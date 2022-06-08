@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  web:
+    image: notification-admin-api
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    env_file: .env
+    entrypoint: local/scripts/notify-admin-web-entrypoint.sh
+    command: >
+      bash -c "make generate-version-file && make run"
+    volumes:
+      - .:/app
+    ports:
+      - "6012:6012"
+  redis:
+    image: redis:latest

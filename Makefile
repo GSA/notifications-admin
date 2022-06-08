@@ -28,6 +28,11 @@ bootstrap: generate-version-file ## Set up everything to run the app
 	source $(HOME)/.nvm/nvm.sh && nvm install && npm ci --no-audit
 	. environment.sh; source $(HOME)/.nvm/nvm.sh && npm run build
 
+.PHONY: bootstrap-with-docker
+bootstrap: generate-version-file ## Set up everything to run the app
+	source $(HOME)/.nvm/nvm.sh && nvm install && npm ci --no-audit
+	. environment.sh; source $(HOME)/.nvm/nvm.sh && npm run build
+
 .PHONY: watch-frontend
 watch-frontend:  ## Build frontend and watch for changes
 	. environment.sh; npm run watch
