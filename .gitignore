@@ -102,8 +102,12 @@ node_modules
 bower_components
 npm-debug.log
 
+# Mac + local
+*.DS_Store
 environment.sh
 .envrc
+.env
+.env*
 
 # CloudFoundry
 .cf

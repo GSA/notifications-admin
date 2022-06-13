@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  admin:
+    container_name: admin
+    image: notification-admin
+    env_file: .env
+    build:
+      context: .
+      dockerfile: devcontainer-admin/Dockerfile
+    command: sleep infinity
+    volumes:
+      - .:/workspace:cached
+    ports:
+      - "6012:6012"
+    expose:
+      - "6012"
+  adminredis:
+    container_name: adminredis
+    image: redis:latest
+
+networks:
+  default:
+    name: notify-network
+    external: true
