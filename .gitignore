@@ -104,6 +104,7 @@ npm-debug.log
 
 environment.sh
 .envrc
+.env
 
 # CloudFoundry
 .cf
