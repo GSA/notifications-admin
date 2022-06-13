@@ -29,9 +29,9 @@ bootstrap: generate-version-file ## Set up everything to run the app
 	. environment.sh; source $(HOME)/.nvm/nvm.sh && npm run build
 
 .PHONY: bootstrap-with-docker
-bootstrap: generate-version-file ## Set up everything to run the app
-	source $(HOME)/.nvm/nvm.sh && nvm install && npm ci --no-audit
-	. environment.sh; source $(HOME)/.nvm/nvm.sh && npm run build
+bootstrap-with-docker: generate-version-file ## Set up everything to run the app
+	# npm ci --no-audit
+	npm run build
 
 .PHONY: watch-frontend
 watch-frontend:  ## Build frontend and watch for changes
@@ -40,6 +40,10 @@ watch-frontend:  ## Build frontend and watch for changes
 .PHONY: run-flask
 run-flask:  ## Run flask
 	. environment.sh && flask run -p 6012
+
+.PHONY: run
+run:
+	flask run -p 6012 --host=0.0.0.0
 
 .PHONY: npm-audit
 npm-audit:  ## Check for vulnerabilities in NPM packages
