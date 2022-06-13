@@ -26,7 +26,7 @@ VIRTUALENV_ROOT := $(shell [ -z $$VIRTUAL_ENV ] && echo $$(pwd)/venv || echo $$V
 bootstrap: generate-version-file ## Set up everything to run the app
 	pip3 install -r requirements_for_test.txt
 	source $(HOME)/.nvm/nvm.sh && nvm install && npm ci --no-audit
-	. environment.sh; source $(HOME)/.nvm/nvm.sh && npm run build
+	source $(HOME)/.nvm/nvm.sh && npm run build
 
 .PHONY: bootstrap-with-docker
 bootstrap-with-docker: generate-version-file ## Set up everything to run the app
@@ -35,15 +35,11 @@ bootstrap-with-docker: generate-version-file ## Set up everything to run the app
 
 .PHONY: watch-frontend
 watch-frontend:  ## Build frontend and watch for changes
-	. environment.sh; npm run watch
+	npm run watch
 
 .PHONY: run-flask
 run-flask:  ## Run flask
-	. environment.sh && flask run -p 6012
-
-.PHONY: run
-run:
-	flask run -p 6012 --host=0.0.0.0
+	flask run -p 6012
 
 .PHONY: npm-audit
 npm-audit:  ## Check for vulnerabilities in NPM packages
