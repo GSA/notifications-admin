@@ -6,7 +6,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN groupadd --gid 1000 node \
     && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-ENV NODE_VERSION 16.10.0
+ENV NODE_VERSION 16.15.1
+# RUN if [ -z "$NODE_VERSION" ]; then echo 'Environment variable NODE_VERSION must be set. Exiting.'; exit 1; fi
 
 RUN echo "Install base packages"
 
@@ -29,8 +30,12 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && apt-get install -y --no-install-recommends \
     libcurl4-openssl-dev \
     libssl-dev \
-    && apt-get install -y ca-certificates curl wget gnupg dirmngr xz-utils libatomic1 --no-install-recommends \
-    && apt-get -y clean \
+    && apt-get install -y ca-certificates curl ntp wget gnupg dirmngr xz-utils libatomic1 --no-install-recommends \
+    && mkdir /usr/local/share/ca-certificates/cacert.org \
+    && wget -P /usr/local/share/ca-certificates/cacert.org http://www.cacert.org/certs/root.crt http://www.cacert.org/certs/class3.crt \
+    && apt-get install -y apt-transport-https ca-certificates \
+    && update-ca-certificates \
+    && git config --global http.sslCAinfo /etc/ssl/certs/ca-certificates.crt \
     && rm -rf /var/lib/apt/lists/* /tmp/* \
     && for key in \
     4ED778F539E3634C779C87C6D7062848A1AB005C \
@@ -54,19 +59,13 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
     && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
     && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
-    && apt-mark auto '.*' > /dev/null \
-    && find /usr/local -type f -executable -exec ldd '{}' ';' \
-    | awk '/=>/ { print $(NF-1) }' \
-    | sort -u \
-    | xargs -r dpkg-query --search \
-    | cut -d: -f1 \
-    | sort -u \
-    | xargs -r apt-mark manual \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    && apt-get -y clean \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
-    # smoke tests
     && node --version \
     && npm --version
+
+RUN echo $(node --version)
+RUN echo $(npm --version)
 
 RUN pip install --upgrade pip
 
@@ -77,6 +76,14 @@ COPY requirements.txt ./
 
 RUN \
     echo "Installing python dependencies" \
-    && pip install -r requirements.txt --no-cache-dir
+    && pip install -r requirements.txt
+
+COPY package-lock.json ./
+COPY package.json ./
+
+RUN npm ci --no-audit
+# RUN npm run build
 
 COPY . .
+
+
