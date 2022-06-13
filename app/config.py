@@ -104,9 +104,9 @@ class Development(Config):
     MOU_BUCKET_NAME = 'notify.tools-mou'
     TRANSIENT_UPLOADED_LETTERS = 'development-transient-uploaded-letters'
     PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'development-letters-precompiled-originals-backup'
-
     ADMIN_CLIENT_SECRET = 'dev-notify-secret-key'
-    API_HOST_NAME = 'http://localhost:6011'
+    # check for local compose orchestration variable
+    API_HOST_NAME = os.environ.get('DEV_API_HOST_NAME', 'http://dev:6011')
     DANGEROUS_SALT = 'dev-notify-salt'
     SECRET_KEY = 'dev-notify-secret-key'
     ANTIVIRUS_API_HOST = 'http://localhost:6016'
@@ -115,7 +115,8 @@ class Development(Config):
 
     ASSET_PATH = '/static/'
 
-    REDIS_URL = 'redis://localhost:6379/0'
+    REDIS_URL = os.environ.get('DEV_REDIS_URL', 'http://redis:6379')
+    
     REDIS_ENABLED = os.environ.get('REDIS_ENABLED') == '1'
 
 
