@@ -16,7 +16,7 @@ services:
     expose:
       - "6012"
   adminredis:
-    container_name: adminredis
+    command: sh -c "rm -f /data/dump.rdb && redis-server --port 6379" # disable persistence
     image: redis:latest
 
 networks:
