@@ -107,13 +107,13 @@ def test_get_letter_s3_object_raises_custom_error(
     expected_exception
 ):
     bucket_name = current_app.config['TRANSIENT_UPLOADED_LETTERS']
-    s3 = boto3.client('s3', region_name='eu-west-1')
+    s3 = boto3.client('s3', region_name='us-west-2')
 
     # bucket not existing will trigger some other error
     if will_raise_custom_error:
         s3.create_bucket(
             Bucket=bucket_name,
-            CreateBucketConfiguration={'LocationConstraint': 'eu-west-1'}
+            CreateBucketConfiguration={'LocationConstraint': 'us-west-2'}
         )
 
     with pytest.raises(expected_exception):

@@ -24,7 +24,7 @@ data = {'data': 'some_data'}
 filename = 'test.png'
 svg_filename = 'test.svg'
 upload_id = 'test_uuid'
-region = 'eu-west1'
+region = 'us-west-2'
 
 
 @pytest.fixture

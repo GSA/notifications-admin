@@ -31,7 +31,7 @@ class Config(object):
     ANTIVIRUS_API_KEY = os.environ.get('ANTIVIRUS_API_KEY')
 
     ASSETS_DEBUG = False
-    AWS_REGION = 'eu-west-1'
+    AWS_REGION = 'us-west-2'
     DEFAULT_SERVICE_LIMIT = 50
 
     EMAIL_EXPIRY_SECONDS = 3600  # 1 hour
@@ -97,8 +97,8 @@ class Development(Config):
     DEBUG = True
     SESSION_COOKIE_SECURE = False
     SESSION_PROTECTION = None
-    CSV_UPLOAD_BUCKET_NAME = 'development-notifications-csv-upload'
-    CONTACT_LIST_UPLOAD_BUCKET_NAME = 'development-contact-list'
+    CSV_UPLOAD_BUCKET_NAME = 'local-notifications-csv-upload'
+    CONTACT_LIST_UPLOAD_BUCKET_NAME = 'local-contact-list'
     LOGO_UPLOAD_BUCKET_NAME = 'public-logos-tools'
     LOGO_CDN_DOMAIN = 'static-logos.notify.tools'
     MOU_BUCKET_NAME = 'notify.tools-mou'
