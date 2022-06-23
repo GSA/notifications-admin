@@ -27,13 +27,13 @@ function configure_aws_logs {
 [general]
 state_file = /home/vcap/logs/awslogs-state
 
-[/home/vcap/logs/app.log]
-file = /home/vcap/logs/app.log*
+[${LOGS_DIR}/app.log]
+file = ${LOGS_DIR}/app.log.json
 log_group_name = paas-${CW_APP_NAME}-application
 log_stream_name = {hostname}
 
-[/home/vcap/logs/gunicorn_error.log]
-file = /home/vcap/logs/gunicorn_error.log
+[${LOGS_DIR}/gunicorn_error.log]
+file = ${LOGS_DIR}/gunicorn_error.log
 log_group_name = paas-${CW_APP_NAME}-gunicorn
 log_stream_name = {hostname}
 EOF

@@ -191,7 +191,7 @@ class Live(Config):
     CHECK_PROXY_HEADER = False
     ASSET_DOMAIN = 'static.notifications.service.gov.uk'
     ASSET_PATH = 'https://static.notifications.service.gov.uk/'
->
+
 
 class CloudFoundryConfig(Config):
     pass

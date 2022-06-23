@@ -2,15 +2,12 @@
 applications:
   - name: notifications-admin
     buildpack: python_buildpack
-
     memory: 1G
-
-    routes:
-      - route: notifications-admin.app.cloud.gov
-
     health-check-type: http
     health-check-http-endpoint: '/_status?simple=true'
     health-check-invocation-timeout: 10
+    routes:
+      - route: notifications-admin.app.cloud.gov
 
     services:
       # - logit-ssl-syslog-drain
@@ -22,6 +19,8 @@ applications:
       NOTIFY_APP_NAME: admin
       NOTIFY_LOG_PATH: /home/vcap/logs/app.log
       FLASK_APP: application.py
+      FLASK_ENV: production
+
       NOTIFY_ENVIRONMENT: live
 
       # Credentials variables
