@@ -3,6 +3,7 @@
 set -e -o pipefail
 
 TERMINATE_TIMEOUT=30
+readonly LOGS_DIR="/home/vcap/logs"
 
 function check_params {
   if [ -z "${NOTIFY_APP_NAME}" ]; then
@@ -16,6 +17,10 @@ function check_params {
 }
 
 function configure_aws_logs {
+    # create files so that aws logs agent doesn't complain
+  touch ${LOGS_DIR}/gunicorn_error.log
+  touch ${LOGS_DIR}/app.log.json
+
   aws configure set plugins.cwlogs cwlogs
 
   cat > /home/vcap/app/awslogs.conf << EOF

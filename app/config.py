@@ -31,7 +31,7 @@ class Config(object):
     ANTIVIRUS_API_KEY = os.environ.get('ANTIVIRUS_API_KEY')
 
     ASSETS_DEBUG = False
-    AWS_REGION = 'us-west-2'
+    AWS_REGION = os.environ.get('AWS_REGION')
     DEFAULT_SERVICE_LIMIT = 50
 
     EMAIL_EXPIRY_SECONDS = 3600  # 1 hour
@@ -189,8 +189,8 @@ class Live(Config):
     PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'prototype-letters-precompiled-originals-backup'
     NOTIFY_ENVIRONMENT = 'live'
     CHECK_PROXY_HEADER = False
-    # ASSET_DOMAIN = 'static.notifications.service.gov.uk'
-    # ASSET_PATH = 'https://static.notifications.service.gov.uk/'
+    ASSET_DOMAIN = 'static.notifications.service.gov.uk'
+    ASSET_PATH = 'https://static.notifications.service.gov.uk/'
 >
 
 class CloudFoundryConfig(Config):
