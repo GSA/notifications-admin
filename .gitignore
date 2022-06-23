@@ -108,6 +108,7 @@ environment.sh
 .envrc
 .env
 .env*
+varsfile
 
 # CloudFoundry
 .cf

@@ -1,0 +1,39 @@
+---
+applications:
+  - name: notifications-admin
+    buildpack: python_buildpack
+    memory: 1G
+    health-check-type: http
+    health-check-http-endpoint: '/_status?simple=true'
+    health-check-invocation-timeout: 10
+    routes:
+      - route: notifications-admin.app.cloud.gov
+
+    services:
+      # - logit-ssl-syslog-drain
+      # - notify-prometheus
+      # - notify-splunk
+      - api-redis
+
+    env:
+      NOTIFY_APP_NAME: admin
+      NOTIFY_LOG_PATH: /home/vcap/logs/app.log
+      FLASK_APP: application.py
+      FLASK_ENV: production
+
+      NOTIFY_ENVIRONMENT: live
+
+      # Credentials variables
+      ADMIN_CLIENT_SECRET: ((ADMIN_CLIENT_SECRET))
+      ADMIN_BASE_URL: notifications-admin.app.cloud.gov
+      API_HOST_NAME: notifications-api.app.cloud.gov
+      DANGEROUS_SALT: ((DANGEROUS_SALT))
+      SECRET_KEY: ((SECRET_KEY))
+      ROUTE_SECRET_KEY_1: ((ROUTE_SECRET_KEY_1))
+      ROUTE_SECRET_KEY_2: ((ROUTE_SECRET_KEY_2))
+
+      AWS_REGION: us-west-2
+      AWS_ACCESS_KEY_ID: ((AWS_ACCESS_KEY_ID))
+      AWS_SECRET_ACCESS_KEY: ((AWS_SECRET_ACCESS_KEY))
+
+      NOTIFY_BILLING_DETAILS: []
