@@ -180,18 +180,18 @@ class Staging(Config):
 class Live(Config):
     HEADER_COLOUR = '#005EA5'  # $govuk-blue
     HTTP_PROTOCOL = 'https'
-    CSV_UPLOAD_BUCKET_NAME = 'live-notifications-csv-upload'
-    CONTACT_LIST_UPLOAD_BUCKET_NAME = 'production-contact-list'
-    LOGO_UPLOAD_BUCKET_NAME = 'public-logos-production'
+    CSV_UPLOAD_BUCKET_NAME = 'notifications.prototype.csv_upload'
+    CONTACT_LIST_UPLOAD_BUCKET_NAME = 'notifications.prototype.contact_list_upload'
+    LOGO_UPLOAD_BUCKET_NAME = 'notifications.prototype.logo_upload'
     LOGO_CDN_DOMAIN = 'static-logos.notifications.service.gov.uk'
-    MOU_BUCKET_NAME = 'notifications.service.gov.uk-mou'
-    TRANSIENT_UPLOADED_LETTERS = 'production-transient-uploaded-letters'
-    PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'production-letters-precompiled-originals-backup'
+    MOU_BUCKET_NAME = 'notifications.prototype.mou'
+    TRANSIENT_UPLOADED_LETTERS = 'prototype-transient-uploaded-letters'
+    PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'prototype-letters-precompiled-originals-backup'
     NOTIFY_ENVIRONMENT = 'live'
     CHECK_PROXY_HEADER = False
-    ASSET_DOMAIN = 'static.notifications.service.gov.uk'
-    ASSET_PATH = 'https://static.notifications.service.gov.uk/'
-
+    # ASSET_DOMAIN = 'static.notifications.service.gov.uk'
+    # ASSET_PATH = 'https://static.notifications.service.gov.uk/'
+>
 
 class CloudFoundryConfig(Config):
     pass
