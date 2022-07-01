@@ -20,7 +20,6 @@ from flask.globals import _lookup_req_object, _request_ctx_stack
 from flask_login import LoginManager, current_user
 from flask_wtf import CSRFProtect
 from flask_wtf.csrf import CSRFError
-from flask_basicauth import BasicAuth
 from gds_metrics import GDSMetrics
 from govuk_frontend_jinja.flask_ext import init_govuk_frontend
 from itsdangerous import BadSignature
@@ -137,7 +136,7 @@ from app.url_converters import (
 login_manager = LoginManager()
 csrf = CSRFProtect()
 metrics = GDSMetrics()
-basic_auth = BasicAuth()
+basic_auth = CustomBasicAuth()
 
 # The current service attached to the request stack.
 def _get_current_service():
