@@ -223,9 +223,7 @@ def create_app(application):
     login_manager.login_message_category = 'default'
     login_manager.session_protection = None
     login_manager.anonymous_user = AnonymousUser
-    
-    # basic_auth = BasicAuth(application)
-    
+
     setup_basic_auth(application)
 
     # make sure we handle unicode correctly
