@@ -126,6 +126,7 @@ class Development(Config):
 
 
 class Test(Development):
+    BASIC_AUTH_FORCE = False
     DEBUG = True
     TESTING = True
     WTF_CSRF_ENABLED = False
