@@ -4,8 +4,6 @@ from notifications_python_client.errors import HTTPError
 from app import status_api_client, version
 from app.status import status
 
-from functools import wraps
-
 
 @status.route('/_status', methods=['GET'])
 def show_status():
