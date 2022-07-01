@@ -39,6 +39,7 @@ from werkzeug.local import LocalProxy
 from app import proxy_fix, webauthn_server
 from app.asset_fingerprinter import asset_fingerprinter
 from app.config import configs
+from app.custom_auth import CustomBasicAuth
 from app.extensions import antivirus_client, redis_client, zendesk_client
 from app.formatters import (
     convert_to_boolean,
@@ -593,16 +594,16 @@ def init_jinja(application):
     jinja_loader = jinja2.FileSystemLoader(template_folders)
     application.jinja_loader = jinja_loader
 
-class CustomBasicAuth(BasicAuth):
-    """
-        Description: 
-        Override BasicAuth to permit anonymous healthcheck at /_status?simple=true
-    """
-    def challenge(self):
-        if "/_status" in request.url:
-            if request.args.get('elb', None) or request.args.get('simple', None):
-                return jsonify(status="ok"), 200
-        return super(CustomBasicAuth, self).challenge()
+# class CustomBasicAuth(BasicAuth):
+#     """
+#         Description: 
+#         Override BasicAuth to permit anonymous healthcheck at /_status?simple=true
+#     """
+#     def challenge(self):
+#         if "/_status" in request.url:
+#             if request.args.get('elb', None) or request.args.get('simple', None):
+#                 return jsonify(status="ok"), 200
+#         return super(CustomBasicAuth, self).challenge()
 
 def setup_basic_auth(application):
     application.basic_auth = CustomBasicAuth(application)

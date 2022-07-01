@@ -3,15 +3,13 @@ from flask import jsonify, request
 
 class CustomBasicAuth(BasicAuth):
     """
-        Description:
-
-        Usage:
-
+        Description: 
+        Override BasicAuth to permit anonymous healthcheck at /_status?simple=true
     """
-    
-    def check_credentials(self, username, password):
-        # here, for example, you can search user in the database by passed `username` and `password`, etc.
-        return username == 'user' and password == 'password'
-
+    def challenge(self):
+        if "/_status" in request.url:
+            if request.args.get('elb', None) or request.args.get('simple', None):
+                return jsonify(status="ok"), 200
+        return super(CustomBasicAuth, self).challenge()
 
 custom_basic_auth = CustomBasicAuth()
