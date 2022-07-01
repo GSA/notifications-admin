@@ -13,7 +13,7 @@ from flask import (
     render_template,
     request,
     session,
-    url_for
+    url_for,
 )
 from flask.globals import _lookup_req_object, _request_ctx_stack
 from flask_login import LoginManager, current_user
