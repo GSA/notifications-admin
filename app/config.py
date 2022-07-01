@@ -10,7 +10,7 @@ if os.environ.get('VCAP_APPLICATION'):
 
 class Config(object):
     ADMIN_CLIENT_SECRET = os.environ.get('ADMIN_CLIENT_SECRET')
-    API_HOST_NAME = os.environ.get('API_HOST_NAME')
+    API_HOST_NAME = os.environ.get('API_HOST_NAME', 'https://notifications-api.app.cloud.gov')
     SECRET_KEY = os.environ.get('SECRET_KEY')
     DANGEROUS_SALT = os.environ.get('DANGEROUS_SALT')
     ZENDESK_API_KEY = os.environ.get('ZENDESK_API_KEY')
@@ -62,13 +62,17 @@ class Config(object):
     LOGO_UPLOAD_BUCKET_NAME = 'public-logos-local'
     MOU_BUCKET_NAME = 'local-mou'
     TRANSIENT_UPLOADED_LETTERS = 'local-transient-uploaded-letters'
-    ROUTE_SECRET_KEY_1 = os.environ.get('ROUTE_SECRET_KEY_1', '')
-    ROUTE_SECRET_KEY_2 = os.environ.get('ROUTE_SECRET_KEY_2', '')
+    ROUTE_SECRET_KEY_1 = os.environ.get('ROUTE_SECRET_KEY_1', 'dev-route-secret-key-1')
+    ROUTE_SECRET_KEY_2 = os.environ.get('ROUTE_SECRET_KEY_2', 'dev-route-secret-key-2')
     CHECK_PROXY_HEADER = False
     ANTIVIRUS_ENABLED = True
 
     REDIS_URL = os.environ.get('REDIS_URL')
     REDIS_ENABLED = True
+    
+    BASIC_AUTH_USERNAME = os.environ.get('BASIC_AUTH_USERNAME')
+    BASIC_AUTH_PASSWORD = os.environ.get('BASIC_AUTH_PASSWORD')
+    BASIC_AUTH_FORCE = True
 
     ASSET_DOMAIN = ''
     ASSET_PATH = '/static/'
@@ -93,6 +97,7 @@ class Config(object):
 
 
 class Development(Config):
+    BASIC_AUTH_FORCE = True
     NOTIFY_LOG_PATH = 'application.log'
     DEBUG = True
     SESSION_COOKIE_SECURE = False
@@ -143,6 +148,7 @@ class Test(Development):
 
 
 class Preview(Config):
+    BASIC_AUTH_FORCE = True
     HTTP_PROTOCOL = 'https'
     HEADER_COLOUR = '#F499BE'  # $baby-pink
     CSV_UPLOAD_BUCKET_NAME = 'preview-notifications-csv-upload'
@@ -162,6 +168,7 @@ class Preview(Config):
 
 
 class Staging(Config):
+    BASIC_AUTH_FORCE = True
     HTTP_PROTOCOL = 'https'
     HEADER_COLOUR = '#6F72AF'  # $mauve
     CSV_UPLOAD_BUCKET_NAME = 'staging-notifications-csv-upload'
@@ -178,6 +185,7 @@ class Staging(Config):
 
 
 class Live(Config):
+    BASIC_AUTH_FORCE = True
     HEADER_COLOUR = '#005EA5'  # $govuk-blue
     HTTP_PROTOCOL = 'https'
     CSV_UPLOAD_BUCKET_NAME = 'notifications.prototype.csv_upload'

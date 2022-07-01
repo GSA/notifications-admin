@@ -28,6 +28,7 @@ RUN apt-get update \
     tldr \
     unzip \
     vim \
+    apache2-utils \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*

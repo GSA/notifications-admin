@@ -7,6 +7,8 @@ set -ex
 # tools and the filesystem mount enabled should be located here. 
 ###################################################################
 
+echo "RUNNING ENTRYPOINT SCRIPT"
+
 # Define aliases
 echo -e "\n\n# User's Aliases" >> ~/.zshrc
 echo -e "alias fd=fdfind" >> ~/.zshrc
@@ -34,3 +36,5 @@ npm run build
 
 # run flask
 # make run
+
+echo "FINISHED ENTRYPOINT SCRIPT"

@@ -29,8 +29,6 @@ applications:
       API_HOST_NAME: notifications-api.app.cloud.gov
       DANGEROUS_SALT: ((DANGEROUS_SALT))
       SECRET_KEY: ((SECRET_KEY))
-      ROUTE_SECRET_KEY_1: ((ROUTE_SECRET_KEY_1))
-      ROUTE_SECRET_KEY_2: ((ROUTE_SECRET_KEY_2))
 
       AWS_REGION: us-west-2
       AWS_ACCESS_KEY_ID: ((AWS_ACCESS_KEY_ID))

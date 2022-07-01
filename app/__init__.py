@@ -19,6 +19,7 @@ from flask.globals import _lookup_req_object, _request_ctx_stack
 from flask_login import LoginManager, current_user
 from flask_wtf import CSRFProtect
 from flask_wtf.csrf import CSRFError
+from flask_basicauth import BasicAuth
 from gds_metrics import GDSMetrics
 from govuk_frontend_jinja.flask_ext import init_govuk_frontend
 from itsdangerous import BadSignature
@@ -134,7 +135,7 @@ from app.url_converters import (
 login_manager = LoginManager()
 csrf = CSRFProtect()
 metrics = GDSMetrics()
-
+basic_auth = BasicAuth()
 
 # The current service attached to the request stack.
 def _get_current_service():
@@ -220,6 +221,8 @@ def create_app(application):
     login_manager.login_message_category = 'default'
     login_manager.session_protection = None
     login_manager.anonymous_user = AnonymousUser
+    
+    basic_auth = BasicAuth(application)
 
     # make sure we handle unicode correctly
     redis_client.redis_store.decode_responses = True
