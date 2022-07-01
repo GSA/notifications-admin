@@ -1,9 +1,23 @@
 from flask import current_app, jsonify, request
 from notifications_python_client.errors import HTTPError
 
-from app import status_api_client, version
+from app import status_api_client, version, basic_auth
 from app.status import status
 
+from functools import wraps
+
+
+def health_check():
+    def wrapper(fn):
+        @wraps(fn)
+        def decorator(*args, **kwargs):
+            return jsonify(status="ok"), 200
+            # if '/_status' in request.url:
+            #     return jsonify(status="ok"), 200
+            # else:
+            #     return fn(*args, **kwargs)
+        return decorator
+    return wrapper
 
 @status.route('/_status', methods=['GET'])
 def show_status():

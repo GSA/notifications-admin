@@ -23,7 +23,7 @@ class Config(object):
 
     # Logging
     DEBUG = False
-    NOTIFY_LOG_PATH = os.getenv('NOTIFY_LOG_PATH')
+    NOTIFY_LOG_PATH = os.environ.get('NOTIFY_LOG_PATH', 'application.log')
 
     ADMIN_CLIENT_USER_NAME = 'notify-admin'
 
@@ -40,7 +40,7 @@ class Config(object):
     HEADER_COLOUR = '#81878b'  # mix(govuk-colour("dark-grey"), govuk-colour("mid-grey"))
     HTTP_PROTOCOL = 'http'
     NOTIFY_APP_NAME = 'admin'
-    NOTIFY_LOG_LEVEL = 'DEBUG'
+    NOTIFY_LOG_LEVEL = os.environ.get('NOTIFY_LOG_LEVEL', 'DEBUG')
     PERMANENT_SESSION_LIFETIME = 20 * 60 * 60  # 20 hours
     SEND_FILE_MAX_AGE_DEFAULT = 365 * 24 * 60 * 60  # 1 year
     SESSION_COOKIE_HTTPONLY = True

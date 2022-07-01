@@ -14,6 +14,7 @@ from flask import (
     request,
     session,
     url_for,
+    jsonify
 )
 from flask.globals import _lookup_req_object, _request_ctx_stack
 from flask_login import LoginManager, current_user
@@ -222,7 +223,9 @@ def create_app(application):
     login_manager.session_protection = None
     login_manager.anonymous_user = AnonymousUser
     
-    basic_auth = BasicAuth(application)
+    # basic_auth = BasicAuth(application)
+    
+    setup_basic_auth(application)
 
     # make sure we handle unicode correctly
     redis_client.redis_store.decode_responses = True
@@ -589,3 +592,17 @@ def init_jinja(application):
     ]
     jinja_loader = jinja2.FileSystemLoader(template_folders)
     application.jinja_loader = jinja_loader
+
+class CustomBasicAuth(BasicAuth):
+    """
+        Description: 
+        Override BasicAuth to permit anonymous healthcheck at /_status?simple=true
+    """
+    def challenge(self):
+        if "/_status" in request.url:
+            if request.args.get('elb', None) or request.args.get('simple', None):
+                return jsonify(status="ok"), 200
+        return super(CustomBasicAuth, self).challenge()
+
+def setup_basic_auth(application):
+    application.basic_auth = CustomBasicAuth(application)
