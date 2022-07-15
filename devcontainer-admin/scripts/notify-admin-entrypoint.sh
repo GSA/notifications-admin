@@ -29,7 +29,10 @@ pip3 install -r requirements_for_test.txt
 make generate-version-file
 # make babel
 
-# npm ci install
+if [ ! -d "/node_modules" ]; then
+  npm ci install
+fi
+
 npm run build
 
 # run flask
