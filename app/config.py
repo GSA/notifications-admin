@@ -4,12 +4,15 @@ import os
 if os.environ.get('VCAP_APPLICATION'):
     # on cloudfoundry, config is a json blob in VCAP_APPLICATION - unpack it, and populate
     # standard environment variables from it
-    from app.cloudfoundry_config import extract_cloudfoundry_config
-    extract_cloudfoundry_config()
+    # from app.cloudfoundry_config import extract_cloudfoundry_config
+    # extract_cloudfoundry_config()
+    vcap_services = json.loads(os.environ['VCAP_SERVICES'])
+    os.environ['REDIS_URL'] = vcap_services['aws-elasticache-redis'][0]['credentials']['uri']
 
 
 class Config(object):
     ADMIN_CLIENT_SECRET = os.environ.get('ADMIN_CLIENT_SECRET')
+    ADMIN_CLIENT_USER_NAME = os.environ.get('ADMIN_CLIENT_USERNAME')
     API_HOST_NAME = os.environ.get('API_HOST_NAME', 'localhost')
     SECRET_KEY = os.environ.get('SECRET_KEY')
     DANGEROUS_SALT = os.environ.get('DANGEROUS_SALT')
@@ -24,8 +27,6 @@ class Config(object):
     # Logging
     DEBUG = False
     NOTIFY_LOG_PATH = os.environ.get('NOTIFY_LOG_PATH', 'application.log')
-
-    ADMIN_CLIENT_USER_NAME = 'notify-admin'
 
     ANTIVIRUS_API_HOST = os.environ.get('ANTIVIRUS_API_HOST')
     ANTIVIRUS_API_KEY = os.environ.get('ANTIVIRUS_API_KEY')
@@ -109,7 +110,7 @@ class Development(Config):
     MOU_BUCKET_NAME = 'notify.tools-mou'
     TRANSIENT_UPLOADED_LETTERS = 'development-transient-uploaded-letters'
     PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'development-letters-precompiled-originals-backup'
-    ADMIN_CLIENT_SECRET = 'dev-notify-secret-key'
+    ADMIN_CLIENT_SECRET = os.environ.get('ADMIN_CLIENT_SECRET')
     # check for local compose orchestration variable
     API_HOST_NAME = os.environ.get('DEV_API_HOST_NAME', 'http://dev:6011')
     DANGEROUS_SALT = 'dev-notify-salt'
@@ -121,8 +122,7 @@ class Development(Config):
     ASSET_PATH = '/static/'
 
     REDIS_URL = os.environ.get('DEV_REDIS_URL', 'http://redis:6379')
-    
-    REDIS_ENABLED = os.environ.get('REDIS_ENABLED') == '1'
+    REDIS_ENABLED = True
 
 
 class Test(Development):
@@ -200,6 +200,18 @@ class Live(Config):
     CHECK_PROXY_HEADER = False
     ASSET_DOMAIN = 'static.notifications.service.gov.uk'
     ASSET_PATH = 'https://static.notifications.service.gov.uk/'
+    
+    REDIS_URL = os.environ.get('REDIS_URL')
+    REDIS_ENABLED = True
+    
+    ADMIN_CLIENT_SECRET = os.environ.get('ADMIN_CLIENT_SECRET')
+    ADMIN_CLIENT_USER_NAME = os.environ.get('ADMIN_CLIENT_USERNAME')
+    API_HOST_NAME = os.environ.get('API_HOST_NAME')
+    DANGEROUS_SALT = os.environ.get('DANGEROUS_SALT')
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    ANTIVIRUS_API_HOST = 'http://localhost:6016'
+    ANTIVIRUS_API_KEY = 'test-key'
+    ANTIVIRUS_ENABLED = False
 
 
 class CloudFoundryConfig(Config):

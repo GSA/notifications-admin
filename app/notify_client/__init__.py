@@ -1,4 +1,4 @@
-from flask import abort, has_request_context, request
+from flask import abort, has_request_context, request, current_app
 from flask_login import current_user
 from notifications_python_client import __version__
 from notifications_python_client.base import BaseAPIClient
@@ -28,6 +28,7 @@ class NotifyAdminAPIClient(BaseAPIClient):
         self.route_secret = app.config['ROUTE_SECRET_KEY_1']
 
     def generate_headers(self, api_token):
+        # current_app.logger.info("Attempting to generate headers")
         headers = {
             "Content-type": "application/json",
             "Authorization": "Bearer {}".format(api_token),
