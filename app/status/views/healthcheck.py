@@ -20,29 +20,3 @@ def show_status():
             api=api_status,
             git_commit=version.__git_commit__,
             build_time=version.__time__), 200
-
-@status.route('/_status/servicecounts', methods=['GET'])
-def get_counts():
-    try:
-        orgs_status = status_api_client.get_count_of_live_services_and_organisations()
-    except HTTPError as e:
-        current_app.logger.exception("API failed to respond")
-        return jsonify(status="error", message=str(e.message)), 500
-    return jsonify(
-        status="ok",
-        api=orgs_status,
-        git_commit=version.__git_commit__,
-        build_time=version.__time__), 200
-
-@status.route('/_status/services', methods=['GET'])
-def get_services():
-    try:
-        services = status_api_client.get_services()
-    except HTTPError as e:
-        current_app.logger.exception("API failed to respond")
-        return jsonify(status="error", message=str(e.message)), 500
-    return jsonify(
-        status="ok",
-        api=services,
-        git_commit=version.__git_commit__,
-        build_time=version.__time__), 200
