@@ -18,22 +18,25 @@ applications:
     env:
       NOTIFY_APP_NAME: admin
       NOTIFY_LOG_PATH: /home/vcap/logs/app.log
+      NOTIFY_LOG_LEVEL: DEBUG
       FLASK_APP: application.py
       FLASK_ENV: production
+      REDIS_ENABLED: ((REDIS_ENABLED))
 
       NOTIFY_ENVIRONMENT: live
 
       # Credentials variables
       ADMIN_CLIENT_SECRET: ((ADMIN_CLIENT_SECRET))
-      ADMIN_BASE_URL: notifications-admin.app.cloud.gov
-      API_HOST_NAME: notifications-api.app.cloud.gov
+      ADMIN_CLIENT_USERNAME: ((ADMIN_CLIENT_USERNAME))
+      ADMIN_BASE_URL: https://notifications-admin.app.cloud.gov
+      API_HOST_NAME: https://notifications-api.app.cloud.gov
       DANGEROUS_SALT: ((DANGEROUS_SALT))
       SECRET_KEY: ((SECRET_KEY))
-      ROUTE_SECRET_KEY_1: ((ROUTE_SECRET_KEY_1))
-      ROUTE_SECRET_KEY_2: ((ROUTE_SECRET_KEY_2))
 
       AWS_REGION: us-west-2
       AWS_ACCESS_KEY_ID: ((AWS_ACCESS_KEY_ID))
       AWS_SECRET_ACCESS_KEY: ((AWS_SECRET_ACCESS_KEY))
+      BASIC_AUTH_USERNAME: ((BASIC_AUTH_USERNAME))
+      BASIC_AUTH_PASSWORD: ((BASIC_AUTH_PASSWORD))
 
       NOTIFY_BILLING_DETAILS: []

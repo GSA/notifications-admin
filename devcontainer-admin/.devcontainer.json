@@ -23,16 +23,13 @@
         }
     },
     "extensions": [
-        "ms-python.python", // "ms-python.black-formatter",
         "donjayamanne.python-extension-pack",
-        "ms-azuretools.vscode-docker",
         "ms-python.vscode-pylance",
         "eamodio.gitlens",
         "wholroyd.jinja",
         "pmbenjamin.vscode-snyk",
         "visualstudioexptteam.vscodeintellicode",
         "yzhang.markdown-all-in-one",
-        "ms-ossdata.vscode-postgresql",
         "GitHub.copilot"
     ],
     "forwardPorts": [

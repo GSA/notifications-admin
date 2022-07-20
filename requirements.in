@@ -10,6 +10,7 @@ wtforms==3.0.1
 Flask-Login==0.6.1
 Werkzeug==2.1.2
 jinja2==3.1.2
+Flask-BasicAuth==0.2.0
 
 blinker==1.4
 pyexcel==0.7.0

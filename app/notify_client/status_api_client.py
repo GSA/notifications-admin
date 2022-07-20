@@ -1,5 +1,5 @@
+import os
 from app.notify_client import NotifyAdminAPIClient, cache
-
 
 class StatusApiClient(NotifyAdminAPIClient):
 

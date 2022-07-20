@@ -109,6 +109,8 @@ environment.sh
 .env
 .env*
 varsfile
+*.log.json
+logs/**
 
 # CloudFoundry
 .cf
