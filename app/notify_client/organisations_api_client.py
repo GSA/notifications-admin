@@ -8,11 +8,11 @@ from app.notify_client import NotifyAdminAPIClient, cache
 
 class OrganisationsClient(NotifyAdminAPIClient):
 
-    @cache.set('organisations')
+    # @cache.set('organisations')
     def get_organisations(self):
         return self.get(url='/organisations')
 
-    @cache.set('domains')
+    # @cache.set('domains')
     def get_domains(self):
         return list(chain.from_iterable(
             organisation['domains']
@@ -22,7 +22,7 @@ class OrganisationsClient(NotifyAdminAPIClient):
     def get_organisation(self, org_id):
         return self.get(url='/organisations/{}'.format(org_id))
 
-    @cache.set('organisation-{org_id}-name')
+    # @cache.set('organisation-{org_id}-name')
     def get_organisation_name(self, org_id):
         return self.get_organisation(org_id)['name']
 
@@ -36,7 +36,7 @@ class OrganisationsClient(NotifyAdminAPIClient):
                 return None
             raise error
 
-    @cache.delete('organisations')
+    # @cache.delete('organisations')
     def create_organisation(self, name, crown, organisation_type, agreement_signed):
         return self.post(
             url="/organisations",
@@ -48,8 +48,8 @@ class OrganisationsClient(NotifyAdminAPIClient):
             }
         )
 
-    @cache.delete('domains')
-    @cache.delete('organisations')
+    # @cache.delete('domains')
+    # @cache.delete('organisations')
     def update_organisation(self, org_id, cached_service_ids=None, **kwargs):
         api_response = self.post(url="/organisations/{}".format(org_id), data=kwargs)
 
@@ -61,9 +61,9 @@ class OrganisationsClient(NotifyAdminAPIClient):
 
         return api_response
 
-    @cache.delete('service-{service_id}')
-    @cache.delete('live-service-and-organisation-counts')
-    @cache.delete('organisations')
+    # @cache.delete('service-{service_id}')
+    # @cache.delete('live-service-and-organisation-counts')
+    # @cache.delete('organisations')
     def update_service_organisation(self, service_id, org_id):
         data = {
             'service_id': service_id
@@ -76,7 +76,7 @@ class OrganisationsClient(NotifyAdminAPIClient):
     def get_organisation_services(self, org_id):
         return self.get(url="/organisations/{}/services".format(org_id))
 
-    @cache.delete('user-{user_id}')
+    # @cache.delete('user-{user_id}')
     def remove_user_from_organisation(self, org_id, user_id):
         return self.delete(f'/organisations/{org_id}/users/{user_id}')
 

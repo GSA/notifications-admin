@@ -84,7 +84,7 @@ class JobApiClient(NotifyAdminAPIClient):
             url=f'/service/{service_id}/job/scheduled-job-stats'
         )
 
-    @cache.set('has_jobs-{service_id}')
+    # @cache.set('has_jobs-{service_id}')
     def has_jobs(self, service_id):
         return bool(self.get_jobs(service_id)['data'])
 
@@ -108,14 +108,14 @@ class JobApiClient(NotifyAdminAPIClient):
 
         return job
 
-    @cache.delete('has_jobs-{service_id}')
+    # @cache.delete('has_jobs-{service_id}')
     def cancel_job(self, service_id, job_id):
         return self.post(
             url='/service/{}/job/{}/cancel'.format(service_id, job_id),
             data={}
         )
 
-    @cache.delete('has_jobs-{service_id}')
+    # @cache.delete('has_jobs-{service_id}')
     def cancel_letter_job(self, service_id, job_id):
         return self.post(
             url='/service/{}/job/{}/cancel-letter-job'.format(service_id, job_id),

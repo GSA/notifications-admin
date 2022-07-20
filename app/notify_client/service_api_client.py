@@ -7,7 +7,7 @@ from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
 
 
 class ServiceAPIClient(NotifyAdminAPIClient):
-    @cache.delete('user-{user_id}')
+    # @cache.delete('user-{user_id}')
     def create_service(
         self,
         service_name,
@@ -32,7 +32,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         data = _attach_current_user(data)
         return self.post("/service", data)['data']['id']
 
-    @cache.set('service-{service_id}')
+    # @cache.set('service-{service_id}')
     def get_service(self, service_id):
         """
         Retrieve a service.
@@ -64,7 +64,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         params_dict['only_active'] = True
         return self.get_services(params_dict)
 
-    @cache.delete('service-{service_id}')
+    # @cache.delete('service-{service_id}')
     def update_service(
         self,
         service_id,
@@ -114,7 +114,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         endpoint = "/service/{0}".format(service_id)
         return self.post(endpoint, data)
 
-    @cache.delete('live-service-and-organisation-counts')
+    # @cache.delete('live-service-and-organisation-counts')
     def update_status(self, service_id, live):
         return self.update_service(
             service_id,
@@ -123,7 +123,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             go_live_at=str(datetime.utcnow()) if live else None
         )
 
-    @cache.delete('live-service-and-organisation-counts')
+    # @cache.delete('live-service-and-organisation-counts')
     def update_count_as_live(self, service_id, count_as_live):
         return self.update_service(
             service_id,
@@ -134,24 +134,24 @@ class ServiceAPIClient(NotifyAdminAPIClient):
     def update_service_with_properties(self, service_id, properties):
         return self.update_service(service_id, **properties)
 
-    @cache.delete('service-{service_id}')
-    @cache.delete('service-{service_id}-templates')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
+    # @cache.delete('service-{service_id}')
+    # @cache.delete('service-{service_id}-templates')
+    # @cache.delete_by_pattern('service-{service_id}-template-*')
     def archive_service(self, service_id, cached_service_user_ids):
         if cached_service_user_ids:
             redis_client.delete(*map('user-{}'.format, cached_service_user_ids))
         return self.post('/service/{}/archive'.format(service_id), data=None)
 
-    @cache.delete('service-{service_id}')
+    # @cache.delete('service-{service_id}')
     def suspend_service(self, service_id):
         return self.post('/service/{}/suspend'.format(service_id), data=None)
 
-    @cache.delete('service-{service_id}')
+    # @cache.delete('service-{service_id}')
     def resume_service(self, service_id):
         return self.post('/service/{}/resume'.format(service_id), data=None)
 
-    @cache.delete('service-{service_id}')
-    @cache.delete('user-{user_id}')
+    # @cache.delete('service-{service_id}')
+    # @cache.delete('user-{user_id}')
     def remove_user_from_service(self, service_id, user_id):
         """
         Remove a user from a service
@@ -162,7 +162,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         data = _attach_current_user({})
         return self.delete(endpoint, data)
 
-    @cache.delete('service-{service_id}-templates')
+    # @cache.delete('service-{service_id}-templates')
     def create_service_template(self, name, type_, content, service_id, subject=None, process_type='normal',
                                 parent_folder_id=None):
         """
@@ -187,8 +187,8 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         endpoint = "/service/{0}/template".format(service_id)
         return self.post(endpoint, data)
 
-    @cache.delete('service-{service_id}-templates')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
+    # @cache.delete('service-{service_id}-templates')
+    # @cache.delete_by_pattern('service-{service_id}-template-*')
     def update_service_template(
         self, id_, name, type_, content, service_id, subject=None, process_type=None
     ):
@@ -214,8 +214,8 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         endpoint = "/service/{0}/template/{1}".format(service_id, id_)
         return self.post(endpoint, data)
 
-    @cache.delete('service-{service_id}-templates')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
+    # @cache.delete('service-{service_id}-templates')
+    # @cache.delete_by_pattern('service-{service_id}-template-*')
     def redact_service_template(self, service_id, id_):
         return self.post(
             "/service/{}/template/{}".format(service_id, id_),
@@ -224,8 +224,8 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             ),
         )
 
-    @cache.delete('service-{service_id}-templates')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
+    # @cache.delete('service-{service_id}-templates')
+    # @cache.delete_by_pattern('service-{service_id}-template-*')
     def update_service_template_sender(self, service_id, template_id, reply_to):
         data = {
             'reply_to': reply_to,
@@ -236,15 +236,15 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             data
         )
 
-    @cache.delete('service-{service_id}-templates')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
+    # @cache.delete('service-{service_id}-templates')
+    # @cache.delete_by_pattern('service-{service_id}-template-*')
     def update_service_template_postage(self, service_id, template_id, postage):
         return self.post(
             "/service/{0}/template/{1}".format(service_id, template_id),
             _attach_current_user({'postage': postage})
         )
 
-    @cache.set('service-{service_id}-template-{template_id}-version-{version}')
+    # @cache.set('service-{service_id}-template-{template_id}-version-{version}')
     def get_service_template(self, service_id, template_id, version=None):
         """
         Retrieve a service template.
@@ -256,7 +256,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             endpoint = '{base}/version/{version}'.format(base=endpoint, version=version)
         return self.get(endpoint)
 
-    @cache.set('service-{service_id}-template-{template_id}-versions')
+    # @cache.set('service-{service_id}-template-{template_id}-versions')
     def get_service_template_versions(self, service_id, template_id):
         """
         Retrieve a list of versions for a template
@@ -273,7 +273,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         """
         return self.get('/service/{}/template/precompiled'.format(service_id))
 
-    @cache.set('service-{service_id}-templates')
+    # @cache.set('service-{service_id}-templates')
     def get_service_templates(self, service_id):
         """
         Retrieve all templates for service.
@@ -293,8 +293,8 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             )
         ])
 
-    @cache.delete('service-{service_id}-templates')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
+    # @cache.delete('service-{service_id}-templates')
+    # @cache.delete_by_pattern('service-{service_id}-template-*')
     def delete_service_template(self, service_id, template_id):
         """
         Set a service template's archived flag to True
@@ -322,7 +322,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
     def get_guest_list(self, service_id):
         return self.get(url='/service/{}/guest-list'.format(service_id))
 
-    @cache.delete('service-{service_id}')
+    # @cache.delete('service-{service_id}')
     def update_guest_list(self, service_id, data):
         return self.put(url='/service/{}/guest-list'.format(service_id), data=data)
 
@@ -358,7 +358,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             '/service/{}/inbound-sms/summary'.format(service_id)
         )
 
-    @cache.delete('service-{service_id}')
+    # @cache.delete('service-{service_id}')
     def create_service_inbound_api(self, service_id, url, bearer_token, user_id):
         data = {
             "url": url,
@@ -367,7 +367,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         }
         return self.post("/service/{}/inbound-api".format(service_id), data)
 
-    @cache.delete('service-{service_id}')
+    # @cache.delete('service-{service_id}')
     def update_service_inbound_api(self, service_id, url, bearer_token, user_id, inbound_api_id):
         data = {
             "url": url,
@@ -384,7 +384,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             )
         )['data']
 
-    @cache.delete('service-{service_id}')
+    # @cache.delete('service-{service_id}')
     def delete_service_inbound_api(self, service_id, callback_api_id):
         return self.delete("/service/{}/inbound-api/{}".format(
             service_id, callback_api_id
@@ -411,8 +411,8 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             data={"email": email_address}
         )
 
-    @cache.delete('service-{service_id}')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
+    # @cache.delete('service-{service_id}')
+    # @cache.delete_by_pattern('service-{service_id}-template-*')
     def add_reply_to_email_address(self, service_id, email_address, is_default=False):
         return self.post(
             "/service/{}/email-reply-to".format(service_id),
@@ -422,8 +422,8 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             }
         )
 
-    @cache.delete('service-{service_id}')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
+    # @cache.delete('service-{service_id}')
+    # @cache.delete_by_pattern('service-{service_id}-template-*')
     def update_reply_to_email_address(self, service_id, reply_to_email_id, email_address, is_default=False):
         return self.post(
             "/service/{}/email-reply-to/{}".format(
@@ -436,8 +436,8 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             }
         )
 
-    @cache.delete('service-{service_id}')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
+    # @cache.delete('service-{service_id}')
+    # @cache.delete_by_pattern('service-{service_id}-template-*')
     def delete_reply_to_email_address(self, service_id, reply_to_email_id):
         return self.post(
             "/service/{}/email-reply-to/{}/archive".format(service_id, reply_to_email_id),
@@ -450,8 +450,8 @@ class ServiceAPIClient(NotifyAdminAPIClient):
     def get_letter_contact(self, service_id, letter_contact_id):
         return self.get("/service/{}/letter-contact/{}".format(service_id, letter_contact_id))
 
-    @cache.delete('service-{service_id}')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
+    # @cache.delete('service-{service_id}')
+    # @cache.delete_by_pattern('service-{service_id}-template-*')
     def add_letter_contact(self, service_id, contact_block, is_default=False):
         return self.post(
             "/service/{}/letter-contact".format(service_id),
@@ -461,8 +461,8 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             }
         )
 
-    @cache.delete('service-{service_id}')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
+    # @cache.delete('service-{service_id}')
+    # @cache.delete_by_pattern('service-{service_id}-template-*')
     def update_letter_contact(self, service_id, letter_contact_id, contact_block, is_default=False):
         return self.post(
             "/service/{}/letter-contact/{}".format(
@@ -475,8 +475,8 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             }
         )
 
-    @cache.delete('service-{service_id}')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
+    # @cache.delete('service-{service_id}')
+    # @cache.delete_by_pattern('service-{service_id}-template-*')
     def delete_letter_contact(self, service_id, letter_contact_id):
         return self.post(
             "/service/{}/letter-contact/{}/archive".format(service_id, letter_contact_id),
@@ -493,8 +493,8 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             "/service/{}/sms-sender/{}".format(service_id, sms_sender_id)
         )
 
-    @cache.delete('service-{service_id}')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
+    # @cache.delete('service-{service_id}')
+    # @cache.delete_by_pattern('service-{service_id}-template-*')
     def add_sms_sender(self, service_id, sms_sender, is_default=False, inbound_number_id=None):
         data = {
             "sms_sender": sms_sender,
@@ -504,8 +504,8 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             data["inbound_number_id"] = inbound_number_id
         return self.post("/service/{}/sms-sender".format(service_id), data=data)
 
-    @cache.delete('service-{service_id}')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
+    # @cache.delete('service-{service_id}')
+    # @cache.delete_by_pattern('service-{service_id}-template-*')
     def update_sms_sender(self, service_id, sms_sender_id, sms_sender, is_default=False):
         return self.post(
             "/service/{}/sms-sender/{}".format(service_id, sms_sender_id),
@@ -515,8 +515,8 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             }
         )
 
-    @cache.delete('service-{service_id}')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
+    # @cache.delete('service-{service_id}')
+    # @cache.delete_by_pattern('service-{service_id}-template-*')
     def delete_sms_sender(self, service_id, sms_sender_id):
         return self.post(
             "/service/{}/sms-sender/{}/archive".format(service_id, sms_sender_id),
@@ -530,7 +530,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             )
         )['data']
 
-    @cache.delete('service-{service_id}')
+    # @cache.delete('service-{service_id}')
     def update_service_callback_api(self, service_id, url, bearer_token, user_id, callback_api_id):
         data = {
             "url": url,
@@ -540,13 +540,13 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             data['bearer_token'] = bearer_token
         return self.post("/service/{}/delivery-receipt-api/{}".format(service_id, callback_api_id), data)
 
-    @cache.delete('service-{service_id}')
+    # @cache.delete('service-{service_id}')
     def delete_service_callback_api(self, service_id, callback_api_id):
         return self.delete("/service/{}/delivery-receipt-api/{}".format(
             service_id, callback_api_id
         ))
 
-    @cache.delete('service-{service_id}')
+    # @cache.delete('service-{service_id}')
     def create_service_callback_api(self, service_id, url, bearer_token, user_id):
         data = {
             "url": url,
@@ -555,7 +555,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         }
         return self.post("/service/{}/delivery-receipt-api".format(service_id), data)
 
-    @cache.delete('service-{service_id}-data-retention')
+    # @cache.delete('service-{service_id}-data-retention')
     def create_service_data_retention(self, service_id, notification_type, days_of_retention):
         data = {
             "notification_type": notification_type,
@@ -564,29 +564,29 @@ class ServiceAPIClient(NotifyAdminAPIClient):
 
         return self.post("/service/{}/data-retention".format(service_id), data)
 
-    @cache.delete('service-{service_id}-data-retention')
+    # @cache.delete('service-{service_id}-data-retention')
     def update_service_data_retention(self, service_id, data_retention_id, days_of_retention):
         data = {
             "days_of_retention": days_of_retention
         }
         return self.post("/service/{}/data-retention/{}".format(service_id, data_retention_id), data)
 
-    @cache.set('service-{service_id}-data-retention')
+    # @cache.set('service-{service_id}-data-retention')
     def get_service_data_retention(self, service_id):
         return self.get("/service/{}/data-retention".format(service_id))
 
-    @cache.set('service-{service_id}-returned-letters-statistics')
+    # @cache.set('service-{service_id}-returned-letters-statistics')
     def get_returned_letter_statistics(self, service_id):
         return self.get("service/{}/returned-letter-statistics".format(service_id))
 
-    @cache.set('service-{service_id}-returned-letters-summary')
+    # @cache.set('service-{service_id}-returned-letters-summary')
     def get_returned_letter_summary(self, service_id):
         return self.get("service/{}/returned-letter-summary".format(service_id))
 
     def get_returned_letters(self, service_id, reported_at):
         return self.get("service/{}/returned-letters?reported_at={}".format(service_id, reported_at))
 
-    @cache.delete('service-{service_id}')
+    # @cache.delete('service-{service_id}')
     def set_service_broadcast_settings(
         self, service_id, service_mode, broadcast_channel, provider_restriction, cached_service_user_ids
     ):
