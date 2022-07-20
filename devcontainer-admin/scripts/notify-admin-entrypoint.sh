@@ -36,7 +36,6 @@ if [ ! -d "/node_modules" ]; then
   npm ci install
 fi
 
-# npm ci install
 npm run build
 
 # run flask
