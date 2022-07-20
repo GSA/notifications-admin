@@ -21,7 +21,7 @@ import morphdom from 'morphdom';
  * This seems to fail in IE8, requires more investigation.
  * See: https://github.com/imagitama/nodelist-foreach-polyfill
  */
-function nodeListForEach (nodes, callback) {
+function nodeListForEach(nodes, callback) {
   if (window.NodeList.prototype.forEach) {
     return nodes.forEach(callback)
   }
@@ -32,11 +32,11 @@ function nodeListForEach (nodes, callback) {
 
 // Copy of the initAll function from https://github.com/alphagov/govuk-frontend/blob/v2.13.0/src/all.js
 // except it only includes, and initialises, the components used by this application.
-function initAll (options) {
+function initAll(options) {
   // Set the options to an empty object by default if no options are passed.
   options = typeof options !== 'undefined' ? options : {}
 
-  // Allow the user to initialise GOV.UK Frontend in only certain sections of the page
+  // Allow the user to initialise US Frontend in only certain sections of the page
   // Defaults to the entire document if nothing is set.
   var scope = typeof options.scope !== 'undefined' ? options.scope : document
 
