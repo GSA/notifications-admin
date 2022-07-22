@@ -144,8 +144,8 @@ class Test(Development):
     ANTIVIRUS_API_KEY = 'test-antivirus-secret'
     ANTIVIRUS_ENABLED = True
 
-    ASSET_DOMAIN = 'static.example.com'
-    ASSET_PATH = 'https://static.example.com/'
+    # ASSET_DOMAIN = 'static.example.com'
+    # ASSET_PATH = 'https://static.example.com/'
 
 
 class Preview(Config):
@@ -198,8 +198,10 @@ class Live(Config):
     PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'prototype-letters-precompiled-originals-backup'
     NOTIFY_ENVIRONMENT = 'live'
     CHECK_PROXY_HEADER = False
-    ASSET_DOMAIN = 'static.notifications.service.gov.uk'
-    ASSET_PATH = 'https://static.notifications.service.gov.uk/'
+    # ASSET_DOMAIN = 'static.notifications.service.gov.uk'
+    # ASSET_PATH = 'https://static.notifications.service.gov.uk/'
+    ASSET_DOMAIN = '' # TODO use a CDN
+    ASSET_PATH = '/static/' # TODO use a CDN
     
     REDIS_URL = os.environ.get('REDIS_URL')
     REDIS_ENABLED = True
