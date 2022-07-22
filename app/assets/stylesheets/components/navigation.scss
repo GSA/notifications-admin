@@ -40,7 +40,9 @@
       box-shadow: 0 -3px 0 0 $grey-3;
     }
 
-    &--live, &--test, &--operator {
+    &--live,
+    &--test,
+    &--operator {
       // This uses new Design System colours to match .govuk-tag--red
       background: #F6D7D2;
       color: #942514;
@@ -171,7 +173,8 @@
       text-decoration: underline;
     }
 
-    &:focus { // override the :hover style (the focus style has its own underline)
+    &:focus {
+      // override the :hover style (the focus style has its own underline)
       text-decoration: none;
     }
 
@@ -236,7 +239,8 @@
   &__item--active {
     @include bold-16;
 
-    a:link, a:visited {
+    a:link,
+    a:visited {
       color: $text-colour;
     }
   }

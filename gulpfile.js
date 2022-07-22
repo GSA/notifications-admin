@@ -81,7 +81,10 @@ const copy = {
       _templates.forEach(name => {
         let _src = [
           paths.govuk_frontend + 'components/' + name + '/macro.njk',
-          paths.govuk_frontend + 'components/' + name + '/template.njk'
+          paths.govuk_frontend + 'components/' + name + '/template.njk',
+          paths.govuk_frontend + 'components/' + name + '/_' + name + '.scss',
+          paths.govuk_frontend + 'components/' + name + '/README.md',
+          paths.govuk_frontend + 'components/' + name + '/macro-options.json'
         ];
         let _dest = paths.templates + 'vendor/govuk-frontend/components/' + name;
 
@@ -92,15 +95,15 @@ const copy = {
         }
 
         src(_src)
-        .pipe(
-          dest(_dest)
-          .on('end', () => { // resolve promise if all copied
-            done = done + 1;
-            if (done === _templates.length) {
-              cb();
-            }
-          })
-        )
+          .pipe(
+            dest(_dest)
+              .on('end', () => { // resolve promise if all copied
+                done = done + 1;
+                if (done === _templates.length) {
+                  cb();
+                }
+              })
+          )
       });
     }
   },
@@ -186,10 +189,10 @@ const javascripts = () => {
     paths.src + 'javascripts/homepage.js',
     paths.src + 'javascripts/main.js',
   ])
-  .pipe(plugins.prettyerror())
-  .pipe(plugins.babel({
-    presets: ['@babel/preset-env']
-  }));
+    .pipe(plugins.prettyerror())
+    .pipe(plugins.babel({
+      presets: ['@babel/preset-env']
+    }));
 
   // return single stream of all vinyl objects piped from the end of the vendored stream, then
   // those from the end of the local stream
@@ -202,10 +205,10 @@ const javascripts = () => {
 
 const sass = () => {
   return src([
-      paths.src + '/stylesheets/main*.scss',
-      paths.src + '/stylesheets/map.scss',
-      paths.src + '/stylesheets/print.scss'
-    ])
+    paths.src + '/stylesheets/main*.scss',
+    paths.src + '/stylesheets/map.scss',
+    paths.src + '/stylesheets/print.scss'
+  ])
     .pipe(plugins.prettyerror())
     .pipe(plugins.sass.sync({
       includePaths: [
@@ -228,11 +231,12 @@ const sass = () => {
 
 const images = () => {
   return src([
-      paths.src + 'images/**/*',
-      paths.toolkit + 'images/**/*',
-      paths.template + 'assets/images/**/*',
-      paths.govuk_frontend + 'assets/images/**/*'
-    ])
+    // paths.toolkit + 'images/**/*',
+    // paths.govuk_frontend + 'assets/images/**/*'
+    paths.src + 'images/**/*',
+    paths.template + 'assets/images/**/*'
+    
+  ])
     .pipe(dest(paths.dist + 'images/'))
 };
 
@@ -260,21 +264,21 @@ const watchFiles = {
 const lint = {
   'sass': () => {
     return src([
-        paths.src + 'stylesheets/*.scss',
-        paths.src + 'stylesheets/components/*.scss',
-        paths.src + 'stylesheets/views/*.scss',
-      ])
+      paths.src + 'stylesheets/*.scss',
+      paths.src + 'stylesheets/components/*.scss',
+      paths.src + 'stylesheets/views/*.scss',
+    ])
       .pipe(plugins.sassLint({
         'options': { 'formatter': 'stylish' },
-        'rules': { 'mixins-before-declarations': [2, { 'exclude': ['media', 'govuk-media-query'] } ] }
+        'rules': { 'mixins-before-declarations': [2, { 'exclude': ['media', 'govuk-media-query'] }] }
       }))
       .pipe(plugins.sassLint.format())
       .pipe(plugins.sassLint.failOnError());
   },
   'js': (cb) => {
     return src(
-        paths.src + 'javascripts/**/*.js'
-      )
+      paths.src + 'javascripts/**/*.js'
+    )
       .pipe(plugins.jshint())
       .pipe(plugins.jshint.reporter(stylish))
       .pipe(plugins.jshint.reporter('fail'))
@@ -285,10 +289,10 @@ const lint = {
 // Default: compile everything
 const defaultTask = parallel(
   parallel(
-    copy.govuk_frontend.fonts,
-    copy.govuk_frontend.templates,
-    images,
-    copy.leaflet.js
+    // copy.govuk_frontend.fonts,
+    // copy.govuk_frontend.templates,
+    // copy.leaflet.js,
+    images
   ),
   series(
     copy.error_pages,

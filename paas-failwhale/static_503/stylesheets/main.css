@@ -2927,6 +2927,10 @@ a:focus {
     margin-right: 0px
 }
 
+.govuk-header__logotype-text {
+    margin-left: 5px
+}
+
 .govuk-header__logotype-crown {
     margin-right: 1px;
     fill: currentColor;
