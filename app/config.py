@@ -11,6 +11,8 @@ if os.environ.get('VCAP_APPLICATION'):
 
 
 class Config(object):
+    NOTIFY_ADMIN_API_CACHE_ENABLED = False # TODO: remove when redis is fixed on remote
+    
     ADMIN_CLIENT_SECRET = os.environ.get('ADMIN_CLIENT_SECRET')
     ADMIN_CLIENT_USER_NAME = os.environ.get('ADMIN_CLIENT_USERNAME')
     API_HOST_NAME = os.environ.get('API_HOST_NAME', 'localhost')
@@ -41,7 +43,7 @@ class Config(object):
     HEADER_COLOUR = '#81878b'  # mix(govuk-colour("dark-grey"), govuk-colour("mid-grey"))
     HTTP_PROTOCOL = 'http'
     NOTIFY_APP_NAME = 'admin'
-    NOTIFY_LOG_LEVEL = os.environ.get('NOTIFY_LOG_LEVEL', 'DEBUG')
+    NOTIFY_LOG_LEVEL = os.environ.get('NOTIFY_LOG_LEVEL', 'INFO')
     PERMANENT_SESSION_LIFETIME = 20 * 60 * 60  # 20 hours
     SEND_FILE_MAX_AGE_DEFAULT = 365 * 24 * 60 * 60  # 1 year
     SESSION_COOKIE_HTTPONLY = True

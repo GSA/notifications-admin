@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from flask import current_app
 from notifications_utils.clients.redis import daily_limit_cache_key
 
 from app.extensions import redis_client
@@ -138,7 +138,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
     # @cache.delete('service-{service_id}-templates')
     # @cache.delete_by_pattern('service-{service_id}-template-*')
     def archive_service(self, service_id, cached_service_user_ids):
-        if cached_service_user_ids:
+        if cached_service_user_ids and current_app.config['NOTIFY_ADMIN_API_CACHE_ENABLED']:
             redis_client.delete(*map('user-{}'.format, cached_service_user_ids))
         return self.post('/service/{}/archive'.format(service_id), data=None)
 
@@ -595,7 +595,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         broadcast channel is one of "operator", "test", "severe", "government"
         provider_restriction is one of "all", "three", "o2", "vodafone", "ee"
         """
-        if cached_service_user_ids:
+        if cached_service_user_ids and current_app.config['NOTIFY_ADMIN_API_CACHE_ENABLED']:
             redis_client.delete(*map('user-{}'.format, cached_service_user_ids))
 
         data = {
@@ -607,8 +607,12 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         return self.post("/service/{}/set-as-broadcast-service".format(service_id), data)
 
     def get_notification_count(self, service_id):
-        # if cache is not set return 0
-        count = redis_client.get(daily_limit_cache_key(service_id)) or 0
+        # if cache is not set, or not enabled, return 0
+        
+        if current_app.config['NOTIFY_ADMIN_API_CACHE_ENABLED']:
+            count = redis_client.get(daily_limit_cache_key(service_id)) or 0
+        else:
+            count = 0
         return int(count)
 
 

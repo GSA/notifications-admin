@@ -45,7 +45,7 @@ def s3download(service_id, upload_id, bucket=None):
 
 
 def set_metadata_on_csv_upload(service_id, upload_id, bucket=None, **kwargs):
-    get_csv_upload(
+    copy_from_object_result = get_csv_upload(
         service_id, upload_id, bucket=bucket
     ).copy_from(
         CopySource='{}/{}'.format(*get_csv_location(service_id, upload_id, bucket=bucket)),
@@ -55,6 +55,7 @@ def set_metadata_on_csv_upload(service_id, upload_id, bucket=None, **kwargs):
         },
         MetadataDirective='REPLACE',
     )
+    return copy_from_object_result
 
 
 def get_csv_metadata(service_id, upload_id, bucket=None):

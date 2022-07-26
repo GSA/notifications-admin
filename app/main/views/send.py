@@ -598,12 +598,11 @@ def send_from_contact_list(service_id, template_id, contact_list_id):
 
 
 def _check_messages(service_id, template_id, upload_id, preview_row, letters_as_pdf=False):
-
     try:
         # The happy path is that the job doesn’t already exist, so the
         # API will return a 404 and the client will raise HTTPError.
         job_api_client.get_job(service_id, upload_id)
-
+        
         # the job exists already - so go back to the templates page
         # If we just return a `redirect` (302) object here, we'll get
         # errors when we try and unpack in the check_messages route.
@@ -681,6 +680,7 @@ def _check_messages(service_id, template_id, upload_id, preview_row, letters_as_
 
     page_count = get_page_count_for_letter(db_template, template.values)
     template.page_count = page_count
+    
     original_file_name = get_csv_metadata(service_id, upload_id).get('original_file_name', '')
 
     return dict(
@@ -720,7 +720,6 @@ def _check_messages(service_id, template_id, upload_id, preview_row, letters_as_
 )
 @user_has_permissions('send_messages', restrict_admin_usage=True)
 def check_messages(service_id, template_id, upload_id, row_index=2):
-
     data = _check_messages(service_id, template_id, upload_id, row_index)
     data['allowed_file_extensions'] = Spreadsheet.ALLOWED_FILE_EXTENSIONS
 
@@ -1049,7 +1048,6 @@ def send_notification(service_id, template_id):
             sender_id=session.get('sender_id', None),
         )
     except HTTPError as exception:
-        current_app.logger.info('Service {} could not send notification: "{}"'.format(
             current_service.id,
             exception.message
         ))
