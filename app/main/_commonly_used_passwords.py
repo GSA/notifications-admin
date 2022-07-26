@@ -1,9 +1,8 @@
 commonly_used_passwords = [
-    'govuknotify',
-    'GOVUKnotify',
-    'GOV.UK Notify',
-    'GOV.UK notify',
-    'gov.uk notify'
+    'usnotify',
+    'USnotify',
+    'us Notify',
+    'us notify'
 ] + [
     '11111111',
     '12345678',

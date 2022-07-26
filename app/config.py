@@ -103,13 +103,15 @@ class Development(Config):
     DEBUG = True
     SESSION_COOKIE_SECURE = False
     SESSION_PROTECTION = None
-    CSV_UPLOAD_BUCKET_NAME = 'local-notifications-csv-upload'
-    CONTACT_LIST_UPLOAD_BUCKET_NAME = 'local-contact-list'
-    LOGO_UPLOAD_BUCKET_NAME = 'public-logos-tools'
-    LOGO_CDN_DOMAIN = 'static-logos.notify.tools'
-    MOU_BUCKET_NAME = 'notify.tools-mou'
-    TRANSIENT_UPLOADED_LETTERS = 'development-transient-uploaded-letters'
-    PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'development-letters-precompiled-originals-backup'
+    
+    # Buckets
+    CSV_UPLOAD_BUCKET_NAME = 'local-notifications-csv-upload' # created in gsa sandbox
+    CONTACT_LIST_UPLOAD_BUCKET_NAME = 'local-contact-list' # created in gsa sandbox
+    LOGO_UPLOAD_BUCKET_NAME = 'local-public-logos-tools' # created in gsa sandbox
+    MOU_BUCKET_NAME = 'local-notify-tools-mou' # created in gsa sandbox
+    TRANSIENT_UPLOADED_LETTERS = 'development-transient-uploaded-letters' # not created in gsa sandbox
+    PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'development-letters-precompiled-originals-backup' # not created in gsa sandbox
+    
     ADMIN_CLIENT_SECRET = os.environ.get('ADMIN_CLIENT_SECRET')
     # check for local compose orchestration variable
     API_HOST_NAME = os.environ.get('DEV_API_HOST_NAME', 'http://dev:6011')
@@ -117,9 +119,10 @@ class Development(Config):
     SECRET_KEY = 'dev-notify-secret-key'
     ANTIVIRUS_API_HOST = 'http://localhost:6016'
     ANTIVIRUS_API_KEY = 'test-key'
-    ANTIVIRUS_ENABLED = os.getenv('ANTIVIRUS_ENABLED') == '1'
+    ANTIVIRUS_ENABLED = os.environ.get('ANTIVIRUS_ENABLED') == '1'
 
     ASSET_PATH = '/static/'
+    LOGO_CDN_DOMAIN = 'static-logos.notify.tools' # replace with our own CDN
 
     REDIS_URL = os.environ.get('DEV_REDIS_URL', 'http://redis:6379')
     REDIS_ENABLED = True
@@ -144,8 +147,8 @@ class Test(Development):
     ANTIVIRUS_API_KEY = 'test-antivirus-secret'
     ANTIVIRUS_ENABLED = True
 
-    ASSET_DOMAIN = 'static.example.com'
-    ASSET_PATH = 'https://static.example.com/'
+    # ASSET_DOMAIN = 'static.example.com'
+    # ASSET_PATH = 'https://static.example.com/'
 
 
 class Preview(Config):
@@ -189,17 +192,21 @@ class Live(Config):
     BASIC_AUTH_FORCE = True
     HEADER_COLOUR = '#005EA5'  # $govuk-blue
     HTTP_PROTOCOL = 'https'
-    CSV_UPLOAD_BUCKET_NAME = 'notifications.prototype.csv_upload'
-    CONTACT_LIST_UPLOAD_BUCKET_NAME = 'notifications.prototype.contact_list_upload'
-    LOGO_UPLOAD_BUCKET_NAME = 'notifications.prototype.logo_upload'
-    LOGO_CDN_DOMAIN = 'static-logos.notifications.service.gov.uk'
-    MOU_BUCKET_NAME = 'notifications.prototype.mou'
-    TRANSIENT_UPLOADED_LETTERS = 'prototype-transient-uploaded-letters'
-    PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'prototype-letters-precompiled-originals-backup'
+    # buckets
+    CSV_UPLOAD_BUCKET_NAME = 'notifications-prototype-csv-upload' # created in gsa sandbox
+    CONTACT_LIST_UPLOAD_BUCKET_NAME = 'notifications-prototype-contact-list-upload' # created in gsa sandbox
+    LOGO_UPLOAD_BUCKET_NAME = 'notifications-prototype-logo-upload' # created in gsa sandbox
+    MOU_BUCKET_NAME = 'notifications-prototype-mou' # created in gsa sandbox
+    TRANSIENT_UPLOADED_LETTERS = 'prototype-transient-uploaded-letters' # not created in gsa sandbox
+    PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'prototype-letters-precompiled-originals-backup' # not created in gsa sandbox
+    
     NOTIFY_ENVIRONMENT = 'live'
     CHECK_PROXY_HEADER = False
-    ASSET_DOMAIN = 'static.notifications.service.gov.uk'
-    ASSET_PATH = 'https://static.notifications.service.gov.uk/'
+    # ASSET_DOMAIN = 'static.notifications.service.gov.uk'
+    # ASSET_PATH = 'https://static.notifications.service.gov.uk/'
+    ASSET_DOMAIN = '' # TODO use a CDN
+    ASSET_PATH = '/static/' # TODO use a CDN
+    LOGO_CDN_DOMAIN = 'static-logos.notifications.service.gov.uk' # TODO use our own CDN
     
     REDIS_URL = os.environ.get('REDIS_URL')
     REDIS_ENABLED = True
