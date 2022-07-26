@@ -13,7 +13,11 @@ LETTER_TEMP_LOGO_LOCATION = 'letters/static/images/letter-template/temp-{user_id
 
 def get_s3_object(bucket_name, filename):
     s3 = resource('s3')
-    return s3.Object(bucket_name, filename)
+    current_app.logger.info('Requesting s3 object from bucket: {} with key: {}'.format(bucket_name, filename))
+    obj = s3.Object(bucket_name, filename)
+    string_body = obj.get()['Body'].read().decode('utf-8') 
+    current_app.logger.info('s3 Object string body is: {}'.format(string_body))
+    return obj
 
 
 def delete_s3_object(filename):

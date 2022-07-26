@@ -48,7 +48,7 @@ class TemplateFolderAPIClient(NotifyAdminAPIClient):
             'folders': list(folder_ids),
         })
 
-        if template_ids:
+        if template_ids and current_app.config['NOTIFY_ADMIN_API_CACHE_ENABLED']:
             redis_client.delete(*(f'service-{service_id}-template-{id}-version-None' for id in template_ids))
 
     # @cache.delete('service-{service_id}-template-folders')

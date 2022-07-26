@@ -3,7 +3,7 @@ import re
 from collections import OrderedDict
 from datetime import datetime
 
-from flask import abort, flash, redirect, render_template, request, url_for
+from flask import abort, flash, redirect, render_template, request, url_for, current_app
 from notifications_python_client.errors import HTTPError
 
 from app import (
@@ -460,12 +460,13 @@ def platform_admin_returned_letters():
 
         try:
             letter_jobs_client.submit_returned_letters(references)
-            redis_client.delete_by_pattern(
-                'service-????????-????-????-????-????????????-returned-letters-statistics'
-            )
-            redis_client.delete_by_pattern(
-                'service-????????-????-????-????-????????????-returned-letters-summary'
-            )
+            if current_app.config['NOTIFY_ADMIN_API_CACHE_ENABLED']:
+                redis_client.delete_by_pattern(
+                    'service-????????-????-????-????-????????????-returned-letters-statistics'
+                )
+                redis_client.delete_by_pattern(
+                    'service-????????-????-????-????-????????????-returned-letters-summary'
+                )
         except HTTPError as error:
             if error.status_code == 400:
                 error_references = [
@@ -538,10 +539,13 @@ def clear_cache():
         groups = map(CACHE_KEYS.get, group_keys)
         patterns = list(itertools.chain(*groups))
 
-        num_deleted = sum(
-            redis_client.delete_by_pattern(pattern)
-            for pattern in patterns
-        )
+        if current_app.config['NOTIFY_ADMIN_API_CACHE_ENABLED']:
+            num_deleted = sum(
+                redis_client.delete_by_pattern(pattern)
+                for pattern in patterns
+            )
+        else:
+            num_deleted = 0
 
         msg = (
             f'Removed {num_deleted} objects '
