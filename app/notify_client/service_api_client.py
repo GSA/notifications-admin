@@ -607,10 +607,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         return self.post("/service/{}/set-as-broadcast-service".format(service_id), data)
 
     def get_notification_count(self, service_id):
-        # if cache is not set return 0
-        current_app.logger.info("Pinging redis for daily_limit_cache_key(service_id): {}".format(daily_limit_cache_key(service_id)))
-        current_app.logger.info("Redis url is: {}".format( current_app.config['REDIS_URL'] ))
-        current_app.logger.info("Redis enabled is: {}".format( current_app.config['REDIS_ENABLED'] ))
+        # if cache is not set, or not enabled, return 0
         
         if current_app.config['NOTIFY_ADMIN_API_CACHE_ENABLED']:
             count = redis_client.get(daily_limit_cache_key(service_id)) or 0

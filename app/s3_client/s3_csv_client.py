@@ -46,8 +46,6 @@ def s3download(service_id, upload_id, bucket=None):
 
 
 def set_metadata_on_csv_upload(service_id, upload_id, bucket=None, **kwargs):
-    current_app.logger.info('set_metadata_on_csv_upload, service_id: {} upload_id: {} bucket: {}'.format(service_id, upload_id, bucket))
-    current_app.logger.info('csv location to copy from is: {}/{}'.format(*get_csv_location(service_id, upload_id, bucket=bucket)))
     copy_from_object_result = get_csv_upload(
         service_id, upload_id, bucket=bucket
     ).copy_from(

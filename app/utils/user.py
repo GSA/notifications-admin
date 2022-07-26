@@ -19,12 +19,9 @@ def user_has_permissions(*permissions, **permission_kwargs):
     def wrap(func):
         @wraps(func)
         def wrap_func(*args, **kwargs):
-            current_app.logger.info('Checking user permissions')
             if not current_user.is_authenticated:
-                current_app.logger.info('User is not authenticated')
                 return current_app.login_manager.unauthorized()
             if not current_user.has_permissions(*permissions, **permission_kwargs):
-                current_app.logger.info('Authenticated user does not have appropriate permissions')
                 abort(403)
             return func(*args, **kwargs)
         return wrap_func

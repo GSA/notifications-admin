@@ -598,14 +598,11 @@ def send_from_contact_list(service_id, template_id, contact_list_id):
 
 
 def _check_messages(service_id, template_id, upload_id, preview_row, letters_as_pdf=False):
-    current_app.logger.info('Running _check_messages')
     try:
         # The happy path is that the job doesn’t already exist, so the
         # API will return a 404 and the client will raise HTTPError.
-        current_app.logger.info('Requesting job from api with upload_id/job_id: {}'.format(upload_id))
         job_api_client.get_job(service_id, upload_id)
-    
-        current_app.logger.info('Job already exists for upload_id/job_id: {}, sending 302'.format(upload_id))
+        
         # the job exists already - so go back to the templates page
         # If we just return a `redirect` (302) object here, we'll get
         # errors when we try and unpack in the check_messages route.
@@ -616,25 +613,15 @@ def _check_messages(service_id, template_id, upload_id, preview_row, letters_as_
             template_id=template_id
         ))
     except HTTPError as e:
-        current_app.logger.info('Job does not exist for upload_id/job_id: {}'.format(upload_id))
         if e.status_code != 404:
-            current_app.logger.info('Expected 404 when fetching job with upload_id/job_id: {}, instead got: {}'.format(upload_id, e.status_code))
             raise
 
-    current_app.logger.info('_check_messages is now evaluating uploaded file')
-
     notification_count = service_api_client.get_notification_count(service_id)
-    current_app.logger.info('_check_messages notification_count is {}'.format(notification_count))
     remaining_messages = (current_service.message_limit - notification_count)
-    current_app.logger.info('_check_messages remaining_messages is {}'.format(remaining_messages))
 
     contents = s3download(service_id, upload_id)
-    
-    current_app.logger.info('_check_messages obtained file contents' )
 
     db_template = current_service.get_template_with_user_permission_or_403(template_id, current_user)
-    
-    current_app.logger.info('_check_messages got db template with type: {}'.format(db_template['template_type']))
 
     email_reply_to = None
     sms_sender = None
@@ -642,8 +629,6 @@ def _check_messages(service_id, template_id, upload_id, preview_row, letters_as_
         email_reply_to = get_email_reply_to_address_from_session()
     elif db_template['template_type'] == 'sms':
         sms_sender = get_sms_sender_from_session()
-
-    current_app.logger.info('_check_messages creating template from db_template')
 
     template = get_template(
         db_template,
@@ -664,7 +649,6 @@ def _check_messages(service_id, template_id, upload_id, preview_row, letters_as_
         # recalculate the page count once we have the values
         page_count=get_page_count_for_letter(db_template),
     )
-    current_app.logger.info('_check_messages creating recipients from file contents')
     recipients = RecipientCSV(
         contents,
         template=template,
@@ -697,10 +681,8 @@ def _check_messages(service_id, template_id, upload_id, preview_row, letters_as_
     page_count = get_page_count_for_letter(db_template, template.values)
     template.page_count = page_count
     
-    current_app.logger.info('_check_messages getting csv metadata')
     original_file_name = get_csv_metadata(service_id, upload_id).get('original_file_name', '')
 
-    current_app.logger.info('_check_messages returning dict')
     return dict(
         recipients=recipients,
         template=template,
@@ -738,7 +720,6 @@ def _check_messages(service_id, template_id, upload_id, preview_row, letters_as_
 )
 @user_has_permissions('send_messages', restrict_admin_usage=True)
 def check_messages(service_id, template_id, upload_id, row_index=2):
-    current_app.logger.info('Check messages, getting data from upload with id {}'.format(upload_id))
     data = _check_messages(service_id, template_id, upload_id, row_index)
     data['allowed_file_extensions'] = Spreadsheet.ALLOWED_FILE_EXTENSIONS
 
@@ -750,21 +731,17 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
         or data['recipients'].missing_column_headers
         or data['sent_previously']
     ):
-        current_app.logger.info('Found column errors in upload')
         return render_template('views/check/column-errors.html', **data)
 
     if data['row_errors']:
-        current_app.logger.info('Found row errors in upload')
         return render_template('views/check/row-errors.html', **data)
 
     if (
         data['errors']
         or data['trying_to_send_letters_in_trial_mode']
     ):
-        current_app.logger.info('Found other errors in upload')
         return render_template('views/check/column-errors.html', **data)
 
-    current_app.logger.info('Writing upload metadata')
     metadata_kwargs = {
         'notification_count': data['count_of_recipients'],
         'template_id': template_id,
@@ -776,10 +753,8 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
         # sender_id is not an option for sending letters.
         metadata_kwargs['sender_id'] = session['sender_id']
 
-    current_app.logger.info('Setting upload metadata')
     set_metadata_on_csv_upload(service_id, upload_id, **metadata_kwargs)
 
-    current_app.logger.info('Returning 200 from check messages')
     return render_template('views/check/ok.html', **data)
 
 
@@ -793,13 +768,11 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
 )
 @user_has_permissions('send_messages')
 def check_messages_preview(service_id, template_id, upload_id, filetype, row_index=2):
-    current_app.logger.info('Check messages preview, checking filetype')
     if filetype == 'pdf':
         page = None
     elif filetype == 'png':
         page = request.args.get('page', 1)
     else:
-        current_app.logger.info('Check messages preview, filetype is neither pdf nor png, so we return 404')
         abort(404)
 
     template = _check_messages(
@@ -1075,7 +1048,6 @@ def send_notification(service_id, template_id):
             sender_id=session.get('sender_id', None),
         )
     except HTTPError as exception:
-        current_app.logger.info('Service {} could not send notification: "{}"'.format(
             current_service.id,
             exception.message
         ))
