@@ -17,8 +17,7 @@ def get_csv_location(service_id, upload_id, bucket=None):
 
 
 def get_csv_upload(service_id, upload_id, bucket=None):
-    s3_object = get_s3_object(*get_csv_location(service_id, upload_id, bucket))
-    return s3_object
+    return get_s3_object(*get_csv_location(service_id, upload_id, bucket))
 
 
 def s3upload(service_id, filedata, region, bucket=None):

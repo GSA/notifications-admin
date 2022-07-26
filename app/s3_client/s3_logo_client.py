@@ -12,9 +12,9 @@ LETTER_TEMP_LOGO_LOCATION = 'letters/static/images/letter-template/temp-{user_id
 
 
 def get_s3_object(bucket_name, filename):
+    # To inspect contents: obj.get()['Body'].read().decode('utf-8')
     s3 = resource('s3')
     obj = s3.Object(bucket_name, filename)
-    string_body = obj.get()['Body'].read().decode('utf-8')
     return obj
 
 
