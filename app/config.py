@@ -11,7 +11,7 @@ if os.environ.get('VCAP_APPLICATION'):
 
 
 class Config(object):
-    NOTIFY_ADMIN_API_CACHE_ENABLED = False
+    NOTIFY_ADMIN_API_CACHE_ENABLED = False # TODO: remove when redis is fixed on remote
     
     ADMIN_CLIENT_SECRET = os.environ.get('ADMIN_CLIENT_SECRET')
     ADMIN_CLIENT_USER_NAME = os.environ.get('ADMIN_CLIENT_USERNAME')
