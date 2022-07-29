@@ -18,9 +18,12 @@
 {% block maincolumn_content %}
 
     {{ page_header('{} text message template'.format(heading_action)) }}
+    <p class="govuk-body">
+      Don't worry, saving the template will not send ⛔
+    </p>
 
     {% if current_service.prefix_sms %}
-      {% set content_hint = 'Your message will start with your service name' %}
+      {% set content_hint = 'Your service name will be added to the start of your message. You can turn this off in Settings.' %}
     {% endif %}
 
     {% call form_wrapper() %}
@@ -36,7 +39,8 @@
             width='1-1',
             hint=content_hint,
             rows=5,
-            extra_form_group_classes='govuk-!-margin-bottom-2'
+            extra_form_group_classes='govuk-!-margin-bottom-2',
+            placeholder='Edit me! Check out the Personalization section below for details on cool ((stuff)) you can do with your messages!'
           ) }}
           {% if current_user.platform_admin %}
             {{ form.process_type }}
@@ -49,6 +53,9 @@
             </div>
           </div>
           {{ page_footer('Save') }}
+          <p class="form-hint">
+            After saving, you'll have the option to send 🚀
+          </p>
         </div>
         <div class="govuk-grid-column-full">
           {% include "partials/templates/guidance-personalisation.html" %}

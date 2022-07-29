@@ -2152,9 +2152,9 @@ def get_placeholder_form_instance(
         template_type == 'sms'
     ):
         if allow_international_phone_numbers:
-            field = international_phone_number(label=placeholder_name)
+            field = international_phone_number(label=placeholder_name) # TODO: modify as necessary for non-us numbers
         else:
-            field = uk_mobile_number(label=placeholder_name)
+            field = uk_mobile_number(label=placeholder_name) # TODO: replace with us_mobile_number
     else:
         field = GovukTextInputField(placeholder_name, validators=[
             DataRequired(message='Cannot be empty')
@@ -2374,7 +2374,7 @@ class TemplateAndFoldersSelectionForm(Form):
         self.add_template_by_template_type.choices = list(filter(None, [
             ('email', 'Email') if 'email' in available_template_types else None,
             ('sms', 'Text message') if 'sms' in available_template_types else None,
-            ('letter', 'Letter') if 'letter' in available_template_types else None,
+            # ('letter', 'Letter') if 'letter' in available_template_types else None,
             ('broadcast', 'Broadcast') if 'broadcast' in available_template_types else None,
             ('copy-existing', 'Copy an existing template') if allow_adding_copy_of_template else None,
         ]))

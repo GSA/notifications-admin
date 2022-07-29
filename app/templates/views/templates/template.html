@@ -31,6 +31,9 @@
   {% else %}
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
+        <h1 class="heading-large folder-heading">
+          Review your message
+        </h1>
         {{ folder_path(
           folders=current_service.get_template_path(template._template),
           service_id=current_service.id,
@@ -44,13 +47,6 @@
   <div class="govuk-grid-row">
     {% include 'views/templates/_template.html' %}
   </div>
-
-  {% if template.template_type != 'broadcast' %}
-    <div class="bottom-gutter-1-2">
-      {{ copy_to_clipboard(template.id, name="Template ID", thing='template ID') }}
-    </div>
-  {% endif %}
-
   <div class="bottom-gutter-1-2">
     {% if template._template.updated_at %}
       <h2 class="heading-small bottom-gutter-2-3 heading-inline">
@@ -67,6 +63,8 @@
     {% endif %}
     {% if current_user.has_permissions('manage_templates') and user_has_template_permission %}
       {% if not template._template.archived %}
+        <br/>
+        <br/>
         <span class="page-footer-link page-footer-delete-link-without-button bottom-gutter-2-3">
           <a class="govuk-link govuk-link--destructive" href="{{ url_for('.delete_service_template', service_id=current_service.id, template_id=template.id) }}">Delete this template</a>
         </span>
@@ -83,5 +81,11 @@
       {% endif %}
     {% endif %}
   </div>
+
+  {% if template.template_type != 'broadcast' %}
+    <div class="bottom-gutter-1-2" style="display:none">
+      {{ copy_to_clipboard(template.id, name="Template ID", thing='template ID') }}
+    </div>
+  {% endif %}
 
 {% endblock %}

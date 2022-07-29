@@ -16,6 +16,8 @@
 
   {{ page_header(page_title) }}
 
+  {{ template|string }}
+
   {% call form_wrapper(
     class='js-stick-at-top-when-scrolling send-one-off-form' if template.template_type != 'sms' else 'send-one-off-form',
     module="autofocus",
@@ -47,6 +49,6 @@
     {{ page_footer('Continue') }}
   {% endcall %}
 
-  {{ template|string }}
+  
 
 {% endblock %}

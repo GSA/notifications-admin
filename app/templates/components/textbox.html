@@ -12,7 +12,8 @@
   suffix=None,
   safe_error_message=False,
   rows=8,
-  extra_form_group_classes=''
+  extra_form_group_classes='',
+  placeholder=''
 ) %}
   <div
     class="form-group{% if field.errors %} form-group-error{% endif %} {{ extra_form_group_classes }}"
@@ -52,6 +53,7 @@
       data_module='enhanced-textbox' if highlight_placeholders or autosize else '',
       data_highlight_placeholders='true' if highlight_placeholders else 'false',
       rows=rows|string,
+      placeholder=placeholder,
       **kwargs
     ) }}
     {% if suffix %}
