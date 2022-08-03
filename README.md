@@ -19,7 +19,7 @@ NOTE: Set up the [notifications-api repo](https://github.com/18F/notifications-a
 
 # make sure your docker daemon is running
 
-# Using the command pallette (cmd+p), search "Remote Containers: Open folder in project" 
+# Using the command pallette (cmd+shift+p), search "Remote Containers: Open folder in project" 
 # choose devcontainer-admin folder, after reload, hit "show logs" in bottom-right
 # logs should complete shortly after running gulp.js and compiling front-end files
 
