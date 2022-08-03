@@ -7,7 +7,7 @@
 
 {% extends "withnav_template.html" %}
 
-{% set page_title = 'Templates' %}
+{% set page_title = 'Create your messages here' %}
 
 {% block service_page_title %}
   {{ page_title_folder_path(template_folder_path) }}
@@ -20,6 +20,7 @@
      {{ page_header(page_title, size='medium') }}
 
      <p class="govuk-body">
+        Every message starts with a template. You can change it later.
        {% if current_service.has_permission('broadcast') %}
           You haven’t added any templates yet.
        {% else %}
@@ -36,6 +37,10 @@
 
     <div class="govuk-grid-row">
       <div class="{% if current_user.has_permissions('manage_templates') %} govuk-grid-column-five-sixths {% else %} govuk-grid-column-full {% endif %}">
+        <p class="govuk-body">
+          <br>
+          🚨 Every message starts with a template. To send, choose or create a template.
+        </p>
         {{ folder_path(
           folders=template_folder_path,
           service_id=current_service.id,

@@ -117,5 +117,5 @@ logs/**
 
 # Files/folders created by build so not present in .cfignore
 app/version.py
-app/static
-app/templates/vendor
+# app/static # is generated at build time, TODO: de-UKify and ignore again
+# app/templates/vendor # is generated at build time, TODO: de-UKify and ignore again
