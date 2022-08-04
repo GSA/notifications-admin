@@ -231,11 +231,11 @@ const sass = () => {
 
 const images = () => {
   return src([
-    // paths.toolkit + 'images/**/*',
-    // paths.govuk_frontend + 'assets/images/**/*'
+    paths.toolkit + 'images/**/*',
+    paths.govuk_frontend + 'assets/images/**/*',
     paths.src + 'images/**/*',
     paths.template + 'assets/images/**/*'
-    
+
   ])
     .pipe(dest(paths.dist + 'images/'))
 };
