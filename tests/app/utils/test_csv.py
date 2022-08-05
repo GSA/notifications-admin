@@ -78,13 +78,13 @@ def _get_notifications_csv_mock(
     (
         None, [
             'Recipient,Reference,Template,Type,Sent by,Sent by email,Job,Status,Time\n',
-            'foo@bar.com,ref 1234,foo,sms,,sender@email.gov.uk,,Delivered,1943-04-19 12:00:00\r\n',
+            'foo@bar.com,ref 1234,foo,sms,,sender@email.gsa.gov,,Delivered,1943-04-19 12:00:00\r\n',
         ]
     ),
     (
         'Anne Example', [
             'Recipient,Reference,Template,Type,Sent by,Sent by email,Job,Status,Time\n',
-            'foo@bar.com,ref 1234,foo,sms,Anne Example,sender@email.gov.uk,,Delivered,1943-04-19 12:00:00\r\n',
+            'foo@bar.com,ref 1234,foo,sms,Anne Example,sender@email.gsa.gov,,Delivered,1943-04-19 12:00:00\r\n',
         ]
     ),
 ])
@@ -98,7 +98,7 @@ def test_generate_notifications_csv_without_job(
         'app.notification_api_client.get_notifications_for_service',
         side_effect=_get_notifications_csv(
             created_by_name=created_by_name,
-            created_by_email_address="sender@email.gov.uk",
+            created_by_email_address="sender@email.gsa.gov",
             job_id=None,
             job_name=None
         )

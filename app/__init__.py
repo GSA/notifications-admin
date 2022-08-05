@@ -137,6 +137,7 @@ csrf = CSRFProtect()
 metrics = GDSMetrics()
 basic_auth = CustomBasicAuth()
 
+
 # The current service attached to the request stack.
 def _get_current_service():
     return _lookup_req_object('service')
@@ -589,6 +590,7 @@ def init_jinja(application):
     ]
     jinja_loader = jinja2.FileSystemLoader(template_folders)
     application.jinja_loader = jinja_loader
+
 
 def setup_basic_auth(application):
     application.basic_auth = CustomBasicAuth(application)

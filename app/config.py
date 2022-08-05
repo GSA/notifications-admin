@@ -11,8 +11,8 @@ if os.environ.get('VCAP_APPLICATION'):
 
 
 class Config(object):
-    NOTIFY_ADMIN_API_CACHE_ENABLED = False # TODO: remove when redis is fixed on remote
-    
+    NOTIFY_ADMIN_API_CACHE_ENABLED = False  # TODO: remove when redis is fixed on remote
+
     ADMIN_CLIENT_SECRET = os.environ.get('ADMIN_CLIENT_SECRET')
     ADMIN_CLIENT_USER_NAME = os.environ.get('ADMIN_CLIENT_USERNAME')
     API_HOST_NAME = os.environ.get('API_HOST_NAME', 'localhost')
@@ -72,7 +72,7 @@ class Config(object):
 
     REDIS_URL = os.environ.get('REDIS_URL')
     REDIS_ENABLED = True
-    
+
     BASIC_AUTH_USERNAME = os.environ.get('BASIC_AUTH_USERNAME')
     BASIC_AUTH_PASSWORD = os.environ.get('BASIC_AUTH_PASSWORD')
     BASIC_AUTH_FORCE = True
@@ -83,6 +83,7 @@ class Config(object):
     # as defined in api db migration 0331_add_broadcast_org.py
     BROADCAST_ORGANISATION_ID = '38e4bf69-93b0-445d-acee-53ea53fe02df'
 
+    # TODO: reassign this
     NOTIFY_SERVICE_ID = 'd6aa2c68-a2d9-4437-ab19-3ae8eb202553'
 
     NOTIFY_BILLING_DETAILS = json.loads(
@@ -106,15 +107,15 @@ class Development(Config):
     DEBUG = True
     SESSION_COOKIE_SECURE = False
     SESSION_PROTECTION = None
-    
+
     # Buckets
-    CSV_UPLOAD_BUCKET_NAME = 'local-notifications-csv-upload' # created in gsa sandbox
-    CONTACT_LIST_UPLOAD_BUCKET_NAME = 'local-contact-list' # created in gsa sandbox
-    LOGO_UPLOAD_BUCKET_NAME = 'local-public-logos-tools' # created in gsa sandbox
-    MOU_BUCKET_NAME = 'local-notify-tools-mou' # created in gsa sandbox
-    TRANSIENT_UPLOADED_LETTERS = 'development-transient-uploaded-letters' # not created in gsa sandbox
-    PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'development-letters-precompiled-originals-backup' # not created in gsa sandbox
-    
+    CSV_UPLOAD_BUCKET_NAME = 'local-notifications-csv-upload'  # created in gsa sandbox
+    CONTACT_LIST_UPLOAD_BUCKET_NAME = 'local-contact-list'  # created in gsa sandbox
+    LOGO_UPLOAD_BUCKET_NAME = 'local-public-logos-tools'  # created in gsa sandbox
+    MOU_BUCKET_NAME = 'local-notify-tools-mou'  # created in gsa sandbox
+    TRANSIENT_UPLOADED_LETTERS = 'development-transient-uploaded-letters'  # not created in gsa sandbox
+    PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'development-letters-precompiled-originals-backup'  # not created in sandbox
+
     ADMIN_CLIENT_SECRET = os.environ.get('ADMIN_CLIENT_SECRET')
     # check for local compose orchestration variable
     API_HOST_NAME = os.environ.get('DEV_API_HOST_NAME', 'http://dev:6011')
@@ -125,13 +126,14 @@ class Development(Config):
     ANTIVIRUS_ENABLED = os.environ.get('ANTIVIRUS_ENABLED') == '1'
 
     ASSET_PATH = '/static/'
-    LOGO_CDN_DOMAIN = 'static-logos.notify.tools' # replace with our own CDN
+    LOGO_CDN_DOMAIN = 'static-logos.notify.tools'  # replace with our own CDN
 
     REDIS_URL = os.environ.get('DEV_REDIS_URL', 'http://redis:6379')
     REDIS_ENABLED = True
 
 
 class Test(Development):
+    NOTIFY_ADMIN_API_CACHE_ENABLED = True
     BASIC_AUTH_FORCE = False
     DEBUG = True
     TESTING = True
@@ -150,8 +152,8 @@ class Test(Development):
     ANTIVIRUS_API_KEY = 'test-antivirus-secret'
     ANTIVIRUS_ENABLED = True
 
-    # ASSET_DOMAIN = 'static.example.com'
-    # ASSET_PATH = 'https://static.example.com/'
+    ASSET_DOMAIN = 'static.example.com'
+    ASSET_PATH = 'https://static.example.com/'
 
 
 class Preview(Config):
@@ -196,24 +198,24 @@ class Live(Config):
     HEADER_COLOUR = '#005EA5'  # $govuk-blue
     HTTP_PROTOCOL = 'https'
     # buckets
-    CSV_UPLOAD_BUCKET_NAME = 'notifications-prototype-csv-upload' # created in gsa sandbox
-    CONTACT_LIST_UPLOAD_BUCKET_NAME = 'notifications-prototype-contact-list-upload' # created in gsa sandbox
-    LOGO_UPLOAD_BUCKET_NAME = 'notifications-prototype-logo-upload' # created in gsa sandbox
-    MOU_BUCKET_NAME = 'notifications-prototype-mou' # created in gsa sandbox
-    TRANSIENT_UPLOADED_LETTERS = 'prototype-transient-uploaded-letters' # not created in gsa sandbox
-    PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'prototype-letters-precompiled-originals-backup' # not created in gsa sandbox
-    
+    CSV_UPLOAD_BUCKET_NAME = 'notifications-prototype-csv-upload'  # created in gsa sandbox
+    CONTACT_LIST_UPLOAD_BUCKET_NAME = 'notifications-prototype-contact-list-upload'  # created in gsa sandbox
+    LOGO_UPLOAD_BUCKET_NAME = 'notifications-prototype-logo-upload'  # created in gsa sandbox
+    MOU_BUCKET_NAME = 'notifications-prototype-mou'  # created in gsa sandbox
+    TRANSIENT_UPLOADED_LETTERS = 'prototype-transient-uploaded-letters'  # not created in gsa sandbox
+    PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'prototype-letters-precompiled-originals-backup'  # not in sandbox
+
     NOTIFY_ENVIRONMENT = 'live'
     CHECK_PROXY_HEADER = False
     # ASSET_DOMAIN = 'static.notifications.service.gov.uk'
     # ASSET_PATH = 'https://static.notifications.service.gov.uk/'
-    ASSET_DOMAIN = '' # TODO use a CDN
-    ASSET_PATH = '/static/' # TODO use a CDN
-    LOGO_CDN_DOMAIN = 'static-logos.notifications.service.gov.uk' # TODO use our own CDN
-    
+    ASSET_DOMAIN = ''  # TODO use a CDN
+    ASSET_PATH = '/static/'  # TODO use a CDN
+    LOGO_CDN_DOMAIN = 'static-logos.notifications.service.gov.uk'  # TODO use our own CDN
+
     REDIS_URL = os.environ.get('REDIS_URL')
     REDIS_ENABLED = True
-    
+
     ADMIN_CLIENT_SECRET = os.environ.get('ADMIN_CLIENT_SECRET')
     ADMIN_CLIENT_USER_NAME = os.environ.get('ADMIN_CLIENT_USERNAME')
     API_HOST_NAME = os.environ.get('API_HOST_NAME')

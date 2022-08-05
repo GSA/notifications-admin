@@ -1,4 +1,4 @@
-from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
+from app.notify_client import NotifyAdminAPIClient, _attach_current_user
 from app.utils.user_permissions import (
     all_ui_permissions,
     translate_permissions_from_ui_to_db,

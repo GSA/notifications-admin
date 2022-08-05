@@ -51,7 +51,7 @@ def test_register_creates_new_user_and_redirects_to_continue_page(
 ):
     client_request.logout()
     user_data = {'name': 'Some One Valid',
-                 'email_address': 'notfound@example.gov.uk',
+                 'email_address': 'notfound@example.gsa.gov',
                  'mobile_number': phone_number_to_register_with,
                  'password': password,
                  'auth_type': 'sms_auth'
@@ -63,7 +63,7 @@ def test_register_creates_new_user_and_redirects_to_continue_page(
         _follow_redirects=True,
     )
 
-    assert page.select('main p')[0].text == 'An email has been sent to notfound@example.gov.uk.'
+    assert page.select('main p')[0].text == 'An email has been sent to notfound@example.gsa.gov.'
 
     mock_send_verify_email.assert_called_with(ANY, user_data['email_address'])
     mock_register_user.assert_called_with(user_data['name'],
@@ -95,7 +95,7 @@ def test_process_register_returns_200_when_mobile_number_is_invalid(
         'main.register',
         _data={
             'name': 'Bad Mobile',
-            'email_address': 'bad_mobile@example.gov.uk',
+            'email_address': 'bad_mobile@example.gsa.gov',
             'mobile_number': 'not good',
             'password': 'validPassword!',
         },
@@ -130,7 +130,7 @@ def test_should_return_200_when_email_is_not_gov_uk(
 
 
 @pytest.mark.parametrize('email_address', (
-    'notfound@example.gov.uk',
+    'notfound@example.gsa.gov',
     'example@lsquo.net',
     pytest.param('example@ellipsis.com', marks=pytest.mark.xfail(raises=AssertionError)),
 ))
@@ -169,7 +169,7 @@ def test_should_return_200_if_password_is_on_list_of_commonly_used_passwords(
         'main.register',
         _data={
             'name': 'Bad Mobile',
-            'email_address': 'bad_mobile@example.gov.uk',
+            'email_address': 'bad_mobile@example.gsa.gov',
             'mobile_number': '+44123412345',
             'password': 'password',
         },
@@ -247,14 +247,14 @@ def test_shows_hidden_email_address_on_registration_page_from_invite(
 
     page = client_request.get('main.register_from_invite')
     assert normalize_spaces(page.select_one('main p').text) == (
-        'Your account will be created with this email address: invited_user@test.gov.uk'
+        'Your account will be created with this email address: invited_user@test.gsa.gov'
     )
     hidden_input = page.select_one('form .govuk-visually-hidden input')
     for attr, value in (
         ('type', 'email'),
         ('name', 'username'),
         ('id', 'username'),
-        ('value', 'invited_user@test.gov.uk'),
+        ('value', 'invited_user@test.gsa.gov'),
         ('disabled', "disabled"),
         ('tabindex', '-1'),
         ('aria-hidden', 'true'),
@@ -333,7 +333,7 @@ def test_register_from_invite_when_user_registers_in_another_browser(
     )
 
 
-@pytest.mark.parametrize('invite_email_address', ['gov-user@gov.uk', 'non-gov-user@example.com'])
+@pytest.mark.parametrize('invite_email_address', ['gov-user@gsa.gov', 'non-gov-user@example.com'])
 def test_register_from_email_auth_invite(
     client_request,
     sample_invite,
@@ -470,11 +470,11 @@ def test_cannot_register_with_sms_auth_and_missing_mobile_number(
         'main.register',
         _data={
             'name': 'Missing Mobile',
-            'email_address': 'missing_mobile@example.gov.uk',
+            'email_address': 'missing_mobile@example.gsa.gov',
             'password': 'validPassword!',
         },
         _expected_status=200,
-     )
+    )
 
     err = page.select_one('.govuk-error-message')
     assert err.text.strip() == 'Error: Cannot be empty'

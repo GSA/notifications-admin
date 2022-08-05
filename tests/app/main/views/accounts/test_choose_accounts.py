@@ -325,10 +325,10 @@ def test_should_show_back_to_service_if_user_belongs_to_service(
         'Test Service   Switch service '
         ''
         'Dashboard '
-        'Templates '
-        'Uploads '
+        'Send messages '
+        'Letters '
         'Team members'
-    )
+    )  # TODO: set sidebar variables in common test module
 
     page = client_request.get(
         'main.view_template',

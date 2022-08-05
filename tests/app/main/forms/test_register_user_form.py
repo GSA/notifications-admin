@@ -4,7 +4,7 @@ from app.main.forms import RegisterUserForm
 
 
 @pytest.mark.parametrize('password', [
-    'govuknotify', '11111111', 'kittykat', 'blackbox'
+    'usnotify'
 ])
 def test_should_raise_validation_error_for_password(
     client_request,
@@ -13,7 +13,7 @@ def test_should_raise_validation_error_for_password(
 ):
     form = RegisterUserForm()
     form.name.data = 'test'
-    form.email_address.data = 'teset@example.gov.uk'
+    form.email_address.data = 'teset@gsa.gov'
     form.mobile_number.data = '441231231231'
     form.password.data = password
 
@@ -35,7 +35,7 @@ def test_valid_email_in_valid_domains(
 ):
     form = RegisterUserForm(
         name="test",
-        email_address="test@my.gov.uk",
+        email_address="test@gsa.gov",
         mobile_number='4407888999111',
         password='an uncommon password')
     form.validate()

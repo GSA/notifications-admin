@@ -3,7 +3,15 @@ import re
 from collections import OrderedDict
 from datetime import datetime
 
-from flask import abort, flash, redirect, render_template, request, url_for, current_app
+from flask import (
+    abort,
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 from notifications_python_client.errors import HTTPError
 
 from app import (

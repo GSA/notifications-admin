@@ -14,7 +14,7 @@ def test_should_render_forgot_password(client_request):
 
 
 @pytest.mark.parametrize('email_address', [
-    'test@user.gov.uk',
+    'test@user.gsa.gov',
     'someuser@notgovernment.com'
 ])
 def test_should_redirect_to_password_reset_sent_for_valid_email(
@@ -41,7 +41,7 @@ def test_forgot_password_sends_next_link_with_reset_password_email_request(
     mocker,
 ):
     client_request.logout()
-    sample_user = user_json(email_address='test@user.gov.uk')
+    sample_user = user_json(email_address='test@user.gsa.gov')
     mocker.patch('app.user_api_client.send_reset_password_url', return_value=None)
     client_request.post_url(
         url_for('.forgot_password') + f"?next=/services/{SERVICE_ONE_ID}/templates",

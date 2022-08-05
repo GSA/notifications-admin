@@ -86,7 +86,7 @@ def test_view_organisation_shows_the_correct_organisation(
 
     assert normalize_spaces(page.select_one('h1').text) == 'Usage'
     assert normalize_spaces(page.select_one('.govuk-hint').text) == (
-        'Test 1 has no live services on GOV.UK Notify'
+        'Test 1 has no live services on US Notify'
     )
     assert not page.select('a[download]')
 
@@ -785,9 +785,9 @@ def test_manage_org_users_shows_correct_link_next_to_each_user(
     # The second two users are active users, so have the link to be removed from the org
     assert normalize_spaces(
         users[0].text
-    ) == 'invited_user@test.gov.uk (invited) Cancel invitation for invited_user@test.gov.uk'
-    assert normalize_spaces(users[1].text) == 'Test User 1 test@gov.uk Remove Test User 1 test@gov.uk'
-    assert normalize_spaces(users[2].text) == 'Test User 2 testt@gov.uk Remove Test User 2 testt@gov.uk'
+    ) == 'invited_user@test.gsa.gov (invited) Cancel invitation for invited_user@test.gsa.gov'
+    assert normalize_spaces(users[1].text) == 'Test User 1 test@gsa.gov Remove Test User 1 test@gsa.gov'
+    assert normalize_spaces(users[2].text) == 'Test User 2 testt@gsa.gov Remove Test User 2 testt@gsa.gov'
 
     assert users[0].a['href'] == url_for(
         '.cancel_invited_org_user',
@@ -814,7 +814,7 @@ def test_manage_org_users_shows_no_link_for_cancelled_users(
     )
     users = page.find_all(class_='user-list-item')
 
-    assert normalize_spaces(users[0].text) == 'invited_user@test.gov.uk (cancelled invite)'
+    assert normalize_spaces(users[0].text) == 'invited_user@test.gsa.gov (cancelled invite)'
     assert not users[0].a
 
 
@@ -1178,7 +1178,7 @@ def test_view_organisation_domains(
         side_effect=lambda org_id: organisation_json(
             org_id,
             'Org 1',
-            domains=['example.gov.uk', 'test.example.gov.uk'],
+            domains=['example.gsa.gov', 'test.example.gsa.gov'],
         )
     )
 
@@ -1188,8 +1188,8 @@ def test_view_organisation_domains(
     )
 
     assert [textbox.get('value') for textbox in page.select('input[type=text]')] == [
-        'example.gov.uk',
-        'test.example.gov.uk',
+        'example.gsa.gov',
+        'test.example.gsa.gov',
         None,
         None,
         None,
@@ -1214,15 +1214,15 @@ def test_view_organisation_domains(
 @pytest.mark.parametrize('post_data, expected_persisted', (
     (
         {
-            'domains-0': 'example.gov.uk',
-            'domains-2': 'example.gov.uk',
-            'domains-3': 'EXAMPLE.GOV.UK',
-            'domains-5': 'test.gov.uk',
+            'domains-0': 'example.gsa.gov',
+            'domains-2': 'example.gsa.gov',
+            'domains-3': 'EXAMPLE.gsa.gov',
+            'domains-5': 'test.gsa.gov',
         },
         {
             'domains': [
-                'example.gov.uk',
-                'test.gov.uk',
+                'example.gsa.gov',
+                'test.gsa.gov',
             ]
         }
     ),
@@ -1298,7 +1298,7 @@ def test_update_organisation_domains_when_domain_already_exists(
         org_id=ORGANISATION_ID,
         _data={
             'domains': [
-                'example.gov.uk',
+                'example.gsa.gov',
             ]
         },
         _expected_status=200,
@@ -1584,7 +1584,7 @@ def test_update_organisation_billing_details(
         'main.edit_organisation_billing_details',
         org_id=organisation_one['id'],
         _data={
-            'billing_contact_email_addresses': 'accounts@fluff.gov.uk',
+            'billing_contact_email_addresses': 'accounts@fluff.gsa.gov',
             'billing_contact_names': 'Flannellette von Fluff',
             'billing_reference': '',
             'purchase_order_number': 'PO1234',
@@ -1598,7 +1598,7 @@ def test_update_organisation_billing_details(
     mock_update_organisation.assert_called_with(
         organisation_one['id'],
         cached_service_ids=None,
-        billing_contact_email_addresses='accounts@fluff.gov.uk',
+        billing_contact_email_addresses='accounts@fluff.gsa.gov',
         billing_contact_names='Flannellette von Fluff',
         billing_reference='',
         purchase_order_number='PO1234',
@@ -1666,7 +1666,7 @@ def test_organisation_billing_page_when_the_agreement_is_signed_by_a_known_perso
     )
 
     assert page.h1.string == 'Billing'
-    assert '2.5 of the GOV.UK Notify data sharing and financial agreement on 20 February 2020' in normalize_spaces(
+    assert '2.5 of the US Notify data sharing and financial agreement on 20 February 2020' in normalize_spaces(
         page.text)
     assert f'{expected_signatory} signed' in page.text
     assert page.select_one('main a')['href'] == url_for('.organisation_download_agreement', org_id=ORGANISATION_ID)
@@ -1688,7 +1688,7 @@ def test_organisation_billing_page_when_the_agreement_is_signed_by_an_unknown_pe
     )
 
     assert page.h1.string == 'Billing'
-    assert (f'{organisation_one["name"]} has accepted the GOV.UK Notify data '
+    assert (f'{organisation_one["name"]} has accepted the US Notify data '
             'sharing and financial agreement.') in page.text
     assert page.select_one('main a')['href'] == url_for('.organisation_download_agreement', org_id=ORGANISATION_ID)
 
@@ -1721,11 +1721,11 @@ def test_organisation_billing_page_when_the_agreement_is_not_signed(
 @pytest.mark.parametrize('crown, expected_status, expected_file_fetched, expected_file_served', (
     (
         True, 200, 'crown.pdf',
-        'GOV.UK Notify data sharing and financial agreement.pdf',
+        'US Notify data sharing and financial agreement.pdf',
     ),
     (
         False, 200, 'non-crown.pdf',
-        'GOV.UK Notify data sharing and financial agreement (non-crown).pdf',
+        'US Notify data sharing and financial agreement (non-crown).pdf',
     ),
     (
         None, 404, None,

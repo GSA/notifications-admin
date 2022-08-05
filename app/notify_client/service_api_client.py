@@ -1,9 +1,10 @@
 from datetime import datetime
+
 from flask import current_app
 from notifications_utils.clients.redis import daily_limit_cache_key
 
 from app.extensions import redis_client
-from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
+from app.notify_client import NotifyAdminAPIClient, _attach_current_user
 
 
 class ServiceAPIClient(NotifyAdminAPIClient):
@@ -608,7 +609,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
 
     def get_notification_count(self, service_id):
         # if cache is not set, or not enabled, return 0
-        
+
         if current_app.config['NOTIFY_ADMIN_API_CACHE_ENABLED']:
             count = redis_client.get(daily_limit_cache_key(service_id)) or 0
         else:

@@ -446,7 +446,7 @@ def test_raises_on_invalid_navigation_item(
 
 
 @pytest.mark.parametrize('endpoint, selected_nav_item', [
-    ('main.choose_template', 'Templates'),
+    ('main.choose_template', 'Send messages'),
     ('main.manage_users', 'Team members'),
 ])
 def test_a_page_should_nave_selected_navigation_item(
@@ -593,7 +593,7 @@ def test_caseworkers_get_caseworking_navigation(
     )
     page = client_request.get('main.choose_template', service_id=SERVICE_ONE_ID)
     assert normalize_spaces(page.select_one('header + .govuk-width-container nav').text) == (
-        'Templates Sent messages Uploads Team members'
+        'Send messages Sent messages Letters Team members'
     )
 
 
@@ -612,5 +612,5 @@ def test_caseworkers_see_jobs_nav_if_jobs_exist(
     )
     page = client_request.get('main.choose_template', service_id=SERVICE_ONE_ID)
     assert normalize_spaces(page.select_one('header + .govuk-width-container nav').text) == (
-        'Templates Sent messages Uploads Team members'
+        'Send messages Sent messages Letters Team members'
     )

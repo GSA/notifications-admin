@@ -2455,7 +2455,7 @@ def test_download_example_csv(
     )
     assert response.get_data(as_text=True) == (
         'phone number,name,date\r\n'
-        '07700 900321,example,example\r\n'
+        '12223334444,example,example\r\n'
     )
     assert 'text/csv' in response.headers['Content-Type']
 
@@ -4423,8 +4423,8 @@ def test_send_to_myself_sets_placeholder_and_redirects_for_email(
     )
 
     with client_request.session_transaction() as session:
-        assert session['recipient'] == 'test@user.gov.uk'
-        assert session['placeholders'] == {'email address': 'test@user.gov.uk'}
+        assert session['recipient'] == 'test@user.gsa.gov'
+        assert session['placeholders'] == {'email address': 'test@user.gsa.gov'}
 
 
 def test_send_to_myself_sets_placeholder_and_redirects_for_sms(

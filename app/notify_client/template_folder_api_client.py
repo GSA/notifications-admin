@@ -1,5 +1,7 @@
+from flask import current_app
+
 from app.extensions import redis_client
-from app.notify_client import NotifyAdminAPIClient, cache
+from app.notify_client import NotifyAdminAPIClient
 
 
 class TemplateFolderAPIClient(NotifyAdminAPIClient):

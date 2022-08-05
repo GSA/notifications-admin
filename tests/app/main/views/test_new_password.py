@@ -44,7 +44,7 @@ def test_should_return_404_when_email_address_does_not_exist(
     mock_get_user_by_email_not_found,
 ):
     client_request.logout()
-    data = json.dumps({'email': 'no_user@d.gov.uk', 'created_at': str(datetime.utcnow())})
+    data = json.dumps({'email': 'no_user@d.gsa.gov', 'created_at': str(datetime.utcnow())})
     token = generate_token(data, notify_admin.config['SECRET_KEY'], notify_admin.config['DANGEROUS_SALT'])
     client_request.get_url(
         url_for_endpoint_with_token('.new_password', token=token),

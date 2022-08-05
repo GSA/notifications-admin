@@ -62,7 +62,7 @@ def test_returned_letters_page(
             'notification_id': uuid.uuid4(),
             'client_reference': client_reference,
             'created_at': '2019-12-24 13:30',
-            'email_address': 'test@gov.uk',
+            'email_address': 'test@gsa.gov',
             'template_name': template_name,
             'template_id': uuid.uuid4(),
             'template_version': None,
@@ -121,7 +121,7 @@ def test_returned_letters_page_with_many_letters(
             'notification_id': uuid.uuid4(),
             'client_reference': None,
             'created_at': '2019-12-24 13:30',
-            'email_address': 'test@gov.uk',
+            'email_address': 'test@gsa.gov',
             'template_name': 'Example template',
             'template_id': uuid.uuid4(),
             'template_version': None,
@@ -163,7 +163,7 @@ def test_returned_letters_reports(
         'notification_id': '12345678',
         'client_reference': '2344567',
         'created_at': '2019-12-24 13:30',
-        'email_address': 'test@gov.uk',
+        'email_address': 'test@gsa.gov',
         'template_name': 'First letter template',
         'template_id': '3445667',
         'template_version': 2,
@@ -182,7 +182,7 @@ def test_returned_letters_reports(
     assert report.strip() == (
         'Notification ID,Reference,Date sent,Sent by,Template name,Template ID,Template version,'
         + 'Spreadsheet file name,Spreadsheet row number,Uploaded letter file name\r\n'
-        + '12345678,2344567,2019-12-24 13:30,test@gov.uk,'
+        + '12345678,2344567,2019-12-24 13:30,test@gsa.gov,'
         + 'First letter template,3445667,2,,,test_letter.pdf'
     )
 

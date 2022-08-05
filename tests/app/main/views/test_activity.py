@@ -652,7 +652,7 @@ def test_html_contains_links_for_failed_notifications(
         '07123456789 hello & welcome hidden'
     )),
     ('email', (
-        'example@gov.uk hidden, hello & welcome'
+        'example@gsa.gov hidden, hello & welcome'
     )),
     ('letter', (
         # Letters don’t support redaction, but this test is still

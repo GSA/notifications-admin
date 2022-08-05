@@ -58,7 +58,7 @@ def created_by_json(id_, name='', email_address=''):
 def user_json(
     id_='1234',
     name='Test User',
-    email_address='test@gov.uk',
+    email_address='test@gsa.gov',
     mobile_number='+447700900986',
     password_changed_at=None,
     permissions=None,
@@ -109,7 +109,7 @@ def invited_user(
     _id='1234',
     service=None,
     from_user='1234',
-    email_address='testinviteduser@gov.uk',
+    email_address='testinviteduser@gsa.gov',
     permissions=None,
     status='pending',
     created_at=None,
@@ -395,7 +395,7 @@ def inbound_sms_json():
     }
 
 
-TEST_USER_EMAIL = 'test@user.gov.uk'
+TEST_USER_EMAIL = 'test@user.gsa.gov'
 
 
 def create_test_api_user(state, permissions=None):
@@ -491,7 +491,7 @@ def notification_json(
         if template_type == 'letter':
             to = '1 Example Street'
         elif template_type == 'email':
-            to = 'example@gov.uk'
+            to = 'example@gsa.gov'
         else:
             to = '07123456789'
     if sent_at is None:

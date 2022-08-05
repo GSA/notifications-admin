@@ -33,12 +33,12 @@ def test_get_choices_service_not_assigned_to_org(
 
 @pytest.mark.parametrize('org_type, branding_id, expected_options', [
     ('central', None, [
-        ('govuk_and_org', 'GOV.UK and Test Organisation'),
+        ('govuk_and_org', 'gsa.gov and Test Organisation'),
         ('organisation', 'Test Organisation'),
     ]),
     ('central', 'some-branding-id', [
-        ('govuk', 'GOV.UK'),  # central orgs can switch back to GOV.UK
-        ('govuk_and_org', 'GOV.UK and Test Organisation'),
+        ('govuk', 'gsa.gov'),  # central orgs can switch back to gsa.gov
+        ('govuk_and_org', 'gsa.gov and Test Organisation'),
         ('organisation', 'Test Organisation'),
     ]),
     ('local', None, [
@@ -81,7 +81,7 @@ def test_get_email_choices_service_assigned_to_org(
 
 @pytest.mark.parametrize('org_type, branding_id, expected_options', [
     ('central', 'some-branding-id', [
-        # don't show GOV.UK options as org default supersedes it
+        # don't show gsa.gov options as org default supersedes it
         ('organisation', 'Test Organisation'),
     ]),
     ('central', 'org-branding-id', [
@@ -120,13 +120,13 @@ def test_get_email_choices_org_has_default_branding(
 
 
 @pytest.mark.parametrize('branding_name, expected_options', [
-    ('GOV.UK and something else', [
-        ('govuk', 'GOV.UK'),
-        ('govuk_and_org', 'GOV.UK and Test Organisation'),
+    ('gsa.gov and something else', [
+        ('govuk', 'gsa.gov'),
+        ('govuk_and_org', 'gsa.gov and Test Organisation'),
         ('organisation', 'Test Organisation'),
     ]),
-    ('GOv.Uk and test OrganisatioN', [
-        ('govuk', 'GOV.UK'),
+    ('gsa.gov and test OrganisatioN', [
+        ('govuk', 'gsa.gov'),
         ('organisation', 'Test Organisation'),
     ])
 ])

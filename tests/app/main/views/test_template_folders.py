@@ -49,7 +49,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
     ),
     [
         (
-            'Templates – service one – GOV.UK Notify',
+            'Templates – service one – US Notify',
             'Templates',
             [],
             {},
@@ -111,7 +111,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             None,
         ),
         (
-            'Templates – service one – GOV.UK Notify',
+            'Templates – service one – US Notify',
             'Templates',
             [],
             {'template_type': 'all'},
@@ -169,7 +169,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             None,
         ),
         (
-            'Templates – service one – GOV.UK Notify',
+            'Templates – service one – US Notify',
             'Templates',
             [],
             {'template_type': 'sms'},
@@ -204,7 +204,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             None,
         ),
         (
-            'folder_one – Templates – service one – GOV.UK Notify',
+            'folder_one – Templates – service one – US Notify',
             'Templates folder_one',
             [{'template_type': 'all'}],
             {'template_folder_id': PARENT_FOLDER_ID},
@@ -236,7 +236,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             None,
         ),
         (
-            'folder_one – Templates – service one – GOV.UK Notify',
+            'folder_one – Templates – service one – US Notify',
             'Templates folder_one',
             [{'template_type': 'sms'}],
             {'template_type': 'sms', 'template_folder_id': PARENT_FOLDER_ID},
@@ -261,7 +261,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             None,
         ),
         (
-            'folder_one – Templates – service one – GOV.UK Notify',
+            'folder_one – Templates – service one – US Notify',
             'Templates folder_one',
             [{'template_type': 'email'}],
             {'template_type': 'email', 'template_folder_id': PARENT_FOLDER_ID},
@@ -272,7 +272,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             'There are no email templates in this folder',
         ),
         (
-            'folder_one_one – folder_one – Templates – service one – GOV.UK Notify',
+            'folder_one_one – folder_one – Templates – service one – US Notify',
             'Templates folder_one folder_one_one',
             [
                 {'template_type': 'all'},
@@ -299,7 +299,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             None,
         ),
         (
-            'folder_one_one_one – folder_one_one – folder_one – Templates – service one – GOV.UK Notify',
+            'folder_one_one_one – folder_one_one – folder_one – Templates – service one – US Notify',
             'Templates folder_one folder_one_one folder_one_one_one',
             [
                 {'template_type': 'all'},
@@ -320,7 +320,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             None,
         ),
         (
-            'folder_one_one_one – folder_one_one – folder_one – Templates – service one – GOV.UK Notify',
+            'folder_one_one_one – folder_one_one – folder_one – Templates – service one – US Notify',
             'Templates folder_one folder_one_one folder_one_one_one',
             [
                 {'template_type': 'email'},
@@ -338,7 +338,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             'There are no email templates in this folder',
         ),
         (
-            'folder_two – Templates – service one – GOV.UK Notify',
+            'folder_two – Templates – service one – US Notify',
             'Templates folder_two',
             [{'template_type': 'all'}],
             {'template_folder_id': FOLDER_TWO_ID},
@@ -349,7 +349,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             'This folder is empty',
         ),
         (
-            'folder_two – Templates – service one – GOV.UK Notify',
+            'folder_two – Templates – service one – US Notify',
             'Templates folder_two',
             [{'template_type': 'sms'}],
             {'template_folder_id': FOLDER_TWO_ID, 'template_type': 'sms'},
@@ -360,7 +360,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             'This folder is empty',
         ),
         (
-            'folder_two – Templates – service one – GOV.UK Notify',
+            'folder_two – Templates – service one – US Notify',
             'Templates folder_two',
             [{'template_type': 'all'}],
             {'template_folder_id': FOLDER_TWO_ID, 'template_type': 'all'},
@@ -598,7 +598,7 @@ def test_get_manage_folder_page(
         _test_page_title=False,
     )
     assert normalize_spaces(page.select_one('title').text) == (
-        'folder_two – Templates – service one – GOV.UK Notify'
+        'folder_two – Templates – service one – US Notify'
     )
     assert page.select_one('input[name=name]')['value'] == 'folder_two'
     delete_link = page.find('a', string="Delete this folder")
@@ -633,7 +633,7 @@ def test_get_manage_folder_viewing_permissions_for_users(
         _test_page_title=False,
     )
     assert normalize_spaces(page.select_one('title').text) == (
-        'folder_two – Templates – service one – GOV.UK Notify'
+        'folder_two – Templates – service one – US Notify'
     )
     form_labels = page.select('legend.govuk-fieldset__legend')
     assert normalize_spaces(form_labels[0].text) == "Team members who can see this folder"
@@ -685,7 +685,7 @@ def test_get_manage_folder_viewing_permissions_for_users_not_visible_when_no_man
         _test_page_title=False,
     )
     assert normalize_spaces(page.select_one('title').text) == (
-        'folder_two – Templates – service one – GOV.UK Notify'
+        'folder_two – Templates – service one – US Notify'
     )
     form_labels = page.select('legend[class=form-label]')
     assert len(form_labels) == 0
@@ -719,7 +719,7 @@ def test_get_manage_folder_viewing_permissions_for_users_not_visible_for_service
         _test_page_title=False,
     )
     assert normalize_spaces(page.select_one('title').text) == (
-        'folder_two – Templates – service one – GOV.UK Notify'
+        'folder_two – Templates – service one – US Notify'
     )
     form_labels = page.select('legend[class=form-label]')
     assert len(form_labels) == 0
@@ -1381,7 +1381,7 @@ def test_no_action_if_user_fills_in_ambiguous_fields(
     mock_get_no_api_keys,
     data,
 ):
-    service_one['permissions'] += ['letter']
+    # service_one['permissions'] += ['letter']
 
     mock_get_template_folders.return_value = [
         _folder('parent_folder', PARENT_FOLDER_ID, None),
@@ -1404,7 +1404,7 @@ def test_no_action_if_user_fills_in_ambiguous_fields(
     assert [
         'email',
         'sms',
-        'letter',
+        # 'letter',
         'copy-existing',
     ] == [
         radio['value']

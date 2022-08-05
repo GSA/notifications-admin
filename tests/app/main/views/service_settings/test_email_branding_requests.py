@@ -366,7 +366,7 @@ def test_email_branding_govuk_and_org_submit(
         subject='Email branding request - service one',
         ticket_type='question',
         user_name='Test User',
-        user_email='test@user.gov.uk',
+        user_email='test@user.gsa.gov',
         org_id=ORGANISATION_ID,
         org_type='central',
         service_id=SERVICE_ONE_ID
@@ -451,7 +451,7 @@ def test_email_branding_organisation_submit(
         subject='Email branding request - service one',
         ticket_type='question',
         user_name='Test User',
-        user_email='test@user.gov.uk',
+        user_email='test@user.gsa.gov',
         org_id=ORGANISATION_ID,
         org_type='central',
         service_id=SERVICE_ONE_ID
@@ -490,7 +490,7 @@ def test_email_branding_something_else_submit(
     mock_create_ticket.assert_called_once_with(
         ANY,
         message='\n'.join([
-            'Organisation: Can’t tell (domain is user.gov.uk)',
+            'Organisation: Can’t tell (domain is user.gsa.gov)',
             'Service: service one',
             'http://localhost/services/596364a0-858e-42c8-9062-a8fe822260eb',
             '',
@@ -502,7 +502,7 @@ def test_email_branding_something_else_submit(
         subject='Email branding request - service one',
         ticket_type='question',
         user_name='Test User',
-        user_email='test@user.gov.uk',
+        user_email='test@user.gsa.gov',
         org_id=None,
         org_type='nhs_local',
         service_id=SERVICE_ONE_ID
