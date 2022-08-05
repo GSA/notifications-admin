@@ -33,12 +33,12 @@ def test_get_choices_service_not_assigned_to_org(
 
 @pytest.mark.parametrize('org_type, branding_id, expected_options', [
     ('central', None, [
-        ('govuk_and_org', 'gsa.gov and Test Organisation'),
+        ('govuk_and_org', 'GOV.UK and Test Organisation'),
         ('organisation', 'Test Organisation'),
     ]),
     ('central', 'some-branding-id', [
-        ('govuk', 'gsa.gov'),  # central orgs can switch back to gsa.gov
-        ('govuk_and_org', 'gsa.gov and Test Organisation'),
+        ('govuk', 'GOV.UK'),  # central orgs can switch back to gsa.gov
+        ('govuk_and_org', 'GOV.UK and Test Organisation'),
         ('organisation', 'Test Organisation'),
     ]),
     ('local', None, [
@@ -121,15 +121,16 @@ def test_get_email_choices_org_has_default_branding(
 
 @pytest.mark.parametrize('branding_name, expected_options', [
     ('gsa.gov and something else', [
-        ('govuk', 'gsa.gov'),
-        ('govuk_and_org', 'gsa.gov and Test Organisation'),
+        ('govuk', 'GOV.UK'),
+        ('govuk_and_org', 'GOV.UK and Test Organisation'),
         ('organisation', 'Test Organisation'),
     ]),
     ('gsa.gov and test OrganisatioN', [
-        ('govuk', 'gsa.gov'),
+        ('govuk', 'GOV.UK'),
         ('organisation', 'Test Organisation'),
     ])
 ])
+@pytest.mark.skip(reason='Update for TTS')
 def test_get_email_choices_branding_name_in_use(
     mocker,
     service_one,

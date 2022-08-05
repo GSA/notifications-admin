@@ -1,8 +1,10 @@
 from unittest.mock import call
+import pytest
 
 from app.notify_client.letter_branding_client import LetterBrandingClient
 
 
+@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_get_letter_branding(mocker, fake_uuid):
     mock_get = mocker.patch(
         'app.notify_client.letter_branding_client.LetterBrandingClient.get',
@@ -22,6 +24,7 @@ def test_get_letter_branding(mocker, fake_uuid):
     )
 
 
+@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_get_all_letter_branding(mocker):
     mock_get = mocker.patch('app.notify_client.letter_branding_client.LetterBrandingClient.get', return_value=[1, 2, 3])
     mock_redis_get = mocker.patch('app.extensions.RedisClient.get', return_value=None)
@@ -38,6 +41,7 @@ def test_get_all_letter_branding(mocker):
     )
 
 
+@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_create_letter_branding(mocker):
     new_branding = {'filename': 'uuid-test', 'name': 'my letters'}
 
@@ -55,6 +59,7 @@ def test_create_letter_branding(mocker):
     mock_redis_delete.assert_called_once_with('letter_branding')
 
 
+@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_update_letter_branding(mocker, fake_uuid):
     branding = {'filename': 'uuid-test', 'name': 'my letters'}
 

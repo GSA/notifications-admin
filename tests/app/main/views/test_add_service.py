@@ -205,7 +205,7 @@ def test_add_service_has_to_choose_org_type(
     'test@example.NhS.uK',
     'test@EXAMPLE.NHS.NET',
 ))
-@pytest.mark.skip('Need to update for TTS')
+@pytest.mark.skip(reason='Update for TTS')
 def test_get_should_only_show_nhs_org_types_radios_if_user_has_nhs_email(
     client_request,
     mocker,

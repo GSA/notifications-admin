@@ -96,7 +96,7 @@ def test_get_upload_hub_page(
     mocker.patch('app.job_api_client.get_jobs', return_value={'data': []})
     service_one['permissions'] += ['letter', 'upload_letters']
     page = client_request.get('main.uploads', service_id=SERVICE_ONE_ID)
-    assert page.find('h1').text == 'Letters'
+    assert page.find('h1').text == 'Uploads'
     assert page.find('a', text=re.compile('Upload a letter')).attrs['href'] == url_for(
         'main.upload_letter', service_id=SERVICE_ONE_ID
     )

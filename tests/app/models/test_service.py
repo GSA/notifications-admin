@@ -26,6 +26,7 @@ def test_organisation_type_when_service_and_its_org_both_have_an_org_type(mocker
     assert service.organisation_type == 'local'
 
 
+@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_organisation_name_comes_from_cache(mocker, service_one):
     mock_redis_get = mocker.patch(
         'app.extensions.RedisClient.get',
@@ -40,6 +41,7 @@ def test_organisation_name_comes_from_cache(mocker, service_one):
     assert mock_get_organisation.called is False
 
 
+@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_organisation_name_goes_into_cache(mocker, service_one):
     mocker.patch(
         'app.extensions.RedisClient.get',
@@ -63,6 +65,7 @@ def test_organisation_name_goes_into_cache(mocker, service_one):
     )
 
 
+@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_service_without_organisation_doesnt_need_org_api(mocker, service_one):
     mock_redis_get = mocker.patch('app.extensions.RedisClient.get')
     mock_get_organisation = mocker.patch('app.organisations_client.get_organisation')
