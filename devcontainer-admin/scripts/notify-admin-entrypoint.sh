@@ -1,10 +1,10 @@
 #!/bin/bash
-set -ex 
+set -ex
 
 ###################################################################
-# This script will get executed *once* the Docker container has 
+# This script will get executed *once* the Docker container has
 # been built. Commands that need to be executed with all available
-# tools and the filesystem mount enabled should be located here. 
+# tools and the filesystem mount enabled should be located here.
 ###################################################################
 
 echo "RUNNING ENTRYPOINT SCRIPT"
@@ -20,23 +20,12 @@ echo -e "alias lt='exa -al -T -L 2'" >> ~/.zshrc
 
 cd /workspace
 
-# Warm up git index prior to display status in prompt else it will 
+# Warm up git index prior to display status in prompt else it will
 # be quite slow on every invocation of starship.
 git status
 
 pip3 install -r requirements.txt
-pip3 install -r requirements_for_test.txt
-
-# npm rebuild node-sass
-make generate-version-file
-# make babel
-
-# npm ci install
-if [ ! -d "/node_modules" ]; then
-  npm ci install
-fi
-
-npm run build
+make bootstrap
 
 # run flask
 # make run
