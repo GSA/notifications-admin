@@ -19,14 +19,15 @@ NOTIFY_CREDENTIALS ?= ~/.notify-credentials
 
 VIRTUALENV_ROOT := $(shell [ -z $$VIRTUAL_ENV ] && echo $$(pwd)/venv || echo $$VIRTUAL_ENV)
 
+NVMSH := $(shell [ -f "$(HOME)/.nvm/nvm.sh" ] && echo "$(HOME)/.nvm/nvm.sh" || echo "/usr/local/share/nvm/nvm.sh")
 
 ## DEVELOPMENT
 
 .PHONY: bootstrap
 bootstrap: generate-version-file ## Set up everything to run the app
 	pip3 install -r requirements_for_test.txt
-	source $(HOME)/.nvm/nvm.sh && nvm install && npm ci --no-audit
-	source $(HOME)/.nvm/nvm.sh && npm run build
+	source $(NVMSH) --install && npm ci --no-audit
+	source $(NVMSH) && npm run build
 
 .PHONY: watch-frontend
 watch-frontend:  ## Build frontend and watch for changes
@@ -38,7 +39,7 @@ run-flask:  ## Run flask
 
 .PHONY: npm-audit
 npm-audit:  ## Check for vulnerabilities in NPM packages
-	source $(HOME)/.nvm/nvm.sh && npm run audit
+	source $(NVMSH) && npm run audit
 
 .PHONY: help
 help:
@@ -60,7 +61,7 @@ generate-version-file: ## Generates the app version file
 test: ## Run tests
 	flake8 .
 	isort --check-only ./app ./tests
-	source /usr/local/share/nvm/nvm.sh && npm test
+	source $(NVMSH) && npm test
 	py.test -n auto --maxfail=10 tests/
 
 .PHONY: fix-imports
