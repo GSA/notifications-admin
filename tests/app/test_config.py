@@ -40,7 +40,7 @@ def test_load_cloudfoundry_config_if_available(reload_config):
         }],
     })
 
-    with mock.patch('app.cloudfoundry_config.extract_cloudfoundry_config', side_effect=cf_conf) as cf_config:
+    with mock.patch('app.cloudfoundry_config.extract_cloudfoundry_config', side_effect=cf_conf):
         # reload config so that its module level code (ie: all of it) is re-instantiated
         importlib.reload(config)
 

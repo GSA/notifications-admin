@@ -31,16 +31,20 @@ from tests.conftest import (
 
 @pytest.mark.parametrize('permissions, expected_message', (
     (['email'], (
-        'Every message starts with a template. You can change it later. You need a template before you can send emails, text messages or letters.'
+        'Every message starts with a template. You can change it later. '
+        'You need a template before you can send emails, text messages or letters.'
     )),
     (['sms'], (
-        'Every message starts with a template. You can change it later. You need a template before you can send emails, text messages or letters.'
+        'Every message starts with a template. You can change it later. '
+        'You need a template before you can send emails, text messages or letters.'
     )),
     (['letter'], (
-        'Every message starts with a template. You can change it later. You need a template before you can send emails, text messages or letters.'
+        'Every message starts with a template. You can change it later. '
+        'You need a template before you can send emails, text messages or letters.'
     )),
     (['email', 'sms', 'letter'], (
-        'Every message starts with a template. You can change it later. You need a template before you can send emails, text messages or letters.'
+        'Every message starts with a template. You can change it later. '
+        'You need a template before you can send emails, text messages or letters.'
     )),
     (['broadcast'], (
         'Every message starts with a template. You can change it later. You haven’t added any templates yet.'
@@ -89,7 +93,8 @@ def test_should_show_add_template_form_if_service_has_folder_permission(
         'Templates'
     )
     assert normalize_spaces(page.select_one('main p').text) == (
-        'Every message starts with a template. You can change it later. You need a template before you can send emails, text messages or letters.'
+        'Every message starts with a template. You can change it later. '
+        'You need a template before you can send emails, text messages or letters.'
     )
     assert [
         (item['name'], item['value']) for item in page.select('[type=radio]')
