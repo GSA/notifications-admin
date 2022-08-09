@@ -43,9 +43,9 @@ jobs:
         python-version: "3.9"
     - name: Install application dependencies
       run: make bootstrap
-    # - name: Run style checks
-    #   run: flake8 .
-    # - name: Check imports alphabetized
-    #   run: isort --check-only ./app ./tests
+    - name: Run style checks
+      run: flake8 .
+    - name: Check imports alphabetized
+      run: isort --check-only ./app ./tests
     - name: Run tests
       run: pytest -n4 --maxfail=10
