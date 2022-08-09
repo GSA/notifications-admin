@@ -1,4 +1,5 @@
 import pytest
+
 from app.notify_client.broadcast_message_api_client import (
     BroadcastMessageAPIClient,
 )

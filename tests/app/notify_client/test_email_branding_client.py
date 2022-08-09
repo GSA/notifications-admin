@@ -1,4 +1,5 @@
 from unittest.mock import call
+
 import pytest
 
 from app.notify_client.email_branding_client import EmailBrandingClient

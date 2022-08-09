@@ -1,4 +1,5 @@
 import pytest
+
 from app.notify_client.status_api_client import StatusApiClient
 
 
