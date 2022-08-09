@@ -26,7 +26,7 @@ NVMSH := $(shell [ -f "$(HOME)/.nvm/nvm.sh" ] && echo "$(HOME)/.nvm/nvm.sh" || e
 .PHONY: bootstrap
 bootstrap: generate-version-file ## Set up everything to run the app
 	pip3 install -r requirements_for_test.txt
-	source $(NVMSH) --install && npm ci --no-audit
+	source $(NVMSH) --no-use && nvm install && npm ci --no-audit
 	source $(NVMSH) && npm run build
 
 .PHONY: watch-frontend
