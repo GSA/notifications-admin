@@ -16,12 +16,7 @@ US Notify admin application - https://notifications-admin.app.cloud.gov (contact
 
 Open the notifications-admin repo in VS Code (File->Open Folder, select notifications-admin folder)
 
-create a .env file using sample.env as a template
-`cp sample.env .env` (or via VS Code file browser)
-
-from the notifications-api checkout, copy the values in that repo's .env file for `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` into this repo's .env file.
-
-Change `BASIC_AUTH_USERNAME` and `BASIC_AUTH_PASSWORD` to what you'd like them to be for this deployment.
+create a .env file as detailed in the .env Setup section below
 
 Using VS Code's command pallette (cmd+shift+p), search "Remote Containers: Open folder in Container..." 
 
@@ -40,7 +35,7 @@ NOTE: any .py code changes you make should be picked up automatically in develop
 create a .env file using sample.env as a template
 `cp sample.env .env` (or via VS Code file browser)
 
-from the notifications-api checkout, copy the values in that repo's .env file for `AWS_ACCESS_KEY_ID1` and `AWS_SECRET_ACCESS_KEY` into this repo's .env file.
+from the notifications-api checkout, copy the values in that repo's .env file for `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` into this repo's .env file.
 
 Change `BASIC_AUTH_USERNAME` and `BASIC_AUTH_PASSWORD` to what you'd like them to be for this deployment.
 
