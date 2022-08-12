@@ -19,7 +19,7 @@ Open the notifications-admin repo in VS Code (File->Open Folder, select notifica
 create a .env file using sample.env as a template
 `cp sample.env .env` (or via VS Code file browser)
 
-from the notifications-api checkout, copy the values in that repo's .env file for `AWS_ACCESS_KEY_ID1` and `AWS_SECRET_ACCESS_KEY` into this repo's .env file.
+from the notifications-api checkout, copy the values in that repo's .env file for `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` into this repo's .env file.
 
 Change `BASIC_AUTH_USERNAME` and `BASIC_AUTH_PASSWORD` to what you'd like them to be for this deployment.
 
