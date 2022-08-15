@@ -12,18 +12,16 @@ RUN apt-get update \
     emacs \
     exa \
     fd-find \
-    git \ 
+    git \
     iproute2 \
-    less \ 
+    less \
     libsodium-dev \
-    lsb-release \ 
+    lsb-release \
     man-db \
     manpages \
     net-tools \
-    nodejs \ 
-    npm \
-    openssh-client \ 
-    procps \ 
+    openssh-client \
+    procps \
     sudo \
     tldr \
     unzip \
@@ -31,9 +29,6 @@ RUN apt-get update \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
-
-RUN echo $(node --version)
-RUN echo $(npm --version)
 
 # Upgrade pip
 RUN pip install --upgrade pip
@@ -44,8 +39,6 @@ RUN groupadd --gid 1001 node \
 COPY package-lock.json ./
 COPY package.json ./
 COPY devcontainer-admin/scripts/notify-admin-entrypoint.sh ./
-
-RUN npm ci --no-audit
 
 ENV SHELL /bin/zsh
 

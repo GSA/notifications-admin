@@ -1,4 +1,5 @@
 from datetime import date
+
 import pytest
 
 from app.notify_client.performance_dashboard_api_client import (

@@ -20,12 +20,6 @@
         "python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8",
         // "python.linting.pylintPath": "/usr/local/share/pip-global/bin/pylint"
     },
-    "features": {
-        "docker-from-docker": {
-            "version": "latest",
-            "moby": true
-        }
-    },
     "extensions": [
         "donjayamanne.python-extension-pack",
         "ms-python.vscode-pylance",
