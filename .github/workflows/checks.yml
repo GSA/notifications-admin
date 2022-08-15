@@ -47,5 +47,7 @@ jobs:
       run: flake8 .
     - name: Check imports alphabetized
       run: isort --check-only ./app ./tests
-    - name: Run tests
+    - name: Run js tests
+      run: npm test
+    - name: Run py tests
       run: pytest -n4 --maxfail=10
