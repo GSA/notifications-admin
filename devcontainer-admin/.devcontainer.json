@@ -13,12 +13,11 @@
         },
         "python.linting.enabled": true,
         "python.linting.pylintEnabled": true,
-        "python.linting.flake8Enabled": true,  
+        "python.linting.flake8Enabled": true,
         "python.pythonPath": "/usr/local/bin/python",
         "python.linting.flake8Path": "/usr/local/py-utils/bin/flake8",
         "python.linting.pylintPath": "/usr/local/py-utils/bin/pylint",
-        "python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8",
-        // "python.linting.pylintPath": "/usr/local/share/pip-global/bin/pylint"
+        "python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8"
     },
     "extensions": [
         "donjayamanne.python-extension-pack",
