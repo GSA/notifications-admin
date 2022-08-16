@@ -9,27 +9,35 @@ US Notify admin application - https://notifications-admin.app.cloud.gov (contact
  - Send batch emails and SMS by uploading a CSV
  - Show history of notifications
 
-## QUICK START
+## QUICKSTART
 
-NOTE: Set up the [notifications-api repo](https://github.com/18F/notifications-api) locally first, you'll need that docker network and a functioning api to make use of this repo.
-```
-# create .env file as instructed below
+---
+**NOTE**: Set up the [notifications-api repo](https://github.com/18F/notifications-api) locally **FIRST**, you'll need both the docker network it provides and a functioning api to make use of the notifications-admin repo. It is expected as a byproduct of getting notifications-api running you will also be running VS Code and the Remote Containers extension, and that docker daemon is running and the API is as well.
 
-# download vscode and install the Remote-Containers plug-in from Microsoft
+Open the notifications-admin repo in VS Code (File->Open Folder, select notifications-admin folder)
 
-# make sure your docker daemon is running
+create a .env file as detailed in the .env Setup section below
 
-# Using the command pallette (cmd+shift+p), search "Remote Containers: Open folder in project" 
-# choose devcontainer-admin folder, after reload, hit "show logs" in bottom-right
-# logs should complete shortly after running gulp.js and compiling front-end files
+Using VS Code's command pallette (cmd+shift+p), search "Remote Containers: Open folder in Container..." 
 
-# Check vscode panel > ports, await green dot, open a new terminal and run the web server
-make run-flask
-```
+choose devcontainer-admin folder (note: this is a subfolder of notifications-admin/). This will open a new window, closing the current one in the process. After the new window loads, hit "show logs" link in the bottom-right. If this is the first build it will take a few minutes to create the image. The process completes shortly after running gulp.js and compiling front-end files.
+
+Select View->Open View..., then search/select “ports”. Await a green dot on the port view, then open a new terminal and run the web server:
+`make run-flask`
 
 Visit [localhost:6012](http://localhost:6012)
 
 NOTE: any .py code changes you make should be picked up automatically in development. If you're developing JavaScript code, open another vscode terminal and run `npm run watch` to achieve the same.
+
+---
+## .env Setup
+
+create a .env file using sample.env as a template
+`cp sample.env .env` (or via VS Code file browser)
+
+from the notifications-api checkout, copy the values in that repo's .env file for `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` into this repo's .env file.
+
+Change `BASIC_AUTH_USERNAME` and `BASIC_AUTH_PASSWORD` to what you'd like them to be for this deployment.
 
 ## To test the application
 From a terminal within the running devcontainer:
