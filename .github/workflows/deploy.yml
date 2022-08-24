@@ -39,9 +39,11 @@ jobs:
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
+        BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
       with:
-        cf_username: ${{ secrets.cloudgov_username }}
-        cf_password: ${{ secrets.cloudgov_password }}
+        cf_username: ${{ secrets.CLOUDGOV_USERNAME }}
+        cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
         cf_org: gsa-10x-prototyping
         cf_space: 10x-notifications
         push_arguments: >-
@@ -49,6 +51,11 @@ jobs:
           --var SECRET_KEY="$SECRET_KEY"
           --var AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID"
           --var AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"
+          --var REDIS_ENABLED="False"
+          --var ADMIN_CLIENT_USERNAME="notify-admin"
+          --var ADMIN_CLIENT_SECRET="$ADMIN_CLIENT_SECRET"
+          --var BASIC_AUTH_USERNAME="curiousabout"
+          --var BASIC_AUTH_PASSWORD="$BASIC_AUTH_PASSWORD"
 
   bail:
     runs-on: ubuntu-latest
