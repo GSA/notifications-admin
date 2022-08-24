@@ -41,6 +41,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
           BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
+          REDIS_ENABLED: ${{ secrets.REDIS_ENABLED }}
         with:
           cf_username: ${{ secrets.CLOUDGOV_USERNAME }}
           cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
