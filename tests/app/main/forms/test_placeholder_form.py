@@ -25,7 +25,7 @@ def test_form_class_not_mutated(notify_admin):
     (False, 'email address', 'email', '12345', 'Enter a valid email address'),
     (False, 'email address', 'email', '“bad”@email-address.com', 'Enter a valid email address'),
     (False, 'email address', 'email', 'test@example.com', None),
-    (False, 'email address', 'email', 'test@example.gov.uk', None),
+    (False, 'email address', 'email', 'test@example.gsa.gov', None),
 
     (False, 'phone number', 'sms', '', 'Cannot be empty'),
     (False, 'phone number', 'sms', '+1-2345-678890', 'Not a UK mobile number'),

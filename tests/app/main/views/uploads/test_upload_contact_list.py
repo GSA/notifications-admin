@@ -24,7 +24,7 @@ def test_upload_contact_list_page(client_request):
     assert normalize_spaces(page.select('.spreadsheet')[0].text) == (
         'Example A '
         '1 email address '
-        '2 test@example.gov.uk'
+        '2 test@example.gsa.gov'
     )
     assert normalize_spaces(page.select('.spreadsheet')[1].text) == (
         'Example A '

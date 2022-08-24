@@ -2,8 +2,7 @@ commonly_used_passwords = [
     'usnotify',
     'USnotify',
     'us Notify',
-    'us notify'
-] + [
+    'us notify',
     '11111111',
     '12345678',
     '123456789',

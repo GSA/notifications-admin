@@ -33,12 +33,12 @@ def test_find_users_by_email_displays_users_found(
         _expected_status=200
     )
 
-    assert any(element.text.strip() == 'test@gov.uk' for element in document.find_all(
+    assert any(element.text.strip() == 'test@gsa.gov' for element in document.find_all(
         'a', {'class': 'browse-list-link'}, href=True)
     )
     assert any(element.text.strip() == 'Test User' for element in document.find_all('p', {'class': 'browse-list-hint'}))
 
-    assert document.find('a', {'class': 'browse-list-link'}).text.strip() == 'test@gov.uk'
+    assert document.find('a', {'class': 'browse-list-link'}).text.strip() == 'test@gsa.gov'
     assert document.find('p', {'class': 'browse-list-hint'}).text.strip() == 'Test User'
 
 
@@ -118,7 +118,7 @@ def test_user_information_page_shows_information_about_user(
     assert [
         normalize_spaces(p.text) for p in page.select('main p')
     ] == [
-        'test@gov.uk',
+        'test@gsa.gov',
         '+447700900986',
         'Text message code',
         'Last logged in just now',

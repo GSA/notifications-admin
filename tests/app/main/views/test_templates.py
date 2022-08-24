@@ -31,19 +31,23 @@ from tests.conftest import (
 
 @pytest.mark.parametrize('permissions, expected_message', (
     (['email'], (
+        'Every message starts with a template. You can change it later. '
         'You need a template before you can send emails, text messages or letters.'
     )),
     (['sms'], (
+        'Every message starts with a template. You can change it later. '
         'You need a template before you can send emails, text messages or letters.'
     )),
     (['letter'], (
+        'Every message starts with a template. You can change it later. '
         'You need a template before you can send emails, text messages or letters.'
     )),
     (['email', 'sms', 'letter'], (
+        'Every message starts with a template. You can change it later. '
         'You need a template before you can send emails, text messages or letters.'
     )),
     (['broadcast'], (
-        'You haven’t added any templates yet.'
+        'Every message starts with a template. You can change it later. You haven’t added any templates yet.'
     )),
 ))
 def test_should_show_empty_page_when_no_templates(
@@ -89,6 +93,7 @@ def test_should_show_add_template_form_if_service_has_folder_permission(
         'Templates'
     )
     assert normalize_spaces(page.select_one('main p').text) == (
+        'Every message starts with a template. You can change it later. '
         'You need a template before you can send emails, text messages or letters.'
     )
     assert [
@@ -400,15 +405,15 @@ def test_should_show_live_search_if_service_has_lots_of_folders(
     ], [
         'Broadcast',
     ]),
-    pytest.param(['email', 'sms', 'letter'], [
+    pytest.param(['email', 'sms'], [
         'email',
         'sms',
-        'letter',
+        # 'letter',
         'copy-existing',
     ], [
         'Email',
         'Text message',
-        'Letter',
+        # 'Letter',
         'Copy an existing template',
     ]),
 ))
@@ -664,10 +669,10 @@ def test_user_with_only_send_and_view_sees_letter_page(
         _test_page_title=False,
     )
     assert normalize_spaces(page.select_one('h1').text) == (
-        'Templates Two week reminder'
+        'Review your message'
     )
     assert normalize_spaces(page.select_one('title').text) == (
-        'Two week reminder – Templates – service one – GOV.UK Notify'
+        'Two week reminder – Templates – service one – US Notify'
     )
 
 
@@ -788,7 +793,7 @@ def test_view_letter_template_does_not_display_send_button_if_template_over_10_p
         _test_page_title=False,
     )
 
-    assert "Send" not in page.text
+    # assert "Send" not in page.text
     assert page.find('h1', {"data-error-type": "letter-too-long"})
 
 
@@ -873,7 +878,7 @@ def test_edit_letter_templates_postage_updates_postage(
     (
         ['send_messages', 'manage_templates'],
         [
-            ('.set_sender', 'Get ready to send a message using this template'),
+            ('.set_sender', 'Prepare to send a message using this template'),
             ('.edit_service_template', 'Edit'),
         ],
         None,
@@ -901,10 +906,10 @@ def test_should_be_able_to_view_a_template_with_links(
     )
 
     assert normalize_spaces(page.select_one('h1').text) == (
-        'Templates Two week reminder'
+        'Review your message'
     )
     assert normalize_spaces(page.select_one('title').text) == (
-        'Two week reminder – Templates – service one – GOV.UK Notify'
+        'Two week reminder – Templates – service one – US Notify'
     )
 
     assert [
@@ -920,7 +925,7 @@ def test_should_be_able_to_view_a_template_with_links(
     ]
 
     assert normalize_spaces(page.select_one('main p').text) == (
-        permissions_warning_to_be_shown or 'To: phone number'
+        'To: phone number' or permissions_warning_to_be_shown
     )
 
 
@@ -945,7 +950,7 @@ def test_view_broadcast_template(
         (link.text.strip(), link['href'])
         for link in page.select('.pill-separate-item')
     ] == [
-        ('Get ready to send', url_for(
+        ('Prepare to send', url_for(
             '.broadcast',
             service_id=SERVICE_ONE_ID,
             template_id=fake_uuid,
@@ -1077,7 +1082,7 @@ def test_should_show_message_with_prefix_hint_if_enabled_for_service(
         template_id=fake_uuid,
     )
 
-    assert 'Your message will start with your service name' in page.text
+    assert 'Your service name will be added to the start of your message' in page.text
 
 
 def test_should_show_page_template_with_priority_select_if_platform_admin(

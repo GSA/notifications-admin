@@ -32,13 +32,13 @@ from tests.conftest import (
             'Can Manage API integration'
         ),
         (
-            'ZZZZZZZZ zzzzzzz@example.gov.uk '
+            'ZZZZZZZZ zzzzzzz@example.gsa.gov '
             'Can See dashboard '
             'Cannot Send messages '
             'Cannot Add and edit templates '
             'Cannot Manage settings, team and usage '
             'Cannot Manage API integration '
-            'Change details for ZZZZZZZZ zzzzzzz@example.gov.uk'
+            'Change details for ZZZZZZZZ zzzzzzz@example.gsa.gov'
         )
     ),
     (
@@ -52,7 +52,7 @@ from tests.conftest import (
             'Cannot Manage API integration'
         ),
         (
-            'ZZZZZZZZ zzzzzzz@example.gov.uk '
+            'ZZZZZZZZ zzzzzzz@example.gsa.gov '
             'Can See dashboard '
             'Cannot Send messages '
             'Cannot Add and edit templates '
@@ -71,7 +71,7 @@ from tests.conftest import (
             'Cannot Manage API integration'
         ),
         (
-            'ZZZZZZZZ zzzzzzz@example.gov.uk '
+            'ZZZZZZZZ zzzzzzz@example.gsa.gov '
             'Can See dashboard '
             'Cannot Send messages '
             'Cannot Add and edit templates '
@@ -90,7 +90,7 @@ from tests.conftest import (
             'Cannot Manage API integration'
         ),
         (
-            'ZZZZZZZZ zzzzzzz@example.gov.uk '
+            'ZZZZZZZZ zzzzzzz@example.gsa.gov '
             'Can See dashboard '
             'Cannot Send messages '
             'Cannot Add and edit templates '
@@ -109,7 +109,7 @@ from tests.conftest import (
             'Cannot Manage API integration'
         ),
         (
-            'ZZZZZZZZ zzzzzzz@example.gov.uk '
+            'ZZZZZZZZ zzzzzzz@example.gsa.gov '
             'Can See dashboard '
             'Cannot Send messages '
             'Cannot Add and edit templates '
@@ -132,7 +132,7 @@ def test_should_show_overview_page(
 ):
     current_user = user
     other_user = copy.deepcopy(active_user_view_permissions)
-    other_user['email_address'] = 'zzzzzzz@example.gov.uk'
+    other_user['email_address'] = 'zzzzzzz@example.gsa.gov'
     other_user['name'] = 'ZZZZZZZZ'
     other_user['id'] = 'zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzzzzzz'
 
@@ -168,7 +168,7 @@ def test_should_show_change_details_link(
 
     other_user = active_caseworking_user
     other_user['id'] = uuid.uuid4()
-    other_user['email_address'] = 'zzzzzzz@example.gov.uk'
+    other_user['email_address'] = 'zzzzzzz@example.gsa.gov'
     other_user['state'] = state
 
     mocker.patch('app.user_api_client.get_user', return_value=current_user)
@@ -181,7 +181,7 @@ def test_should_show_change_details_link(
     link = page.select('.user-list-item')[-1].select_one('a')
 
     assert normalize_spaces(link.text) == (
-        'Change details for Test User zzzzzzz@example.gov.uk'
+        'Change details for Test User zzzzzzz@example.gsa.gov'
     )
     assert link['href'] == url_for(
         '.edit_user_permissions',
@@ -247,7 +247,7 @@ def test_should_show_caseworker_on_overview_page(
 
     other_user = active_caseworking_user
     other_user['id'] = uuid.uuid4()
-    other_user['email_address'] = 'zzzzzzz@example.gov.uk'
+    other_user['email_address'] = 'zzzzzzz@example.gsa.gov'
 
     mocker.patch('app.user_api_client.get_user', return_value=current_user)
     mocker.patch('app.models.user.Users.client_method', return_value=[
@@ -268,7 +268,7 @@ def test_should_show_caseworker_on_overview_page(
     )
     # [1:5] are invited users
     assert normalize_spaces(page.select('.user-list-item')[6].text) == (
-        'Test User zzzzzzz@example.gov.uk '
+        'Test User zzzzzzz@example.gsa.gov '
         'Cannot See dashboard '
         'Can Send messages '
         'Cannot Add and edit templates '
@@ -794,7 +794,7 @@ def test_cant_edit_user_folder_permissions_for_platform_admin_users(
         service_id=SERVICE_ONE_ID,
         user_id=platform_admin_user['id'],
     )
-    assert normalize_spaces(page.select('main p')[0].text) == 'platform@admin.gov.uk Change email address'
+    assert normalize_spaces(page.select('main p')[0].text) == 'platform@admin.gsa.gov Change email address'
     assert normalize_spaces(page.select('main p')[2].text) == (
         'Platform admin users can access all template folders.'
     )
@@ -1015,7 +1015,7 @@ def test_should_show_page_for_inviting_user_with_email_prefilled(
         'Invite Service Two User'
     )
     assert normalize_spaces(page.select_one('main .govuk-body').text) == (
-        'service-two-user@test.gov.uk'
+        'service-two-user@test.gsa.gov'
     )
     assert not page.select("input#email_address") or page.select("input[type=email]")
 
@@ -1062,7 +1062,7 @@ def test_should_show_page_if_prefilled_user_is_already_invited(
     mock_get_invites_for_service,
 ):
     active_user_with_permission_to_other_service['email_address'] = (
-        'user_1@testnotify.gov.uk'
+        'user_1@testnotify.gsa.gov'
     )
     mocker.patch('app.models.user.user_api_client.get_user', side_effect=[
         # First call is to get the current user
@@ -1164,7 +1164,7 @@ def test_should_show_folder_permission_form_if_service_has_folder_permissions_en
 
 
 @pytest.mark.parametrize('email_address, gov_user', [
-    ('test@example.gov.uk', True),
+    ('test@example.gsa.gov', True),
     ('test@example.com', False)
 ])
 def test_invite_user(
@@ -1259,7 +1259,7 @@ def test_invite_user_when_email_address_is_prefilled(
     ('email_auth')
 ])
 @pytest.mark.parametrize('email_address, gov_user', [
-    ('test@example.gov.uk', True),
+    ('test@example.gsa.gov', True),
     ('test@example.com', False)
 ])
 def test_invite_user_with_email_auth_service(
@@ -1275,7 +1275,7 @@ def test_invite_user_with_email_auth_service(
     mock_get_template_folders,
 ):
     service_one['permissions'].append('email_auth')
-    sample_invite['email_address'] = 'test@example.gov.uk'
+    sample_invite['email_address'] = 'test@example.gsa.gov'
 
     assert is_gov_user(email_address) is gov_user
     mocker.patch('app.models.user.InvitedUsers.client_method', return_value=[sample_invite])
@@ -1302,7 +1302,7 @@ def test_invite_user_with_email_auth_service(
 
     assert page.h1.string.strip() == 'Team members'
     flash_banner = page.find('div', class_='banner-default-with-tick').string.strip()
-    assert flash_banner == 'Invite sent to test@example.gov.uk'
+    assert flash_banner == 'Invite sent to test@example.gsa.gov'
 
     expected_permissions = {'manage_api_keys', 'manage_service', 'manage_templates', 'send_messages', 'view_activity'}
 
@@ -1354,7 +1354,7 @@ def test_invite_user_to_broadcast_service(
     mocker.patch('app.models.user.InvitedUsers.client_method', return_value=[sample_invite])
     mocker.patch('app.models.user.Users.client_method', return_value=[active_user_with_permissions])
     mocker.patch('app.invite_api_client.create_invite', return_value=sample_invite)
-    post_data['email_address'] = 'broadcast@example.gov.uk'
+    post_data['email_address'] = 'broadcast@example.gsa.gov'
     client_request.post(
         'main.invite_user',
         service_id=SERVICE_ONE_ID,
@@ -1363,7 +1363,7 @@ def test_invite_user_to_broadcast_service(
     app.invite_api_client.create_invite.assert_called_once_with(
         sample_invite['from_user'],
         sample_invite['service'],
-        'broadcast@example.gov.uk',
+        'broadcast@example.gsa.gov',
         expected_permissions_to_api,
         'sms_auth',
         [],
@@ -1448,16 +1448,16 @@ def test_cancel_invited_user_doesnt_work_if_user_not_invited_to_this_service(
 
 @pytest.mark.parametrize('invite_status, expected_text', [
     ('pending', (
-        'invited_user@test.gov.uk (invited) '
+        'invited_user@test.gsa.gov (invited) '
         'Can See dashboard '
         'Can Send messages '
         'Cannot Add and edit templates '
         'Can Manage settings, team and usage '
         'Can Manage API integration '
-        'Cancel invitation for invited_user@test.gov.uk'
+        'Cancel invitation for invited_user@test.gsa.gov'
     )),
     ('cancelled', (
-        'invited_user@test.gov.uk (cancelled invite) '
+        'invited_user@test.gsa.gov (cancelled invite) '
         # all permissions are greyed out
         'Cannot See dashboard '
         'Cannot Send messages '
@@ -1502,7 +1502,7 @@ def test_manage_users_does_not_show_accepted_invite(
     assert page.h1.string.strip() == 'Team members'
     user_lists = page.find_all('div', {'class': 'user-list'})
     assert len(user_lists) == 1
-    assert not page.find(text='invited_user@test.gov.uk')
+    assert not page.find(text='invited_user@test.gsa.gov')
 
 
 def test_user_cant_invite_themselves(
@@ -1533,13 +1533,13 @@ def test_user_cant_invite_themselves(
 
 
 @pytest.mark.parametrize('email_address', (
-    'test@user.gov.uk',
-    'TEST@user.gov.uk',
-    'test@USER.gov.uk',
-    'test+test@user.gov.uk',
-    'te.st@user.gov.uk',
-    pytest.param('test2@user.gov.uk', marks=pytest.mark.xfail),
-    pytest.param('test@other.gov.uk', marks=pytest.mark.xfail),
+    'test@user.gsa.gov',
+    'TEST@user.gsa.gov',
+    'test@USER.gsa.gov',
+    'test+test@user.gsa.gov',
+    'te.st@user.gsa.gov',
+    pytest.param('test2@user.gsa.gov', marks=pytest.mark.xfail),
+    pytest.param('test@other.gsa.gov', marks=pytest.mark.xfail),
 ))
 def test_broadcast_user_cant_invite_themselves_or_their_aliases(
     client_request,
@@ -1778,7 +1778,7 @@ def test_edit_user_email_redirects_to_confirmation(
     with client_request.session_transaction() as session:
         assert session[
             'team_member_email_change-{}'.format(active_user_with_permissions['id'])
-        ] == 'test@user.gov.uk'
+        ] == 'test@user.gsa.gov'
 
 
 def test_edit_user_email_without_changing_goes_back_to_team_members(
@@ -1804,7 +1804,7 @@ def test_edit_user_email_without_changing_goes_back_to_team_members(
     assert mock_update_user_attribute.called is False
 
 
-@pytest.mark.parametrize('original_email_address', ['test@gov.uk', 'test@example.com'])
+@pytest.mark.parametrize('original_email_address', ['test@gsa.gov', 'test@example.com'])
 def test_edit_user_email_can_change_any_email_address_to_a_gov_email_address(
     client_request,
     active_user_with_permissions,
@@ -1821,7 +1821,7 @@ def test_edit_user_email_can_change_any_email_address_to_a_gov_email_address(
         service_id=SERVICE_ONE_ID,
         user_id=active_user_with_permissions['id'],
         _data={
-            'email_address': 'new-email-address@gov.uk'
+            'email_address': 'new-email-address@gsa.gov'
         },
         _expected_status=302,
         _expected_redirect=url_for(
@@ -1886,7 +1886,7 @@ def test_confirm_edit_user_email_page(
     mock_get_users_by_service,
     mock_get_user,
 ):
-    new_email = 'new_email@gov.uk'
+    new_email = 'new_email@gsa.gov'
     with client_request.session_transaction() as session:
         session[
             'team_member_email_change-{}'.format(active_user_with_permissions['id'])
@@ -1952,7 +1952,7 @@ def test_confirm_edit_user_email_changes_user_email(
                  side_effect=[active_user_with_permissions, api_user_active])
     mock_event_handler = mocker.patch('app.main.views.manage_users.create_email_change_event')
 
-    new_email = 'new_email@gov.uk'
+    new_email = 'new_email@gsa.gov'
     with client_request.session_transaction() as session:
         session[
             'team_member_email_change-{}'.format(api_user_active['id'])
@@ -1986,7 +1986,7 @@ def test_confirm_edit_user_email_doesnt_change_user_email_for_non_team_member(
     mock_get_users_by_service,
 ):
     with client_request.session_transaction() as session:
-        session['team_member_email_change'] = 'new_email@gov.uk'
+        session['team_member_email_change'] = 'new_email@gsa.gov'
     client_request.post(
         'main.confirm_edit_user_email',
         service_id=SERVICE_ONE_ID,

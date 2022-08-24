@@ -65,7 +65,7 @@ def mock_get_service_settings_page_common(
         'Send emails On Change your settings for sending emails',
         'Reply-to email addresses Not set Manage reply-to email addresses',
         'Email branding GOV.UK Change email branding',
-        'Send files by email contact_us@gov.uk Manage sending files by email',
+        'Send files by email contact_us@gsa.gov Manage sending files by email',
 
         'Label Value Action',
         'Send text messages On Change your settings for sending text messages',
@@ -88,7 +88,7 @@ def mock_get_service_settings_page_common(
         'Send emails On Change your settings for sending emails',
         'Reply-to email addresses Not set Manage reply-to email addresses',
         'Email branding GOV.UK Change email branding',
-        'Send files by email contact_us@gov.uk Manage sending files by email',
+        'Send files by email contact_us@gsa.gov Manage sending files by email',
 
         'Label Value Action',
         'Send text messages On Change your settings for sending text messages',
@@ -133,7 +133,7 @@ def test_should_show_overview(
         users=[api_user_active['id']],
         permissions=['sms', 'email'],
         organisation_id=ORGANISATION_ID,
-        contact_link='contact_us@gov.uk',
+        contact_link='contact_us@gsa.gov',
     )
     mocker.patch('app.service_api_client.get_service', return_value={'data': service_one})
 
@@ -165,7 +165,7 @@ def test_platform_admin_sees_only_relevant_settings_for_broadcast_service(
         permissions=['broadcast'],
         restricted=True,
         organisation_id=ORGANISATION_ID,
-        contact_link='contact_us@gov.uk',
+        contact_link='contact_us@gsa.gov',
     )
     mocker.patch('app.service_api_client.get_service', return_value={'data': service_one})
 
@@ -292,7 +292,7 @@ def test_organisation_name_links_to_org_dashboard(
 
 
 @pytest.mark.parametrize('service_contact_link,expected_text', [
-    ('contact.me@gov.uk', 'Send files by email contact.me@gov.uk Manage sending files by email'),
+    ('contact.me@gsa.gov', 'Send files by email contact.me@gsa.gov Manage sending files by email'),
     (None, 'Send files by email Not set up Manage sending files by email'),
 ])
 def test_send_files_by_email_row_on_settings_page(
@@ -941,7 +941,7 @@ def test_should_check_for_sending_things_right(
     invite_one = invite_json(id_=uuid4(),
                              from_user=service_one['users'][0],
                              service_id=service_one['id'],
-                             email_address='invited_user@test.gov.uk',
+                             email_address='invited_user@test.gsa.gov',
                              permissions='view_activity,send_messages,manage_service,manage_api_keys',
                              created_at=datetime.utcnow(),
                              status='pending',
@@ -1624,7 +1624,7 @@ def test_should_redirect_after_request_to_go_live(
         '\n'
         '---\n'
         'Organisation type: Central government\n'
-        'Agreement signed: Can’t tell (domain is user.gov.uk).\n'
+        'Agreement signed: Can’t tell (domain is user.gsa.gov).\n'
         '\n'
         '{formatted_displayed_volumes}'
         '\n'
@@ -1634,7 +1634,7 @@ def test_should_redirect_after_request_to_go_live(
         'Service reply-to address: test@example.com\n'
         '\n'
         '---\n'
-        'Request sent by test@user.gov.uk\n'
+        'Request sent by test@user.gsa.gov\n'
         'Requester’s user page: http://localhost/users/{user_id}\n'
     ).format(
         service_id=SERVICE_ONE_ID,
@@ -1721,7 +1721,7 @@ def test_request_to_go_live_displays_go_live_notes_in_zendesk_ticket(
         'Service reply-to address: test@example.com\n'
         '\n'
         '---\n'
-        'Request sent by test@user.gov.uk\n'
+        'Request sent by test@user.gsa.gov\n'
         'Requester’s user page: http://localhost/users/{user_id}\n'
     ).format(
         service_id=SERVICE_ONE_ID,
@@ -1767,7 +1767,7 @@ def test_request_to_go_live_displays_mou_signatories(
             'Org 1',
             agreement_signed=True,
             agreement_signed_by_id=fake_uuid,
-            agreement_signed_on_behalf_of_email_address='bigdog@example.gov.uk',
+            agreement_signed_on_behalf_of_email_address='bigdog@example.gsa.gov',
         )
     )
     mocker.patch(
@@ -1784,8 +1784,8 @@ def test_request_to_go_live_displays_mou_signatories(
     assert (
         'Organisation type: Central government\n'
         'Agreement signed: Yes, for Org 1.\n'
-        'Agreement signed by: test@user.gov.uk\n'
-        'Agreement signed on behalf of: bigdog@example.gov.uk\n'
+        'Agreement signed by: test@user.gsa.gov\n'
+        'Agreement signed on behalf of: bigdog@example.gsa.gov\n'
         '\n'
         'Emails in next year: 111,111\n'
     ) in mock_create_ticket.call_args[1]['message']
@@ -2392,7 +2392,7 @@ def test_service_add_reply_to_email_address_without_verification_for_platform_ad
         'app.service_api_client.get_reply_to_email_addresses',
         return_value=[create_reply_to_email_address(is_default=True)]
     )
-    data = {"is_default": "y", "email_address": "test@example.gov.uk"}
+    data = {"is_default": "y", "email_address": "test@example.gsa.gov"}
 
     client_request.post(
         'main.service_add_email_reply_to',
@@ -2406,7 +2406,7 @@ def test_service_add_reply_to_email_address_without_verification_for_platform_ad
     )
     mock_update.assert_called_once_with(
         SERVICE_ONE_ID,
-        email_address='test@example.gov.uk',
+        email_address='test@example.gsa.gov',
         is_default=True)
 
 
@@ -2432,7 +2432,7 @@ def test_service_verify_reply_to_address(
     notification = {
         "id": fake_uuid,
         "status": status,
-        "to": "email@example.gov.uk",
+        "to": "email@example.gsa.gov",
         "service_id": SERVICE_ONE_ID,
         "template_id": TEMPLATE_ONE_ID,
         "notification_type": "email",
@@ -2481,7 +2481,7 @@ def test_add_reply_to_email_address_fails_if_notification_not_delivered_in_45_se
     notification = {
         "id": fake_uuid,
         "status": "sending",
-        "to": "email@example.gov.uk",
+        "to": "email@example.gsa.gov",
         "service_id": SERVICE_ONE_ID,
         "template_id": TEMPLATE_ONE_ID,
         "notification_type": "email",
@@ -2664,14 +2664,14 @@ def test_edit_reply_to_email_address_sends_verification_notification_if_address_
         'app.service_api_client.verify_reply_to_email_address', return_value={"data": {"id": "123"}}
     )
     mocker.patch('app.service_api_client.get_reply_to_email_address', return_value=reply_to_address)
-    data['email_address'] = "test@example.gov.uk"
+    data['email_address'] = "test@example.gsa.gov"
     client_request.post(
         'main.service_edit_email_reply_to',
         service_id=SERVICE_ONE_ID,
         reply_to_email_id=fake_uuid,
         _data=data
     )
-    mock_verify.assert_called_once_with(SERVICE_ONE_ID, "test@example.gov.uk")
+    mock_verify.assert_called_once_with(SERVICE_ONE_ID, "test@example.gsa.gov")
 
 
 def test_service_edit_email_reply_to_updates_email_address_without_verification_for_platform_admin(
@@ -2689,7 +2689,7 @@ def test_service_edit_email_reply_to_updates_email_address_without_verification_
         'app.service_api_client.get_reply_to_email_address',
         return_value=create_reply_to_email_address(is_default=True)
     )
-    data = {"is_default": "y", "email_address": "test@example.gov.uk"}
+    data = {"is_default": "y", "email_address": "test@example.gsa.gov"}
 
     client_request.post(
         'main.service_edit_email_reply_to',
@@ -2705,7 +2705,7 @@ def test_service_edit_email_reply_to_updates_email_address_without_verification_
     mock_update.assert_called_once_with(
         SERVICE_ONE_ID,
         reply_to_email_id=fake_uuid,
-        email_address='test@example.gov.uk',
+        email_address='test@example.gsa.gov',
         is_default=True)
 
 
@@ -3944,7 +3944,7 @@ def test_unknown_channel_404s(
     ),
     (
         'email',
-        'It’s free to send emails through GOV.UK Notify.',
+        'It’s free to send emails through US Notify.',
         'Send emails',
         [],
         'False',
@@ -3953,7 +3953,7 @@ def test_unknown_channel_404s(
     ),
     (
         'email',
-        'It’s free to send emails through GOV.UK Notify.',
+        'It’s free to send emails through US Notify.',
         'Send emails',
         ['email', 'sms', 'letter'],
         'True',
@@ -4419,7 +4419,7 @@ def test_send_files_by_email_contact_details_uses_the_selected_field_when_multip
 @pytest.mark.parametrize(
     'contact_link, subheader, button_selected',
     [
-        ('contact.me@gov.uk', 'Change contact details for the file download page', True),
+        ('contact.me@gsa.gov', 'Change contact details for the file download page', True),
         (None, 'Add contact details to the file download page', False),
     ]
 )
@@ -5004,7 +5004,7 @@ def test_update_service_billing_details(
         'main.edit_service_billing_details',
         service_id=SERVICE_ONE_ID,
         _data={
-            'billing_contact_email_addresses': 'accounts@fluff.gov.uk',
+            'billing_contact_email_addresses': 'accounts@fluff.gsa.gov',
             'billing_contact_names': 'Flannellette von Fluff',
             'billing_reference': '',
             'purchase_order_number': 'PO1234',
@@ -5017,7 +5017,7 @@ def test_update_service_billing_details(
     )
     mock_update_service.assert_called_with(
         SERVICE_ONE_ID,
-        billing_contact_email_addresses='accounts@fluff.gov.uk',
+        billing_contact_email_addresses='accounts@fluff.gsa.gov',
         billing_contact_names='Flannellette von Fluff',
         billing_reference='',
         purchase_order_number='PO1234',

@@ -1,11 +1,10 @@
 from itertools import chain
 
+from flask import current_app
 from notifications_python_client.errors import HTTPError
 
 from app.extensions import redis_client
-from app.notify_client import NotifyAdminAPIClient, cache
-
-from flask import current_app
+from app.notify_client import NotifyAdminAPIClient
 
 
 class OrganisationsClient(NotifyAdminAPIClient):

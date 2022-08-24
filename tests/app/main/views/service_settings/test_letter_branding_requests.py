@@ -88,7 +88,7 @@ def test_letter_branding_request_page_back_link(
 
 
 @pytest.mark.parametrize('org_name, expected_organisation', (
-    (None, 'Can’t tell (domain is user.gov.uk)'),
+    (None, 'Can’t tell (domain is user.gsa.gov)'),
     ('Test Organisation', 'Test Organisation'),
 ))
 def test_letter_branding_request_submit(
@@ -144,7 +144,7 @@ def test_letter_branding_request_submit(
         subject='Letter branding request - service one',
         ticket_type='question',
         user_name='Test User',
-        user_email='test@user.gov.uk',
+        user_email='test@user.gsa.gov',
         org_id=organisation_id,
         org_type='central',
         service_id=SERVICE_ONE_ID

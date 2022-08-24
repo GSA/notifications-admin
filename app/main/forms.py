@@ -762,7 +762,7 @@ def govuk_checkboxes_field_widget(self, field, wrap_in_collapsible=False, param_
         return _wrap_in_collapsible(
             self.field_label,
             Markup(render_template('forms/fields/checkboxes/macro.njk', params=params))
-            )
+        )
     else:
         return Markup(
             render_template('forms/fields/checkboxes/macro.njk', params=params))
@@ -851,7 +851,7 @@ class GovukTextareaField(TextAreaField):
                 "isPageHeading": False
             },
             "hint": {
-              "text": None
+                "text": None
             },
             "errorMessage": error_message
         }
@@ -2152,9 +2152,9 @@ def get_placeholder_form_instance(
         template_type == 'sms'
     ):
         if allow_international_phone_numbers:
-            field = international_phone_number(label=placeholder_name) # TODO: modify as necessary for non-us numbers
+            field = international_phone_number(label=placeholder_name)  # TODO: modify as necessary for non-us numbers
         else:
-            field = uk_mobile_number(label=placeholder_name) # TODO: replace with us_mobile_number
+            field = uk_mobile_number(label=placeholder_name)  # TODO: replace with us_mobile_number
     else:
         field = GovukTextInputField(placeholder_name, validators=[
             DataRequired(message='Cannot be empty')

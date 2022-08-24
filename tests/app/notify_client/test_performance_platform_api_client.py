@@ -1,10 +1,13 @@
 from datetime import date
 
+import pytest
+
 from app.notify_client.performance_dashboard_api_client import (
     PerformanceDashboardAPIClient,
 )
 
 
+@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_get_aggregate_platform_stats(mocker):
     mocker.patch('app.extensions.RedisClient.get', return_value=None)
     client = PerformanceDashboardAPIClient()
@@ -21,6 +24,7 @@ def test_get_aggregate_platform_stats(mocker):
     })
 
 
+@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_sets_value_in_cache(mocker):
     client = PerformanceDashboardAPIClient()
 
@@ -43,8 +47,8 @@ def test_sets_value_in_cache(mocker):
 
     mock_redis_get.assert_called_once_with('performance-stats-2021-01-01-to-2022-02-02')
     mock_api_get.assert_called_once_with('/performance-dashboard', params={
-            'start_date': '2021-01-01', 'end_date': '2022-02-02'
-        })
+        'start_date': '2021-01-01', 'end_date': '2022-02-02'
+    })
     mock_redis_set.assert_called_once_with(
         'performance-stats-2021-01-01-to-2022-02-02',
         '{"data_from": "api"}',
@@ -52,6 +56,7 @@ def test_sets_value_in_cache(mocker):
     )
 
 
+@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_returns_value_from_cache(mocker):
     client = PerformanceDashboardAPIClient()
 

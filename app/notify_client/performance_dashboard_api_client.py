@@ -1,4 +1,4 @@
-from app.notify_client import NotifyAdminAPIClient, cache
+from app.notify_client import NotifyAdminAPIClient
 
 
 class PerformanceDashboardAPIClient(NotifyAdminAPIClient):

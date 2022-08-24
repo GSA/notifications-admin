@@ -327,7 +327,7 @@ def test_should_show_confirm_revoke_api_key(
     )
     assert normalize_spaces(page.select('.banner-dangerous')[0].text) == (
         'Are you sure you want to revoke ‘some key name’? '
-        'You will not be able to use this API key to connect to GOV.UK Notify. '
+        'You will not be able to use this API key to connect to US Notify. '
         'Yes, revoke this API key'
     )
     assert mock_get_api_keys.call_args_list == [
@@ -797,7 +797,7 @@ def test_update_delivery_status_callback_without_changes_does_not_update(
     mock_get_valid_service_callback_api,
 ):
     service_one['service_callback_api'] = [fake_uuid]
-    data = {"user_id": fake_uuid, "url": "https://hello2.gov.uk", "bearer_token": "bearer_token_set"}
+    data = {"user_id": fake_uuid, "url": "https://hello2.gsa.gov", "bearer_token": "bearer_token_set"}
 
     client_request.post(
         'main.delivery_status_callback',
@@ -817,7 +817,7 @@ def test_update_receive_text_message_callback_without_changes_does_not_update(
 ):
     service_one['inbound_api'] = [fake_uuid]
     service_one['permissions'] = ['inbound_sms']
-    data = {"user_id": fake_uuid, "url": "https://hello3.gov.uk", "bearer_token": "bearer_token_set"}
+    data = {"user_id": fake_uuid, "url": "https://hello3.gsa.gov", "bearer_token": "bearer_token_set"}
 
     client_request.post(
         'main.received_text_messages_callback',

@@ -431,7 +431,7 @@ def send_one_off_step(service_id, template_id, step_index):
     if db_template['template_type'] == 'email':
         email_reply_to = get_email_reply_to_address_from_session()
     elif db_template['template_type'] == 'sms':
-        sms_sender = get_sms_sender_from_session() # TODO: verify default sender is US Notify
+        sms_sender = get_sms_sender_from_session()  # TODO: verify default sender is US Notify
 
     template_values = get_recipient_and_placeholders_from_session(db_template['template_type'])
 
@@ -602,7 +602,7 @@ def _check_messages(service_id, template_id, upload_id, preview_row, letters_as_
         # The happy path is that the job doesn’t already exist, so the
         # API will return a 404 and the client will raise HTTPError.
         job_api_client.get_job(service_id, upload_id)
-        
+
         # the job exists already - so go back to the templates page
         # If we just return a `redirect` (302) object here, we'll get
         # errors when we try and unpack in the check_messages route.
@@ -680,7 +680,7 @@ def _check_messages(service_id, template_id, upload_id, preview_row, letters_as_
 
     page_count = get_page_count_for_letter(db_template, template.values)
     template.page_count = page_count
-    
+
     original_file_name = get_csv_metadata(service_id, upload_id).get('original_file_name', '')
 
     return dict(

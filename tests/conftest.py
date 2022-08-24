@@ -1163,7 +1163,7 @@ def active_user_with_permission_to_other_service(
         'Service Two User'
     )
     active_user_with_permission_to_two_services['email_address'] = (
-        'service-two-user@test.gov.uk'
+        'service-two-user@test.gsa.gov'
     )
     return active_user_with_permission_to_two_services
 
@@ -2168,7 +2168,7 @@ def mock_s3_set_metadata(mocker):
 def sample_invite(mocker, service_one):
     id_ = USER_ONE_ID
     from_user = service_one['users'][0]
-    email_address = 'invited_user@test.gov.uk'
+    email_address = 'invited_user@test.gsa.gov'
     service_id = service_one['id']
     permissions = 'view_activity,send_emails,send_letters,send_texts,manage_settings,manage_users,manage_api_keys'
     created_at = str(datetime.utcnow())
@@ -2199,7 +2199,7 @@ def mock_get_invites_for_service(mocker, service_one, sample_invite):
         data = []
         for i in range(0, 5):
             invite = copy.copy(sample_invite)
-            invite['email_address'] = 'user_{}@testnotify.gov.uk'.format(i)
+            invite['email_address'] = 'user_{}@testnotify.gsa.gov'.format(i)
             data.append(invite)
         return data
 
@@ -2213,7 +2213,7 @@ def mock_get_invites_without_manage_permission(mocker, service_one, sample_invit
         return [invite_json(
             id_=str(sample_uuid()),
             from_user=service_one['users'][0],
-            email_address='invited_user@test.gov.uk',
+            email_address='invited_user@test.gsa.gov',
             service_id=service_one['id'],
             permissions='view_activity,send_messages,manage_api_keys',
             created_at=str(datetime.utcnow()),
@@ -2715,7 +2715,7 @@ def mock_get_notification(mocker):
         noti['created_by'] = {
             'id': fake_uuid,
             'name': 'Test User',
-            'email_address': 'test@user.gov.uk'
+            'email_address': 'test@user.gsa.gov'
         }
         noti['template'] = template_json(
             service_id,
@@ -3072,7 +3072,7 @@ def mock_get_valid_service_inbound_api(mocker):
             'created_at': '2017-12-04T10:52:55.289026Z',
             'updated_by_id': fake_uuid,
             'id': inbound_api_id,
-            'url': 'https://hello3.gov.uk',
+            'url': 'https://hello3.gsa.gov',
             'service_id': service_id,
             'updated_at': '2017-12-04T11:28:42.575153Z'
         }
@@ -3087,7 +3087,7 @@ def mock_get_valid_service_callback_api(mocker):
             'created_at': '2017-12-04T10:52:55.289026Z',
             'updated_by_id': fake_uuid,
             'id': callback_api_id,
-            'url': 'https://hello2.gov.uk',
+            'url': 'https://hello2.gsa.gov',
             'service_id': service_id,
             'updated_at': '2017-12-04T11:28:42.575153Z'
         }
@@ -3273,7 +3273,7 @@ def mock_get_users_for_organisation(mocker):
     def _get_users_for_organisation(org_id):
         return [
             user_json(id_='1234', name='Test User 1'),
-            user_json(id_='5678', name='Test User 2', email_address='testt@gov.uk'),
+            user_json(id_='5678', name='Test User 2', email_address='testt@gsa.gov'),
         ]
 
     return mocker.patch(
@@ -3299,7 +3299,7 @@ def mock_get_invited_users_for_organisation(mocker, sample_org_invite):
 def sample_org_invite(mocker, organisation_one):
     id_ = str(UUID(bytes=b'sample_org_invit', version=4))
     invited_by = organisation_one['users'][0]
-    email_address = 'invited_user@test.gov.uk'
+    email_address = 'invited_user@test.gsa.gov'
     organisation = organisation_one['id']
     created_at = str(datetime.utcnow())
     status = 'pending'
@@ -3313,7 +3313,7 @@ def mock_get_invites_for_organisation(mocker, sample_org_invite):
         data = []
         for i in range(0, 5):
             invite = copy.copy(sample_org_invite)
-            invite['email_address'] = 'user_{}@testnotify.gov.uk'.format(i)
+            invite['email_address'] = 'user_{}@testnotify.gsa.gov'.format(i)
             data.append(invite)
         return data
 
@@ -3652,7 +3652,7 @@ def create_active_user_approve_broadcasts_permissions(with_unique_id=False):
 def create_active_caseworking_user(with_unique_id=False):
     return create_user(
         id=str(uuid4()) if with_unique_id else sample_uuid(),
-        email_address='caseworker@example.gov.uk',
+        email_address='caseworker@example.gsa.gov',
         permissions={SERVICE_ONE_ID: [
             'send_texts',
             'send_emails',
@@ -3702,7 +3702,7 @@ def create_platform_admin_user(with_unique_id=False, auth_type='webauthn_auth', 
     return create_user(
         id=str(uuid4()) if with_unique_id else sample_uuid(),
         name='Platform admin user',
-        email_address='platform@admin.gov.uk',
+        email_address='platform@admin.gsa.gov',
         permissions=permissions or {},
         platform_admin=True,
         auth_type=auth_type,
@@ -3740,7 +3740,7 @@ def create_user(**overrides):
     user_data = {
         'name': 'Test User',
         'password': 'somepassword',
-        'email_address': 'test@user.gov.uk',
+        'email_address': 'test@user.gsa.gov',
         'mobile_number': '07700 900762',
         'state': 'active',
         'failed_login_count': 0,
@@ -3926,7 +3926,7 @@ def create_notification(
         noti['created_by'] = {
             'id': sample_uuid(),
             'name': 'Test User',
-            'email_address': 'test@user.gov.uk'
+            'email_address': 'test@user.gsa.gov'
         }
     noti['personalisation'] = {'name': 'Jo'}
     noti['template'] = template_json(

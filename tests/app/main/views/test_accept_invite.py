@@ -57,7 +57,7 @@ def test_existing_user_accept_invite_calls_api_and_redirects_to_dashboard(
     )
 
     mock_check_invite_token.assert_called_with('thisisnotarealtoken')
-    mock_get_existing_user_by_email.assert_called_with('invited_user@test.gov.uk')
+    mock_get_existing_user_by_email.assert_called_with('invited_user@test.gsa.gov')
     assert mock_accept_invite.call_count == 1
     mock_add_user_to_service.assert_called_with(
         expected_service,
@@ -182,7 +182,7 @@ def test_invite_goes_in_session(
     mock_add_user_to_service,
     mock_accept_invite,
 ):
-    sample_invite['email_address'] = 'test@user.gov.uk'
+    sample_invite['email_address'] = 'test@user.gsa.gov'
 
     client_request.get(
         'main.accept_invite',
@@ -337,7 +337,7 @@ def test_existing_signed_out_user_accept_invite_redirects_to_sign_in(
     )
 
     mock_check_invite_token.assert_called_with('thisisnotarealtoken')
-    mock_get_existing_user_by_email.assert_called_with('invited_user@test.gov.uk')
+    mock_get_existing_user_by_email.assert_called_with('invited_user@test.gsa.gov')
     mock_add_user_to_service.assert_called_with(expected_service,
                                                 api_user_active['id'],
                                                 expected_permissions,
@@ -370,7 +370,7 @@ def test_new_user_accept_invite_calls_api_and_redirects_to_registration(
     )
 
     mock_check_invite_token.assert_called_with('thisisnotarealtoken')
-    mock_dont_get_user_by_email.assert_called_with('invited_user@test.gov.uk')
+    mock_dont_get_user_by_email.assert_called_with('invited_user@test.gsa.gov')
 
 
 def test_new_user_accept_invite_calls_api_and_views_registration_page(
@@ -393,14 +393,14 @@ def test_new_user_accept_invite_calls_api_and_views_registration_page(
     )
 
     mock_check_invite_token.assert_called_with('thisisnotarealtoken')
-    mock_dont_get_user_by_email.assert_called_with('invited_user@test.gov.uk')
+    mock_dont_get_user_by_email.assert_called_with('invited_user@test.gsa.gov')
     mock_get_invited_user_by_id.assert_called_once_with(sample_invite['id'])
 
     assert page.h1.string.strip() == 'Create an account'
 
     assert normalize_spaces(page.select_one('main p').text) == (
         'Your account will be created with this email address: '
-        'invited_user@test.gov.uk'
+        'invited_user@test.gsa.gov'
     )
 
     form = page.find('form')
@@ -410,7 +410,7 @@ def test_new_user_accept_invite_calls_api_and_views_registration_page(
     email = form.find('input', type='hidden', id='email_address')
 
     assert email
-    assert email.attrs['value'] == 'invited_user@test.gov.uk'
+    assert email.attrs['value'] == 'invited_user@test.gsa.gov'
     assert name
     assert password
     assert service
@@ -550,7 +550,7 @@ def test_signed_in_existing_user_cannot_use_anothers_invite(
     flash_banners = page.find_all('div', class_='banner-dangerous')
     assert len(flash_banners) == 1
     banner_contents = normalize_spaces(flash_banners[0].text)
-    assert "You’re signed in as test@user.gov.uk." in banner_contents
+    assert "You’re signed in as test@user.gsa.gov." in banner_contents
     assert "This invite is for another email address." in banner_contents
     assert "Sign out and click the link again to accept this invite." in banner_contents
     assert mock_accept_invite.call_count == 0
@@ -565,8 +565,8 @@ def test_accept_invite_does_not_treat_email_addresses_as_case_sensitive(
     mock_check_invite_token,
     mock_get_user_by_email
 ):
-    # the email address of api_user_active is 'test@user.gov.uk'
-    sample_invite['email_address'] = 'TEST@user.gov.uk'
+    # the email address of api_user_active is 'test@user.gsa.gov'
+    sample_invite['email_address'] = 'TEST@user.gsa.gov'
     mocker.patch('app.models.user.Users.client_method', return_value=[api_user_active])
 
     client_request.get(
@@ -736,7 +736,7 @@ def test_existing_user_accepts_and_sets_email_auth(
         _expected_redirect=url_for('main.service_dashboard', service_id=service_one['id']),
     )
 
-    mock_get_existing_user_by_email.assert_called_once_with('test@user.gov.uk')
+    mock_get_existing_user_by_email.assert_called_once_with('test@user.gsa.gov')
     assert mock_update_user_attribute.call_args_list == [
         call(api_user_active['id'], email_access_validated_at='2021-12-12T12:12:12'),
         call(api_user_active['id'], auth_type='email_auth'),
