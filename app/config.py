@@ -128,7 +128,7 @@ class Development(Config):
     ASSET_PATH = '/static/'
     LOGO_CDN_DOMAIN = 'static-logos.notify.tools'  # replace with our own CDN
 
-    REDIS_URL = os.environ.get('DEV_REDIS_URL', 'http://redis:6379')
+    REDIS_URL = os.environ.get('REDIS_URL')
     REDIS_ENABLED = True
 
 
