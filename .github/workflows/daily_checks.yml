@@ -1,6 +1,10 @@
-name: Run checks
+name: Run daily scans
 
-on: [push]
+on:
+  schedule:
+    # cron format: 'minute hour dayofmonth month dayofweek'
+    # this will run at noon UTC every day (7am EST / 8am EDT)
+    - cron: '0 12 * * *'
 
 permissions:
   contents: read
@@ -27,20 +31,6 @@ env:
   BASIC_AUTH_PASSWORD: the10xnotifybeta
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: ./.github/actions/setup-project
-    - name: Run style checks
-      run: flake8 .
-    - name: Check imports alphabetized
-      run: isort --check-only ./app ./tests
-    - name: Run js tests
-      run: npm test
-    - name: Run py tests
-      run: pytest -n4 --maxfail=10
-
   dependency-audits:
     runs-on: ubuntu-latest
     steps:

@@ -10,7 +10,7 @@
     "test-watch": "jest --watch --config tests/javascripts/jest.config.js tests/javascripts",
     "build": "gulp",
     "watch": "gulp watch",
-    "audit": "better-npm-audit audit --production --level high"
+    "audit": "better-npm-audit audit --production --level low"
   },
   "repository": {
     "type": "git",
