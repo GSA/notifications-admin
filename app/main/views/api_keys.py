@@ -25,7 +25,7 @@ from app.notify_client.api_key_api_client import (
 )
 from app.utils.user import user_has_permissions
 
-dummy_bearer_token = 'bearer_token_set'
+dummy_bearer_token = 'bearer_token_set'  # nosec B105 - this is not a real token
 
 
 @main.route("/services/<uuid:service_id>/api")

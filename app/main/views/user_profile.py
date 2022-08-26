@@ -31,7 +31,7 @@ from app.utils.user import user_is_gov_user, user_is_logged_in
 
 NEW_EMAIL = 'new-email'
 NEW_MOBILE = 'new-mob'
-NEW_MOBILE_PASSWORD_CONFIRMED = 'new-mob-password-confirmed'
+NEW_MOBILE_PASSWORD_CONFIRMED = 'new-mob-password-confirmed'  # nosec B105 - this is not a password
 
 
 @main.route("/user-profile")

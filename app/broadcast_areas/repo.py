@@ -1,11 +1,11 @@
-import json
 import os
-import pickle
+import pickle  # nosec B403 - loads only used with trusted input
 import sqlite3
+from json import dumps, loads
 from pathlib import Path
 
 rtree_index_path = Path(__file__).parent / 'rtree.pickle'
-rtree_index = pickle.loads(rtree_index_path.read_bytes())
+rtree_index = pickle.loads(rtree_index_path.read_bytes())  # nosec B301 - trusted input
 
 
 class BroadcastAreasRepository(object):
@@ -111,7 +111,7 @@ class BroadcastAreasRepository(object):
                 ))
                 if not keep_old_features:
                     conn.execute(features_q, (
-                        id, json.dumps(polygons), json.dumps(simple_polygons), utm_crs
+                        id, dumps(polygons), dumps(simple_polygons), utm_crs
                     ))
 
     def query(self, sql, *args):
@@ -127,13 +127,10 @@ class BroadcastAreasRepository(object):
         return sorted(libraries)
 
     def get_areas(self, area_ids):
-        q = """
-        SELECT id, name, count_of_phones, broadcast_area_library_id
-        FROM broadcast_areas
-        WHERE id IN ({})
-        """.format(",".join("?" * len(area_ids)))
+        q = "SELECT id, name, count_of_phones, broadcast_area_library_id FROM broadcast_areas"
+        where = "WHERE id IN ({})".format(",".join("?" * len(area_ids)))
 
-        results = self.query(q, *area_ids)
+        results = self.query(F"{q} {where}", *area_ids)
 
         areas = [
             (row[0], row[1], row[2], row[3])
@@ -147,13 +144,13 @@ class BroadcastAreasRepository(object):
         SELECT broadcast_areas.id, name, count_of_phones, broadcast_area_library_id, simple_polygons, utm_crs
         FROM broadcast_areas
         JOIN broadcast_area_polygons on broadcast_area_polygons.id = broadcast_areas.id
-        WHERE broadcast_areas.id IN ({})
-        """.format(",".join("?" * len(area_ids)))
+        """
+        where = "WHERE broadcast_areas.id IN ({})".format(",".join("?" * len(area_ids)))
 
-        results = self.query(q, *area_ids)
+        results = self.query(F"{q} {where}", *area_ids)
 
         areas = [
-            (row[0], row[1], row[2], row[3], json.loads(row[4]), row[5])
+            (row[0], row[1], row[2], row[3], loads(row[4]), row[5])
             for row in results
         ]
 
@@ -239,7 +236,7 @@ class BroadcastAreasRepository(object):
 
         results = self.query(q, area_id)
 
-        return json.loads(results[0][0]), results[0][1]
+        return loads(results[0][0]), results[0][1]
 
     def get_simple_polygons_for_area(self, area_id):
         q = """
@@ -250,4 +247,4 @@ class BroadcastAreasRepository(object):
 
         results = self.query(q, area_id)
 
-        return json.loads(results[0][0]), results[0][1]
+        return loads(results[0][0]), results[0][1]

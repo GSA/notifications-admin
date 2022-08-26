@@ -120,7 +120,7 @@ class Development(Config):
     # check for local compose orchestration variable
     API_HOST_NAME = os.environ.get('DEV_API_HOST_NAME', 'http://dev:6011')
     DANGEROUS_SALT = 'dev-notify-salt'
-    SECRET_KEY = 'dev-notify-secret-key'
+    SECRET_KEY = 'dev-notify-secret-key'  # nosec B105 - only used in development
     ANTIVIRUS_API_HOST = 'http://localhost:6016'
     ANTIVIRUS_API_KEY = 'test-key'
     ANTIVIRUS_ENABLED = os.environ.get('ANTIVIRUS_ENABLED') == '1'
