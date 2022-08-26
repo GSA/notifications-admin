@@ -52,3 +52,22 @@ jobs:
         run: pip install bandit
       - name: Run scan
         run: bandit -r app/ --confidence-level medium
+
+  dynamic-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-project
+      - name: Run server
+        run: make run-flask &
+        env:
+          NOTIFY_ENVIRONMENT: scanning
+      - name: Run OWASP Full Scan
+        uses: zaproxy/action-full-scan@v0.4.0
+        with:
+          docker_name: 'owasp/zap2docker-weekly'
+          target: 'http://localhost:6012'
+          fail_action: true
+          allow_issue_writing: false
+          rules_file_name: 'zap.conf'
+          cmd_options: '-I'
