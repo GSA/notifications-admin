@@ -156,6 +156,14 @@ class Test(Development):
     ASSET_PATH = 'https://static.example.com/'
 
 
+class Scanning(Test):
+    BASIC_AUTH_FORCE = False
+    API_HOST_NAME = 'https://notifications-api.app.cloud.gov/'
+    NOTIFY_ENVIRONMENT = 'scanning'
+    ASSET_DOMAIN = ''
+    ASSET_PATH = '/static/'
+
+
 class Preview(Config):
     BASIC_AUTH_FORCE = True
     HTTP_PROTOCOL = 'https'
@@ -242,6 +250,7 @@ class Sandbox(CloudFoundryConfig):
 configs = {
     'development': Development,
     'test': Test,
+    'scanning': Scanning,
     'preview': Preview,
     'staging': Staging,
     'live': Live,
