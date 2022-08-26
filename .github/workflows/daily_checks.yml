@@ -42,3 +42,13 @@ jobs:
         ignore-vulns: PYSEC-2022-237
     - name: Run npm audit
       run: make npm-audit
+
+  static-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-project
+      - name: Install bandit
+        run: pip install bandit
+      - name: Run scan
+        run: bandit -r app/ --confidence-level medium

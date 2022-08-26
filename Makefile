@@ -81,6 +81,11 @@ pip-audit:
 .PHONY: audit
 audit: npm-audit pip-audit
 
+.PHONY: static-scan
+static-scan:
+	pip install bandit
+	bandit -r app/
+
 .PHONY: clean
 clean:
 	rm -rf node_modules cache target ${CF_MANIFEST_PATH}
