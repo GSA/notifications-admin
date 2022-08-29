@@ -3,8 +3,8 @@ name: Run daily scans
 on:
   schedule:
     # cron format: 'minute hour dayofmonth month dayofweek'
-    # this will run at noon UTC every day (7am EST / 8am EDT)
-    - cron: '0 12 * * *'
+    # this will run at 10am UTC every day (5am EST / 6am EDT)
+    - cron: '0 10 * * *'
 
 permissions:
   contents: read
