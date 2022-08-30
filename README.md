@@ -18,7 +18,7 @@ Open the notifications-admin repo in VS Code (File->Open Folder, select notifica
 
 create a .env file as detailed in the .env Setup section below
 
-Using VS Code's command pallette (cmd+shift+p), search "Remote Containers: Open folder in Container..." 
+Using VS Code's command pallette (cmd+shift+p), search "Remote Containers: Open folder in Container..."
 
 choose devcontainer-admin folder (note: this is a subfolder of notifications-admin/). This will open a new window, closing the current one in the process. After the new window loads, hit "show logs" link in the bottom-right. If this is the first build it will take a few minutes to create the image. The process completes shortly after running gulp.js and compiling front-end files.
 
@@ -51,6 +51,13 @@ npm run test-watch
 ```
 
 To run a specific JavaScript test, you'll need to copy the full command from `package.json`.
+
+## Running a11y-scans locally
+
+Unlike most of the tests and scans, pa11y-ci cannot currently be run from within the VSCode dev container.
+
+1. Run `make run-flask` from within the devcontainer
+2. Run `make a11y-scan` from your host computer.
 
 ## Further docs [STILL UK DOCS]
 

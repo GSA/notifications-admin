@@ -102,7 +102,7 @@ class Config(object):
 
 class Development(Config):
     ADMIN_BASE_URL = 'http://localhost:6012'
-    BASIC_AUTH_FORCE = True
+    BASIC_AUTH_FORCE = False
     NOTIFY_LOG_PATH = 'application.log'
     DEBUG = True
     SESSION_COOKIE_SECURE = False

@@ -86,6 +86,11 @@ static-scan:
 	pip install bandit
 	bandit -r app/
 
+.PHONY: a11y-scan
+a11y-scan:
+	npm install -g pa11y-ci
+	pa11y-ci
+
 .PHONY: clean
 clean:
 	rm -rf node_modules cache target ${CF_MANIFEST_PATH}
