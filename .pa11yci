@@ -1,9 +1,20 @@
 {
   "defaults": {
     "standard": "WCAG2AA",
-    "runners": ["axe"]
+    "runners": ["axe"],
+    "hideElements": [
+      "nav > ol a",
+      "iframe[src^=\"https://www.youtube\"]",
+      "#sms-pricing-details",
+      "a.govuk-footer__link.govuk-footer__copyright-logo"
+    ]
   },
   "urls": [
-    "http://localhost:6012"
+    "http://localhost:6012",
+    "http://localhost:6012/support",
+    "http://localhost:6012/features",
+    "http://localhost:6012/pricing",
+    "http://localhost:6012/documentation",
+    "http://localhost:6012/sign-in"
   ]
 }
