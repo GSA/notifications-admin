@@ -88,8 +88,8 @@ static-scan:
 
 .PHONY: a11y-scan
 a11y-scan:
-	npm install -g pa11y-ci
-	pa11y-ci
+	source $(NVMSH) && npm install -g pa11y-ci
+	source $(NVMSH) && pa11y-ci
 
 .PHONY: clean
 clean:

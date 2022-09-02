@@ -91,7 +91,5 @@ jobs:
         run: make run-flask &
         env:
           NOTIFY_ENVIRONMENT: scanning
-      - name: Install pa11y-ci
-        run: npm install -g pa11y-ci
       - name: Run pa11y-ci
-        run: pa11y-ci
+        run: make a11y-scan
