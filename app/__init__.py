@@ -163,6 +163,7 @@ def create_app(application):
     asset_fingerprinter._asset_root = application.config['ASSET_PATH']
 
     init_app(application)
+    logging.init_app(application)
 
     if 'extensions' not in application.jinja_options:
         application.jinja_options['extensions'] = []
@@ -215,7 +216,6 @@ def create_app(application):
     ):
         client.init_app(application)
 
-    logging.init_app(application)
     webauthn_server.init_app(application)
 
     login_manager.login_view = 'main.sign_in'

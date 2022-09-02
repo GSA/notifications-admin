@@ -17,7 +17,7 @@ $(eval export CF_HOME)
 
 NOTIFY_CREDENTIALS ?= ~/.notify-credentials
 
-VIRTUALENV_ROOT := $(shell [ -z $$VIRTUAL_ENV ] && echo $$(pwd)/venv || echo $$VIRTUAL_ENV)
+VIRTUALENV_ROOT := $(shell [ -z $$VIRTUAL_ENV ] && echo "/home/vscode/.local" || echo $$VIRTUAL_ENV)
 
 NVMSH := $(shell [ -f "$(HOME)/.nvm/nvm.sh" ] && echo "$(HOME)/.nvm/nvm.sh" || echo "/usr/local/share/nvm/nvm.sh")
 
@@ -51,7 +51,7 @@ virtualenv:
 
 .PHONY: upgrade-pip
 upgrade-pip: virtualenv
-	${VIRTUALENV_ROOT}/bin/pip install --upgrade pip
+	usr/local/bin/pip install --upgrade pip
 
 .PHONY: generate-version-file
 generate-version-file: ## Generates the app version file
@@ -70,7 +70,7 @@ fix-imports: ## Fix imports using isort
 
 .PHONY: freeze-requirements
 freeze-requirements: ## create static requirements.txt
-	${VIRTUALENV_ROOT}/bin/pip install --upgrade pip-tools
+	usr/local/bin/pip install --upgrade pip-tools
 	${VIRTUALENV_ROOT}/bin/pip-compile requirements.in
 
 .PHONY: clean

@@ -31,6 +31,10 @@ def show_redis_status():
     try:
         redis_uri = current_app.config['REDIS_URL']
         current_app.logger.info(f"config['REDIS_URL']: {redis_uri}")
+        redis_enabled = current_app.config['REDIS_ENABLED']
+        current_app.logger.info(f"config['REDIS_ENABLED']: {redis_enabled}")
+        if redis_enabled:
+            current_app.logger.info("config['REDIS_ENABLED'] evaluates as True")
 
         try:
             now = time.time()
