@@ -37,7 +37,7 @@ class AssetFingerprinter(object):
         return self._cache[asset_path]
 
     def get_asset_fingerprint(self, asset_file_path):
-        return hashlib.md5(
+        return hashlib.md5(  # nosec B324 - hash value is not verified, so md5 is fine
             self.get_asset_file_contents(asset_file_path)
         ).hexdigest()
 

@@ -1,6 +1,10 @@
-name: Run checks
+name: Run daily scans
 
-on: [push]
+on:
+  schedule:
+    # cron format: 'minute hour dayofmonth month dayofweek'
+    # this will run at 10am UTC every day (5am EST / 6am EDT)
+    - cron: '0 10 * * *'
 
 permissions:
   contents: read
@@ -27,20 +31,6 @@ env:
   BASIC_AUTH_PASSWORD: the10xnotifybeta
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: ./.github/actions/setup-project
-    - name: Run style checks
-      run: flake8 .
-    - name: Check imports alphabetized
-      run: isort --check-only ./app ./tests
-    - name: Run js tests
-      run: npm test
-    - name: Run py tests
-      run: pytest -n4 --maxfail=10
-
   dependency-audits:
     runs-on: ubuntu-latest
     steps:
@@ -72,8 +62,8 @@ jobs:
         run: make run-flask &
         env:
           NOTIFY_ENVIRONMENT: scanning
-      - name: Run OWASP Baseline Scan
-        uses: zaproxy/action-baseline@v0.7.0
+      - name: Run OWASP Full Scan
+        uses: zaproxy/action-full-scan@v0.4.0
         with:
           docker_name: 'owasp/zap2docker-weekly'
           target: 'http://localhost:6012'
@@ -81,15 +71,3 @@ jobs:
           allow_issue_writing: false
           rules_file_name: 'zap.conf'
           cmd_options: '-I'
-
-  a11y-scan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup-project
-      - name: Run server
-        run: make run-flask &
-        env:
-          NOTIFY_ENVIRONMENT: scanning
-      - name: Run pa11y-ci
-        run: make a11y-scan

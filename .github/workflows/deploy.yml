@@ -35,11 +35,11 @@ jobs:
       - name: Deploy to cloud.gov
         uses: 18f/cg-deploy-action@main
         env:
-          DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DANGEROUS_SALT: ${{ secrets.PROD_DANGEROUS_SALT }}
+          SECRET_KEY: ${{ secrets.PROD_SECRET_KEY }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
+          ADMIN_CLIENT_SECRET: ${{ secrets.PROD_ADMIN_CLIENT_SECRET }}
           BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
           REDIS_ENABLED: ${{ secrets.REDIS_ENABLED }}
         with:
