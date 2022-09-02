@@ -21,17 +21,29 @@ $button-shadow-size: $govuk-border-width-form-element;
       user-select: none;
       padding: 0 0 govuk-spacing(9) 0;
 
+      .govuk-grid-column-one-third {
+        display: none;
+        img {
+          max-width: 100%;
+        }
+      }
+
       @include media(desktop) {
-        background-image: file-url('product/proposition-illustration.png');
-        background-size: 320px;
-        background-repeat: no-repeat;
-        background-position: right -6px top 100px;
+        .govuk-grid-column-one-third {
+          display: block;
+        }
       }
 
       &--alternative {
         @include media(desktop) {
           background-image: file-url('product/proposition-alternative.svg');
+          background-size: 320px;
+          background-repeat: no-repeat;
           background-position: right 10px bottom 0;
+
+          .govuk-grid-column-one-third {
+            display: none;
+          }
         }
       }
 

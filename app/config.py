@@ -102,7 +102,7 @@ class Config(object):
 
 class Development(Config):
     ADMIN_BASE_URL = 'http://localhost:6012'
-    BASIC_AUTH_FORCE = True
+    BASIC_AUTH_FORCE = False
     NOTIFY_LOG_PATH = 'application.log'
     DEBUG = True
     SESSION_COOKIE_SECURE = False
@@ -120,7 +120,7 @@ class Development(Config):
     # check for local compose orchestration variable
     API_HOST_NAME = os.environ.get('DEV_API_HOST_NAME', 'http://dev:6011')
     DANGEROUS_SALT = 'dev-notify-salt'
-    SECRET_KEY = 'dev-notify-secret-key'
+    SECRET_KEY = 'dev-notify-secret-key'  # nosec B105 - only used in development
     ANTIVIRUS_API_HOST = 'http://localhost:6016'
     ANTIVIRUS_API_KEY = 'test-key'
     ANTIVIRUS_ENABLED = os.environ.get('ANTIVIRUS_ENABLED') == '1'
@@ -154,6 +154,14 @@ class Test(Development):
 
     ASSET_DOMAIN = 'static.example.com'
     ASSET_PATH = 'https://static.example.com/'
+
+
+class Scanning(Test):
+    BASIC_AUTH_FORCE = False
+    API_HOST_NAME = 'https://notifications-api.app.cloud.gov/'
+    NOTIFY_ENVIRONMENT = 'scanning'
+    ASSET_DOMAIN = ''
+    ASSET_PATH = '/static/'
 
 
 class Preview(Config):
@@ -242,6 +250,7 @@ class Sandbox(CloudFoundryConfig):
 configs = {
     'development': Development,
     'test': Test,
+    'scanning': Scanning,
     'preview': Preview,
     'staging': Staging,
     'live': Live,

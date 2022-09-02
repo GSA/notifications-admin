@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 import csv
-import pickle
 import sys
 from math import isclose
 from pathlib import Path
+from pickle import dumps  # nosec B403
 
 import geojson
 from notifications_utils.formatters import formatted_list
@@ -104,8 +104,10 @@ def clean_up_invalid_polygons(polygons, indent="    "):
 
             # Make sure the polygon is now valid, and that we haven’t
             # drastically transformed the polygon by ‘fixing’ it
-            assert fixed_polygon.is_valid
-            assert isclose(fixed_polygon.area, shapely_polygon.area, rel_tol=0.001)
+            if not fixed_polygon.is_valid:
+                raise RuntimeError("Fixed polygon is no longer valid")
+            if not isclose(fixed_polygon.area, shapely_polygon.area, rel_tol=0.001):
+                raise RuntimeError("Fixed polygon moved too much")
 
             print(  # noqa: T201
                 f"{indent}Polygon {index + 1}/{len(polygons)} fixed!"
@@ -158,7 +160,8 @@ def polygons_and_simplified_polygons(feature):
     # Check that the simplification process hasn’t introduced bad data
     for dataset in output:
         for polygon in dataset:
-            assert Polygon(polygon).is_valid
+            if not Polygon(polygon).is_valid:
+                raise RuntimeError('Simplification process introduced bad data')
 
     return output + [simplified.utm_crs]
 
@@ -360,7 +363,7 @@ def _add_electoral_wards(dataset_id):
         except KeyError:
             print("Skipping", ward_code, ward_name)  # noqa: T201
 
-    rtree_index_path.open('wb').write(pickle.dumps(rtree_index))
+    rtree_index_path.open('wb').write(dumps(rtree_index))
     repo.insert_broadcast_areas(areas_to_add, keep_old_polygons)
 
 

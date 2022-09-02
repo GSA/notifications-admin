@@ -42,6 +42,11 @@
             it before
           </div>
         </div>
+        <div class="govuk-grid-column-one-third">
+          <img
+            src="{{ asset_url('images/product/proposition-illustration.png') }}"
+            alt="An illustration of notifications to a phone, a laptop, and a letter.">
+        </div>
       </div>
     </div>
   </div>
@@ -58,7 +63,9 @@
         </p>
       </div>
       <div class="govuk-grid-column-one-half">
-        <img src="{{ asset_url('images/product/01-templates.svg') }}" alt="">
+        <img
+          src="{{ asset_url('images/product/01-templates.svg') }}"
+          alt="Example screenshot of adding a new text message template">
       </div>
     </div>
   </div>
@@ -114,7 +121,7 @@
     </h2>
     <div class="responsive-embed responsive-embed--16by9 responsive-embed--bordered bottom-gutter-2">
       <div class="responsive-embed__wrapper">
-        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/_90cv1YgQo4" frameborder="0" allowfullscreen></iframe>
+        <iframe title="US Notify introduction video" width="560" height="315" src="https://www.youtube-nocookie.com/embed/_90cv1YgQo4" frameborder="0" allowfullscreen></iframe>
       </div>
     </div>
   </div>
@@ -125,12 +132,12 @@
         <div class="govuk-grid-column-one-half">
           <span class="govuk-visually-hidden">There are</span>
           <div class="product-page-big-number">{{ counts.organisations|format_thousands }}</div>
-          organisations
+          <span>organisations</span>
         </div>
         <div class="govuk-grid-column-one-half">
           <span class="govuk-visually-hidden">and</span>
           <div class="product-page-big-number">{{ counts.services|format_thousands }}</div>
-          services
+          <span>services</span>
           <span class="govuk-visually-hidden">using Notify.</span>
         </div>
       </div>
@@ -147,18 +154,18 @@
         <div class="govuk-grid-column-one-half">
           <h3 class="govuk-visually-hidden">Emails</h3>
           <div class="product-page-big-number">Unlimited</div>
-          free emails
+          <span>free emails</span>
         </div>
         <div class="govuk-grid-column-one-half">
           <h3 class="govuk-visually-hidden">Text messages</h3>
           <div class="product-page-big-number">Up to 40,000</div>
-          free text messages a year,<br>
-          then {{ sms_rate }} pence per message
+          <span>free text messages a year,<br>
+          then {{ sms_rate }} pence per message</span>
         </div>
         <div class="govuk-grid-column-one-half">
           <h3 class="govuk-visually-hidden">Letters</h3>
           <div class="product-page-big-number">41 pence</div>
-          to print and post a one page letter
+          <span>to print and post a one page letter</span>
         </div>
         <div class="govuk-grid-column-one-half">
           <p class="align-with-big-number-hint">

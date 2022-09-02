@@ -73,6 +73,24 @@ freeze-requirements: ## create static requirements.txt
 	${VIRTUALENV_ROOT}/bin/pip install --upgrade pip-tools
 	${VIRTUALENV_ROOT}/bin/pip-compile requirements.in
 
+.PHONY: pip-audit
+pip-audit:
+	pip install --upgrade pip-audit
+	pip-audit -r requirements.txt -r requirements_for_test.txt -l --ignore-vuln PYSEC-2022-237
+
+.PHONY: audit
+audit: npm-audit pip-audit
+
+.PHONY: static-scan
+static-scan:
+	pip install bandit
+	bandit -r app/
+
+.PHONY: a11y-scan
+a11y-scan:
+	npm install -g pa11y-ci
+	pa11y-ci
+
 .PHONY: clean
 clean:
 	rm -rf node_modules cache target ${CF_MANIFEST_PATH}
