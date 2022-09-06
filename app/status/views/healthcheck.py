@@ -1,11 +1,11 @@
 import time
 
 from flask import current_app, jsonify, request
+from flask_redis import FlaskRedis
 from notifications_python_client.errors import HTTPError
 from redis import RedisError
 
 from app import status_api_client, version
-from app.extensions import redis_client
 from app.status import status
 
 
@@ -38,9 +38,11 @@ def show_redis_status():
 
         try:
             now = time.time()
-            redis_client.set('test', now)
-            val = redis_client.get('test')
-            current_app.logger.info(f"Retrieved value from redis is: {val}")
+            check_redis = FlaskRedis()
+            check_redis.init_app(current_app)
+            check_redis.set('mytestkey', now)
+            val = check_redis.get('mytestkey')
+            current_app.logger.info(f"Retrieved value from redis for mytestkey is: {val}")
         except RedisError as err:
             current_app.logger.exception(f"Redis service failed to respond with {err}")
             # return jsonify(status="error", message=("Redis service failed to respond with: "+str(err))), 500

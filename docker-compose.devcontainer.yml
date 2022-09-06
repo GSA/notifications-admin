@@ -16,12 +16,12 @@ services:
     expose:
       - "6012"
   adminredis:
-    command: sh -c "rm -f /data/dump.rdb && redis-server --port 6379" # disable persistence
+    command: sh -c "rm -f /data/dump.rdb && redis-server --port 6381" # disable persistence
     image: redis:latest
     ports:
-      - "6379:6379"
+      - "6381:6381"
     expose:
-      - "6379"
+      - "6381"
 
 networks:
   default:

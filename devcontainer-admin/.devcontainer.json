@@ -14,10 +14,13 @@
         "python.linting.enabled": true,
         "python.linting.pylintEnabled": true,
         "python.linting.flake8Enabled": true,
-        "python.pythonPath": "/usr/local/bin/python",
+        "python.defaultInterpreterPath": "/usr/bin/python3",
         "python.linting.flake8Path": "/usr/local/py-utils/bin/flake8",
         "python.linting.pylintPath": "/usr/local/py-utils/bin/pylint",
-        "python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8"
+        "python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8",
+        "python.analysis.extraPaths": [
+            "/home/vscode/.local/lib/python3.9/site-packages"
+        ]
     },
     "extensions": [
         "donjayamanne.python-extension-pack",

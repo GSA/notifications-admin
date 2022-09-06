@@ -70,7 +70,7 @@ class Config(object):
     CHECK_PROXY_HEADER = False
     ANTIVIRUS_ENABLED = True
 
-    REDIS_URL = os.environ.get('REDIS_URL')
+    REDIS_URL = os.environ.get('REDIS_URL')+'/0'
     REDIS_ENABLED = True
 
     BASIC_AUTH_USERNAME = os.environ.get('BASIC_AUTH_USERNAME')
@@ -128,7 +128,6 @@ class Development(Config):
     ASSET_PATH = '/static/'
     LOGO_CDN_DOMAIN = 'static-logos.notify.tools'  # replace with our own CDN
 
-    REDIS_URL = os.environ.get('REDIS_URL')
     REDIS_ENABLED = True
 
 
@@ -221,7 +220,6 @@ class Live(Config):
     ASSET_PATH = '/static/'  # TODO use a CDN
     LOGO_CDN_DOMAIN = 'static-logos.notifications.service.gov.uk'  # TODO use our own CDN
 
-    REDIS_URL = os.environ.get('REDIS_URL')
     REDIS_ENABLED = True
 
     ADMIN_CLIENT_SECRET = os.environ.get('ADMIN_CLIENT_SECRET')
