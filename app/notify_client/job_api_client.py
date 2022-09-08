@@ -1,5 +1,3 @@
-from flask import current_app
-
 from app.extensions import redis_client
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
 
@@ -102,12 +100,11 @@ class JobApiClient(NotifyAdminAPIClient):
         data = _attach_current_user(data)
         job = self.post(url='/service/{}/job'.format(service_id), data=data)
 
-        if current_app.config['NOTIFY_ADMIN_API_CACHE_ENABLED']:
-            redis_client.set(
-                'has_jobs-{}'.format(service_id),
-                b'true',
-                ex=int(cache.DEFAULT_TTL),
-            )
+        redis_client.set(
+            'has_jobs-{}'.format(service_id),
+            b'true',
+            ex=int(cache.DEFAULT_TTL),
+        )
 
         return job
 
