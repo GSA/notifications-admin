@@ -1,4 +1,4 @@
-from app.notify_client import NotifyAdminAPIClient
+from app.notify_client import NotifyAdminAPIClient, cache
 
 
 class StatusApiClient(NotifyAdminAPIClient):
@@ -8,6 +8,10 @@ class StatusApiClient(NotifyAdminAPIClient):
 
     # @cache.set('live-service-and-organisation-counts', ttl_in_seconds=3600)
     def get_count_of_live_services_and_organisations(self):
+        return self.get(url='/_status/live-service-and-organisation-counts')
+
+    @cache.set('live-service-and-organisation-counts', ttl_in_seconds=3600)
+    def get_count_of_live_services_and_organisations_cached(self):
         return self.get(url='/_status/live-service-and-organisation-counts')
 
 

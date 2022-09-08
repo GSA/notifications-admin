@@ -7,12 +7,10 @@ if os.environ.get('VCAP_APPLICATION'):
     # from app.cloudfoundry_config import extract_cloudfoundry_config
     # extract_cloudfoundry_config()
     vcap_services = json.loads(os.environ['VCAP_SERVICES'])
-    os.environ['REDIS_URL'] = vcap_services['aws-elasticache-redis'][0]['credentials']['uri']
+    os.environ['REDIS_URL'] = vcap_services['aws-elasticache-redis'][0]['credentials']['uri'].replace("redis", "rediss")
 
 
 class Config(object):
-    NOTIFY_ADMIN_API_CACHE_ENABLED = False  # TODO: remove when redis is fixed on remote
-
     ADMIN_CLIENT_SECRET = os.environ.get('ADMIN_CLIENT_SECRET')
     ADMIN_CLIENT_USER_NAME = os.environ.get('ADMIN_CLIENT_USERNAME')
     API_HOST_NAME = os.environ.get('API_HOST_NAME', 'localhost')
@@ -128,12 +126,8 @@ class Development(Config):
     ASSET_PATH = '/static/'
     LOGO_CDN_DOMAIN = 'static-logos.notify.tools'  # replace with our own CDN
 
-    REDIS_URL = os.environ.get('DEV_REDIS_URL', 'http://redis:6379')
-    REDIS_ENABLED = True
-
 
 class Test(Development):
-    NOTIFY_ADMIN_API_CACHE_ENABLED = True
     BASIC_AUTH_FORCE = False
     DEBUG = True
     TESTING = True
@@ -220,9 +214,6 @@ class Live(Config):
     ASSET_DOMAIN = ''  # TODO use a CDN
     ASSET_PATH = '/static/'  # TODO use a CDN
     LOGO_CDN_DOMAIN = 'static-logos.notifications.service.gov.uk'  # TODO use our own CDN
-
-    REDIS_URL = os.environ.get('REDIS_URL')
-    REDIS_ENABLED = True
 
     ADMIN_CLIENT_SECRET = os.environ.get('ADMIN_CLIENT_SECRET')
     ADMIN_CLIENT_USER_NAME = os.environ.get('ADMIN_CLIENT_USERNAME')

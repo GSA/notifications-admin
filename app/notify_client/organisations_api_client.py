@@ -1,6 +1,5 @@
 from itertools import chain
 
-from flask import current_app
 from notifications_python_client.errors import HTTPError
 
 from app.extensions import redis_client
@@ -54,12 +53,11 @@ class OrganisationsClient(NotifyAdminAPIClient):
     def update_organisation(self, org_id, cached_service_ids=None, **kwargs):
         api_response = self.post(url="/organisations/{}".format(org_id), data=kwargs)
 
-        if current_app.config['NOTIFY_ADMIN_API_CACHE_ENABLED']:
-            if cached_service_ids:
-                redis_client.delete(*map('service-{}'.format, cached_service_ids))
+        if cached_service_ids:
+            redis_client.delete(*map('service-{}'.format, cached_service_ids))
 
-            if 'name' in kwargs:
-                redis_client.delete(f'organisation-{org_id}-name')
+        if 'name' in kwargs:
+            redis_client.delete(f'organisation-{org_id}-name')
 
         return api_response
 
