@@ -35,7 +35,7 @@ def test_load_cloudfoundry_config_if_available(reload_config):
     os.environ['VCAP_SERVICES'] = json.dumps({
         'aws-elasticache-redis': [{
             'credentials': {
-                'uri': 'redis uri'
+                'uri': 'redis://xxx:6379'
             }
         }],
     })
@@ -44,8 +44,8 @@ def test_load_cloudfoundry_config_if_available(reload_config):
         # reload config so that its module level code (ie: all of it) is re-instantiated
         importlib.reload(config)
 
-    assert os.environ['REDIS_URL'] == 'redis uri'
-    assert config.Config.REDIS_URL == 'redis uri'
+    assert os.environ['REDIS_URL'] == 'rediss://xxx:6379'
+    assert config.Config.REDIS_URL == 'rediss://xxx:6379'
 
 
 def test_load_config_if_cloudfoundry_not_available(reload_config):

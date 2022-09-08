@@ -1,3 +1,4 @@
+import logging
 import numbers
 import uuid
 from time import time
@@ -6,8 +7,6 @@ from flask import current_app
 from flask_redis import FlaskRedis
 # expose redis exceptions so that they can be caught
 from redis.exceptions import RedisError  # noqa
-
-import logging
 
 logging.basicConfig(level=logging.INFO)
 
