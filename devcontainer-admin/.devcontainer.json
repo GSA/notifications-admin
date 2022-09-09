@@ -30,8 +30,7 @@
         "pmbenjamin.vscode-snyk",
         "visualstudioexptteam.vscodeintellicode",
         "visualstudioexptteam.intellicode-api-usage-examples",
-        "yzhang.markdown-all-in-one",
-        "GitHub.copilot"
+        "yzhang.markdown-all-in-one"
     ],
     "forwardPorts": [
         6012
