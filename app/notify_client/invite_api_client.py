@@ -1,4 +1,4 @@
-from app.notify_client import NotifyAdminAPIClient, _attach_current_user
+from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
 from app.utils.user_permissions import (
     all_ui_permissions,
     translate_permissions_from_ui_to_db,
@@ -64,8 +64,8 @@ class InviteApiClient(NotifyAdminAPIClient):
         self.post(url='/service/{0}/invite/{1}'.format(service_id, invited_user_id),
                   data=data)
 
-    # @cache.delete('service-{service_id}')
-    # @cache.delete('user-{invited_user_id}')
+    @cache.delete('service-{service_id}')
+    @cache.delete('user-{invited_user_id}')
     def accept_invite(self, service_id, invited_user_id):
         data = {'status': 'accepted'}
         self.post(url='/service/{0}/invite/{1}'.format(service_id, invited_user_id),

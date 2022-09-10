@@ -105,7 +105,7 @@ def mock_get_service_settings_page_common(
         'Count in list of live services Yes Change if service is counted in list of live services',
         'Billing details None Change billing details for service',
         'Notes None Change the notes for the service',
-        'Organisation Test organisation Central government Change organisation for service',
+        'Organisation Test Organisation Central government Change organisation for service',
         'Rate limit 3,000 per minute Change rate limit',
         'Message limit 1,000 per day Change daily message limit',
         'Free text message allowance 250,000 per year Change free text message allowance',
@@ -288,7 +288,7 @@ def test_organisation_name_links_to_org_dashboard(
 
     org_row = find_element_by_tag_and_partial_text(response, tag='tr', string='Organisation')
     assert org_row.find('a')['href'] == url_for('main.organisation_dashboard', org_id=ORGANISATION_ID)
-    assert normalize_spaces(org_row.find('a').text) == 'Test organisation'
+    assert normalize_spaces(org_row.find('a').text) == 'Test Organisation'
 
 
 @pytest.mark.parametrize('service_contact_link,expected_text', [

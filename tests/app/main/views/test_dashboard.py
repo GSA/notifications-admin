@@ -833,7 +833,7 @@ def test_should_show_upcoming_jobs_on_dashboard(
         'main.service_dashboard',
         service_id=SERVICE_ONE_ID,
     )
-    mock_get_jobs.assert_called_once_with(SERVICE_ONE_ID)
+
     mock_get_scheduled_job_stats.assert_called_once_with(SERVICE_ONE_ID)
 
     assert normalize_spaces(

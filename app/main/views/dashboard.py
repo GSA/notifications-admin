@@ -419,7 +419,7 @@ def get_monthly_usage_breakdown(year, monthly_usage):
 def get_monthly_usage_breakdown_for_letters(monthly_letters):
     postage_order = {'first class': 0, 'second class': 1, 'international': 2}
 
-    group_key = lambda row: (  # noqa: E731
+    def group_key(row): return (  # noqa: E731
         postage_order[get_monthly_usage_postage_description(row)], row['rate']
     )
 

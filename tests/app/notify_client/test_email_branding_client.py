@@ -1,11 +1,8 @@
 from unittest.mock import call
 
-import pytest
-
 from app.notify_client.email_branding_client import EmailBrandingClient
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_get_email_branding(mocker, fake_uuid):
     mock_get = mocker.patch(
         'app.notify_client.email_branding_client.EmailBrandingClient.get',
@@ -30,7 +27,6 @@ def test_get_email_branding(mocker, fake_uuid):
     )
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_get_all_email_branding(mocker):
     mock_get = mocker.patch(
         'app.notify_client.email_branding_client.EmailBrandingClient.get',
@@ -55,7 +51,6 @@ def test_get_all_email_branding(mocker):
     )
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_create_email_branding(mocker):
     org_data = {'logo': 'test.png', 'name': 'test name', 'text': 'test name', 'colour': 'red',
                 'brand_type': 'org'}
@@ -75,7 +70,6 @@ def test_create_email_branding(mocker):
     mock_redis_delete.assert_called_once_with('email_branding')
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_update_email_branding(mocker, fake_uuid):
     org_data = {'logo': 'test.png', 'name': 'test name', 'text': 'test name', 'colour': 'red',
                 'brand_type': 'org'}
