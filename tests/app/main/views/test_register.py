@@ -151,7 +151,7 @@ def test_should_add_user_details_to_session(
         _data={
             'name': 'Test Codes',
             'email_address': email_address,
-            'mobile_number': '+17733541500',
+            'mobile_number': '+11231231234',
             'password': 'validPassword!'
         }
     )
