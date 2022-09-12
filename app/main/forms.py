@@ -1298,14 +1298,7 @@ class CreateServiceForm(StripWhitespaceForm):
             MustContainAlphanumericCharacters(),
             Length(max=255, message='Service name must be 255 characters or fewer')
         ])
-    organisation_type = OrganisationTypeField('Who runs this service?')
-
-
-class CreateNhsServiceForm(CreateServiceForm):
-    organisation_type = OrganisationTypeField(
-        'Who runs this service?',
-        include_only={'nhs_central', 'nhs_local', 'nhs_gp'},
-    )
+    # organisation_type = OrganisationTypeField('Who runs this service?')
 
 
 class AdminNewOrganisationForm(
