@@ -131,11 +131,12 @@ def test_should_return_200_when_email_is_not_gov_uk(
 
 @pytest.mark.parametrize('email_address', (
     'notfound@example.gsa.gov',
-    pytest.param('example@lsquo.net', marks=pytest.mark.xfail(raises=AssertionError)),
+    'example@lsquo.net',
     pytest.param('example@ellipsis.com', marks=pytest.mark.xfail(raises=AssertionError)),
 ))
 def test_should_add_user_details_to_session(
     client_request,
+    mocker,
     mock_send_verify_code,
     mock_register_user,
     mock_get_user_by_email_not_found,
