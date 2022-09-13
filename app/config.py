@@ -141,6 +141,7 @@ class Test(Development):
     PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'test-letters-precompiled-originals-backup'
     NOTIFY_ENVIRONMENT = 'test'
     API_HOST_NAME = 'http://you-forgot-to-mock-an-api-call-to'
+    REDIS_URL = 'redis://you-forgot-to-mock-a-redis-call-to'
     TEMPLATE_PREVIEW_API_HOST = 'http://localhost:9999'
     ANTIVIRUS_API_HOST = 'https://test-antivirus'
     ANTIVIRUS_API_KEY = 'test-antivirus-secret'

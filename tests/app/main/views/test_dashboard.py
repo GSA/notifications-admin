@@ -226,6 +226,7 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_messages(
         'main.service_dashboard',
         service_id=SERVICE_ONE_ID,
     )
+    mock_get_jobs.assert_called_once_with(SERVICE_ONE_ID)
     banner = page.select('a.banner-dashboard')[1]
     assert normalize_spaces(
         banner.text
@@ -254,6 +255,7 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_no_messages(
         'main.service_dashboard',
         service_id=SERVICE_ONE_ID,
     )
+    mock_get_jobs.assert_called_once_with(SERVICE_ONE_ID)
     banner = page.select('a.banner-dashboard')[1]
     assert normalize_spaces(banner.text) == '0 text messages received'
     assert banner['href'] == url_for(
@@ -275,7 +277,6 @@ def test_inbox_showing_inbound_messages(
     client_request,
     service_one,
     mock_get_service_templates_when_no_templates_exist,
-    mock_get_jobs,
     mock_get_service_statistics,
     mock_get_template_statistics,
     mock_get_annual_usage_for_service,
@@ -304,7 +305,6 @@ def test_get_inbound_sms_shows_page_links(
     client_request,
     service_one,
     mock_get_service_templates_when_no_templates_exist,
-    mock_get_jobs,
     mock_get_service_statistics,
     mock_get_template_statistics,
     mock_get_annual_usage_for_service,
@@ -327,7 +327,6 @@ def test_empty_inbox(
     client_request,
     service_one,
     mock_get_service_templates_when_no_templates_exist,
-    mock_get_jobs,
     mock_get_service_statistics,
     mock_get_template_statistics,
     mock_get_annual_usage_for_service,
@@ -833,6 +832,7 @@ def test_should_show_upcoming_jobs_on_dashboard(
         'main.service_dashboard',
         service_id=SERVICE_ONE_ID,
     )
+
     mock_get_jobs.assert_called_once_with(SERVICE_ONE_ID)
     mock_get_scheduled_job_stats.assert_called_once_with(SERVICE_ONE_ID)
 
@@ -975,6 +975,7 @@ def test_should_not_show_jobs_on_dashboard_for_users_with_uploads_page(
         'main.service_dashboard',
         service_id=SERVICE_ONE_ID,
     )
+    mock_get_jobs.assert_called_once_with(SERVICE_ONE_ID)
     for filename in {
         "export 1/1/2016.xls",
         "all email addresses.xlsx",

@@ -92,7 +92,6 @@ from app import organisations_client
         ),
     ]
 )
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_returns_value_from_cache(
     notify_admin,
     mocker,
@@ -125,7 +124,6 @@ def test_returns_value_from_cache(
     assert mock_redis_set.call_args_list == expected_cache_set_calls
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_deletes_domain_cache(
     notify_admin,
     mock_get_user,
@@ -153,7 +151,6 @@ def test_deletes_domain_cache(
         call('domains'),
     ]),
 ))
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_update_organisation_when_not_updating_org_type(
     mocker,
     fake_uuid,
@@ -173,7 +170,6 @@ def test_update_organisation_when_not_updating_org_type(
     assert mock_redis_delete.call_args_list == expected_cache_delete_calls
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_update_organisation_when_updating_org_type_and_org_has_services(mocker, fake_uuid):
     mock_redis_delete = mocker.patch('app.extensions.RedisClient.delete')
     mock_post = mocker.patch('app.notify_client.organisations_api_client.OrganisationsClient.post')
@@ -195,7 +191,6 @@ def test_update_organisation_when_updating_org_type_and_org_has_services(mocker,
     ]
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_update_organisation_when_updating_org_type_but_org_has_no_services(mocker, fake_uuid):
     mock_redis_delete = mocker.patch('app.extensions.RedisClient.delete')
     mock_post = mocker.patch('app.notify_client.organisations_api_client.OrganisationsClient.post')
@@ -216,7 +211,6 @@ def test_update_organisation_when_updating_org_type_but_org_has_no_services(mock
     ]
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_update_service_organisation_deletes_cache(mocker, fake_uuid):
     mock_redis_delete = mocker.patch('app.extensions.RedisClient.delete')
     mock_post = mocker.patch('app.notify_client.organisations_api_client.OrganisationsClient.post')
@@ -237,7 +231,6 @@ def test_update_service_organisation_deletes_cache(mocker, fake_uuid):
     )
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_remove_user_from_organisation_deletes_user_cache(mocker):
     mock_redis_delete = mocker.patch('app.extensions.RedisClient.delete')
     mock_delete = mocker.patch('app.notify_client.organisations_api_client.OrganisationsClient.delete')

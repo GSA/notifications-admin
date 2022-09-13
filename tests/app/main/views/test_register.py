@@ -136,6 +136,7 @@ def test_should_return_200_when_email_is_not_gov_uk(
 ))
 def test_should_add_user_details_to_session(
     client_request,
+    mocker,
     mock_send_verify_code,
     mock_register_user,
     mock_get_user_by_email_not_found,
@@ -151,9 +152,9 @@ def test_should_add_user_details_to_session(
         _data={
             'name': 'Test Codes',
             'email_address': email_address,
-            'mobile_number': '+4407700900460',
+            'mobile_number': '+11231231234',
             'password': 'validPassword!'
-        },
+        }
     )
     with client_request.session_transaction() as session:
         assert session['user_details']['email'] == email_address

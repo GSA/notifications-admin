@@ -7,7 +7,6 @@ from app.models.job import Job, PaginatedJobs
 from app.notify_client.job_api_client import JobApiClient
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_client_creates_job_data_correctly(mocker, fake_uuid):
     job_id = fake_uuid
     service_id = fake_uuid
@@ -333,7 +332,6 @@ def test_cancel_job(mocker):
         'false',
     ),
 ])
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_has_jobs_sets_cache(
     mocker,
     fake_uuid,
@@ -363,7 +361,6 @@ def test_has_jobs_sets_cache(
     (b'true', True),
     (b'false', False),
 ])
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_has_jobs_returns_from_cache(
     mocker,
     fake_uuid,

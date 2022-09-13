@@ -1,5 +1,3 @@
-import pytest
-
 from app.notify_client.broadcast_message_api_client import (
     BroadcastMessageAPIClient,
 )
@@ -39,7 +37,6 @@ def test_get_broadcast_messages(mocker):
     )
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_get_broadcast_message(mocker):
     client = BroadcastMessageAPIClient()
     mocker.patch('app.notify_client.current_user', id='1')
@@ -59,7 +56,6 @@ def test_get_broadcast_message(mocker):
     )
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_update_broadcast_message(mocker):
     client = BroadcastMessageAPIClient()
     mocker.patch('app.notify_client.current_user', id='1')
@@ -79,7 +75,6 @@ def test_update_broadcast_message(mocker):
     mock_redis_delete.assert_called_once_with('service-12345-broadcast-message-67890')
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_update_broadcast_message_status(mocker):
     client = BroadcastMessageAPIClient()
     mocker.patch('app.notify_client.current_user', id='1')

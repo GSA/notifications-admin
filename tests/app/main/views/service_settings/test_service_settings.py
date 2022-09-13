@@ -279,6 +279,7 @@ def test_organisation_name_links_to_org_dashboard(
     service_one = service_json(SERVICE_ONE_ID,
                                permissions=['sms', 'email'],
                                organisation_id=ORGANISATION_ID)
+
     mocker.patch('app.service_api_client.get_service', return_value={'data': service_one})
 
     client_request.login(platform_admin_user, service_one)

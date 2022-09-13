@@ -10,7 +10,6 @@ from tests.conftest import SERVICE_ONE_ID
 FAKE_TEMPLATE_ID = uuid4()
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_client_posts_archived_true_when_deleting_template(mocker):
     mocker.patch('app.notify_client.current_user', id='1')
     mock_redis_delete_by_pattern = mocker.patch('app.extensions.RedisClient.delete_by_pattern')
@@ -354,7 +353,6 @@ def test_client_returns_count_of_service_templates(
         ),
     ]
 )
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_returns_value_from_cache(
     mocker,
     client_method,
@@ -410,7 +408,6 @@ def test_returns_value_from_cache(
     (user_api_client, 'add_user_to_service', [SERVICE_ONE_ID, uuid4(), [], []], {}),
     (invite_api_client, 'accept_invite', [SERVICE_ONE_ID, uuid4()], {}),
 ])
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_deletes_service_cache(
     notify_admin,
     mock_get_user,
@@ -455,7 +452,6 @@ def test_deletes_service_cache(
         'service-{}'.format(SERVICE_ONE_ID),
     ]),
 ])
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_deletes_caches_when_modifying_templates(
     notify_admin,
     mock_get_user,
@@ -479,7 +475,6 @@ def test_deletes_caches_when_modifying_templates(
         assert mock_redis_delete_by_pattern.call_args_list[0] == call(f'service-{SERVICE_ONE_ID}-template-*')
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_deletes_cached_users_when_archiving_service(mocker, mock_get_service_templates):
     mock_redis_delete = mocker.patch('app.extensions.RedisClient.delete')
     mock_redis_delete_by_pattern = mocker.patch('app.extensions.RedisClient.delete_by_pattern')
@@ -492,7 +487,6 @@ def test_deletes_cached_users_when_archiving_service(mocker, mock_get_service_te
     assert call(f'service-{SERVICE_ONE_ID}-template-*') in mock_redis_delete_by_pattern.call_args_list
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_deletes_cached_users_when_changing_broadcast_service_settings(mocker):
     mock_redis_delete = mocker.patch('app.extensions.RedisClient.delete')
 
@@ -534,7 +528,6 @@ def test_client_updates_guest_list(mocker):
     )
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_client_doesnt_delete_service_template_cache_when_none_exist(
     notify_admin,
     mock_get_user,
@@ -554,7 +547,6 @@ def test_client_doesnt_delete_service_template_cache_when_none_exist(
     assert len(mock_redis_delete_by_pattern.call_args_list) == 1
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_client_deletes_service_template_cache_when_service_is_updated(
     notify_admin,
     mock_get_user,

@@ -1,9 +1,6 @@
-import pytest
-
 from app.notify_client.status_api_client import StatusApiClient
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_get_count_of_live_services_and_organisations(mocker):
     mocker.patch('app.extensions.RedisClient.get', return_value=None)
     client = StatusApiClient()
@@ -14,7 +11,6 @@ def test_get_count_of_live_services_and_organisations(mocker):
     mock.assert_called_once_with(url='/_status/live-service-and-organisation-counts')
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_sets_value_in_cache(mocker):
     client = StatusApiClient()
 
@@ -41,7 +37,6 @@ def test_sets_value_in_cache(mocker):
     )
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_returns_value_from_cache(mocker):
     client = StatusApiClient()
 

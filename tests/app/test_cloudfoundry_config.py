@@ -11,7 +11,7 @@ def vcap_services():
     return {
         'aws-elasticache-redis': [{
             'credentials': {
-                'uri': 'redis uri'
+                'uri': 'redis://xxx:6379'
             }
         }],
     }
@@ -21,4 +21,4 @@ def test_extract_cloudfoundry_config_populates_other_vars(os_environ, vcap_servi
     os.environ['VCAP_SERVICES'] = json.dumps(vcap_services)
     extract_cloudfoundry_config()
 
-    assert os.environ['REDIS_URL'] == 'redis uri'
+    assert os.environ['REDIS_URL'] == 'rediss://xxx:6379'

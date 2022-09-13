@@ -155,7 +155,6 @@ def test_client_converts_admin_permissions_to_db_permissions_on_add_to_service(n
         ),
     ]
 )
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_returns_value_from_cache(
     notify_admin,
     mocker,
@@ -203,7 +202,6 @@ def test_returns_value_from_cache(
     (service_api_client, 'create_service', ['', '', 0, False, user_id, sample_uuid()], {}),
     (invite_api_client, 'accept_invite', [SERVICE_ONE_ID, user_id], {}),
 ])
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_deletes_user_cache(
     notify_admin,
     mock_get_user,
@@ -223,7 +221,6 @@ def test_deletes_user_cache(
     assert len(mock_request.call_args_list) == 1
 
 
-@pytest.mark.skip(reason='@cache decorator disabled until caching is fixed')
 def test_add_user_to_service_calls_correct_endpoint_and_deletes_keys_from_cache(mocker):
     mock_redis_delete = mocker.patch('app.extensions.RedisClient.delete')
 
