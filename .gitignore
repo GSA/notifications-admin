@@ -119,3 +119,10 @@ logs/**
 app/version.py
 # app/static # is generated at build time, TODO: de-UKify and ignore again
 # app/templates/vendor # is generated at build time, TODO: de-UKify and ignore again
+
+# Terraform
+.terraform.lock.hcl
+**/.terraform/*
+secrets.auto.tfvars
+terraform.tfstate
+terraform.tfstate.backup
