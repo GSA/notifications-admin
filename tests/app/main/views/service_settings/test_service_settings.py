@@ -621,7 +621,7 @@ def test_broadcast_service_in_training_mode_doesnt_show_trial_mode_content(
     assert not page.select_one('main ul')
 
 
-@ freeze_time("2017-04-01 11:09:00.061258")
+@freeze_time("2017-04-01 11:09:00.061258")
 def test_switch_service_to_live(
     client_request,
     platform_admin_user,
@@ -1583,7 +1583,7 @@ def test_non_gov_users_cant_request_to_go_live(
         ),
     ),
 ))
-@ freeze_time("2012-12-21 13:12:12.12354")
+@freeze_time("2012-12-21 13:12:12.12354")
 def test_should_redirect_after_request_to_go_live(
     client_request,
     mocker,
@@ -2417,7 +2417,7 @@ def test_service_add_reply_to_email_address_without_verification_for_platform_ad
     ("sending", 0, 0),
     ("permanent-failure", 1, 0),
 ])
-@ freeze_time("2018-06-01 11:11:00.061258")
+@freeze_time("2018-06-01 11:11:00.061258")
 def test_service_verify_reply_to_address(
     mocker,
     client_request,
@@ -2477,7 +2477,7 @@ def test_service_verify_reply_to_address(
         assert page.find('input', type='email').attrs["value"] == notification["to"]
 
 
-@ freeze_time("2018-06-01 11:11:00.061258")
+@freeze_time("2018-06-01 11:11:00.061258")
 def test_add_reply_to_email_address_fails_if_notification_not_delivered_in_45_sec(mocker, client_request, fake_uuid):
     notification = {
         "id": fake_uuid,
@@ -3780,7 +3780,7 @@ def test_should_show_page_to_set_sms_allowance(
     mock_get_free_sms_fragment_limit.assert_called_once_with(SERVICE_ONE_ID)
 
 
-@ freeze_time("2017-04-01 11:09:00.061258")
+@freeze_time("2017-04-01 11:09:00.061258")
 @pytest.mark.parametrize('given_allowance, expected_api_argument', [
     ('0', 0),
     ('1', 1),
