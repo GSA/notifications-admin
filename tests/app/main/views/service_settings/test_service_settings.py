@@ -292,7 +292,7 @@ def test_organisation_name_links_to_org_dashboard(
     assert normalize_spaces(org_row.find('a').text) == 'Test organisation'
 
 
-@ pytest.mark.parametrize('service_contact_link,expected_text', [
+@pytest.mark.parametrize('service_contact_link,expected_text', [
     ('contact.me@gsa.gov', 'Send files by email contact.me@gsa.gov Manage sending files by email'),
     (None, 'Send files by email Not set up Manage sending files by email'),
 ])
@@ -325,7 +325,7 @@ def test_send_files_by_email_row_on_settings_page(
     assert normalize_spaces(org_row.get_text()) == expected_text
 
 
-@ pytest.mark.parametrize('permissions, expected_rows', [
+@pytest.mark.parametrize('permissions, expected_rows', [
     (['email', 'sms', 'inbound_sms', 'international_sms'], [
 
         'Service name service one Change service name',
@@ -538,7 +538,7 @@ def test_should_show_service_name_with_no_prefixing(
     ).text == 'Your service name should tell users what the message is about as well as who it’s from.'
 
 
-@ pytest.mark.parametrize('name, error_message', [
+@pytest.mark.parametrize('name, error_message', [
     ('', 'Cannot be empty'),
     ('.', 'Must include at least two alphanumeric characters'),
     ('a' * 256, 'Service name must be 255 characters or fewer'),
@@ -559,7 +559,7 @@ def test_service_name_change_fails_if_new_name_fails_validation(
     assert error_message in page.find("span", {"class": "govuk-error-message"}).text
 
 
-@ pytest.mark.parametrize('user, expected_text, expected_link', [
+@pytest.mark.parametrize('user, expected_text, expected_link', [
     (
         create_active_user_with_permissions(),
         'To remove these restrictions, you can send us a request to go live.',
@@ -689,7 +689,7 @@ def test_switch_service_to_restricted(
     )
 
 
-@ pytest.mark.parametrize('count_as_live, selected, labelled', (
+@pytest.mark.parametrize('count_as_live, selected, labelled', (
     (True, 'True', 'Yes'),
     (False, 'False', 'No'),
 ))
@@ -719,7 +719,7 @@ def test_show_switch_service_to_count_as_live_page(
     )).text.strip() == labelled
 
 
-@ pytest.mark.parametrize('post_data, expected_persisted_value', (
+@pytest.mark.parametrize('post_data, expected_persisted_value', (
     ('True', True),
     ('False', False),
 ))
@@ -786,7 +786,7 @@ def test_should_redirect_after_service_name_change(
     )
 
 
-@ pytest.mark.parametrize('volumes, consent_to_research, expected_estimated_volumes_item', [
+@pytest.mark.parametrize('volumes, consent_to_research, expected_estimated_volumes_item', [
     ((0, 0, 0), None, 'Tell us how many messages you expect to send Not completed'),
     ((1, 0, 0), None, 'Tell us how many messages you expect to send Not completed'),
     ((1, 0, 0), False, 'Tell us how many messages you expect to send Completed'),
@@ -834,7 +834,7 @@ def test_should_check_if_estimated_volumes_provided(
     )
 
 
-@ pytest.mark.parametrize((
+@pytest.mark.parametrize((
     'volume_email,'
     'count_of_email_templates,'
     'reply_to_email_addresses,'
@@ -895,7 +895,7 @@ def test_should_check_for_reply_to_on_go_live(
         mock_get_reply_to_email_addresses.assert_called_once_with(SERVICE_ONE_ID)
 
 
-@ pytest.mark.parametrize((
+@pytest.mark.parametrize((
     'count_of_users_with_manage_service,'
     'count_of_invites_with_manage_service,'
     'expected_user_checklist_item'
@@ -904,7 +904,7 @@ def test_should_check_for_reply_to_on_go_live(
     (2, 0, 'Add a team member who can manage settings, team and usage Completed'),
     (1, 1, 'Add a team member who can manage settings, team and usage Completed'),
 ])
-@ pytest.mark.parametrize('count_of_templates, expected_templates_checklist_item', [
+@pytest.mark.parametrize('count_of_templates, expected_templates_checklist_item', [
     (0, 'Add templates with examples of the content you plan to send Not completed'),
     (1, 'Add templates with examples of the content you plan to send Completed'),
     (2, 'Add templates with examples of the content you plan to send Completed'),
@@ -973,7 +973,7 @@ def test_should_check_for_sending_things_right(
     mock_get_invites.assert_called_once_with(SERVICE_ONE_ID)
 
 
-@ pytest.mark.parametrize('checklist_completed, agreement_signed, expected_button', (
+@pytest.mark.parametrize('checklist_completed, agreement_signed, expected_button', (
     (True, True, True),
     (True, None, True),
     (True, False, False),
@@ -1036,7 +1036,7 @@ def test_should_not_show_go_live_button_if_checklist_not_complete(
         )
 
 
-@ pytest.mark.parametrize('go_live_at, message', [
+@pytest.mark.parametrize('go_live_at, message', [
     (None, '‘service one’ is already live.'),
     ('2020-10-09 13:55:20', '‘service one’ went live on 9 October 2020.'),
 ])
@@ -1058,7 +1058,7 @@ def test_request_to_go_live_redirects_if_service_already_live(
     assert normalize_spaces(page.select_one('main p').text) == message
 
 
-@ pytest.mark.parametrize((
+@pytest.mark.parametrize((
     'estimated_sms_volume,'
     'organisation_type,'
     'count_of_sms_templates,'
@@ -1195,7 +1195,7 @@ def test_should_check_for_sms_sender_on_go_live(
     mock_get_sms_senders.assert_called_once_with(SERVICE_ONE_ID)
 
 
-@ pytest.mark.parametrize('agreement_signed, expected_item', (
+@pytest.mark.parametrize('agreement_signed, expected_item', (
     pytest.param(
         None,
         '',
@@ -1257,7 +1257,7 @@ def test_should_check_for_mou_on_request_to_go_live(
     assert normalize_spaces(checklist_items[3].text) == expected_item
 
 
-@ pytest.mark.parametrize('organisation_type', (
+@pytest.mark.parametrize('organisation_type', (
     'nhs_gp',
     pytest.param(
         'central',
@@ -1352,12 +1352,12 @@ def test_non_gov_user_is_told_they_cant_go_live(
     assert len(page.select('main button')) == 0
 
 
-@ pytest.mark.parametrize('consent_to_research, displayed_consent', (
+@pytest.mark.parametrize('consent_to_research, displayed_consent', (
     (None, None),
     (True, 'yes'),
     (False, 'no'),
 ))
-@ pytest.mark.parametrize('volumes, displayed_volumes', (
+@pytest.mark.parametrize('volumes, displayed_volumes', (
     (
         (('email', None), ('sms', None), ('letter', None)),
         (None, None, None),
@@ -1429,7 +1429,7 @@ def test_should_show_estimate_volumes(
         assert page.select_one('input[checked]')['value'] == displayed_consent
 
 
-@ pytest.mark.parametrize('consent_to_research, expected_persisted_consent_to_research', (
+@pytest.mark.parametrize('consent_to_research, expected_persisted_consent_to_research', (
     ('yes', True),
     ('no', False),
 ))
@@ -1463,7 +1463,7 @@ def test_should_show_persist_estimated_volumes(
     )
 
 
-@ pytest.mark.parametrize('data, error_selector, expected_error_message', (
+@pytest.mark.parametrize('data, error_selector, expected_error_message', (
     (
         {
             'volume_email': '1234',
@@ -1563,7 +1563,7 @@ def test_non_gov_users_cant_request_to_go_live(
     )
 
 
-@ pytest.mark.parametrize('volumes, displayed_volumes, formatted_displayed_volumes', (
+@pytest.mark.parametrize('volumes, displayed_volumes, formatted_displayed_volumes', (
     (
         (('email', None), ('sms', None), ('letter', None)),
         ', , ',
@@ -1826,7 +1826,7 @@ def test_should_be_able_to_request_to_go_live_with_no_organisation(
     assert mock_post.called is True
 
 
-@ pytest.mark.parametrize(
+@pytest.mark.parametrize(
     (
         'has_team_members,'
         'has_templates,'
@@ -1981,7 +1981,7 @@ def test_ready_to_go_live(
     }).go_live_checklist_completed_as_yes_no == expected_readyness
 
 
-@ pytest.mark.parametrize('route', [
+@pytest.mark.parametrize('route', [
     'main.service_settings',
     'main.service_name_change',
     'main.request_to_go_live',
@@ -2015,7 +2015,7 @@ def test_route_permissions(
     )
 
 
-@ pytest.mark.parametrize('route', [
+@pytest.mark.parametrize('route', [
     'main.service_settings',
     'main.service_name_change',
     'main.request_to_go_live',
@@ -2044,7 +2044,7 @@ def test_route_invalid_permissions(
         service_one)
 
 
-@ pytest.mark.parametrize('route', [
+@pytest.mark.parametrize('route', [
     'main.service_settings',
     'main.service_name_change',
     'main.request_to_go_live',
@@ -2104,7 +2104,7 @@ def test_and_more_hint_appears_on_settings_with_more_than_just_a_single_sender(
     assert get_row(page, 'Sender addresses') == "Sender addresses 1 Example Street …and 2 more Manage sender addresses"
 
 
-@ pytest.mark.parametrize('sender_list_page, index, expected_output', [
+@pytest.mark.parametrize('sender_list_page, index, expected_output', [
     ('main.service_email_reply_to', 0, 'test@example.com (default) Change test@example.com'),
     ('main.service_letter_contact_details', 1, '1 Example Street (default) Change 1 Example Street'),
     ('main.service_sms_senders', 0, 'GOVUK (default) Change GOVUK')
@@ -2130,7 +2130,7 @@ def test_api_ids_dont_show_on_option_pages_with_a_single_sender(
     assert len(rows) == index + 1
 
 
-@ pytest.mark.parametrize(
+@pytest.mark.parametrize(
     (
         'sender_list_page,'
         'endpoint_to_mock,'
@@ -2220,7 +2220,7 @@ def test_remove_default_from_default_letter_contact_block(
     )
 
 
-@ pytest.mark.parametrize('sender_list_page, endpoint_to_mock, expected_output', [
+@pytest.mark.parametrize('sender_list_page, endpoint_to_mock, expected_output', [
     (
         'main.service_email_reply_to',
         'app.service_api_client.get_reply_to_email_addresses',
@@ -2257,7 +2257,7 @@ def test_no_senders_message_shows(
     assert len(rows) == 1
 
 
-@ pytest.mark.parametrize('reply_to_input, expected_error', [
+@pytest.mark.parametrize('reply_to_input, expected_error', [
     ('', 'Cannot be empty'),
     ('testtest', 'Enter a valid email address'),
 ])
@@ -2277,7 +2277,7 @@ def test_incorrect_reply_to_email_address_input(
     assert expected_error in normalize_spaces(page.select_one('.govuk-error-message').text)
 
 
-@ pytest.mark.parametrize('contact_block_input, expected_error', [
+@pytest.mark.parametrize('contact_block_input, expected_error', [
     ('', 'Cannot be empty'),
     ('1 \n 2 \n 3 \n 4 \n 5 \n 6 \n 7 \n 8 \n 9 \n 0 \n a', 'Contains 11 lines, maximum is 10')
 ])
@@ -2297,7 +2297,7 @@ def test_incorrect_letter_contact_block_input(
     assert normalize_spaces(page.select_one('.error-message').text) == expected_error
 
 
-@ pytest.mark.parametrize('sms_sender_input, expected_error', [
+@pytest.mark.parametrize('sms_sender_input, expected_error', [
     ('elevenchars', None),
     ('11 chars', None),
     ('', 'Cannot be empty'),
@@ -2352,7 +2352,7 @@ def test_incorrect_sms_sender_input_with_multiple_errors_only_shows_the_first(
     assert count_of_api_calls == 0
 
 
-@ pytest.mark.parametrize('reply_to_addresses, data, api_default_args', [
+@pytest.mark.parametrize('reply_to_addresses, data, api_default_args', [
     ([], {}, True),
     (create_multiple_email_reply_to_addresses(), {}, False),
     (create_multiple_email_reply_to_addresses(), {"is_default": "y"}, True)
@@ -2411,8 +2411,8 @@ def test_service_add_reply_to_email_address_without_verification_for_platform_ad
         is_default=True)
 
 
-@ pytest.mark.parametrize("is_default,replace,expected_header", [(True, "&replace=123", "Change"), (False, "", "Add")])
-@ pytest.mark.parametrize("status,expected_failure,expected_success", [
+@pytest.mark.parametrize("is_default,replace,expected_header", [(True, "&replace=123", "Change"), (False, "", "Add")])
+@pytest.mark.parametrize("status,expected_failure,expected_success", [
     ("delivered", 0, 1),
     ("sending", 0, 0),
     ("permanent-failure", 1, 0),
@@ -2504,7 +2504,7 @@ def test_add_reply_to_email_address_fails_if_notification_not_delivered_in_45_se
     assert mock_add_reply_to_email_address.called is False
 
 
-@ pytest.mark.parametrize('letter_contact_blocks, data, api_default_args', [
+@pytest.mark.parametrize('letter_contact_blocks, data, api_default_args', [
     ([], {}, True),  # no existing letter contact blocks
     (create_multiple_letter_contact_blocks(), {}, False),
     (create_multiple_letter_contact_blocks(), {"is_default": "y"}, True)
@@ -2579,7 +2579,7 @@ def test_add_letter_contact_when_coming_from_template(
     )
 
 
-@ pytest.mark.parametrize('sms_senders, data, api_default_args', [
+@pytest.mark.parametrize('sms_senders, data, api_default_args', [
     ([], {}, True),
     (create_multiple_sms_senders(), {}, False),
     (create_multiple_sms_senders(), {"is_default": "y"}, True)
@@ -2607,7 +2607,7 @@ def test_add_sms_sender(
     )
 
 
-@ pytest.mark.parametrize('reply_to_addresses, checkbox_present', [
+@pytest.mark.parametrize('reply_to_addresses, checkbox_present', [
     ([], False),
     (create_multiple_email_reply_to_addresses(), True),
 ])
@@ -2627,7 +2627,7 @@ def test_default_box_doesnt_show_on_first_email_sender(
     assert bool(page.select_one('[name=is_default]')) == checkbox_present
 
 
-@ pytest.mark.parametrize('contact_blocks, checkbox_present', [
+@pytest.mark.parametrize('contact_blocks, checkbox_present', [
     ([], False),
     (create_multiple_letter_contact_blocks(), True)
 ])
@@ -2647,7 +2647,7 @@ def test_default_box_doesnt_show_on_first_letter_sender(
     assert bool(page.select_one('[name=is_default]')) == checkbox_present
 
 
-@ pytest.mark.parametrize('reply_to_address, data, api_default_args', [
+@pytest.mark.parametrize('reply_to_address, data, api_default_args', [
     (create_reply_to_email_address(is_default=True), {"is_default": "y"}, True),
     (create_reply_to_email_address(is_default=True), {}, True),
     (create_reply_to_email_address(is_default=False), {}, False),
@@ -2710,7 +2710,7 @@ def test_service_edit_email_reply_to_updates_email_address_without_verification_
         is_default=True)
 
 
-@ pytest.mark.parametrize('reply_to_address, data, api_default_args', [
+@pytest.mark.parametrize('reply_to_address, data, api_default_args', [
     (create_reply_to_email_address(), {"is_default": "y"}, True),
     (create_reply_to_email_address(), {}, True),
     (create_reply_to_email_address(is_default=False), {}, False),
@@ -2744,7 +2744,7 @@ def test_edit_reply_to_email_address_goes_straight_to_update_if_address_not_chan
     assert mock_verify.called is False
 
 
-@ pytest.mark.parametrize('url', [
+@pytest.mark.parametrize('url', [
     'main.service_edit_email_reply_to',
     'main.service_add_email_reply_to',
 ])
@@ -2786,7 +2786,7 @@ def test_add_edit_reply_to_email_address_goes_straight_to_update_if_address_not_
     assert mock_update_reply_to_email_address.called is False
 
 
-@ pytest.mark.parametrize('reply_to_address, default_choice_and_delete_link_expected', [
+@pytest.mark.parametrize('reply_to_address, default_choice_and_delete_link_expected', [
     (
         create_reply_to_email_address(is_default=False),
         True,
@@ -2831,7 +2831,7 @@ def test_shows_delete_link_for_get_request_for_edit_email_reply_to_address(
         assert not page.select('.page-footer a')
 
 
-@ pytest.mark.parametrize('reply_to_address, default_choice_and_delete_link_expected, default_checkbox_checked', [
+@pytest.mark.parametrize('reply_to_address, default_choice_and_delete_link_expected, default_checkbox_checked', [
     (
         create_reply_to_email_address(is_default=False),
         True,
@@ -2932,7 +2932,7 @@ def test_delete_reply_to_email_address(
     mock_delete.assert_called_once_with(service_id=SERVICE_ONE_ID, reply_to_email_id=fake_uuid)
 
 
-@ pytest.mark.parametrize('letter_contact_block, data, api_default_args', [
+@pytest.mark.parametrize('letter_contact_block, data, api_default_args', [
     (create_letter_contact_block(), {"is_default": "y"}, True),
     (create_letter_contact_block(), {}, True),
     (create_letter_contact_block(is_default=False), {}, False),
@@ -3008,7 +3008,7 @@ def test_delete_letter_contact_block(
     )
 
 
-@ pytest.mark.parametrize('sms_sender, data, api_default_args', [
+@pytest.mark.parametrize('sms_sender, data, api_default_args', [
     (create_sms_sender(), {"is_default": "y", "sms_sender": "test"}, True),
     (create_sms_sender(), {"sms_sender": "test"}, True),
     (create_sms_sender(is_default=False), {"sms_sender": "test"}, False),
@@ -3040,7 +3040,7 @@ def test_edit_sms_sender(
     )
 
 
-@ pytest.mark.parametrize('sender_page, endpoint_to_mock, sender_details, default_message, params, checkbox_present', [
+@pytest.mark.parametrize('sender_page, endpoint_to_mock, sender_details, default_message, params, checkbox_present', [
     (
         'main.service_edit_email_reply_to',
         'app.service_api_client.get_reply_to_email_address',
@@ -3134,7 +3134,7 @@ def test_sender_details_are_escaped(client_request, mocker, fake_uuid):
     assert 'foo<br>bar' in normalize_spaces(page.select('.user-list-item')[1].text)
 
 
-@ pytest.mark.parametrize('sms_sender, expected_link_text, partial_href', [
+@pytest.mark.parametrize('sms_sender, expected_link_text, partial_href', [
     (
         create_sms_sender(is_default=False),
         'Delete',
@@ -3200,7 +3200,7 @@ def test_confirm_delete_sms_sender(
     assert page.select_one('.banner-dangerous form')['method'] == 'post'
 
 
-@ pytest.mark.parametrize('sms_sender, expected_link_text', [
+@pytest.mark.parametrize('sms_sender, expected_link_text', [
     (create_sms_sender(is_default=False, inbound_number_id='1234'), None),
     (create_sms_sender(is_default=True), None),
     (create_sms_sender(is_default=False), 'Delete'),
@@ -3251,7 +3251,7 @@ def test_delete_sms_sender(
     mock_delete.assert_called_once_with(service_id=SERVICE_ONE_ID, sms_sender_id=fake_uuid)
 
 
-@ pytest.mark.parametrize('sms_sender, hide_textbox', [
+@pytest.mark.parametrize('sms_sender, hide_textbox', [
     (create_sms_sender(is_default=False, inbound_number_id='1234'), True),
     (create_sms_sender(is_default=True), False),
 ])
@@ -3325,7 +3325,7 @@ def test_service_set_letter_branding_platform_admin_only(
     )
 
 
-@ pytest.mark.parametrize('letter_branding, expected_selected, expected_items', [
+@pytest.mark.parametrize('letter_branding, expected_selected, expected_items', [
     # expected order: currently selected, then default, then rest alphabetically
     (None, '__NONE__', (
         ('__NONE__', 'None'),
@@ -3346,7 +3346,7 @@ def test_service_set_letter_branding_platform_admin_only(
         (str(UUID(int=1)), 'Land Registry'),
     )),
 ])
-@ pytest.mark.parametrize('endpoint, extra_args', (
+@pytest.mark.parametrize('endpoint, extra_args', (
     (
         'main.service_set_letter_branding',
         {'service_id': SERVICE_ONE_ID},
@@ -3397,11 +3397,11 @@ def test_service_set_letter_branding_prepopulates(
         assert page.select('input[type=radio]')[index]['value'] == expected_value
 
 
-@ pytest.mark.parametrize('selected_letter_branding, expected_post_data', [
+@pytest.mark.parametrize('selected_letter_branding, expected_post_data', [
     (str(UUID(int=1)), str(UUID(int=1))),
     ('__NONE__', None),
 ])
-@ pytest.mark.parametrize('endpoint, extra_args, expected_redirect', (
+@pytest.mark.parametrize('endpoint, extra_args, expected_redirect', (
     (
         'main.service_set_letter_branding',
         {'service_id': SERVICE_ONE_ID},
@@ -3438,7 +3438,7 @@ def test_service_set_letter_branding_redirects_to_preview_page_when_form_submitt
     )
 
 
-@ pytest.mark.parametrize('endpoint, extra_args', (
+@pytest.mark.parametrize('endpoint, extra_args', (
     (
         'main.service_preview_letter_branding',
         {'service_id': SERVICE_ONE_ID},
@@ -3467,11 +3467,11 @@ def test_service_preview_letter_branding_shows_preview_letter(
     assert page.find('iframe')['src'] == url_for('main.letter_template', branding_style='hm-government')
 
 
-@ pytest.mark.parametrize('selected_letter_branding, expected_post_data', [
+@pytest.mark.parametrize('selected_letter_branding, expected_post_data', [
     (str(UUID(int=1)), str(UUID(int=1))),
     ('__NONE__', None),
 ])
-@ pytest.mark.parametrize('endpoint, extra_args, expected_redirect', (
+@pytest.mark.parametrize('endpoint, extra_args, expected_redirect', (
     (
         'main.service_preview_letter_branding',
         {'service_id': SERVICE_ONE_ID},
@@ -3532,7 +3532,7 @@ def test_service_preview_letter_branding_saves(
         raise Exception
 
 
-@ pytest.mark.parametrize('current_branding, expected_values, expected_labels', [
+@pytest.mark.parametrize('current_branding, expected_values, expected_labels', [
     (None, [
         '__NONE__', '1', '2', '3', '4', '5',
     ], [
@@ -3544,7 +3544,7 @@ def test_service_preview_letter_branding_saves(
         'org 5', 'GOV.UK', 'org 1', 'org 2', 'org 3', 'org 4',
     ]),
 ])
-@ pytest.mark.parametrize('endpoint, extra_args', (
+@pytest.mark.parametrize('endpoint, extra_args', (
     (
         'main.service_set_email_branding',
         {'service_id': SERVICE_ONE_ID},
@@ -3604,7 +3604,7 @@ def test_should_show_branding_styles(
     app.service_api_client.get_service.assert_called_once_with(service_one['id'])
 
 
-@ pytest.mark.parametrize('endpoint, extra_args, expected_redirect', (
+@pytest.mark.parametrize('endpoint, extra_args, expected_redirect', (
     (
         'main.service_set_email_branding',
         {'service_id': SERVICE_ONE_ID},
@@ -3646,7 +3646,7 @@ def test_should_send_branding_and_organisations_to_preview(
     mock_get_all_email_branding.assert_called_once_with()
 
 
-@ pytest.mark.parametrize('endpoint, extra_args', (
+@pytest.mark.parametrize('endpoint, extra_args', (
     (
         'main.service_preview_email_branding',
         {'service_id': SERVICE_ONE_ID},
@@ -3680,12 +3680,12 @@ def test_should_preview_email_branding(
     assert iframeQString['branding_style'] == ['1']
 
 
-@ pytest.mark.parametrize('posted_value, submitted_value', (
+@pytest.mark.parametrize('posted_value, submitted_value', (
     ('1', '1'),
     ('__NONE__', None),
     pytest.param('None', None, marks=pytest.mark.xfail(raises=AssertionError)),
 ))
-@ pytest.mark.parametrize('endpoint, extra_args, expected_redirect', (
+@pytest.mark.parametrize('endpoint, extra_args, expected_redirect', (
     (
         'main.service_preview_email_branding',
         {'service_id': SERVICE_ONE_ID},
@@ -3746,8 +3746,8 @@ def test_should_set_branding_and_organisations(
         raise Exception
 
 
-@ pytest.mark.parametrize('method', ['get', 'post'])
-@ pytest.mark.parametrize('endpoint', [
+@pytest.mark.parametrize('method', ['get', 'post'])
+@pytest.mark.parametrize('endpoint', [
     'main.set_free_sms_allowance',
     'main.set_message_limit',
     'main.set_rate_limit',
@@ -3781,7 +3781,7 @@ def test_should_show_page_to_set_sms_allowance(
 
 
 @ freeze_time("2017-04-01 11:09:00.061258")
-@ pytest.mark.parametrize('given_allowance, expected_api_argument', [
+@pytest.mark.parametrize('given_allowance, expected_api_argument', [
     ('0', 0),
     ('1', 1),
     ('250000', 250000),
@@ -3849,11 +3849,11 @@ def test_should_show_page_to_set_rate_limit(
     )
 
 
-@ pytest.mark.parametrize('endpoint, field_name', (
+@pytest.mark.parametrize('endpoint, field_name', (
     ('main.set_message_limit', 'message_limit'),
     ('main.set_rate_limit', 'rate_limit'),
 ))
-@ pytest.mark.parametrize('new_limit, expected_api_argument', [
+@pytest.mark.parametrize('new_limit, expected_api_argument', [
     ('1', 1),
     ('250000', 250000),
     pytest.param('foo', 'foo', marks=pytest.mark.xfail),
@@ -3907,7 +3907,7 @@ def test_unknown_channel_404s(
     )
 
 
-@ pytest.mark.parametrize((
+@pytest.mark.parametrize((
     'channel,'
     'expected_first_para,'
     'expected_legend,'
@@ -4004,7 +4004,7 @@ def test_switch_service_channels_on_and_off(
     assert mocked_fn.call_args[0][0] == service_one['id']
 
 
-@ pytest.mark.parametrize('channel', (
+@pytest.mark.parametrize('channel', (
     'email', 'sms', 'letter',
 ))
 def test_broadcast_service_cant_post_to_set_other_channels_endpoint(
@@ -4030,7 +4030,7 @@ def test_broadcast_service_cant_post_to_set_other_channels_endpoint(
     )
 
 
-@ pytest.mark.parametrize('permission, permissions, expected_checked', [
+@pytest.mark.parametrize('permission, permissions, expected_checked', [
     ('international_sms', ['international_sms'], 'True'),
     ('international_letters', ['international_letters'], 'True'),
     ('international_sms', [''], 'False'),
@@ -4057,11 +4057,11 @@ def test_show_international_sms_and_letters_as_radio_button(
     assert checked_radios[0]['value'] == expected_checked
 
 
-@ pytest.mark.parametrize('permission', (
+@pytest.mark.parametrize('permission', (
     'international_sms',
     'international_letters',
 ))
-@ pytest.mark.parametrize('post_value, permission_expected_in_api_call', [
+@pytest.mark.parametrize('post_value, permission_expected_in_api_call', [
     ('True', True),
     ('False', False),
 ])
@@ -4091,7 +4091,7 @@ def test_switch_service_enable_international_sms_and_letters(
     assert mocked_fn.call_args[0][0] == service_one['id']
 
 
-@ pytest.mark.parametrize('user, is_trial_service', (
+@pytest.mark.parametrize('user, is_trial_service', (
     [create_platform_admin_user(), True],
     [create_platform_admin_user(), False],
     [create_active_user_with_permissions(), True],
@@ -4134,7 +4134,7 @@ def test_archive_service_after_confirm(
     assert call(f"user-{sample_uuid()}") in redis_delete_mock.call_args_list
 
 
-@ pytest.mark.parametrize('user, is_trial_service', (
+@pytest.mark.parametrize('user, is_trial_service', (
     [create_platform_admin_user(), True],
     [create_platform_admin_user(), False],
     [create_active_user_with_permissions(), True],
@@ -4199,7 +4199,7 @@ def test_cant_archive_inactive_service(
     assert 'Delete service' not in {a.text for a in page.find_all('a', class_='button')}
 
 
-@ pytest.mark.parametrize('user', (
+@pytest.mark.parametrize('user', (
     create_platform_admin_user(),
     pytest.param(create_active_user_with_permissions(), marks=pytest.mark.xfail),
 ))
@@ -4225,7 +4225,7 @@ def test_suspend_service_after_confirm(
     mock_event.assert_called_once_with(service_id=SERVICE_ONE_ID, suspended_by_id=user['id'])
 
 
-@ pytest.mark.parametrize('user', (
+@pytest.mark.parametrize('user', (
     create_platform_admin_user(),
     pytest.param(create_active_user_with_permissions(), marks=pytest.mark.xfail),
 ))
@@ -4269,7 +4269,7 @@ def test_cant_suspend_inactive_service(
     assert 'Suspend service' not in {a.text for a in page.find_all('a', class_='button')}
 
 
-@ pytest.mark.parametrize('user', (
+@pytest.mark.parametrize('user', (
     create_platform_admin_user(),
     pytest.param(create_active_user_with_permissions(), marks=pytest.mark.xfail),
 ))
@@ -4297,7 +4297,7 @@ def test_resume_service_after_confirm(
     assert mock_event.called_once_with(service_id=SERVICE_ONE_ID, resumed_by_id=user['id'])
 
 
-@ pytest.mark.parametrize('user', (
+@pytest.mark.parametrize('user', (
     create_platform_admin_user(),
     pytest.param(create_active_user_with_permissions(), marks=pytest.mark.xfail),
 ))
@@ -4339,7 +4339,7 @@ def test_cant_resume_active_service(
     assert 'Resume service' not in {a.text for a in page.find_all('a', class_='button')}
 
 
-@ pytest.mark.parametrize('contact_details_type, contact_details_value', [
+@pytest.mark.parametrize('contact_details_type, contact_details_value', [
     ('url', 'http://example.com/'),
     ('email_address', 'me@example.com'),
     ('phone_number', '0207 123 4567'),
@@ -4359,7 +4359,7 @@ def test_send_files_by_email_contact_details_prefills_the_form_with_the_existing
     assert page.find('input', {'id': contact_details_type}).get('value') == contact_details_value
 
 
-@ pytest.mark.parametrize('contact_details_type, old_value, new_value', [
+@pytest.mark.parametrize('contact_details_type, old_value, new_value', [
     ('url', 'http://example.com/', 'http://new-link.com/'),
     ('email_address', 'old@example.com', 'new@example.com'),
     ('phone_number', '0207 12345', '0207 56789'),
@@ -4417,7 +4417,7 @@ def test_send_files_by_email_contact_details_uses_the_selected_field_when_multip
     mock_update_service.assert_called_once_with(SERVICE_ONE_ID, contact_link='http://www.new-url.com')
 
 
-@ pytest.mark.parametrize(
+@pytest.mark.parametrize(
     'contact_link, subheader, button_selected',
     [
         ('contact.me@gsa.gov', 'Change contact details for the file download page', True),
@@ -4456,7 +4456,7 @@ def test_send_files_by_email_contact_details_displays_error_message_when_no_radi
     assert normalize_spaces(page.h1.text) == "Send files by email"
 
 
-@ pytest.mark.parametrize('contact_details_type, invalid_value, error', [
+@pytest.mark.parametrize('contact_details_type, invalid_value, error', [
     ('url', 'invalid.com/', 'Must be a valid URL'),
     ('email_address', 'me@co', 'Enter a valid email address'),
     ('phone_number', 'abcde', 'Must be a valid phone number'),
@@ -4485,7 +4485,7 @@ def test_send_files_by_email_contact_details_does_not_update_invalid_contact_det
     assert normalize_spaces(page.h1.text) == "Send files by email"
 
 
-@ pytest.mark.parametrize('endpoint, permissions, expected_p', [
+@pytest.mark.parametrize('endpoint, permissions, expected_p', [
     (
         'main.service_set_inbound_sms',
         ['sms'],
@@ -4570,7 +4570,7 @@ def test_set_inbound_sms_when_inbound_number_is_not_set(
     )
 
 
-@ pytest.mark.parametrize('user, expected_paragraphs', [
+@pytest.mark.parametrize('user, expected_paragraphs', [
     (create_active_user_with_permissions(), [
         'Your service can receive text messages sent to 07700900123.',
         'You can still send text messages from a sender name if you '
@@ -4628,7 +4628,7 @@ def test_show_sms_prefixing_setting_page(
         assert radios[1]['checked']
 
 
-@ pytest.mark.parametrize('post_value', [
+@pytest.mark.parametrize('post_value', [
     True,
     False,
 ])
@@ -4728,7 +4728,7 @@ def test_update_service_organisation_does_not_update_if_same_value(
     assert mock_update_service_organisation.called is False
 
 
-@ pytest.mark.parametrize('single_branding_option, expected_href', [
+@pytest.mark.parametrize('single_branding_option, expected_href', [
     (True, f'/services/{SERVICE_ONE_ID}/service-settings/email-branding/something-else'),
     (False, f'/services/{SERVICE_ONE_ID}/service-settings/email-branding'),
 ])
@@ -5067,7 +5067,7 @@ def test_service_set_broadcast_channel_has_no_radio_selected_for_non_broadcast_s
     assert len(page.select('input[checked]')) == 0
 
 
-@ pytest.mark.parametrize(
+@pytest.mark.parametrize(
     'service_mode,broadcast_channel,allowed_broadcast_provider,expected_text,expected_value',
     [
         (
@@ -5120,7 +5120,7 @@ def test_service_set_broadcast_channel_has_radio_selected_for_broadcast_service(
     assert selected_label.text.strip() == expected_text
 
 
-@ pytest.mark.parametrize(
+@pytest.mark.parametrize(
     'channel,expected_redirect_endpoint,extra_args',
     [
         (
@@ -5173,7 +5173,7 @@ def test_service_set_broadcast_channel_redirects(
     )
 
 
-@ pytest.mark.parametrize(
+@pytest.mark.parametrize(
     'service_mode,broadcast_channel,allowed_broadcast_provider,expected_selected',
     [
         (
@@ -5229,7 +5229,7 @@ def test_service_set_broadcast_network_has_radio_selected(
     ] == expected_selected
 
 
-@ pytest.mark.parametrize(
+@pytest.mark.parametrize(
     'broadcast_channel, data, expected_result',
     (
         ('severe', {'all_networks': True}, 'live-severe-all'),
@@ -5266,14 +5266,14 @@ def test_service_set_broadcast_network(
     )
 
 
-@ pytest.mark.parametrize(
+@pytest.mark.parametrize(
     'data',
     (
         {},
         {'all_networks': ''},  # Missing choice of MNO
     ),
 )
-@ pytest.mark.parametrize('broadcast_channel', ['government', 'severe', 'test', 'operator'])
+@pytest.mark.parametrize('broadcast_channel', ['government', 'severe', 'test', 'operator'])
 def test_service_set_broadcast_network_makes_you_choose(
     client_request,
     platform_admin_user,
@@ -5294,7 +5294,7 @@ def test_service_set_broadcast_network_makes_you_choose(
     ) == 'Error: Select a mobile network'
 
 
-@ pytest.mark.parametrize(
+@pytest.mark.parametrize(
     'value, expected_paragraphs',
     [
         ('training-test-all', [
@@ -5376,7 +5376,7 @@ def test_service_confirm_broadcast_account_type_confirmation_page(
     ] == expected_paragraphs + ['All team member permissions will be removed.']
 
 
-@ pytest.mark.parametrize(
+@pytest.mark.parametrize(
     'value,service_mode,broadcast_channel,allowed_broadcast_provider',
     [
         ("training-test-all", "training", "test", "all"),
@@ -5426,7 +5426,7 @@ def test_service_confirm_broadcast_account_type_posts_data_to_api_and_redirects(
     )
 
 
-@ pytest.mark.parametrize('account_type', (
+@pytest.mark.parametrize('account_type', (
     'foo-test-ee',
     'live-foo-all',
     'live-government-foo'
