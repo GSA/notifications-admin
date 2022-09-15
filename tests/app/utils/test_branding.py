@@ -4,7 +4,6 @@ import pytest
 
 from app.models.service import Service
 from app.utils.branding import (
-    NHS_EMAIL_BRANDING_ID,
     get_email_choices,
     get_letter_choices,
 )
