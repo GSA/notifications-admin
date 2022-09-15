@@ -5,11 +5,9 @@ from functools import partial
 from flask import flash, redirect, render_template, request, send_file, url_for
 from flask_login import current_user
 from notifications_python_client.errors import HTTPError
-from werkzeug.exceptions import abort
 
 from app import (
     current_organisation,
-    current_service,
     email_branding_client,
     letter_branding_client,
     org_invite_api_client,

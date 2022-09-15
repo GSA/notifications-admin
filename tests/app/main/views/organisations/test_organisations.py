@@ -104,13 +104,13 @@ def test_page_to_create_new_organisation(
         for input in page.select('input')
     ] == [
         ('text', 'name', None),
-        ('radio', 'organisation_type', 'central'),
-        ('radio', 'organisation_type', 'local'),
-        ('radio', 'organisation_type', 'nhs_central'),
-        ('radio', 'organisation_type', 'nhs_local'),
-        ('radio', 'organisation_type', 'nhs_gp'),
-        ('radio', 'organisation_type', 'emergency_service'),
-        ('radio', 'organisation_type', 'school_or_college'),
+        ('radio', 'organisation_type', 'federal'),
+        ('radio', 'organisation_type', 'state'),
+        # ('radio', 'organisation_type', 'nhs_central'),
+        # ('radio', 'organisation_type', 'nhs_local'),
+        # ('radio', 'organisation_type', 'nhs_gp'),
+        # ('radio', 'organisation_type', 'emergency_service'),
+        # ('radio', 'organisation_type', 'school_or_college'),
         ('radio', 'organisation_type', 'other'),
         ('radio', 'crown_status', 'crown'),
         ('radio', 'crown_status', 'non-crown'),
@@ -133,7 +133,7 @@ def test_create_new_organisation(
         '.add_organisation',
         _data={
             'name': 'new name',
-            'organisation_type': 'local',
+            'organisation_type': 'federal',
             'crown_status': 'non-crown',
         },
         _expected_redirect=url_for(
@@ -144,7 +144,7 @@ def test_create_new_organisation(
 
     mock_create_organisation.assert_called_once_with(
         name='new name',
-        organisation_type='local',
+        organisation_type='federal',
         crown=False,
         agreement_signed=False,
     )
@@ -226,7 +226,7 @@ def test_create_new_organisation_fails_with_duplicate_name(
         '.add_organisation',
         _data={
             'name': 'Existing org',
-            'organisation_type': 'local',
+            'organisation_type': 'federal',
             'crown_status': 'non-crown',
         },
         _expected_status=200,
@@ -241,6 +241,7 @@ def test_create_new_organisation_fails_with_duplicate_name(
     ('central', None, 403),
     ('nhs_gp', organisation_json(organisation_type='nhs_gp'), 403),
 ))
+@pytest.mark.skip(reason='Update for TTS')
 def test_gps_can_create_own_organisations(
     client_request,
     mocker,
@@ -276,6 +277,7 @@ def test_gps_can_create_own_organisations(
     ('central', None, 403),
     ('nhs_local', organisation_json(organisation_type='nhs_local'), 403),
 ))
+@pytest.mark.skip(reason='Update for TTS')
 def test_nhs_local_can_create_own_organisations(
     client_request,
     mocker,
@@ -343,6 +345,7 @@ def test_nhs_local_can_create_own_organisations(
         'service one',
     ),
 ))
+@pytest.mark.skip(reason='Update for TTS')
 def test_gps_can_name_their_organisation(
     client_request,
     mocker,
@@ -392,6 +395,7 @@ def test_gps_can_name_their_organisation(
         'Cannot be empty',
     ),
 ))
+@pytest.mark.skip(reason='Update for TTS')
 def test_validation_of_gps_creating_organisations(
     client_request,
     mocker,
@@ -409,6 +413,7 @@ def test_validation_of_gps_creating_organisations(
     assert expected_error in page.select_one('.govuk-error-message, .error-message').text
 
 
+@pytest.mark.skip(reason='Update for TTS')
 def test_nhs_local_assigns_to_selected_organisation(
     client_request,
     mocker,
@@ -928,7 +933,7 @@ def test_organisation_settings_for_platform_admin(
     expected_rows = [
         'Label Value Action',
         'Name Test organisation Change organisation name',
-        'Sector Central government Change sector for the organisation',
+        'Sector Federal government Change sector for the organisation',
         'Crown organisation Yes Change organisation crown status',
         (
             'Data sharing and financial agreement '
@@ -957,16 +962,11 @@ def test_organisation_settings_for_platform_admin(
     (
         '.edit_organisation_type',
         (
-            {'value': 'central', 'label': 'Central government'},
-            {'value': 'local', 'label': 'Local government'},
-            {'value': 'nhs_central', 'label': 'NHS – central government agency or public body'},
-            {'value': 'nhs_local', 'label': 'NHS Trust or Clinical Commissioning Group'},
-            {'value': 'nhs_gp', 'label': 'GP practice'},
-            {'value': 'emergency_service', 'label': 'Emergency service'},
-            {'value': 'school_or_college', 'label': 'School or college'},
+            {'value': 'federal', 'label': 'Federal government'},
+            {'value': 'state', 'label': 'State government'},
             {'value': 'other', 'label': 'Other'},
         ),
-        'central',
+        'federal',
     ),
     (
         '.edit_organisation_crown_status',
@@ -1043,18 +1043,13 @@ def test_view_organisation_settings(
 @pytest.mark.parametrize('endpoint, post_data, expected_persisted', (
     (
         '.edit_organisation_type',
-        {'organisation_type': 'central'},
-        {'cached_service_ids': [], 'organisation_type': 'central'},
+        {'organisation_type': 'federal'},
+        {'cached_service_ids': [], 'organisation_type': 'federal'},
     ),
     (
         '.edit_organisation_type',
-        {'organisation_type': 'local'},
-        {'cached_service_ids': [], 'organisation_type': 'local'},
-    ),
-    (
-        '.edit_organisation_type',
-        {'organisation_type': 'nhs_local'},
-        {'cached_service_ids': [], 'organisation_type': 'nhs_local'},
+        {'organisation_type': 'state'},
+        {'cached_service_ids': [], 'organisation_type': 'state'},
     ),
     (
         '.edit_organisation_crown_status',
@@ -1141,7 +1136,7 @@ def test_update_organisation_sector_sends_service_id_data_to_api_client(
     client_request.post(
         'main.edit_organisation_type',
         org_id=organisation_one['id'],
-        _data={'organisation_type': 'central'},
+        _data={'organisation_type': 'federal'},
         _expected_status=302,
         _expected_redirect=url_for(
             'main.organisation_settings',
@@ -1152,7 +1147,7 @@ def test_update_organisation_sector_sends_service_id_data_to_api_client(
     mock_update_organisation.assert_called_once_with(
         organisation_one['id'],
         cached_service_ids=['12345', '67890', SERVICE_ONE_ID],
-        organisation_type='central'
+        organisation_type='federal'
     )
 
 

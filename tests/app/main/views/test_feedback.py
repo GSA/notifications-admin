@@ -227,7 +227,7 @@ def test_passes_user_details_through_flow(
         user_name='Test User',
         user_email='test@user.gsa.gov',
         org_id=None,
-        org_type='central',
+        org_type='federal',
         service_id=SERVICE_ONE_ID
     )
 

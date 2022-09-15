@@ -26,7 +26,7 @@ class Organisation(JSONModel, SortByNameMixin):
     # TYPE_NHS_GP = 'nhs_gp'
     # TYPE_EMERGENCY_SERVICE = 'emergency_service'
     # TYPE_SCHOOL_OR_COLLEGE = 'school_or_college'
-    # TYPE_OTHER = 'other'
+    TYPE_OTHER = 'other'
 
     # NHS_TYPES = (
     #     TYPE_NHS_CENTRAL,
@@ -36,7 +36,7 @@ class Organisation(JSONModel, SortByNameMixin):
 
     TYPE_LABELS = OrderedDict([
         (TYPE_FEDERAL, 'Federal government'),
-        (TYPE_STATE, 'State government')
+        (TYPE_STATE, 'State government'),
 
         # (TYPE_CENTRAL, 'Central government'),
         # (TYPE_LOCAL, 'Local government'),
@@ -45,7 +45,7 @@ class Organisation(JSONModel, SortByNameMixin):
         # (TYPE_NHS_GP, 'GP practice'),
         # (TYPE_EMERGENCY_SERVICE, 'Emergency service'),
         # (TYPE_SCHOOL_OR_COLLEGE, 'School or college'),
-        # (TYPE_OTHER, 'Other'),
+        (TYPE_OTHER, 'Other'),
     ])
 
     ALLOWED_PROPERTIES = {

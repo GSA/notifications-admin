@@ -13,7 +13,7 @@ def test_organisation_type_when_services_organisation_has_no_org_type(mocker, se
     mocker.patch('app.organisations_client.get_organisation', return_value=org)
 
     assert not org['organisation_type']
-    assert service.organisation_type == 'central'
+    assert service.organisation_type == 'federal'
 
 
 def test_organisation_type_when_service_and_its_org_both_have_an_org_type(mocker, service_one):
