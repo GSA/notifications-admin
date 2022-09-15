@@ -3,10 +3,7 @@ from unittest.mock import PropertyMock
 import pytest
 
 from app.models.service import Service
-from app.utils.branding import (
-    get_email_choices,
-    get_letter_choices,
-)
+from app.utils.branding import get_email_choices, get_letter_choices
 from tests import organisation_json
 from tests.conftest import create_email_branding
 
