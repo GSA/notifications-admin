@@ -204,8 +204,9 @@ class Live(Config):
         'CSV_UPLOAD_BUCKET_NAME', 'notifications-prototype-csv-upload')  # created in gsa sandbox
     CONTACT_LIST_UPLOAD_BUCKET_NAME = os.environ.get(
         'CONTACT_LIST_BUCKET_NAME', 'notifications-prototype-contact-list-upload')  # created in gsa sandbox
-    LOGO_UPLOAD_BUCKET_NAME = 'notifications-prototype-logo-upload'  # created in gsa sandbox
-    MOU_BUCKET_NAME = 'notifications-prototype-mou'  # created in gsa sandbox
+    LOGO_UPLOAD_BUCKET_NAME = os.environ.get(
+        'LOGO_UPLOAD_BUCKET_NAME', 'notifications-prototype-logo-upload')  # created in gsa sandbox
+    MOU_BUCKET_NAME = os.environ.get('MOU_UPLOAD_BUCKET_NAME', 'notifications-prototype-mou')  # created in gsa sandbox
     # TRANSIENT_UPLOADED_LETTERS = 'prototype-transient-uploaded-letters'  # not created in gsa sandbox
     # PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'prototype-letters-precompiled-originals-backup'  # not in sandbox
 

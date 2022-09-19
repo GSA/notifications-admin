@@ -16,6 +16,8 @@ applications:
       - notifications-admin-redis-((env))
       - notifications-api-csv-upload-bucket-((env))
       - notifications-api-contact-list-bucket-((env))
+      - notifications-admin-logo-upload-bucket-((env))
+      - notifications-admin-mou-upload-bucket-((env))
 
     env:
       NOTIFY_APP_NAME: admin
@@ -23,6 +25,7 @@ applications:
       NOTIFY_LOG_LEVEL: INFO
       FLASK_APP: application.py
       FLASK_ENV: production
+      DEPLOY_ENV: ((env))
       REDIS_ENABLED: ((REDIS_ENABLED))
 
       NOTIFY_ENVIRONMENT: live

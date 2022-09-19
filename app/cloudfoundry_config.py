@@ -16,13 +16,25 @@ def extract_cloudfoundry_config():
     os.environ['REDIS_URL'] = vcap_services['aws-elasticache-redis'][0]['credentials']['uri'].replace('redis', 'rediss')
 
     # CSV Upload Bucket Name
-    csv_bucket_service = find_by_service_name(
+    bucket_service = find_by_service_name(
         vcap_services['s3'], f"notifications-api-csv-upload-bucket-{os.environ['DEPLOY_ENV']}")
-    if csv_bucket_service:
-        os.environ['CSV_UPLOAD_BUCKET_NAME'] = csv_bucket_service['credentials']['bucket']
+    if bucket_service:
+        os.environ['CSV_UPLOAD_BUCKET_NAME'] = bucket_service['credentials']['bucket']
 
     # Contact List Bucket Name
-    contact_bucket_service = find_by_service_name(
+    bucket_service = find_by_service_name(
         vcap_services['s3'], f"notifications-api-contact-list-bucket-{os.environ['DEPLOY_ENV']}")
-    if contact_bucket_service:
-        os.environ['CONTACT_LIST_BUCKET_NAME'] = contact_bucket_service['credentials']['bucket']
+    if bucket_service:
+        os.environ['CONTACT_LIST_BUCKET_NAME'] = bucket_service['credentials']['bucket']
+
+    # Logo Upload Bucket Name
+    bucket_service = find_by_service_name(
+        vcap_services['s3'], f"notifications-admin-logo-upload-bucket-{os.environ['DEPLOY_ENV']}")
+    if bucket_service:
+        os.environ['LOGO_UPLOAD_BUCKET_NAME'] = bucket_service['credentials']['bucket']
+
+    # MOU Upload Bucket Name
+    bucket_service = find_by_service_name(
+        vcap_services['s3'], f"notifications-admin-mou-upload-bucket-{os.environ['DEPLOY_ENV']}")
+    if bucket_service:
+        os.environ['MOU_UPLOAD_BUCKET_NAME'] = bucket_service['credentials']['bucket']
