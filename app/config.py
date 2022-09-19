@@ -1,13 +1,11 @@
 import json
 import os
 
-if os.environ.get('VCAP_APPLICATION'):
-    # on cloudfoundry, config is a json blob in VCAP_APPLICATION - unpack it, and populate
+if os.environ.get('VCAP_SERVICES'):
+    # on cloudfoundry, config is a json blob in VCAP_SERVICES - unpack it, and populate
     # standard environment variables from it
-    # from app.cloudfoundry_config import extract_cloudfoundry_config
-    # extract_cloudfoundry_config()
-    vcap_services = json.loads(os.environ['VCAP_SERVICES'])
-    os.environ['REDIS_URL'] = vcap_services['aws-elasticache-redis'][0]['credentials']['uri'].replace("redis", "rediss")
+    from app.cloudfoundry_config import extract_cloudfoundry_config
+    extract_cloudfoundry_config()
 
 
 class Config(object):
@@ -62,7 +60,7 @@ class Config(object):
     NOTIFY_ENVIRONMENT = 'development'
     LOGO_UPLOAD_BUCKET_NAME = 'public-logos-local'
     MOU_BUCKET_NAME = 'local-mou'
-    TRANSIENT_UPLOADED_LETTERS = 'local-transient-uploaded-letters'
+    # TRANSIENT_UPLOADED_LETTERS = 'local-transient-uploaded-letters'
     ROUTE_SECRET_KEY_1 = os.environ.get('ROUTE_SECRET_KEY_1', 'dev-route-secret-key-1')
     ROUTE_SECRET_KEY_2 = os.environ.get('ROUTE_SECRET_KEY_2', 'dev-route-secret-key-2')
     CHECK_PROXY_HEADER = False
@@ -111,8 +109,9 @@ class Development(Config):
     CONTACT_LIST_UPLOAD_BUCKET_NAME = 'local-contact-list'  # created in gsa sandbox
     LOGO_UPLOAD_BUCKET_NAME = 'local-public-logos-tools'  # created in gsa sandbox
     MOU_BUCKET_NAME = 'local-notify-tools-mou'  # created in gsa sandbox
-    TRANSIENT_UPLOADED_LETTERS = 'development-transient-uploaded-letters'  # not created in gsa sandbox
-    PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'development-letters-precompiled-originals-backup'  # not created in sandbox
+    # TRANSIENT_UPLOADED_LETTERS = 'development-transient-uploaded-letters'  # not created in gsa sandbox
+    # PRECOMPILED_ORIGINALS_BACKUP_LETTERS =
+    # 'development-letters-precompiled-originals-backup'  # not created in sandbox
 
     ADMIN_CLIENT_SECRET = os.environ.get('ADMIN_CLIENT_SECRET')
     # check for local compose orchestration variable
@@ -137,8 +136,8 @@ class Test(Development):
     LOGO_UPLOAD_BUCKET_NAME = 'public-logos-test'
     LOGO_CDN_DOMAIN = 'static-logos.test.com'
     MOU_BUCKET_NAME = 'test-mou'
-    TRANSIENT_UPLOADED_LETTERS = 'test-transient-uploaded-letters'
-    PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'test-letters-precompiled-originals-backup'
+    # TRANSIENT_UPLOADED_LETTERS = 'test-transient-uploaded-letters'
+    # PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'test-letters-precompiled-originals-backup'
     NOTIFY_ENVIRONMENT = 'test'
     API_HOST_NAME = 'http://you-forgot-to-mock-an-api-call-to'
     REDIS_URL = 'redis://you-forgot-to-mock-a-redis-call-to'
@@ -168,8 +167,8 @@ class Preview(Config):
     LOGO_UPLOAD_BUCKET_NAME = 'public-logos-preview'
     LOGO_CDN_DOMAIN = 'static-logos.notify.works'
     MOU_BUCKET_NAME = 'notify.works-mou'
-    TRANSIENT_UPLOADED_LETTERS = 'preview-transient-uploaded-letters'
-    PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'preview-letters-precompiled-originals-backup'
+    # TRANSIENT_UPLOADED_LETTERS = 'preview-transient-uploaded-letters'
+    # PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'preview-letters-precompiled-originals-backup'
     NOTIFY_ENVIRONMENT = 'preview'
     CHECK_PROXY_HEADER = False
     ASSET_DOMAIN = 'static.notify.works'
@@ -188,8 +187,8 @@ class Staging(Config):
     LOGO_UPLOAD_BUCKET_NAME = 'public-logos-staging'
     LOGO_CDN_DOMAIN = 'static-logos.staging-notify.works'
     MOU_BUCKET_NAME = 'staging-notify.works-mou'
-    TRANSIENT_UPLOADED_LETTERS = 'staging-transient-uploaded-letters'
-    PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'staging-letters-precompiled-originals-backup'
+    # TRANSIENT_UPLOADED_LETTERS = 'staging-transient-uploaded-letters'
+    # PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'staging-letters-precompiled-originals-backup'
     NOTIFY_ENVIRONMENT = 'staging'
     CHECK_PROXY_HEADER = False
     ASSET_DOMAIN = 'static.staging-notify.works'
@@ -201,12 +200,14 @@ class Live(Config):
     HEADER_COLOUR = '#005EA5'  # $govuk-blue
     HTTP_PROTOCOL = 'https'
     # buckets
-    CSV_UPLOAD_BUCKET_NAME = 'notifications-prototype-csv-upload'  # created in gsa sandbox
-    CONTACT_LIST_UPLOAD_BUCKET_NAME = 'notifications-prototype-contact-list-upload'  # created in gsa sandbox
+    CSV_UPLOAD_BUCKET_NAME = os.environ.get(
+        'CSV_UPLOAD_BUCKET_NAME', 'notifications-prototype-csv-upload')  # created in gsa sandbox
+    CONTACT_LIST_UPLOAD_BUCKET_NAME = os.environ.get(
+        'CONTACT_LIST_BUCKET_NAME', 'notifications-prototype-contact-list-upload')  # created in gsa sandbox
     LOGO_UPLOAD_BUCKET_NAME = 'notifications-prototype-logo-upload'  # created in gsa sandbox
     MOU_BUCKET_NAME = 'notifications-prototype-mou'  # created in gsa sandbox
-    TRANSIENT_UPLOADED_LETTERS = 'prototype-transient-uploaded-letters'  # not created in gsa sandbox
-    PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'prototype-letters-precompiled-originals-backup'  # not in sandbox
+    # TRANSIENT_UPLOADED_LETTERS = 'prototype-transient-uploaded-letters'  # not created in gsa sandbox
+    # PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'prototype-letters-precompiled-originals-backup'  # not in sandbox
 
     NOTIFY_ENVIRONMENT = 'live'
     CHECK_PROXY_HEADER = False

@@ -15,6 +15,8 @@ from app.s3_client.s3_letter_upload_client import (
     upload_letter_to_s3,
 )
 
+pytest.skip(reason="Skipping letter-related features", allow_module_level=True)
+
 
 def test_backup_original_letter_to_s3(mocker, notify_admin):
     s3_mock = mocker.patch('app.s3_client.s3_letter_upload_client.utils_s3upload')
