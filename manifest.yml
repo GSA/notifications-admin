@@ -33,7 +33,7 @@ applications:
       ADMIN_CLIENT_SECRET: ((ADMIN_CLIENT_SECRET))
       ADMIN_CLIENT_USERNAME: ((ADMIN_CLIENT_USERNAME))
       ADMIN_BASE_URL: https://notifications-admin.app.cloud.gov
-      API_HOST_NAME: https://notifications-api.app.cloud.gov
+      API_HOST_NAME: https://notifications-api-((env)).apps.internal:61443
       DANGEROUS_SALT: ((DANGEROUS_SALT))
       SECRET_KEY: ((SECRET_KEY))
 
