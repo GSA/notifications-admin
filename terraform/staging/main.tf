@@ -29,14 +29,3 @@ module "logo_upload_bucket" {
   recursive_delete = local.recursive_delete
   s3_service_name  = "${local.app_name}-logo-upload-bucket-${local.env}"
 }
-
-module "mou_upload_bucket" {
-  source = "github.com/18f/terraform-cloudgov//s3"
-
-  cf_user          = var.cf_user
-  cf_password      = var.cf_password
-  cf_org_name      = local.cf_org_name
-  cf_space_name    = local.cf_space_name
-  recursive_delete = local.recursive_delete
-  s3_service_name  = "${local.app_name}-mou-upload-bucket-${local.env}"
-}

@@ -17,7 +17,6 @@ applications:
       - notifications-api-csv-upload-bucket-((env))
       - notifications-api-contact-list-bucket-((env))
       - notifications-admin-logo-upload-bucket-((env))
-      - notifications-admin-mou-upload-bucket-((env))
 
     env:
       NOTIFY_APP_NAME: admin

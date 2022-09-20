@@ -23,21 +23,12 @@ class MockS3Object():
     (
         True, True,
         partial(url_for, 'main.request_to_go_live', service_id=SERVICE_ONE_ID),
-        [
-            (
-                ['govuk-link', 'govuk-link--no-visited-state'],
-                partial(url_for, 'main.service_download_agreement', service_id=SERVICE_ONE_ID),
-            ),
-        ]
+        []
     ),
     (
         False, False,
         partial(url_for, 'main.request_to_go_live', service_id=SERVICE_ONE_ID),
         [
-            (
-                ['govuk-link', 'govuk-link--no-visited-state'],
-                partial(url_for, 'main.service_download_agreement', service_id=SERVICE_ONE_ID),
-            ),
             (
                 ['govuk-button'],
                 partial(url_for, 'main.service_accept_agreement', service_id=SERVICE_ONE_ID),
@@ -48,10 +39,6 @@ class MockS3Object():
         False, True,
         partial(url_for, 'main.request_to_go_live', service_id=SERVICE_ONE_ID),
         [
-            (
-                ['govuk-link', 'govuk-link--no-visited-state'],
-                partial(url_for, 'main.service_download_agreement', service_id=SERVICE_ONE_ID),
-            ),
             (
                 ['govuk-button'],
                 partial(url_for, 'main.service_accept_agreement', service_id=SERVICE_ONE_ID),
@@ -126,14 +113,14 @@ def test_unknown_gps_and_trusts_are_redirected(
 
 
 @pytest.mark.parametrize('crown, expected_status, expected_file_fetched, expected_file_served', (
-    (
-        True, 200, 'crown.pdf',
-        'US Notify data sharing and financial agreement.pdf',
-    ),
-    (
-        False, 200, 'non-crown.pdf',
-        'US Notify data sharing and financial agreement (non-crown).pdf',
-    ),
+    # (
+    #     True, 200, 'crown.pdf',
+    #     'US Notify data sharing and financial agreement.pdf',
+    # ),
+    # (
+    #     False, 200, 'non-crown.pdf',
+    #     'US Notify data sharing and financial agreement (non-crown).pdf',
+    # ),
     (
         None, 404, None,
         None,
@@ -490,8 +477,8 @@ def test_confirm_agreement_page_persists(
     'main.public_download_agreement',
 ))
 @pytest.mark.parametrize('variant, expected_status', (
-    ('crown', 200),
-    ('non-crown', 200),
+    # ('crown', 200),
+    # ('non-crown', 200),
     ('foo', 404),
 ))
 def test_show_public_agreement_page(

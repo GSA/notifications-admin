@@ -59,7 +59,7 @@ class Config(object):
 
     NOTIFY_ENVIRONMENT = 'development'
     LOGO_UPLOAD_BUCKET_NAME = 'public-logos-local'
-    MOU_BUCKET_NAME = 'local-mou'
+    # MOU_BUCKET_NAME = 'local-mou'
     # TRANSIENT_UPLOADED_LETTERS = 'local-transient-uploaded-letters'
     ROUTE_SECRET_KEY_1 = os.environ.get('ROUTE_SECRET_KEY_1', 'dev-route-secret-key-1')
     ROUTE_SECRET_KEY_2 = os.environ.get('ROUTE_SECRET_KEY_2', 'dev-route-secret-key-2')
@@ -108,7 +108,7 @@ class Development(Config):
     CSV_UPLOAD_BUCKET_NAME = 'local-notifications-csv-upload'  # created in gsa sandbox
     CONTACT_LIST_UPLOAD_BUCKET_NAME = 'local-contact-list'  # created in gsa sandbox
     LOGO_UPLOAD_BUCKET_NAME = 'local-public-logos-tools'  # created in gsa sandbox
-    MOU_BUCKET_NAME = 'local-notify-tools-mou'  # created in gsa sandbox
+    # MOU_BUCKET_NAME = 'local-notify-tools-mou'  # created in gsa sandbox
     # TRANSIENT_UPLOADED_LETTERS = 'development-transient-uploaded-letters'  # not created in gsa sandbox
     # PRECOMPILED_ORIGINALS_BACKUP_LETTERS =
     # 'development-letters-precompiled-originals-backup'  # not created in sandbox
@@ -135,7 +135,7 @@ class Test(Development):
     CONTACT_LIST_UPLOAD_BUCKET_NAME = 'test-contact-list'
     LOGO_UPLOAD_BUCKET_NAME = 'public-logos-test'
     LOGO_CDN_DOMAIN = 'static-logos.test.com'
-    MOU_BUCKET_NAME = 'test-mou'
+    # MOU_BUCKET_NAME = 'test-mou'
     # TRANSIENT_UPLOADED_LETTERS = 'test-transient-uploaded-letters'
     # PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'test-letters-precompiled-originals-backup'
     NOTIFY_ENVIRONMENT = 'test'
@@ -166,7 +166,7 @@ class Preview(Config):
     CONTACT_LIST_UPLOAD_BUCKET_NAME = 'preview-contact-list'
     LOGO_UPLOAD_BUCKET_NAME = 'public-logos-preview'
     LOGO_CDN_DOMAIN = 'static-logos.notify.works'
-    MOU_BUCKET_NAME = 'notify.works-mou'
+    # MOU_BUCKET_NAME = 'notify.works-mou'
     # TRANSIENT_UPLOADED_LETTERS = 'preview-transient-uploaded-letters'
     # PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'preview-letters-precompiled-originals-backup'
     NOTIFY_ENVIRONMENT = 'preview'
@@ -186,7 +186,7 @@ class Staging(Config):
     CONTACT_LIST_UPLOAD_BUCKET_NAME = 'staging-contact-list'
     LOGO_UPLOAD_BUCKET_NAME = 'public-logos-staging'
     LOGO_CDN_DOMAIN = 'static-logos.staging-notify.works'
-    MOU_BUCKET_NAME = 'staging-notify.works-mou'
+    # MOU_BUCKET_NAME = 'staging-notify.works-mou'
     # TRANSIENT_UPLOADED_LETTERS = 'staging-transient-uploaded-letters'
     # PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'staging-letters-precompiled-originals-backup'
     NOTIFY_ENVIRONMENT = 'staging'
@@ -206,7 +206,8 @@ class Live(Config):
         'CONTACT_LIST_BUCKET_NAME', 'notifications-prototype-contact-list-upload')  # created in gsa sandbox
     LOGO_UPLOAD_BUCKET_NAME = os.environ.get(
         'LOGO_UPLOAD_BUCKET_NAME', 'notifications-prototype-logo-upload')  # created in gsa sandbox
-    MOU_BUCKET_NAME = os.environ.get('MOU_UPLOAD_BUCKET_NAME', 'notifications-prototype-mou')  # created in gsa sandbox
+    # MOU_BUCKET_NAME = os.environ.get(
+    #     'MOU_UPLOAD_BUCKET_NAME', 'notifications-prototype-mou')  # created in gsa sandbox
     # TRANSIENT_UPLOADED_LETTERS = 'prototype-transient-uploaded-letters'  # not created in gsa sandbox
     # PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'prototype-letters-precompiled-originals-backup'  # not in sandbox
 

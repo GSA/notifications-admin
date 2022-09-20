@@ -32,9 +32,3 @@ def extract_cloudfoundry_config():
         vcap_services['s3'], f"notifications-admin-logo-upload-bucket-{os.environ['DEPLOY_ENV']}")
     if bucket_service:
         os.environ['LOGO_UPLOAD_BUCKET_NAME'] = bucket_service['credentials']['bucket']
-
-    # MOU Upload Bucket Name
-    bucket_service = find_by_service_name(
-        vcap_services['s3'], f"notifications-admin-mou-upload-bucket-{os.environ['DEPLOY_ENV']}")
-    if bucket_service:
-        os.environ['MOU_UPLOAD_BUCKET_NAME'] = bucket_service['credentials']['bucket']
