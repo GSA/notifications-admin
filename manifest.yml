@@ -1,6 +1,6 @@
 ---
 applications:
-  - name: notifications-admin
+  - name: notifications-admin-((env))
     buildpack: python_buildpack
     memory: 1G
     health-check-type: http
@@ -13,7 +13,7 @@ applications:
       # - logit-ssl-syslog-drain
       # - notify-prometheus
       # - notify-splunk
-      - api-redis
+      - notifications-admin-redis-((env))
 
     env:
       NOTIFY_APP_NAME: admin
