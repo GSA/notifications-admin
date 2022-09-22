@@ -4368,8 +4368,8 @@ def test_send_from_contact_list(
     mock_get_contact_list,
 ):
     new_uuid = uuid.uuid4()
-    mock_download = mocker.patch('app.models.contact_list.s3download', return_value='contents')
-    mock_get_metadata = mocker.patch('app.models.contact_list.get_csv_metadata', return_value={
+    mock_download = mocker.patch('app.models.contact_list.get_s3_contents', return_value='contents')
+    mock_get_metadata = mocker.patch('app.models.contact_list.get_s3_metadata', return_value={
         'example_key': 'example value',
     })
     mock_upload = mocker.patch('app.models.contact_list.s3upload', return_value=new_uuid)
@@ -4388,12 +4388,8 @@ def test_send_from_contact_list(
             contact_list_id=fake_uuid,
         )
     )
-    mock_download.assert_called_once_with(
-        SERVICE_ONE_ID, fake_uuid, bucket='test-contact-list'
-    )
-    mock_get_metadata.assert_called_once_with(
-        SERVICE_ONE_ID, fake_uuid, bucket='test-contact-list'
-    )
+    mock_download.assert_called_once()
+    mock_get_metadata.assert_called_once()
     mock_upload.assert_called_once_with(
         SERVICE_ONE_ID, {'data': 'contents'}, ANY
     )

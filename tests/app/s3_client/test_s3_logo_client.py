@@ -3,6 +3,7 @@ from unittest.mock import call
 
 import pytest
 
+from app.s3_client import default_access_key, default_secret_key
 from app.s3_client.s3_logo_client import (
     EMAIL_LOGO_LOCATION_STRUCTURE,
     LETTER_TEMP_LOGO_LOCATION,
@@ -54,7 +55,9 @@ def test_upload_email_logo_calls_correct_args(client_request, mocker, fake_uuid,
         region=region,
         file_location=upload_filename,
         bucket_name=bucket,
-        content_type='image/png'
+        content_type='image/png',
+        access_key=default_access_key,
+        secret_key=default_secret_key,
     )
 
 
@@ -70,7 +73,9 @@ def test_upload_letter_temp_logo_calls_correct_args(mocker, fake_uuid, letter_up
         region=region,
         bucket_name=bucket,
         file_location=letter_upload_filename,
-        content_type='image/svg+xml'
+        content_type='image/svg+xml',
+        access_key=default_access_key,
+        secret_key=default_secret_key,
     )
     assert new_filename == 'letters/static/images/letter-template/temp-{}_test_uuid-test.svg'.format(fake_uuid)
 
@@ -84,7 +89,7 @@ def test_persist_logo(client_request, mocker, fake_uuid, upload_filename):
 
     persist_logo(upload_filename, new_filename)
 
-    mocked_get_s3_object.assert_called_once_with(bucket, new_filename)
+    mocked_get_s3_object.assert_called_once_with(bucket, new_filename, default_access_key, default_secret_key)
     mocked_delete_s3_object.assert_called_once_with(upload_filename)
 
 
