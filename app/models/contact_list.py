@@ -1,20 +1,23 @@
 from functools import partial
 from os import path
+from uuid import uuid4
 
 from flask import abort, current_app
 from notifications_utils.formatters import strip_all_whitespace
 from notifications_utils.recipients import RecipientCSV
+from notifications_utils.s3 import s3upload as utils_s3upload
 from werkzeug.utils import cached_property
 
 from app.models import JSONModel, ModelList
 from app.models.job import PaginatedJobsAndScheduledJobs
 from app.notify_client.contact_list_api_client import contact_list_api_client
-from app.s3_client.s3_csv_client import (
-    get_csv_metadata,
-    s3download,
-    s3upload,
-    set_metadata_on_csv_upload,
+from app.s3_client import (
+    get_s3_contents,
+    get_s3_metadata,
+    get_s3_object,
+    set_s3_metadata,
 )
+from app.s3_client.s3_csv_client import s3upload, set_metadata_on_csv_upload
 from app.utils.templates import get_sample_template
 
 
@@ -46,38 +49,52 @@ class ContactList(JSONModel):
         return current_app.config['CONTACT_LIST_UPLOAD_BUCKET_NAME']
 
     @staticmethod
-    def upload(service_id, file_dict):
-        return s3upload(
-            service_id,
-            file_dict,
-            current_app.config['AWS_REGION'],
-            bucket=ContactList.get_bucket_name(),
+    def get_access_key():
+        return current_app.config['CONTACT_LIST_UPLOAD_ACCESS_KEY']
+
+    @staticmethod
+    def get_secret_key():
+        return current_app.config['CONTACT_LIST_UPLOAD_SECRET_KEY']
+
+    @staticmethod
+    def get_filename(service_id, upload_id):
+        return f"service-{service_id}-notify/{upload_id}.csv"
+
+    @staticmethod
+    def get_s3_arguments(service_id, upload_id):
+        return (
+            ContactList.get_bucket_name(),
+            ContactList.get_filename(service_id, upload_id),
+            ContactList.get_access_key(),
+            ContactList.get_secret_key(),
         )
+
+    @staticmethod
+    def upload(service_id, file_dict):
+        upload_id = str(uuid4())
+        utils_s3upload(
+            filedata=file_dict['data'],
+            region=current_app.config['AWS_REGION'],
+            bucket_name=ContactList.get_bucket_name(),
+            file_location=ContactList.get_filename(service_id, upload_id),
+            access_key=ContactList.get_access_key(),
+            secret_key=ContactList.get_secret_key(),
+        )
+        return upload_id
 
     @staticmethod
     def download(service_id, upload_id):
-        return strip_all_whitespace(s3download(
-            service_id,
-            upload_id,
-            bucket=ContactList.get_bucket_name(),
-        ))
+        return strip_all_whitespace(
+            get_s3_contents(
+                get_s3_object(*ContactList.get_s3_arguments(service_id, upload_id))))
 
     @staticmethod
     def set_metadata(service_id, upload_id, **kwargs):
-        return set_metadata_on_csv_upload(
-            service_id,
-            upload_id,
-            bucket=ContactList.get_bucket_name(),
-            **kwargs,
-        )
+        return set_s3_metadata(get_s3_object(*ContactList.get_s3_arguments(service_id, upload_id)), **kwargs)
 
     @staticmethod
     def get_metadata(service_id, upload_id):
-        return get_csv_metadata(
-            service_id,
-            upload_id,
-            bucket=ContactList.get_bucket_name(),
-        )
+        return get_s3_metadata(get_s3_object(*ContactList.get_s3_arguments(service_id, upload_id)))
 
     def copy_to_uploads(self):
         metadata = self.get_metadata(self.service_id, self.id)

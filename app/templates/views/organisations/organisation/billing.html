@@ -22,19 +22,9 @@
           {{ current_org.agreement_signed_on_behalf_of_name or current_org.agreement_signed_by.name }} signed the agreement
           on behalf of {{ current_org.name}}.
         </p>
-        <p class="govuk-body">
-          <a class="govuk-link govuk-link--no-visited-state"
-             href="{{ url_for('.organisation_download_agreement', org_id=current_org.id) }}">Download the current version of the agreement (PDF)
-          </a>
-        </p>
       {% elif current_org.agreement_signed %}
         <p class="govuk-body">
           {{ current_org.name}} has accepted the US Notify data sharing and financial agreement.
-        </p>
-        <p class="govuk-body">
-          <a class="govuk-link govuk-link--no-visited-state"
-             href="{{ url_for('.organisation_download_agreement', org_id=current_org.id) }}">Download the current version of the agreement (PDF)
-          </a>
         </p>
       {% elif current_org.agreement_signed is false %}
         <p class="govuk-body">

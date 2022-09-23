@@ -1,68 +1,52 @@
 import uuid
 
-import botocore
 from flask import current_app
 from notifications_utils.s3 import s3upload as utils_s3upload
 
-from app.s3_client.s3_logo_client import get_s3_object
+from app.s3_client import (
+    get_s3_contents,
+    get_s3_metadata,
+    get_s3_object,
+    set_s3_metadata,
+)
 
 FILE_LOCATION_STRUCTURE = 'service-{}-notify/{}.csv'
 
 
-def get_csv_location(service_id, upload_id, bucket=None):
+def get_csv_location(service_id, upload_id):
     return (
-        bucket or current_app.config['CSV_UPLOAD_BUCKET_NAME'],
+        current_app.config['CSV_UPLOAD_BUCKET_NAME'],
         FILE_LOCATION_STRUCTURE.format(service_id, upload_id),
+        current_app.config['CSV_UPLOAD_ACCESS_KEY'],
+        current_app.config['CSV_UPLOAD_SECRET_KEY'],
     )
 
 
-def get_csv_upload(service_id, upload_id, bucket=None):
-    return get_s3_object(*get_csv_location(service_id, upload_id, bucket))
+def get_csv_upload(service_id, upload_id):
+    return get_s3_object(*get_csv_location(service_id, upload_id))
 
 
-def s3upload(service_id, filedata, region, bucket=None):
+def s3upload(service_id, filedata, region):
     upload_id = str(uuid.uuid4())
-    bucket_name, file_location = get_csv_location(service_id, upload_id, bucket)
+    bucket_name, file_location, access_key, secret_key = get_csv_location(service_id, upload_id)
     utils_s3upload(
         filedata=filedata['data'],
         region=region,
         bucket_name=bucket_name,
         file_location=file_location,
+        access_key=access_key,
+        secret_key=secret_key,
     )
     return upload_id
 
 
-def s3download(service_id, upload_id, bucket=None):
-    contents = ''
-    try:
-        key = get_csv_upload(service_id, upload_id, bucket)
-        contents = key.get()['Body'].read().decode('utf-8')
-    except botocore.exceptions.ClientError as e:
-        current_app.logger.error("Unable to download s3 file {}".format(
-            FILE_LOCATION_STRUCTURE.format(service_id, upload_id)))
-        raise e
-    return contents
+def s3download(service_id, upload_id):
+    return get_s3_contents(get_csv_upload(service_id, upload_id))
 
 
-def set_metadata_on_csv_upload(service_id, upload_id, bucket=None, **kwargs):
-    copy_from_object_result = get_csv_upload(
-        service_id, upload_id, bucket=bucket
-    ).copy_from(
-        CopySource='{}/{}'.format(*get_csv_location(service_id, upload_id, bucket=bucket)),
-        ServerSideEncryption='AES256',
-        Metadata={
-            key: str(value) for key, value in kwargs.items()
-        },
-        MetadataDirective='REPLACE',
-    )
-    return copy_from_object_result
+def set_metadata_on_csv_upload(service_id, upload_id, **kwargs):
+    return set_s3_metadata(get_csv_upload(service_id, upload_id), **kwargs)
 
 
-def get_csv_metadata(service_id, upload_id, bucket=None):
-    try:
-        key = get_csv_upload(service_id, upload_id, bucket)
-        return key.get()['Metadata']
-    except botocore.exceptions.ClientError as e:
-        current_app.logger.error("Unable to download s3 file {}".format(
-            FILE_LOCATION_STRUCTURE.format(service_id, upload_id)))
-        raise e
+def get_csv_metadata(service_id, upload_id):
+    return get_s3_metadata(get_csv_upload(service_id, upload_id))
