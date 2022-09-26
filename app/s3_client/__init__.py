@@ -6,11 +6,18 @@ from flask import current_app
 
 default_access_key = os.environ.get('AWS_ACCESS_KEY_ID')
 default_secret_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
+default_region = os.environ.get('AWS_REGION')
 
 
-def get_s3_object(bucket_name, filename, access_key=default_access_key, secret_key=default_secret_key):
+def get_s3_object(
+    bucket_name,
+    filename,
+    access_key=default_access_key,
+    secret_key=default_secret_key,
+    region=default_region,
+):
     # To inspect contents: obj.get()['Body'].read().decode('utf-8')
-    session = Session(aws_access_key_id=access_key, aws_secret_access_key=secret_key)
+    session = Session(aws_access_key_id=access_key, aws_secret_access_key=secret_key, region_name=region)
     s3 = session.resource('s3')
     obj = s3.Object(bucket_name, filename)
     return obj

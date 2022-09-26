@@ -61,7 +61,6 @@ def update_letter_branding(branding_id, logo=None):
         upload_filename = upload_letter_temp_logo(
             file_upload_form.file.data.filename,
             file_upload_form.file.data,
-            current_app.config['AWS_REGION'],
             user_id=session["user_id"]
         )
 
@@ -132,7 +131,6 @@ def create_letter_branding(logo=None):
         upload_filename = upload_letter_temp_logo(
             file_upload_form.file.data.filename,
             file_upload_form.file.data,
-            current_app.config['AWS_REGION'],
             user_id=session["user_id"]
         )
 

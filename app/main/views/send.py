@@ -147,7 +147,6 @@ def send_messages(service_id, template_id):
             upload_id = s3upload(
                 service_id,
                 Spreadsheet.from_file_form(form).as_dict,
-                current_app.config['AWS_REGION']
             )
             file_name_metadata = unicode_truncate(
                 SanitiseASCII.encode(form.file.data.filename),

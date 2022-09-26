@@ -22,6 +22,7 @@ def extract_cloudfoundry_config():
         os.environ['CSV_UPLOAD_BUCKET_NAME'] = bucket_service['credentials']['bucket']
         os.environ['CSV_UPLOAD_ACCESS_KEY'] = bucket_service['credentials']['access_key_id']
         os.environ['CSV_UPLOAD_SECRET_KEY'] = bucket_service['credentials']['secret_access_key']
+        os.environ['CSV_UPLOAD_REGION'] = bucket_service['credentials']['region']
 
     # Contact List Bucket Name
     bucket_service = find_by_service_name(
@@ -30,6 +31,7 @@ def extract_cloudfoundry_config():
         os.environ['CONTACT_LIST_BUCKET_NAME'] = bucket_service['credentials']['bucket']
         os.environ['CONTACT_LIST_ACCESS_KEY'] = bucket_service['credentials']['access_key_id']
         os.environ['CONTACT_LIST_SECRET_KEY'] = bucket_service['credentials']['secret_access_key']
+        os.environ['CONTACT_LIST_REGION'] = bucket_service['credentials']['region']
 
     # Logo Upload Bucket Name
     bucket_service = find_by_service_name(
@@ -38,3 +40,4 @@ def extract_cloudfoundry_config():
         os.environ['LOGO_UPLOAD_BUCKET_NAME'] = bucket_service['credentials']['bucket']
         os.environ['LOGO_UPLOAD_ACCESS_KEY'] = bucket_service['credentials']['access_key_id']
         os.environ['LOGO_UPLOAD_SECRET_KEY'] = bucket_service['credentials']['secret_access_key']
+        os.environ['LOGO_UPLOAD_REGION'] = bucket_service['credentials']['region']

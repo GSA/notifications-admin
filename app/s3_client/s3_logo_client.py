@@ -19,6 +19,7 @@ def get_logo_location(filename=None):
         filename,
         current_app.config['LOGO_UPLOAD_ACCESS_KEY'],
         current_app.config['LOGO_UPLOAD_SECRET_KEY'],
+        current_app.config['LOGO_UPLOAD_REGION'],
     )
 
 
@@ -29,8 +30,8 @@ def delete_s3_object(filename):
 def persist_logo(old_name, new_name):
     if old_name == new_name:
         return
-    bucket_name, filename, access_key, secret_key = get_logo_location(new_name)
-    get_s3_object(bucket_name, filename, access_key, secret_key).copy_from(
+    bucket_name, filename, access_key, secret_key, region = get_logo_location(new_name)
+    get_s3_object(bucket_name, filename, access_key, secret_key, region).copy_from(
         CopySource='{}/{}'.format(bucket_name, old_name))
     delete_s3_object(old_name)
 
@@ -38,7 +39,8 @@ def persist_logo(old_name, new_name):
 def get_s3_objects_filter_by_prefix(prefix):
     bucket_name = current_app.config['LOGO_UPLOAD_BUCKET_NAME']
     session = Session(aws_access_key_id=current_app.config['LOGO_UPLOAD_ACCESS_KEY'],
-                      aws_secret_access_key=current_app.config['LOGO_UPLOAD_SECRET_KEY'])
+                      aws_secret_access_key=current_app.config['LOGO_UPLOAD_SECRET_KEY'],
+                      region_name=current_app.config['LOGO_UPLOAD_REGION'])
     s3 = session.resource('s3')
     return s3.Bucket(bucket_name).objects.filter(Prefix=prefix)
 
@@ -51,7 +53,7 @@ def get_letter_filename_with_no_path_or_extension(filename):
     return filename[len(LETTER_PREFIX):-4]
 
 
-def upload_email_logo(filename, filedata, region, user_id):
+def upload_email_logo(filename, filedata, user_id):
     upload_file_name = EMAIL_LOGO_LOCATION_STRUCTURE.format(
         temp=TEMP_TAG.format(user_id=user_id),
         unique_id=str(uuid.uuid4()),
@@ -60,7 +62,7 @@ def upload_email_logo(filename, filedata, region, user_id):
     bucket_name = current_app.config['LOGO_UPLOAD_BUCKET_NAME']
     utils_s3upload(
         filedata=filedata,
-        region=region,
+        region=current_app.config['LOGO_UPLOAD_REGION'],
         bucket_name=bucket_name,
         file_location=upload_file_name,
         content_type='image/png',
@@ -71,7 +73,7 @@ def upload_email_logo(filename, filedata, region, user_id):
     return upload_file_name
 
 
-def upload_letter_temp_logo(filename, filedata, region, user_id):
+def upload_letter_temp_logo(filename, filedata, user_id):
     upload_filename = LETTER_TEMP_LOGO_LOCATION.format(
         user_id=user_id,
         unique_id=str(uuid.uuid4()),
@@ -80,7 +82,7 @@ def upload_letter_temp_logo(filename, filedata, region, user_id):
     bucket_name = current_app.config['LOGO_UPLOAD_BUCKET_NAME']
     utils_s3upload(
         filedata=filedata,
-        region=region,
+        region=current_app.config['LOGO_UPLOAD_REGION'],
         bucket_name=bucket_name,
         file_location=upload_filename,
         content_type='image/svg+xml',
