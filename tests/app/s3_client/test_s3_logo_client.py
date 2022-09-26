@@ -3,7 +3,7 @@ from unittest.mock import call
 
 import pytest
 
-from app.s3_client import default_access_key, default_secret_key
+from app.s3_client import default_access_key, default_region, default_secret_key
 from app.s3_client.s3_logo_client import (
     EMAIL_LOGO_LOCATION_STRUCTURE,
     LETTER_TEMP_LOGO_LOCATION,
@@ -48,7 +48,7 @@ def test_upload_email_logo_calls_correct_args(client_request, mocker, fake_uuid,
     mocker.patch.dict('flask.current_app.config', {'LOGO_UPLOAD_BUCKET_NAME': bucket})
     mocked_s3_upload = mocker.patch('app.s3_client.s3_logo_client.utils_s3upload')
 
-    upload_email_logo(filename=filename, user_id=fake_uuid, filedata=data, region=region)
+    upload_email_logo(filename=filename, user_id=fake_uuid, filedata=data)
 
     mocked_s3_upload.assert_called_once_with(
         filedata=data,
@@ -66,7 +66,7 @@ def test_upload_letter_temp_logo_calls_correct_args(mocker, fake_uuid, letter_up
     mocker.patch.dict('flask.current_app.config', {'LOGO_UPLOAD_BUCKET_NAME': bucket})
     mocked_s3_upload = mocker.patch('app.s3_client.s3_logo_client.utils_s3upload')
 
-    new_filename = upload_letter_temp_logo(filename=svg_filename, user_id=fake_uuid, filedata=data, region=region)
+    new_filename = upload_letter_temp_logo(filename=svg_filename, user_id=fake_uuid, filedata=data)
 
     mocked_s3_upload.assert_called_once_with(
         filedata=data,
@@ -89,7 +89,8 @@ def test_persist_logo(client_request, mocker, fake_uuid, upload_filename):
 
     persist_logo(upload_filename, new_filename)
 
-    mocked_get_s3_object.assert_called_once_with(bucket, new_filename, default_access_key, default_secret_key)
+    mocked_get_s3_object.assert_called_once_with(
+        bucket, new_filename, default_access_key, default_secret_key, default_region)
     mocked_delete_s3_object.assert_called_once_with(upload_filename)
 
 

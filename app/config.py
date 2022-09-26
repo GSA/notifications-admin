@@ -54,9 +54,11 @@ class Config(object):
     CSV_UPLOAD_BUCKET_NAME = 'local-notifications-csv-upload'
     CSV_UPLOAD_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY_ID')
     CSV_UPLOAD_SECRET_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    CSV_UPLOAD_REGION = os.environ.get('AWS_REGION')
     CONTACT_LIST_UPLOAD_BUCKET_NAME = 'local-contact-list'
     CONTACT_LIST_UPLOAD_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY_ID')
     CONTACT_LIST_UPLOAD_SECRET_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    CONTACT_LIST_UPLOAD_REGION = os.environ.get('AWS_REGION')
     ACTIVITY_STATS_LIMIT_DAYS = 7
 
     REPLY_TO_EMAIL_ADDRESS_VALIDATION_TIMEOUT = 45
@@ -65,6 +67,7 @@ class Config(object):
     LOGO_UPLOAD_BUCKET_NAME = 'public-logos-local'
     LOGO_UPLOAD_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY_ID')
     LOGO_UPLOAD_SECRET_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    LOGO_UPLOAD_REGION = os.environ.get('AWS_REGION')
     # MOU_BUCKET_NAME = 'local-mou'
     # TRANSIENT_UPLOADED_LETTERS = 'local-transient-uploaded-letters'
     ROUTE_SECRET_KEY_1 = os.environ.get('ROUTE_SECRET_KEY_1', 'dev-route-secret-key-1')
@@ -210,14 +213,17 @@ class Live(Config):
         'CSV_UPLOAD_BUCKET_NAME', 'notifications-prototype-csv-upload')  # created in gsa sandbox
     CSV_UPLOAD_ACCESS_KEY = os.environ.get('CSV_UPLOAD_ACCESS_KEY')
     CSV_UPLOAD_SECRET_KEY = os.environ.get('CSV_UPLOAD_SECRET_KEY')
+    CSV_UPLOAD_REGION = os.environ.get('CSV_UPLOAD_REGION')
     CONTACT_LIST_UPLOAD_BUCKET_NAME = os.environ.get(
         'CONTACT_LIST_BUCKET_NAME', 'notifications-prototype-contact-list-upload')  # created in gsa sandbox
     CONTACT_LIST_UPLOAD_ACCESS_KEY = os.environ.get('CONTACT_LIST_ACCESS_KEY')
     CONTACT_LIST_UPLOAD_SECRET_KEY = os.environ.get('CONTACT_LIST_SECRET_KEY')
+    CONTACT_LIST_UPLOAD_REGION = os.environ.get('CONTACT_LIST_REGION')
     LOGO_UPLOAD_BUCKET_NAME = os.environ.get(
         'LOGO_UPLOAD_BUCKET_NAME', 'notifications-prototype-logo-upload')  # created in gsa sandbox
     LOGO_UPLOAD_ACCESS_KEY = os.environ.get('LOGO_UPLOAD_ACCESS_KEY')
     LOGO_UPLOAD_SECRET_KEY = os.environ.get('LOGO_UPLOAD_SECRET_KEY')
+    LOGO_UPLOAD_REGION = os.environ.get('LOGO_UPLOAD_REGION')
     # MOU_BUCKET_NAME = os.environ.get(
     #     'MOU_UPLOAD_BUCKET_NAME', 'notifications-prototype-mou')  # created in gsa sandbox
     # TRANSIENT_UPLOADED_LETTERS = 'prototype-transient-uploaded-letters'  # not created in gsa sandbox

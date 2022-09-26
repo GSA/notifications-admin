@@ -46,7 +46,6 @@ def update_email_branding(branding_id, logo=None):
             upload_filename = upload_email_logo(
                 form.file.data.filename,
                 form.file.data,
-                current_app.config['AWS_REGION'],
                 user_id=session["user_id"]
             )
 
@@ -93,7 +92,6 @@ def create_email_branding(logo=None):
             upload_filename = upload_email_logo(
                 form.file.data.filename,
                 form.file.data,
-                current_app.config['AWS_REGION'],
                 user_id=session["user_id"]
             )
 

@@ -20,6 +20,7 @@ def vcap_services():
                 'credentials': {
                     'access_key_id': 'csv-access',
                     'bucket': 'csv-upload-bucket',
+                    'region': 'us-gov-west-1',
                     'secret_access_key': 'csv-secret'
                 }
             },
@@ -28,6 +29,7 @@ def vcap_services():
                 'credentials': {
                     'access_key_id': 'contact-list-access',
                     'bucket': 'contact-list-bucket',
+                    'region': 'us-gov-west-1',
                     'secret_access_key': 'contact-list-secret'
                 }
             }

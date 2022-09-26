@@ -57,6 +57,10 @@ class ContactList(JSONModel):
         return current_app.config['CONTACT_LIST_UPLOAD_SECRET_KEY']
 
     @staticmethod
+    def get_region():
+        return current_app.config['CONTACT_LIST_UPLOAD_REGION']
+
+    @staticmethod
     def get_filename(service_id, upload_id):
         return f"service-{service_id}-notify/{upload_id}.csv"
 
@@ -67,6 +71,7 @@ class ContactList(JSONModel):
             ContactList.get_filename(service_id, upload_id),
             ContactList.get_access_key(),
             ContactList.get_secret_key(),
+            ContactList.get_region(),
         )
 
     @staticmethod
@@ -74,7 +79,7 @@ class ContactList(JSONModel):
         upload_id = str(uuid4())
         utils_s3upload(
             filedata=file_dict['data'],
-            region=current_app.config['AWS_REGION'],
+            region=ContactList.get_region(),
             bucket_name=ContactList.get_bucket_name(),
             file_location=ContactList.get_filename(service_id, upload_id),
             access_key=ContactList.get_access_key(),
@@ -97,11 +102,12 @@ class ContactList(JSONModel):
         return get_s3_metadata(get_s3_object(*ContactList.get_s3_arguments(service_id, upload_id)))
 
     def copy_to_uploads(self):
+        raise RuntimeError("RCA probably an issue with copying between buckets")
         metadata = self.get_metadata(self.service_id, self.id)
         new_upload_id = s3upload(
             self.service_id,
             {'data': self.contents},
-            current_app.config['AWS_REGION'],
+            ContactList.get_region(),
         )
         set_metadata_on_csv_upload(
             self.service_id,
