@@ -44,3 +44,5 @@ applications:
       BASIC_AUTH_PASSWORD: ((BASIC_AUTH_PASSWORD))
 
       NOTIFY_BILLING_DETAILS: []
+
+      REQUESTS_CA_BUNDLE: "/etc/ssl/certs/ca-certificates.crt"
