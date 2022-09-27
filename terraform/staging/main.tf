@@ -29,3 +29,14 @@ module "logo_upload_bucket" {
   recursive_delete = local.recursive_delete
   s3_service_name  = "${local.app_name}-logo-upload-bucket-${local.env}"
 }
+
+module "api_network_route" {
+  source = "../shared/container_networking"
+
+  cf_user              = var.cf_user
+  cf_password          = var.cf_password
+  cf_org_name          = local.cf_org_name
+  cf_space_name        = local.cf_space_name
+  source_app_name      = "${local.app_name}-${local.env}"
+  destination_app_name = "notifications-api-${local.env}"
+}
