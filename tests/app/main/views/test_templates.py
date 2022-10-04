@@ -46,9 +46,6 @@ from tests.conftest import (
         'Every message starts with a template. You can change it later. '
         'You need a template before you can send emails, text messages or letters.'
     )),
-    (['broadcast'], (
-        'Every message starts with a template. You can change it later. You haven’t added any templates yet.'
-    )),
 ))
 def test_should_show_empty_page_when_no_templates(
     client_request,
@@ -209,76 +206,6 @@ def test_should_show_page_for_choosing_a_template(
     mock_get_template_folders.assert_called_once_with(SERVICE_ONE_ID)
 
 
-def test_should_show_page_of_broadcast_templates(
-    mocker,
-    client_request,
-    service_one,
-    fake_uuid,
-    mock_get_template_folders,
-    mock_get_no_api_keys,
-):
-    service_one['permissions'] += ['broadcast']
-    mocker.patch(
-        'app.service_api_client.get_service_templates',
-        return_value={'data': [
-            template_json(
-                SERVICE_ONE_ID,
-                fake_uuid,
-                type_='broadcast',
-                name='A',
-                content='a' * 40,
-            ),
-            template_json(
-                SERVICE_ONE_ID,
-                fake_uuid,
-                type_='broadcast',
-                name='B',
-                content='b' * 42,
-            ),
-            template_json(
-                SERVICE_ONE_ID,
-                fake_uuid,
-                type_='broadcast',
-                name='C',
-                content='c' * 43,
-            ),
-            template_json(
-                SERVICE_ONE_ID,
-                fake_uuid,
-                type_='broadcast',
-                name='D',
-                # This should be truncated at 40 chars, then have the
-                # trailing space stripped
-                content=('d' * 39) + ' ' + ('d' * 40),
-            ),
-        ]}
-    )
-    page = client_request.get(
-        'main.choose_template',
-        service_id=SERVICE_ONE_ID,
-    )
-    assert [
-        (
-            normalize_spaces(template.select_one('.govuk-link').text),
-            normalize_spaces(template.select_one('.govuk-hint').text),
-        )
-        for template in page.select('.template-list-item')
-    ] == [
-        (
-            'A', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        ),
-        (
-            'B', 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
-        ),
-        (
-            'C', 'cccccccccccccccccccccccccccccccccccccccc…',
-        ),
-        (
-            'D', 'ddddddddddddddddddddddddddddddddddddddd…',
-        ),
-    ]
-
-
 def test_choose_template_can_pass_through_an_initial_state_to_templates_and_folders_selection_form(
     client_request,
     mock_get_template_folders,
@@ -400,11 +327,6 @@ def test_should_show_live_search_if_service_has_lots_of_folders(
         'Text message',
         'Copy an existing template',
     ]),
-    pytest.param(['broadcast'], [
-        'broadcast',
-    ], [
-        'Broadcast',
-    ]),
     pytest.param(['email', 'sms'], [
         'email',
         'sms',
@@ -452,7 +374,6 @@ def test_should_show_new_template_choices_if_service_has_folder_permission(
     (['sms'], True),
     (['email'], True),
     (['letter'], True),
-    (['broadcast'], True),
     (['sms', 'email'], False),
 ])
 def test_should_add_data_attributes_for_services_that_only_allow_one_type_of_notifications(
@@ -525,44 +446,6 @@ def test_should_show_page_for_one_template(
     )
 
     mock_get_service_template.assert_called_with(SERVICE_ONE_ID, template_id, None)
-
-
-def test_broadcast_template_doesnt_highlight_placeholders_but_does_count_characters(
-    client_request,
-    service_one,
-    mock_get_broadcast_template,
-    fake_uuid,
-):
-    service_one['permissions'] += ['broadcast']
-    page = client_request.get(
-        '.edit_service_template',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-    )
-    assert page.select_one('textarea')['data-module'] == 'enhanced-textbox'
-    assert page.select_one('textarea')['data-highlight-placeholders'] == 'false'
-
-    assert (
-        page.select_one('[data-module=update-status]')['data-target']
-    ) == (
-        page.select_one('textarea')['id']
-    ) == (
-        'template_content'
-    )
-
-    assert (
-        page.select_one('[data-module=update-status]')['data-updates-url']
-    ) == url_for(
-        '.count_content_length',
-        service_id=SERVICE_ONE_ID,
-        template_type='broadcast',
-    )
-
-    assert (
-        page.select_one('[data-module=update-status]')['aria-live']
-    ) == (
-        'polite'
-    )
 
 
 def test_caseworker_redirected_to_set_sender_for_one_off(
@@ -929,49 +812,6 @@ def test_should_be_able_to_view_a_template_with_links(
     )
 
 
-def test_view_broadcast_template(
-    client_request,
-    service_one,
-    mock_get_broadcast_template,
-    mock_get_template_folders,
-    fake_uuid,
-    active_user_create_broadcasts_permission,
-):
-    client_request.login(active_user_create_broadcasts_permission)
-    active_user_create_broadcasts_permission['permissions'][SERVICE_ONE_ID].append('manage_templates')
-    page = client_request.get(
-        '.view_template',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _test_page_title=False,
-    )
-
-    assert [
-        (link.text.strip(), link['href'])
-        for link in page.select('.pill-separate-item')
-    ] == [
-        ('Prepare to send', url_for(
-            '.broadcast',
-            service_id=SERVICE_ONE_ID,
-            template_id=fake_uuid,
-        )),
-        ('Edit this template', url_for(
-            '.edit_service_template',
-            service_id=SERVICE_ONE_ID,
-            template_id=fake_uuid,
-        )),
-    ]
-
-    assert (
-        normalize_spaces(page.select_one('.template-container').text)
-    ) == (
-        normalize_spaces(page.select_one('.broadcast-message-wrapper').text)
-    ) == (
-        'Emergency alert '
-        'This is a test'
-    )
-
-
 def test_should_show_template_id_on_template_page(
     client_request,
     mock_get_service_template,
@@ -985,21 +825,6 @@ def test_should_show_template_id_on_template_page(
         _test_page_title=False,
     )
     assert fake_uuid in page.select('.copy-to-clipboard__value')[0].text
-
-
-def test_should_hide_template_id_for_broadcast_templates(
-    client_request,
-    mock_get_broadcast_template,
-    mock_get_template_folders,
-    fake_uuid,
-):
-    page = client_request.get(
-        '.view_template',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _test_page_title=False,
-    )
-    assert not page.select('.copy-to-clipboard__value')
 
 
 def test_should_show_sms_template_with_downgraded_unicode_characters(
@@ -1605,14 +1430,6 @@ def test_cant_copy_template_from_non_member_service(
         },
         "Sending letters has been disabled for your service."
     ),
-    (
-        ['letter'],
-        {
-            'operation': 'add-new-template',
-            'add_template_by_template_type': 'broadcast',
-        },
-        "Sending broadcasts has been disabled for your service."
-    ),
 ))
 def test_should_not_allow_creation_of_template_through_form_without_correct_permission(
     client_request,
@@ -1645,7 +1462,6 @@ def test_should_not_allow_creation_of_template_through_form_without_correct_perm
     ('email', 'Sending emails has been disabled for your service.'),
     ('sms', 'Sending text messages has been disabled for your service.'),
     ('letter', 'Sending letters has been disabled for your service.'),
-    ('broadcast', 'Sending broadcasts has been disabled for your service.'),
 ])
 def test_should_not_allow_creation_of_a_template_without_correct_permission(
     client_request,
@@ -2006,37 +1822,6 @@ def test_should_not_update_too_big_template(
     assert "Content has a character count greater than the limit of 459" in page.text
 
 
-@pytest.mark.parametrize('content, expected_error', (
-    (("ŴŶ" * 308), (
-        'Content must be 615 characters or fewer because it contains Ŵ and Ŷ'
-    )),
-    (("ab" * 698), (
-        'Content must be 1,395 characters or fewer'
-    )),
-))
-def test_should_not_create_too_big_template_for_broadcasts(
-    client_request,
-    service_one,
-    content,
-    expected_error,
-):
-    service_one['permissions'] = ['broadcast']
-    page = client_request.post(
-        '.add_service_template',
-        service_id=SERVICE_ONE_ID,
-        template_type='broadcast',
-        _data={
-            'name': 'New name',
-            'template_content': content,
-            'template_type': 'broadcast',
-            'service': SERVICE_ONE_ID,
-            'process_type': 'normal'
-        },
-        _expected_status=200,
-    )
-    assert normalize_spaces(page.select_one('.error-message').text) == expected_error
-
-
 def test_should_redirect_when_saving_a_template_email(
     client_request,
     mock_get_service_email_template,
@@ -2311,7 +2096,6 @@ def test_route_invalid_permissions(
 @pytest.mark.parametrize('template_type, expected', (
     ('email', 'New email template'),
     ('sms', 'New text message template'),
-    ('broadcast', 'New template'),
 ))
 def test_add_template_page_title(
     client_request,
@@ -2353,11 +2137,8 @@ def test_can_create_email_template_with_emoji(
     ('sms', (
         'You cannot use 🍜 in text messages.'
     )),
-    ('broadcast', (
-        'You cannot use 🍜 in broadcasts.'
-    )),
 ))
-def test_should_not_create_sms_or_broadcast_template_with_emoji(
+def test_should_not_create_sms_template_with_emoji(
     client_request,
     service_one,
     mock_create_service_template,
@@ -2385,9 +2166,6 @@ def test_should_not_create_sms_or_broadcast_template_with_emoji(
 @pytest.mark.parametrize('template_type, expected_error', (
     ('sms', (
         'You cannot use 🍔 in text messages.'
-    )),
-    ('broadcast', (
-        'You cannot use 🍔 in broadcasts.'
     )),
 ))
 def test_should_not_update_sms_template_with_emoji(
@@ -2428,9 +2206,9 @@ def test_should_not_update_sms_template_with_emoji(
 
 
 @pytest.mark.parametrize('template_type', (
-    'sms', 'broadcast'
+    'sms',
 ))
-def test_should_create_sms_or_broadcast_template_without_downgrading_unicode_characters(
+def test_should_create_sms_template_without_downgrading_unicode_characters(
     client_request,
     service_one,
     mock_create_service_template,
@@ -2557,25 +2335,6 @@ def test_should_not_show_redaction_stuff_for_letters(
     )
 
 
-def test_should_not_show_redaction_stuff_for_broadcasts(
-    client_request,
-    fake_uuid,
-    mock_get_broadcast_template,
-    mock_get_template_folders,
-):
-    page = client_request.get(
-        'main.view_template',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _test_page_title=False,
-    )
-
-    assert page.select('.hint') == []
-    assert 'personalisation' not in ' '.join(
-        link.text.lower() for link in page.select('a')
-    )
-
-
 def test_set_template_sender(
     client_request,
     fake_uuid,
@@ -2645,43 +2404,6 @@ def test_set_template_sender_escapes_letter_contact_block_names(
     radio_text = page.select_one('.govuk-grid-column-three-quarters label[for="sender-1"]').decode_contents()
     assert "&lt;script&gt;" in radio_text
     assert "<script>" not in radio_text
-
-
-@pytest.mark.parametrize('template_content', (
-    'This is a ((test))',
-    'This ((unsure??might)) be a test',
-    pytest.param('This is a test', marks=pytest.mark.xfail),
-))
-@pytest.mark.parametrize('template_type', (
-    'broadcast',
-    pytest.param('sms', marks=pytest.mark.xfail),
-))
-def test_should_not_create_broadcast_template_with_placeholders(
-    client_request,
-    service_one,
-    mock_create_service_template,
-    mock_update_service_template,
-    template_content,
-    template_type,
-):
-    service_one['permissions'] += [template_type]
-    page = client_request.post(
-        '.add_service_template',
-        service_id=SERVICE_ONE_ID,
-        template_type=template_type,
-        _data={
-            'name': 'new name',
-            'template_content': template_content,
-            'service': SERVICE_ONE_ID,
-        },
-        _expected_status=200,
-    )
-    assert normalize_spaces(
-        page.select_one('.error-message').text
-    ) == (
-        'You can’t use ((double brackets)) to personalise this message'
-    )
-    assert mock_create_service_template.called is False
 
 
 @pytest.mark.parametrize(
@@ -2775,41 +2497,6 @@ def test_should_not_create_broadcast_template_with_placeholders(
             'sms', False, f'Hello (( {"a" * 999} ))',
             'Will be charged as 1 text message (not including personalisation)',
             None,
-        ),
-        (
-            'broadcast', False, '',
-            'You have 1,395 characters remaining',
-            None,
-        ),
-        (
-            'broadcast', False, 'a',
-            'You have 1,394 characters remaining',
-            None,
-        ),
-        (
-            'broadcast', False, 'a' * 1395,
-            'You have 0 characters remaining',
-            None,
-        ),
-        (
-            'broadcast', False, 'a' * 1396,
-            'You have 1 character too many',
-            'govuk-error-message',
-        ),
-        (
-            'broadcast', False, 'a' * 1397,
-            'You have 2 characters too many',
-            'govuk-error-message',
-        ),
-        (
-            'broadcast', False, 'Ẅ' * 615,
-            'You have 0 characters remaining',
-            None,
-        ),
-        (
-            'broadcast', False, 'Ẅ' * 616,
-            'You have 1 character too many',
-            'govuk-error-message',
         ),
     ),
 )

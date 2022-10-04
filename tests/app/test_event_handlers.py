@@ -5,7 +5,6 @@ from app.event_handlers import (
     create_add_user_to_service_event,
     create_archive_service_event,
     create_archive_user_event,
-    create_broadcast_account_type_change_event,
     create_email_change_event,
     create_mobile_number_change_event,
     create_remove_user_from_service_event,
@@ -88,19 +87,6 @@ def test_create_archive_user_event_calls_events_api(client_request, mock_events)
 
     create_archive_user_event(**kwargs)
     mock_events.assert_called_with('archive_user', event_dict(**kwargs))
-
-
-def test_create_broadcast_account_type_change_event(client_request, mock_events):
-    kwargs = {
-        "service_id": str(uuid.uuid4()),
-        "changed_by_id": str(uuid.uuid4()),
-        "service_mode": 'training',
-        "broadcast_channel": 'severe',
-        "provider_restriction": None
-    }
-
-    create_broadcast_account_type_change_event(**kwargs)
-    mock_events.assert_called_with('change_broadcast_account_type', event_dict(**kwargs))
 
 
 def test_suspend_service(client_request, mock_events):

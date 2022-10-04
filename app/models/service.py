@@ -31,11 +31,9 @@ class Service(JSONModel, SortByNameMixin):
 
     ALLOWED_PROPERTIES = {
         'active',
-        'allowed_broadcast_provider',
         'billing_contact_email_addresses',
         'billing_contact_names',
         'billing_reference',
-        'broadcast_channel',
         'consent_to_research',
         'contact_link',
         'count_as_live',
@@ -61,7 +59,6 @@ class Service(JSONModel, SortByNameMixin):
         'email',
         'sms',
         'letter',
-        'broadcast',
     )
 
     ALL_PERMISSIONS = TEMPLATE_TYPES + (
@@ -71,7 +68,6 @@ class Service(JSONModel, SortByNameMixin):
         'international_letters',
         'international_sms',
         'upload_document',
-        'broadcast',
     )
 
     @classmethod
