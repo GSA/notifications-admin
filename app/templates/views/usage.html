@@ -63,7 +63,7 @@
             {{ big_number(
               sms_cost,
               'spent',
-              currency="£",
+              currency="$",
               smaller=True
             ) }}
           </div>
@@ -73,7 +73,7 @@
             {{ big_number(
                 letter_cost,
                 'spent',
-                currency="£",
+                currency="$",
                 smaller=True
               ) }}
           </div>
@@ -100,7 +100,7 @@
             {% call field(align='left') %}
               {{ big_number(
                 item.sms_cost + item.letter_cost,
-                currency="£",
+                currency="$",
                 smallest=True
               ) }}
               <ul>
