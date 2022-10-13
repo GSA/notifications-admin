@@ -2,7 +2,7 @@
 
 <div class="ajax-block-container">
   <div class="govuk-grid-row">
-    <div id="total-email" class="govuk-grid-column-one-third">
+    <div id="total-email" class="govuk-grid-column-one-half">
       {{ big_number_with_status(
         statistics['email']['requested'],
         statistics['email']['requested']|message_count_label('email', suffix='sent'),
@@ -14,7 +14,7 @@
         smaller=True,
       ) }}
     </div>
-    <div id="total-sms" class="govuk-grid-column-one-third">
+    <div id="total-sms" class="govuk-grid-column-one-half">
       {{ big_number_with_status(
         statistics['sms']['requested'],
         statistics['sms']['requested']|message_count_label('sms', suffix='sent'),
@@ -26,7 +26,7 @@
         smaller=True,
       ) }}
     </div>
-    <div id="total-letters" class="govuk-grid-column-one-third">
+    <!-- <div id="total-letters" class="govuk-grid-column-one-third">
       {{ big_number_with_status(
         statistics['letter']['requested'],
         statistics['letter']['requested']|message_count_label('letter', suffix='sent'),
@@ -37,6 +37,6 @@
         link=url_for(".view_notifications", service_id=service_id, message_type='letter', status=''),
         smaller=True,
       ) }}
-    </div>
+    </div> -->
   </div>
 </div>
