@@ -47,7 +47,9 @@ def _create_example_template(service_id):
 def add_service():
     default_organisation_type = current_user.default_organisation_type
     form = CreateServiceForm(
-        organisation_type="federal"
+        # avoid setting a default for now; the US gov email addresses aren't as useful as the UK
+        # ones for guessing the org type
+        organisation_type=None
     )
 
     if form.validate_on_submit():
