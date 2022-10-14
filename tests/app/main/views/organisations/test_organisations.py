@@ -469,8 +469,8 @@ def test_organisation_services_shows_live_services_and_usage(
 
     # Totals
     assert normalize_spaces(usage_rows[0].text) == "Emails 33,000 sent"
-    assert normalize_spaces(usage_rows[1].text) == "Text messages £42.00 spent"
-    assert normalize_spaces(usage_rows[2].text) == "Letters £30.50 spent"
+    assert normalize_spaces(usage_rows[1].text) == "Text messages $42.00 spent"
+    assert normalize_spaces(usage_rows[2].text) == "Letters $30.50 spent"
 
     assert normalize_spaces(services[0].text) == '1'
     assert normalize_spaces(services[1].text) == '5'
@@ -478,11 +478,11 @@ def test_organisation_services_shows_live_services_and_usage(
 
     assert normalize_spaces(usage_rows[3].text) == "13,000 emails sent"
     assert normalize_spaces(usage_rows[4].text) == "122 free text messages sent"
-    assert normalize_spaces(usage_rows[5].text) == "£30.50 spent on letters"
+    assert normalize_spaces(usage_rows[5].text) == "$30.50 spent on letters"
     assert services[1].find('a')['href'] == url_for('main.usage', service_id=SERVICE_TWO_ID)
     assert normalize_spaces(usage_rows[6].text) == "20,000 emails sent"
-    assert normalize_spaces(usage_rows[7].text) == "£42.00 spent on text messages"
-    assert normalize_spaces(usage_rows[8].text) == "£0.00 spent on letters"
+    assert normalize_spaces(usage_rows[7].text) == "$42.00 spent on text messages"
+    assert normalize_spaces(usage_rows[8].text) == "$0.00 spent on letters"
 
     # Ensure there’s no ‘this org has no services message’
     assert not page.select('.govuk-hint')
@@ -512,12 +512,12 @@ def test_organisation_services_shows_live_services_and_usage_with_count_of_1(
 
     # Totals
     assert normalize_spaces(usage_rows[0].text) == "Emails 1 sent"
-    assert normalize_spaces(usage_rows[1].text) == "Text messages £0.00 spent"
-    assert normalize_spaces(usage_rows[2].text) == "Letters £0.00 spent"
+    assert normalize_spaces(usage_rows[1].text) == "Text messages $0.00 spent"
+    assert normalize_spaces(usage_rows[2].text) == "Letters $0.00 spent"
 
     assert normalize_spaces(usage_rows[3].text) == "1 email sent"
     assert normalize_spaces(usage_rows[4].text) == "1 free text message sent"
-    assert normalize_spaces(usage_rows[5].text) == "£0.00 spent on letters"
+    assert normalize_spaces(usage_rows[5].text) == "$0.00 spent on letters"
 
 
 @freeze_time("2020-02-20 20:20")
@@ -716,7 +716,7 @@ def test_download_organisation_usage_report(
 
     assert csv_report.string == (
         "Service ID,Service Name,Emails sent,Free text message allowance remaining,"
-        "Spent on text messages (£),Spent on letters (£)"
+        "Spent on text messages ($),Spent on letters ($)"
         "\r\n596364a0-858e-42c8-9062-a8fe822260eb,Service 1,13000,0,1.93,30.50"
         "\r\n147ad62a-2951-4fa1-9ca0-093cd1a52c52,Service 1,23000,0,3.94,60.50\r\n"
     )
