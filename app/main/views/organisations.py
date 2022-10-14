@@ -182,8 +182,8 @@ def download_organisation_usage_report(org_id):
     ])
 
     monetary_column_names = OrderedDict([
-        ('sms_cost', 'Spent on text messages (£)'),
-        ('letter_cost', 'Spent on letters (£)')
+        ('sms_cost', 'Spent on text messages ($)'),
+        ('letter_cost', 'Spent on letters ($)')
     ])
 
     org_usage_data = [

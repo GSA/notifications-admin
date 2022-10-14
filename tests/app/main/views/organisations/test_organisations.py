@@ -716,7 +716,7 @@ def test_download_organisation_usage_report(
 
     assert csv_report.string == (
         "Service ID,Service Name,Emails sent,Free text message allowance remaining,"
-        "Spent on text messages (£),Spent on letters (£)"
+        "Spent on text messages ($),Spent on letters ($)"
         "\r\n596364a0-858e-42c8-9062-a8fe822260eb,Service 1,13000,0,1.93,30.50"
         "\r\n147ad62a-2951-4fa1-9ca0-093cd1a52c52,Service 1,23000,0,3.94,60.50\r\n"
     )

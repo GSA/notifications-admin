@@ -1019,15 +1019,14 @@ def test_usage_page(
     assert '251,800 sent' in sms_column
     assert '250,000 free allowance' in sms_column
     assert '0 free allowance remaining' in sms_column
-    assert '£29.85 spent' in sms_column
+    assert '$29.85 spent' in sms_column
     assert '1,500 at 1.65 pence' in sms_column
     assert '300 at 1.70 pence' in sms_column
 
     # letter_column = normalize_spaces(annual_usage[2].text + annual_usage[5].text)
     # assert 'Letters' in letter_column
     # assert '100 sent' in letter_column
-    # assert '£30.00 spent' in letter_column
-
+    # assert '$30.00 spent' in letter_column
 
 @freeze_time("2012-03-31 12:12:12")
 def test_usage_page_no_sms_spend(
@@ -1056,7 +1055,7 @@ def test_usage_page_no_sms_spend(
     assert 'Text messages' in sms_column
     assert '250,000 free allowance' in sms_column
     assert '249,000 free allowance remaining' in sms_column
-    assert '£0.00 spent' in sms_column
+    assert '$0.00 spent' in sms_column
     assert 'pence per message' not in sms_column
 
 
@@ -1075,7 +1074,7 @@ def test_usage_page_monthly_breakdown(
     assert '249,860 free text messages' in monthly_breakdown
 
     assert 'February' in monthly_breakdown
-    assert '£29.55' in monthly_breakdown
+    assert '$29.55' in monthly_breakdown
     assert '140 free text messages' in monthly_breakdown
     assert '960 text messages at 1.65p' in monthly_breakdown
     assert '33 text messages at 1.70p' in monthly_breakdown
@@ -1085,7 +1084,7 @@ def test_usage_page_monthly_breakdown(
     # assert '7 international letters at 84p' in monthly_breakdown
 
     assert 'March' in monthly_breakdown
-    assert '£20.91' in monthly_breakdown
+    assert '$20.91' in monthly_breakdown
     assert '1,230 text messages at 1.70p' in monthly_breakdown
 
 
@@ -1727,9 +1726,9 @@ def test_service_dashboard_shows_usage(
     ) == (
         'Unlimited '
         'free email allowance '
-        '£29.85 '
+        '$29.85 '
         'spent on text messages'
-        # '£30.00 '
+        # '$30.00 '
         # 'spent on letters'
     )
 
