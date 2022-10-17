@@ -1028,6 +1028,7 @@ def test_usage_page(
     # assert '100 sent' in letter_column
     # assert '$30.00 spent' in letter_column
 
+
 @freeze_time("2012-03-31 12:12:12")
 def test_usage_page_no_sms_spend(
     mocker,
