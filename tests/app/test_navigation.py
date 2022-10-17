@@ -18,8 +18,6 @@ EXCLUDED_ENDPOINTS = tuple(map(Navigation.get_endpoint_with_blueprint, {
     'action_blocked',
     'add_data_retention',
     'add_organisation',
-    'add_organisation_from_gp_service',
-    'add_organisation_from_nhs_local_service',
     'add_service',
     'add_service_template',
     'api_callbacks',
