@@ -10,9 +10,6 @@ applications:
       - route: notifications-admin.app.cloud.gov
 
     services:
-      # - logit-ssl-syslog-drain
-      # - notify-prometheus
-      # - notify-splunk
       - notifications-admin-redis-((env))
       - notifications-api-csv-upload-bucket-((env))
       - notifications-api-contact-list-bucket-((env))
@@ -27,7 +24,7 @@ applications:
       DEPLOY_ENV: ((env))
       REDIS_ENABLED: ((REDIS_ENABLED))
 
-      NOTIFY_ENVIRONMENT: live
+      NOTIFY_ENVIRONMENT: ((env))
 
       # Credentials variables
       ADMIN_CLIENT_SECRET: ((ADMIN_CLIENT_SECRET))
