@@ -17,7 +17,7 @@ def test_non_logged_in_user_can_see_homepage(
     page = client_request.get('main.index', _test_page_title=False)
 
     assert page.h1.text.strip() == (
-        'Send emails, text messages and letters to your users'
+        'Send text messages and email to your users'
     )
 
     assert page.select_one('a[role=button][draggable=false]')['href'] == url_for(
@@ -25,7 +25,7 @@ def test_non_logged_in_user_can_see_homepage(
     )
 
     assert page.select_one('meta[name=description]')['content'].strip() == (
-        'US Notify lets you send emails, text messages and letters '
+        'US Notify lets you send text messages and email '
         'to your users. Try it now if you work in federal, state or local government.'
     )
 
@@ -360,6 +360,7 @@ def test_font_preload(
 @pytest.mark.parametrize('current_date, expected_rate', (
     ('2022-05-01', '1.72'),
 ))
+@pytest.mark.skip(reason="Currently hidden for TTS")
 def test_sms_price(
     client_request,
     mock_get_service_and_organisation_counts,

@@ -22,10 +22,10 @@
   <p class="govuk-body">US Notify is free to use unless you:</p>
   <ul class="list list-bullet">
     <li>exceed your <a class="govuk-link govuk-link--no-visited-state" href="#text-messages">free text message allowance</a></li>
-    <li>send <a class="govuk-link govuk-link--no-visited-state" href="#letters">letters</a></li>
+    <!-- <li>send <a class="govuk-link govuk-link--no-visited-state" href="#letters">letters</a></li> -->
   </ul>
 
-  <p class="govuk-body">You’ll only pay for the additional text messages or letters that you send. There’s no monthly charge, no setup fee and no procurement cost.</p>
+  <p class="govuk-body">You’ll only pay for the additional text messages that you send. There’s no monthly charge, no setup fee and no procurement cost.</p>
 
   <p class="govuk-body">
     {% if not current_user.is_authenticated %}
@@ -229,7 +229,7 @@
     "html": smsIntRates
   }) }}
 
-  <h2 class="heading-medium" id="letters">Letters</h2>
+  <!-- <h2 class="heading-medium" id="letters">Letters</h2>
   <p class="govuk-body">The cost of sending a letter depends on the postage you choose and how many sheets of paper you need.</p>
 
   <p class="govuk-body">Prices include:</p>
@@ -238,9 +238,9 @@
      <li>postage</li>
      <li>double-sided colour printing</li>
      <li>C5 size envelopes with an address window</li>
-  </ul>
+  </ul> -->
 
-  <div>
+  <!-- <div>
     {% call mapping_table(
       caption='Letter pricing',
       field_headings=['Paper', 'Second class', 'First class', 'International'],
@@ -262,6 +262,6 @@
         {% endcall %}
       {% endfor %}
     {% endcall %}
-  </div>
+  </div> -->
 
 {% endblock %}
