@@ -126,7 +126,6 @@ def test_service_navigation_for_org_user(
         (
             'Send messages',
             'Sent messages',
-            'Letters',
             'Team members',
         ),
         403,
@@ -136,7 +135,6 @@ def test_service_navigation_for_org_user(
         (
             'Send messages',
             'Sent messages',
-            'Letters',
             'Team members',
             'Usage',
         ),

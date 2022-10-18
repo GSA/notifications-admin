@@ -74,8 +74,8 @@ def mock_get_service_settings_page_common(
         'Send international text messages Off Change your settings for sending international text messages',
         'Receive text messages Off Change your settings for receiving text messages',
 
-        'Label Value Action',
-        'Send letters Off Change your settings for sending letters',
+        # 'Label Value Action',
+        # 'Send letters Off Change your settings for sending letters',
 
     ]),
     (create_platform_admin_user(), [
@@ -97,8 +97,8 @@ def mock_get_service_settings_page_common(
         'Send international text messages Off Change your settings for sending international text messages',
         'Receive text messages Off Change your settings for receiving text messages',
 
-        'Label Value Action',
-        'Send letters Off Change your settings for sending letters',
+        # 'Label Value Action',
+        # 'Send letters Off Change your settings for sending letters',
 
         'Label Value Action',
         'Live Off Change service status',
@@ -344,8 +344,8 @@ def test_send_files_by_email_row_on_settings_page(
         'Send international text messages On Change your settings for sending international text messages',
         'Receive text messages On Change your settings for receiving text messages',
 
-        'Label Value Action',
-        'Send letters Off Change your settings for sending letters',
+        # 'Label Value Action',
+        # 'Send letters Off Change your settings for sending letters',
 
     ]),
     (['email', 'sms', 'email_auth'], [
@@ -366,28 +366,28 @@ def test_send_files_by_email_row_on_settings_page(
         'Send international text messages Off Change your settings for sending international text messages',
         'Receive text messages Off Change your settings for receiving text messages',
 
-        'Label Value Action',
-        'Send letters Off Change your settings for sending letters',
+        # 'Label Value Action',
+        # 'Send letters Off Change your settings for sending letters',
 
     ]),
-    (['letter'], [
+    # (['letter'], [
 
-        'Service name service one Change service name',
-        'Sign-in method Text message code Change sign-in method',
+    #     'Service name service one Change service name',
+    #     'Sign-in method Text message code Change sign-in method',
 
-        'Label Value Action',
-        'Send emails Off Change your settings for sending emails',
+    #     'Label Value Action',
+    #     'Send emails Off Change your settings for sending emails',
 
-        'Label Value Action',
-        'Send text messages Off Change your settings for sending text messages',
+    #     'Label Value Action',
+    #     'Send text messages Off Change your settings for sending text messages',
 
-        'Label Value Action',
-        'Send letters On Change your settings for sending letters',
-        'Send international letters Off Change',
-        'Sender addresses 1 Example Street Manage sender addresses',
-        'Letter branding Not set Change letter branding',
+    #     'Label Value Action',
+    #     'Send letters On Change your settings for sending letters',
+    #     'Send international letters Off Change',
+    #     'Sender addresses 1 Example Street Manage sender addresses',
+    #     'Letter branding Not set Change letter branding',
 
-    ]),
+    # ]),
     (['broadcast'], [
 
         'Service name service one Change service name',
@@ -418,6 +418,7 @@ def test_should_show_overview_for_service_with_more_things_set(
         assert row == " ".join(page.find_all('tr')[index + 1].text.split())
 
 
+@pytest.mark.skip(reason="Skipping letter-specific test")
 def test_if_cant_send_letters_then_cant_see_letter_contact_block(
         client_request,
         service_one,
@@ -430,6 +431,7 @@ def test_if_cant_send_letters_then_cant_see_letter_contact_block(
     assert 'Letter contact block' not in response
 
 
+@pytest.mark.skip(reason="Skipping letter-specific test")
 def test_letter_contact_block_shows_none_if_not_set(
     client_request,
     service_one,
@@ -449,6 +451,7 @@ def test_letter_contact_block_shows_none_if_not_set(
     assert 'default' in div.attrs['class'][0]
 
 
+@pytest.mark.skip(reason="Skipping letter-specific test")
 def test_escapes_letter_contact_block(
     client_request,
     service_one,
@@ -2067,7 +2070,7 @@ def test_and_more_hint_appears_on_settings_with_more_than_just_a_single_sender(
         multiple_sms_senders,
         mock_get_service_settings_page_common,
 ):
-    service_one['permissions'] = ['email', 'sms', 'letter']
+    service_one['permissions'] = ['email', 'sms']
 
     page = client_request.get(
         'main.service_settings',
@@ -2083,7 +2086,8 @@ def test_and_more_hint_appears_on_settings_with_more_than_just_a_single_sender(
         "Reply-to email addresses test@example.com …and 2 more Manage reply-to email addresses"
     assert get_row(page, 'Text message senders') == \
         "Text message senders Example …and 2 more Manage text message senders"
-    assert get_row(page, 'Sender addresses') == "Sender addresses 1 Example Street …and 2 more Manage sender addresses"
+    # assert get_row(page, 'Sender addresses') == \
+    #     "Sender addresses 1 Example Street …and 2 more Manage sender addresses"
 
 
 @pytest.mark.parametrize('sender_list_page, index, expected_output', [
@@ -4737,6 +4741,7 @@ def test_service_settings_links_to_branding_request_page_for_emails(
     assert len(page.find_all('a', attrs={'href': expected_href})) == 1
 
 
+@pytest.mark.skip(reason="Skipping letter-specific test")
 def test_service_settings_links_to_branding_request_page_for_letters(
     mocker,
     service_one,

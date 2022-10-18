@@ -51,7 +51,7 @@ def test_get_support_index_page_when_signed_out(
     assert normalize_spaces(
         page.select_one('form label[for=who-0]').text
     ) == (
-        'I work in the public sector and need to send emails, text messages or letters'
+        'I work in the public sector and need to send emails or text messages'
     )
     assert page.select_one('form input#who-0')['value'] == 'public-sector'
     assert normalize_spaces(

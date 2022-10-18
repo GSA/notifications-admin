@@ -904,21 +904,21 @@ def test_should_not_show_upcoming_jobs_on_dashboard_if_service_has_no_jobs(
 
 @pytest.mark.parametrize('permissions', (
     ['email', 'sms'],
-    ['email', 'sms', 'letter'],
+    # ['email', 'sms', 'letter'],
 ))
 @pytest.mark.parametrize('totals', [
     (
         {
             'email': {'requested': 0, 'delivered': 0, 'failed': 0},
             'sms': {'requested': 99999, 'delivered': 0, 'failed': 0},
-            'letter': {'requested': 99999, 'delivered': 0, 'failed': 0}
+            # 'letter': {'requested': 99999, 'delivered': 0, 'failed': 0}
         },
     ),
     (
         {
             'email': {'requested': 0, 'delivered': 0, 'failed': 0},
             'sms': {'requested': 0, 'delivered': 0, 'failed': 0},
-            'letter': {'requested': 100000, 'delivered': 0, 'failed': 0},
+            # 'letter': {'requested': 100000, 'delivered': 0, 'failed': 0},
         },
     ),
 ])
@@ -950,12 +950,12 @@ def test_correct_font_size_for_big_numbers(
     )
 
     assert (
-        len(page.select_one('[data-key=totals]').select('.govuk-grid-column-one-third'))
+        len(page.select_one('[data-key=totals]').select('.govuk-grid-column-one-half'))
     ) == (
-        len(page.select_one('[data-key=usage]').select('.govuk-grid-column-one-third'))
+        len(page.select_one('[data-key=usage]').select('.govuk-grid-column-one-half'))
     ) == (
         len(page.select('.big-number-with-status .big-number-smaller'))
-    ) == 3
+    ) == 2
 
 
 def test_should_not_show_jobs_on_dashboard_for_users_with_uploads_page(
@@ -1007,14 +1007,14 @@ def test_usage_page(
     assert normalize_spaces(unselected_nav_links[0].text) == '2010 to 2011 financial year'
     assert normalize_spaces(unselected_nav_links[1].text) == '2009 to 2010 financial year'
 
-    annual_usage = page.find_all('div', {'class': 'govuk-grid-column-one-third'})
+    annual_usage = page.find_all('div', {'class': 'govuk-grid-column-one-half'})
 
     # annual stats are shown in two rows, each with three column; email is col 1
-    email_column = normalize_spaces(annual_usage[0].text + annual_usage[3].text)
+    email_column = normalize_spaces(annual_usage[0].text + annual_usage[2].text)
     assert 'Emails' in email_column
     assert '1,000 sent' in email_column
 
-    sms_column = normalize_spaces(annual_usage[1].text + annual_usage[4].text)
+    sms_column = normalize_spaces(annual_usage[1].text + annual_usage[3].text)
     assert 'Text messages' in sms_column
     assert '251,800 sent' in sms_column
     assert '250,000 free allowance' in sms_column
@@ -1023,10 +1023,10 @@ def test_usage_page(
     assert '1,500 at 1.65 pence' in sms_column
     assert '300 at 1.70 pence' in sms_column
 
-    letter_column = normalize_spaces(annual_usage[2].text + annual_usage[5].text)
-    assert 'Letters' in letter_column
-    assert '100 sent' in letter_column
-    assert '$30.00 spent' in letter_column
+    # letter_column = normalize_spaces(annual_usage[2].text + annual_usage[5].text)
+    # assert 'Letters' in letter_column
+    # assert '100 sent' in letter_column
+    # assert '$30.00 spent' in letter_column
 
 
 @freeze_time("2012-03-31 12:12:12")
@@ -1051,8 +1051,8 @@ def test_usage_page_no_sms_spend(
         service_id=SERVICE_ONE_ID,
     )
 
-    annual_usage = page.find_all('div', {'class': 'govuk-grid-column-one-third'})
-    sms_column = normalize_spaces(annual_usage[1].text + annual_usage[4].text)
+    annual_usage = page.find_all('div', {'class': 'govuk-grid-column-one-half'})
+    sms_column = normalize_spaces(annual_usage[1].text + annual_usage[3].text)
     assert 'Text messages' in sms_column
     assert '250,000 free allowance' in sms_column
     assert '249,000 free allowance remaining' in sms_column
@@ -1079,10 +1079,10 @@ def test_usage_page_monthly_breakdown(
     assert '140 free text messages' in monthly_breakdown
     assert '960 text messages at 1.65p' in monthly_breakdown
     assert '33 text messages at 1.70p' in monthly_breakdown
-    assert '5 first class letters at 33p' in monthly_breakdown
-    assert '10 second class letters at 31p' in monthly_breakdown
-    assert '3 international letters at 55p' in monthly_breakdown
-    assert '7 international letters at 84p' in monthly_breakdown
+    # assert '5 first class letters at 33p' in monthly_breakdown
+    # assert '10 second class letters at 31p' in monthly_breakdown
+    # assert '3 international letters at 55p' in monthly_breakdown
+    # assert '7 international letters at 84p' in monthly_breakdown
 
     assert 'March' in monthly_breakdown
     assert '$20.91' in monthly_breakdown
@@ -1110,6 +1110,7 @@ def test_usage_page_monthly_breakdown_shows_months_so_far(
         assert len(rows) == expected_number_of_months
 
 
+@pytest.mark.skip(reason="Skipping letter-specific test")
 @freeze_time("2012-03-31 12:12:12")
 def test_usage_page_letter_breakdown_ordered_by_postage_and_rate(
     client_request,
@@ -1144,7 +1145,7 @@ def test_usage_page_with_0_free_allowance(
         year=2020,
     )
 
-    annual_usage = page.select('main .govuk-grid-column-one-third')
+    annual_usage = page.select('main .govuk-grid-column-one-half')
     sms_column = normalize_spaces(annual_usage[1].text)
 
     assert '0 free allowance' in sms_column
@@ -1705,7 +1706,7 @@ def test_breadcrumb_shows_if_service_is_suspended(
 
 @pytest.mark.parametrize('permissions', (
     ['email', 'sms'],
-    ['email', 'sms', 'letter'],
+    # ['email', 'sms', 'letter'],
 ))
 def test_service_dashboard_shows_usage(
     client_request,
@@ -1727,9 +1728,9 @@ def test_service_dashboard_shows_usage(
         'Unlimited '
         'free email allowance '
         '$29.85 '
-        'spent on text messages '
-        '$30.00 '
-        'spent on letters'
+        'spent on text messages'
+        # '$30.00 '
+        # 'spent on letters'
     )
 
 

@@ -943,7 +943,7 @@ def test_organisation_settings_for_platform_admin(
         'Billing details None Change billing details for the organisation',
         'Notes None Change the notes for the organisation',
         'Default email branding GOV.UK Change default email branding for the organisation',
-        'Default letter branding No branding Change default letter branding for the organisation',
+        # 'Default letter branding No branding Change default letter branding for the organisation',
         'Known email domains None Change known email domains for the organisation',
     ]
 

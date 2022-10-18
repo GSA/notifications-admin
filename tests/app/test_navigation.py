@@ -512,7 +512,7 @@ def test_navigation_urls(
     ] == [
         '/services/{}'.format(SERVICE_ONE_ID),
         '/services/{}/templates'.format(SERVICE_ONE_ID),
-        '/services/{}/uploads'.format(SERVICE_ONE_ID),
+        # '/services/{}/uploads'.format(SERVICE_ONE_ID),
         '/services/{}/users'.format(SERVICE_ONE_ID),
         '/services/{}/usage'.format(SERVICE_ONE_ID),
         '/services/{}/service-settings'.format(SERVICE_ONE_ID),
@@ -591,7 +591,7 @@ def test_caseworkers_get_caseworking_navigation(
     )
     page = client_request.get('main.choose_template', service_id=SERVICE_ONE_ID)
     assert normalize_spaces(page.select_one('header + .govuk-width-container nav').text) == (
-        'Send messages Sent messages Letters Team members'
+        'Send messages Sent messages Team members'
     )
 
 
@@ -610,5 +610,5 @@ def test_caseworkers_see_jobs_nav_if_jobs_exist(
     )
     page = client_request.get('main.choose_template', service_id=SERVICE_ONE_ID)
     assert normalize_spaces(page.select_one('header + .govuk-width-container nav').text) == (
-        'Send messages Sent messages Letters Team members'
+        'Send messages Sent messages Team members'
     )
