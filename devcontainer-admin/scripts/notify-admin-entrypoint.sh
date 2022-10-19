@@ -20,14 +20,14 @@ echo -e "alias lt='exa -al -T -L 2'" >> ~/.zshrc
 
 cd /workspace
 
-# Warm up git index prior to display status in prompt else it will
-# be quite slow on every invocation of starship.
-git status
-
 pip3 install -r requirements.txt
 make bootstrap
 
 # run flask
 # make run
+
+# Warm up git index prior to display status in prompt else it will
+# be quite slow on every invocation of starship.
+git status
 
 echo "FINISHED ENTRYPOINT SCRIPT"
