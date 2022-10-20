@@ -15,12 +15,16 @@ LETTER_TEMP_LOGO_LOCATION = 'letters/static/images/letter-template/temp-{user_id
 
 def get_logo_location(filename=None):
     return (
-        current_app.config['LOGO_UPLOAD_BUCKET_NAME'],
+        bucket_creds('bucket'),
         filename,
-        current_app.config['LOGO_UPLOAD_ACCESS_KEY'],
-        current_app.config['LOGO_UPLOAD_SECRET_KEY'],
-        current_app.config['LOGO_UPLOAD_REGION'],
+        bucket_creds('access_key_id'),
+        bucket_creds('secret_access_key'),
+        bucket_creds('region'),
     )
+
+
+def bucket_creds(key):
+    return current_app.config['LOGO_UPLOAD_BUCKET'][key]
 
 
 def delete_s3_object(filename):
@@ -37,10 +41,10 @@ def persist_logo(old_name, new_name):
 
 
 def get_s3_objects_filter_by_prefix(prefix):
-    bucket_name = current_app.config['LOGO_UPLOAD_BUCKET_NAME']
-    session = Session(aws_access_key_id=current_app.config['LOGO_UPLOAD_ACCESS_KEY'],
-                      aws_secret_access_key=current_app.config['LOGO_UPLOAD_SECRET_KEY'],
-                      region_name=current_app.config['LOGO_UPLOAD_REGION'])
+    bucket_name = bucket_creds('bucket')
+    session = Session(aws_access_key_id=bucket_creds('access_key_id'),
+                      aws_secret_access_key=bucket_creds('secret_access_key'),
+                      region_name=bucket_creds('region'))
     s3 = session.resource('s3')
     return s3.Bucket(bucket_name).objects.filter(Prefix=prefix)
 
@@ -59,15 +63,15 @@ def upload_email_logo(filename, filedata, user_id):
         unique_id=str(uuid.uuid4()),
         filename=filename
     )
-    bucket_name = current_app.config['LOGO_UPLOAD_BUCKET_NAME']
+    bucket_name = bucket_creds('bucket')
     utils_s3upload(
         filedata=filedata,
-        region=current_app.config['LOGO_UPLOAD_REGION'],
+        region=bucket_creds('region'),
         bucket_name=bucket_name,
         file_location=upload_file_name,
         content_type='image/png',
-        access_key=current_app.config['LOGO_UPLOAD_ACCESS_KEY'],
-        secret_key=current_app.config['LOGO_UPLOAD_SECRET_KEY'],
+        access_key=bucket_creds('access_key_id'),
+        secret_key=bucket_creds('secret_access_key'),
     )
 
     return upload_file_name
@@ -79,15 +83,15 @@ def upload_letter_temp_logo(filename, filedata, user_id):
         unique_id=str(uuid.uuid4()),
         filename=filename
     )
-    bucket_name = current_app.config['LOGO_UPLOAD_BUCKET_NAME']
+    bucket_name = bucket_creds('bucket')
     utils_s3upload(
         filedata=filedata,
-        region=current_app.config['LOGO_UPLOAD_REGION'],
+        region=bucket_creds('region'),
         bucket_name=bucket_name,
         file_location=upload_filename,
         content_type='image/svg+xml',
-        access_key=current_app.config['LOGO_UPLOAD_ACCESS_KEY'],
-        secret_key=current_app.config['LOGO_UPLOAD_SECRET_KEY'],
+        access_key=bucket_creds('access_key_id'),
+        secret_key=bucket_creds('secret_access_key'),
     )
 
     return upload_filename

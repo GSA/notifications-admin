@@ -1,11 +1,7 @@
 import json
 import os
 
-if os.environ.get('VCAP_SERVICES'):
-    # on cloudfoundry, config is a json blob in VCAP_SERVICES - unpack it, and populate
-    # standard environment variables from it
-    from app.cloudfoundry_config import extract_cloudfoundry_config
-    extract_cloudfoundry_config()
+from app.cloudfoundry_config import cloud_config
 
 
 class Config(object):
@@ -60,7 +56,7 @@ class Config(object):
 
     AWS_REGION = os.environ.get('AWS_REGION')
 
-    REDIS_URL = os.environ.get('REDIS_URL')
+    REDIS_URL = cloud_config.redis_url
     REDIS_ENABLED = os.environ.get('REDIS_ENABLED', '1') == '1'
 
     # as defined in api db migration 0331_add_broadcast_org.py
@@ -93,22 +89,24 @@ class Development(Config):
     ASSET_PATH = '/static/'
 
     # Buckets
-    CSV_UPLOAD_BUCKET_NAME = 'local-notifications-csv-upload'  # created in gsa sandbox
-    CSV_UPLOAD_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY_ID')
-    CSV_UPLOAD_SECRET_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-    CSV_UPLOAD_REGION = os.environ.get('AWS_REGION')
-    CONTACT_LIST_UPLOAD_BUCKET_NAME = 'local-contact-list'  # created in gsa sandbox
-    CONTACT_LIST_UPLOAD_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY_ID')
-    CONTACT_LIST_UPLOAD_SECRET_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-    CONTACT_LIST_UPLOAD_REGION = os.environ.get('AWS_REGION')
-    LOGO_UPLOAD_BUCKET_NAME = 'local-public-logos-tools'  # created in gsa sandbox
-    LOGO_UPLOAD_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY_ID')
-    LOGO_UPLOAD_SECRET_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-    LOGO_UPLOAD_REGION = os.environ.get('AWS_REGION')
-    # MOU_BUCKET_NAME = 'local-notify-tools-mou'  # not created in gsa sandbox
-    # TRANSIENT_UPLOADED_LETTERS = 'development-transient-uploaded-letters'  # not created in gsa sandbox
-    # PRECOMPILED_ORIGINALS_BACKUP_LETTERS =
-    # 'development-letters-precompiled-originals-backup'  # not created in sandbox
+    CSV_UPLOAD_BUCKET = {
+        'bucket': 'local-notifications-csv-upload',
+        'access_key_id': os.environ.get('AWS_ACCESS_KEY_ID'),
+        'secret_access_key': os.environ.get('AWS_SECRET_ACCESS_KEY'),
+        'region': os.environ.get('AWS_REGION')
+    }
+    CONTACT_LIST_BUCKET = {
+        'bucket': 'local-contact-list',
+        'access_key_id': os.environ.get('AWS_ACCESS_KEY_ID'),
+        'secret_access_key': os.environ.get('AWS_SECRET_ACCESS_KEY'),
+        'region': os.environ.get('AWS_REGION')
+    }
+    LOGO_UPLOAD_BUCKET = {
+        'bucket': 'local-public-logos-tools',
+        'access_key_id': os.environ.get('AWS_ACCESS_KEY_ID'),
+        'secret_access_key': os.environ.get('AWS_SECRET_ACCESS_KEY'),
+        'region': os.environ.get('AWS_REGION')
+    }
 
     # credential overrides
     DANGEROUS_SALT = 'dev-notify-salt'
@@ -123,14 +121,6 @@ class Test(Development):
     WTF_CSRF_ENABLED = False
     ASSET_DOMAIN = 'static.example.com'
     ASSET_PATH = 'https://static.example.com/'
-
-    # none of these buckets actually exist
-    CSV_UPLOAD_BUCKET_NAME = 'test-notifications-csv-upload'
-    CONTACT_LIST_UPLOAD_BUCKET_NAME = 'test-contact-list'
-    LOGO_UPLOAD_BUCKET_NAME = 'public-logos-test'
-    # MOU_BUCKET_NAME = 'test-mou'
-    # TRANSIENT_UPLOADED_LETTERS = 'test-transient-uploaded-letters'
-    # PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'test-letters-precompiled-originals-backup'
 
     API_HOST_NAME = 'http://you-forgot-to-mock-an-api-call-to'
     REDIS_URL = 'redis://you-forgot-to-mock-a-redis-call-to'
@@ -149,21 +139,12 @@ class Production(Config):
     DEBUG = False
 
     # buckets
-    CSV_UPLOAD_BUCKET_NAME = os.environ.get('CSV_UPLOAD_BUCKET_NAME')
-    CSV_UPLOAD_ACCESS_KEY = os.environ.get('CSV_UPLOAD_ACCESS_KEY')
-    CSV_UPLOAD_SECRET_KEY = os.environ.get('CSV_UPLOAD_SECRET_KEY')
-    CSV_UPLOAD_REGION = os.environ.get('CSV_UPLOAD_REGION')
-    CONTACT_LIST_UPLOAD_BUCKET_NAME = os.environ.get('CONTACT_LIST_BUCKET_NAME')
-    CONTACT_LIST_UPLOAD_ACCESS_KEY = os.environ.get('CONTACT_LIST_ACCESS_KEY')
-    CONTACT_LIST_UPLOAD_SECRET_KEY = os.environ.get('CONTACT_LIST_SECRET_KEY')
-    CONTACT_LIST_UPLOAD_REGION = os.environ.get('CONTACT_LIST_REGION')
-    LOGO_UPLOAD_BUCKET_NAME = os.environ.get('LOGO_UPLOAD_BUCKET_NAME')
-    LOGO_UPLOAD_ACCESS_KEY = os.environ.get('LOGO_UPLOAD_ACCESS_KEY')
-    LOGO_UPLOAD_SECRET_KEY = os.environ.get('LOGO_UPLOAD_SECRET_KEY')
-    LOGO_UPLOAD_REGION = os.environ.get('LOGO_UPLOAD_REGION')
-    # MOU_BUCKET_NAME = os.environ.get('MOU_UPLOAD_BUCKET_NAME')
-    # TRANSIENT_UPLOADED_LETTERS = 'prototype-transient-uploaded-letters'  # not created in gsa sandbox
-    # PRECOMPILED_ORIGINALS_BACKUP_LETTERS = 'prototype-letters-precompiled-originals-backup'  # not in sandbox
+    CSV_UPLOAD_BUCKET = cloud_config.s3_credentials(
+        f"notifications-api-csv-upload-bucket-{os.environ['NOTIFY_ENVIRONMENT']}")
+    CONTACT_LIST_BUCKET = cloud_config.s3_credentials(
+        f"notifications-api-contact-list-bucket-{os.environ['NOTIFY_ENVIRONMENT']}")
+    LOGO_UPLOAD_BUCKET = cloud_config.s3_credentials(
+        f"notifications-admin-logo-upload-bucket-{os.environ['NOTIFY_ENVIRONMENT']}")
 
 
 class Staging(Production):

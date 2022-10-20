@@ -15,11 +15,11 @@ FILE_LOCATION_STRUCTURE = 'service-{}-notify/{}.csv'
 
 def get_csv_location(service_id, upload_id):
     return (
-        current_app.config['CSV_UPLOAD_BUCKET_NAME'],
+        current_app.config['CSV_UPLOAD_BUCKET']['bucket'],
         FILE_LOCATION_STRUCTURE.format(service_id, upload_id),
-        current_app.config['CSV_UPLOAD_ACCESS_KEY'],
-        current_app.config['CSV_UPLOAD_SECRET_KEY'],
-        current_app.config['CSV_UPLOAD_REGION'],
+        current_app.config['CSV_UPLOAD_BUCKET']['access_key_id'],
+        current_app.config['CSV_UPLOAD_BUCKET']['secret_access_key'],
+        current_app.config['CSV_UPLOAD_BUCKET']['region'],
     )
 
 

@@ -45,20 +45,24 @@ class ContactList(JSONModel):
         ))
 
     @staticmethod
+    def get_bucket_credentials(key):
+        return current_app.config['CONTACT_LIST_BUCKET'][key]
+
+    @staticmethod
     def get_bucket_name():
-        return current_app.config['CONTACT_LIST_UPLOAD_BUCKET_NAME']
+        return ContactList.get_bucket_credentials('bucket')
 
     @staticmethod
     def get_access_key():
-        return current_app.config['CONTACT_LIST_UPLOAD_ACCESS_KEY']
+        return ContactList.get_bucket_credentials('access_key_id')
 
     @staticmethod
     def get_secret_key():
-        return current_app.config['CONTACT_LIST_UPLOAD_SECRET_KEY']
+        return ContactList.get_bucket_credentials('secret_access_key')
 
     @staticmethod
     def get_region():
-        return current_app.config['CONTACT_LIST_UPLOAD_REGION']
+        return ContactList.get_bucket_credentials('region')
 
     @staticmethod
     def get_filename(service_id, upload_id):

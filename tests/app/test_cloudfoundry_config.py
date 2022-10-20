@@ -3,7 +3,14 @@ import os
 
 import pytest
 
-from app.cloudfoundry_config import extract_cloudfoundry_config
+from app.cloudfoundry_config import CloudfoundryConfig
+
+bucket_credentials = {
+    'access_key_id': 'contact-list-access',
+    'bucket': 'contact-list-bucket',
+    'region': 'us-gov-west-1',
+    'secret_access_key': 'contact-list-secret'
+}
 
 
 @pytest.fixture
@@ -26,22 +33,39 @@ def vcap_services():
             },
             {
                 'name': 'notifications-api-contact-list-bucket-test',
-                'credentials': {
-                    'access_key_id': 'contact-list-access',
-                    'bucket': 'contact-list-bucket',
-                    'region': 'us-gov-west-1',
-                    'secret_access_key': 'contact-list-secret'
-                }
+                'credentials': bucket_credentials
             }
         ],
     }
 
 
-def test_extract_cloudfoundry_config_populates_other_vars(os_environ, vcap_services):
-    os.environ['DEPLOY_ENV'] = 'test'
+def test_redis_url(vcap_services):
     os.environ['VCAP_SERVICES'] = json.dumps(vcap_services)
-    extract_cloudfoundry_config()
 
-    assert os.environ['REDIS_URL'] == 'rediss://xxx:6379'
-    assert os.environ['CSV_UPLOAD_BUCKET_NAME'] == 'csv-upload-bucket'
-    assert os.environ['CONTACT_LIST_BUCKET_NAME'] == 'contact-list-bucket'
+    assert CloudfoundryConfig().redis_url == 'rediss://xxx:6379'
+
+
+def test_redis_url_falls_back_to_REDIS_URL():
+    expected = 'rediss://yyy:6379'
+    os.environ['REDIS_URL'] = expected
+    os.environ['VCAP_SERVICES'] = ""
+
+    assert CloudfoundryConfig().redis_url == expected
+
+
+def test_s3_bucket_credentials(vcap_services):
+    os.environ['VCAP_SERVICES'] = json.dumps(vcap_services)
+
+    assert CloudfoundryConfig().s3_credentials('notifications-api-contact-list-bucket-test') == bucket_credentials
+
+
+def test_s3_bucket_credentials_falls_back_to_empty_creds():
+    os.environ['VCAP_SERVICES'] = ""
+    expected = {
+        'bucket': '',
+        'access_key_id': '',
+        'secret_access_key': '',
+        'region': ''
+    }
+
+    assert CloudfoundryConfig().s3_credentials('bucket') == expected

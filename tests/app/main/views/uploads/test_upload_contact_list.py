@@ -208,7 +208,7 @@ def test_upload_csv_file_shows_error_banner(
     mock_upload.assert_called_once_with(
         filedata='',
         region='us-west-2',
-        bucket_name='test-contact-list',
+        bucket_name='local-contact-list',
         file_location=f"service-{SERVICE_ONE_ID}-notify/{fake_uuid}.csv",
         access_key=default_access_key,
         secret_key=default_secret_key,
