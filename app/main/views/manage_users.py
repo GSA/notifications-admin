@@ -19,8 +19,6 @@ from app.event_handlers import (
 from app.formatters import redact_mobile_number
 from app.main import main
 from app.main.forms import (
-    BroadcastInviteUserForm,
-    BroadcastPermissionsForm,
     ChangeEmailForm,
     ChangeMobileNumberForm,
     ChangeNonGovEmailForm,
@@ -30,10 +28,7 @@ from app.main.forms import (
 )
 from app.models.user import InvitedUser, User
 from app.utils.user import is_gov_user, user_has_permissions
-from app.utils.user_permissions import (
-    broadcast_permission_options,
-    permission_options,
-)
+from app.utils.user_permissions import permission_options
 
 
 @main.route("/services/<uuid:service_id>/users")
@@ -45,9 +40,7 @@ def manage_users(service_id):
         current_user=current_user,
         show_search_box=(len(current_service.team_members) > 7),
         form=SearchUsersForm(),
-        permissions=(
-            broadcast_permission_options if current_service.has_permission('broadcast') else permission_options
-        ),
+        permissions=permission_options,
     )
 
 
@@ -56,10 +49,7 @@ def manage_users(service_id):
 @user_has_permissions('manage_service')
 def invite_user(service_id, user_id=None):
 
-    if current_service.has_permission('broadcast'):
-        form_class = BroadcastInviteUserForm
-    else:
-        form_class = InviteUserForm
+    form_class = InviteUserForm
 
     form = form_class(
         inviter_email_address=current_user.email_address,
@@ -124,10 +114,7 @@ def edit_user_permissions(service_id, user_id):
     if user.mobile_number:
         mobile_number = redact_mobile_number(user.mobile_number, " ")
 
-    if current_service.has_permission('broadcast'):
-        form_class = BroadcastPermissionsForm
-    else:
-        form_class = PermissionsForm
+    form_class = PermissionsForm
 
     form = form_class.from_user(
         user,

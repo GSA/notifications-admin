@@ -448,12 +448,6 @@ def message_count_noun(count, template_type):
         else:
             return 'letters'
 
-    elif template_type == 'broadcast':
-        if count == 1:
-            return 'broadcast'
-        else:
-            return 'broadcasts'
-
 
 def message_count(count, template_type):
     return (

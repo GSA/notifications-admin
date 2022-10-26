@@ -1,4 +1,3 @@
-import math
 import weakref
 from datetime import datetime, timedelta
 from itertools import chain
@@ -56,7 +55,6 @@ from app.formatters import (
     guess_name_from_email_address,
 )
 from app.main.validators import (
-    BroadcastLength,
     CommonlyUsedPassword,
     CsvFileValidator,
     DoesNotStartWithDoubleZero,
@@ -64,7 +62,6 @@ from app.main.validators import (
     MustContainAlphanumericCharacters,
     NoCommasInPlaceHolders,
     NoEmbeddedImagesInSVG,
-    NoPlaceholders,
     NoTextInSVG,
     OnlySMSCharacters,
     ValidEmail,
@@ -73,12 +70,7 @@ from app.main.validators import (
 from app.models.feedback import PROBLEM_TICKET_TYPE, QUESTION_TICKET_TYPE
 from app.models.organisation import Organisation
 from app.utils import branding, merge_jsonlike
-from app.utils.user import distinct_email_addresses
-from app.utils.user_permissions import (
-    all_ui_permissions,
-    broadcast_permission_options,
-    permission_options,
-)
+from app.utils.user_permissions import all_ui_permissions, permission_options
 
 
 def get_time_value_and_label(future_time):
@@ -1013,14 +1005,6 @@ def filter_by_permissions(valuelist):
         return [entry for entry in valuelist if any(entry in option for option in permission_options)]
 
 
-# guard against data entries that aren't a known broadcast permission
-def filter_by_broadcast_permissions(valuelist):
-    if valuelist is None:
-        return None
-    else:
-        return [entry for entry in valuelist if any(entry in option for option in broadcast_permission_options)]
-
-
 class AuthTypeForm(StripWhitespaceForm):
     auth_type = GovukRadiosField(
         'Sign in using',
@@ -1094,24 +1078,6 @@ class PermissionsForm(BasePermissionsForm):
     pass
 
 
-class BroadcastPermissionsForm(BasePermissionsForm):
-
-    permissions_field = GovukCheckboxesField(
-        'Permissions',
-        choices=[
-            (value, label) for value, label in broadcast_permission_options
-        ],
-        filters=[filter_by_broadcast_permissions],
-        param_extensions={
-            "hint": {"text": "Team members who can create or approve alerts can also reject them."}
-        }
-    )
-
-    @property
-    def permissions(self):
-        return {'view_activity'} | super().permissions
-
-
 class BaseInviteUserForm():
     email_address = email_address(gov_user=False)
 
@@ -1128,14 +1094,6 @@ class BaseInviteUserForm():
 
 class InviteUserForm(BaseInviteUserForm, PermissionsForm):
     pass
-
-
-class BroadcastInviteUserForm(BaseInviteUserForm, BroadcastPermissionsForm):
-    email_address = email_address(gov_user=True)
-
-    def validate_email_address(self, field):
-        if not distinct_email_addresses(field.data, self.inviter_email_address):
-            raise ValidationError("You cannot send an invitation to yourself")
 
 
 class InviteOrgUserForm(BaseInviteUserForm, StripWhitespaceForm):
@@ -1307,67 +1265,6 @@ class ConfirmPasswordForm(StripWhitespaceForm):
             raise ValidationError('Invalid password')
 
 
-class NewBroadcastForm(StripWhitespaceForm):
-    content = GovukRadiosField(
-        'New alert',
-        choices=[
-            ('freeform', 'Write your own message'),
-            ('template', 'Use a template'),
-        ],
-        param_extensions={'fieldset': {'legend': {'classes': 'govuk-visually-hidden'}}}
-    )
-
-    @property
-    def use_template(self):
-        return self.content.data == 'template'
-
-
-class ConfirmBroadcastForm(StripWhitespaceForm):
-
-    def __init__(self, *args, service_is_live, channel, max_phones, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.confirm.label.text = self.generate_label(channel, max_phones)
-
-        if service_is_live:
-            self.confirm.validators += (
-                DataRequired('You need to confirm that you understand'),
-            )
-
-    confirm = GovukCheckboxField("Confirm")
-
-    @staticmethod
-    def generate_label(channel, max_phones):
-        if channel in {'test', 'operator'}:
-            return (
-                f'I understand this will alert anyone who has switched '
-                f'on the {channel} channel'
-            )
-        if channel == 'severe':
-            return (
-                f'I understand this will alert {ConfirmBroadcastForm.format_number_generic(max_phones)} '
-                'of people'
-            )
-        if channel == 'government':
-            return (
-                f'I understand this will alert {ConfirmBroadcastForm.format_number_generic(max_phones)} '
-                'of people, even if they’ve opted out'
-            )
-
-    @staticmethod
-    def format_number_generic(count):
-        for threshold, message in (
-            (1_000_000, 'millions'),
-            (100_000, 'hundreds of thousands'),
-            (10_000, 'tens of thousands'),
-            (1_000, 'thousands'),
-            (100, 'hundreds'),
-            (-math.inf, 'an unknown number')
-        ):
-            if count >= threshold:
-                return message
-
-
 class BaseTemplateForm(StripWhitespaceForm):
     name = GovukTextInputField(
         "Template name",
@@ -1394,13 +1291,6 @@ class BaseTemplateForm(StripWhitespaceForm):
 class SMSTemplateForm(BaseTemplateForm):
     def validate_template_content(self, field):
         OnlySMSCharacters(template_type='sms')(None, field)
-
-
-class BroadcastTemplateForm(SMSTemplateForm):
-    def validate_template_content(self, field):
-        OnlySMSCharacters(template_type='broadcast')(None, field)
-        NoPlaceholders()(None, field)
-        BroadcastLength()(None, field)
 
 
 class LetterAddressForm(StripWhitespaceForm):
@@ -2324,7 +2214,6 @@ class TemplateAndFoldersSelectionForm(Form):
             ('email', 'Email') if 'email' in available_template_types else None,
             ('sms', 'Text message') if 'sms' in available_template_types else None,
             # ('letter', 'Letter') if 'letter' in available_template_types else None,
-            ('broadcast', 'Broadcast') if 'broadcast' in available_template_types else None,
             ('copy-existing', 'Copy an existing template') if allow_adding_copy_of_template else None,
         ]))
 
@@ -2406,85 +2295,6 @@ class AdminOrganisationGoLiveNotesForm(StripWhitespaceForm):
     )
 
 
-class ServiceBroadcastAccountTypeField(GovukRadiosField):
-    # After validation we split the value back into its parts of service_mode
-    # broadcast_channel and provider_restriction to be used by the flask route to send to the
-    # API
-    def post_validate(self, form, validation_stopped):
-        if not validation_stopped and self.data:
-            split_values = self.data.split("-")
-            self.service_mode = split_values[0]
-            self.broadcast_channel = split_values[1]
-            self.provider_restriction = split_values[2]
-
-
-class ServiceBroadcastChannelForm(StripWhitespaceForm):
-    channel = GovukRadiosField(
-        'Emergency alerts settings',
-        thing='mode or channel',
-        choices=[
-            ("training", "Training mode"),
-            ("operator", "Operator channel"),
-            ("test", "Test channel"),
-            ("severe", "Live channel"),
-            ("government", "Government channel"),
-        ],
-    )
-
-
-class ServiceBroadcastNetworkForm(StripWhitespaceForm):
-    def __init__(self, broadcast_channel, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.broadcast_channel = broadcast_channel
-
-    all_networks = OnOffField(
-        'Choose a mobile network',
-        choices=(
-            (True, 'All networks'),
-            (False, 'A single network')
-        ),
-    )
-    network = OptionalGovukRadiosField(
-        'Choose a mobile network',
-        thing='a mobile network',
-        choices=(
-            ('ee', 'EE'),
-            ('o2', 'O2'),
-            ('vodafone', 'Vodafone'),
-            ('three', 'Three'),
-        ),
-    )
-
-    @property
-    def account_type(self):
-        if self.all_networks.data:
-            provider = 'all'
-        else:
-            provider = self.network.data
-
-        return f'live-{self.broadcast_channel}-{provider}'
-
-    def validate_network(self, field):
-        if not self.all_networks.data and not field.data:
-            raise ValidationError('Select a mobile network')
-
-
-class ServiceBroadcastAccountTypeForm(StripWhitespaceForm):
-    account_type = ServiceBroadcastAccountTypeField(
-        'Change cell broadcast service type',
-        thing='which type of account this cell broadcast service is',
-        choices=[
-            ("training-test-all", "")
-        ] +
-        [
-            (f"live-{broadcast_channel}-{provider}", "")
-            for broadcast_channel in ["test", "operator", "severe", "government"]
-            for provider in ["all", "ee", "o2", "three", "vodafone"]
-        ],
-        validators=[DataRequired()]
-    )
-
-
 class AcceptAgreementForm(StripWhitespaceForm):
 
     @classmethod
@@ -2547,43 +2357,6 @@ class AcceptAgreementForm(StripWhitespaceForm):
             float(field.data)
         except (TypeError, ValueError):
             raise ValidationError("Must be a number")
-
-
-class BroadcastAreaForm(StripWhitespaceForm):
-
-    areas = GovukCheckboxesField('Choose areas to broadcast to')
-
-    def __init__(self, choices, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.areas.choices = choices
-        self.areas.render_as_list = True
-        self.areas.param_extensions = {'fieldset': {'legend': {'classes': 'govuk-visually-hidden'}}}
-
-    @classmethod
-    def from_library(cls, library):
-        return cls(choices=[
-            (area.id, area.name) for area in sorted(library)
-        ])
-
-
-class BroadcastAreaFormWithSelectAll(BroadcastAreaForm):
-
-    select_all = GovukCheckboxField('Select all')
-
-    @classmethod
-    def from_library(cls, library, select_all_choice):
-        instance = super().from_library(library)
-        (
-            instance.select_all.area_slug,
-            instance.select_all.label.text,
-        ) = select_all_choice
-        return instance
-
-    @property
-    def selected_areas(self):
-        if self.select_all.data:
-            return [self.select_all.area_slug]
-        return self.areas.data
 
 
 class ChangeSecurityKeyNameForm(StripWhitespaceForm):
