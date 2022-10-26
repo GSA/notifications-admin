@@ -21,6 +21,12 @@ from app.s3_client.s3_logo_client import (
 )
 
 bucket = 'test_bucket'
+bucket_credentials = {
+    'bucket': bucket,
+    'access_key_id': default_access_key,
+    'secret_access_key': default_secret_key,
+    'region': default_region
+}
 data = {'data': 'some_data'}
 filename = 'test.png'
 svg_filename = 'test.svg'
@@ -45,7 +51,7 @@ def letter_upload_filename(fake_uuid):
 
 def test_upload_email_logo_calls_correct_args(client_request, mocker, fake_uuid, upload_filename):
     mocker.patch('uuid.uuid4', return_value=upload_id)
-    mocker.patch.dict('flask.current_app.config', {'LOGO_UPLOAD_BUCKET_NAME': bucket})
+    mocker.patch.dict('flask.current_app.config', {'LOGO_UPLOAD_BUCKET': bucket_credentials})
     mocked_s3_upload = mocker.patch('app.s3_client.s3_logo_client.utils_s3upload')
 
     upload_email_logo(filename=filename, user_id=fake_uuid, filedata=data)
@@ -63,7 +69,7 @@ def test_upload_email_logo_calls_correct_args(client_request, mocker, fake_uuid,
 
 def test_upload_letter_temp_logo_calls_correct_args(mocker, fake_uuid, letter_upload_filename):
     mocker.patch('uuid.uuid4', return_value=upload_id)
-    mocker.patch.dict('flask.current_app.config', {'LOGO_UPLOAD_BUCKET_NAME': bucket})
+    mocker.patch.dict('flask.current_app.config', {'LOGO_UPLOAD_BUCKET': bucket_credentials})
     mocked_s3_upload = mocker.patch('app.s3_client.s3_logo_client.utils_s3upload')
 
     new_filename = upload_letter_temp_logo(filename=svg_filename, user_id=fake_uuid, filedata=data)
@@ -81,7 +87,7 @@ def test_upload_letter_temp_logo_calls_correct_args(mocker, fake_uuid, letter_up
 
 
 def test_persist_logo(client_request, mocker, fake_uuid, upload_filename):
-    mocker.patch.dict('flask.current_app.config', {'LOGO_UPLOAD_BUCKET_NAME': bucket})
+    mocker.patch.dict('flask.current_app.config', {'LOGO_UPLOAD_BUCKET': bucket_credentials})
     mocked_get_s3_object = mocker.patch('app.s3_client.s3_logo_client.get_s3_object')
     mocked_delete_s3_object = mocker.patch('app.s3_client.s3_logo_client.delete_s3_object')
 
