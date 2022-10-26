@@ -586,26 +586,6 @@ class ServiceAPIClient(NotifyAdminAPIClient):
     def get_returned_letters(self, service_id, reported_at):
         return self.get("service/{}/returned-letters?reported_at={}".format(service_id, reported_at))
 
-    @cache.delete('service-{service_id}')
-    def set_service_broadcast_settings(
-        self, service_id, service_mode, broadcast_channel, provider_restriction, cached_service_user_ids
-    ):
-        """
-        service_mode is one of "training" or "live"
-        broadcast channel is one of "operator", "test", "severe", "government"
-        provider_restriction is one of "all", "three", "o2", "vodafone", "ee"
-        """
-        if cached_service_user_ids:
-            redis_client.delete(*map('user-{}'.format, cached_service_user_ids))
-
-        data = {
-            "service_mode": service_mode,
-            "broadcast_channel": broadcast_channel,
-            "provider_restriction": provider_restriction
-        }
-
-        return self.post("/service/{}/set-as-broadcast-service".format(service_id), data)
-
     def get_notification_count(self, service_id):
         # if cache is not set, or not enabled, return 0
 

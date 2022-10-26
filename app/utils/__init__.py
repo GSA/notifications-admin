@@ -14,7 +14,7 @@ FAILURE_STATUSES = ['failed', 'temporary-failure', 'permanent-failure',
                     'technical-failure', 'virus-scan-failed', 'validation-failed']
 REQUESTED_STATUSES = SENDING_STATUSES + DELIVERED_STATUSES + FAILURE_STATUSES
 
-NOTIFICATION_TYPES = ["sms", "email", "letter", "broadcast"]
+NOTIFICATION_TYPES = ["sms", "email", "letter"]
 
 
 def service_has_permission(permission):
