@@ -40,25 +40,15 @@ def test_get_should_render_add_service_template(
     assert [
         label.text.strip() for label in page.select('.govuk-radios__item label')
     ] == [
-        'Central government',
-        'Local government',
-        'NHS – central government agency or public body',
-        'NHS Trust or Clinical Commissioning Group',
-        'GP practice',
-        'Emergency service',
-        'School or college',
+        'Federal government',
+        'State government',
         'Other',
     ]
     assert [
         radio['value'] for radio in page.select('.govuk-radios__item input')
     ] == [
-        'central',
-        'local',
-        'nhs_central',
-        'nhs_local',
-        'nhs_gp',
-        'emergency_service',
-        'school_or_college',
+        'federal',
+        'state',
         'other',
     ]
 
@@ -99,22 +89,10 @@ def test_show_different_page_if_user_org_type_is_local(
     'test@anotherexample.gsa.gov',
 ))
 @pytest.mark.parametrize('inherited, posted, persisted, sms_limit', (
-    (None, 'central', 'central', 150_000),
-    (None, 'nhs_central', 'nhs_central', 150_000),
-    (None, 'nhs_gp', 'nhs_gp', 10_000),
-    (None, 'nhs_local', 'nhs_local', 25_000),
-    (None, 'local', 'local', 25_000),
-    (None, 'emergency_service', 'emergency_service', 25_000),
-    (None, 'school_or_college', 'school_or_college', 10_000),
-    (None, 'other', 'other', 10_000),
-    ('central', None, 'central', 150_000),
-    ('nhs_central', None, 'nhs_central', 150_000),
-    ('nhs_local', None, 'nhs_local', 25_000),
-    ('local', None, 'local', 25_000),
-    ('emergency_service', None, 'emergency_service', 25_000),
-    ('school_or_college', None, 'school_or_college', 10_000),
-    ('other', None, 'other', 10_000),
-    ('central', 'local', 'central', 150_000),
+    (None, 'federal', 'federal', 150_000),
+    # ('federal', None, 'federal', 150_000),
+    (None, 'state', 'state', 150_000),
+    # ('state', None, 'state', 150_000),
 ))
 @freeze_time("2021-01-01")
 def test_should_add_service_and_redirect_to_tour_when_no_services(
@@ -238,14 +216,8 @@ def test_get_should_only_show_nhs_org_types_radios_if_user_has_nhs_email(
 
 
 @pytest.mark.parametrize('organisation_type, free_allowance', [
-    ('central', 150_000),
-    ('local', 25_000),
-    ('nhs_central', 150_000),
-    ('nhs_local', 25_000),
-    ('nhs_gp', 10_000),
-    ('school_or_college', 10_000),
-    ('emergency_service', 25_000),
-    ('other', 10_000),
+    ('federal', 150_000),
+    ('state', 150_000),
 ])
 def test_should_add_service_and_redirect_to_dashboard_when_existing_service(
     notify_admin,
@@ -326,7 +298,7 @@ def test_should_return_form_errors_with_duplicate_service_name_regardless_of_cas
         'main.add_service',
         _data={
             'name': 'SERVICE ONE',
-            'organisation_type': 'central',
+            'organisation_type': 'federal',
         },
         _expected_status=200,
     )

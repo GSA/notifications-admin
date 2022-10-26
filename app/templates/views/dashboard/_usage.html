@@ -1,18 +1,18 @@
 {% from "components/big-number.html" import big_number %}
 
 <div class='govuk-grid-row ajax-block-container'>
-  <div class='govuk-grid-column-one-third'>
+  <div class='govuk-grid-column-one-half'>
     <div class="keyline-block">
       {{ big_number("Unlimited", 'free email allowance', smaller=True) }}
     </div>
   </div>
-  <div class='govuk-grid-column-one-third'>
+  <div class='govuk-grid-column-one-half'>
     <div class="keyline-block">
       {% if sms_cost %}
         {{ big_number(
           sms_cost,
           'spent on text messages',
-          currency="£",
+          currency="$",
           smaller=True
         ) }}
       {% else %}
@@ -20,14 +20,14 @@
       {% endif %}
     </div>
   </div>
-  <div class='govuk-grid-column-one-third'>
+  <!-- <div class='govuk-grid-column-one-third'>
     <div class="keyline-block">
       {{ big_number(
         letter_cost,
         'spent on letters',
-        currency="£",
+        currency="$",
         smaller=True
       ) }}
     </div>
-  </div>
+  </div> -->
 </div>

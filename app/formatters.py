@@ -300,6 +300,7 @@ def nl2br(value):
     return ''
 
 
+# this formatter appears to only be used in the letter module
 def format_number_in_pounds_as_currency(number):
     if number >= 1:
         return f"£{number:,.2f}"

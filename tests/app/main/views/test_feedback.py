@@ -51,7 +51,7 @@ def test_get_support_index_page_when_signed_out(
     assert normalize_spaces(
         page.select_one('form label[for=who-0]').text
     ) == (
-        'I work in the public sector and need to send emails, text messages or letters'
+        'I work in the public sector and need to send emails or text messages'
     )
     assert page.select_one('form input#who-0')['value'] == 'public-sector'
     assert normalize_spaces(
@@ -227,7 +227,7 @@ def test_passes_user_details_through_flow(
         user_name='Test User',
         user_email='test@user.gsa.gov',
         org_id=None,
-        org_type='central',
+        org_type='federal',
         service_id=SERVICE_ONE_ID
     )
 

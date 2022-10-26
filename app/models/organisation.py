@@ -16,29 +16,35 @@ from app.notify_client.organisations_api_client import organisations_client
 
 class Organisation(JSONModel, SortByNameMixin):
 
-    TYPE_CENTRAL = 'central'
-    TYPE_LOCAL = 'local'
-    TYPE_NHS_CENTRAL = 'nhs_central'
-    TYPE_NHS_LOCAL = 'nhs_local'
-    TYPE_NHS_GP = 'nhs_gp'
-    TYPE_EMERGENCY_SERVICE = 'emergency_service'
-    TYPE_SCHOOL_OR_COLLEGE = 'school_or_college'
+    TYPE_FEDERAL = 'federal'
+    TYPE_STATE = 'state'
+
+    # TYPE_CENTRAL = 'central'
+    # TYPE_LOCAL = 'local'
+    # TYPE_NHS_CENTRAL = 'nhs_central'
+    # TYPE_NHS_LOCAL = 'nhs_local'
+    # TYPE_NHS_GP = 'nhs_gp'
+    # TYPE_EMERGENCY_SERVICE = 'emergency_service'
+    # TYPE_SCHOOL_OR_COLLEGE = 'school_or_college'
     TYPE_OTHER = 'other'
 
-    NHS_TYPES = (
-        TYPE_NHS_CENTRAL,
-        TYPE_NHS_LOCAL,
-        TYPE_NHS_GP,
-    )
+    # NHS_TYPES = (
+    #     TYPE_NHS_CENTRAL,
+    #     TYPE_NHS_LOCAL,
+    #     TYPE_NHS_GP,
+    # )
 
     TYPE_LABELS = OrderedDict([
-        (TYPE_CENTRAL, 'Central government'),
-        (TYPE_LOCAL, 'Local government'),
-        (TYPE_NHS_CENTRAL, 'NHS – central government agency or public body'),
-        (TYPE_NHS_LOCAL, 'NHS Trust or Clinical Commissioning Group'),
-        (TYPE_NHS_GP, 'GP practice'),
-        (TYPE_EMERGENCY_SERVICE, 'Emergency service'),
-        (TYPE_SCHOOL_OR_COLLEGE, 'School or college'),
+        (TYPE_FEDERAL, 'Federal government'),
+        (TYPE_STATE, 'State government'),
+
+        # (TYPE_CENTRAL, 'Central government'),
+        # (TYPE_LOCAL, 'Local government'),
+        # (TYPE_NHS_CENTRAL, 'NHS – central government agency or public body'),
+        # (TYPE_NHS_LOCAL, 'NHS Trust or Clinical Commissioning Group'),
+        # (TYPE_NHS_GP, 'GP practice'),
+        # (TYPE_EMERGENCY_SERVICE, 'Emergency service'),
+        # (TYPE_SCHOOL_OR_COLLEGE, 'School or college'),
         (TYPE_OTHER, 'Other'),
     ])
 

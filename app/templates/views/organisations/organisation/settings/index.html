@@ -109,7 +109,7 @@
           )
         }}
       {% endcall %}
-      {% call row() %}
+      <!-- {% call row() %}
         {{ text_field('Default letter branding') }}
         {{ optional_text_field(
           current_org.letter_branding.name,
@@ -121,7 +121,7 @@
             suffix='default letter branding for the organisation'
           )
         }}
-      {% endcall %}
+      {% endcall %} -->
       {% call row() %}
         {{ text_field('Known email domains') }}
         {{ optional_text_field(current_org.domains or None, default='None') }}

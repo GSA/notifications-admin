@@ -18,8 +18,6 @@ EXCLUDED_ENDPOINTS = tuple(map(Navigation.get_endpoint_with_blueprint, {
     'action_blocked',
     'add_data_retention',
     'add_organisation',
-    'add_organisation_from_gp_service',
-    'add_organisation_from_nhs_local_service',
     'add_service',
     'add_service_template',
     'api_callbacks',
@@ -490,7 +488,7 @@ def test_navigation_urls(
     ] == [
         '/services/{}'.format(SERVICE_ONE_ID),
         '/services/{}/templates'.format(SERVICE_ONE_ID),
-        '/services/{}/uploads'.format(SERVICE_ONE_ID),
+        # '/services/{}/uploads'.format(SERVICE_ONE_ID),
         '/services/{}/users'.format(SERVICE_ONE_ID),
         '/services/{}/usage'.format(SERVICE_ONE_ID),
         '/services/{}/service-settings'.format(SERVICE_ONE_ID),
@@ -513,7 +511,7 @@ def test_caseworkers_get_caseworking_navigation(
     )
     page = client_request.get('main.choose_template', service_id=SERVICE_ONE_ID)
     assert normalize_spaces(page.select_one('header + .govuk-width-container nav').text) == (
-        'Send messages Sent messages Letters Team members'
+        'Send messages Sent messages Team members'
     )
 
 
@@ -532,5 +530,5 @@ def test_caseworkers_see_jobs_nav_if_jobs_exist(
     )
     page = client_request.get('main.choose_template', service_id=SERVICE_ONE_ID)
     assert normalize_spaces(page.select_one('header + .govuk-width-container nav').text) == (
-        'Send messages Sent messages Letters Team members'
+        'Send messages Sent messages Team members'
     )

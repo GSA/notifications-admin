@@ -1149,50 +1149,6 @@ class RenameOrganisationForm(StripWhitespaceForm):
         ])
 
 
-class AddGPOrganisationForm(StripWhitespaceForm):
-
-    def __init__(self, *args, service_name='unknown', **kwargs):
-        super().__init__(*args, **kwargs)
-        self.same_as_service_name.label.text = 'Is your GP practice called ‘{}’?'.format(service_name)
-        self.service_name = service_name
-
-    def get_organisation_name(self):
-        if self.same_as_service_name.data:
-            return self.service_name
-        return self.name.data
-
-    same_as_service_name = OnOffField(
-        'Is your GP practice called the same name as your service?',
-        choices=(
-            (True, 'Yes'),
-            (False, 'No'),
-        ),
-    )
-
-    name = GovukTextInputField(
-        'What’s your practice called?',
-    )
-
-    def validate_name(self, field):
-        if self.same_as_service_name.data is False:
-            if not field.data:
-                raise ValidationError('Cannot be empty')
-        else:
-            field.data = ''
-
-
-class AddNHSLocalOrganisationForm(StripWhitespaceForm):
-
-    def __init__(self, *args, organisation_choices=None, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.organisations.choices = organisation_choices
-
-    organisations = GovukRadiosField(
-        'Which NHS Trust or Clinical Commissioning Group do you work for?',
-        thing='an NHS Trust or Clinical Commissioning Group'
-    )
-
-
 class OrganisationOrganisationTypeForm(StripWhitespaceForm):
     organisation_type = OrganisationTypeField('What type of organisation is this?')
 
@@ -1256,14 +1212,7 @@ class CreateServiceForm(StripWhitespaceForm):
             MustContainAlphanumericCharacters(),
             Length(max=255, message='Service name must be 255 characters or fewer')
         ])
-    organisation_type = OrganisationTypeField('Who runs this service?')
-
-
-class CreateNhsServiceForm(CreateServiceForm):
-    organisation_type = OrganisationTypeField(
-        'Who runs this service?',
-        include_only={'nhs_central', 'nhs_local', 'nhs_gp'},
-    )
+    organisation_type = OrganisationTypeField('Where is this service run?')
 
 
 class AdminNewOrganisationForm(
@@ -1564,7 +1513,7 @@ class SupportRedirect(StripWhitespaceForm):
     who = GovukRadiosField(
         'What do you need help with?',
         choices=[
-            ('public-sector', 'I work in the public sector and need to send emails, text messages or letters'),
+            ('public-sector', 'I work in the public sector and need to send emails or text messages'),
             ('public', 'I’m a member of the public with a question for the government'),
         ],
         param_extensions={

@@ -18,14 +18,14 @@
     </div>
     <div id='pill-selected-item'>
       <div class='govuk-grid-row'>
-        <div class='govuk-grid-column-one-third'>
+        <div class='govuk-grid-column-one-half'>
           <h2 class='heading-small'>Emails</h2>
           <div class="keyline-block">
             {{ big_number(emails_sent, 'sent', smaller=True) }}
             {{ big_number("Unlimited", 'free allowance', smaller=True) }}
           </div>
         </div>
-        <div class='govuk-grid-column-one-third'>
+        <div class='govuk-grid-column-one-half'>
           <h2 class='heading-small'>Text messages</h2>
           <div class="keyline-block">
             {{ big_number(sms_sent, 'sent', smaller=True) }}
@@ -44,40 +44,40 @@
             {% endfor %}
           </div>
         </div>
-        <div class='govuk-grid-column-one-third'>
+        <!-- <div class='govuk-grid-column-one-third'>
           <h2 class='heading-small'>Letters</h2>
           <div class="keyline-block">
             {{ big_number(letter_sent, 'sent', smaller=True) }}
           </div>
-        </div>
+        </div> -->
       </div>
 
       <div class='govuk-grid-row'>
-        <div class='govuk-grid-column-one-third'>
+        <div class='govuk-grid-column-one-half'>
           <div class="keyline-block">
             &nbsp;
           </div>
         </div>
-        <div class='govuk-grid-column-one-third'>
+        <div class='govuk-grid-column-one-half'>
           <div class="keyline-block">
             {{ big_number(
               sms_cost,
               'spent',
-              currency="£",
+              currency="$",
               smaller=True
             ) }}
           </div>
         </div>
-        <div class='govuk-grid-column-one-third'>
+        <!-- <div class='govuk-grid-column-one-third'>
           <div class="keyline-block">
             {{ big_number(
                 letter_cost,
                 'spent',
-                currency="£",
+                currency="$",
                 smaller=True
               ) }}
           </div>
-        </div>
+        </div> -->
 
       </div>
 
@@ -100,7 +100,7 @@
             {% call field(align='left') %}
               {{ big_number(
                 item.sms_cost + item.letter_cost,
-                currency="£",
+                currency="$",
                 smallest=True
               ) }}
               <ul>
@@ -111,12 +111,12 @@
                   <li class="tabular-numbers">{{ sms.charged_units|message_count('sms') }} at
                   {{- ' {:.2f}p'.format(sms.rate * 100) }}</li>
               {% endfor %}
-              {% for letter in item.letter_breakdown %}
+              <!-- {% for letter in item.letter_breakdown %}
                 {% if letter.sent %}
                   <li class="tabular-numbers">{{ "{:,} {}".format(letter.sent, letter.postage_description) }} {{ letter.sent|message_count_label('letter', suffix='') }} at
                   {{ letter.rate | format_number_in_pounds_as_currency }}</li>
                 {% endif %}
-              {% endfor %}
+              {% endfor %} -->
               {% if not (item.sms_free_allowance_used or item.sms_cost or item.letter_breakdown) %}
                 <li aria-hidden="true">–</li>
               {% endif %}

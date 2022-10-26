@@ -33,7 +33,7 @@
         {{ big_number(
           total_sms_cost,
           'spent',
-          currency="£",
+          currency="$",
           smaller=True
         ) }}
       </div>
@@ -44,7 +44,7 @@
         {{ big_number(
           total_letter_cost,
           'spent',
-          currency="£",
+          currency="$",
           smaller=True
         ) }}
       </div>
@@ -82,7 +82,7 @@
             {{ big_number(
               service.sms_cost,
               'spent on text messages',
-              currency="£",
+              currency="$",
               smallest=True
             ) }}
           {% else %}
@@ -97,7 +97,7 @@
           {{ big_number(
             service.letter_cost,
             'spent on letters',
-            currency="£",
+            currency="$",
             smallest=True
           ) }}
         </div>

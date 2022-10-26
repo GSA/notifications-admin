@@ -76,7 +76,8 @@ freeze-requirements: ## create static requirements.txt
 .PHONY: pip-audit
 pip-audit:
 	pip install --upgrade pip-audit
-	pip-audit -r requirements.txt -r requirements_for_test.txt -l --ignore-vuln PYSEC-2022-237
+	pip-audit -r requirements.txt -l --ignore-vuln PYSEC-2022-237
+	-pip-audit -r requirements_for_test.txt -l
 
 .PHONY: audit
 audit: npm-audit pip-audit
