@@ -79,6 +79,15 @@ class Config(object):
     }
 
 
+def _default_s3_credentials(bucket_name):
+    return {
+        'bucket': bucket_name,
+        'access_key_id': os.environ.get('AWS_ACCESS_KEY_ID'),
+        'secret_access_key': os.environ.get('AWS_SECRET_ACCESS_KEY'),
+        'region': os.environ.get('AWS_REGION')
+    }
+
+
 class Development(Config):
     BASIC_AUTH_FORCE = False
     DEBUG = True
@@ -89,24 +98,9 @@ class Development(Config):
     ASSET_PATH = '/static/'
 
     # Buckets
-    CSV_UPLOAD_BUCKET = {
-        'bucket': 'local-notifications-csv-upload',
-        'access_key_id': os.environ.get('AWS_ACCESS_KEY_ID'),
-        'secret_access_key': os.environ.get('AWS_SECRET_ACCESS_KEY'),
-        'region': os.environ.get('AWS_REGION')
-    }
-    CONTACT_LIST_BUCKET = {
-        'bucket': 'local-contact-list',
-        'access_key_id': os.environ.get('AWS_ACCESS_KEY_ID'),
-        'secret_access_key': os.environ.get('AWS_SECRET_ACCESS_KEY'),
-        'region': os.environ.get('AWS_REGION')
-    }
-    LOGO_UPLOAD_BUCKET = {
-        'bucket': 'local-public-logos-tools',
-        'access_key_id': os.environ.get('AWS_ACCESS_KEY_ID'),
-        'secret_access_key': os.environ.get('AWS_SECRET_ACCESS_KEY'),
-        'region': os.environ.get('AWS_REGION')
-    }
+    CSV_UPLOAD_BUCKET = _default_s3_credentials('local-notifications-csv-upload')
+    CONTACT_LIST_BUCKET = _default_s3_credentials('local-contact-list')
+    LOGO_UPLOAD_BUCKET = _default_s3_credentials('local-public-logos-tools')
 
     # credential overrides
     DANGEROUS_SALT = 'dev-notify-salt'
@@ -128,6 +122,11 @@ class Test(Development):
     ANTIVIRUS_API_KEY = 'test-antivirus-secret'
     ANTIVIRUS_ENABLED = True
     LOGO_CDN_DOMAIN = 'static-logos.test.com'
+
+    # Buckets
+    CSV_UPLOAD_BUCKET = _default_s3_credentials('test-csv-upload')
+    CONTACT_LIST_BUCKET = _default_s3_credentials('test-contact-list')
+    LOGO_UPLOAD_BUCKET = _default_s3_credentials('test-logo-upload')
 
 
 class Production(Config):
