@@ -1,6 +1,6 @@
 
-// helper for spying on the submit method on a form element
-// JSDOM's implementation of submit just wraps a 'not implemented' error so we need to mock that to track calls to it
+// helper for spying on the submit method on a form element, via the event's `preventDefault` method
+// JSDOM's implementation of requestSubmit triggers the submit event but then throws an error unless the submit handler returns false
 //
 // * Remove when JSDOM implements submit on its form elements *
 //
@@ -11,7 +11,9 @@
 //
 // form elements link to their implementation instance via a symbol property
 // this spies on the submit method of the implementation instance for a form element and mocks it to prevent 'not implemented' errors
-function spyOnFormSubmit (jest, form) {
+// it returns a spy on the event preventDefault function because submit is called every time, no matter if they submission will happen or not
+
+function spyOnFormSubmitEventPrevention (jest, form) {
 
   const formImplementationSymbols = Object.getOwnPropertySymbols(form).filter(
     symbol => form[symbol].constructor.name === 'HTMLFormElementImpl'
@@ -23,11 +25,15 @@ function spyOnFormSubmit (jest, form) {
 
   const HTMLFormElementImpl = form[formImplementationSymbols[0]];
 
-  const submitSpy = jest.spyOn(HTMLFormElementImpl, 'submit')
+  const event = new Event("submit", {bubbles: true, cancelable: true})
+  const preventDefaultSpy = jest.spyOn(event, 'preventDefault')
 
-  submitSpy.mockImplementation();
-  return submitSpy;
+  const submitSpy = jest.spyOn(HTMLFormElementImpl, 'requestSubmit')
+  submitSpy.mockImplementation(() => {
+    form.dispatchEvent(event)
+  });
 
+  return preventDefaultSpy;
 };
 
-exports.spyOnFormSubmit = spyOnFormSubmit;
+exports.spyOnFormSubmitEventPrevention = spyOnFormSubmitEventPrevention;

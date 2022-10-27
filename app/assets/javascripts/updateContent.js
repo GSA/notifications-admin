@@ -80,23 +80,25 @@
 
     let startTime = Date.now();
 
-    if (document.visibilityState !== "hidden" && queue.push(renderer) === 1) $.ajax(
-      resource,
-      {
-        'method': form ? 'post' : 'get',
-        'data': form ? $('#' + form).serialize() : {}
-      }
-    ).done(
-      response => {
-        flushQueue(queue, response);
-        if (response.stop === 1) {
-          poll = function(){};
+    if (document.visibilityState !== "hidden" && queue.push(renderer) === 1) {
+      $.ajax(
+        resource,
+        {
+          'method': form ? 'post' : 'get',
+          'data': form ? $('#' + form).serialize() : {}
         }
-        interval = calculateBackoff(Date.now() - startTime);
-      }
-    ).fail(
-      () => poll = function(){}
-    );
+      ).done(
+        response => {
+          flushQueue(queue, response);
+          if (response.stop === 1) {
+            poll = function(){};
+          }
+          interval = calculateBackoff(Date.now() - startTime);
+        }
+      ).fail(
+        () => poll = function(){}
+      );
+    }
 
     setTimeout(
       () => poll.apply(window, arguments), interval
