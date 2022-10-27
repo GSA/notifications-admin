@@ -58,7 +58,7 @@ generate-version-file: ## Generates the app version file
 	@echo -e "__git_commit__ = \"${GIT_COMMIT}\"\n__time__ = \"${DATE}\"" > ${APP_VERSION_FILE}
 
 .PHONY: test
-test: py-lint py-test js-test ## Run tests
+test: py-lint py-test js-lint js-test ## Run tests
 
 .PHONY: py-lint
 py-lint: ## Run python linting scanners
