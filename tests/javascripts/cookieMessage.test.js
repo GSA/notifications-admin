@@ -28,7 +28,7 @@ describe("Cookie message", () => {
     document.getElementsByTagName('head')[0].appendChild(cookieMessageStyles);
 
     // protect against any previous tests setting a cookies-policy cookie
-    helpers.deleteCookie('cookies-policy');
+    helpers.deleteCookie('cookies_policy');
 
   });
 
@@ -92,7 +92,7 @@ describe("Cookie message", () => {
 
   });
 
-  /* 
+  /*
     Note: If no JS, the cookie banner is hidden.
 
     This works through CSS, based on the presence of the `js-enabled` class on the <body> so is not tested here.
@@ -198,7 +198,7 @@ describe("Cookie message", () => {
 
         expect(banner.is('hidden')).toBe(true);
 
-      }); 
+      });
 
       test("The consent cookie should be set, with analytics set to 'true'", () => {
 
@@ -242,7 +242,7 @@ describe("Cookie message", () => {
 
         expect(banner.is('hidden')).toBe(true);
 
-      }); 
+      });
 
       test("The consent cookie should be set, with analytics set to 'false'", () => {
 
