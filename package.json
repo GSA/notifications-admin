@@ -6,7 +6,8 @@
     "node": ">=10.15.3"
   },
   "scripts": {
-    "test": "gulp lint && jest --config tests/javascripts/jest.config.js tests/javascripts",
+    "lint": "gulp lint",
+    "test": "jest --config tests/javascripts/jest.config.js tests/javascripts",
     "test-watch": "jest --watch --config tests/javascripts/jest.config.js tests/javascripts",
     "build": "gulp",
     "watch": "gulp watch",

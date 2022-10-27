@@ -58,11 +58,24 @@ generate-version-file: ## Generates the app version file
 	@echo -e "__git_commit__ = \"${GIT_COMMIT}\"\n__time__ = \"${DATE}\"" > ${APP_VERSION_FILE}
 
 .PHONY: test
-test: ## Run tests
+test: py-lint py-test js-test ## Run tests
+
+.PHONY: py-lint
+py-lint: ## Run python linting scanners
 	flake8 .
 	isort --check-only ./app ./tests
-	source $(NVMSH) && npm test
+
+.PHONY: py-test
+py-test: ## Run python unit tests
 	py.test -n auto --maxfail=10 tests/
+
+.PHONY: js-lint
+js-lint: ## Run javascript linting scanners
+	source $(NVMSH) && npm run lint
+
+.PHONY: js-test
+js-test: ## Run javascript unit tests
+	source $(NVMSH) && npm test
 
 .PHONY: fix-imports
 fix-imports: ## Fix imports using isort
