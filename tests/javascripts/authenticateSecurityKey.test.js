@@ -99,6 +99,7 @@ describe('Authenticate with security key', () => {
   })
 
   test('authenticates and passes a redirect url through to the authenticate admin endpoint', (done) => {
+    window.location.href = `${window.location.href}?next=%2Ffoo%3Fbar%3Dbaz`
     jest.spyOn(window, 'fetch')
       .mockImplementationOnce((_url) => {
         // initial fetch of options from the server
@@ -128,7 +129,7 @@ describe('Authenticate with security key', () => {
       .mockImplementationOnce((url, options = {}) => {
         // subsequent POST of credential data to server
         expect(url.toString()).toEqual(
-          'https://www.notifications.service.gov.uk/webauthn/authenticate'
+          'https://www.notifications.service.gov.uk/webauthn/authenticate?next=%2Ffoo%3Fbar%3Dbaz'
         )
         return Promise.resolve({
           ok: true, arrayBuffer: () => Promise.resolve(window.CBOR.encode({ redirect_url: '/foo' }))

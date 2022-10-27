@@ -7,6 +7,8 @@ let _location = {
   href: "https://www.notifications.service.gov.uk",
 }
 
+// JSDOM provides a read-only window.location, which does not allow for
+// mocking or setting.
 Object.defineProperty(window, 'location', {
   get: () => _location,
   set: (value) => {
