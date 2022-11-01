@@ -23,10 +23,6 @@ def features_nav():
             "link": "main.roadmap",
         },
         {
-            "name": "Who can use Notify",
-            "link": "main.who_can_use_notify",
-        },
-        {
             "name": "Security",
             "link": "main.security",
         },
@@ -37,28 +33,15 @@ def features_nav():
     ]
 
 
-def pricing_nav():
-    return [
-        {
-            "name": "Pricing",
-            "link": "main.pricing",
-        },
-        {
-            "name": "How to pay",
-            "link": "main.how_to_pay",
-        },
-        {
-            "name": "Billing details",
-            "link": "main.billing_details",
-        },
-    ]
-
-
 def using_notify_nav():
     return [
         {
             "name": "Get started",
             "link": "main.get_started",
+        },
+        {
+            "name": "Pricing",
+            "link": "main.pricing",
         },
         {
             "name": "Trial mode",

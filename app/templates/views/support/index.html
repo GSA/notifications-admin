@@ -3,15 +3,20 @@
 {% from "components/form.html" import form_wrapper %}
 
 {% block per_page_title %}
-  Support
+  Contact us
 {% endblock %}
 
 {% block maincolumn_content %}
 
-  <h1 class="heading-large">Support</h1>
-  <p class="govuk-body">US Notify provides 24-hour online support.</p>
+  <h1 class="heading-large">Contact us</h1>
+  
+  <p class="govuk-body">We are available at <a href="mailto:tts-benefits-studio@gsa.gov">tts-benefits-studio@gsa.gov</a>.</p>
 
-  {% call form_wrapper() %}
+  <p class="govuk-body">You can expect a response within 1 business day.</p>
+  
+  <!-- <p class="govuk-body">US Notify provides 24-hour online support.</p> -->
+
+  <!-- {% call form_wrapper() %}
     {% if current_user.is_authenticated %}
       {{ form.support_type }}
     {% else %}
@@ -22,8 +27,6 @@
     {% endif %}
     {{ page_footer('Continue') }}
   {% endcall %}
-
-  <p class="govuk-body">You can also <a class="govuk-link govuk-link--no-visited-state" href="https://ukgovernmentdigital.slack.com/messages/C0E1ADVPC">contact us on Slack</a>.</p>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -42,6 +45,6 @@
       <li>a 500 response code appears when you try to send messages using the API</li>
     </ul>
   </div>
-</div>
+</div> -->
 
 {% endblock %}
