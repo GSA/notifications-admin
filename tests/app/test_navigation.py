@@ -332,7 +332,6 @@ EXCLUDED_ENDPOINTS = tuple(map(Navigation.get_endpoint_with_blueprint, {
     'webauthn_complete_register',
     'webauthn_begin_authentication',
     'webauthn_complete_authentication',
-    'who_can_use_notify',
     'who_its_for',
 }))
 
