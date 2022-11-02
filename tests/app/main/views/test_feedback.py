@@ -21,6 +21,7 @@ def no_redirect():
     return lambda: None
 
 
+@pytest.mark.skip(reason="Not currently using Zendesk")
 def test_get_support_index_page(
     client_request,
 ):
@@ -41,6 +42,7 @@ def test_get_support_index_page(
     ) == 'Continue'
 
 
+@pytest.mark.skip(reason="Not currently using Zendesk")
 def test_get_support_index_page_when_signed_out(
     client_request,
 ):
