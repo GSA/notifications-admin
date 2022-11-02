@@ -1,0 +1,4 @@
+env: staging
+instances: 1
+memory: 1G
+public_admin_route: notify-staging.app.cloud.gov
