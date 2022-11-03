@@ -1,9 +1,9 @@
 locals {
   cf_org_name      = "gsa-tts-benefits-studio-prototyping"
-  cf_space_name    = "notify-staging"
-  env              = "staging"
+  cf_space_name    = "notify-demo"
+  env              = "demo"
   app_name         = "notify-admin"
-  recursive_delete = true
+  recursive_delete = false
 }
 
 module "redis" {
@@ -36,13 +36,13 @@ module "logo_upload_bucket" {
 # 1) the api app has first been deployed
 # 2) the admin app has first been deployed
 ###########################################################################
-module "api_network_route" {
-  source = "../shared/container_networking"
+# module "api_network_route" {
+#   source = "../shared/container_networking"
 
-  cf_user              = var.cf_user
-  cf_password          = var.cf_password
-  cf_org_name          = local.cf_org_name
-  cf_space_name        = local.cf_space_name
-  source_app_name      = "${local.app_name}-${local.env}"
-  destination_app_name = "notify-api-${local.env}"
-}
+#   cf_user              = var.cf_user
+#   cf_password          = var.cf_password
+#   cf_org_name          = local.cf_org_name
+#   cf_space_name        = local.cf_space_name
+#   source_app_name      = "${local.app_name}-${local.env}"
+#   destination_app_name = "notify-api-${local.env}"
+# }

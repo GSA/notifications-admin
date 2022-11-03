@@ -148,6 +148,10 @@ class Staging(Production):
     HEADER_COLOUR = '#6F72AF'  # $mauve
 
 
+class Demo(Staging):
+    pass
+
+
 class Scanning(Production):
     BASIC_AUTH_FORCE = False
     HTTP_PROTOCOL = 'http'
@@ -162,5 +166,6 @@ configs = {
     'test': Test,
     'scanning': Scanning,
     'staging': Staging,
+    'demo': Demo,
     'production': Production
 }

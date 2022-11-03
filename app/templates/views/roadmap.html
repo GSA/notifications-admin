@@ -12,61 +12,87 @@
 
   {{ content_metadata(
     data={
-      "Last updated": "27 April 2022",
-      "Next review due": "12 July 2022"
+      "Last updated": "1 November 2022",
+      "Next review due on": "15 December 2022"
     }
   ) }}
 
 
-  <p class="govuk-body">The US Notify roadmap shows what we’re working on and some of the <a class="govuk-link govuk-link--no-visited-state" href="#things-we-have-done">things we’ve done</a>.</p>
-  <p class="govuk-body">The roadmap is only a guide. It does not cover everything we do, and some things may change.</p>
+  <p class="govuk-body">The Notify roadmap shows what we’re working on and what we're planning to do next.</p>
+  <p class="govuk-body">This roadmap is only a guide. It does not cover everything we do, and some things may change.</p>
   <p class="govuk-body">You can <a class="govuk-link govuk-link--no-visited-state" href="{{url_for('.support')}}">contact us</a> if you have any questions about the roadmap or suggestions for new features.</p>
 
-  <h2 class="heading-medium" id="things-we-are-working-on">Things we’re working on</h2>
+  <h2 class="heading-medium" id="things-we-are-working-on">What we’re working on</h2>
 
 <h3 class="heading-small" id="now">Now</h3>
 
+  <p class="govuk-body">We are investigating the Notify concept, building on the notifications tool pioneered by the UK.</p>
+  <p class="govuk-body">To do this, we are convening a pilot with a small set of partners.</p>
+  <p class="govuk-body">Goals during this stage:</p>
+
   <ul class="list list-bullet">
-   
-    <li>Make it easier for services to pick their own <a class="govuk-link govuk-link--no-visited-state" href="{{url_for('main.branding_and_customisation')}}">email branding</a></li>
-    <li>Help services to get better value for money</li>
-    <li>Improve the time it takes some of our webpages to load</li>
+    <li>Achieve compliance to begin piloting, such as ATO and privacy standards</li>
+    <li>Demonstrate that a government-run notifications tool provides a unique value</li>
+    <li>Gather data from the pilot to improve the product</li>
+  </ul>
+
+  <p class="govuk-body">Features prioritized during this stage:</p>
+
+  <ul class="list list-bullet">
+    <li>Bulk, individually customizable one-way SMS sending via web UI</li>
+    <li>Organization permissions settings for various team members to edit/send</li>
+    <li>Reusable message templates</li>
+    <li>7-day records deletion</li>
+    <li>Message send/failure analytics</li>
   </ul>
 
   <h3 class="heading-small" id="next">Next</h3>
 
+  <p class="govuk-body">If the pilot is successful, we hope to recruit additional high-impact partners to improve outcomes for low-income individuals and families.</p>
+
+  <p class="govuk-body">Goals during this stage:</p>
+
   <ul class="list list-bullet">
-    <li>Explore ways to share common content patterns</li>
-    <li>Make it easier for organisations to find the usage data they need</li>
+    <li>Complement Notify with practical guidance and support services</li>
+    <li>Iterate on existing features and implement new features based on what we've learned so far</li>
+    <li>Hone our measurement approaches to better quantify impact</li>
+  </ul>
+
+  <p class="govuk-body">Features prioritized during this stage:</p>
+
+  <ul class="list list-bullet">
+    <li>SMS sending via API integration</li>
+    <li>Single-level decision two-way messaging (e.g. reply “YES” if, or “NO” if…)</li>
+    <li>Self-service account creation</li>
+    <li>Application status page</li>
+    <li>Scheduled send option</li>
   </ul>
 
   <h3 class="heading-small" id="later">Later</h3>
 
+  <p class="govuk-body">In the future, we may decide to expand beyond SMS, or to offer the service government-wide</p>
+
+  <p class="govuk-body">Features to be considered during this stage:</p>
+
   <ul class="list list-bullet">
 
-    <li>Let services preview their email branding</li>
-    <li>Let services upload their own logo for emails and letters</li>
-    <li>Meet our targets for <a class="govuk-link govuk-link--no-visited-state" href="{{url_for('main.accessibility_statement')}}">accessibility</a></li>
+    <li>Email sending via UI and API</li>
+    <li>Multiple-level decision two-way messaging (greater than one layer decision-tree)</li>
+    <li>Open-text reply two-way messaging (rather than reply yes or no, 1 or 2, etc.)</li>
+    <li>Multilingual interface and content library options</li>
+    <li>Recurring scheduled send (e.g. “Send each Monday for 3 weeks”)</li>
 
   </ul>
 
-  <h2 class="heading-medium" id="things-we-have-done">Things we’ve done</h2>
+  <!-- <h2 class="heading-medium" id="things-we-have-done">Things we’ve done</h2>
 
   <p class="govuk-body">Recently we have:</p>
 
   <ul class="list list-bullet">
 
-    <li>upgraded some of our software dependencies</li>
-    <li>completed our annual IT health check</li>
-    <li>tested new ways for services to upload their own brand logo</li>
-    <li>improved our performance by <a class="govuk-link govuk-link--no-visited-state" href="https://technology.blog.gov.uk/2022/02/01/upgrading-celery-on-gov-uk-notify/">upgrading the software we use</a></li>
-    <li>made our website work better in Windows high contrast mode</li>
-    <li>increased our capacity at short notice during a busy period</li>
-    <li>added quarterly billing reports that organisations can download</li>
+    <li></li>
+    <li></li>
     
-  </ul>
-
-  <p class="govuk-body">Between April 2021 and March 2022 we sent a total of 2.7 billion notifications. Half of those were for services set up in response to the coronavirus (COVID-19) pandemic.</p>
-
+  </ul> -->
 
 {% endblock %}

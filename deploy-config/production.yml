@@ -1,0 +1,4 @@
+env: production
+instances: 2
+memory: 1G
+public_admin_route: notify.app.cloud.gov

@@ -1,0 +1,4 @@
+env: demo
+instances: 1
+memory: 1G
+public_admin_route: notify-demo.app.cloud.gov
