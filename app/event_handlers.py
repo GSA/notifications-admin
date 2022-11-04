@@ -10,7 +10,6 @@ EVENT_SCHEMAS = {
     "add_user_to_service": {"user_id", "invited_by_id", "service_id", "ui_permissions"},
     "set_user_permissions": {"user_id", "service_id", "original_ui_permissions", "new_ui_permissions", "set_by_id"},
     "archive_user": {"user_id", "archived_by_id"},
-    "change_broadcast_account_type": {"service_id", "changed_by_id", "service_mode", "broadcast_channel", "provider_restriction"},  # noqa: E501 (length)
     "archive_service": {"service_id", "archived_by_id"},
     "suspend_service": {"service_id", "suspended_by_id"},
     "resume_service": {"service_id", "resumed_by_id"},
@@ -43,10 +42,6 @@ def create_set_user_permissions_event(**kwargs):
 
 def create_archive_user_event(**kwargs):
     _send_event('archive_user', **kwargs)
-
-
-def create_broadcast_account_type_change_event(**kwargs):
-    _send_event('change_broadcast_account_type', **kwargs)
 
 
 def create_suspend_service_event(**kwargs):

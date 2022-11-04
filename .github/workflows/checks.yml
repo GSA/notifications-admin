@@ -10,20 +10,9 @@ env:
   FLASK_APP: application.py
   FLASK_ENV: development
   WERKZEUG_DEBUG_PIN: off
-  REDIS_URL: "redis://you-forgot-to-mock-a-redis-call-to"
-  REDIS_ENABLED: True
-  ANTIVIRUS_ENABLED: 0
+  REDIS_ENABLED: 0
   NODE_VERSION: 16.15.1
-  ADMIN_CLIENT_ID: notify-admin
-  ADMIN_CLIENT_USERNAME: notify-admin
-  ADMIN_CLIENT_SECRET: dev-notify-secret-key
-  GOVUK_ALERTS_CLIENT_ID: govuk-alerts
-  ADMIN_BASE_URL: http://localhost:6012
-  API_HOST_NAME: http://localhost:6011
-  DEV_API_HOST_NAME: http://localhost:6011
   AWS_REGION: us-west-2
-  BASIC_AUTH_USERNAME: curiousabout
-  BASIC_AUTH_PASSWORD: the10xnotifybeta
 
 jobs:
   build:
@@ -35,6 +24,8 @@ jobs:
         run: flake8 .
       - name: Check imports alphabetized
         run: isort --check-only ./app ./tests
+      - name: Run js lint
+        run: npm run lint
       - name: Run js tests
         run: npm test
       - name: Run py tests
@@ -74,7 +65,7 @@ jobs:
       - name: Run OWASP Baseline Scan
         uses: zaproxy/action-baseline@v0.7.0
         with:
-          docker_name: "owasp/zap2docker-weekly"
+          docker_name: "owasp/zap2docker-stable"
           target: "http://localhost:6012"
           fail_action: true
           allow_issue_writing: false

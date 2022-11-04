@@ -8,20 +8,8 @@ from app.utils.user_permissions import (
 
 @pytest.mark.parametrize('db_permissions,expected_ui_permissions', [
     (
-        ['approve_broadcasts', 'reject_broadcasts', 'cancel_broadcasts'],
-        {'approve_broadcasts'},
-    ),
-    (
-        ['manage_templates', 'create_broadcasts', 'reject_broadcasts', 'cancel_broadcasts'],
-        {'create_broadcasts', 'manage_templates'},
-    ),
-    (
         ['manage_templates'],
         {'manage_templates'},
-    ),
-    (
-        ['create_broadcasts'],
-        set(),
     ),
     (
         ['send_texts', 'send_emails', 'send_letters', 'manage_templates', 'some_unknown_permission'],

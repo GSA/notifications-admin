@@ -1,6 +1,5 @@
 from flask import current_app
 from notifications_utils.template import (
-    BroadcastPreviewTemplate,
     EmailPreviewTemplate,
     LetterImageTemplate,
     LetterPreviewTemplate,
@@ -64,7 +63,3 @@ def get_template(
                 admin_base_url=current_app.config['ADMIN_BASE_URL'],
                 redact_missing_personalisation=redact_missing_personalisation,
             )
-    if 'broadcast' == template['template_type']:
-        return BroadcastPreviewTemplate(
-            template,
-        )

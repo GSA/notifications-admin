@@ -6,7 +6,7 @@ from notifications_utils.international_billing_rates import (
 
 from app.main import main
 from app.main.forms import SearchByNameForm
-from app.main.views.sub_navigation_dictionaries import pricing_nav
+from app.main.views.sub_navigation_dictionaries import using_notify_nav
 
 CURRENT_SMS_RATE = '1.72'
 
@@ -21,7 +21,7 @@ def pricing():
             for cc, country in INTERNATIONAL_BILLING_RATES.items()
         ], key=lambda x: x[0]),
         search_form=SearchByNameForm(),
-        navigation_links=pricing_nav(),
+        navigation_links=using_notify_nav(),
     )
 
 
@@ -29,7 +29,7 @@ def pricing():
 def how_to_pay():
     return render_template(
         'views/pricing/how-to-pay.html',
-        navigation_links=pricing_nav(),
+        navigation_links=using_notify_nav(),
     )
 
 
@@ -39,9 +39,9 @@ def billing_details():
         return render_template(
             'views/pricing/billing-details.html',
             billing_details=current_app.config['NOTIFY_BILLING_DETAILS'],
-            navigation_links=pricing_nav(),
+            navigation_links=using_notify_nav(),
         )
     return render_template(
         'views/pricing/billing-details-signed-out.html',
-        navigation_links=pricing_nav(),
+        navigation_links=using_notify_nav(),
     )

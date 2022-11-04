@@ -12,7 +12,7 @@ describe('Prevent duplicate form submissions', () => {
 
   let form;
   let button;
-  let formSubmitSpy;
+  let formEventSpy;
 
   beforeEach(() => {
 
@@ -26,7 +26,7 @@ describe('Prevent duplicate form submissions', () => {
     button = document.querySelector('button');
 
     // requires a helper due to JSDOM not implementing the submit method
-    formSubmitSpy = helpers.spyOnFormSubmit(jest, form);
+    formEventSpy = helpers.spyOnFormSubmitEventPrevention(jest, form);
 
     require('../../app/assets/javascripts/preventDuplicateFormSubmissions.js');
 
@@ -40,7 +40,7 @@ describe('Prevent duplicate form submissions', () => {
     // the module cache needs resetting each time for the script to execute
     jest.resetModules();
 
-    formSubmitSpy.mockClear();
+    formEventSpy.mockClear();
 
   });
 
@@ -49,7 +49,7 @@ describe('Prevent duplicate form submissions', () => {
     helpers.triggerEvent(button, 'click');
     helpers.triggerEvent(button, 'click');
 
-    expect(formSubmitSpy.mock.calls.length).toEqual(1);
+    expect(formEventSpy.mock.calls.length).toEqual(1);
 
   });
 
@@ -61,7 +61,7 @@ describe('Prevent duplicate form submissions', () => {
 
     helpers.triggerEvent(button, 'click');
 
-    expect(formSubmitSpy.mock.calls.length).toEqual(2);
+    expect(formEventSpy.mock.calls.length).toEqual(0);
 
   });
 

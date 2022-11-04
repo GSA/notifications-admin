@@ -99,9 +99,7 @@ describe('Authenticate with security key', () => {
   })
 
   test('authenticates and passes a redirect url through to the authenticate admin endpoint', (done) => {
-    // https://github.com/facebook/jest/issues/890#issuecomment-415202799
-    window.history.pushState({}, 'Test Title', '/?next=%2Ffoo%3Fbar%3Dbaz')
-
+    window.location.href = `${window.location.href}?next=%2Ffoo%3Fbar%3Dbaz`
     jest.spyOn(window, 'fetch')
       .mockImplementationOnce((_url) => {
         // initial fetch of options from the server
@@ -135,7 +133,7 @@ describe('Authenticate with security key', () => {
         )
         return Promise.resolve({
           ok: true, arrayBuffer: () => Promise.resolve(window.CBOR.encode({ redirect_url: '/foo' }))
-        })
+          })
       })
 
     jest.spyOn(window.location, 'assign').mockImplementation((href) => {

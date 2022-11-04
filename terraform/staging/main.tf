@@ -1,8 +1,8 @@
 locals {
-  cf_org_name      = "gsa-10x-prototyping"
-  cf_space_name    = "10x-notifications"
+  cf_org_name      = "gsa-tts-benefits-studio-prototyping"
+  cf_space_name    = "notify-staging"
   env              = "staging"
-  app_name         = "notifications-admin"
+  app_name         = "notify-admin"
   recursive_delete = true
 }
 
@@ -30,6 +30,12 @@ module "logo_upload_bucket" {
   s3_service_name  = "${local.app_name}-logo-upload-bucket-${local.env}"
 }
 
+# ##########################################################################
+# The following lines need to be commented out for the initial `terraform apply`
+# It can be re-enabled after:
+# 1) the api app has first been deployed
+# 2) the admin app has first been deployed
+###########################################################################
 module "api_network_route" {
   source = "../shared/container_networking"
 
@@ -38,5 +44,5 @@ module "api_network_route" {
   cf_org_name          = local.cf_org_name
   cf_space_name        = local.cf_space_name
   source_app_name      = "${local.app_name}-${local.env}"
-  destination_app_name = "notifications-api-${local.env}"
+  destination_app_name = "notify-api-${local.env}"
 }

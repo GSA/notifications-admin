@@ -1,0 +1,68 @@
+name: Deploy to demo environment
+
+on:
+  push:
+    branches: [ production ]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: demo
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Check for changes to Terraform
+        id: changed-terraform-files
+        uses: tj-actions/changed-files@v1.1.2
+        with:
+          files: terraform/demo
+      - name: Terraform init
+        if: steps.changed-terraform-files.outputs.any_changed == 'true'
+        working-directory: terraform/demo
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_SECRET_ACCESS_KEY }}
+        run: terraform init
+      - name: Terraform apply
+        if: steps.changed-terraform-files.outputs.any_changed == 'true'
+        working-directory: terraform/demo
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_SECRET_ACCESS_KEY }}
+          TF_VAR_cf_user: ${{ secrets.CLOUDGOV_USERNAME }}
+          TF_VAR_cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
+        run: terraform apply -auto-approve -input=false
+
+      - uses: ./.github/actions/setup-project
+
+      - name: Deploy to cloud.gov
+        uses: 18f/cg-deploy-action@main
+        env:
+          DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
+          BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
+          REDIS_ENABLED: ${{ secrets.REDIS_ENABLED }}
+        with:
+          cf_username: ${{ secrets.CLOUDGOV_USERNAME }}
+          cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
+          cf_org: gsa-tts-benefits-studio-prototyping
+          cf_space: notify-demo
+          push_arguments: >-
+            --vars-file deploy-config/demo.yml
+            --var DANGEROUS_SALT="$DANGEROUS_SALT"
+            --var SECRET_KEY="$SECRET_KEY"
+            --var AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID"
+            --var AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"
+            --var REDIS_ENABLED="$REDIS_ENABLED"
+            --var ADMIN_CLIENT_USERNAME="notify-admin"
+            --var ADMIN_CLIENT_SECRET="$ADMIN_CLIENT_SECRET"
+            --var BASIC_AUTH_USERNAME="curiousabout"
+            --var BASIC_AUTH_PASSWORD="$BASIC_AUTH_PASSWORD"

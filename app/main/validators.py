@@ -8,7 +8,6 @@ from notifications_utils.recipients import (
     validate_email_address,
 )
 from notifications_utils.sanitise_text import SanitiseSMS
-from notifications_utils.template import BroadcastMessageTemplate
 from wtforms import ValidationError
 
 from app.main._commonly_used_passwords import commonly_used_passwords
@@ -48,7 +47,7 @@ class ValidGovEmail:
         message = '''
             Enter a public sector email address or
             <a class="govuk-link govuk-link--no-visited-state" href="{}">find out who can use Notify</a>
-        '''.format(url_for('main.who_can_use_notify'))
+        '''.format(url_for('main.features'))
         if not is_gov_user(field.data.lower()):
             raise ValidationError(message)
 
@@ -120,7 +119,6 @@ class OnlySMSCharacters:
                 'You cannot use {} in {}. {} will not show up properly on everyone’s phones.'.format(
                     formatted_list(non_sms_characters, conjunction='or', before_each='', after_each=''),
                     {
-                        'broadcast': 'broadcasts',
                         'sms': 'text messages',
                     }.get(self._template_type),
                     ('It' if len(non_sms_characters) == 1 else 'They')
@@ -128,38 +126,16 @@ class OnlySMSCharacters:
             )
 
 
-class NoPlaceholders:
+# class NoPlaceholders:
 
-    def __init__(self, message=None):
-        self.message = message or (
-            'You can’t use ((double brackets)) to personalise this message'
-        )
+#     def __init__(self, message=None):
+#         self.message = message or (
+#             'You can’t use ((double brackets)) to personalise this message'
+#         )
 
-    def __call__(self, form, field):
-        if Field(field.data).placeholders:
-            raise ValidationError(self.message)
-
-
-class BroadcastLength:
-
-    def __call__(self, form, field):
-        template = BroadcastMessageTemplate({
-            'template_type': 'broadcast',
-            'content': field.data,
-        })
-
-        if template.content_too_long:
-            non_gsm_characters = list(sorted(template.non_gsm_characters))
-            if non_gsm_characters:
-                raise ValidationError(
-                    f'Content must be {template.max_content_count:,.0f} '
-                    f'characters or fewer because it contains '
-                    f'{formatted_list(non_gsm_characters, conjunction="and", before_each="", after_each="")}'
-                )
-            raise ValidationError(
-                f'Content must be {template.max_content_count:,.0f} '
-                f'characters or fewer'
-            )
+#     def __call__(self, form, field):
+#         if Field(field.data).placeholders:
+#             raise ValidationError(self.message)
 
 
 class LettersNumbersSingleQuotesFullStopsAndUnderscoresOnly:

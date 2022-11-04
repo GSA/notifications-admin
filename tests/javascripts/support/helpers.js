@@ -23,5 +23,5 @@ exports.templatesAndFoldersCheckboxes = html.templatesAndFoldersCheckboxes;
 exports.element = elements.element;
 exports.WindowMock = rendering.WindowMock;
 exports.ScreenMock = rendering.ScreenMock;
-exports.spyOnFormSubmit = forms.spyOnFormSubmit;
+exports.spyOnFormSubmitEventPrevention = forms.spyOnFormSubmitEventPrevention;
 exports.getFormDataFromPairs = utilities.getFormDataFromPairs;

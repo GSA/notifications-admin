@@ -15,13 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
+    environment: staging
     steps:
-      - name: Install container dependencies
-        run: |
-          sudo apt-get update \
-          && sudo apt-get install -y --no-install-recommends \
-          libcurl4-openssl-dev
-
       - uses: actions/checkout@v3
         with:
           fetch-depth: 2
@@ -48,31 +43,25 @@ jobs:
           TF_VAR_cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
         run: terraform apply -auto-approve -input=false
 
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.9"
-
-      - name: Install application dependencies
-        run: make bootstrap
+      - uses: ./.github/actions/setup-project
 
       - name: Deploy to cloud.gov
         uses: 18f/cg-deploy-action@main
         env:
-          DANGEROUS_SALT: ${{ secrets.PROD_DANGEROUS_SALT }}
-          SECRET_KEY: ${{ secrets.PROD_SECRET_KEY }}
+          DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          ADMIN_CLIENT_SECRET: ${{ secrets.PROD_ADMIN_CLIENT_SECRET }}
+          ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
           BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
           REDIS_ENABLED: ${{ secrets.REDIS_ENABLED }}
         with:
           cf_username: ${{ secrets.CLOUDGOV_USERNAME }}
           cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
-          cf_org: gsa-10x-prototyping
-          cf_space: 10x-notifications
+          cf_org: gsa-tts-benefits-studio-prototyping
+          cf_space: notify-staging
           push_arguments: >-
-            --var env=staging
+            --vars-file deploy-config/staging.yml
             --var DANGEROUS_SALT="$DANGEROUS_SALT"
             --var SECRET_KEY="$SECRET_KEY"
             --var AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID"
@@ -87,4 +76,6 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     steps:
-      - run: echo 'Checks failed, not deploying'
+      - uses: actions/github-script@v6
+        with:
+          script: core.setFailed('Checks failed, not deploying')

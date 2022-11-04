@@ -1,8 +1,8 @@
 locals {
-  cf_org_name      = "TKTK"
-  cf_space_name    = "TKTK"
+  cf_org_name      = "gsa-tts-benefits-studio-prototyping"
+  cf_space_name    = "notify-prod"
   env              = "production"
-  app_name         = "notifications-admin"
+  app_name         = "notify-admin"
   recursive_delete = false
 }
 
@@ -44,7 +44,7 @@ module "logo_upload_bucket" {
 #   cf_org_name          = local.cf_org_name
 #   cf_space_name        = local.cf_space_name
 #   source_app_name      = "${local.app_name}-${local.env}"
-#   destination_app_name = "notifications-api-${local.env}"
+#   destination_app_name = "notify-api-${local.env}"
 # }
 
 # ##########################################################################

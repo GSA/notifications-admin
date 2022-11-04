@@ -25,7 +25,6 @@ from app import (
 from app.formatters import character_count, message_count
 from app.main import main, no_cookie
 from app.main.forms import (
-    BroadcastTemplateForm,
     EmailTemplateForm,
     LetterTemplateForm,
     LetterTemplatePostageForm,
@@ -47,7 +46,6 @@ form_objects = {
     'email': EmailTemplateForm,
     'sms': SMSTemplateForm,
     'letter': LetterTemplateForm,
-    'broadcast': BroadcastTemplateForm,
 }
 
 
@@ -202,7 +200,6 @@ def get_template_nav_label(value):
         'sms': 'Text message',
         'email': 'Email',
         'letter': 'Letter',
-        'broadcast': 'Broadcast',
     }[value]
 
 
@@ -657,7 +654,7 @@ def edit_service_template(service_id, template_id):
 )
 @user_has_permissions()
 def count_content_length(service_id, template_type):
-    if template_type not in {'sms', 'broadcast'}:
+    if template_type not in {'sms'}:
         abort(404)
 
     error, message = _get_content_count_error_and_message_for_template(
@@ -693,20 +690,6 @@ def _get_content_count_error_and_message_for_template(template):
         return False, (
             f'Will be charged as {message_count(template.fragment_count, template.template_type)} '
         )
-
-    if template.template_type == 'broadcast':
-        if template.content_too_long:
-            return True, (
-                f'You have '
-                f'{character_count(template.encoded_content_count - template.max_content_count)} '
-                f'too many'
-            )
-        else:
-            return False, (
-                f'You have '
-                f'{character_count(template.max_content_count - template.encoded_content_count)} '
-                f'remaining'
-            )
 
 
 @main.route("/services/<uuid:service_id>/templates/<uuid:template_id>/delete", methods=['GET', 'POST'])

@@ -24,22 +24,13 @@ EXCLUDED_ENDPOINTS = tuple(map(Navigation.get_endpoint_with_blueprint, {
     'api_documentation',
     'api_integration',
     'api_keys',
-    'approve_broadcast_message',
     'archive_service',
     'archive_user',
     'bat_phone',
     'begin_tour',
     'billing_details',
     'branding_and_customisation',
-    'broadcast',
-    'broadcast_dashboard',
-    'broadcast_dashboard_previous',
-    'broadcast_dashboard_rejected',
-    'broadcast_dashboard_updates',
-    'broadcast_tour',
-    'broadcast_tour_live',
     'callbacks',
-    'cancel_broadcast_message',
     'cancel_invited_org_user',
     'cancel_invited_user',
     'cancel_job',
@@ -53,9 +44,6 @@ EXCLUDED_ENDPOINTS = tuple(map(Navigation.get_endpoint_with_blueprint, {
     'check_notification',
     'check_tour_notification',
     'choose_account',
-    'choose_broadcast_area',
-    'choose_broadcast_library',
-    'choose_broadcast_sub_area',
     'choose_from_contact_list',
     'choose_service',
     'choose_template',
@@ -163,7 +151,6 @@ EXCLUDED_ENDPOINTS = tuple(map(Navigation.get_endpoint_with_blueprint, {
     'manage_users',
     'message_status',
     'monthly',
-    'new_broadcast',
     'new_password',
     'no_cookie.check_messages_preview',
     'no_cookie.check_notification_preview',
@@ -192,8 +179,6 @@ EXCLUDED_ENDPOINTS = tuple(map(Navigation.get_endpoint_with_blueprint, {
     'platform_admin_reports',
     'platform_admin_returned_letters',
     'platform_admin_splash_page',
-    'preview_broadcast_areas',
-    'preview_broadcast_message',
     'pricing',
     'privacy',
     'public_agreement',
@@ -204,8 +189,6 @@ EXCLUDED_ENDPOINTS = tuple(map(Navigation.get_endpoint_with_blueprint, {
     'register_from_invite',
     'register_from_org_invite',
     'registration_continue',
-    'reject_broadcast_message',
-    'remove_broadcast_area',
     'remove_user_from_organisation',
     'remove_user_from_service',
     'request_to_go_live',
@@ -256,9 +239,6 @@ EXCLUDED_ENDPOINTS = tuple(map(Navigation.get_endpoint_with_blueprint, {
     'service_preview_email_branding',
     'service_preview_letter_branding',
     'service_set_auth_type',
-    'service_confirm_broadcast_account_type',
-    'service_set_broadcast_channel',
-    'service_set_broadcast_network',
     'service_set_channel',
     'service_set_email_branding',
     'service_set_inbound_number',
@@ -333,7 +313,6 @@ EXCLUDED_ENDPOINTS = tuple(map(Navigation.get_endpoint_with_blueprint, {
     'using_notify',
     'verify',
     'verify_email',
-    'view_current_broadcast',
     'view_job',
     'view_job_csv',
     'view_job_updates',
@@ -344,10 +323,8 @@ EXCLUDED_ENDPOINTS = tuple(map(Navigation.get_endpoint_with_blueprint, {
     'view_notification_updates',
     'view_notifications',
     'view_notifications_csv',
-    'view_previous_broadcast',
     'view_provider',
     'view_providers',
-    'view_rejected_broadcast',
     'view_template',
     'view_template_version',
     'view_template_versions',
@@ -355,9 +332,7 @@ EXCLUDED_ENDPOINTS = tuple(map(Navigation.get_endpoint_with_blueprint, {
     'webauthn_complete_register',
     'webauthn_begin_authentication',
     'webauthn_complete_authentication',
-    'who_can_use_notify',
     'who_its_for',
-    'write_new_broadcast',
 }))
 
 
@@ -517,62 +492,6 @@ def test_navigation_urls(
         '/services/{}/usage'.format(SERVICE_ONE_ID),
         '/services/{}/service-settings'.format(SERVICE_ONE_ID),
         '/services/{}/api'.format(SERVICE_ONE_ID),
-    ]
-
-
-def test_navigation_for_services_with_broadcast_permission(
-    mocker,
-    client_request,
-    service_one,
-    mock_get_service_templates,
-    mock_get_template_folders,
-    mock_get_api_keys,
-    active_user_create_broadcasts_permission,
-):
-    service_one['permissions'] += ['broadcast']
-    mocker.patch(
-        'app.user_api_client.get_user',
-        return_value=active_user_create_broadcasts_permission
-    )
-
-    page = client_request.get('main.choose_template', service_id=SERVICE_ONE_ID)
-    assert [
-        a['href'] for a in page.select('.navigation a')
-    ] == [
-        '/services/{}/current-alerts'.format(SERVICE_ONE_ID),
-        '/services/{}/past-alerts'.format(SERVICE_ONE_ID),
-        '/services/{}/rejected-alerts'.format(SERVICE_ONE_ID),
-        '/services/{}/templates'.format(SERVICE_ONE_ID),
-        '/services/{}/users'.format(SERVICE_ONE_ID),
-    ]
-
-
-def test_navigation_for_services_with_broadcast_permission_platform_admin(
-    mocker,
-    client_request,
-    service_one,
-    mock_get_service_templates,
-    mock_get_template_folders,
-    mock_get_api_keys,
-    platform_admin_user,
-):
-    service_one['permissions'] += ['broadcast']
-    mocker.patch(
-        'app.user_api_client.get_user',
-        return_value=platform_admin_user,
-    )
-
-    page = client_request.get('main.choose_template', service_id=SERVICE_ONE_ID)
-    assert [
-        a['href'] for a in page.select('.navigation a')
-    ] == [
-        '/services/{}/current-alerts'.format(SERVICE_ONE_ID),
-        '/services/{}/past-alerts'.format(SERVICE_ONE_ID),
-        '/services/{}/rejected-alerts'.format(SERVICE_ONE_ID),
-        '/services/{}/templates'.format(SERVICE_ONE_ID),
-        '/services/{}/users'.format(SERVICE_ONE_ID),
-        '/services/{}/service-settings'.format(SERVICE_ONE_ID),
-        '/services/{}/api/keys'.format(SERVICE_ONE_ID),
     ]
 
 
