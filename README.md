@@ -2,7 +2,7 @@
 
 Cloned from the brilliant work of the team at [GOV.UK Notify](https://github.com/alphagov/notifications-admin), cheers!
 
-US Notify admin application - https://notifications-admin.app.cloud.gov (contact team for access)
+US Notify admin application - https://notify-demo.app.cloud.gov (contact team for access)
 
  - Register and manage users
  - Create and manage services
