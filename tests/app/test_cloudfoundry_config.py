@@ -23,7 +23,7 @@ def vcap_services():
         }],
         's3': [
             {
-                'name': 'notifications-api-csv-upload-bucket-test',
+                'name': 'notify-api-csv-upload-bucket-test',
                 'credentials': {
                     'access_key_id': 'csv-access',
                     'bucket': 'csv-upload-bucket',
@@ -32,7 +32,7 @@ def vcap_services():
                 }
             },
             {
-                'name': 'notifications-api-contact-list-bucket-test',
+                'name': 'notify-api-contact-list-bucket-test',
                 'credentials': bucket_credentials
             }
         ],
@@ -56,7 +56,7 @@ def test_redis_url_falls_back_to_REDIS_URL():
 def test_s3_bucket_credentials(vcap_services):
     os.environ['VCAP_SERVICES'] = json.dumps(vcap_services)
 
-    assert CloudfoundryConfig().s3_credentials('notifications-api-contact-list-bucket-test') == bucket_credentials
+    assert CloudfoundryConfig().s3_credentials('notify-api-contact-list-bucket-test') == bucket_credentials
 
 
 def test_s3_bucket_credentials_falls_back_to_empty_creds():
