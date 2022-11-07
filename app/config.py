@@ -136,11 +136,11 @@ class Production(Config):
 
     # buckets
     CSV_UPLOAD_BUCKET = cloud_config.s3_credentials(
-        f"notifications-api-csv-upload-bucket-{os.environ['NOTIFY_ENVIRONMENT']}")
+        f"notify-api-csv-upload-bucket-{os.environ['NOTIFY_ENVIRONMENT']}")
     CONTACT_LIST_BUCKET = cloud_config.s3_credentials(
-        f"notifications-api-contact-list-bucket-{os.environ['NOTIFY_ENVIRONMENT']}")
+        f"notify-api-contact-list-bucket-{os.environ['NOTIFY_ENVIRONMENT']}")
     LOGO_UPLOAD_BUCKET = cloud_config.s3_credentials(
-        f"notifications-admin-logo-upload-bucket-{os.environ['NOTIFY_ENVIRONMENT']}")
+        f"notify-admin-logo-upload-bucket-{os.environ['NOTIFY_ENVIRONMENT']}")
 
 
 class Staging(Production):
@@ -155,7 +155,7 @@ class Demo(Staging):
 class Scanning(Production):
     BASIC_AUTH_FORCE = False
     HTTP_PROTOCOL = 'http'
-    API_HOST_NAME = 'https://notifications-api.app.cloud.gov/'
+    API_HOST_NAME = 'https://notify-api-demo.app.cloud.gov/'
     SECRET_KEY = 'dev-notify-secret-key'  # nosec B105 - only used in development
     ADMIN_CLIENT_USER_NAME = 'notify-admin'
     ADMIN_CLIENT_SECRET = 'dev-notify-secret-key'  # nosec B105 - only used in development
