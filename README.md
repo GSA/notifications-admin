@@ -96,3 +96,11 @@ Work through [commit `543be77`](https://github.com/GSA/notifications-admin/commi
 ## Contributing
 
 As stated in [CONTRIBUTING.md](CONTRIBUTING.md), all contributions to this project will be released under the CC0 dedication. By submitting a pull request, you are agreeing to comply with this waiver of copyright interest.
+
+## About the TTS Public Benefits Studio
+
+The Public Benefits Studio is a team inside of [GSA’s Technology Transformation Services](https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services) (TTS), home to innovative programs like [18F](https://18f.gsa.gov/) and [Login.gov](https://login.gov). We collaborate with benefits programs to develop shared technology tools and best practices that reduce the burden of navigating government programs for low income individuals and families.
+
+We’re a cross-functional team of technologists with specialized experience working across public benefits programs like Medicaid, SNAP, and unemployment insurance.
+
+For more information on what we're working on, the Notify tool, and how to get involved with our team, [see our flyer.](https://github.com/GSA/notifications-admin/blob/main/docs/notify-pilot-flyer.md)
