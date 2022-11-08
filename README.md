@@ -1,43 +1,67 @@
-# US Notify Admin
+# Notify UI
 
-Cloned from the brilliant work of the team at [GOV.UK Notify](https://github.com/alphagov/notifications-admin), cheers!
+This is the Notify front-end for government users and admins. To see it in action, check out [the demo site](https://notify-demo.app.cloud.gov) (contact team for credentials).
 
-US Notify admin application - https://notify-demo.app.cloud.gov (contact team for access)
+Through the interface, users can:
 
  - Register and manage users
  - Create and manage services
- - Send batch emails and SMS by uploading a CSV
- - Show history of notifications
+ - Send batch SMS by uploading a CSV
+ - View their history of notifications
 
-## QUICKSTART
+The [Notify API](https://github.com/GSA/notifications-api) provides the UI's backend and is required for most things to function. Set that up first!
 
----
-**NOTE**: Set up the [notifications-api repo](https://github.com/18F/notifications-api) locally **FIRST**, you'll need both the docker network it provides and a functioning api to make use of the notifications-admin repo. It is expected as a byproduct of getting notifications-api running you will also be running VS Code and the Remote Containers extension, and that docker daemon is running and the API is as well.
+## Local setup
 
-Open the notifications-admin repo in VS Code (File->Open Folder, select notifications-admin folder)
+### Direct setup
 
-create a .env file as detailed in the .env Setup section below
+1. Get the API running
 
-Using VS Code's command pallette (cmd+shift+p), search "Remote Containers: Open folder in Container..."
+1. Install [pipenv](https://pipenv.pypa.io/en/latest/)
 
-choose devcontainer-admin folder (note: this is a subfolder of notifications-admin/). This will open a new window, closing the current one in the process. After the new window loads, hit "show logs" link in the bottom-right. If this is the first build it will take a few minutes to create the image. The process completes shortly after running gulp.js and compiling front-end files.
+1. Install Python and Node dependencies
 
-Select View->Open View..., then search/select “ports”. Await a green dot on the port view, then open a new terminal and run the web server:
-`make run-flask`
+    `make bootstrap`
 
-Visit [localhost:6012](http://localhost:6012)
+1. Create the .env file
 
-NOTE: any .py code changes you make should be picked up automatically in development. If you're developing JavaScript code, open another vscode terminal and run `npm run watch` to achieve the same.
+    ```
+    cp sample.env .env
+    # follow the instructions in .env
+    ```
 
----
-## .env Setup
+1. Run the Flask server
 
-create a .env file using sample.env as a template
-`cp sample.env .env` (or via VS Code file browser)
+    `make run-flask`
 
-from the notifications-api checkout, copy the values in that repo's .env file for `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` into this repo's .env file.
+1. Go to http://localhost:6012
 
-Change `BASIC_AUTH_USERNAME` and `BASIC_AUTH_PASSWORD` to what you'd like them to be for this deployment.
+### VS Code && Docker installation
+
+If you're working in VS Code, you can also leverage Docker for a containerized dev environment
+
+1. Get the API running, including the Docker network
+
+1. Create the .env file
+
+    ```
+    cp sample.env .env
+    # follow the instructions in .env
+    ```
+
+1. Install the Remote-Containers plug-in in VS Code
+
+1. Using the command palette (shift+cmd+p) or green button thingy in the bottom left, search and select “Remote Containers: Open Folder in Container...” When prompted, choose **devcontainer-admin** folder (note: this is a *subfolder* of notifications-admin). This will start the container in a new window, replacing the current one.
+
+1. Wait a few minutes while things happen 🍵
+
+1. Open a VS Code terminal and run the Flask application:
+
+    `make run-flask`
+
+1. Go to http://localhost:6012
+
+NOTE: when you change .env in the future, you'll need to rebuild the devcontainer for the change to take effect. VS Code _should_ detect the change and prompt you with a toast notification during a cached build. If not, you can find a manual rebuild in command pallette or just `docker rm` the notifications-api container.
 
 ## To test the application
 From a terminal within the running devcontainer:
@@ -59,7 +83,7 @@ Unlike most of the tests and scans, pa11y-ci cannot currently be run from within
 1. Run `make run-flask` from within the devcontainer
 2. Run `make a11y-scan` from your host computer.
 
-## Further docs [STILL UK DOCS]
+## Further docs from UK
 
 - [Working with static assets](docs/static-assets.md)
 - [JavaScript documentation](https://github.com/alphagov/notifications-manuals/wiki/JavaScript-Documentation)

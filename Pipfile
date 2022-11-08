@@ -1,0 +1,56 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+ago = "==0.0.93"
+awscli-cwlogs = ">=1.4,<1.5"
+blinker = "==1.4"
+fido2 = "==0.9.3"
+flask = "==2.1.2"
+flask-basicauth = "==0.2.0"
+flask-login = "==0.6.1"
+flask-wtf = "==1.0.1"
+gds-metrics = {version = "==0.2.4", ref = "6f1840a57b6fb1ee40b7e84f2f18ec229de8aa72", git = "https://github.com/alphagov/gds_metrics_python.git"}
+govuk-bank-holidays = "==0.11"
+govuk-frontend-jinja = {version = "==0.5.8-alpha", git = "https://github.com/alphagov/govuk-frontend-jinja.git"}
+gunicorn = {version = "==20.1.0", extras = ["eventlet"], ref = "1299ea9e967a61ae2edebe191082fd169b864c64", git = "https://github.com/benoitc/gunicorn.git"}
+humanize = "==4.1.0"
+itsdangerous = "==2.1.2"
+jinja2 = "==3.1.2"
+notifications-python-client = "==6.3.0"
+notifications-utils = {version = "==56.0.3", git = "https://github.com/GSA/notifications-utils.git"}
+prometheus-client = "==0.14.1"
+pyexcel = "==0.7.0"
+pyexcel-io = "==0.6.6"
+pyexcel-ods3 = "==0.6.1"
+pyexcel-xls = "==0.7.0"
+pyexcel-xlsx = "==0.6.0"
+pyproj = "==3.3.1"
+python-dotenv = "==0.20.0"
+pytz = "==2022.1"
+rtreelib = "==0.2.0"
+werkzeug = "==2.1.2"
+wtforms = "==3.0.1"
+
+[dev-packages]
+isort = "==5.10.1"
+pytest = "==7.1.2"
+pytest-env = "==0.6.2"
+pytest-mock = "==3.7.0"
+pytest-xdist = "==2.5.0"
+beautifulsoup4 = "==4.11.1"
+freezegun = "==1.2.1"
+flake8 = "==4.0.1"
+flake8-bugbear = "==22.4.25"
+flake8-print = "==5.0.0"
+moto = "==3.1.7"
+requests-mock = "==1.9.3"
+# used for creating manifest file locally
+jinja2-cli = {version = "==0.8.2", extras = ["yaml"]}
+pip-audit = "*"
+bandit = "*"
+
+[requires]
+python_version = "3.9"
