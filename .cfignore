@@ -1,5 +1,20 @@
 # This file is a copy of .gitignore except for file/folders created by the build
 
+# from deploy-exclude.lst
+*__pycache__*
+.git/*
+app/assets/*
+bower_components/*
+cache/*
+.cache/*
+node_modules/*
+target/*
+venv/*
+.envrc
+.cf/*
+.pytest_cache/*
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
