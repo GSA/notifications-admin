@@ -13,6 +13,9 @@ runs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.9"
+    - name: Install pipenv  
+      shell: bash
+      run: pip install --upgrade pipenv
     - name: Install application dependencies
       shell: bash
       run: make bootstrap

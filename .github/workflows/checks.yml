@@ -21,21 +21,23 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-project
       - name: Run style checks
-        run: flake8 .
+        run: pipenv run flake8 .
       - name: Check imports alphabetized
-        run: isort --check-only ./app ./tests
+        run: pipenv run isort --check-only ./app ./tests
       - name: Run js lint
         run: npm run lint
       - name: Run js tests
         run: npm test
       - name: Run py tests
-        run: pytest -n4 --maxfail=10
+        run: pipenv run pytest -n4 --maxfail=10
 
   dependency-audits:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-project
+      - name: Create requirements.txt
+        run: pipenv requirements > requirements.txt
       - uses: trailofbits/gh-action-pip-audit@v1.0.0
         with:
           inputs: requirements.txt
@@ -48,10 +50,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-project
-      - name: Install bandit
-        run: pip install bandit
       - name: Run scan
-        run: bandit -r app/ --confidence-level medium
+        run: pipenv run bandit -r app/ --confidence-level medium
 
   dynamic-scan:
     runs-on: ubuntu-latest
