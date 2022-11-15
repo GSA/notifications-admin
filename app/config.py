@@ -145,11 +145,15 @@ class Production(Config):
 
 class Staging(Production):
     BASIC_AUTH_FORCE = True
-    HEADER_COLOUR = '#6F72AF'  # $mauve
+    HEADER_COLOUR = '#00ff00'  # $green
 
 
 class Demo(Staging):
-    pass
+    HEADER_COLOUR = '#6F72AF'  # $mauve
+
+
+class Sandbox(Staging):
+    HEADER_COLOUR = '#ff0000'  # $red
 
 
 class Scanning(Production):
@@ -167,5 +171,6 @@ configs = {
     'scanning': Scanning,
     'staging': Staging,
     'demo': Demo,
+    'sandbox': Sandbox,
     'production': Production
 }

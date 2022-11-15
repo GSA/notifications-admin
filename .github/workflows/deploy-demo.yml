@@ -40,6 +40,9 @@ jobs:
 
       - uses: ./.github/actions/setup-project
 
+      - name: Create requirements.txt because Cloud Foundry does a weird pipenv thing
+        run: pipenv requirements > requirements.txt
+
       - name: Deploy to cloud.gov
         uses: 18f/cg-deploy-action@main
         env:
