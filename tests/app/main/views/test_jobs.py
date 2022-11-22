@@ -397,7 +397,6 @@ def test_should_show_letter_job_with_banner_after_sending_before_1730(
         'main.view_job',
         service_id=SERVICE_ONE_ID,
         job_id=fake_uuid,
-        just_sent='yes',
     )
 
     assert page.select('p.bottom-gutter') == []
@@ -425,7 +424,6 @@ def test_should_show_letter_job_with_banner_when_there_are_multiple_CSV_rows(
         'main.view_job',
         service_id=SERVICE_ONE_ID,
         job_id=fake_uuid,
-        just_sent='yes',
     )
 
     assert page.select('p.bottom-gutter') == []
@@ -452,7 +450,6 @@ def test_should_show_letter_job_with_banner_after_sending_after_1730(
         'main.view_job',
         service_id=SERVICE_ONE_ID,
         job_id=fake_uuid,
-        just_sent='yes',
     )
 
     assert page.select('p.bottom-gutter') == []
@@ -474,7 +471,6 @@ def test_should_show_scheduled_job(
         'main.view_job',
         service_id=SERVICE_ONE_ID,
         job_id=fake_uuid,
-        just_sent='yes',
     )
 
     assert normalize_spaces(page.select('main p')[1].text) == (

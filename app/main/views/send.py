@@ -817,7 +817,6 @@ def start_job(service_id, upload_id):
             'main.view_job',
             job_id=upload_id,
             service_id=service_id,
-            just_sent='yes',
         )
     )
 

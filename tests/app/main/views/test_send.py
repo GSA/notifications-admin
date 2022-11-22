@@ -2734,33 +2734,6 @@ def test_create_job_should_call_api(
     )
 
 
-def test_can_start_letters_job(
-    client_request,
-    platform_admin_user,
-    mock_create_job,
-    service_one,
-    fake_uuid
-):
-    with client_request.session_transaction() as session:
-        session['file_uploads'] = {
-            fake_uuid: {
-                'template_id': fake_uuid,
-                'notification_count': 123,
-                'valid': True
-            }
-        }
-
-    client_request.login(platform_admin_user)
-    response = client_request.post_response(
-        'main.start_job',
-        service_id=service_one['id'],
-        upload_id=fake_uuid,
-        _data={},
-        _expected_status=302,
-    )
-    assert 'just_sent=yes' in response.location
-
-
 @pytest.mark.parametrize('filetype, extra_args, expected_values, expected_page', [
     (
         'png',

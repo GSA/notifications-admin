@@ -290,7 +290,6 @@ EXCLUDED_ENDPOINTS = tuple(map(Navigation.get_endpoint_with_blueprint, {
     'upload_contact_list',
     'upload_letter',
     'uploaded_letter_preview',
-    'uploaded_letters',
     'uploads',
     'usage',
     'user_information',

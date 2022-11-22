@@ -12,36 +12,6 @@ from notifications_utils.timezones import (
 )
 
 
-def printing_today_or_tomorrow(created_at):
-    print_cutoff = convert_local_timezone_to_utc(
-        convert_utc_to_local_timezone(datetime.utcnow()).replace(hour=17, minute=30)
-    ).replace(tzinfo=pytz.utc)
-    created_at = convert_utc_to_local_timezone(created_at)
-
-    if created_at < print_cutoff:
-        return 'today'
-    else:
-        return 'tomorrow'
-
-
-def get_letter_printing_statement(status, created_at, long_form=True):
-    created_at_dt = parser.parse(created_at).replace(tzinfo=None)
-    if letter_can_be_cancelled(status, created_at_dt):
-        decription = 'Printing starts' if long_form else 'Printing'
-        return f'{decription} {printing_today_or_tomorrow(created_at)} at 5:30pm'
-    else:
-        printed_datetime = convert_utc_to_local_timezone(created_at) + timedelta(hours=6, minutes=30)
-        if printed_datetime.date() == datetime.now().date():
-            return 'Printed today at 5:30pm'
-        elif printed_datetime.date() == datetime.now().date() - timedelta(days=1):
-            return 'Printed yesterday at 5:30pm'
-
-        printed_date = printed_datetime.strftime('%d %B').lstrip('0')
-        description = 'Printed on' if long_form else 'Printed'
-
-        return f'{description} {printed_date} at 5:30pm'
-
-
 LETTER_VALIDATION_MESSAGES = {
     'letter-not-a4-portrait-oriented': {
         'title': 'Your letter is not A4 portrait size',

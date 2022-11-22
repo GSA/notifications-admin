@@ -35,10 +35,6 @@ from app.main.forms import SearchNotificationsForm
 from app.models.job import Job
 from app.utils import parse_filter_args, set_status_filters
 from app.utils.csv import generate_notifications_csv
-from app.utils.letters import (
-    get_letter_printing_statement,
-    printing_today_or_tomorrow,
-)
 from app.utils.pagination import (
     generate_next_dict,
     generate_previous_dict,
@@ -66,11 +62,6 @@ def view_job(service_id, job_id):
     filter_args = parse_filter_args(request.args)
     filter_args['status'] = set_status_filters(filter_args)
 
-    just_sent_message = 'Your {} been sent. Printing starts {} at 5:30pm.'.format(
-        'letter has' if job.notification_count == 1 else 'letters have',
-        printing_today_or_tomorrow(job.created_at)
-    )
-
     return render_template(
         'views/jobs/job.html',
         job=job,
@@ -82,8 +73,6 @@ def view_job(service_id, job_id):
             status=request.args.get('status', ''),
         ),
         partials=get_job_partials(job),
-        just_sent=request.args.get('just_sent') == 'yes',
-        just_sent_message=just_sent_message,
     )
 
 
@@ -426,7 +415,6 @@ def get_job_partials(job):
         'status': render_template(
             'partials/jobs/status.html',
             job=job,
-            letter_print_day=get_letter_printing_statement("created", job.created_at)
         ),
     }
 

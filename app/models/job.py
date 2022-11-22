@@ -14,7 +14,6 @@ from app.notify_client.job_api_client import job_api_client
 from app.notify_client.notification_api_client import notification_api_client
 from app.notify_client.service_api_client import service_api_client
 from app.utils import set_status_filters
-from app.utils.letters import get_letter_printing_statement
 from app.utils.time import is_less_than_days_ago
 
 
@@ -155,20 +154,6 @@ class Job(JSONModel):
             return False
 
         return True
-
-    @property
-    def letter_printing_statement(self):
-        if self.upload_type != 'letter_day':
-            raise TypeError()
-        return get_letter_printing_statement(
-            'created',
-            # We have to make the time just before 5:30pm because a
-            # letter uploaded at 5:30pm will be printed the next day
-            (
-                convert_utc_to_local_timezone(self.created_at) - timedelta(minutes=1)
-            ).astimezone(pytz.utc).isoformat(),
-            long_form=False,
-        )
 
     @cached_property
     def all_notifications(self):

@@ -10,31 +10,17 @@
 {% endblock %}
 
 {% block backLink %}
-  {% if not just_sent %}
-    {{ govukBackLink({ "href": url_for('main.uploads', service_id=current_service.id) }) }}
-  {% endif %}
+  {{ govukBackLink({ "href": url_for('main.uploads', service_id=current_service.id) }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
 
     {{ page_header(job.original_file_name) }}
 
-    {% if just_sent and job.template_type == 'letter' %}
-      {{ banner(just_sent_message, type='default', with_tick=True) }}
-    {% else %}
-      {{ ajax_block(partials, updates_url, 'status', finished=job.processing_finished) }}
-    {% endif %}
+    {{ ajax_block(partials, updates_url, 'status', finished=job.processing_finished) }}
     {{ ajax_block(partials, updates_url, 'counts', finished=job.processing_finished) }}
     {{ ajax_block(partials, updates_url, 'notifications', finished=job.processing_finished) }}
 
-    {% if job.letter_job_can_be_cancelled %}
-      <div class="js-stick-at-bottom-when-scrolling">
-        <div class="page-footer">
-          <span class="page-footer-link page-footer-delete-link-without-button">
-            <a class="govuk-link govuk-link--destructive" href="{{ url_for('main.cancel_letter_job', service_id=current_service.id, job_id=job.id) }}">Cancel sending these letters</a>
-          </span>
-    {% else %}
-      <div>&nbsp;</div>
-    {% endif %}
+    <div>&nbsp;</div>
 
 {% endblock %}

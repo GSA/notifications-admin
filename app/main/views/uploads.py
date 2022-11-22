@@ -49,7 +49,6 @@ from app.template_previews import TemplatePreview, sanitise_letter
 from app.utils import unicode_truncate
 from app.utils.csv import Spreadsheet, get_errors_for_csv
 from app.utils.letters import (
-    get_letter_printing_statement,
     get_letter_validation_error,
 )
 from app.utils.pagination import (
@@ -93,59 +92,6 @@ def uploads(service_id):
         next_page=next_page,
         now=datetime.utcnow().isoformat(),
     )
-
-
-@main.route("/services/<uuid:service_id>/uploaded-letters/<simple_date:letter_print_day>")
-@user_has_permissions()
-def uploaded_letters(service_id, letter_print_day):
-    page = get_page_from_request()
-    if page is None:
-        abort(404, "Invalid page argument ({}).".format(request.args.get('page')))
-    uploaded_letters = upload_api_client.get_letters_by_service_and_print_day(
-        current_service.id, letter_print_day=letter_print_day, page=page,
-    )
-
-    prev_page = None
-    if uploaded_letters['links'].get('prev'):
-        prev_page = generate_previous_dict('.uploaded_letters', service_id, page, url_args={
-            'letter_print_day': letter_print_day
-        })
-    next_page = None
-    if uploaded_letters['links'].get('next'):
-        next_page = generate_next_dict('.uploaded_letters', service_id, page, url_args={
-            'letter_print_day': letter_print_day
-        })
-    return render_template(
-        'views/uploads/uploaded-letters.html',
-        notifications=add_preview_of_content_uploaded_letters(
-            uploaded_letters['notifications']
-        ),
-        prev_page=prev_page,
-        next_page=next_page,
-        show_pagination=True,
-        total=uploaded_letters['total'],
-        letter_printing_statement=get_letter_printing_statement(
-            'created',
-            letter_print_day,
-        ),
-        letter_print_day=letter_print_day,
-        single_notification_url=partial(
-            url_for,
-            '.view_notification',
-            service_id=current_service.id,
-            from_uploaded_letters=letter_print_day,
-        )
-    )
-
-
-def add_preview_of_content_uploaded_letters(notifications):
-
-    for notification in notifications:
-        yield(dict(
-            preview_of_content=', '.join(notification.pop('to').splitlines()),
-            to=notification['client_reference'],
-            **notification
-        ))
 
 
 @main.route("/services/<uuid:service_id>/upload-letter", methods=['GET', 'POST'])

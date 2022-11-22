@@ -44,7 +44,6 @@ from app.utils import (
 )
 from app.utils.csv import generate_notifications_csv
 from app.utils.letters import (
-    get_letter_printing_statement,
     get_letter_validation_error,
 )
 from app.utils.templates import get_template
@@ -120,7 +119,6 @@ def view_notification(service_id, notification_id):
     else:
         job = None
 
-    letter_print_day = get_letter_printing_statement(notification['status'], notification['created_at'])
 
     notification_created = parser.parse(notification['created_at']).replace(tzinfo=None)
 
@@ -137,12 +135,6 @@ def view_notification(service_id, notification_id):
             'main.view_job',
             service_id=current_service.id,
             job_id=request.args.get('from_job'),
-        )
-    elif request.args.get('from_uploaded_letters'):
-        back_link = url_for(
-            'main.uploaded_letters',
-            service_id=current_service.id,
-            letter_print_day=request.args.get('from_uploaded_letters'),
         )
     else:
         back_link = url_for(
@@ -185,7 +177,6 @@ def view_notification(service_id, notification_id):
         postage=notification['postage'],
         can_receive_inbound=(current_service.has_permission('inbound_sms')),
         is_precompiled_letter=notification['template']['is_precompiled_letter'],
-        letter_print_day=letter_print_day,
         show_cancel_button=show_cancel_button,
         sent_with_test_key=(
             notification.get('key_type') == KEY_TYPE_TEST
