@@ -4,7 +4,7 @@ from itertools import chain
 from numbers import Number
 
 import pytz
-from flask import Markup, render_template, request
+from flask import Markup, current_app, render_template, request
 from flask_login import current_user
 from flask_wtf import FlaskForm as Form
 from flask_wtf.file import FileAllowed
@@ -77,8 +77,8 @@ def get_time_value_and_label(future_time):
     return (
         future_time.replace(tzinfo=None).isoformat(),
         '{} at {}'.format(
-            get_human_day(future_time.astimezone(pytz.timezone('Europe/London'))),
-            get_human_time(future_time.astimezone(pytz.timezone('Europe/London')))
+            get_human_day(future_time.astimezone(pytz.timezone(current_app.config['TIMEZONE']))),
+            get_human_time(future_time.astimezone(pytz.timezone(current_app.config['TIMEZONE'])))
         )
     )
 

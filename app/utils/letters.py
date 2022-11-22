@@ -7,17 +7,16 @@ from notifications_utils.formatters import unescaped_formatted_list
 from notifications_utils.letter_timings import letter_can_be_cancelled
 from notifications_utils.postal_address import PostalAddress
 from notifications_utils.timezones import (
-    convert_bst_to_utc,
-    convert_utc_to_bst,
-    utc_string_to_aware_gmt_datetime,
+    convert_local_timezone_to_utc,
+    convert_utc_to_local_timezone,
 )
 
 
 def printing_today_or_tomorrow(created_at):
-    print_cutoff = convert_bst_to_utc(
-        convert_utc_to_bst(datetime.utcnow()).replace(hour=17, minute=30)
+    print_cutoff = convert_local_timezone_to_utc(
+        convert_utc_to_local_timezone(datetime.utcnow()).replace(hour=17, minute=30)
     ).replace(tzinfo=pytz.utc)
-    created_at = utc_string_to_aware_gmt_datetime(created_at)
+    created_at = convert_utc_to_local_timezone(created_at)
 
     if created_at < print_cutoff:
         return 'today'
@@ -31,7 +30,7 @@ def get_letter_printing_statement(status, created_at, long_form=True):
         decription = 'Printing starts' if long_form else 'Printing'
         return f'{decription} {printing_today_or_tomorrow(created_at)} at 5:30pm'
     else:
-        printed_datetime = utc_string_to_aware_gmt_datetime(created_at) + timedelta(hours=6, minutes=30)
+        printed_datetime = convert_utc_to_local_timezone(created_at) + timedelta(hours=6, minutes=30)
         if printed_datetime.date() == datetime.now().date():
             return 'Printed today at 5:30pm'
         elif printed_datetime.date() == datetime.now().date() - timedelta(days=1):

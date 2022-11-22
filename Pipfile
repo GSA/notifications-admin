@@ -20,7 +20,7 @@ humanize = "==4.1.0"
 itsdangerous = "==2.1.2"
 jinja2 = "==3.1.2"
 notifications-python-client = "==6.3.0"
-notifications-utils = {version = "==56.0.3", git = "https://github.com/GSA/notifications-utils.git"}
+notifications-utils = {editable = true, ref = "987646ec18d32dfe8b4ea55b83d68e31e2f85104", git = "https://github.com/GSA/notifications-utils"}
 prometheus-client = "==0.14.1"
 pyexcel = "==0.7.0"
 pyexcel-io = "==0.6.6"

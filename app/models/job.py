@@ -6,7 +6,7 @@ from notifications_utils.letter_timings import (
     get_letter_timings,
     letter_can_be_cancelled,
 )
-from notifications_utils.timezones import utc_string_to_aware_gmt_datetime
+from notifications_utils.timezones import convert_utc_to_local_timezone
 from werkzeug.utils import cached_property
 
 from app.models import JSONModel, ModelList, PaginatedModelList
@@ -150,7 +150,7 @@ class Job(JSONModel):
 
         if not letter_can_be_cancelled(
             'created',
-            utc_string_to_aware_gmt_datetime(self.created_at).replace(tzinfo=None)
+            convert_utc_to_local_timezone(self.created_at).replace(tzinfo=None)
         ):
             return False
 
@@ -165,7 +165,7 @@ class Job(JSONModel):
             # We have to make the time just before 5:30pm because a
             # letter uploaded at 5:30pm will be printed the next day
             (
-                utc_string_to_aware_gmt_datetime(self.created_at) - timedelta(minutes=1)
+                convert_utc_to_local_timezone(self.created_at) - timedelta(minutes=1)
             ).astimezone(pytz.utc).isoformat(),
             long_form=False,
         )

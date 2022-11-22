@@ -16,7 +16,7 @@ from notifications_python_client.errors import HTTPError
 from notifications_utils.clients.zendesk.zendesk_client import (
     NotifySupportTicket,
 )
-from notifications_utils.timezones import utc_string_to_aware_gmt_datetime
+from notifications_utils.timezones import convert_utc_to_local_timezone
 
 from app import (
     billing_api_client,
@@ -440,8 +440,8 @@ def get_service_verify_reply_to_address_partials(service_id, notification_id):
                     is_default=is_default
                 )
     seconds_since_sending = (
-        utc_string_to_aware_gmt_datetime(datetime.utcnow().isoformat()) -
-        utc_string_to_aware_gmt_datetime(notification['created_at'])
+        convert_utc_to_local_timezone(datetime.utcnow().isoformat()) -
+        convert_utc_to_local_timezone(notification['created_at'])
     ).seconds
     if notification["status"] in FAILURE_STATUSES or (
         notification["status"] in SENDING_STATUSES and

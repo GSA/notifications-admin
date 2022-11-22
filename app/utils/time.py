@@ -2,11 +2,11 @@ from datetime import datetime
 
 import pytz
 from dateutil import parser
-from notifications_utils.timezones import utc_string_to_aware_gmt_datetime
+from notifications_utils.timezones import convert_utc_to_local_timezone
 
 
 def get_current_financial_year():
-    now = utc_string_to_aware_gmt_datetime(
+    now = convert_utc_to_local_timezone(
         datetime.utcnow()
     )
     current_month = int(now.strftime('%-m'))
