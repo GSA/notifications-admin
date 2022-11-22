@@ -75,10 +75,12 @@ def format_datetime_numeric(date):
 
 
 def format_date_numeric(date):
+    date = dateutil.parser.parse(date, ignoretz=True)
     return convert_utc_to_local_timezone(date).strftime('%Y-%m-%d')
 
 
 def format_time_24h(date):
+    date = dateutil.parser.parse(date, ignoretz=True)
     return convert_utc_to_local_timezone(date).strftime('%H:%M')
 
 
@@ -119,14 +121,17 @@ def format_time(date):
 
 
 def format_date(date):
+    date = dateutil.parser.parse(date, ignoretz=True)
     return convert_utc_to_local_timezone(date).strftime('%A %d %B %Y')
 
 
 def format_date_normal(date):
+    date = dateutil.parser.parse(date, ignoretz=True)
     return convert_utc_to_local_timezone(date).strftime('%d %B %Y').lstrip('0')
 
 
 def format_date_short(date):
+    date = dateutil.parser.parse(date, ignoretz=True)
     return _format_datetime_short(convert_utc_to_local_timezone(date))
 
 
@@ -142,6 +147,7 @@ def format_datetime_human(date, date_prefix=''):
 
 
 def format_day_of_week(date):
+    date = dateutil.parser.parse(date, ignoretz=True)
     return convert_utc_to_local_timezone(date).strftime('%A')
 
 

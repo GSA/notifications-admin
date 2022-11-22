@@ -104,6 +104,7 @@ def get_human_day(time, prefix_today_with='T'):
 
 
 def get_furthest_possible_scheduled_time():
+    # TODO: update this so it pulls in 4 days at local timezone, not UTC
     return (datetime.utcnow() + timedelta(days=4)).replace(hour=0)
 
 
