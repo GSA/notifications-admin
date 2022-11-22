@@ -34,19 +34,19 @@
   <li class="get-started-list__item">
     <h2 class="get-started-list__heading">Set up your service</h2>
     {% if not current_user.is_authenticated or not current_service %}
-    <p class="govuk-body">Review your settings to add message branding, reply-to addresses and sender information.</p>
+    <p class="govuk-body">Review your settings to add message branding and sender information.</p>
     <p class="govuk-body">Add team members and check their permissions.</p>
     {% else %}
-    <p class="govuk-body">Review your <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.service_settings', service_id=current_service.id) }}">settings</a> to add message branding, reply-to addresses and sender information.</p>
+    <p class="govuk-body">Review your <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.service_settings', service_id=current_service.id) }}">settings</a> to add message branding and sender information.</p>
     <p class="govuk-body">Add <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.manage_users', service_id=current_service.id) }}">team members</a> and check their permissions.</p>
     {% endif %}
   </li>
 
-  <li class="get-started-list__item">
+  <!-- <li class="get-started-list__item">
     <h2 class="get-started-list__heading">Set up an API integration (optional)</h2>
     <p class="govuk-body">You can use the Notify API to send messages automatically.</p>
     <p class="govuk-body">Our <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.documentation') }}">documentation</a> explains how to integrate the API with a web application or back office system.</p>
-  </li>
+  </li> -->
 
   <li class="get-started-list__item">
     <h2 class="get-started-list__heading">Start sending messages</h2>
@@ -55,7 +55,7 @@
     {% else %}
     <p class="govuk-body">You should <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.request_to_go_live', service_id=current_service.id) }}">request to go live</a> when you’re ready to send messages to people outside your team. We’ll approve your request within one working day.</p>
     {% endif %}
-    <p class="govuk-body">Check <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.how_to_pay') }}">how to pay</a> if you’re planning to send letters or exceed the <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.pricing', _anchor='text-messages') }}">free text message allowance</a>.</p>
+    <p class="govuk-body">Check <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.how_to_pay') }}">how to pay</a> if you’re planning to exceed the <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.pricing', _anchor='text-messages') }}">free text message allowance</a>.</p>
   </li>
 
 </ol>
