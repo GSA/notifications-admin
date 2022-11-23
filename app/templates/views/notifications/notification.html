@@ -50,20 +50,7 @@
       {{ template|string }}
     </div>
 
-    {% if template.template_type == 'letter' %}
-      <div class="js-stick-at-bottom-when-scrolling">
-        <div class="page-footer">
-          {% if show_cancel_button %}
-            <span class="page-footer-delete-link page-footer-delete-link-without-button">
-              <a class="govuk-link govuk-link--destructive" href="{{ url_for('main.cancel_letter', service_id=current_service.id, notification_id=notification_id) }}">Cancel sending this letter</a>
-            </span>
-          {% else %}
-            <div>&nbsp;</div>
-          {% endif %}
-          <a class="govuk-link govuk-link--no-visited-state page-footer-right-aligned-link-without-button" href="{{ url_for('main.view_letter_notification_as_preview', service_id=current_service.id, notification_id=notification_id, filetype='pdf') }}" download>Download as a PDF</a>
-        </div>
-      </div>
-    {% elif template.template_type == 'email' %}
+    {% if template.template_type == 'email' %}
       <div class="js-stick-at-bottom-when-scrolling">
         {{ ajax_block(partials, updates_url, 'status', finished=finished) }}
       </div>

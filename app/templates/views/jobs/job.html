@@ -9,10 +9,6 @@
   {{ job.original_file_name }}
 {% endblock %}
 
-{% block backLink %}
-  {{ govukBackLink({ "href": url_for('main.uploads', service_id=current_service.id) }) }}
-{% endblock %}
-
 {% block maincolumn_content %}
 
     {{ page_header(job.original_file_name) }}

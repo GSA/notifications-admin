@@ -112,29 +112,6 @@ def cancel_job(service_id, job_id):
     return redirect(url_for('main.service_dashboard', service_id=service_id))
 
 
-@main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>/cancel", methods=['GET', 'POST'])
-@user_has_permissions()
-def cancel_letter_job(service_id, job_id):
-    if request.method == 'POST':
-        job = Job.from_id(job_id, service_id=service_id)
-
-        if job.status != 'finished' or job.notifications_created < job.notification_count:
-            flash("We are still processing these letters, please try again in a minute.", 'try again')
-            return view_job(service_id, job_id)
-        try:
-            number_of_letters = job.cancel()
-        except HTTPError as e:
-            flash(e.message, 'dangerous')
-            return redirect(url_for('main.view_job', service_id=service_id, job_id=job_id))
-        flash("Cancelled {} letters from {}".format(
-            format_thousands(number_of_letters), job.original_file_name
-        ), 'default_with_tick')
-        return redirect(url_for('main.service_dashboard', service_id=service_id))
-
-    flash("Are you sure you want to cancel sending these letters?", 'cancel')
-    return view_job(service_id, job_id)
-
-
 @main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>.json")
 @user_has_permissions()
 def view_job_updates(service_id, job_id):

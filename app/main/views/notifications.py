@@ -185,31 +185,6 @@ def view_notification(service_id, notification_id):
     )
 
 
-@main.route("/services/<uuid:service_id>/notification/<uuid:notification_id>/cancel", methods=['GET', 'POST'])
-@user_has_permissions('view_activity', 'send_messages')
-def cancel_letter(service_id, notification_id):
-
-    if request.method == 'POST':
-        try:
-            notification_api_client.update_notification_to_cancelled(current_service.id, notification_id)
-        except HTTPError as e:
-            message_fragments = ["already been cancelled", "too late to cancel"]
-            if e.status_code == 400 and any(fragment in e.message for fragment in message_fragments):
-                flash(e.message)
-            else:
-                raise e
-        return redirect(url_for('main.view_notification', service_id=service_id, notification_id=notification_id))
-
-    flash("Are you sure you want to cancel sending this letter?", 'cancel')
-    return view_notification(service_id, notification_id)
-
-
-def get_preview_error_image():
-    path = os.path.join(os.path.dirname(__file__), "..", "..", "static", "images", "preview_error.png")
-    with open(path, "rb") as file:
-        return file.read()
-
-
 @main.route("/services/<uuid:service_id>/notification/<uuid:notification_id>.<letter_file_extension:filetype>")
 @user_has_permissions('view_activity', 'send_messages')
 def view_letter_notification_as_preview(

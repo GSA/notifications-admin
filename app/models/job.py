@@ -199,10 +199,7 @@ class Job(JSONModel):
         )
 
     def cancel(self):
-        if self.template_type == 'letter':
-            return job_api_client.cancel_letter_job(self.service, self.id)
-        else:
-            return job_api_client.cancel_job(self.service, self.id)
+        return job_api_client.cancel_job(self.service, self.id)
 
 
 class ImmediateJobs(ModelList):

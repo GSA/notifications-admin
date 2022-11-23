@@ -230,7 +230,7 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_messages(
     banner = page.select('a.banner-dashboard')[1]
     assert normalize_spaces(
         banner.text
-    ) == '9,999 text messages received latest message just now'
+    ) == '9,999 text messages received latest message 5 hours ago'
     assert banner['href'] == url_for(
         'main.inbox', service_id=SERVICE_ONE_ID
     )
@@ -264,14 +264,14 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_no_messages(
 
 
 @pytest.mark.parametrize('index, expected_row', enumerate([
-    '07900 900000 message-1 1 hour ago',
-    '07900 900000 message-2 1 hour ago',
-    '07900 900000 message-3 1 hour ago',
-    '07900 900002 message-4 3 hours ago',
-    '+33 1 12 34 56 78 message-5 5 hours ago',
-    '+1 202-555-0104 message-6 7 hours ago',
-    '+1 202-555-0104 message-7 9 hours ago',
-    '+682 12345 message-8 9 hours ago',
+    '07900 900000 message-1 6 hours ago',
+    '07900 900000 message-2 6 hours ago',
+    '07900 900000 message-3 6 hours ago',
+    '07900 900002 message-4 8 hours ago',
+    '+33 1 12 34 56 78 message-5 10 hours ago',
+    '+1 202-555-0104 message-6 12 hours ago',
+    '+1 202-555-0104 message-7 14 hours ago',
+    '+682 12345 message-8 14 hours ago',
 ]))
 def test_inbox_showing_inbound_messages(
     client_request,
@@ -411,7 +411,7 @@ def test_view_inbox_updates(
     mock_get_partials.assert_called_once_with(SERVICE_ONE_ID)
 
 
-@freeze_time("2016-07-01 13:00")
+@freeze_time("2016-07-01 18:00")
 def test_download_inbox(
     client_request,
     mock_get_inbound_sms,
@@ -496,115 +496,6 @@ def test_returned_letters_not_visible_if_service_has_no_returned_letters(
         service_id=SERVICE_ONE_ID,
     )
     assert not page.select('#total-returned-letters')
-
-
-@pytest.mark.parametrize('reporting_date, expected_message', (
-    ('2020-01-10 00:00:00.000000', (
-        '4,000 returned letters latest report today'
-    )),
-    ('2020-01-09 23:59:59.000000', (
-        '4,000 returned letters latest report yesterday'
-    )),
-    ('2020-01-08 12:12:12.000000', (
-        '4,000 returned letters latest report 2 days ago'
-    )),
-    ('2019-12-10 00:00:00.000000', (
-        '4,000 returned letters latest report 1 month ago'
-    )),
-))
-@freeze_time('2020-01-10 12:34:00.000000')
-def test_returned_letters_shows_count_of_recently_returned_letters(
-    client_request,
-    mocker,
-    service_one,
-    mock_get_service_templates_when_no_templates_exist,
-    mock_get_jobs,
-    mock_get_scheduled_job_stats,
-    mock_get_service_statistics,
-    mock_get_template_statistics,
-    mock_get_annual_usage_for_service,
-    mock_get_free_sms_fragment_limit,
-    mock_get_inbound_sms_summary,
-    reporting_date,
-    expected_message,
-):
-    mocker.patch(
-        'app.service_api_client.get_returned_letter_statistics',
-        return_value={
-            'returned_letter_count': 4000,
-            'most_recent_report': reporting_date,
-        },
-    )
-    page = client_request.get(
-        'main.service_dashboard',
-        service_id=SERVICE_ONE_ID,
-    )
-    banner = page.select_one('#total-returned-letters')
-    assert normalize_spaces(banner.text) == expected_message
-    assert banner['href'] == url_for(
-        'main.returned_letter_summary', service_id=SERVICE_ONE_ID
-    )
-
-
-@pytest.mark.parametrize('reporting_date, count, expected_message', (
-    ('2020-02-02', 1, (
-        '1 returned letter latest report today'
-    )),
-    ('2020-02-01', 1, (
-        '1 returned letter latest report yesterday'
-    )),
-    ('2020-01-31', 1, (
-        '1 returned letter latest report 2 days ago'
-    )),
-    ('2020-01-26', 1, (
-        '1 returned letter latest report 7 days ago'
-    )),
-    ('2020-01-25', 0, (
-        '0 returned letters latest report 8 days ago'
-    )),
-    ('2020-01-01', 0, (
-        '0 returned letters latest report 1 month ago'
-    )),
-    ('2019-09-09', 0, (
-        '0 returned letters latest report 4 months ago'
-    )),
-    ('2010-10-10', 0, (
-        '0 returned letters latest report 9 years ago'
-    )),
-))
-@freeze_time('2020-02-02')
-def test_returned_letters_only_counts_recently_returned_letters(
-    client_request,
-    mocker,
-    service_one,
-    mock_get_service_templates_when_no_templates_exist,
-    mock_get_jobs,
-    mock_get_scheduled_job_stats,
-    mock_get_service_statistics,
-    mock_get_template_statistics,
-    mock_get_annual_usage_for_service,
-    mock_get_free_sms_fragment_limit,
-    mock_get_inbound_sms_summary_with_no_messages,
-    reporting_date,
-    count,
-    expected_message,
-):
-    mocker.patch(
-        'app.service_api_client.get_returned_letter_statistics',
-        return_value={
-            'returned_letter_count': count,
-            'most_recent_report': reporting_date,
-        },
-    )
-    page = client_request.get(
-        'main.service_dashboard',
-        service_id=SERVICE_ONE_ID,
-    )
-    banner = page.select_one('#total-returned-letters')
-    assert normalize_spaces(banner.text) == expected_message
-    assert banner['href'] == url_for(
-        'main.returned_letter_summary', service_id=SERVICE_ONE_ID
-    )
 
 
 def test_should_show_recent_templates_on_dashboard(
@@ -846,7 +737,7 @@ def test_should_show_upcoming_jobs_on_dashboard(
         page.select_one('a.banner-dashboard').text
     ) == (
         '2 files waiting to send '
-        'sending starts today at 11:09am'
+        'sending starts today at 6:09am'
     )
 
     assert page.select_one('a.banner-dashboard')['href'] == url_for(

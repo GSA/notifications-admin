@@ -1471,7 +1471,7 @@ def mock_get_scheduled_job(mocker, api_user_active):
             api_user_active,
             job_id=job_id,
             job_status='scheduled',
-            scheduled_for='2016-01-02T00:00:00.061258'
+            scheduled_for='2016-01-02T05:00:00.061258'
         )}
 
     return mocker.patch('app.job_api_client.get_job', side_effect=_get_job)
@@ -3368,20 +3368,20 @@ def mock_get_service_history(mocker):
         'service_history': [
             {
                 'name': 'Example service',
-                'created_at': '2010-10-10T01:01:01.000000Z',
+                'created_at': '2010-10-10T06:01:01.000000Z',
                 'updated_at': None,
                 'created_by_id': uuid4(),
             },
             {
                 'name': 'Before lunch',
-                'created_at': '2010-10-10T01:01:01.000000Z',
-                'updated_at': '2012-12-12T12:12:12.000000Z',
+                'created_at': '2010-10-10T06:01:01.000000Z',
+                'updated_at': '2012-12-12T17:12:12.000000Z',
                 'created_by_id': sample_uuid(),
             },
             {
                 'name': 'After lunch',
-                'created_at': '2010-10-10T01:01:01.000000Z',
-                'updated_at': '2012-12-12T13:13:13.000000Z',
+                'created_at': '2010-10-10T06:01:01.000000Z',
+                'updated_at': '2012-12-12T18:13:13.000000Z',
                 'created_by_id': sample_uuid(),
             },
         ],
@@ -3389,25 +3389,25 @@ def mock_get_service_history(mocker):
             {
                 'name': 'Good key',
                 'updated_at': None,
-                'created_at': '2010-10-10T10:10:10.000000Z',
+                'created_at': '2010-10-10T15:10:10.000000Z',
                 'created_by_id': sample_uuid(),
             },
             {
                 'name': 'Bad key',
-                'updated_at': '2012-11-11T12:12:12.000000Z',
-                'created_at': '2011-11-11T11:11:11.000000Z',
+                'updated_at': '2012-11-11T17:12:12.000000Z',
+                'created_at': '2011-11-11T16:11:11.000000Z',
                 'created_by_id': sample_uuid(),
             },
             {
                 'name': 'Bad key',
                 'updated_at': None,
-                'created_at': '2011-11-11T11:11:11.000000Z',
+                'created_at': '2011-11-11T16:11:11.000000Z',
                 'created_by_id': sample_uuid(),
             },
             {
                 'name': 'Key event returned in non-chronological order',
                 'updated_at': None,
-                'created_at': '2010-10-10T09:09:09.000000Z',
+                'created_at': '2010-10-10T14:09:09.000000Z',
                 'created_by_id': sample_uuid(),
             },
         ],

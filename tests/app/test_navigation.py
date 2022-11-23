@@ -34,8 +34,6 @@ EXCLUDED_ENDPOINTS = tuple(map(Navigation.get_endpoint_with_blueprint, {
     'cancel_invited_org_user',
     'cancel_invited_user',
     'cancel_job',
-    'cancel_letter',
-    'cancel_letter_job',
     'change_user_auth',
     'check_and_resend_text_code',
     'check_and_resend_verification_code',
