@@ -1647,7 +1647,7 @@ def test_organisation_billing_page_when_the_agreement_is_signed_by_a_known_perso
     organisation_one['agreement_signed_version'] = 2.5
     organisation_one['agreement_signed_by_id'] = signed_by_id
     organisation_one['agreement_signed_on_behalf_of_name'] = signed_by_name
-    organisation_one['agreement_signed_at'] = 'Thu, 20 Feb 2020 00:00:00 GMT'
+    organisation_one['agreement_signed_at'] = 'Thu, 20 Feb 2020 06:00:00 GMT'
 
     mocker.patch('app.organisations_client.get_organisation', return_value=organisation_one)
 

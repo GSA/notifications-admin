@@ -4,6 +4,7 @@ from operator import itemgetter
 from statistics import mean
 
 from flask import render_template
+from notifications_utils.timezones import convert_utc_to_local_timezone
 
 from app import performance_dashboard_api_client, status_api_client
 from app.main import main
@@ -12,8 +13,8 @@ from app.main import main
 @main.route("/performance")
 def performance():
     stats = performance_dashboard_api_client.get_performance_dashboard_stats(
-        start_date=(datetime.utcnow() - timedelta(days=7)).date(),
-        end_date=datetime.utcnow().date(),
+        start_date=(convert_utc_to_local_timezone(datetime.utcnow()) - timedelta(days=7)).date(),
+        end_date=convert_utc_to_local_timezone(datetime.utcnow()).date(),
     )
     stats['organisations_using_notify'] = sorted(
         [

@@ -4226,14 +4226,14 @@ def test_redirects_to_template_if_job_exists_already(
         'email',
         '6ce466d0-fd6a-11e5-82f5-e0accb9d11a6',
         ['EmergencyContactList.xls'],
-        'Uploaded today at 10:59am',
+        'Uploaded today at 5:59am',
         '100 email addresses',
     ),
     (
         'sms',
         'd7b0bd1a-d1c7-4621-be5c-3c1b4278a2ad',
         ['phone number list.csv', 'UnusedList.tsv'],
-        'Uploaded today at 1:00pm',
+        'Uploaded today at 8:00am',
         '123 phone numbers',
     ),
 ))

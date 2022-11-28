@@ -106,7 +106,7 @@ def _get_example_performance_data():
     }
 
 
-@freeze_time('2021-01-01')
+@freeze_time('2021-01-01 12:00')
 def test_should_render_performance_page(
     mocker,
     client_request,
