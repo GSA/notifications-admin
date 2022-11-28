@@ -355,20 +355,14 @@ def get_job_partials(job):
     filter_args = parse_filter_args(request.args)
     filter_args['status'] = set_status_filters(filter_args)
     notifications = job.get_notifications(status=filter_args['status'])
-    if job.template_type == 'letter':
-        counts = render_template(
-            'partials/jobs/count-letters.html',
-            job=job,
-        )
-    else:
-        counts = render_template(
-            'partials/count.html',
-            counts=_get_job_counts(job),
-            status=filter_args['status'],
-            notifications_deleted=(
-                job.status == 'finished' and not notifications['notifications']
-            ),
-        )
+    counts = render_template(
+        'partials/count.html',
+        counts=_get_job_counts(job),
+        status=filter_args['status'],
+        notifications_deleted=(
+            job.status == 'finished' and not notifications['notifications']
+        ),
+    )
     service_data_retention_days = current_service.get_days_of_retention(job.template_type)
 
     return {
