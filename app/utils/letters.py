@@ -1,11 +1,6 @@
-from datetime import datetime, timedelta
-
-import pytz
-from dateutil import parser
 from flask import url_for
 from notifications_utils.formatters import unescaped_formatted_list
 from notifications_utils.postal_address import PostalAddress
-
 
 LETTER_VALIDATION_MESSAGES = {
     'letter-not-a4-portrait-oriented': {

@@ -1,12 +1,7 @@
-from datetime import timedelta
-
-import pytz
 from notifications_utils.letter_timings import (
     CANCELLABLE_JOB_LETTER_STATUSES,
     get_letter_timings,
-    letter_can_be_cancelled,
 )
-from notifications_utils.timezones import convert_utc_to_local_timezone
 from werkzeug.utils import cached_property
 
 from app.models import JSONModel, ModelList, PaginatedModelList

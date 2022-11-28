@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 from flask import url_for
 from freezegun import freeze_time
 
-from app.main.forms import FieldWithNoneOption
 from tests.conftest import SERVICE_ONE_ID, normalize_spaces, sample_uuid
 
 

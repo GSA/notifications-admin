@@ -1,5 +1,4 @@
 import json
-import uuid
 from datetime import datetime, timezone
 
 import pytest
@@ -7,13 +6,11 @@ from flask import url_for
 from freezegun import freeze_time
 
 from app.main.views.jobs import get_time_left
-from tests import job_json, notification_json, sample_uuid, user_json
+from tests import job_json, sample_uuid, user_json
 from tests.conftest import (
     SERVICE_ONE_ID,
     create_active_caseworking_user,
     create_active_user_with_permissions,
-    create_notifications,
-    create_template,
     normalize_spaces,
 )
 

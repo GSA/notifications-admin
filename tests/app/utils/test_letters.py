@@ -1,11 +1,8 @@
 import pytest
 from bs4 import BeautifulSoup
 from flask import url_for
-from freezegun import freeze_time
 
-from app.utils.letters import (
-    get_letter_validation_error,
-)
+from app.utils.letters import get_letter_validation_error
 
 
 @pytest.mark.parametrize('error_message, invalid_pages, expected_title, expected_content, expected_summary', [

@@ -3,7 +3,6 @@ import itertools
 import json
 import uuid
 from datetime import datetime
-from functools import partial
 from io import BytesIO
 from zipfile import BadZipFile
 
@@ -27,12 +26,7 @@ from requests import RequestException
 from xlrd.biffh import XLRDError
 from xlrd.xldate import XLDateError
 
-from app import (
-    current_service,
-    notification_api_client,
-    service_api_client,
-    upload_api_client,
-)
+from app import current_service, notification_api_client, service_api_client
 from app.extensions import antivirus_client
 from app.main import main
 from app.main.forms import CsvUploadForm, LetterUploadPostageForm, PDFUploadForm
@@ -48,14 +42,8 @@ from app.s3_client.s3_letter_upload_client import (
 from app.template_previews import TemplatePreview, sanitise_letter
 from app.utils import unicode_truncate
 from app.utils.csv import Spreadsheet, get_errors_for_csv
-from app.utils.letters import (
-    get_letter_validation_error,
-)
-from app.utils.pagination import (
-    generate_next_dict,
-    generate_previous_dict,
-    get_page_from_request,
-)
+from app.utils.letters import get_letter_validation_error
+from app.utils.pagination import generate_next_dict, generate_previous_dict
 from app.utils.templates import get_sample_template, get_template
 from app.utils.user import user_has_permissions
 

@@ -314,7 +314,6 @@ EXCLUDED_ENDPOINTS = tuple(map(Navigation.get_endpoint_with_blueprint, {
     'view_job_csv',
     'view_job_updates',
     'view_jobs',
-    'view_letter_notification_as_preview',
     'view_letter_upload_as_preview',
     'view_notification',
     'view_notification_updates',

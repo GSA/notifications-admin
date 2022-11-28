@@ -2,10 +2,9 @@ from datetime import datetime, timedelta
 from itertools import groupby
 from operator import itemgetter
 from statistics import mean
-import pytz
 
+import pytz
 from flask import current_app, render_template
-from notifications_utils.timezones import convert_utc_to_local_timezone
 
 from app import performance_dashboard_api_client, status_api_client
 from app.main import main

@@ -1,9 +1,9 @@
 import os
+import socket
 import sys
 import traceback
-import eventlet
-import socket
 
+import eventlet
 import gunicorn
 from gds_metrics.gunicorn import child_exit  # noqa
 

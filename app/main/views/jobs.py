@@ -6,7 +6,6 @@ from flask import (
     Markup,
     Response,
     abort,
-    flash,
     jsonify,
     redirect,
     render_template,
@@ -15,7 +14,6 @@ from flask import (
     url_for,
 )
 from flask_login import current_user
-from notifications_python_client.errors import HTTPError
 from notifications_utils.template import (
     EmailPreviewTemplate,
     LetterPreviewTemplate,
@@ -25,7 +23,6 @@ from notifications_utils.template import (
 from app import (
     current_service,
     format_datetime_short,
-    format_thousands,
     notification_api_client,
     service_api_client,
 )

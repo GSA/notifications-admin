@@ -1,12 +1,8 @@
-import base64
 from functools import partial
-from unittest.mock import Mock, mock_open
 
 import pytest
 from flask import url_for
 from freezegun import freeze_time
-from notifications_python_client.errors import APIError, HTTPError
-from PyPDF2.errors import PdfReadError
 
 from tests.conftest import (
     SERVICE_ONE_ID,
@@ -248,7 +244,6 @@ def test_notification_page_does_not_show_cancel_link_for_sms_or_email_notificati
 @pytest.mark.parametrize('service_permissions, template_type, link_expected', [
     ([], '', False),
     (['inbound_sms'], 'email', False),
-    (['inbound_sms'], 'letter', False),
     (['inbound_sms'], 'sms', True),
 ])
 def test_notification_page_has_link_to_send_another_for_sms(
