@@ -138,23 +138,6 @@ class Job(JSONModel):
     def percentage_complete(self):
         return self.notifications_requested / self.notification_count * 100
 
-    @property
-    def letter_job_can_be_cancelled(self):
-
-        if self.template['template_type'] != 'letter':
-            return False
-
-        if any(self.uncancellable_notifications):
-            return False
-
-        if not letter_can_be_cancelled(
-            'created',
-            convert_utc_to_local_timezone(self.created_at).replace(tzinfo=None)
-        ):
-            return False
-
-        return True
-
     @cached_property
     def all_notifications(self):
         return self.get_notifications(set_status_filters({}))['notifications']

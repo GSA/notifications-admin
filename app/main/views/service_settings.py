@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from datetime import datetime
+import dateutil
 
 from flask import (
     abort,
@@ -16,7 +17,6 @@ from notifications_python_client.errors import HTTPError
 from notifications_utils.clients.zendesk.zendesk_client import (
     NotifySupportTicket,
 )
-from notifications_utils.timezones import convert_utc_to_local_timezone
 
 from app import (
     billing_api_client,
@@ -440,8 +440,7 @@ def get_service_verify_reply_to_address_partials(service_id, notification_id):
                     is_default=is_default
                 )
     seconds_since_sending = (
-        convert_utc_to_local_timezone(datetime.utcnow().isoformat()) -
-        convert_utc_to_local_timezone(notification['created_at'])
+        datetime.utcnow() - dateutil.parser.parse(notification['created_at'], ignoretz=True)
     ).seconds
     if notification["status"] in FAILURE_STATUSES or (
         notification["status"] in SENDING_STATUSES and

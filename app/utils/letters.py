@@ -4,12 +4,7 @@ import pytz
 from dateutil import parser
 from flask import url_for
 from notifications_utils.formatters import unescaped_formatted_list
-from notifications_utils.letter_timings import letter_can_be_cancelled
 from notifications_utils.postal_address import PostalAddress
-from notifications_utils.timezones import (
-    convert_local_timezone_to_utc,
-    convert_utc_to_local_timezone,
-)
 
 
 LETTER_VALIDATION_MESSAGES = {

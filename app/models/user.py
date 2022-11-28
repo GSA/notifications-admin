@@ -1,3 +1,4 @@
+import dateutil
 from datetime import datetime
 
 from flask import abort, request, session
@@ -126,8 +127,10 @@ class User(JSONModel, UserMixin):
     def password_changed_more_recently_than(self, datetime_string):
         if not self.password_changed_at:
             return False
+        datetime_string = dateutil.parser.parse(datetime_string, ignoretz=True)
+        changed = dateutil.parser.parse(self.password_changed_at, ignoretz=True)
         return convert_utc_to_local_timezone(
-            self.password_changed_at
+            changed
         ) > convert_utc_to_local_timezone(
             datetime_string
         )
