@@ -86,7 +86,7 @@ def get_time_value_and_label(future_time):
 def get_human_time(time):
     return {
         '0': 'midnight',
-        '12': 'midday'
+        '12': 'noon'
     }.get(
         time.strftime('%-H'),
         time.strftime('%-I%p').lower()

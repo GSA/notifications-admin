@@ -11,7 +11,7 @@ def test_form_contains_next_24h(notify_admin):
 
     # Friday
     assert choices[0] == ('', 'Now')
-    assert choices[1] == ('2016-01-01T17:00:00', 'Today at midday')
+    assert choices[1] == ('2016-01-01T17:00:00', 'Today at noon')
     assert choices[13] == ('2016-01-02T05:00:00', 'Today at midnight')
 
     # Saturday
