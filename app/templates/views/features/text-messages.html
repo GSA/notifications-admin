@@ -1,5 +1,6 @@
 {% extends "content_template.html" %}
 {% from "components/table.html" import mapping_table, row, text_field, edit_field, field with context %}
+{% from "components/service-link.html" import service_link %}
 
 {% block per_page_title %}
   Text messages
@@ -19,7 +20,7 @@
     <li>create reusable text message templates</li>
     <li>personalize the content of your texts</li>
     <li>send and schedule bulk messages</li></ul>
-  <!-- <p class="govuk-body">You can also <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.documentation') }}">integrate with our API</a> to send text messages automatically.<p class="govuk-body"> 
+  <!-- <p class="govuk-body">You can also <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.documentation') }}">integrate with our API</a> to send text messages automatically.<p class="govuk-body">
 
   <h3 class="heading heading-small" id="receive">Receive text messages</h3>
   <p class="govuk-body">Let people send messages to your service or reply to your texts.</p>
@@ -28,7 +29,7 @@
 
   <h3 class="heading heading-small" id="sender">Show people who your texts are from</h3>
   <p class="govuk-body">When you send a text message with Notify, the sender name tells people who it’s from.</p>
-  
+
   <p class="govuk-body">To change the text message sender from the default of ‘US Notify’:</p>
 
   <ol class="list list-number">
