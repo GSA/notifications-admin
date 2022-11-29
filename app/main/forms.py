@@ -104,25 +104,25 @@ def get_human_day(time, prefix_today_with='T'):
 
 
 def get_furthest_possible_scheduled_time():
-    # TODO: update this so it pulls in 4 days at local timezone, not UTC
-    return (datetime.utcnow() + timedelta(days=4)).replace(hour=0)
+    # We want local time to find date boundaries
+    return (datetime.now(current_app.config['PY_TIMEZONE']) + timedelta(days=4)).replace(hour=0)
 
 
 def get_next_hours_until(until):
-    now = datetime.utcnow()
+    now = datetime.now(current_app.config['PY_TIMEZONE'])
     hours = int((until - now).total_seconds() / (60 * 60))
     return [
-        (now + timedelta(hours=i)).replace(minute=0, second=0, microsecond=0).replace(tzinfo=pytz.utc)
+        (now + timedelta(hours=i)).replace(minute=0, second=0, microsecond=0)
         for i in range(1, hours + 1)
     ]
 
 
 def get_next_days_until(until):
-    now = datetime.utcnow()
+    now = datetime.now(current_app.config['PY_TIMEZONE'])
     days = int((until - now).total_seconds() / (60 * 60 * 24))
     return [
         get_human_day(
-            (now + timedelta(days=i)).replace(tzinfo=pytz.utc),
+            (now + timedelta(days=i)),
             prefix_today_with='Later t'
         )
         for i in range(0, days + 1)
