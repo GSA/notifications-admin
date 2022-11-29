@@ -76,7 +76,7 @@ from app.utils.user_permissions import all_ui_permissions, permission_options
 def get_time_value_and_label(future_time):
     return (
         future_time.replace(tzinfo=None).isoformat(),
-        '{} at {}'.format(
+        '{} at {} ET'.format(
             get_human_day(future_time.astimezone(pytz.timezone(current_app.config['TIMEZONE']))),
             get_human_time(future_time.astimezone(pytz.timezone(current_app.config['TIMEZONE'])))
         )
