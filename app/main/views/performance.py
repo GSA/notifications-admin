@@ -13,8 +13,8 @@ from app.main import main
 @main.route("/performance")
 def performance():
     stats = performance_dashboard_api_client.get_performance_dashboard_stats(
-        start_date=(datetime.now(pytz.timezone(current_app.config['TIMEZONE'])) - timedelta(days=7)).date(),
-        end_date=datetime.now(pytz.timezone(current_app.config['TIMEZONE'])).date(),
+        start_date=(datetime.now(current_app.config['PY_TIMEZONE']) - timedelta(days=7)).date(),
+        end_date=datetime.now(current_app.config['PY_TIMEZONE']).date(),
     )
     stats['organisations_using_notify'] = sorted(
         [

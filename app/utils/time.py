@@ -4,11 +4,11 @@ import pytz
 from dateutil import parser
 from notifications_utils.timezones import convert_utc_to_local_timezone
 
+from flask import current_app
+
 
 def get_current_financial_year():
-    now = convert_utc_to_local_timezone(
-        datetime.utcnow()
-    )
+    now = datetime.now(current_app.config['PY_TIMEZONE'])
     current_month = int(now.strftime('%-m'))
     current_year = int(now.strftime('%Y'))
     return current_year if current_month > 3 else current_year - 1

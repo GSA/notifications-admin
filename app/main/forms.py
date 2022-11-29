@@ -77,8 +77,8 @@ def get_time_value_and_label(future_time):
     return (
         future_time.replace(tzinfo=None).isoformat(),
         '{} at {} ET'.format(
-            get_human_day(future_time.astimezone(pytz.timezone(current_app.config['TIMEZONE']))),
-            get_human_time(future_time.astimezone(pytz.timezone(current_app.config['TIMEZONE'])))
+            get_human_day(future_time.astimezone(current_app.config['PY_TIMEZONE'])),
+            get_human_time(future_time.astimezone(current_app.config['PY_TIMEZONE']))
         )
     )
 
