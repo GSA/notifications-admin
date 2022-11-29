@@ -18,6 +18,7 @@ from app.notify_client import InviteTokenError
 from app.notify_client.invite_api_client import invite_api_client
 from app.notify_client.org_invite_api_client import org_invite_api_client
 from app.notify_client.user_api_client import user_api_client
+from app.utils.time import parse_naive_dt
 from app.utils.user import is_gov_user
 from app.utils.user_permissions import (
     all_ui_permissions,
@@ -127,8 +128,8 @@ class User(JSONModel, UserMixin):
     def password_changed_more_recently_than(self, datetime_string):
         if not self.password_changed_at:
             return False
-        datetime_string = dateutil.parser.parse(datetime_string, ignoretz=True)
-        changed = dateutil.parser.parse(self.password_changed_at, ignoretz=True)
+        datetime_string = parse_naive_dt(datetime_string)
+        changed = parse_naive_dt(self.password_changed_at)
         return convert_utc_to_local_timezone(
             changed
         ) > convert_utc_to_local_timezone(

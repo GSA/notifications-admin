@@ -21,6 +21,7 @@ from notifications_utils.recipients import (
 from notifications_utils.take import Take
 from notifications_utils.timezones import convert_utc_to_local_timezone
 
+from app.utils.time import parse_naive_dt
 
 def convert_to_boolean(value):
     if isinstance(value, str):
@@ -75,19 +76,19 @@ def format_datetime_numeric(date):
 
 
 def format_date_numeric(date):
-    date = dateutil.parser.parse(date, ignoretz=True)
+    date = parse_naive_dt(date)
     return convert_utc_to_local_timezone(date).strftime('%Y-%m-%d')
 
 
 def format_time_24h(date):
-    date = dateutil.parser.parse(date, ignoretz=True)
+    date = parse_naive_dt(date)
     return convert_utc_to_local_timezone(date).strftime('%H:%M')
 
 
 def get_human_day(time, date_prefix=''):
 
     #  Add 1 minute to transform 00:00 into ‘midnight today’ instead of ‘midnight tomorrow’
-    time = dateutil.parser.parse(time, ignoretz=True)
+    time = parse_naive_dt(time)
     date = (convert_utc_to_local_timezone(time) - timedelta(minutes=1)).date()
     now = datetime.utcnow()
 
@@ -110,7 +111,7 @@ def get_human_day(time, date_prefix=''):
 
 
 def format_time(date):
-    date = dateutil.parser.parse(date, ignoretz=True)
+    date = parse_naive_dt(date)
     return {
         '12:00AM': 'Midnight',
         '12:00PM': 'Noon'
@@ -121,17 +122,17 @@ def format_time(date):
 
 
 def format_date(date):
-    date = dateutil.parser.parse(date, ignoretz=True)
+    date = parse_naive_dt(date)
     return convert_utc_to_local_timezone(date).strftime('%A %d %B %Y')
 
 
 def format_date_normal(date):
-    date = dateutil.parser.parse(date, ignoretz=True)
+    date = parse_naive_dt(date)
     return convert_utc_to_local_timezone(date).strftime('%d %B %Y').lstrip('0')
 
 
 def format_date_short(date):
-    date = dateutil.parser.parse(date, ignoretz=True)
+    date = parse_naive_dt(date)
     return _format_datetime_short(convert_utc_to_local_timezone(date))
 
 
@@ -147,7 +148,7 @@ def format_datetime_human(date, date_prefix=''):
 
 
 def format_day_of_week(date):
-    date = dateutil.parser.parse(date, ignoretz=True)
+    date = parse_naive_dt(date)
     return convert_utc_to_local_timezone(date).strftime('%A')
 
 
@@ -164,7 +165,7 @@ def naturaltime_without_indefinite_article(date):
 
 
 def format_delta(date):
-    date = dateutil.parser.parse(date, ignoretz=True)
+    date = parse_naive_dt(date)
     delta = (
         datetime.now(timezone.utc)
     ) - (
@@ -178,7 +179,7 @@ def format_delta(date):
 
 
 def format_delta_days(date):
-    date = dateutil.parser.parse(date, ignoretz=True)
+    date = parse_naive_dt(date)
     now = datetime.now(timezone.utc)
     date = convert_utc_to_local_timezone(date).replace(tzinfo=pytz.utc)
     if date.strftime('%Y-%m-%d') == now.strftime('%Y-%m-%d'):
