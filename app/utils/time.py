@@ -2,8 +2,6 @@ from datetime import datetime
 
 import pytz
 from dateutil import parser
-from notifications_utils.timezones import convert_utc_to_local_timezone
-
 from flask import current_app
 
 

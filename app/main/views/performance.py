@@ -3,7 +3,6 @@ from itertools import groupby
 from operator import itemgetter
 from statistics import mean
 
-import pytz
 from flask import current_app, render_template
 
 from app import performance_dashboard_api_client, status_api_client
