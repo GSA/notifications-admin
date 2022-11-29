@@ -1,6 +1,5 @@
 from datetime import datetime
 
-import dateutil
 from flask import abort, request, session
 from flask_login import AnonymousUserMixin, UserMixin, login_user, logout_user
 from notifications_python_client.errors import HTTPError

@@ -23,6 +23,7 @@ from notifications_utils.timezones import convert_utc_to_local_timezone
 
 from app.utils.time import parse_naive_dt
 
+
 def convert_to_boolean(value):
     if isinstance(value, str):
         if value.lower() in ['t', 'true', 'on', 'yes', '1']:

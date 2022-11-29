@@ -1,7 +1,6 @@
 from collections import OrderedDict
 from datetime import datetime
 
-import dateutil
 from flask import (
     abort,
     current_app,
