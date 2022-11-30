@@ -85,7 +85,7 @@ from tests.conftest import SERVICE_ONE_ID, normalize_spaces
         ),
     ]),
 ))
-@freeze_time("2012-01-01 01:01:01")
+@freeze_time("2012-01-01 06:01:01")
 def test_history(
     client_request,
     mock_get_service_history,
