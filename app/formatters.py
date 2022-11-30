@@ -9,7 +9,7 @@ from numbers import Number
 import ago
 import dateutil
 import humanize
-from flask import Markup, url_for
+from flask import Markup, current_app, url_for
 from notifications_utils.field import Field
 from notifications_utils.formatters import make_quotes_smart
 from notifications_utils.formatters import nl2br as utils_nl2br
@@ -18,7 +18,9 @@ from notifications_utils.recipients import (
     validate_phone_number,
 )
 from notifications_utils.take import Take
-from notifications_utils.timezones import utc_string_to_aware_gmt_datetime
+from notifications_utils.timezones import convert_utc_to_local_timezone
+
+from app.utils.time import parse_naive_dt
 
 
 def convert_to_boolean(value):
@@ -74,18 +76,21 @@ def format_datetime_numeric(date):
 
 
 def format_date_numeric(date):
-    return utc_string_to_aware_gmt_datetime(date).strftime('%Y-%m-%d')
+    date = parse_naive_dt(date)
+    return convert_utc_to_local_timezone(date).strftime('%Y-%m-%d')
 
 
 def format_time_24h(date):
-    return utc_string_to_aware_gmt_datetime(date).strftime('%H:%M')
+    date = parse_naive_dt(date)
+    return convert_utc_to_local_timezone(date).strftime('%H:%M')
 
 
 def get_human_day(time, date_prefix=''):
 
     #  Add 1 minute to transform 00:00 into ‘midnight today’ instead of ‘midnight tomorrow’
-    date = (utc_string_to_aware_gmt_datetime(time) - timedelta(minutes=1)).date()
-    now = datetime.utcnow()
+    time = parse_naive_dt(time)
+    date = (convert_utc_to_local_timezone(time) - timedelta(minutes=1)).date()
+    now = datetime.now(current_app.config['PY_TIMEZONE'])
 
     if date == (now + timedelta(days=1)).date():
         return 'tomorrow'
@@ -106,25 +111,29 @@ def get_human_day(time, date_prefix=''):
 
 
 def format_time(date):
+    date = parse_naive_dt(date)
     return {
         '12:00AM': 'Midnight',
-        '12:00PM': 'Midday'
+        '12:00PM': 'Noon'
     }.get(
-        utc_string_to_aware_gmt_datetime(date).strftime('%-I:%M%p'),
-        utc_string_to_aware_gmt_datetime(date).strftime('%-I:%M%p')
+        convert_utc_to_local_timezone(date).strftime('%-I:%M%p'),
+        convert_utc_to_local_timezone(date).strftime('%-I:%M%p')
     ).lower()
 
 
 def format_date(date):
-    return utc_string_to_aware_gmt_datetime(date).strftime('%A %d %B %Y')
+    date = parse_naive_dt(date)
+    return convert_utc_to_local_timezone(date).strftime('%A %d %B %Y')
 
 
 def format_date_normal(date):
-    return utc_string_to_aware_gmt_datetime(date).strftime('%d %B %Y').lstrip('0')
+    date = parse_naive_dt(date)
+    return convert_utc_to_local_timezone(date).strftime('%d %B %Y').lstrip('0')
 
 
 def format_date_short(date):
-    return _format_datetime_short(utc_string_to_aware_gmt_datetime(date))
+    date = parse_naive_dt(date)
+    return _format_datetime_short(convert_utc_to_local_timezone(date))
 
 
 def format_date_human(date):
@@ -139,7 +148,8 @@ def format_datetime_human(date, date_prefix=''):
 
 
 def format_day_of_week(date):
-    return utc_string_to_aware_gmt_datetime(date).strftime('%A')
+    date = parse_naive_dt(date)
+    return convert_utc_to_local_timezone(date).strftime('%A')
 
 
 def _format_datetime_short(datetime):
@@ -155,10 +165,12 @@ def naturaltime_without_indefinite_article(date):
 
 
 def format_delta(date):
+    # This method assumes that date is in UTC
+    date = parse_naive_dt(date)
     delta = (
-        datetime.now(timezone.utc)
+        datetime.utcnow()
     ) - (
-        utc_string_to_aware_gmt_datetime(date)
+        date
     )
     if delta < timedelta(seconds=30):
         return "just now"
@@ -168,8 +180,9 @@ def format_delta(date):
 
 
 def format_delta_days(date):
-    now = datetime.now(timezone.utc)
-    date = utc_string_to_aware_gmt_datetime(date)
+    # This method assumes that date is in UTC
+    date = parse_naive_dt(date)
+    now = datetime.utcnow()
     if date.strftime('%Y-%m-%d') == now.strftime('%Y-%m-%d'):
         return "today"
     if date.strftime('%Y-%m-%d') == (now - timedelta(days=1)).strftime('%Y-%m-%d'):

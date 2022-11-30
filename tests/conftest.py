@@ -1471,7 +1471,7 @@ def mock_get_scheduled_job(mocker, api_user_active):
             api_user_active,
             job_id=job_id,
             job_status='scheduled',
-            scheduled_for='2016-01-02T00:00:00.061258'
+            scheduled_for='2016-01-02T05:00:00.061258'
         )}
 
     return mocker.patch('app.job_api_client.get_job', side_effect=_get_job)
@@ -1640,121 +1640,6 @@ def mock_get_uploads(mocker, api_user_active):
         }
     # Why is mocking on the model needed?
     return mocker.patch('app.models.job.PaginatedUploads.client_method', side_effect=_get_uploads)
-
-
-@pytest.fixture(scope='function')
-def mock_get_uploaded_letters(mocker):
-    def _get_uploaded_letters(service_id, *, letter_print_day, page=1):
-        uploads = [
-            {
-                "api_key": None,
-                "billable_units": 1,
-                "client_reference": "Homer-Simpson.pdf",
-                "created_at": "2020-02-02T13:59:00+00:00",
-                "created_by": {
-                    "email_address": "test@example.com",
-                    "id": "a1958d6b-955b-4f68-8847-cf43cd4b189a",
-                    "name": "Test User"
-                },
-                "document_download_count": None,
-                "id": "03e34025-be54-4d43-8e6a-fb1ea0fd1f29",
-                "international": False,
-                "job": None,
-                "job_row_number": None,
-                "key_name": None,
-                "key_type": "normal",
-                "normalised_to": None,
-                "notification_type": "letter",
-                "personalisation": {},
-                "phone_prefix": None,
-                "postage": "second",
-                "rate_multiplier": None,
-                "reference": "dvla-reference",
-                "reply_to_text": None,
-                "sent_at": "2020-02-02T14:00:00+00:00",
-                "sent_by": None,
-                "service": "f995d8a3-4ece-4961-bbbd-b657b192648c",
-                "status": "delivered",
-                "template": {
-                    "content": "",
-                    "id": "673e4f67-7d9a-42b8-8e56-f3444aa2fbef",
-                    "is_precompiled_letter": True,
-                    "name": "Pre-compiled PDF",
-                    "redact_personalisation": False,
-                    "subject": "Pre-compiled PDF",
-                    "template_type": "letter",
-                    "version": 1
-                },
-                "to": "742 Evergreen Terrace",
-                "updated_at": "2020-02-02T14:00:00+00:00"
-            },
-            {
-                "api_key": None,
-                "billable_units": 1,
-                "client_reference": "Kevin-McCallister.pdf",
-                "created_at": "2020-02-02T12:59:00+00:00",
-                "created_by": {
-                    "email_address": "test@example.com",
-                    "id": "a1958d6b-955b-4f68-8847-cf43cd4b189a",
-                    "name": "Test User"
-                },
-                "document_download_count": None,
-                "id": "fc090d91-e761-4464-9041-9c4594c96a35",
-                "international": False,
-                "job": None,
-                "job_row_number": None,
-                "key_name": None,
-                "key_type": "normal",
-                "normalised_to": None,
-                "notification_type": "letter",
-                "personalisation": {},
-                "phone_prefix": None,
-                "postage": "second",
-                "rate_multiplier": None,
-                "reference": "dvla-reference",
-                "reply_to_text": None,
-                "sent_at": "2020-02-02T14:00:00+00:00",
-                "sent_by": None,
-                "service": "f995d8a3-4ece-4961-bbbd-b657b192648c",
-                "status": "delivered",
-                "template": {
-                    "content": "",
-                    "id": "673e4f67-7d9a-42b8-8e56-f3444aa2fbef",
-                    "is_precompiled_letter": True,
-                    "name": "Pre-compiled PDF",
-                    "redact_personalisation": False,
-                    "subject": "Pre-compiled PDF",
-                    "template_type": "letter",
-                    "version": 1
-                },
-                "to": "671 Lincoln Avenue\nWinnetka",
-                "updated_at": "2020-02-02T14:00:00+00:00"
-            },
-        ]
-        return {
-            'notifications': uploads,
-            'total': 1234,
-            'links': {
-                'prev': 'services/{}/uploads?page={}'.format(service_id, page - 1),
-                'next': 'services/{}/uploads?page={}'.format(service_id, page + 1)
-            }
-        }
-    return mocker.patch(
-        'app.main.views.uploads.upload_api_client.get_letters_by_service_and_print_day',
-        side_effect=_get_uploaded_letters,
-    )
-
-
-@pytest.fixture(scope='function')
-def mock_get_no_uploaded_letters(mocker):
-    return mocker.patch(
-        'app.main.views.uploads.upload_api_client.get_letters_by_service_and_print_day',
-        return_value={
-            'notifications': [],
-            'total': 0,
-            'links': {}
-        },
-    )
 
 
 @pytest.fixture(scope='function')
@@ -3483,20 +3368,20 @@ def mock_get_service_history(mocker):
         'service_history': [
             {
                 'name': 'Example service',
-                'created_at': '2010-10-10T01:01:01.000000Z',
+                'created_at': '2010-10-10T06:01:01.000000Z',
                 'updated_at': None,
                 'created_by_id': uuid4(),
             },
             {
                 'name': 'Before lunch',
-                'created_at': '2010-10-10T01:01:01.000000Z',
-                'updated_at': '2012-12-12T12:12:12.000000Z',
+                'created_at': '2010-10-10T06:01:01.000000Z',
+                'updated_at': '2012-12-12T17:12:12.000000Z',
                 'created_by_id': sample_uuid(),
             },
             {
                 'name': 'After lunch',
-                'created_at': '2010-10-10T01:01:01.000000Z',
-                'updated_at': '2012-12-12T13:13:13.000000Z',
+                'created_at': '2010-10-10T06:01:01.000000Z',
+                'updated_at': '2012-12-12T18:13:13.000000Z',
                 'created_by_id': sample_uuid(),
             },
         ],
@@ -3504,25 +3389,25 @@ def mock_get_service_history(mocker):
             {
                 'name': 'Good key',
                 'updated_at': None,
-                'created_at': '2010-10-10T10:10:10.000000Z',
+                'created_at': '2010-10-10T15:10:10.000000Z',
                 'created_by_id': sample_uuid(),
             },
             {
                 'name': 'Bad key',
-                'updated_at': '2012-11-11T12:12:12.000000Z',
-                'created_at': '2011-11-11T11:11:11.000000Z',
+                'updated_at': '2012-11-11T17:12:12.000000Z',
+                'created_at': '2011-11-11T16:11:11.000000Z',
                 'created_by_id': sample_uuid(),
             },
             {
                 'name': 'Bad key',
                 'updated_at': None,
-                'created_at': '2011-11-11T11:11:11.000000Z',
+                'created_at': '2011-11-11T16:11:11.000000Z',
                 'created_by_id': sample_uuid(),
             },
             {
                 'name': 'Key event returned in non-chronological order',
                 'updated_at': None,
-                'created_at': '2010-10-10T09:09:09.000000Z',
+                'created_at': '2010-10-10T14:09:09.000000Z',
                 'created_by_id': sample_uuid(),
             },
         ],

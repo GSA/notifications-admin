@@ -1,12 +1,7 @@
-from datetime import timedelta
-
-import pytz
 from notifications_utils.letter_timings import (
     CANCELLABLE_JOB_LETTER_STATUSES,
     get_letter_timings,
-    letter_can_be_cancelled,
 )
-from notifications_utils.timezones import utc_string_to_aware_gmt_datetime
 from werkzeug.utils import cached_property
 
 from app.models import JSONModel, ModelList, PaginatedModelList
@@ -14,7 +9,6 @@ from app.notify_client.job_api_client import job_api_client
 from app.notify_client.notification_api_client import notification_api_client
 from app.notify_client.service_api_client import service_api_client
 from app.utils import set_status_filters
-from app.utils.letters import get_letter_printing_statement
 from app.utils.time import is_less_than_days_ago
 
 
@@ -139,37 +133,6 @@ class Job(JSONModel):
     def percentage_complete(self):
         return self.notifications_requested / self.notification_count * 100
 
-    @property
-    def letter_job_can_be_cancelled(self):
-
-        if self.template['template_type'] != 'letter':
-            return False
-
-        if any(self.uncancellable_notifications):
-            return False
-
-        if not letter_can_be_cancelled(
-            'created',
-            utc_string_to_aware_gmt_datetime(self.created_at).replace(tzinfo=None)
-        ):
-            return False
-
-        return True
-
-    @property
-    def letter_printing_statement(self):
-        if self.upload_type != 'letter_day':
-            raise TypeError()
-        return get_letter_printing_statement(
-            'created',
-            # We have to make the time just before 5:30pm because a
-            # letter uploaded at 5:30pm will be printed the next day
-            (
-                utc_string_to_aware_gmt_datetime(self.created_at) - timedelta(minutes=1)
-            ).astimezone(pytz.utc).isoformat(),
-            long_form=False,
-        )
-
     @cached_property
     def all_notifications(self):
         return self.get_notifications(set_status_filters({}))['notifications']
@@ -214,10 +177,7 @@ class Job(JSONModel):
         )
 
     def cancel(self):
-        if self.template_type == 'letter':
-            return job_api_client.cancel_letter_job(self.service, self.id)
-        else:
-            return job_api_client.cancel_job(self.service, self.id)
+        return job_api_client.cancel_job(self.service, self.id)
 
 
 class ImmediateJobs(ModelList):

@@ -42,7 +42,7 @@ describe('RadioSelect', () => {
         let label = hour;
 
         if (hour === 12) {
-          return 'midday';
+          return 'noon';
         }
 
         if (hour === 24) {

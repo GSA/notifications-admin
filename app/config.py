@@ -1,6 +1,8 @@
 import json
 import os
 
+import pytz
+
 from app.cloudfoundry_config import cloud_config
 
 
@@ -12,6 +14,8 @@ class Config(object):
     HEADER_COLOUR = '#81878b'  # mix(govuk-colour("dark-grey"), govuk-colour("mid-grey"))
     LOGO_CDN_DOMAIN = 'static-logos.notifications.service.gov.uk'  # TODO use our own CDN
     ASSETS_DEBUG = False
+    TIMEZONE = os.environ.get('TIMEZONE', 'America/New_York')
+    PY_TIMEZONE = pytz.timezone(TIMEZONE)
 
     # Credentials
     ADMIN_CLIENT_SECRET = os.environ.get('ADMIN_CLIENT_SECRET')

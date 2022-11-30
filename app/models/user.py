@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import abort, request, session
 from flask_login import AnonymousUserMixin, UserMixin, login_user, logout_user
 from notifications_python_client.errors import HTTPError
-from notifications_utils.timezones import utc_string_to_aware_gmt_datetime
+from notifications_utils.timezones import convert_utc_to_local_timezone
 from werkzeug.utils import cached_property
 
 from app.event_handlers import (
@@ -17,6 +17,7 @@ from app.notify_client import InviteTokenError
 from app.notify_client.invite_api_client import invite_api_client
 from app.notify_client.org_invite_api_client import org_invite_api_client
 from app.notify_client.user_api_client import user_api_client
+from app.utils.time import parse_naive_dt
 from app.utils.user import is_gov_user
 from app.utils.user_permissions import (
     all_ui_permissions,
@@ -126,9 +127,11 @@ class User(JSONModel, UserMixin):
     def password_changed_more_recently_than(self, datetime_string):
         if not self.password_changed_at:
             return False
-        return utc_string_to_aware_gmt_datetime(
-            self.password_changed_at
-        ) > utc_string_to_aware_gmt_datetime(
+        datetime_string = parse_naive_dt(datetime_string)
+        changed = parse_naive_dt(self.password_changed_at)
+        return convert_utc_to_local_timezone(
+            changed
+        ) > convert_utc_to_local_timezone(
             datetime_string
         )
 

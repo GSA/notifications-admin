@@ -1,7 +1,7 @@
 {
   "name": "notifications-admin",
   "version": "0.0.1",
-  "description": "Admin front end for GOV.UK Notify",
+  "description": "Admin front end for Notify",
   "engines": {
     "node": ">=10.15.3"
   },
@@ -15,11 +15,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alphagov/notifications-admin.git"
+    "url": "git+https://github.com/GSA/notifications-admin.git"
   },
-  "author": "Government Digital Service",
-  "license": "MIT",
-  "homepage": "https://github.com/alphagov/notifications-admin#readme",
+  "author": "General Services Administration",
+  "license": "CC0",
+  "homepage": "https://github.com/GSA/notifications-admin#readme",
   "dependencies": {
     "cbor-js": "0.1.0",
     "govuk_frontend_toolkit": "8.1.0",

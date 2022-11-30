@@ -4,7 +4,7 @@ from itertools import chain
 from numbers import Number
 
 import pytz
-from flask import Markup, render_template, request
+from flask import Markup, current_app, render_template, request
 from flask_login import current_user
 from flask_wtf import FlaskForm as Form
 from flask_wtf.file import FileAllowed
@@ -75,10 +75,10 @@ from app.utils.user_permissions import all_ui_permissions, permission_options
 
 def get_time_value_and_label(future_time):
     return (
-        future_time.replace(tzinfo=None).isoformat(),
-        '{} at {}'.format(
-            get_human_day(future_time.astimezone(pytz.timezone('Europe/London'))),
-            get_human_time(future_time.astimezone(pytz.timezone('Europe/London')))
+        future_time.astimezone(pytz.utc).replace(tzinfo=None).isoformat(),
+        '{} at {} ET'.format(
+            get_human_day(future_time.astimezone(current_app.config['PY_TIMEZONE'])),
+            get_human_time(future_time.astimezone(current_app.config['PY_TIMEZONE']))
         )
     )
 
@@ -86,7 +86,7 @@ def get_time_value_and_label(future_time):
 def get_human_time(time):
     return {
         '0': 'midnight',
-        '12': 'midday'
+        '12': 'noon'
     }.get(
         time.strftime('%-H'),
         time.strftime('%-I%p').lower()
@@ -96,32 +96,33 @@ def get_human_time(time):
 def get_human_day(time, prefix_today_with='T'):
     #  Add 1 hour to get ‘midnight today’ instead of ‘midnight tomorrow’
     time = (time - timedelta(hours=1)).strftime('%A')
-    if time == datetime.utcnow().strftime('%A'):
+    if time == datetime.now(current_app.config['PY_TIMEZONE']).strftime('%A'):
         return '{}oday'.format(prefix_today_with)
-    if time == (datetime.utcnow() + timedelta(days=1)).strftime('%A'):
+    if time == (datetime.now(current_app.config['PY_TIMEZONE']) + timedelta(days=1)).strftime('%A'):
         return 'Tomorrow'
     return time
 
 
 def get_furthest_possible_scheduled_time():
-    return (datetime.utcnow() + timedelta(days=4)).replace(hour=0)
+    # We want local time to find date boundaries
+    return (datetime.now(current_app.config['PY_TIMEZONE']) + timedelta(days=4)).replace(hour=0)
 
 
 def get_next_hours_until(until):
-    now = datetime.utcnow()
+    now = datetime.now(current_app.config['PY_TIMEZONE'])
     hours = int((until - now).total_seconds() / (60 * 60))
     return [
-        (now + timedelta(hours=i)).replace(minute=0, second=0, microsecond=0).replace(tzinfo=pytz.utc)
+        (now + timedelta(hours=i)).replace(minute=0, second=0, microsecond=0)
         for i in range(1, hours + 1)
     ]
 
 
 def get_next_days_until(until):
-    now = datetime.utcnow()
+    now = datetime.now(current_app.config['PY_TIMEZONE'])
     days = int((until - now).total_seconds() / (60 * 60 * 24))
     return [
         get_human_day(
-            (now + timedelta(days=i)).replace(tzinfo=pytz.utc),
+            (now + timedelta(days=i)),
             prefix_today_with='Later t'
         )
         for i in range(0, days + 1)

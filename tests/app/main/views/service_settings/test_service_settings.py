@@ -72,10 +72,6 @@ def mock_get_service_settings_page_common(
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
         'Receive text messages Off Change your settings for receiving text messages',
-
-        # 'Label Value Action',
-        # 'Send letters Off Change your settings for sending letters',
-
     ]),
     (create_platform_admin_user(), [
 
@@ -95,9 +91,6 @@ def mock_get_service_settings_page_common(
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
         'Receive text messages Off Change your settings for receiving text messages',
-
-        # 'Label Value Action',
-        # 'Send letters Off Change your settings for sending letters',
 
         'Label Value Action',
         'Live Off Change service status',

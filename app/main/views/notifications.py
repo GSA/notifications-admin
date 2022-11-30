@@ -1,30 +1,20 @@
 # -*- coding: utf-8 -*-
-import base64
-import io
-import json
-import os
 from datetime import datetime
 
 from dateutil import parser
 from flask import (
     Response,
-    flash,
     jsonify,
-    redirect,
     render_template,
     request,
-    send_file,
     stream_with_context,
     url_for,
 )
-from notifications_python_client.errors import APIError, HTTPError
 from notifications_utils import LETTER_MAX_PAGE_COUNT
 from notifications_utils.letter_timings import (
     get_letter_timings,
     letter_can_be_cancelled,
 )
-from notifications_utils.pdf import pdf_page_count
-from PyPDF2.errors import PdfReadError
 
 from app import (
     current_service,
@@ -43,10 +33,7 @@ from app.utils import (
     set_status_filters,
 )
 from app.utils.csv import generate_notifications_csv
-from app.utils.letters import (
-    get_letter_printing_statement,
-    get_letter_validation_error,
-)
+from app.utils.letters import get_letter_validation_error
 from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
 
@@ -59,40 +46,20 @@ def view_notification(service_id, notification_id):
 
     personalisation = get_all_personalisation_from_notification(notification)
     error_message = None
-    if notification['template']['is_precompiled_letter']:
-        try:
-            file_contents, metadata = get_letter_file_data(
-                service_id, notification_id, "pdf", with_metadata=True
-            )
-            page_count = int(
-                metadata["page_count"]
-            ) if metadata.get("page_count") else pdf_page_count(io.BytesIO(file_contents))
-            if notification["status"] == "validation-failed":
-                invalid_pages = metadata.get("invalid_pages")
-                invalid_pages = json.loads(invalid_pages) if invalid_pages else invalid_pages
-                error_message = get_letter_validation_error(
-                    metadata.get("message"), invalid_pages, page_count
-                )
-        except PdfReadError:
-            return render_template(
-                'views/notifications/invalid_precompiled_letter.html',
-                created_at=notification['created_at']
-            )
-    else:
-        page_count = get_page_count_for_letter(notification['template'], values=personalisation)
-        if page_count and page_count > LETTER_MAX_PAGE_COUNT:
-            # We check page count here to show the right error message for a letter that is too long.
-            # Another way to do this would be to get the status and error message from letter metadata.
-            # This would be a significant amount of work though, out of scope for this bug fix.
-            # This is because currently we do not pull the letter from S3 when showing preview.
-            # Instead, we generate letter preview based on the letter template and personalisation.
-            # Additionally, when a templated letter is sent via the api and the personalisation pushes the
-            # page count over 10 pages, it takes a while for validation status to come through.
-            # Checking page count here will enable us to show the error message even if the letter is not
-            # fully processed yet.
-            error_message = get_letter_validation_error(
-                "letter-too-long", [1], page_count
-            )
+    page_count = get_page_count_for_letter(notification['template'], values=personalisation)
+    if page_count and page_count > LETTER_MAX_PAGE_COUNT:
+        # We check page count here to show the right error message for a letter that is too long.
+        # Another way to do this would be to get the status and error message from letter metadata.
+        # This would be a significant amount of work though, out of scope for this bug fix.
+        # This is because currently we do not pull the letter from S3 when showing preview.
+        # Instead, we generate letter preview based on the letter template and personalisation.
+        # Additionally, when a templated letter is sent via the api and the personalisation pushes the
+        # page count over 10 pages, it takes a while for validation status to come through.
+        # Checking page count here will enable us to show the error message even if the letter is not
+        # fully processed yet.
+        error_message = get_letter_validation_error(
+            "letter-too-long", [1], page_count
+        )
 
     if notification.get('postage'):
         if notification["status"] == "validation-failed":
@@ -102,12 +69,6 @@ def view_notification(service_id, notification_id):
     template = get_template(
         notification['template'],
         current_service,
-        letter_preview_url=url_for(
-            '.view_letter_notification_as_preview',
-            service_id=service_id,
-            notification_id=notification_id,
-            filetype='png',
-        ),
         page_count=page_count,
         show_recipient=True,
         redact_missing_personalisation=True,
@@ -119,8 +80,6 @@ def view_notification(service_id, notification_id):
         job = job_api_client.get_job(service_id, notification['job']['id'])['data']
     else:
         job = None
-
-    letter_print_day = get_letter_printing_statement(notification['status'], notification['created_at'])
 
     notification_created = parser.parse(notification['created_at']).replace(tzinfo=None)
 
@@ -137,12 +96,6 @@ def view_notification(service_id, notification_id):
             'main.view_job',
             service_id=current_service.id,
             job_id=request.args.get('from_job'),
-        )
-    elif request.args.get('from_uploaded_letters'):
-        back_link = url_for(
-            'main.uploaded_letters',
-            service_id=current_service.id,
-            letter_print_day=request.args.get('from_uploaded_letters'),
         )
     else:
         back_link = url_for(
@@ -185,73 +138,12 @@ def view_notification(service_id, notification_id):
         postage=notification['postage'],
         can_receive_inbound=(current_service.has_permission('inbound_sms')),
         is_precompiled_letter=notification['template']['is_precompiled_letter'],
-        letter_print_day=letter_print_day,
         show_cancel_button=show_cancel_button,
         sent_with_test_key=(
             notification.get('key_type') == KEY_TYPE_TEST
         ),
         back_link=back_link,
     )
-
-
-@main.route("/services/<uuid:service_id>/notification/<uuid:notification_id>/cancel", methods=['GET', 'POST'])
-@user_has_permissions('view_activity', 'send_messages')
-def cancel_letter(service_id, notification_id):
-
-    if request.method == 'POST':
-        try:
-            notification_api_client.update_notification_to_cancelled(current_service.id, notification_id)
-        except HTTPError as e:
-            message_fragments = ["already been cancelled", "too late to cancel"]
-            if e.status_code == 400 and any(fragment in e.message for fragment in message_fragments):
-                flash(e.message)
-            else:
-                raise e
-        return redirect(url_for('main.view_notification', service_id=service_id, notification_id=notification_id))
-
-    flash("Are you sure you want to cancel sending this letter?", 'cancel')
-    return view_notification(service_id, notification_id)
-
-
-def get_preview_error_image():
-    path = os.path.join(os.path.dirname(__file__), "..", "..", "static", "images", "preview_error.png")
-    with open(path, "rb") as file:
-        return file.read()
-
-
-@main.route("/services/<uuid:service_id>/notification/<uuid:notification_id>.<letter_file_extension:filetype>")
-@user_has_permissions('view_activity', 'send_messages')
-def view_letter_notification_as_preview(
-    service_id, notification_id, filetype, with_metadata=False
-):
-    image_data = get_letter_file_data(service_id, notification_id, filetype, with_metadata)
-    file = io.BytesIO(image_data)
-
-    mimetype = 'image/png' if filetype == 'png' else 'application/pdf'
-
-    return send_file(
-        path_or_file=file,
-        mimetype=mimetype,
-    )
-
-
-def get_letter_file_data(service_id, notification_id, filetype, with_metadata=False):
-    try:
-        preview = notification_api_client.get_notification_letter_preview(
-            service_id,
-            notification_id,
-            filetype,
-            page=request.args.get('page')
-        )
-
-        display_file = base64.b64decode(preview['content'])
-    except APIError:
-        display_file = get_preview_error_image()
-        preview = {"metadata": {}}
-
-    if with_metadata:
-        return display_file, preview['metadata']
-    return display_file
 
 
 @main.route("/services/<uuid:service_id>/notification/<uuid:notification_id>.json")

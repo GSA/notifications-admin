@@ -1,47 +1,6 @@
-from datetime import datetime, timedelta
-
-import pytz
-from dateutil import parser
 from flask import url_for
 from notifications_utils.formatters import unescaped_formatted_list
-from notifications_utils.letter_timings import letter_can_be_cancelled
 from notifications_utils.postal_address import PostalAddress
-from notifications_utils.timezones import (
-    convert_bst_to_utc,
-    convert_utc_to_bst,
-    utc_string_to_aware_gmt_datetime,
-)
-
-
-def printing_today_or_tomorrow(created_at):
-    print_cutoff = convert_bst_to_utc(
-        convert_utc_to_bst(datetime.utcnow()).replace(hour=17, minute=30)
-    ).replace(tzinfo=pytz.utc)
-    created_at = utc_string_to_aware_gmt_datetime(created_at)
-
-    if created_at < print_cutoff:
-        return 'today'
-    else:
-        return 'tomorrow'
-
-
-def get_letter_printing_statement(status, created_at, long_form=True):
-    created_at_dt = parser.parse(created_at).replace(tzinfo=None)
-    if letter_can_be_cancelled(status, created_at_dt):
-        decription = 'Printing starts' if long_form else 'Printing'
-        return f'{decription} {printing_today_or_tomorrow(created_at)} at 5:30pm'
-    else:
-        printed_datetime = utc_string_to_aware_gmt_datetime(created_at) + timedelta(hours=6, minutes=30)
-        if printed_datetime.date() == datetime.now().date():
-            return 'Printed today at 5:30pm'
-        elif printed_datetime.date() == datetime.now().date() - timedelta(days=1):
-            return 'Printed yesterday at 5:30pm'
-
-        printed_date = printed_datetime.strftime('%d %B').lstrip('0')
-        description = 'Printed on' if long_form else 'Printed'
-
-        return f'{description} {printed_date} at 5:30pm'
-
 
 LETTER_VALIDATION_MESSAGES = {
     'letter-not-a4-portrait-oriented': {

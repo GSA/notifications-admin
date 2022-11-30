@@ -472,7 +472,7 @@ def test_view_contact_list(
     mocker.patch(
         'app.models.contact_list.contact_list_api_client.get_contact_list',
         return_value=contact_list_json(
-            created_at='2020-03-03T12:12:12.000000Z',
+            created_at='2020-03-03T17:12:12.000000Z',
             service_id=SERVICE_ONE_ID,
             has_jobs=has_jobs
         )
@@ -539,7 +539,7 @@ def test_view_contact_list(
     )
 
 
-@freeze_time('2015-12-31 16:51:56')
+@freeze_time('2015-12-31 21:51:56')
 def test_view_jobs_for_contact_list(
     mocker,
     client_request,
@@ -550,7 +550,7 @@ def test_view_jobs_for_contact_list(
     mocker.patch(
         'app.models.contact_list.contact_list_api_client.get_contact_list',
         return_value={
-            'created_at': '2015-12-31 12:12:12',
+            'created_at': '2015-12-31 17:12:12',
             'created_by': 'Test User',
             'id': fake_uuid,
             'original_file_name': 'EmergencyContactList.xls',
@@ -585,12 +585,12 @@ def test_view_jobs_for_contact_list(
         'Template Status',
         (
             'Template Y '
-            'Sending tomorrow at 11:09pm '
+            'Sending tomorrow at 6:09pm '
             '1 text message waiting to send'
         ),
         (
             'Template Z '
-            'Sending tomorrow at 11:09am '
+            'Sending tomorrow at 6:09am '
             '1 text message waiting to send'
         ),
         (

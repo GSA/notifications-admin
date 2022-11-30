@@ -86,7 +86,7 @@ from tests.conftest import (
         ('test@example.com', 'test@example.com'),
     ]
 )
-@freeze_time('2020-01-01 01:00')
+@freeze_time('2020-01-01 06:00')
 def test_can_show_notifications(
     client_request,
     service_one,
@@ -723,28 +723,28 @@ def test_big_numbers_dont_show_for_letters(
 @freeze_time("2017-09-27 16:30:00.000000")
 @pytest.mark.parametrize(
     "message_type, status, expected_hint_status, single_line", [
-        ('email', 'created', 'Sending since 27 September at 5:30pm', True),
-        ('email', 'sending', 'Sending since 27 September at 5:30pm', True),
-        ('email', 'temporary-failure', 'Inbox not accepting messages right now 27 September at 5:31pm', False),
-        ('email', 'permanent-failure', 'Email address does not exist 27 September at 5:31pm', False),
-        ('email', 'delivered', 'Delivered 27 September at 5:31pm', True),
-        ('sms', 'created', 'Sending since 27 September at 5:30pm', True),
-        ('sms', 'sending', 'Sending since 27 September at 5:30pm', True),
-        ('sms', 'temporary-failure', 'Phone not accepting messages right now 27 September at 5:31pm', False),
-        ('sms', 'permanent-failure', 'Not delivered 27 September at 5:31pm', False),
-        ('sms', 'delivered', 'Delivered 27 September at 5:31pm', True),
-        ('letter', 'created', '27 September at 5:30pm', True),
-        ('letter', 'pending-virus-check', '27 September at 5:30pm', True),
-        ('letter', 'sending', '27 September at 5:30pm', True),
-        ('letter', 'delivered', '27 September at 5:30pm', True),
-        ('letter', 'received', '27 September at 5:30pm', True),
-        ('letter', 'accepted', '27 September at 5:30pm', True),
-        ('letter', 'cancelled', '27 September at 5:30pm', False),  # The API won’t return cancelled letters
-        ('letter', 'permanent-failure', 'Permanent failure 27 September at 5:31pm', False),
-        ('letter', 'temporary-failure', '27 September at 5:30pm', False),  # Not currently a real letter status
-        ('letter', 'virus-scan-failed', 'Virus detected 27 September at 5:30pm', False),
-        ('letter', 'validation-failed', 'Validation failed 27 September at 5:30pm', False),
-        ('letter', 'technical-failure', 'Technical failure 27 September at 5:30pm', False),
+        ('email', 'created', 'Sending since 27 September at 12:30pm', True),
+        ('email', 'sending', 'Sending since 27 September at 12:30pm', True),
+        ('email', 'temporary-failure', 'Inbox not accepting messages right now 27 September at 12:31pm', False),
+        ('email', 'permanent-failure', 'Email address does not exist 27 September at 12:31pm', False),
+        ('email', 'delivered', 'Delivered 27 September at 12:31pm', True),
+        ('sms', 'created', 'Sending since 27 September at 12:30pm', True),
+        ('sms', 'sending', 'Sending since 27 September at 12:30pm', True),
+        ('sms', 'temporary-failure', 'Phone not accepting messages right now 27 September at 12:31pm', False),
+        ('sms', 'permanent-failure', 'Not delivered 27 September at 12:31pm', False),
+        ('sms', 'delivered', 'Delivered 27 September at 12:31pm', True),
+        ('letter', 'created', '27 September at 12:30pm', True),
+        ('letter', 'pending-virus-check', '27 September at 12:30pm', True),
+        ('letter', 'sending', '27 September at 12:30pm', True),
+        ('letter', 'delivered', '27 September at 12:30pm', True),
+        ('letter', 'received', '27 September at 12:30pm', True),
+        ('letter', 'accepted', '27 September at 12:30pm', True),
+        ('letter', 'cancelled', '27 September at 12:30pm', False),  # The API won’t return cancelled letters
+        ('letter', 'permanent-failure', 'Permanent failure 27 September at 12:31pm', False),
+        ('letter', 'temporary-failure', '27 September at 12:30pm', False),  # Not currently a real letter status
+        ('letter', 'virus-scan-failed', 'Virus detected 27 September at 12:30pm', False),
+        ('letter', 'validation-failed', 'Validation failed 27 September at 12:30pm', False),
+        ('letter', 'technical-failure', 'Technical failure 27 September at 12:30pm', False),
     ]
 )
 def test_sending_status_hint_displays_correctly_on_notifications_page(

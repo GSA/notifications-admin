@@ -1,5 +1,4 @@
 import json
-import uuid
 from datetime import datetime, timezone
 
 import pytest
@@ -7,13 +6,11 @@ from flask import url_for
 from freezegun import freeze_time
 
 from app.main.views.jobs import get_time_left
-from tests import job_json, notification_json, sample_uuid, user_json
+from tests import job_json, sample_uuid, user_json
 from tests.conftest import (
     SERVICE_ONE_ID,
     create_active_caseworking_user,
     create_active_user_with_permissions,
-    create_notifications,
-    create_template,
     normalize_spaces,
 )
 
@@ -64,7 +61,7 @@ def test_old_jobs_hub_redirects(
         )
     ]
 )
-@freeze_time("2016-01-01 11:09:00.061258")
+@freeze_time("2016-01-01 16:09:00.061258")
 def test_should_show_page_for_one_job(
     client_request,
     mock_get_service_template,
@@ -86,9 +83,6 @@ def test_should_show_page_for_one_job(
     )
 
     assert page.h1.text.strip() == 'thisisatest.csv'
-    assert page.select_one('.govuk-back-link')['href'] == url_for(
-        'main.uploads', service_id=SERVICE_ONE_ID,
-    )
     assert ' '.join(page.find('tbody').find('tr').text.split()) == (
         '07123456789 template content Delivered 1 January at 11:10am'
     )
@@ -317,151 +311,7 @@ def test_should_show_old_job(
     ]
 
 
-@freeze_time("2016-01-01 11:09:00.061258")
-def test_should_show_letter_job(
-    client_request,
-    mock_get_service_letter_template,
-    mock_get_letter_job,
-    mock_get_service_data_retention,
-    fake_uuid,
-    mocker,
-):
-    notifications = create_notifications(template_type='letter', subject='template subject')
-    get_notifications = mocker.patch(
-        'app.notification_api_client.get_notifications_for_service',
-        return_value=notifications,
-    )
-
-    page = client_request.get(
-        'main.view_job',
-        service_id=SERVICE_ONE_ID,
-        job_id=fake_uuid,
-    )
-    assert normalize_spaces(page.h1.text) == 'thisisatest.csv'
-    assert normalize_spaces(page.select('p.bottom-gutter')[0].text) == (
-        'Sent by Test User on 1 January at 11:09am Printing starts today at 5:30pm'
-    )
-    assert page.select('.banner-default-with-tick') == []
-    assert normalize_spaces(page.select('tbody tr')[0].text) == (
-        '1 Example Street template subject 1 January at 11:09am'
-    )
-    assert normalize_spaces(page.select('.keyline-block')[0].text) == (
-        '1 Letter'
-    )
-    assert normalize_spaces(page.select('.keyline-block')[1].text) == (
-        '6 January Estimated delivery date'
-    )
-    assert page.select_one('a[download]')['href'] == url_for(
-        'main.view_job_csv',
-        service_id=SERVICE_ONE_ID,
-        job_id=fake_uuid,
-    )
-    assert page.select('.hint') == []
-
-    get_notifications.assert_called_with(
-        SERVICE_ONE_ID,
-        fake_uuid,
-        status=[
-            'created',
-            'pending',
-            'sending',
-            'pending-virus-check',
-            'delivered',
-            'sent',
-            'returned-letter',
-            'failed',
-            'temporary-failure',
-            'permanent-failure',
-            'technical-failure',
-            'virus-scan-failed',
-            'validation-failed'
-        ],
-    )
-
-
-@freeze_time("2016-01-01 11:09:00")
-def test_should_show_letter_job_with_banner_after_sending_before_1730(
-    mocker,
-    client_request,
-    mock_get_service_letter_template,
-    mock_get_letter_job,
-    mock_get_service_data_retention,
-    fake_uuid,
-):
-    mocker.patch(
-        'app.notification_api_client.get_notifications_for_service',
-        return_value=create_notifications(template_type='letter', postage='second')
-    )
-
-    page = client_request.get(
-        'main.view_job',
-        service_id=SERVICE_ONE_ID,
-        job_id=fake_uuid,
-        just_sent='yes',
-    )
-
-    assert page.select('p.bottom-gutter') == []
-    assert normalize_spaces(page.select('.banner-default-with-tick')[0].text) == (
-        'Your letter has been sent. Printing starts today at 5:30pm.'
-    )
-    assert not page.select_one('.govuk-back-link')
-
-
-@freeze_time("2016-01-01 11:09:00")
-def test_should_show_letter_job_with_banner_when_there_are_multiple_CSV_rows(
-    mocker,
-    client_request,
-    mock_get_service_letter_template,
-    mock_get_letter_job_in_progress,
-    mock_get_service_data_retention,
-    fake_uuid,
-):
-    mocker.patch(
-        'app.notification_api_client.get_notifications_for_service',
-        return_value=create_notifications(template_type='letter', postage='second')
-    )
-
-    page = client_request.get(
-        'main.view_job',
-        service_id=SERVICE_ONE_ID,
-        job_id=fake_uuid,
-        just_sent='yes',
-    )
-
-    assert page.select('p.bottom-gutter') == []
-    assert normalize_spaces(page.select('.banner-default-with-tick')[0].text) == (
-        'Your letters have been sent. Printing starts today at 5:30pm.'
-    )
-
-
-@freeze_time("2016-01-01 18:09:00")
-def test_should_show_letter_job_with_banner_after_sending_after_1730(
-    mocker,
-    client_request,
-    mock_get_service_letter_template,
-    mock_get_letter_job,
-    mock_get_service_data_retention,
-    fake_uuid,
-):
-    mocker.patch(
-        'app.notification_api_client.get_notifications_for_service',
-        return_value=create_notifications(template_type='letter', postage='second')
-    )
-
-    page = client_request.get(
-        'main.view_job',
-        service_id=SERVICE_ONE_ID,
-        job_id=fake_uuid,
-        just_sent='yes',
-    )
-
-    assert page.select('p.bottom-gutter') == []
-    assert normalize_spaces(page.select('.banner-default-with-tick')[0].text) == (
-        'Your letter has been sent. Printing starts tomorrow at 5:30pm.'
-    )
-
-
-@freeze_time("2016-01-01T00:00:00.061258")
+@freeze_time("2016-01-01T05:00:00.061258")
 def test_should_show_scheduled_job(
     client_request,
     mock_get_service_template,
@@ -474,7 +324,6 @@ def test_should_show_scheduled_job(
         'main.view_job',
         service_id=SERVICE_ONE_ID,
         job_id=fake_uuid,
-        just_sent='yes',
     )
 
     assert normalize_spaces(page.select('main p')[1].text) == (
@@ -487,7 +336,6 @@ def test_should_show_scheduled_job(
         version=1,
     )
     assert page.select_one('main button[type=submit]').text.strip() == 'Cancel sending'
-    assert not page.select_one('.govuk-back-link')
 
 
 def test_should_cancel_job(
@@ -526,159 +374,7 @@ def test_should_not_show_cancelled_job(
     )
 
 
-def test_should_cancel_letter_job(
-    client_request,
-    mocker,
-    mock_get_service_letter_template,
-    active_user_with_permissions
-):
-    job_id = str(uuid.uuid4())
-    job = job_json(
-        SERVICE_ONE_ID,
-        active_user_with_permissions,
-        job_id=job_id,
-        created_at="2019-06-20T15:30:00.000001+00:00",
-        job_status="finished",
-        template_type="letter",
-    )
-    mocker.patch('app.job_api_client.get_job', side_effect=[{"data": job}])
-    notifications_json = notification_json(SERVICE_ONE_ID, job=job, status="created", template_type="letter")
-    mocker.patch('app.job_api_client.get_job', side_effect=[{"data": job}])
-    mocker.patch('app.notification_api_client.get_notifications_for_service', return_value=notifications_json)
-    mocker.patch('app.notification_api_client.get_notification_count_for_job_id', return_value=5)
-    mock_cancel = mocker.patch('app.job_api_client.cancel_letter_job', return_value=5)
-    client_request.post(
-        'main.cancel_letter_job',
-        service_id=SERVICE_ONE_ID,
-        job_id=job_id,
-        _expected_status=302,
-        _expected_redirect=url_for(
-            'main.service_dashboard',
-            service_id=SERVICE_ONE_ID,
-        )
-    )
-    mock_cancel.assert_called_once_with(SERVICE_ONE_ID, job_id)
-
-
-@freeze_time("2019-06-20 17:30:00.000001")
-@pytest.mark.parametrize("job_created_at, expected_fragment", [
-    ("2019-06-20T15:30:00.000001+00:00", "today"),
-    ("2019-06-19T15:30:00.000001+00:00", "yesterday"),
-    ("2019-06-18T15:30:00.000001+00:00", "on 18 June"),
-])
-def test_should_not_show_cancel_link_for_letter_job_if_too_late(
-    client_request,
-    mocker,
-    mock_get_service_letter_template,
-    mock_get_service_data_retention,
-    active_user_with_permissions,
-    job_created_at,
-    expected_fragment,
-):
-    job_id = uuid.uuid4()
-    job = job_json(
-        SERVICE_ONE_ID, active_user_with_permissions, job_id=job_id, created_at=job_created_at
-    )
-    notifications_json = notification_json(SERVICE_ONE_ID, job=job, status="created", template_type="letter")
-    mocker.patch('app.job_api_client.get_job', side_effect=[{"data": job}])
-    mocker.patch(
-        'app.notification_api_client.get_notifications_for_service',
-        return_value=notifications_json
-    )
-
-    page = client_request.get(
-        'main.view_job',
-        service_id=SERVICE_ONE_ID,
-        job_id=str(job_id)
-    )
-
-    assert "Cancel sending these letters" not in page
-    assert page.find('p', {'id': 'printing-info'}).text.strip() == "Printed {} at 5:30pm".format(expected_fragment)
-
-
-@freeze_time("2019-06-20 15:32:00.000001")
-@pytest.mark.parametrize(" job_status", [
-    "finished", "in progress"
-])
-def test_should_show_cancel_link_for_letter_job(
-    client_request,
-    mocker,
-    mock_get_service_letter_template,
-    mock_get_service_data_retention,
-    active_user_with_permissions,
-    job_status,
-):
-    job_id = uuid.uuid4()
-    job = job_json(
-        SERVICE_ONE_ID,
-        active_user_with_permissions,
-        job_id=job_id,
-        created_at="2019-06-20T15:30:00.000001+00:00",
-        job_status=job_status
-    )
-    notifications_json = notification_json(SERVICE_ONE_ID, job=job, status="created", template_type="letter")
-    mocker.patch('app.job_api_client.get_job', side_effect=[{"data": job}])
-    mocker.patch(
-        'app.notification_api_client.get_notifications_for_service',
-        return_value=notifications_json,
-    )
-
-    page = client_request.get(
-        'main.view_job',
-        service_id=SERVICE_ONE_ID,
-        job_id=str(job_id)
-    )
-
-    assert page.find('a', text='Cancel sending these letters').attrs["href"] == url_for(
-        "main.cancel_letter_job", service_id=SERVICE_ONE_ID, job_id=job_id
-    )
-    assert page.find('p', {'id': 'printing-info'}).text.strip() == "Printing starts today at 5:30pm"
-
-
-@freeze_time("2019-06-20 15:31:00.000001")
-@pytest.mark.parametrize('job_status,number_of_processed_notifications', [['in progress', 2], ['finished', 1]])
-def test_dont_cancel_letter_job_when_to_early_to_cancel(
-    client_request,
-    mocker,
-    mock_get_service_letter_template,
-    mock_get_service_data_retention,
-    active_user_with_permissions,
-    job_status,
-    number_of_processed_notifications,
-):
-    job_id = uuid.uuid4()
-    job = job_json(
-        SERVICE_ONE_ID,
-        active_user_with_permissions,
-        job_id=job_id,
-        created_at="2019-06-20T15:30:00.000001+00:00",
-        job_status=job_status,
-        notification_count=2
-    )
-    mocker.patch('app.job_api_client.get_job', side_effect=[{"data": job}, {"data": job}])
-
-    notifications_json = notification_json(
-        SERVICE_ONE_ID, job=job, status="created", template_type="letter", rows=number_of_processed_notifications
-    )
-    mocker.patch('app.notification_api_client.get_notifications_for_service', return_value=notifications_json)
-    mocker.patch(
-        'app.notification_api_client.get_notification_count_for_job_id', return_value=number_of_processed_notifications
-    )
-
-    mock_cancel = mocker.patch('app.job_api_client.cancel_letter_job')
-    page = client_request.post(
-        'main.cancel_letter_job',
-        service_id=SERVICE_ONE_ID,
-        job_id=str(job_id),
-        _expected_status=200,
-    )
-    assert mock_cancel.called is False
-    flash_message = normalize_spaces(page.find('div', class_='banner-dangerous').text)
-
-    assert 'We are still processing these letters, please try again in a minute.' in flash_message
-
-
-@freeze_time("2016-01-01 00:00:00.000001")
+@freeze_time("2016-01-01 05:00:00.000001")
 def test_should_show_updates_for_one_job_as_json(
     client_request,
     service_one,
@@ -708,7 +404,7 @@ def test_should_show_updates_for_one_job_as_json(
     assert 'Sent by Test User on 1 January at midnight' in content['status']
 
 
-@freeze_time("2016-01-01 00:00:00.000001")
+@freeze_time("2016-01-01 05:00:00.000001")
 def test_should_show_updates_for_scheduled_job_as_json(
     client_request,
     service_one,
@@ -723,8 +419,8 @@ def test_should_show_updates_for_scheduled_job_as_json(
         service_one['id'],
         created_by=user_json(),
         job_id=fake_uuid,
-        scheduled_for='2016-06-01T13:00:00+00:00',
-        processing_started='2016-06-01T15:00:00+00:00',
+        scheduled_for='2016-06-01T18:00:00+00:00',
+        processing_started='2016-06-01T20:00:00+00:00',
     )})
 
     response = client_request.get_response(
@@ -756,48 +452,3 @@ def test_should_show_updates_for_scheduled_job_as_json(
 @freeze_time("2016-01-10 12:00:00.000000")
 def test_time_left(job_created_at, expected_message):
     assert get_time_left(job_created_at) == expected_message
-
-
-@freeze_time("2016-01-01 11:09:00.061258")
-def test_should_show_letter_job_with_first_class_if_notifications_are_first_class(
-    client_request,
-    mock_get_service_letter_template,
-    mock_get_letter_job,
-    mock_get_service_data_retention,
-    fake_uuid,
-    mocker,
-):
-    notifications = create_notifications(template_type='letter', postage='first')
-    mocker.patch('app.notification_api_client.get_notifications_for_service', return_value=notifications)
-
-    page = client_request.get(
-        'main.view_job',
-        service_id=SERVICE_ONE_ID,
-        job_id=fake_uuid,
-    )
-
-    assert normalize_spaces(page.select('.keyline-block')[1].text) == '5 January Estimated delivery date'
-
-
-@freeze_time("2016-01-01 11:09:00.061258")
-def test_should_show_letter_job_with_first_class_if_no_notifications(
-    client_request,
-    service_one,
-    mock_get_letter_job,
-    fake_uuid,
-    mock_get_notifications_with_no_notifications,
-    mock_get_service_data_retention,
-    mocker
-):
-    mocker.patch(
-        'app.service_api_client.get_service_template',
-        return_value={'data': create_template(template_type='letter', postage='first')}
-    )
-
-    page = client_request.get(
-        'main.view_job',
-        service_id=SERVICE_ONE_ID,
-        job_id=fake_uuid,
-    )
-
-    assert normalize_spaces(page.select('.keyline-block')[1].text) == '5 January Estimated delivery date'
