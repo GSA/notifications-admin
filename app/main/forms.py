@@ -75,7 +75,7 @@ from app.utils.user_permissions import all_ui_permissions, permission_options
 
 def get_time_value_and_label(future_time):
     return (
-        future_time.replace(tzinfo=None).isoformat(),
+        future_time.astimezone(pytz.utc).replace(tzinfo=None).isoformat(),
         '{} at {} ET'.format(
             get_human_day(future_time.astimezone(current_app.config['PY_TIMEZONE'])),
             get_human_time(future_time.astimezone(current_app.config['PY_TIMEZONE']))
@@ -96,9 +96,9 @@ def get_human_time(time):
 def get_human_day(time, prefix_today_with='T'):
     #  Add 1 hour to get ‘midnight today’ instead of ‘midnight tomorrow’
     time = (time - timedelta(hours=1)).strftime('%A')
-    if time == datetime.utcnow().strftime('%A'):
+    if time == datetime.now(current_app.config['PY_TIMEZONE']).strftime('%A'):
         return '{}oday'.format(prefix_today_with)
-    if time == (datetime.utcnow() + timedelta(days=1)).strftime('%A'):
+    if time == (datetime.now(current_app.config['PY_TIMEZONE']) + timedelta(days=1)).strftime('%A'):
         return 'Tomorrow'
     return time
 
