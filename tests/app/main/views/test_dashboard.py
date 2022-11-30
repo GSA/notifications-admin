@@ -230,7 +230,7 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_messages(
     banner = page.select('a.banner-dashboard')[1]
     assert normalize_spaces(
         banner.text
-    ) == '9,999 text messages received latest message 5 hours ago'
+    ) == '9,999 text messages received latest message just now'
     assert banner['href'] == url_for(
         'main.inbox', service_id=SERVICE_ONE_ID
     )
@@ -264,14 +264,14 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_no_messages(
 
 
 @pytest.mark.parametrize('index, expected_row', enumerate([
-    '07900 900000 message-1 6 hours ago',
-    '07900 900000 message-2 6 hours ago',
-    '07900 900000 message-3 6 hours ago',
-    '07900 900002 message-4 8 hours ago',
-    '+33 1 12 34 56 78 message-5 10 hours ago',
-    '+1 202-555-0104 message-6 12 hours ago',
-    '+1 202-555-0104 message-7 14 hours ago',
-    '+682 12345 message-8 14 hours ago',
+    '07900 900000 message-1 1 hour ago',
+    '07900 900000 message-2 1 hour ago',
+    '07900 900000 message-3 1 hour ago',
+    '07900 900002 message-4 3 hours ago',
+    '+33 1 12 34 56 78 message-5 5 hours ago',
+    '+1 202-555-0104 message-6 7 hours ago',
+    '+1 202-555-0104 message-7 9 hours ago',
+    '+682 12345 message-8 9 hours ago',
 ]))
 def test_inbox_showing_inbound_messages(
     client_request,

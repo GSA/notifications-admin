@@ -1,3 +1,4 @@
+from datetime import datetime
 from functools import partial
 
 import pytest
@@ -7,6 +8,7 @@ from freezegun import freeze_time
 from app.formatters import (
     email_safe,
     format_datetime_relative,
+    format_delta,
     format_notification_status_as_url,
     format_number_in_pounds_as_currency,
     round_to_significant_figures,
@@ -129,3 +131,8 @@ def test_round_to_significant_figures(value, significant_figures, expected_resul
 ])
 def test_email_safe_return_dot_separated_email_domain(service_name, safe_email):
     assert email_safe(service_name) == safe_email
+
+
+def test_format_delta():
+    naive_now_utc = datetime.utcnow().isoformat()
+    assert format_delta(naive_now_utc) == "just now"

@@ -9,7 +9,6 @@ from numbers import Number
 import ago
 import dateutil
 import humanize
-import pytz
 from flask import Markup, current_app, url_for
 from notifications_utils.field import Field
 from notifications_utils.formatters import make_quotes_smart
@@ -166,11 +165,12 @@ def naturaltime_without_indefinite_article(date):
 
 
 def format_delta(date):
+    # This method assumes that date is in UTC
     date = parse_naive_dt(date)
     delta = (
-        datetime.now(timezone.utc)
+        datetime.utcnow()
     ) - (
-        convert_utc_to_local_timezone(date).replace(tzinfo=pytz.utc)
+        date
     )
     if delta < timedelta(seconds=30):
         return "just now"
@@ -180,9 +180,9 @@ def format_delta(date):
 
 
 def format_delta_days(date):
+    # This method assumes that date is in UTC
     date = parse_naive_dt(date)
-    now = datetime.now(timezone.utc)
-    date = convert_utc_to_local_timezone(date).replace(tzinfo=pytz.utc)
+    now = datetime.utcnow()
     if date.strftime('%Y-%m-%d') == now.strftime('%Y-%m-%d'):
         return "today"
     if date.strftime('%Y-%m-%d') == (now - timedelta(days=1)).strftime('%Y-%m-%d'):

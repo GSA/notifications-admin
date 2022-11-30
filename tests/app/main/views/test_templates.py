@@ -1867,7 +1867,7 @@ def test_should_show_delete_template_page_with_time_block(
     mocker.patch('app.template_statistics_client.get_last_used_date_for_template',
                  return_value='2012-01-01 12:00:00')
 
-    with freeze_time('2012-01-01 7:10:00'):
+    with freeze_time('2012-01-01 12:10:00'):
         page = client_request.get(
             '.delete_service_template',
             service_id=SERVICE_ONE_ID,

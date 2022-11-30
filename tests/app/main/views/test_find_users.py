@@ -121,7 +121,7 @@ def test_user_information_page_shows_information_about_user(
         'test@gsa.gov',
         '+447700900986',
         'Text message code',
-        'Last logged in 5 hours ago',
+        'Last logged in just now',
     ]
 
     assert '0 failed login attempts' not in page.text
