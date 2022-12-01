@@ -3,11 +3,6 @@
 <div class='govuk-grid-row ajax-block-container'>
   <div class='govuk-grid-column-one-half'>
     <div class="keyline-block">
-      {{ big_number("Unlimited", 'free email allowance', smaller=True) }}
-    </div>
-  </div>
-  <div class='govuk-grid-column-one-half'>
-    <div class="keyline-block">
       {% if sms_cost %}
         {{ big_number(
           sms_cost,
@@ -20,14 +15,9 @@
       {% endif %}
     </div>
   </div>
-  <!-- <div class='govuk-grid-column-one-third'>
+  <div class='govuk-grid-column-one-half'>
     <div class="keyline-block">
-      {{ big_number(
-        letter_cost,
-        'spent on letters',
-        currency="$",
-        smaller=True
-      ) }}
+      {{ big_number("No email", 'during SMS pilot', smaller=True) }}
     </div>
-  </div> -->
+  </div>
 </div>
