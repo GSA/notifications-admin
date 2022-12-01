@@ -35,7 +35,6 @@ class Config(object):
 
     # Logging
     NOTIFY_LOG_LEVEL = os.environ.get('NOTIFY_LOG_LEVEL', 'INFO')
-    NOTIFY_LOG_PATH = os.environ.get('NOTIFY_LOG_PATH', 'application.log')
 
     DEFAULT_SERVICE_LIMIT = 50
 

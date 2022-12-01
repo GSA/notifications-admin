@@ -4,6 +4,7 @@ applications:
     buildpack: python_buildpack
     instances: ((instances))
     memory: ((memory))
+    command: gunicorn -c /home/vcap/app/gunicorn_config.py application
     health-check-type: http
     health-check-http-endpoint: '/_status?simple=true'
     health-check-invocation-timeout: 10
@@ -19,7 +20,6 @@ applications:
     env:
       NOTIFY_ENVIRONMENT: ((env))
       NOTIFY_APP_NAME: admin
-      NOTIFY_LOG_PATH: /home/vcap/logs/app.log
       NOTIFY_LOG_LEVEL: INFO
       FLASK_APP: application.py
       FLASK_ENV: production
