@@ -50,19 +50,19 @@
       <!-- <div class='govuk-grid-row'>
         <div class='govuk-grid-column-one-half'>
           <div class="keyline-block">
-            &nbsp;
-          </div>
-        </div>
-        <div class='govuk-grid-column-one-half'>
-          <div class="keyline-block">
             {{ big_number(
               sms_cost,
               'spent',
               currency="$",
               smaller=True
-            ) }}
+              ) }}
+            </div>
           </div>
-        </div>
+          <div class='govuk-grid-column-one-half'>
+            <div class="keyline-block">
+              &nbsp;
+            </div>
+          </div>
       </div> -->
 
       {% if months %}
@@ -83,7 +83,7 @@
             {% endcall %}
             {% call field(align='left') %}
               {{ big_number(
-                item.sms_cost + item.letter_cost,
+                item.sms_cost,
                 currency="$",
                 smallest=True
               ) }}
@@ -95,13 +95,7 @@
                   <li class="tabular-numbers">{{ sms.charged_units|message_count('sms') }} at
                   {{- ' {:.2f}p'.format(sms.rate * 100) }}</li>
               {% endfor %}
-              <!-- {% for letter in item.letter_breakdown %}
-                {% if letter.sent %}
-                  <li class="tabular-numbers">{{ "{:,} {}".format(letter.sent, letter.postage_description) }} {{ letter.sent|message_count_label('letter', suffix='') }} at
-                  {{ letter.rate | format_number_in_pounds_as_currency }}</li>
-                {% endif %}
-              {% endfor %} -->
-              {% if not (item.sms_free_allowance_used or item.sms_cost or item.letter_breakdown) %}
+              {% if not (item.sms_free_allowance_used or item.sms_cost) %}
                 <li aria-hidden="true">–</li>
               {% endif %}
               </ul>
@@ -114,7 +108,7 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-third">
         <p class="align-with-heading-copy">
-          Financial year ends 31&nbsp;March
+          Federal fiscal year ends September&nbsp;30
         </p>
       </div>
       <div class="govuk-grid-column-two-thirds">

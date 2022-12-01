@@ -326,10 +326,6 @@ def get_annual_usage_breakdown(usage, free_sms_fragment_limit):
     emails = get_usage_breakdown_by_type(usage, 'email')
     emails_sent = sum(row['notifications_sent'] for row in emails)
 
-    letters = get_usage_breakdown_by_type(usage, 'letter')
-    letters_sent = sum(row['notifications_sent'] for row in letters)
-    letters_cost = sum(row['cost'] for row in letters)
-
     return {
         'emails_sent': emails_sent,
         'sms_free_allowance': sms_free_allowance,
@@ -337,8 +333,6 @@ def get_annual_usage_breakdown(usage, free_sms_fragment_limit):
         'sms_allowance_remaining': max(0, (sms_free_allowance - sms_chargeable_units)),
         'sms_cost': sms_cost,
         'sms_breakdown': sms,
-        'letter_sent': letters_sent,
-        'letter_cost': letters_cost
     }
 
 
@@ -374,8 +368,8 @@ def get_months_for_financial_year(year, time_format='%B'):
     return [
         month.strftime(time_format)
         for month in (
-            get_months_for_year(4, 13, year) +
-            get_months_for_year(1, 4, year + 1)
+            get_months_for_year(10, 13, year) +
+            get_months_for_year(1, 10, year + 1)
         )
         if month < datetime.now()
     ]
@@ -391,7 +385,6 @@ def get_usage_breakdown_by_type(usage, notification_type):
 
 def get_monthly_usage_breakdown(year, monthly_usage):
     sms = get_usage_breakdown_by_type(monthly_usage, 'sms')
-    letters = get_usage_breakdown_by_type(monthly_usage, 'letter')
 
     for month in get_months_for_financial_year(year):
         monthly_sms = [row for row in sms if row['month'] == month]
@@ -399,14 +392,8 @@ def get_monthly_usage_breakdown(year, monthly_usage):
         sms_cost = sum(row['cost'] for row in monthly_sms)
         sms_breakdown = [row for row in monthly_sms if row['charged_units']]
 
-        monthly_letters = [row for row in letters if row['month'] == month]
-        letter_cost = sum(row['cost'] for row in monthly_letters)
-        letter_breakdown = get_monthly_usage_breakdown_for_letters(monthly_letters)
-
         yield {
             'month': month,
-            'letter_cost': letter_cost,
-            'letter_breakdown': list(letter_breakdown),
             'sms_free_allowance_used': sms_free_allowance_used,
             'sms_breakdown': sms_breakdown,
             'sms_cost': sms_cost,
@@ -461,7 +448,7 @@ def get_tuples_of_financial_years(
 ):
     return (
         (
-            'financial year',
+            'fiscal year',
             year,
             partial_url(year=year),
             '{} to {}'.format(year, year + 1),
