@@ -132,7 +132,7 @@ def usage(service_id):
     units = billing_api_client.get_monthly_usage_for_service(service_id, year)
     yearly_usage = billing_api_client.get_annual_usage_for_service(service_id, year)
     more_stats = []
-    
+
     try:
         more_stats = format_monthly_stats_to_list(
                 service_api_client.get_monthly_notification_stats(service_id, year)['data']
@@ -145,7 +145,7 @@ def usage(service_id):
             # This is all the other months
             # and we need last year's data
             more_stats = [month for month in more_stats if month['name'] not in ['October', 'November', 'December']]
-    except Exception as e:
+    except Exception:
         pass
 
     return render_template(
