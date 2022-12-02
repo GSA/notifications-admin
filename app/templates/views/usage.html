@@ -39,10 +39,10 @@
           </div>
         </div>
         <div class='govuk-grid-column-one-half'>
-          <h2 class='heading-small'>Emails</h2>
-          <div class="keyline-block">
-            {{ big_number(emails_sent, 'sent', smaller=True) }}
-            {{ big_number("No email", 'during SMS pilot', smaller=True) }}
+          <h2 class='heading-small' style="color: gray;">Emails</h2>
+          <div class="keyline-block" style="color: gray;">
+            {{ big_number(emails_sent, 'email disabled during SMS pilot', smaller=True) }}
+            {{ big_number("", '', smaller=True) }}
           </div>
         </div>
       </div>
@@ -74,6 +74,7 @@
             empty_message='',
             field_headings=[
               'By month',
+              hidden_field_heading('Text messages'),
               hidden_field_heading('Cost'),
             ],
             field_headings_visible=True
@@ -81,6 +82,24 @@
             {% call row_heading() %}
               {{ item.month }}
             {% endcall %}
+            {% for counts, template_type in [
+              (item.sms_counts.0, 'sms'),
+            ] %}
+              {% call field(align='left') %}
+                {{ big_number(
+                  counts.requested,
+                  counts.requested|message_count_label(template_type, suffix=''),
+                  smallest=True,
+                ) }}
+                {% if counts.requested %}
+                  <span class="{{ 'failure-highlight' if counts.show_warning else '' }}">
+                    {{ "{:,}".format(counts.failed) }} failed
+                  </span>
+                {% else %}
+                  –
+                {% endif %}
+              {% endcall %}
+            {% endfor %}
             {% call field(align='left') %}
               {{ big_number(
                 item.sms_cost,
@@ -100,6 +119,7 @@
               {% endif %}
               </ul>
             {% endcall %}
+            
           {% endcall %}
         </div>
       {% endif %}

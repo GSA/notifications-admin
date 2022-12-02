@@ -131,10 +131,26 @@ def usage(service_id):
     free_sms_allowance = billing_api_client.get_free_sms_fragment_limit_for_year(service_id, year)
     units = billing_api_client.get_monthly_usage_for_service(service_id, year)
     yearly_usage = billing_api_client.get_annual_usage_for_service(service_id, year)
+    more_stats = []
+    
+    try:
+        more_stats = format_monthly_stats_to_list(
+                service_api_client.get_monthly_notification_stats(service_id, year)['data']
+        )
+        if year == current_financial_year:
+            # This includes Oct, Nov, Dec
+            # but we don't need next year's data yet
+            more_stats = [month for month in more_stats if month['name'] in ['October', 'November', 'December']]
+        elif year == (current_financial_year + 1):
+            # This is all the other months
+            # and we need last year's data
+            more_stats = [month for month in more_stats if month['name'] not in ['October', 'November', 'December']]
+    except Exception as e:
+        pass
 
     return render_template(
         'views/usage.html',
-        months=list(get_monthly_usage_breakdown(year, units)),
+        months=list(get_monthly_usage_breakdown(year, units, more_stats)),
         selected_year=year,
         years=get_tuples_of_financial_years(
             partial(url_for, '.usage', service_id=service_id),
@@ -383,7 +399,7 @@ def get_usage_breakdown_by_type(usage, notification_type):
     return [row for row in usage if row['notification_type'] == notification_type]
 
 
-def get_monthly_usage_breakdown(year, monthly_usage):
+def get_monthly_usage_breakdown(year, monthly_usage, more_stats):
     sms = get_usage_breakdown_by_type(monthly_usage, 'sms')
 
     for month in get_months_for_financial_year(year):
@@ -391,44 +407,15 @@ def get_monthly_usage_breakdown(year, monthly_usage):
         sms_free_allowance_used = sum(row['free_allowance_used'] for row in monthly_sms)
         sms_cost = sum(row['cost'] for row in monthly_sms)
         sms_breakdown = [row for row in monthly_sms if row['charged_units']]
+        sms_counts = [row['sms_counts'] for row in more_stats if row['sms_counts'] and row['name'] == month]
 
         yield {
             'month': month,
             'sms_free_allowance_used': sms_free_allowance_used,
             'sms_breakdown': sms_breakdown,
             'sms_cost': sms_cost,
+            'sms_counts': sms_counts,
         }
-
-
-def get_monthly_usage_breakdown_for_letters(monthly_letters):
-    postage_order = {'first class': 0, 'second class': 1, 'international': 2}
-
-    def group_key(row): return (
-        postage_order[get_monthly_usage_postage_description(row)], row['rate']
-    )
-
-    # First sort letter rows by postage and then by rate, clumping "europe" and
-    # "rest-of-world" postage together as "international". Group the sorted rows
-    # together using the same fields - "group_key" is used for both operations.
-    # Note that "groupby" preserves the sort order in the groups it returns.
-    rate_groups = groupby(sorted(monthly_letters, key=group_key), key=group_key)
-
-    for _key, rate_group in rate_groups:
-        # rate_group is a one-time generator so must be converted to a list for reuse
-        rate_group = list(rate_group)
-
-        yield {
-            "sent": sum(x['notifications_sent'] for x in rate_group),
-            "rate": rate_group[0]['rate'],
-            "cost": sum(x['cost'] for x in rate_group),
-            "postage_description": get_monthly_usage_postage_description(rate_group[0])
-        }
-
-
-def get_monthly_usage_postage_description(row):
-    if row['postage'] in ('first', 'second'):
-        return f'{row["postage"]} class'
-    return 'international'
 
 
 def requested_and_current_financial_year(request):
