@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 from flask import url_for
 from freezegun import freeze_time
 
-from app.main.forms import FieldWithNoneOption
 from tests.conftest import SERVICE_ONE_ID, normalize_spaces, sample_uuid
 
 
@@ -184,7 +183,8 @@ def test_message_status_page_contains_message_status_ids(client_request):
     # so this test ensures we don't accidentally remove them
     page = client_request.get('main.message_status')
 
-    assert page.find(id='email-statuses')
+    # email-statuses is commented out in view
+    # assert page.find(id='email-statuses')
     assert page.find(id='text-message-statuses')
 
 
@@ -275,69 +275,6 @@ def test_email_branding_preview(
     )
     assert page.title.text == 'Email branding preview'
     assert mock_get_email_branding.called is email_branding_retrieved
-
-
-@pytest.mark.parametrize('branding_style, filename', [
-    ('hm-government', 'hm-government'),
-    (None, 'no-branding'),
-    (FieldWithNoneOption.NONE_OPTION_VALUE, 'no-branding')
-])
-def test_letter_template_preview_links_to_the_correct_image(
-    client_request,
-    mocker,
-    mock_get_letter_branding_by_id,
-    branding_style,
-    filename,
-):
-    page = client_request.get(
-        'main.letter_template',
-        _test_page_title=False,
-        # Letter HTML doesn’t use the Design System, so elements won’t have class attributes
-        _test_for_elements_without_class=False,
-        branding_style=branding_style
-    )
-
-    image_link = page.find('img')['src']
-
-    assert image_link == url_for(
-        'no_cookie.letter_branding_preview_image',
-        filename=filename,
-        page=1
-    )
-
-
-def test_letter_template_preview_headers(
-    client_request,
-    mock_get_letter_branding_by_id,
-):
-    response = client_request.get_response(
-        'main.letter_template', branding_style='hm-government'
-    )
-
-    assert response.headers.get('X-Frame-Options') == 'SAMEORIGIN'
-
-
-def test_letter_spec_redirect(client_request):
-    client_request.get(
-        'main.letter_spec',
-        _expected_status=302,
-        _expected_redirect=(
-            'https://docs.notifications.service.gov.uk'
-            '/documentation/images/notify-pdf-letter-spec-v2.4.pdf'
-        ),
-    )
-
-
-def test_letter_spec_redirect_with_non_logged_in_user(client_request):
-    client_request.logout()
-    client_request.get(
-        'main.letter_spec',
-        _expected_status=302,
-        _expected_redirect=(
-            'https://docs.notifications.service.gov.uk'
-            '/documentation/images/notify-pdf-letter-spec-v2.4.pdf'
-        ),
-    )
 
 
 def test_font_preload(

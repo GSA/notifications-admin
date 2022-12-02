@@ -106,7 +106,7 @@ def _get_example_performance_data():
     }
 
 
-@freeze_time('2021-01-01')
+@freeze_time('2021-01-01 12:00')
 def test_should_render_performance_page(
     mocker,
     client_request,
@@ -132,13 +132,13 @@ def test_should_render_performance_page(
         ''
         'Messages sent since May 2016 '
         'Date Emails Text messages Letters '
-        '27 February 2021 1 2 3 '
         '26 February 2021 1 2 3 '
         '25 February 2021 1 2 3 '
         '24 February 2021 1 2 3 '
         '23 February 2021 1 2 3 '
         '22 February 2021 1 2 3 '
-        '21 February 2021 1,234,567 123,456 123 '
+        '21 February 2021 1 2 3 '
+        '20 February 2021 1,234,567 123,456 123 '
 
 
         'Only showing the last 7 days '
@@ -147,13 +147,13 @@ def test_should_render_performance_page(
         '98.31% on average '
         'Messages sent within 10 seconds '
         'Date Percentage '
-        '27 February 2021 98.60% '
-        '26 February 2021 100.00% '
-        '25 February 2021 99.99% '
-        '24 February 2021 100.00% '
-        '23 February 2021 95.00% '
-        '22 February 2021 95.30% '
-        '21 February 2021 99.25% '
+        '26 February 2021 98.60% '
+        '25 February 2021 100.00% '
+        '24 February 2021 99.99% '
+        '23 February 2021 100.00% '
+        '22 February 2021 95.00% '
+        '21 February 2021 95.30% '
+        '20 February 2021 99.25% '
         'Only showing the last 7 days '
         ''
         'Organisations using Notify '

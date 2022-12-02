@@ -5,7 +5,6 @@ name = "pypi"
 
 [packages]
 ago = "==0.0.93"
-awscli-cwlogs = ">=1.4,<1.5"
 blinker = "==1.4"
 fido2 = "==0.9.3"
 flask = "==2.1.2"
@@ -20,7 +19,6 @@ humanize = "==4.1.0"
 itsdangerous = "==2.1.2"
 jinja2 = "==3.1.2"
 notifications-python-client = "==6.3.0"
-notifications-utils = {version = "==56.0.3", git = "https://github.com/GSA/notifications-utils.git"}
 prometheus-client = "==0.14.1"
 pyexcel = "==0.7.0"
 pyexcel-io = "==0.6.6"
@@ -33,6 +31,7 @@ pytz = "==2022.1"
 rtreelib = "==0.2.0"
 werkzeug = "==2.1.2"
 wtforms = "==3.0.1"
+notifications-utils = {editable = true, ref = "6fd4efc0f324244bd5694cfa008f52dc9878ed55", git = "https://github.com/GSA/notifications-utils"}
 
 [dev-packages]
 isort = "==5.10.1"

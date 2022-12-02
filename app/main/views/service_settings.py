@@ -16,7 +16,6 @@ from notifications_python_client.errors import HTTPError
 from notifications_utils.clients.zendesk.zendesk_client import (
     NotifySupportTicket,
 )
-from notifications_utils.timezones import utc_string_to_aware_gmt_datetime
 
 from app import (
     billing_api_client,
@@ -67,6 +66,7 @@ from app.main.forms import (
 from app.utils import DELIVERED_STATUSES, FAILURE_STATUSES, SENDING_STATUSES
 from app.utils.branding import NHS_EMAIL_BRANDING_ID
 from app.utils.branding import get_email_choices as get_email_branding_choices
+from app.utils.time import parse_naive_dt
 from app.utils.user import (
     user_has_permissions,
     user_is_gov_user,
@@ -440,8 +440,7 @@ def get_service_verify_reply_to_address_partials(service_id, notification_id):
                     is_default=is_default
                 )
     seconds_since_sending = (
-        utc_string_to_aware_gmt_datetime(datetime.utcnow().isoformat()) -
-        utc_string_to_aware_gmt_datetime(notification['created_at'])
+        datetime.utcnow() - parse_naive_dt(notification['created_at'])
     ).seconds
     if notification["status"] in FAILURE_STATUSES or (
         notification["status"] in SENDING_STATUSES and

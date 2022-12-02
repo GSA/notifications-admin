@@ -1,10 +1,12 @@
 import uuid
 from collections import OrderedDict
+from datetime import date
 from unittest.mock import call
 
 import pytest
 from flask import url_for
 
+from app.formatters import format_datetime_short
 from tests import sample_uuid, validate_route_permission
 from tests.conftest import (
     SERVICE_ONE_ID,
@@ -195,7 +197,7 @@ def test_should_show_api_keys_page(
     revoke_link = page.select_one('main tr a.govuk-link.govuk-link--destructive')
 
     assert rows[0] == 'API keys Action'
-    assert rows[1] == 'another key name Revoked 1 January at 1:00am'
+    assert rows[1] == f"another key name Revoked {format_datetime_short(date.fromtimestamp(0).isoformat())}"
     assert rows[2] == 'some key name Revoke some key name'
 
     assert normalize_spaces(revoke_link.text) == 'Revoke some key name'

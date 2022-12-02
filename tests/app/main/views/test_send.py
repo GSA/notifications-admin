@@ -2734,33 +2734,6 @@ def test_create_job_should_call_api(
     )
 
 
-def test_can_start_letters_job(
-    client_request,
-    platform_admin_user,
-    mock_create_job,
-    service_one,
-    fake_uuid
-):
-    with client_request.session_transaction() as session:
-        session['file_uploads'] = {
-            fake_uuid: {
-                'template_id': fake_uuid,
-                'notification_count': 123,
-                'valid': True
-            }
-        }
-
-    client_request.login(platform_admin_user)
-    response = client_request.post_response(
-        'main.start_job',
-        service_id=service_one['id'],
-        upload_id=fake_uuid,
-        _data={},
-        _expected_status=302,
-    )
-    assert 'just_sent=yes' in response.location
-
-
 @pytest.mark.parametrize('filetype, extra_args, expected_values, expected_page', [
     (
         'png',
@@ -4253,14 +4226,14 @@ def test_redirects_to_template_if_job_exists_already(
         'email',
         '6ce466d0-fd6a-11e5-82f5-e0accb9d11a6',
         ['EmergencyContactList.xls'],
-        'Uploaded today at 10:59am',
+        'Uploaded today at 5:59am',
         '100 email addresses',
     ),
     (
         'sms',
         'd7b0bd1a-d1c7-4621-be5c-3c1b4278a2ad',
         ['phone number list.csv', 'UnusedList.tsv'],
-        'Uploaded today at 1:00pm',
+        'Uploaded today at 8:00am',
         '123 phone numbers',
     ),
 ))

@@ -13,31 +13,7 @@ from tests.conftest import (
 )
 
 
-@pytest.mark.parametrize('extra_permissions', (
-    pytest.param(
-        [],
-        marks=pytest.mark.xfail(raises=AssertionError),
-    ),
-    pytest.param(
-        ['upload_letters'],
-        marks=pytest.mark.xfail(raises=AssertionError),
-    ),
-    ['letter'],
-    ['letter', 'upload_letters'],
-))
-def test_upload_letters_button_only_with_letters_permission(
-    client_request,
-    service_one,
-    mock_get_uploads,
-    mock_get_jobs,
-    mock_get_no_contact_lists,
-    extra_permissions,
-):
-    service_one['permissions'] += extra_permissions
-    page = client_request.get('main.uploads', service_id=SERVICE_ONE_ID)
-    assert page.find('a', text=re.compile('Upload a letter'))
-
-
+@pytest.mark.skip(reason="Not sure that TTS needs this")
 @pytest.mark.parametrize('user', (
     create_platform_admin_user(),
     create_active_user_with_permissions(),
@@ -62,10 +38,6 @@ def test_all_users_have_upload_contact_list(
     ([], (
         'You have not uploaded any files recently.'
     )),
-    (['letter'], (
-        'You have not uploaded any files recently. '
-        'Upload a letter and Notify will print, pack and post it for you.'
-    )),
 ))
 def test_get_upload_hub_with_no_uploads(
     mocker,
@@ -85,6 +57,7 @@ def test_get_upload_hub_with_no_uploads(
     assert not page.select('.file-list-filename')
 
 
+@pytest.mark.skip(reason="Needs to be rewritten with no letters")
 @freeze_time('2017-10-10 10:10:10')
 def test_get_upload_hub_page(
     mocker,
@@ -118,7 +91,7 @@ def test_get_upload_hub_page(
 
     assert normalize_spaces(uploads[1].text.strip()) == (
         'some.csv '
-        'Sent 1 January 2016 at 11:09am '
+        'Sent 1 January 2016 at 6:09am '
         '0 sending 8 delivered 2 failed'
     )
     assert uploads[1].select_one('a.file-list-filename-large')['href'] == (
@@ -127,7 +100,7 @@ def test_get_upload_hub_page(
 
     assert normalize_spaces(uploads[2].text.strip()) == (
         'some.pdf '
-        'Sent 1 January 2016 at 11:09am '
+        'Sent 1 January 2016 at 6:09am '
         'Firstname Lastname '
         '123 Example Street'
     )
@@ -139,159 +112,6 @@ def test_get_upload_hub_page(
     )
     assert uploads[2].select_one('a.file-list-filename-large')['href'] == (
         '/services/{}/notification/letter_id_1'.format(SERVICE_ONE_ID)
-    )
-
-
-@freeze_time('2020-02-02 14:00')
-def test_get_uploaded_letters(
-    mocker,
-    client_request,
-    service_one,
-    mock_get_uploaded_letters,
-):
-    page = client_request.get(
-        'main.uploaded_letters',
-        service_id=SERVICE_ONE_ID,
-        letter_print_day='2020-02-02'
-    )
-    assert page.select_one('.govuk-back-link')['href'] == url_for(
-        'main.uploads',
-        service_id=SERVICE_ONE_ID,
-    )
-    assert normalize_spaces(
-        page.select_one('h1').text
-    ) == (
-        'Uploaded letters'
-    )
-    assert normalize_spaces(
-        page.select('main p')[0].text
-    ) == (
-        '1,234 letters'
-    )
-    assert normalize_spaces(
-        page.select('main p')[1].text
-    ) == (
-        'Printing starts today at 5:30pm'
-    )
-
-    assert [
-        normalize_spaces(row.text)
-        for row in page.select('tbody tr')
-    ] == [
-        (
-            'Homer-Simpson.pdf '
-            '742 Evergreen Terrace '
-            '2 February at 1:59pm'
-        ),
-        (
-            'Kevin-McCallister.pdf '
-            '671 Lincoln Avenue, Winnetka '
-            '2 February at 12:59pm'
-        ),
-    ]
-
-    assert [
-        link['href'] for link in page.select('tbody tr a')
-    ] == [
-        url_for(
-            'main.view_notification',
-            service_id=SERVICE_ONE_ID,
-            notification_id='03e34025-be54-4d43-8e6a-fb1ea0fd1f29',
-            from_uploaded_letters='2020-02-02',
-        ),
-        url_for(
-            'main.view_notification',
-            service_id=SERVICE_ONE_ID,
-            notification_id='fc090d91-e761-4464-9041-9c4594c96a35',
-            from_uploaded_letters='2020-02-02',
-        ),
-    ]
-
-    next_page_link = page.select_one('a[rel=next]')
-    prev_page_link = page.select_one('a[rel=previous]')
-    assert next_page_link['href'] == url_for(
-        'main.uploaded_letters', service_id=SERVICE_ONE_ID, letter_print_day='2020-02-02', page=2
-    )
-    assert normalize_spaces(next_page_link.text) == (
-        'Next page '
-        'page 2'
-    )
-    assert prev_page_link['href'] == url_for(
-        'main.uploaded_letters', service_id=SERVICE_ONE_ID, letter_print_day='2020-02-02', page=0
-    )
-    assert normalize_spaces(prev_page_link.text) == (
-        'Previous page '
-        'page 0'
-    )
-
-    mock_get_uploaded_letters.assert_called_once_with(
-        SERVICE_ONE_ID,
-        letter_print_day='2020-02-02',
-        page=1,
-    )
-
-
-@freeze_time('2020-02-02 14:00')
-def test_get_empty_uploaded_letters_page(
-    mocker,
-    client_request,
-    service_one,
-    mock_get_no_uploaded_letters,
-):
-    page = client_request.get(
-        'main.uploaded_letters',
-        service_id=SERVICE_ONE_ID,
-        letter_print_day='2020-02-02'
-    )
-    page.select_one('main table')
-
-    assert not page.select('tbody tr')
-    assert not page.select_one('a[rel=next]')
-    assert not page.select_one('a[rel=previous]')
-
-
-@freeze_time('2020-02-02')
-def test_get_uploaded_letters_passes_through_page_argument(
-    mocker,
-    client_request,
-    service_one,
-    mock_get_uploaded_letters,
-):
-    client_request.get(
-        'main.uploaded_letters',
-        service_id=SERVICE_ONE_ID,
-        letter_print_day='2020-02-02',
-        page=99,
-    )
-    mock_get_uploaded_letters.assert_called_once_with(
-        SERVICE_ONE_ID,
-        letter_print_day='2020-02-02',
-        page=99,
-    )
-
-
-def test_get_uploaded_letters_404s_for_bad_page_arguments(
-    mocker,
-    client_request,
-):
-    client_request.get(
-        'main.uploaded_letters',
-        service_id=SERVICE_ONE_ID,
-        letter_print_day='2020-02-02',
-        page='one',
-        _expected_status=404,
-    )
-
-
-def test_get_uploaded_letters_404s_for_invalid_date(
-    mocker,
-    client_request,
-):
-    client_request.get(
-        'main.uploaded_letters',
-        service_id=SERVICE_ONE_ID,
-        letter_print_day='1234-56-78',
-        _expected_status=404,
     )
 
 
@@ -319,12 +139,12 @@ def test_uploads_page_shows_scheduled_jobs(
         ),
         (
             'even_later.csv '
-            'Sending 1 January 2016 at 11:09pm '
+            'Sending 1 January 2016 at 6:09pm '
             '1 text message waiting to send'
         ),
         (
             'send_me_later.csv '
-            'Sending 1 January 2016 at 11:09am '
+            'Sending 1 January 2016 at 6:09am '
             '1 text message waiting to send'
         ),
     ]
@@ -365,12 +185,12 @@ def test_uploads_page_shows_contact_lists_first(
         ),
         (
             'even_later.csv '
-            'Sending 1 January 2016 at 11:09pm '
+            'Sending 1 January 2016 at 6:09pm '
             '1 text message waiting to send'
         ),
         (
             'send_me_later.csv '
-            'Sending 1 January 2016 at 11:09am '
+            'Sending 1 January 2016 at 6:09am '
             '1 text message waiting to send'
         ),
     ]
@@ -378,23 +198,4 @@ def test_uploads_page_shows_contact_lists_first(
         'main.contact_list',
         service_id=SERVICE_ONE_ID,
         contact_list_id='d7b0bd1a-d1c7-4621-be5c-3c1b4278a2ad',
-    )
-
-
-def test_get_uploads_shows_pagination(
-    client_request,
-    active_user_with_permissions,
-    mock_get_jobs,
-    mock_get_uploads,
-    mock_get_no_contact_lists,
-):
-    page = client_request.get('main.uploads', service_id=SERVICE_ONE_ID)
-
-    assert normalize_spaces(page.select_one('.next-page').text) == (
-        'Next page '
-        'page 2'
-    )
-    assert normalize_spaces(page.select_one('.previous-page').text) == (
-        'Previous page '
-        'page 0'
     )

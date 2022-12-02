@@ -178,7 +178,6 @@ class MainNavigation(Navigation):
             'delete_contact_list',
             'upload_letter',
             'uploaded_letter_preview',
-            'uploaded_letters',
             'uploads',
             'view_job',
             'view_jobs',
@@ -288,7 +287,6 @@ class CaseworkNavigation(Navigation):
             'delete_contact_list',
             'upload_letter',
             'uploaded_letter_preview',
-            'uploaded_letters',
             'uploads',
         },
     }

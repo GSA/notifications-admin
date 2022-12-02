@@ -115,12 +115,5 @@ class JobApiClient(NotifyAdminAPIClient):
             data={}
         )
 
-    @cache.delete('has_jobs-{service_id}')
-    def cancel_letter_job(self, service_id, job_id):
-        return self.post(
-            url='/service/{}/job/{}/cancel-letter-job'.format(service_id, job_id),
-            data={}
-        )
-
 
 job_api_client = JobApiClient()
