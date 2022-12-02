@@ -96,7 +96,7 @@ def test_should_show_add_template_form_if_service_has_folder_permission(
     assert [
         (item['name'], item['value']) for item in page.select('[type=radio]')
     ] == [
-        ('add_template_by_template_type', 'email'),
+        # ('add_template_by_template_type', 'email'),
         ('add_template_by_template_type', 'sms'),
     ]
     assert not page.select('main a')
@@ -319,21 +319,21 @@ def test_should_show_live_search_if_service_has_lots_of_folders(
 
 @pytest.mark.parametrize('service_permissions, expected_values, expected_labels', (
     pytest.param(['email', 'sms'], [
-        'email',
+        # 'email',
         'sms',
         'copy-existing',
     ], [
-        'Email',
+        # 'Email',
         'Text message',
         'Copy an existing template',
     ]),
     pytest.param(['email', 'sms'], [
-        'email',
+        # 'email',
         'sms',
         # 'letter',
         'copy-existing',
     ], [
-        'Email',
+        # 'Email',
         'Text message',
         # 'Letter',
         'Copy an existing template',

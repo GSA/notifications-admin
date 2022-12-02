@@ -60,11 +60,11 @@ def mock_get_service_settings_page_common(
         'Service name Test Service Change service name',
         'Sign-in method Text message code Change sign-in method',
 
-        'Label Value Action',
-        'Send emails On Change your settings for sending emails',
-        'Reply-to email addresses Not set Manage reply-to email addresses',
-        'Email branding GOV.UK Change email branding',
-        'Send files by email contact_us@gsa.gov Manage sending files by email',
+        # 'Label Value Action',
+        # 'Send emails On Change your settings for sending emails',
+        # 'Reply-to email addresses Not set Manage reply-to email addresses',
+        # 'Email branding GOV.UK Change email branding',
+        # 'Send files by email contact_us@gsa.gov Manage sending files by email',
 
         'Label Value Action',
         'Send text messages On Change your settings for sending text messages',
@@ -79,11 +79,11 @@ def mock_get_service_settings_page_common(
         'Service name Test Service Change service name',
         'Sign-in method Text message code Change sign-in method',
 
-        'Label Value Action',
-        'Send emails On Change your settings for sending emails',
-        'Reply-to email addresses Not set Manage reply-to email addresses',
-        'Email branding GOV.UK Change email branding',
-        'Send files by email contact_us@gsa.gov Manage sending files by email',
+        # 'Label Value Action',
+        # 'Send emails On Change your settings for sending emails',
+        # 'Reply-to email addresses Not set Manage reply-to email addresses',
+        # 'Email branding GOV.UK Change email branding',
+        # 'Send files by email contact_us@gsa.gov Manage sending files by email',
 
         'Label Value Action',
         'Send text messages On Change your settings for sending text messages',
@@ -189,6 +189,7 @@ def test_organisation_name_links_to_org_dashboard(
     assert normalize_spaces(org_row.find('a').text) == 'Test organisation'
 
 
+@pytest.mark.skip(reason="Email currently deactivated")
 @pytest.mark.parametrize('service_contact_link,expected_text', [
     ('contact.me@gsa.gov', 'Send files by email contact.me@gsa.gov Manage sending files by email'),
     (None, 'Send files by email Not set up Manage sending files by email'),
@@ -228,11 +229,11 @@ def test_send_files_by_email_row_on_settings_page(
         'Service name service one Change service name',
         'Sign-in method Text message code Change sign-in method',
 
-        'Label Value Action',
-        'Send emails On Change your settings for sending emails',
-        'Reply-to email addresses test@example.com Manage reply-to email addresses',
-        'Email branding Organisation name Change email branding',
-        'Send files by email Not set up Manage sending files by email',
+        # 'Label Value Action',
+        # 'Send emails On Change your settings for sending emails',
+        # 'Reply-to email addresses test@example.com Manage reply-to email addresses',
+        # 'Email branding Organisation name Change email branding',
+        # 'Send files by email Not set up Manage sending files by email',
 
         'Label Value Action',
         'Send text messages On Change your settings for sending text messages',
@@ -241,20 +242,17 @@ def test_send_files_by_email_row_on_settings_page(
         'Send international text messages On Change your settings for sending international text messages',
         'Receive text messages On Change your settings for receiving text messages',
 
-        # 'Label Value Action',
-        # 'Send letters Off Change your settings for sending letters',
-
     ]),
     (['email', 'sms', 'email_auth'], [
 
         'Service name service one Change service name',
         'Sign-in method Email link or text message code Change sign-in method',
 
-        'Label Value Action',
-        'Send emails On Change your settings for sending emails',
-        'Reply-to email addresses test@example.com Manage reply-to email addresses',
-        'Email branding Organisation name Change email branding',
-        'Send files by email Not set up Manage sending files by email',
+        # 'Label Value Action',
+        # 'Send emails On Change your settings for sending emails',
+        # 'Reply-to email addresses test@example.com Manage reply-to email addresses',
+        # 'Email branding Organisation name Change email branding',
+        # 'Send files by email Not set up Manage sending files by email',
 
         'Label Value Action',
         'Send text messages On Change your settings for sending text messages',
@@ -263,28 +261,7 @@ def test_send_files_by_email_row_on_settings_page(
         'Send international text messages Off Change your settings for sending international text messages',
         'Receive text messages Off Change your settings for receiving text messages',
 
-        # 'Label Value Action',
-        # 'Send letters Off Change your settings for sending letters',
-
     ]),
-    # (['letter'], [
-
-    #     'Service name service one Change service name',
-    #     'Sign-in method Text message code Change sign-in method',
-
-    #     'Label Value Action',
-    #     'Send emails Off Change your settings for sending emails',
-
-    #     'Label Value Action',
-    #     'Send text messages Off Change your settings for sending text messages',
-
-    #     'Label Value Action',
-    #     'Send letters On Change your settings for sending letters',
-    #     'Send international letters Off Change',
-    #     'Sender addresses 1 Example Street Manage sender addresses',
-    #     'Letter branding Not set Change letter branding',
-
-    # ]),
 ])
 def test_should_show_overview_for_service_with_more_things_set(
         client_request,
@@ -1934,6 +1911,7 @@ def test_route_for_platform_admin(
     )
 
 
+@pytest.mark.skip(reason="Email currently deactivated")
 def test_and_more_hint_appears_on_settings_with_more_than_just_a_single_sender(
         client_request,
         service_one,
@@ -4560,6 +4538,7 @@ def test_update_service_organisation_does_not_update_if_same_value(
     assert mock_update_service_organisation.called is False
 
 
+@pytest.mark.skip(reason="Email currently deactivated")
 @pytest.mark.parametrize('single_branding_option, expected_href', [
     (True, f'/services/{SERVICE_ONE_ID}/service-settings/email-branding/something-else'),
     # (False, f'/services/{SERVICE_ONE_ID}/service-settings/email-branding'),

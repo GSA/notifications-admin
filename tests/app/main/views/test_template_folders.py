@@ -1402,9 +1402,8 @@ def test_no_action_if_user_fills_in_ambiguous_fields(
     assert page.select_one('button[value={}]'.format(data['operation']))
 
     assert [
-        'email',
+        # 'email',
         'sms',
-        # 'letter',
         'copy-existing',
     ] == [
         radio['value']
