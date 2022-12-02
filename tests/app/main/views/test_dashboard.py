@@ -844,7 +844,8 @@ def test_usage_page(
     client_request,
     mock_get_annual_usage_for_service,
     mock_get_monthly_usage_for_service,
-    mock_get_free_sms_fragment_limit
+    mock_get_free_sms_fragment_limit,
+    mock_get_monthly_notification_stats,
 ):
     page = client_request.get(
         'main.usage',
@@ -884,7 +885,8 @@ def test_usage_page_no_sms_spend(
     mocker,
     client_request,
     mock_get_monthly_usage_for_service,
-    mock_get_free_sms_fragment_limit
+    mock_get_free_sms_fragment_limit,
+    mock_get_monthly_notification_stats,
 ):
     mocker.patch('app.billing_api_client.get_annual_usage_for_service', return_value=[
         {
@@ -916,7 +918,8 @@ def test_usage_page_monthly_breakdown(
     service_one,
     mock_get_annual_usage_for_service,
     mock_get_monthly_usage_for_service,
-    mock_get_free_sms_fragment_limit
+    mock_get_free_sms_fragment_limit,
+    mock_get_monthly_notification_stats,
 ):
     page = client_request.get('main.usage', service_id=SERVICE_ONE_ID)
     monthly_breakdown = normalize_spaces(page.find('table').text)
@@ -947,6 +950,7 @@ def test_usage_page_monthly_breakdown_shows_months_so_far(
     mock_get_annual_usage_for_service,
     mock_get_monthly_usage_for_service,
     mock_get_free_sms_fragment_limit,
+    mock_get_monthly_notification_stats,
     now,
     expected_number_of_months
 ):
@@ -961,6 +965,7 @@ def test_usage_page_with_0_free_allowance(
     client_request,
     mock_get_annual_usage_for_service,
     mock_get_monthly_usage_for_service,
+    mock_get_monthly_notification_stats,
 ):
     mocker.patch(
         'app.billing_api_client.get_free_sms_fragment_limit_for_year',
@@ -984,6 +989,7 @@ def test_usage_page_with_year_argument(
     mock_get_annual_usage_for_service,
     mock_get_monthly_usage_for_service,
     mock_get_free_sms_fragment_limit,
+    mock_get_monthly_notification_stats,
 ):
     client_request.get(
         'main.usage',
@@ -993,6 +999,7 @@ def test_usage_page_with_year_argument(
     mock_get_monthly_usage_for_service.assert_called_once_with(SERVICE_ONE_ID, 2000)
     mock_get_annual_usage_for_service.assert_called_once_with(SERVICE_ONE_ID, 2000)
     mock_get_free_sms_fragment_limit.assert_called_with(SERVICE_ONE_ID, 2000)
+    mock_get_monthly_notification_stats.assert_called_with(SERVICE_ONE_ID, 2000)
 
 
 def test_usage_page_for_invalid_year(
@@ -1011,7 +1018,8 @@ def test_future_usage_page(
     client_request,
     mock_get_annual_usage_for_service_in_future,
     mock_get_monthly_usage_for_service_in_future,
-    mock_get_free_sms_fragment_limit
+    mock_get_free_sms_fragment_limit,
+    mock_get_monthly_notification_stats
 ):
     client_request.get(
         'main.usage',
@@ -1022,6 +1030,7 @@ def test_future_usage_page(
     mock_get_monthly_usage_for_service_in_future.assert_called_once_with(SERVICE_ONE_ID, 2014)
     mock_get_annual_usage_for_service_in_future.assert_called_once_with(SERVICE_ONE_ID, 2014)
     mock_get_free_sms_fragment_limit.assert_called_with(SERVICE_ONE_ID, 2014)
+    mock_get_monthly_notification_stats.assert_called_with(SERVICE_ONE_ID, 2014)
 
 
 def _test_dashboard_menu(client_request, mocker, usr, service, permissions):

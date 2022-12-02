@@ -131,22 +131,18 @@ def usage(service_id):
     free_sms_allowance = billing_api_client.get_free_sms_fragment_limit_for_year(service_id, year)
     units = billing_api_client.get_monthly_usage_for_service(service_id, year)
     yearly_usage = billing_api_client.get_annual_usage_for_service(service_id, year)
-    more_stats = []
 
-    try:
-        more_stats = format_monthly_stats_to_list(
-                service_api_client.get_monthly_notification_stats(service_id, year)['data']
-        )
-        if year == current_financial_year:
-            # This includes Oct, Nov, Dec
-            # but we don't need next year's data yet
-            more_stats = [month for month in more_stats if month['name'] in ['October', 'November', 'December']]
-        elif year == (current_financial_year + 1):
-            # This is all the other months
-            # and we need last year's data
-            more_stats = [month for month in more_stats if month['name'] not in ['October', 'November', 'December']]
-    except Exception:
-        pass
+    more_stats = format_monthly_stats_to_list(
+            service_api_client.get_monthly_notification_stats(service_id, year)['data']
+    )
+    if year == current_financial_year:
+        # This includes Oct, Nov, Dec
+        # but we don't need next year's data yet
+        more_stats = [month for month in more_stats if month['name'] in ['October', 'November', 'December']]
+    elif year == (current_financial_year + 1):
+        # This is all the other months
+        # and we need last year's data
+        more_stats = [month for month in more_stats if month['name'] not in ['October', 'November', 'December']]
 
     return render_template(
         'views/usage.html',
