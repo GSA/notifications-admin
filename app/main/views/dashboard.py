@@ -258,7 +258,6 @@ def aggregate_template_usage(template_statistics, sort_key='count'):
             "template_id": k,
             "template_name": template_stats[0]['template_name'],
             "template_type": template_stats[0]['template_type'],
-            "is_precompiled_letter": template_stats[0]['is_precompiled_letter'],
             "count": sum(s['count'] for s in template_stats)
         })
 
@@ -270,7 +269,7 @@ def aggregate_notifications_stats(template_statistics):
     notifications = {
         template_type: {
             status: 0 for status in ('requested', 'delivered', 'failed')
-        } for template_type in ["sms", "email", "letter"]
+        } for template_type in ["sms", "email"]
     }
     for stat in template_statistics:
         notifications[stat["template_type"]]["requested"] += stat["count"]

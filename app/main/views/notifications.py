@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
-from dateutil import parser
 from flask import (
     Response,
     jsonify,
@@ -9,11 +8,6 @@ from flask import (
     request,
     stream_with_context,
     url_for,
-)
-from notifications_utils import LETTER_MAX_PAGE_COUNT
-from notifications_utils.letter_timings import (
-    get_letter_timings,
-    letter_can_be_cancelled,
 )
 
 from app import (
@@ -24,7 +18,6 @@ from app import (
 )
 from app.main import main
 from app.notify_client.api_key_api_client import KEY_TYPE_TEST
-from app.template_previews import get_page_count_for_letter
 from app.utils import (
     DELIVERED_STATUSES,
     FAILURE_STATUSES,
@@ -33,7 +26,6 @@ from app.utils import (
     set_status_filters,
 )
 from app.utils.csv import generate_notifications_csv
-from app.utils.letters import get_letter_validation_error
 from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
 
@@ -46,30 +38,10 @@ def view_notification(service_id, notification_id):
 
     personalisation = get_all_personalisation_from_notification(notification)
     error_message = None
-    page_count = get_page_count_for_letter(notification['template'], values=personalisation)
-    if page_count and page_count > LETTER_MAX_PAGE_COUNT:
-        # We check page count here to show the right error message for a letter that is too long.
-        # Another way to do this would be to get the status and error message from letter metadata.
-        # This would be a significant amount of work though, out of scope for this bug fix.
-        # This is because currently we do not pull the letter from S3 when showing preview.
-        # Instead, we generate letter preview based on the letter template and personalisation.
-        # Additionally, when a templated letter is sent via the api and the personalisation pushes the
-        # page count over 10 pages, it takes a while for validation status to come through.
-        # Checking page count here will enable us to show the error message even if the letter is not
-        # fully processed yet.
-        error_message = get_letter_validation_error(
-            "letter-too-long", [1], page_count
-        )
 
-    if notification.get('postage'):
-        if notification["status"] == "validation-failed":
-            notification['template']['postage'] = None
-        else:
-            notification['template']['postage'] = notification['postage']
     template = get_template(
         notification['template'],
         current_service,
-        page_count=page_count,
         show_recipient=True,
         redact_missing_personalisation=True,
         sms_sender=notification['reply_to_text'],
@@ -80,11 +52,6 @@ def view_notification(service_id, notification_id):
         job = job_api_client.get_job(service_id, notification['job']['id'])['data']
     else:
         job = None
-
-    notification_created = parser.parse(notification['created_at']).replace(tzinfo=None)
-
-    show_cancel_button = notification['notification_type'] == 'letter' and \
-        letter_can_be_cancelled(notification['status'], notification_created)
 
     if get_help_argument() or request.args.get('help') == '0':
         # help=0 is set when you’ve just sent a notification. We
@@ -104,14 +71,6 @@ def view_notification(service_id, notification_id):
             message_type=template.template_type,
             status='sending,delivered,failed',
         )
-
-    if notification['notification_type'] == 'letter':
-        estimated_letter_delivery_date = get_letter_timings(
-            notification['created_at'],
-            postage=notification['postage']
-        ).earliest_delivery
-    else:
-        estimated_letter_delivery_date = None
 
     return render_template(
         'views/notifications/notification.html',
@@ -133,12 +92,8 @@ def view_notification(service_id, notification_id):
         created_at=notification['created_at'],
         updated_at=notification['updated_at'],
         help=get_help_argument(),
-        estimated_letter_delivery_date=estimated_letter_delivery_date,
         notification_id=notification['id'],
-        postage=notification['postage'],
         can_receive_inbound=(current_service.has_permission('inbound_sms')),
-        is_precompiled_letter=notification['template']['is_precompiled_letter'],
-        show_cancel_button=show_cancel_button,
         sent_with_test_key=(
             notification.get('key_type') == KEY_TYPE_TEST
         ),

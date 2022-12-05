@@ -16,7 +16,6 @@ from flask import (
 from flask_login import current_user
 from notifications_utils.template import (
     EmailPreviewTemplate,
-    LetterPreviewTemplate,
     SMSBodyPreviewTemplate,
 )
 
@@ -135,7 +134,6 @@ def view_notifications(service_id, message_type=None):
         things_you_can_search_by={
             'email': ['email address'],
             'sms': ['phone number'],
-            'letter': ['postal address', 'file name'],
             # We say recipient here because combining all 3 types, plus
             # reference gets too long for the hint text
             None: ['recipient'],
@@ -266,7 +264,7 @@ def get_status_filters(service, message_type, statistics):
         stats = {
             key: sum(
                 statistics[message_type][key]
-                for message_type in {'email', 'sms', 'letter'}
+                for message_type in {'email', 'sms'}
             )
             for key in {'requested', 'delivered', 'failed'}
         }
@@ -401,9 +399,6 @@ def get_preview_of_content(notification):
     if notification['template'].get('redact_personalisation'):
         notification['personalisation'] = {}
 
-    if notification['template']['is_precompiled_letter']:
-        return notification['client_reference']
-
     if notification['template']['template_type'] == 'sms':
         return str(SMSBodyPreviewTemplate(
             notification['template'],
@@ -415,10 +410,4 @@ def get_preview_of_content(notification):
             notification['template'],
             notification['personalisation'],
             redact_missing_personalisation=True,
-        ).subject)
-
-    if notification['template']['template_type'] == 'letter':
-        return Markup(LetterPreviewTemplate(
-            notification['template'],
-            notification['personalisation'],
         ).subject)

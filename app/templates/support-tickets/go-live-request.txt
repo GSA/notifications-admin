@@ -22,7 +22,6 @@ Agreement signed on behalf of: {{ organisation.agreement_signed_on_behalf_of_ema
 
 Emails in next year: {{ service.volume_email|format_thousands }}
 Text messages in next year: {{ service.volume_sms|format_thousands }}
-Letters in next year: {{ service.volume_letter|format_thousands }}
 
 Consent to research: {{ service.consent_to_research|format_yes_no }}
 Other live services for that user: {{ user.live_services|format_yes_no }}

@@ -77,7 +77,6 @@ def user_json(
             'view_activity',
             'send_texts',
             'send_emails',
-            'send_letters',
             'manage_users',
             'manage_templates',
             'manage_settings',
@@ -148,7 +147,6 @@ def service_json(
     email_branding=None,
     branding='govuk',
     created_at=None,
-    letter_contact_block=None,
     inbound_api=None,
     service_callback_api=None,
     permissions=None,
@@ -187,8 +185,6 @@ def service_json(
         'email_branding': email_branding,
         'branding': branding,
         'created_at': created_at or str(datetime.utcnow()),
-        'letter_branding': None,
-        'letter_contact_block': letter_contact_block,
         'permissions': permissions,
         'inbound_api': inbound_api,
         'service_callback_api': service_callback_api,
@@ -196,7 +192,6 @@ def service_json(
         'contact_link': contact_link,
         'volume_email': 111111,
         'volume_sms': 222222,
-        'volume_letter': 333333,
         'consent_to_research': True,
         'count_as_live': True,
         'organisation': organisation_id,
@@ -215,7 +210,6 @@ def organisation_json(
     active=True,
     created_at=None,
     services=None,
-    letter_branding_id=None,
     email_branding_id=None,
     domains=None,
     crown=True,
@@ -243,7 +237,6 @@ def organisation_json(
         'users': users,
         'created_at': created_at or str(datetime.utcnow()),
         'email_branding_id': email_branding_id,
-        'letter_branding_id': letter_branding_id,
         'organisation_type': organisation_type,
         'crown': crown,
         'agreement_signed': agreement_signed,
@@ -273,11 +266,8 @@ def template_json(service_id,
                   archived=False,
                   process_type='normal',
                   redact_personalisation=None,
-                  service_letter_contact=None,
                   reply_to=None,
                   reply_to_text=None,
-                  is_precompiled_letter=False,
-                  postage=None,
                   folder=None
                   ):
     template = {
@@ -290,12 +280,9 @@ def template_json(service_id,
         'updated_at': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f'),
         'archived': archived,
         'process_type': process_type,
-        'service_letter_contact': service_letter_contact,
         'reply_to': reply_to,
         'reply_to_text': reply_to_text,
-        'is_precompiled_letter': is_precompiled_letter,
         'folder': folder,
-        'postage': postage
     }
     if content is None:
         template['content'] = "template content"
@@ -479,14 +466,11 @@ def notification_json(
     reply_to_text=None,
     client_reference=None,
     created_by_name=None,
-    postage=None,
 ):
     if template is None:
         template = template_json(service_id, str(generate_uuid()), type_=template_type)
     if to is None:
-        if template_type == 'letter':
-            to = '1 Example Street'
-        elif template_type == 'email':
+        if template_type == 'email':
             to = 'example@gsa.gov'
         else:
             to = '07123456789'
@@ -499,8 +483,6 @@ def notification_json(
     if status is None:
         status = 'delivered'
     links = {}
-    if template_type == 'letter':
-        postage = postage or 'second'
 
     if with_links:
         links = {
@@ -528,7 +510,6 @@ def notification_json(
             'service': service_id,
             'template_version': template['version'],
             'personalisation': personalisation or {},
-            'postage': postage,
             'notification_type': template_type,
             'reply_to_text': reply_to_text,
             'client_reference': client_reference,

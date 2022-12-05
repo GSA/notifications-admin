@@ -10,7 +10,6 @@ from flask_wtf import FlaskForm as Form
 from flask_wtf.file import FileAllowed
 from flask_wtf.file import FileField as FileField_wtf
 from flask_wtf.file import FileSize
-from notifications_utils.countries.data import Postage
 from notifications_utils.formatters import strip_all_whitespace
 from notifications_utils.insensitive_dict import InsensitiveDict
 from notifications_utils.postal_address import PostalAddress
@@ -1294,108 +1293,10 @@ class SMSTemplateForm(BaseTemplateForm):
         OnlySMSCharacters(template_type='sms')(None, field)
 
 
-class LetterAddressForm(StripWhitespaceForm):
-
-    def __init__(self, *args, allow_international_letters=False, **kwargs):
-        self.allow_international_letters = allow_international_letters
-        super().__init__(*args, **kwargs)
-
-    address = PostalAddressField(
-        'Address',
-        validators=[DataRequired(message="Cannot be empty")]
-    )
-
-    def validate_address(self, field):
-
-        address = PostalAddress(
-            field.data,
-            allow_international_letters=self.allow_international_letters,
-        )
-
-        if not address.has_enough_lines:
-            raise ValidationError(
-                f'Address must be at least {PostalAddress.MIN_LINES} lines long'
-            )
-
-        if address.has_too_many_lines:
-            raise ValidationError(
-                f'Address must be no more than {PostalAddress.MAX_LINES} lines long'
-            )
-
-        if not address.has_valid_last_line:
-            if self.allow_international_letters:
-                raise ValidationError(
-                    'Last line of the address must be a UK postcode or another country'
-                )
-            if address.international:
-                raise ValidationError(
-                    'You do not have permission to send letters to other countries'
-                )
-            raise ValidationError(
-                'Last line of the address must be a real UK postcode'
-            )
-
-        if address.has_invalid_characters:
-            raise ValidationError(
-                'Address lines must not start with any of the following characters: @ ( ) = [ ] ” \\ / , < > ~'
-            )
-
-
 class EmailTemplateForm(BaseTemplateForm):
     subject = TextAreaField(
         u'Subject',
         validators=[DataRequired(message="Cannot be empty")])
-
-
-class LetterTemplateForm(EmailTemplateForm):
-    subject = TextAreaField(
-        u'Main heading',
-        validators=[DataRequired(message="Cannot be empty")])
-
-    template_content = TextAreaField(
-        u'Body',
-        validators=[
-            DataRequired(message="Cannot be empty"),
-            NoCommasInPlaceHolders()
-        ]
-    )
-
-
-class LetterTemplatePostageForm(StripWhitespaceForm):
-    postage = GovukRadiosField(
-        'Choose the postage for this letter template',
-        choices=[
-            ('first', 'First class'),
-            ('second', 'Second class'),
-        ],
-        thing='first class or second class',
-        validators=[DataRequired()]
-    )
-
-
-class LetterUploadPostageForm(StripWhitespaceForm):
-
-    def __init__(self, *args, postage_zone, **kwargs):
-
-        super().__init__(*args, **kwargs)
-
-        if postage_zone != Postage.UK:
-            self.postage.choices = [(postage_zone, '')]
-            self.postage.data = postage_zone
-
-    @property
-    def show_postage(self):
-        return len(self.postage.choices) > 1
-
-    postage = GovukRadiosField(
-        'Choose the postage for this letter',
-        choices=[
-            ('first', 'First class post'),
-            ('second', 'Second class post'),
-        ],
-        default='second',
-        validators=[DataRequired()]
-    )
 
 
 class ForgotPasswordForm(StripWhitespaceForm):
@@ -1552,11 +1453,6 @@ class EstimateUsageForm(StripWhitespaceForm):
         things='text messages',
         format_error_suffix='you expect to send',
     )
-    volume_letter = ForgivingIntegerField(
-        'How many letters do you expect to send in the next year?',
-        things='letters',
-        format_error_suffix='you expect to send',
-    )
     consent_to_research = GovukRadiosField(
         'Can we contact you when we’re doing user research?',
         choices=[
@@ -1573,7 +1469,7 @@ class EstimateUsageForm(StripWhitespaceForm):
 
     def validate(self, *args, **kwargs):
 
-        if self.volume_email.data == self.volume_sms.data == self.volume_letter.data == 0:
+        if self.volume_email.data == self.volume_sms.data == 0:
             self.at_least_one_volume_filled = False
             return False
 
@@ -1696,23 +1592,6 @@ class AdminBillingDetailsForm(StripWhitespaceForm):
     notes = TextAreaField(validators=[])
 
 
-class ServiceLetterContactBlockForm(StripWhitespaceForm):
-    letter_contact_block = TextAreaField(
-        validators=[
-            DataRequired(message="Cannot be empty"),
-            NoCommasInPlaceHolders()
-        ]
-    )
-    is_default = GovukCheckboxField("Set as your default address")
-
-    def validate_letter_contact_block(self, field):
-        line_count = field.data.strip().count('\n')
-        if line_count >= 10:
-            raise ValidationError(
-                'Contains {} lines, maximum is 10'.format(line_count + 1)
-            )
-
-
 class ServiceOnOffSettingForm(StripWhitespaceForm):
 
     def __init__(self, name, *args, truthy='On', falsey='Off', **kwargs):
@@ -1731,7 +1610,6 @@ class ServiceSwitchChannelForm(ServiceOnOffSettingForm):
         name = 'Send {}'.format({
             'email': 'emails',
             'sms': 'text messages',
-            'letter': 'letters',
         }.get(channel))
 
         super().__init__(name, *args, **kwargs)
@@ -1759,11 +1637,6 @@ class AdminSetEmailBrandingForm(StripWhitespaceForm):
                 branding[1].lower(),
             ),
         )
-
-
-class AdminSetLetterBrandingForm(AdminSetEmailBrandingForm):
-    # form is the same, but instead of GOV.UK we have None as a valid option
-    DEFAULT = (FieldWithNoneOption.NONE_OPTION_VALUE, 'None')
 
 
 class AdminPreviewBrandingForm(StripWhitespaceForm):
@@ -1800,10 +1673,6 @@ class AdminEditEmailBrandingForm(StripWhitespaceForm):
             raise ValidationError('This field is required')
 
 
-class AdminEditLetterBrandingForm(StripWhitespaceForm):
-    name = GovukTextInputField('Name of brand', validators=[DataRequired()])
-
-
 class SVGFileUpload(StripWhitespaceForm):
     file = FileField_wtf(
         'Upload an SVG logo',
@@ -1812,16 +1681,6 @@ class SVGFileUpload(StripWhitespaceForm):
             DataRequired(message="You need to upload a file to submit"),
             NoEmbeddedImagesInSVG(),
             NoTextInSVG(),
-        ]
-    )
-
-
-class PDFUploadForm(StripWhitespaceForm):
-    file = FileField_wtf(
-        'Upload a letter in PDF format',
-        validators=[
-            FileAllowed(['pdf'], 'Save your letter as a PDF and try again.'),
-            DataRequired(message="You need to choose a file to upload")
         ]
     )
 
@@ -2062,32 +1921,6 @@ class ChooseEmailBrandingForm(ChooseBrandingForm):
         )
 
 
-class ChooseLetterBrandingForm(ChooseBrandingForm):
-    options = RadioField('Choose your new letter branding')
-    something_else = TextAreaField('Describe the branding you want')
-
-    def __init__(self, service):
-        super().__init__()
-
-        self.options.choices = tuple(
-            list(branding.get_letter_choices(service)) +
-            [self.FALLBACK_OPTION]
-        )
-
-        if self.something_else_is_only_option:
-            self.options.data = self.FALLBACK_OPTION_VALUE
-
-    def validate_something_else(self, field):
-        if (
-            self.something_else_is_only_option
-            or self.options.data == self.FALLBACK_OPTION_VALUE
-        ) and not field.data:
-            raise ValidationError('Cannot be empty')
-
-        if self.options.data != self.FALLBACK_OPTION_VALUE:
-            field.data = ''
-
-
 class SomethingElseBrandingForm(StripWhitespaceForm):
     something_else = GovukTextareaField(
         'Describe the branding you want',
@@ -2111,7 +1944,6 @@ class AdminServiceAddDataRetentionForm(StripWhitespaceForm):
         choices=[
             ('email', 'Email'),
             ('sms', 'SMS'),
-            ('letter', 'Letter'),
         ],
         thing='notification type',
     )
@@ -2125,15 +1957,6 @@ class AdminServiceEditDataRetentionForm(StripWhitespaceForm):
     days_of_retention = GovukIntegerField(
         label="Days of retention",
         validators=[validators.NumberRange(min=3, max=90, message="Must be between 3 and 90")],
-    )
-
-
-class AdminReturnedLettersForm(StripWhitespaceForm):
-    references = TextAreaField(
-        u'Letter references',
-        validators=[
-            DataRequired(message="Cannot be empty"),
-        ]
     )
 
 
@@ -2214,7 +2037,6 @@ class TemplateAndFoldersSelectionForm(Form):
         self.add_template_by_template_type.choices = list(filter(None, [
             # ('email', 'Email') if 'email' in available_template_types else None,
             ('sms', 'Text message') if 'sms' in available_template_types else None,
-            # ('letter', 'Letter') if 'letter' in available_template_types else None,
             ('copy-existing', 'Copy an existing template') if allow_adding_copy_of_template else None,
         ]))
 

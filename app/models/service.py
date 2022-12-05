@@ -18,7 +18,6 @@ from app.notify_client.email_branding_client import email_branding_client
 from app.notify_client.inbound_number_client import inbound_number_client
 from app.notify_client.invite_api_client import invite_api_client
 from app.notify_client.job_api_client import job_api_client
-from app.notify_client.letter_branding_client import letter_branding_client
 from app.notify_client.organisations_api_client import organisations_client
 from app.notify_client.service_api_client import service_api_client
 from app.notify_client.template_folder_api_client import (
@@ -52,20 +51,17 @@ class Service(JSONModel, SortByNameMixin):
         'service_callback_api',
         'volume_email',
         'volume_sms',
-        'volume_letter',
     }
 
     TEMPLATE_TYPES = (
         'email',
         'sms',
-        'letter',
     )
 
     ALL_PERMISSIONS = TEMPLATE_TYPES + (
         'edit_folder_permissions',
         'email_auth',
         'inbound_sms',
-        'international_letters',
         'international_sms',
         'upload_document',
     )
@@ -260,7 +256,6 @@ class Service(JSONModel, SortByNameMixin):
             self.consent_to_research is not None and any((
                 self.volume_email,
                 self.volume_sms,
-                self.volume_letter,
             ))
         )
 
@@ -364,55 +359,11 @@ class Service(JSONModel, SortByNameMixin):
             self.sms_sender_is_govuk,
         ))
 
-    @cached_property
-    def letter_contact_details(self):
-        return service_api_client.get_letter_contacts(self.id)
-
-    @property
-    def count_letter_contact_details(self):
-        return len(self.letter_contact_details)
-
-    @property
-    def default_letter_contact_block(self):
-        return next(
-            (
-                letter_contact_block
-                for letter_contact_block in self.letter_contact_details
-                if letter_contact_block['is_default']
-            ), None
-        )
-
-    @property
-    def default_letter_contact_block_html(self):
-        # import in the function to prevent cyclical imports
-        from app import nl2br
-
-        if self.default_letter_contact_block:
-            return nl2br(self.default_letter_contact_block['contact_block'])
-        return ''
-
-    def edit_letter_contact_block(self, id, contact_block, is_default):
-        service_api_client.update_letter_contact(
-            self.id, letter_contact_id=id, contact_block=contact_block, is_default=is_default,
-        )
-
-    def remove_default_letter_contact_block(self):
-        if self.default_letter_contact_block:
-            self.edit_letter_contact_block(
-                self.default_letter_contact_block['id'],
-                self.default_letter_contact_block['contact_block'],
-                is_default=False,
-            )
-
-    def get_letter_contact_block(self, id):
-        return service_api_client.get_letter_contact(self.id, id)
-
     @property
     def volumes(self):
         return sum(filter(None, (
             self.volume_email,
             self.volume_sms,
-            self.volume_letter,
         )))
 
     @property
@@ -465,25 +416,9 @@ class Service(JSONModel, SortByNameMixin):
             return 'GOV.UK'
         return self.email_branding['name']
 
-    @cached_property
-    def letter_branding_name(self):
-        if self.letter_branding is None:
-            return 'no'
-        return self.letter_branding['name']
-
     @property
     def needs_to_change_email_branding(self):
         return self.email_branding_id is None and self.organisation_type != Organisation.TYPE_CENTRAL
-
-    @property
-    def letter_branding_id(self):
-        return self._dict['letter_branding']
-
-    @cached_property
-    def letter_branding(self):
-        if self.letter_branding_id:
-            return letter_branding_client.get_letter_branding(self.letter_branding_id)
-        return None
 
     @cached_property
     def organisation(self):
@@ -591,26 +526,6 @@ class Service(JSONModel, SortByNameMixin):
                 Organisation.TYPE_NHS_LOCAL,
             }
         )
-
-    @cached_property
-    def returned_letter_statistics(self):
-        return service_api_client.get_returned_letter_statistics(self.id)
-
-    @cached_property
-    def returned_letter_summary(self):
-        return service_api_client.get_returned_letter_summary(self.id)
-
-    @property
-    def count_of_returned_letters_in_last_7_days(self):
-        return self.returned_letter_statistics['returned_letter_count']
-
-    @property
-    def date_of_most_recent_returned_letter_report(self):
-        return self.returned_letter_statistics['most_recent_report']
-
-    @property
-    def has_returned_letters(self):
-        return bool(self.date_of_most_recent_returned_letter_report)
 
     @property
     def contact_lists(self):

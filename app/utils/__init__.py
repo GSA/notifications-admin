@@ -9,12 +9,12 @@ from werkzeug.datastructures import MultiDict
 from werkzeug.routing import RequestRedirect
 
 SENDING_STATUSES = ['created', 'pending', 'sending', 'pending-virus-check']
-DELIVERED_STATUSES = ['delivered', 'sent', 'returned-letter']
+DELIVERED_STATUSES = ['delivered', 'sent']
 FAILURE_STATUSES = ['failed', 'temporary-failure', 'permanent-failure',
                     'technical-failure', 'virus-scan-failed', 'validation-failed']
 REQUESTED_STATUSES = SENDING_STATUSES + DELIVERED_STATUSES + FAILURE_STATUSES
 
-NOTIFICATION_TYPES = ["sms", "email", "letter"]
+NOTIFICATION_TYPES = ["sms", "email"]
 
 
 def service_has_permission(permission):
@@ -68,7 +68,6 @@ def should_skip_template_page(db_template):
     return (
         current_user.has_permissions('send_messages')
         and not current_user.has_permissions('manage_templates', 'manage_api_keys')
-        and db_template['template_type'] != 'letter'
         and not db_template['archived']
     )
 

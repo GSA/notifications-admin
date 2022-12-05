@@ -1,7 +1,3 @@
-from notifications_utils.letter_timings import (
-    CANCELLABLE_JOB_LETTER_STATUSES,
-    get_letter_timings,
-)
 from werkzeug.utils import cached_property
 
 from app.models import JSONModel, ModelList, PaginatedModelList
@@ -50,10 +46,6 @@ class Job(JSONModel):
     @property
     def upload_type(self):
         return self._dict.get('upload_type')
-
-    @property
-    def pdf_letter(self):
-        return self.upload_type == 'letter'
 
     @property
     def processing_started(self):
@@ -139,23 +131,10 @@ class Job(JSONModel):
 
     @property
     def uncancellable_notifications(self):
+        # TODO: this is redundant now
         return (
             n for n in self.all_notifications
-            if n['status'] not in CANCELLABLE_JOB_LETTER_STATUSES
         )
-
-    @cached_property
-    def postage(self):
-        # There might be no notifications if the job has only just been
-        # created and the tasks haven't run yet
-        try:
-            return self.all_notifications[0]['postage']
-        except IndexError:
-            return self.template['postage']
-
-    @property
-    def letter_timings(self):
-        return get_letter_timings(self.created_at, postage=self.postage)
 
     @property
     def failure_rate(self):

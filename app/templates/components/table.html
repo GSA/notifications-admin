@@ -147,7 +147,7 @@
 
 {% macro notification_status_field(notification) %}
 
-  {% set displayed_on_single_line = notification.status in ['created', 'pending', 'pending-virus-check', 'sending', 'delivered', 'returned-letter', 'accepted', 'received'] %}
+  {% set displayed_on_single_line = notification.status in ['created', 'pending', 'pending-virus-check', 'sending', 'delivered', 'accepted', 'received'] %}
 
   {% if not notification %}
     {% call field(align='right') %}{% endcall %}
@@ -166,18 +166,10 @@
         </a>
       {% endif %}
       <span class="status-hint">
-        {% if notification['notification_type'] == "letter" %}
-          {% if notification.status == 'permanent-failure' %}
-            {{ (notification.updated_at)|format_datetime_short }}
-          {% else %}
-            {{ (notification.created_at)|format_datetime_short }}
-          {% endif %}
-        {% else %}
-          {{ notification.status|format_notification_status_as_time(
-            notification.created_at|format_datetime_short,
-            (notification.updated_at or notification.created_at)|format_datetime_short
-          ) }}
-        {% endif %}
+        {{ notification.status|format_notification_status_as_time(
+          notification.created_at|format_datetime_short,
+          (notification.updated_at or notification.created_at)|format_datetime_short
+        ) }}
       </span>
       {% if displayed_on_single_line %}</span>{% endif %}
     {% endcall %}

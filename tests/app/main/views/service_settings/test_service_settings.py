@@ -2,7 +2,7 @@ from datetime import datetime
 from functools import partial
 from unittest.mock import ANY, Mock, PropertyMock, call
 from urllib.parse import parse_qs, urlparse
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 import pytest
 from flask import url_for
@@ -28,9 +28,7 @@ from tests.conftest import (
     create_active_user_no_api_key_permission,
     create_active_user_no_settings_permission,
     create_active_user_with_permissions,
-    create_letter_contact_block,
     create_multiple_email_reply_to_addresses,
-    create_multiple_letter_contact_blocks,
     create_multiple_sms_senders,
     create_platform_admin_user,
     create_reply_to_email_address,
@@ -44,7 +42,6 @@ FAKE_TEMPLATE_ID = uuid4()
 
 @pytest.fixture
 def mock_get_service_settings_page_common(
-    mock_get_all_letter_branding,
     mock_get_inbound_number_for_service,
     mock_get_free_sms_fragment_limit,
     mock_get_service_data_retention,
@@ -102,7 +99,6 @@ def mock_get_service_settings_page_common(
         'Message limit 1,000 per day Change daily message limit',
         'Free text message allowance 250,000 per year Change free text message allowance',
         'Email branding GOV.UK Change email branding (admin view)',
-        'Letter branding Not set Change letter branding (admin view)',
         'Custom data retention Email – 7 days Change data retention',
         'Receive inbound SMS Off Change your settings for Receive inbound SMS',
         'Email authentication Off Change your settings for Email authentication',
@@ -113,7 +109,6 @@ def test_should_show_overview(
         mocker,
         api_user_active,
         no_reply_to_email_addresses,
-        no_letter_contact_blocks,
         single_sms_sender,
         user,
         expected_rows,
@@ -145,7 +140,6 @@ def test_no_go_live_link_for_service_without_organisation(
     client_request,
     mocker,
     no_reply_to_email_addresses,
-    no_letter_contact_blocks,
     single_sms_sender,
     platform_admin_user,
     mock_get_service_settings_page_common,
@@ -168,7 +162,6 @@ def test_organisation_name_links_to_org_dashboard(
     client_request,
     platform_admin_user,
     no_reply_to_email_addresses,
-    no_letter_contact_blocks,
     single_sms_sender,
     mock_get_service_settings_page_common,
     mocker,
@@ -198,7 +191,6 @@ def test_send_files_by_email_row_on_settings_page(
     client_request,
     platform_admin_user,
     no_reply_to_email_addresses,
-    no_letter_contact_blocks,
     single_sms_sender,
     mock_get_service_settings_page_common,
     mocker,
@@ -269,7 +261,6 @@ def test_should_show_overview_for_service_with_more_things_set(
         mocker,
         service_one,
         single_reply_to_email_address,
-        single_letter_contact_block,
         single_sms_sender,
         mock_get_email_branding,
         mock_get_service_settings_page_common,
@@ -284,60 +275,6 @@ def test_should_show_overview_for_service_with_more_things_set(
     )
     for index, row in enumerate(expected_rows):
         assert row == " ".join(page.find_all('tr')[index + 1].text.split())
-
-
-@pytest.mark.skip(reason="Skipping letter-specific test")
-def test_if_cant_send_letters_then_cant_see_letter_contact_block(
-        client_request,
-        service_one,
-        single_reply_to_email_address,
-        no_letter_contact_blocks,
-        single_sms_sender,
-        mock_get_service_settings_page_common,
-):
-    response = client_request.get('main.service_settings', service_id=service_one['id'])
-    assert 'Letter contact block' not in response
-
-
-@pytest.mark.skip(reason="Skipping letter-specific test")
-def test_letter_contact_block_shows_none_if_not_set(
-    client_request,
-    service_one,
-    single_reply_to_email_address,
-    no_letter_contact_blocks,
-    single_sms_sender,
-    mock_get_service_settings_page_common,
-):
-    service_one['permissions'] = ['letter']
-    page = client_request.get(
-        'main.service_settings',
-        service_id=SERVICE_ONE_ID,
-    )
-
-    div = page.find_all('tr')[10].find_all('td')[1].div
-    assert div.text.strip() == 'Not set'
-    assert 'default' in div.attrs['class'][0]
-
-
-@pytest.mark.skip(reason="Skipping letter-specific test")
-def test_escapes_letter_contact_block(
-    client_request,
-    service_one,
-    mocker,
-    single_reply_to_email_address,
-    single_sms_sender,
-    injected_letter_contact_block,
-    mock_get_service_settings_page_common,
-):
-    service_one['permissions'] = ['letter']
-    page = client_request.get(
-        'main.service_settings',
-        service_id=SERVICE_ONE_ID,
-    )
-
-    div = str(page.find_all('tr')[10].find_all('td')[1].div)
-    assert 'foo<br/>bar' in div
-    assert '<script>' not in div
 
 
 def test_should_show_service_name(
@@ -446,7 +383,6 @@ def test_show_restricted_service(
     client_request,
     service_one,
     single_reply_to_email_address,
-    single_letter_contact_block,
     single_sms_sender,
     mock_get_service_settings_page_common,
     user,
@@ -503,7 +439,6 @@ def test_show_live_service(
     client_request,
     mock_get_live_service,
     single_reply_to_email_address,
-    single_letter_contact_block,
     single_sms_sender,
     mock_get_service_settings_page_common,
 ):
@@ -639,11 +574,11 @@ def test_should_redirect_after_service_name_change(
 
 
 @pytest.mark.parametrize('volumes, consent_to_research, expected_estimated_volumes_item', [
-    ((0, 0, 0), None, 'Tell us how many messages you expect to send Not completed'),
-    ((1, 0, 0), None, 'Tell us how many messages you expect to send Not completed'),
-    ((1, 0, 0), False, 'Tell us how many messages you expect to send Completed'),
-    ((1, 0, 0), True, 'Tell us how many messages you expect to send Completed'),
-    ((9, 99, 999), True, 'Tell us how many messages you expect to send Completed'),
+    ((0, 0), None, 'Tell us how many messages you expect to send Not completed'),
+    ((1, 0), None, 'Tell us how many messages you expect to send Not completed'),
+    ((1, 0), False, 'Tell us how many messages you expect to send Completed'),
+    ((1, 0), True, 'Tell us how many messages you expect to send Completed'),
+    ((9, 99), True, 'Tell us how many messages you expect to send Completed'),
 ])
 def test_should_check_if_estimated_volumes_provided(
     client_request,
@@ -659,7 +594,7 @@ def test_should_check_if_estimated_volumes_provided(
     expected_estimated_volumes_item,
 ):
 
-    for volume, channel in zip(volumes, ('sms', 'email', 'letter')):
+    for volume, channel in zip(volumes, ('sms', 'email')):
         mocker.patch(
             'app.models.service.Service.volume_{}'.format(channel),
             create=True,
@@ -727,7 +662,7 @@ def test_should_check_for_reply_to_on_go_live(
         return_value=reply_to_email_addresses
     )
 
-    for channel, volume in (('email', volume_email), ('sms', 0), ('letter', 1)):
+    for channel, volume in (('email', volume_email), ('sms', 0)):
         mocker.patch(
             'app.models.service.Service.volume_{}'.format(channel),
             create=True,
@@ -856,7 +791,7 @@ def test_should_not_show_go_live_button_if_checklist_not_complete(
         create=True,
     )
 
-    for channel in ('email', 'sms', 'letter'):
+    for channel in ('email', 'sms'):
         mocker.patch(
             'app.models.service.Service.volume_{}'.format(channel),
             create=True,
@@ -1069,7 +1004,7 @@ def test_should_check_for_mou_on_request_to_go_live(
         'app.main.views.service_settings.service_api_client.get_reply_to_email_addresses',
         return_value=[],
     )
-    for channel in {'email', 'sms', 'letter'}:
+    for channel in {'email', 'sms'}:
         mocker.patch(
             'app.models.service.Service.volume_{}'.format(channel),
             create=True,
@@ -1088,66 +1023,6 @@ def test_should_check_for_mou_on_request_to_go_live(
 
     checklist_items = page.select('.task-list .task-list-item')
     assert normalize_spaces(checklist_items[3].text) == expected_item
-
-
-@pytest.mark.parametrize('organisation_type', (
-    'nhs_gp',
-    pytest.param(
-        'central',
-        marks=pytest.mark.xfail(raises=IndexError)
-    ),
-))
-@pytest.mark.skip(reason='Update for TTS')
-def test_gp_without_organisation_is_shown_agreement_step(
-    client_request,
-    service_one,
-    mocker,
-    organisation_type,
-):
-    mocker.patch(
-        'app.models.service.Service.has_team_members',
-        return_value=False,
-    )
-    mocker.patch(
-        'app.models.service.Service.all_templates',
-        new_callable=PropertyMock,
-        return_value=[],
-    )
-    mocker.patch(
-        'app.main.views.service_settings.service_api_client.get_sms_senders',
-        return_value=[],
-    )
-    mocker.patch(
-        'app.main.views.service_settings.service_api_client.get_reply_to_email_addresses',
-        return_value=[],
-    )
-    for channel in {'email', 'sms', 'letter'}:
-        mocker.patch(
-            'app.models.service.Service.volume_{}'.format(channel),
-            create=True,
-            new_callable=PropertyMock,
-            return_value=None,
-        )
-    mocker.patch(
-        'app.models.service.Service.organisation_id',
-        new_callable=PropertyMock,
-        return_value=None,
-    )
-    mocker.patch(
-        'app.models.service.Service.organisation_type',
-        new_callable=PropertyMock,
-        return_value=organisation_type,
-    )
-
-    page = client_request.get(
-        'main.request_to_go_live', service_id=SERVICE_ONE_ID
-    )
-    assert page.h1.text == 'Before you request to go live'
-    assert normalize_spaces(
-        page.select('.task-list .task-list-item')[3].text
-    ) == (
-        'Accept our data sharing and financial agreement Not completed'
-    )
 
 
 def test_non_gov_user_is_told_they_cant_go_live(
@@ -1193,12 +1068,12 @@ def test_non_gov_user_is_told_they_cant_go_live(
 ))
 @pytest.mark.parametrize('volumes, displayed_volumes', (
     (
-        (('email', None), ('sms', None), ('letter', None)),
-        (None, None, None),
+        (('email', None), ('sms', None)),
+        (None, None),
     ),
     (
-        (('email', 1234), ('sms', 0), ('letter', 999)),
-        ('1,234', '0', '999'),
+        (('email', 1234), ('sms', 0)),
+        ('1,234', '0'),
     ),
 ))
 def test_should_show_estimate_volumes(
@@ -1239,12 +1114,6 @@ def test_should_show_estimate_volumes(
             'For example, 50,000',
             displayed_volumes[1],
         ),
-        (
-            'letter',
-            'How many letters do you expect to send in the next year?',
-            'For example, 50,000',
-            displayed_volumes[2],
-        ),
     ):
         assert normalize_spaces(
             page.select_one('label[for=volume_{}]'.format(channel)).text
@@ -1279,7 +1148,6 @@ def test_should_show_persist_estimated_volumes(
         _data={
             'volume_email': '1,234,567',
             'volume_sms': '',
-            'volume_letter': '098',
             'consent_to_research': consent_to_research,
         },
         _expected_status=302,
@@ -1292,7 +1160,6 @@ def test_should_show_persist_estimated_volumes(
         SERVICE_ONE_ID,
         volume_email=1234567,
         volume_sms=0,
-        volume_letter=98,
         consent_to_research=expected_persisted_consent_to_research,
     )
 
@@ -1302,7 +1169,6 @@ def test_should_show_persist_estimated_volumes(
         {
             'volume_email': '1234',
             'volume_sms': '2000000001',
-            'volume_letter': '9876',
             'consent_to_research': 'yes',
         },
         '#volume_sms-error',
@@ -1312,7 +1178,6 @@ def test_should_show_persist_estimated_volumes(
         {
             'volume_email': '1 234',
             'volume_sms': '0',
-            'volume_letter': '9876',
             'consent_to_research': '',
         },
         '[data-error-label="consent_to_research"]',
@@ -1346,14 +1211,12 @@ def test_should_error_if_all_volumes_zero(
         _data={
             'volume_email': '',
             'volume_sms': '0',
-            'volume_letter': '0,00 0',
             'consent_to_research': 'yes',
         },
         _expected_status=200,
     )
     assert page.select('input[type=text]')[0].get('value') is None
     assert page.select('input[type=text]')[1]['value'] == '0'
-    assert page.select('input[type=text]')[2]['value'] == '0,00 0'
     assert normalize_spaces(page.select_one('.banner-dangerous').text) == (
         'Enter the number of messages you expect to send in the next year'
     )
@@ -1368,19 +1231,17 @@ def test_should_not_default_to_zero_if_some_fields_dont_validate(
         'main.estimate_usage',
         service_id=SERVICE_ONE_ID,
         _data={
-            'volume_email': '1234',
+            'volume_email': 'aaaaaaaaaaaaa',
             'volume_sms': '',
-            'volume_letter': 'aaaaaaaaaaaaa',
             'consent_to_research': 'yes',
         },
         _expected_status=200,
     )
-    assert page.select('input[type=text]')[0]['value'] == '1234'
+    assert page.select('input[type=text]')[0]['value'] == 'aaaaaaaaaaaaa'
     assert page.select('input[type=text]')[1].get('value') is None
-    assert page.select('input[type=text]')[2]['value'] == 'aaaaaaaaaaaaa'
     assert normalize_spaces(
-        page.select_one('#volume_letter-error').text
-    ) == 'Error: Enter the number of letters you expect to send'
+        page.select_one('#volume_email-error').text
+    ) == 'Error: Enter the number of emails you expect to send'
     assert mock_update_service.called is False
 
 
@@ -1399,21 +1260,19 @@ def test_non_gov_users_cant_request_to_go_live(
 
 @pytest.mark.parametrize('volumes, displayed_volumes, formatted_displayed_volumes', (
     (
-        (('email', None), ('sms', None), ('letter', None)),
-        ', , ',
+        (('email', None), ('sms', None)),
+        ', ',
         (
             'Emails in next year: \n'
             'Text messages in next year: \n'
-            'Letters in next year: \n'
         ),
     ),
     (
-        (('email', 1234), ('sms', 0), ('letter', 999)),
-        '0, 1234, 999',  # This is a different order to match the spreadsheet
+        (('email', 1234), ('sms', 0)),
+        '0, 1234',  # This is a different order to match the spreadsheet
         (
             'Emails in next year: 1,234\n'
             'Text messages in next year: 0\n'
-            'Letters in next year: 999\n'
         ),
     ),
 ))
@@ -1423,7 +1282,6 @@ def test_should_redirect_after_request_to_go_live(
     mocker,
     active_user_with_permissions,
     single_reply_to_email_address,
-    single_letter_contact_block,
     mock_get_organisations_and_services_for_user,
     single_sms_sender,
     mock_get_service_settings_page_common,
@@ -1507,7 +1365,6 @@ def test_request_to_go_live_displays_go_live_notes_in_zendesk_ticket(
     mocker,
     active_user_with_permissions,
     single_reply_to_email_address,
-    single_letter_contact_block,
     mock_get_organisations_and_services_for_user,
     single_sms_sender,
     mock_get_service_organisation,
@@ -1548,7 +1405,6 @@ def test_request_to_go_live_displays_go_live_notes_in_zendesk_ticket(
         '\n'
         'Emails in next year: 111,111\n'
         'Text messages in next year: 222,222\n'
-        'Letters in next year: 333,333\n'
         '\n'
         'Consent to research: Yes\n'
         'Other live services for that user: No\n'
@@ -1585,7 +1441,6 @@ def test_request_to_go_live_displays_mou_signatories(
     fake_uuid,
     active_user_with_permissions,
     single_reply_to_email_address,
-    single_letter_contact_block,
     mock_get_organisations_and_services_for_user,
     single_sms_sender,
     mock_get_service_organisation,
@@ -1630,7 +1485,6 @@ def test_should_be_able_to_request_to_go_live_with_no_organisation(
     client_request,
     mocker,
     single_reply_to_email_address,
-    single_letter_contact_block,
     mock_get_organisations_and_services_for_user,
     single_sms_sender,
     mock_get_service_settings_page_common,
@@ -1639,7 +1493,7 @@ def test_should_be_able_to_request_to_go_live_with_no_organisation(
     mock_update_service,
     mock_get_invites_without_manage_permission,
 ):
-    for channel in {'email', 'sms', 'letter'}:
+    for channel in {'email', 'sms'}:
         mocker.patch(
             'app.models.service.Service.volume_{}'.format(channel),
             create=True,
@@ -1671,7 +1525,6 @@ def test_should_be_able_to_request_to_go_live_with_no_organisation(
         'sms_sender_is_govuk,'
         'volume_email,'
         'volume_sms,'
-        'volume_letter,'
         'expected_readyness,'
         'agreement_signed,'
     ),
@@ -1684,7 +1537,7 @@ def test_should_be_able_to_request_to_go_live_with_no_organisation(
             True,
             True,
             True,
-            1, 0, 0,
+            1, 0,
             'Yes',
             True,
         ),
@@ -1696,7 +1549,7 @@ def test_should_be_able_to_request_to_go_live_with_no_organisation(
             False,
             True,
             True,
-            1, 0, 1,
+            1, 0,
             'No',
             True,
         ),
@@ -1708,7 +1561,7 @@ def test_should_be_able_to_request_to_go_live_with_no_organisation(
             True,
             True,
             False,
-            0, 1, 0,
+            0, 1,
             'Yes',
             True,
         ),
@@ -1720,7 +1573,7 @@ def test_should_be_able_to_request_to_go_live_with_no_organisation(
             True,
             True,
             True,
-            0, 1, 0,
+            0, 1,
             'No',
             True,
         ),
@@ -1732,7 +1585,7 @@ def test_should_be_able_to_request_to_go_live_with_no_organisation(
             True,
             True,
             False,
-            1, 0, 0,
+            1, 0,
             'No',
             True,
         ),
@@ -1744,7 +1597,7 @@ def test_should_be_able_to_request_to_go_live_with_no_organisation(
             True,
             True,
             False,
-            0, 1, 0,
+            0, 1,
             'No',
             True,
         ),
@@ -1756,7 +1609,7 @@ def test_should_be_able_to_request_to_go_live_with_no_organisation(
             False,
             False,
             True,
-            None, None, None,
+            None, None,
             'No',
             False,
         ),
@@ -1775,7 +1628,6 @@ def test_ready_to_go_live(
     sms_sender_is_govuk,
     volume_email,
     volume_sms,
-    volume_letter,
     expected_readyness,
     agreement_signed,
 ):
@@ -1801,7 +1653,6 @@ def test_ready_to_go_live(
     for channel, volume in (
         ('sms', volume_sms),
         ('email', volume_email),
-        ('letter', volume_letter),
     ):
         mocker.patch(
             'app.models.service.Service.volume_{}'.format(channel),
@@ -1829,7 +1680,6 @@ def test_route_permissions(
         api_user_active,
         service_one,
         single_reply_to_email_address,
-        single_letter_contact_block,
         mock_get_invites_for_service,
         single_sms_sender,
         route,
@@ -1891,7 +1741,6 @@ def test_route_for_platform_admin(
         platform_admin_user,
         service_one,
         single_reply_to_email_address,
-        single_letter_contact_block,
         single_sms_sender,
         route,
         mock_get_service_settings_page_common,
@@ -1916,7 +1765,6 @@ def test_and_more_hint_appears_on_settings_with_more_than_just_a_single_sender(
         client_request,
         service_one,
         multiple_reply_to_email_addresses,
-        multiple_letter_contact_blocks,
         multiple_sms_senders,
         mock_get_service_settings_page_common,
 ):
@@ -1942,13 +1790,11 @@ def test_and_more_hint_appears_on_settings_with_more_than_just_a_single_sender(
 
 @pytest.mark.parametrize('sender_list_page, index, expected_output', [
     ('main.service_email_reply_to', 0, 'test@example.com (default) Change test@example.com'),
-    ('main.service_letter_contact_details', 1, '1 Example Street (default) Change 1 Example Street'),
     ('main.service_sms_senders', 0, 'GOVUK (default) Change GOVUK')
 ])
 def test_api_ids_dont_show_on_option_pages_with_a_single_sender(
     client_request,
     single_reply_to_email_address,
-    single_letter_contact_block,
     mock_get_organisation,
     single_sms_sender,
     sender_list_page,
@@ -1983,16 +1829,6 @@ def test_api_ids_dont_show_on_option_pages_with_a_single_sender(
             'test3@example.com Change test3@example.com ID: 9457',
         ],
     ), (
-        'main.service_letter_contact_details',
-        'app.service_api_client.get_letter_contacts',
-        create_multiple_letter_contact_blocks(),
-        [
-            'Blank Make default',
-            '1 Example Street (default) Change 1 Example Street ID: 1234',
-            '2 Example Street Change 2 Example Street ID: 5678',
-            'foo<bar>baz Change foo <bar> baz ID: 9457',
-        ],
-    ), (
         'main.service_sms_senders',
         'app.service_api_client.get_sms_senders',
         create_multiple_sms_senders(),
@@ -2024,48 +1860,11 @@ def test_default_option_shows_for_default_sender(
     assert [normalize_spaces(row.text) for row in rows] == expected_items
 
 
-def test_remove_default_from_default_letter_contact_block(
-    client_request,
-    mocker,
-    multiple_letter_contact_blocks,
-    mock_update_letter_contact,
-):
-    letter_contact_details_page = url_for(
-        'main.service_letter_contact_details',
-        service_id=SERVICE_ONE_ID,
-    )
-
-    link = client_request.get_url(letter_contact_details_page).select_one('.user-list-item a')
-    assert link.text == 'Make default'
-    assert link['href'] == url_for(
-        '.service_make_blank_default_letter_contact',
-        service_id=SERVICE_ONE_ID,
-    )
-
-    client_request.get_url(
-        link['href'],
-        _expected_status=302,
-        _expected_redirect=letter_contact_details_page,
-    )
-
-    mock_update_letter_contact.assert_called_once_with(
-        SERVICE_ONE_ID,
-        letter_contact_id='1234',
-        contact_block='1 Example Street',
-        is_default=False,
-    )
-
-
 @pytest.mark.parametrize('sender_list_page, endpoint_to_mock, expected_output', [
     (
         'main.service_email_reply_to',
         'app.service_api_client.get_reply_to_email_addresses',
         'You have not added any reply-to email addresses yet'
-    ),
-    (
-        'main.service_letter_contact_details',
-        'app.service_api_client.get_letter_contacts',
-        'Blank (default)'
     ),
     (
         'main.service_sms_senders',
@@ -2111,26 +1910,6 @@ def test_incorrect_reply_to_email_address_input(
     )
 
     assert expected_error in normalize_spaces(page.select_one('.govuk-error-message').text)
-
-
-@pytest.mark.parametrize('contact_block_input, expected_error', [
-    ('', 'Cannot be empty'),
-    ('1 \n 2 \n 3 \n 4 \n 5 \n 6 \n 7 \n 8 \n 9 \n 0 \n a', 'Contains 11 lines, maximum is 10')
-])
-def test_incorrect_letter_contact_block_input(
-    contact_block_input,
-    expected_error,
-    client_request,
-    no_letter_contact_blocks
-):
-    page = client_request.post(
-        'main.service_add_letter_contact',
-        service_id=SERVICE_ONE_ID,
-        _data={'letter_contact_block': contact_block_input},
-        _expected_status=200
-    )
-
-    assert normalize_spaces(page.select_one('.error-message').text) == expected_error
 
 
 @pytest.mark.parametrize('sms_sender_input, expected_error', [
@@ -2340,81 +2119,6 @@ def test_add_reply_to_email_address_fails_if_notification_not_delivered_in_45_se
     assert mock_add_reply_to_email_address.called is False
 
 
-@pytest.mark.parametrize('letter_contact_blocks, data, api_default_args', [
-    ([], {}, True),  # no existing letter contact blocks
-    (create_multiple_letter_contact_blocks(), {}, False),
-    (create_multiple_letter_contact_blocks(), {"is_default": "y"}, True)
-])
-def test_add_letter_contact(
-    letter_contact_blocks,
-    data,
-    api_default_args,
-    mocker,
-    client_request,
-    mock_add_letter_contact
-):
-    mocker.patch('app.service_api_client.get_letter_contacts', return_value=letter_contact_blocks)
-
-    data['letter_contact_block'] = "1 Example Street"
-    client_request.post(
-        'main.service_add_letter_contact',
-        service_id=SERVICE_ONE_ID,
-        _data=data
-    )
-
-    mock_add_letter_contact.assert_called_once_with(
-        SERVICE_ONE_ID,
-        contact_block="1 Example Street",
-        is_default=api_default_args
-    )
-
-
-def test_add_letter_contact_when_coming_from_template(
-    no_letter_contact_blocks,
-    client_request,
-    mock_add_letter_contact,
-    fake_uuid,
-    mock_get_service_letter_template,
-    mock_update_service_template_sender,
-):
-    page = client_request.get(
-        'main.service_add_letter_contact',
-        service_id=SERVICE_ONE_ID,
-        from_template=fake_uuid,
-    )
-
-    assert page.select_one('.govuk-back-link')['href'] == url_for(
-        'main.view_template',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-    )
-
-    client_request.post(
-        'main.service_add_letter_contact',
-        service_id=SERVICE_ONE_ID,
-        _data={
-            'letter_contact_block': '1 Example Street',
-        },
-        from_template=fake_uuid,
-        _expected_redirect=url_for(
-            'main.view_template',
-            service_id=SERVICE_ONE_ID,
-            template_id=fake_uuid,
-        ),
-    )
-
-    mock_add_letter_contact.assert_called_once_with(
-        SERVICE_ONE_ID,
-        contact_block="1 Example Street",
-        is_default=True,
-    )
-    mock_update_service_template_sender.assert_called_once_with(
-        SERVICE_ONE_ID,
-        fake_uuid,
-        '1234',
-    )
-
-
 @pytest.mark.parametrize('sms_senders, data, api_default_args', [
     ([], {}, True),
     (create_multiple_sms_senders(), {}, False),
@@ -2457,26 +2161,6 @@ def test_default_box_doesnt_show_on_first_email_sender(
 
     page = client_request.get(
         'main.service_add_email_reply_to',
-        service_id=SERVICE_ONE_ID
-    )
-
-    assert bool(page.select_one('[name=is_default]')) == checkbox_present
-
-
-@pytest.mark.parametrize('contact_blocks, checkbox_present', [
-    ([], False),
-    (create_multiple_letter_contact_blocks(), True)
-])
-def test_default_box_doesnt_show_on_first_letter_sender(
-    contact_blocks,
-    mocker,
-    checkbox_present,
-    client_request
-):
-    mocker.patch('app.service_api_client.get_letter_contacts', return_value=contact_blocks)
-
-    page = client_request.get(
-        'main.service_add_letter_contact',
         service_id=SERVICE_ONE_ID
     )
 
@@ -2768,82 +2452,6 @@ def test_delete_reply_to_email_address(
     mock_delete.assert_called_once_with(service_id=SERVICE_ONE_ID, reply_to_email_id=fake_uuid)
 
 
-@pytest.mark.parametrize('letter_contact_block, data, api_default_args', [
-    (create_letter_contact_block(), {"is_default": "y"}, True),
-    (create_letter_contact_block(), {}, True),
-    (create_letter_contact_block(is_default=False), {}, False),
-    (create_letter_contact_block(is_default=False), {"is_default": "y"}, True)
-])
-def test_edit_letter_contact_block(
-    letter_contact_block,
-    data,
-    api_default_args,
-    mocker,
-    fake_uuid,
-    client_request,
-    mock_update_letter_contact
-):
-    mocker.patch('app.service_api_client.get_letter_contact', return_value=letter_contact_block)
-    data['letter_contact_block'] = "1 Example Street"
-    client_request.post(
-        'main.service_edit_letter_contact',
-        service_id=SERVICE_ONE_ID,
-        letter_contact_id=fake_uuid,
-        _data=data
-    )
-
-    mock_update_letter_contact.assert_called_once_with(
-        SERVICE_ONE_ID,
-        letter_contact_id=fake_uuid,
-        contact_block="1 Example Street",
-        is_default=api_default_args
-    )
-
-
-def test_confirm_delete_letter_contact_block(
-    fake_uuid,
-    client_request,
-    get_default_letter_contact_block,
-):
-
-    page = client_request.get(
-        'main.service_confirm_delete_letter_contact',
-        service_id=SERVICE_ONE_ID,
-        letter_contact_id=fake_uuid,
-        _test_page_title=False,
-    )
-
-    assert normalize_spaces(page.select_one('.banner-dangerous').text) == (
-        'Are you sure you want to delete this contact block? '
-        'Yes, delete'
-    )
-    assert 'action' not in page.select_one('.banner-dangerous form')
-    assert page.select_one('.banner-dangerous form')['method'] == 'post'
-
-
-def test_delete_letter_contact_block(
-    client_request,
-    service_one,
-    fake_uuid,
-    get_default_letter_contact_block,
-    mocker,
-):
-    mock_delete = mocker.patch('app.service_api_client.delete_letter_contact')
-    client_request.post(
-        '.service_delete_letter_contact',
-        service_id=SERVICE_ONE_ID,
-        letter_contact_id=fake_uuid,
-        _expected_redirect=url_for(
-            'main.service_letter_contact_details',
-            service_id=SERVICE_ONE_ID,
-        )
-    )
-    mock_delete.assert_called_once_with(
-        service_id=SERVICE_ONE_ID,
-        letter_contact_id=fake_uuid,
-    )
-
-
 @pytest.mark.parametrize('sms_sender, data, api_default_args', [
     (create_sms_sender(), {"is_default": "y", "sms_sender": "test"}, True),
     (create_sms_sender(), {"sms_sender": "test"}, True),
@@ -2894,22 +2502,6 @@ def test_edit_sms_sender(
         True
     ),
     (
-        'main.service_edit_letter_contact',
-        'app.service_api_client.get_letter_contact',
-        create_letter_contact_block(is_default=True),
-        'This is currently your default address for service one.',
-        'letter_contact_id',
-        False
-    ),
-    (
-        'main.service_edit_letter_contact',
-        'app.service_api_client.get_letter_contact',
-        create_letter_contact_block(is_default=False),
-        'THIS TEXT WONT BE TESTED',
-        'letter_contact_id',
-        True
-    ),
-    (
         'main.service_edit_sms_sender',
         'app.service_api_client.get_sms_sender',
         create_sms_sender(is_default=True),
@@ -2955,19 +2547,6 @@ def test_default_box_shows_on_non_default_sender_details_while_editing(
         assert normalize_spaces(page.select_one('form p').text) == (
             default_message
         )
-
-
-def test_sender_details_are_escaped(client_request, mocker, fake_uuid):
-    letter_contact_block = create_letter_contact_block(contact_block='foo\n\n<br>\n\nbar')
-    mocker.patch('app.service_api_client.get_letter_contacts', return_value=[letter_contact_block])
-
-    page = client_request.get(
-        'main.service_letter_contact_details',
-        service_id=SERVICE_ONE_ID,
-    )
-
-    # get the second row (first is the default Blank sender)
-    assert 'foo<br>bar' in normalize_spaces(page.select('.user-list-item')[1].text)
 
 
 @pytest.mark.parametrize('sms_sender, expected_link_text, partial_href', [
@@ -3119,7 +2698,6 @@ def test_shows_research_mode_indicator(
     service_one,
     mocker,
     single_reply_to_email_address,
-    single_letter_contact_block,
     single_sms_sender,
     mock_get_service_settings_page_common,
 ):
@@ -3138,7 +2716,6 @@ def test_shows_research_mode_indicator(
 def test_does_not_show_research_mode_indicator(
     client_request,
     single_reply_to_email_address,
-    single_letter_contact_block,
     single_sms_sender,
     mock_get_service_settings_page_common,
 ):
@@ -3149,223 +2726,6 @@ def test_does_not_show_research_mode_indicator(
 
     element = page.find('span', {"id": "research-mode"})
     assert not element
-
-
-def test_service_set_letter_branding_platform_admin_only(
-    client_request,
-):
-    client_request.get(
-        'main.service_set_letter_branding',
-        service_id=SERVICE_ONE_ID,
-        _expected_status=403,
-    )
-
-
-@pytest.mark.parametrize('letter_branding, expected_selected, expected_items', [
-    # expected order: currently selected, then default, then rest alphabetically
-    (None, '__NONE__', (
-        ('__NONE__', 'None'),
-        (str(UUID(int=2)), 'Animal and Plant Health Agency'),
-        (str(UUID(int=0)), 'HM Government'),
-        (str(UUID(int=1)), 'Land Registry'),
-    )),
-    (str(UUID(int=1)), str(UUID(int=1)), (
-        (str(UUID(int=1)), 'Land Registry'),
-        ('__NONE__', 'None'),
-        (str(UUID(int=2)), 'Animal and Plant Health Agency'),
-        (str(UUID(int=0)), 'HM Government'),
-    )),
-    (str(UUID(int=2)), str(UUID(int=2)), (
-        (str(UUID(int=2)), 'Animal and Plant Health Agency'),
-        ('__NONE__', 'None'),
-        (str(UUID(int=0)), 'HM Government'),
-        (str(UUID(int=1)), 'Land Registry'),
-    )),
-])
-@pytest.mark.parametrize('endpoint, extra_args', (
-    (
-        'main.service_set_letter_branding',
-        {'service_id': SERVICE_ONE_ID},
-    ),
-    (
-        'main.edit_organisation_letter_branding',
-        {'org_id': ORGANISATION_ID},
-    ),
-))
-def test_service_set_letter_branding_prepopulates(
-    mocker,
-    client_request,
-    platform_admin_user,
-    service_one,
-    mock_get_organisation,
-    mock_get_all_letter_branding,
-    letter_branding,
-    expected_selected,
-    expected_items,
-    endpoint,
-    extra_args,
-):
-    service_one['letter_branding'] = letter_branding
-    mocker.patch(
-        'app.organisations_client.get_organisation',
-        side_effect=lambda org_id: organisation_json(
-            org_id,
-            'Org 1',
-            letter_branding_id=letter_branding,
-        )
-    )
-
-    client_request.login(platform_admin_user)
-    page = client_request.get(
-        endpoint,
-        **extra_args,
-    )
-
-    assert len(page.select('input[checked]')) == 1
-    assert page.select('input[checked]')[0]['value'] == expected_selected
-
-    for element in {'label[for^=branding_style]', 'input[type=radio]'}:
-        assert len(page.select(element)) == len(expected_items)
-
-    for index, expected_item in enumerate(expected_items):
-        expected_value, expected_label = expected_item
-        assert normalize_spaces(page.select('label[for^=branding_style]')[index].text) == expected_label
-        assert page.select('input[type=radio]')[index]['value'] == expected_value
-
-
-@pytest.mark.parametrize('selected_letter_branding, expected_post_data', [
-    (str(UUID(int=1)), str(UUID(int=1))),
-    ('__NONE__', None),
-])
-@pytest.mark.parametrize('endpoint, extra_args, expected_redirect', (
-    (
-        'main.service_set_letter_branding',
-        {'service_id': SERVICE_ONE_ID},
-        'main.service_preview_letter_branding',
-    ),
-    (
-        'main.edit_organisation_letter_branding',
-        {'org_id': ORGANISATION_ID},
-        'main.organisation_preview_letter_branding',
-    ),
-))
-def test_service_set_letter_branding_redirects_to_preview_page_when_form_submitted(
-    client_request,
-    platform_admin_user,
-    mock_get_organisation,
-    mock_get_all_letter_branding,
-    selected_letter_branding,
-    expected_post_data,
-    endpoint,
-    extra_args,
-    expected_redirect,
-):
-    client_request.login(platform_admin_user)
-    client_request.post(
-        endpoint,
-        _data={'branding_style': selected_letter_branding},
-        _expected_status=302,
-        _expected_redirect=url_for(
-            expected_redirect,
-            branding_style=expected_post_data,
-            **extra_args
-        ),
-        **extra_args
-    )
-
-
-@pytest.mark.parametrize('endpoint, extra_args', (
-    (
-        'main.service_preview_letter_branding',
-        {'service_id': SERVICE_ONE_ID},
-    ),
-    (
-        'main.organisation_preview_letter_branding',
-        {'org_id': ORGANISATION_ID},
-    ),
-))
-def test_service_preview_letter_branding_shows_preview_letter(
-    client_request,
-    platform_admin_user,
-    mock_get_organisation,
-    mock_get_all_letter_branding,
-    endpoint,
-    extra_args,
-):
-    client_request.login(platform_admin_user)
-
-    page = client_request.get(
-        endpoint,
-        branding_style='hm-government',
-        **extra_args
-    )
-
-    assert page.find('iframe')['src'] == url_for('main.letter_template', branding_style='hm-government')
-
-
-@pytest.mark.parametrize('selected_letter_branding, expected_post_data', [
-    (str(UUID(int=1)), str(UUID(int=1))),
-    ('__NONE__', None),
-])
-@pytest.mark.parametrize('endpoint, extra_args, expected_redirect', (
-    (
-        'main.service_preview_letter_branding',
-        {'service_id': SERVICE_ONE_ID},
-        'main.service_settings',
-    ),
-    (
-        'main.organisation_preview_letter_branding',
-        {'org_id': ORGANISATION_ID},
-        'main.organisation_settings',
-    ),
-))
-def test_service_preview_letter_branding_saves(
-    client_request,
-    platform_admin_user,
-    mock_get_organisation,
-    mock_get_organisation_services,
-    mock_update_service,
-    mock_update_organisation,
-    mock_get_all_letter_branding,
-    selected_letter_branding,
-    expected_post_data,
-    endpoint,
-    extra_args,
-    expected_redirect,
-):
-    client_request.login(platform_admin_user)
-    client_request.post(
-        endpoint,
-        _data={'branding_style': selected_letter_branding},
-        _expected_status=302,
-        _expected_redirect=url_for(
-            expected_redirect,
-            **extra_args
-        ),
-        **extra_args
-    )
-
-    if endpoint == 'main.service_preview_letter_branding':
-        mock_update_service.assert_called_once_with(
-            SERVICE_ONE_ID,
-            letter_branding=expected_post_data,
-        )
-        assert mock_update_organisation.called is False
-
-    elif endpoint == 'main.organisation_preview_letter_branding':
-        mock_update_organisation.assert_called_once_with(
-            ORGANISATION_ID,
-            letter_branding_id=expected_post_data,
-            cached_service_ids=[
-                '12345',
-                '67890',
-                '596364a0-858e-42c8-9062-a8fe822260eb',
-            ],
-        )
-        assert mock_update_service.called is False
-
-    else:
-        raise Exception
 
 
 @pytest.mark.parametrize('current_branding, expected_values, expected_labels', [
@@ -3717,21 +3077,6 @@ def test_should_set_message_limit(
     )
 
 
-def test_old_set_letters_page_redirects(
-    client_request,
-):
-    client_request.get(
-        'main.service_set_letters',
-        service_id=SERVICE_ONE_ID,
-        _expected_status=301,
-        _expected_redirect=url_for(
-            'main.service_set_channel',
-            service_id=SERVICE_ONE_ID,
-            channel='letter',
-        )
-    )
-
-
 def test_unknown_channel_404s(
     client_request,
 ):
@@ -3752,24 +3097,6 @@ def test_unknown_channel_404s(
     'posted_value,'
     'expected_updated_permissions'
 ), [
-    (
-        'letter',
-        'It costs between 41 pence and £1.28 to send a letter using Notify.',
-        'Send letters',
-        ['email', 'sms'],
-        'False',
-        'True',
-        ['email', 'sms', 'letter'],
-    ),
-    (
-        'letter',
-        'It costs between 41 pence and £1.28 to send a letter using Notify.',
-        'Send letters',
-        ['email', 'sms', 'letter'],
-        'True',
-        'False',
-        ['email', 'sms'],
-    ),
     (
         'sms',
         'You have a free allowance of 250,000 text messages each financial year.',
@@ -3792,10 +3119,10 @@ def test_unknown_channel_404s(
         'email',
         'It’s free to send emails through US Notify.',
         'Send emails',
-        ['email', 'sms', 'letter'],
+        ['email', 'sms'],
         'True',
         'True',
-        ['email', 'sms', 'letter'],
+        ['email', 'sms'],
     ),
 ])
 def test_switch_service_channels_on_and_off(
@@ -3842,11 +3169,9 @@ def test_switch_service_channels_on_and_off(
 
 @pytest.mark.parametrize('permission, permissions, expected_checked', [
     ('international_sms', ['international_sms'], 'True'),
-    ('international_letters', ['international_letters'], 'True'),
     ('international_sms', [''], 'False'),
-    ('international_letters', [''], 'False'),
 ])
-def test_show_international_sms_and_letters_as_radio_button(
+def test_show_international_sms_as_radio_button(
     client_request,
     service_one,
     mocker,
@@ -3869,13 +3194,12 @@ def test_show_international_sms_and_letters_as_radio_button(
 
 @pytest.mark.parametrize('permission', (
     'international_sms',
-    'international_letters',
 ))
 @pytest.mark.parametrize('post_value, permission_expected_in_api_call', [
     ('True', True),
     ('False', False),
 ])
-def test_switch_service_enable_international_sms_and_letters(
+def test_switch_service_enable_international_sms(
     client_request,
     service_one,
     mocker,
@@ -3955,7 +3279,6 @@ def test_archive_service_prompts_user(
     client_request,
     mocker,
     single_reply_to_email_address,
-    single_letter_contact_block,
     service_one,
     single_sms_sender,
     mock_get_service_settings_page_common,
@@ -3994,7 +3317,6 @@ def test_cant_archive_inactive_service(
     platform_admin_user,
     service_one,
     single_reply_to_email_address,
-    single_letter_contact_block,
     single_sms_sender,
     mock_get_service_settings_page_common
 ):
@@ -4045,7 +3367,6 @@ def test_suspend_service_prompts_user(
     service_one,
     mocker,
     single_reply_to_email_address,
-    single_letter_contact_block,
     single_sms_sender,
     mock_get_service_settings_page_common,
 ):
@@ -4064,7 +3385,6 @@ def test_cant_suspend_inactive_service(
     platform_admin_user,
     service_one,
     single_reply_to_email_address,
-    single_letter_contact_block,
     single_sms_sender,
     mock_get_service_settings_page_common,
 ):
@@ -4116,7 +3436,6 @@ def test_resume_service_prompts_user(
     user,
     service_one,
     single_reply_to_email_address,
-    single_letter_contact_block,
     single_sms_sender,
     mocker,
     mock_get_service_settings_page_common,
@@ -4137,7 +3456,6 @@ def test_cant_resume_active_service(
     platform_admin_user,
     service_one,
     single_reply_to_email_address,
-    single_letter_contact_block,
     single_sms_sender,
     mock_get_service_settings_page_common
 ):
@@ -4180,7 +3498,6 @@ def test_send_files_by_email_contact_details_updates_contact_details_and_redirec
     mock_update_service,
     mock_get_service_settings_page_common,
     no_reply_to_email_addresses,
-    no_letter_contact_blocks,
     single_sms_sender,
     contact_details_type,
     old_value,
@@ -4207,7 +3524,6 @@ def test_send_files_by_email_contact_details_uses_the_selected_field_when_multip
     mock_update_service,
     mock_get_service_settings_page_common,
     no_reply_to_email_addresses,
-    no_letter_contact_blocks,
     single_sms_sender,
 ):
     service_one['contact_link'] = 'http://www.old-url.com'
@@ -4347,11 +3663,9 @@ def test_service_settings_when_inbound_number_is_not_set(
     client_request,
     service_one,
     single_reply_to_email_address,
-    single_letter_contact_block,
     mock_get_organisation,
     single_sms_sender,
     mocker,
-    mock_get_all_letter_branding,
     mock_get_free_sms_fragment_limit,
     mock_get_service_data_retention,
 ):
@@ -4367,10 +3681,8 @@ def test_set_inbound_sms_when_inbound_number_is_not_set(
     client_request,
     service_one,
     single_reply_to_email_address,
-    single_letter_contact_block,
     single_sms_sender,
     mocker,
-    mock_get_all_letter_branding,
 ):
     mocker.patch('app.inbound_number_client.get_inbound_sms_number_for_service',
                  return_value={'data': {}})
@@ -4566,22 +3878,6 @@ def test_service_settings_links_to_branding_request_page_for_emails(
     assert len(page.find_all('a', attrs={'href': expected_href})) == 1
 
 
-@pytest.mark.skip(reason="Skipping letter-specific test")
-def test_service_settings_links_to_branding_request_page_for_letters(
-    mocker,
-    service_one,
-    client_request,
-    no_reply_to_email_addresses,
-    no_letter_contact_blocks,
-    single_sms_sender,
-):
-    service_one['permissions'].append('letter')
-    page = client_request.get(
-        '.service_settings', service_id=SERVICE_ONE_ID
-    )
-    assert len(page.find_all('a', attrs={'href': f'/services/{SERVICE_ONE_ID}/service-settings/letter-branding'})) == 1
-
-
 def test_show_service_data_retention(
         client_request,
         platform_admin_user,
@@ -4704,7 +4000,6 @@ def test_service_settings_links_to_edit_service_notes_page_for_platform_admins(
     client_request,
     platform_admin_user,
     no_reply_to_email_addresses,
-    no_letter_contact_blocks,
     single_sms_sender,
     mock_get_service_settings_page_common,
 ):
@@ -4757,7 +4052,6 @@ def test_service_settings_links_to_edit_service_billing_details_page_for_platfor
     client_request,
     platform_admin_user,
     no_reply_to_email_addresses,
-    no_letter_contact_blocks,
     single_sms_sender,
     mock_get_service_settings_page_common,
 ):

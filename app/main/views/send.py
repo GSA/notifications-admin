@@ -14,13 +14,8 @@ from flask import (
 )
 from flask_login import current_user
 from notifications_python_client.errors import HTTPError
-from notifications_utils import LETTER_MAX_PAGE_COUNT, SMS_CHAR_COUNT_LIMIT
+from notifications_utils import SMS_CHAR_COUNT_LIMIT
 from notifications_utils.insensitive_dict import InsensitiveDict
-from notifications_utils.pdf import is_letter_too_long
-from notifications_utils.postal_address import (
-    PostalAddress,
-    address_lines_1_to_7_keys,
-)
 from notifications_utils.recipients import RecipientCSV, first_column_headings
 from notifications_utils.sanitise_text import SanitiseASCII
 from xlrd.biffh import XLRDError
@@ -37,7 +32,6 @@ from app.main import main, no_cookie
 from app.main.forms import (
     ChooseTimeForm,
     CsvUploadForm,
-    LetterAddressForm,
     SetSenderForm,
     get_placeholder_form_instance,
 )
@@ -49,7 +43,7 @@ from app.s3_client.s3_csv_client import (
     s3upload,
     set_metadata_on_csv_upload,
 )
-from app.template_previews import TemplatePreview, get_page_count_for_letter
+from app.template_previews import TemplatePreview
 from app.utils import (
     PermanentRedirect,
     should_skip_template_page,
@@ -58,11 +52,6 @@ from app.utils import (
 from app.utils.csv import Spreadsheet, get_errors_for_csv
 from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
-
-letter_address_columns = [
-    column.replace('_', ' ')
-    for column in address_lines_1_to_7_keys
-]
 
 
 def get_example_csv_fields(column_headers, use_example_as_example, submitted_fields):
@@ -78,12 +67,6 @@ def get_example_csv_rows(template, use_example_as_example=True, submitted_fields
     return {
         'email': ['test@example.com'] if use_example_as_example else [current_user.email_address],
         'sms': ['12223334444'] if use_example_as_example else [current_user.mobile_number],
-        'letter': [
-            (submitted_fields or {}).get(
-                key, get_example_letter_address(key) if use_example_as_example else key
-            )
-            for key in letter_address_columns
-        ]
     }[template.template_type] + get_example_csv_fields(
         (
             placeholder for placeholder in template.placeholders
@@ -94,14 +77,6 @@ def get_example_csv_rows(template, use_example_as_example=True, submitted_fields
         use_example_as_example,
         submitted_fields
     )
-
-
-def get_example_letter_address(key):
-    return {
-        'address line 1': 'A. Name',
-        'address line 2': '123 Example Street',
-        'address line 3': 'XM4 5HQ'
-    }.get(key, '')
 
 
 @main.route("/services/<uuid:service_id>/send/<uuid:template_id>/csv", methods=['GET', 'POST'])
@@ -130,13 +105,6 @@ def send_messages(service_id, template_id):
         db_template,
         current_service,
         show_recipient=True,
-        letter_preview_url=url_for(
-            'no_cookie.view_letter_template_preview',
-            service_id=service_id,
-            template_id=template_id,
-            filetype='png',
-            page_count=get_page_count_for_letter(db_template),
-        ),
         email_reply_to=email_reply_to,
         sms_sender=sms_sender,
     )
@@ -217,9 +185,6 @@ def set_sender(service_id, template_id):
 
     template = current_service.get_template_with_user_permission_or_403(template_id, current_user)
 
-    if template['template_type'] == 'letter':
-        return redirect_to_one_off
-
     sender_details = get_sender_details(service_id, template['template_type'])
 
     if len(sender_details) == 1:
@@ -272,11 +237,6 @@ def get_sender_context(sender_details, template_type):
             'description': 'Where should replies come back to?',
             'field_name': 'email_address'
         },
-        'letter': {
-            'title': 'Send to one recipient',
-            'description': 'What should appear in the top right of the letter?',
-            'field_name': 'contact_block'
-        },
         'sms': {
             'title': 'Who should the message come from?',
             'description': 'Who should the message come from?',
@@ -301,7 +261,6 @@ def get_sender_context(sender_details, template_type):
 def get_sender_details(service_id, template_type):
     api_call = {
         'email': service_api_client.get_reply_to_email_addresses,
-        'letter': service_api_client.get_letter_contacts,
         'sms': service_api_client.get_sms_senders
     }[template_type]
     return api_call(service_id)
@@ -314,11 +273,6 @@ def send_one_off(service_id, template_id):
     session['placeholders'] = {}
 
     db_template = current_service.get_template_with_user_permission_or_403(template_id, current_user)
-    if db_template['template_type'] == 'letter':
-        session['sender_id'] = None
-        return redirect(
-            url_for('.send_one_off_letter_address', service_id=service_id, template_id=template_id)
-        )
 
     if db_template['template_type'] not in current_service.available_template_types:
         return redirect(url_for(
@@ -342,72 +296,6 @@ def get_notification_check_endpoint(service_id, template):
         service_id=service_id,
         template_id=template.id,
     ))
-
-
-@main.route(
-    "/services/<uuid:service_id>/send/<uuid:template_id>/one-off/address",
-    methods=['GET', 'POST']
-)
-@user_has_permissions('send_messages', restrict_admin_usage=True)
-def send_one_off_letter_address(service_id, template_id):
-    if {'recipient', 'placeholders'} - set(session.keys()):
-        # if someone has come here via a bookmark or back button they might have some stuff still in their session
-        return redirect(url_for('.send_one_off', service_id=service_id, template_id=template_id))
-
-    db_template = current_service.get_template_with_user_permission_or_403(template_id, current_user)
-
-    session_placeholders = get_normalised_placeholders_from_session()
-
-    template = get_template(
-        db_template,
-        current_service,
-        show_recipient=True,
-        letter_preview_url=url_for(
-            'no_cookie.send_test_preview',
-            service_id=service_id,
-            template_id=template_id,
-            filetype='png',
-        ),
-        page_count=get_page_count_for_letter(db_template, session_placeholders),
-        email_reply_to=None,
-        sms_sender=None
-    )
-
-    current_session_address = PostalAddress.from_personalisation(session_placeholders)
-
-    form = LetterAddressForm(
-        address=current_session_address.normalised,
-        allow_international_letters=current_service.has_permission('international_letters'),
-    )
-
-    if form.validate_on_submit():
-        session['placeholders'].update(PostalAddress(form.address.data).as_personalisation)
-
-        placeholders = fields_to_fill_in(template)
-        if all_placeholders_in_session(placeholders):
-            return get_notification_check_endpoint(service_id, template)
-
-        first_non_address_placeholder_index = len(address_lines_1_to_7_keys)
-
-        return redirect(url_for(
-            'main.send_one_off_step',
-            service_id=service_id,
-            template_id=template_id,
-            step_index=first_non_address_placeholder_index,
-        ))
-
-    return render_template(
-        'views/send-one-off-letter-address.html',
-        page_title=get_send_test_page_title(
-            template_type='letter',
-            entering_recipient=True,
-            name=template.name,
-        ),
-        template=template,
-        form=form,
-        back_link=get_back_link(service_id, template, 0),
-        link_to_upload=True,
-    )
 
 
 @main.route(
@@ -438,13 +326,6 @@ def send_one_off_step(service_id, template_id, step_index):
         db_template,
         current_service,
         show_recipient=True,
-        letter_preview_url=url_for(
-            'no_cookie.send_test_preview',
-            service_id=service_id,
-            template_id=template_id,
-            filetype='png',
-        ),
-        page_count=get_page_count_for_letter(db_template, values=template_values),
         email_reply_to=email_reply_to,
         sms_sender=sms_sender
     )
@@ -462,22 +343,6 @@ def send_one_off_step(service_id, template_id, step_index):
             template_id=template_id,
         ))
 
-    # if we're in a letter, we should show address block rather than "address line #" or "postcode"
-    if template.template_type == 'letter':
-        if step_index < len(address_lines_1_to_7_keys):
-            return redirect(url_for(
-                '.send_one_off_letter_address',
-                service_id=service_id,
-                template_id=template_id,
-            ))
-        if current_placeholder in InsensitiveDict(PostalAddress('').as_personalisation):
-            return redirect(url_for(
-                request.endpoint,
-                service_id=service_id,
-                template_id=template_id,
-                step_index=step_index + 1,
-            ))
-
     form = get_placeholder_form_instance(
         current_placeholder,
         dict_to_populate_from=get_normalised_placeholders_from_session(),
@@ -487,12 +352,8 @@ def send_one_off_step(service_id, template_id, step_index):
 
     if form.validate_on_submit():
         # if it's the first input (phone/email), we store against `recipient` as well, for easier extraction.
-        # Only if it's not a letter.
-        # And only if we're not on the test route, since that will already have the user's own number set
-        if (
-            step_index == 0
-            and template.template_type != 'letter'
-        ):
+        # Only if we're not on the test route, since that will already have the user's own number set
+        if step_index == 0:
             session['recipient'] = form.placeholder_value.data
 
         session['placeholders'][current_placeholder] = form.placeholder_value.data
@@ -542,12 +403,6 @@ def send_test_preview(service_id, template_id, filetype):
     template = get_template(
         db_template,
         current_service,
-        letter_preview_url=url_for(
-            'no_cookie.send_test_preview',
-            service_id=service_id,
-            template_id=template_id,
-            filetype='png',
-        ),
     )
 
     template.values = get_normalised_placeholders_from_session()
@@ -596,7 +451,7 @@ def send_from_contact_list(service_id, template_id, contact_list_id):
     ))
 
 
-def _check_messages(service_id, template_id, upload_id, preview_row, letters_as_pdf=False):
+def _check_messages(service_id, template_id, upload_id, preview_row):
     try:
         # The happy path is that the job doesn’t already exist, so the
         # API will return a 404 and the client will raise HTTPError.
@@ -633,20 +488,8 @@ def _check_messages(service_id, template_id, upload_id, preview_row, letters_as_
         db_template,
         current_service,
         show_recipient=True,
-        letter_preview_url=url_for(
-            'no_cookie.check_messages_preview',
-            service_id=service_id,
-            template_id=template_id,
-            upload_id=upload_id,
-            filetype='png',
-            row_index=preview_row,
-        ) if not letters_as_pdf else None,
         email_reply_to=email_reply_to,
         sms_sender=sms_sender,
-        # In this case, we don't provide template values when calculating the page count
-        # because we don't know them at this point. It means that later on we will need to
-        # recalculate the page count once we have the values
-        page_count=get_page_count_for_letter(db_template),
     )
     recipients = RecipientCSV(
         contents,
@@ -658,11 +501,10 @@ def _check_messages(service_id, template_id, upload_id, preview_row, letters_as_
         ) if current_service.trial_mode else None,
         remaining_messages=remaining_messages,
         allow_international_sms=current_service.has_permission('international_sms'),
-        allow_international_letters=current_service.has_permission('international_letters'),
     )
 
     if request.args.get('from_test'):
-        # only happens if generating a letter preview test
+        # TODO: may not be required after letters code removed
         back_link = url_for('main.send_one_off', service_id=service_id, template_id=template.id)
         choose_time_form = None
     else:
@@ -676,9 +518,6 @@ def _check_messages(service_id, template_id, upload_id, preview_row, letters_as_
         template.values = recipients[preview_row - 2].recipient_and_personalisation
     elif preview_row > 2:
         abort(404)
-
-    page_count = get_page_count_for_letter(db_template, template.values)
-    template.page_count = page_count
 
     original_file_name = get_csv_metadata(service_id, upload_id).get('original_file_name', '')
 
@@ -695,20 +534,11 @@ def _check_messages(service_id, template_id, upload_id, preview_row, letters_as_
         remaining_messages=remaining_messages,
         choose_time_form=choose_time_form,
         back_link=back_link,
-        trying_to_send_letters_in_trial_mode=all((
-            current_service.trial_mode,
-            template.template_type == 'letter',
-        )),
         first_recipient_column=recipients.recipient_column_headers[0],
         preview_row=preview_row,
         sent_previously=job_api_client.has_sent_previously(
             service_id, template.id, db_template['version'], original_file_name
         ),
-        letter_too_long=is_letter_too_long(page_count),
-        letter_max_pages=LETTER_MAX_PAGE_COUNT,
-        letter_min_address_lines=PostalAddress.MIN_LINES,
-        letter_max_address_lines=PostalAddress.MAX_LINES,
-        page_count=page_count
     )
 
 
@@ -737,7 +567,6 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
 
     if (
         data['errors']
-        or data['trying_to_send_letters_in_trial_mode']
     ):
         return render_template('views/check/column-errors.html', **data)
 
@@ -748,8 +577,7 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
         'original_file_name': data.get('original_file_name', ''),
     }
 
-    if session.get('sender_id') and data['template'].template_type != 'letter':
-        # sender_id is not an option for sending letters.
+    if session.get('sender_id'):
         metadata_kwargs['sender_id'] = session['sender_id']
 
     set_metadata_on_csv_upload(service_id, upload_id, **metadata_kwargs)
@@ -767,6 +595,7 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
 )
 @user_has_permissions('send_messages')
 def check_messages_preview(service_id, template_id, upload_id, filetype, row_index=2):
+    # TODO: likely candidate for deletion
     if filetype == 'pdf':
         page = None
     elif filetype == 'png':
@@ -775,7 +604,7 @@ def check_messages_preview(service_id, template_id, upload_id, filetype, row_ind
         abort(404)
 
     template = _check_messages(
-        service_id, template_id, upload_id, row_index, letters_as_pdf=True
+        service_id, template_id, upload_id, row_index
     )['template']
     return TemplatePreview.from_utils_template(template, filetype, page=page)
 
@@ -822,9 +651,6 @@ def start_job(service_id, upload_id):
 
 
 def fields_to_fill_in(template, prefill_current_user=False):
-
-    if 'letter' == template.template_type:
-        return letter_address_columns + list(template.placeholders)
 
     if not prefill_current_user:
         return first_column_headings[template.template_type] + list(template.placeholders)
@@ -880,20 +706,6 @@ def get_back_link(service_id, template, step_index, placeholders=None):
                 service_id=service_id,
                 template_id=template.id,
             )
-
-    if template.template_type == 'letter' and placeholders:
-        # Make sure we’re not redirecting users to a page which will
-        # just redirect them forwards again
-        back_link_destination_step_index = next((
-            index
-            for index, placeholder in reversed(
-                list(enumerate(placeholders[:step_index]))
-            )
-            if placeholder not in InsensitiveDict(
-                PostalAddress('').as_personalisation
-            )
-        ), 1)
-        return get_back_link(service_id, template, back_link_destination_step_index + 1)
 
     return url_for(
         'main.send_one_off_step',
@@ -964,13 +776,6 @@ def _check_notification(service_id, template_id, exception=None):
         show_recipient=True,
         email_reply_to=email_reply_to,
         sms_sender=sms_sender,
-        letter_preview_url=url_for(
-            'no_cookie.check_notification_preview',
-            service_id=service_id,
-            template_id=template_id,
-            filetype='png',
-        ),
-        page_count=get_page_count_for_letter(db_template),
     )
 
     placeholders = fields_to_fill_in(template)
@@ -980,21 +785,15 @@ def _check_notification(service_id, template_id, exception=None):
     if (
         (
             not session.get('recipient')
-            and db_template['template_type'] != 'letter'
         )
         or not all_placeholders_in_session(template.placeholders)
     ):
         raise PermanentRedirect(back_link)
 
     template.values = get_recipient_and_placeholders_from_session(template.template_type)
-    page_count = get_page_count_for_letter(db_template, template.values)
-    template.page_count = page_count
     return dict(
         template=template,
         back_link=back_link,
-        letter_too_long=is_letter_too_long(page_count),
-        letter_max_pages=LETTER_MAX_PAGE_COUNT,
-        page_count=page_count,
         **(get_template_error_dict(exception) if exception else {}),
     )
 
@@ -1086,11 +885,7 @@ def get_sms_sender_from_session():
 def get_spreadsheet_column_headings_from_template(template):
     column_headings = []
 
-    if template.template_type == 'letter':
-        # We want to avoid showing `address line 7` for now
-        recipient_columns = letter_address_columns
-    else:
-        recipient_columns = first_column_headings[template.template_type]
+    recipient_columns = first_column_headings[template.template_type]
 
     for column_heading in (
         recipient_columns + list(template.placeholders)

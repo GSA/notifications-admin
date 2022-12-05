@@ -166,117 +166,6 @@ def mock_update_reply_to_email_address(mocker):
 
 
 @pytest.fixture(scope='function')
-def multiple_letter_contact_blocks(mocker):
-    def _get(service_id):
-        return [
-            {
-                'id': '1234',
-                'service_id': service_id,
-                'contact_block': '1 Example Street',
-                'is_default': True,
-                'created_at': datetime.utcnow(),
-                'updated_at': None
-            }, {
-                'id': '5678',
-                'service_id': service_id,
-                'contact_block': '2 Example Street',
-                'is_default': False,
-                'created_at': datetime.utcnow(),
-                'updated_at': None
-            }, {
-                'id': '9457',
-                'service_id': service_id,
-                'contact_block': '3 Example Street',
-                'is_default': False,
-                'created_at': datetime.utcnow(),
-                'updated_at': None
-            }
-        ]
-
-    return mocker.patch('app.service_api_client.get_letter_contacts', side_effect=_get)
-
-
-@pytest.fixture(scope='function')
-def no_letter_contact_blocks(mocker):
-    def _get(service_id):
-        return []
-
-    return mocker.patch('app.service_api_client.get_letter_contacts', side_effect=_get)
-
-
-@pytest.fixture(scope='function')
-def single_letter_contact_block(mocker):
-    def _get(service_id):
-        return [
-            {
-                'id': '1234',
-                'service_id': service_id,
-                'contact_block': '1 Example Street',
-                'is_default': True,
-                'created_at': datetime.utcnow(),
-                'updated_at': None
-            }
-        ]
-
-    return mocker.patch('app.service_api_client.get_letter_contacts', side_effect=_get)
-
-
-@pytest.fixture(scope='function')
-def injected_letter_contact_block(mocker):
-    def _get(service_id):
-        return [
-            {
-                'id': '1234',
-                'service_id': service_id,
-                'contact_block': 'foo\nbar<script>alert(1);</script>',
-                'is_default': True,
-                'created_at': datetime.utcnow(),
-                'updated_at': None
-            }
-        ]
-
-    return mocker.patch('app.service_api_client.get_letter_contacts', side_effect=_get)
-
-
-@pytest.fixture(scope='function')
-def get_default_letter_contact_block(mocker):
-    def _get(service_id, letter_contact_id):
-        return {
-            'id': '1234',
-            'service_id': service_id,
-            'contact_block': '1 Example Street',
-            'is_default': True,
-            'created_at': datetime.utcnow(),
-            'updated_at': None
-        }
-
-    return mocker.patch('app.service_api_client.get_letter_contact', side_effect=_get)
-
-
-@pytest.fixture(scope='function')
-def mock_add_letter_contact(mocker):
-    def _add_letter_contact(service_id, contact_block, is_default=False):
-        return {'data': {
-            'id': '1234',
-            'service_id': service_id,
-            'contact_block': '1 Example Street',
-            'is_default': True,
-            'created_at': str(datetime.utcnow()),
-            'updated_at': None
-        }}
-
-    return mocker.patch('app.service_api_client.add_letter_contact', side_effect=_add_letter_contact)
-
-
-@pytest.fixture(scope='function')
-def mock_update_letter_contact(mocker):
-    def _update_letter_contact(service_id, letter_contact_id, contact_block, is_default=False):
-        return
-
-    return mocker.patch('app.service_api_client.update_letter_contact', side_effect=_update_letter_contact)
-
-
-@pytest.fixture(scope='function')
 def multiple_sms_senders(mocker):
     def _get(service_id):
         return [
@@ -506,7 +395,6 @@ def mock_get_service_statistics(mocker, api_user_active):
         return {
             'email': {'requested': 0, 'delivered': 0, 'failed': 0},
             'sms': {'requested': 0, 'delivered': 0, 'failed': 0},
-            'letter': {'requested': 0, 'delivered': 0, 'failed': 0}
         }
 
     return mocker.patch('app.service_api_client.get_service_statistics', side_effect=_get)
@@ -533,13 +421,11 @@ def mock_get_detailed_services(mocker, fake_uuid):
     service_one['statistics'] = {
         'email': {'requested': 0, 'delivered': 0, 'failed': 0},
         'sms': {'requested': 0, 'delivered': 0, 'failed': 0},
-        'letter': {'requested': 0, 'delivered': 0, 'failed': 0}
 
     }
     service_two['statistics'] = {
         'email': {'requested': 0, 'delivered': 0, 'failed': 0},
         'sms': {'requested': 0, 'delivered': 0, 'failed': 0},
-        'letter': {'requested': 0, 'delivered': 0, 'failed': 0}
 
     }
     services = {'data': [service_one, service_two]}
@@ -834,44 +720,6 @@ def mock_get_service_email_template_without_placeholders(mocker):
 
 
 @pytest.fixture(scope='function')
-def mock_get_service_letter_template(mocker):
-    def _get(service_id, template_id, version=None, postage='second'):
-        template = template_json(
-            service_id,
-            template_id,
-            name="Two week reminder",
-            type_="letter",
-            content="Template <em>content</em> with & entity",
-            subject="Subject",
-            postage=postage,
-        )
-        return {'data': template}
-
-    return mocker.patch(
-        'app.service_api_client.get_service_template', side_effect=_get
-    )
-
-
-@pytest.fixture(scope='function')
-def mock_get_service_letter_template_with_placeholders(mocker):
-    def _get(service_id, template_id, version=None, postage='second'):
-        template = template_json(
-            service_id,
-            template_id,
-            name="Two week reminder",
-            type_="letter",
-            content="Hello ((name)) your thing is due on ((date))",
-            subject="Subject",
-            postage=postage,
-        )
-        return {'data': template}
-
-    return mocker.patch(
-        'app.service_api_client.get_service_template', side_effect=_get
-    )
-
-
-@pytest.fixture(scope='function')
 def mock_create_service_template(mocker, fake_uuid):
     def _create(name, type_, content, service, subject=None, process_type=None, parent_folder_id=None):
         template = template_json(fake_uuid, name, type_, content, service, process_type, parent_folder_id)
@@ -884,8 +732,8 @@ def mock_create_service_template(mocker, fake_uuid):
 
 @pytest.fixture(scope='function')
 def mock_update_service_template(mocker):
-    def _update(id_, name, type_, content, service, subject=None, process_type=None, postage=None):
-        template = template_json(service, id_, name, type_, content, subject, process_type, postage)
+    def _update(id_, name, type_, content, service, subject=None, process_type=None):
+        template = template_json(service, id_, name, type_, content, subject, process_type)
         return {'data': template}
 
     return mocker.patch(
@@ -913,7 +761,7 @@ def mock_create_service_template_content_too_big(mocker):
 
 @pytest.fixture(scope='function')
 def mock_update_service_template_400_content_too_big(mocker):
-    def _update(id_, name, type_, content, service, subject=None, process_type=None, postage=None):
+    def _update(id_, name, type_, content, service, subject=None, process_type=None):
         json_mock = Mock(return_value={
             'message': {'content': ["Content has a character count greater than the limit of 459"]},
             'result': 'error'
@@ -929,13 +777,13 @@ def mock_update_service_template_400_content_too_big(mocker):
         side_effect=_update)
 
 
-def create_service_templates(service_id, number_of_templates=6):
-    template_types = ["sms", "sms", "email", "email", "letter", "letter"]
+def create_service_templates(service_id, number_of_templates=4):
+    template_types = ["sms", "sms", "email", "email"]
     service_templates = []
 
     for _ in range(1, number_of_templates + 1):
         template_number = "two" if _ % 2 == 0 else "one"
-        template_type = template_types[(_ % 6) - 1]
+        template_type = template_types[(_ % 4) - 1]
 
         service_templates.append(template_json(
             service_id,
@@ -944,7 +792,7 @@ def create_service_templates(service_id, number_of_templates=6):
             template_type,
             "{} template {} content".format(template_type, template_number),
             subject="{} template {} subject".format(template_type, template_number)
-                    if template_type in ["email", "letter"] else None
+                    if template_type == "email" else None
         ))
 
     return {'data': service_templates}
@@ -1045,7 +893,6 @@ def platform_admin_user(fake_uuid):
     return create_platform_admin_user(permissions={SERVICE_ONE_ID: [
         'send_texts',
         'send_emails',
-        'send_letters',
         'manage_users',
         'manage_templates',
         'manage_settings',
@@ -1102,7 +949,6 @@ def active_user_with_permission_to_two_services(fake_uuid):
     permissions = [
         'send_texts',
         'send_emails',
-        'send_letters',
         'manage_users',
         'manage_templates',
         'manage_settings',
@@ -1447,14 +1293,6 @@ def mock_get_job(mocker, api_user_active):
     return mocker.patch('app.job_api_client.get_job', side_effect=_get_job)
 
 
-@pytest.fixture(scope='function')
-def mock_get_letter_job(mocker, api_user_active):
-    def _get_job(service_id, job_id):
-        return {"data": job_json(service_id, api_user_active, job_id=job_id, template_type='letter')}
-
-    return mocker.patch('app.job_api_client.get_job', side_effect=_get_job)
-
-
 @pytest.fixture
 def mock_get_job_doesnt_exist(mocker):
     def _get_job(service_id, job_id):
@@ -1512,20 +1350,6 @@ def mock_get_job_with_sending_limits_exceeded(mocker, api_user_active):
             notification_count=10,
             notifications_requested=5,
             job_status='sending limits exceeded',
-        )}
-
-    return mocker.patch('app.job_api_client.get_job', side_effect=_get_job)
-
-
-@pytest.fixture(scope='function')
-def mock_get_letter_job_in_progress(mocker, api_user_active):
-    def _get_job(service_id, job_id):
-        return {"data": job_json(
-            service_id, api_user_active, job_id=job_id,
-            notification_count=10,
-            notifications_requested=5,
-            job_status='processing',
-            template_type='letter',
         )}
 
     return mocker.patch('app.job_api_client.get_job', side_effect=_get_job)
@@ -1593,16 +1417,6 @@ def mock_get_uploads(mocker, api_user_active):
     def _get_uploads(service_id, limit_days=None, statuses=None, page=1):
         uploads = [
             {
-                'id': None,
-                'original_file_name': 'Uploaded letters',
-                'recipient': None,
-                'notification_count': 33,
-                'template_type': 'letter',
-                'created_at': '2017-10-10 16:30:00',
-                'statistics': [],
-                'upload_type': 'letter_day',
-            },
-            {
                 'id': 'job_id_1',
                 'original_file_name': 'some.csv',
                 'notification_count': 10,
@@ -1614,21 +1428,6 @@ def mock_get_uploads(mocker, api_user_active):
                 'upload_type': 'job',
                 'template_type': 'sms',
                 'recipient': None,
-            },
-            {
-                'id': 'letter_id_1',
-                'original_file_name': 'some.pdf',
-                'notification_count': 1,
-                'created_at': '2016-01-01 11:09:00.061258',
-                'statistics': [{'count': 1, 'status': 'delivered'}],
-                'upload_type': 'letter',
-                'template_type': None,
-                'recipient': (
-                    'Firstname Lastname\n'
-                    '123 Example Street\n'
-                    'City of Town\n'
-                    'XM4 5QQ'
-                ),
             },
         ]
         return {
@@ -1784,7 +1583,6 @@ def mock_get_notifications(
                 id_=str(generate_uuid()),
                 type_=template_type[0],
                 redact_personalisation=False,
-                is_precompiled_letter=False,
             )
         else:
             template = template_json(
@@ -2023,7 +1821,7 @@ def sample_invite(mocker, service_one):
     from_user = service_one['users'][0]
     email_address = 'invited_user@test.gsa.gov'
     service_id = service_one['id']
-    permissions = 'view_activity,send_emails,send_letters,send_texts,manage_settings,manage_users,manage_api_keys'
+    permissions = 'view_activity,send_emails,send_texts,manage_settings,manage_users,manage_api_keys'
     created_at = str(datetime.utcnow())
     auth_type = 'sms_auth'
     folder_permissions = []
@@ -2112,7 +1910,6 @@ def mock_get_template_statistics(mocker, service_one, fake_uuid):
         "template_name": template['name'],
         "template_type": template['template_type'],
         "template_id": template['id'],
-        "is_precompiled_letter": False,
         "status": "delivered"
     }
 
@@ -2153,10 +1950,6 @@ def mock_get_monthly_notification_stats(mocker, service_one, fake_uuid):
                     "sending": 1,
                     "delivered": 1,
                 },
-                "letter": {
-                    "sending": 1,
-                    "delivered": 1,
-                }
             }
         }}
     return mocker.patch(
@@ -2193,14 +1986,6 @@ def mock_get_annual_usage_for_service(mocker, service_one, fake_uuid):
                 "rate": 0.017,
                 "cost": 5.1
             },
-            {
-                "notification_type": "letter",
-                "chargeable_units": 300,
-                "notifications_sent": 100,
-                "charged_units": 300,
-                "rate": 0.1,
-                "cost": 30
-            },
         ]
 
     return mocker.patch(
@@ -2217,7 +2002,6 @@ def mock_get_monthly_usage_for_service(mocker):
                 'rate': 0.017,
                 'chargeable_units': 1230,
                 'notifications_sent': 1234,
-                'postage': 'none',
                 'charged_units': 1230,
                 'free_allowance_used': 0,
                 'cost': 20.91,
@@ -2228,7 +2012,6 @@ def mock_get_monthly_usage_for_service(mocker):
                 'rate': 0.017,
                 'chargeable_units': 33,
                 'notifications_sent': 1234,
-                'postage': 'none',
                 'charged_units': 33,
                 'free_allowance_used': 0,
                 'cost': 0.561,
@@ -2239,7 +2022,6 @@ def mock_get_monthly_usage_for_service(mocker):
                 'rate': 0.0165,
                 'chargeable_units': 1100,
                 'notifications_sent': 1234,
-                'postage': 'none',
                 'charged_units': 960,
                 'free_allowance_used': 140,
                 'cost': 15.84,
@@ -2250,7 +2032,6 @@ def mock_get_monthly_usage_for_service(mocker):
                 'rate': 0.017,
                 'chargeable_units': 249860,
                 'notifications_sent': 1234,
-                'postage': 'none',
                 'charged_units': 0,
                 'free_allowance_used': 249860,
                 'cost': 0,
@@ -2344,45 +2125,6 @@ def mock_get_all_email_branding(mocker):
     return mocker.patch(
         'app.notify_client.email_branding_client.email_branding_client.get_all_email_branding',
         side_effect=_get_all_email_branding,
-    )
-
-
-@pytest.fixture(scope='function')
-def mock_get_all_letter_branding(mocker):
-    def _get_letter_branding():
-        return [
-            {
-                'id': str(UUID(int=0)),
-                'name': 'HM Government',
-                'filename': 'hm-government',
-            },
-            {
-                'id': str(UUID(int=1)),
-                'name': 'Land Registry',
-                'filename': 'land-registry',
-            },
-            {
-                'id': str(UUID(int=2)),
-                'name': 'Animal and Plant Health Agency',
-                'filename': 'animal',
-            }
-        ]
-
-    return mocker.patch(
-        'app.letter_branding_client.get_all_letter_branding', side_effect=_get_letter_branding
-    )
-
-
-@pytest.fixture
-def mock_get_letter_branding_by_id(mocker):
-    def _get_branding_by_id(_id):
-        return {
-            'id': _id,
-            'name': 'HM Government',
-            'filename': 'hm-government',
-        }
-    return mocker.patch(
-        'app.letter_branding_client.get_letter_branding', side_effect=_get_branding_by_id
     )
 
 
@@ -3371,14 +3113,6 @@ def mock_get_service_history(mocker):
     })
 
 
-@pytest.fixture(scope='function')
-def mock_get_returned_letter_summary_with_no_returned_letters(mocker):
-    return mocker.patch(
-        'app.service_api_client.get_returned_letter_summary',
-        return_value=[],
-    )
-
-
 @pytest.fixture
 def mock_template_preview(mocker):
     content = b'{"count":1}'
@@ -3390,17 +3124,6 @@ def mock_template_preview(mocker):
     mocker.patch('app.template_previews.TemplatePreview.from_invalid_pdf_file', return_value=example_response)
     mocker.patch('app.template_previews.TemplatePreview.from_example_template', return_value=example_response)
     mocker.patch('app.template_previews.TemplatePreview.from_utils_template', return_value=example_response)
-
-
-@pytest.fixture(scope='function')
-def mock_get_returned_letter_statistics_with_no_returned_letters(mocker):
-    return mocker.patch(
-        'app.service_api_client.get_returned_letter_statistics',
-        return_value={
-            'returned_letter_count': 0,
-            'most_recent_report': None,
-        },
-    )
 
 
 def create_api_user_active(with_unique_id=False):
@@ -3437,7 +3160,6 @@ def create_active_caseworking_user(with_unique_id=False):
         permissions={SERVICE_ONE_ID: [
             'send_texts',
             'send_emails',
-            'send_letters',
         ]},
         services=[SERVICE_ONE_ID],
     )
@@ -3496,7 +3218,6 @@ def create_service_one_admin(**overrides):
         'permissions': {SERVICE_ONE_ID: [
             'send_texts',
             'send_emails',
-            'send_letters',
             'manage_users',
             'manage_templates',
             'manage_settings',
@@ -3635,51 +3356,6 @@ def create_multiple_sms_senders(service_id='abcd'):
     ]
 
 
-def create_letter_contact_block(
-    id_='1234',
-    service_id='abcd',
-    contact_block='1 Example Street',
-    is_default=True,
-    created_at=None,
-    updated_at=None,
-):
-    return {
-        'id': id_,
-        'service_id': service_id,
-        'contact_block': contact_block,
-        'is_default': is_default,
-        'created_at': created_at,
-        'updated_at': updated_at
-    }
-
-
-def create_multiple_letter_contact_blocks(service_id='abcd'):
-    return [
-        {
-            'id': '1234',
-            'service_id': service_id,
-            'contact_block': '1 Example Street',
-            'is_default': True,
-            'created_at': datetime.utcnow(),
-            'updated_at': None
-        }, {
-            'id': '5678',
-            'service_id': service_id,
-            'contact_block': '2 Example Street',
-            'is_default': False,
-            'created_at': datetime.utcnow(),
-            'updated_at': None
-        }, {
-            'id': '9457',
-            'service_id': service_id,
-            'contact_block': 'foo\n\n<bar>\n\nbaz',
-            'is_default': False,
-            'created_at': datetime.utcnow(),
-            'updated_at': None
-        }
-    ]
-
-
 def create_notification(
     notifification_id=None,
     service_id='abcd',
@@ -3687,9 +3363,7 @@ def create_notification(
     redact_personalisation=False,
     template_type=None,
     template_name='sample template',
-    is_precompiled_letter=False,
     key_type=None,
-    postage=None,
     sent_one_off=True,
     reply_to_text=None,
 ):
@@ -3698,7 +3372,6 @@ def create_notification(
         rows=1,
         status=notification_status,
         template_type=template_type,
-        postage=postage,
         reply_to_text=reply_to_text,
     )['notifications'][0]
 
@@ -3717,7 +3390,6 @@ def create_notification(
         subject='blah',
         redact_personalisation=redact_personalisation,
         type_=template_type,
-        is_precompiled_letter=is_precompiled_letter,
         name=template_name
     )
     if key_type:
@@ -3735,8 +3407,6 @@ def create_notifications(
     client_reference=None,
     personalisation=None,
     redact_personalisation=False,
-    is_precompiled_letter=False,
-    postage=None,
     to=None
 ):
     template = template_json(
@@ -3746,7 +3416,6 @@ def create_notifications(
         subject=subject,
         content=content,
         redact_personalisation=redact_personalisation,
-        is_precompiled_letter=is_precompiled_letter
     )
 
     return notification_json(
@@ -3758,7 +3427,6 @@ def create_notifications(
         client_reference=client_reference,
         status=status,
         created_by_name='Firstname Lastname',
-        postage=postage,
         to=to
     )
 
@@ -3779,7 +3447,6 @@ def create_template(
     content='Template content',
     subject='Template subject',
     redact_personalisation=False,
-    postage=None,
     folder=None
 ):
     return template_json(
@@ -3790,7 +3457,6 @@ def create_template(
         content=content,
         subject=subject,
         redact_personalisation=redact_personalisation,
-        postage=postage,
         folder=folder,
     )
 

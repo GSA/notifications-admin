@@ -32,7 +32,7 @@ def test_client_creates_invite(
             'from_user': '12345',
             'service': '67890',
             'created_by': ANY,
-            'permissions': 'send_emails,send_letters,send_texts',
+            'permissions': 'send_emails,send_texts',
             'invite_link_host': 'http://localhost:6012',
             'folder_permissions': [fake_uuid]
         }

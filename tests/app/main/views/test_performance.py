@@ -12,36 +12,35 @@ def _get_example_performance_data():
       "total_notifications": 1_789_000_000,
       "email_notifications": 1_123_000_000,
       "sms_notifications": 987_654_321,
-      "letter_notifications": 1_234_567,
       "live_service_count": random.randrange(1, 1000),
       "notifications_by_type": [
         {
           "date": "2021-02-21",
-          "emails": 1_234_567, "sms": 123_456, "letters": 123,
+          "emails": 1_234_567, "sms": 123_456,
         },
         {
           "date": "2021-02-22",
-          "emails": 1, "sms": 2, "letters": 3,
+          "emails": 1, "sms": 2,
         },
         {
           "date": "2021-02-23",
-          "emails": 1, "sms": 2, "letters": 3,
+          "emails": 1, "sms": 2,
         },
         {
           "date": "2021-02-24",
-          "emails": 1, "sms": 2, "letters": 3,
+          "emails": 1, "sms": 2,
         },
         {
           "date": "2021-02-25",
-          "emails": 1, "sms": 2, "letters": 3,
+          "emails": 1, "sms": 2,
         },
         {
           "date": "2021-02-26",
-          "emails": 1, "sms": 2, "letters": 3,
+          "emails": 1, "sms": 2,
         },
         {
           "date": "2021-02-27",
-          "emails": 1, "sms": 2, "letters": 3,
+          "emails": 1, "sms": 2,
         },
       ],
       "processing_time": [
@@ -128,17 +127,16 @@ def test_should_render_performance_page(
         '1.8 billion total '
         '1.1 billion emails '
         '987.7 million text messages '
-        '1.2 million letters '
         ''
         'Messages sent since May 2016 '
-        'Date Emails Text messages Letters '
-        '26 February 2021 1 2 3 '
-        '25 February 2021 1 2 3 '
-        '24 February 2021 1 2 3 '
-        '23 February 2021 1 2 3 '
-        '22 February 2021 1 2 3 '
-        '21 February 2021 1 2 3 '
-        '20 February 2021 1,234,567 123,456 123 '
+        'Date Emails Text messages '
+        '26 February 2021 1 2 '
+        '25 February 2021 1 2 '
+        '24 February 2021 1 2 '
+        '23 February 2021 1 2 '
+        '22 February 2021 1 2 '
+        '21 February 2021 1 2 '
+        '20 February 2021 1,234,567 123,456 '
 
 
         'Only showing the last 7 days '

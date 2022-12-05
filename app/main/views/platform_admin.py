@@ -1,16 +1,14 @@
 import itertools
-import re
 from collections import OrderedDict
 from datetime import datetime
 
-from flask import abort, flash, redirect, render_template, request, url_for
+from flask import abort, flash, render_template, request, url_for
 from notifications_python_client.errors import HTTPError
 
 from app import (
     billing_api_client,
     complaint_api_client,
     format_date_numeric,
-    letter_jobs_client,
     notification_api_client,
     platform_stats_api_client,
     service_api_client,
@@ -19,7 +17,6 @@ from app.extensions import redis_client
 from app.main import main
 from app.main.forms import (
     AdminClearCacheForm,
-    AdminReturnedLettersForm,
     BillingReportDateFilterForm,
     DateFilterForm,
     RequiredDateFilterForm,
@@ -137,22 +134,6 @@ def make_columns(global_stats, complaints_number):
                 'label': 'test text messages'
             }
         },
-        # letter
-        {
-            'black_box': {
-                'number': global_stats['letter']['total'],
-                'notification_type': 'letter'
-            },
-            'other_data': [
-                get_tech_failure_status_box_data(global_stats['letter']),
-                get_status_box_data(global_stats['letter'],
-                                    'virus-scan-failed', 'virus scan failures', ZERO_FAILURE_THRESHOLD)
-            ],
-            'test_data': {
-                'number': global_stats['letter']['test-key'],
-                'label': 'test letters'
-            }
-        },
     ]
 
 
@@ -222,10 +203,8 @@ def live_services_csv():
         ('live_date', 'Live date'),
         ('sms_volume_intent', 'SMS volume intent'),
         ('email_volume_intent', 'Email volume intent'),
-        ('letter_volume_intent', 'Letter volume intent'),
         ('sms_totals', 'SMS sent this year'),
         ('email_totals', 'Emails sent this year'),
-        ('letter_totals', 'Letters sent this year'),
         ('free_sms_fragment_limit', 'Free sms allowance'),
     ])
 
@@ -280,7 +259,7 @@ def get_billing_report():
         end_date = form.end_date.data
         headers = [
             "organisation_id", "organisation_name", "service_id", "service_name",
-            "sms_cost", "sms_chargeable_units", "total_letters", "letter_cost", "letter_breakdown",
+            "sms_cost", "sms_chargeable_units",
             "purchase_order_number", "contact_names", "contact_email_addresses", "billing_reference"
         ]
         try:
@@ -295,8 +274,8 @@ def get_billing_report():
         rows = [
             [
                 r["organisation_id"], r["organisation_name"], r["service_id"], r["service_name"],
-                r["sms_cost"], r["sms_chargeable_units"], r["total_letters"], r["letter_cost"],
-                r["letter_breakdown"].strip(), r.get("purchase_order_number"), r.get("contact_names"),
+                r["sms_cost"], r["sms_chargeable_units"],
+                r.get("purchase_order_number"), r.get("contact_names"),
                 r.get("contact_email_addresses"), r.get("billing_reference")
             ]
             for r in result
@@ -324,7 +303,6 @@ def get_volumes_by_service():
         headers = [
             "organisation id", "organisation name", "service id", "service name",
             "free allowance", "sms notifications", "sms chargeable units", "email totals",
-            "letter totals", "letter cost", "letter sheet totals"
         ]
         result = billing_api_client.get_data_for_volumes_by_service_report(start_date, end_date)
 
@@ -332,7 +310,6 @@ def get_volumes_by_service():
             [
                 r["organisation_id"], r["organisation_name"], r["service_id"], r["service_name"],
                 r["free_allowance"], r["sms_notifications"], r["sms_chargeable_units"], r["email_totals"],
-                r["letter_totals"], r["letter_cost"], r["letter_sheet_totals"]
             ]
             for r in result
         ]
@@ -358,14 +335,14 @@ def get_daily_volumes():
         end_date = form.end_date.data
         headers = [
             "day", "sms totals", "sms fragment totals", "sms chargeable units",
-            "email totals", "letter totals", "letter sheet totals"
+            "email totals",
         ]
         result = billing_api_client.get_data_for_daily_volumes_report(start_date, end_date)
 
         rows = [
             [
                 r["day"], r["sms_totals"], r["sms_fragment_totals"], r["sms_chargeable_units"],
-                r["email_totals"], r["letter_totals"], r["letter_sheet_totals"]
+                r["email_totals"],
             ]
             for r in result
         ]
@@ -446,46 +423,6 @@ def platform_admin_list_complaints():
     )
 
 
-@main.route("/platform-admin/returned-letters", methods=["GET", "POST"])
-@user_is_platform_admin
-def platform_admin_returned_letters():
-    form = AdminReturnedLettersForm()
-
-    if form.validate_on_submit():
-        references = [
-            re.sub('NOTIFY00[0-9]', '', r.strip())
-            for r in form.references.data.split('\n')
-            if r.strip()
-        ]
-
-        try:
-            letter_jobs_client.submit_returned_letters(references)
-            redis_client.delete_by_pattern(
-                'service-????????-????-????-????-????????????-returned-letters-statistics'
-            )
-            redis_client.delete_by_pattern(
-                'service-????????-????-????-????-????????????-returned-letters-summary'
-            )
-        except HTTPError as error:
-            if error.status_code == 400:
-                error_references = [
-                    re.match('references (.*) does not match', e['message']).group(1)
-                    for e in error.message
-                ]
-                form.references.errors.append("Invalid references: {}".format(', '.join(error_references)))
-            else:
-                raise error
-        else:
-            flash('Submitted {} letter references'.format(len(references)), 'default')
-            return redirect(
-                url_for('.platform_admin_returned_letters')
-            )
-    return render_template(
-        'views/platform-admin/returned-letters.html',
-        form=form,
-    )
-
-
 @main.route("/platform-admin/clear-cache", methods=['GET', 'POST'])
 @user_is_platform_admin
 def clear_cache():
@@ -500,8 +437,6 @@ def clear_cache():
             'service-????????-????-????-????-????????????-templates',
             'service-????????-????-????-????-????????????-data-retention',
             'service-????????-????-????-????-????????????-template-folders',
-            'service-????????-????-????-????-????????????-returned-letters-statistics',
-            'service-????????-????-????-????-????????????-returned-letters-summary',
         ]),
         ('template', [
             'service-????????-????-????-????-????????????-templates',
@@ -511,10 +446,6 @@ def clear_cache():
         ('email_branding', [
             'email_branding',
             'email_branding-????????-????-????-????-????????????',
-        ]),
-        ('letter_branding', [
-            'letter_branding',
-            'letter_branding-????????-????-????-????-????????????',
         ]),
         ('organisation', [
             'organisations',
@@ -588,14 +519,9 @@ def create_global_stats(services):
             'failed': 0,
             'requested': 0
         },
-        'letter': {
-            'delivered': 0,
-            'failed': 0,
-            'requested': 0
-        }
     }
     for service in services:
-        for msg_type, status in itertools.product(('sms', 'email', 'letter'), ('delivered', 'failed', 'requested')):
+        for msg_type, status in itertools.product(('sms', 'email'), ('delivered', 'failed', 'requested')):
             stats[msg_type][status] += service['statistics'][msg_type][status]
 
     for stat in stats.values():

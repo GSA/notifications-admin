@@ -53,21 +53,18 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             'Templates',
             [],
             {},
-            ['Email', 'Text message', 'Letter'],
+            ['Email', 'Text message'],
             [
                 'folder_one folder_one 2 folders',
                 ('folder_one folder_one_one '
                  'folder_one folder_one_one '
-                 '1 template, 1 folder'),
+                 '1 folder'),
                 ('folder_one folder_one_one folder_one_one_one '
                  'folder_one folder_one_one folder_one_one_one '
                  '1 template'),
                 ('folder_one folder_one_one folder_one_one_one sms_template_nested '
                  'folder_one folder_one_one folder_one_one_one sms_template_nested '
                  'Text message template'),
-                ('folder_one folder_one_one letter_template_nested '
-                 'folder_one folder_one_one letter_template_nested '
-                 'Letter template'),
                 ('folder_one folder_one_two '
                  'folder_one folder_one_two '
                  'Empty'),
@@ -80,8 +77,6 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
                  'Text message template'),
                 'email_template_one email_template_one Email template',
                 'email_template_two email_template_two Email template',
-                'letter_template_one letter_template_one Letter template',
-                'letter_template_two letter_template_two Letter template',
             ],
             [
                 'folder_one folder_one 2 folders',
@@ -90,23 +85,18 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
                 'sms_template_two sms_template_two Text message template',
                 'email_template_one email_template_one Email template',
                 'email_template_two email_template_two Email template',
-                'letter_template_one letter_template_one Letter template',
-                'letter_template_two letter_template_two Letter template',
             ],
             [
                 'folder_one',
                 'folder_one_one',
                 'folder_one_one_one',
                 'sms_template_nested',
-                'letter_template_nested',
                 'folder_one_two',
                 'folder_two',
                 'sms_template_one',
                 'sms_template_two',
                 'email_template_one',
                 'email_template_two',
-                'letter_template_one',
-                'letter_template_two',
             ],
             None,
         ),
@@ -115,21 +105,18 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             'Templates',
             [],
             {'template_type': 'all'},
-            ['Email', 'Text message', 'Letter'],
+            ['Email', 'Text message'],
             [
                 'folder_one folder_one 2 folders',
                 ('folder_one folder_one_one '
                  'folder_one folder_one_one '
-                 '1 template, 1 folder'),
+                 '1 folder'),
                 ('folder_one folder_one_one folder_one_one_one '
                  'folder_one folder_one_one folder_one_one_one '
                  '1 template'),
                 ('folder_one folder_one_one folder_one_one_one sms_template_nested '
                  'folder_one folder_one_one folder_one_one_one sms_template_nested '
                  'Text message template'),
-                ('folder_one folder_one_one letter_template_nested '
-                 'folder_one folder_one_one letter_template_nested '
-                 'Letter template'),
                 ('folder_one folder_one_two '
                  'folder_one folder_one_two '
                  'Empty'),
@@ -138,8 +125,6 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
                 'sms_template_two sms_template_two Text message template',
                 'email_template_one email_template_one Email template',
                 'email_template_two email_template_two Email template',
-                'letter_template_one letter_template_one Letter template',
-                'letter_template_two letter_template_two Letter template',
             ],
             [
                 'folder_one folder_one 2 folders',
@@ -148,23 +133,18 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
                 'sms_template_two sms_template_two Text message template',
                 'email_template_one email_template_one Email template',
                 'email_template_two email_template_two Email template',
-                'letter_template_one letter_template_one Letter template',
-                'letter_template_two letter_template_two Letter template',
             ],
             [
                 'folder_one',
                 'folder_one_one',
                 'folder_one_one_one',
                 'sms_template_nested',
-                'letter_template_nested',
                 'folder_one_two',
                 'folder_two',
                 'sms_template_one',
                 'sms_template_two',
                 'email_template_one',
                 'email_template_two',
-                'letter_template_one',
-                'letter_template_two',
             ],
             None,
         ),
@@ -173,7 +153,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             'Templates',
             [],
             {'template_type': 'sms'},
-            ['All', 'Email', 'Letter'],
+            ['All', 'Email'],
             [
                 'folder_one folder_one 1 folder',
                 ('folder_one folder_one_one '
@@ -208,29 +188,25 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             'Templates folder_one',
             [{'template_type': 'all'}],
             {'template_folder_id': PARENT_FOLDER_ID},
-            ['Email', 'Text message', 'Letter'],
+            ['Email', 'Text message'],
             [
-                'folder_one_one folder_one_one 1 template, 1 folder',
+                'folder_one_one folder_one_one 1 folder',
                 ('folder_one_one folder_one_one_one '
                  'folder_one_one folder_one_one_one '
                  '1 template'),
                 ('folder_one_one folder_one_one_one sms_template_nested '
                  'folder_one_one folder_one_one_one sms_template_nested '
                  'Text message template'),
-                ('folder_one_one letter_template_nested '
-                 'folder_one_one letter_template_nested '
-                 'Letter template'),
                 'folder_one_two folder_one_two Empty',
             ],
             [
-                'folder_one_one folder_one_one 1 template, 1 folder',
+                'folder_one_one folder_one_one 1 folder',
                 'folder_one_two folder_one_two Empty',
             ],
             [
                 'folder_one_one',
                 'folder_one_one_one',
                 'sms_template_nested',
-                'letter_template_nested',
                 'folder_one_two',
             ],
             None,
@@ -240,7 +216,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             'Templates folder_one',
             [{'template_type': 'sms'}],
             {'template_type': 'sms', 'template_folder_id': PARENT_FOLDER_ID},
-            ['All', 'Email', 'Letter'],
+            ['All', 'Email'],
             [
                 'folder_one_one folder_one_one 1 folder',
                 ('folder_one_one folder_one_one_one '
@@ -265,7 +241,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             'Templates folder_one',
             [{'template_type': 'email'}],
             {'template_type': 'email', 'template_folder_id': PARENT_FOLDER_ID},
-            ['All', 'Text message', 'Letter'],
+            ['All', 'Text message'],
             [],
             [],
             [],
@@ -279,22 +255,19 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
                 {'template_type': 'all', 'template_folder_id': PARENT_FOLDER_ID},
             ],
             {'template_folder_id': CHILD_FOLDER_ID},
-            ['Email', 'Text message', 'Letter'],
+            ['Email', 'Text message'],
             [
                 'folder_one_one_one folder_one_one_one 1 template',
                 ('folder_one_one_one sms_template_nested '
                  'folder_one_one_one sms_template_nested '
                  'Text message template'),
-                'letter_template_nested letter_template_nested Letter template',
             ],
             [
                 'folder_one_one_one folder_one_one_one 1 template',
-                'letter_template_nested letter_template_nested Letter template',
             ],
             [
                 'folder_one_one_one',
                 'sms_template_nested',
-                'letter_template_nested',
             ],
             None,
         ),
@@ -307,7 +280,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
                 {'template_type': 'all', 'template_folder_id': CHILD_FOLDER_ID},
             ],
             {'template_folder_id': GRANDCHILD_FOLDER_ID},
-            ['Email', 'Text message', 'Letter'],
+            ['Email', 'Text message'],
             [
                 'sms_template_nested sms_template_nested Text message template',
             ],
@@ -331,7 +304,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
                 'template_type': 'email',
                 'template_folder_id': GRANDCHILD_FOLDER_ID,
             },
-            ['All', 'Text message', 'Letter'],
+            ['All', 'Text message'],
             [],
             [],
             [],
@@ -342,7 +315,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             'Templates folder_two',
             [{'template_type': 'all'}],
             {'template_folder_id': FOLDER_TWO_ID},
-            ['Email', 'Text message', 'Letter'],
+            ['Email', 'Text message'],
             [],
             [],
             [],
@@ -353,7 +326,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             'Templates folder_two',
             [{'template_type': 'sms'}],
             {'template_folder_id': FOLDER_TWO_ID, 'template_type': 'sms'},
-            ['All', 'Email', 'Letter'],
+            ['All', 'Email'],
             [],
             [],
             [],
@@ -364,7 +337,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             'Templates folder_two',
             [{'template_type': 'all'}],
             {'template_folder_id': FOLDER_TWO_ID, 'template_type': 'all'},
-            ['Email', 'Text message', 'Letter'],
+            ['Email', 'Text message'],
             [],
             [],
             [],
@@ -403,14 +376,9 @@ def test_should_show_templates_folder_page(
             _template('sms', 'sms_template_two'),
             _template('email', 'email_template_one'),
             _template('email', 'email_template_two'),
-            _template('letter', 'letter_template_one'),
-            _template('letter', 'letter_template_two'),
-            _template('letter', 'letter_template_nested', parent=CHILD_FOLDER_ID),
             _template('sms', 'sms_template_nested', parent=GRANDCHILD_FOLDER_ID),
         ]}
     )
-
-    service_one['permissions'] += ['letter']
 
     page = client_request.get(
         'main.choose_template',
@@ -659,7 +627,6 @@ def test_get_manage_folder_viewing_permissions_for_users_not_visible_when_no_man
     active_user_with_permissions['permissions'][SERVICE_ONE_ID] = [
         'send_texts',
         'send_emails',
-        'send_letters',
         'manage_templates',
         'manage_api_keys',
         'view_activity',
@@ -782,7 +749,6 @@ def test_user_access_denied_to_template_folder_actions_without_folder_permission
     'main.confirm_redact_template',
     'main.delete_service_template',
     'main.edit_service_template',
-    'main.edit_template_postage',
     'main.send_messages',
     'main.send_one_off',
     'main.set_sender',
@@ -880,7 +846,6 @@ def test_manage_folder_users_doesnt_change_permissions_current_user_cannot_manag
     active_user_with_permissions['permissions'][SERVICE_ONE_ID] = [
         'send_texts',
         'send_emails',
-        'send_letters',
         'manage_templates',
         'manage_api_keys',
         'view_activity',
@@ -1381,8 +1346,6 @@ def test_no_action_if_user_fills_in_ambiguous_fields(
     mock_get_no_api_keys,
     data,
 ):
-    # service_one['permissions'] += ['letter']
-
     mock_get_template_folders.return_value = [
         _folder('parent_folder', PARENT_FOLDER_ID, None),
         _folder('folder_two', FOLDER_TWO_ID, None),
@@ -1646,12 +1609,6 @@ def test_show_custom_error_message(
             None,
         ),
         (
-            {'template_type': 'letter'},
-            [],
-            [],
-            None,
-        ),
-        (
             {
                 'template_type': 'email',
                 'template_folder_id': FOLDER_C_ID,
@@ -1687,7 +1644,6 @@ def test_should_filter_templates_folder_page_based_on_user_permissions(
     expected_items,
     expected_empty_message,
 ):
-    service_one['permissions'] += ['letter']
     mock_get_template_folders.return_value = [
         _folder('folder_A', FOLDER_TWO_ID, None, [active_user_with_permissions['id']]),
         _folder('folder_B', FOLDER_B_ID, FOLDER_TWO_ID, []),
@@ -1705,7 +1661,6 @@ def test_should_filter_templates_folder_page_based_on_user_permissions(
             _template('sms', 'sms_template_C', parent=FOLDER_C_ID),
             _template('email', 'email_template_B', parent=FOLDER_B_ID),
             _template('email', 'email_template_G', parent=GRANDCHILD_FOLDER_ID),
-            _template('letter', 'letter_template_F', parent=CHILD_FOLDER_ID),
         ]}
     )
 

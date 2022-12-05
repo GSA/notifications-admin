@@ -11,8 +11,7 @@ from flask import (
 )
 from flask_login import current_user
 from notifications_python_client.errors import HTTPError
-from notifications_utils import LETTER_MAX_PAGE_COUNT, SMS_CHAR_COUNT_LIMIT
-from notifications_utils.pdf import is_letter_too_long
+from notifications_utils import SMS_CHAR_COUNT_LIMIT
 
 from app import (
     current_service,
@@ -26,8 +25,6 @@ from app.formatters import character_count, message_count
 from app.main import main, no_cookie
 from app.main.forms import (
     EmailTemplateForm,
-    LetterTemplateForm,
-    LetterTemplatePostageForm,
     SearchTemplatesForm,
     SetTemplateSenderForm,
     SMSTemplateForm,
@@ -37,15 +34,14 @@ from app.main.forms import (
 from app.main.views.send import get_sender_details
 from app.models.service import Service
 from app.models.template_list import TemplateList, TemplateLists
-from app.template_previews import TemplatePreview, get_page_count_for_letter
+from app.template_previews import TemplatePreview
 from app.utils import NOTIFICATION_TYPES, should_skip_template_page
 from app.utils.templates import get_template
-from app.utils.user import user_has_permissions, user_is_platform_admin
+from app.utils.user import user_has_permissions
 
 form_objects = {
     'email': EmailTemplateForm,
     'sms': SMSTemplateForm,
-    'letter': LetterTemplateForm,
 }
 
 
@@ -61,27 +57,14 @@ def view_template(service_id, template_id):
             '.set_sender', service_id=service_id, template_id=template_id
         ))
 
-    page_count = get_page_count_for_letter(template)
-
     return render_template(
         'views/templates/template.html',
         template=get_template(
             template,
             current_service,
-            letter_preview_url=url_for(
-                'no_cookie.view_letter_template_preview',
-                service_id=service_id,
-                template_id=template_id,
-                filetype='png',
-            ),
             show_recipient=True,
-            page_count=page_count,
         ),
-        template_postage=template["postage"],
         user_has_template_permission=user_has_template_permission,
-        letter_too_long=is_letter_too_long(page_count),
-        letter_max_pages=LETTER_MAX_PAGE_COUNT,
-        page_count=page_count
     )
 
 
@@ -199,7 +182,6 @@ def get_template_nav_label(value):
         'all': 'All',
         'sms': 'Text message',
         'email': 'Email',
-        'letter': 'Letter',
     }[value]
 
 
@@ -218,56 +200,10 @@ def get_template_nav_items(template_folder_id):
     ]
 
 
-@no_cookie.route("/services/<uuid:service_id>/templates/<uuid:template_id>.<filetype>")
-@user_has_permissions()
-def view_letter_template_preview(service_id, template_id, filetype):
-    if filetype not in ('pdf', 'png'):
-        abort(404)
-
-    db_template = current_service.get_template(template_id)
-
-    return TemplatePreview.from_database_object(db_template, filetype, page=request.args.get('page'))
-
-
-@no_cookie.route("/templates/letter-preview-image/<filename>")
-@user_is_platform_admin
-def letter_branding_preview_image(filename):
-    template = {
-        'subject': 'An example letter',
-        'content': (
-            'Lorem Ipsum is simply dummy text of the printing and typesetting '
-            'industry.\n\nLorem Ipsum has been the industry’s standard dummy '
-            'text ever since the 1500s, when an unknown printer took a galley '
-            'of type and scrambled it to make a type specimen book.\n\n'
-            '# History\n\nIt has survived not only\n\n'
-            '* five centuries\n'
-            '* but also the leap into electronic typesetting\n\n'
-            'It was popularised in the 1960s with the release of Letraset '
-            'sheets containing Lorem Ipsum passages, and more recently with '
-            'desktop publishing software like Aldus PageMaker including '
-            'versions of Lorem Ipsum.\n\n'
-            'The point of using Lorem Ipsum is that it has a more-or-less '
-            'normal distribution of letters, as opposed to using ‘Content '
-            'here, content here’, making it look like readable English.'
-        ),
-        'template_type': 'letter',
-    }
-    filename = None if filename == 'no-branding' else filename
-
-    return TemplatePreview.from_example_template(template, filename)
-
-
-def _view_template_version(service_id, template_id, version, letters_as_pdf=False):
+def _view_template_version(service_id, template_id, version):
     return dict(template=get_template(
         current_service.get_template(template_id, version=version),
-        current_service,
-        letter_preview_url=url_for(
-            'no_cookie.view_template_version_preview',
-            service_id=service_id,
-            template_id=template_id,
-            version=version,
-            filetype='png',
-        ) if not letters_as_pdf else None
+        current_service
     ))
 
 
@@ -293,22 +229,6 @@ def _add_template_by_type(template_type, template_folder_id):
         return redirect(url_for(
             '.choose_template_to_copy',
             service_id=current_service.id,
-        ))
-
-    if template_type == 'letter':
-        blank_letter = service_api_client.create_service_template(
-            'New letter template',
-            'letter',
-            'Body',
-            current_service.id,
-            'Main heading',
-            'normal',
-            template_folder_id
-        )
-        return redirect(url_for(
-            '.view_template',
-            service_id=current_service.id,
-            template_id=blank_letter['data']['id'],
         ))
 
     return redirect(url_for(
@@ -724,12 +644,6 @@ def delete_service_template(service_id, template_id):
         template=get_template(
             template,
             current_service,
-            letter_preview_url=url_for(
-                'no_cookie.view_letter_template_preview',
-                service_id=service_id,
-                template_id=template['id'],
-                filetype='png',
-            ),
             show_recipient=True,
         ),
         user_has_template_permission=True,
@@ -746,12 +660,6 @@ def confirm_redact_template(service_id, template_id):
         template=get_template(
             template,
             current_service,
-            letter_preview_url=url_for(
-                'no_cookie.view_letter_template_preview',
-                service_id=service_id,
-                template_id=template_id,
-                filetype='png',
-            ),
             show_recipient=True,
         ),
         user_has_template_permission=True,
@@ -786,13 +694,6 @@ def view_template_versions(service_id, template_id):
             get_template(
                 template,
                 current_service,
-                letter_preview_url=url_for(
-                    'no_cookie.view_template_version_preview',
-                    service_id=service_id,
-                    template_id=template_id,
-                    version=template['version'],
-                    filetype='png',
-                )
             )
             for template in service_api_client.get_service_template_versions(service_id, template_id)['data']
         ]
@@ -835,35 +736,10 @@ def set_template_sender(service_id, template_id):
     )
 
 
-@main.route('/services/<uuid:service_id>/templates/<uuid:template_id>/edit-postage', methods=['GET', 'POST'])
-@user_has_permissions('manage_templates')
-def edit_template_postage(service_id, template_id):
-    template = current_service.get_template_with_user_permission_or_403(template_id, current_user)
-    if template["template_type"] != "letter":
-        abort(404)
-    form = LetterTemplatePostageForm(**template)
-    if form.validate_on_submit():
-        postage = form.postage.data
-        service_api_client.update_service_template_postage(service_id, template_id, postage)
-
-        return redirect(url_for('.view_template', service_id=service_id, template_id=template_id))
-
-    return render_template(
-        'views/templates/edit-template-postage.html',
-        form=form,
-        service_id=service_id,
-        template_id=template_id,
-        template_postage=template["postage"]
-    )
-
-
 def get_template_sender_form_dict(service_id, template):
     context = {
         'email': {
             'field_name': 'email_address'
-        },
-        'letter': {
-            'field_name': 'contact_block'
         },
         'sms': {
             'field_name': 'sms_sender'
@@ -881,5 +757,5 @@ def get_template_sender_form_dict(service_id, template):
     context['value_and_label'] = [(sender['id'], nl2br(sender[sender_format])) for sender in service_senders]
     context['value_and_label'].insert(0, ('', 'Blank'))  # Add blank option to start of list
 
-    context['current_choice'] = template['service_letter_contact'] if template['service_letter_contact'] else ''
+    context['current_choice'] = ''
     return context

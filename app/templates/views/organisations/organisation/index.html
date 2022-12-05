@@ -38,17 +38,6 @@
         ) }}
       </div>
     </div>
-    <div class="govuk-grid-column-one-third">
-      <h2 class="heading-small">Letters</h2>
-      <div class="keyline-block">
-        {{ big_number(
-          total_letter_cost,
-          'spent',
-          currency="$",
-          smaller=True
-        ) }}
-      </div>
-    </div>
   </div>
 
   {% if search_form %}
@@ -92,14 +81,6 @@
               smallest=True
             ) }}
           {% endif %}
-        </div>
-        <div class="govuk-grid-column-one-third">
-          {{ big_number(
-            service.letter_cost,
-            'spent on letters',
-            currency="$",
-            smallest=True
-          ) }}
         </div>
       </div>
     </div>

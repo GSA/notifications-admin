@@ -39,7 +39,7 @@ def test_old_jobs_hub_redirects(
             '',
             [
                 'created', 'pending', 'sending', 'pending-virus-check',
-                'delivered', 'sent', 'returned-letter',
+                'delivered', 'sent',
                 'failed', 'temporary-failure', 'permanent-failure', 'technical-failure',
                 'virus-scan-failed', 'validation-failed'
             ]
@@ -50,7 +50,7 @@ def test_old_jobs_hub_redirects(
         ),
         (
             'delivered',
-            ['delivered', 'sent', 'returned-letter']
+            ['delivered', 'sent']
         ),
         (
             'failed',

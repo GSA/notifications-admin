@@ -109,19 +109,6 @@
           )
         }}
       {% endcall %}
-      <!-- {% call row() %}
-        {{ text_field('Default letter branding') }}
-        {{ optional_text_field(
-          current_org.letter_branding.name,
-          default='No branding'
-        ) }}
-        {{ edit_field(
-            'Change',
-            url_for('.edit_organisation_letter_branding', org_id=current_org.id),
-            suffix='default letter branding for the organisation'
-          )
-        }}
-      {% endcall %} -->
       {% call row() %}
         {{ text_field('Known email domains') }}
         {{ optional_text_field(current_org.domains or None, default='None') }}

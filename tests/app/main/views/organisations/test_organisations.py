@@ -456,10 +456,10 @@ def test_organisation_services_shows_live_services_and_usage(
         'app.organisations_client.get_services_and_usage',
         return_value={"services": [
             {'service_id': SERVICE_ONE_ID, 'service_name': '1', 'chargeable_billable_sms': 250122, 'emails_sent': 13000,
-             'free_sms_limit': 250000, 'letter_cost': 30.50, 'sms_billable_units': 122, 'sms_cost': 0,
+             'free_sms_limit': 250000, 'sms_billable_units': 122, 'sms_cost': 0,
              'sms_remainder': None},
             {'service_id': SERVICE_TWO_ID, 'service_name': '5', 'chargeable_billable_sms': 0, 'emails_sent': 20000,
-             'free_sms_limit': 250000, 'letter_cost': 0, 'sms_billable_units': 2500, 'sms_cost': 42.0,
+             'free_sms_limit': 250000, 'sms_billable_units': 2500, 'sms_cost': 42.0,
              'sms_remainder': None}
         ]}
     )
@@ -475,19 +475,16 @@ def test_organisation_services_shows_live_services_and_usage(
     # Totals
     assert normalize_spaces(usage_rows[0].text) == "Emails 33,000 sent"
     assert normalize_spaces(usage_rows[1].text) == "Text messages $42.00 spent"
-    assert normalize_spaces(usage_rows[2].text) == "Letters $30.50 spent"
 
     assert normalize_spaces(services[0].text) == '1'
     assert normalize_spaces(services[1].text) == '5'
     assert services[0].find('a')['href'] == url_for('main.usage', service_id=SERVICE_ONE_ID)
 
-    assert normalize_spaces(usage_rows[3].text) == "13,000 emails sent"
-    assert normalize_spaces(usage_rows[4].text) == "122 free text messages sent"
-    assert normalize_spaces(usage_rows[5].text) == "$30.50 spent on letters"
+    assert normalize_spaces(usage_rows[2].text) == "13,000 emails sent"
+    assert normalize_spaces(usage_rows[3].text) == "122 free text messages sent"
     assert services[1].find('a')['href'] == url_for('main.usage', service_id=SERVICE_TWO_ID)
-    assert normalize_spaces(usage_rows[6].text) == "20,000 emails sent"
-    assert normalize_spaces(usage_rows[7].text) == "$42.00 spent on text messages"
-    assert normalize_spaces(usage_rows[8].text) == "$0.00 spent on letters"
+    assert normalize_spaces(usage_rows[4].text) == "20,000 emails sent"
+    assert normalize_spaces(usage_rows[5].text) == "$42.00 spent on text messages"
 
     # Ensure there’s no ‘this org has no services message’
     assert not page.select('.govuk-hint')
@@ -505,7 +502,7 @@ def test_organisation_services_shows_live_services_and_usage_with_count_of_1(
         'app.organisations_client.get_services_and_usage',
         return_value={"services": [
             {'service_id': SERVICE_ONE_ID, 'service_name': '1', 'chargeable_billable_sms': 1, 'emails_sent': 1,
-             'free_sms_limit': 250000, 'letter_cost': 0, 'sms_billable_units': 1, 'sms_cost': 0,
+             'free_sms_limit': 250000, 'sms_billable_units': 1, 'sms_cost': 0,
              'sms_remainder': None},
         ]}
     )
@@ -518,11 +515,9 @@ def test_organisation_services_shows_live_services_and_usage_with_count_of_1(
     # Totals
     assert normalize_spaces(usage_rows[0].text) == "Emails 1 sent"
     assert normalize_spaces(usage_rows[1].text) == "Text messages $0.00 spent"
-    assert normalize_spaces(usage_rows[2].text) == "Letters $0.00 spent"
 
-    assert normalize_spaces(usage_rows[3].text) == "1 email sent"
-    assert normalize_spaces(usage_rows[4].text) == "1 free text message sent"
-    assert normalize_spaces(usage_rows[5].text) == "$0.00 spent on letters"
+    assert normalize_spaces(usage_rows[2].text) == "1 email sent"
+    assert normalize_spaces(usage_rows[3].text) == "1 free text message sent"
 
 
 @freeze_time("2020-02-20 20:20")
@@ -577,7 +572,6 @@ def test_organisation_services_shows_search_bar(
                 'chargeable_billable_sms': 250122,
                 'emails_sent': 13000,
                 'free_sms_limit': 250000,
-                'letter_cost': 30.50,
                 'sms_billable_units': 122,
                 'sms_cost': 1.93,
                 'sms_remainder': None
@@ -624,7 +618,6 @@ def test_organisation_services_hides_search_bar_for_7_or_fewer_services(
                 'chargeable_billable_sms': 250122,
                 'emails_sent': 13000,
                 'free_sms_limit': 250000,
-                'letter_cost': 30.50,
                 'sms_billable_units': 122,
                 'sms_cost': 1.93,
                 'sms_remainder': None
@@ -657,7 +650,6 @@ def test_organisation_services_links_to_downloadable_report(
                 'chargeable_billable_sms': 250122,
                 'emails_sent': 13000,
                 'free_sms_limit': 250000,
-                'letter_cost': 30.50,
                 'sms_billable_units': 122,
                 'sms_cost': 1.93,
                 'sms_remainder': None
@@ -693,7 +685,6 @@ def test_download_organisation_usage_report(
                 'chargeable_billable_sms': 22,
                 'emails_sent': 13000,
                 'free_sms_limit': 100,
-                'letter_cost': 30.5,
                 'sms_billable_units': 122,
                 'sms_cost': 1.934,
                 'sms_remainder': 0
@@ -704,7 +695,6 @@ def test_download_organisation_usage_report(
                 'chargeable_billable_sms': 222,
                 'emails_sent': 23000,
                 'free_sms_limit': 250000,
-                'letter_cost': 60.5,
                 'sms_billable_units': 322,
                 'sms_cost': 3.935,
                 'sms_remainder': 0
@@ -721,9 +711,9 @@ def test_download_organisation_usage_report(
 
     assert csv_report.string == (
         "Service ID,Service Name,Emails sent,Free text message allowance remaining,"
-        "Spent on text messages ($),Spent on letters ($)"
-        "\r\n596364a0-858e-42c8-9062-a8fe822260eb,Service 1,13000,0,1.93,30.50"
-        "\r\n147ad62a-2951-4fa1-9ca0-093cd1a52c52,Service 1,23000,0,3.94,60.50\r\n"
+        "Spent on text messages ($)"
+        "\r\n596364a0-858e-42c8-9062-a8fe822260eb,Service 1,13000,0,1.93"
+        "\r\n147ad62a-2951-4fa1-9ca0-093cd1a52c52,Service 1,23000,0,3.94\r\n"
     )
 
 
@@ -943,7 +933,6 @@ def test_organisation_settings_for_platform_admin(
         'Billing details None Change billing details for the organisation',
         'Notes None Change the notes for the organisation',
         'Default email branding GOV.UK Change default email branding for the organisation',
-        # 'Default letter branding No branding Change default letter branding for the organisation',
         'Known email domains None Change known email domains for the organisation',
     ]
 

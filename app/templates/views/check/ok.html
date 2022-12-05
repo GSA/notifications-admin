@@ -21,12 +21,6 @@
 
   {{ page_header('Preview of {}'.format(template.name)) }}
 
-  {% if letter_too_long %}
-    {% call banner_wrapper(type='dangerous') %}
-        {% include "partials/check/letter-too-long.html" %}
-    {% endcall %}
-  {% endif %}
-
   {{ govukSkipLink({
     "text": "Skip to file contents",
     "href": "#" + file_contents_header_id
@@ -37,7 +31,7 @@
     <form method="post" enctype="multipart/form-data" action="{{url_for('main.start_job', service_id=current_service.id, upload_id=upload_id)}}" class='page-footer'>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       <input type="hidden" name="contact_list_id" value="{{ request.args.get('contact_list_id', '') }}" />
-      {% if choose_time_form and template.template_type != 'letter' %}
+      {% if choose_time_form %}
         {{ choose_time_form.scheduled_for(param_extensions={
           'formGroup': {'classes': 'bottom-gutter-2-3'},
           'attributes': {
@@ -47,18 +41,12 @@
           }
         }) }}
       {% endif %}
-      {% if (template.template_type != 'letter' or not request.args.from_test) and not letter_too_long %}
-        {% set button_text %}
-          Send {{ count_of_recipients|message_count(template.template_type) }}
-        {% endset %}
-        {{ govukButton({ "text": button_text }) }}
-      {% else %}
-        {{ govukButton({
-          "element": "a",
-          "text": "Download as a PDF",
-          "href": url_for('no_cookie.check_messages_preview', service_id=current_service.id, template_id=template.id, upload_id=upload_id, filetype='pdf'),
-        }) }}
-      {% endif %}
+      
+      {% set button_text %}
+        Send {{ count_of_recipients|message_count(template.template_type) }}
+      {% endset %}
+      {{ govukButton({ "text": button_text }) }}
+    
     </form>
   </div>
 

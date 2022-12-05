@@ -10,7 +10,6 @@ from app.models import (
     SortByNameMixin,
 )
 from app.notify_client.email_branding_client import email_branding_client
-from app.notify_client.letter_branding_client import letter_branding_client
 from app.notify_client.organisations_api_client import organisations_client
 
 
@@ -32,7 +31,6 @@ class Organisation(JSONModel, SortByNameMixin):
         'active',
         'crown',
         'organisation_type',
-        'letter_branding_id',
         'email_branding_id',
         'agreement_signed',
         'agreement_signed_at',
@@ -166,13 +164,6 @@ class Organisation(JSONModel, SortByNameMixin):
         if self.email_branding_id:
             return self.email_branding['name']
         return 'GOV.UK'
-
-    @cached_property
-    def letter_branding(self):
-        if self.letter_branding_id:
-            return letter_branding_client.get_letter_branding(
-                self.letter_branding_id
-            )
 
     @cached_property
     def agreement_signed_by(self):

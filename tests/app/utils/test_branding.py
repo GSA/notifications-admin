@@ -3,16 +3,15 @@ from unittest.mock import PropertyMock
 import pytest
 
 from app.models.service import Service
-from app.utils.branding import get_email_choices, get_letter_choices
+from app.utils.branding import get_email_choices
 from tests import organisation_json
 from tests.conftest import create_email_branding
 
 
-@pytest.mark.parametrize('function', [get_email_choices, get_letter_choices])
+@pytest.mark.parametrize('function', [get_email_choices])
 @pytest.mark.parametrize('org_type, expected_options', [
     ('federal', []),
     ('state', []),
-    # ('nhs_central', [('nhs', 'NHS')]),
 ])
 def test_get_choices_service_not_assigned_to_org(
     service_one,
@@ -154,114 +153,4 @@ def test_get_email_choices_branding_name_in_use(
 
     options = get_email_choices(service)
     # don't show option if its name is similar to current branding
-    assert list(options) == expected_options
-
-
-@pytest.mark.parametrize('org_type, branding_id, expected_options', [
-    ('federal', None, [
-        ('organisation', 'Test Organisation')
-    ]),
-    ('state', None, [
-        ('organisation', 'Test Organisation')
-    ]),
-    ('state', 'some-random-branding', [
-        ('organisation', 'Test Organisation')
-    ]),
-    # ('nhs_central', None, [
-    #     ('nhs', 'NHS')
-    # ]),
-])
-def test_get_letter_choices_service_assigned_to_org(
-    mocker,
-    service_one,
-    org_type,
-    branding_id,
-    expected_options,
-    mock_get_service_organisation,
-):
-    service = Service(service_one)
-
-    mocker.patch(
-        'app.organisations_client.get_organisation',
-        return_value=organisation_json(organisation_type=org_type)
-    )
-    mocker.patch(
-        'app.models.service.Service.letter_branding_id',
-        new_callable=PropertyMock,
-        return_value=branding_id,
-    )
-
-    options = get_letter_choices(service)
-    assert list(options) == expected_options
-
-
-@pytest.mark.parametrize('branding_id, expected_options', [
-    ('some-branding-id', [
-        # show org option if it's not the current branding
-        ('organisation', 'Test Organisation'),
-    ]),
-    ('org-branding-id', [
-        # don't show org option if it's the current branding
-    ]),
-])
-def test_get_letter_choices_org_has_default_branding(
-    mocker,
-    service_one,
-    branding_id,
-    expected_options,
-    mock_get_service_organisation,
-):
-    service = Service(service_one)
-
-    mocker.patch(
-        'app.organisations_client.get_organisation',
-        return_value=organisation_json(
-            organisation_type='federal',
-            letter_branding_id='org-branding-id'
-        )
-    )
-    mocker.patch(
-        'app.models.service.Service.letter_branding_id',
-        new_callable=PropertyMock,
-        return_value=branding_id
-    )
-
-    options = get_letter_choices(service)
-    # don't show org option if it's the current branding
-    assert list(options) == expected_options
-
-
-@pytest.mark.parametrize('branding_name, expected_options', [
-    ('NHS something else', [
-        ('nhs', 'NHS'),
-    ]),
-    ('NHS', [
-        # don't show NHS option if it's the current branding
-    ])
-])
-@pytest.mark.skip(reason='Update for TTS')
-def test_get_letter_choices_branding_name_in_use(
-    mocker,
-    service_one,
-    branding_name,
-    expected_options,
-    mock_get_service_organisation,
-):
-    service = Service(service_one)
-
-    mocker.patch(
-        'app.organisations_client.get_organisation',
-        return_value=organisation_json(organisation_type='nhs_central')
-    )
-    mocker.patch(
-        'app.models.service.Service.letter_branding_id',
-        new_callable=PropertyMock,
-        return_value='org-branding-id',
-    )
-    mocker.patch(
-        'app.letter_branding_client.get_letter_branding',
-        return_value={'name': branding_name}
-    )
-
-    options = get_letter_choices(service)
     assert list(options) == expected_options

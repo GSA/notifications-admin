@@ -8,9 +8,9 @@ from flask import (
     url_for,
 )
 from flask_login import current_user
-from notifications_utils.template import HTMLEmailTemplate, LetterImageTemplate
+from notifications_utils.template import HTMLEmailTemplate
 
-from app import email_branding_client, letter_branding_client, status_api_client
+from app import email_branding_client, status_api_client
 from app.main import main
 from app.main.forms import FieldWithNoneOption
 from app.main.views.pricing import CURRENT_SMS_RATE
@@ -156,35 +156,6 @@ def email_template():
     return resp
 
 
-@main.route('/_letter')
-def letter_template():
-    branding_style = request.args.get('branding_style')
-
-    if branding_style == FieldWithNoneOption.NONE_OPTION_VALUE:
-        branding_style = None
-
-    if branding_style:
-        filename = letter_branding_client.get_letter_branding(branding_style)['filename']
-    else:
-        filename = 'no-branding'
-
-    template = {'subject': '', 'content': '', 'template_type': 'letter'}
-    image_url = url_for('no_cookie.letter_branding_preview_image', filename=filename)
-
-    template_image = str(LetterImageTemplate(
-        template,
-        image_url=image_url,
-        page_count=1,
-    ))
-
-    resp = make_response(
-        render_template('views/service-settings/letter-preview.html', template=template_image)
-    )
-
-    resp.headers['X-Frame-Options'] = 'SAMEORIGIN'
-    return resp
-
-
 @main.route('/documentation')
 def documentation():
     return render_template(
@@ -234,14 +205,6 @@ def features_email():
 def features_sms():
     return render_template(
         'views/features/text-messages.html',
-        navigation_links=features_nav()
-    )
-
-
-@main.route('/features/letters')
-def features_letters():
-    return render_template(
-        'views/features/letters.html',
         navigation_links=features_nav()
     )
 
@@ -350,22 +313,6 @@ def send_files_by_email():
     )
 
 
-@main.route('/using-notify/guidance/upload-a-letter')
-def upload_a_letter():
-    return render_template(
-        'views/guidance/upload-a-letter.html',
-        navigation_links=using_notify_nav(),
-    )
-
-
-@main.route('/using-notify/guidance/letter-specification')
-def letter_specification():
-    return render_template(
-        'views/guidance/letter-specification.html',
-        navigation_links=using_notify_nav(),
-    )
-
-
 # --- Redirects --- #
 
 @main.route('/roadmap', endpoint='old_roadmap')
@@ -384,11 +331,3 @@ def old_page_redirects():
         'main.old_integration_testing': 'main.integration_testing',
     }
     return redirect(url_for(redirects[request.endpoint]), code=301)
-
-
-@main.route('/docs/notify-pdf-letter-spec-latest.pdf')
-def letter_spec():
-    return redirect(
-        'https://docs.notifications.service.gov.uk'
-        '/documentation/images/notify-pdf-letter-spec-v2.4.pdf'
-    )

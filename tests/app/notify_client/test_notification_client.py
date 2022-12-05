@@ -1,9 +1,6 @@
-import uuid
-
 import pytest
 
 from app.notify_client.notification_api_client import NotificationApiClient
-from tests import notification_json, single_notification_json
 
 
 @pytest.mark.parametrize("arguments,expected_call", [
@@ -96,68 +93,11 @@ def test_send_notification(mocker, client_request, active_user_with_permissions)
     )
 
 
-def test_send_precompiled_letter(mocker, client_request, active_user_with_permissions):
-    mock_post = mocker.patch('app.notify_client.notification_api_client.NotificationApiClient.post')
-    NotificationApiClient().send_precompiled_letter(
-        'abcd-1234',
-        'my_file.pdf',
-        'file-ID',
-        'second',
-        'Bugs Bunny, 12 Hole Avenue, Looney Town'
-    )
-    mock_post.assert_called_once_with(
-        url='/service/abcd-1234/send-pdf-letter',
-        data={
-            'filename': 'my_file.pdf',
-            'file_id': 'file-ID',
-            'created_by': active_user_with_permissions['id'],
-            'postage': 'second',
-            'recipient_address': 'Bugs Bunny, 12 Hole Avenue, Looney Town',
-        }
-    )
-
-
 def test_get_notification(mocker):
     mock_get = mocker.patch('app.notify_client.notification_api_client.NotificationApiClient.get')
     NotificationApiClient().get_notification('foo', 'bar')
     mock_get.assert_called_once_with(
         url='/service/foo/notifications/bar'
-    )
-
-
-@pytest.mark.parametrize("letter_status, expected_status", [
-    ('created', 'accepted'),
-    ('sending', 'accepted'),
-    ('delivered', 'received'),
-    ('returned-letter', 'received'),
-    ("technical-failure", "technical-failure")
-])
-def test_get_api_notifications_changes_letter_statuses(mocker, letter_status, expected_status):
-    service_id = str(uuid.uuid4())
-    sms_notification = single_notification_json(service_id, notification_type='sms', status='created')
-    email_notification = single_notification_json(service_id, notification_type='email', status='created')
-    letter_notification = single_notification_json(service_id, notification_type='letter', status=letter_status)
-    notis = notification_json(service_id=service_id, rows=0)
-    notis['notifications'] = [sms_notification, email_notification, letter_notification]
-
-    mocker.patch('app.notify_client.notification_api_client.NotificationApiClient.get', return_value=notis)
-
-    ret = NotificationApiClient().get_api_notifications_for_service(service_id)
-
-    assert ret['notifications'][0]['notification_type'] == 'sms'
-    assert ret['notifications'][1]['notification_type'] == 'email'
-    assert ret['notifications'][2]['notification_type'] == 'letter'
-    assert ret['notifications'][0]['status'] == 'created'
-    assert ret['notifications'][1]['status'] == 'created'
-    assert ret['notifications'][2]['status'] == expected_status
-
-
-def test_update_notification_to_cancelled(mocker):
-    mock_post = mocker.patch('app.notify_client.notification_api_client.NotificationApiClient.post')
-    NotificationApiClient().update_notification_to_cancelled('foo', 'bar')
-    mock_post.assert_called_once_with(
-        url='/service/foo/notifications/bar/cancel',
-        data={},
     )
 
 

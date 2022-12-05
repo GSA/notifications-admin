@@ -52,16 +52,9 @@
         <h1 class='banner-title' data-module="track-error" data-error-type="Missing recipient columns" data-error-label="{{ upload_id }}">
           There’s a problem with your column names
         </h1>
-        {% if template.template_type == 'letter' %}
-          <p class="govuk-body">
-            Your file needs at least 3 address columns, for example ‘address line 1’,
-            ‘address line 2’ and ‘address line 3’.
-          </p>
-        {% else %}
           <p class="govuk-body">
             Your file needs a column called ‘{{ first_recipient_column }}’.
           </p>
-        {% endif %}
           <p class="govuk-body">
             Right now it has {{ recipients.column_headers | formatted_list(
               prefix='one column, called ',
@@ -113,16 +106,6 @@
           {% include "partials/check/not-allowed-to-send-to.html" %}
         {% endwith %}
 
-      {% elif trying_to_send_letters_in_trial_mode %}
-
-        <div class="bottom-gutter">
-          {% with
-            count_of_recipients=count_of_recipients
-          %}
-            {% include "partials/check/trying-to-send-letters-in-trial-mode.html" %}
-          {% endwith %}
-        </div>
-
       {% elif recipients.more_rows_than_can_send %}
 
         {% include "partials/check/too-many-messages.html" %}
@@ -165,15 +148,7 @@
         {% call index_field() %}
           <span>
             {% set displayed_index = item.index + 2 %}
-            {% if (
-              trying_to_send_letters_in_trial_mode and
-              (not errors or recipients.more_rows_than_can_send) and
-              displayed_index != preview_row
-            ) %}
-              <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.check_messages', service_id=current_service.id, template_id=template.id, upload_id=upload_id, row_index=displayed_index, original_file_name=original_file_name) }}">{{ displayed_index }}</a>
-            {% else %}
-              {{ displayed_index }}
-            {% endif %}
+            {{ displayed_index }}
           </span>
         {% endcall %}
         {% for column in column_headers %}
