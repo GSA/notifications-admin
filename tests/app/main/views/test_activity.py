@@ -49,7 +49,7 @@ from tests.conftest import (
         (
             '',
             [
-                'created', 'pending', 'sending', 'delivered', 'sent', 'failed', 
+                'created', 'pending', 'sending', 'delivered', 'sent', 'failed',
                 'temporary-failure', 'permanent-failure', 'technical-failure',
                 'validation-failed'
             ]
