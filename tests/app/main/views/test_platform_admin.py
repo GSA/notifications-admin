@@ -516,7 +516,7 @@ def test_is_over_threshold(number, total, threshold, result):
 def test_get_tech_failure_status_box_data_removes_percentage_data():
     stats = {
         'failures':
-            {'permanent-failure': 0, 'technical-failure': 0, 'temporary-failure': 1, 'virus-scan-failed': 0},
+            {'permanent-failure': 0, 'technical-failure': 0, 'temporary-failure': 1},
         'test-key': 0,
         'total': 5589
     }
@@ -612,11 +612,11 @@ def test_platform_admin_displays_stats_in_right_boxes_and_with_correct_styling(
 ):
     platform_stats = {
         'email': {'failures':
-                  {'permanent-failure': 3, 'technical-failure': 0, 'temporary-failure': 0, 'virus-scan-failed': 0},
+                  {'permanent-failure': 3, 'technical-failure': 0, 'temporary-failure': 0},
                   'test-key': 0,
                   'total': 145},
         'sms': {'failures':
-                {'permanent-failure': 0, 'technical-failure': 1, 'temporary-failure': 0, 'virus-scan-failed': 0},
+                {'permanent-failure': 0, 'technical-failure': 1, 'temporary-failure': 0},
                 'test-key': 5,
                 'total': 168},
     }

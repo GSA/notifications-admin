@@ -38,7 +38,7 @@ from app import proxy_fix, webauthn_server
 from app.asset_fingerprinter import asset_fingerprinter
 from app.config import configs
 from app.custom_auth import CustomBasicAuth
-from app.extensions import antivirus_client, redis_client, zendesk_client
+from app.extensions import redis_client, zendesk_client
 from app.formatters import (
     convert_to_boolean,
     format_auth_type,
@@ -199,7 +199,6 @@ def create_app(application):
         user_api_client,
 
         # External API clients
-        antivirus_client,
         redis_client,
         zendesk_client,
 

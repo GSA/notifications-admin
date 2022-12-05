@@ -940,7 +940,7 @@ def test_upload_valid_csv_shows_preview_and_table(
             row = page.select('table tbody tr')[row_index]
             assert 'id' not in row
             assert normalize_spaces(str(row.select('td')[index + 1])) == cell
-    
+
 
 def test_show_all_columns_if_there_are_duplicate_recipient_columns(
     client_request,

@@ -49,15 +49,14 @@ from tests.conftest import (
         (
             '',
             [
-                'created', 'pending', 'sending', 'pending-virus-check',
-                'delivered', 'sent',
-                'failed', 'temporary-failure', 'permanent-failure', 'technical-failure',
-                'virus-scan-failed', 'validation-failed'
+                'created', 'pending', 'sending', 'delivered', 'sent', 'failed', 
+                'temporary-failure', 'permanent-failure', 'technical-failure',
+                'validation-failed'
             ]
         ),
         (
             'sending',
-            ['sending', 'created', 'pending', 'pending-virus-check']
+            ['sending', 'created', 'pending']
         ),
         (
             'delivered',
@@ -67,7 +66,7 @@ from tests.conftest import (
             'failed',
             [
                 'failed', 'temporary-failure', 'permanent-failure', 'technical-failure',
-                'virus-scan-failed', 'validation-failed'
+                'validation-failed'
             ]
         )
     ]

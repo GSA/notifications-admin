@@ -1,8 +1,5 @@
-import base64
-from io import BytesIO
-
 import requests
-from flask import current_app, json
+from flask import current_app
 
 from app import current_service
 

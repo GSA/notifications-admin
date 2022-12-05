@@ -30,8 +30,6 @@ class Config(object):
 
     TEMPLATE_PREVIEW_API_HOST = os.environ.get('TEMPLATE_PREVIEW_API_HOST', 'http://localhost:9999')
     TEMPLATE_PREVIEW_API_KEY = os.environ.get('TEMPLATE_PREVIEW_API_KEY', 'my-secret-key')
-    ANTIVIRUS_API_HOST = os.environ.get('ANTIVIRUS_API_HOST', 'http://localhost:6016')
-    ANTIVIRUS_API_KEY = os.environ.get('ANTIVIRUS_API_KEY', 'test-key')
 
     # Logging
     NOTIFY_LOG_LEVEL = os.environ.get('NOTIFY_LOG_LEVEL', 'INFO')
@@ -55,7 +53,6 @@ class Config(object):
     WTF_CSRF_ENABLED = True
     WTF_CSRF_TIME_LIMIT = None
     CHECK_PROXY_HEADER = False
-    ANTIVIRUS_ENABLED = os.environ.get('ANTIVIRUS_ENABLED') == '1'
 
     AWS_REGION = os.environ.get('AWS_REGION')
 
@@ -118,9 +115,6 @@ class Test(Development):
 
     API_HOST_NAME = 'http://you-forgot-to-mock-an-api-call-to'
     REDIS_URL = 'redis://you-forgot-to-mock-a-redis-call-to'
-    ANTIVIRUS_API_HOST = 'https://test-antivirus'
-    ANTIVIRUS_API_KEY = 'test-antivirus-secret'
-    ANTIVIRUS_ENABLED = True
     LOGO_CDN_DOMAIN = 'static-logos.test.com'
 
     # Buckets
