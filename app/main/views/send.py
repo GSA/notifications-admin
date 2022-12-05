@@ -391,25 +391,6 @@ def send_one_off_step(service_id, template_id, step_index):
     )
 
 
-@no_cookie.route("/services/<uuid:service_id>/send/<uuid:template_id>/test.<filetype>", methods=['GET'])
-@user_has_permissions('send_messages')
-def send_test_preview(service_id, template_id, filetype):
-
-    if filetype not in ('pdf', 'png'):
-        abort(404)
-
-    db_template = current_service.get_template_with_user_permission_or_403(template_id, current_user)
-
-    template = get_template(
-        db_template,
-        current_service,
-    )
-
-    template.values = get_normalised_placeholders_from_session()
-
-    return TemplatePreview.from_utils_template(template, filetype, page=request.args.get('page'))
-
-
 @main.route(
     '/services/<uuid:service_id>/send/<uuid:template_id>'
     '/from-contact-list'
@@ -583,49 +564,6 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
     set_metadata_on_csv_upload(service_id, upload_id, **metadata_kwargs)
 
     return render_template('views/check/ok.html', **data)
-
-
-@no_cookie.route(
-    "/services/<uuid:service_id>/<uuid:template_id>/check/<uuid:upload_id>.<filetype>",
-    methods=['GET'],
-)
-@no_cookie.route(
-    "/services/<uuid:service_id>/<uuid:template_id>/check/<uuid:upload_id>/row-<int:row_index>.<filetype>",
-    methods=['GET'],
-)
-@user_has_permissions('send_messages')
-def check_messages_preview(service_id, template_id, upload_id, filetype, row_index=2):
-    # TODO: likely candidate for deletion
-    if filetype == 'pdf':
-        page = None
-    elif filetype == 'png':
-        page = request.args.get('page', 1)
-    else:
-        abort(404)
-
-    template = _check_messages(
-        service_id, template_id, upload_id, row_index
-    )['template']
-    return TemplatePreview.from_utils_template(template, filetype, page=page)
-
-
-@no_cookie.route(
-    "/services/<uuid:service_id>/<uuid:template_id>/check.<filetype>",
-    methods=['GET'],
-)
-@user_has_permissions('send_messages')
-def check_notification_preview(service_id, template_id, filetype):
-    if filetype == 'pdf':
-        page = None
-    elif filetype == 'png':
-        page = request.args.get('page', 1)
-    else:
-        abort(404)
-
-    template = _check_notification(
-        service_id, template_id,
-    )['template']
-    return TemplatePreview.from_utils_template(template, filetype, page=page)
 
 
 @main.route("/services/<uuid:service_id>/start-job/<uuid:upload_id>", methods=['POST'])

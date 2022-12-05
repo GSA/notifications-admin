@@ -940,44 +940,7 @@ def test_upload_valid_csv_shows_preview_and_table(
             row = page.select('table tbody tr')[row_index]
             assert 'id' not in row
             assert normalize_spaces(str(row.select('td')[index + 1])) == cell
-
-
-@pytest.mark.skip(reason="Rewrite without letters")
-def test_upload_valid_csv_only_sets_meta_if_filename_known(
-    client_request,
-    mocker,
-    mock_get_live_service,
-    mock_get_service_letter_template,
-    mock_get_users_by_service,
-    mock_get_service_statistics,
-    mock_get_job_doesnt_exist,
-    mock_get_jobs,
-    mock_s3_get_metadata,
-    mock_s3_set_metadata,
-    mock_template_preview,
-    fake_uuid,
-):
-
-    mocker.patch('app.main.views.send.s3download', return_value="""
-        addressline1, addressline2, postcode
-        House       , 1 Street    , SW1A 1AA
-    """)
-    mocker.patch(
-        'app.main.views.send.get_page_count_for_letter',
-        return_value=5,
-    )
-
-    client_request.get(
-        'no_cookie.check_messages_preview',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        upload_id=fake_uuid,
-        filetype='pdf',
-        _test_page_title=False,
-    )
-
-    assert len(mock_s3_set_metadata.call_args_list) == 0
-
+    
 
 def test_show_all_columns_if_there_are_duplicate_recipient_columns(
     client_request,

@@ -3120,8 +3120,6 @@ def mock_template_preview(mocker):
     headers = {}
     example_response = (content, status_code, headers)
     mocker.patch('app.template_previews.TemplatePreview.from_database_object', return_value=example_response)
-    mocker.patch('app.template_previews.TemplatePreview.from_valid_pdf_file', return_value=example_response)
-    mocker.patch('app.template_previews.TemplatePreview.from_invalid_pdf_file', return_value=example_response)
     mocker.patch('app.template_previews.TemplatePreview.from_example_template', return_value=example_response)
     mocker.patch('app.template_previews.TemplatePreview.from_utils_template', return_value=example_response)
 
