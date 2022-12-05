@@ -3113,17 +3113,6 @@ def mock_get_service_history(mocker):
     })
 
 
-@pytest.fixture
-def mock_template_preview(mocker):
-    content = b'{"count":1}'
-    status_code = 200
-    headers = {}
-    example_response = (content, status_code, headers)
-    mocker.patch('app.template_previews.TemplatePreview.from_database_object', return_value=example_response)
-    mocker.patch('app.template_previews.TemplatePreview.from_example_template', return_value=example_response)
-    mocker.patch('app.template_previews.TemplatePreview.from_utils_template', return_value=example_response)
-
-
 def create_api_user_active(with_unique_id=False):
     return create_user(
         id=str(uuid4()) if with_unique_id else sample_uuid(),

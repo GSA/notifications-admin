@@ -34,7 +34,6 @@ from app.main.forms import (
 from app.main.views.send import get_sender_details
 from app.models.service import Service
 from app.models.template_list import TemplateList, TemplateLists
-from app.template_previews import TemplatePreview
 from app.utils import NOTIFICATION_TYPES, should_skip_template_page
 from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
@@ -214,13 +213,6 @@ def view_template_version(service_id, template_id, version):
         'views/templates/template_history.html',
         **_view_template_version(service_id=service_id, template_id=template_id, version=version)
     )
-
-
-@no_cookie.route("/services/<uuid:service_id>/templates/<uuid:template_id>/version/<int:version>.<filetype>")
-@user_has_permissions()
-def view_template_version_preview(service_id, template_id, version, filetype):
-    db_template = current_service.get_template(template_id, version=version)
-    return TemplatePreview.from_database_object(db_template, filetype)
 
 
 def _add_template_by_type(template_type, template_folder_id):

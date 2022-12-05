@@ -141,7 +141,6 @@ EXCLUDED_ENDPOINTS = tuple(map(Navigation.get_endpoint_with_blueprint, {
     'message_status',
     'monthly',
     'new_password',
-    'no_cookie.view_template_version_preview',
     'notifications_sent_by_service',
     'old_guest_list',
     'old_integration_testing',
