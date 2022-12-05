@@ -12,7 +12,6 @@ from flask_wtf.file import FileField as FileField_wtf
 from flask_wtf.file import FileSize
 from notifications_utils.formatters import strip_all_whitespace
 from notifications_utils.insensitive_dict import InsensitiveDict
-from notifications_utils.postal_address import PostalAddress
 from notifications_utils.recipients import (
     InvalidPhoneError,
     normalise_phone_number,
@@ -581,12 +580,6 @@ class StripWhitespaceStringField(GovukTextInputField):
         ))
         super(GovukTextInputField, self).__init__(label, **kwargs)
         self.param_extensions = param_extensions
-
-
-class PostalAddressField(TextAreaField):
-    def process_formdata(self, valuelist):
-        if valuelist:
-            self.data = PostalAddress(valuelist[0]).normalised
 
 
 class LoginForm(StripWhitespaceForm):
