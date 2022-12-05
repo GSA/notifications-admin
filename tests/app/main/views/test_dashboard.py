@@ -478,26 +478,6 @@ def test_download_inbox_strips_formulae(
     assert expected_cell in response.get_data(as_text=True).split('\r\n')[1]
 
 
-def test_returned_letters_not_visible_if_service_has_no_returned_letters(
-    client_request,
-    mocker,
-    service_one,
-    mock_get_service_templates_when_no_templates_exist,
-    mock_has_no_jobs,
-    mock_get_service_statistics,
-    mock_get_template_statistics,
-    mock_get_annual_usage_for_service,
-    mock_get_free_sms_fragment_limit,
-    mock_get_inbound_sms_summary,
-    mock_get_returned_letter_statistics_with_no_returned_letters,
-):
-    page = client_request.get(
-        'main.service_dashboard',
-        service_id=SERVICE_ONE_ID,
-    )
-    assert not page.select('#total-returned-letters')
-
-
 def test_should_show_recent_templates_on_dashboard(
     client_request,
     mocker,
@@ -604,7 +584,7 @@ def test_should_show_redirect_from_template_history(
     )
 
 
-@freeze_time("2016-07-01 12:00")  # 4 months into 2016 financial year
+@freeze_time("2017-01-01 12:00")  # 4 months into 2016 financial year
 @pytest.mark.parametrize('extra_args', [
     {},
     {'year': '2016'},
@@ -630,8 +610,8 @@ def test_should_show_monthly_breakdown_of_template_usage(
         '2'
     )
 
-    assert len(table_rows) == len(['April'])
-    assert len(page.select('.table-no-data')) == len(['May', 'June', 'July'])
+    assert len(table_rows) == len(['October'])
+    assert len(page.select('.table-no-data')) == len(['November', 'December', 'January'])
 
 
 def test_anyone_can_see_monthly_breakdown(
@@ -653,23 +633,6 @@ def test_anyone_can_see_monthly_breakdown(
     )
 
 
-def test_monthly_shows_letters_in_breakdown(
-    client_request,
-    service_one,
-    mock_get_monthly_notification_stats,
-):
-    page = client_request.get(
-        'main.monthly',
-        service_id=service_one['id']
-    )
-
-    columns = page.select('.table-field-left-aligned .big-number-label')
-
-    assert normalize_spaces(columns[0].text) == 'emails'
-    assert normalize_spaces(columns[1].text) == 'text messages'
-    assert normalize_spaces(columns[2].text) == 'letters'
-
-
 @pytest.mark.parametrize('endpoint', [
     'main.monthly',
     'main.template_usage',
@@ -687,9 +650,9 @@ def test_stats_pages_show_last_3_years(
     )
 
     assert normalize_spaces(page.select_one('.pill').text) == (
-        '2014 to 2015 financial year '
-        '2013 to 2014 financial year '
-        '2012 to 2013 financial year'
+        '2014 to 2015 fiscal year '
+        '2013 to 2014 fiscal year '
+        '2012 to 2013 fiscal year'
     )
 
 
@@ -703,7 +666,7 @@ def test_monthly_has_equal_length_tables(
         service_id=service_one['id']
     )
 
-    assert page.select_one('.table-field-headings th').get('width') == "25%"
+    assert page.select_one('.table-field-headings th').get('width') == "33%"
 
 
 @freeze_time("2016-01-01 11:09:00.061258")
@@ -881,7 +844,8 @@ def test_usage_page(
     client_request,
     mock_get_annual_usage_for_service,
     mock_get_monthly_usage_for_service,
-    mock_get_free_sms_fragment_limit
+    mock_get_free_sms_fragment_limit,
+    mock_get_monthly_notification_stats,
 ):
     page = client_request.get(
         'main.usage',
@@ -894,30 +858,26 @@ def test_usage_page(
 
     nav = page.find('ul', {'class': 'pill'})
     unselected_nav_links = nav.select('a:not(.pill-item--selected)')
-    assert normalize_spaces(nav.find('a', {'aria-current': 'page'}).text) == '2011 to 2012 financial year'
-    assert normalize_spaces(unselected_nav_links[0].text) == '2010 to 2011 financial year'
-    assert normalize_spaces(unselected_nav_links[1].text) == '2009 to 2010 financial year'
+    assert normalize_spaces(nav.find('a', {'aria-current': 'page'}).text) == '2011 to 2012 fiscal year'
+    assert normalize_spaces(unselected_nav_links[0].text) == '2010 to 2011 fiscal year'
+    assert normalize_spaces(unselected_nav_links[1].text) == '2009 to 2010 fiscal year'
 
     annual_usage = page.find_all('div', {'class': 'govuk-grid-column-one-half'})
+    # print(annual_usage)
 
     # annual stats are shown in two rows, each with three column; email is col 1
-    email_column = normalize_spaces(annual_usage[0].text + annual_usage[2].text)
-    assert 'Emails' in email_column
-    assert '1,000 sent' in email_column
+    # email_column = normalize_spaces(annual_usage[0].text + annual_usage[2].text)
+    # assert 'Emails' in email_column
+    # assert '1,000 sent' in email_column
 
-    sms_column = normalize_spaces(annual_usage[1].text + annual_usage[3].text)
+    sms_column = normalize_spaces(annual_usage[0].text + annual_usage[1].text)
     assert 'Text messages' in sms_column
     assert '251,800 sent' in sms_column
     assert '250,000 free allowance' in sms_column
     assert '0 free allowance remaining' in sms_column
-    assert '$29.85 spent' in sms_column
+    assert '$29.85 spent' not in sms_column
     assert '1,500 at 1.65 pence' in sms_column
     assert '300 at 1.70 pence' in sms_column
-
-    # letter_column = normalize_spaces(annual_usage[2].text + annual_usage[5].text)
-    # assert 'Letters' in letter_column
-    # assert '100 sent' in letter_column
-    # assert '$30.00 spent' in letter_column
 
 
 @freeze_time("2012-03-31 12:12:12")
@@ -925,7 +885,8 @@ def test_usage_page_no_sms_spend(
     mocker,
     client_request,
     mock_get_monthly_usage_for_service,
-    mock_get_free_sms_fragment_limit
+    mock_get_free_sms_fragment_limit,
+    mock_get_monthly_notification_stats,
 ):
     mocker.patch('app.billing_api_client.get_annual_usage_for_service', return_value=[
         {
@@ -943,11 +904,11 @@ def test_usage_page_no_sms_spend(
     )
 
     annual_usage = page.find_all('div', {'class': 'govuk-grid-column-one-half'})
-    sms_column = normalize_spaces(annual_usage[1].text + annual_usage[3].text)
+    sms_column = normalize_spaces(annual_usage[0].text + annual_usage[1].text)
     assert 'Text messages' in sms_column
     assert '250,000 free allowance' in sms_column
     assert '249,000 free allowance remaining' in sms_column
-    assert '$0.00 spent' in sms_column
+    assert '$0.00 spent' not in sms_column
     assert 'pence per message' not in sms_column
 
 
@@ -957,23 +918,20 @@ def test_usage_page_monthly_breakdown(
     service_one,
     mock_get_annual_usage_for_service,
     mock_get_monthly_usage_for_service,
-    mock_get_free_sms_fragment_limit
+    mock_get_free_sms_fragment_limit,
+    mock_get_monthly_notification_stats,
 ):
     page = client_request.get('main.usage', service_id=SERVICE_ONE_ID)
     monthly_breakdown = normalize_spaces(page.find('table').text)
 
-    assert 'April' in monthly_breakdown
+    assert 'October' in monthly_breakdown
     assert '249,860 free text messages' in monthly_breakdown
 
     assert 'February' in monthly_breakdown
-    assert '$29.55' in monthly_breakdown
+    assert '$16.40' in monthly_breakdown
     assert '140 free text messages' in monthly_breakdown
     assert '960 text messages at 1.65p' in monthly_breakdown
     assert '33 text messages at 1.70p' in monthly_breakdown
-    # assert '5 first class letters at 33p' in monthly_breakdown
-    # assert '10 second class letters at 31p' in monthly_breakdown
-    # assert '3 international letters at 55p' in monthly_breakdown
-    # assert '7 international letters at 84p' in monthly_breakdown
 
     assert 'March' in monthly_breakdown
     assert '$20.91' in monthly_breakdown
@@ -982,8 +940,8 @@ def test_usage_page_monthly_breakdown(
 
 @pytest.mark.parametrize(
     'now, expected_number_of_months', [
-        (freeze_time("2017-03-31 11:09:00.061258"), 12),
-        (freeze_time("2017-01-01 11:09:00.061258"), 10)
+        (freeze_time("2017-03-31 11:09:00.061258"), 6),
+        (freeze_time("2017-01-01 11:09:00.061258"), 4)
     ]
 )
 def test_usage_page_monthly_breakdown_shows_months_so_far(
@@ -992,6 +950,7 @@ def test_usage_page_monthly_breakdown_shows_months_so_far(
     mock_get_annual_usage_for_service,
     mock_get_monthly_usage_for_service,
     mock_get_free_sms_fragment_limit,
+    mock_get_monthly_notification_stats,
     now,
     expected_number_of_months
 ):
@@ -1001,30 +960,12 @@ def test_usage_page_monthly_breakdown_shows_months_so_far(
         assert len(rows) == expected_number_of_months
 
 
-@pytest.mark.skip(reason="Skipping letter-specific test")
-@freeze_time("2012-03-31 12:12:12")
-def test_usage_page_letter_breakdown_ordered_by_postage_and_rate(
-    client_request,
-    service_one,
-    mock_get_monthly_usage_for_service,
-    mock_get_annual_usage_for_service,
-    mock_get_free_sms_fragment_limit
-):
-    page = client_request.get('main.usage', service_id=SERVICE_ONE_ID)
-    row_for_feb = page.find('table').find_all('tr', class_='table-row')[10]
-    postage_details = row_for_feb.find_all('li', class_='tabular-numbers')
-
-    assert normalize_spaces(postage_details[3].text) == '5 first class letters at 33p'
-    assert normalize_spaces(postage_details[4].text) == '10 second class letters at 31p'
-    assert normalize_spaces(postage_details[5].text) == '3 international letters at 55p'
-    assert normalize_spaces(postage_details[6].text) == '7 international letters at 84p'
-
-
 def test_usage_page_with_0_free_allowance(
     mocker,
     client_request,
     mock_get_annual_usage_for_service,
     mock_get_monthly_usage_for_service,
+    mock_get_monthly_notification_stats,
 ):
     mocker.patch(
         'app.billing_api_client.get_free_sms_fragment_limit_for_year',
@@ -1037,7 +978,7 @@ def test_usage_page_with_0_free_allowance(
     )
 
     annual_usage = page.select('main .govuk-grid-column-one-half')
-    sms_column = normalize_spaces(annual_usage[1].text)
+    sms_column = normalize_spaces(annual_usage[0].text)
 
     assert '0 free allowance' in sms_column
     assert 'free allowance remaining' not in sms_column
@@ -1048,6 +989,7 @@ def test_usage_page_with_year_argument(
     mock_get_annual_usage_for_service,
     mock_get_monthly_usage_for_service,
     mock_get_free_sms_fragment_limit,
+    mock_get_monthly_notification_stats,
 ):
     client_request.get(
         'main.usage',
@@ -1057,6 +999,7 @@ def test_usage_page_with_year_argument(
     mock_get_monthly_usage_for_service.assert_called_once_with(SERVICE_ONE_ID, 2000)
     mock_get_annual_usage_for_service.assert_called_once_with(SERVICE_ONE_ID, 2000)
     mock_get_free_sms_fragment_limit.assert_called_with(SERVICE_ONE_ID, 2000)
+    mock_get_monthly_notification_stats.assert_called_with(SERVICE_ONE_ID, 2000)
 
 
 def test_usage_page_for_invalid_year(
@@ -1075,7 +1018,8 @@ def test_future_usage_page(
     client_request,
     mock_get_annual_usage_for_service_in_future,
     mock_get_monthly_usage_for_service_in_future,
-    mock_get_free_sms_fragment_limit
+    mock_get_free_sms_fragment_limit,
+    mock_get_monthly_notification_stats
 ):
     client_request.get(
         'main.usage',
@@ -1086,6 +1030,7 @@ def test_future_usage_page(
     mock_get_monthly_usage_for_service_in_future.assert_called_once_with(SERVICE_ONE_ID, 2014)
     mock_get_annual_usage_for_service_in_future.assert_called_once_with(SERVICE_ONE_ID, 2014)
     mock_get_free_sms_fragment_limit.assert_called_with(SERVICE_ONE_ID, 2014)
+    mock_get_monthly_notification_stats.assert_called_with(SERVICE_ONE_ID, 2014)
 
 
 def _test_dashboard_menu(client_request, mocker, usr, service, permissions):
@@ -1129,11 +1074,11 @@ def test_menu_send_messages(
         'main.choose_template',
         service_id=service_one['id'],
     ) in page
-    assert url_for('main.uploads', service_id=service_one['id']) in page
+    # assert url_for('main.uploads', service_id=service_one['id']) in page
     assert url_for('main.manage_users', service_id=service_one['id']) in page
 
     assert url_for('main.service_settings', service_id=service_one['id']) not in page
-    assert url_for('main.api_keys', service_id=service_one['id']) not in page
+    # assert url_for('main.api_keys', service_id=service_one['id']) not in page
     assert url_for('main.view_providers') not in page
 
 
@@ -1190,7 +1135,7 @@ def test_menu_manage_service(
     assert url_for('main.manage_users', service_id=service_one['id']) in page
     assert url_for('main.service_settings', service_id=service_one['id']) in page
 
-    assert url_for('main.api_keys', service_id=service_one['id']) not in page
+    # assert url_for('main.api_keys', service_id=service_one['id']) not in page
 
 
 def test_menu_manage_api_keys(
@@ -1246,9 +1191,9 @@ def test_menu_all_services_for_platform_admin_user(
     assert url_for('main.choose_template', service_id=service_one['id']) in page
     assert url_for('main.manage_users', service_id=service_one['id']) in page
     assert url_for('main.service_settings', service_id=service_one['id']) in page
-    assert url_for('main.view_notifications', service_id=service_one['id'], message_type='email') in page
+    # assert url_for('main.view_notifications', service_id=service_one['id'], message_type='email') in page
     assert url_for('main.view_notifications', service_id=service_one['id'], message_type='sms') in page
-    assert url_for('main.api_keys', service_id=service_one['id']) not in page
+    # assert url_for('main.api_keys', service_id=service_one['id']) not in page
 
 
 def test_route_for_service_permissions(
@@ -1332,7 +1277,7 @@ def test_service_dashboard_updates_gets_dashboard_totals(
     )
 
     numbers = [number.text.strip() for number in page.find_all('span', class_='big-number-number')]
-    assert '123' in numbers
+    # assert '123' in numbers  # email is disabled
     assert '456' in numbers
 
 
@@ -1438,8 +1383,8 @@ def test_get_tuples_of_financial_years():
         start=2040,
         end=2041,
     )) == [
-        ('financial year', 2041, 'http://example.com?year=2041', '2041 to 2042'),
-        ('financial year', 2040, 'http://example.com?year=2040', '2040 to 2041'),
+        ('fiscal year', 2041, 'http://example.com?year=2041', '2041 to 2042'),
+        ('fiscal year', 2040, 'http://example.com?year=2040', '2040 to 2041'),
     ]
 
 
@@ -1616,12 +1561,10 @@ def test_service_dashboard_shows_usage(
     assert normalize_spaces(
         page.select_one('[data-key=usage]').text
     ) == (
-        'Unlimited '
-        'free email allowance '
         '$29.85 '
-        'spent on text messages'
-        # '$30.00 '
-        # 'spent on letters'
+        'spent on text messages '
+        '0 '
+        'email disabled during SMS pilot'
     )
 
 

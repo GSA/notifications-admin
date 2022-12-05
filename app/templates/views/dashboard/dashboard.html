@@ -26,10 +26,6 @@
     {{ ajax_block(partials, updates_url, 'inbox') }}
 
     {{ ajax_block(partials, updates_url, 'totals') }}
-    {{ show_more(
-      url_for('.monthly', service_id=current_service.id),
-      'See messages sent per month'
-    ) }}
 
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
 
