@@ -1438,7 +1438,6 @@ def test_send_one_off_redirects_to_end_if_step_out_of_bounds(
     )
 
 
-@pytest.mark.skip(reason="Rewrite without letters")
 @pytest.mark.parametrize('user', (
     create_active_user_with_permissions(),
     create_active_caseworking_user(),
@@ -1465,7 +1464,7 @@ def test_send_one_off_redirects_to_start_if_you_skip_steps(
         'main.send_one_off_step',
         service_id=service_one['id'],
         template_id=fake_uuid,
-        step_index=7,  # letter template has 7 placeholders – we’re at the end
+        step_index=7,
         _expected_redirect=url_for(
             'main.send_one_off',
             service_id=service_one['id'],
