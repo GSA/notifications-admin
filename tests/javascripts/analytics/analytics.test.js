@@ -52,7 +52,7 @@ describe("Analytics", () => {
       expect(setUpArguments[1]).toEqual(['set', 'anonymizeIp', true]);
       expect(setUpArguments[2]).toEqual(['set', 'allowAdFeatures', false]);
       expect(setUpArguments[3]).toEqual(['set', 'transport', 'beacon']);
-      expect(setUpArguments[4]).toEqual(['set', 'title', 'US Notify']);
+      expect(setUpArguments[4]).toEqual(['set', 'title', 'U.S. Notify']);
 
     });
 

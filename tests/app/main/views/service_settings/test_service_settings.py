@@ -3781,7 +3781,7 @@ def test_unknown_channel_404s(
     ),
     (
         'email',
-        'It’s free to send emails through US Notify.',
+        'It’s free to send emails through U.S. Notify.',
         'Send emails',
         [],
         'False',
@@ -3790,7 +3790,7 @@ def test_unknown_channel_404s(
     ),
     (
         'email',
-        'It’s free to send emails through US Notify.',
+        'It’s free to send emails through U.S. Notify.',
         'Send emails',
         ['email', 'sms', 'letter'],
         'True',
