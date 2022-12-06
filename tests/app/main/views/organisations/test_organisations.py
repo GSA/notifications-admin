@@ -86,7 +86,7 @@ def test_view_organisation_shows_the_correct_organisation(
 
     assert normalize_spaces(page.select_one('h1').text) == 'Usage'
     assert normalize_spaces(page.select_one('.govuk-hint').text) == (
-        'Test 1 has no live services on US Notify'
+        'Test 1 has no live services on U.S. Notify'
     )
     assert not page.select('a[download]')
 
@@ -1661,7 +1661,7 @@ def test_organisation_billing_page_when_the_agreement_is_signed_by_a_known_perso
     )
 
     assert page.h1.string == 'Billing'
-    assert '2.5 of the US Notify data sharing and financial agreement on 20 February 2020' in normalize_spaces(
+    assert '2.5 of the U.S. Notify data sharing and financial agreement on 20 February 2020' in normalize_spaces(
         page.text)
     assert f'{expected_signatory} signed' in page.text
     # assert page.select_one('main a')['href'] == url_for('.organisation_download_agreement', org_id=ORGANISATION_ID)
@@ -1683,7 +1683,7 @@ def test_organisation_billing_page_when_the_agreement_is_signed_by_an_unknown_pe
     )
 
     assert page.h1.string == 'Billing'
-    assert (f'{organisation_one["name"]} has accepted the US Notify data '
+    assert (f'{organisation_one["name"]} has accepted the U.S. Notify data '
             'sharing and financial agreement.') in page.text
     # assert page.select_one('main a')['href'] == url_for('.organisation_download_agreement', org_id=ORGANISATION_ID)
 
@@ -1716,11 +1716,11 @@ def test_organisation_billing_page_when_the_agreement_is_not_signed(
 @pytest.mark.parametrize('crown, expected_status, expected_file_fetched, expected_file_served', (
     # (
     #     True, 200, 'crown.pdf',
-    #     'US Notify data sharing and financial agreement.pdf',
+    #     'U.S. Notify data sharing and financial agreement.pdf',
     # ),
     # (
     #     False, 200, 'non-crown.pdf',
-    #     'US Notify data sharing and financial agreement (non-crown).pdf',
+    #     'U.S. Notify data sharing and financial agreement (non-crown).pdf',
     # ),
     (
         None, 404, None,
