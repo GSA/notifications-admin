@@ -22,7 +22,7 @@ from app import (
     template_statistics_client,
 )
 from app.formatters import character_count, message_count
-from app.main import main, no_cookie
+from app.main import main
 from app.main.forms import (
     EmailTemplateForm,
     SearchTemplatesForm,
