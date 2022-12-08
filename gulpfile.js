@@ -289,9 +289,9 @@ const lint = {
 // Default: compile everything
 const defaultTask = parallel(
   parallel(
-    // copy.govuk_frontend.fonts,
-    // copy.govuk_frontend.templates,
-    // copy.leaflet.js,
+    copy.govuk_frontend.fonts,
+    copy.govuk_frontend.templates,
+    copy.leaflet.js,
     images
   ),
   series(

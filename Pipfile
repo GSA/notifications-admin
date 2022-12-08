@@ -31,7 +31,7 @@ pytz = "==2022.1"
 rtreelib = "==0.2.0"
 werkzeug = "==2.1.2"
 wtforms = "==3.0.1"
-notifications-utils = {editable = true, ref = "6fd4efc0f324244bd5694cfa008f52dc9878ed55", git = "https://github.com/GSA/notifications-utils"}
+notifications-utils = {editable = true, branch = "main", git = "https://github.com/GSA/notifications-utils"}
 
 [dev-packages]
 isort = "==5.10.1"
