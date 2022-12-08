@@ -6,7 +6,6 @@ Prerequisite: install the `jq` JSON processor: `brew install jq`
 
 ## Initial setup
 
-1. Get on the GSA VPN (required for reaching cloud.gov API)
 1. Manually run the bootstrap module following instructions under `Terraform State Credentials`
 1. Setup CI/CD Pipeline to run Terraform
   1. Copy bootstrap credentials to your CI/CD secrets using the instructions in the base README
@@ -29,6 +28,10 @@ The bootstrap module is used to create an s3 bucket for later terraform runs to 
 1. Ensure that `import.sh` includes a line and correct IDs for any resources created
 1. Run `./teardown_creds.sh` to remove the space deployer account used to create the s3 bucket
 
+Notes:
+- The `run.sh` commands will move your `cf target` to the `notify-management` space, so make sure to re-target afterwards.
+- If you have trouble with `./run.sh plan`, try getting on the GSA VPN. It may be necessary to connect to the cloud.gov API.
+
 ### To make changes to the bootstrap module
 
 *This should not be necessary in most cases*
@@ -40,20 +43,15 @@ The bootstrap module is used to create an s3 bucket for later terraform runs to 
 1. Make your changes
 1. Continue from step 2 of the boostrapping instructions
 
-### Retrieving existing bucket credentials
+### Use bootstrap credentials
 
-1. Run `./run.sh show`
-1. Follow instructions under `Use bootstrap credentials`
-
-#### Use bootstrap credentials
-
+1. Run `./run.sh show` if you need to retrieve the credentials
 1. Add the following to `~/.aws/credentials`
     ```
     [notify-terraform-backend]
     aws_access_key_id = <access_key_id from bucket_credentials>
     aws_secret_access_key = <secret_access_key from bucket_credentials>
     ```
-
 1. Copy `bucket` from `bucket_credentials` output to the backend block of `staging/providers.tf` and `production/providers.tf`
 
 ## SpaceDeployers
