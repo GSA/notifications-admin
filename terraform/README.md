@@ -6,6 +6,7 @@ Prerequisite: install the `jq` JSON processor: `brew install jq`
 
 ## Initial setup
 
+1. Get on the GSA VPN (required for reaching cloud.gov API)
 1. Manually run the bootstrap module following instructions under `Terraform State Credentials`
 1. Setup CI/CD Pipeline to run Terraform
   1. Copy bootstrap credentials to your CI/CD secrets using the instructions in the base README
@@ -20,6 +21,7 @@ The bootstrap module is used to create an s3 bucket for later terraform runs to 
 
 ### Bootstrapping the state storage s3 buckets for the first time
 
+1. `cd bootstrap`
 1. Run `terraform init`
 1. Run `./run.sh plan` to verify that the changes are what you expect
 1. Run `./run.sh apply` to set up the bucket and retrieve credentials
