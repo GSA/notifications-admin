@@ -14,7 +14,7 @@ def init_app(app):
 
     relying_party = PublicKeyCredentialRpEntity(
         id=base_url.hostname,
-        name="US Notify",
+        name="U.S. Notify",
     )
 
     app.webauthn_server = Fido2Server(

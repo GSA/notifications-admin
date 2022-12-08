@@ -15,7 +15,7 @@
     window.ga('set', 'anonymizeIp', config.anonymizeIp);
     window.ga('set', 'allowAdFeatures', config.allowAdFeatures);
     window.ga('set', 'transport', config.transport);
-    window.ga('set', 'title', 'US Notify');
+    window.ga('set', 'title', 'U.S. Notify');
 
   };
 
