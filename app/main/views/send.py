@@ -317,7 +317,7 @@ def send_one_off_step(service_id, template_id, step_index):
     if db_template['template_type'] == 'email':
         email_reply_to = get_email_reply_to_address_from_session()
     elif db_template['template_type'] == 'sms':
-        sms_sender = get_sms_sender_from_session()  # TODO: verify default sender is US Notify
+        sms_sender = get_sms_sender_from_session()  # TODO: verify default sender is U.S. Notify
 
     template_values = get_recipient_and_placeholders_from_session(db_template['template_type'])
 
