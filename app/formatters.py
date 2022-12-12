@@ -238,9 +238,7 @@ def format_notification_status_as_time(status, created, updated):
 
 
 def format_notification_status_as_field_status(status, notification_type):
-    return {}.get(
-        notification_type,
-        {
+    return {
             'failed': 'error',
             'technical-failure': 'error',
             'temporary-failure': 'error',
@@ -250,8 +248,7 @@ def format_notification_status_as_field_status(status, notification_type):
             'sending': 'default',
             'created': 'default',
             'pending': 'default',
-        }
-    ).get(status, 'error')
+        }.get(status, 'error')
 
 
 def format_notification_status_as_url(status, notification_type):
