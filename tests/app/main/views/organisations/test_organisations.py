@@ -469,7 +469,7 @@ def test_organisation_services_shows_live_services_and_usage(
     mock.assert_called_once_with(ORGANISATION_ID, 2019)
 
     services = page.select('main h3')
-    usage_rows = page.select('main .govuk-grid-column-one-third')
+    usage_rows = page.select('main .govuk-grid-column-one-half')
     assert len(services) == 2
 
     # Totals
@@ -510,7 +510,7 @@ def test_organisation_services_shows_live_services_and_usage_with_count_of_1(
     client_request.login(active_user_with_permissions)
     page = client_request.get('.organisation_dashboard', org_id=ORGANISATION_ID)
 
-    usage_rows = page.select('main .govuk-grid-column-one-third')
+    usage_rows = page.select('main .govuk-grid-column-one-half')
 
     # Totals
     assert normalize_spaces(usage_rows[0].text) == "Emails 1 sent"

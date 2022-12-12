@@ -5,9 +5,8 @@
 {% from "components/form.html" import form_wrapper %}
 {% from "components/button/macro.njk" import govukButton %}
 
-{% set title_status = '' %}
 {% set page_title = (
-  (title_status + 99|message_count_label(message_type, suffix='')) | capitalize
+  (99|message_count_label(message_type, suffix='')) | capitalize
   if current_user.has_permissions('view_activity')
   else 'Sent messages'
 ) %}
