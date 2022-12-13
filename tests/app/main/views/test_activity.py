@@ -49,25 +49,24 @@ from tests.conftest import (
         (
             '',
             [
-                'created', 'pending', 'sending', 'pending-virus-check',
-                'delivered', 'sent', 'returned-letter',
-                'failed', 'temporary-failure', 'permanent-failure', 'technical-failure',
-                'virus-scan-failed', 'validation-failed'
+                'created', 'pending', 'sending', 'delivered', 'sent', 'failed',
+                'temporary-failure', 'permanent-failure', 'technical-failure',
+                'validation-failed'
             ]
         ),
         (
             'sending',
-            ['sending', 'created', 'pending', 'pending-virus-check']
+            ['sending', 'created', 'pending']
         ),
         (
             'delivered',
-            ['delivered', 'sent', 'returned-letter']
+            ['delivered', 'sent']
         ),
         (
             'failed',
             [
                 'failed', 'temporary-failure', 'permanent-failure', 'technical-failure',
-                'virus-scan-failed', 'validation-failed'
+                'validation-failed'
             ]
         )
     ]
@@ -284,55 +283,6 @@ def test_download_not_available_to_users_without_dashboard(
     )
 
 
-def test_letters_with_status_virus_scan_failed_shows_a_failure_description(
-    mocker,
-    client_request,
-    service_one,
-    mock_get_service_statistics,
-    mock_get_service_data_retention,
-    mock_get_api_keys,
-):
-    notifications = create_notifications(template_type='letter', status='virus-scan-failed', is_precompiled_letter=True,
-                                         client_reference='client reference')
-    mocker.patch('app.notification_api_client.get_notifications_for_service', return_value=notifications)
-
-    page = client_request.get(
-        'main.view_notifications',
-        service_id=service_one['id'],
-        message_type='letter',
-        status='',
-    )
-
-    error_description = page.find('div', attrs={'class': 'table-field-status-error'}).text.strip()
-    assert 'Virus detected\n' in error_description
-
-
-@pytest.mark.parametrize('letter_status', [
-    'pending-virus-check', 'virus-scan-failed'
-])
-def test_should_not_show_preview_link_for_precompiled_letters_in_virus_states(
-    mocker,
-    client_request,
-    service_one,
-    mock_get_service_statistics,
-    mock_get_service_data_retention,
-    mock_get_no_api_keys,
-    letter_status,
-):
-    notifications = create_notifications(template_type='letter', status=letter_status,
-                                         is_precompiled_letter=True, client_reference='ref')
-    mocker.patch('app.notification_api_client.get_notifications_for_service', return_value=notifications)
-
-    page = client_request.get(
-        'main.view_notifications',
-        service_id=service_one['id'],
-        message_type='letter',
-        status='',
-    )
-
-    assert not page.find('a', attrs={'class': 'file-list-filename'})
-
-
 def test_shows_message_when_no_notifications(
     client_request,
     mock_get_service_statistics,
@@ -394,16 +344,6 @@ def test_shows_message_when_no_notifications(
         'Search by email address',
         'test@example.com',
     ),
-    (
-        {
-            'message_type': 'letter',
-        },
-        {
-            'to': 'Firstname Lastname',
-        },
-        'Search by postal address or file name',
-        'Firstname Lastname',
-    ),
 ])
 def test_search_recipient_form(
     client_request,
@@ -447,7 +387,6 @@ def test_search_recipient_form(
     (None, 'Search by recipient or reference'),
     ('sms', 'Search by phone number or reference'),
     ('email', 'Search by email address or reference'),
-    ('letter', 'Search by postal address, file name or reference'),
 ])
 def test_api_users_are_told_they_can_search_by_reference_when_service_has_api_keys(
     client_request,
@@ -472,7 +411,6 @@ def test_api_users_are_told_they_can_search_by_reference_when_service_has_api_ke
     (None, 'Search by recipient'),
     ('sms', 'Search by phone number'),
     ('email', 'Search by email address'),
-    ('letter', 'Search by postal address or file name'),
 ])
 def test_api_users_are_not_told_they_can_search_by_reference_when_service_has_no_api_keys(
     client_request,
@@ -654,11 +592,6 @@ def test_html_contains_links_for_failed_notifications(
     ('email', (
         'example@gsa.gov hidden, hello & welcome'
     )),
-    ('letter', (
-        # Letters don’t support redaction, but this test is still
-        # worthwhile to show that the ampersand is not double-escaped
-        '1 Example Street ((name)), hello & welcome'
-    )),
 ))
 def test_redacts_templates_that_should_be_redacted(
     client_request,
@@ -690,36 +623,6 @@ def test_redacts_templates_that_should_be_redacted(
     )
 
 
-@pytest.mark.parametrize(
-    "message_type, nav_visible", [
-        ('email', True),
-        ('sms', True),
-        ('letter', False)
-    ]
-)
-def test_big_numbers_dont_show_for_letters(
-    client_request,
-    service_one,
-    mock_get_notifications,
-    active_user_with_permissions,
-    mock_get_service_statistics,
-    mock_get_service_data_retention,
-    mock_get_no_api_keys,
-    message_type,
-    nav_visible,
-):
-    page = client_request.get(
-        'main.view_notifications',
-        service_id=service_one['id'],
-        message_type=message_type,
-        status='',
-        page=1,
-    )
-
-    assert (len(page.select(".pill")) > 0) == nav_visible
-    assert (len(page.select("[type=search]")) > 0) is True
-
-
 @freeze_time("2017-09-27 16:30:00.000000")
 @pytest.mark.parametrize(
     "message_type, status, expected_hint_status, single_line", [
@@ -733,18 +636,6 @@ def test_big_numbers_dont_show_for_letters(
         ('sms', 'temporary-failure', 'Phone not accepting messages right now 27 September at 12:31pm', False),
         ('sms', 'permanent-failure', 'Not delivered 27 September at 12:31pm', False),
         ('sms', 'delivered', 'Delivered 27 September at 12:31pm', True),
-        ('letter', 'created', '27 September at 12:30pm', True),
-        ('letter', 'pending-virus-check', '27 September at 12:30pm', True),
-        ('letter', 'sending', '27 September at 12:30pm', True),
-        ('letter', 'delivered', '27 September at 12:30pm', True),
-        ('letter', 'received', '27 September at 12:30pm', True),
-        ('letter', 'accepted', '27 September at 12:30pm', True),
-        ('letter', 'cancelled', '27 September at 12:30pm', False),  # The API won’t return cancelled letters
-        ('letter', 'permanent-failure', 'Permanent failure 27 September at 12:31pm', False),
-        ('letter', 'temporary-failure', '27 September at 12:30pm', False),  # Not currently a real letter status
-        ('letter', 'virus-scan-failed', 'Virus detected 27 September at 12:30pm', False),
-        ('letter', 'validation-failed', 'Validation failed 27 September at 12:30pm', False),
-        ('letter', 'technical-failure', 'Technical failure 27 September at 12:30pm', False),
     ]
 )
 def test_sending_status_hint_displays_correctly_on_notifications_page(
@@ -770,37 +661,3 @@ def test_sending_status_hint_displays_correctly_on_notifications_page(
 
     assert normalize_spaces(page.select(".table-field-right-aligned")[0].text) == expected_hint_status
     assert bool(page.select('.align-with-message-body')) is single_line
-
-
-@pytest.mark.parametrize("is_precompiled_letter,expected_address,expected_hint", [
-    (True, "Full Name\nFirst address line\npostcode", "ref"),
-    (False, "Full Name\nFirst address line\npostcode", "template subject")
-])
-def test_should_show_address_and_hint_for_letters(
-    client_request,
-    service_one,
-    mock_get_service_statistics,
-    mock_get_service_data_retention,
-    mock_get_no_api_keys,
-    mocker,
-    is_precompiled_letter,
-    expected_address,
-    expected_hint
-):
-    notifications = create_notifications(
-        template_type='letter',
-        subject=expected_hint,
-        is_precompiled_letter=is_precompiled_letter,
-        client_reference=expected_hint,
-        to=expected_address
-    )
-    mocker.patch('app.notification_api_client.get_notifications_for_service', return_value=notifications)
-
-    page = client_request.get(
-        'main.view_notifications',
-        service_id=SERVICE_ONE_ID,
-        message_type='letter',
-    )
-
-    assert page.select_one('a.file-list-filename').text == 'Full Name, First address line, postcode'
-    assert page.find('p', {'class': 'file-list-hint'}).text.strip() == expected_hint

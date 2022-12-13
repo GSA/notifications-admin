@@ -57,7 +57,6 @@ def test_get_upload_hub_with_no_uploads(
     assert not page.select('.file-list-filename')
 
 
-@pytest.mark.skip(reason="Needs to be rewritten with no letters")
 @freeze_time('2017-10-10 10:10:10')
 def test_get_upload_hub_page(
     mocker,
@@ -67,51 +66,20 @@ def test_get_upload_hub_page(
     mock_get_no_contact_lists,
 ):
     mocker.patch('app.job_api_client.get_jobs', return_value={'data': []})
-    service_one['permissions'] += ['letter', 'upload_letters']
     page = client_request.get('main.uploads', service_id=SERVICE_ONE_ID)
     assert page.find('h1').text == 'Uploads'
-    assert page.find('a', text=re.compile('Upload a letter')).attrs['href'] == url_for(
-        'main.upload_letter', service_id=SERVICE_ONE_ID
-    )
 
     uploads = page.select('tbody tr')
 
-    assert len(uploads) == 3
+    assert len(uploads) == 1
 
     assert normalize_spaces(uploads[0].text.strip()) == (
-        'Uploaded letters '
-        'Printing today at 5:30pm '
-        '33 letters'
-    )
-    assert uploads[0].select_one('a.file-list-filename-large')['href'] == url_for(
-        'main.uploaded_letters',
-        service_id=SERVICE_ONE_ID,
-        letter_print_day='2017-10-10',
-    )
-
-    assert normalize_spaces(uploads[1].text.strip()) == (
         'some.csv '
         'Sent 1 January 2016 at 6:09am '
         '0 sending 8 delivered 2 failed'
     )
-    assert uploads[1].select_one('a.file-list-filename-large')['href'] == (
+    assert uploads[0].select_one('a.file-list-filename-large')['href'] == (
         '/services/{}/jobs/job_id_1'.format(SERVICE_ONE_ID)
-    )
-
-    assert normalize_spaces(uploads[2].text.strip()) == (
-        'some.pdf '
-        'Sent 1 January 2016 at 6:09am '
-        'Firstname Lastname '
-        '123 Example Street'
-    )
-    assert normalize_spaces(str(uploads[2].select_one('.govuk-body'))) == (
-        '<p class="govuk-body letter-recipient-summary"> '
-        'Firstname Lastname<br/> '
-        '123 Example Street<br/> '
-        '</p>'
-    )
-    assert uploads[2].select_one('a.file-list-filename-large')['href'] == (
-        '/services/{}/notification/letter_id_1'.format(SERVICE_ONE_ID)
     )
 
 

@@ -88,8 +88,6 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             'free_sms_fragment_limit',
             'go_live_at',
             'go_live_user',
-            'letter_branding',
-            'letter_contact_block',
             'message_limit',
             'name',
             'notes',
@@ -103,7 +101,6 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             'restricted',
             'sms_sender',
             'volume_email',
-            'volume_letter',
             'volume_sms',
         }
         if disallowed_attributes:
@@ -234,14 +231,6 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         return self.post(
             "/service/{0}/template/{1}".format(service_id, template_id),
             data
-        )
-
-    @cache.delete('service-{service_id}-templates')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
-    def update_service_template_postage(self, service_id, template_id, postage):
-        return self.post(
-            "/service/{0}/template/{1}".format(service_id, template_id),
-            _attach_current_user({'postage': postage})
         )
 
     @cache.set('service-{service_id}-template-{template_id}-version-{version}')
@@ -444,45 +433,6 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             data=None
         )
 
-    def get_letter_contacts(self, service_id):
-        return self.get("/service/{}/letter-contact".format(service_id))
-
-    def get_letter_contact(self, service_id, letter_contact_id):
-        return self.get("/service/{}/letter-contact/{}".format(service_id, letter_contact_id))
-
-    @cache.delete('service-{service_id}')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
-    def add_letter_contact(self, service_id, contact_block, is_default=False):
-        return self.post(
-            "/service/{}/letter-contact".format(service_id),
-            data={
-                "contact_block": contact_block,
-                "is_default": is_default
-            }
-        )
-
-    @cache.delete('service-{service_id}')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
-    def update_letter_contact(self, service_id, letter_contact_id, contact_block, is_default=False):
-        return self.post(
-            "/service/{}/letter-contact/{}".format(
-                service_id,
-                letter_contact_id,
-            ),
-            data={
-                "contact_block": contact_block,
-                "is_default": is_default
-            }
-        )
-
-    @cache.delete('service-{service_id}')
-    @cache.delete_by_pattern('service-{service_id}-template-*')
-    def delete_letter_contact(self, service_id, letter_contact_id):
-        return self.post(
-            "/service/{}/letter-contact/{}/archive".format(service_id, letter_contact_id),
-            data=None
-        )
-
     def get_sms_senders(self, service_id):
         return self.get(
             "/service/{}/sms-sender".format(service_id)
@@ -574,17 +524,6 @@ class ServiceAPIClient(NotifyAdminAPIClient):
     @cache.set('service-{service_id}-data-retention')
     def get_service_data_retention(self, service_id):
         return self.get("/service/{}/data-retention".format(service_id))
-
-    @cache.set('service-{service_id}-returned-letters-statistics')
-    def get_returned_letter_statistics(self, service_id):
-        return self.get("service/{}/returned-letter-statistics".format(service_id))
-
-    @cache.set('service-{service_id}-returned-letters-summary')
-    def get_returned_letter_summary(self, service_id):
-        return self.get("service/{}/returned-letter-summary".format(service_id))
-
-    def get_returned_letters(self, service_id, reported_at):
-        return self.get("service/{}/returned-letters?reported_at={}".format(service_id, reported_at))
 
     def get_notification_count(self, service_id):
         # if cache is not set, or not enabled, return 0

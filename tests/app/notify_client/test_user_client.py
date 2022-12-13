@@ -97,7 +97,6 @@ def test_client_converts_admin_permissions_to_db_permissions_on_edit(notify_admi
     assert sorted(mock_post.call_args[1]['data']['permissions'], key=lambda x: x['permission']) == sorted([
         {'permission': 'send_texts'},
         {'permission': 'send_emails'},
-        {'permission': 'send_letters'},
         {'permission': 'view_activity'},
     ], key=lambda x: x['permission'])
 
@@ -113,7 +112,6 @@ def test_client_converts_admin_permissions_to_db_permissions_on_add_to_service(n
     assert sorted(mock_post.call_args[1]['data']['permissions'], key=lambda x: x['permission']) == sorted([
         {'permission': 'send_texts'},
         {'permission': 'send_emails'},
-        {'permission': 'send_letters'},
         {'permission': 'view_activity'},
     ], key=lambda x: x['permission'])
 

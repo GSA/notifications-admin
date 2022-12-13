@@ -13,7 +13,6 @@
     field_headings=[
     right_aligned_field_heading('Emails'),
     right_aligned_field_heading('Text messages'),
-    right_aligned_field_heading('Letters')
     ],
     field_headings_visible=False,
   ) %}
@@ -33,7 +32,7 @@
         {% endcall %}
 
         {% call row() %}
-          {% for channel in ('email', 'sms', 'letter') %}
+          {% for channel in ('email', 'sms') %}
             {% call field(border=False) %}
               {{ big_number(
                 service['stats'][channel]['requested'],

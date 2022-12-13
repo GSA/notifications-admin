@@ -96,8 +96,6 @@ def create_api_key(service_id):
                     '<a class="govuk-link govuk-link--no-visited-state" href="/features/trial-mode">trial mode</a>')
             }
         }
-    if current_service.has_permission('letter'):
-        form.key_type.param_extensions['items'][1]['hint'] = {'text': 'Cannot be used to send letters'}
     if form.validate_on_submit():
         if current_service.trial_mode and form.key_type.data == KEY_TYPE_NORMAL:
             abort(400)

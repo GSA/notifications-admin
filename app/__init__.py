@@ -38,7 +38,7 @@ from app import proxy_fix, webauthn_server
 from app.asset_fingerprinter import asset_fingerprinter
 from app.config import configs
 from app.custom_auth import CustomBasicAuth
-from app.extensions import antivirus_client, redis_client, zendesk_client
+from app.extensions import redis_client, zendesk_client
 from app.formatters import (
     convert_to_boolean,
     format_auth_type,
@@ -100,8 +100,6 @@ from app.notify_client.events_api_client import events_api_client
 from app.notify_client.inbound_number_client import inbound_number_client
 from app.notify_client.invite_api_client import invite_api_client
 from app.notify_client.job_api_client import job_api_client
-from app.notify_client.letter_branding_client import letter_branding_client
-from app.notify_client.letter_jobs_client import letter_jobs_client
 from app.notify_client.notification_api_client import notification_api_client
 from app.notify_client.org_invite_api_client import org_invite_api_client
 from app.notify_client.organisations_api_client import organisations_client
@@ -123,7 +121,6 @@ from app.notify_client.template_statistics_api_client import (
 from app.notify_client.upload_api_client import upload_api_client
 from app.notify_client.user_api_client import user_api_client
 from app.url_converters import (
-    LetterFileExtensionConverter,
     SimpleDateTypeConverter,
     TemplateTypeConverter,
     TicketTypeConverter,
@@ -188,8 +185,6 @@ def create_app(application):
         inbound_number_client,
         invite_api_client,
         job_api_client,
-        letter_branding_client,
-        letter_jobs_client,
         notification_api_client,
         org_invite_api_client,
         organisations_client,
@@ -204,7 +199,6 @@ def create_app(application):
         user_api_client,
 
         # External API clients
-        antivirus_client,
         redis_client,
         zendesk_client,
 
@@ -278,7 +272,6 @@ def init_app(application):
     application.url_map.converters['uuid'].to_python = lambda self, value: value
     application.url_map.converters['template_type'] = TemplateTypeConverter
     application.url_map.converters['ticket_type'] = TicketTypeConverter
-    application.url_map.converters['letter_file_extension'] = LetterFileExtensionConverter
     application.url_map.converters['simple_date'] = SimpleDateTypeConverter
 
 
@@ -501,8 +494,8 @@ def setup_blueprints(application):
 
     no_cookie_blueprint is for subresources (things loaded asynchronously) that we might be concerned are setting
     cookies unnecessarily and potentially getting in to strange race conditions and overwriting other cookies, as we've
-    seen in the send message flow. Currently, this includes letter template previews, and the iframe from the platform
-    admin email branding preview pages.
+    seen in the send message flow. Currently, this includes the iframe from the platform admin email branding
+    preview pages.
 
     This notably doesn't include the *.json ajax endpoints. If we included them in this, the cookies wouldn't be
     updated, including the expiration date. If you have a dashboard open and in focus it'll refresh the expiration timer

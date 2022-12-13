@@ -8,9 +8,6 @@ from app.s3_client import get_s3_object
 
 TEMP_TAG = 'temp-{user_id}_'
 EMAIL_LOGO_LOCATION_STRUCTURE = '{temp}{unique_id}-{filename}'
-LETTER_PREFIX = 'letters/static/images/letter-template/'
-LETTER_TEMP_TAG = LETTER_PREFIX + TEMP_TAG
-LETTER_TEMP_LOGO_LOCATION = 'letters/static/images/letter-template/temp-{user_id}_{unique_id}-{filename}'
 
 
 def get_logo_location(filename=None):
@@ -53,10 +50,6 @@ def get_temp_truncated_filename(filename, user_id):
     return filename[len(TEMP_TAG.format(user_id=user_id)):]
 
 
-def get_letter_filename_with_no_path_or_extension(filename):
-    return filename[len(LETTER_PREFIX):-4]
-
-
 def upload_email_logo(filename, filedata, user_id):
     upload_file_name = EMAIL_LOGO_LOCATION_STRUCTURE.format(
         temp=TEMP_TAG.format(user_id=user_id),
@@ -77,26 +70,6 @@ def upload_email_logo(filename, filedata, user_id):
     return upload_file_name
 
 
-def upload_letter_temp_logo(filename, filedata, user_id):
-    upload_filename = LETTER_TEMP_LOGO_LOCATION.format(
-        user_id=user_id,
-        unique_id=str(uuid.uuid4()),
-        filename=filename
-    )
-    bucket_name = bucket_creds('bucket')
-    utils_s3upload(
-        filedata=filedata,
-        region=bucket_creds('region'),
-        bucket_name=bucket_name,
-        file_location=upload_filename,
-        content_type='image/svg+xml',
-        access_key=bucket_creds('access_key_id'),
-        secret_key=bucket_creds('secret_access_key'),
-    )
-
-    return upload_filename
-
-
 def permanent_email_logo_name(filename, user_id):
     if filename.startswith(TEMP_TAG.format(user_id=user_id)):
         return get_temp_truncated_filename(filename=filename, user_id=user_id)
@@ -104,38 +77,13 @@ def permanent_email_logo_name(filename, user_id):
         return filename
 
 
-def permanent_letter_logo_name(filename, extension):
-    return LETTER_PREFIX + filename + '.' + extension
-
-
-def letter_filename_for_db(filename, user_id):
-    filename = get_letter_filename_with_no_path_or_extension(filename)
-
-    if filename.startswith(TEMP_TAG.format(user_id=user_id)):
-        filename = get_temp_truncated_filename(filename=filename, user_id=user_id)
-
-    return filename
-
-
 def delete_email_temp_files_created_by(user_id):
     for obj in get_s3_objects_filter_by_prefix(TEMP_TAG.format(user_id=user_id)):
         delete_s3_object(obj.key)
 
 
-def delete_letter_temp_files_created_by(user_id):
-    for obj in get_s3_objects_filter_by_prefix(LETTER_TEMP_TAG.format(user_id=user_id)):
-        delete_s3_object(obj.key)
-
-
 def delete_email_temp_file(filename):
     if not filename.startswith(TEMP_TAG[:5]):
-        raise ValueError('Not a temp file: {}'.format(filename))
-
-    delete_s3_object(filename)
-
-
-def delete_letter_temp_file(filename):
-    if not filename.startswith(LETTER_TEMP_TAG[:43]):
         raise ValueError('Not a temp file: {}'.format(filename))
 
     delete_s3_object(filename)

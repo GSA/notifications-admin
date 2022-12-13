@@ -65,7 +65,7 @@ def test_should_render_platform_admin_page(
         normalize_spaces(column.text)
         for column in page.select('tbody tr')[1].select('td')
     ] == [
-        '0 emails sent', '0 text messages sent', '0 letters sent',
+        '0 emails sent', '0 text messages sent',
     ]
     mock_get_detailed_services.assert_called_once_with({'detailed': True,
                                                         'include_from_test_key': True,
@@ -130,14 +130,12 @@ def test_live_trial_services_with_date_filter(
         'main.live_services', (
             '55 emails sent 5 failed – 5.0%',
             '110 text messages sent 10 failed – 5.0%',
-            '15 letters sent 3 failed – 20.0%'
         ),
     ),
     (
         'main.trial_services', (
             '6 emails sent 1 failed – 10.0%',
             '11 text messages sent 1 failed – 5.0%',
-            '30 letters sent 10 failed – 33.3%'
         ),
     ),
 ])
@@ -160,9 +158,6 @@ def test_should_show_total_on_live_trial_services_pages(
         sms_requested=200,
         sms_delivered=100,
         sms_failed=10,
-        letters_requested=15,
-        letters_delivered=12,
-        letters_failed=3
     )
 
     services[1]['statistics'] = create_stats(
@@ -172,9 +167,6 @@ def test_should_show_total_on_live_trial_services_pages(
         sms_requested=20,
         sms_delivered=10,
         sms_failed=1,
-        letters_requested=30,
-        letters_delivered=20,
-        letters_failed=10
     )
 
     mock_get_detailed_services.return_value = {'data': services}
@@ -185,7 +177,7 @@ def test_should_show_total_on_live_trial_services_pages(
     assert (
         normalize_spaces(page.select('.big-number-with-status')[0].text),
         normalize_spaces(page.select('.big-number-with-status')[1].text),
-        normalize_spaces(page.select('.big-number-with-status')[2].text),
+        # normalize_spaces(page.select('.big-number-with-status')[2].text),
     ) == expected_big_numbers
 
 
@@ -219,12 +211,6 @@ def test_create_global_stats_sets_failure_rates(fake_uuid):
             'requested': 0,
             'failure_rate': '0'
         },
-        'letter': {
-            'delivered': 0,
-            'failed': 0,
-            'requested': 0,
-            'failure_rate': '0'
-        }
     }
 
 
@@ -235,9 +221,6 @@ def create_stats(
     sms_requested=0,
     sms_delivered=0,
     sms_failed=0,
-    letters_requested=0,
-    letters_delivered=0,
-    letters_failed=0
 ):
     return {
         'sms': {
@@ -249,11 +232,6 @@ def create_stats(
             'requested': emails_requested,
             'delivered': emails_delivered,
             'failed': emails_failed,
-        },
-        'letter': {
-            'requested': letters_requested,
-            'delivered': letters_delivered,
-            'failed': letters_failed,
         },
     }
 
@@ -267,9 +245,6 @@ def test_format_stats_by_service_returns_correct_values(fake_uuid):
         sms_requested=50,
         sms_delivered=7,
         sms_failed=11,
-        letters_requested=40,
-        letters_delivered=20,
-        letters_failed=7
     )
 
     ret = list(format_stats_by_service(services))
@@ -282,10 +257,6 @@ def test_format_stats_by_service_returns_correct_values(fake_uuid):
     assert ret[0]['stats']['sms']['requested'] == 50
     assert ret[0]['stats']['sms']['delivered'] == 7
     assert ret[0]['stats']['sms']['failed'] == 11
-
-    assert ret[0]['stats']['letter']['requested'] == 40
-    assert ret[0]['stats']['letter']['delivered'] == 20
-    assert ret[0]['stats']['letter']['failed'] == 7
 
 
 @pytest.mark.parametrize('endpoint, restricted, research_mode', [
@@ -545,7 +516,7 @@ def test_is_over_threshold(number, total, threshold, result):
 def test_get_tech_failure_status_box_data_removes_percentage_data():
     stats = {
         'failures':
-            {'permanent-failure': 0, 'technical-failure': 0, 'temporary-failure': 1, 'virus-scan-failed': 0},
+            {'permanent-failure': 0, 'technical-failure': 0, 'temporary-failure': 1},
         'test-key': 0,
         'total': 5589
     }
@@ -641,17 +612,13 @@ def test_platform_admin_displays_stats_in_right_boxes_and_with_correct_styling(
 ):
     platform_stats = {
         'email': {'failures':
-                  {'permanent-failure': 3, 'technical-failure': 0, 'temporary-failure': 0, 'virus-scan-failed': 0},
+                  {'permanent-failure': 3, 'technical-failure': 0, 'temporary-failure': 0},
                   'test-key': 0,
                   'total': 145},
         'sms': {'failures':
-                {'permanent-failure': 0, 'technical-failure': 1, 'temporary-failure': 0, 'virus-scan-failed': 0},
+                {'permanent-failure': 0, 'technical-failure': 1, 'temporary-failure': 0},
                 'test-key': 5,
                 'total': 168},
-        'letter': {'failures':
-                   {'permanent-failure': 0, 'technical-failure': 0, 'temporary-failure': 1, 'virus-scan-failed': 1},
-                   'test-key': 0,
-                   'total': 500}
     }
     mocker.patch('app.main.views.platform_admin.platform_stats_api_client.get_aggregate_platform_stats',
                  return_value=platform_stats)
@@ -662,67 +629,17 @@ def test_platform_admin_displays_stats_in_right_boxes_and_with_correct_styling(
 
     # Email permanent failure status box - number is correct
     assert '3 permanent failures' in page.find_all(
-        'div', class_='govuk-grid-column-one-third'
+        'div', class_='govuk-grid-column-one-half'
     )[0].find(string=re.compile('permanent'))
     # Email complaints status box - link exists and number is correct
     assert page.find('a', string='15 complaints')
     # SMS total box - number is correct
     assert page.find_all('span', class_='big-number-number')[1].text.strip() == '168'
     # Test SMS box - number is correct
-    assert '5' in page.find_all('div', class_='govuk-grid-column-one-third')[4].text
+    assert '5' in page.find_all('div', class_='govuk-grid-column-one-half')[3].text
     # SMS technical failure status box - number is correct and failure class is used
-    assert '1 technical failures' in page.find_all('div', class_='govuk-grid-column-one-third')[1].find(
+    assert '1 technical failures' in page.find_all('div', class_='govuk-grid-column-one-half')[1].find(
         'div', class_='big-number-status-failing').text
-    # Letter virus scan failure status box - number is correct and failure class is used
-    assert '1 virus scan failures' in page.find_all('div', class_='govuk-grid-column-one-third')[2].find(
-        'div', class_='big-number-status-failing').text
-
-
-@pytest.mark.skip(reason="Update for TTS")
-def test_platform_admin_submit_returned_letters(
-    mocker,
-    client_request,
-    platform_admin_user,
-):
-
-    redis = mocker.patch('app.main.views.platform_admin.redis_client')
-    mock_client = mocker.patch('app.letter_jobs_client.submit_returned_letters')
-
-    client_request.login(platform_admin_user)
-    client_request.post(
-        'main.platform_admin_returned_letters',
-        _data={'references': ' NOTIFY000REF1 \n NOTIFY002REF2 '},
-        _expected_redirect=url_for(
-            'main.platform_admin_returned_letters',
-        )
-    )
-
-    mock_client.assert_called_once_with(['REF1', 'REF2'])
-    assert redis.delete_by_pattern.call_args_list == [
-        call('service-????????-????-????-????-????????????-returned-letters-statistics'),
-        call('service-????????-????-????-????-????????????-returned-letters-summary'),
-    ]
-
-
-@pytest.mark.skip(reason="Update for TTS")
-def test_platform_admin_submit_empty_returned_letters(
-    mocker,
-    client_request,
-    platform_admin_user,
-):
-
-    mock_client = mocker.patch('app.letter_jobs_client.submit_returned_letters')
-
-    client_request.login(platform_admin_user)
-    page = client_request.post(
-        'main.platform_admin_returned_letters',
-        _data={'references': '  \n  '},
-        _expected_status=200,
-    )
-
-    assert not mock_client.called
-
-    assert "Cannot be empty" in page.text
 
 
 def test_clear_cache_shows_form(
@@ -743,7 +660,6 @@ def test_clear_cache_shows_form(
         'service',
         'template',
         'email_branding',
-        'letter_branding',
         'organisation',
     }
 
@@ -760,13 +676,11 @@ def test_clear_cache_shows_form(
         call('service-????????-????-????-????-????????????-templates'),
         call('service-????????-????-????-????-????????????-data-retention'),
         call('service-????????-????-????-????-????????????-template-folders'),
-        call('service-????????-????-????-????-????????????-returned-letters-statistics'),
-        call('service-????????-????-????-????-????????????-returned-letters-summary'),
         call('organisations'),
         call('domains'),
         call('live-service-and-organisation-counts'),
         call('organisation-????????-????-????-????-????????????-name'),
-    ], 'Removed 22 objects across 11 key formats for service, organisation'),
+    ], 'Removed 18 objects across 9 key formats for service, organisation'),
 ))
 def test_clear_cache_submits_and_tells_you_how_many_things_were_deleted(
     client_request,
@@ -835,13 +749,13 @@ def test_get_live_services_report(
                 'consent_to_research': True, 'contact_name': 'Forest fairy', 'organisation_type': 'Ecosystem',
                 'contact_email': 'forest.fairy@digital.cabinet-office.gov.uk', 'contact_mobile': '+447700900986',
                 'live_date': 'Sat, 29 Mar 2014 00:00:00 GMT', 'sms_volume_intent': 100, 'email_volume_intent': 50,
-                'letter_volume_intent': 20, 'sms_totals': 300, 'email_totals': 1200, 'letter_totals': 0,
+                'sms_totals': 300, 'email_totals': 1200,
                 'free_sms_fragment_limit': 100},
             {'service_id': 2, 'service_name': 'james the pine tree', 'organisation_name': 'Forest',
                 'consent_to_research': None, 'contact_name': None, 'organisation_type': 'Ecosystem',
                 'contact_email': None, 'contact_mobile': None,
                 'live_date': None, 'sms_volume_intent': None, 'email_volume_intent': 60,
-                'letter_volume_intent': 0, 'sms_totals': 0, 'email_totals': 0, 'letter_totals': 0,
+                'sms_totals': 0, 'email_totals': 0,
                 'free_sms_fragment_limit': 200},
         ]}
     )
@@ -852,13 +766,13 @@ def test_get_live_services_report(
     report = response.get_data(as_text=True)
     assert report.strip() == (
         'Service ID,Organisation,Organisation type,Service name,Consent to research,Main contact,Contact email,' +
-        'Contact mobile,Live date,SMS volume intent,Email volume intent,Letter volume intent,SMS sent this year,' +
-        'Emails sent this year,Letters sent this year,Free sms allowance\r\n' +
+        'Contact mobile,Live date,SMS volume intent,Email volume intent,SMS sent this year,' +
+        'Emails sent this year,Free sms allowance\r\n' +
 
         '1,Forest,Ecosystem,jessie the oak tree,True,Forest fairy,forest.fairy@digital.cabinet-office.gov.uk,' +
-        '+447700900986,29-03-2014,100,50,20,300,1200,0,100\r\n' +
+        '+447700900986,29-03-2014,100,50,300,1200,100\r\n' +
 
-        '2,Forest,Ecosystem,james the pine tree,,,,,,,60,0,0,0,0,200'
+        '2,Forest,Ecosystem,james the pine tree,,,,,,,60,0,0,200'
     )
 
 
@@ -925,13 +839,10 @@ def test_get_billing_report_calls_api_and_download_data(
     mocker.patch(
         "app.main.views.platform_admin.billing_api_client.get_data_for_billing_report",
         return_value=[{
-            'letter_breakdown': '6 second class letters at 45p\n2 first class letters at 35p\n',
-            'total_letters': 8,
-            'letter_cost': 3.4,
             'organisation_id': '7832a1be-a1f0-4f2a-982f-05adfd3d6354',
-            'organisation_name': 'Org for a - with sms and letter',
+            'organisation_name': 'Org for a - with sms',
             'service_id': '48e82ac0-c8c4-4e46-8712-c83c35a94006',
-            'service_name': 'a - with sms and letter',
+            'service_name': 'a - with sms',
             'sms_cost': 0,
             'sms_chargeable_units': 0,
             'purchase_order_number': 'PO1234',
@@ -955,20 +866,15 @@ def test_get_billing_report_calls_api_and_download_data(
 
     assert response.get_data(as_text=True) == (
         'organisation_id,organisation_name,service_id,service_name,sms_cost,sms_chargeable_units,' +
-        'total_letters,letter_cost,letter_breakdown,purchase_order_number,contact_names,contact_email_addresses,' +
+        'purchase_order_number,contact_names,contact_email_addresses,' +
         'billing_reference\r\n' +
 
         '7832a1be-a1f0-4f2a-982f-05adfd3d6354,' +
-        'Org for a - with sms and letter,' +
+        'Org for a - with sms,' +
         '48e82ac0-c8c4-4e46-8712-c83c35a94006,' +
-        'a - with sms and letter,' +
+        'a - with sms,' +
         '0,' +
         '0,' +
-        '8,' +
-        '3.4,' +
-        '"6 second class letters at 45p' +
-        '\n' +
-        '2 first class letters at 35p",' +
         'PO1234,"Anne, Marie, Josh","billing@example.com, accounts@example.com",Notify2020' +
 
         '\r\n'
@@ -1029,9 +935,6 @@ def test_get_volumes_by_service_report_calls_api_and_download_data(
             "sms_notifications": 10,
             "sms_chargeable_units": 20,
             "email_totals": 8,
-            "letter_totals": 10,
-            "letter_cost": 4.5,
-            "letter_sheet_totals": 10
         }]
     )
 
@@ -1049,7 +952,7 @@ def test_get_volumes_by_service_report_calls_api_and_download_data(
 
     assert response.get_data(as_text=True) == (
         "organisation id,organisation name,service id,service name,free allowance,sms notifications," +
-        "sms chargeable units,email totals,letter totals,letter cost,letter sheet totals\r\n" +
+        "sms chargeable units,email totals\r\n" +
 
         '7832a1be-a1f0-4f2a-982f-05adfd3d6354,' +
         'Org name,' +
@@ -1058,10 +961,7 @@ def test_get_volumes_by_service_report_calls_api_and_download_data(
         '10000,' +
         '10,' +
         '20,' +
-        '8,' +
-        '10,' +
-        '4.5,' +
-        '10' +
+        '8' +
 
         '\r\n'
     )
@@ -1080,8 +980,6 @@ def test_get_daily_volumes_report_calls_api_and_download_data(
             "sms_fragment_totals": 40,
             "sms_chargeable_units": 60,
             "email_totals": 100,
-            "letter_totals": 10,
-            "letter_sheet_totals": 20
         }]
     )
 
@@ -1098,15 +996,13 @@ def test_get_daily_volumes_report_calls_api_and_download_data(
     )
 
     assert response.get_data(as_text=True) == (
-        "day,sms totals,sms fragment totals,sms chargeable units,email totals,letter totals,letter sheet totals\r\n" +
+        "day,sms totals,sms fragment totals,sms chargeable units,email totals\r\n" +
 
         '2019-01-01,' +
         '20,' +
         '40,' +
         '60,' +
-        '100,' +
-        '10,' +
-        '20' +
+        '100' +
 
         '\r\n'
     )

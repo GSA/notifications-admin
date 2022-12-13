@@ -1,5 +1,4 @@
 import json
-from functools import partial
 from unittest.mock import ANY, Mock
 
 import pytest
@@ -8,7 +7,7 @@ from flask import url_for
 from freezegun import freeze_time
 from notifications_python_client.errors import HTTPError
 
-from tests import sample_uuid, template_json, validate_route_permission
+from tests import template_json, validate_route_permission
 from tests.app.main.views.test_template_folders import (
     CHILD_FOLDER_ID,
     FOLDER_TWO_ID,
@@ -23,7 +22,6 @@ from tests.conftest import (
     ElementNotFound,
     create_active_caseworking_user,
     create_active_user_view_permissions,
-    create_letter_contact_block,
     create_template,
     normalize_spaces,
 )
@@ -32,19 +30,15 @@ from tests.conftest import (
 @pytest.mark.parametrize('permissions, expected_message', (
     (['email'], (
         'Every message starts with a template. You can change it later. '
-        'You need a template before you can send emails, text messages or letters.'
+        'You need a template before you can send messages.'
     )),
     (['sms'], (
         'Every message starts with a template. You can change it later. '
-        'You need a template before you can send emails, text messages or letters.'
+        'You need a template before you can send messages.'
     )),
-    (['letter'], (
+    (['email', 'sms'], (
         'Every message starts with a template. You can change it later. '
-        'You need a template before you can send emails, text messages or letters.'
-    )),
-    (['email', 'sms', 'letter'], (
-        'Every message starts with a template. You can change it later. '
-        'You need a template before you can send emails, text messages or letters.'
+        'You need a template before you can send messages.'
     )),
 ))
 def test_should_show_empty_page_when_no_templates(
@@ -91,7 +85,7 @@ def test_should_show_add_template_form_if_service_has_folder_permission(
     )
     assert normalize_spaces(page.select_one('main p').text) == (
         'Every message starts with a template. You can change it later. '
-        'You need a template before you can send emails, text messages or letters.'
+        'You need a template before you can send messages.'
     )
     assert [
         (item['name'], item['value']) for item in page.select('[type=radio]')
@@ -109,56 +103,45 @@ def test_should_show_add_template_form_if_service_has_folder_permission(
             create_active_user_view_permissions(),
             'Templates',
             {},
-            ['Email', 'Text message', 'Letter'],
+            ['Email', 'Text message'],
             [
                 'sms_template_one',
                 'sms_template_two',
                 'email_template_one',
                 'email_template_two',
-                'letter_template_one',
-                'letter_template_two',
             ]
         ),
         (
             create_active_user_view_permissions(),
             'Templates',
             {'template_type': 'sms'},
-            ['All', 'Email', 'Letter'],
+            ['All', 'Email'],
             ['sms_template_one', 'sms_template_two'],
         ),
         (
             create_active_user_view_permissions(),
             'Templates',
             {'template_type': 'email'},
-            ['All', 'Text message', 'Letter'],
+            ['All', 'Text message'],
             ['email_template_one', 'email_template_two'],
-        ),
-        (
-            create_active_user_view_permissions(),
-            'Templates',
-            {'template_type': 'letter'},
-            ['All', 'Email', 'Text message'],
-            ['letter_template_one', 'letter_template_two'],
         ),
         (
             create_active_caseworking_user(),
             'Templates',
             {},
-            ['Email', 'Text message', 'Letter'],
+            ['Email', 'Text message'],
             [
                 'sms_template_one',
                 'sms_template_two',
                 'email_template_one',
                 'email_template_two',
-                'letter_template_one',
-                'letter_template_two',
             ],
         ),
         (
             create_active_caseworking_user(),
             'Templates',
             {'template_type': 'email'},
-            ['All', 'Text message', 'Letter'],
+            ['All', 'Text message'],
             ['email_template_one', 'email_template_two'],
         ),
     ]
@@ -177,7 +160,6 @@ def test_should_show_page_for_choosing_a_template(
     user,
     expected_page_title,
 ):
-    service_one['permissions'].append('letter')
     client_request.login(user)
 
     page = client_request.get(
@@ -271,7 +253,7 @@ def test_should_show_live_search_if_list_of_templates_taller_than_screen(
         'Search by name'
     )
 
-    assert len(page.select(search['data-targets'])) == len(page.select('#template-list .govuk-label')) == 14
+    assert len(page.select(search['data-targets'])) == len(page.select('#template-list .govuk-label')) == 20
 
 
 def test_should_label_search_by_id_for_services_with_api_keys(
@@ -330,12 +312,10 @@ def test_should_show_live_search_if_service_has_lots_of_folders(
     pytest.param(['email', 'sms'], [
         # 'email',
         'sms',
-        # 'letter',
         'copy-existing',
     ], [
         # 'Email',
         'Text message',
-        # 'Letter',
         'Copy an existing template',
     ]),
 ))
@@ -373,7 +353,6 @@ def test_should_show_new_template_choices_if_service_has_folder_permission(
 @pytest.mark.parametrize("permissions,are_data_attrs_added", [
     (['sms'], True),
     (['email'], True),
-    (['letter'], True),
     (['sms', 'email'], False),
 ])
 def test_should_add_data_attributes_for_services_that_only_allow_one_type_of_notifications(
@@ -524,222 +503,6 @@ def test_user_with_only_send_and_view_redirected_to_set_sender_for_one_off(
     )
 
 
-@pytest.mark.parametrize('permissions', (
-    {'send_messages', 'view_activity'},
-    {'send_messages'},
-    {'view_activity'},
-    {},
-))
-def test_user_with_only_send_and_view_sees_letter_page(
-    client_request,
-    mock_get_service_templates,
-    mock_get_template_folders,
-    mock_get_service_letter_template,
-    single_letter_contact_block,
-    mock_has_jobs,
-    active_user_with_permissions,
-    mocker,
-    fake_uuid,
-    permissions,
-):
-    mocker.patch('app.main.views.templates.get_page_count_for_letter', return_value=1)
-    active_user_with_permissions['permissions'][SERVICE_ONE_ID] = permissions
-    client_request.login(active_user_with_permissions)
-    page = client_request.get(
-        'main.view_template',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _test_page_title=False,
-    )
-    assert normalize_spaces(page.select_one('h1').text) == (
-        'Review your message'
-    )
-    assert normalize_spaces(page.select_one('title').text) == (
-        'Two week reminder – Templates – service one – U.S. Notify'
-    )
-
-
-@pytest.mark.parametrize('letter_branding, expected_link, expected_link_text', (
-    (
-        None,
-        partial(
-            url_for, 'main.letter_branding_request',
-            service_id=SERVICE_ONE_ID, from_template=TEMPLATE_ONE_ID
-        ),
-        'Add logo',
-    ),
-    (
-        TEMPLATE_ONE_ID,
-        partial(url_for, 'main.edit_template_postage', template_id=TEMPLATE_ONE_ID),
-        'Change postage',
-    ),
-))
-def test_letter_with_default_branding_has_add_logo_button(
-    mocker,
-    fake_uuid,
-    client_request,
-    service_one,
-    mock_get_template_folders,
-    mock_get_service_letter_template,
-    single_letter_contact_block,
-    letter_branding,
-    expected_link,
-    expected_link_text,
-):
-    mocker.patch('app.main.views.templates.get_page_count_for_letter', return_value=1)
-    service_one['permissions'] += ['letter']
-    service_one['letter_branding'] = letter_branding
-
-    page = client_request.get(
-        'main.view_template',
-        service_id=SERVICE_ONE_ID,
-        template_id=TEMPLATE_ONE_ID,
-        _test_page_title=False,
-    )
-
-    first_edit_link = page.select_one('.template-container a')
-    assert first_edit_link['href'] == expected_link(service_id=SERVICE_ONE_ID)
-    assert first_edit_link.text == expected_link_text
-
-
-@pytest.mark.parametrize("template_postage,expected_result", [
-    ("first", "Postage: first class"),
-    ("second", "Postage: second class"),
-])
-def test_view_letter_template_displays_postage(
-    client_request,
-    service_one,
-    mock_get_service_templates,
-    mock_get_template_folders,
-    single_letter_contact_block,
-    mock_has_jobs,
-    active_user_with_permissions,
-    mocker,
-    fake_uuid,
-    template_postage,
-    expected_result
-):
-    mocker.patch('app.main.views.templates.get_page_count_for_letter', return_value=1)
-    client_request.login(active_user_with_permissions)
-    mocker.patch(
-        'app.service_api_client.get_service_template',
-        return_value={'data': create_template(template_type='letter', postage=template_postage)}
-    )
-
-    page = client_request.get(
-        'main.view_template',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _test_page_title=False,
-    )
-
-    assert normalize_spaces(page.select_one('.letter-postage').text) == expected_result
-
-
-def test_view_non_letter_template_does_not_display_postage(
-    client_request,
-    mock_get_service_template,
-    mock_get_template_folders,
-    fake_uuid,
-):
-    page = client_request.get(
-        '.view_template',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _test_page_title=False,
-    )
-    assert "Postage" not in page.text
-
-
-def test_view_letter_template_does_not_display_send_button_if_template_over_10_pages_long(
-    client_request,
-    service_one,
-    mock_get_service_templates,
-    mock_get_template_folders,
-    single_letter_contact_block,
-    mock_has_jobs,
-    active_user_with_permissions,
-    mocker,
-    fake_uuid,
-):
-    mocker.patch('app.main.views.templates.get_page_count_for_letter', return_value=11)
-    client_request.login(active_user_with_permissions)
-    mocker.patch(
-        'app.service_api_client.get_service_template',
-        return_value={'data': create_template(template_type='letter', postage='second')}
-    )
-
-    page = client_request.get(
-        'main.view_template',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _test_page_title=False,
-    )
-
-    # assert "Send" not in page.text
-    assert page.find('h1', {"data-error-type": "letter-too-long"})
-
-
-def test_edit_letter_template_postage_page_displays_correctly(
-    client_request,
-    service_one,
-    fake_uuid,
-    mocker,
-    mock_get_service_letter_template,
-):
-    page = client_request.get(
-        'main.edit_template_postage',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-    )
-
-    assert page.select_one('h1').text.strip() == 'Change postage'
-    assert page.select('input[checked]')[0].attrs["value"] == 'second'
-
-
-def test_edit_letter_template_postage_page_404s_if_template_is_not_a_letter(
-    client_request,
-    service_one,
-    mock_get_service_template,
-    active_user_with_permissions,
-    mocker,
-    fake_uuid,
-):
-    client_request.login(active_user_with_permissions)
-    page = client_request.get(
-        'main.edit_template_postage',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _expected_status=404
-    )
-
-    assert page.select_one('h1').text.strip() != 'Edit postage'
-
-
-def test_edit_letter_templates_postage_updates_postage(
-    client_request,
-    service_one,
-    mocker,
-    fake_uuid,
-    mock_get_service_letter_template,
-):
-    mock_update_template_postage = mocker.patch(
-        'app.main.views.templates.service_api_client.update_service_template_postage'
-    )
-
-    client_request.post(
-        'main.edit_template_postage',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _data={'postage': 'first'},
-    )
-    mock_update_template_postage.assert_called_with(
-        SERVICE_ONE_ID,
-        fake_uuid,
-        "first"
-    )
-
-
 @pytest.mark.parametrize('permissions, links_to_be_shown, permissions_warning_to_be_shown', [
     (
         ['view_activity'],
@@ -772,7 +535,6 @@ def test_should_be_able_to_view_a_template_with_links(
     mock_get_service_template,
     mock_get_template_folders,
     active_user_with_permissions,
-    single_letter_contact_block,
     fake_uuid,
     permissions,
     links_to_be_shown,
@@ -831,7 +593,6 @@ def test_should_show_sms_template_with_downgraded_unicode_characters(
     client_request,
     mocker,
     service_one,
-    single_letter_contact_block,
     mock_get_template_folders,
     fake_uuid,
 ):
@@ -851,39 +612,6 @@ def test_should_show_sms_template_with_downgraded_unicode_characters(
     )
 
     assert rendered_msg in page.text
-
-
-@pytest.mark.parametrize('contact_block_data, expected_partial_url', (
-    ([], partial(
-        url_for, 'main.service_add_letter_contact', from_template=sample_uuid(),
-    )),
-    ([create_letter_contact_block()], partial(
-        url_for, 'main.set_template_sender', template_id=sample_uuid(),
-    )),
-))
-def test_should_let_letter_contact_block_be_changed_for_the_template(
-    mocker,
-    mock_get_service_letter_template,
-    mock_get_template_folders,
-    client_request,
-    service_one,
-    fake_uuid,
-    contact_block_data,
-    expected_partial_url
-):
-    mocker.patch('app.main.views.templates.get_page_count_for_letter', return_value=1)
-    mocker.patch('app.service_api_client.get_letter_contacts', return_value=contact_block_data)
-
-    page = client_request.get(
-        'main.view_template',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _test_page_title=False,
-    )
-
-    assert page.select_one(
-        'a.edit-template-link-letter-contact'
-    )['href'] == expected_partial_url(service_id=SERVICE_ONE_ID)
 
 
 @pytest.mark.parametrize('prefix_sms', [
@@ -933,91 +661,6 @@ def test_should_show_page_template_with_priority_select_if_platform_admin(
     mock_get_service_template.assert_called_with(service_one['id'], template_id, None)
 
 
-@pytest.mark.parametrize('filetype', ['pdf', 'png'])
-@pytest.mark.parametrize('view, extra_view_args', [
-    ('no_cookie.view_letter_template_preview', {}),
-    ('no_cookie.view_template_version_preview', {'version': 1}),
-])
-def test_should_show_preview_letter_templates(
-    view,
-    extra_view_args,
-    filetype,
-    client_request,
-    mock_get_service_email_template,
-    service_one,
-    fake_uuid,
-    mocker
-):
-    mocked_preview = mocker.patch(
-        'app.main.views.templates.TemplatePreview.from_database_object',
-        return_value='foo'
-    )
-
-    service_id, template_id = service_one['id'], fake_uuid
-
-    response = client_request.get_response(
-        view,
-        service_id=service_id,
-        template_id=template_id,
-        filetype=filetype,
-        **extra_view_args
-    )
-
-    assert response.get_data(as_text=True) == 'foo'
-    mock_get_service_email_template.assert_called_with(service_id, template_id, extra_view_args.get('version'))
-    assert mocked_preview.call_args[0][0]['id'] == template_id
-    assert mocked_preview.call_args[0][0]['service'] == service_id
-    assert mocked_preview.call_args[0][1] == filetype
-
-
-def test_dont_show_preview_letter_templates_for_bad_filetype(
-    client_request,
-    mock_get_service_template,
-    service_one,
-    fake_uuid
-):
-    client_request.get_response(
-        'no_cookie.view_letter_template_preview',
-        service_id=service_one['id'],
-        template_id=fake_uuid,
-        filetype='blah',
-        _expected_status=404,
-    )
-    assert mock_get_service_template.called is False
-
-
-@pytest.mark.parametrize('original_filename, new_filename', [
-    ('geo', 'geo'),
-    ('no-branding', None)
-])
-def test_letter_branding_preview_image(
-    mocker,
-    client_request,
-    platform_admin_user,
-    original_filename,
-    new_filename,
-):
-    mocked_preview = mocker.patch(
-        'app.main.views.templates.TemplatePreview.from_example_template',
-        return_value='foo'
-    )
-    client_request.login(platform_admin_user)
-    resp = client_request.get_response(
-        'no_cookie.letter_branding_preview_image',
-        filename=original_filename,
-    )
-
-    mocked_preview.assert_called_with(
-        {
-            'subject': 'An example letter',
-            'content': ANY,
-            'template_type': 'letter',
-        },
-        new_filename,
-    )
-    assert resp.get_data(as_text=True) == 'foo'
-
-
 def test_choosing_to_copy_redirects(
     client_request,
     service_one,
@@ -1056,7 +699,7 @@ def test_choose_a_template_to_copy(
     expected = [
         (
             'Service 1 '
-            '6 templates'
+            '4 templates'
         ),
         (
             'Service 1 sms_template_one '
@@ -1075,16 +718,8 @@ def test_choose_a_template_to_copy(
             'Email template'
         ),
         (
-            'Service 1 letter_template_one '
-            'Letter template'
-        ),
-        (
-            'Service 1 letter_template_two '
-            'Letter template'
-        ),
-        (
             'Service 2 '
-            '6 templates'
+            '4 templates'
         ),
         (
             'Service 2 sms_template_one '
@@ -1101,14 +736,6 @@ def test_choose_a_template_to_copy(
         (
             'Service 2 email_template_two '
             'Email template'
-        ),
-        (
-            'Service 2 letter_template_one '
-            'Letter template'
-        ),
-        (
-            'Service 2 letter_template_two '
-            'Letter template'
         ),
     ]
     actual = page.select('.template-list-item')
@@ -1167,14 +794,6 @@ def test_choose_a_template_to_copy_when_user_has_one_service(
         (
             'email_template_two '
             'Email template'
-        ),
-        (
-            'letter_template_one '
-            'Letter template'
-        ),
-        (
-            'letter_template_two '
-            'Letter template'
         ),
     ]
     actual = page.select('.template-list-item')
@@ -1407,28 +1026,12 @@ def test_cant_copy_template_from_non_member_service(
 
 @pytest.mark.parametrize('service_permissions, data, expected_error', (
     (
-        ['letter'],
-        {
-            'operation': 'add-new-template',
-            'add_template_by_template_type': 'email',
-        },
-        "Sending emails has been disabled for your service."
-    ),
-    (
         ['email'],
         {
             'operation': 'add-new-template',
             'add_template_by_template_type': 'sms',
         },
         "Sending text messages has been disabled for your service."
-    ),
-    (
-        ['sms'],
-        {
-            'operation': 'add-new-template',
-            'add_template_by_template_type': 'letter',
-        },
-        "Sending letters has been disabled for your service."
     ),
 ))
 def test_should_not_allow_creation_of_template_through_form_without_correct_permission(
@@ -1461,7 +1064,6 @@ def test_should_not_allow_creation_of_template_through_form_without_correct_perm
 @pytest.mark.parametrize('type_of_template, expected_error', [
     ('email', 'Sending emails has been disabled for your service.'),
     ('sms', 'Sending text messages has been disabled for your service.'),
-    ('letter', 'Sending letters has been disabled for your service.'),
 ])
 def test_should_not_allow_creation_of_a_template_without_correct_permission(
     client_request,
@@ -1485,32 +1087,6 @@ def test_should_not_allow_creation_of_a_template_without_correct_permission(
     assert page.select(".govuk-back-link")[0]['href'] == url_for(
         '.choose_template',
         service_id=service_one['id'],
-    )
-
-
-@pytest.mark.parametrize('template_type,  expected_status_code', [
-    ('email', 200),
-    ('sms', 200),
-    ('letter', 302),
-])
-def test_should_redirect_to_one_off_if_template_type_is_letter(
-    client_request,
-    multiple_reply_to_email_addresses,
-    multiple_sms_senders,
-    fake_uuid,
-    mocker,
-    template_type,
-    expected_status_code
-):
-    mocker.patch(
-        'app.service_api_client.get_service_template',
-        return_value={'data': create_template(template_type=template_type)}
-    )
-    client_request.get(
-        '.set_sender',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _expected_status=expected_status_code,
     )
 
 
@@ -1982,7 +1558,6 @@ def test_should_show_page_for_a_deleted_template(
     client_request,
     mock_get_template_folders,
     mock_get_deleted_template,
-    single_letter_contact_block,
     mock_get_user,
     mock_get_user_by_email,
     mock_has_permissions,
@@ -2272,7 +1847,6 @@ def test_should_show_redact_template(
     mock_get_service_template,
     mock_get_template_folders,
     mock_redact_template,
-    single_letter_contact_block,
     service_one,
     fake_uuid,
 ):
@@ -2311,36 +1885,12 @@ def test_should_show_hint_once_template_redacted(
     assert page.select('.hint')[0].text == 'Personalisation is hidden after sending'
 
 
-def test_should_not_show_redaction_stuff_for_letters(
-    client_request,
-    mocker,
-    fake_uuid,
-    mock_get_service_letter_template,
-    mock_get_template_folders,
-    single_letter_contact_block,
-):
-
-    mocker.patch('app.main.views.templates.get_page_count_for_letter', return_value=1)
-
-    page = client_request.get(
-        'main.view_template',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _test_page_title=False,
-    )
-
-    assert page.select('.hint') == []
-    assert 'personalisation' not in ' '.join(
-        link.text.lower() for link in page.select('a')
-    )
-
-
 def test_set_template_sender(
     client_request,
     fake_uuid,
     mock_update_service_template_sender,
-    mock_get_service_letter_template,
-    single_letter_contact_block
+    mock_get_service_template,
+    single_sms_sender
 ):
     data = {
         'sender': '1234',
@@ -2358,52 +1908,6 @@ def test_set_template_sender(
         fake_uuid,
         '1234',
     )
-
-
-@pytest.mark.parametrize('contact_block_data', [
-    [],  # no letter contact blocks
-    [create_letter_contact_block()],
-])
-def test_add_sender_link_only_appears_on_services_with_no_senders(
-    client_request,
-    fake_uuid,
-    mocker,
-    contact_block_data,
-    mock_get_service_letter_template,
-):
-    mocker.patch('app.service_api_client.get_letter_contacts', return_value=contact_block_data)
-    page = client_request.get(
-        'main.set_template_sender',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-    )
-
-    assert page.select_one('form .page-footer + a')['href'] == url_for(
-        'main.service_add_letter_contact',
-        service_id=SERVICE_ONE_ID,
-        from_template=fake_uuid,
-    )
-
-
-def test_set_template_sender_escapes_letter_contact_block_names(
-    client_request,
-    fake_uuid,
-    mocker,
-    mock_get_service_letter_template,
-):
-    letter_contact_block = create_letter_contact_block(contact_block='foo\n\n<script>\n\nbar')
-    mocker.patch('app.service_api_client.get_letter_contacts', return_value=[letter_contact_block])
-    page = client_request.get(
-        'main.set_template_sender',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-    )
-
-    # use decode_contents, which returns the raw html, rather than text, which sanitises it and makes
-    # testing confusing
-    radio_text = page.select_one('.govuk-grid-column-three-quarters label[for="sender-1"]').decode_contents()
-    assert "&lt;script&gt;" in radio_text
-    assert "<script>" not in radio_text
 
 
 @pytest.mark.parametrize(
@@ -2532,7 +2036,7 @@ def test_content_count_json_endpoint(
 
 
 @pytest.mark.parametrize('template_type', (
-    'email', 'letter', 'banana',
+    'email', 'banana',
 ))
 def test_content_count_json_endpoint_for_unsupported_template_types(
     client_request,

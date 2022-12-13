@@ -326,7 +326,6 @@ def test_should_show_back_to_service_if_user_belongs_to_service(
         ''
         'Dashboard '
         'Send messages '
-        # 'Letters '
         'Team members'
     )  # TODO: set sidebar variables in common test module
 

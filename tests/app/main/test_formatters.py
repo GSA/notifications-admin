@@ -27,11 +27,6 @@ from app.formatters import (
     ('temporary-failure', 'sms', partial(url_for, 'main.message_status', _anchor='text-message-statuses')),
     ('permanent-failure', 'sms', partial(url_for, 'main.message_status', _anchor='text-message-statuses')),
     ('technical-failure', 'sms', partial(url_for, 'main.message_status', _anchor='text-message-statuses')),
-    # Letter statuses are never linked
-    ('technical-failure', 'letter', lambda: None),
-    ('cancelled', 'letter', lambda: None),
-    ('accepted', 'letter', lambda: None),
-    ('received', 'letter', lambda: None),
 ))
 def test_format_notification_status_as_url(
     client_request,

@@ -16,11 +16,7 @@
       field_headings_visible=False
     ) %}
       {% call row_heading() %}
-        {% if item.status in ('pending-virus-check', 'virus-scan-failed') %}
-          <span class="file-list-filename loading-indicator">Checking</span>
-        {% else %}
-          <a class="govuk-link govuk-link--no-visited-state file-list-filename" href="{{ single_notification_url(notification_id=item.id) }}">{{ item.to.splitlines()|join(', ') if item.to else '' }}</a>
-        {% endif %}
+        <a class="govuk-link govuk-link--no-visited-state file-list-filename" href="{{ single_notification_url(notification_id=item.id) }}">{{ item.to.splitlines()|join(', ') if item.to else '' }}</a>
         <p class="file-list-hint">
           {{ item.preview_of_content }}
         </p>

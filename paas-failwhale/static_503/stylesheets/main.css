@@ -9447,7 +9447,6 @@ only screen and (min-resolution: 2dppx) {
 .edit-template-link-letter-contact,
 .edit-template-link-letter-address,
 .edit-template-link-letter-body,
-.edit-template-link-letter-postage,
 .edit-template-link-letter-branding,
 .edit-template-link {
     font-family: "nta", Arial, sans-serif;
@@ -9467,7 +9466,6 @@ only screen and (min-resolution: 2dppx) {
     .edit-template-link-letter-contact,
     .edit-template-link-letter-address,
     .edit-template-link-letter-body,
-    .edit-template-link-letter-postage,
     .edit-template-link-letter-branding,
     .edit-template-link {
         font-size: 19px;
@@ -9478,12 +9476,10 @@ only screen and (min-resolution: 2dppx) {
 .edit-template-link-letter-contact:link,
 .edit-template-link-letter-address:link,
 .edit-template-link-letter-body:link,
-.edit-template-link-letter-postage:link,
 .edit-template-link-letter-branding:link,
 .edit-template-link-letter-contact:visited,
 .edit-template-link-letter-address:visited,
 .edit-template-link-letter-body:visited,
-.edit-template-link-letter-postage:visited,
 .edit-template-link-letter-branding:visited,
 .edit-template-link:link,
 .edit-template-link:visited {
@@ -9493,35 +9489,9 @@ only screen and (min-resolution: 2dppx) {
 .edit-template-link-letter-contact:hover,
 .edit-template-link-letter-address:hover,
 .edit-template-link-letter-body:hover,
-.edit-template-link-letter-postage:hover,
 .edit-template-link-letter-branding:hover,
 .edit-template-link:hover {
     color: #d5e8f3
-}
-
-.edit-template-link-letter-contact {
-    right: -25px;
-    top: 232px
-}
-
-.edit-template-link-letter-address {
-    top: 14.65%;
-    left: -5px
-}
-
-.edit-template-link-letter-body {
-    top: 400px;
-    left: -5px
-}
-
-.edit-template-link-letter-postage {
-    top: 51px;
-    right: 145px
-}
-
-.edit-template-link-letter-branding {
-    top: 51px;
-    left: 66px
 }
 
 .notification-status {

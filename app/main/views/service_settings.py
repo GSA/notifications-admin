@@ -22,7 +22,6 @@ from app import (
     current_service,
     email_branding_client,
     inbound_number_client,
-    letter_branding_client,
     notification_api_client,
     organisations_client,
     service_api_client,
@@ -46,16 +45,13 @@ from app.main.forms import (
     AdminServiceRateLimitForm,
     AdminServiceSMSAllowanceForm,
     AdminSetEmailBrandingForm,
-    AdminSetLetterBrandingForm,
     AdminSetOrganisationForm,
     ChooseEmailBrandingForm,
-    ChooseLetterBrandingForm,
     EstimateUsageForm,
     RenameServiceForm,
     SearchByNameForm,
     ServiceContactDetailsForm,
     ServiceEditInboundNumberForm,
-    ServiceLetterContactBlockForm,
     ServiceOnOffSettingForm,
     ServiceReplyToEmailForm,
     ServiceSmsSenderForm,
@@ -76,7 +72,6 @@ from app.utils.user import (
 PLATFORM_ADMIN_SERVICE_PERMISSIONS = OrderedDict([
     ('inbound_sms', {'title': 'Receive inbound SMS', 'requires': 'sms', 'endpoint': '.service_set_inbound_number'}),
     ('email_auth', {'title': 'Email authentication'}),
-    ('international_letters', {'title': 'Send international letters', 'requires': 'letter'}),
 ])
 
 
@@ -132,7 +127,6 @@ def estimate_usage(service_id):
     form = EstimateUsageForm(
         volume_email=current_service.volume_email,
         volume_sms=current_service.volume_sms,
-        volume_letter=current_service.volume_letter,
         consent_to_research={
             True: 'yes',
             False: 'no',
@@ -143,7 +137,6 @@ def estimate_usage(service_id):
         current_service.update(
             volume_email=form.volume_email.data,
             volume_sms=form.volume_sms.data,
-            volume_letter=form.volume_letter.data,
             consent_to_research=(form.consent_to_research.data == 'yes'),
         )
         return redirect(url_for(
@@ -607,27 +600,6 @@ def service_set_international_sms(service_id):
     )
 
 
-@main.route("/services/<uuid:service_id>/service-settings/set-international-letters", methods=['GET', 'POST'])
-@user_has_permissions('manage_service')
-def service_set_international_letters(service_id):
-    form = ServiceOnOffSettingForm(
-        'Send letters to international addresses',
-        enabled=current_service.has_permission('international_letters'),
-    )
-    if form.validate_on_submit():
-        current_service.force_permission(
-            'international_letters',
-            on=form.enabled.data,
-        )
-        return redirect(
-            url_for(".service_settings", service_id=service_id)
-        )
-    return render_template(
-        'views/service-settings/set-international-letters.html',
-        form=form,
-    )
-
-
 @main.route("/services/<uuid:service_id>/service-settings/set-inbound-sms", methods=['GET'])
 @user_has_permissions('manage_service')
 def service_set_inbound_sms(service_id):
@@ -636,24 +608,11 @@ def service_set_inbound_sms(service_id):
     )
 
 
-@main.route("/services/<uuid:service_id>/service-settings/set-letters", methods=['GET'])
-@user_has_permissions('manage_service')
-def service_set_letters(service_id):
-    return redirect(
-        url_for(
-            '.service_set_channel',
-            service_id=current_service.id,
-            channel='letter',
-        ),
-        code=301,
-    )
-
-
 @main.route("/services/<uuid:service_id>/service-settings/set-<channel>", methods=['GET', 'POST'])
 @user_has_permissions('manage_service')
 def service_set_channel(service_id, channel):
 
-    if channel not in {'email', 'sms', 'letter'}:
+    if channel not in {'email', 'sms'}:
         abort(404)
 
     form = ServiceSwitchChannelForm(
@@ -682,103 +641,6 @@ def service_set_auth_type(service_id):
     return render_template(
         'views/service-settings/set-auth-type.html',
     )
-
-
-@main.route("/services/<uuid:service_id>/service-settings/letter-contacts", methods=['GET'])
-@user_has_permissions('manage_service', 'manage_api_keys')
-def service_letter_contact_details(service_id):
-    letter_contact_details = service_api_client.get_letter_contacts(service_id)
-    return render_template(
-        'views/service-settings/letter-contact-details.html',
-        letter_contact_details=letter_contact_details)
-
-
-@main.route("/services/<uuid:service_id>/service-settings/letter-contact/add", methods=['GET', 'POST'])
-@user_has_permissions('manage_service')
-def service_add_letter_contact(service_id):
-    form = ServiceLetterContactBlockForm()
-    first_contact_block = current_service.count_letter_contact_details == 0
-    from_template = request.args.get('from_template')
-    if form.validate_on_submit():
-        new_letter_contact = service_api_client.add_letter_contact(
-            current_service.id,
-            contact_block=form.letter_contact_block.data.replace('\r', '') or None,
-            is_default=first_contact_block if first_contact_block else form.is_default.data
-        )
-        if from_template:
-            service_api_client.update_service_template_sender(
-                service_id,
-                from_template,
-                new_letter_contact['data']['id'],
-            )
-            return redirect(
-                url_for('.view_template', service_id=service_id, template_id=from_template)
-            )
-        return redirect(url_for('.service_letter_contact_details', service_id=service_id))
-    return render_template(
-        'views/service-settings/letter-contact/add.html',
-        form=form,
-        first_contact_block=first_contact_block,
-        back_link=(
-            url_for('main.view_template', template_id=from_template, service_id=current_service.id)
-            if from_template
-            else url_for('.service_letter_contact_details', service_id=current_service.id)
-        ),
-    )
-
-
-@main.route(
-    "/services/<uuid:service_id>/service-settings/letter-contact/<uuid:letter_contact_id>/edit",
-    methods=['GET', 'POST'],
-    endpoint="service_edit_letter_contact",
-)
-@main.route(
-    "/services/<uuid:service_id>/service-settings/letter-contact/<uuid:letter_contact_id>/delete",
-    methods=['GET'],
-    endpoint="service_confirm_delete_letter_contact",
-)
-@user_has_permissions('manage_service')
-def service_edit_letter_contact(service_id, letter_contact_id):
-    letter_contact_block = current_service.get_letter_contact_block(letter_contact_id)
-    form = ServiceLetterContactBlockForm(
-        letter_contact_block=letter_contact_block['contact_block']
-    )
-    if request.method == 'GET':
-        form.is_default.data = letter_contact_block['is_default']
-    if form.validate_on_submit():
-        current_service.edit_letter_contact_block(
-            id=letter_contact_id,
-            contact_block=form.letter_contact_block.data.replace('\r', '') or None,
-            is_default=letter_contact_block['is_default'] or form.is_default.data
-        )
-        return redirect(url_for('.service_letter_contact_details', service_id=service_id))
-
-    if (request.endpoint == "main.service_confirm_delete_letter_contact"):
-        flash("Are you sure you want to delete this contact block?", 'delete')
-    return render_template(
-        'views/service-settings/letter-contact/edit.html',
-        form=form,
-        letter_contact_id=letter_contact_block['id'])
-
-
-@main.route("/services/<uuid:service_id>/service-settings/letter-contact/make-blank-default")
-@user_has_permissions('manage_service')
-def service_make_blank_default_letter_contact(service_id):
-    current_service.remove_default_letter_contact_block()
-    return redirect(url_for('.service_letter_contact_details', service_id=service_id))
-
-
-@main.route(
-    "/services/<uuid:service_id>/service-settings/letter-contact/<uuid:letter_contact_id>/delete",
-    methods=['POST'],
-)
-@user_has_permissions('manage_service')
-def service_delete_letter_contact(service_id, letter_contact_id):
-    service_api_client.delete_letter_contact(
-        service_id=current_service.id,
-        letter_contact_id=letter_contact_id,
-    )
-    return redirect(url_for('.service_letter_contact_details', service_id=current_service.id))
 
 
 @main.route("/services/<uuid:service_id>/service-settings/sms-sender", methods=['GET'])
@@ -956,51 +818,6 @@ def service_preview_email_branding(service_id):
     )
 
 
-@main.route("/services/<uuid:service_id>/service-settings/set-letter-branding", methods=['GET', 'POST'])
-@user_is_platform_admin
-def service_set_letter_branding(service_id):
-    letter_branding = letter_branding_client.get_all_letter_branding()
-
-    form = AdminSetLetterBrandingForm(
-        all_branding_options=get_branding_as_value_and_label(letter_branding),
-        current_branding=current_service.letter_branding_id,
-    )
-
-    if form.validate_on_submit():
-        return redirect(url_for(
-            '.service_preview_letter_branding',
-            service_id=service_id,
-            branding_style=form.branding_style.data,
-        ))
-
-    return render_template(
-        'views/service-settings/set-letter-branding.html',
-        form=form,
-        search_form=SearchByNameForm()
-    )
-
-
-@main.route("/services/<uuid:service_id>/service-settings/preview-letter-branding", methods=['GET', 'POST'])
-@user_is_platform_admin
-def service_preview_letter_branding(service_id):
-    branding_style = request.args.get('branding_style')
-
-    form = AdminPreviewBrandingForm(branding_style=branding_style)
-
-    if form.validate_on_submit():
-        current_service.update(
-            letter_branding=form.branding_style.data
-        )
-        return redirect(url_for('.service_settings', service_id=service_id))
-
-    return render_template(
-        'views/service-settings/preview-letter-branding.html',
-        form=form,
-        service_id=service_id,
-        action=url_for('main.service_preview_letter_branding', service_id=service_id),
-    )
-
-
 @main.route("/services/<uuid:service_id>/service-settings/link-service-to-organisation", methods=['GET', 'POST'])
 @user_is_platform_admin
 def link_service_to_organisation(service_id):
@@ -1153,46 +970,6 @@ def email_branding_something_else(service_id):
         'views/service-settings/branding/email-branding-something-else.html',
         form=form,
         branding_options=ChooseEmailBrandingForm(current_service)
-    )
-
-
-@main.route("/services/<uuid:service_id>/service-settings/letter-branding", methods=['GET', 'POST'])
-@user_has_permissions('manage_service')
-def letter_branding_request(service_id):
-    form = ChooseLetterBrandingForm(current_service)
-    from_template = request.args.get('from_template')
-    branding_name = current_service.letter_branding_name
-    if form.validate_on_submit():
-        ticket_message = render_template(
-            'support-tickets/branding-request.txt',
-            current_branding=branding_name,
-            branding_requested=dict(form.options.choices)[form.options.data],
-            detail=form.something_else.data,
-        )
-        ticket = NotifySupportTicket(
-            subject=f'Letter branding request - {current_service.name}',
-            message=ticket_message,
-            ticket_type=NotifySupportTicket.TYPE_QUESTION,
-            user_name=current_user.name,
-            user_email=current_user.email_address,
-            org_id=current_service.organisation_id,
-            org_type=current_service.organisation_type,
-            service_id=current_service.id
-        )
-        zendesk_client.send_ticket_to_zendesk(ticket)
-        flash((
-            'Thanks for your branding request. We’ll get back to you '
-            'within one working day.'
-        ), 'default')
-        return redirect(url_for(
-            '.view_template', service_id=current_service.id, template_id=from_template
-        ) if from_template else url_for('.service_settings', service_id=current_service.id))
-
-    return render_template(
-        'views/service-settings/branding/letter-branding-options.html',
-        form=form,
-        branding_name=branding_name,
-        from_template=from_template
     )
 
 

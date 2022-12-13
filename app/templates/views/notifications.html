@@ -5,13 +5,8 @@
 {% from "components/form.html" import form_wrapper %}
 {% from "components/button/macro.njk" import govukButton %}
 
-{% set title_status = (
-  'Failed '
-  if status == 'failed' and message_type == 'letter'
-  else ''
-) %}
 {% set page_title = (
-  (title_status + 99|message_count_label(message_type, suffix='')) | capitalize
+  (99|message_count_label(message_type, suffix='')) | capitalize
   if current_user.has_permissions('view_activity')
   else 'Sent messages'
 ) %}
@@ -23,15 +18,12 @@
 {% block maincolumn_content %}
 
   {{ page_header(page_title) }}
-  {% if not message_type == "letter" %}
-
-    {{ ajax_block(
-      partials,
-      url_for('.get_notifications_as_json', service_id=current_service.id, message_type=message_type, status=status),
-      'counts'
-    ) }}
-
-  {% endif %}
+  
+  {{ ajax_block(
+    partials,
+    url_for('.get_notifications_as_json', service_id=current_service.id, message_type=message_type, status=status),
+    'counts'
+  ) }}
 
   {% call form_wrapper(
     action=url_for('.view_notifications', service_id=current_service.id, message_type=message_type),

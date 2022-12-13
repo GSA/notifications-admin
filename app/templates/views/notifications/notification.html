@@ -21,23 +21,15 @@
       1|message_count_label(template.template_type, suffix='') | capitalize
     ) }}
     <p class="govuk-body">
-      {% if is_precompiled_letter %}
-        {% if created_by %}
-          Uploaded
-        {% else %}
-          Provided as PDF
-        {% endif %}
+      {% if help %}
+        ‘{{ template.name }}’
       {% else %}
-        {% if help %}
-          ‘{{ template.name }}’
-        {% else %}
-          <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.view_template', service_id=current_service.id, template_id=template.id) }}">‘{{ template.name }}’</a>
-        {% endif %}
-        was sent
+        <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.view_template', service_id=current_service.id, template_id=template.id) }}">‘{{ template.name }}’</a>
       {% endif %}
+      was sent
       {% if job and job.original_file_name != 'Report' %}
         {% set destination =
-          {'letter': 'an address', 'email': 'an email address', 'sms': 'a phone number'} %}
+          {'email': 'an email address', 'sms': 'a phone number'} %}
         to {{ destination[template.template_type] }} from
         <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.view_job', service_id=current_service.id, job_id=job.id) }}">{{ job.original_file_name }}</a>
       {% elif created_by %}
@@ -46,7 +38,7 @@
       {{ created_at|format_datetime_human }}
     </p>
 
-    <div class="{{ 'letter-sent' if template.template_type == 'letter' else '' }}">
+    <div class="">
       {{ template|string }}
     </div>
 

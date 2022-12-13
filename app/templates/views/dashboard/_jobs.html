@@ -7,7 +7,7 @@
     caption="Recent files uploaded",
     caption_visible=False,
     empty_message=(
-      'Upload a letter and Notify will print, pack and post it for you.' if current_service.has_permission('letter') else 'You have not uploaded any files yet.'
+      'You have not uploaded any files yet.'
     ),
     field_headings=[
       'File',
@@ -62,29 +62,12 @@
             suffix='waiting to send'
           )
         ) }}
-      {% elif item.template_type == 'letter' %}
-        {{ big_number(
-          item.notification_count,
-          smallest=True,
-          label=item.notification_count|message_count_label(
-            item.template_type,
-            suffix=''
-          )
-        ) }}
       {% elif item.upload_type == 'contact_list' %}
         {{ big_number(
           item.row_count,
           smallest=True,
           label="saved {}".format(item.row_count|recipient_count_label(item.template_type))
         ) }}
-      {% elif item.pdf_letter %}
-        <p class="govuk-body letter-recipient-summary">
-          {% for line in item.recipient.splitlines() %}
-            {% if loop.index < 3 %}
-              {{ line }}<br>
-            {% endif %}
-          {% endfor %}
-        </p>
       {% else %}
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-third">
