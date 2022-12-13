@@ -100,7 +100,7 @@ class Development(Config):
     LOGO_UPLOAD_BUCKET = _default_s3_credentials('local-public-logos-tools')
 
     # credential overrides
-    DANGEROUS_SALT = 'dev-notify-salt'
+    DANGEROUS_SALT = 'development-notify-salt'
     SECRET_KEY = 'dev-notify-secret-key'  # nosec B105 - only used in development
     # ADMIN_CLIENT_USER_NAME is called ADMIN_CLIENT_ID in api repo, they should match
     ADMIN_CLIENT_USER_NAME = 'notify-admin'
