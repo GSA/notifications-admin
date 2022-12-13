@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6cd359a61ee2f811f07d9e9fd28bf5f9a983315363aabef81d54f984f14c2c98"
+            "sha256": "407f000846ac854dc6648aa384fa90a5ab5577c2f0a90d7b7e4285347c47f091"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -570,9 +570,8 @@
             "version": "==6.3.0"
         },
         "notifications-utils": {
-            "branch": "main",
             "editable": true,
-            "git": "https://github.com/GSA/notifications-utils",
+            "git": "https://github.com/GSA/notifications-utils.git",
             "ref": "553f4affbef4d0a9e94e9bcf2ceb5c81d92bf032"
         },
         "numpy": {
