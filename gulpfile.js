@@ -161,7 +161,7 @@ const sass = () => {
     .pipe(plugins.prettyerror())
     .pipe(plugins.sass.sync({
       includePaths: [
-        // paths.npm + 'govuk-elements-sass/public/sass/',
+        paths.npm + 'govuk-elements-sass/public/sass/',
         paths.toolkit + 'stylesheets/',
         paths.govuk_frontend,
         paths.npm

@@ -2,6 +2,15 @@
 {% from "components/banner.html" import banner %}
 {% from "components/cookie-banner.html" import cookie_banner %}
 
+{% block headIcons %}
+  <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="{{ asset_url('images/favicon.ico') }}" type="image/x-icon" />
+  <link rel="mask-icon" href="{{ asset_url('images/govuk-mask-icon.svg') }}" color="{{ themeColor | default('#0b0c0c') }}"> {# Hardcoded value of $govuk-black #}
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ asset_url('images/govuk-apple-touch-icon-180x180.png') }}">
+  <link rel="apple-touch-icon" sizes="167x167" href="{{ asset_url('images/govuk-apple-touch-icon-167x167.png') }}">
+  <link rel="apple-touch-icon" sizes="152x152" href="{{ asset_url('images/govuk-apple-touch-icon-152x152.png') }}">
+  <link rel="apple-touch-icon" href="{{ asset_url('images/govuk-apple-touch-icon.png') }}">
+{% endblock %}
+
 {% block head %}
   {%- for font in font_paths %}
   <link rel="preload" href="{{ asset_url(font, with_querystring_hash=False) }}" as="font" type="font/woff2" crossorigin>
@@ -38,7 +47,94 @@
 {% endblock %}
 
 {% block header %}
+  {% if current_user.is_authenticated %}
+    {% if current_user.platform_admin %}
+      {% set navigation = [
+        {
+          "href": url_for('main.support'),
+          "text": "Support",
+          "active": header_navigation.is_selected('support')
+        },
+        {
+          "href": url_for('main.documentation'),
+          "text": "Documentation",
+          "active": header_navigation.is_selected('documentation')
+        },
+        {
+          "href": url_for('main.user_profile'),
+          "text": current_user.name,
+          "active": header_navigation.is_selected('user-profile')
+        },
+        {
+          "href": url_for('main.platform_admin_splash_page'),
+          "text": "Platform admin",
+          "active": header_navigation.is_selected('platform-admin')
+        },
+        {
+          "href": url_for('main.sign_out'),
+          "text": "Sign out"
+        }
+      ] %}
+    {% else %}
+      {% set navigation = [
+        {
+          "href": url_for('main.support'),
+          "text": "Support",
+          "active": header_navigation.is_selected('support')
+        },
+        {
+          "href": url_for('main.documentation'),
+          "text": "Documentation",
+          "active": header_navigation.is_selected('documentation')
+        },
+        {
+          "href": url_for('main.user_profile'),
+          "text": current_user.name,
+          "active": header_navigation.is_selected('user-profile')
+        },
+        {
+          "href": url_for('main.sign_out'),
+          "text": "Sign out"
+        }
+      ] %}
+    {% endif %}
+  {% else %}
+    {% set navigation = [
+      {
+        "href": url_for('main.support'),
+        "text": "Support",
+        "active": header_navigation.is_selected('support')
+      },
+      {
+        "href": url_for('main.features'),
+        "text": "Features",
+        "active": header_navigation.is_selected('features')
+      },
+      {
+        "href": url_for('main.pricing'),
+        "text": "Pricing",
+        "active": header_navigation.is_selected('pricing')
+      },
+      {
+        "href": url_for('main.documentation'),
+        "text": "Documentation",
+        "active": header_navigation.is_selected('documentation')
+      },
+      {
+        "href": url_for('main.sign_in'),
+        "text": "Sign in",
+        "active": header_navigation.is_selected('sign-in')
+      }
+    ] %}
+  {% endif %}
 
+  {{ govukHeader({
+    "homepageUrl": url_for('main.show_accounts_or_dashboard'),
+    "productName": "Notify",
+    "navigation": navigation,
+    "navigationClasses": "govuk-header__navigation--end",
+    "assetsPath": asset_path + "images"
+  }) }}
 {% endblock %}
 
 {% block footer %}
