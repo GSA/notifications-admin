@@ -50,6 +50,10 @@ const copy = {
     return src(paths.src + 'error_pages/**/*')
       .pipe(dest(paths.dist + 'error_pages/'))
   },
+  fonts: () => {
+    return src(paths.src + 'fonts/**/*')
+      .pipe(dest(paths.dist + 'fonts/'));
+  }
 };
 
 
@@ -225,6 +229,7 @@ const lint = {
 // Default: compile everything
 const defaultTask = parallel(
   parallel(
+    copy.fonts,
     images
   ),
   series(
