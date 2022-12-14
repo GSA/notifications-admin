@@ -50,12 +50,6 @@ const copy = {
     return src(paths.src + 'error_pages/**/*')
       .pipe(dest(paths.dist + 'error_pages/'))
   },
-  govuk_frontend: {
-    fonts: () => {
-      return src(paths.govuk_frontend + 'assets/fonts/**/*')
-        .pipe(dest(paths.dist + 'fonts/'));
-    }
-  },
   leaflet: {
     js: () => {
       return src(paths.npm + 'leaflet/dist/leaflet.js')
@@ -238,7 +232,6 @@ const lint = {
 // Default: compile everything
 const defaultTask = parallel(
   parallel(
-    copy.govuk_frontend.fonts,
     copy.leaflet.js,
     images
   ),
