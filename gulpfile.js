@@ -50,12 +50,6 @@ const copy = {
     return src(paths.src + 'error_pages/**/*')
       .pipe(dest(paths.dist + 'error_pages/'))
   },
-  leaflet: {
-    js: () => {
-      return src(paths.npm + 'leaflet/dist/leaflet.js')
-        .pipe(dest(paths.dist + 'javascripts/'))
-    }
-  }
 };
 
 
@@ -149,7 +143,6 @@ const javascripts = () => {
 const sass = () => {
   return src([
     paths.src + '/stylesheets/main*.scss',
-    paths.src + '/stylesheets/map.scss',
     paths.src + '/stylesheets/print.scss'
   ])
     .pipe(plugins.prettyerror())
@@ -232,7 +225,6 @@ const lint = {
 // Default: compile everything
 const defaultTask = parallel(
   parallel(
-    copy.leaflet.js,
     images
   ),
   series(
