@@ -2,15 +2,6 @@
 {% from "components/banner.html" import banner %}
 {% from "components/cookie-banner.html" import cookie_banner %}
 
-{% block headIcons %}
-  <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="{{ asset_url('images/favicon.ico') }}" type="image/x-icon" />
-  <link rel="mask-icon" href="{{ asset_url('images/govuk-mask-icon.svg') }}" color="{{ themeColor | default('#0b0c0c') }}"> {# Hardcoded value of $govuk-black #}
-  <link rel="apple-touch-icon" sizes="180x180" href="{{ asset_url('images/govuk-apple-touch-icon-180x180.png') }}">
-  <link rel="apple-touch-icon" sizes="167x167" href="{{ asset_url('images/govuk-apple-touch-icon-167x167.png') }}">
-  <link rel="apple-touch-icon" sizes="152x152" href="{{ asset_url('images/govuk-apple-touch-icon-152x152.png') }}">
-  <link rel="apple-touch-icon" href="{{ asset_url('images/govuk-apple-touch-icon.png') }}">
-{% endblock %}
-
 {% block head %}
   {%- for font in font_paths %}
   <link rel="preload" href="{{ asset_url(font, with_querystring_hash=False) }}" as="font" type="font/woff2" crossorigin>
@@ -47,6 +38,7 @@
 {% endblock %}
 
 {% block header %}
+
 {% endblock %}
 
 {% block footer %}

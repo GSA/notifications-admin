@@ -54,57 +54,6 @@ const copy = {
     fonts: () => {
       return src(paths.govuk_frontend + 'assets/fonts/**/*')
         .pipe(dest(paths.dist + 'fonts/'));
-    },
-    templates: (cb) => {
-      // Put names of GOVUK Frontend templates here
-      const _templates = [
-        'template',
-        'skip-link',
-        'header',
-        'footer',
-        'back-link',
-        'details',
-        'button',
-        'error-message',
-        'fieldset',
-        'hint',
-        'label',
-        'checkboxes',
-        'radios',
-        'input',
-        'inset-text',
-        'textarea'
-      ];
-      let done = 0;
-
-      // Copy the templates for each component across, preserving their folder structure
-      _templates.forEach(name => {
-        let _src = [
-          paths.govuk_frontend + 'components/' + name + '/macro.njk',
-          paths.govuk_frontend + 'components/' + name + '/template.njk',
-          paths.govuk_frontend + 'components/' + name + '/_' + name + '.scss',
-          paths.govuk_frontend + 'components/' + name + '/README.md',
-          paths.govuk_frontend + 'components/' + name + '/macro-options.json'
-        ];
-        let _dest = paths.templates + 'vendor/govuk-frontend/components/' + name;
-
-        // template.njk isn't a component
-        if (name === 'template') {
-          _src = paths.govuk_frontend + 'template.njk';
-          _dest = paths.templates + 'vendor/govuk-frontend';
-        }
-
-        src(_src)
-          .pipe(
-            dest(_dest)
-              .on('end', () => { // resolve promise if all copied
-                done = done + 1;
-                if (done === _templates.length) {
-                  cb();
-                }
-              })
-          )
-      });
     }
   },
   leaflet: {
@@ -212,7 +161,7 @@ const sass = () => {
     .pipe(plugins.prettyerror())
     .pipe(plugins.sass.sync({
       includePaths: [
-        paths.npm + 'govuk-elements-sass/public/sass/',
+        // paths.npm + 'govuk-elements-sass/public/sass/',
         paths.toolkit + 'stylesheets/',
         paths.govuk_frontend,
         paths.npm
@@ -290,7 +239,6 @@ const lint = {
 const defaultTask = parallel(
   parallel(
     copy.govuk_frontend.fonts,
-    copy.govuk_frontend.templates,
     copy.leaflet.js,
     images
   ),

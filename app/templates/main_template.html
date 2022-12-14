@@ -1,29 +1,26 @@
-{% from "./components/skip-link/macro.njk" import govukSkipLink -%}
-{# specify absolute url for the static assets folder e.g. http://wwww.domain.com/assets #}
-{%- set assetUrl = assetUrl | default(assetPath) -%}
 <!DOCTYPE html>
 <html lang="{{ htmlLang | default('en') }}" class="govuk-template {{ htmlClasses }}">
   <head>
     <meta charset="utf-8" />
-    <title>{% block pageTitle %}GOV.UK - The best place to find government services and information{% endblock %}</title>
+    <title>{% block pageTitle %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="{{ themeColor | default('#0b0c0c') }}" /> {# Hardcoded value of $govuk-black #}
     {# Ensure that older IE versions always render with the correct rendering engine #}
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     {% block headIcons %}
-      <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="{{ assetPath | default('/assets') }}/images/favicon.ico" type="image/x-icon" />
-      <link rel="mask-icon" href="{{ assetPath | default('/assets') }}/images/govuk-mask-icon.svg" color="{{ themeColor | default('#0b0c0c') }}"> {# Hardcoded value of $govuk-black #}
-      <link rel="apple-touch-icon" sizes="180x180" href="{{ assetPath | default('/assets') }}/images/govuk-apple-touch-icon-180x180.png">
-      <link rel="apple-touch-icon" sizes="167x167" href="{{ assetPath | default('/assets') }}/images/govuk-apple-touch-icon-167x167.png">
-      <link rel="apple-touch-icon" sizes="152x152" href="{{ assetPath | default('/assets') }}/images/govuk-apple-touch-icon-152x152.png">
-      <link rel="apple-touch-icon" href="{{ assetPath | default('/assets') }}/images/govuk-apple-touch-icon.png">
+    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="{{ asset_url('images/favicon.ico') }}" type="image/x-icon" />
+    <link rel="mask-icon" href="{{ asset_url('images/govuk-mask-icon.svg') }}" color="{{ themeColor | default('#0b0c0c') }}"> {# Hardcoded value of $govuk-black #}
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset_url('images/govuk-apple-touch-icon-180x180.png') }}">
+    <link rel="apple-touch-icon" sizes="167x167" href="{{ asset_url('images/govuk-apple-touch-icon-167x167.png') }}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ asset_url('images/govuk-apple-touch-icon-152x152.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset_url('images/govuk-apple-touch-icon.png') }}">
     {% endblock %}
 
     {% block head %}{% endblock %}
     {# The default og:image is added below head so that scrapers see any custom metatags first, and this is just a fallback #}
     {# image url needs to be absolute e.g. http://wwww.domain.com/.../govuk-opengraph-image.png #}
-    <meta property="og:image" content="{{ assetUrl | default('/assets') }}/images/govuk-opengraph-image.png">
+    <!-- <meta property="og:image" content="{{ assetUrl | default('/assets') }}/images/govuk-opengraph-image.png"> -->
   </head>
   <body class="govuk-template__body {{ bodyClasses }}">
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
@@ -110,12 +107,7 @@
                         Sign in
                       </a>
                     </li>
-                
                 {% endif %}
-
-
-
-                
               </ul>
             </nav>
         </div>
@@ -133,15 +125,10 @@
 
     <footer class="govuk-footer js-footer" role="contentinfo">
         <div class="govuk-width-container ">
-          
             <div class="govuk-footer__navigation">
-              
                 <div class="govuk-footer__section">
                   <h2 class="govuk-footer__heading govuk-heading-m">About Notify</h2>
-                  
-                    
                     <ul class="govuk-footer__list govuk-footer__list--columns-1">
-                      
                         
                           <li class="govuk-footer__list-item">
                             <a class="govuk-footer__link" href="{{ url_for('main.features') }}">
@@ -149,105 +136,67 @@
                             </a>
                           </li>
                         
-                      
-                        
                           <li class="govuk-footer__list-item">
-                            <a class="govuk-footer__link" href="/features/roadmap">
+                            <a class="govuk-footer__link" href="{{ url_for('main.roadmap') }}">
                               Roadmap
                             </a>
                           </li>
-                        
-                      
-                        
                           <li class="govuk-footer__list-item">
-                            <a class="govuk-footer__link" href="/features/security">
+                            <a class="govuk-footer__link" href="{{ url_for('main.security') }}">
                               Security
                             </a>
                           </li>
-                        
-                      
-                        
                           <li class="govuk-footer__list-item">
-                            <a class="govuk-footer__link" href="/features/terms">
+                            <a class="govuk-footer__link" href="{{ url_for('main.terms') }}">
                               Terms of use
                             </a>
                           </li>
-                        
-                      
                     </ul>
-                  
                 </div>
-              
                 <div class="govuk-footer__section">
                   <h2 class="govuk-footer__heading govuk-heading-m">Using Notify</h2>
-                  
-                    
                     <ul class="govuk-footer__list govuk-footer__list--columns-1">
-                      
-                        
-                          <li class="govuk-footer__list-item">
-                            <a class="govuk-footer__link" href="/using-notify/get-started">
-                              Get started
-                            </a>
-                          </li>
-                        
-                      
-                        
-                          <li class="govuk-footer__list-item">
-                            <a class="govuk-footer__link" href="/pricing">
-                              Pricing
-                            </a>
-                          </li>
-                        
-                      
-                        
-                          <li class="govuk-footer__list-item">
-                            <a class="govuk-footer__link" href="/using-notify/trial-mode">
-                              Trial mode
-                            </a>
-                          </li>
-                        
-                      
-                        
-                          <li class="govuk-footer__list-item">
-                            <a class="govuk-footer__link" href="/using-notify/delivery-status">
-                              Delivery status
-                            </a>
-                          </li>
-                        
-                      
-                        
-                          <li class="govuk-footer__list-item">
-                            <a class="govuk-footer__link" href="/using-notify/guidance">
-                              Guidance
-                            </a>
-                          </li>
-                        
-                      
-                        
-                          <li class="govuk-footer__list-item">
-                            <a class="govuk-footer__link" href="/documentation">
-                              API documentation
-                            </a>
-                          </li>
-                        
-                      
+                        <li class="govuk-footer__list-item">
+                        <a class="govuk-footer__link" href="{{ url_for('main.get_started') }}">
+                            Get started
+                        </a>
+                        </li>
+                        <li class="govuk-footer__list-item">
+                        <a class="govuk-footer__link" href="{{ url_for('main.pricing') }}">
+                            Pricing
+                        </a>
+                        </li>
+                        <li class="govuk-footer__list-item">
+                        <a class="govuk-footer__link" href="{{ url_for('main.trial_mode_new') }}">
+                            Trial mode
+                        </a>
+                        </li>
+                        <li class="govuk-footer__list-item">
+                        <a class="govuk-footer__link" href="{{ url_for('main.message_status') }}">
+                            Delivery status
+                        </a>
+                        </li>
+                        <li class="govuk-footer__list-item">
+                        <a class="govuk-footer__link" href="{{ url_for('main.guidance_index') }}">
+                            Guidance
+                        </a>
+                        </li>
+                    
+                        <li class="govuk-footer__list-item">
+                        <a class="govuk-footer__link" href="{{ url_for('main.documentation') }}">
+                            API documentation
+                        </a>
+                        </li>
                     </ul>
-                  
                 </div>
-              
                 <div class="govuk-footer__section">
                   <h2 class="govuk-footer__heading govuk-heading-m">Support</h2>
-                  
-                    
                     <ul class="govuk-footer__list govuk-footer__list--columns-1">
-                      
-                        
-                          <li class="govuk-footer__list-item">
-                            <a class="govuk-footer__link" href="/support">
-                              Contact us
-                            </a>
-                          </li>
+                        <li class="govuk-footer__list-item">
+                        <a class="govuk-footer__link" href="{{ url_for('main.support') }}">
+                            Contact us
+                        </a>
+                        </li>
                         
                       
                     </ul>
@@ -256,18 +205,12 @@
               
             </div>
             <hr class="govuk-footer__section-break">
-          
           <div class="govuk-footer__meta">
             <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
-              
                 <h2 class="govuk-visually-hidden">Support links</h2>
-                
-                
                   <div class="govuk-footer__meta-custom">
                     Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="govuk-footer__link">Technology Transformation Service</a>
                   </div>
-                
-              
             </div>
           </div>
         </div>
