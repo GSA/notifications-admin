@@ -1,8 +1,8 @@
 {% extends "withnav_template.html" %}
 {% from "components/banner.html" import banner_wrapper %}
 {% from "components/page-header.html" import page_header %}
-{% from "components/back-link/macro.njk" import govukBackLink %}
-{% from "components/button/macro.njk" import govukButton %}
+{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/uk_components/button/macro.njk" import govukButton %}
 
 {% block service_page_title %}
   {{ "Error" if error else "Preview of ‘{}’".format(template.name) }}

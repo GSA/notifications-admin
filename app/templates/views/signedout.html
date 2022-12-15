@@ -1,5 +1,5 @@
 {% extends "fullwidth_template.html" %}
-{% from "components/button/macro.njk" import govukButton %}
+{% from "components/uk_components/button/macro.njk" import govukButton %}
 
 {% block meta %}
   <meta name="description" content="U.S. Notify lets you send text messages and email to your users. Try it now if you work in federal, state or local government.">
@@ -14,14 +14,7 @@
   <div class="product-page-intro">
     <div class="product-page-intro-wrapper" data-module="homepage">
       <nav class="breadcrumbs breadcrumbs--inverse" aria-label="Breadcrumbs">
-       <ol itemscope itemtype="http://schema.org/BreadcrumbList">
-         <li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-           <a class="govuk-link govuk-link--no-visited-state" href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" itemprop="item"><span itemprop="name">TTS Solutions</span></a>
-         </li>
-         <li class="breadcrumbs__item breadcrumbs__item--active" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-           <a class="govuk-link govuk-link--no-visited-state" href="#main" itemprop="item"><span itemprop="name">U.S. Notify</span></a>
-         </li>
-       </ol>
+
       </nav>
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
@@ -163,7 +156,7 @@
   </div> -->
   <div class="product-page-section">
     <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-column-full">
         <h2 class="with-keyline">
           The team
         </h2>
@@ -174,12 +167,6 @@
           <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.support') }}">Contact us</a> if you have a question or want
           to give feedback.
         </p>
-      </div>
-      <div class="govuk-grid-column-one-half">
-        <img
-          src="{{ asset_url('images/product/team.jpg') }}"
-          alt="A photo of the U.S. Notify team gathered around a big screen. One team member is pointing at a graph on the screen."
-        >
       </div>
     </div>
   </div>
