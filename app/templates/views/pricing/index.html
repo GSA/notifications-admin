@@ -1,7 +1,7 @@
 {% from "components/content-metadata.html" import content_metadata %}
 {% from "components/table.html" import mapping_table, row, text_field, field, row_heading %}
 {% from "components/live-search.html" import live_search %}
-{% from "components/details/macro.njk" import govukDetails %}
+{% from "components/uk_components/details/macro.njk" import govukDetails %}
 
 {% extends "content_template.html" %}
 
@@ -19,10 +19,9 @@
       }
     ) }}
 
-  <p class="govuk-body">US Notify is free to use unless you:</p>
+  <p class="govuk-body">U.S. Notify is free to use unless you:</p>
   <ul class="list list-bullet">
     <li>exceed your <a class="govuk-link govuk-link--no-visited-state" href="#text-messages">free text message allowance</a></li>
-    <!-- <li>send <a class="govuk-link govuk-link--no-visited-state" href="#letters">letters</a></li> -->
   </ul>
 
   <p class="govuk-body">You’ll only pay for the additional text messages that you send. There’s no monthly charge, no setup fee and no procurement cost.</p>
@@ -228,40 +227,5 @@
     "id": "sms-pricing-details",
     "html": smsIntRates
   }) }}
-
-  <!-- <h2 class="heading-medium" id="letters">Letters</h2>
-  <p class="govuk-body">The cost of sending a letter depends on the postage you choose and how many sheets of paper you need.</p>
-
-  <p class="govuk-body">Prices include:</p>
-  <ul class="list list-bullet">
-     <li>paper</li>
-     <li>postage</li>
-     <li>double-sided colour printing</li>
-     <li>C5 size envelopes with an address window</li>
-  </ul> -->
-
-  <!-- <div>
-    {% call mapping_table(
-      caption='Letter pricing',
-      field_headings=['Paper', 'Second class', 'First class', 'International'],
-      field_headings_visible=True,
-      caption_visible=False
-    ) %}
-      {% for sheets, second, first, international in [
-        ('1 sheet', '41p', '63p', '96p'),
-        ('2 sheets', '46p', '68p', '£1.04'),
-        ('3 sheets', '51p', '73p', '£1.12'),
-        ('4 sheets', '56p', '78p', '£1.20'),
-        ('5 sheets', '61p', '83p', '£1.28'),
-      ] %}
-        {% call row() %}
-          {% call row_heading() %} {{ sheets }} {% endcall %}
-          {{ text_field(second + ' + VAT') }}
-          {{ text_field(first + ' + VAT') }}
-          {{ text_field(international + ' + VAT') }}
-        {% endcall %}
-      {% endfor %}
-    {% endcall %}
-  </div> -->
 
 {% endblock %}

@@ -99,7 +99,7 @@ def test_view_conversation(
     )
 
     assert normalize_spaces(page.select_one('title').text) == (
-        'Received text message – service one – US Notify'
+        'Received text message – service one – U.S. Notify'
     )
     assert normalize_spaces(page.select_one('h1').text) == (
         '07123 456789'
@@ -298,7 +298,6 @@ def test_conversation_reply_shows_templates(
         _template('sms', 'sms_template_one', parent=INV_PARENT_FOLDER_ID),
         _template('sms', 'sms_template_two'),
         _template('sms', 'sms_template_three', parent=VIS_PARENT_FOLDER_ID),
-        _template('letter', 'letter_template_one')
     ]}
     mocker.patch('app.service_api_client.get_service_templates', return_value=all_templates)
     mock_get_template_folders.return_value = [

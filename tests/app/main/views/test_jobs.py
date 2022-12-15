@@ -38,24 +38,23 @@ def test_old_jobs_hub_redirects(
         (
             '',
             [
-                'created', 'pending', 'sending', 'pending-virus-check',
-                'delivered', 'sent', 'returned-letter',
-                'failed', 'temporary-failure', 'permanent-failure', 'technical-failure',
-                'virus-scan-failed', 'validation-failed'
+                'created', 'pending', 'sending', 'delivered', 'sent', 'failed',
+                'temporary-failure', 'permanent-failure', 'technical-failure',
+                'validation-failed'
             ]
         ),
         (
             'sending',
-            ['sending', 'created', 'pending', 'pending-virus-check']
+            ['sending', 'created', 'pending']
         ),
         (
             'delivered',
-            ['delivered', 'sent', 'returned-letter']
+            ['delivered', 'sent']
         ),
         (
             'failed',
             [
-                'failed', 'temporary-failure', 'permanent-failure', 'technical-failure', 'virus-scan-failed',
+                'failed', 'temporary-failure', 'permanent-failure', 'technical-failure',
                 'validation-failed'
             ]
         )
@@ -234,7 +233,7 @@ def test_should_show_job_with_sending_limit_exceeded_status(
         "Notify cannot send these messages because you have reached your daily limit. You can only send 1,000 messages per day."  # noqa
     )
     assert normalize_spaces(page.select('main p')[2].text) == (
-        "Upload this spreadsheet again tomorrow or contact the US Notify team to raise the limit."
+        "Upload this spreadsheet again tomorrow or contact the U.S. Notify team to raise the limit."
     )
 
 

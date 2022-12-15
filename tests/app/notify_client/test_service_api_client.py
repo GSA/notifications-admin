@@ -125,14 +125,6 @@ def test_get_precompiled_template(mocker):
         {'template_type': 'email'},
         1,
     ),
-    (
-        [
-            {'template_type': 'email'},
-            {'template_type': 'sms'},
-        ],
-        {'template_type': 'letter'},
-        0,
-    ),
 ))
 def test_client_returns_count_of_service_templates(
     notify_admin,
@@ -313,44 +305,6 @@ def test_client_returns_count_of_service_templates(
             ],
             {'data_from': 'api'},
         ),
-        (
-            service_api_client.get_returned_letter_summary,
-            [SERVICE_ONE_ID],
-            [
-                call('service-{}-returned-letters-summary'.format(SERVICE_ONE_ID))
-            ],
-            None,
-            [
-                call('service/{}/returned-letter-summary'.format(SERVICE_ONE_ID))
-            ],
-            [
-                call(
-                    'service-{}-returned-letters-summary'.format(SERVICE_ONE_ID),
-                    '{"data_from": "api"}',
-                    ex=604800,
-                )
-            ],
-            {'data_from': 'api'},
-        ),
-        (
-            service_api_client.get_returned_letter_statistics,
-            [SERVICE_ONE_ID],
-            [
-                call('service-{}-returned-letters-statistics'.format(SERVICE_ONE_ID))
-            ],
-            None,
-            [
-                call('service/{}/returned-letter-statistics'.format(SERVICE_ONE_ID))
-            ],
-            [
-                call(
-                    'service-{}-returned-letters-statistics'.format(SERVICE_ONE_ID),
-                    '{"data_from": "api"}',
-                    ex=604800,
-                )
-            ],
-            {'data_from': 'api'},
-        ),
     ]
 )
 def test_returns_value_from_cache(
@@ -396,9 +350,6 @@ def test_returns_value_from_cache(
     (service_api_client, 'add_reply_to_email_address', [SERVICE_ONE_ID, ''], {}),
     (service_api_client, 'update_reply_to_email_address', [SERVICE_ONE_ID] + [''] * 2, {}),
     (service_api_client, 'delete_reply_to_email_address', [SERVICE_ONE_ID, ''], {}),
-    (service_api_client, 'add_letter_contact', [SERVICE_ONE_ID, ''], {}),
-    (service_api_client, 'update_letter_contact', [SERVICE_ONE_ID] + [''] * 2, {}),
-    (service_api_client, 'delete_letter_contact', [SERVICE_ONE_ID, ''], {}),
     (service_api_client, 'add_sms_sender', [SERVICE_ONE_ID, ''], {}),
     (service_api_client, 'update_sms_sender', [SERVICE_ONE_ID] + [''] * 2, {}),
     (service_api_client, 'delete_sms_sender', [SERVICE_ONE_ID, ''], {}),
@@ -438,9 +389,6 @@ def test_deletes_service_cache(
         'service-{}-templates'.format(SERVICE_ONE_ID),
     ]),
     ('update_service_template_sender', [SERVICE_ONE_ID, FAKE_TEMPLATE_ID, 'foo'], [
-        'service-{}-templates'.format(SERVICE_ONE_ID),
-    ]),
-    ('update_service_template_postage', [SERVICE_ONE_ID, FAKE_TEMPLATE_ID, 'first'], [
         'service-{}-templates'.format(SERVICE_ONE_ID),
     ]),
     ('delete_service_template', [SERVICE_ONE_ID, FAKE_TEMPLATE_ID], [
@@ -563,8 +511,6 @@ def test_client_updates_service_with_allowed_attributes(
         'free_sms_fragment_limit',
         'go_live_at',
         'go_live_user',
-        'letter_branding',
-        'letter_contact_block',
         'message_limit',
         'name',
         'notes',
@@ -577,7 +523,6 @@ def test_client_updates_service_with_allowed_attributes(
         'restricted',
         'sms_sender',
         'volume_email',
-        'volume_letter',
         'volume_sms',
     ]
 

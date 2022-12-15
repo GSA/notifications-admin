@@ -1,7 +1,8 @@
 from itertools import chain
 
 permission_mappings = {
-    'send_messages': ['send_texts', 'send_emails', 'send_letters'],
+    # TODO: consider turning off email-sending permissions during SMS pilot
+    'send_messages': ['send_texts', 'send_emails'],
     'manage_templates': ['manage_templates'],
     'manage_service': ['manage_users', 'manage_settings'],
     'manage_api_keys': ['manage_api_keys'],

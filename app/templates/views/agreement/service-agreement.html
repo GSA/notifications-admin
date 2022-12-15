@@ -1,7 +1,7 @@
 {% extends "withnav_template.html" %}
 {% from "components/page-header.html" import page_header %}
-{% from "components/button/macro.njk" import govukButton %}
-{% from "components/back-link/macro.njk" import govukBackLink %}
+{% from "components/uk_components/button/macro.njk" import govukButton %}
+{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
 
 {% block service_page_title %}
   Accept our data sharing and financial agreement
@@ -19,7 +19,7 @@
     {{ page_header('Accept our data sharing and financial agreement')}}
 
     <p class="govuk-body">
-      Before you can use US Notify, you need to accept our data sharing and financial agreement.
+      Before you can use U.S. Notify, you need to accept our data sharing and financial agreement.
     </p>
     <p class="govuk-body">
       This must be done by, or on behalf of, someone with the authority to sign contracts for {{ current_service.organisation.name }}.

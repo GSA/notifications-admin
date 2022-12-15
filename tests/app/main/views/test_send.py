@@ -15,11 +15,7 @@ from flask import url_for
 from freezegun import freeze_time
 from notifications_python_client.errors import HTTPError
 from notifications_utils.recipients import RecipientCSV
-from notifications_utils.template import (
-    LetterImageTemplate,
-    LetterPreviewTemplate,
-    SMSPreviewTemplate,
-)
+from notifications_utils.template import SMSPreviewTemplate
 from xlrd.biffh import XLRDError
 from xlrd.xldate import (
     XLDateAmbiguous,
@@ -29,7 +25,6 @@ from xlrd.xldate import (
 )
 
 from tests import (
-    template_json,
     validate_route_permission,
     validate_route_permission_with_client,
 )
@@ -41,7 +36,6 @@ from tests.conftest import (
     create_multiple_sms_senders,
     create_template,
     mock_get_service_email_template,
-    mock_get_service_letter_template,
     mock_get_service_template,
     normalize_spaces,
 )
@@ -347,39 +341,6 @@ def test_example_spreadsheet(
     assert page.select_one('input[type=file]')['accept'] == '.csv,.xlsx,.xls,.ods,.xlsm,.tsv'
 
 
-def test_example_spreadsheet_for_letters(
-    client_request,
-    service_one,
-    mocker,
-    mock_get_service_letter_template_with_placeholders,
-    fake_uuid,
-):
-    service_one['permissions'] += ['letter']
-    mocker.patch('app.main.views.send.get_page_count_for_letter', return_value=1)
-
-    page = client_request.get(
-        '.send_messages',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid
-    )
-
-    assert list(zip(*[
-        [normalize_spaces(cell.text) for cell in page.select('tbody tr')[row].select('td')]
-        for row in (0, 1)
-    ])) == [
-        ('1', '2'),
-        ('address line 1', 'A. Name'),
-        ('address line 2', '123 Example Street'),
-        ('address line 3', 'XM4 5HQ'),
-        ('address line 4', ''),
-        ('address line 5', ''),
-        ('address line 6', ''),
-        ('address line 7', ''),
-        ('name', 'example'),
-        ('date', 'example'),
-    ]
-
-
 @pytest.mark.parametrize(
     "filename, acceptable_file, expected_status",
     list(zip(test_spreadsheet_files, repeat(True), repeat(302))) +
@@ -673,165 +634,6 @@ def test_upload_csv_file_with_very_long_placeholder_shows_check_page_with_errors
         'Message is too long'
     )
     assert page.select('tbody tr td')[1]['colspan'] == '2'
-
-
-def test_upload_csv_file_with_bad_postal_address_shows_check_page_with_errors(
-    client_request,
-    service_one,
-    mocker,
-    mock_get_service_letter_template,
-    mock_s3_set_metadata,
-    mock_s3_get_metadata,
-    mock_s3_upload,
-    mock_get_users_by_service,
-    mock_get_service_statistics,
-    mock_get_job_doesnt_exist,
-    mock_get_jobs,
-    fake_uuid,
-):
-    service_one['permissions'] += ['letter']
-    mocker.patch('app.main.views.send.get_page_count_for_letter', return_value=9)
-    mocker.patch(
-        'app.main.views.send.s3download',
-        return_value='''
-            address line 1,     address line 3,  address line 6,
-            Firstname Lastname, 123 Example St., SW1A 1AA
-            Firstname Lastname, 123 Example St., SW!A !AA
-            Firstname Lastname, 123 Example St., France
-                              , 123 Example St., SW!A !AA
-            "1\n2\n3\n4\n5\n6\n7\n8"
-            =Firstname Lastname, 123 Example St., SW1A 1AA
-        '''
-    )
-
-    page = client_request.post(
-        'main.send_messages',
-        service_id=service_one['id'],
-        template_id=fake_uuid,
-        _data={'file': (BytesIO(''.encode('utf-8')), 'example.csv')},
-        _content_type='multipart/form-data',
-        _follow_redirects=True,
-    )
-
-    assert normalize_spaces(
-        page.select_one('.banner-dangerous').text
-    ) == (
-        'There’s a problem with example.csv '
-        'You need to fix 5 addresses.'
-    )
-    assert [
-        normalize_spaces(row.text) for row in page.select('tbody tr')
-    ] == [
-        '3 Last line of the address must be a real UK postcode',
-        'Firstname Lastname 123 Example St. SW!A !AA',
-
-        '4 You do not have permission to send letters to other countries',
-        'Firstname Lastname 123 Example St. France',
-
-        '5 Address must be at least 3 lines long',
-        '123 Example St. SW!A !AA',
-
-        '6 Address must be no more than 7 lines long',
-        '1 2 3 4 5 6 7 8',
-
-        '7 Address lines must not start with any of the following characters: @ ( ) = [ ] ” \\ / , < > ~',
-        '=Firstname Lastname 123 Example St. SW1A 1AA',
-    ]
-
-
-def test_upload_csv_file_with_international_letters_permission_shows_appropriate_errors(
-    client_request,
-    service_one,
-    mocker,
-    mock_get_service_letter_template,
-    mock_s3_set_metadata,
-    mock_s3_get_metadata,
-    mock_s3_upload,
-    mock_get_users_by_service,
-    mock_get_service_statistics,
-    mock_get_job_doesnt_exist,
-    mock_get_jobs,
-    fake_uuid,
-):
-    service_one['permissions'] += ['letter', 'international_letters']
-    mocker.patch('app.main.views.send.get_page_count_for_letter', return_value=9)
-    mocker.patch(
-        'app.main.views.send.s3download',
-        return_value='''
-            address line 1,     address line 3,  address line 6,
-            Firstname Lastname, 123 Example St., SW1A 1AA
-            Firstname Lastname, 123 Example St., France
-            Firstname Lastname, 123 Example St., SW!A !AA
-            Firstname Lastname, 123 Example St., Not France
-        '''
-    )
-
-    page = client_request.post(
-        'main.send_messages',
-        service_id=service_one['id'],
-        template_id=fake_uuid,
-        _data={'file': (BytesIO(''.encode('utf-8')), 'example.csv')},
-        _content_type='multipart/form-data',
-        _follow_redirects=True
-    )
-
-    assert normalize_spaces(
-        page.select_one('.banner-dangerous').text
-    ) == (
-        'There’s a problem with example.csv '
-        'You need to fix 2 addresses.'
-    )
-    assert [
-        normalize_spaces(row.text) for row in page.select('tbody tr')
-    ] == [
-        '4 Last line of the address must be a UK postcode or another country',
-        'Firstname Lastname 123 Example St. SW!A !AA',
-
-        '5 Last line of the address must be a UK postcode or another country',
-        'Firstname Lastname 123 Example St. Not France',
-    ]
-
-
-@pytest.mark.parametrize('row_index, expected_postage', (
-    (2, 'Postage: second class'),
-    (3, 'Postage: international'),
-))
-def test_upload_csv_file_with_international_letters_permission_shows_correct_postage(
-    client_request,
-    service_one,
-    mocker,
-    mock_get_service_letter_template,
-    mock_s3_get_metadata,
-    mock_s3_upload,
-    mock_get_users_by_service,
-    mock_get_service_statistics,
-    mock_get_job_doesnt_exist,
-    mock_get_jobs,
-    fake_uuid,
-    row_index,
-    expected_postage,
-):
-    service_one['permissions'] += ['letter', 'international_letters']
-    mocker.patch('app.main.views.send.get_page_count_for_letter', return_value=9)
-    mocker.patch(
-        'app.main.views.send.s3download',
-        return_value='''
-            address line 1,     address line 3,  address line 6,
-            Firstname Lastname, 123 Example St., SW1A 1AA
-            Firstname Lastname, 123 Example St., France
-        '''
-    )
-
-    page = client_request.get(
-        'main.check_messages',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        upload_id=fake_uuid,
-        row_index=row_index,
-        _test_page_title=False,
-    )
-
-    assert normalize_spaces(page.select_one('.letter-postage').text) == expected_postage
 
 
 @pytest.mark.parametrize('file_contents, expected_error,', [
@@ -1140,42 +942,6 @@ def test_upload_valid_csv_shows_preview_and_table(
             assert normalize_spaces(str(row.select('td')[index + 1])) == cell
 
 
-def test_upload_valid_csv_only_sets_meta_if_filename_known(
-    client_request,
-    mocker,
-    mock_get_live_service,
-    mock_get_service_letter_template,
-    mock_get_users_by_service,
-    mock_get_service_statistics,
-    mock_get_job_doesnt_exist,
-    mock_get_jobs,
-    mock_s3_get_metadata,
-    mock_s3_set_metadata,
-    mock_template_preview,
-    fake_uuid,
-):
-
-    mocker.patch('app.main.views.send.s3download', return_value="""
-        addressline1, addressline2, postcode
-        House       , 1 Street    , SW1A 1AA
-    """)
-    mocker.patch(
-        'app.main.views.send.get_page_count_for_letter',
-        return_value=5,
-    )
-
-    client_request.get(
-        'no_cookie.check_messages_preview',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        upload_id=fake_uuid,
-        filetype='pdf',
-        _test_page_title=False,
-    )
-
-    assert len(mock_s3_set_metadata.call_args_list) == 0
-
-
 def test_show_all_columns_if_there_are_duplicate_recipient_columns(
     client_request,
     mocker,
@@ -1261,7 +1027,7 @@ def test_404_for_previewing_a_row_out_of_range(
     )
 
 
-@pytest.mark.parametrize('template_type', ['sms', 'email', 'letter'])
+@pytest.mark.parametrize('template_type', ['sms', 'email'])
 def test_send_one_off_step_redirects_to_start_if_session_not_setup(
     mocker,
     client_request,
@@ -1335,7 +1101,6 @@ def test_send_one_off_has_correct_page_title(
     mocker.patch('app.user_api_client.get_user', return_value=user)
     template_data = create_template(template_type='sms', name='Two week reminder', content='Hi there ((name))')
     mocker.patch('app.service_api_client.get_service_template', return_value={'data': template_data})
-    mocker.patch('app.main.views.send.get_page_count_for_letter', return_value=9)
 
     page = client_request.get(
         'main.send_one_off',
@@ -1404,11 +1169,6 @@ def test_send_one_off_shows_placeholders_in_correct_order(
         partial(url_for, 'main.send_one_off_to_myself')
     ),
     (
-        create_active_user_with_permissions(),
-        'letter',
-        None, None
-    ),
-    (
         create_active_caseworking_user(),
         'sms',
         None, None
@@ -1430,7 +1190,6 @@ def test_send_one_off_has_skip_link(
     mocker.patch('app.user_api_client.get_user', return_value=user)
     template_data = create_template(template_id=fake_uuid, template_type=template_type)
     mocker.patch('app.service_api_client.get_service_template', return_value={'data': template_data})
-    mocker.patch('app.main.views.send.get_page_count_for_letter', return_value=9)
 
     page = client_request.get(
         'main.send_one_off_step',
@@ -1456,7 +1215,6 @@ def test_send_one_off_has_skip_link(
 @pytest.mark.parametrize('template_type, expected_sticky', [
     ('sms', False),
     ('email', True),
-    ('letter', False),
 ])
 def test_send_one_off_has_sticky_header_for_email(
     mocker,
@@ -1469,7 +1227,6 @@ def test_send_one_off_has_sticky_header_for_email(
 ):
     template_data = create_template(template_type=template_type, content='((body))')
     mocker.patch('app.service_api_client.get_service_template', return_value={'data': template_data})
-    mocker.patch('app.main.views.send.get_page_count_for_letter', return_value=9)
 
     page = client_request.get(
         'main.send_one_off_step',
@@ -1480,38 +1237,6 @@ def test_send_one_off_has_sticky_header_for_email(
     )
 
     assert bool(page.select('.js-stick-at-top-when-scrolling')) == expected_sticky
-
-
-def test_send_one_off_has_sticky_header_for_letter_on_non_address_placeholders(
-    mocker,
-    client_request,
-    fake_uuid,
-    mock_get_live_service,
-):
-    template_data = create_template(template_type='letter', content='((body))')
-    mocker.patch('app.service_api_client.get_service_template', return_value={'data': template_data})
-    mocker.patch('app.main.views.send.get_page_count_for_letter', return_value=9)
-
-    with client_request.session_transaction() as session:
-        session['recipient'] = ''
-        session['placeholders'] = {
-            'address line 1': 'foo',
-            'address line 2': 'bar',
-            'address line 3': '',
-            'address line 4': '',
-            'address line 5': '',
-            'address line 6': '',
-            'postcode': 'SW1 1AA',
-        }
-
-    page = client_request.get(
-        'main.send_one_off_step',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        step_index=7,  # letter template has 7 placeholders – we’re at the end
-        _follow_redirects=True,
-    )
-    assert page.select('.js-stick-at-top-when-scrolling')
 
 
 @pytest.mark.parametrize('user', (
@@ -1722,7 +1447,6 @@ def test_send_one_off_redirects_to_start_if_you_skip_steps(
     platform_admin_user,
     service_one,
     fake_uuid,
-    mock_get_service_letter_template,
     mock_s3_upload,
     mock_get_users_by_service,
     mock_get_service_statistics,
@@ -1740,7 +1464,7 @@ def test_send_one_off_redirects_to_start_if_you_skip_steps(
         'main.send_one_off_step',
         service_id=service_one['id'],
         template_id=fake_uuid,
-        step_index=7,  # letter template has 7 placeholders – we’re at the end
+        step_index=7,
         _expected_redirect=url_for(
             'main.send_one_off',
             service_id=service_one['id'],
@@ -1919,43 +1643,6 @@ def test_send_one_off_sms_message_back_link_with_multiple_placeholders(
     )
 
 
-def test_send_one_off_letter_redirects_to_right_url(
-    client_request,
-    platform_admin_user,
-    fake_uuid,
-    mock_get_service_letter_template,
-    mock_s3_upload,
-    mock_get_users_by_service,
-    mock_get_service_statistics,
-    mocker,
-):
-    mocker.patch('app.main.views.send.get_page_count_for_letter', return_value=9)
-    with client_request.session_transaction() as session:
-        session['recipient'] = ''
-        session['placeholders'] = {
-            'address line 1': 'foo',
-            'address line 2': 'bar',
-            'address line 3': '',
-            'address line 4': '',
-            'address line 5': '',
-            'address line 6': '',
-            'address line 7': 'SW1 1AA',
-        }
-
-    client_request.login(platform_admin_user)
-    client_request.get(
-        'main.send_one_off_step',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        step_index=7,  # letter template has 7 placeholders – we’re at the end
-        _expected_redirect=url_for(
-            'main.check_notification',
-            service_id=SERVICE_ONE_ID,
-            template_id=fake_uuid,
-        ),
-    )
-
-
 def test_send_one_off_populates_field_from_session(
     client_request,
     mocker,
@@ -1979,148 +1666,6 @@ def test_send_one_off_populates_field_from_session(
     )
 
     assert page.select('input')[0]['value'] == 'Jo'
-
-
-def test_send_one_off_back_link_populates_address_textarea(
-    client_request,
-    mocker,
-    mock_get_service_letter_template,
-    mock_template_preview,
-    fake_uuid,
-):
-    with client_request.session_transaction() as session:
-        session['recipient'] = None
-        session['placeholders'] = {'address line 1': 'foo', 'address line 2': 'bar', 'address line 3': ''}
-
-    # imagine someone hit the back button to go from line 3 page to line 2 page
-    page = client_request.get(
-        'main.send_one_off_step',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        step_index=2,
-        _follow_redirects=True
-    )
-
-    assert page.select_one('h1').text.strip() == 'Send ‘Two week reminder’'
-
-    form = page.select_one('form')
-    assert form.select_one('label').text.strip() == 'Address'
-
-    textarea = form.select_one('textarea')
-    assert textarea.attrs['name'] == 'address'
-    assert textarea.text == '\r\nfoo\nbar'
-
-
-@pytest.mark.parametrize('placeholder', (
-    'address_line_1',
-    'address_line_2',
-    'address_line_3',
-    'address_line_4',
-    'address_line_5',
-    'address_line_6',
-    'address_line_7',
-    'postcode',
-))
-def test_send_one_off_letter_copes_with_placeholder_from_address_block(
-    client_request,
-    mocker,
-    fake_uuid,
-    mock_template_preview,
-    no_letter_contact_blocks,
-    placeholder,
-):
-    mocker.patch(
-        'app.service_api_client.get_service_template',
-        return_value={'data': template_json(
-            SERVICE_ONE_ID,
-            fake_uuid,
-            name="Awkward letter",
-            type_="letter",
-            subject=f"Hello (({placeholder}))",
-            content="We need to talk about ((thing))",
-        )},
-    )
-    with client_request.session_transaction() as session:
-        session['recipient'] = None
-        session['placeholders'] = {}
-
-    page = client_request.post(
-        'main.send_one_off_letter_address',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _data={'address': '''
-            foo
-            bar
-            SW1A 1AA
-        '''},
-        _follow_redirects=True,
-    )
-
-    assert normalize_spaces(page.select_one('form label').text) == 'thing'
-    assert page.select_one('form input[type=text]')['name'] == 'placeholder_value'
-    assert page.select_one('form input[type=text]').get('value') is None
-
-    with client_request.session_transaction() as session:
-        assert session['placeholders'] == {
-            'address_line_1': 'foo',
-            'address_line_2': 'bar',
-            'address_line_3': '',
-            'address_line_4': '',
-            'address_line_5': '',
-            'address_line_6': '',
-            'address_line_7': 'SW1A 1AA',
-            'postcode': 'SW1A 1AA',
-        }
-
-    back_link = page.select_one('.govuk-back-link')['href']
-    assert back_link == url_for(
-        'main.send_one_off_step',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        step_index=1,
-    )
-    previous_page = client_request.get_url(back_link, _follow_redirects=True)
-
-    # We’ve skipped past the address placeholder and gone back to the
-    # address block
-    assert normalize_spaces(previous_page.select_one('form label').text) == 'Address'
-
-
-@pytest.mark.parametrize('last_line, expected_postage', (
-    ('France', 'Postage: international'),
-    ('SW1A 1AA', 'Postage: second class'),
-))
-def test_send_one_off_letter_shows_international_postage(
-    client_request,
-    service_one,
-    mocker,
-    fake_uuid,
-    mock_get_service_letter_template_with_placeholders,
-    mock_template_preview,
-    no_letter_contact_blocks,
-    last_line,
-    expected_postage,
-):
-    service_one['permissions'] += ['letter', 'international_letters']
-
-    with client_request.session_transaction() as session:
-        session['recipient'] = None
-        session['placeholders'] = {}
-
-    page = client_request.post(
-        'main.send_one_off_letter_address',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _data={'address': f'''
-            123 Example Street
-            Paris
-            {last_line}
-        '''},
-        _follow_redirects=True,
-    )
-
-    assert normalize_spaces(page.select_one('form label').text) == 'name'
-    assert normalize_spaces(page.select_one('.letter-postage').text) == expected_postage
 
 
 def test_send_one_off_sms_message_puts_submitted_data_in_session(
@@ -2155,47 +1700,6 @@ def test_send_one_off_sms_message_puts_submitted_data_in_session(
         assert session['placeholders'] == {'phone number': '07700 900762', 'name': 'Jo'}
 
 
-@pytest.mark.parametrize('filetype', ['pdf', 'png'])
-def test_send_test_works_as_letter_preview(
-    filetype,
-    client_request,
-    platform_admin_user,
-    mock_get_service_letter_template,
-    mock_get_users_by_service,
-    mock_get_service_statistics,
-    service_one,
-    fake_uuid,
-    mocker,
-):
-    service_one['permissions'] = ['letter']
-    mocker.patch('app.service_api_client.get_service', return_value={"data": service_one})
-    mocker.patch('app.main.views.send.get_page_count_for_letter', return_value=1)
-    mocked_preview = mocker.patch(
-        'app.main.views.send.TemplatePreview.from_utils_template',
-        return_value='foo'
-    )
-
-    service_id = service_one['id']
-    template_id = fake_uuid
-    with client_request.session_transaction() as session:
-        session['placeholders'] = {'address_line_1': 'Jo Lastname'}
-    client_request.login(platform_admin_user)
-    response = client_request.get_response(
-        'no_cookie.send_test_preview',
-        service_id=service_id,
-        template_id=template_id,
-        filetype=filetype,
-    )
-
-    mock_get_service_letter_template.assert_called_with(service_id, template_id, None)
-
-    assert response.get_data(as_text=True) == 'foo'
-    assert mocked_preview.call_args[0][0].id == template_id
-    assert type(mocked_preview.call_args[0][0]) == LetterImageTemplate
-    assert mocked_preview.call_args[0][0].values == {'addressline1': 'Jo Lastname'}
-    assert mocked_preview.call_args[0][1] == filetype
-
-
 def test_send_one_off_clears_session(
     client_request,
     mocker,
@@ -2219,222 +1723,6 @@ def test_send_one_off_clears_session(
     with client_request.session_transaction() as session:
         assert session['recipient'] is None
         assert session['placeholders'] == {}
-
-
-def test_send_one_off_redirects_to_letter_address(client_request, fake_uuid, mock_get_service_letter_template):
-    with client_request.session_transaction() as session:
-        session['placeholders'] = {'foo': 'some old data that we dont care about'}
-
-    client_request.get(
-        'main.send_one_off',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _expected_redirect=url_for(
-            'main.send_one_off_letter_address',
-            service_id=SERVICE_ONE_ID,
-            template_id=fake_uuid,
-        )
-    )
-    # make sure it cleared session first
-    with client_request.session_transaction() as session:
-        assert session['recipient'] is None
-        assert session['placeholders'] == {}
-
-
-def test_send_one_off_letter_address_shows_form(
-    client_request,
-    fake_uuid,
-    mock_get_service_letter_template,
-    mock_template_preview,
-):
-    with client_request.session_transaction() as session:
-        session['recipient'] = None
-        session['placeholders'] = {}
-
-    page = client_request.get(
-        'main.send_one_off_letter_address',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid
-    )
-
-    assert page.select_one('h1').text.strip() == 'Send ‘Two week reminder’'
-
-    form = page.select_one('form')
-
-    assert form['data-module'] == 'autofocus'
-    assert form['data-force-focus'] == 'True'
-
-    assert form.select_one('label').text.strip() == 'Address'
-    assert form.select_one('textarea')['name'] == 'address'
-    assert form.select_one('textarea')['data-module'] == 'enhanced-textbox'
-    assert form.select_one('textarea')['data-highlight-placeholders'] == 'false'
-    assert form.select_one('textarea')['rows'] == '4'
-
-    upload_link = form.select_one('a')
-
-    assert upload_link.text.strip() == 'Upload a list of addresses'
-    assert upload_link['href'] == url_for(
-        'main.send_messages',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-    )
-
-    assert (
-        page.find_all('a', {'class': 'govuk-back-link'})[0]['href']
-    ) == url_for('main.view_template', service_id=SERVICE_ONE_ID, template_id=fake_uuid)
-
-
-@pytest.mark.parametrize(['form_data', 'expected_placeholders'], [
-    # minimal
-    ('\n'.join(['a', 'b', 'sw1a1aa']), {
-        'address_line_1': 'a',
-        'address_line_2': 'b',
-        'address_line_3': '',
-        'address_line_4': '',
-        'address_line_5': '',
-        'address_line_6': '',
-        'address_line_7': 'SW1A 1AA',
-        'postcode': 'SW1A 1AA',
-    }),
-    # maximal
-    ('\n'.join(['a', 'b', 'c', 'd', 'e', 'f', 'sw1a1aa']), {
-        'address_line_1': 'a',
-        'address_line_2': 'b',
-        'address_line_3': 'c',
-        'address_line_4': 'd',
-        'address_line_5': 'e',
-        'address_line_6': 'f',
-        'address_line_7': 'SW1A 1AA',
-        'postcode': 'SW1A 1AA',
-    }),
-    # it ignores empty lines and strips whitespace from each line.
-    # It also strips extra whitespace from the middle of lines.
-    ('\n  a\ta  \n\n\n      \n\n\n\nb  b   \r\n sw1a\u00A01aa \n\n', {
-        'address_line_1': 'a a',
-        'address_line_2': 'b b',
-        'address_line_3': '',
-        'address_line_4': '',
-        'address_line_5': '',
-        'address_line_6': '',
-        'address_line_7': 'SW1A 1AA',
-        'postcode': 'SW1A 1AA',
-    }),
-])
-def test_send_one_off_letter_address_populates_address_fields_in_session(
-    client_request,
-    fake_uuid,
-    mock_get_service_letter_template,
-    mock_template_preview,
-    form_data,
-    expected_placeholders
-):
-    with client_request.session_transaction() as session:
-        session['recipient'] = None
-        session['placeholders'] = {}
-
-    client_request.post(
-        'main.send_one_off_letter_address',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _data={'address': form_data},
-        # there are no additional placeholders so go straight to the check page
-        _expected_redirect=url_for(
-            'main.check_notification',
-            service_id=SERVICE_ONE_ID,
-            template_id=fake_uuid,
-        ),
-    )
-    with client_request.session_transaction() as session:
-        assert session['placeholders'] == expected_placeholders
-
-
-@pytest.mark.parametrize('form_data, extra_permissions, expected_error_message', [
-    (
-        '',
-        [],
-        'Cannot be empty'
-    ),
-    (
-        'a\n\n\n\nb',
-        [],
-        'Address must be at least 3 lines long',
-    ),
-    (
-        '\n'.join(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']),
-        [],
-        'Address must be no more than 7 lines long'
-    ),
-    (
-        '\n'.join(['a', 'b', 'c', 'd', 'e', 'f', 'g']),
-        [],
-        'Last line of the address must be a real UK postcode',
-    ),
-    (
-        '\n'.join(['a', 'b', 'c', 'd', 'e', 'france']),
-        [],
-        'You do not have permission to send letters to other countries',
-    ),
-    (
-        '\n'.join(['a', 'b', 'c', 'd', 'e', 'f', 'g']),
-        ['international_letters'],
-        'Last line of the address must be a UK postcode or another country',
-    ),
-    (
-        'a\n(b\nSW1A 1AA',
-        [],
-        'Address lines must not start with any of the following characters: @ ( ) = [ ] ” \\ / , < > ~',
-    ),
-])
-def test_send_one_off_letter_address_rejects_bad_addresses(
-    client_request,
-    service_one,
-    fake_uuid,
-    mock_get_service_letter_template,
-    mock_template_preview,
-    form_data,
-    extra_permissions,
-    expected_error_message
-):
-    service_one['permissions'] += extra_permissions
-
-    with client_request.session_transaction() as session:
-        session['recipient'] = None
-        session['placeholders'] = {}
-
-    page = client_request.post(
-        'main.send_one_off_letter_address',
-        _data={'address': form_data},
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _expected_status=200
-    )
-
-    error = page.select('form .error-message')
-    assert normalize_spaces(error[0].text) == expected_error_message
-
-
-def test_send_one_off_letter_address_goes_to_next_placeholder(client_request, mock_template_preview, mocker):
-    with client_request.session_transaction() as session:
-        session['recipient'] = None
-        session['placeholders'] = {}
-
-    template_data = create_template(template_type='letter', content='((foo))')
-
-    mocker.patch('app.service_api_client.get_service_template', return_value={'data': template_data})
-
-    client_request.post(
-        'main.send_one_off_letter_address',
-        service_id=SERVICE_ONE_ID,
-        template_id=template_data['id'],
-        _data={'address': 'a\nb\nSW1A 1AA'},
-        # step 0-6 represent address line 1-6 and postcode. step 7 is the first non address placeholder
-        _expected_redirect=url_for(
-            'main.send_one_off_step',
-            service_id=SERVICE_ONE_ID,
-            template_id=template_data['id'],
-            step_index=7,
-        )
-    )
 
 
 def test_download_example_csv(
@@ -2613,41 +1901,6 @@ def test_test_message_can_only_be_sent_now(
     assert 'name="scheduled_for"' not in content
 
 
-def test_letter_can_only_be_sent_now(
-    client_request,
-    mocker,
-    mock_get_live_service,
-    mock_get_service_letter_template,
-    mock_get_users_by_service,
-    mock_get_service_statistics,
-    mock_s3_get_metadata,
-    mock_s3_set_metadata,
-    mock_get_job_doesnt_exist,
-    mock_get_jobs,
-    fake_uuid,
-):
-    mocker.patch(
-        'app.main.views.send.s3download',
-        return_value="addressline1, addressline2, postcode\na,b,sw1 1aa"
-    )
-    mocker.patch('app.main.views.send.set_metadata_on_csv_upload')
-    mocker.patch('app.main.views.send.get_page_count_for_letter', return_value=1)
-
-    page = client_request.get(
-        'main.check_messages',
-        service_id=SERVICE_ONE_ID,
-        upload_id=fake_uuid,
-        template_id=fake_uuid,
-    )
-
-    assert 'name="scheduled_for"' not in page
-    assert normalize_spaces(
-        page.select_one('main [type=submit]').text
-    ) == (
-        'Send 1 letter'
-    )
-
-
 def test_send_button_is_correctly_labelled(
     client_request,
     mocker,
@@ -2732,133 +1985,6 @@ def test_create_job_should_call_api(
         scheduled_for=when,
         contact_list_id=str(contact_list_id),
     )
-
-
-@pytest.mark.parametrize('filetype, extra_args, expected_values, expected_page', [
-    (
-        'png',
-        {},
-        {'postcode': 'abc123', 'addressline1': '123 street', 'result': 'pass'},
-        1
-    ),
-    (
-        'pdf',
-        {},
-        {'postcode': 'abc123', 'addressline1': '123 street', 'result': 'pass'},
-        None
-    ),
-    (
-        'png',
-        {'row_index': 2},
-        {'postcode': 'abc123', 'addressline1': '123 street', 'result': 'pass'},
-        1
-    ),
-    (
-        'png',
-        {'row_index': 3},
-        {'postcode': 'cba321', 'addressline1': '321 avenue', 'result': 'fail'},
-        1
-    ),
-    (
-        'png',
-        {'row_index': 3, 'page': 2},
-        {'postcode': 'cba321', 'addressline1': '321 avenue', 'result': 'fail'},
-        '2'
-    ),
-    (
-        # pdf expected page is always None
-        'pdf',
-        {'row_index': 3, 'page': 2},
-        {'postcode': 'cba321', 'addressline1': '321 avenue', 'result': 'fail'},
-        None
-    ),
-])
-def test_should_show_preview_letter_message(
-    filetype,
-    client_request,
-    platform_admin_user,
-    mock_get_service_letter_template,
-    mock_get_users_by_service,
-    mock_get_service_statistics,
-    mock_get_job_doesnt_exist,
-    mock_get_jobs,
-    service_one,
-    fake_uuid,
-    mocker,
-    extra_args,
-    expected_values,
-    expected_page
-):
-    service_one['permissions'] = ['letter']
-    mocker.patch('app.service_api_client.get_service', return_value={"data": service_one})
-    mock_page_count = mocker.patch('app.main.views.send.get_page_count_for_letter', return_value=1)
-
-    mocker.patch(
-        'app.main.views.send.s3download',
-        return_value='\n'.join(
-            ['address line 1, postcode, result'] +
-            ['123 street, abc123, pass'] +
-            ['321 avenue, cba321, fail']
-        )
-    )
-    mocker.patch(
-        'app.main.views.send.get_csv_metadata',
-        return_value={'original_file_name': f'example.{filetype}'},
-    )
-    mocked_preview = mocker.patch(
-        'app.main.views.send.TemplatePreview.from_utils_template',
-        return_value='foo'
-    )
-
-    service_id = service_one['id']
-    template_id = fake_uuid
-    with client_request.session_transaction() as session:
-        session['file_uploads'] = {
-            fake_uuid: {
-                'template_id': fake_uuid,
-                'notification_count': 1,
-                'valid': True
-            }
-        }
-
-    client_request.login(platform_admin_user)
-    response = client_request.get_response(
-        'no_cookie.check_messages_preview',
-        service_id=service_id,
-        template_id=fake_uuid,
-        upload_id=fake_uuid,
-        filetype=filetype,
-        **extra_args
-    )
-
-    mock_get_service_letter_template.assert_called_with(service_id, template_id, None)
-
-    assert response.get_data(as_text=True) == 'foo'
-    mocked_preview.assert_called_once()
-    assert mocked_preview.call_args[0][0].id == template_id
-    assert type(mocked_preview.call_args[0][0]) == LetterPreviewTemplate
-    assert mocked_preview.call_args[0][1] == filetype
-    assert mocked_preview.call_args[0][0].values == expected_values
-    assert mocked_preview.call_args[1] == {'page': expected_page}
-
-    mock_page_count.assert_called_with(ANY, expected_values)
-
-
-def test_dont_show_preview_letter_templates_for_bad_filetype(
-    client_request,
-    mock_get_service_template,
-    service_one,
-    fake_uuid
-):
-    client_request.get_response(
-        'no_cookie.check_messages_preview',
-        service_id=service_one['id'],
-        template_id=fake_uuid,
-        upload_id=fake_uuid,
-        filetype='blah',
-        _expected_status=404,
-    )
-    assert mock_get_service_template.called is False
 
 
 @pytest.mark.parametrize('route, response_code', [
@@ -2984,12 +2110,6 @@ def test_route_permissions_sending(
             partial(url_for, '.send_messages')
         ),
         (
-            'letter',
-            False,
-            dict(from_test=True),
-            partial(url_for, '.send_one_off')
-        ),
-        (
             'sms',
             True,
             dict(from_test=True),
@@ -3018,11 +2138,6 @@ def test_check_messages_back_link(
     content = 'Hi there ((name))' if has_placeholders else 'Hi there'
     template_data = create_template(template_id=fake_uuid, template_type=template_type, content=content)
     mocker.patch('app.service_api_client.get_service_template', return_value={'data': template_data})
-
-    mocker.patch(
-        'app.main.views.send.get_page_count_for_letter',
-        return_value=5,
-    )
 
     with client_request.session_transaction() as session:
         session['file_uploads'] = {
@@ -3137,173 +2252,6 @@ def test_check_messages_shows_trial_mode_error(
     )
 
 
-@pytest.mark.parametrize('restricted, error_should_be_shown', [
-    (True, True),
-    (False, False),
-])
-@pytest.mark.parametrize('number_of_rows, expected_error_message', [
-    (1, 'You cannot send this letter'),
-    (11, 'You cannot send these letters'),  # Less than trial mode limit
-    (111, 'You cannot send these letters'),  # More than trial mode limit
-])
-def test_check_messages_shows_trial_mode_error_for_letters(
-    client_request,
-    service_one,
-    mock_get_service_letter_template,
-    mock_has_permissions,
-    mock_get_users_by_service,
-    mock_get_service_statistics,
-    mock_get_job_doesnt_exist,
-    mock_get_jobs,
-    mock_s3_get_metadata,
-    mock_s3_set_metadata,
-    fake_uuid,
-    mocker,
-    restricted,
-    error_should_be_shown,
-    number_of_rows,
-    expected_error_message,
-):
-    service_one['restricted'] = restricted
-    mocker.patch('app.service_api_client.get_service', return_value={'data': service_one})
-
-    mocker.patch('app.main.views.send.s3download', return_value='\n'.join(
-        ['address_line_1,address_line_2,postcode,'] +
-        ['First Last,    123 Street,    SW1 1AA'] * number_of_rows
-    ))
-    mocker.patch(
-        'app.main.views.send.get_page_count_for_letter',
-        return_value=3,
-    )
-
-    with client_request.session_transaction() as session:
-        session['file_uploads'] = {
-            fake_uuid: {
-                'template_id': '',
-            }
-        }
-
-    page = client_request.get(
-        'main.check_messages',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        upload_id=fake_uuid,
-        _test_page_title=False,
-    )
-
-    error = page.select('.banner-dangerous')
-
-    if error_should_be_shown:
-        assert normalize_spaces(error[0].text) == (
-            '{} '
-            'In trial mode you can only preview how your letters will look'
-        ).format(expected_error_message)
-    else:
-        assert not error
-
-    assert len(page.select('.letter img')) == 3
-
-    if number_of_rows > 1:
-        assert page.select_one('.table-field-index a').text == '3'
-
-
-@pytest.mark.parametrize('number_of_rows, expected_error_message', [
-    (1, 'This letter is'),
-    (11, 'These letters are'),  # TODO: Pluralise too many pages error message for multiple letters
-])
-def test_check_messages_does_not_allow_to_send_letter_longer_than_10_pages(
-    client_request,
-    api_user_active,
-    mock_get_service_letter_template,
-    mock_has_permissions,
-    mock_get_users_by_service,
-    mock_get_service_statistics,
-    mock_get_job_doesnt_exist,
-    mock_get_jobs,
-    mock_s3_get_metadata,
-    mock_s3_set_metadata,
-    fake_uuid,
-    mocker,
-    mock_get_live_service,
-    number_of_rows,
-    expected_error_message,
-):
-    mocker.patch('app.main.views.send.s3download', return_value='\n'.join(
-        ['address_line_1,address_line_2,postcode,'] +
-        ['First Last,    123 Street,    SW1 1AA'] * number_of_rows
-    ))
-    mocker.patch(
-        'app.main.views.send.get_page_count_for_letter',
-        return_value=11,
-    )
-
-    with client_request.session_transaction() as session:
-        session['file_uploads'] = {
-            fake_uuid: {
-                'template_id': '',
-            }
-        }
-
-    page = client_request.get(
-        'main.check_messages',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        upload_id=fake_uuid,
-        _test_page_title=False,
-    )
-    assert page.find('h1', {"data-error-type": "letter-too-long"})
-
-    assert len(page.select('.letter img')) == 10  # if letter longer than 10 pages, only 10 first pages are displayed
-    assert not page.select('main [type=submit]')
-
-
-def test_check_messages_shows_data_errors_before_trial_mode_errors_for_letters(
-    mocker,
-    client_request,
-    mock_get_service_letter_template,
-    mock_has_permissions,
-    mock_get_users_by_service,
-    mock_get_service_statistics,
-    mock_get_job_doesnt_exist,
-    mock_get_jobs,
-    fake_uuid,
-    mock_s3_get_metadata,
-):
-
-    mocker.patch('app.main.views.send.s3download', return_value='\n'.join(
-        ['address_line_1,address_line_2,postcode,'] +
-        ['              ,              ,SW1 1AA'] +
-        ['              ,              ,SW1 1AA']
-    ))
-
-    mocker.patch(
-        'app.main.views.send.get_page_count_for_letter',
-        return_value=5,
-    )
-
-    with client_request.session_transaction() as session:
-        session['file_uploads'] = {
-            fake_uuid: {
-                'template_id': '',
-                'original_file_name': 'example.csv',
-            }
-        }
-
-    page = client_request.get(
-        'main.check_messages',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        upload_id=fake_uuid,
-        _test_page_title=False,
-    )
-
-    assert normalize_spaces(page.select_one('.banner-dangerous').text) == (
-        'There’s a problem with example.csv '
-        'You need to fix 2 addresses.'
-    )
-    assert not page.select('.table-field-index a')
-
-
 @pytest.mark.parametrize('uploaded_file_name', (
     pytest.param('applicants.ods'),  # normal job
     pytest.param('thisisatest.csv', marks=pytest.mark.xfail),  # different template version
@@ -3352,7 +2300,7 @@ def test_warns_if_file_sent_already(
 def test_check_messages_column_error_doesnt_show_optional_columns(
     mocker,
     client_request,
-    mock_get_service_letter_template,
+    mock_get_service_template,
     mock_has_permissions,
     fake_uuid,
     mock_get_users_by_service,
@@ -3366,11 +2314,6 @@ def test_check_messages_column_error_doesnt_show_optional_columns(
         ['address_line_1,address_line_2,foo'] +
         ['First Lastname,1 Example Road,SW1 1AA']
     ))
-
-    mocker.patch(
-        'app.main.views.send.get_page_count_for_letter',
-        return_value=5,
-    )
 
     with client_request.session_transaction() as session:
         session['file_uploads'] = {
@@ -3390,8 +2333,7 @@ def test_check_messages_column_error_doesnt_show_optional_columns(
 
     assert normalize_spaces(page.select_one('.banner-dangerous').text) == (
         'There’s a problem with your column names '
-        'Your file needs at least 3 address columns, for example ‘address line 1’, '
-        '‘address line 2’ and ‘address line 3’. '
+        'Your file needs a column called ‘phone number’. '
         'Right now it has columns called ‘address_line_1’, ‘address_line_2’ and ‘foo’.'
     )
 
@@ -3437,241 +2379,6 @@ def test_check_messages_adds_sender_id_in_session_to_metadata(
         valid=True,
         original_file_name='example.csv',
     )
-
-
-def test_check_messages_does_not_add_sender_id_in_session_to_metadata_for_letter_template(
-    client_request,
-    mocker,
-    mock_get_live_service,
-    mock_get_service_letter_template,
-    mock_get_users_by_service,
-    mock_get_service_statistics,
-    mock_get_job_doesnt_exist,
-    mock_get_jobs,
-    mock_s3_get_metadata,
-    mock_s3_set_metadata,
-    fake_uuid,
-):
-    mocker.patch('app.main.views.send.s3download', return_value="""
-            address_line_1,address_line_2,postcode,
-            First Last,    123 Street,    SW1 1AA
-        """)
-
-    mocker.patch(
-        'app.main.views.send.get_page_count_for_letter',
-        return_value=5,
-    )
-
-    with client_request.session_transaction() as session:
-        session['file_uploads'] = {
-            fake_uuid: {'template_id': fake_uuid}
-        }
-        session['sender_id'] = 'fake-sender'
-
-    client_request.get(
-        'main.check_messages',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        upload_id=fake_uuid,
-        _test_page_title=False,
-    )
-
-    mock_s3_set_metadata.assert_called_once_with(
-        SERVICE_ONE_ID,
-        fake_uuid,
-        notification_count=1,
-        template_id=fake_uuid,
-        valid=True,
-        original_file_name='example.csv',
-    )
-
-
-@pytest.mark.parametrize('extra_args', (
-    {},
-    {'from_test': True},
-))
-def test_letters_from_csv_files_dont_have_download_link(
-    client_request,
-    mocker,
-    mock_get_service,
-    mock_get_service_letter_template,
-    mock_has_permissions,
-    fake_uuid,
-    mock_get_users_by_service,
-    mock_get_service_statistics,
-    mock_get_job_doesnt_exist,
-    mock_get_jobs,
-    mock_s3_get_metadata,
-    mock_s3_set_metadata,
-    extra_args,
-):
-
-    mocker.patch('app.main.views.send.s3download', return_value="""
-        address_line_1,address_line_2,postcode,
-        First Last,    123 Street,    SW1 1AA
-    """)
-
-    mocker.patch(
-        'app.main.views.send.get_page_count_for_letter',
-        return_value=5,
-    )
-
-    with client_request.session_transaction() as session:
-        session['file_uploads'] = {
-            fake_uuid: {
-                'template_id': '',
-            }
-        }
-
-    page = client_request.get(
-        'main.check_messages',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        upload_id=fake_uuid,
-        _test_page_title=False,
-        **extra_args
-    )
-
-    assert normalize_spaces(
-        page.select_one('.banner-dangerous').text
-    ) == normalize_spaces(
-        'You cannot send this letter '
-        'In trial mode you can only preview how your letters will look'
-    )
-
-    assert len(page.select('.letter img')) == 5
-    assert not page.select('a[download]')
-
-
-@pytest.mark.parametrize('restricted', [True, False])
-def test_one_off_letters_have_download_link(
-    client_request,
-    mocker,
-    api_user_active,
-    mock_get_service_letter_template,
-    mock_has_permissions,
-    fake_uuid,
-    mock_get_users_by_service,
-    mock_get_service_statistics,
-    restricted,
-    service_one,
-):
-    service_one['restricted'] = restricted
-    mocker.patch('app.service_api_client.get_service', return_value={'data': service_one})
-
-    mocker.patch(
-        'app.main.views.send.get_page_count_for_letter',
-        return_value=5,
-    )
-
-    with client_request.session_transaction() as session:
-        session['recipient'] = None
-        session['placeholders'] = {
-            'address_line_1': 'First Last',
-            'address_line_2': '123 Street',
-            'postcode': 'SW1 1AA',
-        }
-
-    page = client_request.get(
-        'main.check_notification',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _test_page_title=False,
-    )
-
-    assert len(page.select('.letter img')) == 5
-
-    assert page.select_one('a[download]')['href'] == url_for(
-        'no_cookie.check_notification_preview',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        filetype='pdf',
-    )
-    assert page.select_one('a[download]').text == 'Download as a PDF'
-
-
-def test_send_one_off_letter_errors_in_trial_mode(
-    client_request,
-    mocker,
-    mock_get_service,
-    mock_get_service_letter_template,
-    mock_has_permissions,
-    fake_uuid,
-    mock_get_users_by_service,
-    mock_get_service_statistics,
-    mock_get_job_doesnt_exist,
-    mock_s3_set_metadata,
-):
-
-    mocker.patch(
-        'app.main.views.send.get_page_count_for_letter',
-        return_value=5,
-    )
-
-    with client_request.session_transaction() as session:
-        session['recipient'] = None
-        session['placeholders'] = {
-            'address_line_1': 'First Last',
-            'address_line_2': '123 Street',
-            'postcode': 'SW1 1AA',
-        }
-
-    page = client_request.get(
-        'main.check_notification',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _test_page_title=False,
-    )
-
-    assert normalize_spaces(page.select('.banner-dangerous')) == normalize_spaces(
-        'You cannot send this letter '
-        'In trial mode you can only preview how your letters will look'
-    )
-
-    assert len(page.select('.letter img')) == 5
-
-    assert not page.select('main [type=submit]')
-    assert page.select_one('.govuk-back-link').text == 'Back'
-    assert page.select_one('a[download]').text == 'Download as a PDF'
-
-
-def test_send_one_off_letter_errors_if_letter_longer_than_10_pages(
-    client_request,
-    mocker,
-    mock_get_live_service,
-    mock_get_service_letter_template,
-    mock_has_permissions,
-    fake_uuid,
-    mock_get_users_by_service,
-    mock_get_service_statistics,
-    mock_get_job_doesnt_exist,
-    mock_s3_set_metadata,
-):
-
-    mocker.patch(
-        'app.main.views.send.get_page_count_for_letter',
-        return_value=11,
-    )
-
-    with client_request.session_transaction() as session:
-        session['recipient'] = None
-        session['placeholders'] = {
-            'address_line_1': 'First Last',
-            'address_line_2': '123 Street',
-            'postcode': 'SW1 1AA',
-        }
-
-    page = client_request.get(
-        'main.check_notification',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _test_page_title=False,
-    )
-
-    assert page.find('h1', {"data-error-type": "letter-too-long"})
-    assert len(page.select('.letter img')) == 10
-
-    assert not page.select('main [type=submit]')
 
 
 def test_check_messages_shows_over_max_row_error(
@@ -3783,58 +2490,6 @@ def test_check_notification_shows_preview(
     )
 
 
-def test_check_notification_shows_back_link(
-    mocker,
-    client_request,
-    service_one,
-    fake_uuid,
-    mock_template_preview
-):
-    service_one['restricted'] = False
-    mocker.patch(
-        'app.service_api_client.get_service_template',
-        return_value={'data': template_json(
-            SERVICE_ONE_ID,
-            fake_uuid,
-            name="Awkward letter",
-            type_="letter",
-            subject="We need to talk about ((thing))",
-            content="Hello ((address line 3))",
-        )},
-    )
-    with client_request.session_transaction() as session:
-        session['recipient'] = 'foo'
-        session['placeholders'] = {
-            'address_line_1': 'foo',
-            'address_line_2': 'bar',
-            'address_line_3': '',
-            'address_line_4': '',
-            'address_line_5': '',
-            'address_line_6': '',
-            'address_line_7': 'SW1A 1AA',
-            'postcode': 'SW1A 1AA',
-            'thing': 'a thing',
-        }
-
-    page = client_request.get(
-        'main.check_notification',
-        service_id=service_one['id'],
-        template_id=fake_uuid,
-    )
-
-    assert page.h1.text.strip() == 'Preview of ‘Awkward letter’'
-    back_link = page.find_all('a', {'class': 'govuk-back-link'})[0]['href']
-    assert back_link == url_for(
-        'main.send_one_off_step',
-        service_id=service_one['id'],
-        template_id=fake_uuid,
-        step_index=7,
-    )
-
-    previous_page = client_request.get_url(back_link)
-    assert normalize_spaces(previous_page.select_one('label').text) == 'thing'
-
-
 @pytest.mark.parametrize('template, recipient, placeholders, expected_personalisation', (
     (
         mock_get_service_template,
@@ -3845,12 +2500,6 @@ def test_check_notification_shows_back_link(
     (
         mock_get_service_email_template,
         'test@example.com',
-        {},
-        {},
-    ),
-    (
-        mock_get_service_letter_template,
-        'foo',
         {},
         {},
     ),
@@ -3882,29 +2531,6 @@ def test_send_notification_submits_data(
         personalisation=expected_personalisation,
         sender_id=None
     )
-
-
-@pytest.mark.parametrize('placeholders', (
-    {'address line 1': 'Foo'},
-    {'ADDRESSLINE_1': 'Foo'},
-))
-def test_send_notification_submits_data_for_letter(
-    client_request,
-    fake_uuid,
-    mock_send_notification,
-    mock_get_service_letter_template,
-    placeholders,
-):
-    with client_request.session_transaction() as session:
-        session['recipient'] = None
-        session['placeholders'] = placeholders
-
-    client_request.post(
-        'main.send_notification',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid
-    )
-    assert mock_send_notification.call_args[1]['recipient'] == 'Foo'
 
 
 def test_send_notification_clears_session(
@@ -4420,18 +3046,3 @@ def test_send_to_myself_sets_placeholder_and_redirects_for_sms(
     with client_request.session_transaction() as session:
         assert session['recipient'] == '07700 900762'
         assert session['placeholders'] == {'phone number': '07700 900762'}
-
-
-def test_send_to_myself_404s_for_letter(
-    mocker, client_request, fake_uuid, mock_get_service_letter_template
-):
-    with client_request.session_transaction() as session:
-        session['recipient'] = None
-        session['placeholders'] = {}
-
-    client_request.get(
-        'main.send_one_off_to_myself',
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _expected_status=404,
-    )

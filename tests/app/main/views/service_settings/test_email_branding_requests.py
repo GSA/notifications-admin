@@ -26,7 +26,6 @@ def test_email_branding_request_page_when_no_branding_is_set(
     client_request,
     mocker,
     mock_get_email_branding,
-    mock_get_letter_branding_by_id,
     organisation_type,
     expected_options,
 ):
@@ -45,7 +44,6 @@ def test_email_branding_request_page_when_no_branding_is_set(
 
     assert mock_get_email_branding.called is False
     assert page.find('iframe')['src'] == url_for('main.email_template', branding_style='__NONE__')
-    assert mock_get_letter_branding_by_id.called is False
 
     button_text = normalize_spaces(page.select_one('.page-footer button').text)
 

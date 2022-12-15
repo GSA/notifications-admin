@@ -1,7 +1,7 @@
 {% extends "content_template.html" %}
 {% from "components/table.html" import mapping_table, row, text_field, edit_field, field with context %}
 {% from "components/sub-navigation.html" import sub_navigation %}
-{% from "components/details/macro.njk" import govukDetails %}
+{% from "components/uk_components/details/macro.njk" import govukDetails %}
 
 {% block per_page_title %}
   Get started
@@ -13,7 +13,7 @@
 
 <ol class="get-started-list">
   <li class="get-started-list__item">
-    <h2 class="get-started-list__heading">Check if US Notify is right for you</h2>
+    <h2 class="get-started-list__heading">Check if U.S. Notify is right for you</h2>
     <p class="govuk-body">Read about our <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.features') }}">features</a>, <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.pricing') }}">pricing</a> and <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.roadmap') }}">roadmap</a>.</p>
   </li>
 

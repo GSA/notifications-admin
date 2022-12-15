@@ -74,9 +74,7 @@
                 <dd class="api-notifications-item__data-value">{{ notification[key] }}</dd>
               {% endif %}
             {% endfor %}
-            {% if notification.status not in ('pending-virus-check', 'virus-scan-failed') %}
-              <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.view_notification', service_id=current_service.id, notification_id=notification.id) }}">View {{ 1|message_count_label(notification.template.template_type, suffix='') }}</a>
-            {% endif %}
+            <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.view_notification', service_id=current_service.id, notification_id=notification.id) }}">View {{ 1|message_count_label(notification.template.template_type, suffix='') }}</a>
           </dl>
         </div>
       </details>

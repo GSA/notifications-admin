@@ -259,10 +259,6 @@ def test_notification_page_has_link_to_send_another_for_sms(
     service_one['permissions'] = service_permissions
     notification = create_notification(template_type=template_type)
     mocker.patch('app.notification_api_client.get_notification', return_value=notification)
-    mocker.patch(
-        'app.main.views.notifications.get_page_count_for_letter',
-        return_value=1
-    )
 
     page = client_request.get(
         'main.view_notification',

@@ -3,7 +3,7 @@
 {% from "components/folder-path.html" import folder_path, page_title_folder_path %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/copy-to-clipboard.html" import copy_to_clipboard %}
-{% from "components/button/macro.njk" import govukButton %}
+{% from "components/uk_components/button/macro.njk" import govukButton %}
 
 {% block service_page_title %}
   {{ page_title_folder_path(current_service.get_template_path(template._template)) }}
@@ -70,14 +70,12 @@
         </span>
         &emsp;
       {% endif %}
-      {% if template.template_type not in ('letter') %}
-        {% if not template._template.redact_personalisation %}
-          <span class="page-footer-link page-footer-delete-link-without-button">
-            <a class="govuk-link govuk-link--destructive" href="{{ url_for('.confirm_redact_template', service_id=current_service.id, template_id=template.id) }}">Hide personalisation after sending</a>
-          </span>
-        {% else %}
-          <p class="hint">Personalisation is hidden after sending</p>
-        {% endif %}
+      {% if not template._template.redact_personalisation %}
+        <span class="page-footer-link page-footer-delete-link-without-button">
+          <a class="govuk-link govuk-link--destructive" href="{{ url_for('.confirm_redact_template', service_id=current_service.id, template_id=template.id) }}">Hide personalisation after sending</a>
+        </span>
+      {% else %}
+        <p class="hint">Personalisation is hidden after sending</p>
       {% endif %}
     {% endif %}
   </div>

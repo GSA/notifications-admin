@@ -41,7 +41,6 @@ def test_form_class_not_mutated(notify_admin):
 
     (True, 'phone number', 'sms', 'invalid', 'Must not contain letters or symbols'),
     (True, 'phone number', 'email', 'invalid', None),
-    (True, 'phone number', 'letter', 'invalid', None),
     (True, 'email address', 'sms', 'invalid', None),
 
 ])

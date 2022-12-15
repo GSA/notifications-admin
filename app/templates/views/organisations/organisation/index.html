@@ -17,7 +17,7 @@
   </div>
 
   <div class="govuk-grid-row bottom-gutter">
-    <div class="govuk-grid-column-one-third">
+    <div class="govuk-grid-column-one-half">
       <h2 class="heading-small">Emails</h2>
       <div class="keyline-block">
         {{ big_number(
@@ -27,22 +27,11 @@
         ) }}
       </div>
     </div>
-    <div class="govuk-grid-column-one-third">
+    <div class="govuk-grid-column-one-half">
       <h2 class="heading-small">Text messages</h2>
       <div class="keyline-block">
         {{ big_number(
           total_sms_cost,
-          'spent',
-          currency="$",
-          smaller=True
-        ) }}
-      </div>
-    </div>
-    <div class="govuk-grid-column-one-third">
-      <h2 class="heading-small">Letters</h2>
-      <div class="keyline-block">
-        {{ big_number(
-          total_letter_cost,
           'spent',
           currency="$",
           smaller=True
@@ -70,14 +59,14 @@
         <a href="{{ url_for('main.usage', service_id=service.service_id) }}" class="govuk-link govuk-link--no-visited-state browse-list-link">{{ service.service_name  }}</a>
       </h3>
       <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-third">
+        <div class="govuk-grid-column-one-half">
           {{ big_number(
             service.emails_sent,
             label=service.emails_sent|message_count_label('email'),
             smallest=True
           ) }}
         </div>
-        <div class="govuk-grid-column-one-third">
+        <div class="govuk-grid-column-one-half">
           {% if service.sms_cost %}
             {{ big_number(
               service.sms_cost,
@@ -93,21 +82,13 @@
             ) }}
           {% endif %}
         </div>
-        <div class="govuk-grid-column-one-third">
-          {{ big_number(
-            service.letter_cost,
-            'spent on letters',
-            currency="$",
-            smallest=True
-          ) }}
-        </div>
       </div>
     </div>
   {% endfor %}
   <div class="keyline-block govuk-!-margin-top-2"></div>
   {% if not services %}
     <p class="govuk-body govuk-hint">
-      {{ current_org.name }} has no live services on US Notify
+      {{ current_org.name }} has no live services on U.S. Notify
     </p>
     <div class="keyline-block govuk-!-margin-top-2"></div>
   {% else %}

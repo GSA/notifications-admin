@@ -8,11 +8,7 @@ from flask import url_for
 
 from app.formatters import format_datetime_short
 from tests import sample_uuid, validate_route_permission
-from tests.conftest import (
-    SERVICE_ONE_ID,
-    create_notifications,
-    normalize_spaces,
-)
+from tests.conftest import SERVICE_ONE_ID, normalize_spaces
 
 
 def test_should_show_api_page(
@@ -66,77 +62,6 @@ def test_should_show_api_page_with_no_notifications(
     )
     rows = page.find_all('div', {'class': 'api-notifications-item'})
     assert 'When you send messages via the API they’ll appear here.' in rows[len(rows) - 1].text.strip()
-
-
-@pytest.mark.parametrize('template_type, link_text', [
-    ('sms', 'View text message'),
-    ('letter', 'View letter'),
-    ('email', 'View email'),
-])
-def test_letter_notifications_should_have_link_to_view_letter(
-    client_request,
-    mock_has_permissions,
-    mocker,
-    template_type,
-    link_text,
-):
-    notifications = create_notifications(template_type=template_type)
-    mocker.patch('app.notification_api_client.get_notifications_for_service', return_value=notifications)
-    page = client_request.get(
-        'main.api_integration',
-        service_id=SERVICE_ONE_ID,
-    )
-
-    assert page.select_one('details a').text.strip() == link_text
-
-
-@pytest.mark.parametrize('status', [
-    'pending-virus-check', 'virus-scan-failed'
-])
-def test_should_not_have_link_to_view_letter_for_precompiled_letters_in_virus_states(
-    client_request,
-    fake_uuid,
-    mock_has_permissions,
-    mocker,
-    status
-):
-    notifications = create_notifications(status=status)
-    mocker.patch('app.notification_api_client.get_notifications_for_service', return_value=notifications)
-
-    page = client_request.get(
-        'main.api_integration',
-        service_id=fake_uuid,
-    )
-
-    assert not page.select_one('details a')
-
-
-@pytest.mark.parametrize('client_reference, shows_ref', [
-    ('foo', True),
-    (None, False),
-])
-def test_letter_notifications_should_show_client_reference(
-    client_request,
-    fake_uuid,
-    mock_has_permissions,
-    mocker,
-    client_reference,
-    shows_ref
-):
-    notifications = create_notifications(client_reference=client_reference)
-    mocker.patch('app.notification_api_client.get_notifications_for_service', return_value=notifications)
-
-    page = client_request.get(
-        'main.api_integration',
-        service_id=fake_uuid,
-    )
-    dt_arr = [p.text for p in page.select('dt')]
-
-    if shows_ref:
-        assert 'client_reference:' in dt_arr
-        assert page.select_one('dd:nth-of-type(2)').text == 'foo'
-    else:
-        assert 'client_reference:' not in dt_arr
 
 
 def test_should_show_api_page_for_live_service(
@@ -210,8 +135,8 @@ def test_should_show_api_keys_page(
     mock_get_api_keys.assert_called_once_with(SERVICE_ONE_ID)
 
 
-@pytest.mark.parametrize('restricted, can_send_letters, expected_options', [
-    (True, False, [
+@pytest.mark.parametrize('restricted, expected_options', [
+    (True, [
         (
             'Live – sends to anyone',
             'Not available because your service is in trial mode'
@@ -219,17 +144,9 @@ def test_should_show_api_keys_page(
         'Team and guest list – limits who you can send to',
         'Test – pretends to send messages',
     ]),
-    (False, False, [
+    (False, [
         'Live – sends to anyone',
         'Team and guest list – limits who you can send to',
-        'Test – pretends to send messages',
-    ]),
-    (False, True, [
-        'Live – sends to anyone',
-        (
-            'Team and guest list – limits who you can send to',
-            'Cannot be used to send letters'
-        ),
         'Test – pretends to send messages',
     ]),
 ])
@@ -239,13 +156,10 @@ def test_should_show_create_api_key_page(
     api_user_active,
     mock_get_api_keys,
     restricted,
-    can_send_letters,
     expected_options,
     service_one,
 ):
     service_one['restricted'] = restricted
-    if can_send_letters:
-        service_one['permissions'].append('letter')
 
     mocker.patch('app.service_api_client.get_service', return_value={'data': service_one})
 
@@ -329,7 +243,7 @@ def test_should_show_confirm_revoke_api_key(
     )
     assert normalize_spaces(page.select('.banner-dangerous')[0].text) == (
         'Are you sure you want to revoke ‘some key name’? '
-        'You will not be able to use this API key to connect to US Notify. '
+        'You will not be able to use this API key to connect to U.S. Notify. '
         'Yes, revoke this API key'
     )
     assert mock_get_api_keys.call_args_list == [

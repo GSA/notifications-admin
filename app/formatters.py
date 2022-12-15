@@ -202,7 +202,6 @@ def format_notification_type(notification_type):
     return {
         'email': 'Email',
         'sms': 'Text message',
-        'letter': 'Letter'
     }[notification_type]
 
 
@@ -229,23 +228,6 @@ def format_notification_status(status, template_type):
             'pending': 'Sending',
             'sent': 'Sent to an international number'
         },
-        'letter': {
-            'failed': '',
-            'technical-failure': 'Technical failure',
-            'temporary-failure': '',
-            'permanent-failure': 'Permanent failure',
-            'delivered': '',
-            'received': '',
-            'accepted': '',
-            'sending': '',
-            'created': '',
-            'sent': '',
-            'pending-virus-check': '',
-            'virus-scan-failed': 'Virus detected',
-            'returned-letter': '',
-            'cancelled': '',
-            'validation-failed': 'Validation failed',
-        }
     }[template_type].get(status, status)
 
 
@@ -257,24 +239,6 @@ def format_notification_status_as_time(status, created, updated):
 
 def format_notification_status_as_field_status(status, notification_type):
     return {
-        'letter': {
-            'failed': 'error',
-            'technical-failure': 'error',
-            'temporary-failure': 'error',
-            'permanent-failure': 'error',
-            'delivered': None,
-            'sent': None,
-            'sending': None,
-            'created': None,
-            'accepted': None,
-            'pending-virus-check': None,
-            'virus-scan-failed': 'error',
-            'returned-letter': None,
-            'cancelled': 'error',
-        },
-    }.get(
-        notification_type,
-        {
             'failed': 'error',
             'technical-failure': 'error',
             'temporary-failure': 'error',
@@ -284,8 +248,7 @@ def format_notification_status_as_field_status(status, notification_type):
             'sending': 'default',
             'created': 'default',
             'pending': 'default',
-        }
-    ).get(status, 'error')
+        }.get(status, 'error')
 
 
 def format_notification_status_as_url(status, notification_type):
@@ -314,6 +277,7 @@ def nl2br(value):
 
 
 # this formatter appears to only be used in the letter module
+# TODO: use more widely, or delete? currency symbol could be set in config
 def format_number_in_pounds_as_currency(number):
     if number >= 1:
         return f"£{number:,.2f}"
@@ -455,12 +419,6 @@ def message_count_noun(count, template_type):
         else:
             return 'emails'
 
-    elif template_type == 'letter':
-        if count == 1:
-            return 'letter'
-        else:
-            return 'letters'
-
 
 def message_count(count, template_type):
     return (
@@ -488,12 +446,6 @@ def recipient_count_label(count, template_type):
             return 'email address'
         else:
             return 'email addresses'
-
-    elif template_type == 'letter':
-        if count == 1:
-            return 'address'
-        else:
-            return 'addresses'
 
 
 def recipient_count(count, template_type):

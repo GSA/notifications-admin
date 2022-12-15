@@ -86,7 +86,7 @@ def test_view_organisation_shows_the_correct_organisation(
 
     assert normalize_spaces(page.select_one('h1').text) == 'Usage'
     assert normalize_spaces(page.select_one('.govuk-hint').text) == (
-        'Test 1 has no live services on US Notify'
+        'Test 1 has no live services on U.S. Notify'
     )
     assert not page.select('a[download]')
 
@@ -456,10 +456,10 @@ def test_organisation_services_shows_live_services_and_usage(
         'app.organisations_client.get_services_and_usage',
         return_value={"services": [
             {'service_id': SERVICE_ONE_ID, 'service_name': '1', 'chargeable_billable_sms': 250122, 'emails_sent': 13000,
-             'free_sms_limit': 250000, 'letter_cost': 30.50, 'sms_billable_units': 122, 'sms_cost': 0,
+             'free_sms_limit': 250000, 'sms_billable_units': 122, 'sms_cost': 0,
              'sms_remainder': None},
             {'service_id': SERVICE_TWO_ID, 'service_name': '5', 'chargeable_billable_sms': 0, 'emails_sent': 20000,
-             'free_sms_limit': 250000, 'letter_cost': 0, 'sms_billable_units': 2500, 'sms_cost': 42.0,
+             'free_sms_limit': 250000, 'sms_billable_units': 2500, 'sms_cost': 42.0,
              'sms_remainder': None}
         ]}
     )
@@ -469,25 +469,22 @@ def test_organisation_services_shows_live_services_and_usage(
     mock.assert_called_once_with(ORGANISATION_ID, 2019)
 
     services = page.select('main h3')
-    usage_rows = page.select('main .govuk-grid-column-one-third')
+    usage_rows = page.select('main .govuk-grid-column-one-half')
     assert len(services) == 2
 
     # Totals
     assert normalize_spaces(usage_rows[0].text) == "Emails 33,000 sent"
     assert normalize_spaces(usage_rows[1].text) == "Text messages $42.00 spent"
-    assert normalize_spaces(usage_rows[2].text) == "Letters $30.50 spent"
 
     assert normalize_spaces(services[0].text) == '1'
     assert normalize_spaces(services[1].text) == '5'
     assert services[0].find('a')['href'] == url_for('main.usage', service_id=SERVICE_ONE_ID)
 
-    assert normalize_spaces(usage_rows[3].text) == "13,000 emails sent"
-    assert normalize_spaces(usage_rows[4].text) == "122 free text messages sent"
-    assert normalize_spaces(usage_rows[5].text) == "$30.50 spent on letters"
+    assert normalize_spaces(usage_rows[2].text) == "13,000 emails sent"
+    assert normalize_spaces(usage_rows[3].text) == "122 free text messages sent"
     assert services[1].find('a')['href'] == url_for('main.usage', service_id=SERVICE_TWO_ID)
-    assert normalize_spaces(usage_rows[6].text) == "20,000 emails sent"
-    assert normalize_spaces(usage_rows[7].text) == "$42.00 spent on text messages"
-    assert normalize_spaces(usage_rows[8].text) == "$0.00 spent on letters"
+    assert normalize_spaces(usage_rows[4].text) == "20,000 emails sent"
+    assert normalize_spaces(usage_rows[5].text) == "$42.00 spent on text messages"
 
     # Ensure there’s no ‘this org has no services message’
     assert not page.select('.govuk-hint')
@@ -505,7 +502,7 @@ def test_organisation_services_shows_live_services_and_usage_with_count_of_1(
         'app.organisations_client.get_services_and_usage',
         return_value={"services": [
             {'service_id': SERVICE_ONE_ID, 'service_name': '1', 'chargeable_billable_sms': 1, 'emails_sent': 1,
-             'free_sms_limit': 250000, 'letter_cost': 0, 'sms_billable_units': 1, 'sms_cost': 0,
+             'free_sms_limit': 250000, 'sms_billable_units': 1, 'sms_cost': 0,
              'sms_remainder': None},
         ]}
     )
@@ -513,16 +510,14 @@ def test_organisation_services_shows_live_services_and_usage_with_count_of_1(
     client_request.login(active_user_with_permissions)
     page = client_request.get('.organisation_dashboard', org_id=ORGANISATION_ID)
 
-    usage_rows = page.select('main .govuk-grid-column-one-third')
+    usage_rows = page.select('main .govuk-grid-column-one-half')
 
     # Totals
     assert normalize_spaces(usage_rows[0].text) == "Emails 1 sent"
     assert normalize_spaces(usage_rows[1].text) == "Text messages $0.00 spent"
-    assert normalize_spaces(usage_rows[2].text) == "Letters $0.00 spent"
 
-    assert normalize_spaces(usage_rows[3].text) == "1 email sent"
-    assert normalize_spaces(usage_rows[4].text) == "1 free text message sent"
-    assert normalize_spaces(usage_rows[5].text) == "$0.00 spent on letters"
+    assert normalize_spaces(usage_rows[2].text) == "1 email sent"
+    assert normalize_spaces(usage_rows[3].text) == "1 free text message sent"
 
 
 @freeze_time("2020-02-20 20:20")
@@ -577,7 +572,6 @@ def test_organisation_services_shows_search_bar(
                 'chargeable_billable_sms': 250122,
                 'emails_sent': 13000,
                 'free_sms_limit': 250000,
-                'letter_cost': 30.50,
                 'sms_billable_units': 122,
                 'sms_cost': 1.93,
                 'sms_remainder': None
@@ -624,7 +618,6 @@ def test_organisation_services_hides_search_bar_for_7_or_fewer_services(
                 'chargeable_billable_sms': 250122,
                 'emails_sent': 13000,
                 'free_sms_limit': 250000,
-                'letter_cost': 30.50,
                 'sms_billable_units': 122,
                 'sms_cost': 1.93,
                 'sms_remainder': None
@@ -657,7 +650,6 @@ def test_organisation_services_links_to_downloadable_report(
                 'chargeable_billable_sms': 250122,
                 'emails_sent': 13000,
                 'free_sms_limit': 250000,
-                'letter_cost': 30.50,
                 'sms_billable_units': 122,
                 'sms_cost': 1.93,
                 'sms_remainder': None
@@ -693,7 +685,6 @@ def test_download_organisation_usage_report(
                 'chargeable_billable_sms': 22,
                 'emails_sent': 13000,
                 'free_sms_limit': 100,
-                'letter_cost': 30.5,
                 'sms_billable_units': 122,
                 'sms_cost': 1.934,
                 'sms_remainder': 0
@@ -704,7 +695,6 @@ def test_download_organisation_usage_report(
                 'chargeable_billable_sms': 222,
                 'emails_sent': 23000,
                 'free_sms_limit': 250000,
-                'letter_cost': 60.5,
                 'sms_billable_units': 322,
                 'sms_cost': 3.935,
                 'sms_remainder': 0
@@ -721,9 +711,9 @@ def test_download_organisation_usage_report(
 
     assert csv_report.string == (
         "Service ID,Service Name,Emails sent,Free text message allowance remaining,"
-        "Spent on text messages ($),Spent on letters ($)"
-        "\r\n596364a0-858e-42c8-9062-a8fe822260eb,Service 1,13000,0,1.93,30.50"
-        "\r\n147ad62a-2951-4fa1-9ca0-093cd1a52c52,Service 1,23000,0,3.94,60.50\r\n"
+        "Spent on text messages ($)"
+        "\r\n596364a0-858e-42c8-9062-a8fe822260eb,Service 1,13000,0,1.93"
+        "\r\n147ad62a-2951-4fa1-9ca0-093cd1a52c52,Service 1,23000,0,3.94\r\n"
     )
 
 
@@ -943,7 +933,6 @@ def test_organisation_settings_for_platform_admin(
         'Billing details None Change billing details for the organisation',
         'Notes None Change the notes for the organisation',
         'Default email branding GOV.UK Change default email branding for the organisation',
-        # 'Default letter branding No branding Change default letter branding for the organisation',
         'Known email domains None Change known email domains for the organisation',
     ]
 
@@ -1661,7 +1650,7 @@ def test_organisation_billing_page_when_the_agreement_is_signed_by_a_known_perso
     )
 
     assert page.h1.string == 'Billing'
-    assert '2.5 of the US Notify data sharing and financial agreement on 20 February 2020' in normalize_spaces(
+    assert '2.5 of the U.S. Notify data sharing and financial agreement on 20 February 2020' in normalize_spaces(
         page.text)
     assert f'{expected_signatory} signed' in page.text
     # assert page.select_one('main a')['href'] == url_for('.organisation_download_agreement', org_id=ORGANISATION_ID)
@@ -1683,7 +1672,7 @@ def test_organisation_billing_page_when_the_agreement_is_signed_by_an_unknown_pe
     )
 
     assert page.h1.string == 'Billing'
-    assert (f'{organisation_one["name"]} has accepted the US Notify data '
+    assert (f'{organisation_one["name"]} has accepted the U.S. Notify data '
             'sharing and financial agreement.') in page.text
     # assert page.select_one('main a')['href'] == url_for('.organisation_download_agreement', org_id=ORGANISATION_ID)
 
@@ -1716,11 +1705,11 @@ def test_organisation_billing_page_when_the_agreement_is_not_signed(
 @pytest.mark.parametrize('crown, expected_status, expected_file_fetched, expected_file_served', (
     # (
     #     True, 200, 'crown.pdf',
-    #     'US Notify data sharing and financial agreement.pdf',
+    #     'U.S. Notify data sharing and financial agreement.pdf',
     # ),
     # (
     #     False, 200, 'non-crown.pdf',
-    #     'US Notify data sharing and financial agreement (non-crown).pdf',
+    #     'U.S. Notify data sharing and financial agreement (non-crown).pdf',
     # ),
     (
         None, 404, None,

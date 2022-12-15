@@ -63,16 +63,6 @@ class NotificationApiClient(NotifyAdminAPIClient):
         data = _attach_current_user(data)
         return self.post(url='/service/{}/send-notification'.format(service_id), data=data)
 
-    def send_precompiled_letter(self, service_id, filename, file_id, postage, recipient_address):
-        data = {
-            'filename': filename,
-            'file_id': file_id,
-            'postage': postage,
-            'recipient_address': recipient_address
-        }
-        data = _attach_current_user(data)
-        return self.post(url='/service/{}/send-pdf-letter'.format(service_id), data=data)
-
     def get_notification(self, service_id, notification_id):
         return self.get(url='/service/{}/notifications/{}'.format(service_id, notification_id))
 
@@ -84,29 +74,7 @@ class NotificationApiClient(NotifyAdminAPIClient):
             include_one_off=False,
             count_pages=False
         )
-        return self.map_letters_to_accepted(ret)
-
-    @staticmethod
-    def map_letters_to_accepted(notifications):
-        for notification in notifications['notifications']:
-            if notification['notification_type'] == 'letter':
-                if notification['status'] in ('created', 'sending'):
-                    notification['status'] = 'accepted'
-
-                if notification['status'] in ('delivered', 'returned-letter'):
-                    notification['status'] = 'received'
-        return notifications
-
-    def get_notification_letter_preview(self, service_id, notification_id, file_type, page=None):
-
-        get_url = '/service/{}/template/preview/{}/{}{}'.format(
-            service_id,
-            notification_id,
-            file_type,
-            '?page={}'.format(page) if page else ''
-        )
-
-        return self.get(url=get_url)
+        return ret
 
     def update_notification_to_cancelled(self, service_id, notification_id):
         return self.post(

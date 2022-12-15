@@ -26,15 +26,6 @@ from tests.conftest import sample_uuid
     ('inbound_api', 'foo', 'bar', (
         'Updated the callback for received text messages'
     )),
-    ('letter_branding', None, sample_uuid(), (
-        'Updated the logo on this service’s letters'
-    )),
-    ('letter_branding', sample_uuid(), None, (
-        'Removed the logo from this service’s letters'
-    )),
-    ('letter_contact_block', None, sample_uuid(), (
-        'Updated the default letter contact block for this service'
-    )),
     ('message_limit', 1, 2, (
         'Increased this service’s daily message limit from 1 to 2'
     )),

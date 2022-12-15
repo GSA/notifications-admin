@@ -67,33 +67,4 @@
     {% endcall %}
   </div>
 
-  <!-- <h2 id="letter-statuses" class="heading-medium">Letters</h2>
-  <div class="bottom-gutter-3-2">
-    {% call mapping_table(
-      caption='Message statuses – letters',
-      field_headings=['Status', 'Description'],
-      field_headings_visible=True,
-      caption_visible=False
-    ) %}
-      {% for message_status, description in [
-        ('Sent', 'Notify has sent the letter to the provider to be printed.'),
-        ('Printed', 'The provider has printed the letter. Letters are printed at 5:30pm and dispatched the next working day.'),
-        ('Cancelled', 'Sending cancelled. Your letter will not be printed or dispatched.'),
-        ('Technical failure', 'Notify had an unexpected error while sending the letter to our printing provider.'),
-        ('Permanent failure', 'The provider cannot print the letter. Your letter will not be dispatched.')
-      ] %}
-        {% call row() %}
-          {{ text_field(message_status) }}
-          {{ text_field(description) }}
-        {% endcall %}
-      {% endfor %}
-    {% endcall %}
-  </div>
-
-  <h3 id="returned-mail" class="heading-small">Undelivered letters and returned mail</h3>
-
-  <p class="govuk-body">Every letter we send includes our printer’s address on the back of the envelope. It’s not possible to customise the return address.</p>
-  <p class="govuk-body">Returned mail is destroyed by our printer.</p>
-  <p class="govuk-body">Each letter has a unique ID. Our printer sends us the ID of every letter they destroy. We’ll contact you if the IDs match any of your letters. This is a partly manual process, so it can take a few weeks.</p> -->
-
 {% endblock %}

@@ -9,7 +9,6 @@ from notifications_python_client.errors import HTTPError
 from app import (
     current_organisation,
     email_branding_client,
-    letter_branding_client,
     org_invite_api_client,
     organisations_client,
 )
@@ -22,7 +21,6 @@ from app.main.forms import (
     AdminOrganisationGoLiveNotesForm,
     AdminPreviewBrandingForm,
     AdminSetEmailBrandingForm,
-    AdminSetLetterBrandingForm,
     InviteOrgUserForm,
     OrganisationAgreementSignedForm,
     OrganisationCrownStatusForm,
@@ -96,7 +94,7 @@ def organisation_dashboard(org_id):
         search_form=SearchByNameForm() if len(services) > 7 else None,
         **{
             f'total_{key}': sum(service[key] for service in services)
-            for key in ('emails_sent', 'sms_cost', 'letter_cost')
+            for key in ('emails_sent', 'sms_cost')
         },
         download_link=url_for(
             '.download_organisation_usage_report',
@@ -123,7 +121,6 @@ def download_organisation_usage_report(org_id):
 
     monetary_column_names = OrderedDict([
         ('sms_cost', 'Spent on text messages ($)'),
-        ('letter_cost', 'Spent on letters ($)')
     ])
 
     org_usage_data = [
@@ -383,51 +380,6 @@ def organisation_preview_email_branding(org_id):
         'views/organisations/organisation/settings/preview-email-branding.html',
         form=form,
         action=url_for('main.organisation_preview_email_branding', org_id=org_id),
-    )
-
-
-@main.route("/organisations/<uuid:org_id>/settings/set-letter-branding", methods=['GET', 'POST'])
-@user_is_platform_admin
-def edit_organisation_letter_branding(org_id):
-    letter_branding = letter_branding_client.get_all_letter_branding()
-
-    form = AdminSetLetterBrandingForm(
-        all_branding_options=get_branding_as_value_and_label(letter_branding),
-        current_branding=current_organisation.letter_branding_id,
-    )
-
-    if form.validate_on_submit():
-        return redirect(url_for(
-            '.organisation_preview_letter_branding',
-            org_id=org_id,
-            branding_style=form.branding_style.data,
-        ))
-
-    return render_template(
-        'views/organisations/organisation/settings/set-letter-branding.html',
-        form=form,
-        search_form=SearchByNameForm()
-    )
-
-
-@main.route("/organisations/<uuid:org_id>/settings/preview-letter-branding", methods=['GET', 'POST'])
-@user_is_platform_admin
-def organisation_preview_letter_branding(org_id):
-    branding_style = request.args.get('branding_style')
-
-    form = AdminPreviewBrandingForm(branding_style=branding_style)
-
-    if form.validate_on_submit():
-        current_organisation.update(
-            letter_branding_id=form.branding_style.data,
-            delete_services_cache=True,
-        )
-        return redirect(url_for('.organisation_settings', org_id=org_id))
-
-    return render_template(
-        'views/organisations/organisation/settings/preview-letter-branding.html',
-        form=form,
-        action=url_for('main.organisation_preview_letter_branding', org_id=org_id),
     )
 
 

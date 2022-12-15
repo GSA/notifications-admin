@@ -13,11 +13,9 @@ def get_service_settings_page(
     platform_admin_user,
     service_one,
     mock_get_inbound_number_for_service,
-    mock_get_all_letter_branding,
     mock_get_organisation,
     mock_get_free_sms_fragment_limit,
     no_reply_to_email_addresses,
-    no_letter_contact_blocks,
     single_sms_sender,
     mock_get_service_data_retention,
 ):
@@ -63,18 +61,6 @@ def test_service_set_permission_requires_platform_admin(
         'False',
         [],
     ),
-    (
-        [],
-        'international_letters',
-        'True',
-        ['international_letters'],
-    ),
-    (
-        ['international_letters'],
-        'international_letters',
-        'False',
-        [],
-    ),
 ])
 def test_service_set_permission(
     mocker,
@@ -113,9 +99,6 @@ def test_service_set_permission(
     ({'restricted': False}, '.service_switch_live', {}, 'Live On Change service status'),
     ({'permissions': ['sms']}, '.service_set_inbound_number', {},
         'Receive inbound SMS Off Change your settings for Receive inbound SMS'),
-    ({'permissions': ['letter']},
-     '.service_set_permission', {'permission': 'international_letters'},
-        'Send international letters Off Change your settings for Send international letters'),
 ])
 def test_service_setting_toggles_show(
     mocker,
@@ -196,10 +179,8 @@ def test_normal_user_doesnt_see_any_platform_admin_settings(
     client_request,
     service_one,
     no_reply_to_email_addresses,
-    no_letter_contact_blocks,
     mock_get_organisation,
     single_sms_sender,
-    mock_get_all_letter_branding,
     mock_get_inbound_number_for_service,
     mock_get_free_sms_fragment_limit,
     mock_get_service_data_retention

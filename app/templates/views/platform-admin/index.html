@@ -2,8 +2,8 @@
 {% from "components/big-number.html" import big_number_simple %}
 {% from "components/status-box.html" import status_box %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/details/macro.njk" import govukDetails %}
-{% from "components/button/macro.njk" import govukButton %}
+{% from "components/uk_components/details/macro.njk" import govukDetails %}
+{% from "components/uk_components/button/macro.njk" import govukButton %}
 
 {% block per_page_title %}
   Summary
@@ -32,7 +32,7 @@
 
   <div class="govuk-grid-row bottom-gutter">
     {% for noti_type in global_stats %}
-      <div class="govuk-grid-column-one-third">
+      <div class="govuk-grid-column-one-half">
         {{ big_number_simple(
             noti_type.black_box.number,
             noti_type.black_box.number|message_count_label(noti_type.black_box.notification_type)
@@ -53,7 +53,7 @@
 
   <div class="govuk-grid-row bottom-gutter">
     {% for noti_type in global_stats %}
-      <div class="govuk-grid-column-one-third">
+      <div class="govuk-grid-column-one-half">
         <div class="bordered-text-box">
           <span class="big-number-number">{{ "{:,}".format(noti_type.test_data.number) }}</span>
           {{ noti_type.test_data.label }}
