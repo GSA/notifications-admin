@@ -5,7 +5,8 @@
     <div class="govuk-header__logo">
       <a href="{{ params.homepageUrl | default('/') }}" class="govuk-header__link govuk-header__link--homepage">
         <span class="govuk-header__logotype">
-          
+            <image src="{{ params.assetsPath | default('/assets/images') }}/email-template/us-flag.png" xlink:href="" class="govuk-header__logotype-crown-fallback-image" width="36" height="32"></image>
+          </svg>
           <span class="govuk-header__logotype-text">
             U.S.
           </span>
