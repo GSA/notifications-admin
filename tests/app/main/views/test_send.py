@@ -2926,7 +2926,7 @@ def test_choose_from_contact_list_with_personalised_template(
         normalize_spaces(p.text) for p in page.select('main p')
     ] == [
         'You cannot use an emergency contact list with this template because '
-        'it is personalised with ((name)) and ((thing)).',
+        'it is personalized with ((name)) and ((thing)).',
         'Emergency contact lists can only include email addresses or phone numbers.',
     ]
     assert not page.select('table')

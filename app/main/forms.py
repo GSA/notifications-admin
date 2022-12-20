@@ -1138,17 +1138,17 @@ class RenameOrganisationForm(StripWhitespaceForm):
         validators=[
             DataRequired(message='Cannot be empty'),
             MustContainAlphanumericCharacters(),
-            Length(max=255, message='Organisation name must be 255 characters or fewer')
+            Length(max=255, message='Organization name must be 255 characters or fewer')
         ])
 
 
 class OrganisationOrganisationTypeForm(StripWhitespaceForm):
-    organisation_type = OrganisationTypeField('What type of organisation is this?')
+    organisation_type = OrganisationTypeField('What type of organization is this?')
 
 
 class OrganisationCrownStatusForm(StripWhitespaceForm):
     crown_status = GovukRadiosField(
-        'Is this organisation a crown body?',
+        'Is this organization a crown body?',
         choices=[
             ('crown', 'Yes'),
             ('non-crown', 'No'),
@@ -1160,7 +1160,7 @@ class OrganisationCrownStatusForm(StripWhitespaceForm):
 
 class OrganisationAgreementSignedForm(StripWhitespaceForm):
     agreement_signed = GovukRadiosField(
-        'Has this organisation signed the agreement?',
+        'Has this organization signed the agreement?',
         choices=[
             ('yes', 'Yes'),
             ('no', 'No'),
@@ -1169,7 +1169,7 @@ class OrganisationAgreementSignedForm(StripWhitespaceForm):
         thing='whether this organisation has signed the agreement',
         param_extensions={
             'items': [
-                {'hint': {'html': 'Users will be told their organisation has already signed the agreement'}},
+                {'hint': {'html': 'Users will be told their organization has already signed the agreement'}},
                 {'hint': {'html': 'Users will be prompted to sign the agreement before they can go live'}},
                 {'hint': {'html': 'Users will not be prompted to sign the agreement'}}
             ]

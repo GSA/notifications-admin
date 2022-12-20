@@ -250,7 +250,7 @@
           {% call row() %}
             {{ text_field('Live')}}
             {% if current_service.trial_mode and not current_service.organisation_id %}
-              {{ text_field('No (organisation must be set first)') }}
+              {{ text_field('No (organization must be set first)') }}
               {{ text_field('') }}
             {% else %}
               {{ boolean_field(not current_service.trial_mode) }}
@@ -276,7 +276,7 @@
           {% endcall %}
 
           {% call row() %}
-            {{ text_field('Organisation')}}
+            {{ text_field('Organization')}}
             {% call field() %}
               {% if current_service.organisation_id %}
                 <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.organisation_dashboard', org_id=current_service.organisation_id) }}">

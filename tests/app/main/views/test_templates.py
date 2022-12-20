@@ -1248,11 +1248,11 @@ def test_should_403_when_create_template_with_process_type_of_priority_for_non_p
 
 @pytest.mark.parametrize('old_content, new_content, expected_paragraphs', [
     (
-        "my favourite colour is blue",
-        "my favourite colour is ((colour))",
+        "my favourite color is blue",
+        "my favourite color is ((color))",
         [
-            'You added ((colour))',
-            'Before you send any messages, make sure your API calls include colour.',
+            'You added ((color))',
+            'Before you send any messages, make sure your API calls include color.',
         ]
     ),
     (
@@ -1833,7 +1833,7 @@ def test_should_show_message_before_redacting_template(
     )
 
     assert (
-        'Are you sure you want to hide personalisation after sending?'
+        'Are you sure you want to hide personalization after sending?'
     ) in page.select('.banner-dangerous')[0].text
 
     form = page.select('.banner-dangerous form')[0]
@@ -1859,7 +1859,7 @@ def test_should_show_redact_template(
     )
 
     assert normalize_spaces(page.select('.banner-default-with-tick')[0].text) == (
-        'Personalised content will be hidden for messages sent with this template'
+        'Personalized content will be hidden for messages sent with this template'
     )
 
     mock_redact_template.assert_called_once_with(SERVICE_ONE_ID, fake_uuid)
@@ -1882,7 +1882,7 @@ def test_should_show_hint_once_template_redacted(
         _test_page_title=False,
     )
 
-    assert page.select('.hint')[0].text == 'Personalisation is hidden after sending'
+    assert page.select('.hint')[0].text == 'Personalization is hidden after sending'
 
 
 def test_set_template_sender(
@@ -1993,13 +1993,13 @@ def test_set_template_sender(
         ),
         (
             'sms', False, 'Hello ((name))',
-            'Will be charged as 1 text message (not including personalisation)',
+            'Will be charged as 1 text message (not including personalization)',
             None,
         ),
         (
             # Length of placeholder body doesn’t count towards fragment count
             'sms', False, f'Hello (( {"a" * 999} ))',
-            'Will be charged as 1 text message (not including personalisation)',
+            'Will be charged as 1 text message (not including personalization)',
             None,
         ),
     ),

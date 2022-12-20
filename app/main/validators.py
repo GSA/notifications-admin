@@ -130,7 +130,7 @@ class OnlySMSCharacters:
 
 #     def __init__(self, message=None):
 #         self.message = message or (
-#             'You can’t use ((double brackets)) to personalise this message'
+#             'You can’t use ((double brackets)) to personalize this message'
 #         )
 
 #     def __call__(self, form, field):

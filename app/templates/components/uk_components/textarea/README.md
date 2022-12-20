@@ -10,6 +10,6 @@ Find out when to use the textarea component in your service in the [GOV.UK Desig
 
 ## Component options
 
-Use options to customise the appearance, content and behaviour of a component when using a macro, for example, changing the text.
+Use options to customize the appearance, content and behavior of a component when using a macro, for example, changing the text.
 
 See [options table](https://design-system.service.gov.uk/components/textarea/#options-example-default) for details.

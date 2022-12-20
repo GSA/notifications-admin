@@ -169,8 +169,8 @@ def test_create_new_organisation_validates(
         for error in page.select('.govuk-error-message')
     ] == [
         ('name', 'Error: Cannot be empty'),
-        ('organisation_type', 'Error: Select the type of organisation'),
-        ('crown_status', 'Error: Select whether this organisation is a crown body'),
+        ('organisation_type', 'Error: Select the type of organization'),
+        ('crown_status', 'Error: Select whether this organization is a crown body'),
     ]
     assert mock_create_organisation.called is False
 
@@ -178,7 +178,7 @@ def test_create_new_organisation_validates(
 @pytest.mark.parametrize('name, error_message', [
     ('', 'Cannot be empty'),
     ('a', 'at least two alphanumeric characters'),
-    ('a' * 256, 'Organisation name must be 255 characters or fewer'),
+    ('a' * 256, 'Organization name must be 255 characters or fewer'),
 ])
 def test_create_new_organisation_fails_with_incorrect_input(
     client_request,
@@ -1318,7 +1318,7 @@ def test_update_organisation_name(
 @pytest.mark.parametrize('name, error_message', [
     ('', 'Cannot be empty'),
     ('a', 'at least two alphanumeric characters'),
-    ('a' * 256, 'Organisation name must be 255 characters or fewer'),
+    ('a' * 256, 'Organization name must be 255 characters or fewer'),
 ])
 def test_update_organisation_with_incorrect_input(
     client_request,
@@ -1352,7 +1352,7 @@ def test_update_organisation_with_non_unique_name(
                 status_code=400,
                 json={'result': 'error', 'message': 'Organisation name already exists'}
             ),
-            message='Organisation name already exists',
+            message='Organization name already exists',
         )
     )
     client_request.login(platform_admin_user)
@@ -1363,7 +1363,7 @@ def test_update_organisation_with_non_unique_name(
         _expected_status=200,
     )
 
-    assert 'This organisation name is already in use' in page.select_one('.govuk-error-message').text
+    assert 'This organization name is already in use' in page.select_one('.govuk-error-message').text
 
 
 def test_get_edit_organisation_go_live_notes_page(
@@ -1436,7 +1436,7 @@ def test_view_edit_organisation_notes(
         'main.edit_organisation_notes',
         org_id=organisation_one['id'],
     )
-    assert page.select_one('h1').text == "Edit organisation notes"
+    assert page.select_one('h1').text == "Edit organization notes"
     assert page.find('label', class_="form-label").text.strip() == "Notes"
     assert page.find('textarea').attrs["name"] == "notes"
 
@@ -1531,7 +1531,7 @@ def test_view_edit_organisation_billing_details(
         'main.edit_organisation_billing_details',
         org_id=organisation_one['id'],
     )
-    assert page.select_one('h1').text == "Edit organisation billing details"
+    assert page.select_one('h1').text == "Edit organization billing details"
     labels = page.find_all('label', class_="form-label")
     labels_list = [
         'Contact email addresses',

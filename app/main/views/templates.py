@@ -666,7 +666,7 @@ def redact_template(service_id, template_id):
     service_api_client.redact_service_template(service_id, template_id)
 
     flash(
-        'Personalised content will be hidden for messages sent with this template',
+        'Personalized content will be hidden for messages sent with this template',
         'default_with_tick'
     )
 

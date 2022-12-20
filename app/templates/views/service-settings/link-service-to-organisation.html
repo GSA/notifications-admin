@@ -5,7 +5,7 @@
 {% from "components/form.html" import form_wrapper %}
 {% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
 
-{% set page_title = "Link service to organisation" %}
+{% set page_title = "Link service to organization" %}
 
 {% block service_page_title %}
   {{ page_title }}
@@ -29,7 +29,7 @@
       {{ form.organisations }}
       {{ sticky_page_footer('Save') }}
     {% else %}
-      <p class="hint"> No organisations </p>
+      <p class="hint"> No organizations </p>
     {% endif %}
   {% endcall %}
 {% endblock %}
