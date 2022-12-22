@@ -7,7 +7,7 @@ locals {
 }
 
 module "redis" {
-  source = "github.com/18f/terraform-cloudgov//redis"
+  source = "github.com/18f/terraform-cloudgov//redis?ref=v0.1.0"
 
   cf_user          = var.cf_user
   cf_password      = var.cf_password
@@ -20,7 +20,7 @@ module "redis" {
 }
 
 module "logo_upload_bucket" {
-  source = "github.com/18f/terraform-cloudgov//s3"
+  source = "github.com/18f/terraform-cloudgov//s3?ref=v0.1.0"
 
   cf_user          = var.cf_user
   cf_password      = var.cf_password
