@@ -71,8 +71,8 @@ def test_create_mobile_number_change_event_calls_events_api(client_request, mock
     kwargs = {
         "user_id": str(uuid.uuid4()),
         "updated_by_id": str(uuid.uuid4()),
-        "original_mobile_number": '07700900000',
-        "new_mobile_number": '07700900999'
+        "original_mobile_number": '2028675304',
+        "new_mobile_number": '2028675309'
     }
 
     create_mobile_number_change_event(**kwargs)

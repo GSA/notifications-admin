@@ -257,8 +257,8 @@ def test_delete_mobile_number(
 
 
 @pytest.mark.parametrize('phone_number_to_register_with', [
-    '+4407700900460',
-    '+1800-555-555',
+    '+12024900460',
+    '+1800-555-5555',
 ])
 def test_should_redirect_after_mobile_number_change(
     client_request,
@@ -280,7 +280,7 @@ def test_should_show_authenticate_after_mobile_number_change(
     client_request,
 ):
     with client_request.session_transaction() as session:
-        session['new-mob'] = '+441234123123'
+        session['new-mob'] = '+12021234123'
 
     page = client_request.get(
         'main.user_profile_mobile_number_authenticate',
@@ -296,7 +296,7 @@ def test_should_redirect_after_mobile_number_authenticate(
     mock_send_verify_code,
 ):
     with client_request.session_transaction() as session:
-        session['new-mob'] = '+441234123123'
+        session['new-mob'] = '+12021234123'
 
     client_request.post(
         'main.user_profile_mobile_number_authenticate',
@@ -322,7 +322,7 @@ def test_should_show_confirm_after_mobile_number_change(
 
 
 @pytest.mark.parametrize('phone_number_to_register_with', [
-    '+4407700900460',
+    '+12020900460',
     '+1800-555-555',
 ])
 def test_should_redirect_after_mobile_number_confirm(

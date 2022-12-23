@@ -110,26 +110,26 @@ def test_generate_notifications_csv_without_job(
     (
         """
             phone_number
-            07700900123
+            2028675309
         """,
         ['Row number', 'phone_number', 'Template', 'Type', 'Job', 'Status', 'Time'],
-        ['1', '07700900123', 'foo', 'sms', 'bar.csv', 'Delivered', '1943-04-19 12:00:00'],
+        ['1', '2028675309', 'foo', 'sms', 'bar.csv', 'Delivered', '1943-04-19 12:00:00'],
     ),
     (
         """
             phone_number, a, b, c
-            07700900123,  🐜,🐝,🦀
+            2028675309,  🐜,🐝,🦀
         """,
         ['Row number', 'phone_number', 'a', 'b', 'c', 'Template', 'Type', 'Job', 'Status', 'Time'],
-        ['1', '07700900123', '🐜', '🐝', '🦀', 'foo', 'sms', 'bar.csv', 'Delivered', '1943-04-19 12:00:00'],
+        ['1', '2028675309', '🐜', '🐝', '🦀', 'foo', 'sms', 'bar.csv', 'Delivered', '1943-04-19 12:00:00'],
     ),
     (
         """
             "phone_number", "a", "b", "c"
-            "07700900123","🐜,🐜","🐝,🐝","🦀"
+            "2028675309","🐜,🐜","🐝,🐝","🦀"
         """,
         ['Row number', 'phone_number', 'a', 'b', 'c', 'Template', 'Type', 'Job', 'Status', 'Time'],
-        ['1', '07700900123', '🐜,🐜', '🐝,🐝', '🦀', 'foo', 'sms', 'bar.csv', 'Delivered', '1943-04-19 12:00:00'],
+        ['1', '2028675309', '🐜,🐜', '🐝,🐝', '🦀', 'foo', 'sms', 'bar.csv', 'Delivered', '1943-04-19 12:00:00'],
     ),
 ])
 def test_generate_notifications_csv_returns_correct_csv_file(
@@ -170,16 +170,16 @@ def test_generate_notifications_csv_calls_twice_if_next_link(
         'app.s3_client.s3_csv_client.s3download',
         return_value="""
             phone_number
-            07700900000
-            07700900001
-            07700900002
-            07700900003
-            07700900004
-            07700900005
-            07700900006
-            07700900007
-            07700900008
-            07700900009
+            2028675304
+            2028675301
+            2028675302
+            2028675303
+            2028675304
+            2028675305
+            2028675306
+            2028675307
+            2028675308
+            2028675309
         """
     )
 
@@ -203,8 +203,8 @@ def test_generate_notifications_csv_calls_twice_if_next_link(
     csv = list(DictReader(StringIO('\n'.join(csv_content))))
 
     assert len(csv) == 10
-    assert csv[0]['phone_number'] == '07700900000'
-    assert csv[9]['phone_number'] == '07700900009'
+    assert csv[0]['phone_number'] == '2028675304'
+    assert csv[9]['phone_number'] == '2028675309'
     assert mock_get_notifications.call_count == 2
     # mock_calls[0][2] is the kwargs from first call
     assert mock_get_notifications.mock_calls[0][2]['page'] == 1

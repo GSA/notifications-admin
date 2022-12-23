@@ -223,13 +223,13 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_no_messages(
 
 
 @pytest.mark.parametrize('index, expected_row', enumerate([
-    '07900 900000 message-1 1 hour ago',
-    '07900 900000 message-2 1 hour ago',
-    '07900 900000 message-3 1 hour ago',
-    '07900 900002 message-4 3 hours ago',
+    '(202) 867-5300 message-1 1 hour ago',
+    '(202) 867-5300 message-2 1 hour ago',
+    '(202) 867-5300 message-3 1 hour ago',
+    '(202) 867-5302 message-4 3 hours ago',
     '+33 1 12 34 56 78 message-5 5 hours ago',
-    '+1 202-555-0104 message-6 7 hours ago',
-    '+1 202-555-0104 message-7 9 hours ago',
+    '(202) 555-0104 message-6 7 hours ago',
+    '(202) 555-0104 message-7 9 hours ago',
     '+682 12345 message-8 9 hours ago',
 ]))
 def test_inbox_showing_inbound_messages(
@@ -301,7 +301,7 @@ def test_empty_inbox(
     )
 
     assert normalize_spaces(page.select('tbody tr')) == (
-        'When users text your service’s phone number (0781239871) you’ll see the messages here'
+        'When users text your service’s phone number (2028675301) you’ll see the messages here'
     )
     assert not page.select('a[download]')
     assert not page.select('li.next-page')
@@ -389,13 +389,13 @@ def test_download_inbox(
     )
     assert response.get_data(as_text=True) == (
         'Phone number,Message,Received\r\n'
-        '07900 900000,message-1,2016-07-01 13:00\r\n'
-        '07900 900000,message-2,2016-07-01 12:59\r\n'
-        '07900 900000,message-3,2016-07-01 12:59\r\n'
-        '07900 900002,message-4,2016-07-01 10:59\r\n'
+        '(202) 867-5300,message-1,2016-07-01 13:00\r\n'
+        '(202) 867-5300,message-2,2016-07-01 12:59\r\n'
+        '(202) 867-5300,message-3,2016-07-01 12:59\r\n'
+        '(202) 867-5302,message-4,2016-07-01 10:59\r\n'
         '+33 1 12 34 56 78,message-5,2016-07-01 08:59\r\n'
-        '+1 202-555-0104,message-6,2016-07-01 06:59\r\n'
-        '+1 202-555-0104,message-7,2016-07-01 04:59\r\n'
+        '(202) 555-0104,message-6,2016-07-01 06:59\r\n'
+        '(202) 555-0104,message-7,2016-07-01 04:59\r\n'
         '+682 12345,message-8,2016-07-01 04:59\r\n'
     )
 

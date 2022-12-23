@@ -59,7 +59,7 @@ def user_json(
     id_='1234',
     name='Test User',
     email_address='test@gsa.gov',
-    mobile_number='+447700900986',
+    mobile_number='+12028675109',
     password_changed_at=None,
     permissions=None,
     auth_type='sms_auth',
@@ -359,19 +359,19 @@ def inbound_sms_json():
         'has_next': True,
         'data': [{
             'user_number': phone_number,
-            'notify_number': '07900000002',
+            'notify_number': '+12028675309',
             'content': f'message-{index + 1}',
             'created_at': (
                 datetime.utcnow() - timedelta(minutes=60 * hours_ago, seconds=index)
             ).isoformat(),
             'id': sample_uuid(),
         } for index, hours_ago, phone_number in (
-            (0, 1, '447900900000'),
-            (1, 1, '07900900000'),
-            (2, 1, '07900900000'),
-            (3, 3, '07900900002'),
-            (4, 5, '33(0)1 12345678'),  # France
-            (5, 7, '1-202-555-0104'),  # USA in one format
+            (0, 1, '+12028675300'),
+            (1, 1, '2028675300'),
+            (2, 1, '2028675300'),
+            (3, 3, '2028675302'),
+            (4, 5, '+33(0)1 12345678'),  # France
+            (5, 7, '+1-202-555-0104'),  # USA in one format
             (6, 9, '+12025550104'),  # USA in another format
             (7, 9, '+68212345'),  # Cook Islands
         )]
@@ -386,7 +386,7 @@ def create_test_api_user(state, permissions=None):
                  'name': 'Test User',
                  'password': 'somepassword',
                  'email_address': TEST_USER_EMAIL,
-                 'mobile_number': '+441234123412',
+                 'mobile_number': '+12021234123',
                  'state': state,
                  'permissions': permissions or {}
                  }
@@ -473,7 +473,7 @@ def notification_json(
         if template_type == 'email':
             to = 'example@gsa.gov'
         else:
-            to = '07123456789'
+            to = '2021234567'
     if sent_at is None:
         sent_at = str(datetime.utcnow().time())
     if created_at is None:
@@ -548,7 +548,7 @@ def single_notification_json(
 
     data = {
         'sent_at': sent_at,
-        'to': '07123456789',
+        'to': '2021234567',
         'billable_units': 1,
         'status': status,
         'created_at': created_at,

@@ -19,7 +19,7 @@ def test_user(notify_admin):
     user_data = {'id': 1,
                  'name': 'Test User',
                  'email_address': 'test@user.gsa.gov',
-                 'mobile_number': '+4412341234',
+                 'mobile_number': '+12021231234',
                  'state': 'pending',
                  'failed_login_count': 0,
                  'platform_admin': False,
@@ -29,7 +29,7 @@ def test_user(notify_admin):
     assert user.id == 1
     assert user.name == 'Test User'
     assert user.email_address == 'test@user.gsa.gov'
-    assert user.mobile_number == '+4412341234'
+    assert user.mobile_number == '+12021231234'
     assert user.state == 'pending'
 
     # user has ten failed logins before being locked

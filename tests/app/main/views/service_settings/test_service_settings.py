@@ -3470,7 +3470,7 @@ def test_cant_resume_active_service(
 @pytest.mark.parametrize('contact_details_type, contact_details_value', [
     ('url', 'http://example.com/'),
     ('email_address', 'me@example.com'),
-    ('phone_number', '0207 123 4567'),
+    ('phone_number', '202 867 5309'),
 ])
 def test_send_files_by_email_contact_details_prefills_the_form_with_the_existing_contact_details(
     client_request,
@@ -3490,7 +3490,7 @@ def test_send_files_by_email_contact_details_prefills_the_form_with_the_existing
 @pytest.mark.parametrize('contact_details_type, old_value, new_value', [
     ('url', 'http://example.com/', 'http://new-link.com/'),
     ('email_address', 'old@example.com', 'new@example.com'),
-    ('phone_number', '0207 12345', '0207 56789'),
+    ('phone_number', '2021234567', '2028901234'),
 ])
 def test_send_files_by_email_contact_details_updates_contact_details_and_redirects_to_settings_page(
     client_request,
@@ -3534,7 +3534,7 @@ def test_send_files_by_email_contact_details_uses_the_selected_field_when_multip
             'contact_details_type': 'url',
             'url': 'http://www.new-url.com',
             'email_address': 'me@example.com',
-            'phone_number': '0207 123 4567'
+            'phone_number': '202 867 5309'
         },
         _follow_redirects=True
     )
@@ -3623,7 +3623,7 @@ def test_send_files_by_email_contact_details_does_not_update_invalid_contact_det
         'main.service_set_inbound_sms',
         ['sms', 'inbound_sms'],
         (
-            'Your service can receive text messages sent to 0781239871.'
+            'Your service can receive text messages sent to 2028675301.'
         )
     ),
     (
@@ -3694,14 +3694,14 @@ def test_set_inbound_sms_when_inbound_number_is_not_set(
 
 @pytest.mark.parametrize('user, expected_paragraphs', [
     (create_active_user_with_permissions(), [
-        'Your service can receive text messages sent to 07700900123.',
+        'Your service can receive text messages sent to 2028675309.',
         'You can still send text messages from a sender name if you '
         'need to, but users will not be able to reply to those messages.',
         'Contact us if you want to switch this feature off.',
         'You can set up callbacks for received text messages on the API integration page.',
     ]),
     (create_active_user_no_api_key_permission(), [
-        'Your service can receive text messages sent to 07700900123.',
+        'Your service can receive text messages sent to 2028675309.',
         'You can still send text messages from a sender name if you '
         'need to, but users will not be able to reply to those messages.',
         'Contact us if you want to switch this feature off.',
@@ -3716,7 +3716,7 @@ def test_set_inbound_sms_when_inbound_number_is_set(
 ):
     service_one['permissions'] = ['inbound_sms']
     mocker.patch('app.inbound_number_client.get_inbound_sms_number_for_service', return_value={
-        'data': {'number': '07700900123'}
+        'data': {'number': '2028675309'}
     })
     client_request.login(user)
     page = client_request.get(

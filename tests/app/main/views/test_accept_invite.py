@@ -465,7 +465,7 @@ def test_new_user_accept_invite_completes_new_registration_redirects_to_verify(
             'email_address': sample_invite['email_address'],
             'from_user': sample_invite['from_user'],
             'password': 'longpassword',
-            'mobile_number': '+447890123456',
+            'mobile_number': '+12027890123',
             'name': 'Invited User',
             'auth_type': 'email_auth'
             }
@@ -584,7 +584,7 @@ def test_new_invited_user_verifies_and_added_to_service(
         'email_address': sample_invite['email_address'],
         'from_user': sample_invite['from_user'],
         'password': 'longpassword',
-        'mobile_number': '+447890123456',
+        'mobile_number': '+12027890123',
         'name': 'Invited User',
         'auth_type': 'sms_auth'
     }
