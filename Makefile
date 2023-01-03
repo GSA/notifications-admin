@@ -69,8 +69,10 @@ freeze-requirements: ## create static requirements.txt
 
 .PHONY: pip-audit
 pip-audit:
-	pipenv run pip-audit -r requirements.txt -l --ignore-vuln PYSEC-2022-237
-	-pipenv run pip-audit -r requirements_for_test.txt -l
+	pipenv requirements > requirements.txt
+	pipenv requirements --dev > requirements_for_test.txt
+	pipenv run pip-audit -r requirements.txt --ignore-vuln PYSEC-2022-237
+	-pipenv run pip-audit -r requirements_for_test.txt
 
 .PHONY: audit
 audit: npm-audit pip-audit
