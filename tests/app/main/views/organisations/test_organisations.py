@@ -63,7 +63,7 @@ def test_organisation_page_shows_all_organisations(
 
     assert normalize_spaces(
         page.select_one('a.govuk-button--secondary').text
-    ) == 'New organisation'
+    ) == 'New organization'
     get_organisations.assert_called_once_with()
 
 
@@ -211,7 +211,7 @@ def test_create_new_organisation_fails_with_duplicate_name(
     mocker,
 ):
     def _create(**_kwargs):
-        json_mock = mocker.Mock(return_value={'message': 'Organisation name already exists'})
+        json_mock = mocker.Mock(return_value={'message': 'Organization name already exists'})
         resp_mock = mocker.Mock(status_code=400, json=json_mock)
         http_error = HTTPError(response=resp_mock, message="Default message")
         raise http_error
@@ -232,7 +232,7 @@ def test_create_new_organisation_fails_with_duplicate_name(
         _expected_status=200,
     )
 
-    error_message = 'This organisation name is already in use'
+    error_message = 'This organization name is already in use'
     assert error_message in page.select_one('.govuk-error-message').text
 
 
@@ -972,7 +972,7 @@ def test_organisation_settings_for_platform_admin(
             {
                 'value': 'yes',
                 'label': 'Yes',
-                'hint': 'Users will be told their organisation has already signed the agreement'
+                'hint': 'Users will be told their organization has already signed the agreement'
             },
             {
                 'value': 'no',

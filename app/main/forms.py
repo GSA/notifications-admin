@@ -980,7 +980,7 @@ class OrganisationTypeField(GovukRadiosField):
                 (value, label) for value, label in Organisation.TYPE_LABELS.items()
                 if not include_only or value in include_only
             ],
-            thing='the type of organisation',
+            thing='the type of organization',
             validators=validators or [],
             **kwargs
         )
@@ -1154,7 +1154,7 @@ class OrganisationCrownStatusForm(StripWhitespaceForm):
             ('non-crown', 'No'),
             ('unknown', 'Not sure'),
         ],
-        thing='whether this organisation is a crown body',
+        thing='whether this organization is a crown body',
     )
 
 
@@ -1166,7 +1166,7 @@ class OrganisationAgreementSignedForm(StripWhitespaceForm):
             ('no', 'No'),
             ('unknown', 'No (but we have some service-specific agreements in place)'),
         ],
-        thing='whether this organisation has signed the agreement',
+        thing='whether this organization has signed the agreement',
         param_extensions={
             'items': [
                 {'hint': {'html': 'Users will be told their organization has already signed the agreement'}},

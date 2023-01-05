@@ -1398,7 +1398,7 @@ def test_link_to_upload_not_offered_when_entering_personalisation(
         step_index=1,
     )
 
-    # We’re entering personalisation
+    # We’re entering personalization
     assert page.select_one('input[type=text]')['name'] == 'placeholder_value'
     assert page.select_one('label[for=placeholder_value]').text.strip() == 'name'
     # No ‘Upload’ link shown
