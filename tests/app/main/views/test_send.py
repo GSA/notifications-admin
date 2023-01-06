@@ -343,8 +343,7 @@ def test_example_spreadsheet(
 
 @pytest.mark.parametrize(
     "filename, acceptable_file, expected_status",
-    # TODO update the excel files with expected phone numbers
-    # list(zip(test_spreadsheet_files, repeat(True), repeat(302))) +
+    list(zip(test_spreadsheet_files, repeat(True), repeat(302))) +
     list(zip(test_non_spreadsheet_files, repeat(False), repeat(200)))
 )
 def test_upload_files_in_different_formats(
