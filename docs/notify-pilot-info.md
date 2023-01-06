@@ -97,3 +97,11 @@ To get involved, email us at [notify-support@gsa.gov](mailto:notify-support@gsa.
     co-design a pilot program to test U.S. Notify for specific use cases.
     Early adopters will have wrap-around set-up support from the Studio
     and an opportunity to shape the future of this product.
+    
+### US Notify Demo
+
+
+
+https://user-images.githubusercontent.com/6556888/208711970-eb70e618-fd13-4e38-bb61-3ddbf6e21a6d.mp4
+
+
