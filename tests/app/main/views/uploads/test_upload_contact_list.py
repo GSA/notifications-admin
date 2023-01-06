@@ -30,7 +30,7 @@ def test_upload_contact_list_page(client_request):
     assert normalize_spaces(page.select('.spreadsheet')[1].text) == (
         'Example A '
         '1 phone number '
-        '2 07700 900123'
+        '2 555-867-5309'
     )
 
 
@@ -38,7 +38,7 @@ def test_upload_contact_list_page(client_request):
     (
         """
             telephone,name
-            +447700900986
+            +12028675109
         """,
         (
             'Your file has too many columns '
@@ -46,12 +46,12 @@ def test_upload_contact_list_page(client_request):
             'Right now it has 2 columns called ‘telephone’ and ‘name’.'
         ),
         'Row in file 1 telephone name',
-        '2 +447700900986',
+        '2 +12028675109',
     ),
     (
         """
             phone number, email address
-            +447700900986, test@example.com
+            +12028675109, test@example.com
         """,
         (
             'Your file has too many columns '
@@ -59,19 +59,19 @@ def test_upload_contact_list_page(client_request):
             'Right now it has 2 columns called ‘phone number’ and ‘email address’.'
         ),
         'Row in file 1 phone number email address',
-        '2 +447700900986 test@example.com',
+        '2 +12028675109 test@example.com',
     ),
     (
         """
             email address
-            +447700900986
+            +12028675109
         """,
         (
             'There’s a problem with invalid.csv '
             'You need to fix 1 email address.'
         ),
         'Row in file 1 email address',
-        '2 Not a valid email address +447700900986',
+        '2 Not a valid email address +12028675109',
     ),
     (
         """
@@ -83,12 +83,12 @@ def test_upload_contact_list_page(client_request):
             'You need to fix 1 phone number.'
         ),
         'Row in file 1 phone number',
-        '2 Must not contain letters or symbols test@example.com',
+        '2 The string supplied did not seem to be a phone number. test@example.com',
     ),
     (
         """
             phone number, phone number, PHONE_NUMBER
-            +447700900111,+447700900222,+447700900333,
+            +12027900111,+12027900222,+12027900333,
         """,
         (
             'Your file has too many columns '
@@ -96,7 +96,7 @@ def test_upload_contact_list_page(client_request):
             'Right now it has 3 columns called ‘phone number’, ‘phone number’ and ‘PHONE_NUMBER’.'
         ),
         'Row in file 1 phone number phone number PHONE_NUMBER',
-        '2 +447700900333 +447700900333 +447700900333',
+        '2 +12027900333 +12027900333 +12027900333',
     ),
     (
         """
@@ -110,13 +110,13 @@ def test_upload_contact_list_page(client_request):
         '',
     ),
     (
-        "+447700900986",
+        "+12028675109",
         (
             'Your file is missing some rows '
             'It needs at least one row of data, in a column called '
             '‘email address’ or ‘phone number’.'
         ),
-        'Row in file 1 +447700900986',
+        'Row in file 1 +12028675109',
         '',
     ),
     (
@@ -132,9 +132,9 @@ def test_upload_contact_list_page(client_request):
     (
         """
             phone number
-            +447700900986
+            +12028675109
 
-            +447700900986
+            +12028675109
         """,
         (
             'There’s a problem with invalid.csv '
@@ -148,14 +148,14 @@ def test_upload_contact_list_page(client_request):
     (
         """
             phone number
-            +447700900
+            +12027900
         """,
         (
             'There’s a problem with invalid.csv '
             'You need to fix 1 phone number.'
         ),
         'Row in file 1 phone number',
-        '2 Not enough digits +447700900',
+        '2 Not enough digits +12027900',
     ),
     (
         """
@@ -244,7 +244,7 @@ def test_upload_csv_file_shows_error_banner_for_too_many_rows(
     mocker.patch('app.models.contact_list.utils_s3upload', return_value=fake_uuid)
     mocker.patch('app.models.contact_list.set_s3_metadata')
     mocker.patch('app.models.contact_list.get_s3_contents', return_value='\n'.join(
-        ['phone number'] + (['07700900986'] * 100_001)
+        ['phone number'] + (['2028675309'] * 100_001)
     ))
     mocker.patch('app.models.contact_list.get_s3_metadata',
                  return_value={'original_file_name': 'invalid.csv'})
@@ -293,7 +293,7 @@ def test_upload_csv_file_sanitises_and_truncates_file_name_in_metadata(
     mocker.patch('app.models.contact_list.utils_s3upload', return_value=fake_uuid)
     mock_set_metadata = mocker.patch('app.models.contact_list.set_s3_metadata')
     mocker.patch('app.models.contact_list.get_s3_contents', return_value='\n'.join(
-        ['phone number'] + (['07700900986'] * 100_001)
+        ['phone number'] + (['2028675309'] * 100_001)
     ))
 
     filename = f"😁{'a' * 2000}.csv"
@@ -323,7 +323,7 @@ def test_upload_csv_shows_trial_mode_error(
     mocker.patch('app.models.contact_list.utils_s3upload', return_value=fake_uuid)
     mocker.patch('app.models.contact_list.get_s3_contents', return_value=(
         'phone number\n'
-        '07900900321'  # Not in team
+        '2028675209'  # Not in team
     ))
     mocker.patch('app.models.contact_list.get_s3_metadata',
                  return_value={'original_file_name': 'invalid.csv'})
@@ -642,7 +642,7 @@ def test_download_contact_list(
 ):
     mocker.patch(
         'app.models.contact_list.get_s3_contents',
-        return_value='phone number\n07900900321'
+        return_value='phone number\n2028675209'
     )
     response = client_request.get_response(
         'main.download_contact_list',
@@ -659,7 +659,7 @@ def test_download_contact_list(
     )
     assert response.get_data(as_text=True) == (
         'phone number\n'
-        '07900900321'
+        '2028675209'
     )
 
 
@@ -673,7 +673,7 @@ def test_confirm_delete_contact_list(
 ):
     mocker.patch(
         'app.models.contact_list.get_s3_contents',
-        return_value='phone number\n07900900321'
+        return_value='phone number\n2028675209'
     )
     page = client_request.get(
         'main.delete_contact_list',

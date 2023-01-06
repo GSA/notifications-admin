@@ -371,9 +371,9 @@ def test_upload_files_in_different_formats(
     if acceptable_file:
         assert mock_s3_upload.call_args[0][1]['data'].strip() == (
             "phone number,name,favourite colour,fruit\r\n"
-            "07739 468 050,Pete,Coral,tomato\r\n"
-            "07527 125 974,Not Pete,Magenta,Avacado\r\n"
-            "07512 058 823,Still Not Pete,Crimson,Pear"
+            "202 946 8050,Pete,Coral,tomato\r\n"
+            "202 712 5974,Not Pete,Magenta,Avacado\r\n"
+            "202 205 8823,Still Not Pete,Crimson,Pear"
         )
         mock_s3_set_metadata.assert_called_once_with(
             SERVICE_ONE_ID,
@@ -494,8 +494,8 @@ def test_upload_csv_file_with_errors_shows_check_page_with_errors(
         'app.main.views.send.s3download',
         return_value="""
             phone number,name
-            +447700900986
-            +447700900986
+            +12028675109
+            +12028675109
         """
     )
 
@@ -515,7 +515,7 @@ def test_upload_csv_file_with_errors_shows_check_page_with_errors(
     assert page.select_one('input[type=file]')['accept'] == '.csv,.xlsx,.xls,.ods,.xlsm,.tsv'
 
     assert 'There’s a problem with example.csv' in page.text
-    assert '+447700900986' in page.text
+    assert '+12028675109' in page.text
     assert 'Missing' in page.text
     assert 'Upload your file again' in page.text
 
@@ -539,8 +539,8 @@ def test_upload_csv_file_with_empty_message_shows_check_page_with_errors(
         'app.main.views.send.s3download',
         return_value="""
             phone number, show_placeholder
-            +447700900986, yes
-            +447700900986, no
+            +12028675109, yes
+            +12028675109, no
         """
     )
 
@@ -566,7 +566,7 @@ def test_upload_csv_file_with_empty_message_shows_check_page_with_errors(
         normalize_spaces(row.text) for row in page.select('tbody tr')
     ] == [
         '3 No content for this message',
-        '+447700900986 no',
+        '+12028675109 no',
     ]
     assert normalize_spaces(page.select_one('.table-field-index').text) == '3'
     assert page.select_one('.table-field-index')['rowspan'] == '2'
@@ -596,8 +596,8 @@ def test_upload_csv_file_with_very_long_placeholder_shows_check_page_with_errors
         'app.main.views.send.s3download',
         return_value=f"""
             phone number, name
-            +447700900986, {big_placeholder}
-            +447700900987, {big_placeholder}
+            +12028675109, {big_placeholder}
+            +12027700900, {big_placeholder}
         """
     )
 
@@ -623,9 +623,9 @@ def test_upload_csv_file_with_very_long_placeholder_shows_check_page_with_errors
         normalize_spaces(row.text) for row in page.select('tbody tr')
     ] == [
         '2 Message is too long',
-        f'+447700900986 {big_placeholder}',
+        f'+12028675109 {big_placeholder}',
         '3 Message is too long',
-        f'+447700900987 {big_placeholder}',
+        f'+12027700900 {big_placeholder}',
     ]
     assert normalize_spaces(page.select_one('.table-field-index').text) == '2'
     assert page.select_one('.table-field-index')['rowspan'] == '2'
@@ -640,7 +640,7 @@ def test_upload_csv_file_with_very_long_placeholder_shows_check_page_with_errors
     (
         """
             telephone,name
-            +447700900986
+            +12028675109
         """,
         (
             'There’s a problem with your column names '
@@ -651,7 +651,7 @@ def test_upload_csv_file_with_very_long_placeholder_shows_check_page_with_errors
     (
         """
             phone number
-            +447700900986
+            +12028675109
         """,
         (
             'Your column names need to match the double brackets in your template '
@@ -661,7 +661,7 @@ def test_upload_csv_file_with_very_long_placeholder_shows_check_page_with_errors
     (
         """
             phone number, phone number, PHONE_NUMBER
-            +447700900111,+447700900222,+447700900333,
+            +12027900111,+12027900222,+12027900333,
         """,
         (
             'There’s a problem with your column names '
@@ -679,7 +679,7 @@ def test_upload_csv_file_with_very_long_placeholder_shows_check_page_with_errors
         )
     ),
     (
-        "+447700900986",
+        "+12028675109",
         (
             'Your file is missing some rows '
             'It needs at least one row of data, and columns called ‘name’ and ‘phone number’.'
@@ -695,9 +695,9 @@ def test_upload_csv_file_with_very_long_placeholder_shows_check_page_with_errors
     (
         """
             phone number, name
-            +447700900986, example
+            +12028675109, example
             , example
-            +447700900986, example
+            +12028675109, example
         """,
         (
             'There’s a problem with example.csv '
@@ -707,9 +707,9 @@ def test_upload_csv_file_with_very_long_placeholder_shows_check_page_with_errors
     (
         """
             phone number, name
-            +447700900986, example
-            +447700900986,
-            +447700900986, example
+            +12028675109, example
+            +12028675109,
+            +12028675109, example
         """,
         (
             'There’s a problem with example.csv '
@@ -814,19 +814,19 @@ def test_upload_valid_csv_redirects_to_check_page(
     (
         {},
         None,
-        'To: 07700900001',
+        'To: 2028675301',
         'Test Service: A, Template <em>content</em> with & entity',
     ),
     (
         {'row_index': 2},
         None,
-        'To: 07700900001',
+        'To: 2028675301',
         'Test Service: A, Template <em>content</em> with & entity',
     ),
     (
         {'row_index': 4},
         True,
-        'To: 07700900003',
+        'To: 2028675303',
         'Test Service: C, Template <em>content</em> with & entity',
     ),
 ])
@@ -855,9 +855,9 @@ def test_upload_valid_csv_shows_preview_and_table(
 
     mocker.patch('app.main.views.send.s3download', return_value="""
         phone number,name,thing,thing,thing
-        07700900001, A,   foo,  foo,  foo
-        07700900002, B,   foo,  foo,  foo
-        07700900003, C,   foo,  foo,
+        2028675301, A,   foo,  foo,  foo
+        2028675302, B,   foo,  foo,  foo
+        2028675303, C,   foo,  foo,
     """)
 
     page = client_request.get(
@@ -897,7 +897,7 @@ def test_upload_valid_csv_shows_preview_and_table(
 
     for row_index, row in enumerate([
         (
-            '<td class="table-field-left-aligned"> <div class=""> 07700900001 </div> </td>',
+            '<td class="table-field-left-aligned"> <div class=""> 2028675301 </div> </td>',
             '<td class="table-field-left-aligned"> <div class=""> A </div> </td>',
             (
                 '<td class="table-field-left-aligned"> '
@@ -910,7 +910,7 @@ def test_upload_valid_csv_shows_preview_and_table(
             )
         ),
         (
-            '<td class="table-field-left-aligned"> <div class=""> 07700900002 </div> </td>',
+            '<td class="table-field-left-aligned"> <div class=""> 2028675302 </div> </td>',
             '<td class="table-field-left-aligned"> <div class=""> B </div> </td>',
             (
                 '<td class="table-field-left-aligned"> '
@@ -923,7 +923,7 @@ def test_upload_valid_csv_shows_preview_and_table(
             )
         ),
         (
-            '<td class="table-field-left-aligned"> <div class=""> 07700900003 </div> </td>',
+            '<td class="table-field-left-aligned"> <div class=""> 2028675303 </div> </td>',
             '<td class="table-field-left-aligned"> <div class=""> C </div> </td>',
             (
                 '<td class="table-field-left-aligned"> '
@@ -962,7 +962,7 @@ def test_show_all_columns_if_there_are_duplicate_recipient_columns(
 
     mocker.patch('app.main.views.send.s3download', return_value="""
         phone number, phone_number, PHONENUMBER
-        07700900001,  07700900002,  07700900003
+        2028675301,  2028675302,  2028675303
     """)
 
     page = client_request.get(
@@ -977,7 +977,7 @@ def test_show_all_columns_if_there_are_duplicate_recipient_columns(
         'Row in file1 phone number phone_number PHONENUMBER'
     )
     assert normalize_spaces(page.select_one('tbody').text) == (
-        '2 07700900003 07700900003 07700900003'
+        '2 2028675303 2028675303 2028675303'
     )
 
 
@@ -1012,9 +1012,9 @@ def test_404_for_previewing_a_row_out_of_range(
 
     mocker.patch('app.main.views.send.s3download', return_value="""
         phone number,name,thing,thing,thing
-        07700900001, A,   foo,  foo,  foo
-        07700900002, B,   foo,  foo,  foo
-        07700900003, C,   foo,  foo,  foo
+        2028675301, A,   foo,  foo,  foo
+        2028675302, B,   foo,  foo,  foo
+        2028675303, C,   foo,  foo,  foo
     """)
 
     client_request.get(
@@ -1122,12 +1122,12 @@ def test_send_one_off_has_correct_page_title(
     ),
     (
         1,
-        {'phone number': '07900900123'},
+        {'phone number': '2020900123'},
         'one',
     ),
     (
         2,
-        {'phone number': '07900900123', 'one': 'one'},
+        {'phone number': '2020900123', 'one': 'one'},
         'two',
     ),
 ])
@@ -1388,8 +1388,8 @@ def test_link_to_upload_not_offered_when_entering_personalisation(
     client_request.login(user)
 
     with client_request.session_transaction() as session:
-        session['recipient'] = '07900900900'
-        session['placeholders'] = {'phone number': '07900900900'}
+        session['recipient'] = '2029009009'
+        session['placeholders'] = {'phone number': '2029009009'}
 
     page = client_request.get(
         'main.send_one_off_step',
@@ -1421,8 +1421,8 @@ def test_send_one_off_redirects_to_end_if_step_out_of_bounds(
     client_request.login(user)
 
     with client_request.session_transaction() as session:
-        session['recipient'] = '07900900123'
-        session['placeholders'] = {'name': 'foo', 'phone number': '07900900123'}
+        session['recipient'] = '2020900123'
+        session['placeholders'] = {'name': 'foo', 'phone number': '2020900123'}
 
     client_request.get(
         'main.send_one_off_step',
@@ -1625,8 +1625,8 @@ def test_send_one_off_sms_message_back_link_with_multiple_placeholders(
     mock_has_no_jobs,
 ):
     with client_request.session_transaction() as session:
-        session['recipient'] = '07900900123'
-        session['placeholders'] = {'phone number': '07900900123', 'one': 'bar'}
+        session['recipient'] = '2020900123'
+        session['placeholders'] = {'phone number': '2020900123', 'one': 'bar'}
 
     page = client_request.get(
         'main.send_one_off_step',
@@ -1678,8 +1678,8 @@ def test_send_one_off_sms_message_puts_submitted_data_in_session(
     fake_uuid,
 ):
     with client_request.session_transaction() as session:
-        session['recipient'] = '07700 900762'
-        session['placeholders'] = {'phone number': '07700 900762'}
+        session['recipient'] = '202-867-5303'
+        session['placeholders'] = {'phone number': '202-867-5303'}
 
     client_request.post(
         'main.send_one_off_step',
@@ -1696,8 +1696,8 @@ def test_send_one_off_sms_message_puts_submitted_data_in_session(
     )
 
     with client_request.session_transaction() as session:
-        assert session['recipient'] == '07700 900762'
-        assert session['placeholders'] == {'phone number': '07700 900762', 'name': 'Jo'}
+        assert session['recipient'] == '202-867-5303'
+        assert session['placeholders'] == {'phone number': '202-867-5303', 'name': 'Jo'}
 
 
 def test_send_one_off_clears_session(
@@ -1710,7 +1710,7 @@ def test_send_one_off_clears_session(
     mocker.patch('app.service_api_client.get_service_template', return_value=template)
 
     with client_request.session_transaction() as session:
-        session['recipient'] = '07700900001'
+        session['recipient'] = '2028675301'
         session['placeholders'] = {'foo': 'bar'}
 
     client_request.get(
@@ -1766,7 +1766,7 @@ def test_upload_csvfile_with_valid_phone_shows_all_numbers(
     mocker.patch(
         'app.main.views.send.s3download',
         return_value='\n'.join(['phone number'] + [
-            '07700 9007{0:02d}'.format(final_two) for final_two in range(0, 53)
+            '202 867 07{0:02d}'.format(final_two) for final_two in range(0, 53)
         ])
     )
     mock_get_notification_count = mocker.patch('app.service_api_client.get_notification_count', return_value=0)
@@ -1796,9 +1796,9 @@ def test_upload_csvfile_with_valid_phone_shows_all_numbers(
         original_file_name='example.csv',
     )
 
-    assert '07700 900701' in page.text
-    assert '07700 900749' in page.text
-    assert '07700 900750' not in page.text
+    assert '202 867 0701' in page.text
+    assert '202 867 0749' in page.text
+    assert '202 867 0750' not in page.text
     assert 'Only showing the first 50 rows' in page.text
 
     mock_get_notification_count.assert_called_once_with(service_one['id'])
@@ -1914,7 +1914,7 @@ def test_send_button_is_correctly_labelled(
     mock_s3_get_metadata,
 ):
     mocker.patch('app.main.views.send.s3download', return_value='\n'.join(
-        ['phone_number'] + (['07900900123'] * 1000)
+        ['phone_number'] + (['2028670123'] * 1000)
     ))
     mocker.patch('app.main.views.send.set_metadata_on_csv_upload')
 
@@ -2041,7 +2041,7 @@ def test_route_permissions_send_check_notifications(
     method
 ):
     with client_request.session_transaction() as session:
-        session['recipient'] = '07700900001'
+        session['recipient'] = '2028675301'
         session['placeholders'] = {'name': 'a'}
     validate_route_permission_with_client(
         mocker,
@@ -2226,7 +2226,7 @@ def test_check_messages_shows_trial_mode_error(
     mocker
 ):
     mocker.patch('app.main.views.send.s3download', return_value=(
-        'phone number,\n07900900321'  # Not in team
+        'phone number,\n2028675209'  # Not in team
     ))
 
     with client_request.session_transaction() as session:
@@ -2272,7 +2272,7 @@ def test_warns_if_file_sent_already(
     uploaded_file_name,
 ):
     mocker.patch('app.main.views.send.s3download', return_value=(
-        'phone number,\n07900900321'
+        'phone number,\n2028675209'
     ))
     mocker.patch(
         'app.main.views.send.get_csv_metadata',
@@ -2352,7 +2352,7 @@ def test_check_messages_adds_sender_id_in_session_to_metadata(
     fake_uuid,
 ):
     mocker.patch('app.main.views.send.s3download', return_value=(
-        'phone number,\n07900900321'
+        'phone number,\n2028675209'
     ))
     mocker.patch('app.main.views.send.get_sms_sender_from_session')
 
@@ -2425,7 +2425,7 @@ def test_check_messages_shows_over_max_row_error(
 
 @pytest.mark.parametrize('existing_session_items', [
     {},
-    {'recipient': '07700900001'},
+    {'recipient': '2028675301'},
     {'name': 'Jo'}
 ])
 def test_check_notification_redirects_if_session_not_populated(
@@ -2459,7 +2459,7 @@ def test_check_notification_shows_preview(
     mock_get_service_template
 ):
     with client_request.session_transaction() as session:
-        session['recipient'] = '07700900001'
+        session['recipient'] = '2028675301'
         session['placeholders'] = {}
 
     page = client_request.get(
@@ -2493,7 +2493,7 @@ def test_check_notification_shows_preview(
 @pytest.mark.parametrize('template, recipient, placeholders, expected_personalisation', (
     (
         mock_get_service_template,
-        '07700900001',
+        '2028675301',
         {'a': 'b'},
         {'a': 'b'},
     ),
@@ -2541,7 +2541,7 @@ def test_send_notification_clears_session(
     mock_get_service_template,
 ):
     with client_request.session_transaction() as session:
-        session['recipient'] = '07700900001'
+        session['recipient'] = '2028675301'
         session['placeholders'] = {'a': 'b'}
 
     client_request.post(
@@ -2594,7 +2594,7 @@ def test_send_notification_redirects_to_view_page(
     extra_redirect_args
 ):
     with client_request.session_transaction() as session:
-        session['recipient'] = '07700900001'
+        session['recipient'] = '2028675301'
         session['placeholders'] = {'a': 'b'}
 
     client_request.post(
@@ -2656,7 +2656,7 @@ def test_send_notification_shows_error_if_400(
         side_effect=MockHTTPError(),
     )
     with client_request.session_transaction() as session:
-        session['recipient'] = '07700900001'
+        session['recipient'] = '2028675301'
         session['placeholders'] = {'name': 'a' * 900}
 
     page = client_request.post(
@@ -2790,11 +2790,11 @@ def test_sms_sender_is_previewed(
 
     mocker.patch('app.main.views.send.s3download', return_value="""
         phone number,date,thing
-        7700900986,foo,bar
+        2028675109,foo,bar
     """)
 
     with client_request.session_transaction() as session:
-        session['recipient'] = '7700900986'
+        session['recipient'] = '2028675109'
         session['placeholders'] = {}
         session['file_uploads'] = {
             fake_uuid: {
@@ -3044,5 +3044,5 @@ def test_send_to_myself_sets_placeholder_and_redirects_for_sms(
     )
 
     with client_request.session_transaction() as session:
-        assert session['recipient'] == '07700 900762'
-        assert session['placeholders'] == {'phone number': '07700 900762'}
+        assert session['recipient'] == '202-867-5303'
+        assert session['placeholders'] == {'phone number': '202-867-5303'}

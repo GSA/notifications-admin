@@ -17,8 +17,8 @@ def test_form_fails_validation_with_no_radio_buttons_selected(notify_admin):
     ('phone_number', 'url', 'http://www.example.com'),
     ('url', 'email_address', 'user@example.com'),
     ('phone_number', 'email_address', 'user@example.com'),
-    ('url', 'phone_number', '0207 123 4567'),
-    ('email_address', 'phone_number', '0207 123 4567'),
+    ('url', 'phone_number', '202 867 5309'),
+    ('email_address', 'phone_number', '202 867 5309'),
 ])
 def test_form_fails_validation_when_radio_button_selected_and_text_box_filled_in_do_not_match(
     notify_admin,
@@ -39,7 +39,7 @@ def test_form_fails_validation_when_radio_button_selected_and_text_box_filled_in
 @pytest.mark.parametrize('selected_field, url, email_address, phone_number', [
     ('url', 'http://www.example.com', 'invalid-email.com', 'phone'),
     ('email_address', 'www.invalid-url.com', 'me@example.com', 'phone'),
-    ('phone_number', 'www.invalid-url.com', 'invalid-email.com', '0207 123 4567'),
+    ('phone_number', 'www.invalid-url.com', 'invalid-email.com', '202 867 5309'),
 ])
 def test_form_only_validates_the_field_which_matches_the_selected_radio_button(
     notify_admin,

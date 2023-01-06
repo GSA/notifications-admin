@@ -46,24 +46,24 @@ def test_client_gets_notifications_for_service_and_job_by_page(mocker, arguments
 
 @pytest.mark.parametrize("arguments,expected_call", [
     (
-        {'to': "0793433"},
-        {'url': '/service/abcd1234/notifications', 'data': {'to': "0793433"}}
+        {'to': "2028675309"},
+        {'url': '/service/abcd1234/notifications', 'data': {'to': "2028675309"}}
     ),
     (
-        {'to': "0793433", 'job_id': 'efgh5678'},
-        {'url': '/service/abcd1234/job/efgh5678/notifications', 'data': {'to': "0793433"}}
+        {'to': "2028675309", 'job_id': 'efgh5678'},
+        {'url': '/service/abcd1234/job/efgh5678/notifications', 'data': {'to': "2028675309"}}
     ),
     (
-        {'to': "0793433", 'page': 99},
-        {'url': '/service/abcd1234/notifications', 'data': {'to': "0793433", 'page': 99}}
+        {'to': "2028675309", 'page': 99},
+        {'url': '/service/abcd1234/notifications', 'data': {'to': "2028675309", 'page': 99}}
     ),
     (
-        {'to': "0793433", 'limit_days': 3},
-        {'url': '/service/abcd1234/notifications', 'data': {'to': "0793433", 'limit_days': 3}}
+        {'to': "2028675309", 'limit_days': 3},
+        {'url': '/service/abcd1234/notifications', 'data': {'to': "2028675309", 'limit_days': 3}}
     ),
     (
-        {'to': "0793433", 'job_id': 'efgh5678', 'limit_days': 3},
-        {'url': '/service/abcd1234/job/efgh5678/notifications', 'data': {'to': "0793433"}}
+        {'to': "2028675309", 'job_id': 'efgh5678', 'limit_days': 3},
+        {'url': '/service/abcd1234/job/efgh5678/notifications', 'data': {'to': "2028675309"}}
     ),
 ])
 def test_client_gets_notifications_for_service_and_job_by_page_posts_for_to(mocker, arguments, expected_call):
@@ -78,7 +78,7 @@ def test_send_notification(mocker, client_request, active_user_with_permissions)
     NotificationApiClient().send_notification(
         'foo',
         template_id='bar',
-        recipient='07700900001',
+        recipient='2028675301',
         personalisation=None,
         sender_id=None
     )
@@ -86,7 +86,7 @@ def test_send_notification(mocker, client_request, active_user_with_permissions)
         url='/service/foo/send-notification',
         data={
             'template_id': 'bar',
-            'to': '07700900001',
+            'to': '2028675301',
             'personalisation': None,
             'created_by': active_user_with_permissions['id']
         }

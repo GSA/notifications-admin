@@ -81,7 +81,7 @@ from tests.conftest import (
 @pytest.mark.parametrize(
     "to_argument, expected_to_argument", [
         ('', ''),
-        ('+447900900123', '+447900900123'),
+        ('+12029000123', '+12029000123'),
         ('test@example.com', 'test@example.com'),
     ]
 )
@@ -134,7 +134,7 @@ def test_can_show_notifications(
     ) == (
         # Comes from
         # https://github.com/alphagov/notifications-admin/blob/8faffad508f9a087b0006989c197741c693cc2e2/tests/__init__.py#L436
-        '07123456789'
+        '2021234567'
     )
     assert normalize_spaces(
         # We’re doing str() here not .text to make sure there’s no extra
@@ -587,7 +587,7 @@ def test_html_contains_links_for_failed_notifications(
 
 @pytest.mark.parametrize('notification_type, expected_row_contents', (
     ('sms', (
-        '07123456789 hello & welcome hidden'
+        '2021234567 hello & welcome hidden'
     )),
     ('email', (
         'example@gsa.gov hidden, hello & welcome'
