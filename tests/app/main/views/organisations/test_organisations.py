@@ -34,7 +34,7 @@ def test_organisation_page_shows_all_organisations(
 
     assert normalize_spaces(
         page.select_one('h1').text
-    ) == "Organisations"
+    ) == "Organizations"
 
     assert [
         (
@@ -922,18 +922,18 @@ def test_organisation_settings_for_platform_admin(
 ):
     expected_rows = [
         'Label Value Action',
-        'Name Test organisation Change organisation name',
-        'Sector Federal government Change sector for the organisation',
-        'Crown organisation Yes Change organisation crown status',
+        'Name Test organisation Change organization name',
+        'Sector Federal government Change sector for the organization',
+        'Crown organization Yes Change organization crown status',
         (
             'Data sharing and financial agreement '
-            'Not signed Change data sharing and financial agreement for the organisation'
+            'Not signed Change data sharing and financial agreement for the organization'
         ),
-        'Request to go live notes None Change go live notes for the organisation',
-        'Billing details None Change billing details for the organisation',
-        'Notes None Change the notes for the organisation',
-        'Default email branding GOV.UK Change default email branding for the organisation',
-        'Known email domains None Change known email domains for the organisation',
+        'Request to go live notes None Change go live notes for the organization',
+        'Billing details None Change billing details for the organization',
+        'Notes None Change the notes for the organization',
+        'Default email branding GOV.UK Change default email branding for the organization',
+        'Known email domains None Change known email domains for the organization',
     ]
 
     client_request.login(platform_admin_user)

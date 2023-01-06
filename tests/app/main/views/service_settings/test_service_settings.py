@@ -94,7 +94,7 @@ def mock_get_service_settings_page_common(
         'Count in list of live services Yes Change if service is counted in list of live services',
         'Billing details None Change billing details for service',
         'Notes None Change the notes for the service',
-        'Organization Test organisation Federal government Change organisation for service',
+        'Organization Test organisation Federal government Change organization for service',
         'Rate limit 3,000 per minute Change rate limit',
         'Message limit 1,000 per day Change daily message limit',
         'Free text message allowance 250,000 per year Change free text message allowance',
@@ -155,7 +155,7 @@ def test_no_go_live_link_for_service_without_organisation(
 
     organisation = find_element_by_tag_and_partial_text(page, tag='td', string='Organization')
     assert normalize_spaces(organisation.find_next_siblings()[0].text) == 'Not set Federal government'
-    assert normalize_spaces(organisation.find_next_siblings()[1].text) == 'Change organisation for service'
+    assert normalize_spaces(organisation.find_next_siblings()[1].text) == 'Change organization for service'
 
 
 def test_organisation_name_links_to_org_dashboard(

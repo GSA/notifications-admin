@@ -765,7 +765,7 @@ def test_get_live_services_report(
     )
     report = response.get_data(as_text=True)
     assert report.strip() == (
-        'Service ID,Organisation,Organisation type,Service name,Consent to research,Main contact,Contact email,' +
+        'Service ID,Organization,Organization type,Service name,Consent to research,Main contact,Contact email,' +
         'Contact mobile,Live date,SMS volume intent,Email volume intent,SMS sent this year,' +
         'Emails sent this year,Free sms allowance\r\n' +
 

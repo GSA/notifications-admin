@@ -1134,7 +1134,7 @@ class RenameServiceForm(StripWhitespaceForm):
 
 class RenameOrganisationForm(StripWhitespaceForm):
     name = GovukTextInputField(
-        u'Organisation name',
+        u'Organization name',
         validators=[
             DataRequired(message='Cannot be empty'),
             MustContainAlphanumericCharacters(),
@@ -1886,7 +1886,7 @@ class AdminSetOrganisationForm(StripWhitespaceForm):
         self.organisations.choices = kwargs['choices']
 
     organisations = GovukRadiosField(
-        'Select an organisation',
+        'Select an organization',
         validators=[
             DataRequired()
         ]
