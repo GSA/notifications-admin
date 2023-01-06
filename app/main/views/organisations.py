@@ -63,9 +63,9 @@ def add_organisation():
                 org_id=Organisation.create_from_form(form).id,
             ))
         except HTTPError as e:
-            msg = 'Organisation name already exists'
+            msg = 'Organization name already exists'
             if e.status_code == 400 and msg in e.message:
-                form.name.errors.append("This organisation name is already in use")
+                form.name.errors.append("This organization name is already in use")
             else:
                 raise e
 
@@ -243,9 +243,9 @@ def edit_organisation_name(org_id):
         try:
             current_organisation.update(name=form.name.data)
         except HTTPError as http_error:
-            error_msg = 'Organisation name already exists'
+            error_msg = 'Organization name already exists'
             if http_error.status_code == 400 and error_msg in http_error.message:
-                form.name.errors.append('This organisation name is already in use')
+                form.name.errors.append('This organization name is already in use')
             else:
                 raise http_error
         else:

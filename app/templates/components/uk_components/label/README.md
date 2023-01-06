@@ -10,6 +10,6 @@ The label component is used in other input components, to see an example of it i
 
 ## Component options
 
-Use options to customise the appearance, content and behaviour of a component when using a macro, for example, changing the text.
+Use options to customize the appearance, content and behavior of a component when using a macro, for example, changing the text.
 
 See [options table](https://design-system.service.gov.uk/components/file-upload/#options-example-default--label) for details.

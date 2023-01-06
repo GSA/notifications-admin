@@ -105,13 +105,13 @@
   </div>
 
   <h2 class="govuk-heading-m">
-    Organisations using Notify
+    Organizations using Notify
   </h2>
   <div class="govuk-grid-row bottom-gutter">
     <div class="govuk-grid-column-one-half">
       <span class="govuk-visually-hidden">There are</span>
       <div class="product-page-big-number">{{ count_of_live_services_and_organisations.organisations|format_thousands }}</div>
-      organisations
+      organizations
     </div>
     <div class="govuk-grid-column-one-half">
       <span class="govuk-visually-hidden">and</span>
@@ -123,10 +123,10 @@
   <div class="dashboard-table">
     {% call(item, row_number) list_table(
       organisations_using_notify,
-      caption='Organisations using Notify',
+      caption='Organizations using Notify',
       caption_visible=False,
       field_headings=[
-        'Organisation', 'Number of live services'
+        'Organization', 'Number of live services'
       ],
       empty_message='No data to show'
     ) %}

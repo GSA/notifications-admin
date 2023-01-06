@@ -35,7 +35,7 @@ def _create_example_template(service_id):
     example_sms_template = service_api_client.create_service_template(
         'Example text message template',
         'sms',
-        'Hi, I’m trying out U.S. Notify. Today is ((day of week)) and my favourite colour is ((colour)).',
+        'Hi, I’m trying out U.S. Notify. Today is ((day of week)) and my favourite color is ((color)).',
         service_id,
     )
     return example_sms_template

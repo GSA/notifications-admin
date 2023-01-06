@@ -84,7 +84,7 @@ def test_show_different_page_if_user_org_type_is_local(
 
 
 @pytest.mark.parametrize('email_address', (
-    # User’s email address doesn’t matter when the organisation is known
+    # User’s email address doesn’t matter when the organization is known
     'test@example.gsa.gov',
     'test@anotherexample.gsa.gov',
 ))
@@ -142,7 +142,7 @@ def test_should_add_service_and_redirect_to_tour_when_no_services(
         'sms',
         (
             "Hi, I’m trying out U.S. Notify. Today is "
-            "((day of week)) and my favourite colour is ((colour))."
+            "((day of week)) and my favourite color is ((color))."
         ),
         101,
     )
@@ -171,7 +171,7 @@ def test_add_service_has_to_choose_org_type(
         _expected_status=200,
     )
     assert normalize_spaces(page.select_one('.govuk-error-message').text) == (
-        'Error: Select the type of organisation'
+        'Error: Select the type of organization'
     )
     assert mock_create_service.called is False
     assert mock_create_service_template.called is False

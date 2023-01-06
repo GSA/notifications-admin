@@ -597,7 +597,7 @@ def _get_content_count_error_and_message_for_template(template):
         if template.placeholders:
             return False, (
                 f'Will be charged as {message_count(template.fragment_count, template.template_type)} '
-                f'(not including personalisation)'
+                f'(not including personalization)'
             )
         return False, (
             f'Will be charged as {message_count(template.fragment_count, template.template_type)} '
@@ -666,7 +666,7 @@ def redact_template(service_id, template_id):
     service_api_client.redact_service_template(service_id, template_id)
 
     flash(
-        'Personalised content will be hidden for messages sent with this template',
+        'Personalized content will be hidden for messages sent with this template',
         'default_with_tick'
     )
 

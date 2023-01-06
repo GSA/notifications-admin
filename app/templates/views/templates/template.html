@@ -13,10 +13,10 @@
 
   {% if show_redaction_message %}
     <div class="bottom-gutter">
-      {% call banner_wrapper(type='dangerous', subhead='Are you sure you want to hide personalisation after sending?') %}
+      {% call banner_wrapper(type='dangerous', subhead='Are you sure you want to hide personalization after sending?') %}
         <ul class="list list-bullet">
           <li>
-            You will not be able to see personalised content in Notify for this template
+            You will not be able to see personalized content in Notify for this template
           </li>
           <li>
             You cannot undo this
@@ -72,10 +72,10 @@
       {% endif %}
       {% if not template._template.redact_personalisation %}
         <span class="page-footer-link page-footer-delete-link-without-button">
-          <a class="govuk-link govuk-link--destructive" href="{{ url_for('.confirm_redact_template', service_id=current_service.id, template_id=template.id) }}">Hide personalisation after sending</a>
+          <a class="govuk-link govuk-link--destructive" href="{{ url_for('.confirm_redact_template', service_id=current_service.id, template_id=template.id) }}">Hide personalization after sending</a>
         </span>
       {% else %}
-        <p class="hint">Personalisation is hidden after sending</p>
+        <p class="hint">Personalization is hidden after sending</p>
       {% endif %}
     {% endif %}
   </div>
