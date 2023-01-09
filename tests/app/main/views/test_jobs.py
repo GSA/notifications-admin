@@ -83,7 +83,7 @@ def test_should_show_page_for_one_job(
 
     assert page.h1.text.strip() == 'thisisatest.csv'
     assert ' '.join(page.find('tbody').find('tr').text.split()) == (
-        '07123456789 template content Delivered 1 January at 11:10am'
+        '2021234567 template content Delivered 1 January at 11:10am'
     )
     assert page.find('div', {'data-key': 'notifications'})['data-resource'] == url_for(
         'main.view_job_updates',
@@ -102,7 +102,7 @@ def test_should_show_page_for_one_job(
     assert page.find('span', {'id': 'time-left'}).text == 'Data available for 7 days'
 
     assert normalize_spaces(page.select_one('tbody tr').text) == normalize_spaces(
-        '07123456789 '
+        '2021234567 '
         'template content '
         'Delivered 1 January at 11:10am'
     )
@@ -396,7 +396,7 @@ def test_should_show_updates_for_one_job_as_json(
     assert 'delivered' in content['counts']
     assert 'failed' in content['counts']
     assert 'Recipient' in content['notifications']
-    assert '07123456789' in content['notifications']
+    assert '2021234567' in content['notifications']
     assert 'Status' in content['notifications']
     assert 'Delivered' in content['notifications']
     assert '12:01am' in content['notifications']
@@ -433,7 +433,7 @@ def test_should_show_updates_for_scheduled_job_as_json(
     assert 'delivered' in content['counts']
     assert 'failed' in content['counts']
     assert 'Recipient' in content['notifications']
-    assert '07123456789' in content['notifications']
+    assert '2021234567' in content['notifications']
     assert 'Status' in content['notifications']
     assert 'Delivered' in content['notifications']
     assert '12:01am' in content['notifications']

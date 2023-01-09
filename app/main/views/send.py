@@ -627,7 +627,7 @@ def all_placeholders_in_session(placeholders):
 def get_send_test_page_title(template_type, entering_recipient, name=None):
     if entering_recipient:
         return 'Send ‘{}’'.format(name)
-    return 'Personalise this message'
+    return 'Personalize this message'
 
 
 def get_back_link(service_id, template, step_index, placeholders=None):

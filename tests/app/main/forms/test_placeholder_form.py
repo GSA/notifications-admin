@@ -28,9 +28,9 @@ def test_form_class_not_mutated(notify_admin):
     (False, 'email address', 'email', 'test@example.gsa.gov', None),
 
     (False, 'phone number', 'sms', '', 'Cannot be empty'),
-    (False, 'phone number', 'sms', '+1-2345-678890', 'Not a UK mobile number'),
-    (False, 'phone number', 'sms', '07900900123', None),
-    (False, 'phone number', 'sms', '+44(0)7900 900-123', None),
+    (False, 'phone number', 'sms', '+(44) 7700-900 855', 'Not a US number'),
+    (False, 'phone number', 'sms', '2028675309', None),
+    (False, 'phone number', 'sms', '+1 (202) 867-5309', None),
 
     (True, 'phone number', 'sms', '+123', 'Not enough digits'),
     (True, 'phone number', 'sms', '+44(0)7900 900-123', None),
@@ -39,7 +39,7 @@ def test_form_class_not_mutated(notify_admin):
     (False, 'anything else', 'sms', '', 'Cannot be empty'),
     (False, 'anything else', 'email', '', 'Cannot be empty'),
 
-    (True, 'phone number', 'sms', 'invalid', 'Must not contain letters or symbols'),
+    (True, 'phone number', 'sms', 'invalid', 'The string supplied did not seem to be a phone number.'),
     (True, 'phone number', 'email', 'invalid', None),
     (True, 'email address', 'sms', 'invalid', None),
 

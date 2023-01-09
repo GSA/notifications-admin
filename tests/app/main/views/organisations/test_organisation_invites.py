@@ -251,10 +251,10 @@ def test_registration_from_org_invite_404s_if_user_not_in_session(
         'name': 'Bad Mobile',
         'mobile_number': 'not good',
         'password': 'validPassword!'
-    }, 'Must not contain letters or symbols'],
+    }, 'The string supplied did not seem to be a phone number'],
     [{
         'name': 'Bad Password',
-        'mobile_number': '+44123412345',
+        'mobile_number': '+12021234123',
         'password': 'password'
     }, 'Choose a password that’s harder to guess'],
 ])
@@ -296,7 +296,7 @@ def test_registration_from_org_invite_has_different_email_or_organisation(
 
     data = {
         'name': 'Test User',
-        'mobile_number': '+4407700900460',
+        'mobile_number': '+12024900460',
         'password': 'validPassword!',
         'email_address': sample_org_invite['email_address'],
         'organisation': sample_org_invite['organisation']
@@ -329,7 +329,7 @@ def test_org_user_registers_with_email_already_in_use(
         'main.register_from_org_invite',
         _data={
             'name': 'Test User',
-            'mobile_number': '+4407700900460',
+            'mobile_number': '+12024900460',
             'password': 'validPassword!',
             'email_address': sample_org_invite['email_address'],
             'organisation': sample_org_invite['organisation'],
@@ -365,7 +365,7 @@ def test_org_user_registration(
         _data={
             'name': 'Test User',
             'email_address': sample_org_invite['email_address'],
-            'mobile_number': '+4407700900460',
+            'mobile_number': '+12024900460',
             'password': 'validPassword!',
             'organisation': sample_org_invite['organisation'],
         },
@@ -376,14 +376,14 @@ def test_org_user_registration(
     mock_register_user.assert_called_once_with(
         'Test User',
         sample_org_invite['email_address'],
-        '+4407700900460',
+        '+12024900460',
         'validPassword!',
         'sms_auth'
     )
     mock_send_verify_code.assert_called_once_with(
         '6ce466d0-fd6a-11e5-82f5-e0accb9d11a6',
         'sms',
-        '+4407700900460',
+        '+12024900460',
     )
     mock_get_invited_org_user_by_id.assert_called_once_with(sample_org_invite['id'])
 

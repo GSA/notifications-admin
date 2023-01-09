@@ -3,12 +3,12 @@
 {% from "components/uk_components/button/macro.njk" import govukButton %}
 
 {% block per_page_title %}
-  Organisations
+  Organizations
 {% endblock %}
 
 {% block platform_admin_content %}
 
-  <h1 class="heading-medium">Organisations</h1>
+  <h1 class="heading-medium">Organizations</h1>
 
   {{ live_search(target_selector='.browse-list-item', show=True, form=search_form, label='Search by name') }}
 
@@ -32,7 +32,7 @@
   <div class="js-stick-at-bottom-when-scrolling">
     {{ govukButton({
       "element": "a",
-      "text": "New organisation",
+      "text": "New organization",
       "href": url_for('main.add_organisation'),
       "classes": "govuk-button--secondary"
     }) }}

@@ -94,7 +94,7 @@ def mock_get_service_settings_page_common(
         'Count in list of live services Yes Change if service is counted in list of live services',
         'Billing details None Change billing details for service',
         'Notes None Change the notes for the service',
-        'Organisation Test organisation Federal government Change organisation for service',
+        'Organization Test organisation Federal government Change organization for service',
         'Rate limit 3,000 per minute Change rate limit',
         'Message limit 1,000 per day Change daily message limit',
         'Free text message allowance 250,000 per year Change free text message allowance',
@@ -151,11 +151,11 @@ def test_no_go_live_link_for_service_without_organisation(
     assert page.find('h1').text == 'Settings'
 
     is_live = find_element_by_tag_and_partial_text(page, tag='td', string='Live')
-    assert normalize_spaces(is_live.find_next_sibling().text) == 'No (organisation must be set first)'
+    assert normalize_spaces(is_live.find_next_sibling().text) == 'No (organization must be set first)'
 
-    organisation = find_element_by_tag_and_partial_text(page, tag='td', string='Organisation')
+    organisation = find_element_by_tag_and_partial_text(page, tag='td', string='Organization')
     assert normalize_spaces(organisation.find_next_siblings()[0].text) == 'Not set Federal government'
-    assert normalize_spaces(organisation.find_next_siblings()[1].text) == 'Change organisation for service'
+    assert normalize_spaces(organisation.find_next_siblings()[1].text) == 'Change organization for service'
 
 
 def test_organisation_name_links_to_org_dashboard(
@@ -177,7 +177,7 @@ def test_organisation_name_links_to_org_dashboard(
         'main.service_settings', service_id=SERVICE_ONE_ID
     )
 
-    org_row = find_element_by_tag_and_partial_text(response, tag='tr', string='Organisation')
+    org_row = find_element_by_tag_and_partial_text(response, tag='tr', string='Organization')
     assert org_row.find('a')['href'] == url_for('main.organisation_dashboard', org_id=ORGANISATION_ID)
     assert normalize_spaces(org_row.find('a').text) == 'Test organisation'
 
@@ -3470,7 +3470,7 @@ def test_cant_resume_active_service(
 @pytest.mark.parametrize('contact_details_type, contact_details_value', [
     ('url', 'http://example.com/'),
     ('email_address', 'me@example.com'),
-    ('phone_number', '0207 123 4567'),
+    ('phone_number', '202 867 5309'),
 ])
 def test_send_files_by_email_contact_details_prefills_the_form_with_the_existing_contact_details(
     client_request,
@@ -3490,7 +3490,7 @@ def test_send_files_by_email_contact_details_prefills_the_form_with_the_existing
 @pytest.mark.parametrize('contact_details_type, old_value, new_value', [
     ('url', 'http://example.com/', 'http://new-link.com/'),
     ('email_address', 'old@example.com', 'new@example.com'),
-    ('phone_number', '0207 12345', '0207 56789'),
+    ('phone_number', '2021234567', '2028901234'),
 ])
 def test_send_files_by_email_contact_details_updates_contact_details_and_redirects_to_settings_page(
     client_request,
@@ -3534,7 +3534,7 @@ def test_send_files_by_email_contact_details_uses_the_selected_field_when_multip
             'contact_details_type': 'url',
             'url': 'http://www.new-url.com',
             'email_address': 'me@example.com',
-            'phone_number': '0207 123 4567'
+            'phone_number': '202 867 5309'
         },
         _follow_redirects=True
     )
@@ -3623,7 +3623,7 @@ def test_send_files_by_email_contact_details_does_not_update_invalid_contact_det
         'main.service_set_inbound_sms',
         ['sms', 'inbound_sms'],
         (
-            'Your service can receive text messages sent to 0781239871.'
+            'Your service can receive text messages sent to 2028675301.'
         )
     ),
     (
@@ -3694,14 +3694,14 @@ def test_set_inbound_sms_when_inbound_number_is_not_set(
 
 @pytest.mark.parametrize('user, expected_paragraphs', [
     (create_active_user_with_permissions(), [
-        'Your service can receive text messages sent to 07700900123.',
+        'Your service can receive text messages sent to 2028675309.',
         'You can still send text messages from a sender name if you '
         'need to, but users will not be able to reply to those messages.',
         'Contact us if you want to switch this feature off.',
         'You can set up callbacks for received text messages on the API integration page.',
     ]),
     (create_active_user_no_api_key_permission(), [
-        'Your service can receive text messages sent to 07700900123.',
+        'Your service can receive text messages sent to 2028675309.',
         'You can still send text messages from a sender name if you '
         'need to, but users will not be able to reply to those messages.',
         'Contact us if you want to switch this feature off.',
@@ -3716,7 +3716,7 @@ def test_set_inbound_sms_when_inbound_number_is_set(
 ):
     service_one['permissions'] = ['inbound_sms']
     mocker.patch('app.inbound_number_client.get_inbound_sms_number_for_service', return_value={
-        'data': {'number': '07700900123'}
+        'data': {'number': '2028675309'}
     })
     client_request.login(user)
     page = client_request.get(
@@ -3807,7 +3807,7 @@ def test_select_organisation_shows_message_if_no_orgs(
         service_id=service_one['id'],
     )
 
-    assert normalize_spaces(page.select_one('main p').text) == "No organisations"
+    assert normalize_spaces(page.select_one('main p').text) == "No organizations"
     assert not page.select_one('main button')
 
 

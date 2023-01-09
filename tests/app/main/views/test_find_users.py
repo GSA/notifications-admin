@@ -119,7 +119,7 @@ def test_user_information_page_shows_information_about_user(
         normalize_spaces(p.text) for p in page.select('main p')
     ] == [
         'test@gsa.gov',
-        '+447700900986',
+        '+12028675109',
         'Text message code',
         'Last logged in just now',
     ]

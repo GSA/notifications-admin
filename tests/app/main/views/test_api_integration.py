@@ -27,7 +27,7 @@ def test_should_show_api_page(
     rows = page.find_all('details')
     assert len(rows) == 5
     for row in rows:
-        assert row.select('h3 .govuk-details__summary-text')[0].string.strip() == '07123456789'
+        assert row.select('h3 .govuk-details__summary-text')[0].string.strip() == '2021234567'
 
 
 def test_should_show_api_page_with_lots_of_notifications(
@@ -353,7 +353,7 @@ def test_should_show_guestlist_page(
     )
     textboxes = page.find_all('input', {'class': 'govuk-input'})
     for index, value in enumerate(
-        ['test@example.com'] + [None] * 4 + ['07900900000'] + [None] * 4
+        ['test@example.com'] + [None] * 4 + ['2028675300'] + [None] * 4
     ):
         assert textboxes[index].get('value') == value
 
@@ -365,8 +365,8 @@ def test_should_update_guestlist(
     data = OrderedDict([
         ('email_addresses-1', 'test@example.com'),
         ('email_addresses-3', 'test@example.com'),
-        ('phone_numbers-0', '07900900000'),
-        ('phone_numbers-2', '+1800-555-555'),
+        ('phone_numbers-0', '2028675300'),
+        ('phone_numbers-2', '+1800-555-5555'),
     ])
 
     client_request.post(
@@ -377,7 +377,7 @@ def test_should_update_guestlist(
 
     mock_update_guest_list.assert_called_once_with(SERVICE_ONE_ID, {
         'email_addresses': ['test@example.com', 'test@example.com'],
-        'phone_numbers': ['07900900000', '+1800-555-555']})
+        'phone_numbers': ['2028675300', '+1800-555-5555']})
 
 
 def test_should_validate_guestlist_items(

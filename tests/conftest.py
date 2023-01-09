@@ -341,24 +341,24 @@ def multiple_available_inbound_numbers(mocker):
                 'active': True,
                 'created_at': '2017-10-18T16:57:14.154185Z',
                 'id': '781d9c60-7a7e-46b7-9896-7b045b992fa7',
-                'number': '0712121214',
-                'provider': 'mmg',
+                'number': '2021212124',
+                'provider': 'sns',
                 'service': None,
                 'updated_at': None
             }, {
                 'active': True,
                 'created_at': '2017-10-18T16:57:22.585806Z',
                 'id': '781d9c60-7a7e-46b7-9896-7b045b992fa5',
-                'number': '0712121215',
-                'provider': 'mmg',
+                'number': '2021212125',
+                'provider': 'sns',
                 'service': None,
                 'updated_at': None
             }, {
                 'active': True,
                 'created_at': '2017-10-18T16:57:38.585806Z',
                 'id': '781d9c61-7a7e-46b7-9896-7b045b992fa5',
-                'number': '0712121216',
-                'provider': 'mmg',
+                'number': '2021212126',
+                'provider': 'sns',
                 'service': None,
                 'updated_at': None
             }
@@ -1747,7 +1747,7 @@ def mock_get_inbound_sms_summary_with_no_messages(mocker):
 def mock_get_inbound_number_for_service(mocker):
     return mocker.patch(
         'app.inbound_number_client.get_inbound_sms_number_for_service',
-        return_value={'data': {'number': '0781239871'}})
+        return_value={'data': {'number': '2028675301'}})
 
 
 @pytest.fixture(scope='function')
@@ -1773,7 +1773,7 @@ def mock_get_users_by_service(mocker):
         return [create_service_one_admin(
             id=sample_uuid(),
             logged_in_at=None,
-            mobile_number='+447700900986',
+            mobile_number='+12028675109',
             email_address='notify@digital.cabinet-office.gov.uk',
         )]
 
@@ -1795,8 +1795,8 @@ def mock_s3_download(mocker):
     def _download(service_id, upload_id):
         return """
             phone number,name
-            +447700900986,John
-            +447700900986,Smith
+            +12028675109,John
+            +12028675109,Smith
         """
 
     return mocker.patch('app.main.views.send.s3download', side_effect=_download)
@@ -2230,7 +2230,7 @@ def mock_get_guest_list(mocker):
     def _get_guest_list(service_id):
         return {
             'email_addresses': ['test@example.com'],
-            'phone_numbers': ['07900900000']
+            'phone_numbers': ['2028675300']
         }
 
     return mocker.patch(
@@ -3230,7 +3230,7 @@ def create_user(**overrides):
         'name': 'Test User',
         'password': 'somepassword',
         'email_address': 'test@user.gsa.gov',
-        'mobile_number': '07700 900762',
+        'mobile_number': '202-867-5303',
         'state': 'active',
         'failed_login_count': 0,
         'permissions': {},

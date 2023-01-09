@@ -193,8 +193,8 @@ def live_services_csv():
 
     column_names = OrderedDict([
         ('service_id', 'Service ID'),
-        ('organisation_name', 'Organisation'),
-        ('organisation_type', 'Organisation type'),
+        ('organisation_name', 'Organization'),
+        ('organisation_type', 'Organization type'),
         ('service_name', 'Service name'),
         ('consent_to_research', 'Consent to research'),
         ('contact_name', 'Main contact'),

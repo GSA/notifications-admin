@@ -31,7 +31,7 @@ def test_should_200_for_tour_start(
     assert normalize_spaces(
         page.select('.sms-message-recipient')[0].text
     ) == (
-        'To: 07700 900762'
+        'To: 202-867-5303'
     )
     assert normalize_spaces(
         page.select('.sms-message-wrapper')[0].text
@@ -51,7 +51,7 @@ def test_should_clear_session_on_tour_start(
     fake_uuid,
 ):
     with client_request.session_transaction() as session:
-        session['placeholders'] = {'one': 'hello', 'phone number': '07700 900762'}
+        session['placeholders'] = {'one': 'hello', 'phone number': '202-867-5303'}
 
     client_request.get(
         'main.begin_tour',
@@ -154,7 +154,7 @@ def test_should_200_for_get_tour_step(
     assert normalize_spaces(
         page.select('.sms-message-recipient')[0].text
     ) == (
-        'To: 07700 900762'
+        'To: 202-867-5303'
     )
 
     assert normalize_spaces(
@@ -171,7 +171,7 @@ def test_should_show_empty_text_box(
     fake_uuid,
 ):
     with client_request.session_transaction() as session:
-        session['placeholders'] = {'phone number': '07700 900762'}
+        session['placeholders'] = {'phone number': '202-867-5303'}
 
     page = client_request.get(
         'main.tour_step',
@@ -201,7 +201,7 @@ def test_should_prefill_answers_for_get_tour_step(
     fake_uuid,
 ):
     with client_request.session_transaction() as session:
-        session['placeholders'] = session['placeholders'] = {'one': 'hello', 'phone number': '07700 900762'}
+        session['placeholders'] = session['placeholders'] = {'one': 'hello', 'phone number': '202-867-5303'}
 
     page = client_request.get(
         'main.tour_step',
@@ -377,7 +377,7 @@ def test_post_tour_step_saves_data_and_redirects_to_next_step(
     )
 
     with client_request.session_transaction() as session:
-        assert session['placeholders'] == {'one': 'hello', 'phone number': '07700 900762'}
+        assert session['placeholders'] == {'one': 'hello', 'phone number': '202-867-5303'}
 
 
 def test_post_tour_step_adds_data_to_saved_data_and_redirects_to_next_step(
@@ -387,7 +387,7 @@ def test_post_tour_step_adds_data_to_saved_data_and_redirects_to_next_step(
     fake_uuid,
 ):
     with client_request.session_transaction() as session:
-        session['placeholders'] = {'one': 'hello', 'phone number': '07700 900762'}
+        session['placeholders'] = {'one': 'hello', 'phone number': '202-867-5303'}
 
     client_request.post(
         'main.tour_step',
@@ -406,7 +406,7 @@ def test_post_tour_step_adds_data_to_saved_data_and_redirects_to_next_step(
 
     with client_request.session_transaction() as session:
         assert session['placeholders'] == {
-            'one': 'hello', 'two': 'is it me you are looking for', 'phone number': '07700 900762'
+            'one': 'hello', 'two': 'is it me you are looking for', 'phone number': '202-867-5303'
         }
 
 
@@ -417,7 +417,7 @@ def test_post_tour_step_raises_validation_error_for_form_error(
     fake_uuid,
 ):
     with client_request.session_transaction() as session:
-        session['placeholders'] = {'one': 'hi', 'phone number': '07700 900762'}
+        session['placeholders'] = {'one': 'hi', 'phone number': '202-867-5303'}
 
     page = client_request.post(
         'main.tour_step',
@@ -437,7 +437,7 @@ def test_post_tour_step_raises_validation_error_for_form_error(
     assert normalize_spaces(
         page.select('.sms-message-recipient')[0].text
     ) == (
-        'To: 07700 900762'
+        'To: 202-867-5303'
     )
 
     assert normalize_spaces(
@@ -447,7 +447,7 @@ def test_post_tour_step_raises_validation_error_for_form_error(
     )
 
     with client_request.session_transaction() as session:
-        assert session['placeholders'] == {'one': 'hi', 'phone number': '07700 900762'}
+        assert session['placeholders'] == {'one': 'hi', 'phone number': '202-867-5303'}
 
 
 def test_post_final_tour_step_saves_data_and_redirects_to_check_notification(
@@ -457,7 +457,7 @@ def test_post_final_tour_step_saves_data_and_redirects_to_check_notification(
     fake_uuid,
 ):
     with client_request.session_transaction() as session:
-        session['placeholders'] = {'one': 'hello', 'two': 'hi', 'phone number': '07700 900762'}
+        session['placeholders'] = {'one': 'hello', 'two': 'hi', 'phone number': '202-867-5303'}
 
     client_request.post(
         'main.tour_step',
@@ -475,7 +475,7 @@ def test_post_final_tour_step_saves_data_and_redirects_to_check_notification(
 
     with client_request.session_transaction() as session:
         assert session['placeholders'] == {
-            'one': 'hello', 'two': 'hi', 'three': 'howdy', 'phone number': '07700 900762'
+            'one': 'hello', 'two': 'hi', 'three': 'howdy', 'phone number': '202-867-5303'
         }
 
 
@@ -510,7 +510,7 @@ def test_get_test_step_out_of_index_redirects_to_check_notification_if_all_place
     fake_uuid,
 ):
     with client_request.session_transaction() as session:
-        session['placeholders'] = {'one': 'hello', 'two': 'hi', 'three': 'howdy', 'phone number': '07700 900762'}
+        session['placeholders'] = {'one': 'hello', 'two': 'hi', 'three': 'howdy', 'phone number': '202-867-5303'}
 
     client_request.get(
         'main.tour_step',
@@ -533,7 +533,7 @@ def test_should_200_for_check_tour_notification(
     fake_uuid,
 ):
     with client_request.session_transaction() as session:
-        session['placeholders'] = {'one': 'hello', 'two': 'hi', 'three': 'howdy', 'phone number': '07700 900762'}
+        session['placeholders'] = {'one': 'hello', 'two': 'hi', 'three': 'howdy', 'phone number': '202-867-5303'}
 
     page = client_request.get(
         'main.check_tour_notification',
@@ -554,7 +554,7 @@ def test_should_200_for_check_tour_notification(
     assert normalize_spaces(
         page.select('.sms-message-recipient')[0].text
     ) == (
-        'To: 07700 900762'
+        'To: 202-867-5303'
     )
     assert normalize_spaces(
         page.select('.sms-message-wrapper')[0].text
@@ -578,7 +578,7 @@ def test_back_link_from_check_tour_notification_points_to_last_tour_step(
     fake_uuid,
 ):
     with client_request.session_transaction() as session:
-        session['placeholders'] = {'one': 'hello', 'two': 'hi', 'three': 'howdy', 'phone number': '07700 900762'}
+        session['placeholders'] = {'one': 'hello', 'two': 'hi', 'three': 'howdy', 'phone number': '202-867-5303'}
 
     page = client_request.get(
         'main.check_tour_notification',
@@ -624,7 +624,7 @@ def test_check_tour_notification_redirects_to_first_step_if_not_all_placeholders
     fake_uuid,
 ):
     with client_request.session_transaction() as session:
-        session['placeholders'] = {'one': 'hello', 'two': 'hi', 'phone number': '07700 900762'}
+        session['placeholders'] = {'one': 'hello', 'two': 'hi', 'phone number': '202-867-5303'}
 
     client_request.get(
         'main.check_tour_notification',

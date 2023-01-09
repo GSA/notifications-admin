@@ -34,7 +34,7 @@ def test_organisation_page_shows_all_organisations(
 
     assert normalize_spaces(
         page.select_one('h1').text
-    ) == "Organisations"
+    ) == "Organizations"
 
     assert [
         (
@@ -63,7 +63,7 @@ def test_organisation_page_shows_all_organisations(
 
     assert normalize_spaces(
         page.select_one('a.govuk-button--secondary').text
-    ) == 'New organisation'
+    ) == 'New organization'
     get_organisations.assert_called_once_with()
 
 
@@ -169,8 +169,8 @@ def test_create_new_organisation_validates(
         for error in page.select('.govuk-error-message')
     ] == [
         ('name', 'Error: Cannot be empty'),
-        ('organisation_type', 'Error: Select the type of organisation'),
-        ('crown_status', 'Error: Select whether this organisation is a crown body'),
+        ('organisation_type', 'Error: Select the type of organization'),
+        ('crown_status', 'Error: Select whether this organization is a crown body'),
     ]
     assert mock_create_organisation.called is False
 
@@ -178,7 +178,7 @@ def test_create_new_organisation_validates(
 @pytest.mark.parametrize('name, error_message', [
     ('', 'Cannot be empty'),
     ('a', 'at least two alphanumeric characters'),
-    ('a' * 256, 'Organisation name must be 255 characters or fewer'),
+    ('a' * 256, 'Organization name must be 255 characters or fewer'),
 ])
 def test_create_new_organisation_fails_with_incorrect_input(
     client_request,
@@ -211,7 +211,7 @@ def test_create_new_organisation_fails_with_duplicate_name(
     mocker,
 ):
     def _create(**_kwargs):
-        json_mock = mocker.Mock(return_value={'message': 'Organisation name already exists'})
+        json_mock = mocker.Mock(return_value={'message': 'Organization name already exists'})
         resp_mock = mocker.Mock(status_code=400, json=json_mock)
         http_error = HTTPError(response=resp_mock, message="Default message")
         raise http_error
@@ -232,7 +232,7 @@ def test_create_new_organisation_fails_with_duplicate_name(
         _expected_status=200,
     )
 
-    error_message = 'This organisation name is already in use'
+    error_message = 'This organization name is already in use'
     assert error_message in page.select_one('.govuk-error-message').text
 
 
@@ -922,18 +922,18 @@ def test_organisation_settings_for_platform_admin(
 ):
     expected_rows = [
         'Label Value Action',
-        'Name Test organisation Change organisation name',
-        'Sector Federal government Change sector for the organisation',
-        'Crown organisation Yes Change organisation crown status',
+        'Name Test organisation Change organization name',
+        'Sector Federal government Change sector for the organization',
+        'Crown organization Yes Change organization crown status',
         (
             'Data sharing and financial agreement '
-            'Not signed Change data sharing and financial agreement for the organisation'
+            'Not signed Change data sharing and financial agreement for the organization'
         ),
-        'Request to go live notes None Change go live notes for the organisation',
-        'Billing details None Change billing details for the organisation',
-        'Notes None Change the notes for the organisation',
-        'Default email branding GOV.UK Change default email branding for the organisation',
-        'Known email domains None Change known email domains for the organisation',
+        'Request to go live notes None Change go live notes for the organization',
+        'Billing details None Change billing details for the organization',
+        'Notes None Change the notes for the organization',
+        'Default email branding GOV.UK Change default email branding for the organization',
+        'Known email domains None Change known email domains for the organization',
     ]
 
     client_request.login(platform_admin_user)
@@ -972,7 +972,7 @@ def test_organisation_settings_for_platform_admin(
             {
                 'value': 'yes',
                 'label': 'Yes',
-                'hint': 'Users will be told their organisation has already signed the agreement'
+                'hint': 'Users will be told their organization has already signed the agreement'
             },
             {
                 'value': 'no',
@@ -1318,7 +1318,7 @@ def test_update_organisation_name(
 @pytest.mark.parametrize('name, error_message', [
     ('', 'Cannot be empty'),
     ('a', 'at least two alphanumeric characters'),
-    ('a' * 256, 'Organisation name must be 255 characters or fewer'),
+    ('a' * 256, 'Organization name must be 255 characters or fewer'),
 ])
 def test_update_organisation_with_incorrect_input(
     client_request,
@@ -1352,7 +1352,7 @@ def test_update_organisation_with_non_unique_name(
                 status_code=400,
                 json={'result': 'error', 'message': 'Organisation name already exists'}
             ),
-            message='Organisation name already exists',
+            message='Organization name already exists',
         )
     )
     client_request.login(platform_admin_user)
@@ -1363,7 +1363,7 @@ def test_update_organisation_with_non_unique_name(
         _expected_status=200,
     )
 
-    assert 'This organisation name is already in use' in page.select_one('.govuk-error-message').text
+    assert 'This organization name is already in use' in page.select_one('.govuk-error-message').text
 
 
 def test_get_edit_organisation_go_live_notes_page(
@@ -1436,7 +1436,7 @@ def test_view_edit_organisation_notes(
         'main.edit_organisation_notes',
         org_id=organisation_one['id'],
     )
-    assert page.select_one('h1').text == "Edit organisation notes"
+    assert page.select_one('h1').text == "Edit organization notes"
     assert page.find('label', class_="form-label").text.strip() == "Notes"
     assert page.find('textarea').attrs["name"] == "notes"
 
@@ -1531,7 +1531,7 @@ def test_view_edit_organisation_billing_details(
         'main.edit_organisation_billing_details',
         org_id=organisation_one['id'],
     )
-    assert page.select_one('h1').text == "Edit organisation billing details"
+    assert page.select_one('h1').text == "Edit organization billing details"
     labels = page.find_all('label', class_="form-label")
     labels_list = [
         'Contact email addresses',

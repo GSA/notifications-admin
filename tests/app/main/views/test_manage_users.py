@@ -385,7 +385,7 @@ def test_manage_users_page_shows_member_auth_type_if_service_has_email_auth_acti
     ),
     (
         False,
-        '07700 900762',
+        '202-867-5303',
         """
             Text message code
         """,
@@ -1711,7 +1711,7 @@ def test_edit_user_permissions_page_displays_redacted_mobile_number_and_change_l
 
     assert active_user_with_permissions['name'] in page.find('h1').text
     mobile_number_paragraph = page.select('p[id=user_mobile_number]')[0]
-    assert '0770 •  •  •  • 762' in mobile_number_paragraph.text
+    assert '202-8 •  •  •  • 303' in mobile_number_paragraph.text
     change_link = mobile_number_paragraph.findChild()
     assert change_link.attrs['href'] == '/services/{}/users/{}/edit-mobile-number'.format(
         service_one['id'], active_user_with_permissions['id']
@@ -1758,7 +1758,7 @@ def test_edit_user_mobile_number_page(
     assert page.select('p[id=user_name]')[0].text == (
         "This will change the mobile number for {}."
     ).format(active_user_with_permissions['name'])
-    assert page.select('input[name=mobile_number]')[0].attrs["value"] == "0770••••762"
+    assert page.select('input[name=mobile_number]')[0].attrs["value"] == "202-8••••303"
     assert normalize_spaces(page.select('main button[type=submit]')[0].text) == "Save"
 
 
@@ -1771,7 +1771,7 @@ def test_edit_user_mobile_number_redirects_to_confirmation(
         'main.edit_user_mobile_number',
         service_id=SERVICE_ONE_ID,
         user_id=active_user_with_permissions['id'],
-        _data={'mobile_number': '07554080636'},
+        _data={'mobile_number': '2028675309'},
         _expected_status=302,
         _expected_redirect=url_for(
             'main.confirm_edit_user_mobile_number',
@@ -1793,7 +1793,7 @@ def test_edit_user_mobile_number_redirects_to_manage_users_if_number_not_changed
         'main.edit_user_mobile_number',
         service_id=SERVICE_ONE_ID,
         user_id=active_user_with_permissions['id'],
-        _data={'mobile_number': '0770••••762'},
+        _data={'mobile_number': '202-8••••303'},
         _expected_status=302,
         _expected_redirect=url_for(
             'main.manage_users',
@@ -1810,7 +1810,7 @@ def test_confirm_edit_user_mobile_number_page(
     mocker,
     mock_get_user,
 ):
-    new_number = '07554080636'
+    new_number = '2028675309'
     with client_request.session_transaction() as session:
         session['team_member_mobile_change'] = new_number
     page = client_request.get(
@@ -1865,7 +1865,7 @@ def test_confirm_edit_user_mobile_number_changes_user_mobile_number(
                  side_effect=[active_user_with_permissions, api_user_active])
     mock_event_handler = mocker.patch('app.main.views.manage_users.create_mobile_number_change_event')
 
-    new_number = '07554080636'
+    new_number = '2028675309'
     with client_request.session_transaction() as session:
         session['team_member_mobile_change'] = new_number
 
@@ -1896,7 +1896,7 @@ def test_confirm_edit_user_mobile_number_doesnt_change_user_mobile_for_non_team_
     mock_get_users_by_service,
 ):
     with client_request.session_transaction() as session:
-        session['team_member_mobile_change'] = '07554080636'
+        session['team_member_mobile_change'] = '2028675309'
     client_request.post(
         'main.confirm_edit_user_mobile_number',
         service_id=SERVICE_ONE_ID,

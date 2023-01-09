@@ -14,7 +14,6 @@ from notifications_utils.formatters import strip_all_whitespace
 from notifications_utils.insensitive_dict import InsensitiveDict
 from notifications_utils.recipients import (
     InvalidPhoneError,
-    normalise_phone_number,
     validate_phone_number,
 )
 from werkzeug.utils import cached_property
@@ -980,7 +979,7 @@ class OrganisationTypeField(GovukRadiosField):
                 (value, label) for value, label in Organisation.TYPE_LABELS.items()
                 if not include_only or value in include_only
             ],
-            thing='the type of organisation',
+            thing='the type of organization',
             validators=validators or [],
             **kwargs
         )
@@ -1134,42 +1133,42 @@ class RenameServiceForm(StripWhitespaceForm):
 
 class RenameOrganisationForm(StripWhitespaceForm):
     name = GovukTextInputField(
-        u'Organisation name',
+        u'Organization name',
         validators=[
             DataRequired(message='Cannot be empty'),
             MustContainAlphanumericCharacters(),
-            Length(max=255, message='Organisation name must be 255 characters or fewer')
+            Length(max=255, message='Organization name must be 255 characters or fewer')
         ])
 
 
 class OrganisationOrganisationTypeForm(StripWhitespaceForm):
-    organisation_type = OrganisationTypeField('What type of organisation is this?')
+    organisation_type = OrganisationTypeField('What type of organization is this?')
 
 
 class OrganisationCrownStatusForm(StripWhitespaceForm):
     crown_status = GovukRadiosField(
-        'Is this organisation a crown body?',
+        'Is this organization a crown body?',
         choices=[
             ('crown', 'Yes'),
             ('non-crown', 'No'),
             ('unknown', 'Not sure'),
         ],
-        thing='whether this organisation is a crown body',
+        thing='whether this organization is a crown body',
     )
 
 
 class OrganisationAgreementSignedForm(StripWhitespaceForm):
     agreement_signed = GovukRadiosField(
-        'Has this organisation signed the agreement?',
+        'Has this organization signed the agreement?',
         choices=[
             ('yes', 'Yes'),
             ('no', 'No'),
             ('unknown', 'No (but we have some service-specific agreements in place)'),
         ],
-        thing='whether this organisation has signed the agreement',
+        thing='whether this organization has signed the agreement',
         param_extensions={
             'items': [
-                {'hint': {'html': 'Users will be told their organisation has already signed the agreement'}},
+                {'hint': {'html': 'Users will be told their organization has already signed the agreement'}},
                 {'hint': {'html': 'Users will be prompted to sign the agreement before they can go live'}},
                 {'hint': {'html': 'Users will not be prompted to sign the agreement'}}
             ]
@@ -1538,10 +1537,9 @@ class ServiceContactDetailsForm(StripWhitespaceForm):
             self.email_address.validators = [DataRequired(), Length(min=5, max=255), ValidEmail()]
 
         elif self.contact_details_type.data == 'phone_number':
-            # we can't use the existing phone number validation functions here since we want to allow landlines
             def valid_phone_number(self, num):
                 try:
-                    normalise_phone_number(num.data)
+                    validate_phone_number(num.data, international=True)
                     return True
                 except InvalidPhoneError:
                     raise ValidationError('Must be a valid phone number')
@@ -1886,7 +1884,7 @@ class AdminSetOrganisationForm(StripWhitespaceForm):
         self.organisations.choices = kwargs['choices']
 
     organisations = GovukRadiosField(
-        'Select an organisation',
+        'Select an organization',
         validators=[
             DataRequired()
         ]
