@@ -356,8 +356,8 @@ def useful_headers_after_request(response):
     response.headers.add('X-XSS-Protection', '1; mode=block')
     response.headers.add('Content-Security-Policy', (
         "default-src 'self' {asset_domain} 'unsafe-inline';"
-        "script-src 'self' {asset_domain} *.google-analytics.com 'unsafe-inline' 'unsafe-eval' data:;"
-        "connect-src 'self' *.google-analytics.com;"
+        "script-src 'self' {asset_domain} *.google-analytics.com https://js-agent.newrelic.com https://*.nr-data.net 'unsafe-inline' 'unsafe-eval' data:;"
+        "connect-src 'self' *.google-analytics.com https://*.nr-data.net;"
         "object-src 'self';"
         "font-src 'self' {asset_domain} data:;"
         "img-src 'self' {asset_domain} *.tile.openstreetmap.org *.google-analytics.com"
