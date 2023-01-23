@@ -25,7 +25,7 @@ watch-frontend:  ## Build frontend and watch for changes
 
 .PHONY: run-flask
 run-flask:  ## Run flask
-	pipenv run flask run -p 6012 --host=0.0.0.0
+	pipenv run newrelic-admin run-program flask run -p 6012 --host=0.0.0.0
 
 .PHONY: npm-audit
 npm-audit:  ## Check for vulnerabilities in NPM packages
@@ -48,6 +48,7 @@ py-lint: ## Run python linting scanners
 	pipenv run isort --check-only ./app ./tests
 
 .PHONY: py-test
+py-test: export NEW_RELIC_ENVIRONMENT=test
 py-test: ## Run python unit tests
 	pipenv run py.test -n auto --maxfail=10 tests/
 
