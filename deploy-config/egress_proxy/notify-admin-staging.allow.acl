@@ -1,2 +1,2 @@
 gov-collector.newrelic.com
-*.apps.internal
+egress-proxy-notify-admin-staging.apps.internal
