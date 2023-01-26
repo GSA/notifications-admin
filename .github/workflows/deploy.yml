@@ -58,6 +58,7 @@ jobs:
           ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
           BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
           REDIS_ENABLED: ${{ secrets.REDIS_ENABLED }}
+          NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
         with:
           cf_username: ${{ secrets.CLOUDGOV_USERNAME }}
           cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
@@ -74,6 +75,22 @@ jobs:
             --var ADMIN_CLIENT_SECRET="$ADMIN_CLIENT_SECRET"
             --var BASIC_AUTH_USERNAME="curiousabout"
             --var BASIC_AUTH_PASSWORD="$BASIC_AUTH_PASSWORD"
+            --var NEW_RELIC_LICENSE_KEY="$NEW_RELIC_LICENSE_KEY"
+
+      - name: Check for changes to egress config
+        id: changed-egress-config
+        uses: tj-actions/changed-files@v34
+        with:
+          files: |
+            deploy-config/egress_proxy/notify-admin-staging.*.acl
+            .github/actions/deploy-proxy/action.yml
+            .github/workflows/deploy.yml
+      - name: Deploy egress proxy
+        if: steps.changed-egress-config.outputs.any_changed == 'true'
+        uses: ./.github/actions/deploy-proxy
+        with:
+          cf_space: notify-staging
+          app: notify-admin-staging
 
   bail:
     runs-on: ubuntu-latest

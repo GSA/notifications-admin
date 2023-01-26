@@ -22,7 +22,10 @@ applications:
       NOTIFY_APP_NAME: admin
       NOTIFY_LOG_LEVEL: INFO
       FLASK_APP: application.py
-      FLASK_ENV: production
+      FLASK_DEBUG: "false"
+      NEW_RELIC_CONFIG_FILE: newrelic.ini
+      NEW_RELIC_ENVIRONMENT: ((env))
+
       REDIS_ENABLED: ((REDIS_ENABLED))
       ADMIN_BASE_URL: https://((public_admin_route))
       API_HOST_NAME: https://notify-api-((env)).apps.internal:61443
@@ -34,6 +37,7 @@ applications:
       SECRET_KEY: ((SECRET_KEY))
       BASIC_AUTH_USERNAME: ((BASIC_AUTH_USERNAME))
       BASIC_AUTH_PASSWORD: ((BASIC_AUTH_PASSWORD))
+      NEW_RELIC_LICENSE_KEY: ((NEW_RELIC_LICENSE_KEY))
 
       AWS_REGION: us-west-2
       AWS_ACCESS_KEY_ID: ((AWS_ACCESS_KEY_ID))
@@ -42,3 +46,4 @@ applications:
       NOTIFY_BILLING_DETAILS: '[]'
 
       REQUESTS_CA_BUNDLE: "/etc/ssl/certs/ca-certificates.crt"
+      NEW_RELIC_CA_BUNDLE_PATH: "/etc/ssl/certs/ca-certificates.crt"

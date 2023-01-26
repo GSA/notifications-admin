@@ -436,7 +436,7 @@ def test_caseworker_redirected_to_set_sender_for_one_off(
     active_caseworking_user,
 ):
 
-    mocker.patch('app.user_api_client.get_user', return_value=active_caseworking_user)
+    client_request.login(active_caseworking_user)
 
     client_request.get(
         'main.view_template',
