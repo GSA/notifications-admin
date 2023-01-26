@@ -4,7 +4,7 @@ applications:
     buildpack: python_buildpack
     instances: ((instances))
     memory: ((memory))
-    command: gunicorn -c /home/vcap/app/gunicorn_config.py application
+    command: newrelic-admin run-program gunicorn -c /home/vcap/app/gunicorn_config.py application
     health-check-type: http
     health-check-http-endpoint: '/_status?simple=true'
     health-check-invocation-timeout: 10
