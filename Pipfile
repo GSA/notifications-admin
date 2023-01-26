@@ -32,7 +32,7 @@ rtreelib = "==0.2.0"
 werkzeug = "~=2.2"
 wtforms = "==3.0.1"
 newrelic = "*"
-notifications-utils = {editable = true, ref = "request-unbound-error", git = "https://github.com/GSA/notifications-utils.git"}
+notifications-utils = {editable = true, ref = "main", git = "https://github.com/GSA/notifications-utils.git"}
 
 [dev-packages]
 isort = "==5.10.1"
