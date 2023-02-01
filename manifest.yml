@@ -39,10 +39,6 @@ applications:
       BASIC_AUTH_PASSWORD: ((BASIC_AUTH_PASSWORD))
       NEW_RELIC_LICENSE_KEY: ((NEW_RELIC_LICENSE_KEY))
 
-      AWS_REGION: us-west-2
-      AWS_ACCESS_KEY_ID: ((AWS_ACCESS_KEY_ID))
-      AWS_SECRET_ACCESS_KEY: ((AWS_SECRET_ACCESS_KEY))
-
       NOTIFY_BILLING_DETAILS: '[]'
 
       REQUESTS_CA_BUNDLE: "/etc/ssl/certs/ca-certificates.crt"
