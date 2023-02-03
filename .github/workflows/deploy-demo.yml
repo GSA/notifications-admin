@@ -48,8 +48,6 @@ jobs:
         env:
           DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
           BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
           REDIS_ENABLED: ${{ secrets.REDIS_ENABLED }}
@@ -63,8 +61,6 @@ jobs:
             --vars-file deploy-config/demo.yml
             --var DANGEROUS_SALT="$DANGEROUS_SALT"
             --var SECRET_KEY="$SECRET_KEY"
-            --var AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID"
-            --var AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"
             --var REDIS_ENABLED="$REDIS_ENABLED"
             --var ADMIN_CLIENT_USERNAME="notify-admin"
             --var ADMIN_CLIENT_SECRET="$ADMIN_CLIENT_SECRET"
