@@ -350,8 +350,8 @@ class SMSCode(GovukTextInputField):
     validators = [
         DataRequired(message='Cannot be empty'),
         Regexp(regex=r'^\d+$', message='Numbers only'),
-        Length(min=5, message='Not enough numbers'),
-        Length(max=5, message='Too many numbers'),
+        Length(min=6, message='Not enough numbers'),
+        Length(max=6, message='Too many numbers'),
     ]
 
     def __call__(self, **kwargs):
