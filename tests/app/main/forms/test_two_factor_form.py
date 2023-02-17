@@ -9,10 +9,10 @@ def _check_code(code):
 
 
 @pytest.mark.parametrize('post_data', [
-    {'sms_code': '12345'},
-    {'sms_code': ' 12345 '},
-    {'sms_code': '12 34 5'},
-    {'sms_code': '1-23-45'},
+    {'sms_code': '123456'},
+    {'sms_code': ' 123456 '},
+    {'sms_code': '12 34 56'},
+    {'sms_code': '1-23-45-6'},
 ])
 def test_form_is_valid_returns_no_errors(
     notify_admin,
@@ -23,7 +23,7 @@ def test_form_is_valid_returns_no_errors(
         form = TwoFactorForm(_check_code)
         assert form.validate() is True
         assert form.errors == {}
-    mock_check_verify_code.assert_called_once_with('1', '12345', 'sms')
+    mock_check_verify_code.assert_called_once_with('1', '123456', 'sms')
 
 
 @pytest.mark.parametrize('post_data, expected_error', (
@@ -32,7 +32,7 @@ def test_form_is_valid_returns_no_errors(
         'Not enough numbers',
     ),
     (
-        {'sms_code': '123456'},
+        {'sms_code': '1234567'},
         'Too many numbers',
     ),
     (
@@ -40,11 +40,11 @@ def test_form_is_valid_returns_no_errors(
         'Cannot be empty',
     ),
     (
-        {'sms_code': '12E45'},
+        {'sms_code': '12E456'},
         'Numbers only',
     ),
     (
-        {'sms_code': ' ! 2 3 4 5'},
+        {'sms_code': ' ! 2 3 4 5 6'},
         'Numbers only',
     ),
 ))
@@ -64,7 +64,7 @@ def test_check_verify_code_returns_error_when_code_has_expired(
     notify_admin,
     mock_check_verify_code_code_expired,
 ):
-    with notify_admin.test_request_context(method='POST', data={'sms_code': '99999'}):
+    with notify_admin.test_request_context(method='POST', data={'sms_code': '999999'}):
         form = TwoFactorForm(_check_code)
         assert form.validate() is False
         assert form.errors == {'sms_code': ['Code has expired']}
@@ -74,7 +74,7 @@ def test_check_verify_code_returns_error_when_code_was_not_found(
     notify_admin,
     mock_check_verify_code_code_not_found,
 ):
-    with notify_admin.test_request_context(method='POST', data={'sms_code': '99999'}):
+    with notify_admin.test_request_context(method='POST', data={'sms_code': '999999'}):
         form = TwoFactorForm(_check_code)
         assert form.validate() is False
         assert form.errors == {'sms_code': ['Code not found']}
