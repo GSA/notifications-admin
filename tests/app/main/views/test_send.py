@@ -1098,7 +1098,7 @@ def test_send_one_off_has_correct_page_title(
     mocker,
     user,
 ):
-    mocker.patch('app.user_api_client.get_user', return_value=user)
+    client_request.login(user)
     template_data = create_template(template_type='sms', name='Two week reminder', content='Hi there ((name))')
     mocker.patch('app.service_api_client.get_service_template', return_value={'data': template_data})
 
@@ -1187,7 +1187,7 @@ def test_send_one_off_has_skip_link(
     expected_link_url,
     user,
 ):
-    mocker.patch('app.user_api_client.get_user', return_value=user)
+    client_request.login(user)
     template_data = create_template(template_id=fake_uuid, template_type=template_type)
     mocker.patch('app.service_api_client.get_service_template', return_value={'data': template_data})
 
@@ -1444,7 +1444,6 @@ def test_send_one_off_redirects_to_end_if_step_out_of_bounds(
 ))
 def test_send_one_off_redirects_to_start_if_you_skip_steps(
     client_request,
-    platform_admin_user,
     service_one,
     fake_uuid,
     mock_s3_upload,
@@ -1454,12 +1453,10 @@ def test_send_one_off_redirects_to_start_if_you_skip_steps(
     mocker,
     user,
 ):
-    mocker.patch('app.user_api_client.get_user', return_value=user)
-
     with client_request.session_transaction() as session:
         session['placeholders'] = {'address_line_1': 'foo'}
 
-    client_request.login(platform_admin_user)
+    client_request.login(user)
     client_request.get(
         'main.send_one_off_step',
         service_id=service_one['id'],
@@ -1489,7 +1486,7 @@ def test_send_one_off_redirects_to_start_if_index_out_of_bounds_and_some_placeho
     mocker,
     user,
 ):
-    mocker.patch('app.user_api_client.get_user', return_value=user)
+    client_request.login(user)
     with client_request.session_transaction() as session:
         session['placeholders'] = {'name': 'foo'}
 
@@ -1518,7 +1515,7 @@ def test_send_one_off_sms_message_redirects(
     fake_uuid,
     user,
 ):
-    mocker.patch('app.user_api_client.get_user', return_value=user)
+    client_request.login(user)
     template = {'data': {'template_type': 'sms', 'folder': None}}
     mocker.patch('app.service_api_client.get_service_template', return_value=template)
 
@@ -1552,7 +1549,7 @@ def test_send_one_off_email_to_self_without_placeholders_redirects_to_check_page
     fake_uuid,
     user,
 ):
-    mocker.patch('app.user_api_client.get_user', return_value=user)
+    client_request.login(user)
 
     with client_request.session_transaction() as session:
         session['recipient'] = 'foo@bar.com'

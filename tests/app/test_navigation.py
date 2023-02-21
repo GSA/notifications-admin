@@ -455,17 +455,13 @@ def test_navigation_urls(
 
 def test_caseworkers_get_caseworking_navigation(
     client_request,
-    mocker,
     mock_get_template_folders,
     mock_get_service_templates,
     mock_has_no_jobs,
     mock_get_api_keys,
     active_caseworking_user,
 ):
-    mocker.patch(
-        'app.user_api_client.get_user',
-        return_value=active_caseworking_user
-    )
+    client_request.login(active_caseworking_user)
     page = client_request.get('main.choose_template', service_id=SERVICE_ONE_ID)
     assert normalize_spaces(page.select_one('header + .govuk-width-container nav').text) == (
         'Send messages Sent messages Team members'
@@ -474,17 +470,13 @@ def test_caseworkers_get_caseworking_navigation(
 
 def test_caseworkers_see_jobs_nav_if_jobs_exist(
     client_request,
-    mocker,
     mock_get_service_templates,
     mock_get_template_folders,
     mock_has_jobs,
     active_caseworking_user,
     mock_get_api_keys,
 ):
-    mocker.patch(
-        'app.user_api_client.get_user',
-        return_value=active_caseworking_user
-    )
+    client_request.login(active_caseworking_user)
     page = client_request.get('main.choose_template', service_id=SERVICE_ONE_ID)
     assert normalize_spaces(page.select_one('header + .govuk-width-container nav').text) == (
         'Send messages Sent messages Team members'

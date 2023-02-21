@@ -13,7 +13,6 @@ from app.models.webauthn_credential import (
 from tests.conftest import (
     create_api_user_active,
     create_user,
-    fake_uuid,
     normalize_spaces,
     url_for_endpoint_with_token,
 )
@@ -194,7 +193,7 @@ def test_change_your_mobile_number_page_shows_delete_link_if_user_on_email_auth(
     api_user_active_email_auth,
     mocker
 ):
-    mocker.patch('app.user_api_client.get_user', return_value=api_user_active_email_auth)
+    client_request.login(api_user_active_email_auth)
     page = client_request.get(('main.user_profile_mobile_number'))
     assert 'Change your mobile number' in page.text
     assert 'Delete your number' in page.text
@@ -202,7 +201,7 @@ def test_change_your_mobile_number_page_shows_delete_link_if_user_on_email_auth(
 
 def test_change_your_mobile_number_page_doesnt_show_delete_link_if_user_has_no_mobile_number(
     client_request,
-    api_user_active_email_auth,
+    fake_uuid,
     mocker
 ):
     user = create_user(
@@ -210,7 +209,7 @@ def test_change_your_mobile_number_page_doesnt_show_delete_link_if_user_has_no_m
         auth_type='email_auth',
         mobile_number=None
     )
-    mocker.patch('app.user_api_client.get_user', return_value=user)
+    client_request.login(user)
     page = client_request.get(('main.user_profile_mobile_number'))
     assert 'Change your mobile number' in page.text
     assert 'Delete your number' not in page.text
@@ -221,7 +220,7 @@ def test_confirm_delete_mobile_number(
     api_user_active_email_auth,
     mocker
 ):
-    mocker.patch('app.user_api_client.get_user', return_value=api_user_active_email_auth)
+    client_request.login(api_user_active_email_auth)
 
     page = client_request.get(
         '.user_profile_confirm_delete_mobile_number',
@@ -241,7 +240,7 @@ def test_delete_mobile_number(
     api_user_active_email_auth,
     mocker
 ):
-    mocker.patch('app.user_api_client.get_user', return_value=api_user_active_email_auth)
+    client_request.login(api_user_active_email_auth)
     mock_delete = mocker.patch('app.user_api_client.update_user_attribute')
 
     client_request.post(
@@ -337,8 +336,8 @@ def test_should_redirect_after_mobile_number_confirm(
     user_before['current_session_id'] = str(uuid.UUID(int=1))
     user_after['current_session_id'] = str(uuid.UUID(int=2))
 
-    # first time (login decorator) return normally, second time (after 2FA return with new session id)
-    mocker.patch('app.user_api_client.get_user', side_effect=[user_before, user_after])
+    client_request.login(user_before)
+    mocker.patch('app.user_api_client.get_user', side_effect=[user_after])
 
     with client_request.session_transaction() as session:
         session['new-mob-password-confirmed'] = True
@@ -347,7 +346,7 @@ def test_should_redirect_after_mobile_number_confirm(
 
     client_request.post(
         'main.user_profile_mobile_number_confirm',
-        _data={'sms_code': '12345'},
+        _data={'sms_code': '123456'},
         _expected_status=302,
         _expected_redirect=url_for(
             'main.user_profile',

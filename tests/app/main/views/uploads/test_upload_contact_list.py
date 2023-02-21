@@ -1,5 +1,6 @@
 import uuid
 from io import BytesIO
+from os import getenv
 from unittest.mock import ANY
 
 import pytest
@@ -7,7 +8,6 @@ from flask import url_for
 from freezegun import freeze_time
 
 from app.formatters import normalize_spaces
-from app.s3_client import default_access_key, default_secret_key
 from tests import contact_list_json
 from tests.conftest import SERVICE_ONE_ID
 
@@ -210,8 +210,8 @@ def test_upload_csv_file_shows_error_banner(
         region='us-west-2',
         bucket_name='test-contact-list',
         file_location=f"service-{SERVICE_ONE_ID}-notify/{fake_uuid}.csv",
-        access_key=default_access_key,
-        secret_key=default_secret_key,
+        access_key=getenv('AWS_ACCESS_KEY_ID'),
+        secret_key=getenv('AWS_SECRET_ACCESS_KEY'),
     )
     mock_set_metadata.assert_called_once_with(
         ANY,

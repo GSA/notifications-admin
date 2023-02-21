@@ -1,9 +1,9 @@
 from collections import namedtuple
+from os import getenv
 from unittest.mock import call
 
 import pytest
 
-from app.s3_client import default_access_key, default_region, default_secret_key
 from app.s3_client.s3_logo_client import (
     EMAIL_LOGO_LOCATION_STRUCTURE,
     TEMP_TAG,
@@ -14,6 +14,9 @@ from app.s3_client.s3_logo_client import (
     upload_email_logo,
 )
 
+default_access_key = getenv('AWS_ACCESS_KEY_ID')
+default_secret_key = getenv('AWS_SECRET_ACCESS_KEY')
+default_region = getenv('AWS_REGION')
 bucket = 'test_bucket'
 bucket_credentials = {
     'bucket': bucket,
