@@ -15,7 +15,7 @@ from flask import (
     session,
     url_for,
 )
-from flask.globals import _lookup_req_object, _request_ctx_stack
+from flask.globals import request_ctx
 from flask_login import LoginManager, current_user
 from flask_wtf import CSRFProtect
 from flask_wtf.csrf import CSRFError
@@ -133,14 +133,10 @@ basic_auth = CustomBasicAuth()
 
 
 # The current service attached to the request stack.
-def _get_current_service():
-    return _lookup_req_object('service')
-
-
-current_service = LocalProxy(_get_current_service)
+current_service = LocalProxy(partial(getattr, request_ctx, 'service'))
 
 # The current organisation attached to the request stack.
-current_organisation = LocalProxy(partial(_lookup_req_object, 'organisation'))
+current_organisation = LocalProxy(partial(getattr, request_ctx, 'organisation'))
 
 navigation = {
     'casework_navigation': CaseworkNavigation(),
@@ -295,10 +291,10 @@ def make_session_permanent():
 
 def load_service_before_request():
     if '/static/' in request.url:
-        _request_ctx_stack.top.service = None
+        request_ctx.service = None
         return
-    if _request_ctx_stack.top is not None:
-        _request_ctx_stack.top.service = None
+    if request_ctx is not None:
+        request_ctx.service = None
 
         if request.view_args:
             service_id = request.view_args.get('service_id', session.get('service_id'))
@@ -307,7 +303,7 @@ def load_service_before_request():
 
         if service_id:
             try:
-                _request_ctx_stack.top.service = Service(
+                request_ctx.service = Service(
                     service_api_client.get_service(service_id)['data']
                 )
             except HTTPError as exc:
@@ -320,17 +316,17 @@ def load_service_before_request():
 
 def load_organisation_before_request():
     if '/static/' in request.url:
-        _request_ctx_stack.top.organisation = None
+        request_ctx.organisation = None
         return
-    if _request_ctx_stack.top is not None:
-        _request_ctx_stack.top.organisation = None
+    if request_ctx is not None:
+        request_ctx.organisation = None
 
         if request.view_args:
             org_id = request.view_args.get('org_id')
 
             if org_id:
                 try:
-                    _request_ctx_stack.top.organisation = Organisation.from_id(org_id)
+                    request_ctx.organisation = Organisation.from_id(org_id)
                 except HTTPError as exc:
                     # if org id isn't real, then 404 rather than 500ing later because we expect org to be set
                     if exc.status_code == 404:
@@ -360,8 +356,9 @@ def useful_headers_after_request(response):
     response.headers.add('X-XSS-Protection', '1; mode=block')
     response.headers.add('Content-Security-Policy', (
         "default-src 'self' {asset_domain} 'unsafe-inline';"
-        "script-src 'self' {asset_domain} *.google-analytics.com 'unsafe-inline' 'unsafe-eval' data:;"
-        "connect-src 'self' *.google-analytics.com;"
+        "script-src 'self' {asset_domain} *.google-analytics.com https://js-agent.newrelic.com https://*.nr-data.net "
+        "'unsafe-inline' 'unsafe-eval' data:;"
+        "connect-src 'self' *.google-analytics.com https://*.nr-data.net;"
         "object-src 'self';"
         "font-src 'self' {asset_domain} data:;"
         "img-src 'self' {asset_domain} *.tile.openstreetmap.org *.google-analytics.com"

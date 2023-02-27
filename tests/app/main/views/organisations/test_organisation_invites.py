@@ -405,7 +405,7 @@ def test_verified_org_user_redirects_to_dashboard(
 
     client_request.post(
         'main.verify',
-        _data={'sms_code': '12345'},
+        _data={'sms_code': '123456'},
         _expected_redirect=url_for(
             'main.organisation_dashboard',
             org_id=invited_org_user['organisation'],
