@@ -30,7 +30,7 @@
     {% if not current_user.is_authenticated %}
       <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.register') }}">Create an account,</a> then add your unique service(s).</p>
     {% else %}
-      Additional unique services may be added, subject to approval by the U.S. Notify team.
+      Additional unique services may be added, although moving each service out of trial mode is subject to approval by the U.S. Notify team.
     {% endif %}
   </p>
 
