@@ -34,6 +34,7 @@ werkzeug = "~=2.2"
 wtforms = "==3.0.1"
 newrelic = "*"
 notifications-utils = {editable = true, ref = "main", git = "https://github.com/GSA/notifications-utils.git"}
+flask-talisman = "*"
 
 [dev-packages]
 isort = "==5.10.1"
