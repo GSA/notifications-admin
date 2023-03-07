@@ -21,7 +21,7 @@ bootstrap: generate-version-file ## Set up everything to run the app
 
 .PHONY: watch-frontend
 watch-frontend:  ## Build frontend and watch for changes
-	npm run watch
+	source $(NVMSH) && npm run watch
 
 .PHONY: run-flask
 run-flask:  ## Run flask
