@@ -30,7 +30,6 @@ from notifications_utils.formatters import (
     get_lines_with_normalised_whitespace,
 )
 from notifications_utils.recipients import format_phone_number_human_readable
-from notifications_utils.sanitise_text import SanitiseASCII
 from werkzeug.exceptions import HTTPException as WerkzeugHTTPException
 from werkzeug.exceptions import abort
 from werkzeug.local import LocalProxy
@@ -146,6 +145,7 @@ navigation = {
     'header_navigation': HeaderNavigation(),
     'org_navigation': OrgNavigation(),
 }
+
 
 def _csp(config):
     asset_domain = config['ASSET_DOMAIN']
