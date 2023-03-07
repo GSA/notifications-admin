@@ -77,7 +77,7 @@ additional features based on partner needs.
 | Organization permissions settings for various team members to edit/send | Single-level decision bidirectionality (e.g. reply “YES” if, or “NO” if…) | Multiple-level decision bidirectionality (greater than one layer decision-tree) |
 | Reusable message templates                                              | Self-service account creation                                             | Open-text reply bidirectionality (rather than reply yes or no, 1 or 2, etc.)    |
 | Message send/failure analytics                                          | Application status page                                                   | Multilingual interface and content library options                              |
-| 7-day records deletion                                                  | Scheduled send option                                                     | Recurring scheduled send                                                        |
+| 1-day records deletion                                                  | Scheduled send option                                                     | Recurring scheduled send                                                        |
 
 ###  OPPORTUNITIES TO GET INVOLVED
 
