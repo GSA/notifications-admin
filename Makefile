@@ -27,6 +27,10 @@ watch-frontend:  ## Build frontend and watch for changes
 run-flask:  ## Run flask
 	pipenv run newrelic-admin run-program flask run -p 6012 --host=0.0.0.0
 
+.PHONY: run-flask-bare
+run-flask-bare:  ## Run flask without invoking pipenv so we can override ENV variables in .env
+	flask run -p 6012 --host=0.0.0.0
+
 .PHONY: npm-audit
 npm-audit:  ## Check for vulnerabilities in NPM packages
 	source $(NVMSH) && npm run audit

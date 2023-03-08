@@ -2,6 +2,7 @@
   "defaults": {
     "standard": "WCAG2AA",
     "runners": ["axe"],
+    "concurrency": 1,
     "hideElements": [
       "nav > ol a",
       "#sms-pricing-details",

@@ -247,7 +247,8 @@ def create_app(application):
         application,
         content_security_policy=_csp(application.config),
         content_security_policy_nonce_in=['style-src', 'script-src'],
-        frame_options='deny'
+        frame_options='deny',
+        force_https=(application.config['HTTP_PROTOCOL'] == 'https')
     )
     logging.init_app(application)
     webauthn_server.init_app(application)
