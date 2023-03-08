@@ -183,17 +183,13 @@
   id=None
 ) %}
   {% call field(align='right') %}
-    <style nonce="{{ csp_nonce() }}">
-      {% if id %}
+    {% if id %}
+      <style nonce="{{ csp_nonce() }}">
         #{{id}} .spark-bar-bar {
           width: {{ count / max_count * 100 }}%;
         }
-      {% else %}
-        .spark-bar-bar {
-          width: 100%;
-        }
-      {% endif %}
-    </style>
+      </style>
+    {% endif %}
     <span {% if id %}id="{{ id }}"{% endif %} class="spark-bar">
       <span class="spark-bar-bar">
         {{ '{:,.0f}'.format(count) }}
