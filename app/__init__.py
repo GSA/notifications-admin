@@ -17,6 +17,7 @@ from flask import (
 )
 from flask.globals import request_ctx
 from flask_login import LoginManager, current_user
+from flask_talisman import Talisman
 from flask_wtf import CSRFProtect
 from flask_wtf.csrf import CSRFError
 from gds_metrics import GDSMetrics
@@ -29,7 +30,6 @@ from notifications_utils.formatters import (
     get_lines_with_normalised_whitespace,
 )
 from notifications_utils.recipients import format_phone_number_human_readable
-from notifications_utils.sanitise_text import SanitiseASCII
 from werkzeug.exceptions import HTTPException as WerkzeugHTTPException
 from werkzeug.exceptions import abort
 from werkzeug.local import LocalProxy
@@ -128,6 +128,7 @@ from app.url_converters import (
 
 login_manager = LoginManager()
 csrf = CSRFProtect()
+talisman = Talisman()
 metrics = GDSMetrics()
 basic_auth = CustomBasicAuth()
 
@@ -144,6 +145,47 @@ navigation = {
     'header_navigation': HeaderNavigation(),
     'org_navigation': OrgNavigation(),
 }
+
+
+def _csp(config):
+    asset_domain = config['ASSET_DOMAIN']
+    logo_domain = config['LOGO_CDN_DOMAIN']
+    return {
+        "default-src": [
+            "'self'",
+            asset_domain
+        ],
+        "script-src": [
+            "'self'",
+            "'unsafe-eval'",
+            asset_domain,
+            "*.google-analytics.com",
+            "https://js-agent.newrelic.com",
+            "https://*.nr-data.net",
+            "data:"
+        ],
+        "connect-src": [
+            "'self'",
+            "*.google-analytics.com",
+            "https://*.nr-data.net"
+        ],
+        "style-src": [
+            "'self'",
+            asset_domain
+        ],
+        "font-src": [
+            "'self'",
+            asset_domain,
+            "data:"
+        ],
+        "img-src": [
+            "'self'",
+            asset_domain,
+            logo_domain,
+            "*.google-analytics.com",
+            "data:"
+        ]
+    }
 
 
 def create_app(application):
@@ -201,6 +243,13 @@ def create_app(application):
     ):
         client.init_app(application)
 
+    talisman.init_app(
+        application,
+        content_security_policy=_csp(application.config),
+        content_security_policy_nonce_in=['style-src', 'script-src'],
+        frame_options='deny',
+        force_https=(application.config['HTTP_PROTOCOL'] == 'https')
+    )
     logging.init_app(application)
     webauthn_server.init_app(application)
 
@@ -224,8 +273,6 @@ def create_app(application):
 
 
 def init_app(application):
-    application.after_request(useful_headers_after_request)
-
     application.before_request(load_service_before_request)
     application.before_request(load_organisation_before_request)
     application.before_request(request_helper.check_proxy_header_before_request)
@@ -349,45 +396,11 @@ def save_service_or_org_after_request(response):
     return response
 
 
-#  https://www.owasp.org/index.php/List_of_useful_HTTP_headers
-def useful_headers_after_request(response):
-    response.headers.add('X-Frame-Options', 'deny')
-    response.headers.add('X-Content-Type-Options', 'nosniff')
-    response.headers.add('X-XSS-Protection', '1; mode=block')
-    response.headers.add('Content-Security-Policy', (
-        "default-src 'self' {asset_domain} 'unsafe-inline';"
-        "script-src 'self' {asset_domain} *.google-analytics.com https://js-agent.newrelic.com https://*.nr-data.net "
-        "'unsafe-inline' 'unsafe-eval' data:;"
-        "connect-src 'self' *.google-analytics.com https://*.nr-data.net;"
-        "object-src 'self';"
-        "font-src 'self' {asset_domain} data:;"
-        "img-src 'self' {asset_domain} *.tile.openstreetmap.org *.google-analytics.com"
-        " *.notifications.service.gov.uk {logo_domain} data:;"
-        "frame-src 'self' www.youtube-nocookie.com;".format(
-            asset_domain=current_app.config['ASSET_DOMAIN'],
-            logo_domain=current_app.config['LOGO_CDN_DOMAIN'],
-        )
-    ))
-    response.headers.add('Link', (
-        '<{asset_url}>; rel=dns-prefetch, <{asset_url}>; rel=preconnect'.format(
-            asset_url=f'https://{current_app.config["ASSET_DOMAIN"]}'
-        )
-    ))
-    if 'Cache-Control' in response.headers:
-        del response.headers['Cache-Control']
-    response.headers.add(
-        'Cache-Control', 'no-store, no-cache, private, must-revalidate')
-    for key, value in response.headers:
-        response.headers[key] = SanitiseASCII.encode(value)
-    return response
-
-
 def register_errorhandlers(application):  # noqa (C901 too complex)
     def _error_response(error_code, error_page_template=None):
         if error_page_template is None:
             error_page_template = error_code
-        resp = make_response(render_template("error/{0}.html".format(error_page_template)), error_code)
-        return useful_headers_after_request(resp)
+        return make_response(render_template("error/{0}.html".format(error_page_template)), error_code)
 
     @application.errorhandler(HTTPError)
     def render_http_error(error):

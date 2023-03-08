@@ -233,3 +233,23 @@ details .arrow {
 input:-webkit-autofill::first-line {
   @include core-19;
 }
+
+.pilot-disabled {
+  a {
+    background-color: gray;
+    border-color: gray;
+
+    span {
+      color: lightgray;
+    }
+  }
+  .big-number-status {
+    background-color: gray;
+    border-color: gray;
+    color: lightgray;
+  }
+
+  & > * {
+    color: gray;
+  }
+}

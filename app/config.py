@@ -154,7 +154,7 @@ class Sandbox(Staging):
 class Scanning(Production):
     BASIC_AUTH_FORCE = False
     HTTP_PROTOCOL = 'http'
-    API_HOST_NAME = 'https://notify-api-demo.app.cloud.gov/'
+    API_HOST_NAME = 'https://notify-api-staging.app.cloud.gov/'
     SECRET_KEY = 'dev-notify-secret-key'  # nosec B105 - only used in development
     ADMIN_CLIENT_USER_NAME = 'notify-admin'
     ADMIN_CLIENT_SECRET = 'dev-notify-secret-key'  # nosec B105 - only used in development

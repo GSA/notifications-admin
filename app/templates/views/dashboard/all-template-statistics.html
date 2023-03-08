@@ -46,7 +46,7 @@
                 {{ 1|message_count_label(item.type, suffix='template')|capitalize }}
               </span>
             {% endcall %}
-            {{ spark_bar_field(item.requested_count, most_used_template_count) }}
+            {{ spark_bar_field(item.requested_count, most_used_template_count, id=item.id) }}
           {% endcall %}
         </div>
       {% endif %}
