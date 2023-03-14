@@ -13,7 +13,26 @@ The [Notify API](https://github.com/GSA/notifications-api) provides the UI's bac
 
 ## Local setup
 
-If you are using VS Code, there are also instructions for [running inside Docker](./docs/docker-remote-containers.md)
+### Common steps
+
+1. Install pre-requisites for setup:
+    * [jq](https://stedolan.github.io/jq/): `brew install jq`
+    * [terraform](https://www.terraform.io/): `brew install terraform` or `brew install tfenv` and use `tfenv` to install `terraform ~> 1.4.0`
+    * [cf-cli@8](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html): `brew install cloudfoundry/tap/cf-cli@8`
+1. [Log into cloud.gov](https://cloud.gov/docs/getting-started/setup/#set-up-the-command-line): `cf login -a api.fr.cloud.gov --sso`
+1. Ensure you have access to the `notify-local-dev` and `notify-staging` spaces in cloud.gov
+1. Run the API setup steps
+1. Run the development terraform with:
+
+        ```
+        $ cd terraform/development
+        $ ./run.sh
+        ```
+
+1. If you want to send data to New Relic from your local develpment environment, set `NEW_RELIC_LICENSE_KEY` within `.env`
+1. Follow the instructions for either `Direct installation` or `Docker installation` below
+
+### Direct installation
 
 1. Get the API running
 
@@ -23,18 +42,15 @@ If you are using VS Code, there are also instructions for [running inside Docker
 
     `make bootstrap`
 
-1. Create the .env file
-
-    ```
-    cp sample.env .env
-    # follow the instructions in .env
-    ```
-
 1. Run the Flask server
 
     `make run-flask`
 
 1. Go to http://localhost:6012
+
+### Docker installation
+
+If you are using VS Code, there are also instructions for [running inside Docker](./docs/docker-remote-containers.md)
 
 ## To test the application
 From a terminal within the running devcontainer:

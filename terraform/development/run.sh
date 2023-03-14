@@ -46,9 +46,13 @@ set -e
 
 service_account="$username-terraform"
 
-if [[ ! -f "secrets.auto.tfvars" ]]; then
+if [[ ! -s "secrets.auto.tfvars" ]]; then
   # create user in notify-local-dev space to create s3 buckets
   ../create_service_account.sh -s notify-local-dev -u $service_account > secrets.auto.tfvars
+fi
+
+if [[ ! -f "../../.env" ]]; then
+  cp ../../sample.env ../../.env
 fi
 
 set +e
