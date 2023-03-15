@@ -4,12 +4,7 @@ If you're working in VS Code, you can also leverage Docker for a containerized d
 
 1. Get the API running, including the Docker network
 
-1. Create the .env file
-
-    ```
-    cp sample.env .env
-    # follow the instructions in .env
-    ```
+1. Uncomment the `Local Docker setup` lines in `.env` and comment out the `Local direct setup` lines.
 
 1. Install the Remote-Containers plug-in in VS Code
 
