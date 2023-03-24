@@ -1,6 +1,5 @@
 import uuid
 from io import BytesIO
-from os import getenv
 from unittest.mock import ANY
 
 import pytest
@@ -178,6 +177,7 @@ def test_upload_contact_list_page(client_request):
 def test_upload_csv_file_shows_error_banner(
     client_request,
     mocker,
+    notify_admin,
     mock_s3_upload,
     mock_get_job_doesnt_exist,
     mock_get_users_by_service,
@@ -205,13 +205,14 @@ def test_upload_csv_file_shows_error_banner(
         _data={'file': (BytesIO(''.encode('utf-8')), 'invalid.csv')},
         _follow_redirects=True,
     )
+    bucket_creds = notify_admin.config['CONTACT_LIST_BUCKET']
     mock_upload.assert_called_once_with(
         filedata='',
-        region='us-west-2',
-        bucket_name='test-contact-list',
+        region=bucket_creds['region'],
+        bucket_name=bucket_creds['bucket'],
         file_location=f"service-{SERVICE_ONE_ID}-notify/{fake_uuid}.csv",
-        access_key=getenv('AWS_ACCESS_KEY_ID'),
-        secret_key=getenv('AWS_SECRET_ACCESS_KEY'),
+        access_key=bucket_creds['access_key_id'],
+        secret_key=bucket_creds['secret_access_key'],
     )
     mock_set_metadata.assert_called_once_with(
         ANY,

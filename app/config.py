@@ -74,12 +74,12 @@ class Config(object):
     }
 
 
-def _default_s3_credentials(bucket_name):
+def _s3_credentials_from_env(bucket_prefix):
     return {
-        'bucket': bucket_name,
-        'access_key_id': getenv('AWS_ACCESS_KEY_ID'),
-        'secret_access_key': getenv('AWS_SECRET_ACCESS_KEY'),
-        'region': getenv('AWS_REGION')
+        'bucket': getenv(f"{bucket_prefix}_BUCKET_NAME", f"{bucket_prefix}-test-bucket-name"),
+        'access_key_id': getenv(f"{bucket_prefix}_AWS_ACCESS_KEY_ID"),
+        'secret_access_key': getenv(f"{bucket_prefix}_AWS_SECRET_ACCESS_KEY"),
+        'region': getenv(f"{bucket_prefix}_AWS_REGION")
     }
 
 
@@ -93,9 +93,9 @@ class Development(Config):
     ASSET_PATH = '/static/'
 
     # Buckets
-    CSV_UPLOAD_BUCKET = _default_s3_credentials('local-notifications-csv-upload')
-    CONTACT_LIST_BUCKET = _default_s3_credentials('local-contact-list')
-    LOGO_UPLOAD_BUCKET = _default_s3_credentials('local-public-logos-tools')
+    CSV_UPLOAD_BUCKET = _s3_credentials_from_env('CSV')
+    CONTACT_LIST_BUCKET = _s3_credentials_from_env('CONTACT')
+    LOGO_UPLOAD_BUCKET = _s3_credentials_from_env('LOGO')
 
     # credential overrides
     DANGEROUS_SALT = 'development-notify-salt'
@@ -114,11 +114,6 @@ class Test(Development):
     API_HOST_NAME = 'http://you-forgot-to-mock-an-api-call-to'
     REDIS_URL = 'redis://you-forgot-to-mock-a-redis-call-to'
     LOGO_CDN_DOMAIN = 'static-logos.test.com'
-
-    # Buckets
-    CSV_UPLOAD_BUCKET = _default_s3_credentials('test-csv-upload')
-    CONTACT_LIST_BUCKET = _default_s3_credentials('test-contact-list')
-    LOGO_UPLOAD_BUCKET = _default_s3_credentials('test-logo-upload')
 
 
 class Production(Config):
@@ -154,7 +149,7 @@ class Sandbox(Staging):
 class Scanning(Production):
     BASIC_AUTH_FORCE = False
     HTTP_PROTOCOL = 'http'
-    API_HOST_NAME = 'https://notify-api-demo.app.cloud.gov/'
+    API_HOST_NAME = 'https://notify-api-staging.app.cloud.gov/'
     SECRET_KEY = 'dev-notify-secret-key'  # nosec B105 - only used in development
     ADMIN_CLIENT_USER_NAME = 'notify-admin'
     ADMIN_CLIENT_SECRET = 'dev-notify-secret-key'  # nosec B105 - only used in development

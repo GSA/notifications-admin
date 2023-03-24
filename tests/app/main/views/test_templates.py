@@ -574,6 +574,7 @@ def test_should_be_able_to_view_a_template_with_links(
     )
 
 
+@pytest.mark.skip(reason="Hiding the copy-to-clipboard widget until API access is opened up")
 def test_should_show_template_id_on_template_page(
     client_request,
     mock_get_service_template,

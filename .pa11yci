@@ -2,9 +2,9 @@
   "defaults": {
     "standard": "WCAG2AA",
     "runners": ["axe"],
+    "concurrency": 1,
     "hideElements": [
       "nav > ol a",
-      "iframe[src^=\"https://www.youtube\"]",
       "#sms-pricing-details",
       "a.govuk-footer__link.govuk-footer__copyright-logo"
     ]

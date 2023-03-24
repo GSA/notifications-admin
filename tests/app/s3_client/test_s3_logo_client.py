@@ -1,5 +1,4 @@
 from collections import namedtuple
-from os import getenv
 from unittest.mock import call
 
 import pytest
@@ -14,21 +13,10 @@ from app.s3_client.s3_logo_client import (
     upload_email_logo,
 )
 
-default_access_key = getenv('AWS_ACCESS_KEY_ID')
-default_secret_key = getenv('AWS_SECRET_ACCESS_KEY')
-default_region = getenv('AWS_REGION')
-bucket = 'test_bucket'
-bucket_credentials = {
-    'bucket': bucket,
-    'access_key_id': default_access_key,
-    'secret_access_key': default_secret_key,
-    'region': default_region
-}
 data = {'data': 'some_data'}
 filename = 'test.png'
 svg_filename = 'test.svg'
 upload_id = 'test_uuid'
-region = 'us-west-2'
 
 
 @pytest.fixture
@@ -37,26 +25,29 @@ def upload_filename(fake_uuid):
         temp=TEMP_TAG.format(user_id=fake_uuid), unique_id=upload_id, filename=filename)
 
 
-def test_upload_email_logo_calls_correct_args(client_request, mocker, fake_uuid, upload_filename):
+@pytest.fixture
+def bucket_credentials(notify_admin):
+    return notify_admin.config['LOGO_UPLOAD_BUCKET']
+
+
+def test_upload_email_logo_calls_correct_args(client_request, mocker, bucket_credentials, fake_uuid, upload_filename):
     mocker.patch('uuid.uuid4', return_value=upload_id)
-    mocker.patch.dict('flask.current_app.config', {'LOGO_UPLOAD_BUCKET': bucket_credentials})
     mocked_s3_upload = mocker.patch('app.s3_client.s3_logo_client.utils_s3upload')
 
     upload_email_logo(filename=filename, user_id=fake_uuid, filedata=data)
 
     mocked_s3_upload.assert_called_once_with(
         filedata=data,
-        region=region,
+        region=bucket_credentials['region'],
         file_location=upload_filename,
-        bucket_name=bucket,
+        bucket_name=bucket_credentials['bucket'],
         content_type='image/png',
-        access_key=default_access_key,
-        secret_key=default_secret_key,
+        access_key=bucket_credentials['access_key_id'],
+        secret_key=bucket_credentials['secret_access_key'],
     )
 
 
-def test_persist_logo(client_request, mocker, fake_uuid, upload_filename):
-    mocker.patch.dict('flask.current_app.config', {'LOGO_UPLOAD_BUCKET': bucket_credentials})
+def test_persist_logo(client_request, bucket_credentials, mocker, fake_uuid, upload_filename):
     mocked_get_s3_object = mocker.patch('app.s3_client.s3_logo_client.get_s3_object')
     mocked_delete_s3_object = mocker.patch('app.s3_client.s3_logo_client.delete_s3_object')
 
@@ -65,7 +56,11 @@ def test_persist_logo(client_request, mocker, fake_uuid, upload_filename):
     persist_logo(upload_filename, new_filename)
 
     mocked_get_s3_object.assert_called_once_with(
-        bucket, new_filename, default_access_key, default_secret_key, default_region)
+        bucket_credentials['bucket'],
+        new_filename,
+        bucket_credentials['access_key_id'],
+        bucket_credentials['secret_access_key'],
+        bucket_credentials['region'])
     mocked_delete_s3_object.assert_called_once_with(upload_filename)
 
 

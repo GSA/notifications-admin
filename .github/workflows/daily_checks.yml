@@ -17,7 +17,6 @@ env:
   WERKZEUG_DEBUG_PIN: off
   REDIS_ENABLED: 0
   NODE_VERSION: 16.15.1
-  AWS_REGION: us-west-2
 
 jobs:
   dependency-audits:
