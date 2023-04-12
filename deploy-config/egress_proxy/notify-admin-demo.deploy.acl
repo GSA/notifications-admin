@@ -1,0 +1,3 @@
+Update this file to force a re-deploy of the egress proxy even when notify-admin-demo.<allow|deny>.acl haven't changed
+
+20230412: Redeploy to re-calculate the list of allowed s3 buckets
