@@ -3,7 +3,6 @@ from notifications_utils.serialised_model import SerialisedModelCollection
 from werkzeug.utils import cached_property
 
 from app.models import JSONModel, SortByNameMixin
-from app.models.contact_list import ContactLists
 from app.models.job import (
     ImmediateJobs,
     PaginatedJobs,
@@ -526,10 +525,6 @@ class Service(JSONModel, SortByNameMixin):
                 Organisation.TYPE_NHS_LOCAL,
             }
         )
-
-    @property
-    def contact_lists(self):
-        return ContactLists(self.id)
 
 
 class Services(SerialisedModelCollection):

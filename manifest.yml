@@ -14,7 +14,6 @@ applications:
     services:
       - notify-admin-redis-((env))
       - notify-api-csv-upload-bucket-((env))
-      - notify-api-contact-list-bucket-((env))
       - notify-admin-logo-upload-bucket-((env))
 
     env:
