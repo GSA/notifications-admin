@@ -23,7 +23,6 @@ from app.main.forms import (
     AdminSetEmailBrandingForm,
     InviteOrgUserForm,
     OrganisationAgreementSignedForm,
-    OrganisationCrownStatusForm,
     OrganisationOrganisationTypeForm,
     RenameOrganisationForm,
     SearchByNameForm,
@@ -278,35 +277,6 @@ def edit_organisation_type(org_id):
     )
 
 
-@main.route("/organisations/<uuid:org_id>/settings/edit-crown-status", methods=['GET', 'POST'])
-@user_is_platform_admin
-def edit_organisation_crown_status(org_id):
-
-    form = OrganisationCrownStatusForm(
-        crown_status={
-            True: 'crown',
-            False: 'non-crown',
-            None: 'unknown',
-        }.get(current_organisation.crown)
-    )
-
-    if form.validate_on_submit():
-        organisations_client.update_organisation(
-            current_organisation.id,
-            crown={
-                'crown': True,
-                'non-crown': False,
-                'unknown': None,
-            }.get(form.crown_status.data),
-        )
-        return redirect(url_for('.organisation_settings', org_id=org_id))
-
-    return render_template(
-        'views/organisations/organisation/settings/edit-crown-status.html',
-        form=form,
-    )
-
-
 @main.route("/organisations/<uuid:org_id>/settings/edit-agreement", methods=['GET', 'POST'])
 @user_is_platform_admin
 def edit_organisation_agreement(org_id):
@@ -500,5 +470,5 @@ def organisation_billing(org_id):
 @user_is_platform_admin
 def organisation_download_agreement(org_id):
     return send_file(**get_mou(
-        current_organisation.crown_status_or_404
+
     ))

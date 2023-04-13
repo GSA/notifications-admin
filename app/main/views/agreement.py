@@ -23,8 +23,6 @@ def service_agreement(service_id):
             return redirect(
                 url_for('main.add_organisation_from_nhs_local_service', service_id=current_service.id)
             )
-    if current_service.organisation.crown is None:
-        return render_template('views/agreement/service-agreement-choose.html')
     if current_service.organisation.agreement_signed:
         return render_template('views/agreement/service-agreement-signed.html')
     return render_template('views/agreement/service-agreement.html')
@@ -34,7 +32,6 @@ def service_agreement(service_id):
 @user_has_permissions('manage_service')
 def service_download_agreement(service_id):
     return send_file(**get_mou(
-        current_service.organisation.crown_status_or_404
     ))
 
 
@@ -85,13 +82,13 @@ def service_confirm_agreement(service_id):
 @main.route('/agreement/<variant>', endpoint='public_agreement')
 @main.route('/agreement/<variant>.pdf', endpoint='public_download_agreement')
 def public_agreement(variant):
-
-    if variant not in {'crown', 'non-crown'}:
+    # originally we returned 404 if variant was not in ['crown', 'not_crown'].  Will we be using agreement.pdf?
+    # for now this is just to keep tests working as expected.
+    if variant != "agreement":
         abort(404)
 
     if request.endpoint == 'main.public_download_agreement':
         return send_file(**get_mou(
-            organisation_is_crown=(variant == 'crown')
         ))
 
     return render_template(

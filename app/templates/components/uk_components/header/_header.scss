@@ -45,13 +45,7 @@
     margin-right: govuk-spacing(1);
   }
 
-  .govuk-header__logotype-crown {
-    margin-right: 1px;
-    fill: currentColor;
-    vertical-align: middle;
-  }
-
-  .govuk-header__logotype-crown-fallback-image {
+  .govuk-header__logotype-fallback-image {
     width: 36px;
     height: 32px;
     border: 0;
@@ -269,8 +263,7 @@
       background: transparent;
     }
 
-    // Hide the inverted crown when printing in browsers that don't support SVG.
-    .govuk-header__logotype-crown-fallback-image {
+    .govuk-header__logotype-fallback-image {
       display: none;
     }
 
@@ -289,7 +282,7 @@
 
   // Begin adjustments for font baseline offset
   // These should be removed when the font is updated with the correct baseline
-  .govuk-header__logotype-crown {
+  .govuk-header__logotype {
     position: relative;
     top: -4px;
   }

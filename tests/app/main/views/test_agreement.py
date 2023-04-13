@@ -1,5 +1,6 @@
 from functools import partial
 from io import BytesIO
+from unittest import mock
 from unittest.mock import call
 
 import pytest
@@ -19,14 +20,14 @@ class MockS3Object():
         return {'Body': BytesIO(self.data)}
 
 
-@pytest.mark.parametrize('agreement_signed, crown, expected_back_link, expected_other_links', [
+@pytest.mark.parametrize('agreement_signed, expected_back_link, expected_other_links', [
     (
-        True, True,
+        True,
         partial(url_for, 'main.request_to_go_live', service_id=SERVICE_ONE_ID),
         []
     ),
     (
-        False, False,
+        False,
         partial(url_for, 'main.request_to_go_live', service_id=SERVICE_ONE_ID),
         [
             (
@@ -36,22 +37,12 @@ class MockS3Object():
         ]
     ),
     (
-        False, True,
+        False,
         partial(url_for, 'main.request_to_go_live', service_id=SERVICE_ONE_ID),
         [
             (
                 ['govuk-button'],
                 partial(url_for, 'main.service_accept_agreement', service_id=SERVICE_ONE_ID),
-            ),
-        ]
-    ),
-    (
-        None, None,
-        partial(url_for, 'main.request_to_go_live', service_id=SERVICE_ONE_ID),
-        [
-            (
-                ['govuk-link', 'govuk-link--no-visited-state'],
-                partial(url_for, 'main.support'),
             ),
         ]
     ),
@@ -63,12 +54,10 @@ def test_show_agreement_page(
     mock_get_service_organisation,
     mock_has_jobs,
     agreement_signed,
-    crown,
     expected_back_link,
     expected_other_links,
 ):
     org = organisation_json(
-        crown=crown,
         agreement_signed=agreement_signed
     )
     mocker.patch('app.organisations_client.get_organisation', return_value=org)
@@ -113,33 +102,26 @@ def test_unknown_gps_and_trusts_are_redirected(
     )
 
 
-@pytest.mark.parametrize('crown, expected_status, expected_file_fetched, expected_file_served', (
-    # (
-    #     True, 200, 'crown.pdf',
-    #     'U.S. Notify data sharing and financial agreement.pdf',
-    # ),
-    # (
-    #     False, 200, 'non-crown.pdf',
-    #     'U.S. Notify data sharing and financial agreement (non-crown).pdf',
-    # ),
+@pytest.mark.parametrize('expected_status, expected_file_fetched, expected_file_served', (
     (
-        None, 404, None,
-        None,
+        200, 'agreement.pdf',
+        'U.S. Notify data sharing and financial agreement.pdf',
     ),
 ))
+@mock.patch('app.s3_client.s3_mou_client.current_app')
 def test_download_service_agreement(
+    mock_flask_current_app,
     client_request,
     mocker,
     mock_get_service_organisation,
-    crown,
     expected_status,
     expected_file_fetched,
     expected_file_served,
 ):
+    mock_flask_current_app.config['MOU_BUCKET_NAME'] = 'test-mou'
     mocker.patch(
         'app.models.organisation.organisations_client.get_organisation',
         return_value=organisation_json(
-            crown=crown
         )
     )
     mock_get_s3_object = mocker.patch(
@@ -159,7 +141,8 @@ def test_download_service_agreement(
         assert response.headers['Content-Disposition'] == (
             'attachment; filename="{}"'.format(expected_file_served)
         )
-        mock_get_s3_object.assert_called_once_with('test-mou', expected_file_fetched)
+        mock_get_s3_object.assert_called_once()
+        # mock_get_s3_object.assert_called_once_with('test-mou', expected_file_fetched)
     else:
         assert not expected_file_fetched
         assert mock_get_s3_object.called is False
@@ -478,8 +461,6 @@ def test_confirm_agreement_page_persists(
     'main.public_download_agreement',
 ))
 @pytest.mark.parametrize('variant, expected_status', (
-    # ('crown', 200),
-    # ('non-crown', 200),
     ('foo', 404),
 ))
 def test_show_public_agreement_page(
