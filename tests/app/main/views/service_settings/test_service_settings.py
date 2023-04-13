@@ -1395,16 +1395,13 @@ def test_request_to_go_live_displays_go_live_notes_in_zendesk_ticket(
         _follow_redirects=True
     )
 
-    # TODO.  As part of #446 changes I manually added 'Agreement signed: No (organisation is Org 1). This
-    # TODO.  service is not allowed to go live."
-    # TODO.  Not sure why this was necessary.
     expected_message = (
         'Service: service one\n'
         'http://localhost/services/{service_id}\n'
         '\n'
         '---\n'
         'Organisation type: Federal government\n'
-        'Agreement signed: No (organisation is Org 1). This service is not allowed to go live\n'
+        'Agreement signed: No (organisation is Org 1). {go_live_note}\n'
         '\n'
         'Emails in next year: 111,111\n'
         'Text messages in next year: 222,222\n'
@@ -1419,6 +1416,7 @@ def test_request_to_go_live_displays_go_live_notes_in_zendesk_ticket(
         'Requester’s user page: http://localhost/users/{user_id}\n'
     ).format(
         service_id=SERVICE_ONE_ID,
+        go_live_note=go_live_note,
         user_id=active_user_with_permissions['id'],
     )
 
