@@ -18,7 +18,6 @@ from . import (
     TestClient,
     api_key_json,
     assert_url_expected,
-    contact_list_json,
     generate_uuid,
     inbound_sms_json,
     invite_json,
@@ -1275,7 +1274,7 @@ def mock_check_verify_code_code_expired(mocker):
 
 @pytest.fixture(scope='function')
 def mock_create_job(mocker, api_user_active):
-    def _create(job_id, service_id, scheduled_for=None, contact_list_id=None):
+    def _create(job_id, service_id, scheduled_for=None):
         return job_json(
             service_id,
             api_user_active,
@@ -1367,7 +1366,7 @@ def mock_has_no_jobs(mocker):
 
 @pytest.fixture(scope='function')
 def mock_get_jobs(mocker, api_user_active, fake_uuid):
-    def _get_jobs(service_id, limit_days=None, statuses=None, contact_list_id=None, page=1):
+    def _get_jobs(service_id, limit_days=None, statuses=None, page=1):
         if statuses is None:
             statuses = ['', 'scheduled', 'pending', 'cancelled', 'finished']
 
@@ -1459,98 +1458,6 @@ def mock_get_no_jobs(mocker, api_user_active):
             'data': [],
             'links': {},
         }
-    )
-
-
-@pytest.fixture(scope='function')
-def mock_create_contact_list(mocker, api_user_active):
-    def _create(
-        service_id,
-        upload_id,
-        original_file_name,
-        row_count,
-        template_type,
-    ):
-        return {
-            'service_id': service_id,
-            'upload_id': upload_id,
-            'original_file_name': original_file_name,
-            'row_count': row_count,
-            'template_type': template_type,
-        }
-
-    return mocker.patch(
-        'app.contact_list_api_client.create_contact_list',
-        side_effect=_create,
-    )
-
-
-@pytest.fixture(scope='function')
-def mock_get_contact_lists(mocker, api_user_active, fake_uuid):
-    def _get(service_id, template_type=None):
-        return [
-            contact_list_json(
-                id_=fake_uuid,
-                created_at='2020-06-13T09:59:56.000000Z',
-                service_id=service_id,
-            ),
-            contact_list_json(
-                id_='d7b0bd1a-d1c7-4621-be5c-3c1b4278a2ad',
-                created_at='2020-06-13T12:00:00.000000Z',
-                service_id=service_id,
-                original_file_name='phone number list.csv',
-                row_count=123,
-                recent_job_count=2,
-                template_type='sms',
-            ),
-            contact_list_json(
-                id_=fake_uuid,
-                created_at='2020-05-02T01:00:00.000000Z',
-                original_file_name='UnusedList.tsv',
-                row_count=1,
-                has_jobs=False,
-                service_id=service_id,
-                template_type='sms',
-            )
-        ]
-
-    return mocker.patch(
-        'app.models.contact_list.ContactLists.client_method',
-        side_effect=_get,
-    )
-
-
-@pytest.fixture(scope='function')
-def mock_get_contact_list(mocker, api_user_active, fake_uuid):
-    def _get(*, service_id, contact_list_id):
-        return contact_list_json(
-            id_=fake_uuid,
-            created_at='2020-06-13T09:59:56.000000Z',
-            service_id=service_id,
-        )
-
-    return mocker.patch(
-        'app.models.contact_list.contact_list_api_client.get_contact_list',
-        side_effect=_get,
-    )
-
-
-@pytest.fixture(scope='function')
-def mock_get_no_contact_list(mocker, api_user_active, fake_uuid):
-    def _get(*, service_id, contact_list_id):
-        raise HTTPError(response=Mock(status_code=404))
-
-    return mocker.patch(
-        'app.models.contact_list.contact_list_api_client.get_contact_list',
-        side_effect=_get,
-    )
-
-
-@pytest.fixture(scope='function')
-def mock_get_no_contact_lists(mocker):
-    return mocker.patch(
-        'app.models.contact_list.ContactLists.client_method',
-        return_value=[],
     )
 
 
