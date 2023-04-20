@@ -7,8 +7,7 @@ from app.s3_client.s3_logo_client import get_s3_object
 def get_mou():
     bucket = current_app.config['MOU_BUCKET_NAME']
     filename = 'agreement.pdf'
-    attachment_filename = 'U.S. Notify data sharing and financial agreement.pdf'.format(
-    )
+    attachment_filename = 'U.S. Notify data sharing and financial agreement.pdf'
     try:
         key = get_s3_object(bucket, filename)
         return {

@@ -263,6 +263,7 @@
       background: transparent;
     }
 
+    // Hide the inverted logo when printing in browsers that don't support SVG.
     .govuk-header__logotype-fallback-image {
       display: none;
     }

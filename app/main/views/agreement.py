@@ -31,8 +31,7 @@ def service_agreement(service_id):
 @main.route('/services/<uuid:service_id>/agreement.pdf')
 @user_has_permissions('manage_service')
 def service_download_agreement(service_id):
-    return send_file(**get_mou(
-    ))
+    return send_file(**get_mou())
 
 
 @main.route('/services/<uuid:service_id>/agreement/accept', methods=['GET', 'POST'])
@@ -88,8 +87,7 @@ def public_agreement(variant):
         abort(404)
 
     if request.endpoint == 'main.public_download_agreement':
-        return send_file(**get_mou(
-        ))
+        return send_file(**get_mou())
 
     return render_template(
         'views/agreement/agreement-public.html',

@@ -469,6 +469,4 @@ def organisation_billing(org_id):
 @main.route('/organisations/<uuid:org_id>/agreement.pdf')
 @user_is_platform_admin
 def organisation_download_agreement(org_id):
-    return send_file(**get_mou(
-
-    ))
+    return send_file(**get_mou())

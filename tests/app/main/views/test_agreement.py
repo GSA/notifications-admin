@@ -142,7 +142,6 @@ def test_download_service_agreement(
             'attachment; filename="{}"'.format(expected_file_served)
         )
         mock_get_s3_object.assert_called_once()
-        # mock_get_s3_object.assert_called_once_with('test-mou', expected_file_fetched)
     else:
         assert not expected_file_fetched
         assert mock_get_s3_object.called is False
