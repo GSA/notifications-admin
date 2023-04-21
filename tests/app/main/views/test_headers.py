@@ -14,11 +14,12 @@ def test_owasp_useful_headers_set(
     assert response.headers['X-XSS-Protection'] == '1; mode=block'
     csp = response.headers['Content-Security-Policy']
     assert search(r"default-src 'self' static\.example\.com;", csp)
+    assert search(r"frame-ancestors 'none';", csp)
+    assert search(r"form-action 'self';", csp)
     assert search(
-        r"script-src 'self' 'unsafe-eval' static\.example\.com \*\.google-analytics\.com https:\/\/js-agent\.newrelic\.com https:\/\/\*\.nr-data\.net data: 'nonce-.*';", # noqa e501
+        r"script-src 'self' static\.example\.com 'unsafe-eval' https:\/\/js-agent\.newrelic\.com https:\/\/gov-bam\.nr-data\.net 'nonce-.*';", # noqa e501
         csp
     )
-    assert search(r"connect-src 'self' \*\.google-analytics\.com https:\/\/\*.nr-data\.net;", csp)
+    assert search(r"connect-src 'self' https:\/\/gov-bam.nr-data\.net;", csp)
     assert search(r"style-src 'self' static\.example\.com 'nonce-.*';", csp)
-    assert search(r"font-src 'self' static\.example\.com data:;", csp)
-    assert search(r"img-src 'self' static\.example\.com static-logos\.test\.com \*\.google-analytics\.com data:", csp)
+    assert search(r"img-src 'self' static\.example\.com static-logos\.test\.com", csp)
