@@ -29,7 +29,7 @@ jobs:
       - name: Run js tests
         run: npm test
       - name: Run py tests with coverage
-        run: run coverage run --omit=*/notifications_utils/* -m pytest -n4 --maxfail=10
+        run: pipenv run coverage run --omit=*/notifications_utils/* -m pytest -n4 --maxfail=10
       - name: Check coverage threshold
         run: pipenv run coverage report --fail-under=40
 
