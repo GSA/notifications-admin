@@ -4,10 +4,10 @@ This is the Notify front-end for government users and admins. To see it in actio
 
 Through the interface, users can:
 
- - Register and manage users
- - Create and manage services
- - Send batch SMS by uploading a CSV
- - View their history of notifications
+- Register and manage users
+- Create and manage services
+- Send batch SMS by uploading a CSV
+- View their history of notifications
 
 The [Notify API](https://github.com/GSA/notifications-api) provides the UI's backend and is required for most things to function. Set that up first!
 
@@ -15,22 +15,22 @@ The [Notify API](https://github.com/GSA/notifications-api) provides the UI's bac
 
 ### Common steps
 
-1. Install pre-requisites for setup:
-    * [jq](https://stedolan.github.io/jq/): `brew install jq`
-    * [terraform](https://www.terraform.io/): `brew install terraform` or `brew install tfenv` and use `tfenv` to install `terraform ~> 1.4.0`
-    * [cf-cli@8](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html): `brew install cloudfoundry/tap/cf-cli@8`
-1. [Log into cloud.gov](https://cloud.gov/docs/getting-started/setup/#set-up-the-command-line): `cf login -a api.fr.cloud.gov --sso`
-1. Ensure you have access to the `notify-local-dev` and `notify-staging` spaces in cloud.gov
-1. Run the API setup steps
-1. Run the development terraform with:
+1.  Install pre-requisites for setup:
+    - [jq](https://stedolan.github.io/jq/): `brew install jq`
+    - [terraform](https://www.terraform.io/): `brew install terraform` or `brew install tfenv` and use `tfenv` to install `terraform ~> 1.4.0`
+    - [cf-cli@8](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html): `brew install cloudfoundry/tap/cf-cli@8`
+1.  [Log into cloud.gov](https://cloud.gov/docs/getting-started/setup/#set-up-the-command-line): `cf login -a api.fr.cloud.gov --sso`
+1.  Ensure you have access to the `notify-local-dev` and `notify-staging` spaces in cloud.gov
+1.  Run the API setup steps
+1.  Run the development terraform with:
 
         ```
         $ cd terraform/development
         $ ./run.sh
         ```
 
-1. If you want to send data to New Relic from your local develpment environment, set `NEW_RELIC_LICENSE_KEY` within `.env`
-1. Follow the instructions for either `Direct installation` or `Docker installation` below
+1.  If you want to send data to New Relic from your local develpment environment, set `NEW_RELIC_LICENSE_KEY` within `.env`
+1.  Follow the instructions for either `Direct installation` or `Docker installation` below
 
 ### Direct installation
 
@@ -40,11 +40,11 @@ The [Notify API](https://github.com/GSA/notifications-api) provides the UI's bac
 
 1. Install Python and Node dependencies
 
-    `make bootstrap`
+   `make bootstrap`
 
 1. Run the Flask server
 
-    `make run-flask`
+   `make run-flask`
 
 1. Go to http://localhost:6012
 
@@ -53,6 +53,7 @@ The [Notify API](https://github.com/GSA/notifications-api) provides the UI's bac
 If you are using VS Code, there are also instructions for [running inside Docker](./docs/docker-remote-containers.md)
 
 ## To test the application
+
 From a terminal within the running devcontainer:
 
 ```
@@ -69,8 +70,24 @@ To run a specific JavaScript test, you'll need to copy the full command from `pa
 
 Unlike most of the tests and scans, pa11y-ci cannot currently be run from within the VSCode dev container.
 
-1. Run `make run-flask` from within the devcontainer
+1. `make run-flask` from within the devcontainer
 2. Run `make a11y-scan` from your host computer.
+
+## Building USWDS
+
+This only has to be done once
+
+- Run `npx gulp init` This command will add all the USWDS assets to the directories from gulpfile.js, add a project Sass entry point, and compile USWDS into CSS.
+
+This should be done when you want to compile your sass and icons
+
+- `npx gulp compile`
+
+This command can be used as you're doing local development, as it compiles, then recompiles when there are changes to Sass files in paths.dist.sass and paths.src.projectSass
+
+- `npx gulp watch`
+
+Other compile commands can be found at the [Getting started for developers](https://designsystem.digital.gov/documentation/getting-started-for-developers/) section from the USWDS documentation. You'll mostly need to reference [Phase 2](https://designsystem.digital.gov/documentation/getting-started/developers/phase-two-compile/)
 
 ## Further docs from UK
 
