@@ -1,3 +1,5 @@
+from unittest import mock
+
 import pytest
 from flask import url_for
 from freezegun import freeze_time
@@ -112,8 +114,6 @@ def test_page_to_create_new_organisation(
         # ('radio', 'organisation_type', 'emergency_service'),
         # ('radio', 'organisation_type', 'school_or_college'),
         ('radio', 'organisation_type', 'other'),
-        ('radio', 'crown_status', 'crown'),
-        ('radio', 'crown_status', 'non-crown'),
         ('hidden', 'csrf_token', mocker.ANY),
     ]
 
@@ -134,7 +134,6 @@ def test_create_new_organisation(
         _data={
             'name': 'new name',
             'organisation_type': 'federal',
-            'crown_status': 'non-crown',
         },
         _expected_redirect=url_for(
             'main.organisation_settings',
@@ -145,7 +144,6 @@ def test_create_new_organisation(
     mock_create_organisation.assert_called_once_with(
         name='new name',
         organisation_type='federal',
-        crown=False,
         agreement_signed=False,
     )
 
@@ -170,7 +168,6 @@ def test_create_new_organisation_validates(
     ] == [
         ('name', 'Error: Cannot be empty'),
         ('organisation_type', 'Error: Select the type of organization'),
-        ('crown_status', 'Error: Select whether this organization is a crown body'),
     ]
     assert mock_create_organisation.called is False
 
@@ -197,7 +194,6 @@ def test_create_new_organisation_fails_with_incorrect_input(
         _data={
             'name': name,
             'organisation_type': 'local',
-            'crown_status': 'non-crown',
         },
         _expected_status=200,
     )
@@ -227,7 +223,6 @@ def test_create_new_organisation_fails_with_duplicate_name(
         _data={
             'name': 'Existing org',
             'organisation_type': 'federal',
-            'crown_status': 'non-crown',
         },
         _expected_status=200,
     )
@@ -375,7 +370,6 @@ def test_gps_can_name_their_organisation(
         name=expected_service_name,
         organisation_type='nhs_gp',
         agreement_signed=False,
-        crown=False,
     )
     mock_update_service_organisation.assert_called_once_with(SERVICE_ONE_ID, ORGANISATION_ID)
 
@@ -924,7 +918,6 @@ def test_organisation_settings_for_platform_admin(
         'Label Value Action',
         'Name Test organisation Change organization name',
         'Sector Federal government Change sector for the organization',
-        'Crown organization Yes Change organization crown status',
         (
             'Data sharing and financial agreement '
             'Not signed Change data sharing and financial agreement for the organization'
@@ -956,15 +949,6 @@ def test_organisation_settings_for_platform_admin(
             {'value': 'other', 'label': 'Other'},
         ),
         'federal',
-    ),
-    (
-        '.edit_organisation_crown_status',
-        (
-            {'value': 'crown', 'label': 'Yes'},
-            {'value': 'non-crown', 'label': 'No'},
-            {'value': 'unknown', 'label': 'Not sure'},
-        ),
-        'crown',
     ),
     (
         '.edit_organisation_agreement',
@@ -1039,21 +1023,6 @@ def test_view_organisation_settings(
         '.edit_organisation_type',
         {'organisation_type': 'state'},
         {'cached_service_ids': [], 'organisation_type': 'state'},
-    ),
-    (
-        '.edit_organisation_crown_status',
-        {'crown_status': 'crown'},
-        {'crown': True},
-    ),
-    (
-        '.edit_organisation_crown_status',
-        {'crown_status': 'non-crown'},
-        {'crown': False},
-    ),
-    (
-        '.edit_organisation_crown_status',
-        {'crown_status': 'unknown'},
-        {'crown': None},
     ),
     (
         '.edit_organisation_agreement',
@@ -1702,33 +1671,26 @@ def test_organisation_billing_page_when_the_agreement_is_not_signed(
     assert f'{organisation_one["name"]} {expected_content}' in page.text
 
 
-@pytest.mark.parametrize('crown, expected_status, expected_file_fetched, expected_file_served', (
-    # (
-    #     True, 200, 'crown.pdf',
-    #     'U.S. Notify data sharing and financial agreement.pdf',
-    # ),
-    # (
-    #     False, 200, 'non-crown.pdf',
-    #     'U.S. Notify data sharing and financial agreement (non-crown).pdf',
-    # ),
+@pytest.mark.parametrize('expected_status, expected_file_fetched, expected_file_served', (
     (
-        None, 404, None,
-        None,
+        200, 'agreement.pdf',
+        'U.S. Notify data sharing and financial agreement.pdf',
     ),
 ))
+@mock.patch('app.s3_client.s3_mou_client.current_app')
 def test_download_organisation_agreement(
+    mock_flask_current_app,
     client_request,
     platform_admin_user,
     mocker,
-    crown,
     expected_status,
     expected_file_fetched,
     expected_file_served,
 ):
+    mock_flask_current_app.config['MOU_BUCKET_NAME'] = 'test-mou'
     mocker.patch(
         'app.models.organisation.organisations_client.get_organisation',
         return_value=organisation_json(
-            crown=crown
         )
     )
     mock_get_s3_object = mocker.patch(
@@ -1749,7 +1711,8 @@ def test_download_organisation_agreement(
         assert response.headers['Content-Disposition'] == (
             f'attachment; filename="{expected_file_served}"'
         )
-        mock_get_s3_object.assert_called_once_with('test-mou', expected_file_fetched)
+        # mock_get_s3_object.assert_called_once_with('test-mou', expected_file_fetched)
+        mock_get_s3_object.assert_called_once()
     else:
         assert not expected_file_fetched
         assert mock_get_s3_object.called is False

@@ -1,6 +1,5 @@
 from collections import OrderedDict
 
-from flask import abort
 from werkzeug.utils import cached_property
 
 from app.models import (
@@ -29,7 +28,6 @@ class Organisation(JSONModel, SortByNameMixin):
         'id',
         'name',
         'active',
-        'crown',
         'organisation_type',
         'email_branding_id',
         'agreement_signed',
@@ -66,19 +64,13 @@ class Organisation(JSONModel, SortByNameMixin):
     def create_from_form(cls, form):
         return cls.create(
             name=form.name.data,
-            crown={
-                'crown': True,
-                'non-crown': False,
-                'unknown': None,
-            }.get(form.crown_status.data),
             organisation_type=form.organisation_type.data,
         )
 
     @classmethod
-    def create(cls, name, crown, organisation_type, agreement_signed=False):
+    def create(cls, name, organisation_type, agreement_signed=False):
         return cls(organisations_client.create_organisation(
             name=name,
-            crown=crown,
             organisation_type=organisation_type,
             agreement_signed=agreement_signed,
         ))
@@ -89,7 +81,6 @@ class Organisation(JSONModel, SortByNameMixin):
 
         if self._dict == {}:
             self.name = None
-            self.crown = None
             self.agreement_signed = None
             self.domains = []
             self.organisation_type = None
@@ -99,12 +90,6 @@ class Organisation(JSONModel, SortByNameMixin):
     @property
     def organisation_type_label(self):
         return self.TYPE_LABELS.get(self.organisation_type)
-
-    @property
-    def crown_status_or_404(self):
-        if self.crown is None:
-            abort(404)
-        return self.crown
 
     @property
     def billing_details(self):

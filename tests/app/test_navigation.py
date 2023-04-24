@@ -71,7 +71,6 @@ EXCLUDED_ENDPOINTS = tuple(map(Navigation.get_endpoint_with_blueprint, {
     'edit_data_retention',
     'edit_organisation_agreement',
     'edit_organisation_billing_details',
-    'edit_organisation_crown_status',
     'edit_organisation_domains',
     'edit_organisation_email_branding',
     'edit_organisation_go_live_notes',
