@@ -32,15 +32,6 @@ resource "cloudfoundry_service_key" "csv_key" {
   service_instance = data.cloudfoundry_service_instance.csv_bucket.id
 }
 
-data "cloudfoundry_service_instance" "contact_list_bucket" {
-  name_or_id = "${var.username}-contact-list-bucket"
-  space      = data.cloudfoundry_space.dev.id
-}
-resource "cloudfoundry_service_key" "contact_list_key" {
-  name             = local.key_name
-  service_instance = data.cloudfoundry_service_instance.contact_list_bucket.id
-}
-
 locals {
   credentials = <<EOM
 
@@ -50,11 +41,6 @@ CSV_BUCKET_NAME=${cloudfoundry_service_key.csv_key.credentials.bucket}
 CSV_AWS_ACCESS_KEY_ID=${cloudfoundry_service_key.csv_key.credentials.access_key_id}
 CSV_AWS_SECRET_ACCESS_KEY=${cloudfoundry_service_key.csv_key.credentials.secret_access_key}
 CSV_AWS_REGION=${cloudfoundry_service_key.csv_key.credentials.region}
-# CONTACT_LIST_BUCKET
-CONTACT_BUCKET_NAME=${cloudfoundry_service_key.contact_list_key.credentials.bucket}
-CONTACT_AWS_ACCESS_KEY_ID=${cloudfoundry_service_key.contact_list_key.credentials.access_key_id}
-CONTACT_AWS_SECRET_ACCESS_KEY=${cloudfoundry_service_key.contact_list_key.credentials.secret_access_key}
-CONTACT_AWS_REGION=${cloudfoundry_service_key.contact_list_key.credentials.region}
 # LOGO_UPLOAD_BUCKET
 LOGO_BUCKET_NAME=${cloudfoundry_service_key.logo_key.credentials.bucket}
 LOGO_AWS_ACCESS_KEY_ID=${cloudfoundry_service_key.logo_key.credentials.access_key_id}

@@ -35,7 +35,6 @@ from app.main.forms import (
     SetSenderForm,
     get_placeholder_form_instance,
 )
-from app.models.contact_list import ContactList, ContactListsAlphabetical
 from app.models.user import Users
 from app.s3_client.s3_csv_client import (
     get_csv_metadata,
@@ -390,47 +389,6 @@ def send_one_off_step(service_id, template_id, step_index):
     )
 
 
-@main.route(
-    '/services/<uuid:service_id>/send/<uuid:template_id>'
-    '/from-contact-list'
-)
-@user_has_permissions('send_messages')
-def choose_from_contact_list(service_id, template_id):
-    db_template = current_service.get_template_with_user_permission_or_403(
-        template_id, current_user
-    )
-    template = get_template(
-        db_template, current_service,
-    )
-    return render_template(
-        'views/send-contact-list.html',
-        contact_lists=ContactListsAlphabetical(
-            current_service.id,
-            template_type=template.template_type,
-        ),
-        template=template,
-    )
-
-
-@main.route(
-    '/services/<uuid:service_id>/send/<uuid:template_id>'
-    '/from-contact-list/<uuid:contact_list_id>'
-)
-@user_has_permissions('send_messages')
-def send_from_contact_list(service_id, template_id, contact_list_id):
-    contact_list = ContactList.from_id(
-        contact_list_id,
-        service_id=current_service.id,
-    )
-    return redirect(url_for(
-        'main.check_messages',
-        service_id=current_service.id,
-        template_id=template_id,
-        upload_id=contact_list.copy_to_uploads(),
-        contact_list_id=contact_list.id,
-    ))
-
-
 def _check_messages(service_id, template_id, upload_id, preview_row):
     try:
         # The happy path is that the job doesn’t already exist, so the
@@ -573,7 +531,6 @@ def start_job(service_id, upload_id):
         upload_id,
         service_id,
         scheduled_for=request.form.get('scheduled_for', ''),
-        contact_list_id=request.form.get('contact_list_id', ''),
     )
 
     session.pop('sender_id', None)

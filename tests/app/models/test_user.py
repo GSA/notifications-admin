@@ -8,7 +8,6 @@ def test_anonymous_user(notify_admin):
     assert AnonymousUser().is_authenticated is False
     assert AnonymousUser().logged_in_elsewhere() is False
     assert AnonymousUser().default_organisation.name is None
-    assert AnonymousUser().default_organisation.crown is None
     assert AnonymousUser().default_organisation.agreement_signed is None
     assert AnonymousUser().default_organisation.domains == []
     assert AnonymousUser().default_organisation.organisation_type is None

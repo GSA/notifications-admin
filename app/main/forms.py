@@ -1145,18 +1145,6 @@ class OrganisationOrganisationTypeForm(StripWhitespaceForm):
     organisation_type = OrganisationTypeField('What type of organization is this?')
 
 
-class OrganisationCrownStatusForm(StripWhitespaceForm):
-    crown_status = GovukRadiosField(
-        'Is this organization a crown body?',
-        choices=[
-            ('crown', 'Yes'),
-            ('non-crown', 'No'),
-            ('unknown', 'Not sure'),
-        ],
-        thing='whether this organization is a crown body',
-    )
-
-
 class OrganisationAgreementSignedForm(StripWhitespaceForm):
     agreement_signed = GovukRadiosField(
         'Has this organization signed the agreement?',
@@ -1209,13 +1197,10 @@ class CreateServiceForm(StripWhitespaceForm):
 
 class AdminNewOrganisationForm(
     RenameOrganisationForm,
-    OrganisationOrganisationTypeForm,
-    OrganisationCrownStatusForm,
+    OrganisationOrganisationTypeForm
 ):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Don’t offer the ‘not sure’ choice
-        self.crown_status.choices = self.crown_status.choices[:-1]
 
 
 class AdminServiceSMSAllowanceForm(StripWhitespaceForm):

@@ -212,7 +212,6 @@ def organisation_json(
     services=None,
     email_branding_id=None,
     domains=None,
-    crown=True,
     agreement_signed=False,
     agreement_signed_version=None,
     agreement_signed_by_id=None,
@@ -238,7 +237,6 @@ def organisation_json(
         'created_at': created_at or str(datetime.utcnow()),
         'email_branding_id': email_branding_id,
         'organisation_type': organisation_type,
-        'crown': crown,
         'agreement_signed': agreement_signed,
         'agreement_signed_at': None,
         'agreement_signed_by_id': agreement_signed_by_id,
@@ -672,28 +670,3 @@ def assert_url_expected(actual, expected):
 
 def find_element_by_tag_and_partial_text(page, tag, string):
     return [e for e in page.find_all(tag) if string in e.text][0]
-
-
-def contact_list_json(
-    *,
-    id_=None,
-    created_at='2020-06-13T09:59:56.000000Z',
-    created_by='Test User',
-    service_id,
-    original_file_name='EmergencyContactList.xls',
-    row_count=100,
-    recent_job_count=0,
-    has_jobs=True,
-    template_type='email',
-):
-    return {
-        'id': id_ or sample_uuid(),
-        'created_at': created_at,
-        'created_by': created_by,
-        'service_id': service_id,
-        'original_file_name': original_file_name,
-        'row_count': row_count,
-        'recent_job_count': recent_job_count,
-        'has_jobs': has_jobs,
-        'template_type': template_type,
-    }

@@ -1,4 +1,4 @@
-### The Public Benefits Studio
+# The Public Benefits Studio
 
 The Public Benefits Studio is a team inside of GSA’s Technology
 Transformation Services (TTS), home to innovative programs like 18F and
@@ -11,7 +11,7 @@ We’re a cross-functional team of technologists with specialized
 experience working across public benefits programs like Medicaid, SNAP,
 and unemployment insurance.
 
-### WHAT WE’RE CURRENTLY EXPLORING
+## WHAT WE’RE CURRENTLY EXPLORING
 
 <table>
 <colgroup>
@@ -34,7 +34,7 @@ agency money.</td>
 </tbody>
 </table>
 
-OUR FIRST BET: U.S. Notify
+### OUR FIRST BET: U.S. Notify
 
 <table>
 <colgroup>
@@ -63,7 +63,7 @@ send thousands of customized-to-the-user text messages per year at
 little-to-no-cost. The easy interface requires no technical expertise to
 use and the setup process takes only ten minutes.
 
-### WHERE WE’RE AT
+## WHERE WE’RE AT
 
 **We’re in the early stages of assessing this product’s market fit and
 targeting to pilot** this shared service with at least 3 partners in
@@ -79,7 +79,7 @@ additional features based on partner needs.
 | Message send/failure analytics                                          | Application status page                                                   | Multilingual interface and content library options                              |
 | 1-day records deletion                                                  | Scheduled send option                                                     | Recurring scheduled send                                                        |
 
-###  OPPORTUNITIES TO GET INVOLVED
+##  OPPORTUNITIES TO GET INVOLVED
 
 To get involved, email us at [notify-support@gsa.gov](mailto:notify-support@gsa.gov) with the following in the subject line!
 
@@ -98,7 +98,7 @@ To get involved, email us at [notify-support@gsa.gov](mailto:notify-support@gsa.
     Early adopters will have wrap-around set-up support from the Studio
     and an opportunity to shape the future of this product.
     
-### US Notify Demo
+## US Notify Demo
 
 
 

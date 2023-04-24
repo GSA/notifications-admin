@@ -94,7 +94,6 @@ from app.notify_client import InviteTokenError
 from app.notify_client.api_key_api_client import api_key_api_client
 from app.notify_client.billing_api_client import billing_api_client
 from app.notify_client.complaint_api_client import complaint_api_client
-from app.notify_client.contact_list_api_client import contact_list_api_client
 from app.notify_client.email_branding_client import email_branding_client
 from app.notify_client.events_api_client import events_api_client
 from app.notify_client.inbound_number_client import inbound_number_client
@@ -155,35 +154,27 @@ def _csp(config):
             "'self'",
             asset_domain
         ],
+        "frame-ancestors": "'none'",
+        "form-action": "'self'",
         "script-src": [
             "'self'",
-            "'unsafe-eval'",
             asset_domain,
-            "*.google-analytics.com",
+            "'unsafe-eval'",
             "https://js-agent.newrelic.com",
-            "https://*.nr-data.net",
-            "data:"
+            "https://gov-bam.nr-data.net",
         ],
         "connect-src": [
             "'self'",
-            "*.google-analytics.com",
-            "https://*.nr-data.net"
+            "https://gov-bam.nr-data.net"
         ],
         "style-src": [
             "'self'",
             asset_domain
         ],
-        "font-src": [
-            "'self'",
-            asset_domain,
-            "data:"
-        ],
         "img-src": [
             "'self'",
             asset_domain,
-            logo_domain,
-            "*.google-analytics.com",
-            "data:"
+            logo_domain
         ]
     }
 
@@ -216,7 +207,6 @@ def create_app(application):
         # API clients
         api_key_api_client,
         billing_api_client,
-        contact_list_api_client,
         complaint_api_client,
         email_branding_client,
         events_api_client,
@@ -247,6 +237,22 @@ def create_app(application):
         application,
         content_security_policy=_csp(application.config),
         content_security_policy_nonce_in=['style-src', 'script-src'],
+        permissions_policy={
+            'accelerometer': '()',
+            'ambient-light-sensor': '()',
+            'autoplay': '()',
+            'battery': '()',
+            'camera': '()',
+            'document-domain': '()',
+            'geolocation': '()',
+            'gyroscope': '()',
+            'local-fonts': '()',
+            'magnetometer': '()',
+            'microphone': '()',
+            'midi': '()',
+            'payment': '()',
+            'screen-wake-lock': '()'
+        },
         frame_options='deny',
         force_https=(application.config['HTTP_PROTOCOL'] == 'https')
     )
