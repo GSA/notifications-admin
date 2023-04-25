@@ -35,22 +35,6 @@
         }}
       {% endcall %}
       {% call row() %}
-        {{ text_field('Crown organization') }}
-        {{ optional_text_field(
-            {
-              True: 'Yes',
-              False: 'No',
-            }.get(current_org.crown),
-            default='Not sure'
-        ) }}
-        {{ edit_field(
-            'Change',
-            url_for('.edit_organisation_crown_status', org_id=current_org.id),
-            suffix='organization crown status'
-          )
-        }}
-      {% endcall %}
-      {% call row() %}
         {{ text_field('Data sharing and financial agreement') }}
         {{ text_field(
           {

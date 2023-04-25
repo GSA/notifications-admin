@@ -1401,7 +1401,7 @@ def test_request_to_go_live_displays_go_live_notes_in_zendesk_ticket(
         '\n'
         '---\n'
         'Organisation type: Federal government\n'
-        'Agreement signed: No (organisation is Org 1, a crown body). {go_live_note}\n'
+        'Agreement signed: No (organisation is Org 1). {go_live_note}\n'
         '\n'
         'Emails in next year: 111,111\n'
         'Text messages in next year: 222,222\n'
