@@ -54,8 +54,8 @@ py-lint: ## Run python linting scanners
 .PHONY: py-test
 py-test: export NEW_RELIC_ENVIRONMENT=test
 py-test: ## Run python unit tests
-	pipenv run coverage run --omit=*/notifications_utils/* -m pytest -n auto --maxfail=10 tests/
-	pipenv run coverage report --fail-under=40
+	pipenv run coverage run --omit=*/notifications_utils/* -m pytest --maxfail=10 tests/
+	pipenv run coverage report --fail-under=90
 	pipenv run coverage html -d .coverage_cache
 
 .PHONY: js-lint
