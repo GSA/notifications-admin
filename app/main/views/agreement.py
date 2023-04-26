@@ -1,13 +1,12 @@
 from datetime import datetime
 
-from flask import abort, redirect, render_template, request, send_file, url_for
+from flask import abort, redirect, render_template, request, url_for
 from flask_login import current_user
 
 from app import current_service
 from app.main import main
 from app.main.forms import AcceptAgreementForm
 from app.models.organisation import Organisation
-from app.s3_client.s3_mou_client import get_mou
 from app.utils.user import user_has_permissions
 
 
@@ -26,12 +25,6 @@ def service_agreement(service_id):
     if current_service.organisation.agreement_signed:
         return render_template('views/agreement/service-agreement-signed.html')
     return render_template('views/agreement/service-agreement.html')
-
-
-@main.route('/services/<uuid:service_id>/agreement.pdf')
-@user_has_permissions('manage_service')
-def service_download_agreement(service_id):
-    return send_file(**get_mou())
 
 
 @main.route('/services/<uuid:service_id>/agreement/accept', methods=['GET', 'POST'])
@@ -85,9 +78,6 @@ def public_agreement(variant):
     # for now this is just to keep tests working as expected.
     if variant != "agreement":
         abort(404)
-
-    if request.endpoint == 'main.public_download_agreement':
-        return send_file(**get_mou())
 
     return render_template(
         'views/agreement/agreement-public.html',

@@ -1,12 +1,9 @@
-from unittest import mock
-
 import pytest
 from flask import url_for
 from freezegun import freeze_time
 from notifications_python_client.errors import HTTPError
 
 from tests import organisation_json, service_json
-from tests.app.main.views.test_agreement import MockS3Object
 from tests.conftest import (
     ORGANISATION_ID,
     SERVICE_ONE_ID,
@@ -1669,50 +1666,3 @@ def test_organisation_billing_page_when_the_agreement_is_not_signed(
 
     assert page.h1.string == 'Billing'
     assert f'{organisation_one["name"]} {expected_content}' in page.text
-
-
-@pytest.mark.parametrize('expected_status, expected_file_fetched, expected_file_served', (
-    (
-        200, 'agreement.pdf',
-        'U.S. Notify data sharing and financial agreement.pdf',
-    ),
-))
-@mock.patch('app.s3_client.s3_mou_client.current_app')
-def test_download_organisation_agreement(
-    mock_flask_current_app,
-    client_request,
-    platform_admin_user,
-    mocker,
-    expected_status,
-    expected_file_fetched,
-    expected_file_served,
-):
-    mock_flask_current_app.config['MOU_BUCKET_NAME'] = 'test-mou'
-    mocker.patch(
-        'app.models.organisation.organisations_client.get_organisation',
-        return_value=organisation_json(
-        )
-    )
-    mock_get_s3_object = mocker.patch(
-        'app.s3_client.s3_mou_client.get_s3_object',
-        return_value=MockS3Object(b'foo')
-    )
-
-    client_request.login(platform_admin_user)
-    response = client_request.get_response(
-        'main.organisation_download_agreement',
-        org_id=ORGANISATION_ID,
-        _expected_status=expected_status,
-    )
-
-    if expected_file_served:
-        assert response.get_data() == b'foo'
-        assert response.headers['Content-Type'] == 'application/pdf'
-        assert response.headers['Content-Disposition'] == (
-            f'attachment; filename="{expected_file_served}"'
-        )
-        # mock_get_s3_object.assert_called_once_with('test-mou', expected_file_fetched)
-        mock_get_s3_object.assert_called_once()
-    else:
-        assert not expected_file_fetched
-        assert mock_get_s3_object.called is False
