@@ -71,7 +71,7 @@ def test_platform_admin_flag_set_in_session(
 
     mocker.patch.dict('app.models.user.session', values=session_dict, clear=True)
 
-    assert User({'platform_admin': is_platform_admin}).platform_admin == expected_result
+    assert User({'id': 1, 'platform_admin': is_platform_admin}).platform_admin == expected_result
 
 
 def test_has_live_services(

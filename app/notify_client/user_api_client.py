@@ -1,3 +1,4 @@
+from flask import current_app
 from notifications_python_client.errors import HTTPError
 
 from app.notify_client import NotifyAdminAPIClient, cache
@@ -83,13 +84,16 @@ class UserApiClient(NotifyAdminAPIClient):
     @cache.delete('user-{user_id}')
     def verify_password(self, user_id, password):
         try:
+            current_app.logger.warn(f"Checking password for {user_id}")
             url = "/user/{}/verify/password".format(user_id)
             data = {"password": password}
             self.post(url, data=data)
             return True
         except HTTPError as e:
             if e.status_code == 400 or e.status_code == 404:
+                current_app.logger.error(f"Password for {user_id} was invalid")
                 return False
+            raise
 
     def send_verify_code(self, user_id, code_type, to, next_string=None):
         data = {'to': to}
@@ -98,6 +102,7 @@ class UserApiClient(NotifyAdminAPIClient):
         if code_type == 'email':
             data['email_auth_link_host'] = self.admin_url
         endpoint = '/user/{0}/{1}-code'.format(user_id, code_type)
+        current_app.logger.warn(f"Sending verify_code {code_type} to {user_id}")
         self.post(endpoint, data=data)
 
     def send_verify_email(self, user_id, to):
@@ -118,24 +123,28 @@ class UserApiClient(NotifyAdminAPIClient):
         data = {'code_type': code_type, 'code': code}
         endpoint = '/user/{}/verify/code'.format(user_id)
         try:
+            current_app.logger.warn(f"Checking verify code for {user_id}")
             self.post(endpoint, data=data)
             return True, ''
         except HTTPError as e:
             if e.status_code == 400 or e.status_code == 404:
+                current_app.logger.error(f"Verify code for {user_id} was invalid")
                 return False, e.message
-            raise e
+            raise
 
     @cache.delete('user-{user_id}')
     def complete_webauthn_login_attempt(self, user_id, is_successful):
         data = {'successful': is_successful}
         endpoint = f'/user/{user_id}/complete/webauthn-login'
         try:
+            current_app.logger.warn(f"Sending webauthn-login for {user_id}")
             self.post(endpoint, data=data)
             return True, ''
         except HTTPError as e:
             if e.status_code == 403:
+                current_app.logger.error(f"Webauthn-login attempt for {user_id} was invalid")
                 return False, e.message
-            raise e
+            raise
 
     def get_users_for_service(self, service_id):
         endpoint = '/service/{}/users'.format(service_id)

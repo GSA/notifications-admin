@@ -8,6 +8,8 @@ EVENT_SCHEMAS = {
     "update_user_mobile_number": {"user_id", "updated_by_id", "original_mobile_number", "new_mobile_number"},
     "remove_user_from_service": {"user_id", "removed_by_id", "service_id"},
     "add_user_to_service": {"user_id", "invited_by_id", "service_id", "ui_permissions"},
+    "invite_user_to_service": {"email_address", "invited_by_id", "service_id", "ui_permissions"},
+    "cancel_user_invite_to_service": {"email_address", "canceled_by_id", "service_id"},
     "set_user_permissions": {"user_id", "service_id", "original_ui_permissions", "new_ui_permissions", "set_by_id"},
     "archive_user": {"user_id", "archived_by_id"},
     "archive_service": {"service_id", "archived_by_id"},
@@ -30,6 +32,14 @@ def create_mobile_number_change_event(**kwargs):
 
 def create_remove_user_from_service_event(**kwargs):
     _send_event('remove_user_from_service', **kwargs)
+
+
+def create_invite_user_to_service_event(**kwargs):
+    _send_event('invite_user_to_service', **kwargs)
+
+
+def create_cancel_user_invite_to_service_event(**kwargs):
+    _send_event('cancel_user_invite_to_service', **kwargs)
 
 
 def create_add_user_to_service_event(**kwargs):

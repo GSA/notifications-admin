@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import abort, request, session
+from flask import abort, current_app, request, session
 from flask_login import AnonymousUserMixin, UserMixin, login_user, logout_user
 from notifications_python_client.errors import HTTPError
 from notifications_utils.timezones import convert_utc_to_local_timezone
@@ -175,6 +175,7 @@ class User(JSONModel, UserMixin):
         # Update the db so the server also knows the user is logged out.
         self.update(current_session_id=None)
         logout_user()
+        current_app.logger.info(f"Logged out {self.id}")
 
     @property
     def sms_auth(self):
@@ -201,7 +202,9 @@ class User(JSONModel, UserMixin):
 
     @property
     def is_gov_user(self):
-        return is_gov_user(self.email_address)
+        is_gov = is_gov_user(self.email_address)
+        current_app.logger.info(f"User {self.id} is_gov_user: {is_gov}")
+        return is_gov
 
     @property
     def is_authenticated(self):
@@ -212,6 +215,7 @@ class User(JSONModel, UserMixin):
 
     @property
     def platform_admin(self):
+        current_app.logger.warn(f"Checking User {self.id} for platform admin: {self._platform_admin}")
         return self._platform_admin and not session.get('disable_platform_admin_view', False)
 
     def has_permissions(self, *permissions, restrict_admin_usage=False, allow_org_user=False):
@@ -228,32 +232,45 @@ class User(JSONModel, UserMixin):
             # use @user_is_platform_admin for platform admin only pages
             raise NotImplementedError
 
+        log_msg = f"has_permissions user: {self.id} service: {service_id}"
         # platform admins should be able to do most things (except eg send messages, or create api keys)
         if self.platform_admin and not restrict_admin_usage:
+            current_app.logger.warn(f"{log_msg} true because user is platform_admin")
             return True
 
         if org_id:
-            return self.belongs_to_organisation(org_id)
+            value = self.belongs_to_organisation(org_id)
+            current_app.logger.warn(f"{log_msg} org: {org_id} returning {value}")
+            return value
 
         if not permissions and self.belongs_to_service(service_id):
+            current_app.logger.warn(f"{log_msg} True because belongs_to_service")
             return True
 
         if any(
             self.permissions_for_service(service_id) & set(permissions)
         ):
+            current_app.logger.warn(f"{log_msg} permissions valid")
             return True
 
         from app.models.service import Service
 
-        return allow_org_user and self.belongs_to_organisation(
+        org_value = allow_org_user and self.belongs_to_organisation(
             Service.from_id(service_id).organisation_id
         )
+        current_app.logger.warn(f"{log_msg} returning {org_value}")
+        return org_value
 
     def permissions_for_service(self, service_id):
         return self._permissions.get(service_id, set())
 
     def has_permission_for_service(self, service_id, permission):
-        return permission in self._permissions.get(service_id, [])
+        has_permission = permission in self.permissions_for_service(service_id)
+        current_app.logger.warn(
+            f"has_permission_for_service user: {self.id} service: {service_id} "
+            f"permission: {permission} retuning {has_permission}"
+        )
+        return has_permission
 
     def has_template_folder_permission(self, template_folder, service=None):
         if self.platform_admin:
@@ -547,11 +564,13 @@ class InvitedUser(JSONModel):
         return cls.by_id(invited_user_id) if invited_user_id else None
 
     def has_permissions(self, *permissions):
+        current_app.logger.warn(f"Checking invited user {self.id} for permissions: {permissions}")
         if self.status == 'cancelled':
             return False
         return set(self.permissions) > set(permissions)
 
     def has_permission_for_service(self, service_id, permission):
+        current_app.logger.warn(f"Checking invited user {self.id} for permission: {permission} on service {service_id}")
         if self.status == 'cancelled':
             return False
         return self.service == service_id and permission in self.permissions
