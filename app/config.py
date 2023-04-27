@@ -91,6 +91,7 @@ class Development(Config):
     HTTP_PROTOCOL = 'http'
     ASSET_DOMAIN = ''
     ASSET_PATH = '/static/'
+    NOTIFY_LOG_LEVEL = 'DEBUG'
 
     # Buckets
     CSV_UPLOAD_BUCKET = _s3_credentials_from_env('CSV')

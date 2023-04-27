@@ -1000,7 +1000,7 @@ def active_user_no_settings_permission():
 def api_user_locked(fake_uuid):
     return create_user(
         id=fake_uuid,
-        failed_login_count=5,
+        failed_login_count=10,
         password_changed_at=None,
     )
 
