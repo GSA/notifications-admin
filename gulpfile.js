@@ -10,6 +10,7 @@ const rollupPluginCommonjs = require('rollup-plugin-commonjs');
 const rollupPluginNodeResolve = require('rollup-plugin-node-resolve');
 const streamqueue = require('streamqueue');
 const stylish = require('jshint-stylish');
+const uswds = require("@uswds/compile");
 
 const plugins = {};
 plugins.addSrc = require('gulp-add-src');
@@ -174,6 +175,7 @@ const images = () => {
     paths.toolkit + 'images/**/*',
     paths.govuk_frontend + 'assets/images/**/*',
     paths.src + 'images/**/*',
+    paths.src + 'img/**/*',
     paths.template + 'assets/images/**/*'
 
   ])
@@ -192,6 +194,10 @@ const watchFiles = {
   },
   images: (cb) => {
     watch([paths.src + 'images/**/*'], images);
+    cb();
+  },
+  uswds: (cb) => {
+    watch([paths.src + 'sass/**/*'], uswds.watch);
     cb();
   },
   self: (cb) => {
@@ -237,7 +243,8 @@ const defaultTask = parallel(
     series(
       javascripts
     ),
-    sass
+    sass, 
+    uswds.compile
   )
 );
 
@@ -260,10 +267,6 @@ exports.watch = series(defaultTask, watchForChanges);
 
 
 // 3. Compile USWDS
-/**
-* Import uswds-compile
-*/
-const uswds = require("@uswds/compile");
 
 /**
 * USWDS version
