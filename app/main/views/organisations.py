@@ -22,7 +22,6 @@ from app.main.forms import (
     AdminPreviewBrandingForm,
     AdminSetEmailBrandingForm,
     InviteOrgUserForm,
-    OrganisationAgreementSignedForm,
     OrganisationOrganisationTypeForm,
     RenameOrganisationForm,
     SearchByNameForm,
@@ -272,35 +271,6 @@ def edit_organisation_type(org_id):
 
     return render_template(
         'views/organisations/organisation/settings/edit-type.html',
-        form=form,
-    )
-
-
-@main.route("/organisations/<uuid:org_id>/settings/edit-agreement", methods=['GET', 'POST'])
-@user_is_platform_admin
-def edit_organisation_agreement(org_id):
-
-    form = OrganisationAgreementSignedForm(
-        agreement_signed={
-            True: 'yes',
-            False: 'no',
-            None: 'unknown',
-        }.get(current_organisation.agreement_signed)
-    )
-
-    if form.validate_on_submit():
-        organisations_client.update_organisation(
-            current_organisation.id,
-            agreement_signed={
-                'yes': True,
-                'no': False,
-                'unknown': None,
-            }.get(form.agreement_signed.data),
-        )
-        return redirect(url_for('.organisation_settings', org_id=org_id))
-
-    return render_template(
-        'views/organisations/organisation/settings/edit-agreement.html',
         form=form,
     )
 

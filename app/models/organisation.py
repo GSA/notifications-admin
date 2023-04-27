@@ -30,12 +30,6 @@ class Organisation(JSONModel, SortByNameMixin):
         'active',
         'organisation_type',
         'email_branding_id',
-        'agreement_signed',
-        'agreement_signed_at',
-        'agreement_signed_by_id',
-        'agreement_signed_version',
-        'agreement_signed_on_behalf_of_name',
-        'agreement_signed_on_behalf_of_email_address',
         'domains',
         'request_to_go_live_notes',
         'count_of_live_services',
@@ -68,11 +62,10 @@ class Organisation(JSONModel, SortByNameMixin):
         )
 
     @classmethod
-    def create(cls, name, organisation_type, agreement_signed=False):
+    def create(cls, name, organisation_type):
         return cls(organisations_client.create_organisation(
             name=name,
             organisation_type=organisation_type,
-            agreement_signed=agreement_signed,
         ))
 
     def __init__(self, _dict):
@@ -81,7 +74,6 @@ class Organisation(JSONModel, SortByNameMixin):
 
         if self._dict == {}:
             self.name = None
-            self.agreement_signed = None
             self.domains = []
             self.organisation_type = None
             self.request_to_go_live_notes = None
@@ -149,12 +141,6 @@ class Organisation(JSONModel, SortByNameMixin):
         if self.email_branding_id:
             return self.email_branding['name']
         return 'GOV.UK'
-
-    @cached_property
-    def agreement_signed_by(self):
-        if self.agreement_signed_by_id:
-            from app.models.user import User
-            return User.from_id(self.agreement_signed_by_id)
 
     def update(self, delete_services_cache=False, **kwargs):
         response = organisations_client.update_organisation(

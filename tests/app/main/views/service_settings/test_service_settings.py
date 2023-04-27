@@ -760,12 +760,10 @@ def test_should_check_for_sending_things_right(
     mock_get_invites.assert_called_once_with(SERVICE_ONE_ID)
 
 
-@pytest.mark.parametrize('checklist_completed, agreement_signed, expected_button', (
-    (True, True, True),
-    (True, None, True),
-    (True, False, False),
-    (False, True, False),
-    (False, None, False),
+@pytest.mark.parametrize('checklist_completed, expected_button', (
+    (True, True),
+    (True, True),
+    (False, False),
 ))
 def test_should_not_show_go_live_button_if_checklist_not_complete(
     client_request,
@@ -776,19 +774,12 @@ def test_should_not_show_go_live_button_if_checklist_not_complete(
     mock_get_invites_for_service,
     single_sms_sender,
     checklist_completed,
-    agreement_signed,
     expected_button,
 ):
     mocker.patch(
         'app.models.service.Service.go_live_checklist_completed',
         new_callable=PropertyMock,
         return_value=checklist_completed,
-    )
-    mocker.patch(
-        'app.models.organisation.Organisation.agreement_signed',
-        new_callable=PropertyMock,
-        return_value=agreement_signed,
-        create=True,
     )
 
     for channel in ('email', 'sms'):
@@ -961,68 +952,6 @@ def test_should_check_for_sms_sender_on_go_live(
     assert normalize_spaces(checklist_items[3].text) == expected_sms_sender_checklist_item
 
     mock_get_sms_senders.assert_called_once_with(SERVICE_ONE_ID)
-
-
-@pytest.mark.parametrize('agreement_signed, expected_item', (
-    pytest.param(
-        None,
-        '',
-        marks=pytest.mark.xfail(raises=IndexError)
-    ),
-    (
-        True,
-        'Accept our data sharing and financial agreement Completed',
-    ),
-    (
-        False,
-        'Accept our data sharing and financial agreement Not completed',
-    ),
-))
-def test_should_check_for_mou_on_request_to_go_live(
-    client_request,
-    service_one,
-    mocker,
-    agreement_signed,
-    mock_get_invites_for_service,
-    mock_get_service_organisation,
-    expected_item,
-):
-    mocker.patch(
-        'app.models.service.Service.has_team_members',
-        return_value=False,
-    )
-    mocker.patch(
-        'app.models.service.Service.all_templates',
-        new_callable=PropertyMock,
-        return_value=[],
-    )
-    mocker.patch(
-        'app.main.views.service_settings.service_api_client.get_sms_senders',
-        return_value=[],
-    )
-    mocker.patch(
-        'app.main.views.service_settings.service_api_client.get_reply_to_email_addresses',
-        return_value=[],
-    )
-    for channel in {'email', 'sms'}:
-        mocker.patch(
-            'app.models.service.Service.volume_{}'.format(channel),
-            create=True,
-            new_callable=PropertyMock,
-            return_value=None,
-        )
-
-    mocker.patch(
-        'app.organisations_client.get_organisation',
-        return_value=organisation_json(agreement_signed=agreement_signed)
-    )
-    page = client_request.get(
-        'main.request_to_go_live', service_id=SERVICE_ONE_ID
-    )
-    assert page.h1.text == 'Before you request to go live'
-
-    checklist_items = page.select('.task-list .task-list-item')
-    assert normalize_spaces(checklist_items[3].text) == expected_item
 
 
 def test_non_gov_user_is_told_they_cant_go_live(
@@ -1316,8 +1245,7 @@ def test_should_redirect_after_request_to_go_live(
         'http://localhost/services/{service_id}\n'
         '\n'
         '---\n'
-        'Organisation type: Federal government\n'
-        'Agreement signed: Can’t tell (domain is user.gsa.gov).\n'
+        'Organisation type: Federal government (domain is user.gsa.gov).\n'
         '\n'
         '{formatted_displayed_volumes}'
         '\n'
@@ -1400,8 +1328,7 @@ def test_request_to_go_live_displays_go_live_notes_in_zendesk_ticket(
         'http://localhost/services/{service_id}\n'
         '\n'
         '---\n'
-        'Organisation type: Federal government\n'
-        'Agreement signed: No (organisation is Org 1). {go_live_note}\n'
+        'Organisation type: Federal government (organisation is Org 1). {go_live_note}\n'
         '\n'
         'Emails in next year: 111,111\n'
         'Text messages in next year: 222,222\n'
@@ -1472,11 +1399,10 @@ def test_request_to_go_live_displays_mou_signatories(
     )
 
     assert (
-        'Organisation type: Federal government\n'
-        'Agreement signed: Yes, for Org 1.\n'
-        'Agreement signed by: test@user.gsa.gov\n'
-        'Agreement signed on behalf of: bigdog@example.gsa.gov\n'
-        '\n'
+        'Organisation type: Federal government'
+    ) in mock_create_ticket.call_args[1]['message']
+
+    assert (
         'Emails in next year: 111,111\n'
     ) in mock_create_ticket.call_args[1]['message']
 

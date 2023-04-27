@@ -141,7 +141,6 @@ def test_create_new_organisation(
     mock_create_organisation.assert_called_once_with(
         name='new name',
         organisation_type='federal',
-        agreement_signed=False,
     )
 
 
@@ -357,16 +356,11 @@ def test_gps_can_name_their_organisation(
         service_id=SERVICE_ONE_ID,
         _data=data,
         _expected_status=302,
-        _expected_redirect=url_for(
-            'main.service_agreement',
-            service_id=SERVICE_ONE_ID,
-        )
     )
 
     mock_create_organisation.assert_called_once_with(
         name=expected_service_name,
         organisation_type='nhs_gp',
-        agreement_signed=False,
     )
     mock_update_service_organisation.assert_called_once_with(SERVICE_ONE_ID, ORGANISATION_ID)
 
@@ -427,10 +421,6 @@ def test_nhs_local_assigns_to_selected_organisation(
             'organisations': ORGANISATION_ID,
         },
         _expected_status=302,
-        _expected_redirect=url_for(
-            'main.service_agreement',
-            service_id=SERVICE_ONE_ID,
-        )
     )
     mock_update_service_organisation.assert_called_once_with(SERVICE_ONE_ID, ORGANISATION_ID)
 
@@ -915,10 +905,6 @@ def test_organisation_settings_for_platform_admin(
         'Label Value Action',
         'Name Test organisation Change organization name',
         'Sector Federal government Change sector for the organization',
-        (
-            'Data sharing and financial agreement '
-            'Not signed Change data sharing and financial agreement for the organization'
-        ),
         'Request to go live notes None Change go live notes for the organization',
         'Billing details None Change billing details for the organization',
         'Notes None Change the notes for the organization',
@@ -946,27 +932,6 @@ def test_organisation_settings_for_platform_admin(
             {'value': 'other', 'label': 'Other'},
         ),
         'federal',
-    ),
-    (
-        '.edit_organisation_agreement',
-        (
-            {
-                'value': 'yes',
-                'label': 'Yes',
-                'hint': 'Users will be told their organization has already signed the agreement'
-            },
-            {
-                'value': 'no',
-                'label': 'No',
-                'hint': 'Users will be prompted to sign the agreement before they can go live'
-            },
-            {
-                'value': 'unknown',
-                'label': 'No (but we have some service-specific agreements in place)',
-                'hint': 'Users will not be prompted to sign the agreement'
-            },
-        ),
-        'no',
     ),
 ))
 @pytest.mark.parametrize('user', (
@@ -1020,21 +985,6 @@ def test_view_organisation_settings(
         '.edit_organisation_type',
         {'organisation_type': 'state'},
         {'cached_service_ids': [], 'organisation_type': 'state'},
-    ),
-    (
-        '.edit_organisation_agreement',
-        {'agreement_signed': 'yes'},
-        {'agreement_signed': True},
-    ),
-    (
-        '.edit_organisation_agreement',
-        {'agreement_signed': 'no'},
-        {'agreement_signed': False},
-    ),
-    (
-        '.edit_organisation_agreement',
-        {'agreement_signed': 'unknown'},
-        {'agreement_signed': None},
     ),
 ))
 @pytest.mark.parametrize('user', (
@@ -1579,90 +1529,3 @@ def test_organisation_billing_page_not_accessible_if_not_platform_admin(
         org_id=ORGANISATION_ID,
         _expected_status=403
     )
-
-
-@pytest.mark.parametrize('signed_by_id, signed_by_name, expected_signatory', [
-    ('1234', None, 'Test User'),
-    (None, 'The Org Manager', 'The Org Manager'),
-    ('1234', 'The Org Manager', 'The Org Manager'),
-])
-def test_organisation_billing_page_when_the_agreement_is_signed_by_a_known_person(
-    organisation_one,
-    client_request,
-    api_user_active,
-    mocker,
-    platform_admin_user,
-    signed_by_id,
-    signed_by_name,
-    expected_signatory,
-):
-    api_user_active['id'] = '1234'
-
-    organisation_one['agreement_signed'] = True
-    organisation_one['agreement_signed_version'] = 2.5
-    organisation_one['agreement_signed_by_id'] = signed_by_id
-    organisation_one['agreement_signed_on_behalf_of_name'] = signed_by_name
-    organisation_one['agreement_signed_at'] = 'Thu, 20 Feb 2020 06:00:00 GMT'
-
-    mocker.patch('app.organisations_client.get_organisation', return_value=organisation_one)
-
-    client_request.login(platform_admin_user)
-
-    mocker.patch('app.user_api_client.get_user', side_effect=[api_user_active])
-
-    page = client_request.get(
-        '.organisation_billing',
-        org_id=ORGANISATION_ID,
-    )
-
-    assert page.h1.string == 'Billing'
-    assert '2.5 of the U.S. Notify data sharing and financial agreement on 20 February 2020' in normalize_spaces(
-        page.text)
-    assert f'{expected_signatory} signed' in page.text
-    # assert page.select_one('main a')['href'] == url_for('.organisation_download_agreement', org_id=ORGANISATION_ID)
-
-
-def test_organisation_billing_page_when_the_agreement_is_signed_by_an_unknown_person(
-    organisation_one,
-    client_request,
-    platform_admin_user,
-    mocker,
-):
-    organisation_one['agreement_signed'] = True
-    mocker.patch('app.organisations_client.get_organisation', return_value=organisation_one)
-
-    client_request.login(platform_admin_user)
-    page = client_request.get(
-        '.organisation_billing',
-        org_id=ORGANISATION_ID,
-    )
-
-    assert page.h1.string == 'Billing'
-    assert (f'{organisation_one["name"]} has accepted the U.S. Notify data '
-            'sharing and financial agreement.') in page.text
-    # assert page.select_one('main a')['href'] == url_for('.organisation_download_agreement', org_id=ORGANISATION_ID)
-
-
-@pytest.mark.parametrize('agreement_signed, expected_content', [
-    (False, 'needs to accept'),
-    (None, 'has not accepted'),
-])
-def test_organisation_billing_page_when_the_agreement_is_not_signed(
-    organisation_one,
-    client_request,
-    platform_admin_user,
-    mocker,
-    agreement_signed,
-    expected_content,
-):
-    organisation_one['agreement_signed'] = agreement_signed
-    mocker.patch('app.organisations_client.get_organisation', return_value=organisation_one)
-
-    client_request.login(platform_admin_user)
-    page = client_request.get(
-        '.organisation_billing',
-        org_id=ORGANISATION_ID,
-    )
-
-    assert page.h1.string == 'Billing'
-    assert f'{organisation_one["name"]} {expected_content}' in page.text
