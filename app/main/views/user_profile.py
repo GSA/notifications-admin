@@ -15,6 +15,10 @@ from notifications_python_client.errors import HTTPError
 from notifications_utils.url_safe_token import check_token
 
 from app import user_api_client
+from app.event_handlers import (
+    create_email_change_event,
+    create_mobile_number_change_event,
+)
 from app.main import main
 from app.main.forms import (
     ChangeEmailForm,
@@ -91,6 +95,12 @@ def user_profile_email_authenticate():
 
     if form.validate_on_submit():
         user_api_client.send_change_email_verification(current_user.id, session[NEW_EMAIL])
+        create_email_change_event(
+            user_id=current_user.id,
+            updated_by_id=current_user.id,
+            original_email_address=current_user.email_address,
+            new_email_address=session[NEW_EMAIL],
+        )
         return render_template('views/change-email-continue.html',
                                new_email=session[NEW_EMAIL])
 
@@ -170,6 +180,12 @@ def user_profile_mobile_number_authenticate():
     if form.validate_on_submit():
         session[NEW_MOBILE_PASSWORD_CONFIRMED] = True
         current_user.send_verify_code(to=session[NEW_MOBILE])
+        create_mobile_number_change_event(
+            user_id=current_user.id,
+            updated_by_id=current_user.id,
+            original_mobile_number=current_user.mobile_number,
+            new_mobile_number=session[NEW_MOBILE]
+        )
         return redirect(url_for('.user_profile_mobile_number_confirm'))
 
     return render_template(

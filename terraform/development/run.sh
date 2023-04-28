@@ -8,7 +8,7 @@ $0: Create development infrastructure
 
 Usage:
   $0 -h
-  $0 [-u <USER NAME>] [-k]
+  $0 [-u <USER NAME>] [-k] [-d]
 
 Options:
 -h: show help and exit
