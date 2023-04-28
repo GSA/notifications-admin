@@ -219,21 +219,20 @@ def test_process_webauthn_auth_sign_in_redirects_to_webauthn_with_next_redirect(
     mock_get_user_by_email.assert_called_once_with('valid@example.gsa.gov')
 
 
-# Commented out to avoid failure of coverage report. MUST FIX TEST
-# def test_should_return_locked_out_true_when_user_is_locked(
-#     client_request,
-#     mock_get_user_by_email_locked,
-# ):
-#     client_request.logout()
-#     page = client_request.post(
-#         'main.sign_in',
-#         _data={
-#             'email_address': 'valid@example.gsa.gov',
-#             'password': 'whatIsMyPassword!',
-#         },
-#         _expected_status=200,
-#     )
-#     assert 'The email address or password you entered is incorrect' in page.text
+def test_should_return_locked_out_true_when_user_is_locked(
+    client_request,
+    mock_get_user_by_email_locked,
+):
+    client_request.logout()
+    page = client_request.post(
+        'main.sign_in',
+        _data={
+            'email_address': 'valid@example.gsa.gov',
+            'password': 'whatIsMyPassword!',
+        },
+        _expected_status=200,
+    )
+    assert 'The email address or password you entered is incorrect' in page.text
 
 
 def test_should_return_200_when_user_does_not_exist(
