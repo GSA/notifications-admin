@@ -2,6 +2,7 @@
 applications:
   - name: notify-admin-((env))
     buildpack: python_buildpack
+    stack: cflinuxfs4
     instances: ((instances))
     memory: ((memory))
     command: newrelic-admin run-program gunicorn -c /home/vcap/app/gunicorn_config.py application
@@ -14,7 +15,6 @@ applications:
     services:
       - notify-admin-redis-((env))
       - notify-api-csv-upload-bucket-((env))
-      - notify-api-contact-list-bucket-((env))
       - notify-admin-logo-upload-bucket-((env))
 
     env:

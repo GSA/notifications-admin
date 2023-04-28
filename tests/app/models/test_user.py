@@ -8,7 +8,6 @@ def test_anonymous_user(notify_admin):
     assert AnonymousUser().is_authenticated is False
     assert AnonymousUser().logged_in_elsewhere() is False
     assert AnonymousUser().default_organisation.name is None
-    assert AnonymousUser().default_organisation.crown is None
     assert AnonymousUser().default_organisation.agreement_signed is None
     assert AnonymousUser().default_organisation.domains == []
     assert AnonymousUser().default_organisation.organisation_type is None
@@ -72,7 +71,7 @@ def test_platform_admin_flag_set_in_session(
 
     mocker.patch.dict('app.models.user.session', values=session_dict, clear=True)
 
-    assert User({'platform_admin': is_platform_admin}).platform_admin == expected_result
+    assert User({'id': 1, 'platform_admin': is_platform_admin}).platform_admin == expected_result
 
 
 def test_has_live_services(

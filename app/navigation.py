@@ -141,7 +141,6 @@ class MainNavigation(Navigation):
             'add_service_template',
             'check_messages',
             'check_notification',
-            'choose_from_contact_list',
             'choose_template',
             'choose_template_to_copy',
             'confirm_redact_template',
@@ -161,11 +160,6 @@ class MainNavigation(Navigation):
             'view_template_versions',
         },
         'uploads': {
-            'upload_contact_list',
-            'check_contact_list',
-            'save_contact_list',
-            'contact_list',
-            'delete_contact_list',
             'uploads',
             'view_job',
             'view_jobs',
@@ -244,7 +238,6 @@ class CaseworkNavigation(Navigation):
 
     mapping = {
         'send-one-off': {
-            'choose_from_contact_list',
             'choose_template',
             'send_one_off',
             'send_one_off_step',
@@ -257,11 +250,6 @@ class CaseworkNavigation(Navigation):
         'uploads': {
             'view_jobs',
             'view_job',
-            'upload_contact_list',
-            'check_contact_list',
-            'save_contact_list',
-            'contact_list',
-            'delete_contact_list',
             'uploads',
         },
     }
@@ -276,7 +264,6 @@ class OrgNavigation(Navigation):
         'settings': {
             'edit_organisation_agreement',
             'edit_organisation_billing_details',
-            'edit_organisation_crown_status',
             'edit_organisation_domains',
             'edit_organisation_email_branding',
             'edit_organisation_domains',

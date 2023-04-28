@@ -91,10 +91,10 @@ class Development(Config):
     HTTP_PROTOCOL = 'http'
     ASSET_DOMAIN = ''
     ASSET_PATH = '/static/'
+    NOTIFY_LOG_LEVEL = 'DEBUG'
 
     # Buckets
     CSV_UPLOAD_BUCKET = _s3_credentials_from_env('CSV')
-    CONTACT_LIST_BUCKET = _s3_credentials_from_env('CONTACT')
     LOGO_UPLOAD_BUCKET = _s3_credentials_from_env('LOGO')
 
     # credential overrides
@@ -127,8 +127,6 @@ class Production(Config):
     # buckets
     CSV_UPLOAD_BUCKET = cloud_config.s3_credentials(
         f"notify-api-csv-upload-bucket-{getenv('NOTIFY_ENVIRONMENT')}")
-    CONTACT_LIST_BUCKET = cloud_config.s3_credentials(
-        f"notify-api-contact-list-bucket-{getenv('NOTIFY_ENVIRONMENT')}")
     LOGO_UPLOAD_BUCKET = cloud_config.s3_credentials(
         f"notify-admin-logo-upload-bucket-{getenv('NOTIFY_ENVIRONMENT')}")
 

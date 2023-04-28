@@ -12,7 +12,9 @@ from notifications_python_client.errors import HTTPError
 
 from app import current_service, service_api_client
 from app.event_handlers import (
+    create_cancel_user_invite_to_service_event,
     create_email_change_event,
+    create_invite_user_to_service_event,
     create_mobile_number_change_event,
     create_remove_user_from_service_event,
 )
@@ -90,6 +92,12 @@ def invite_user(service_id, user_id=None):
             form.permissions,
             form.login_authentication.data,
             form.folder_permissions.data,
+        )
+        create_invite_user_to_service_event(
+            email_address=email_address,
+            invited_by_id=current_user.id,
+            service_id=service_id,
+            ui_permissions=form.permissions,
         )
 
         flash('Invite sent to {}'.format(invited_user.email_address), 'default_with_tick')
@@ -314,6 +322,11 @@ def cancel_invited_user(service_id, invited_user_id):
     current_service.cancel_invite(invited_user_id)
 
     invited_user = InvitedUser.by_id_and_service_id(service_id, invited_user_id)
+    create_cancel_user_invite_to_service_event(
+        email_address=invited_user.email_address,
+        canceled_by_id=current_user.id,
+        service_id=service_id,
+    )
 
     flash(f'Invitation cancelled for {invited_user.email_address}', 'default_with_tick')
     return redirect(url_for('main.manage_users', service_id=service_id))

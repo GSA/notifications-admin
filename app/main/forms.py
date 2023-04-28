@@ -1103,7 +1103,7 @@ class TwoFactorForm(StripWhitespaceForm):
 
     sms_code = SMSCode('Text message code')
 
-    def validate(self):
+    def validate(self, extra_validators=None):
 
         if not self.sms_code.validate(self):
             return False
@@ -1143,18 +1143,6 @@ class RenameOrganisationForm(StripWhitespaceForm):
 
 class OrganisationOrganisationTypeForm(StripWhitespaceForm):
     organisation_type = OrganisationTypeField('What type of organization is this?')
-
-
-class OrganisationCrownStatusForm(StripWhitespaceForm):
-    crown_status = GovukRadiosField(
-        'Is this organization a crown body?',
-        choices=[
-            ('crown', 'Yes'),
-            ('non-crown', 'No'),
-            ('unknown', 'Not sure'),
-        ],
-        thing='whether this organization is a crown body',
-    )
 
 
 class OrganisationAgreementSignedForm(StripWhitespaceForm):
@@ -1209,13 +1197,10 @@ class CreateServiceForm(StripWhitespaceForm):
 
 class AdminNewOrganisationForm(
     RenameOrganisationForm,
-    OrganisationOrganisationTypeForm,
-    OrganisationCrownStatusForm,
+    OrganisationOrganisationTypeForm
 ):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Don’t offer the ‘not sure’ choice
-        self.crown_status.choices = self.crown_status.choices[:-1]
 
 
 class AdminServiceSMSAllowanceForm(StripWhitespaceForm):
@@ -1493,8 +1478,8 @@ class AdminProviderRatioForm(Form):
             for provider in providers
         })
 
-    def validate(self):
-        if not super().validate():
+    def validate(self, extra_validators=None):
+        if not super().validate(extra_validators):
             return False
 
         total = sum(
@@ -1528,7 +1513,7 @@ class ServiceContactDetailsForm(StripWhitespaceForm):
     # This is a text field because the number provided by the user can also be a short code
     phone_number = GovukTextInputField("Phone number")
 
-    def validate(self):
+    def validate(self, extra_validators=None):
 
         if self.contact_details_type.data == 'url':
             self.url.validators = [DataRequired(), URL(message='Must be a valid URL')]
@@ -1545,7 +1530,7 @@ class ServiceContactDetailsForm(StripWhitespaceForm):
                     raise ValidationError('Must be a valid phone number')
             self.phone_number.validators = [DataRequired(), Length(min=5, max=20), valid_phone_number]
 
-        return super().validate()
+        return super().validate(extra_validators)
 
 
 class ServiceReplyToEmailForm(StripWhitespaceForm):
@@ -1817,8 +1802,8 @@ class CallbackForm(StripWhitespaceForm):
                     Length(min=10, message='Must be at least 10 characters')]
     )
 
-    def validate(self):
-        return super().validate() or self.url.data == ''
+    def validate(self, extra_validators=None):
+        return super().validate(extra_validators) or self.url.data == ''
 
 
 class SMSPrefixForm(StripWhitespaceForm):
@@ -2042,7 +2027,7 @@ class TemplateAndFoldersSelectionForm(Form):
     def is_selected(self, template_folder_id):
         return template_folder_id in (self.templates_and_folders.data or [])
 
-    def validate(self):
+    def validate(self, extra_validators=None):
         self.op = request.form.get('operation')
 
         self.is_move_op = self.op in {'move-to-existing-folder', 'move-to-new-folder'}
@@ -2052,7 +2037,7 @@ class TemplateAndFoldersSelectionForm(Form):
         if not (self.is_add_folder_op or self.is_move_op or self.is_add_template_op):
             return False
 
-        return super().validate()
+        return super().validate(extra_validators)
 
     def get_folder_name(self):
         if self.op == 'add-new-folder':
