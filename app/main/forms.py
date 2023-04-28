@@ -1145,25 +1145,6 @@ class OrganisationOrganisationTypeForm(StripWhitespaceForm):
     organisation_type = OrganisationTypeField('What type of organization is this?')
 
 
-class OrganisationAgreementSignedForm(StripWhitespaceForm):
-    agreement_signed = GovukRadiosField(
-        'Has this organization signed the agreement?',
-        choices=[
-            ('yes', 'Yes'),
-            ('no', 'No'),
-            ('unknown', 'No (but we have some service-specific agreements in place)'),
-        ],
-        thing='whether this organization has signed the agreement',
-        param_extensions={
-            'items': [
-                {'hint': {'html': 'Users will be told their organization has already signed the agreement'}},
-                {'hint': {'html': 'Users will be prompted to sign the agreement before they can go live'}},
-                {'hint': {'html': 'Users will not be prompted to sign the agreement'}}
-            ]
-        }
-    )
-
-
 class AdminOrganisationDomainsForm(StripWhitespaceForm):
 
     def populate(self, domains_list):
@@ -2092,70 +2073,6 @@ class AdminOrganisationGoLiveNotesForm(StripWhitespaceForm):
         'Go live notes',
         filters=[lambda x: x or None],
     )
-
-
-class AcceptAgreementForm(StripWhitespaceForm):
-
-    @classmethod
-    def from_organisation(cls, org):
-
-        if org.agreement_signed_on_behalf_of_name and org.agreement_signed_on_behalf_of_email_address:
-            who = 'someone-else'
-        elif org.agreement_signed_version:  # only set if user has submitted form previously
-            who = 'me'
-        else:
-            who = None
-
-        return cls(
-            version=org.agreement_signed_version,
-            who=who,
-            on_behalf_of_name=org.agreement_signed_on_behalf_of_name,
-            on_behalf_of_email=org.agreement_signed_on_behalf_of_email_address,
-        )
-
-    version = GovukTextInputField(
-        'Which version of the agreement do you want to accept?'
-    )
-
-    who = RadioField(
-        'Who are you accepting the agreement for?',
-        choices=(
-            (
-                'me',
-                'Yourself',
-            ),
-            (
-                'someone-else',
-                'Someone else',
-            ),
-        ),
-    )
-
-    on_behalf_of_name = GovukTextInputField(
-        'What’s their name?'
-    )
-
-    on_behalf_of_email = email_address(
-        'What’s their email address?',
-        required=False,
-        gov_user=False,
-    )
-
-    def __validate_if_nominating(self, field):
-        if self.who.data == 'someone-else':
-            if not field.data:
-                raise ValidationError('Cannot be empty')
-        else:
-            field.data = ''
-
-    validate_on_behalf_of_name = __validate_if_nominating
-    validate_on_behalf_of_email = __validate_if_nominating
-
-    def validate_version(self, field):
-        try:
-            float(field.data)
-        except (TypeError, ValueError):
-            raise ValidationError("Must be a number")
 
 
 class ChangeSecurityKeyNameForm(StripWhitespaceForm):

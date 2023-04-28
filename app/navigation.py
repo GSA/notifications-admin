@@ -191,9 +191,6 @@ class MainNavigation(Navigation):
             'request_to_go_live',
             'service_add_email_reply_to',
             'service_add_sms_sender',
-            'service_agreement',
-            'service_accept_agreement',
-            'service_confirm_agreement',
             'service_confirm_delete_email_reply_to',
             'service_confirm_delete_sms_sender',
             'service_edit_email_reply_to',
@@ -262,7 +259,6 @@ class OrgNavigation(Navigation):
             'organisation_dashboard',
         },
         'settings': {
-            'edit_organisation_agreement',
             'edit_organisation_billing_details',
             'edit_organisation_domains',
             'edit_organisation_email_branding',
