@@ -73,22 +73,6 @@ Unlike most of the tests and scans, pa11y-ci cannot currently be run from within
 1. `make run-flask` from within the devcontainer
 2. Run `make a11y-scan` from your host computer.
 
-## Building USWDS
-
-This only has to be done once
-
-- Run `npx gulp init` This command will add all the USWDS assets to the directories from gulpfile.js, add a project Sass entry point, and compile USWDS into CSS.
-
-This should be done when you want to compile your sass and icons
-
-- `npx gulp compile`
-
-This command can be used as you're doing local development, as it compiles, then recompiles when there are changes to Sass files in paths.dist.sass and paths.src.projectSass
-
-- `npx gulp watch`
-
-Other compile commands can be found at the [Getting started for developers](https://designsystem.digital.gov/documentation/getting-started-for-developers/) section from the USWDS documentation. You'll mostly need to reference [Phase 2](https://designsystem.digital.gov/documentation/getting-started/developers/phase-two-compile/)
-
 ## Further docs from UK
 
 - [Working with static assets](docs/static-assets.md)
