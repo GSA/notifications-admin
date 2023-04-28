@@ -21,6 +21,7 @@
   "license": "CC0",
   "homepage": "https://github.com/GSA/notifications-admin#readme",
   "dependencies": {
+    "@uswds/uswds": "^3.4.1",
     "cbor-js": "0.1.0",
     "govuk_frontend_toolkit": "8.1.0",
     "govuk-elements-sass": "3.1.2",
@@ -28,6 +29,7 @@
     "hogan": "1.0.2",
     "jquery": "3.6.1",
     "morphdom": "2.6.1",
+    "python": "^0.0.4",
     "query-command-supported": "1.0.0",
     "textarea-caret": "3.1.0",
     "timeago": "1.6.7"
@@ -35,6 +37,7 @@
   "devDependencies": {
     "@babel/core": "7.19.6",
     "@babel/preset-env": "7.19.4",
+    "@uswds/compile": "^1.0.0",
     "better-npm-audit": "^3.7.3",
     "gulp": "4.0.2",
     "gulp-add-src": "1.0.0",
