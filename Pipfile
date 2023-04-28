@@ -35,6 +35,7 @@ wtforms = "~=3.0"
 newrelic = "*"
 flask-talisman = "*"
 notifications-utils = {editable = true, ref = "main", git = "https://github.com/GSA/notifications-utils.git"}
+coverage = "*"
 
 [dev-packages]
 isort = "==5.10.1"
