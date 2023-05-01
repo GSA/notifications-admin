@@ -1,10 +1,12 @@
 name: Run checks
 
-on: [push, pull_request_target]
-
-permissions:
-  contents: read
-  pull-requests: write
+on:
+  push:
+    permissions:
+      contents: read
+  pull_request_target:
+    types:
+      - opened
 
 env:
   NOTIFY_ENVIRONMENT: test
