@@ -4,7 +4,7 @@ on: [push]
 
 permissions:
   contents: read
-  pull_requests: write
+  pull-requests: write
 
 env:
   NOTIFY_ENVIRONMENT: test
