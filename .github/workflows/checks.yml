@@ -1,15 +1,6 @@
 name: Run checks
 
-on:
-  push:
-    permissions:
-      contents: read
-  pull_request_target:
-    types:
-      - opened
-    permissions:
-      pull-requests: write
-      contents: write
+on: [push]
 
 env:
   NOTIFY_ENVIRONMENT: test
@@ -22,6 +13,10 @@ env:
 
 jobs:
   build:
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -31,6 +26,8 @@ jobs:
       - uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           test-script: npm test
+          output: report-markdown
+          annotations: failed-tests
           prnumber: ${{ steps.findPr.outputs.number }}
       - name: Run style checks
         run: pipenv run flake8 .
