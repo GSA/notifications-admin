@@ -28,6 +28,12 @@ class Config(object):
     BASIC_AUTH_USERNAME = getenv('BASIC_AUTH_USERNAME')
     BASIC_AUTH_PASSWORD = getenv('BASIC_AUTH_PASSWORD')
 
+    NR_ACCOUNT_ID = getenv('NR_ACCOUNT_ID')
+    NR_TRUST_KEY = getenv('NR_TRUST_KEY')
+    NR_AGENT_ID = getenv('NR_AGENT_ID')
+    NR_APP_ID = getenv('NR_APP_ID')
+    NR_BROWSER_KEY = getenv('NR_BROWSER_KEY')
+
     TEMPLATE_PREVIEW_API_HOST = getenv('TEMPLATE_PREVIEW_API_HOST', 'http://localhost:9999')
     TEMPLATE_PREVIEW_API_KEY = getenv('TEMPLATE_PREVIEW_API_KEY', 'my-secret-key')
 
