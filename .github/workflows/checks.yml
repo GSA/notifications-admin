@@ -7,6 +7,9 @@ on:
   pull_request_target:
     types:
       - opened
+    permissions:
+      pull-requests: write
+      contents: write
 
 env:
   NOTIFY_ENVIRONMENT: test
@@ -23,9 +26,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-project
+      - uses: jwalton/gh-find-current-pr@v1
+        id: findPr
       - uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           test-script: npm test
+          prnumber: ${{ steps.findPr.outputs.number }}
       - name: Run style checks
         run: pipenv run flake8 .
       - name: Check imports alphabetized
