@@ -282,6 +282,8 @@ def init_app(application):
     application.before_request(load_service_before_request)
     application.before_request(load_organisation_before_request)
     application.before_request(request_helper.check_proxy_header_before_request)
+    application.before_request(make_session_permanent)
+    application.after_request(save_service_or_org_after_request)
 
     font_paths = [
         str(item)[len(asset_fingerprinter._filesystem_path):]
@@ -520,9 +522,6 @@ def setup_blueprints(application):
     from app.main import main as main_blueprint
     from app.main import no_cookie as no_cookie_blueprint
     from app.status import status as status_blueprint
-
-    main_blueprint.before_request(make_session_permanent)
-    main_blueprint.after_request(save_service_or_org_after_request)
 
     application.register_blueprint(main_blueprint)
     # no_cookie_blueprint specifically doesn't have `make_session_permanent` or `save_service_or_org_after_request`
