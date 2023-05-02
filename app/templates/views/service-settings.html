@@ -46,6 +46,76 @@
             )
           }}
         {% endcall %}
+
+        {% call row() %}
+          {{ text_field('Send text messages') }}
+          {{ boolean_field('sms' in current_service.permissions) }}
+          {{ edit_field(
+            'Change',
+            url_for(
+            '.service_set_channel',
+            service_id=current_service.id,
+            channel='sms'
+            ),
+            permissions=['manage_service'],
+            suffix='your settings for sending text messages',
+          )}}
+        {% endcall %}
+        
+        {% call settings_row(if_has_permission='sms') %}
+          {{ text_field('Text message senders') }}
+          {% call field(status='default' if current_service.default_sms_sender == "None" else '') %}
+          {{ current_service.default_sms_sender | nl2br if current_service.default_sms_sender else 'None'}}
+            {% if current_service.count_sms_senders > 1 %}
+            <div class="hint">
+              {{ '…and %d more' | format(current_service.count_sms_senders - 1) }}
+            </div>
+            {% endif %}
+        {% endcall %}
+          {{ edit_field(
+            'Manage',
+            url_for('.service_sms_senders', service_id=current_service.id),
+            permissions=['manage_service','manage_api_keys'],
+            suffix='text message senders',
+          )
+        }}
+        {% endcall %}
+        
+        {% call settings_row(if_has_permission='sms') %}
+          {{ text_field('Start text messages with service name') }}
+          {{ boolean_field(current_service.prefix_sms) }}
+          {{ edit_field(
+            'Change',
+            url_for('.service_set_sms_prefix', service_id=current_service.id),
+            permissions=['manage_service'],
+            suffix='your settings for starting text messages with service name',
+          )
+          }}
+        {% endcall %}
+        
+        {% call settings_row(if_has_permission='sms') %}
+          {{ text_field('Send international text messages') }}
+          {{ boolean_field('international_sms' in current_service.permissions) }}
+          {{ edit_field(
+            'Change',
+            url_for('.service_set_international_sms', service_id=current_service.id),
+            permissions=['manage_service'],
+            suffix='your settings for sending international text messages',
+          )
+          }}
+        {% endcall %}
+        
+        <!-- {% call settings_row(if_has_permission='sms') %}
+                  {{ text_field('Receive text messages') }}
+                  {{ boolean_field('inbound_sms' in current_service.permissions) }}
+                  {{ edit_field(
+                      'Change',
+                      url_for('.service_set_inbound_sms', service_id=current_service.id),
+                      permissions=['manage_service'],
+                      suffix='your settings for receiving text messages',
+                  )
+                  }}
+                {% endcall %} -->
       {% endcall %}
 
       <!-- {% call mapping_table(
@@ -119,85 +189,6 @@
 
       {% endcall %} -->
 
-      {% call mapping_table(
-        caption='Text message settings',
-        field_headings=['Label', 'Value', 'Action'],
-        field_headings_visible=False,
-        caption_visible=True
-      ) %}
-
-        {% call row() %}
-          {{ text_field('Send text messages') }}
-          {{ boolean_field('sms' in current_service.permissions) }}
-          {{ edit_field(
-            'Change',
-            url_for(
-              '.service_set_channel',
-              service_id=current_service.id,
-              channel='sms'
-            ),
-            permissions=['manage_service'],
-            suffix='your settings for sending text messages',
-          )}}
-        {% endcall %}
-
-        {% call settings_row(if_has_permission='sms') %}
-          {{ text_field('Text message senders') }}
-          {% call field(status='default' if current_service.default_sms_sender == "None" else '') %}
-            {{ current_service.default_sms_sender | nl2br if current_service.default_sms_sender else 'None'}}
-            {% if current_service.count_sms_senders > 1 %}
-              <div class="hint">
-                {{ '…and %d more' | format(current_service.count_sms_senders - 1) }}
-              </div>
-            {% endif %}
-          {% endcall %}
-          {{ edit_field(
-              'Manage',
-              url_for('.service_sms_senders', service_id=current_service.id),
-              permissions=['manage_service','manage_api_keys'],
-              suffix='text message senders',
-          )
-          }}
-        {% endcall %}
-
-        {% call settings_row(if_has_permission='sms') %}
-          {{ text_field('Start text messages with service name') }}
-          {{ boolean_field(current_service.prefix_sms) }}
-          {{ edit_field(
-              'Change',
-              url_for('.service_set_sms_prefix', service_id=current_service.id),
-              permissions=['manage_service'],
-              suffix='your settings for starting text messages with service name',
-          )
-          }}
-        {% endcall %}
-
-        {% call settings_row(if_has_permission='sms') %}
-          {{ text_field('Send international text messages') }}
-          {{ boolean_field('international_sms' in current_service.permissions) }}
-          {{ edit_field(
-              'Change',
-              url_for('.service_set_international_sms', service_id=current_service.id),
-              permissions=['manage_service'],
-              suffix='your settings for sending international text messages',
-          )
-          }}
-        {% endcall %}
-
-        <!-- {% call settings_row(if_has_permission='sms') %}
-          {{ text_field('Receive text messages') }}
-          {{ boolean_field('inbound_sms' in current_service.permissions) }}
-          {{ edit_field(
-              'Change',
-              url_for('.service_set_inbound_sms', service_id=current_service.id),
-              permissions=['manage_service'],
-              suffix='your settings for receiving text messages',
-          )
-          }}
-        {% endcall %} -->
-
-      {% endcall %}
-    
     </div>
 
     {% if current_service.trial_mode %}

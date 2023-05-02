@@ -226,7 +226,7 @@ def format_notification_status(status, template_type):
             'sending': 'Sending',
             'created': 'Sending',
             'pending': 'Sending',
-            'sent': 'Sent to an international number'
+            'sent': 'Sent'
         },
     }[template_type].get(status, status)
 
@@ -239,16 +239,16 @@ def format_notification_status_as_time(status, created, updated):
 
 def format_notification_status_as_field_status(status, notification_type):
     return {
-            'failed': 'error',
-            'technical-failure': 'error',
-            'temporary-failure': 'error',
-            'permanent-failure': 'error',
-            'delivered': None,
-            'sent': 'sent-international' if notification_type == 'sms' else None,
-            'sending': 'default',
-            'created': 'default',
-            'pending': 'default',
-        }.get(status, 'error')
+        'failed': 'error',
+        'technical-failure': 'error',
+        'temporary-failure': 'error',
+        'permanent-failure': 'error',
+        'delivered': None,
+        'sent': 'sent-international' if notification_type == 'sms' else None,
+        'sending': 'default',
+        'created': 'default',
+        'pending': 'default',
+    }.get(status, 'error')
 
 
 def format_notification_status_as_url(status, notification_type):
