@@ -269,7 +269,12 @@ def create_app(application):
     # make sure we handle unicode correctly
     redis_client.redis_store.decode_responses = True
 
-    setup_blueprints(application)
+    from app.main import main as main_blueprint
+    from app.status import status as status_blueprint
+
+    application.register_blueprint(main_blueprint)
+
+    application.register_blueprint(status_blueprint)
 
     add_template_filters(application)
 
@@ -282,6 +287,8 @@ def init_app(application):
     application.before_request(load_service_before_request)
     application.before_request(load_organisation_before_request)
     application.before_request(request_helper.check_proxy_header_before_request)
+    application.before_request(make_session_permanent)
+    application.after_request(save_service_or_org_after_request)
 
     font_paths = [
         str(item)[len(asset_fingerprinter._filesystem_path):]
@@ -498,36 +505,6 @@ def register_errorhandlers(application):  # noqa (C901 too complex)
         if current_app.config.get('DEBUG', None):
             raise error
         return _error_response(500)
-
-
-def setup_blueprints(application):
-    """
-    There are three blueprints: status_blueprint, no_cookie_blueprint, and main_blueprint.
-
-    main_blueprint is the default for everything.
-
-    status_blueprint is only for the status page - unauthenticated, unstyled, no cookies, etc.
-
-    no_cookie_blueprint is for subresources (things loaded asynchronously) that we might be concerned are setting
-    cookies unnecessarily and potentially getting in to strange race conditions and overwriting other cookies, as we've
-    seen in the send message flow. Currently, this includes the iframe from the platform admin email branding
-    preview pages.
-
-    This notably doesn't include the *.json ajax endpoints. If we included them in this, the cookies wouldn't be
-    updated, including the expiration date. If you have a dashboard open and in focus it'll refresh the expiration timer
-    every two seconds, and you will never log out, which is behaviour we want to preserve.
-    """
-    from app.main import main as main_blueprint
-    from app.main import no_cookie as no_cookie_blueprint
-    from app.status import status as status_blueprint
-
-    main_blueprint.before_request(make_session_permanent)
-    main_blueprint.after_request(save_service_or_org_after_request)
-
-    application.register_blueprint(main_blueprint)
-    # no_cookie_blueprint specifically doesn't have `make_session_permanent` or `save_service_or_org_after_request`
-    application.register_blueprint(no_cookie_blueprint)
-    application.register_blueprint(status_blueprint)
 
 
 def setup_event_handlers():
