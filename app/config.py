@@ -1,6 +1,7 @@
 import json
 from os import getenv
 
+import newrelic.agent
 import pytz
 
 from app.cloudfoundry_config import cloud_config
@@ -33,6 +34,8 @@ class Config(object):
     NR_AGENT_ID = getenv('NR_AGENT_ID')
     NR_APP_ID = getenv('NR_APP_ID')
     NR_BROWSER_KEY = getenv('NR_BROWSER_KEY')
+    settings = newrelic.agent.global_settings()
+    NR_MONITOR_ON = settings and settings.monitor_mode
 
     TEMPLATE_PREVIEW_API_HOST = getenv('TEMPLATE_PREVIEW_API_HOST', 'http://localhost:9999')
     TEMPLATE_PREVIEW_API_KEY = getenv('TEMPLATE_PREVIEW_API_KEY', 'my-secret-key')

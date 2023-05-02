@@ -10,7 +10,10 @@
     <title>{% block pageTitle %}U.S. Notify{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="{{ themeColor | default('#0b0c0c') }}" /> {# Hardcoded value of $govuk-black #}
-    {% include "partials/newrelic.html" -%}
+    {% if config['NR_MONITOR_ON'] %}
+      {% include "partials/newrelic.html" -%}
+    {% endif %}
+
     {# Ensure that older IE versions always render with the correct rendering engine #}
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
