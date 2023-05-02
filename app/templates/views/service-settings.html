@@ -184,7 +184,7 @@
           }}
         {% endcall %}
 
-        {% call settings_row(if_has_permission='sms') %}
+        <!-- {% call settings_row(if_has_permission='sms') %}
           {{ text_field('Receive text messages') }}
           {{ boolean_field('inbound_sms' in current_service.permissions) }}
           {{ edit_field(
@@ -194,7 +194,7 @@
               suffix='your settings for receiving text messages',
           )
           }}
-        {% endcall %}
+        {% endcall %} -->
 
       {% endcall %}
     
@@ -206,7 +206,7 @@
         <p class="govuk-body">You can only:</p>
 
         <ul class='list list-bullet'>
-          <li>send {{ current_service.message_limit }} text messages and emails per day</li>
+          <li>send {{ current_service.message_limit }} text messages per day</li>
           <li>send messages to yourself and other people in your team</li>
         </ul>
 

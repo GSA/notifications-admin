@@ -1249,8 +1249,8 @@ def test_should_403_when_create_template_with_process_type_of_priority_for_non_p
 
 @pytest.mark.parametrize('old_content, new_content, expected_paragraphs', [
     (
-        "my favourite color is blue",
-        "my favourite color is ((color))",
+        "my favorite color is blue",
+        "my favorite color is ((color))",
         [
             'You added ((color))',
             'Before you send any messages, make sure your API calls include color.',

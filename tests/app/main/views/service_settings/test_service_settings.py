@@ -68,7 +68,7 @@ def mock_get_service_settings_page_common(
         'Text message senders GOVUK Manage text message senders',
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
-        'Receive text messages Off Change your settings for receiving text messages',
+        # 'Receive text messages Off Change your settings for receiving text messages',
     ]),
     (create_platform_admin_user(), [
 
@@ -87,7 +87,7 @@ def mock_get_service_settings_page_common(
         'Text message senders GOVUK Manage text message senders',
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
-        'Receive text messages Off Change your settings for receiving text messages',
+        # 'Receive text messages Off Change your settings for receiving text messages',
 
         'Label Value Action',
         'Live Off Change service status',
@@ -216,7 +216,7 @@ def test_send_files_by_email_row_on_settings_page(
 
 
 @pytest.mark.parametrize('permissions, expected_rows', [
-    (['email', 'sms', 'inbound_sms', 'international_sms'], [
+    (['email', 'sms', 'international_sms'], [
 
         'Service name service one Change service name',
         'Sign-in method Text message code Change sign-in method',
@@ -232,7 +232,7 @@ def test_send_files_by_email_row_on_settings_page(
         'Text message senders GOVUK Manage text message senders',
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages On Change your settings for sending international text messages',
-        'Receive text messages On Change your settings for receiving text messages',
+        # 'Receive text messages On Change your settings for receiving text messages',
 
     ]),
     (['email', 'sms', 'email_auth'], [
@@ -251,7 +251,7 @@ def test_send_files_by_email_row_on_settings_page(
         'Text message senders GOVUK Manage text message senders',
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
-        'Receive text messages Off Change your settings for receiving text messages',
+        # 'Receive text messages Off Change your settings for receiving text messages',
 
     ]),
 ])
@@ -3538,20 +3538,20 @@ def test_send_files_by_email_contact_details_does_not_update_invalid_contact_det
 
 
 @pytest.mark.parametrize('endpoint, permissions, expected_p', [
-    (
-        'main.service_set_inbound_sms',
-        ['sms'],
-        (
-            'Contact us if you want to be able to receive text messages from your users.'
-        )
-    ),
-    (
-        'main.service_set_inbound_sms',
-        ['sms', 'inbound_sms'],
-        (
-            'Your service can receive text messages sent to 2028675301.'
-        )
-    ),
+    # (
+    #     'main.service_set_inbound_sms',
+    #     ['sms'],
+    #     (
+    #         'Contact us if you want to be able to receive text messages from your users.'
+    #     )
+    # ),
+    # (
+    #     'main.service_set_inbound_sms',
+    #     ['sms', 'inbound_sms'],
+    #     (
+    #         'Your service can receive text messages sent to 2028675301.'
+    #     )
+    # ),
     (
         'main.service_set_auth_type',
         [],
