@@ -2,6 +2,8 @@ name: Run checks
 
 on: [push]
 
+permissions: read
+
 env:
   NOTIFY_ENVIRONMENT: test
   NEW_RELIC_CONFIG_FILE: newrelic.ini
