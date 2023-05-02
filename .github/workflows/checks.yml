@@ -2,7 +2,8 @@ name: Run checks
 
 on: [push]
 
-permissions: read
+permissions:
+  contents: read
 
 env:
   NOTIFY_ENVIRONMENT: test
