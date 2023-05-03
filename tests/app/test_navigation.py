@@ -52,7 +52,6 @@ EXCLUDED_ENDPOINTS = tuple(map(Navigation.get_endpoint_with_blueprint, {
     'conversation_reply',
     'conversation_reply_with_template',
     'conversation_updates',
-    'cookies',
     'copy_template',
     'count_content_length',
     'create_and_send_messages',
