@@ -41,11 +41,6 @@ def error(status_code):
     abort(status_code)
 
 
-@main.route('/cookies')
-def cookies():
-    return render_template('views/cookies.html')
-
-
 @main.route('/privacy')
 def privacy():
     return render_template('views/privacy.html')
