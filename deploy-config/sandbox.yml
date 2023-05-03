@@ -9,3 +9,6 @@ SECRET_KEY: sandbox-notify-secret-key
 BASIC_AUTH_USERNAME: sandbox
 BASIC_AUTH_PASSWORD: sandbox
 REDIS_ENABLED: 1
+nr_agent_id: ""
+nr_app_id: ""
+NR_BROWSER_KEY: ""

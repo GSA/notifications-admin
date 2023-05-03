@@ -7,9 +7,13 @@
 <html lang="{{ htmlLang | default('en') }}" class="govuk-template {{ htmlClasses }}">
   <head>
     <meta charset="utf-8" />
-    <title>{% block pageTitle %}GOV.UK - The best place to find government services and information{% endblock %}</title>
+    <title>{% block pageTitle %}U.S. Notify{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="{{ themeColor | default('#0b0c0c') }}" /> {# Hardcoded value of $govuk-black #}
+    {% if config['NR_MONITOR_ON'] %}
+      {% include "partials/newrelic.html" -%}
+    {% endif %}
+
     {# Ensure that older IE versions always render with the correct rendering engine #}
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 

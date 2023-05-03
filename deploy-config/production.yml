@@ -2,3 +2,5 @@ env: production
 instances: 2
 memory: 1G
 public_admin_route: notify.app.cloud.gov
+nr_agent_id: ""
+nr_app_id: ""
