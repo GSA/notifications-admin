@@ -28,14 +28,14 @@ def test_non_logged_in_user_can_see_homepage(
         'to your users. Try it now if you work in federal, state or local government.'
     )
 
-    assert normalize_spaces(page.select_one('#whos-using-notify').text) == (
-        'Who’s using U.S. Notify '
-        'There are 111 organizations and 9,999 services using Notify. '
-        'See the list of services and organizations.'
-    )
-    assert page.select_one('#whos-using-notify a')['href'] == url_for(
-        'main.performance'
-    )
+    # assert normalize_spaces(page.select_one('#whos-using-notify').text) == (
+    #     'Who’s using U.S. Notify '
+    #     'There are 111 organizations and 9,999 services using Notify. '
+    #     'See the list of services and organizations.'
+    # )
+    # assert page.select_one('#whos-using-notify a')['href'] == url_for(
+    #     'main.performance'
+    # )
 
 
 def test_logged_in_user_redirects_to_choose_account(

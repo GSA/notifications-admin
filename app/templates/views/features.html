@@ -1,6 +1,7 @@
 {% extends "content_template.html" %}
 {% from "components/table.html" import mapping_table, row, text_field, edit_field, field with context %}
 {% from "components/sub-navigation.html" import sub_navigation %}
+{% from "components/service-link.html" import service_link %}
 
 {% block per_page_title %}
   Features
@@ -26,7 +27,20 @@
 
 <h2 class="heading-medium" id="personalised-messages">Personalized content</h2>
 <p class="govuk-body">Notify makes it easy to send personalized messages from a single template.</p>
-<p class="govuk-body">See <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.edit_and_format_messages', _anchor='personalised-content') }}">how to personalize your content</a>.</p>
+<p class="govuk-body">See <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.guidance_index', _anchor='personalized-content') }}">how to personalize your content</a>.</p>
+<h3 class="heading heading-small" id="sender">Show people who your texts are from</h3>
+<p class="govuk-body">When you send a text message with Notify, the sender name tells people who it’s from.</p>
+
+<p class="govuk-body">To change the text message sender from the default of ‘U.S. Notify’:</p>
+
+<ol class="list list-number">
+  <li>Go to the <b class="govuk-!-font-weight-bold">Text message settings</b> section of the {{
+    service_link(current_service, 'main.service_settings', 'settings') }} page.</li>
+  <li>Select <b class="govuk-!-font-weight-bold">Manage</b> on the <b class="govuk-!-font-weight-bold">Text message
+      senders</b> row.</li>
+  <li>Select <b class="govuk-!-font-weight-bold">Change</b> or <b class="govuk-!-font-weight-bold">Add text message
+      sender</b>.</li>
+</ol>
 
 <h2 class="heading-medium" id="bulk-sending">Bulk sending</h2>
 <p class="govuk-body">To send a batch of messages at once, upload a list of contact details to Notify. You can also schedule the date and time you want them to be sent.</p>
@@ -56,7 +70,7 @@
 
 <!-- <p class="govuk-body">We send messages through several different providers. If one provider fails, Notify switches to another so that your messages are not affected.</p> -->
 
-<p class="govuk-body">Visit our <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.performance') }}">performance data</a> page to see how Notify is performing.</p>
+<!-- <p class="govuk-body">Visit our <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.performance') }}">performance data</a> page to see how Notify is performing.</p> -->
 
 <h2 class="heading-medium" id="security">Security</h2>
 <p class="govuk-body">Notify protects and manages data to meet the needs of government services.</p>
