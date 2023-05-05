@@ -46,7 +46,7 @@ def test_csrf_returns_400(client_request, mocker):
     mocker.patch('app.main.views.index.render_template', side_effect=csrf_err)
 
     page = client_request.get_url(
-        '/cookies',
+        '/privacy',
         _expected_status=400,
         _test_page_title=False,
     )
@@ -61,8 +61,8 @@ def test_csrf_redirects_to_sign_in_page_if_not_signed_in(client_request, mocker)
 
     client_request.logout()
     client_request.get_url(
-        '/cookies',
-        _expected_redirect=url_for('main.sign_in', next='/cookies'),
+        '/privacy',
+        _expected_redirect=url_for('main.sign_in', next='/privacy'),
     )
 
 
