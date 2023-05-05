@@ -50,23 +50,23 @@ def using_notify_nav():
         {
             "name": "Guidance",
             "link": "main.guidance_index",
+            # "sub_navigation_items": [
+            #     {
+            #         "name": "Formatting",
+            #         "link": "main.edit_and_format_messages",
+            #     },
+            #     {
+            #       "name": "Branding",
+            #        "link": "main.branding_and_customisation",
+            #     },
+            #     {
+            #        "name": "Send files by email",
+            #        "link": "main.send_files_by_email",
+            #     },
+            # ]
+            # {
+            #   "name": "API documentation",
+            #   "link": "main.documentation",
+            # },
         },
-        # "sub_navigation_items": [
-        #     {
-        #         "name": "Formatting",
-        #         "link": "main.edit_and_format_messages",
-        #     },
-        #     {
-        #       "name": "Branding",
-        #        "link": "main.branding_and_customisation",
-        #     },
-        #     {
-        #        "name": "Send files by email",
-        #        "link": "main.send_files_by_email",
-        #     },
-        # ]
-        # {
-        #   "name": "API documentation",
-        #   "link": "main.documentation",
-        # },
     ]
