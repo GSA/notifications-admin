@@ -1,4 +1,4 @@
-name: Deploy to demo environment
+name: Deploy to production environment
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: demo
+    environment: production
     steps:
       - uses: actions/checkout@v3
         with:
@@ -21,19 +21,19 @@ jobs:
         uses: tj-actions/changed-files@v1.1.2
         with:
           files: |
-            terraform/demo
+            terraform/production
             terraform/shared
-            .github/workflows/deploy-demo.yml
+            .github/workflows/deploy-prod.yml
       - name: Terraform init
         if: steps.changed-terraform-files.outputs.any_changed == 'true'
-        working-directory: terraform/demo
+        working-directory: terraform/production
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_SECRET_ACCESS_KEY }}
         run: terraform init
       - name: Terraform apply
         if: steps.changed-terraform-files.outputs.any_changed == 'true'
-        working-directory: terraform/demo
+        working-directory: terraform/production
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_SECRET_ACCESS_KEY }}
@@ -59,9 +59,9 @@ jobs:
           cf_username: ${{ secrets.CLOUDGOV_USERNAME }}
           cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
           cf_org: gsa-tts-benefits-studio-prototyping
-          cf_space: notify-demo
+          cf_space: notify-production
           push_arguments: >-
-            --vars-file deploy-config/demo.yml
+            --vars-file deploy-config/production.yml
             --var DANGEROUS_SALT="$DANGEROUS_SALT"
             --var SECRET_KEY="$SECRET_KEY"
             --var ADMIN_CLIENT_USERNAME="notify-admin"
@@ -76,12 +76,12 @@ jobs:
         uses: tj-actions/changed-files@v34
         with:
           files: |
-            deploy-config/egress_proxy/notify-admin-demo.*.acl
+            deploy-config/egress_proxy/notify-admin-production.*.acl
             .github/actions/deploy-proxy/action.yml
-            .github/workflows/deploy-demo.yml
+            .github/workflows/deploy-prod.yml
       - name: Deploy egress proxy
         if: steps.changed-egress-config.outputs.any_changed == 'true'
         uses: ./.github/actions/deploy-proxy
         with:
-          cf_space: notify-demo
-          app: notify-admin-demo
+          cf_space: notify-production
+          app: notify-admin-production
