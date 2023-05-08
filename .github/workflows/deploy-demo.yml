@@ -53,7 +53,6 @@ jobs:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
           BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
-          REDIS_ENABLED: ${{ secrets.REDIS_ENABLED }}
           NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
           NR_BROWSER_KEY: ${{ secrets.NR_BROWSER_KEY }}
         with:
@@ -65,7 +64,6 @@ jobs:
             --vars-file deploy-config/demo.yml
             --var DANGEROUS_SALT="$DANGEROUS_SALT"
             --var SECRET_KEY="$SECRET_KEY"
-            --var REDIS_ENABLED="$REDIS_ENABLED"
             --var ADMIN_CLIENT_USERNAME="notify-admin"
             --var ADMIN_CLIENT_SECRET="$ADMIN_CLIENT_SECRET"
             --var BASIC_AUTH_USERNAME="curiousabout"

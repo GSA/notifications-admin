@@ -2,5 +2,6 @@ env: staging
 instances: 1
 memory: 1G
 public_admin_route: notify-staging.app.cloud.gov
+redis_enabled: 1
 nr_agent_id: "1134291385"
 nr_app_id: "1031640326"
