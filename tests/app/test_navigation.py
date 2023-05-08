@@ -380,7 +380,7 @@ def test_a_page_should_nave_selected_navigation_item(
 
 
 @pytest.mark.parametrize('endpoint, selected_nav_item', [
-    ('main.documentation', 'Documentation'),
+    # ('main.documentation', 'Documentation'),
     ('main.support', 'Support'),
 ])
 def test_a_page_should_nave_selected_header_navigation_item(

@@ -16,7 +16,7 @@ def test_non_logged_in_user_can_see_homepage(
     page = client_request.get('main.index', _test_page_title=False)
 
     assert page.h1.text.strip() == (
-        'Send text messages and email to your users'
+        'Send text messages to your users'
     )
 
     assert page.select_one('a[role=button][draggable=false]')['href'] == url_for(
@@ -24,8 +24,8 @@ def test_non_logged_in_user_can_see_homepage(
     )
 
     assert page.select_one('meta[name=description]')['content'].strip() == (
-        'U.S. Notify lets you send text messages and email '
-        'to your users. Try it now if you work in federal, state or local government.'
+        'U.S. Notify lets you send text messages '
+        'to your users. Try it now if you work in federal, state, or local government.'
     )
 
     assert normalize_spaces(page.select_one('#whos-using-notify').text) == (
