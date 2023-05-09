@@ -2,7 +2,7 @@ from collections import OrderedDict
 from datetime import datetime
 from functools import partial
 
-from flask import flash, redirect, render_template, request, send_file, url_for
+from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user
 from notifications_python_client.errors import HTTPError
 
@@ -22,7 +22,6 @@ from app.main.forms import (
     AdminPreviewBrandingForm,
     AdminSetEmailBrandingForm,
     InviteOrgUserForm,
-    OrganisationAgreementSignedForm,
     OrganisationOrganisationTypeForm,
     RenameOrganisationForm,
     SearchByNameForm,
@@ -35,7 +34,6 @@ from app.main.views.dashboard import (
 from app.main.views.service_settings import get_branding_as_value_and_label
 from app.models.organisation import AllOrganisations, Organisation
 from app.models.user import InvitedOrgUser, User
-from app.s3_client.s3_mou_client import get_mou
 from app.utils.csv import Spreadsheet
 from app.utils.user import user_has_permissions, user_is_platform_admin
 
@@ -277,35 +275,6 @@ def edit_organisation_type(org_id):
     )
 
 
-@main.route("/organisations/<uuid:org_id>/settings/edit-agreement", methods=['GET', 'POST'])
-@user_is_platform_admin
-def edit_organisation_agreement(org_id):
-
-    form = OrganisationAgreementSignedForm(
-        agreement_signed={
-            True: 'yes',
-            False: 'no',
-            None: 'unknown',
-        }.get(current_organisation.agreement_signed)
-    )
-
-    if form.validate_on_submit():
-        organisations_client.update_organisation(
-            current_organisation.id,
-            agreement_signed={
-                'yes': True,
-                'no': False,
-                'unknown': None,
-            }.get(form.agreement_signed.data),
-        )
-        return redirect(url_for('.organisation_settings', org_id=org_id))
-
-    return render_template(
-        'views/organisations/organisation/settings/edit-agreement.html',
-        form=form,
-    )
-
-
 @main.route("/organisations/<uuid:org_id>/settings/set-email-branding", methods=['GET', 'POST'])
 @user_is_platform_admin
 def edit_organisation_email_branding(org_id):
@@ -464,9 +433,3 @@ def organisation_billing(org_id):
     return render_template(
         'views/organisations/organisation/billing.html'
     )
-
-
-@main.route('/organisations/<uuid:org_id>/agreement.pdf')
-@user_is_platform_admin
-def organisation_download_agreement(org_id):
-    return send_file(**get_mou())

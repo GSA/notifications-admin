@@ -56,38 +56,34 @@ def mock_get_service_settings_page_common(
         'Label Value Action',
         'Service name Test Service Change service name',
         'Sign-in method Text message code Change sign-in method',
+        'Send text messages On Change your settings for sending text messages',
+        'Text message senders GOVUK Manage text message senders',
+        'Start text messages with service name On Change your settings for starting text messages with service name',
+        'Send international text messages Off Change your settings for sending international text messages',
 
         # 'Label Value Action',
         # 'Send emails On Change your settings for sending emails',
         # 'Reply-to email addresses Not set Manage reply-to email addresses',
         # 'Email branding GOV.UK Change email branding',
         # 'Send files by email contact_us@gsa.gov Manage sending files by email',
-
-        'Label Value Action',
-        'Send text messages On Change your settings for sending text messages',
-        'Text message senders GOVUK Manage text message senders',
-        'Start text messages with service name On Change your settings for starting text messages with service name',
-        'Send international text messages Off Change your settings for sending international text messages',
-        'Receive text messages Off Change your settings for receiving text messages',
+        # 'Receive text messages Off Change your settings for receiving text messages',
     ]),
     (create_platform_admin_user(), [
 
         'Label Value Action',
         'Service name Test Service Change service name',
         'Sign-in method Text message code Change sign-in method',
+        'Send text messages On Change your settings for sending text messages',
+        'Text message senders GOVUK Manage text message senders',
+        'Start text messages with service name On Change your settings for starting text messages with service name',
+        'Send international text messages Off Change your settings for sending international text messages',
 
         # 'Label Value Action',
         # 'Send emails On Change your settings for sending emails',
         # 'Reply-to email addresses Not set Manage reply-to email addresses',
         # 'Email branding GOV.UK Change email branding',
         # 'Send files by email contact_us@gsa.gov Manage sending files by email',
-
-        'Label Value Action',
-        'Send text messages On Change your settings for sending text messages',
-        'Text message senders GOVUK Manage text message senders',
-        'Start text messages with service name On Change your settings for starting text messages with service name',
-        'Send international text messages Off Change your settings for sending international text messages',
-        'Receive text messages Off Change your settings for receiving text messages',
+        # 'Receive text messages Off Change your settings for receiving text messages',
 
         'Label Value Action',
         'Live Off Change service status',
@@ -216,42 +212,38 @@ def test_send_files_by_email_row_on_settings_page(
 
 
 @pytest.mark.parametrize('permissions, expected_rows', [
-    (['email', 'sms', 'inbound_sms', 'international_sms'], [
+    (['email', 'sms', 'international_sms'], [
 
         'Service name service one Change service name',
         'Sign-in method Text message code Change sign-in method',
+        'Send text messages On Change your settings for sending text messages',
+        'Text message senders GOVUK Manage text message senders',
+        'Start text messages with service name On Change your settings for starting text messages with service name',
+        'Send international text messages On Change your settings for sending international text messages',
 
         # 'Label Value Action',
         # 'Send emails On Change your settings for sending emails',
         # 'Reply-to email addresses test@example.com Manage reply-to email addresses',
         # 'Email branding Organisation name Change email branding',
         # 'Send files by email Not set up Manage sending files by email',
-
-        'Label Value Action',
-        'Send text messages On Change your settings for sending text messages',
-        'Text message senders GOVUK Manage text message senders',
-        'Start text messages with service name On Change your settings for starting text messages with service name',
-        'Send international text messages On Change your settings for sending international text messages',
-        'Receive text messages On Change your settings for receiving text messages',
+        # 'Receive text messages On Change your settings for receiving text messages',
 
     ]),
     (['email', 'sms', 'email_auth'], [
 
         'Service name service one Change service name',
         'Sign-in method Email link or text message code Change sign-in method',
+        'Send text messages On Change your settings for sending text messages',
+        'Text message senders GOVUK Manage text message senders',
+        'Start text messages with service name On Change your settings for starting text messages with service name',
+        'Send international text messages Off Change your settings for sending international text messages',
 
         # 'Label Value Action',
         # 'Send emails On Change your settings for sending emails',
         # 'Reply-to email addresses test@example.com Manage reply-to email addresses',
         # 'Email branding Organisation name Change email branding',
-        # 'Send files by email Not set up Manage sending files by email',
-
-        'Label Value Action',
-        'Send text messages On Change your settings for sending text messages',
-        'Text message senders GOVUK Manage text message senders',
-        'Start text messages with service name On Change your settings for starting text messages with service name',
-        'Send international text messages Off Change your settings for sending international text messages',
-        'Receive text messages Off Change your settings for receiving text messages',
+        # 'Send files by email Not set up Manage sending files by email'
+        # 'Receive text messages Off Change your settings for receiving text messages',
 
     ]),
 ])
@@ -760,12 +752,10 @@ def test_should_check_for_sending_things_right(
     mock_get_invites.assert_called_once_with(SERVICE_ONE_ID)
 
 
-@pytest.mark.parametrize('checklist_completed, agreement_signed, expected_button', (
-    (True, True, True),
-    (True, None, True),
-    (True, False, False),
-    (False, True, False),
-    (False, None, False),
+@pytest.mark.parametrize('checklist_completed, expected_button', (
+    (True, True),
+    (True, True),
+    (False, False),
 ))
 def test_should_not_show_go_live_button_if_checklist_not_complete(
     client_request,
@@ -776,19 +766,12 @@ def test_should_not_show_go_live_button_if_checklist_not_complete(
     mock_get_invites_for_service,
     single_sms_sender,
     checklist_completed,
-    agreement_signed,
     expected_button,
 ):
     mocker.patch(
         'app.models.service.Service.go_live_checklist_completed',
         new_callable=PropertyMock,
         return_value=checklist_completed,
-    )
-    mocker.patch(
-        'app.models.organisation.Organisation.agreement_signed',
-        new_callable=PropertyMock,
-        return_value=agreement_signed,
-        create=True,
     )
 
     for channel in ('email', 'sms'):
@@ -961,68 +944,6 @@ def test_should_check_for_sms_sender_on_go_live(
     assert normalize_spaces(checklist_items[3].text) == expected_sms_sender_checklist_item
 
     mock_get_sms_senders.assert_called_once_with(SERVICE_ONE_ID)
-
-
-@pytest.mark.parametrize('agreement_signed, expected_item', (
-    pytest.param(
-        None,
-        '',
-        marks=pytest.mark.xfail(raises=IndexError)
-    ),
-    (
-        True,
-        'Accept our data sharing and financial agreement Completed',
-    ),
-    (
-        False,
-        'Accept our data sharing and financial agreement Not completed',
-    ),
-))
-def test_should_check_for_mou_on_request_to_go_live(
-    client_request,
-    service_one,
-    mocker,
-    agreement_signed,
-    mock_get_invites_for_service,
-    mock_get_service_organisation,
-    expected_item,
-):
-    mocker.patch(
-        'app.models.service.Service.has_team_members',
-        return_value=False,
-    )
-    mocker.patch(
-        'app.models.service.Service.all_templates',
-        new_callable=PropertyMock,
-        return_value=[],
-    )
-    mocker.patch(
-        'app.main.views.service_settings.service_api_client.get_sms_senders',
-        return_value=[],
-    )
-    mocker.patch(
-        'app.main.views.service_settings.service_api_client.get_reply_to_email_addresses',
-        return_value=[],
-    )
-    for channel in {'email', 'sms'}:
-        mocker.patch(
-            'app.models.service.Service.volume_{}'.format(channel),
-            create=True,
-            new_callable=PropertyMock,
-            return_value=None,
-        )
-
-    mocker.patch(
-        'app.organisations_client.get_organisation',
-        return_value=organisation_json(agreement_signed=agreement_signed)
-    )
-    page = client_request.get(
-        'main.request_to_go_live', service_id=SERVICE_ONE_ID
-    )
-    assert page.h1.text == 'Before you request to go live'
-
-    checklist_items = page.select('.task-list .task-list-item')
-    assert normalize_spaces(checklist_items[3].text) == expected_item
 
 
 def test_non_gov_user_is_told_they_cant_go_live(
@@ -1316,8 +1237,7 @@ def test_should_redirect_after_request_to_go_live(
         'http://localhost/services/{service_id}\n'
         '\n'
         '---\n'
-        'Organisation type: Federal government\n'
-        'Agreement signed: Can’t tell (domain is user.gsa.gov).\n'
+        'Organisation type: Federal government (domain is user.gsa.gov).\n'
         '\n'
         '{formatted_displayed_volumes}'
         '\n'
@@ -1400,8 +1320,7 @@ def test_request_to_go_live_displays_go_live_notes_in_zendesk_ticket(
         'http://localhost/services/{service_id}\n'
         '\n'
         '---\n'
-        'Organisation type: Federal government\n'
-        'Agreement signed: No (organisation is Org 1). {go_live_note}\n'
+        'Organisation type: Federal government (organisation is Org 1). {go_live_note}\n'
         '\n'
         'Emails in next year: 111,111\n'
         'Text messages in next year: 222,222\n'
@@ -1472,11 +1391,10 @@ def test_request_to_go_live_displays_mou_signatories(
     )
 
     assert (
-        'Organisation type: Federal government\n'
-        'Agreement signed: Yes, for Org 1.\n'
-        'Agreement signed by: test@user.gsa.gov\n'
-        'Agreement signed on behalf of: bigdog@example.gsa.gov\n'
-        '\n'
+        'Organisation type: Federal government'
+    ) in mock_create_ticket.call_args[1]['message']
+
+    assert (
         'Emails in next year: 111,111\n'
     ) in mock_create_ticket.call_args[1]['message']
 
@@ -3557,7 +3475,7 @@ def test_send_files_by_email_contact_details_page(
     page = client_request.get(
         'main.send_files_by_email_contact_details', service_id=SERVICE_ONE_ID
     )
-    assert normalize_spaces(page.find_all('h2')[1].text) == subheader
+    assert normalize_spaces(page.find_all('h2')[0].text) == subheader
     if button_selected:
         assert 'checked' in page.find('input', {'name': 'contact_details_type', 'value': 'email_address'}).attrs
     else:
@@ -3612,20 +3530,20 @@ def test_send_files_by_email_contact_details_does_not_update_invalid_contact_det
 
 
 @pytest.mark.parametrize('endpoint, permissions, expected_p', [
-    (
-        'main.service_set_inbound_sms',
-        ['sms'],
-        (
-            'Contact us if you want to be able to receive text messages from your users.'
-        )
-    ),
-    (
-        'main.service_set_inbound_sms',
-        ['sms', 'inbound_sms'],
-        (
-            'Your service can receive text messages sent to 2028675301.'
-        )
-    ),
+    # (
+    #     'main.service_set_inbound_sms',
+    #     ['sms'],
+    #     (
+    #         'Contact us if you want to be able to receive text messages from your users.'
+    #     )
+    # ),
+    # (
+    #     'main.service_set_inbound_sms',
+    #     ['sms', 'inbound_sms'],
+    #     (
+    #         'Your service can receive text messages sent to 2028675301.'
+    #     )
+    # ),
     (
         'main.service_set_auth_type',
         [],

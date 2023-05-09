@@ -516,16 +516,6 @@ class Service(JSONModel, SortByNameMixin):
     def get_api_key(self, id):
         return self._get_by_id(self.api_keys, id)
 
-    @property
-    def able_to_accept_agreement(self):
-        return (
-            self.organisation.agreement_signed is not None
-            or self.organisation_type in {
-                Organisation.TYPE_NHS_GP,
-                Organisation.TYPE_NHS_LOCAL,
-            }
-        )
-
 
 class Services(SerialisedModelCollection):
     model = Service

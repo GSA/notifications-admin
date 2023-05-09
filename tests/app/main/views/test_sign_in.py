@@ -21,7 +21,7 @@ def test_render_sign_in_template_for_new_user(
     assert page.select_one('#password')['autocomplete'] == 'current-password'
     assert page.select('main a')[0].text == 'create one now'
     assert page.select('main a')[0]['href'] == url_for('main.register')
-    assert page.select('main a')[1].text == 'Forgotten your password?'
+    assert page.select('main a')[1].text == 'Forgot your password?'
     assert page.select('main a')[1]['href'] == url_for('main.forgot_password')
     assert 'Sign in again' not in normalize_spaces(page.text)
 
@@ -36,7 +36,7 @@ def test_render_sign_in_template_with_next_link_for_password_reset(
         _test_page_title=False
     )
     forgot_password_link = page.find('a', class_="govuk-link govuk-link--no-visited-state page-footer-secondary-link")
-    assert forgot_password_link.text == 'Forgotten your password?'
+    assert forgot_password_link.text == 'Forgot your password?'
     assert forgot_password_link['href'] == url_for('main.forgot_password', next=f'/services/{SERVICE_ONE_ID}/templates')
 
 

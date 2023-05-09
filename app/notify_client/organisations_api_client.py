@@ -37,13 +37,12 @@ class OrganisationsClient(NotifyAdminAPIClient):
             raise error
 
     @cache.delete('organisations')
-    def create_organisation(self, name, organisation_type, agreement_signed):
+    def create_organisation(self, name, organisation_type):
         return self.post(
             url="/organisations",
             data={
                 "name": name,
                 "organisation_type": organisation_type,
-                "agreement_signed": agreement_signed,
             }
         )
 

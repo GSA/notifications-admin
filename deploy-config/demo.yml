@@ -2,3 +2,6 @@ env: demo
 instances: 1
 memory: 1G
 public_admin_route: notify-demo.app.cloud.gov
+redis_enabled: 1
+nr_agent_id: "1134302465"
+nr_app_id: "1083160688"

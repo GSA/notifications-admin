@@ -16,7 +16,7 @@ def test_non_logged_in_user_can_see_homepage(
     page = client_request.get('main.index', _test_page_title=False)
 
     assert page.h1.text.strip() == (
-        'Send text messages and email to your users'
+        'Send text messages to your users'
     )
 
     assert page.select_one('a[role=button][draggable=false]')['href'] == url_for(
@@ -24,8 +24,8 @@ def test_non_logged_in_user_can_see_homepage(
     )
 
     assert page.select_one('meta[name=description]')['content'].strip() == (
-        'U.S. Notify lets you send text messages and email '
-        'to your users. Try it now if you work in federal, state or local government.'
+        'U.S. Notify lets you send text messages '
+        'to your users. Try it now if you work in federal, state, or local government.'
     )
 
     assert normalize_spaces(page.select_one('#whos-using-notify').text) == (
@@ -91,7 +91,7 @@ def test_hiding_pages_from_search_engines(
 
 
 @pytest.mark.parametrize('view', [
-    'cookies', 'privacy', 'pricing', 'terms', 'roadmap',
+    'privacy', 'pricing', 'terms', 'roadmap',
     'features', 'documentation', 'security',
     'message_status', 'features_email', 'features_sms',
     'how_to_pay', 'get_started',
@@ -233,6 +233,7 @@ def test_css_is_served_from_correct_path(client_request):
         page.select('link[rel=stylesheet]')
     ):
         assert link['href'].startswith([
+            # 'https://static.example.com/css/styles.css?',
             'https://static.example.com/stylesheets/main.css?',
             'https://static.example.com/stylesheets/print.css?',
         ][index])

@@ -35,22 +35,6 @@
         }}
       {% endcall %}
       {% call row() %}
-        {{ text_field('Data sharing and financial agreement') }}
-        {{ text_field(
-          {
-            True: 'Signed',
-            False: 'Not signed',
-            None: 'Not signed (but we have some service-specific agreements in place)'
-          }.get(current_org.agreement_signed)
-        ) }}
-        {{ edit_field(
-            'Change',
-            url_for('.edit_organisation_agreement', org_id=current_org.id),
-            suffix='data sharing and financial agreement for the organization'
-          )
-        }}
-      {% endcall %}
-      {% call row() %}
         {{ text_field('Request to go live notes') }}
         {{ optional_text_field(current_org.request_to_go_live_notes, default='None') }}
         {{ edit_field(

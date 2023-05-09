@@ -6,16 +6,12 @@
 {% from "components/form.html" import form_wrapper %}
 {% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
 
-{% block per_page_title %}
-  Accept our data sharing and financial agreement
-{% endblock %}
 
 {% block backLink %}
   {{ govukBackLink({ "href": url_for('main.request_to_go_live', service_id=current_service.id) }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
-  {{ page_header('Accept our data sharing and financial agreement') }}
   {% call form_wrapper() %}
     {% call select_wrapper(form.same_as_service_name) %}
       {% for option in form.same_as_service_name %}

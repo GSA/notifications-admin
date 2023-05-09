@@ -16,10 +16,22 @@ env:
 
 jobs:
   build:
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-project
+      - uses: jwalton/gh-find-current-pr@v1
+        id: findPr
+      - uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          test-script: npm test
+          output: report-markdown
+          annotations: failed-tests
+          prnumber: ${{ steps.findPr.outputs.number }}
       - name: Run style checks
         run: pipenv run flake8 .
       - name: Check imports alphabetized
@@ -53,7 +65,7 @@ jobs:
       - uses: ./.github/actions/setup-project
       - name: Create requirements.txt
         run: pipenv requirements > requirements.txt
-      - uses: pypa/gh-action-pip-audit@v1.0.4
+      - uses: pypa/gh-action-pip-audit@v1.0.6
         with:
           inputs: requirements.txt
       - name: Run npm audit

@@ -13,7 +13,7 @@ module "redis" {
   cf_space_name    = local.cf_space_name
   name             = "${local.app_name}-redis-${local.env}"
   recursive_delete = local.recursive_delete
-  redis_plan_name  = "TKTK-production-redis-plan"
+  redis_plan_name  = "redis-3node-large"
 }
 
 module "logo_upload_bucket" {
@@ -45,7 +45,7 @@ module "logo_upload_bucket" {
 # It can be re-enabled after:
 # 1) the app has first been deployed
 # 2) the route has been manually created by an OrgManager:
-#     `cf create-domain TKTK-org-name TKTK-production-domain-name`
+#     `cf create-domain gsa-tts-benefits-studio-prototyping beta.notify.gov`
 ###########################################################################
 # module "domain" {
 #   source = "github.com/18f/terraform-cloudgov//domain?ref=v0.2.0"
@@ -56,5 +56,5 @@ module "logo_upload_bucket" {
 #   name             = "${local.app_name}-domain-${local.env}"
 #   recursive_delete = local.recursive_delete
 #   cdn_plan_name    = "domain"
-#   domain_name      = "TKTK-production-domain-name"
+#   domain_name      = "beta.notify.gov"
 # }

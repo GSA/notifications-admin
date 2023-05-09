@@ -26,7 +26,13 @@ applications:
       NEW_RELIC_CONFIG_FILE: newrelic.ini
       NEW_RELIC_ENVIRONMENT: ((env))
 
-      REDIS_ENABLED: ((REDIS_ENABLED))
+      NR_ACCOUNT_ID: 3389907
+      NR_TRUST_KEY: 562946
+      NR_AGENT_ID: ((nr_agent_id))
+      NR_APP_ID: ((nr_app_id))
+      NR_BROWSER_KEY: ((NR_BROWSER_KEY))
+
+      REDIS_ENABLED: ((redis_enabled))
       ADMIN_BASE_URL: https://((public_admin_route))
       API_HOST_NAME: https://notify-api-((env)).apps.internal:61443
 
