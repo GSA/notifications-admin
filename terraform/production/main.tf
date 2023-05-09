@@ -48,7 +48,7 @@ module "api_network_route" {
 #     `cf create-domain gsa-tts-benefits-studio-prototyping beta.notify.gov`
 ###########################################################################
 module "domain" {
-  source = "github.com/18f/terraform-cloudgov//domain?ref=v0.2.0"
+  source = "github.com/18f/terraform-cloudgov//domain?ref=v0.5.2"
 
   cf_org_name      = local.cf_org_name
   cf_space_name    = local.cf_space_name
