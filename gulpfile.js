@@ -243,7 +243,8 @@ const defaultTask = parallel(
       javascripts
     ),
     sass, 
-    uswds.compile
+    uswds.compile,
+    uswds.copyAssets
   )
 );
 
@@ -279,6 +280,7 @@ uswds.settings.version = 3;
 * Set as many as you need
 */
 uswds.paths.dist.css = './app/static/css';
+uswds.paths.dist.js = './app/static/js';
 uswds.paths.dist.theme = './app/assets/sass/uswds';
 
 /**
@@ -288,3 +290,4 @@ uswds.paths.dist.theme = './app/assets/sass/uswds';
 exports.init = uswds.init;
 exports.compile = uswds.compile;
 exports.watch = uswds.watch;
+exports.copyAssets = uswds.copyAssets;
