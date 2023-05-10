@@ -1,5 +1,15 @@
 # Notify Sprint Goals Log
 
+## Sprint: TBD (5/11/23)
+
+|             | Goal                                                                                                                              | Impact                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| Engineering | [Finalizing "must haves"](https://github.com/GSA/notifications-admin/issues/235) and moving to ["quality of life"](https://github.com/GSA/notifications-admin/issues/412) components, work on [data structure](https://github.com/GSA/notifications-api/issues/162) & clearing path to [promote services](https://github.com/GSA/notifications-admin/issues/301) to "live mode"                                                              | A functional application that allows for promotion from trial mode to external recipients                                     |
+| UX          | Continue [integrating USWDS](https://github.com/GSA/notifications-admin/issues/453), start wireframing new flows, strategize collection and synthesis of partner feedback              | A U.S. government look and feel, better accessibility, better experience            |
+| Content     | [Content strategy](https://github.com/GSA/notifications-admin/issues/481) and [Notify terminology work](https://github.com/GSA/notifications-admin/issues/480), aligning with Studio comms strategy | Consistency in terminology, tone, type of content |
+| Security    | Respond to any assessment questions ASAP, transition duties to Steven                                                    | Keep the LATO award timeline as short as possible, ensure a smooth transition for compliance POC
+
+
 ## Sprint: Ibis (4/27/23)
 
 |             | Goal                                                                                                                              | Impact                                                                                                                                     |
