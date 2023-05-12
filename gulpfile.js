@@ -281,6 +281,8 @@ uswds.settings.version = 3;
 */
 uswds.paths.dist.css = './app/static/css';
 uswds.paths.dist.js = './app/static/js';
+uswds.paths.dist.img = './app/static/img';
+uswds.paths.dist.fonts = './app/static/fonts';
 uswds.paths.dist.theme = './app/assets/sass/uswds';
 
 /**
