@@ -8,29 +8,29 @@
 
 {% block content_column_content %}
 
-  <h1 class="heading heading-large">Text messages</h1>
-  <p class="govuk-body">Send thousands of free text messages to US phone numbers with Notify.</p>
+  <h1 class="font-body-2xl">Text messages</h1>
+  <p>Send thousands of free text messages to US phone numbers with Notify.</p>
   {% if not current_user.is_authenticated %}
-  <p class="govuk-body"><a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.register') }}">Create an account</a> and try Notify for yourself.</p>
+  <p><a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.register') }}">Create an account</a> and try Notify for yourself.</p>
   {% endif %}
 
   <h2 class="heading heading-medium">Features</h2>
-  <p class="govuk-body">Notify makes it easy to:</p>
+  <p>Notify makes it easy to:</p>
   <ul class="list list-bullet">
     <li>create reusable text message templates</li>
     <li>personalize the content of your texts</li>
     <li>send and schedule bulk messages</li></ul>
-  <!-- <p class="govuk-body">You can also <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.documentation') }}">integrate with our API</a> to send text messages automatically.<p class="govuk-body">
+  <!-- <p>You can also <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.documentation') }}">integrate with our API</a> to send text messages automatically.<p>
 
-  <h3 class="heading heading-small" id="receive">Receive text messages</h3>
-  <p class="govuk-body">Let people send messages to your service or reply to your texts.</p>
-  <p class="govuk-body">You can see and reply to the messages you receive when you sign in to Notify. If you’re using our API, you can set up your own automated processes to manage replies.</p>
-  <p class="govuk-body"><a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.support') }}">Contact us</a> to request a unique number for text message replies.</p> -->
+  <h3 class="font-body-md margin-bottom-2" id="receive">Receive text messages</h3>
+  <p>Let people send messages to your service or reply to your texts.</p>
+  <p>You can see and reply to the messages you receive when you sign in to Notify. If you’re using our API, you can set up your own automated processes to manage replies.</p>
+  <p><a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.support') }}">Contact us</a> to request a unique number for text message replies.</p> -->
 
-  <h3 class="heading heading-small" id="sender">Show people who your texts are from</h3>
-  <p class="govuk-body">When you send a text message with Notify, the sender name tells people who it’s from.</p>
+  <h3 class="font-body-md margin-bottom-2" id="sender">Show people who your texts are from</h3>
+  <p>When you send a text message with Notify, the sender name tells people who it’s from.</p>
 
-  <p class="govuk-body">To change the text message sender from the default of ‘U.S. Notify’:</p>
+  <p>To change the text message sender from the default of ‘U.S. Notify’:</p>
 
   <ol class="list list-number">
     <li>Go to the <b class="govuk-!-font-weight-bold">Text message settings</b> section of the {{ service_link(current_service, 'main.service_settings', 'settings') }} page.</li>
@@ -39,7 +39,7 @@
 </ol>
 
   <h2 class="heading heading-medium">Pricing<h2>
-    <p class="govuk-body">Each service you add has an annual allowance of free text messages.</p>
-    <p class="govuk-body"><a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.pricing', _anchor='text-messages') }}">See pricing</a> for more details.</p>
+    <p>Each service you add has an annual allowance of free text messages.</p>
+    <p><a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.pricing', _anchor='text-messages') }}">See pricing</a> for more details.</p>
 
 {% endblock %}

@@ -20,11 +20,11 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
   {% call form_wrapper() %}
-    <p class="govuk-body">New email address:</p>
+    <p>New email address:</p>
     <div class="panel panel-border-wide bottom-gutter">
-      <p class="govuk-body">{{ new_email }}</p>
+      <p>{{ new_email }}</p>
     </div>
-    <p class="govuk-body">We will send {{ user.name }} an email to tell them about the change.</p>
+    <p>We will send {{ user.name }} an email to tell them about the change.</p>
     {{ page_footer('Confirm') }}
   {% endcall %}
   </div>

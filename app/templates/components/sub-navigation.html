@@ -1,10 +1,10 @@
 {% macro sub_navigation_item(item) %}
-  <li class="sub-navigation__item {% if item['link'] == request.endpoint %} sub-navigation__item--active {% endif %}"
+  <li class="usa-sidenav__item" href="{{ url_for(item['link']) }}"
       itemprop="itemListElement"
       itemscope
       itemtype="http://schema.org/ListItem"
   >
-    <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for(item['link']) }}" itemprop="item">
+    <a class="{% if item['link'] == request.endpoint %} usa-current {% endif %}" href="{{ url_for(item['link']) }}" itemprop="item">
       <span itemprop="name">{{item['name']}}</span>
     </a>
     {% if caller %}
@@ -14,18 +14,18 @@
 {% endmacro %}
 
 {% macro sub_navigation_item_sub_navigation(item) %}
-  <ol itemscope itemtype="http://schema.org/ItemList">
+  <ul class="usa-sidenav__sublist" itemscope itemtype="http://schema.org/ItemList">
     {% for sub_item in item.sub_navigation_items %}
       {{ sub_navigation_item(sub_item) }}
     {% endfor %}
-  </ol>
+  </ul>
 {% endmacro %}
 
 {% macro sub_navigation(
   item_set
 ) %}
-  <nav class="sub-navigation">
-    <ol itemscope itemtype="http://schema.org/ItemList">
+  <nav aria-label="Side navigation," class="margin-top-5">
+    <ul class="usa-sidenav" itemtype="http://schema.org/ItemList">
       {% for item in item_set %}
         {% if item.sub_navigation_items %}
           {% call sub_navigation_item(item) %}
@@ -35,6 +35,6 @@
           {{ sub_navigation_item(item) }}
         {% endif %}
       {% endfor %}
-    </ol>
+    </ul>
   </nav>
 {% endmacro %}

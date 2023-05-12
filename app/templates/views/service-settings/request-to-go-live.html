@@ -52,15 +52,15 @@
         {% endif %}
       {% endcall %}
       {% if not current_user.is_gov_user %}
-        <p class="govuk-body">
+        <p>
           Only team members with a government email address can request to go live.
         </p>
       {% elif (not current_service.go_live_checklist_completed)  %}
-        <p class="govuk-body">
+        <p>
           You must complete these steps before you can request to go live.
         </p>
       {% else %}
-        <p class="govuk-body">
+        <p>
           When we receive your request we’ll get back to you within one working day.
         </p>
         <p class="bottom-gutter">
