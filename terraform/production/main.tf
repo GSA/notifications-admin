@@ -46,6 +46,8 @@ module "api_network_route" {
 # 1) the app has first been deployed
 # 2) the route has been manually created by an OrgManager:
 #     `cf create-domain gsa-tts-benefits-studio-prototyping beta.notify.gov`
+# 3) the acme-challenge CNAME record must be created
+#       https://cloud.gov/docs/services/external-domain-service/#how-to-create-an-instance-of-this-service
 ###########################################################################
 module "domain" {
   source = "github.com/18f/terraform-cloudgov//domain?ref=v0.5.2"
