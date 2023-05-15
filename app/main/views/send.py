@@ -80,6 +80,9 @@ def get_example_csv_rows(template, use_example_as_example=True, submitted_fields
 @main.route("/services/<uuid:service_id>/send/<uuid:template_id>/csv", methods=['GET', 'POST'])
 @user_has_permissions('send_messages', restrict_admin_usage=True)
 def send_messages(service_id, template_id):
+    notification_count = service_api_client.get_notification_count(service_id)
+    remaining_messages = (current_service.message_limit - notification_count)
+
     db_template = current_service.get_template_with_user_permission_or_403(template_id, current_user)
 
     email_reply_to = None
@@ -154,7 +157,8 @@ def send_messages(service_id, template_id):
         column_headings=list(ascii_uppercase[:len(column_headings)]),
         example=[column_headings, get_example_csv_rows(template)],
         form=form,
-        allowed_file_extensions=Spreadsheet.ALLOWED_FILE_EXTENSIONS
+        allowed_file_extensions=Spreadsheet.ALLOWED_FILE_EXTENSIONS,
+        remaining_messages=remaining_messages
     )
 
 
