@@ -1,5 +1,1 @@
-gsa.gov
-gmail.com
-dispostable.com
-simulator.amazonses.com
-amazonses.com
+gov
