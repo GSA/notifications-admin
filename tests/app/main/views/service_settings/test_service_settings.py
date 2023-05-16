@@ -276,7 +276,7 @@ def test_should_show_service_name(
     assert page.find('h1').text == 'Change your service name'
     assert page.find('input', attrs={"type": "text"})['value'] == 'service one'
     assert page.select_one(
-        'main p'
+        'main .govuk-body'
     ).text == 'Your service name should tell users what the message is about as well as who it’s from.'
     assert normalize_spaces(page.select_one('main ul').text) == (
         'at the start of every text message '
@@ -334,7 +334,7 @@ def test_should_show_service_name_with_no_prefixing(
     page = client_request.get('main.service_name_change', service_id=SERVICE_ONE_ID)
     assert page.find('h1').text == 'Change your service name'
     assert page.select_one(
-        'main p'
+        'main .govuk-body'
     ).text == 'Your service name should tell users what the message is about as well as who it’s from.'
 
 

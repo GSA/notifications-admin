@@ -106,7 +106,7 @@
             </a>
           </li>
         </ul>
-        <section aria-label="Search component">
+        <!-- <section aria-label="Search component">
           <form class="usa-search usa-search--small margin-bottom-2" role="search">
             <label class="usa-sr-only" for="search-field">Search</label>
             <input class="usa-input" id="search-field" type="search" name="search" />
@@ -114,58 +114,8 @@
               <img src="/static/images/usa-icons-bg/search--white.svg" class="usa-search__submit-icon" alt="Search" />
             </button>
           </form>
-        </section>
+        </section> -->
       </div>
     </div>
   </nav>
 </header>
-
-<!-- <header class="govuk-header {{ params.classes if params.classes }}" role="banner" data-module="header"
-        {%- for attribute, value in params.attributes %} {{attribute}}="{{value}}"{% endfor %}>
-  <div class="govuk-header__container {{ params.containerClasses | default('govuk-width-container') }}">
-
-    <div class="govuk-header__logo">
-      <a href="{{ params.homepageUrl | default('/') }}" class="govuk-header__link govuk-header__link--homepage">
-        <span class="govuk-header__logotype">
-            <image src="{{ params.assetsPath | default('/static/images') }}/email-template/us-flag.png" alt="United States Flag" xlink:href="" class="govuk-header__logotype-fallback-image" width="36" height="32"></image>
-          </svg>
-          <span class="govuk-header__logotype-text">
-            U.S.
-          </span>
-        </span>
-        {% if (params.productName) %}
-        <span class="govuk-header__product-name">
-          {{ params.productName }}
-        </span>
-        {% endif %}
-      </a>
-    </div>
-    {% if params.serviceName or params.navigation  %}
-    <div class="govuk-header__content">
-
-    {% if params.serviceName %}
-    <a href="{{ params.serviceUrl }}" class="govuk-header__link govuk-header__link--service-name">
-      {{ params.serviceName }}
-    </a>
-    {% endif %}
-
-    {% if params.navigation %}
-    <button type="button" role="button" class="govuk-header__menu-button js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
-    <nav>
-      <ul id="navigation" class="govuk-header__navigation {{ params.navigationClasses if params.navigationClasses }}" aria-label="Top Level Navigation">
-        {% for item in params.navigation %}
-          {% if item.href and item.text %}
-            <li class="govuk-header__navigation-item{{ ' govuk-header__navigation-item--active' if item.active }}">
-              <a class="govuk-header__link" href="{{ item.href }}"{% for attribute, value in item.attributes %} {{attribute}}="{{value}}"{% endfor %}>
-                {{ item.text }}
-              </a>
-            </li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    </nav>
-    {% endif %}
-    </div>
-    {% endif %}
-  </div>
-</header> -->

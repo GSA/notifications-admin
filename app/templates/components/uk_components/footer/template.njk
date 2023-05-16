@@ -98,6 +98,31 @@
           {% endif %}
         </div>
       </div>
+      <div class="govuk-footer__meta border-top border-gray-10">
+        <div class="govuk-footer__meta-item govuk-footer__meta-item--grow padding-top-2">
+          {% if params.meta %}
+          <h2 class="govuk-visually-hidden">{{ params.meta.visuallyHiddenTitle | default("Support links") }}</h2>
+          {% if params.meta.items %}
+          <ul class="govuk-footer__inline-list">
+            {% for item in params.meta.items %}
+            <li class="govuk-footer__inline-list-item">
+              <a class="govuk-footer__link" href="{{ item.href }}" {% for attribute, value in item.attributes %}
+                {{attribute}}="{{value}}" {% endfor %}>
+                {{ item.text }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          {% if params.meta.text or params.meta.html %}
+          <div>
+            {{ params.meta.html | safe if params.meta.html else params.meta.text }}
+          </div>
+          {% endif %}
+          {% endif %}
+        </div>
+      </div>
+      </div>
     </div>
   </div>
 </footer>
