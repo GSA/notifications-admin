@@ -168,10 +168,10 @@ def test_should_show_create_api_key_page(
     for index, option in enumerate(expected_options):
         item = page.select('.govuk-radios__item')[index]
         if type(option) is tuple:
-            assert normalize_spaces(item.select_one('.govuk-label').text) == option[0]
+            assert normalize_spaces(item.select_one('.usa-label').text) == option[0]
             assert normalize_spaces(item.select_one('.govuk-hint').text) == option[1]
         else:
-            assert normalize_spaces(item.select_one('.govuk-label').text) == option
+            assert normalize_spaces(item.select_one('.usa-label').text) == option
 
 
 def test_should_create_api_key_with_type_normal(
@@ -351,7 +351,7 @@ def test_should_show_guestlist_page(
         'main.guest_list',
         service_id=SERVICE_ONE_ID,
     )
-    textboxes = page.find_all('input', {'class': 'govuk-input'})
+    textboxes = page.find_all('input', {'class': 'usa-input'})
     for index, value in enumerate(
         ['test@example.com'] + [None] * 4 + ['2028675300'] + [None] * 4
     ):

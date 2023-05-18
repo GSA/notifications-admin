@@ -279,7 +279,7 @@ uswds.settings.version = 3;
 * Path settings
 * Set as many as you need
 */
-uswds.paths.dist.css = './app/static/css';
+uswds.paths.dist.css = './app/assets/css';
 uswds.paths.dist.js = './app/static/js';
 uswds.paths.dist.img = './app/static/img';
 uswds.paths.dist.fonts = './app/static/fonts';

@@ -317,10 +317,10 @@ def test_edit_sms_provider_provider_ratio(
         '.edit_sms_provider_ratio',
     )
 
-    inputs = page.select('.govuk-input[type="text"]')
+    inputs = page.select('.usa-input[type="text"]')
     assert len(inputs) == 2
 
-    first_input = page.select_one('.govuk-input[name="sms_provider_1"]')
+    first_input = page.select_one('.usa-input[name="sms_provider_1"]')
     assert first_input.attrs['value'] == str(sms_provider_1['priority'])
 
 
@@ -343,7 +343,7 @@ def test_edit_sms_provider_provider_ratio_only_shows_active_providers(
         '.edit_sms_provider_ratio',
     )
 
-    inputs = page.select('.govuk-input[type="text"]')
+    inputs = page.select('.usa-input[type="text"]')
     assert len(inputs) == 1
 
 

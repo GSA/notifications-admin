@@ -337,7 +337,7 @@ def test_should_show_back_to_service_if_user_belongs_to_service(
     )
 
     assert normalize_spaces(
-        page.select_one('header + .govuk-width-container').text
+        page.select_one('header + .grid-container').text
     ).startswith(
         normalize_spaces(expected_page_text)
     )

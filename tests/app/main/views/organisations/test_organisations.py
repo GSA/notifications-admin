@@ -824,7 +824,7 @@ def test_manage_org_users_should_show_live_search_if_more_than_7_users(
     )
     assert len(page.select('.user-list-item')) == number_of_users
 
-    textbox = page.select_one('[data-module=autofocus] .govuk-input')
+    textbox = page.select_one('[data-module=autofocus] .usa-input')
     assert 'value' not in textbox
     assert textbox['name'] == 'search'
     # data-module=autofocus is set on a containing element so it
@@ -832,7 +832,7 @@ def test_manage_org_users_should_show_live_search_if_more_than_7_users(
     assert 'data-module' not in textbox
     assert not page.select_one('[data-force-focus]')
     assert textbox['class'] == [
-        'govuk-input', 'govuk-!-width-full',
+        'usa-input', 'govuk-!-width-full',
     ]
     assert normalize_spaces(
         page.select_one('label[for=search]').text

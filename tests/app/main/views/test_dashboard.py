@@ -746,9 +746,9 @@ def test_correct_font_size_for_big_numbers(
     )
 
     assert (
-        len(page.select_one('[data-key=totals]').select('.govuk-grid-column-one-half'))
+        len(page.select_one('[data-key=totals]').select('.grid-col-6'))
     ) == (
-        len(page.select_one('[data-key=usage]').select('.govuk-grid-column-one-half'))
+        len(page.select_one('[data-key=usage]').select('.grid-col-6'))
     ) == (
         len(page.select('.big-number-with-status .big-number-smaller'))
     ) == 2

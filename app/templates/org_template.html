@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main %}
-  <div class="govuk-width-container">
+  <div class="grid-container">
     <div class="navigation-service">
       {% if current_user.platform_admin %}
         <a href="{{ url_for('.organisations') }}" class="govuk-link govuk-link--no-visited-state navigation-organisation-link">Organizations</a>

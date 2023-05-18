@@ -63,3 +63,8 @@ p,
 .large-number {
    font-size: size("body", 16);
 }
+
+..big-number-with-status .big-number,
+.big-number-with-status .big-number-smaller {
+   background-color: $theme-color-primary;
+}

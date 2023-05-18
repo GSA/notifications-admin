@@ -7,20 +7,20 @@
 {% endblock %}
 
 {% block main %}
-  <div class="govuk-width-container">
+  <div class="grid-container">
     {% include "service_navigation.html" %}
-    <div class="govuk-grid-row govuk-!-padding-bottom-12">
+    <div class="grid-row">
       {% if help %}
-        <div class="govuk-grid-column-one-third">
+        <div class="grid-col-3">
       {% else %}
-        <div class="govuk-grid-column-one-quarter">
+        <div class="grid-col-3">
       {% endif %}
           {% include "main_nav.html" %}
         </div>
       {% if help %}
-        <div class="govuk-grid-column-two-thirds">
+        <div class="grid-col-8">
       {% else %}
-        <div class="govuk-grid-column-three-quarters">
+        <div class="grid-col-9 padding-left-4 sub-content">
       {% endif %}
         {% block beforeContent %}
           {% block backLink %}{% endblock %}
