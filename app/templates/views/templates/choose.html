@@ -34,10 +34,13 @@
 
     <div class="govuk-grid-row">
       <div class="{% if current_user.has_permissions('manage_templates') %} govuk-grid-column-five-sixths {% else %} govuk-grid-column-full {% endif %}">
-        <p>
-          <br>
-          🚨 Every message starts with a template. To send, choose or create a template.
-        </p>
+        <div class="usa-alert usa-alert--info usa-alert--slim margin-y-5">
+          <div class="usa-alert__body">
+            <p class="usa-alert__text">
+              Every message starts with a template. To send, choose or create a template.
+            </p>
+          </div>
+        </div>
         {{ folder_path(
           folders=template_folder_path,
           service_id=current_service.id,

@@ -49,7 +49,7 @@ h1 {
 
    h2:not(.get-started-list__heading, .usa-process-list__heading),
    h3 {
-      margin-top: units(5) !important;
+      margin-top: units(5);
       margin-bottom: units(2) !important;
    }
 }
@@ -57,14 +57,35 @@ h1 {
 p,
 .list li {
    font-family: family("sans");
-   font-size: size("body", 7);
+   // font-size: size("body", 7);
 }
 
 .large-number {
    font-size: size("body", 16);
 }
 
-..big-number-with-status .big-number,
+.big-number-with-status .big-number,
 .big-number-with-status .big-number-smaller {
-   background-color: $theme-color-primary;
+   @include u-bg("primary");
 }
+
+.big-number-with-status .big-number-status,
+.big-number-with-status .big-number-status-failing {
+   @include u-bg("green-cool-40v");
+}
+
+.show-more-no-border:focus,
+.show-more:focus {
+   box-shadow: none;
+}
+
+.govuk-checkboxes__label::after {
+   top: 13px;
+   left: 9px;
+   width: 22px;
+   height: 11px;
+}
+
+// .govuk-checkboxes__input:focus + .govuk-checkboxes__label::before {
+//    box-shadow: 0 0 0 3px color("primary");
+// }

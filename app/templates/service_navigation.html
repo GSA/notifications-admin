@@ -7,7 +7,7 @@
   </div>
 {% endmacro %}
 
-<div class="navigation-service margin-top-5 display-flex flex-align-center flex-justify">
+<div class="navigation-service margin-top-2 display-flex flex-align-end flex-justify">
   {% if current_service.organisation_id %}
     {% if current_user.platform_admin or
       (current_user.belongs_to_organisation(current_service.organisation_id) and current_service.live) %}
@@ -15,5 +15,5 @@
     {% endif %}
   {% endif %}
   {{ navigation_service_name(current_service) }}
-  <a href="{{ url_for('main.choose_account') }}" class="usa-link">Switch service</a>
+  <a href="{{ url_for('main.choose_account') }}" class="usa-link margin-bottom-2">Switch service</a>
 </div>

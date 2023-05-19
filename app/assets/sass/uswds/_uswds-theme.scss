@@ -8,6 +8,5 @@ in the form $setting: value,
 */
 
 @use "uswds-core" with (
-   $theme-font-type-sans: "public-sans",
-   $theme-show-notifications: false
+    $theme-show-notifications: false
 );

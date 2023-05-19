@@ -44,8 +44,8 @@ function templatesAndFoldersCheckboxes (hierarchy) {
 
     result += `
       <div class="govuk-checkboxes__item template-list-item template-list-item-with-checkbox template-list-item-without-ancestors">
-        <input class="govuk-checkboxes__input" id="templates-or-folder-${idx}" name="templates_and_folders" type="checkbox" value="templates-or-folder-${idx}">
-        <label class="govuk-checkboxes__label template-list-item-label" for="templates-or-folder-${idx}">
+        <input class="usa-checkbox__input" id="templates-or-folder-${idx}" name="templates_and_folders" type="checkbox" value="templates-or-folder-${idx}">
+        <label class="usa-checkbox__label template-list-item-label margin-top-05" for="templates-or-folder-${idx}">
           <span class="govuk-visually-hidden">${node.label}</span>
         </label>
         <a href="/services/6658542f-0cad-491f-bec8-ab8457700ead/templates/all/folders/3d057d9a-51fc-45ea-8b63-0003206350a6" class="govuk-link govuk-link--no-visited-state template-list-${node.type === 'folder' ? 'folder' : 'template'}">
