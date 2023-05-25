@@ -398,7 +398,7 @@ def test_validation_of_gps_creating_organisations(
     assert expected_error in page.select_one('.govuk-error-message, .error-message').text
 
 
-@pytest.mark.skip(reason='Update for TTS')
+@pytest.mark.g(reason='Update for TTS')
 def test_nhs_local_assigns_to_selected_organisation(
     client_request,
     mocker,

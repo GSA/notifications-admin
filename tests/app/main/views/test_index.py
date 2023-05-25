@@ -239,14 +239,13 @@ def test_css_is_served_from_correct_path(client_request):
         ][index])
 
 
-@pytest.mark.skip(reason="Update for TTS")
 def test_resources_that_use_asset_path_variable_have_correct_path(client_request):
 
     page = client_request.get('main.documentation')  # easy static page
 
     logo_svg_fallback = page.select_one('.govuk-header__logotype-fallback-image')
 
-    assert logo_svg_fallback['src'].startswith('https://static.example.com/images/govuk-logotype.png')
+    assert logo_svg_fallback['src'].startswith('https://static.example.com/images/email-template/us-flag.png')
 
 
 @pytest.mark.parametrize('extra_args, email_branding_retrieved', (

@@ -6,7 +6,6 @@ from notifications_utils.clients.zendesk.zendesk_client import (
     NotifySupportTicket,
 )
 
-from app.utils.branding import NHS_EMAIL_BRANDING_ID
 from tests import sample_uuid
 from tests.conftest import ORGANISATION_ID, SERVICE_ONE_ID, normalize_spaces
 
@@ -77,7 +76,6 @@ def test_email_branding_request_page_shows_branding_if_set(
     assert page.find('iframe')['src'] == url_for('main.email_template', branding_style='some-random-branding')
 
 
-@pytest.mark.skip(reason='Update for TTS')
 def test_email_branding_request_page_back_link(
     client_request,
 ):
@@ -106,20 +104,12 @@ def test_email_branding_request_page_back_link(
     ),
     (
         {
-            'options': 'organisation',
-        },
-        'federal',
-        'main.email_branding_organisation',
-    ),
-    (
-        {
             'options': 'something_else',
         },
         'federal',
         'main.email_branding_something_else',
     ),
 ))
-@pytest.mark.skip(reason='Update for TTS')
 def test_email_branding_request_submit(
     client_request,
     service_one,
@@ -151,7 +141,6 @@ def test_email_branding_request_submit(
     )
 
 
-@pytest.mark.skip(reason='Update for TTS')
 def test_email_branding_request_submit_when_no_radio_button_is_selected(
     client_request,
     service_one,
@@ -170,9 +159,7 @@ def test_email_branding_request_submit_when_no_radio_button_is_selected(
 
 @pytest.mark.parametrize('endpoint, expected_heading', [
     ('main.email_branding_govuk_and_org', 'Before you request new branding'),
-    ('main.email_branding_organisation', 'When you request new branding'),
 ])
-@pytest.mark.skip(reason='Update for TTS')
 def test_email_branding_description_pages_for_org_branding(
     client_request,
     mocker,
@@ -250,7 +237,6 @@ def test_email_branding_something_else_page(client_request, service_one):
     )
 
 
-@pytest.mark.skip(reason='Update for TTS')
 def test_get_email_branding_something_else_page_is_only_option(client_request, service_one):
     # should only have a "something else" option
     # so back button goes back to settings page
@@ -268,7 +254,6 @@ def test_get_email_branding_something_else_page_is_only_option(client_request, s
 @pytest.mark.parametrize('endpoint', [
     ('main.email_branding_govuk'),
     ('main.email_branding_govuk_and_org'),
-    # ('main.email_branding_nhs'),
     ('main.email_branding_organisation'),
 ])
 def test_email_branding_pages_give_404_if_selected_branding_not_allowed(
@@ -284,7 +269,6 @@ def test_email_branding_pages_give_404_if_selected_branding_not_allowed(
     )
 
 
-@pytest.mark.skip(reason='Update for TTS')
 def test_email_branding_govuk_submit(
     mocker,
     client_request,
@@ -380,34 +364,6 @@ def test_email_branding_govuk_and_org_submit(
 
 
 @pytest.mark.skip(reason='Update for TTS')
-def test_email_branding_nhs_submit(
-    mocker,
-    client_request,
-    service_one,
-    organisation_one,
-    no_reply_to_email_addresses,
-    mock_get_email_branding,
-    single_sms_sender,
-    mock_update_service,
-):
-    service_one['email_branding'] = sample_uuid()
-    service_one['organisation_type'] = 'nhs_local'
-
-    page = client_request.post(
-        '.email_branding_nhs',
-        service_id=SERVICE_ONE_ID,
-        _follow_redirects=True,
-    )
-
-    mock_update_service.assert_called_once_with(
-        SERVICE_ONE_ID,
-        email_branding=NHS_EMAIL_BRANDING_ID,
-    )
-    assert page.h1.text == 'Settings'
-    assert normalize_spaces(page.select_one('.banner-default').text) == 'You’ve updated your email branding'
-
-
-@pytest.mark.skip(reason='Update for TTS')
 def test_email_branding_organisation_submit(
     mocker,
     client_request,
@@ -466,7 +422,6 @@ def test_email_branding_organisation_submit(
     )
 
 
-@pytest.mark.skip(reason='Update for TTS')
 def test_email_branding_something_else_submit(
     client_request,
     mocker,
@@ -518,7 +473,6 @@ def test_email_branding_something_else_submit(
     )
 
 
-@pytest.mark.skip(reason='Update for TTS')
 def test_email_branding_something_else_submit_shows_error_if_textbox_is_empty(
     client_request,
 ):
