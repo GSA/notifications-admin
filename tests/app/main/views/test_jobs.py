@@ -252,12 +252,11 @@ def test_should_show_job_with_sending_limit_exceeded_status(
        'No messages to show yet…'
     )),
     # Created a while ago, started just within the last 24h
-    # TODO -- should pass, tech debt due to timezone changes, re-evaluate after UTC changes
+    # TODO -- fails locally, should pass, tech debt due to timezone changes, re-evaluate after UTC changes
     pytest.param(
         datetime(2020, 1, 1, 0, 0, 0),
         datetime(2020, 1, 9, 6, 0, 1),
         ('No messages to show yet…'),
-        marks=pytest.mark.xfail(raises=AssertionError),
     ),
     # Created a while ago, started exactly 24h ago
     # ---
