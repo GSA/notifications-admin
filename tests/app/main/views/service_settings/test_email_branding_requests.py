@@ -11,15 +11,10 @@ from tests.conftest import ORGANISATION_ID, SERVICE_ONE_ID, normalize_spaces
 
 
 @pytest.mark.parametrize('organisation_type, expected_options', (
-    ('nhs_central', [
-        ('nhs', 'NHS'),
-        ('something_else', 'Something else'),
-    ]),
     ('other', [
         ('something_else', 'Something else'),
-    ])
+    ]),
 ))
-@pytest.mark.skip(reason='Update for TTS')
 def test_email_branding_request_page_when_no_branding_is_set(
     service_one,
     client_request,

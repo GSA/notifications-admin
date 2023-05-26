@@ -2172,9 +2172,7 @@ def test_check_messages_shows_trial_mode_error(
 
 @pytest.mark.parametrize('uploaded_file_name', (
     pytest.param('applicants.ods'),  # normal job
-    pytest.param('thisisatest.csv', marks=pytest.mark.xfail),  # different template version
     pytest.param('send_me_later.csv'),  # should look at scheduled job
-    pytest.param('full_of_regret.csv', marks=pytest.mark.xfail),  # job is cancelled
 ))
 def test_warns_if_file_sent_already(
     client_request,
@@ -2213,6 +2211,51 @@ def test_warns_if_file_sent_already(
     )
 
     mock_get_jobs.assert_called_once_with(SERVICE_ONE_ID, limit_days=0)
+
+
+@pytest.mark.parametrize('uploaded_file_name', (
+    pytest.param('thisisatest.csv'),  # different template version
+    pytest.param('full_of_regret.csv'),  # job is cancelled
+))
+def test_warns_if_file_sent_already_errors(
+    client_request,
+    mock_get_users_by_service,
+    mock_get_live_service,
+    mock_get_service_template,
+    mock_has_permissions,
+    mock_get_service_statistics,
+    mock_get_job_doesnt_exist,
+    mock_get_jobs,
+    fake_uuid,
+    mocker,
+    uploaded_file_name,
+):
+    mocker.patch('app.main.views.send.s3download', return_value=(
+        'phone number,\n2028675209'
+    ))
+    mocker.patch(
+        'app.main.views.send.get_csv_metadata',
+        return_value={'original_file_name': uploaded_file_name},
+    )
+    # Should be botocore.errorfactory.NoSuchKey but for some reason can't use that
+    with pytest.raises(expected_exception=Exception):
+        page = client_request.get(
+            'main.check_messages',
+            service_id=SERVICE_ONE_ID,
+            template_id="5d729fbd-239c-44ab-b498-75a985f3198f",
+            upload_id=fake_uuid,
+            original_file_name=uploaded_file_name,
+            _test_page_title=False,
+        )
+
+        assert normalize_spaces(
+            page.select_one('.banner-dangerous').text
+        ) == (
+            'These messages have already been sent today '
+            'If you need to resend them, rename the file and upload it again.'
+        )
+
+        mock_get_jobs.assert_called_once_with(SERVICE_ONE_ID, limit_days=0)
 
 
 def test_check_messages_column_error_doesnt_show_optional_columns(

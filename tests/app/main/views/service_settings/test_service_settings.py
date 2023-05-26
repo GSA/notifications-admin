@@ -619,8 +619,6 @@ def test_should_check_if_estimated_volumes_provided(
     'reply_to_email_addresses,'
     'expected_reply_to_checklist_item'
 ), [
-    pytest.param(None, 0, [], '', marks=pytest.mark.xfail(raises=IndexError)),
-    pytest.param(0, 0, [], '', marks=pytest.mark.xfail(raises=IndexError)),
     (None, 1, [], 'Add a reply-to email address Not completed'),
     (None, 1, [{}], 'Add a reply-to email address Completed'),
     (1, 1, [], 'Add a reply-to email address Not completed'),
@@ -672,6 +670,59 @@ def test_should_check_for_reply_to_on_go_live(
 
     if count_of_email_templates:
         mock_get_reply_to_email_addresses.assert_called_once_with(SERVICE_ONE_ID)
+
+
+@pytest.mark.parametrize((
+    'volume_email,'
+    'count_of_email_templates,'
+    'reply_to_email_addresses,'
+    'expected_reply_to_checklist_item'
+), [
+    (None, 0, [], ''),
+    (0, 0, [], ''),
+])
+def test_should_check_for_reply_to_on_go_live_index_error(
+    client_request,
+    mocker,
+    service_one,
+    fake_uuid,
+    single_sms_sender,
+    volume_email,
+    count_of_email_templates,
+    reply_to_email_addresses,
+    expected_reply_to_checklist_item,
+    mock_get_invites_for_service,
+    mock_get_users_by_service,
+):
+    mocker.patch(
+        'app.service_api_client.get_service_templates',
+        return_value={'data': [
+            create_template(template_type='email')
+            for _ in range(0, count_of_email_templates)
+        ]}
+    )
+
+    mocker.patch(
+        'app.main.views.service_settings.service_api_client.get_reply_to_email_addresses',
+        return_value=reply_to_email_addresses
+    )
+
+    for channel, volume in (('email', volume_email), ('sms', 0)):
+        mocker.patch(
+            'app.models.service.Service.volume_{}'.format(channel),
+            create=True,
+            new_callable=PropertyMock,
+            return_value=volume,
+        )
+
+    with pytest.raises(expected_exception=IndexError):
+        page = client_request.get(
+            'main.request_to_go_live', service_id=SERVICE_ONE_ID
+        )
+        assert page.h1.text == 'Before you request to go live'
+
+        checklist_items = page.select('.task-list .task-list-item')
+        assert normalize_spaces(checklist_items[3].text) == expected_reply_to_checklist_item
 
 
 @pytest.mark.parametrize((
@@ -835,55 +886,49 @@ def test_request_to_go_live_redirects_if_service_already_live(
     'sms_senders,'
     'expected_sms_sender_checklist_item'
 ), [
-    pytest.param(
+    (
         0,
         'state',
         0,
         [],
         '',
-        marks=pytest.mark.xfail(raises=IndexError)
     ),
-    pytest.param(
+    (
         None,
         'state',
         0,
         [{'is_default': True, 'sms_sender': 'GOVUK'}],
         '',
-        marks=pytest.mark.xfail(raises=IndexError)
     ),
-    pytest.param(
+    (
         1,
         'federal',
         99,
         [{'is_default': True, 'sms_sender': 'GOVUK'}],
         '',
-        marks=pytest.mark.xfail(raises=IndexError)
     ),
-    pytest.param(
+    (
         None,
         'federal',
         99,
         [{'is_default': True, 'sms_sender': 'GOVUK'}],
         '',
-        marks=pytest.mark.xfail(raises=IndexError)
     ),
-    pytest.param(
+    (
         1,
         'federal',
         99,
         [{'is_default': True, 'sms_sender': 'GOVUK'}],
         '',
-        marks=pytest.mark.xfail(raises=IndexError)
     ),
-    pytest.param(
+    (
         1,
         'state',
         1,
         [],
         'Change your text message sender name Not completed',
-        marks=pytest.mark.xfail(raises=IndexError),
     ),
-    pytest.param(
+    (
         1,
         'state',
         1,
@@ -892,7 +937,6 @@ def test_request_to_go_live_redirects_if_service_already_live(
             {'is_default': True, 'sms_sender': 'KUVOG'},
         ],
         'Change your text message sender name Completed',
-        marks=pytest.mark.xfail(raises=IndexError),
     ),
 ])
 def test_should_check_for_sms_sender_on_go_live(
@@ -935,15 +979,16 @@ def test_should_check_for_sms_sender_on_go_live(
             return_value=volume,
         )
 
-    page = client_request.get(
-        'main.request_to_go_live', service_id=SERVICE_ONE_ID
-    )
-    assert page.h1.text == 'Before you request to go live'
+    with pytest.raises(expected_exception=IndexError):
+        page = client_request.get(
+            'main.request_to_go_live', service_id=SERVICE_ONE_ID
+        )
+        assert page.h1.text == 'Before you request to go live'
 
-    checklist_items = page.select('.task-list .task-list-item')
-    assert normalize_spaces(checklist_items[3].text) == expected_sms_sender_checklist_item
+        checklist_items = page.select('.task-list .task-list-item')
+        assert normalize_spaces(checklist_items[3].text) == expected_sms_sender_checklist_item
 
-    mock_get_sms_senders.assert_called_once_with(SERVICE_ONE_ID)
+        mock_get_sms_senders.assert_called_once_with(SERVICE_ONE_ID)
 
 
 def test_non_gov_user_is_told_they_cant_go_live(
@@ -2899,7 +2944,6 @@ def test_should_show_page_to_set_sms_allowance(
     ('0', 0),
     ('1', 1),
     ('250000', 250000),
-    pytest.param('foo', 'foo', marks=pytest.mark.xfail),
 ])
 def test_should_set_sms_allowance(
     client_request,
@@ -2927,6 +2971,34 @@ def test_should_set_sms_allowance(
         SERVICE_ONE_ID,
         expected_api_argument
     )
+
+
+@freeze_time("2017-04-01 11:09:00.061258")
+@pytest.mark.parametrize('given_allowance, expected_api_argument', [
+    pytest.param('foo', 'foo'),
+])
+def test_should_set_sms_allowance_fails(
+    client_request,
+    platform_admin_user,
+    given_allowance,
+    expected_api_argument,
+    mock_get_free_sms_fragment_limit,
+    mock_create_or_update_free_sms_fragment_limit,
+):
+
+    with pytest.raises(expected_exception=AssertionError):
+        client_request.login(platform_admin_user)
+        client_request.post(
+            'main.set_free_sms_allowance',
+            service_id=SERVICE_ONE_ID,
+            _data={
+                'free_sms_allowance': given_allowance,
+            },
+            _expected_redirect=url_for(
+                'main.service_settings',
+                service_id=SERVICE_ONE_ID,
+            ),
+        )
 
 
 def test_should_show_page_to_set_message_limit(
@@ -3147,8 +3219,6 @@ def test_switch_service_enable_international_sms(
     [create_platform_admin_user(), True],
     [create_platform_admin_user(), False],
     [create_active_user_with_permissions(), True],
-    pytest.param(create_active_user_with_permissions(), False, marks=pytest.mark.xfail),
-    pytest.param(create_active_user_no_settings_permission(), True, marks=pytest.mark.xfail),
 ))
 def test_archive_service_after_confirm(
     client_request,
@@ -3187,11 +3257,50 @@ def test_archive_service_after_confirm(
 
 
 @pytest.mark.parametrize('user, is_trial_service', (
+    pytest.param(create_active_user_with_permissions(), False),
+    pytest.param(create_active_user_no_settings_permission(), True),
+))
+def test_archive_service_after_confirm_error(
+    client_request,
+    mocker,
+    mock_get_organisations,
+    mock_get_service_and_organisation_counts,
+    mock_get_organisations_and_services_for_user,
+    mock_get_users_by_service,
+    mock_get_service_templates,
+    service_one,
+    user,
+    is_trial_service,
+):
+    service_one['restricted'] = is_trial_service
+    mocker.patch('app.service_api_client.post')
+    mocker.patch('app.main.views.service_settings.create_archive_service_event')
+    mocker.patch('app.notify_client.service_api_client.redis_client.delete')
+    mocker.patch('app.notify_client.service_api_client.redis_client.delete_by_pattern')
+
+    with pytest.raises(expected_exception=AssertionError):
+        client_request.login(user)
+        client_request.post(
+            'main.archive_service',
+            service_id=SERVICE_ONE_ID,
+            _follow_redirects=True,
+        )
+
+        # mock_api.assert_called_once_with('/service/{}/archive'.format(SERVICE_ONE_ID), data=None)
+        # mock_event.assert_called_once_with(service_id=SERVICE_ONE_ID, archived_by_id=user['id'])
+
+        # assert normalize_spaces(page.select_one('h1').text) == 'Choose service'
+        # assert normalize_spaces(page.select_one('.banner-default-with-tick').text) == (
+        #     '‘service one’ was deleted'
+        # )
+        # The one user which is part of this service has the sample_uuid as it's user ID
+        # assert call(f"user-{sample_uuid()}") in redis_delete_mock.call_args_list
+
+
+@pytest.mark.parametrize('user, is_trial_service', (
     [create_platform_admin_user(), True],
     [create_platform_admin_user(), False],
     [create_active_user_with_permissions(), True],
-    pytest.param(create_active_user_with_permissions(), False, marks=pytest.mark.xfail),
-    pytest.param(create_active_user_no_settings_permission(), True, marks=pytest.mark.xfail),
 ))
 def test_archive_service_prompts_user(
     client_request,
@@ -3230,6 +3339,48 @@ def test_archive_service_prompts_user(
     assert mock_api.called is False
 
 
+@pytest.mark.parametrize('user, is_trial_service', (
+    pytest.param(create_active_user_with_permissions(), False),
+    pytest.param(create_active_user_no_settings_permission(), True),
+))
+def test_archive_service_prompts_user_error(
+    client_request,
+    mocker,
+    single_reply_to_email_address,
+    service_one,
+    single_sms_sender,
+    mock_get_service_settings_page_common,
+    user,
+    is_trial_service,
+):
+    mocker.patch('app.service_api_client.post')
+    service_one['restricted'] = is_trial_service
+    client_request.login(user)
+
+    with pytest.raises(expected_exception=AssertionError):
+        client_request.get(
+            'main.archive_service',
+            service_id=SERVICE_ONE_ID
+        )
+        # delete_link = settings_page.select('.page-footer-link a')[0]
+        # assert normalize_spaces(delete_link.text) == 'Delete this service'
+        # assert delete_link['href'] == url_for(
+        #     'main.archive_service',
+        #     service_id=SERVICE_ONE_ID,
+        # )
+        #
+        # delete_page = client_request.get(
+        #     'main.archive_service',
+        #     service_id=SERVICE_ONE_ID,
+        # )
+        # assert normalize_spaces(delete_page.select_one('.banner-dangerous').text) == (
+        #     'Are you sure you want to delete ‘service one’? '
+        #     'There’s no way to undo this. '
+        #     'Yes, delete'
+        # )
+        # assert mock_api.called is False
+
+
 def test_cant_archive_inactive_service(
     client_request,
     platform_admin_user,
@@ -3251,7 +3402,6 @@ def test_cant_archive_inactive_service(
 
 @pytest.mark.parametrize('user', (
     create_platform_admin_user(),
-    pytest.param(create_active_user_with_permissions(), marks=pytest.mark.xfail),
 ))
 def test_suspend_service_after_confirm(
     client_request,
@@ -3273,6 +3423,31 @@ def test_suspend_service_after_confirm(
 
     mock_api.assert_called_once_with('/service/{}/suspend'.format(SERVICE_ONE_ID), data=None)
     mock_event.assert_called_once_with(service_id=SERVICE_ONE_ID, suspended_by_id=user['id'])
+
+
+@pytest.mark.parametrize('user', (
+    pytest.param(create_active_user_with_permissions()),
+))
+def test_suspend_service_after_confirm_error(
+    client_request,
+    user,
+    mocker,
+):
+    mocker.patch('app.service_api_client.post')
+    mocker.patch('app.main.views.service_settings.create_suspend_service_event')
+    with pytest.raises(expected_exception=AssertionError):
+        client_request.login(user)
+        client_request.post(
+            'main.suspend_service',
+            service_id=SERVICE_ONE_ID,
+            _expected_redirect=url_for(
+                'main.service_settings',
+                service_id=SERVICE_ONE_ID,
+            ),
+        )
+
+    # mock_api.assert_called_once_with('/service/{}/suspend'.format(SERVICE_ONE_ID), data=None)
+    # mock_event.assert_called_once_with(service_id=SERVICE_ONE_ID, suspended_by_id=user['id'])
 
 
 @pytest.mark.parametrize('user', (

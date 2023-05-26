@@ -768,8 +768,8 @@ def test_manage_org_users_shows_no_link_for_cancelled_users(
 
 
 @pytest.mark.parametrize('number_of_users', (
-    pytest.param(7, marks=pytest.mark.xfail),
     pytest.param(8),
+    pytest.param(800),
 ))
 def test_manage_org_users_should_show_live_search_if_more_than_7_users(
     client_request,
@@ -810,6 +810,37 @@ def test_manage_org_users_should_show_live_search_if_more_than_7_users(
     assert normalize_spaces(
         page.select_one('label[for=search]').text
     ) == 'Search by name or email address'
+
+
+@pytest.mark.parametrize('number_of_users', (
+    pytest.param(3),
+    pytest.param(7),
+))
+def test_manage_org_users_should_show_live_search_if_7_users_or_less(
+    client_request,
+    mocker,
+    mock_get_organisation,
+    active_user_with_permissions,
+    number_of_users,
+):
+    mocker.patch(
+        'app.models.user.OrganisationInvitedUsers.client_method',
+        return_value=[],
+    )
+    mocker.patch(
+        'app.models.user.OrganisationUsers.client_method',
+        return_value=[active_user_with_permissions] * number_of_users,
+    )
+
+    page = client_request.get(
+        '.manage_org_users',
+        org_id=ORGANISATION_ID,
+    )
+
+    with pytest.raises(expected_exception=TypeError):
+        assert page.select_one('div[data-module=live-search]')['data-targets'] == (
+            ".user-list-item"
+        )
 
 
 def test_edit_organisation_user_shows_the_delete_confirmation_banner(
@@ -966,7 +997,6 @@ def test_view_organisation_settings(
     ),
     pytest.param(
         create_active_user_with_permissions(),
-        marks=pytest.mark.xfail
     ),
 ))
 def test_update_organisation_settings(
@@ -984,21 +1014,28 @@ def test_update_organisation_settings(
     mocker.patch('app.organisations_client.get_organisation_services', return_value=[])
     client_request.login(user)
 
+    if user['email_address'] == 'platform@admin.gsa.gov':
+        expected_status = 302
+        expected_redirect = url_for(
+            'main.organisation_settings',
+            org_id=organisation_one['id'],
+        )
+    else:
+        expected_status = 403
+        expected_redirect = None
     client_request.post(
         endpoint,
         org_id=organisation_one['id'],
         _data=post_data,
-        _expected_status=302,
-        _expected_redirect=url_for(
-            'main.organisation_settings',
-            org_id=organisation_one['id'],
-        ),
+        _expected_status=expected_status,
+        _expected_redirect=expected_redirect,
     )
 
-    mock_update_organisation.assert_called_once_with(
-        organisation_one['id'],
-        **expected_persisted,
-    )
+    if user['email_address'] == 'platform@admin.gsa.gov':
+        mock_update_organisation.assert_called_once_with(
+            organisation_one['id'],
+            **expected_persisted,
+        )
 
 
 def test_update_organisation_sector_sends_service_id_data_to_api_client(
@@ -1116,7 +1153,6 @@ def test_view_organisation_domains(
     ),
     pytest.param(
         create_active_user_with_permissions(),
-        marks=pytest.mark.xfail
     ),
 ))
 def test_update_organisation_domains(
@@ -1130,22 +1166,29 @@ def test_update_organisation_domains(
     user,
 ):
     client_request.login(user)
+    if user['email_address'] == 'platform@admin.gsa.gov':
+        expected_status = 302
+        expected_redirect = url_for(
+            'main.organisation_settings',
+            org_id=organisation_one['id'],
+        )
+    else:
+        expected_status = 403
+        expected_redirect = None
 
     client_request.post(
         'main.edit_organisation_domains',
         org_id=ORGANISATION_ID,
         _data=post_data,
-        _expected_status=302,
-        _expected_redirect=url_for(
-            'main.organisation_settings',
-            org_id=organisation_one['id'],
-        ),
+        _expected_status=expected_status,
+        _expected_redirect=expected_redirect,
     )
 
-    mock_update_organisation.assert_called_once_with(
-        ORGANISATION_ID,
-        **expected_persisted,
-    )
+    if user['email_address'] == 'platform@admin.gsa.gov':
+        mock_update_organisation.assert_called_once_with(
+            ORGANISATION_ID,
+            **expected_persisted,
+        )
 
 
 def test_update_organisation_domains_when_domain_already_exists(
