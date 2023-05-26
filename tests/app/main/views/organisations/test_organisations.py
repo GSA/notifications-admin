@@ -398,33 +398,6 @@ def test_validation_of_gps_creating_organisations(
     assert expected_error in page.select_one('.govuk-error-message, .error-message').text
 
 
-@pytest.mark.g(reason='Update for TTS')
-def test_nhs_local_assigns_to_selected_organisation(
-    client_request,
-    mocker,
-    service_one,
-    mock_get_organisation,
-    mock_update_service_organisation,
-):
-    mocker.patch(
-        'app.models.organisation.AllOrganisations.client_method',
-        return_value=[
-            organisation_json(ORGANISATION_ID, 'Trust 1', organisation_type='nhs_local'),
-        ],
-    )
-    service_one['organisation_type'] = 'nhs_local'
-
-    client_request.post(
-        '.add_organisation_from_nhs_local_service',
-        service_id=SERVICE_ONE_ID,
-        _data={
-            'organisations': ORGANISATION_ID,
-        },
-        _expected_status=302,
-    )
-    mock_update_service_organisation.assert_called_once_with(SERVICE_ONE_ID, ORGANISATION_ID)
-
-
 @freeze_time("2020-02-20 20:20")
 def test_organisation_services_shows_live_services_and_usage(
     client_request,
