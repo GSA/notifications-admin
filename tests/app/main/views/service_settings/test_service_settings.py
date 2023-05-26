@@ -3452,7 +3452,7 @@ def test_suspend_service_after_confirm_error(
 
 @pytest.mark.parametrize('user', (
     create_platform_admin_user(),
-    pytest.param(create_active_user_with_permissions(), marks=pytest.mark.xfail),
+    pytest.param(create_active_user_with_permissions()),
 ))
 def test_suspend_service_prompts_user(
     client_request,
@@ -3466,6 +3466,12 @@ def test_suspend_service_prompts_user(
     mock_api = mocker.patch('app.service_api_client.post')
 
     client_request.login(user)
+
+    if user['email_address'] != 'platform@admin.gsa.gov':
+        with pytest.raises(expected_exception=AssertionError):
+            client_request.get('main.suspend_service', service_id=service_one['id'])
+        return
+
     page = client_request.get('main.suspend_service', service_id=service_one['id'])
 
     assert 'This will suspend the service and revoke all api keys. Are you sure you want to suspend this service?' in \
