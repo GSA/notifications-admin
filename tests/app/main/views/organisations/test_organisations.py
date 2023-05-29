@@ -262,64 +262,6 @@ def test_gps_can_create_own_organisations(
     )
 
 
-@pytest.mark.parametrize('organisation_type, organisation, expected_status', (
-    ('nhs_local', None, 200),
-    ('nhs_gp', None, 403),
-    ('central', None, 403),
-    ('nhs_local', organisation_json(organisation_type='nhs_local'), 403),
-))
-@pytest.mark.skip(reason='Update for TTS')
-def test_nhs_local_can_create_own_organisations(
-    client_request,
-    mocker,
-    mock_get_service_organisation,
-    service_one,
-    organisation_type,
-    organisation,
-    expected_status,
-):
-    mocker.patch('app.organisations_client.get_organisation', return_value=organisation)
-    mocker.patch(
-        'app.models.organisation.AllOrganisations.client_method',
-        return_value=[
-            organisation_json('t2', 'Trust 2', organisation_type='nhs_local'),
-            organisation_json('t1', 'Trust 1', organisation_type='nhs_local'),
-            organisation_json('gp1', 'GP 1', organisation_type='nhs_gp'),
-            organisation_json('c1', 'Central 1'),
-        ],
-    )
-    service_one['organisation_type'] = organisation_type
-
-    page = client_request.get(
-        '.add_organisation_from_nhs_local_service',
-        service_id=SERVICE_ONE_ID,
-        _expected_status=expected_status,
-    )
-
-    if expected_status == 403:
-        return
-
-    assert normalize_spaces(page.select_one('main p').text) == (
-        'Which NHS Trust or Clinical Commissioning Group do you work for?'
-    )
-    assert page.select_one('[data-module=live-search]')['data-targets'] == (
-        '.govuk-radios__item'
-    )
-    assert [
-        (
-            normalize_spaces(radio.select_one('label').text),
-            radio.select_one('input')['value']
-        )
-        for radio in page.select('.govuk-radios__item')
-    ] == [
-        ('Trust 1', 't1'),
-        ('Trust 2', 't2'),
-    ]
-    assert normalize_spaces(page.select_one('.js-stick-at-bottom-when-scrolling button').text) == (
-        'Continue'
-    )
-
-
 @pytest.mark.parametrize('data, expected_service_name', (
     (
         {

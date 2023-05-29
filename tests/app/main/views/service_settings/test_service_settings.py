@@ -3500,7 +3500,7 @@ def test_cant_suspend_inactive_service(
 
 @pytest.mark.parametrize('user', (
     create_platform_admin_user(),
-    pytest.param(create_active_user_with_permissions(), marks=pytest.mark.xfail),
+    create_active_user_with_permissions(),
 ))
 def test_resume_service_after_confirm(
     mocker,
@@ -3513,6 +3513,14 @@ def test_resume_service_after_confirm(
     mock_event = mocker.patch('app.main.views.service_settings.create_resume_service_event')
 
     client_request.login(user)
+    if user['email_address'] != "platform@admin.gsa.gov":
+        client_request.post(
+            'main.resume_service',
+            service_id=SERVICE_ONE_ID,
+            _expected_status=403,
+        )
+        return
+
     client_request.post(
         'main.resume_service',
         service_id=SERVICE_ONE_ID,
