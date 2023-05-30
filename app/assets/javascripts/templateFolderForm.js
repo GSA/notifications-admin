@@ -149,7 +149,7 @@
     this.makeButton = (text, opts) => {
       let $btn = $('<a href=""></a>')
                     .html(text)
-                    .addClass('usa-link font-body-sm margin-left-1')
+                    .addClass('usa-link font-body-sm margin-left-1 js-cancel')
                     // isn't set if cancelSelector is undefined
                     .data('target', opts.cancelSelector || undefined)
                     .attr('tabindex', '0')
