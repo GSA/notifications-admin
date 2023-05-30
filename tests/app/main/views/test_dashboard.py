@@ -458,7 +458,7 @@ def test_should_show_recent_templates_on_dashboard(
     mock_template_stats.assert_called_once_with(SERVICE_ONE_ID, limit_days=7)
 
     headers = [header.text.strip() for header in page.find_all('h2') + page.find_all('h1')]
-    assert 'In the last 7 days' in headers
+    assert 'In the last seven days' in headers
 
     table_rows = page.find_all('tbody')[0].find_all('tr')
 

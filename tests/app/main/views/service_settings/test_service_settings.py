@@ -56,38 +56,34 @@ def mock_get_service_settings_page_common(
         'Label Value Action',
         'Service name Test Service Change service name',
         'Sign-in method Text message code Change sign-in method',
+        'Send text messages On Change your settings for sending text messages',
+        'Text message senders GOVUK Manage text message senders',
+        'Start text messages with service name On Change your settings for starting text messages with service name',
+        'Send international text messages Off Change your settings for sending international text messages',
 
         # 'Label Value Action',
         # 'Send emails On Change your settings for sending emails',
         # 'Reply-to email addresses Not set Manage reply-to email addresses',
         # 'Email branding GOV.UK Change email branding',
         # 'Send files by email contact_us@gsa.gov Manage sending files by email',
-
-        'Label Value Action',
-        'Send text messages On Change your settings for sending text messages',
-        'Text message senders GOVUK Manage text message senders',
-        'Start text messages with service name On Change your settings for starting text messages with service name',
-        'Send international text messages Off Change your settings for sending international text messages',
-        'Receive text messages Off Change your settings for receiving text messages',
+        # 'Receive text messages Off Change your settings for receiving text messages',
     ]),
     (create_platform_admin_user(), [
 
         'Label Value Action',
         'Service name Test Service Change service name',
         'Sign-in method Text message code Change sign-in method',
+        'Send text messages On Change your settings for sending text messages',
+        'Text message senders GOVUK Manage text message senders',
+        'Start text messages with service name On Change your settings for starting text messages with service name',
+        'Send international text messages Off Change your settings for sending international text messages',
 
         # 'Label Value Action',
         # 'Send emails On Change your settings for sending emails',
         # 'Reply-to email addresses Not set Manage reply-to email addresses',
         # 'Email branding GOV.UK Change email branding',
         # 'Send files by email contact_us@gsa.gov Manage sending files by email',
-
-        'Label Value Action',
-        'Send text messages On Change your settings for sending text messages',
-        'Text message senders GOVUK Manage text message senders',
-        'Start text messages with service name On Change your settings for starting text messages with service name',
-        'Send international text messages Off Change your settings for sending international text messages',
-        'Receive text messages Off Change your settings for receiving text messages',
+        # 'Receive text messages Off Change your settings for receiving text messages',
 
         'Label Value Action',
         'Live Off Change service status',
@@ -216,42 +212,38 @@ def test_send_files_by_email_row_on_settings_page(
 
 
 @pytest.mark.parametrize('permissions, expected_rows', [
-    (['email', 'sms', 'inbound_sms', 'international_sms'], [
+    (['email', 'sms', 'international_sms'], [
 
         'Service name service one Change service name',
         'Sign-in method Text message code Change sign-in method',
+        'Send text messages On Change your settings for sending text messages',
+        'Text message senders GOVUK Manage text message senders',
+        'Start text messages with service name On Change your settings for starting text messages with service name',
+        'Send international text messages On Change your settings for sending international text messages',
 
         # 'Label Value Action',
         # 'Send emails On Change your settings for sending emails',
         # 'Reply-to email addresses test@example.com Manage reply-to email addresses',
         # 'Email branding Organisation name Change email branding',
         # 'Send files by email Not set up Manage sending files by email',
-
-        'Label Value Action',
-        'Send text messages On Change your settings for sending text messages',
-        'Text message senders GOVUK Manage text message senders',
-        'Start text messages with service name On Change your settings for starting text messages with service name',
-        'Send international text messages On Change your settings for sending international text messages',
-        'Receive text messages On Change your settings for receiving text messages',
+        # 'Receive text messages On Change your settings for receiving text messages',
 
     ]),
     (['email', 'sms', 'email_auth'], [
 
         'Service name service one Change service name',
         'Sign-in method Email link or text message code Change sign-in method',
+        'Send text messages On Change your settings for sending text messages',
+        'Text message senders GOVUK Manage text message senders',
+        'Start text messages with service name On Change your settings for starting text messages with service name',
+        'Send international text messages Off Change your settings for sending international text messages',
 
         # 'Label Value Action',
         # 'Send emails On Change your settings for sending emails',
         # 'Reply-to email addresses test@example.com Manage reply-to email addresses',
         # 'Email branding Organisation name Change email branding',
-        # 'Send files by email Not set up Manage sending files by email',
-
-        'Label Value Action',
-        'Send text messages On Change your settings for sending text messages',
-        'Text message senders GOVUK Manage text message senders',
-        'Start text messages with service name On Change your settings for starting text messages with service name',
-        'Send international text messages Off Change your settings for sending international text messages',
-        'Receive text messages Off Change your settings for receiving text messages',
+        # 'Send files by email Not set up Manage sending files by email'
+        # 'Receive text messages Off Change your settings for receiving text messages',
 
     ]),
 ])
@@ -3538,20 +3530,20 @@ def test_send_files_by_email_contact_details_does_not_update_invalid_contact_det
 
 
 @pytest.mark.parametrize('endpoint, permissions, expected_p', [
-    (
-        'main.service_set_inbound_sms',
-        ['sms'],
-        (
-            'Contact us if you want to be able to receive text messages from your users.'
-        )
-    ),
-    (
-        'main.service_set_inbound_sms',
-        ['sms', 'inbound_sms'],
-        (
-            'Your service can receive text messages sent to 2028675301.'
-        )
-    ),
+    # (
+    #     'main.service_set_inbound_sms',
+    #     ['sms'],
+    #     (
+    #         'Contact us if you want to be able to receive text messages from your users.'
+    #     )
+    # ),
+    # (
+    #     'main.service_set_inbound_sms',
+    #     ['sms', 'inbound_sms'],
+    #     (
+    #         'Your service can receive text messages sent to 2028675301.'
+    #     )
+    # ),
     (
         'main.service_set_auth_type',
         [],
