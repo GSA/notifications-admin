@@ -1,5 +1,14 @@
 # Notify Sprint Goals Log
 
+## Sprint: K (5/24/23)
+
+|             | Goals                                                                                                                              | Impact                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| Engineering | Moving from an ad-hoc "complete must-haves" process to a more strategic, themed progression; examining and implementing a structure for [Architecture Decision Records](https://github.com/GSA/notifications-admin/issues/522); assessing and planning for timezone accommodations in both [back-end](https://github.com/GSA/notifications-api/issues/260) and [UI](https://github.com/GSA/notifications-admin/issues/525)                                                          |   Less context-switching; better documentation and prioritization; a clear strategy and content regarding timezones for users                                   |
+| UX          | Wrap first iteration of [USWDS component migration](https://github.com/GSA/notifications-admin/issues/453); [propose new flows and wireframes](https://github.com/GSA/notifications-admin/issues/455)             | A U.S. government look and feel; easier user navigation          |
+| Content     | [Hone content](https://github.com/GSA/notifications-admin/issues/523) for [U.S. Notify-specific aspects](https://github.com/GSA/notifications-admin/issues/521); finalize [style and terminology docs](https://github.com/GSA/notifications-admin/issues/481) | Clear and applicable documentation and direction in the application |
+| Security    | Respond to any assessment questions and/or needs                                                  | Keep the LATO award timeline as short as possible
+
 ## Sprint: Jabiru (5/11/23)
 
 |             | Goal                                                                                                                              | Impact                                                                                                                                     |
