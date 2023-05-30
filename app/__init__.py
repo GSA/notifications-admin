@@ -311,6 +311,11 @@ def init_app(application):
     def _nav_selected():
         return navigation
 
+    @application.context_processor
+    def _attach_current_remaining_messages():
+        request
+        return {'side_nav_remaining_messages': current_service.message_limit - service_api_client.get_notification_count(service_id=current_service.id)}
+
     @application.before_request
     def record_start_time():
         g.start = monotonic()
@@ -394,6 +399,9 @@ def load_organisation_before_request():
                     else:
                         raise
 
+
+def load_current_daily_messages_per_service():
+    service = request.args.get('service')
 
 def save_service_or_org_after_request(response):
     # Only save the current session if the request is 200

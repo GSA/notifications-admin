@@ -27,4 +27,10 @@
   {% endif %}
   </ul>
 </nav>
+    <div>
+        <p>Messages Left / Daily Limit</p>
+        <ul>
+            <li>{{ side_nav_remaining_messages }} / {{ current_service.message_limit }}</li>
+        </ul>
+    </div>
 {% endif %}
