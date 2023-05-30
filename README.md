@@ -38,6 +38,8 @@ The [Notify API](https://github.com/GSA/notifications-api) provides the UI's bac
 
 1. Install [pipenv](https://pipenv.pypa.io/en/latest/)
 
+1. Install [nvm (Node Version Manager)](https://github.com/nvm-sh/nvm#installing-and-updating)
+
 1. Install Python and Node dependencies
 
    `make bootstrap`
