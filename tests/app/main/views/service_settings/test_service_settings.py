@@ -61,12 +61,6 @@ def mock_get_service_settings_page_common(
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
 
-        # 'Label Value Action',
-        # 'Send emails On Change your settings for sending emails',
-        # 'Reply-to email addresses Not set Manage reply-to email addresses',
-        # 'Email branding GOV.UK Change email branding',
-        # 'Send files by email contact_us@gsa.gov Manage sending files by email',
-        # 'Receive text messages Off Change your settings for receiving text messages',
     ]),
     (create_platform_admin_user(), [
 
@@ -78,12 +72,6 @@ def mock_get_service_settings_page_common(
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
 
-        # 'Label Value Action',
-        # 'Send emails On Change your settings for sending emails',
-        # 'Reply-to email addresses Not set Manage reply-to email addresses',
-        # 'Email branding GOV.UK Change email branding',
-        # 'Send files by email contact_us@gsa.gov Manage sending files by email',
-        # 'Receive text messages Off Change your settings for receiving text messages',
 
         'Label Value Action',
         'Live Off Change service status',
@@ -221,12 +209,6 @@ def test_send_files_by_email_row_on_settings_page(
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages On Change your settings for sending international text messages',
 
-        # 'Label Value Action',
-        # 'Send emails On Change your settings for sending emails',
-        # 'Reply-to email addresses test@example.com Manage reply-to email addresses',
-        # 'Email branding Organisation name Change email branding',
-        # 'Send files by email Not set up Manage sending files by email',
-        # 'Receive text messages On Change your settings for receiving text messages',
 
     ]),
     (['email', 'sms', 'email_auth'], [
@@ -238,12 +220,6 @@ def test_send_files_by_email_row_on_settings_page(
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
 
-        # 'Label Value Action',
-        # 'Send emails On Change your settings for sending emails',
-        # 'Reply-to email addresses test@example.com Manage reply-to email addresses',
-        # 'Email branding Organisation name Change email branding',
-        # 'Send files by email Not set up Manage sending files by email'
-        # 'Receive text messages Off Change your settings for receiving text messages',
 
     ]),
 ])
@@ -1747,8 +1723,6 @@ def test_and_more_hint_appears_on_settings_with_more_than_just_a_single_sender(
         "Reply-to email addresses test@example.com …and 2 more Manage reply-to email addresses"
     assert get_row(page, 'Text message senders') == \
         "Text message senders Example …and 2 more Manage text message senders"
-    # assert get_row(page, 'Sender addresses') == \
-    #     "Sender addresses 1 Example Street …and 2 more Manage sender addresses"
 
 
 @pytest.mark.parametrize('sender_list_page, index, expected_output', [
@@ -3286,16 +3260,6 @@ def test_archive_service_after_confirm_error(
             _follow_redirects=True,
         )
 
-        # mock_api.assert_called_once_with('/service/{}/archive'.format(SERVICE_ONE_ID), data=None)
-        # mock_event.assert_called_once_with(service_id=SERVICE_ONE_ID, archived_by_id=user['id'])
-
-        # assert normalize_spaces(page.select_one('h1').text) == 'Choose service'
-        # assert normalize_spaces(page.select_one('.banner-default-with-tick').text) == (
-        #     '‘service one’ was deleted'
-        # )
-        # The one user which is part of this service has the sample_uuid as it's user ID
-        # assert call(f"user-{sample_uuid()}") in redis_delete_mock.call_args_list
-
 
 @pytest.mark.parametrize('user, is_trial_service', (
     [create_platform_admin_user(), True],
@@ -3362,23 +3326,6 @@ def test_archive_service_prompts_user_error(
             'main.archive_service',
             service_id=SERVICE_ONE_ID
         )
-        # delete_link = settings_page.select('.page-footer-link a')[0]
-        # assert normalize_spaces(delete_link.text) == 'Delete this service'
-        # assert delete_link['href'] == url_for(
-        #     'main.archive_service',
-        #     service_id=SERVICE_ONE_ID,
-        # )
-        #
-        # delete_page = client_request.get(
-        #     'main.archive_service',
-        #     service_id=SERVICE_ONE_ID,
-        # )
-        # assert normalize_spaces(delete_page.select_one('.banner-dangerous').text) == (
-        #     'Are you sure you want to delete ‘service one’? '
-        #     'There’s no way to undo this. '
-        #     'Yes, delete'
-        # )
-        # assert mock_api.called is False
 
 
 def test_cant_archive_inactive_service(
@@ -3445,9 +3392,6 @@ def test_suspend_service_after_confirm_error(
                 service_id=SERVICE_ONE_ID,
             ),
         )
-
-    # mock_api.assert_called_once_with('/service/{}/suspend'.format(SERVICE_ONE_ID), data=None)
-    # mock_event.assert_called_once_with(service_id=SERVICE_ONE_ID, suspended_by_id=user['id'])
 
 
 @pytest.mark.parametrize('user', (
@@ -3719,20 +3663,6 @@ def test_send_files_by_email_contact_details_does_not_update_invalid_contact_det
 
 
 @pytest.mark.parametrize('endpoint, permissions, expected_p', [
-    # (
-    #     'main.service_set_inbound_sms',
-    #     ['sms'],
-    #     (
-    #         'Contact us if you want to be able to receive text messages from your users.'
-    #     )
-    # ),
-    # (
-    #     'main.service_set_inbound_sms',
-    #     ['sms', 'inbound_sms'],
-    #     (
-    #         'Your service can receive text messages sent to 2028675301.'
-    #     )
-    # ),
     (
         'main.service_set_auth_type',
         [],
@@ -3960,7 +3890,6 @@ def test_update_service_organisation_does_not_update_if_same_value(
 @pytest.mark.skip(reason="Email currently deactivated")
 @pytest.mark.parametrize('single_branding_option, expected_href', [
     (True, f'/services/{SERVICE_ONE_ID}/service-settings/email-branding/something-else'),
-    # (False, f'/services/{SERVICE_ONE_ID}/service-settings/email-branding'),
 ])
 def test_service_settings_links_to_branding_request_page_for_emails(
     service_one,
@@ -3974,10 +3903,6 @@ def test_service_settings_links_to_branding_request_page_for_emails(
         # should only have a "something else" option
         # so we go straight to that form
         service_one['organisation_type'] = 'other'
-    # else:
-    #     # expect to have a "NHS" option as well as the
-    #     # fallback one, so ask user to choose
-    #     service_one['organisation_type'] = 'nhs_central'
 
     page = client_request.get(
         '.service_settings', service_id=SERVICE_ONE_ID
