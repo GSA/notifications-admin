@@ -52,11 +52,6 @@
           "active": header_navigation.is_selected('support')
         },
         {
-          "href": url_for('main.documentation'),
-          "text": "Documentation",
-          "active": header_navigation.is_selected('documentation')
-        },
-        {
           "href": url_for('main.user_profile'),
           "text": current_user.name,
           "active": header_navigation.is_selected('user-profile')
@@ -77,11 +72,6 @@
           "href": url_for('main.support'),
           "text": "Support",
           "active": header_navigation.is_selected('support')
-        },
-        {
-          "href": url_for('main.documentation'),
-          "text": "Documentation",
-          "active": header_navigation.is_selected('documentation')
         },
         {
           "href": url_for('main.user_profile'),
@@ -112,11 +102,6 @@
         "active": header_navigation.is_selected('pricing')
       },
       {
-        "href": url_for('main.documentation'),
-        "text": "Documentation",
-        "active": header_navigation.is_selected('documentation')
-      },
-      {
         "href": url_for('main.sign_in'),
         "text": "Sign in",
         "active": header_navigation.is_selected('sign-in')
@@ -137,9 +122,9 @@
   
 
   {% if current_service and current_service.research_mode %}
-    {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="govuk-footer__link">Technology Transformation Service</a><span id="research-mode" class="research-mode">research mode</span>' %}
+    {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="govuk-footer__link">Technology Transformation Services</a><span id="research-mode" class="research-mode">research mode</span>' %}
   {% else %}
-    {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="govuk-footer__link">Technology Transformation Service</a>' %}
+    {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="govuk-footer__link">Technology Transformation Services</a>' %}
   {% endif %}
 
   {{ govukFooter({

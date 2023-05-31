@@ -17,8 +17,8 @@ def _gen_mock_field(x):
 
 @pytest.mark.parametrize("email", [  # TODO: update with email_domains.txt
     'test@gsa.gov',
-    'test@gmail.com',
-    'test@amazonses.com'
+    'test@abc.gov',
+    'test@xyz.gov'
 ])
 def test_valid_list_of_white_list_email_domains(
     client_request,
@@ -29,7 +29,6 @@ def test_valid_list_of_white_list_email_domains(
 
 
 @pytest.mark.parametrize("email", [  # TODO: update with email_domains.txt
-    'test@gov.gov',
     'test@gov.gsa',
     'test@gmail.co',
     'test@mail.co',

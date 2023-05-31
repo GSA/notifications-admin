@@ -1,5 +1,24 @@
 # Notify Sprint Goals Log
 
+## Sprint: K (5/24/23)
+
+|             | Goals                                                                                                                              | Impact                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| Engineering | Moving from an ad-hoc "complete must-haves" process to a more strategic, themed progression; examining and implementing a structure for [Architecture Decision Records](https://github.com/GSA/notifications-admin/issues/522); assessing and planning for timezone accommodations in both [back-end](https://github.com/GSA/notifications-api/issues/260) and [UI](https://github.com/GSA/notifications-admin/issues/525)                                                          |   Less context-switching; better documentation and prioritization; a clear strategy and content regarding timezones for users                                   |
+| UX          | Wrap first iteration of [USWDS component migration](https://github.com/GSA/notifications-admin/issues/453); [propose new flows and wireframes](https://github.com/GSA/notifications-admin/issues/455)             | A U.S. government look and feel; easier user navigation          |
+| Content     | [Hone content](https://github.com/GSA/notifications-admin/issues/523) for [U.S. Notify-specific aspects](https://github.com/GSA/notifications-admin/issues/521); finalize [style and terminology docs](https://github.com/GSA/notifications-admin/issues/481) | Clear and applicable documentation and direction in the application |
+| Security    | Respond to any assessment questions and/or needs                                                  | Keep the LATO award timeline as short as possible
+
+## Sprint: Jabiru (5/11/23)
+
+|             | Goal                                                                                                                              | Impact                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| Engineering | [Finalizing "must haves"](https://github.com/GSA/notifications-admin/issues/235) and moving to ["quality of life"](https://github.com/GSA/notifications-admin/issues/412) components, work on [data structure](https://github.com/GSA/notifications-api/issues/162) & clearing path to [promote services](https://github.com/GSA/notifications-admin/issues/301) to "live mode"                                                              | A functional application that allows for promotion from trial mode to external recipients                                     |
+| UX          | Continue [integrating USWDS](https://github.com/GSA/notifications-admin/issues/453), start wireframing new flows, strategize collection and synthesis of partner feedback              | A U.S. government look and feel, better accessibility, better experience            |
+| Content     | [Content strategy](https://github.com/GSA/notifications-admin/issues/481) and [Notify terminology work](https://github.com/GSA/notifications-admin/issues/480), aligning with Studio comms strategy | Consistency in terminology, tone, type of content |
+| Security    | Respond to any assessment questions ASAP, transition duties to Steven                                                    | Keep the LATO award timeline as short as possible, ensure a smooth transition for compliance POC
+
+
 ## Sprint: Ibis (4/27/23)
 
 |             | Goal                                                                                                                              | Impact                                                                                                                                     |

@@ -32,7 +32,7 @@ applications:
       NR_APP_ID: ((nr_app_id))
       NR_BROWSER_KEY: ((NR_BROWSER_KEY))
 
-      REDIS_ENABLED: ((REDIS_ENABLED))
+      REDIS_ENABLED: ((redis_enabled))
       ADMIN_BASE_URL: https://((public_admin_route))
       API_HOST_NAME: https://notify-api-((env)).apps.internal:61443
 
