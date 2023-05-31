@@ -37,6 +37,10 @@ def test_non_logged_in_user_can_see_homepage(
     #     'main.performance'
     # )
 
+    # To be removed if we decide to use the "Who’s using Notify" link
+    anchor_tag = page.select_one('#whos-using-notify a')
+    assert anchor_tag is None or anchor_tag['href'] == url_for('main.performance')
+
 
 def test_logged_in_user_redirects_to_choose_account(
     client_request,
