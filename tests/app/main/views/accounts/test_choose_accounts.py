@@ -267,7 +267,7 @@ def test_choose_account_should_not_show_back_to_service_link_if_not_signed_in(
 
 @pytest.mark.parametrize('active', (
     False,
-    pytest.param(True, marks=pytest.mark.xfail(raises=AssertionError)),
+    pytest.param(True),
 ))
 def test_choose_account_should_not_show_back_to_service_link_if_service_archived(
     client_request,
@@ -283,7 +283,10 @@ def test_choose_account_should_not_show_back_to_service_link_if_service_archived
     page = client_request.get('main.choose_account')
 
     assert normalize_spaces(page.select_one('h1').text) == 'Choose service'
-    assert page.select_one('.navigation-service a') is None
+    if active:
+        assert page.select_one('.navigation-service a') is not None
+    else:
+        assert page.select_one('.navigation-service a') is None
 
 
 def test_should_not_show_back_to_service_if_user_doesnt_belong_to_service(

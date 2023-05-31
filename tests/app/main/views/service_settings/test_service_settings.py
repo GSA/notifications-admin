@@ -61,12 +61,6 @@ def mock_get_service_settings_page_common(
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
 
-        # 'Label Value Action',
-        # 'Send emails On Change your settings for sending emails',
-        # 'Reply-to email addresses Not set Manage reply-to email addresses',
-        # 'Email branding GOV.UK Change email branding',
-        # 'Send files by email contact_us@gsa.gov Manage sending files by email',
-        # 'Receive text messages Off Change your settings for receiving text messages',
     ]),
     (create_platform_admin_user(), [
 
@@ -78,12 +72,6 @@ def mock_get_service_settings_page_common(
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
 
-        # 'Label Value Action',
-        # 'Send emails On Change your settings for sending emails',
-        # 'Reply-to email addresses Not set Manage reply-to email addresses',
-        # 'Email branding GOV.UK Change email branding',
-        # 'Send files by email contact_us@gsa.gov Manage sending files by email',
-        # 'Receive text messages Off Change your settings for receiving text messages',
 
         'Label Value Action',
         'Live Off Change service status',
@@ -221,12 +209,6 @@ def test_send_files_by_email_row_on_settings_page(
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages On Change your settings for sending international text messages',
 
-        # 'Label Value Action',
-        # 'Send emails On Change your settings for sending emails',
-        # 'Reply-to email addresses test@example.com Manage reply-to email addresses',
-        # 'Email branding Organisation name Change email branding',
-        # 'Send files by email Not set up Manage sending files by email',
-        # 'Receive text messages On Change your settings for receiving text messages',
 
     ]),
     (['email', 'sms', 'email_auth'], [
@@ -238,12 +220,6 @@ def test_send_files_by_email_row_on_settings_page(
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
 
-        # 'Label Value Action',
-        # 'Send emails On Change your settings for sending emails',
-        # 'Reply-to email addresses test@example.com Manage reply-to email addresses',
-        # 'Email branding Organisation name Change email branding',
-        # 'Send files by email Not set up Manage sending files by email'
-        # 'Receive text messages Off Change your settings for receiving text messages',
 
     ]),
 ])
@@ -619,8 +595,6 @@ def test_should_check_if_estimated_volumes_provided(
     'reply_to_email_addresses,'
     'expected_reply_to_checklist_item'
 ), [
-    pytest.param(None, 0, [], '', marks=pytest.mark.xfail(raises=IndexError)),
-    pytest.param(0, 0, [], '', marks=pytest.mark.xfail(raises=IndexError)),
     (None, 1, [], 'Add a reply-to email address Not completed'),
     (None, 1, [{}], 'Add a reply-to email address Completed'),
     (1, 1, [], 'Add a reply-to email address Not completed'),
@@ -672,6 +646,59 @@ def test_should_check_for_reply_to_on_go_live(
 
     if count_of_email_templates:
         mock_get_reply_to_email_addresses.assert_called_once_with(SERVICE_ONE_ID)
+
+
+@pytest.mark.parametrize((
+    'volume_email,'
+    'count_of_email_templates,'
+    'reply_to_email_addresses,'
+    'expected_reply_to_checklist_item'
+), [
+    (None, 0, [], ''),
+    (0, 0, [], ''),
+])
+def test_should_check_for_reply_to_on_go_live_index_error(
+    client_request,
+    mocker,
+    service_one,
+    fake_uuid,
+    single_sms_sender,
+    volume_email,
+    count_of_email_templates,
+    reply_to_email_addresses,
+    expected_reply_to_checklist_item,
+    mock_get_invites_for_service,
+    mock_get_users_by_service,
+):
+    mocker.patch(
+        'app.service_api_client.get_service_templates',
+        return_value={'data': [
+            create_template(template_type='email')
+            for _ in range(0, count_of_email_templates)
+        ]}
+    )
+
+    mocker.patch(
+        'app.main.views.service_settings.service_api_client.get_reply_to_email_addresses',
+        return_value=reply_to_email_addresses
+    )
+
+    for channel, volume in (('email', volume_email), ('sms', 0)):
+        mocker.patch(
+            'app.models.service.Service.volume_{}'.format(channel),
+            create=True,
+            new_callable=PropertyMock,
+            return_value=volume,
+        )
+
+    with pytest.raises(expected_exception=IndexError):
+        page = client_request.get(
+            'main.request_to_go_live', service_id=SERVICE_ONE_ID
+        )
+        assert page.h1.text == 'Before you request to go live'
+
+        checklist_items = page.select('.task-list .task-list-item')
+        assert normalize_spaces(checklist_items[3].text) == expected_reply_to_checklist_item
 
 
 @pytest.mark.parametrize((
@@ -835,55 +862,49 @@ def test_request_to_go_live_redirects_if_service_already_live(
     'sms_senders,'
     'expected_sms_sender_checklist_item'
 ), [
-    pytest.param(
+    (
         0,
         'state',
         0,
         [],
         '',
-        marks=pytest.mark.xfail(raises=IndexError)
     ),
-    pytest.param(
+    (
         None,
         'state',
         0,
         [{'is_default': True, 'sms_sender': 'GOVUK'}],
         '',
-        marks=pytest.mark.xfail(raises=IndexError)
     ),
-    pytest.param(
+    (
         1,
         'federal',
         99,
         [{'is_default': True, 'sms_sender': 'GOVUK'}],
         '',
-        marks=pytest.mark.xfail(raises=IndexError)
     ),
-    pytest.param(
+    (
         None,
         'federal',
         99,
         [{'is_default': True, 'sms_sender': 'GOVUK'}],
         '',
-        marks=pytest.mark.xfail(raises=IndexError)
     ),
-    pytest.param(
+    (
         1,
         'federal',
         99,
         [{'is_default': True, 'sms_sender': 'GOVUK'}],
         '',
-        marks=pytest.mark.xfail(raises=IndexError)
     ),
-    pytest.param(
+    (
         1,
         'state',
         1,
         [],
         'Change your text message sender name Not completed',
-        marks=pytest.mark.xfail(raises=IndexError),
     ),
-    pytest.param(
+    (
         1,
         'state',
         1,
@@ -892,7 +913,6 @@ def test_request_to_go_live_redirects_if_service_already_live(
             {'is_default': True, 'sms_sender': 'KUVOG'},
         ],
         'Change your text message sender name Completed',
-        marks=pytest.mark.xfail(raises=IndexError),
     ),
 ])
 def test_should_check_for_sms_sender_on_go_live(
@@ -935,15 +955,16 @@ def test_should_check_for_sms_sender_on_go_live(
             return_value=volume,
         )
 
-    page = client_request.get(
-        'main.request_to_go_live', service_id=SERVICE_ONE_ID
-    )
-    assert page.h1.text == 'Before you request to go live'
+    with pytest.raises(expected_exception=IndexError):
+        page = client_request.get(
+            'main.request_to_go_live', service_id=SERVICE_ONE_ID
+        )
+        assert page.h1.text == 'Before you request to go live'
 
-    checklist_items = page.select('.task-list .task-list-item')
-    assert normalize_spaces(checklist_items[3].text) == expected_sms_sender_checklist_item
+        checklist_items = page.select('.task-list .task-list-item')
+        assert normalize_spaces(checklist_items[3].text) == expected_sms_sender_checklist_item
 
-    mock_get_sms_senders.assert_called_once_with(SERVICE_ONE_ID)
+        mock_get_sms_senders.assert_called_once_with(SERVICE_ONE_ID)
 
 
 def test_non_gov_user_is_told_they_cant_go_live(
@@ -1702,8 +1723,6 @@ def test_and_more_hint_appears_on_settings_with_more_than_just_a_single_sender(
         "Reply-to email addresses test@example.com …and 2 more Manage reply-to email addresses"
     assert get_row(page, 'Text message senders') == \
         "Text message senders Example …and 2 more Manage text message senders"
-    # assert get_row(page, 'Sender addresses') == \
-    #     "Sender addresses 1 Example Street …and 2 more Manage sender addresses"
 
 
 @pytest.mark.parametrize('sender_list_page, index, expected_output', [
@@ -2899,7 +2918,6 @@ def test_should_show_page_to_set_sms_allowance(
     ('0', 0),
     ('1', 1),
     ('250000', 250000),
-    pytest.param('foo', 'foo', marks=pytest.mark.xfail),
 ])
 def test_should_set_sms_allowance(
     client_request,
@@ -2927,6 +2945,34 @@ def test_should_set_sms_allowance(
         SERVICE_ONE_ID,
         expected_api_argument
     )
+
+
+@freeze_time("2017-04-01 11:09:00.061258")
+@pytest.mark.parametrize('given_allowance, expected_api_argument', [
+    pytest.param('foo', 'foo'),
+])
+def test_should_set_sms_allowance_fails(
+    client_request,
+    platform_admin_user,
+    given_allowance,
+    expected_api_argument,
+    mock_get_free_sms_fragment_limit,
+    mock_create_or_update_free_sms_fragment_limit,
+):
+
+    with pytest.raises(expected_exception=AssertionError):
+        client_request.login(platform_admin_user)
+        client_request.post(
+            'main.set_free_sms_allowance',
+            service_id=SERVICE_ONE_ID,
+            _data={
+                'free_sms_allowance': given_allowance,
+            },
+            _expected_redirect=url_for(
+                'main.service_settings',
+                service_id=SERVICE_ONE_ID,
+            ),
+        )
 
 
 def test_should_show_page_to_set_message_limit(
@@ -3147,8 +3193,6 @@ def test_switch_service_enable_international_sms(
     [create_platform_admin_user(), True],
     [create_platform_admin_user(), False],
     [create_active_user_with_permissions(), True],
-    pytest.param(create_active_user_with_permissions(), False, marks=pytest.mark.xfail),
-    pytest.param(create_active_user_no_settings_permission(), True, marks=pytest.mark.xfail),
 ))
 def test_archive_service_after_confirm(
     client_request,
@@ -3187,11 +3231,40 @@ def test_archive_service_after_confirm(
 
 
 @pytest.mark.parametrize('user, is_trial_service', (
+    pytest.param(create_active_user_with_permissions(), False),
+    pytest.param(create_active_user_no_settings_permission(), True),
+))
+def test_archive_service_after_confirm_error(
+    client_request,
+    mocker,
+    mock_get_organisations,
+    mock_get_service_and_organisation_counts,
+    mock_get_organisations_and_services_for_user,
+    mock_get_users_by_service,
+    mock_get_service_templates,
+    service_one,
+    user,
+    is_trial_service,
+):
+    service_one['restricted'] = is_trial_service
+    mocker.patch('app.service_api_client.post')
+    mocker.patch('app.main.views.service_settings.create_archive_service_event')
+    mocker.patch('app.notify_client.service_api_client.redis_client.delete')
+    mocker.patch('app.notify_client.service_api_client.redis_client.delete_by_pattern')
+
+    with pytest.raises(expected_exception=AssertionError):
+        client_request.login(user)
+        client_request.post(
+            'main.archive_service',
+            service_id=SERVICE_ONE_ID,
+            _follow_redirects=True,
+        )
+
+
+@pytest.mark.parametrize('user, is_trial_service', (
     [create_platform_admin_user(), True],
     [create_platform_admin_user(), False],
     [create_active_user_with_permissions(), True],
-    pytest.param(create_active_user_with_permissions(), False, marks=pytest.mark.xfail),
-    pytest.param(create_active_user_no_settings_permission(), True, marks=pytest.mark.xfail),
 ))
 def test_archive_service_prompts_user(
     client_request,
@@ -3230,6 +3303,31 @@ def test_archive_service_prompts_user(
     assert mock_api.called is False
 
 
+@pytest.mark.parametrize('user, is_trial_service', (
+    pytest.param(create_active_user_with_permissions(), False),
+    pytest.param(create_active_user_no_settings_permission(), True),
+))
+def test_archive_service_prompts_user_error(
+    client_request,
+    mocker,
+    single_reply_to_email_address,
+    service_one,
+    single_sms_sender,
+    mock_get_service_settings_page_common,
+    user,
+    is_trial_service,
+):
+    mocker.patch('app.service_api_client.post')
+    service_one['restricted'] = is_trial_service
+    client_request.login(user)
+
+    with pytest.raises(expected_exception=AssertionError):
+        client_request.get(
+            'main.archive_service',
+            service_id=SERVICE_ONE_ID
+        )
+
+
 def test_cant_archive_inactive_service(
     client_request,
     platform_admin_user,
@@ -3251,7 +3349,6 @@ def test_cant_archive_inactive_service(
 
 @pytest.mark.parametrize('user', (
     create_platform_admin_user(),
-    pytest.param(create_active_user_with_permissions(), marks=pytest.mark.xfail),
 ))
 def test_suspend_service_after_confirm(
     client_request,
@@ -3276,8 +3373,30 @@ def test_suspend_service_after_confirm(
 
 
 @pytest.mark.parametrize('user', (
+    pytest.param(create_active_user_with_permissions()),
+))
+def test_suspend_service_after_confirm_error(
+    client_request,
+    user,
+    mocker,
+):
+    mocker.patch('app.service_api_client.post')
+    mocker.patch('app.main.views.service_settings.create_suspend_service_event')
+    with pytest.raises(expected_exception=AssertionError):
+        client_request.login(user)
+        client_request.post(
+            'main.suspend_service',
+            service_id=SERVICE_ONE_ID,
+            _expected_redirect=url_for(
+                'main.service_settings',
+                service_id=SERVICE_ONE_ID,
+            ),
+        )
+
+
+@pytest.mark.parametrize('user', (
     create_platform_admin_user(),
-    pytest.param(create_active_user_with_permissions(), marks=pytest.mark.xfail),
+    pytest.param(create_active_user_with_permissions()),
 ))
 def test_suspend_service_prompts_user(
     client_request,
@@ -3291,6 +3410,12 @@ def test_suspend_service_prompts_user(
     mock_api = mocker.patch('app.service_api_client.post')
 
     client_request.login(user)
+
+    if user['email_address'] != 'platform@admin.gsa.gov':
+        with pytest.raises(expected_exception=AssertionError):
+            client_request.get('main.suspend_service', service_id=service_one['id'])
+        return
+
     page = client_request.get('main.suspend_service', service_id=service_one['id'])
 
     assert 'This will suspend the service and revoke all api keys. Are you sure you want to suspend this service?' in \
@@ -3319,7 +3444,7 @@ def test_cant_suspend_inactive_service(
 
 @pytest.mark.parametrize('user', (
     create_platform_admin_user(),
-    pytest.param(create_active_user_with_permissions(), marks=pytest.mark.xfail),
+    create_active_user_with_permissions(),
 ))
 def test_resume_service_after_confirm(
     mocker,
@@ -3332,6 +3457,14 @@ def test_resume_service_after_confirm(
     mock_event = mocker.patch('app.main.views.service_settings.create_resume_service_event')
 
     client_request.login(user)
+    if user['email_address'] != "platform@admin.gsa.gov":
+        client_request.post(
+            'main.resume_service',
+            service_id=SERVICE_ONE_ID,
+            _expected_status=403,
+        )
+        return
+
     client_request.post(
         'main.resume_service',
         service_id=SERVICE_ONE_ID,
@@ -3530,20 +3663,6 @@ def test_send_files_by_email_contact_details_does_not_update_invalid_contact_det
 
 
 @pytest.mark.parametrize('endpoint, permissions, expected_p', [
-    # (
-    #     'main.service_set_inbound_sms',
-    #     ['sms'],
-    #     (
-    #         'Contact us if you want to be able to receive text messages from your users.'
-    #     )
-    # ),
-    # (
-    #     'main.service_set_inbound_sms',
-    #     ['sms', 'inbound_sms'],
-    #     (
-    #         'Your service can receive text messages sent to 2028675301.'
-    #     )
-    # ),
     (
         'main.service_set_auth_type',
         [],
@@ -3771,7 +3890,6 @@ def test_update_service_organisation_does_not_update_if_same_value(
 @pytest.mark.skip(reason="Email currently deactivated")
 @pytest.mark.parametrize('single_branding_option, expected_href', [
     (True, f'/services/{SERVICE_ONE_ID}/service-settings/email-branding/something-else'),
-    # (False, f'/services/{SERVICE_ONE_ID}/service-settings/email-branding'),
 ])
 def test_service_settings_links_to_branding_request_page_for_emails(
     service_one,
@@ -3785,10 +3903,6 @@ def test_service_settings_links_to_branding_request_page_for_emails(
         # should only have a "something else" option
         # so we go straight to that form
         service_one['organisation_type'] = 'other'
-    # else:
-    #     # expect to have a "NHS" option as well as the
-    #     # fallback one, so ask user to choose
-    #     service_one['organisation_type'] = 'nhs_central'
 
     page = client_request.get(
         '.service_settings', service_id=SERVICE_ONE_ID
