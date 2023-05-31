@@ -520,8 +520,8 @@ def test_should_show_manage_security_key_page(
     page = client_request.get('.user_profile_manage_security_key', key_id=webauthn_credential['id'])
     assert page.select_one('h1').text.strip() == f'Manage ‘{webauthn_credential["name"]}’'
 
-    assert page.select_one('.govuk-back-link').text.strip() == 'Back'
-    assert page.select_one('.govuk-back-link')['href'] == url_for('.user_profile_security_keys')
+    assert page.select_one('.usa-back-link').text.strip() == 'Back'
+    assert page.select_one('.usa-back-link')['href'] == url_for('.user_profile_security_keys')
 
     assert page.select_one('#security_key_name')["value"] == webauthn_credential["name"]
 

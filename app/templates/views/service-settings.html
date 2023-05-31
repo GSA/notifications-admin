@@ -8,7 +8,7 @@
 
 {% block maincolumn_content %}
 
-    <h1 class="heading-medium">Settings</h1>
+    <h1 class="font-body-lg">Settings</h1>
 
     <div class="bottom-gutter-3-2 settings-table body-copy-table">
 
@@ -192,7 +192,7 @@
     </div>
 
     {% if current_service.trial_mode %}
-      <h2 class="heading-medium top-gutter-0">Your service is in trial mode</h2>
+      <h2 class="font-body-lg top-gutter-0">Your service is in trial mode</h2>
 
         <p>You can only:</p>
 
@@ -350,7 +350,7 @@
     {% if current_service.active and (current_service.trial_mode or current_user.platform_admin) %}
       <p class="top-gutter-1-2">
         <span class="page-footer-link page-footer-delete-link-without-button">
-          <a class="govuk-link govuk-link--destructive" href="{{ url_for('.archive_service', service_id=current_service.id) }}">
+          <a class="usa-button usa-button--secondary" href="{{ url_for('.archive_service', service_id=current_service.id) }}">
             Delete this service
           </a>
         </span>

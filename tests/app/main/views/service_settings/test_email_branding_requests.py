@@ -85,7 +85,7 @@ def test_email_branding_request_page_back_link(
         '.email_branding_request', service_id=SERVICE_ONE_ID
     )
 
-    back_link = page.select('a[class=govuk-back-link]')
+    back_link = page.select('a[class=usa-back-link]')
     assert back_link[0].attrs['href'] == url_for('.service_settings', service_id=SERVICE_ONE_ID)
 
 
@@ -245,7 +245,7 @@ def test_email_branding_something_else_page(client_request, service_one):
     assert normalize_spaces(page.h1.text) == 'Describe the branding you want'
     assert page.select_one('textarea')['name'] == ('something_else')
     assert normalize_spaces(page.select_one('.page-footer button').text) == 'Request new branding'
-    assert page.select_one('.govuk-back-link')['href'] == url_for(
+    assert page.select_one('.usa-back-link')['href'] == url_for(
         'main.email_branding_request', service_id=SERVICE_ONE_ID,
     )
 
@@ -260,7 +260,7 @@ def test_get_email_branding_something_else_page_is_only_option(client_request, s
         'main.email_branding_something_else',
         service_id=SERVICE_ONE_ID,
     )
-    assert page.select_one('.govuk-back-link')['href'] == url_for(
+    assert page.select_one('.usa-back-link')['href'] == url_for(
         'main.service_settings', service_id=SERVICE_ONE_ID,
     )
 

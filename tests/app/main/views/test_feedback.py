@@ -531,7 +531,7 @@ def test_back_link_from_form(
         ticket_type=PROBLEM_TICKET_TYPE,
         **extra_args
     )
-    assert page.select_one('.govuk-back-link')['href'] == expected_back_link()
+    assert page.select_one('.usa-back-link')['href'] == expected_back_link()
     assert normalize_spaces(page.select_one('h1').text) == 'Report a problem'
 
 
@@ -680,8 +680,8 @@ def test_bat_email_page(
     client_request.logout()
     page = client_request.get(bat_phone_page)
 
-    assert page.select_one('.govuk-back-link').text == 'Back'
-    assert page.select_one('.govuk-back-link')['href'] == url_for('main.support')
+    assert page.select_one('.usa-back-link').text == 'Back'
+    assert page.select_one('.usa-back-link')['href'] == url_for('main.support')
     assert page.select('main a')[1].text == 'Fill in this form'
     assert page.select('main a')[1]['href'] == url_for('main.feedback', ticket_type=PROBLEM_TICKET_TYPE, severe='no')
     next_page = client_request.get_url(page.select('main a')[1]['href'])
