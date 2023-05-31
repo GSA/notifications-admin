@@ -122,10 +122,6 @@ def test_service_setting_toggles_show(
     ({'active': True}, '.history', 2, 'Service history'),
     ({'active': False}, '.resume_service', 0, 'Resume service'),
     ({'active': False}, '.history', 1, 'Service history'),
-    pytest.param(
-        {'active': False}, '.archive_service', 2, 'Resume service',
-        marks=pytest.mark.xfail(raises=IndexError)
-    )
 ])
 def test_service_setting_link_toggles(
     get_service_settings_page,
@@ -141,6 +137,26 @@ def test_service_setting_link_toggles(
     link = page.select('.page-footer-link a')[index]
     assert normalize_spaces(link.text) == text
     assert link['href'] == link_url
+
+
+@pytest.mark.parametrize('service_fields, endpoint, index, text', [
+    pytest.param(
+        {'active': False}, '.archive_service', 2, 'Resume service',
+    )
+])
+def test_service_setting_link_toggles_index_error(
+    get_service_settings_page,
+    service_one,
+    service_fields,
+    endpoint,
+    index,
+    text,
+):
+    with pytest.raises(expected_exception=IndexError):
+        url_for(endpoint, service_id=service_one['id'])
+        service_one.update(service_fields)
+        page = get_service_settings_page()
+        page.select('.page-footer-link a')[index]
 
 
 @pytest.mark.parametrize('permissions,permissions_text,visible', [

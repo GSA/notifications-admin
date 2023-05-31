@@ -985,14 +985,6 @@ def test_delete_folder(
     pytest.param(
         create_active_user_with_permissions()
     ),
-    pytest.param(
-        create_active_user_view_permissions(),
-        marks=pytest.mark.xfail(raises=AssertionError)
-    ),
-    pytest.param(
-        create_active_caseworking_user(),
-        marks=pytest.mark.xfail(raises=AssertionError)
-    ),
 ])
 def test_should_show_checkboxes_for_selecting_templates(
     client_request,
@@ -1020,6 +1012,43 @@ def test_should_show_checkboxes_for_selecting_templates(
     for index in (1, 2, 3):
         assert checkboxes[index]['value'] != TEMPLATE_ONE_ID
         assert TEMPLATE_ONE_ID not in checkboxes[index]['id']
+
+
+@pytest.mark.parametrize('user', [
+    pytest.param(
+        create_active_user_view_permissions(),
+    ),
+    pytest.param(
+        create_active_caseworking_user(),
+    ),
+])
+def test_should_show_checkboxes_for_selecting_templates_assertion_error(
+    client_request,
+    mocker,
+    service_one,
+    mock_get_service_templates,
+    mock_get_template_folders,
+    mock_has_no_jobs,
+    mock_get_no_api_keys,
+    user,
+):
+    with pytest.raises(expected_exception=AssertionError):
+        client_request.login(user)
+
+        page = client_request.get(
+            'main.choose_template',
+            service_id=SERVICE_ONE_ID,
+        )
+        checkboxes = page.select('input[name=templates_and_folders]')
+
+        assert len(checkboxes) == 4
+
+        assert checkboxes[0]['value'] == TEMPLATE_ONE_ID
+        assert checkboxes[0]['id'] == 'templates-or-folder-{}'.format(TEMPLATE_ONE_ID)
+
+        for index in (1, 2, 3):
+            assert checkboxes[index]['value'] != TEMPLATE_ONE_ID
+            assert TEMPLATE_ONE_ID not in checkboxes[index]['id']
 
 
 @pytest.mark.parametrize('user', [
