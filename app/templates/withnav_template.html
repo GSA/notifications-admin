@@ -1,7 +1,5 @@
 {% extends "admin_template.html" %}
 
-{% set mainClasses = "govuk-!-padding-top-0 govuk-!-padding-bottom-0" %}
-
 {% block per_page_title %}
   {% block service_page_title %}{% endblock %} – {{ current_service.name }}
 {% endblock %}
@@ -25,7 +23,7 @@
         {% block beforeContent %}
           {% block backLink %}{% endblock %}
         {% endblock %}
-        <main class="govuk-main-wrapper column-main {{ mainClasses }}" id="main-content" role="main">
+        <main id="main-content" role="main">
         {% block content %}
           {% include 'flash_messages.html' %}
           {% block maincolumn_content %}{% endblock %}

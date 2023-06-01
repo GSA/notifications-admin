@@ -559,7 +559,7 @@ def test_should_be_able_to_view_a_template_with_links(
 
     assert [
         (link['href'], normalize_spaces(link.text))
-        for link in page.select('.pill-separate-item')
+        for link in page.select('.usa-pill-separate-item')
     ] == [
         (url_for(
             endpoint,

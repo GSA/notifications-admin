@@ -86,10 +86,17 @@ p,
    height: 11px;
 }
 
-// .govuk-checkboxes__input:focus + .govuk-checkboxes__label::before {
-//    box-shadow: 0 0 0 3px color("primary");
-// }
+.govuk-checkboxes__input:focus + .govuk-checkboxes__label::before,
+.multiple-choice [type="radio"]:focus + label::before {
+   box-shadow: 0 0 0 3px color("blue-40v");
+}
 
 .usa-dark-background .pill-item__container {
    color: #fff;
+}
+
+.pill-separate-item:link,
+.pill-separate-item:visited {
+   text-decoration: none;
+   background: initial;
 }

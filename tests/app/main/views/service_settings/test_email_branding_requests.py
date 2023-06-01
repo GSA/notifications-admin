@@ -78,8 +78,12 @@ def test_email_branding_request_page_back_link(
         '.email_branding_request', service_id=SERVICE_ONE_ID
     )
 
-    back_link = page.select('a[class=usa-back-link]')
-    assert back_link[0].attrs['href'] == url_for('.service_settings', service_id=SERVICE_ONE_ID)
+    back_link = page.select_one('a.usa-back-link')
+    assert len(back_link) > 0, "No back link found on the page"
+    assert back_link['href'] == url_for('.service_settings', service_id=SERVICE_ONE_ID)
+
+    # back_link = page.select('a[class=usa-back-link]')
+    # assert back_link[0].attrs['href'] == url_for('.service_settings', service_id=SERVICE_ONE_ID)
 
 
 @pytest.mark.parametrize('data, org_type, endpoint', (
