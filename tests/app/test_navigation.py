@@ -352,11 +352,11 @@ def test_all_endpoints_are_covered(navigation_instance):
     navigation_instances,
     ids=(x.__class__.__name__ for x in navigation_instances)
 )
-@pytest.mark.xfail(raises=KeyError)
 def test_raises_on_invalid_navigation_item(
     client_request, navigation_instance
 ):
-    navigation_instance.is_selected('foo')
+    with pytest.raises(expected_exception=KeyError):
+        navigation_instance.is_selected('foo')
 
 
 @pytest.mark.parametrize('endpoint, selected_nav_item', [

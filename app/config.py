@@ -40,6 +40,8 @@ class Config(object):
     TEMPLATE_PREVIEW_API_HOST = getenv('TEMPLATE_PREVIEW_API_HOST', 'http://localhost:9999')
     TEMPLATE_PREVIEW_API_KEY = getenv('TEMPLATE_PREVIEW_API_KEY', 'my-secret-key')
 
+    GOVERNMENT_EMAIL_DOMAIN_NAMES = ['gov']
+
     # Logging
     NOTIFY_LOG_LEVEL = getenv('NOTIFY_LOG_LEVEL', 'INFO')
 
