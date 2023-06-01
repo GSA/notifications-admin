@@ -315,7 +315,7 @@ def init_app(application):
     def _attach_current_daily_remaining_messages_per_service():
         remaining_messages = 0
 
-        if hasattr(current_service, 'message_limit'):
+        if current_service:
             remaining_messages = current_service.message_limit - service_api_client.get_notification_count(
                 service_id=current_service.id)
 

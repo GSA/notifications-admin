@@ -81,7 +81,7 @@ def get_example_csv_rows(template, use_example_as_example=True, submitted_fields
 @user_has_permissions('send_messages', restrict_admin_usage=True)
 def send_messages(service_id, template_id):
     notification_count = service_api_client.get_notification_count(service_id)
-    remaining_messages = (current_service.message_limit - notification_count)
+    remaining_messages = current_service.message_limit - notification_count
 
     db_template = current_service.get_template_with_user_permission_or_403(template_id, current_user)
 

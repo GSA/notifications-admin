@@ -530,14 +530,12 @@ class ServiceAPIClient(NotifyAdminAPIClient):
 
     def get_notification_count(self, service_id):
         # if cache is not set, or not enabled, return 0
-
         count = redis_client.get(daily_limit_cache_key(service_id)) or 0
 
         return int(count)
 
     def get_global_notification_count(self):
         # if cache is not set, or not enabled, return 0
-
         count = redis_client.get(daily_total_cache_key()) or 0
 
         return int(count)
