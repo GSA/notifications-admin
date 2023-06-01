@@ -322,7 +322,7 @@ def test_should_show_back_to_service_if_user_belongs_to_service(
 ):
     mock_get_service.return_value = service_one
     expected_page_text = (
-        'Test Service Daily Message Limit: 50  Switch service '
+        'Test Service Switch service '
         ''
         'Dashboard '
         'Send messages '

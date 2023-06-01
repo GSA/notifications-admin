@@ -312,9 +312,24 @@ def init_app(application):
         return navigation
 
     @application.context_processor
-    def _attach_current_remaining_messages():
-        request
-        return {'side_nav_remaining_messages': current_service.message_limit - service_api_client.get_notification_count(service_id=current_service.id)}
+    def _attach_current_daily_remaining_messages_per_service():
+        remaining_messages = 0
+
+        if hasattr(current_service, 'message_limit'):
+            remaining_messages = current_service.message_limit - service_api_client.get_notification_count(
+                service_id=current_service.id)
+
+        return {'daily_remaining_messages': remaining_messages}
+
+    @application.context_processor
+    def _attach_current_global_daily_messages():
+        remaining_global_messages = 0
+
+        if current_app:
+            global_limit = current_app.config['GLOBAL_SERVICE_MESSAGE_LIMIT']
+            global_messages_count = service_api_client.get_global_notification_count()
+            remaining_global_messages = global_limit - global_messages_count
+        return {'daily_global_messages_remaining': remaining_global_messages}
 
     @application.before_request
     def record_start_time():
@@ -399,9 +414,6 @@ def load_organisation_before_request():
                     else:
                         raise
 
-
-def load_current_daily_messages_per_service():
-    service = request.args.get('service')
 
 def save_service_or_org_after_request(response):
     # Only save the current session if the request is 200

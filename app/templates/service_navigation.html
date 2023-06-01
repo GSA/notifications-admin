@@ -1,7 +1,6 @@
 {% macro navigation_service_name(service) %}
   <div class="navigation-service-name govuk-!-font-weight-bold">
     {{ service.name }}
-    <p class="govuk-body"> Daily Message Limit: {{ service.message_limit }}</p>
     {% if not service.active %}
       <span class="navigation-service-type navigation-service-type--suspended">Suspended</span>
     {% endif %}
