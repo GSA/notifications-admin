@@ -262,64 +262,6 @@ def test_gps_can_create_own_organisations(
     )
 
 
-@pytest.mark.parametrize('organisation_type, organisation, expected_status', (
-    ('nhs_local', None, 200),
-    ('nhs_gp', None, 403),
-    ('central', None, 403),
-    ('nhs_local', organisation_json(organisation_type='nhs_local'), 403),
-))
-@pytest.mark.skip(reason='Update for TTS')
-def test_nhs_local_can_create_own_organisations(
-    client_request,
-    mocker,
-    mock_get_service_organisation,
-    service_one,
-    organisation_type,
-    organisation,
-    expected_status,
-):
-    mocker.patch('app.organisations_client.get_organisation', return_value=organisation)
-    mocker.patch(
-        'app.models.organisation.AllOrganisations.client_method',
-        return_value=[
-            organisation_json('t2', 'Trust 2', organisation_type='nhs_local'),
-            organisation_json('t1', 'Trust 1', organisation_type='nhs_local'),
-            organisation_json('gp1', 'GP 1', organisation_type='nhs_gp'),
-            organisation_json('c1', 'Central 1'),
-        ],
-    )
-    service_one['organisation_type'] = organisation_type
-
-    page = client_request.get(
-        '.add_organisation_from_nhs_local_service',
-        service_id=SERVICE_ONE_ID,
-        _expected_status=expected_status,
-    )
-
-    if expected_status == 403:
-        return
-
-    assert normalize_spaces(page.select_one('main p').text) == (
-        'Which NHS Trust or Clinical Commissioning Group do you work for?'
-    )
-    assert page.select_one('[data-module=live-search]')['data-targets'] == (
-        '.govuk-radios__item'
-    )
-    assert [
-        (
-            normalize_spaces(radio.select_one('label').text),
-            radio.select_one('input')['value']
-        )
-        for radio in page.select('.govuk-radios__item')
-    ] == [
-        ('Trust 1', 't1'),
-        ('Trust 2', 't2'),
-    ]
-    assert normalize_spaces(page.select_one('.js-stick-at-bottom-when-scrolling button').text) == (
-        'Continue'
-    )
-
-
 @pytest.mark.parametrize('data, expected_service_name', (
     (
         {
@@ -396,33 +338,6 @@ def test_validation_of_gps_creating_organisations(
         _expected_status=200,
     )
     assert expected_error in page.select_one('.govuk-error-message, .error-message').text
-
-
-@pytest.mark.skip(reason='Update for TTS')
-def test_nhs_local_assigns_to_selected_organisation(
-    client_request,
-    mocker,
-    service_one,
-    mock_get_organisation,
-    mock_update_service_organisation,
-):
-    mocker.patch(
-        'app.models.organisation.AllOrganisations.client_method',
-        return_value=[
-            organisation_json(ORGANISATION_ID, 'Trust 1', organisation_type='nhs_local'),
-        ],
-    )
-    service_one['organisation_type'] = 'nhs_local'
-
-    client_request.post(
-        '.add_organisation_from_nhs_local_service',
-        service_id=SERVICE_ONE_ID,
-        _data={
-            'organisations': ORGANISATION_ID,
-        },
-        _expected_status=302,
-    )
-    mock_update_service_organisation.assert_called_once_with(SERVICE_ONE_ID, ORGANISATION_ID)
 
 
 @freeze_time("2020-02-20 20:20")
@@ -795,8 +710,8 @@ def test_manage_org_users_shows_no_link_for_cancelled_users(
 
 
 @pytest.mark.parametrize('number_of_users', (
-    pytest.param(7, marks=pytest.mark.xfail),
     pytest.param(8),
+    pytest.param(800),
 ))
 def test_manage_org_users_should_show_live_search_if_more_than_7_users(
     client_request,
@@ -837,6 +752,37 @@ def test_manage_org_users_should_show_live_search_if_more_than_7_users(
     assert normalize_spaces(
         page.select_one('label[for=search]').text
     ) == 'Search by name or email address'
+
+
+@pytest.mark.parametrize('number_of_users', (
+    pytest.param(3),
+    pytest.param(7),
+))
+def test_manage_org_users_should_show_live_search_if_7_users_or_less(
+    client_request,
+    mocker,
+    mock_get_organisation,
+    active_user_with_permissions,
+    number_of_users,
+):
+    mocker.patch(
+        'app.models.user.OrganisationInvitedUsers.client_method',
+        return_value=[],
+    )
+    mocker.patch(
+        'app.models.user.OrganisationUsers.client_method',
+        return_value=[active_user_with_permissions] * number_of_users,
+    )
+
+    page = client_request.get(
+        '.manage_org_users',
+        org_id=ORGANISATION_ID,
+    )
+
+    with pytest.raises(expected_exception=TypeError):
+        assert page.select_one('div[data-module=live-search]')['data-targets'] == (
+            ".user-list-item"
+        )
 
 
 def test_edit_organisation_user_shows_the_delete_confirmation_banner(
@@ -993,7 +939,6 @@ def test_view_organisation_settings(
     ),
     pytest.param(
         create_active_user_with_permissions(),
-        marks=pytest.mark.xfail
     ),
 ))
 def test_update_organisation_settings(
@@ -1011,21 +956,28 @@ def test_update_organisation_settings(
     mocker.patch('app.organisations_client.get_organisation_services', return_value=[])
     client_request.login(user)
 
+    if user['email_address'] == 'platform@admin.gsa.gov':
+        expected_status = 302
+        expected_redirect = url_for(
+            'main.organisation_settings',
+            org_id=organisation_one['id'],
+        )
+    else:
+        expected_status = 403
+        expected_redirect = None
     client_request.post(
         endpoint,
         org_id=organisation_one['id'],
         _data=post_data,
-        _expected_status=302,
-        _expected_redirect=url_for(
-            'main.organisation_settings',
-            org_id=organisation_one['id'],
-        ),
+        _expected_status=expected_status,
+        _expected_redirect=expected_redirect,
     )
 
-    mock_update_organisation.assert_called_once_with(
-        organisation_one['id'],
-        **expected_persisted,
-    )
+    if user['email_address'] == 'platform@admin.gsa.gov':
+        mock_update_organisation.assert_called_once_with(
+            organisation_one['id'],
+            **expected_persisted,
+        )
 
 
 def test_update_organisation_sector_sends_service_id_data_to_api_client(
@@ -1143,7 +1095,6 @@ def test_view_organisation_domains(
     ),
     pytest.param(
         create_active_user_with_permissions(),
-        marks=pytest.mark.xfail
     ),
 ))
 def test_update_organisation_domains(
@@ -1157,22 +1108,29 @@ def test_update_organisation_domains(
     user,
 ):
     client_request.login(user)
+    if user['email_address'] == 'platform@admin.gsa.gov':
+        expected_status = 302
+        expected_redirect = url_for(
+            'main.organisation_settings',
+            org_id=organisation_one['id'],
+        )
+    else:
+        expected_status = 403
+        expected_redirect = None
 
     client_request.post(
         'main.edit_organisation_domains',
         org_id=ORGANISATION_ID,
         _data=post_data,
-        _expected_status=302,
-        _expected_redirect=url_for(
-            'main.organisation_settings',
-            org_id=organisation_one['id'],
-        ),
+        _expected_status=expected_status,
+        _expected_redirect=expected_redirect,
     )
 
-    mock_update_organisation.assert_called_once_with(
-        ORGANISATION_ID,
-        **expected_persisted,
-    )
+    if user['email_address'] == 'platform@admin.gsa.gov':
+        mock_update_organisation.assert_called_once_with(
+            ORGANISATION_ID,
+            **expected_persisted,
+        )
 
 
 def test_update_organisation_domains_when_domain_already_exists(

@@ -230,7 +230,7 @@ def test_should_show_job_with_sending_limit_exceeded_status(
     )
 
     assert normalize_spaces(page.select('main p')[1].text) == (
-        "Notify cannot send these messages because you have reached your daily limit. You can only send 1,000 messages per day."  # noqa
+        "Notify cannot send these messages because you have reached a limit. You can only send 1,000 messages per day and 250,000 messages in total."  # noqa
     )
     assert normalize_spaces(page.select('main p')[2].text) == (
         "Upload this spreadsheet again tomorrow or contact the U.S. Notify team to raise the limit."
@@ -245,16 +245,19 @@ def test_should_show_job_with_sending_limit_exceeded_status(
     )),
     # Just started
     (datetime(2020, 1, 10, 0, 0, 0), datetime(2020, 1, 10, 0, 0, 1), (
-        'No messages to show yet…'
+       'No messages to show yet…'
     )),
     # Created a while ago, just started
     (datetime(2020, 1, 1, 0, 0, 0), datetime(2020, 1, 10, 0, 0, 1), (
-        'No messages to show yet…'
+       'No messages to show yet…'
     )),
     # Created a while ago, started just within the last 24h
-    (datetime(2020, 1, 1, 0, 0, 0), datetime(2020, 1, 9, 6, 0, 1), (
-        'No messages to show yet…'
-    )),
+    # TODO -- fails locally, should pass, tech debt due to timezone changes, re-evaluate after UTC changes
+    pytest.param(
+        datetime(2020, 1, 1, 0, 0, 0),
+        datetime(2020, 1, 9, 6, 0, 1),
+        ('No messages to show yet…'),
+    ),
     # Created a while ago, started exactly 24h ago
     # ---
     # It doesn’t matter that 24h (1 day) and 7 days (the service’s data

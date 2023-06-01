@@ -191,7 +191,7 @@ def test_should_show_change_details_link(
 
 
 @pytest.mark.parametrize('number_of_users', (
-    pytest.param(7, marks=pytest.mark.xfail),
+    pytest.param(7),
     pytest.param(8),
 ))
 def test_should_show_live_search_if_more_than_7_users(
@@ -212,6 +212,13 @@ def test_should_show_live_search_if_more_than_7_users(
     )
 
     page = client_request.get('main.manage_users', service_id=SERVICE_ONE_ID)
+
+    if number_of_users == 7:
+        with pytest.raises(expected_exception=TypeError):
+            assert page.select_one('div[data-module=live-search]')['data-targets'] == (
+                ".user-list-item"
+            )
+        return
 
     assert page.select_one('div[data-module=live-search]')['data-targets'] == (
         ".user-list-item"

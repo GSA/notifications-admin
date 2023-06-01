@@ -6,10 +6,6 @@ from app.utils.user import user_has_permissions
 
 
 @pytest.mark.parametrize('permissions', (
-    pytest.param([
-        # Route has a permission which the user doesn’t have
-        'send_messages'
-    ], marks=pytest.mark.xfail(raises=Forbidden)),
     [
         # Route has one of the permissions which the user has
         'manage_service'
@@ -43,6 +39,32 @@ def test_permissions(
         pass
 
     index()
+
+
+@pytest.mark.parametrize('permissions', (
+    [
+        # Route has a permission which the user doesn’t have
+        'send_messages'
+    ],
+))
+def test_permissions_forbidden(
+    client_request,
+    permissions,
+    api_user_active,
+):
+    request.view_args.update({'service_id': 'foo'})
+
+    api_user_active['permissions'] = {'foo': ['manage_users', 'manage_templates', 'manage_settings']}
+    api_user_active['services'] = ['foo', 'bar']
+
+    client_request.login(api_user_active)
+
+    @user_has_permissions(*permissions)
+    def index():
+        pass
+
+    with pytest.raises(expected_exception=Forbidden):
+        index()
 
 
 def test_restrict_admin_usage(
