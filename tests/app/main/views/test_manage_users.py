@@ -652,10 +652,10 @@ def test_cant_edit_user_folder_permissions_for_platform_admin_users(
         service_id=SERVICE_ONE_ID,
         user_id=platform_admin_user['id'],
     )
-    # assert normalize_spaces(page.select('main .govuk-body')[0].text) == 'platform@admin.gsa.gov Change email address'
-    # assert normalize_spaces(page.select('main .govuk-body')[2].text) == (
-    #     'Platform admin users can access all template folders.'
-    # )
+    assert normalize_spaces(page.select('main .usa-body')[0].text) == 'platform@admin.gsa.gov Change email address'
+    assert normalize_spaces(page.select('main .usa-body')[1].text) == (
+        'Platform admin users can access all template folders.'
+    )
     assert page.select('input[name=folder_permissions]') == []
     client_request.post(
         'main.edit_user_permissions',

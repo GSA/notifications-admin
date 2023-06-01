@@ -244,9 +244,9 @@ def test_resources_that_use_asset_path_variable_have_correct_path(client_request
 
     page = client_request.get('main.documentation')  # easy static page
 
-    logo_svg_fallback = page.select_one('.govuk-header__logotype-fallback-image')
+    logo_svg_fallback = page.select_one('.usa-flag-logo')
 
-    assert logo_svg_fallback['src'].startswith('https://static.example.com/images/email-template/us-flag.png')
+    assert logo_svg_fallback['src'].startswith('https://static.example.com/images/us-notify-color.png')
 
 
 @pytest.mark.parametrize('extra_args, email_branding_retrieved', (
