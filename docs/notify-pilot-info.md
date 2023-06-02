@@ -67,7 +67,7 @@ use and the setup process takes only ten minutes.
 
 **We’re in the early stages of assessing this product’s market fit and
 targeting to pilot** this shared service with at least 3 partners in
-spring of 2023. Following our first pilot, we intend to scale by adding
+2023. Following our first pilot, we intend to scale by adding
 additional features based on partner needs.
 
 |                                                                         |                                                                           |                                                                                 |
