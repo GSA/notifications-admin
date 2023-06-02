@@ -93,5 +93,8 @@
       Only showing the first {{ count_of_displayed_recipients }} rows
     </p>
   {% endif %}
-
+    <div>
+        <h2 class="heading-medium">Messages remaining today / Messages left if list is sent </h2>
+        <p class="govuk-body">{{ remaining_messages }} / {{ remaining_messages - count_of_recipients }}</p>
+    </div>
 {% endblock %}

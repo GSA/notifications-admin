@@ -311,6 +311,26 @@ def init_app(application):
     def _nav_selected():
         return navigation
 
+    @application.context_processor
+    def _attach_current_daily_remaining_messages_per_service():
+        remaining_messages = 0
+
+        if hasattr(current_service, 'message_limit'):
+            remaining_messages = current_service.message_limit - service_api_client.get_notification_count(
+                service_id=current_service.id)
+
+        return {'daily_remaining_messages': remaining_messages}
+
+    @application.context_processor
+    def _attach_current_global_daily_messages():
+        remaining_global_messages = 0
+
+        if current_app:
+            global_limit = current_app.config['GLOBAL_SERVICE_MESSAGE_LIMIT']
+            global_messages_count = service_api_client.get_global_notification_count()
+            remaining_global_messages = global_limit - global_messages_count
+        return {'daily_global_messages_remaining': remaining_global_messages}
+
     @application.before_request
     def record_start_time():
         g.start = monotonic()
