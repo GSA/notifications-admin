@@ -4055,7 +4055,7 @@ def test_view_edit_service_notes(
         service_id=SERVICE_ONE_ID,
     )
     assert page.select_one('h1').text == "Edit service notes"
-    assert page.find('label', class_="form-label").text.strip() == "Notes"
+    assert page.find('label', class_="usa-label").text.strip() == "Notes"
     assert page.find('textarea').attrs["name"] == "notes"
 
 

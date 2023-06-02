@@ -1,10 +1,9 @@
 {% from "components/banner.html" import banner_wrapper %}
 
-<div class="govuk-grid-column-full template-container">
+<div class="grid-col-12 template-container">
   {{ template|string }}
 </div>
-<br>
-<div class="govuk-grid-column-full">
+<div class="grid-col-12">
   {% if template._template.archived %}
     <p class="hint">
       This template was deleted {{ template._template.updated_at|format_datetime_relative }}.
@@ -16,7 +15,7 @@
       or edit this template, contact your manager.
     </p>
   {% else %}
-    <div class="grid-row">
+    <div class="grid-row margin-bottom-5">
       <div class="usa-button-group">
         {% if current_user.has_permissions('send_messages', restrict_admin_usage=True) %}
             <a href="{{ url_for(".set_sender", service_id=current_service.id, template_id=template.id) }}" class="usa-button usa-pill-separate-item">
@@ -32,6 +31,4 @@
     </div>
   {% endif %}
 </div>
-<br>
-<br>
 

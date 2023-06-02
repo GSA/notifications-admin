@@ -1311,7 +1311,7 @@ def test_view_edit_organisation_notes(
         org_id=organisation_one['id'],
     )
     assert page.select_one('h1').text == "Edit organization notes"
-    assert page.find('label', class_="form-label").text.strip() == "Notes"
+    assert page.find('label', class_="usa-label").text.strip() == "Notes"
     assert page.find('textarea').attrs["name"] == "notes"
 
 
@@ -1406,7 +1406,7 @@ def test_view_edit_organisation_billing_details(
         org_id=organisation_one['id'],
     )
     assert page.select_one('h1').text == "Edit organization billing details"
-    labels = page.find_all('label', class_="form-label")
+    labels = page.find_all('label', class_="usa-label")
     labels_list = [
         'Contact email addresses',
         'Contact names',

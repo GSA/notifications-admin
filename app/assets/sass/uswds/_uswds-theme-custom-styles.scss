@@ -100,3 +100,22 @@ p,
    text-decoration: none;
    background: initial;
 }
+
+.template-footer .usa-link,
+.template-content-count {
+   font-size: units(2);
+}
+
+.textbox-highlight-background,
+.textbox-highlight-foreground,
+.textbox-highlight-mask,
+.textbox-highlight-textbox {
+   font-size: units(2);
+   line-height: 1.2;
+   padding: units(1);
+   font-family: family("sans");
+}
+
+.govuk-inset-text {
+   border-color: color("blue-40v");
+}

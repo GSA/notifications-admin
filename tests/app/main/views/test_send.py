@@ -90,7 +90,7 @@ def test_default_email_sender_is_checked_and_has_hint(
     )
 
     assert page.select('.govuk-radios input')[0].has_attr('checked')
-    assert normalize_spaces(page.select_one('.govuk-radios .govuk-hint').text) == "(Default)"
+    assert normalize_spaces(page.select_one('.govuk-radios .usa-hint').text) == "(Default)"
     assert not page.select('.govuk-radios input')[1].has_attr('checked')
 
 
@@ -107,7 +107,7 @@ def test_default_sms_sender_is_checked_and_has_hint(
     )
 
     assert page.select('.govuk-radios input')[0].has_attr('checked')
-    assert normalize_spaces(page.select_one('.govuk-radios .govuk-hint').text) == "(Default)"
+    assert normalize_spaces(page.select_one('.govuk-radios .usa-hint').text) == "(Default)"
     assert not page.select('.govuk-radios input')[1].has_attr('checked')
 
 
@@ -124,7 +124,7 @@ def test_default_sms_sender_is_checked_and_has_hint_when_there_are_no_inbound_nu
     )
 
     assert page.select('.govuk-radios input')[0].has_attr('checked')
-    assert normalize_spaces(page.select_one('.govuk-radios .govuk-hint').text) == "(Default)"
+    assert normalize_spaces(page.select_one('.govuk-radios .usa-hint').text) == "(Default)"
     assert not page.select('.govuk-radios input')[1].has_attr('checked')
 
 
@@ -143,7 +143,7 @@ def test_default_inbound_sender_is_checked_and_has_hint_with_default_and_receive
 
     assert page.select('.govuk-radios input')[0].has_attr('checked')
     assert normalize_spaces(
-        page.select_one('.govuk-radios .govuk-hint').text) == "(Default and receives replies)"
+        page.select_one('.govuk-radios .usa-hint').text) == "(Default and receives replies)"
     assert not page.select('.govuk-radios input')[1].has_attr('checked')
     assert not page.select('.govuk-radios input')[2].has_attr('checked')
 
@@ -163,7 +163,7 @@ def test_sms_sender_has_receives_replies_hint(
 
     assert page.select('.govuk-radios input')[0].has_attr('checked')
     assert normalize_spaces(
-        page.select_one('.govuk-radios .govuk-hint').text) == "(Default and receives replies)"
+        page.select_one('.govuk-radios .usa-hint').text) == "(Default and receives replies)"
     assert not page.select('.govuk-radios input')[1].has_attr('checked')
     assert not page.select('.govuk-radios input')[2].has_attr('checked')
 

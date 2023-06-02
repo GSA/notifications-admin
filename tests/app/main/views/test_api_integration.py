@@ -169,7 +169,7 @@ def test_should_show_create_api_key_page(
         item = page.select('.govuk-radios__item')[index]
         if type(option) is tuple:
             assert normalize_spaces(item.select_one('.usa-label').text) == option[0]
-            assert normalize_spaces(item.select_one('.govuk-hint').text) == option[1]
+            assert normalize_spaces(item.select_one('.usa-hint').text) == option[1]
         else:
             assert normalize_spaces(item.select_one('.usa-label').text) == option
 
