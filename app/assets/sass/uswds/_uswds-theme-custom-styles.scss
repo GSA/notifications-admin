@@ -102,8 +102,10 @@ p,
 }
 
 .template-footer .usa-link,
-.template-content-count {
-   font-size: units(2);
+.template-content-count,
+.table-empty-message,
+td.table-empty-message {
+   font-size: size("body", "sm");
 }
 
 .textbox-highlight-background,
@@ -118,4 +120,13 @@ p,
 
 .govuk-inset-text {
    border-color: color("blue-40v");
+}
+
+.usa-dark-background .pill-item__label {
+   color: white;
+   text-decoration: none !important;
+}
+
+.pill-item.usa-link {
+   text-decoration: none !important;
 }
