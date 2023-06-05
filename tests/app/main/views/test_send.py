@@ -1751,7 +1751,7 @@ def test_upload_csvfile_with_valid_phone_shows_all_numbers(
     assert '202 867 0750' not in page.text
     assert 'Only showing the first 50 rows' in page.text
 
-    mock_get_notification_count.assert_called_once_with(service_one['id'])
+    mock_get_notification_count.assert_called_with(service_id=service_one['id'])
 
 
 @pytest.mark.parametrize('international_sms_permission, should_allow_international', [

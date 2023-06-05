@@ -47,6 +47,8 @@ class Config(object):
 
     DEFAULT_SERVICE_LIMIT = 50
 
+    GLOBAL_SERVICE_MESSAGE_LIMIT = 5000
+
     EMAIL_EXPIRY_SECONDS = 3600  # 1 hour
     INVITATION_EXPIRY_SECONDS = 3600 * 24 * 2  # 2 days - also set on api
     EMAIL_2FA_EXPIRY_SECONDS = 1800  # 30 Minutes
