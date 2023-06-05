@@ -1,7 +1,7 @@
 {% if help %}
   {% include 'partials/tour.html' %}
 {% else %}
-<nav class="nav margin-top-5">
+<nav class="nav margin-y-5">
   <ul class="usa-sidenav">
   {% if current_user.has_permissions() %}
     {% if current_user.has_permissions('view_activity') %}
@@ -26,15 +26,11 @@
     <li class="usa-sidenav__item"><a class="govuk-link govuk-link--no-visited-state{{ main_navigation.is_selected('team-members') }}" href="{{ url_for('.manage_users', service_id=current_service.id) }}">Team members</a></li>
   {% endif %}
   </ul>
-</nav><br>
+</nav>
     <div>
-        <p class="govuk-body">Messages Left / Daily Limit</p>
-        <ul>
-            <li>{{ daily_remaining_messages }} / {{ current_service.message_limit }}</li>
-        </ul><br>
-        <p class="govuk-body">Messages Left Across Services</p>
-        <ul>
-            <li>{{ daily_global_messages_remaining }}</li>
-        </ul>
+        <p class="usa-body bold margin-bottom-1">Messages Left / Daily Limit</p>
+        <p>{{ daily_remaining_messages }} / {{ current_service.message_limit }}</p>
+        <p class="usa--body bold margin-bottom-1">Messages Left Across Services</p>
+        <p>{{ daily_global_messages_remaining }}</p>
     </div>
 {% endif %}

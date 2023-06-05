@@ -28,7 +28,7 @@
         {{ form.placeholder_value(param_extensions={"classes": "govuk-!-width-full"}) }}
       </div>
       {% if skip_link or link_to_upload %}
-        <div class="grid-col-12">
+        <div class="grid-col-12 template-footer">
           {% if link_to_upload %}
             <a class="usa-link margin-right-1" href="{{ url_for('.send_messages', service_id=current_service.id, template_id=template.id) }}">Upload a list of {{ 999|recipient_count_label(template.template_type) }}</a>
           {% endif %}
