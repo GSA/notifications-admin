@@ -85,25 +85,25 @@ U.S. Notify
 <section id="whos-using-notify"
   class="grid-container usa-section border-top border-base-lighter padding-top-4 padding-bottom-5">
   <div class="grid-row grid-gap flex-column">
-    <h2 class="font-heading-xl display-flex flex-justify-center margin-top-0 bold">
+    <h2 class="font-heading-xl display-flex flex-justify-center margin-top-0 margin-bottom-3 bold">
       Who’s using U.S. Notify
     </h2>
-    <p class="display-flex flex-justify-center font-body-sm margin-bottom-3">
+    <!-- <p class="display-flex flex-justify-center font-body-sm margin-bottom-3">
       See the
       <a class="usa-link margin-left-05" href="{{ url_for('main.performance') }}">list of services and
         organizations</a>.
-    </p>
+    </p> -->
   </div>
   <div class="grid-row">
     <div class="tablet:grid-col-6 display-flex flex-justify-center flex-align-center flex-column">
       <span class="usa-sr-only">There are</span>
       <div class="large-number">{{ counts.organisations|format_thousands }}</div>
-      <p class="font-body-lg">Organizations</p>
+      <p class="font-body-lg margin-bottom-0">Organizations</p>
     </div>
     <div class="tablet:grid-col-6 display-flex flex-justify-center flex-align-center flex-column">
       <span class="usa-sr-only">and</span>
       <div class="large-number">{{ counts.services|format_thousands }}</div>
-      <p class="font-body-lg">Services</p>
+      <p class="font-body-lg margin-bottom-0">Services</p>
       <span class="usa-sr-only">using Notify.</span>
     </div>
   </div>
