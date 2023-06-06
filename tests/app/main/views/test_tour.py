@@ -429,7 +429,7 @@ def test_post_tour_step_raises_validation_error_for_form_error(
     )
 
     assert normalize_spaces(
-        page.select('.govuk-error-message')[0].text
+        page.select('.usa-error-message')[0].text
     ) == (
         'Error: Cannot be empty'
     )

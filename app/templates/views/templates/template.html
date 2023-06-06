@@ -12,6 +12,7 @@
 {% block maincolumn_content %}
 
   {% if show_redaction_message %}
+
     <div class="bottom-gutter">
       {% call banner_wrapper(type='dangerous', subhead='Are you sure you want to hide personalization after sending?') %}
         <ul class="list list-bullet">
@@ -24,7 +25,7 @@
         </ul>
         <form method='post'>
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-          {{ govukButton({ "text": "Confirm", "classes": "govuk-button--warning govuk-!-margin-top-2" }) }}
+          {{ govukButton({ "text": "Confirm", "classes": "usa-button--secondary margin-top-2" }) }}
         </form>
       {% endcall %}
     </div>
@@ -49,21 +50,17 @@
   </div>
   <div class="template-footer">
     {% if template._template.updated_at %}
-      <h2 class="heading-small bottom-gutter-2-3 heading-inline">
+      <h2 class="font-body-lg">
         Last edited
         <time class="timeago" datetime="{{ template._template.updated_at }}">
           {{ template._template.updated_at|format_delta }}
         </time>
       </h2>
-
-      &emsp;
-      <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.view_template_versions', service_id=current_service.id, template_id=template.id) }}">See previous versions</a>
-      &emsp;
+      <a class="usa-link margin-right-3" href="{{ url_for('.view_template_versions', service_id=current_service.id, template_id=template.id) }}">See previous versions</a>
     {% endif %}
     {% if current_user.has_permissions('manage_templates') and user_has_template_permission %}
       {% if not template._template.archived %}
-          <a class="usa-link" href="{{ url_for('.delete_service_template', service_id=current_service.id, template_id=template.id) }}">Delete this template</a>
-        &emsp;
+          <a class="usa-link margin-right-3" href="{{ url_for('.delete_service_template', service_id=current_service.id, template_id=template.id) }}">Delete this template</a>
       {% endif %}
       {% if not template._template.redact_personalisation %}
           <a class="usa-link" href="{{ url_for('.confirm_redact_template', service_id=current_service.id, template_id=template.id) }}">Hide personalization after sending</a>

@@ -439,7 +439,7 @@ def test_callback_forms_validation(
         _data=data,
         _expected_status=200
     )
-    error_msgs = ' '.join(msg.text.strip() for msg in response.select(".govuk-error-message"))
+    error_msgs = ' '.join(msg.text.strip() for msg in response.select(".usa-error-message"))
 
     assert expected_errors in error_msgs
 

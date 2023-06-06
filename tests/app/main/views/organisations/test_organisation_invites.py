@@ -57,7 +57,7 @@ def test_invite_org_user_errors_when_same_email_as_inviter(
     )
 
     assert mock_invite_org_user.called is False
-    assert 'You cannot send an invitation to yourself' in normalize_spaces(page.select_one('.govuk-error-message').text)
+    assert 'You cannot send an invitation to yourself' in normalize_spaces(page.select_one('.usa-error-message').text)
 
 
 def test_cancel_invited_org_user_cancels_user_invitations(

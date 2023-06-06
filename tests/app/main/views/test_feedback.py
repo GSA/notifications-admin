@@ -269,7 +269,7 @@ def test_email_address_required_for_problems_and_questions(
         _data=data,
         _expected_status=200
     )
-    assert normalize_spaces(page.select_one('.govuk-error-message').text) == (
+    assert normalize_spaces(page.select_one('.usa-error-message').text) == (
         'Error: Cannot be empty'
     )
 
@@ -294,7 +294,7 @@ def test_email_address_must_be_valid_if_provided_to_support_form(
         _expected_status=200,
     )
 
-    assert normalize_spaces(page.select_one('span.govuk-error-message').text) == (
+    assert normalize_spaces(page.select_one('span.usa-error-message').text) == (
         'Error: Enter a valid email address'
     )
 

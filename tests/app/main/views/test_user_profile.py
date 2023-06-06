@@ -130,7 +130,7 @@ def test_should_show_errors_if_new_email_address_does_not_validate(
         _expected_status=200,
     )
 
-    assert normalize_spaces(page.find('span', class_='govuk-error-message').text) == f'Error: {error_message}'
+    assert normalize_spaces(page.find('span', class_='usa-error-message').text) == f'Error: {error_message}'
     # We only call API to check if the email address is already in use if there are no other errors
     assert not mock_email_is_not_already_in_use.called
 

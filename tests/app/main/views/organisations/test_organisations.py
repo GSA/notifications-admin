@@ -160,7 +160,7 @@ def test_create_new_organisation_validates(
     )
     assert [
         (error['data-error-label'], normalize_spaces(error.text))
-        for error in page.select('.govuk-error-message')
+        for error in page.select('.usa-error-message')
     ] == [
         ('name', 'Error: Cannot be empty'),
         ('organisation_type', 'Error: Select the type of organization'),
@@ -194,7 +194,7 @@ def test_create_new_organisation_fails_with_incorrect_input(
         _expected_status=200,
     )
     assert mock_create_organisation.called is False
-    assert error_message in page.select_one('.govuk-error-message').text
+    assert error_message in page.select_one('.usa-error-message').text
 
 
 def test_create_new_organisation_fails_with_duplicate_name(
@@ -224,7 +224,7 @@ def test_create_new_organisation_fails_with_duplicate_name(
     )
 
     error_message = 'This organization name is already in use'
-    assert error_message in page.select_one('.govuk-error-message').text
+    assert error_message in page.select_one('.usa-error-message').text
 
 
 @pytest.mark.parametrize('organisation_type, organisation, expected_status', (
@@ -337,7 +337,7 @@ def test_validation_of_gps_creating_organisations(
         _data=data,
         _expected_status=200,
     )
-    assert expected_error in page.select_one('.govuk-error-message, .error-message').text
+    assert expected_error in page.select_one('.usa-error-message, .error-message').text
 
 
 @freeze_time("2020-02-20 20:20")
@@ -1209,7 +1209,7 @@ def test_update_organisation_with_incorrect_input(
         _data={'name': name},
         _expected_status=200,
     )
-    assert error_message in page.select_one('.govuk-error-message').text
+    assert error_message in page.select_one('.usa-error-message').text
 
 
 def test_update_organisation_with_non_unique_name(
@@ -1237,7 +1237,7 @@ def test_update_organisation_with_non_unique_name(
         _expected_status=200,
     )
 
-    assert 'This organization name is already in use' in page.select_one('.govuk-error-message').text
+    assert 'This organization name is already in use' in page.select_one('.usa-error-message').text
 
 
 def test_get_edit_organisation_go_live_notes_page(

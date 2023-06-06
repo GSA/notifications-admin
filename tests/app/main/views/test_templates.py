@@ -1956,21 +1956,21 @@ def test_set_template_sender(
             # Can’t make a 7 fragment text template from content alone
             'sms', False, 'a' * 919,
             'You have 1 character too many',
-            'govuk-error-message',
+            'usa-error-message',
         ),
         (
             # Service name increases content count but character count
             # is based on content alone
             'sms', True, 'a' * 919,
             'You have 1 character too many',
-            'govuk-error-message',
+            'usa-error-message',
         ),
         (
             # Service name increases content count but character count
             # is based on content alone
             'sms', True, 'a' * 920,
             'You have 2 characters too many',
-            'govuk-error-message',
+            'usa-error-message',
         ),
         (
             'sms', False, 'Ẅ' * 70,
@@ -1990,7 +1990,7 @@ def test_set_template_sender(
         (
             'sms', False, 'Ẅ' * 919,
             'You have 1 character too many',
-            'govuk-error-message',
+            'usa-error-message',
         ),
         (
             'sms', False, 'Hello ((name))',

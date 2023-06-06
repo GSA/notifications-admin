@@ -436,5 +436,5 @@ def test_edit_sms_provider_submit_invalid_percentages(
         _follow_redirects=True
     )
 
-    assert expected_error in page.select_one('.govuk-error-message').text
+    assert expected_error in page.select_one('.usa-error-message').text
     mock_update_provider.assert_not_called()

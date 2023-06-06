@@ -482,4 +482,4 @@ def test_email_branding_something_else_submit_shows_error_if_textbox_is_empty(
         _follow_redirects=True,
     )
     assert normalize_spaces(page.h1.text) == 'Describe the branding you want'
-    assert normalize_spaces(page.select_one('.govuk-error-message').text) == 'Error: Cannot be empty'
+    assert normalize_spaces(page.select_one('.usa-error-message').text) == 'Error: Cannot be empty'
