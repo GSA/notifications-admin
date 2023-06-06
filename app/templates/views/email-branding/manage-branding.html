@@ -24,7 +24,7 @@
           <img src="https://{{ cdn_url }}/{{ logo }}"/>
         </div>
       {% endif %}
-      <p class="govuk-body">
+      <p>
         Logos should be PNG files, 108px high
       </p>
       {{ file_upload(form.file, allowed_file_extensions=['png'], button_text='{} logo'.format('Update' if email_branding else 'Upload')) }}

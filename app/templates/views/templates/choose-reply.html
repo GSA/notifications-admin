@@ -11,7 +11,7 @@
 {% block maincolumn_content %}
 
 <div class="bottom-gutter-1-2">
-  <h1 class="heading-large">Choose a template</h1>
+  <h1 class="font-body-2xl margin-bottom-3">Choose a template</h1>
   {{ folder_path(template_folder_path, current_service.id, template_type, current_user, root_element='h2') }}
 </div>
 
@@ -27,7 +27,7 @@
         "href": url_for('.choose_template', service_id=current_service.id, initial_state='add-new-template')
       }) }}
     {% else %}
-      <p class="govuk-body">
+      <p>
         You need to ask your service manager to add templates before you
         can send text messages.
       </p>

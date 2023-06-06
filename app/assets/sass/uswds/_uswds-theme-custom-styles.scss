@@ -21,3 +21,45 @@ i.e.
 */
 
 @use "uswds-core" as *;
+
+.usa-logo {
+   font-family: family("sans");
+   img {
+      @include at-media($theme-header-min-width) {
+         width: 80px;
+         height: 70px;
+      }
+   }
+}
+
+.usa-nav__primary > .usa-nav__primary-item > a {
+   font-size: size("body", 4);
+}
+
+h1 {
+   font-weight: bold !important;
+}
+
+.sub-content {
+   h1,
+   h2:not(.get-started-list__heading, .usa-process-list__heading) {
+      margin-top: units(4);
+      font-weight: bold !important;
+   }
+
+   h2:not(.get-started-list__heading, .usa-process-list__heading),
+   h3 {
+      margin-top: units(5) !important;
+      margin-bottom: units(2) !important;
+   }
+}
+
+p,
+.list li {
+   font-family: family("sans");
+   font-size: size("body", 7);
+}
+
+.large-number {
+   font-size: size("body", 16);
+}

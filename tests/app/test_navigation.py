@@ -389,7 +389,7 @@ def test_a_page_should_nave_selected_header_navigation_item(
     selected_nav_item,
 ):
     page = client_request.get(endpoint, service_id=SERVICE_ONE_ID)
-    selected_nav_items = page.select('.govuk-header__navigation-item--active')
+    selected_nav_items = page.select('.usa-current')
     assert len(selected_nav_items) == 1
     assert selected_nav_items[0].text.strip() == selected_nav_item
 

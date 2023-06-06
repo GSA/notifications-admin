@@ -8,13 +8,13 @@
 {% block platform_admin_content %}
   <div class="govuk-grid-row bottom-gutter">
     <div class="govuk-grid-column-full">
-      <h1 class="heading-large">
+      <h1 class="font-body-2xl margin-bottom-3">
         {{ user.name }}
       </h1>
-      <p class="govuk-body">{{ user.email_address }}</p>
+      <p>{{ user.email_address }}</p>
       <p class="{{ '' if user.mobile_number else 'hint' }}">{{ user.mobile_number or 'No mobile number'}}</p>
 
-      <h2 class="heading-medium">Live services</h2>
+      <h2 class="font-body-lg">Live services</h2>
       <nav class="browse-list">
         {% if user.live_services %}
           <ul>
@@ -30,7 +30,7 @@
           </p>
         {% endif %}
       </nav>
-      <h2 class="heading-medium">Trial mode services</h2>
+      <h2 class="font-body-lg">Trial mode services</h2>
       <nav class="browse-list">
         {% if user.trial_mode_services %}
           <ul>
@@ -47,19 +47,19 @@
         {% endif %}
       </nav>
 
-      <h2 class="heading-medium">Authentication</h2>
-      <p class="govuk-body">{{ user.auth_type | format_auth_type }}</p>
+      <h2 class="font-body-lg">Authentication</h2>
+      <p>{{ user.auth_type | format_auth_type }}</p>
       {% if user.auth_type != 'webauthn_auth' %}
         <a class="govuk-link govuk-link" href="{{ url_for('main.change_user_auth', user_id=user.id) }}">
           Change authentication for this user
         </a>
       {% endif %}
 
-      <h2 class="heading-medium">Last login</h2>
+      <h2 class="font-body-lg">Last login</h2>
       {% if not user.logged_in_at %}
       <p class="hint">This person has never logged in</p>
       {% else %}
-      <p class="govuk-body">Last logged in
+      <p>Last logged in
         <time class="timeago" datetime="{{ user.logged_in_at }}">
           {{ user.logged_in_at|format_delta }}
         </time>

@@ -25,14 +25,17 @@
 
   {{ page_header(user.name or user.email_localpart) }}
 
-  <p class="govuk-body">
+  <p class="usa-body">
     {{ user.email_address }}&emsp;
     <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.edit_user_email', service_id=current_service.id, user_id=user.id)}}">
     Change<span class="govuk-visually-hidden"> email address</span>
     </a>
   </p>
+  <p class="usa-body">
+    Platform admin users can access all template folders.
+  </p>
   {% if mobile_number %}
-    <p class="govuk-body" id="user_mobile_number">
+    <p class="usa-body" id="user_mobile_number">
       {{ mobile_number }}&emsp;
       <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.edit_user_mobile_number', service_id=current_service.id, user_id=user.id)}}">
       Change<span class="govuk-visually-hidden"> mobile number</span>

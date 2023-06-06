@@ -22,7 +22,7 @@
 
   {{ page_header('Change email branding') }}
 
-  <p class="govuk-body">
+  <p>
     Your emails currently have {{ branding_name }} branding.
   </p>
 
@@ -31,7 +31,7 @@
   ) }}
 
   {% if current_service.needs_to_change_email_branding %}
-    <p class="govuk-body">
+    <p>
       You should be using your own branding instead.
     </p>
   {% endif %}
