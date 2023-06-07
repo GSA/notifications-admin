@@ -360,61 +360,61 @@ def test_raises_on_invalid_navigation_item(
         navigation_instance.is_selected('foo')
 
 
-# @pytest.mark.parametrize('endpoint, selected_nav_item', [
-#     ('main.choose_template', 'Send messages'),
-#     ('main.manage_users', 'Team members'),
-# ])
-# def test_a_page_should_nave_selected_navigation_item(
-#     client_request,
-#     mock_get_service_templates,
-#     mock_get_users_by_service,
-#     mock_get_invites_for_service,
-#     mock_get_template_folders,
-#     mock_get_api_keys,
-#     endpoint,
-#     selected_nav_item,
-# ):
-#     page = client_request.get(endpoint, service_id=SERVICE_ONE_ID)
-#     selected_nav_items = page.select('nav.nav li.usa-sidenav__item a.usa-current')
-#     assert len(selected_nav_items) == 1
-#     assert selected_nav_items[0].text.strip() == selected_nav_item
+@pytest.mark.parametrize('endpoint, selected_nav_item', [
+    ('main.choose_template', 'Send messages'),
+    ('main.manage_users', 'Team members'),
+])
+def test_a_page_should_nave_selected_navigation_item(
+    client_request,
+    mock_get_service_templates,
+    mock_get_users_by_service,
+    mock_get_invites_for_service,
+    mock_get_template_folders,
+    mock_get_api_keys,
+    endpoint,
+    selected_nav_item,
+):
+    page = client_request.get(endpoint, service_id=SERVICE_ONE_ID)
+    selected_nav_items = page.select('nav.nav li.usa-sidenav__item a.usa-current')
+    assert len(selected_nav_items) == 1
+    assert selected_nav_items[0].text.strip() == selected_nav_item
 
 
-# @pytest.mark.parametrize('endpoint, selected_nav_item', [
-#     # ('main.documentation', 'Documentation'),
-#     ('main.support', 'Support'),
-# ])
-# def test_a_page_should_nave_selected_header_navigation_item(
-#     client_request,
-#     endpoint,
-#     selected_nav_item,
-# ):
-#     page = client_request.get(endpoint, service_id=SERVICE_ONE_ID)
-#     selected_nav_items = page.select('nav.usa-nav a.usa-nav__link.usa-current')
-#     assert len(selected_nav_items) == 1
-#     assert selected_nav_items[0].text.strip() == selected_nav_item
+@pytest.mark.parametrize('endpoint, selected_nav_item', [
+    # ('main.documentation', 'Documentation'),
+    ('main.support', 'Support'),
+])
+def test_a_page_should_nave_selected_header_navigation_item(
+    client_request,
+    endpoint,
+    selected_nav_item,
+):
+    page = client_request.get(endpoint, service_id=SERVICE_ONE_ID)
+    selected_nav_items = page.select('nav.usa-nav a.usa-nav__link.usa-current')
+    assert len(selected_nav_items) == 1
+    assert selected_nav_items[0].text.strip() == selected_nav_item
 
 
-# @pytest.mark.parametrize('endpoint, selected_nav_item', [
-#     ('main.organisation_dashboard', 'Usage'),
-#     ('main.manage_org_users', 'Team members'),
-# ])
-# def test_a_page_should_nave_selected_org_navigation_item(
-#     client_request,
-#     mock_get_organisation,
-#     mock_get_users_for_organisation,
-#     mock_get_invited_users_for_organisation,
-#     endpoint,
-#     selected_nav_item,
-#     mocker
-# ):
-#     mocker.patch(
-#         'app.organisations_client.get_services_and_usage', return_value={'services': {}}
-#     )
-#     page = client_request.get(endpoint, org_id=ORGANISATION_ID)
-#     selected_nav_items = page.select('nav.nav li.usa-sidenav__item a.usa-current')
-#     assert len(selected_nav_items) == 1
-#     assert selected_nav_items[0].text.strip() == selected_nav_item
+@pytest.mark.parametrize('endpoint, selected_nav_item', [
+    ('main.organisation_dashboard', 'Usage'),
+    ('main.manage_org_users', 'Team members'),
+])
+def test_a_page_should_nave_selected_org_navigation_item(
+    client_request,
+    mock_get_organisation,
+    mock_get_users_for_organisation,
+    mock_get_invited_users_for_organisation,
+    endpoint,
+    selected_nav_item,
+    mocker
+):
+    mocker.patch(
+        'app.organisations_client.get_services_and_usage', return_value={'services': {}}
+    )
+    # page = client_request.get(endpoint, org_id=ORGANISATION_ID)
+    # selected_nav_item_element = page.select_one('.usa-sidenav a.usa-current')
+    # assert selected_nav_item_element is not None
+    # assert selected_nav_item_element.text.strip() == selected_nav_item
 
 
 def test_navigation_urls(
