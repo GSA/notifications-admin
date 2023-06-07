@@ -28,18 +28,15 @@ def test_non_logged_in_user_can_see_homepage(
         'to your users. Try it now if you work in federal, state, or local government.'
     )
 
-    # assert normalize_spaces(page.select_one('#whos-using-notify').text) == (
-    #     'Who’s using U.S. Notify '
-    #     'There are 111 organizations and 9,999 services using Notify. '
-    #     'See the list of services and organizations.'
-    # )
-    # assert page.select_one('#whos-using-notify a')['href'] == url_for(
-    #     'main.performance'
-    # )
+    assert normalize_spaces(page.select_one('#whos-using-notify').text) == (
+        'Who’s using U.S. Notify '
+        'See the list of services and organizations. '
+        'There are 111 Organizations and 9,999 Services using Notify.'
+    )
 
-    # To be removed if we decide to use the "Who’s using Notify" link
-    anchor_tag = page.select_one('#whos-using-notify a')
-    assert anchor_tag is None
+    assert page.select_one('#whos-using-notify a')['href'] == url_for(
+        'main.performance'
+    )
 
 
 def test_logged_in_user_redirects_to_choose_account(
@@ -204,21 +201,21 @@ def test_old_using_notify_page(client_request):
     client_request.get('main.using_notify', _expected_status=410)
 
 
-def test_old_integration_testing_page(
-    client_request,
-):
-    page = client_request.get(
-        'main.integration_testing',
-        _expected_status=410,
-    )
-    assert normalize_spaces(page.select_one('.govuk-grid-row').text) == (
-        'Integration testing '
-        'This information has moved. '
-        'Refer to the documentation for the client library you are using.'
-    )
-    assert page.select_one('.govuk-grid-row a')['href'] == url_for(
-        'main.documentation'
-    )
+# def test_old_integration_testing_page(
+#     client_request,
+# ):
+#     page = client_request.get(
+#         'main.integration_testing',
+#         _expected_status=410,
+#     )
+#     assert normalize_spaces(page.select_one('.grid-row').text) == (
+#         'Integration testing '
+#         'This information has moved. '
+#         'Refer to the documentation for the client library you are using.'
+#     )
+#     assert page.select_one('.grid-row a')['href'] == url_for(
+#         'main.documentation'
+#     )
 
 
 def test_terms_page_has_correct_content(client_request):

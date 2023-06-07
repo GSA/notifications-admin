@@ -49,7 +49,7 @@ h1 {
 
    h2:not(.get-started-list__heading, .usa-process-list__heading),
    h3 {
-      margin-top: units(5);
+      margin-top: units(5) !important;
       margin-bottom: units(2) !important;
    }
 }
@@ -57,7 +57,7 @@ h1 {
 p,
 .list li {
    font-family: family("sans");
-   // font-size: size("body", 7);
+   font-size: size("body", 6);
 }
 
 .large-number {

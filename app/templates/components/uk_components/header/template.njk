@@ -89,8 +89,7 @@
         {% endfor %}
       </ul>
       <div class="usa-nav__secondary">
-        <!-- Will experiment with later, want to keep for now -->
-        <!-- <ul class="usa-nav__secondary-links">
+        <ul class="usa-nav__secondary-links">
           {% for item in params.secondaryNavigation %}
             {% if item.href and item.text %}
             <li class="usa-nav__secondary-item{{ ' is-current' if item.active }}">
@@ -101,12 +100,12 @@
             </li>
             {% endif %}
           {% endfor %}
-          <li class="usa-nav__secondary-item">
+          <!-- <li class="usa-nav__secondary-item">
             <a href="javascript:void(0)">
               Sign in
             </a>
-          </li>
-        </ul> -->
+          </li> -->
+        </ul>
         <!-- <section aria-label="Search component">
           <form class="usa-search usa-search--small margin-bottom-2" role="search">
             <label class="usa-sr-only" for="search-field">Search</label>
