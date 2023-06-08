@@ -55,12 +55,12 @@ class HeaderNavigation(Navigation):
         'using_notify': {
             'get_started',
             'using_notify',
+            'pricing',
             'trial_mode_new',
             'message_status',
             'guidance_index',
         },
         'pricing': {
-            'pricing',
             'how_to_pay',
             'billing_details',
         },

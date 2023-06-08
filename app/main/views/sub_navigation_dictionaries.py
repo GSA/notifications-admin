@@ -8,10 +8,10 @@ def features_nav():
                 #     "name": "Emails",
                 #     "link": "main.features_email",
                 # },
-                {
-                    "name": "Text messages",
-                    "link": "main.features_sms",
-                },
+                # {
+                #     "name": "Text messages",
+                #     "link": "main.features_sms",
+                # },
             ]
         },
         {
@@ -38,6 +38,10 @@ def using_notify_nav():
         {
             "name": "Trial mode",
             "link": "main.trial_mode_new",
+        },
+        {
+            "name": "Pricing",
+            "link": "main.pricing",
         },
         {
             "name": "Delivery status",
