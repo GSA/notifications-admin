@@ -14,7 +14,7 @@ describe("Error Banner", () => {
   describe("The `hideBanner` method", () => {
     test("Will hide the element", () => {
       document.body.innerHTML = `
-      <span class="govuk-error-message banner-dangerous js-error-visible">
+      <span class="usa-error-message banner-dangerous js-error-visible">
       </span>`;
       window.GOVUK.ErrorBanner.hideBanner();
       expect(document.querySelector('.banner-dangerous').classList).toContain('govuk-!-display-none')
@@ -24,7 +24,7 @@ describe("Error Banner", () => {
   describe("The `showBanner` method", () => {
     beforeEach(() => {
       document.body.innerHTML = `
-        <span class="govuk-error-message banner-dangerous js-error-visible govuk-!-display-none">
+        <span class="usa-error-message banner-dangerous js-error-visible govuk-!-display-none">
         </span>`;
 
       window.GOVUK.ErrorBanner.showBanner('Some Err');

@@ -46,7 +46,7 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
                 </div>
                 <div class="js-will-stick-at-bottom-when-scrolling">
                   <div class="page-footer">
-                    <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-right-3 govuk-!-margin-bottom-1" name="operation" value="move-to-existing-folder">Move</button>
+                    <button type="submit" class="usa-button" name="operation" value="move-to-existing-folder">Move</button>
                   </div>
                 </div>
               </div>
@@ -59,7 +59,7 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
                     <input class="govuk-input govuk-!-width-full" id="move_to_new_folder_name" name="move_to_new_folder_name" type="text">
                   </div>
                   <div class="page-footer">
-                    <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-1" name="operation" value="move-to-new-folder">Add to new folder</button>
+                    <button type="submit" class="usa-button" name="operation" value="move-to-new-folder">Add to new folder</button>
                   </div>
                 </div>
               </div>
@@ -72,7 +72,7 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
                     <input class="govuk-input govuk-!-width-full" id="add_new_folder_name" name="add_new_folder_name" type="text">
                   </div>
                   <div class="page-footer">
-                    <button type="submit" class="govuk-button page-footer__button" name="operation" value="add-new-folder">Add new folder</button>
+                    <button type="submit" class="usa-button page-footer__button" name="operation" value="add-new-folder">Add new folder</button>
                   </div>
                 </div>
               </div>
@@ -112,7 +112,7 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
                 </div>
                 <div class="js-will-stick-at-bottom-when-scrolling">
                   <div class="page-footer">
-                    <button type="submit" class="govuk-button page-footer__button" name="operation" value="add-new-template">Continue</button>
+                    <button type="submit" class="usa-button page-footer__button" name="operation" value="add-new-template">Continue</button>
                   </div>
                 </div>
               </div>

@@ -50,15 +50,15 @@
     {% endcall %}
   </div>
   <p class="table-show-more-link">
-    <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.get_example_csv', service_id=current_service.id, template_id=template.id) }}" download>Download this example (<abbr title="Comma separated values">CSV</abbr>)</a>
+    <a class="usa-link" href="{{ url_for('.get_example_csv', service_id=current_service.id, template_id=template.id) }}" download>Download this example (<abbr title="Comma separated values">CSV</abbr>)</a>
   </p>
 
   <h2 class="font-body-lg">Your file will populate this template ({{ template.name }})</h2>
   {{ template|string }}
 
     <div>
-        <h2 class="heading-medium">Messages Remaining Today / Daily Message Limit</h2>
-        <p class="govuk-body"> {{ daily_remaining_messages }} / {{ current_service.message_limit }}</p>
+        <h2 class="font-body-lg">Messages Remaining Today / Daily Message Limit</h2>
+        <p class="usa-body"> {{ daily_remaining_messages }} / {{ current_service.message_limit }}</p>
     </div>
 
 {% endblock %}

@@ -1,6 +1,5 @@
 {% from "components/big-number.html" import big_number %}
 {% from "components/table.html" import list_table, field, hidden_field_heading, row_heading, text_field %}
-{% from "components/page-header.html" import page_header %}
 {% from "components/pill.html" import pill %}
 
 {% extends "withnav_template.html" %}
@@ -11,7 +10,9 @@
 
 {% block maincolumn_content %}
 
-    {{ page_header('Usage', size='medium') }}
+    <h1 class="font-body-lg">
+      Usage
+    </h1>
 
     <div class="bottom-gutter">
       {{ pill(years, selected_year, big_number_args={'smallest': True}) }}
@@ -66,7 +67,7 @@
       </div> -->
 
       {% if months %}
-        <div class="dashboard-table usage-table body-copy-table">
+        <div class="dashboard-table usage-table body-copy-table margin-top-4">
           {% call(item, row_index) list_table(
             months,
             caption="Total spend",
@@ -134,7 +135,7 @@
       <div class="govuk-grid-column-two-thirds">
         <p class="align-with-heading-copy">
           What counts as 1 text message?<br />
-          See <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.pricing') }}">pricing</a>.
+          See <a class="usa-link" href="{{ url_for('.pricing') }}">pricing</a>.
         </p>
       </div>
     </div>

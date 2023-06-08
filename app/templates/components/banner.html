@@ -13,11 +13,11 @@
     {% endif %}
   >
     {% if subhead -%}
-      <h1 class="banner-title">{{ subhead }}</h1>
+      <h1 class="banner-title font-body-lg">{{ subhead }}</h1>
     {%- endif -%}
     {{ body }}
     {% if context %}
-    <p class="govuk-body">
+    <p class="usa-body">
       {{ context }}
     </p>
     {% endif %}
@@ -28,7 +28,7 @@
           "text": "" if thing else delete_button,
           "html": delete_button + "<span class=\"govuk-visually-hidden\"> ‘" + thing + "’</span>" if thing else "",
           "name": "delete",
-          "classes": "govuk-button--warning govuk-!-margin-top-2",
+          "classes": "margin-top-2 usa-button--secondary",
         }) }}
       {% endcall %}
     {% endif %}

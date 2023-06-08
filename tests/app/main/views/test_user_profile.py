@@ -130,7 +130,7 @@ def test_should_show_errors_if_new_email_address_does_not_validate(
         _expected_status=200,
     )
 
-    assert normalize_spaces(page.find('span', class_='govuk-error-message').text) == f'Error: {error_message}'
+    assert normalize_spaces(page.find('span', class_='usa-error-message').text) == f'Error: {error_message}'
     # We only call API to check if the email address is already in use if there are no other errors
     assert not mock_email_is_not_already_in_use.called
 
@@ -520,8 +520,8 @@ def test_should_show_manage_security_key_page(
     page = client_request.get('.user_profile_manage_security_key', key_id=webauthn_credential['id'])
     assert page.select_one('h1').text.strip() == f'Manage ‘{webauthn_credential["name"]}’'
 
-    assert page.select_one('.govuk-back-link').text.strip() == 'Back'
-    assert page.select_one('.govuk-back-link')['href'] == url_for('.user_profile_security_keys')
+    assert page.select_one('.usa-back-link').text.strip() == 'Back'
+    assert page.select_one('.usa-back-link')['href'] == url_for('.user_profile_security_keys')
 
     assert page.select_one('#security_key_name')["value"] == webauthn_credential["name"]
 

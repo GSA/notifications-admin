@@ -10,16 +10,16 @@
 
 {% block maincolumn_content %}
 
-  <div class="dashboard">
+  <div class="dashboard margin-bottom-8">
 
-    <h1 class="govuk-visually-hidden">Dashboard</h1>
+    <h1 class="usa-sr-only">Dashboard</h1>
     {% if current_user.has_permissions('manage_templates') and not current_service.all_templates %}
       {% include 'views/dashboard/write-first-messages.html' %}
     {% endif %}
 
     {{ ajax_block(partials, updates_url, 'upcoming') }}
 
-    <h2 class="font-body-lg">
+    <h2 class="font-body-lg margin-top-0">
       In the last seven days
     </h2>
 
@@ -30,7 +30,7 @@
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
 
     {% if current_user.has_permissions('manage_service') %}
-      <h2 class='heading-medium'>This year</h2>
+      <h2 class='font-body-lg'>This year</h2>
       {{ ajax_block(partials, updates_url, 'usage') }}
       {{ show_more(
         url_for(".usage", service_id=current_service['id']),

@@ -253,7 +253,7 @@ def test_should_show_live_search_if_list_of_templates_taller_than_screen(
         'Search by name'
     )
 
-    assert len(page.select(search['data-targets'])) == len(page.select('#template-list .govuk-label')) == 20
+    assert len(page.select(search['data-targets'])) == len(page.select('#template-list .usa-label')) == 20
 
 
 def test_should_label_search_by_id_for_services_with_api_keys(
@@ -290,7 +290,7 @@ def test_should_show_live_search_if_service_has_lots_of_folders(
         service_id=SERVICE_ONE_ID,
     )
 
-    count_of_templates_and_folders = len(page.select('#template-list .govuk-label'))
+    count_of_templates_and_folders = len(page.select('#template-list .usa-label'))
     count_of_folders = len(page.select('.template-list-folder:first-of-type'))
     count_of_templates = count_of_templates_and_folders - count_of_folders
 
@@ -559,7 +559,7 @@ def test_should_be_able_to_view_a_template_with_links(
 
     assert [
         (link['href'], normalize_spaces(link.text))
-        for link in page.select('.pill-separate-item')
+        for link in page.select('.usa-pill-separate-item')
     ] == [
         (url_for(
             endpoint,
@@ -1054,8 +1054,8 @@ def test_should_not_allow_creation_of_template_through_form_without_correct_perm
         _expected_status=403,
     )
     assert normalize_spaces(page.select('main p')[0].text) == expected_error
-    assert page.select(".govuk-back-link")[0].text == "Back"
-    assert page.select(".govuk-back-link")[0]['href'] == url_for(
+    assert page.select(".usa-back-link")[0].text == "Back"
+    assert page.select(".usa-back-link")[0]['href'] == url_for(
         '.choose_template',
         service_id=SERVICE_ONE_ID,
     )
@@ -1084,8 +1084,8 @@ def test_should_not_allow_creation_of_a_template_without_correct_permission(
         _expected_status=403,
     )
     assert page.select('main p')[0].text.strip() == expected_error
-    assert page.select(".govuk-back-link")[0].text == "Back"
-    assert page.select(".govuk-back-link")[0]['href'] == url_for(
+    assert page.select(".usa-back-link")[0].text == "Back"
+    assert page.select(".usa-back-link")[0]['href'] == url_for(
         '.choose_template',
         service_id=service_one['id'],
     )
@@ -1177,8 +1177,8 @@ def test_should_not_allow_template_edits_without_correct_permission(
     )
 
     assert page.select('main p')[0].text.strip() == "Sending text messages has been disabled for your service."
-    assert page.select(".govuk-back-link")[0].text == "Back"
-    assert page.select(".govuk-back-link")[0]['href'] == url_for(
+    assert page.select(".usa-back-link")[0].text == "Back"
+    assert page.select(".usa-back-link")[0]['href'] == url_for(
         '.view_template',
         service_id=SERVICE_ONE_ID,
         template_id=fake_uuid,
@@ -1304,7 +1304,7 @@ def test_should_show_interstitial_when_making_breaking_change(
     )
 
     assert page.h1.string.strip() == "Confirm changes"
-    assert page.find('a', {'class': 'govuk-back-link'})['href'] == url_for(
+    assert page.find('a', {'class': 'usa-back-link'})['href'] == url_for(
         ".edit_service_template",
         service_id=SERVICE_ONE_ID,
         template_id=fake_uuid,
@@ -1956,21 +1956,21 @@ def test_set_template_sender(
             # Can’t make a 7 fragment text template from content alone
             'sms', False, 'a' * 919,
             'You have 1 character too many',
-            'govuk-error-message',
+            'usa-error-message',
         ),
         (
             # Service name increases content count but character count
             # is based on content alone
             'sms', True, 'a' * 919,
             'You have 1 character too many',
-            'govuk-error-message',
+            'usa-error-message',
         ),
         (
             # Service name increases content count but character count
             # is based on content alone
             'sms', True, 'a' * 920,
             'You have 2 characters too many',
-            'govuk-error-message',
+            'usa-error-message',
         ),
         (
             'sms', False, 'Ẅ' * 70,
@@ -1990,7 +1990,7 @@ def test_set_template_sender(
         (
             'sms', False, 'Ẅ' * 919,
             'You have 1 character too many',
-            'govuk-error-message',
+            'usa-error-message',
         ),
         (
             'sms', False, 'Hello ((name))',

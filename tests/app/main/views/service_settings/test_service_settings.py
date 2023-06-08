@@ -332,7 +332,7 @@ def test_service_name_change_fails_if_new_name_fails_validation(
         _expected_status=200,
     )
     assert not mock_update_service.called
-    assert error_message in page.find("span", {"class": "govuk-error-message"}).text
+    assert error_message in page.find("span", {"class": "usa-error-message"}).text
 
 
 @pytest.mark.parametrize('user, expected_text, expected_link', [
@@ -1846,7 +1846,7 @@ def test_incorrect_reply_to_email_address_input(
         _expected_status=200
     )
 
-    assert expected_error in normalize_spaces(page.select_one('.govuk-error-message').text)
+    assert expected_error in normalize_spaces(page.select_one('.usa-error-message').text)
 
 
 @pytest.mark.parametrize('sms_sender_input, expected_error', [
@@ -1872,7 +1872,7 @@ def test_incorrect_sms_sender_input(
         _expected_status=(200 if expected_error else 302)
     )
 
-    error_message = page.select_one('.govuk-error-message')
+    error_message = page.select_one('.usa-error-message')
     count_of_api_calls = len(mock_add_sms_sender.call_args_list)
 
     if not expected_error:
@@ -1897,7 +1897,7 @@ def test_incorrect_sms_sender_input_with_multiple_errors_only_shows_the_first(
         _expected_status=200
     )
 
-    error_message = page.select_one('.govuk-error-message')
+    error_message = page.select_one('.usa-error-message')
     count_of_api_calls = len(mock_add_sms_sender.call_args_list)
 
     assert normalize_spaces(error_message.text) == 'Error: Enter 3 characters or more'
@@ -2268,8 +2268,8 @@ def test_shows_delete_link_for_get_request_for_edit_email_reply_to_address(
         reply_to_email_id=sample_uuid(),
     )
 
-    assert page.select_one('.govuk-back-link').text.strip() == 'Back'
-    assert page.select_one('.govuk-back-link')['href'] == url_for(
+    assert page.select_one('.usa-back-link').text.strip() == 'Back'
+    assert page.select_one('.usa-back-link')['href'] == url_for(
         '.service_email_reply_to',
         service_id=SERVICE_ONE_ID,
     )
@@ -2327,12 +2327,12 @@ def test_shows_delete_link_for_error_on_post_request_for_edit_email_reply_to_add
         _expected_status=200
     )
 
-    assert page.select_one('.govuk-back-link').text.strip() == 'Back'
-    assert page.select_one('.govuk-back-link')['href'] == url_for(
+    assert page.select_one('.usa-back-link').text.strip() == 'Back'
+    assert page.select_one('.usa-back-link')['href'] == url_for(
         '.service_email_reply_to',
         service_id=SERVICE_ONE_ID,
     )
-    assert page.select_one('.govuk-error-message').text.strip() == 'Error: Enter a valid email address'
+    assert page.select_one('.usa-error-message').text.strip() == 'Error: Enter a valid email address'
     assert page.select_one('input#email_address').get('value') == 'not a valid email address'
 
     if default_choice_and_delete_link_expected:
@@ -2516,7 +2516,7 @@ def test_shows_delete_link_for_sms_sender(
     )
 
     link = page.select_one('.page-footer a')
-    back_link = page.select_one('.govuk-back-link')
+    back_link = page.select_one('.usa-back-link')
 
     assert back_link.text.strip() == 'Back'
     assert back_link['href'] == url_for(
@@ -2573,7 +2573,7 @@ def test_inbound_sms_sender_is_not_deleteable(
         sms_sender_id=fake_uuid,
     )
 
-    back_link = page.select_one('.govuk-back-link')
+    back_link = page.select_one('.usa-back-link')
     footer_link = page.select_one('.page-footer a')
     assert normalize_spaces(back_link.text) == 'Back'
 
@@ -3658,7 +3658,7 @@ def test_send_files_by_email_contact_details_does_not_update_invalid_contact_det
         _follow_redirects=True
     )
 
-    assert error in page.find('span', class_='govuk-error-message').text
+    assert error in page.find('span', class_='usa-error-message').text
     assert normalize_spaces(page.h1.text) == "Send files by email"
 
 
@@ -4003,7 +4003,7 @@ def test_update_service_data_retention_return_validation_error_for_negative_days
         _data={'days_of_retention': -5},
         _expected_status=200,
     )
-    assert 'Must be between 3 and 90' in page.find('span', class_='govuk-error-message').text
+    assert 'Must be between 3 and 90' in page.find('span', class_='usa-error-message').text
     assert mock_get_service_data_retention.called
     assert not mock_update_service_data_retention.called
 
@@ -4055,7 +4055,7 @@ def test_view_edit_service_notes(
         service_id=SERVICE_ONE_ID,
     )
     assert page.select_one('h1').text == "Edit service notes"
-    assert page.find('label', class_="form-label").text.strip() == "Notes"
+    assert page.find('label', class_="usa-label").text.strip() == "Notes"
     assert page.find('textarea').attrs["name"] == "notes"
 
 

@@ -2,11 +2,12 @@
 {% from "components/uk_components/button/macro.njk" import govukButton %}
 
 {% block meta %}
-  <meta name="description" content="U.S. Notify lets you send text messages to your users. Try it now if you work in federal, state, or local government.">
+<meta name="description"
+  content="U.S. Notify lets you send text messages to your users. Try it now if you work in federal, state, or local government.">
 {% endblock %}
 
 {% block pageTitle %}
-  U.S. Notify
+U.S. Notify
 {% endblock %}
 
 {% block content %}
@@ -16,7 +17,8 @@
     <div class="grid-row grid-gap display-flex flex-align-center">
       <div class="tablet:grid-col-7">
         <h1 class="font-serif-2xl usa-hero__heading">Send text messages to your users</h1>
-        <p class="font-sans-lg margin-bottom-5">Try U.S. Notify now if you work in federal, state, or local government.</p>
+        <p class="font-sans-lg margin-bottom-5">Try U.S. Notify now if you work in federal, state, or local government.
+        </p>
         <div class="usa-button-group">
           <a class="usa-button usa-button--big" href="{{ url_for('main.register' )}}">Create an account</a>
           or <a class="usa__link margin-x-1" href="{{ url_for('.sign_in' )}}">sign in</a> if you’ve used
@@ -26,7 +28,7 @@
       <div class="tablet:grid-col-4 grid-offset-1">
         <img src="{{ asset_url('images/product/proposition-illustration.png') }}"
           alt="An illustration of notifications to a phone, a laptop, and a letter.">
-      </div>  
+      </div>
     </div>
   </div>
 </section>
@@ -60,9 +62,9 @@
 </section>
 <section class="grid-container usa-section border-top border-base-lighter">
   <div class="grid-row grid-gap">
-      <h2 class="font-heading-xl margin-top-0 margin-bottom-3 bold">
-        Send messages manually or automatically
-      </h2>
+    <h2 class="font-heading-xl margin-top-0 margin-bottom-3 bold">
+      Send messages manually or automatically
+    </h2>
   </div>
   <div class="grid-row grid-gap">
     <div class="tablet:grid-col-6 usa-prose">
@@ -80,27 +82,28 @@
     </div>
   </div>
 </section>
-<section id="whos-using-notify" class="grid-container usa-section border-top border-base-lighter padding-top-4 padding-bottom-5">
+<section id="whos-using-notify"
+  class="grid-container usa-section border-top border-base-lighter padding-top-4 padding-bottom-5">
   <div class="grid-row grid-gap flex-column">
-    <h2 class="font-heading-xl display-flex flex-justify-center margin-top-0 bold">
+    <h2 class="font-heading-xl display-flex flex-justify-center margin-top-0 margin-bottom-3 bold">
       Who’s using U.S. Notify
     </h2>
-    <p class="display-flex flex-justify-center font-body-sm margin-bottom-3">
+    <!-- <p class="display-flex flex-justify-center font-body-sm margin-bottom-3">
       See the
       <a class="usa-link margin-left-05" href="{{ url_for('main.performance') }}">list of services and
         organizations</a>.
-    </p>
+    </p> -->
   </div>
   <div class="grid-row">
     <div class="tablet:grid-col-6 display-flex flex-justify-center flex-align-center flex-column">
       <span class="usa-sr-only">There are</span>
       <div class="large-number">{{ counts.organisations|format_thousands }}</div>
-      <p class="font-body-lg">Organizations</p>
+      <p class="font-body-lg margin-bottom-0">Organizations</p>
     </div>
     <div class="tablet:grid-col-6 display-flex flex-justify-center flex-align-center flex-column">
       <span class="usa-sr-only">and</span>
       <div class="large-number">{{ counts.services|format_thousands }}</div>
-      <p class="font-body-lg">Services</p>
+      <p class="font-body-lg margin-bottom-0">Services</p>
       <span class="usa-sr-only">using Notify.</span>
     </div>
   </div>
@@ -120,9 +123,9 @@
   </p>
 </section>
 
-  <!-- <div class="product-page-intro"></div> -->
+<!-- <div class="product-page-intro"></div> -->
 
-    <!-- <div class="product-page-intro-wrapper" data-module="homepage">
+<!-- <div class="product-page-intro-wrapper" data-module="homepage">
       <nav class="breadcrumbs breadcrumbs--inverse" aria-label="Breadcrumbs">
 
       </nav>
