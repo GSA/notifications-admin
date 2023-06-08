@@ -170,7 +170,7 @@ def test_add_service_has_to_choose_org_type(
         },
         _expected_status=200,
     )
-    assert normalize_spaces(page.select_one('.govuk-error-message').text) == (
+    assert normalize_spaces(page.select_one('.usa-error-message').text) == (
         'Error: Select the type of organization'
     )
     assert mock_create_service.called is False
@@ -274,7 +274,7 @@ def test_add_service_fails_if_service_name_fails_validation(
         _data={"name": name},
         _expected_status=200,
     )
-    assert error_message in page.find("span", {"class": "govuk-error-message"}).text
+    assert error_message in page.find("span", {"class": "usa-error-message"}).text
 
 
 @freeze_time("2021-01-01")
@@ -302,7 +302,7 @@ def test_should_return_form_errors_with_duplicate_service_name_regardless_of_cas
         },
         _expected_status=200,
     )
-    assert 'This service name is already in use' in page.select_one('.govuk-error-message').text.strip()
+    assert 'This service name is already in use' in page.select_one('.usa-error-message').text.strip()
 
 
 def test_non_government_user_cannot_access_create_service_page(

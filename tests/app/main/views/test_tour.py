@@ -39,7 +39,7 @@ def test_should_200_for_tour_start(
         'service one: ((one)) ((two)) ((three))'
     )
 
-    assert page.select('a.govuk-button')[0]['href'] == url_for(
+    assert page.select('a.usa-button')[0]['href'] == url_for(
         '.tour_step', service_id=SERVICE_ONE_ID, template_id=fake_uuid, step_index=1
     )
 
@@ -180,11 +180,11 @@ def test_should_show_empty_text_box(
         step_index=1
     )
 
-    textbox = page.select_one('[data-module=autofocus][data-force-focus=True] .govuk-input')
+    textbox = page.select_one('[data-module=autofocus][data-force-focus=True] .usa-input')
     assert 'value' not in textbox
     assert textbox['name'] == 'placeholder_value'
     assert textbox['class'] == [
-        'govuk-input', 'govuk-!-width-full',
+        'usa-input', 'govuk-!-width-full',
     ]
     # data-module=autofocus is set on a containing element so it
     # shouldn’t also be set on the textbox itself
@@ -210,7 +210,7 @@ def test_should_prefill_answers_for_get_tour_step(
         step_index=1
     )
 
-    assert page.select('.govuk-input')[0]['value'] == 'hello'
+    assert page.select('.usa-input')[0]['value'] == 'hello'
 
 
 @pytest.mark.parametrize('template_type', ['email'])
@@ -321,7 +321,7 @@ def test_back_link_from_first_get_tour_step_points_to_tour_start(
         step_index=1
     )
 
-    assert page.select('.govuk-back-link')[0]['href'] == url_for(
+    assert page.select('.usa-back-link')[0]['href'] == url_for(
         "main.begin_tour",
         service_id=SERVICE_ONE_ID,
         template_id=fake_uuid
@@ -344,7 +344,7 @@ def test_back_link_from_get_tour_step_points_to_previous_step(
         step_index=2
     )
 
-    assert page.select('.govuk-back-link')[0]['href'] == url_for(
+    assert page.select('.usa-back-link')[0]['href'] == url_for(
         'main.tour_step',
         service_id=SERVICE_ONE_ID,
         template_id=fake_uuid,
@@ -429,7 +429,7 @@ def test_post_tour_step_raises_validation_error_for_form_error(
     )
 
     assert normalize_spaces(
-        page.select('.govuk-error-message')[0].text
+        page.select('.usa-error-message')[0].text
     ) == (
         'Error: Cannot be empty'
     )
@@ -586,7 +586,7 @@ def test_back_link_from_check_tour_notification_points_to_last_tour_step(
         template_id=fake_uuid,
     )
 
-    assert page.select('.govuk-back-link')[0]['href'] == url_for(
+    assert page.select('.usa-back-link')[0]['href'] == url_for(
         "main.tour_step",
         service_id=SERVICE_ONE_ID,
         template_id=fake_uuid,

@@ -29,14 +29,13 @@ def test_non_logged_in_user_can_see_homepage(
     )
 
     assert normalize_spaces(page.select_one('#whos-using-notify').text) == (
-        'Who’s using U.S. Notify '
-        'See the list of services and organizations. '
+        'Who’s using U.S. Notify '  # Hiding this next area for the pilot
+        # Hiding this next area for the pilot
+        # 'See the list of services and organizations. '
         'There are 111 Organizations and 9,999 Services using Notify.'
     )
 
-    assert page.select_one('#whos-using-notify a')['href'] == url_for(
-        'main.performance'
-    )
+    assert page.select_one('#whos-using-notify a') is None
 
 
 def test_logged_in_user_redirects_to_choose_account(

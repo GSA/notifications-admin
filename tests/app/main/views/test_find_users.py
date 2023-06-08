@@ -86,7 +86,7 @@ def test_find_users_by_email_validates_against_empty_search_submission(
     document = client_request.post('main.find_users_by_email', _data={"search": ""}, _expected_status=200)
 
     expected_message = "Error: You need to enter full or partial email address to search by."
-    assert document.find('span', {'class': 'govuk-error-message'}).text.strip() == expected_message
+    assert document.find('span', {'class': 'usa-error-message'}).text.strip() == expected_message
 
 
 def test_user_information_page_shows_information_about_user(

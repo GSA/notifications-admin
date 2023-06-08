@@ -18,9 +18,14 @@
 {% block maincolumn_content %}
 
     {{ page_header('{} text message template'.format(heading_action)) }}
-    <p>
-      Don't worry, saving the template will not send ⛔
-    </p>
+
+    <div class="usa-alert usa-alert--info usa-alert--slim">
+      <div class="usa-alert__body">
+        <p class="usa-alert__text">
+          Don't worry, saving the template will not send        
+        </p>
+      </div>
+    </div>
 
     {% if current_service.prefix_sms %}
       {% set content_hint = 'Your service name will be added to the start of your message. You can turn this off in Settings.' %}
@@ -53,7 +58,7 @@
             </div>
           </div>
           {{ page_footer('Save') }}
-          <p class="form-hint">
+          <p class="usa-hint">
             After saving, you'll have the option to send 🚀
           </p>
         </div>

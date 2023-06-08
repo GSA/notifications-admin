@@ -47,7 +47,7 @@ def test_should_render_correct_resend_template_for_active_user(
     assert page.h1.string == 'Resend security code'
     # there shouldn't be a form for updating mobile number
     assert page.find('form') is None
-    assert page.find('a', class_="govuk-button")['href'] == url_for(
+    assert page.find('a', class_="usa-button")['href'] == url_for(
         'main.check_and_resend_verification_code',
         next=redirect_url
     )
@@ -207,4 +207,4 @@ def test_should_render_correct_email_not_received_template_for_active_user(
     assert page.h1.string == 'Resend email link'
     # there shouldn't be a form for updating mobile number
     assert page.find('form') is None
-    assert page.find('a', class_="govuk-button")['href'] == url_for('main.resend_email_link', next=redirect_url)
+    assert page.find('a', class_="usa-button")['href'] == url_for('main.resend_email_link', next=redirect_url)

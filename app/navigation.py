@@ -6,7 +6,7 @@ from flask import request
 class Navigation:
 
     mapping = {}
-    selected_class = "selected"
+    selected_class = "usa-current"
 
     def __init__(self):
         self.mapping = {
@@ -25,7 +25,7 @@ class Navigation:
 
     def is_selected(self, navigation_item):
         if request.endpoint in self.mapping[navigation_item]:
-            return " " + self.selected_class
+            return self.selected_class
         return ''
 
     @staticmethod

@@ -72,7 +72,7 @@ def test_find_services_by_name_validates_against_empty_search_submission(
     document = client_request.post('main.find_services_by_name', _data={"search": ""}, _expected_status=200)
 
     expected_message = "Error: You need to enter full or partial name to search by."
-    assert document.find('span', {'class': 'govuk-error-message'}).text.strip() == expected_message
+    assert document.find('span', {'class': 'usa-error-message'}).text.strip() == expected_message
 
 
 def test_find_services_by_name_redirects_for_uuid(

@@ -27,28 +27,27 @@
 
   {% call form_wrapper(
     action=url_for('.view_notifications', service_id=current_service.id, message_type=message_type),
-    class="govuk-grid-row"
+    class="usa-search margin-bottom-2"
   ) %}
-    <div class="govuk-grid-column-three-quarters {% if message_type == 'sms' %}extra-tracking{% endif %}">
-      {{ search_form.to(param_extensions={
-            "label": {
-              "text": things_you_can_search_by|formatted_list(
-                conjunction='or',
-                before_each='',
-                after_each='',
-                prefix='Search by',
-                prefix_plural='Search by'
-              )
-            }
-      }) }}
-    </div>
-    <div class="govuk-grid-column-one-quarter">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-      {{ govukButton({
-        "text": "Search",
-        "classes": "search-form__button"
-      }) }}
-    </div>
+      <div class="grid-col-4 {% if message_type == 'sms' %}extra-tracking{% endif %}">
+        {{ search_form.to(param_extensions={
+        "label": {
+        "text": things_you_can_search_by|formatted_list(
+        conjunction='or',
+        before_each='',
+        after_each='',
+        prefix='Search by',
+        prefix_plural='Search by'
+        )
+        }
+        }) }}
+      </div>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="usa-button" type="submit">
+      <span class="usa-search__submit-text">Search </span><img src="/assets/img/usa-icons-bg/search--white.svg"
+        class="usa-search__submit-icon" alt="Search" />
+    </button> 
+  
   {% endcall %}
 
   {% call form_wrapper(id="search-form") %}
@@ -57,8 +56,8 @@
   {% endcall %}
 
   {% if current_user.has_permissions('view_activity') %}
-    <p class="bottom-gutter">
-      <a href="{{ download_link }}" download="download" class="govuk-link govuk-link--no-visited-state govuk-!-font-weight-bold">Download this report (<abbr title="Comma separated values">CSV</abbr>)</a>
+    <p class="font-body-sm">
+      <a href="{{ download_link }}" download="download" class="usa-link">Download this report (<abbr title="Comma separated values">CSV</abbr>)</a>
       &emsp;
       Data available for {{ partials.service_data_retention_days }} days
     </p>

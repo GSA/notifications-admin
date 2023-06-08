@@ -115,7 +115,7 @@ def test_service_navigation_for_org_user(
         service_id=SERVICE_ONE_ID,
     )
     assert [
-        item.text.strip() for item in page.select('nav.navigation a')
+        item.text.strip() for item in page.select('nav.nav a')
     ] == [
         'Usage',
         'Team members',
@@ -179,7 +179,7 @@ def test_service_user_without_manage_service_permission_can_see_usage_page_when_
         service_id=SERVICE_ONE_ID,
     )
     assert tuple(
-        item.text.strip() for item in page.select('nav.navigation a')
+        item.text.strip() for item in page.select('nav.nav a')
     ) == expected_menu_items
 
     client_request.get(

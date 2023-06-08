@@ -716,7 +716,7 @@ def test_clear_cache_requires_option(
 
     page = client_request.post('main.clear_cache', _data={}, _expected_status=200)
 
-    assert normalize_spaces(page.find('span', class_='govuk-error-message').text) == 'Error: Select at least one option'
+    assert normalize_spaces(page.find('span', class_='usa-error-message').text) == 'Error: Select at least one option'
     assert not redis.delete_by_pattern.called
 
 
@@ -808,7 +808,7 @@ def test_get_notifications_sent_by_service_validates_form(
         _data={'start_date': '', 'end_date': '20190101'}
     )
 
-    errors = page.select('.govuk-error-message')
+    errors = page.select('.usa-error-message')
     assert len(errors) == 2
 
     for error in errors:

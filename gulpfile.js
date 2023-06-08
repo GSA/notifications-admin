@@ -291,5 +291,6 @@ uswds.paths.dist.theme = './app/assets/sass/uswds';
 */
 exports.init = uswds.init;
 exports.compile = uswds.compile;
+exports.copyAll = uswds.copyAll;
 exports.watch = uswds.watch;
 exports.copyAssets = uswds.copyAssets;

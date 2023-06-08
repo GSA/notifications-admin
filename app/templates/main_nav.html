@@ -1,40 +1,36 @@
 {% if help %}
   {% include 'partials/tour.html' %}
 {% else %}
-<nav class="navigation">
-  <ul>
+<nav class="nav margin-y-5">
+  <ul class="usa-sidenav">
   {% if current_user.has_permissions() %}
     {% if current_user.has_permissions('view_activity') %}
-      <li><a class="govuk-link govuk-link--no-visited-state{{ main_navigation.is_selected('dashboard') }}" href="{{ url_for('.service_dashboard', service_id=current_service.id) }}">Dashboard</a></li>
+      <li class="usa-sidenav__item"><a class="{{ main_navigation.is_selected('dashboard') }}" href="{{ url_for('.service_dashboard', service_id=current_service.id) }}">Dashboard</a></li>
     {% endif %}
-    <li><a class="govuk-link govuk-link--no-visited-state{{ main_navigation.is_selected('templates') }}" href="{{ url_for('.choose_template', service_id=current_service.id) }}">Send messages</a></li>
+      <li class="usa-sidenav__item"><a class="{{ main_navigation.is_selected('templates') }}" href="{{ url_for('.choose_template', service_id=current_service.id) }}">Send messages</a></li>
     {% if not current_user.has_permissions('view_activity') %}
-      <li><a class="govuk-link govuk-link--no-visited-state{{ casework_navigation.is_selected('sent-messages') }}" href="{{ url_for('.view_notifications', service_id=current_service.id, status='sending,delivered,failed') }}">Sent messages</a></li>
+      <li class="usa-sidenav__item"><a class="{{ casework_navigation.is_selected('sent-messages') }}" href="{{ url_for('.view_notifications', service_id=current_service.id, status='sending,delivered,failed') }}">Sent messages</a></li>
     {% endif %}
-    <li><a class="govuk-link govuk-link--no-visited-state{{ main_navigation.is_selected('team-members') }}" href="{{ url_for('.manage_users', service_id=current_service.id) }}">Team members</a></li>
+      <li class="usa-sidenav__item"><a class="{{ main_navigation.is_selected('team-members') }}" href="{{ url_for('.manage_users', service_id=current_service.id) }}">Team members</a></li>
     {% if current_user.has_permissions('manage_service', allow_org_user=True) %}
-      <li><a class="govuk-link govuk-link--no-visited-state{{ main_navigation.is_selected('usage') }}" href="{{ url_for('.usage', service_id=current_service.id) }}">Usage</a></li>
+      <li class="usa-sidenav__item"><a class="{{ main_navigation.is_selected('usage') }}" href="{{ url_for('.usage', service_id=current_service.id) }}">Usage</a></li>
     {% endif %}
     {% if current_user.has_permissions('manage_api_keys', 'manage_service') %}
-      <li><a class="govuk-link govuk-link--no-visited-state{{ main_navigation.is_selected('settings') }}" href="{{ url_for('.service_settings', service_id=current_service.id) }}">Settings</a></li>
+      <li class="usa-sidenav__item"><a class="{{ main_navigation.is_selected('settings') }}" href="{{ url_for('.service_settings', service_id=current_service.id) }}">Settings</a></li>
     {% endif %}
     {% if current_user.has_permissions('manage_api_keys') %}
       <!-- <li><a class="govuk-link govuk-link--no-visited-state{{ main_navigation.is_selected('api-integration') }}" href="{{ url_for('.api_integration', service_id=current_service.id) }}">API integration</a></li> -->
     {% endif %}
   {% elif current_user.has_permissions(allow_org_user=True) %}
-    <li><a class="govuk-link govuk-link--no-visited-state{{ main_navigation.is_selected('usage') }}" href="{{ url_for('.usage', service_id=current_service.id) }}">Usage</a></li>
-    <li><a class="govuk-link govuk-link--no-visited-state{{ main_navigation.is_selected('team-members') }}" href="{{ url_for('.manage_users', service_id=current_service.id) }}">Team members</a></li>
+    <li class="usa-sidenav__item"><a class="govuk-link govuk-link--no-visited-state{{ main_navigation.is_selected('usage') }}" href="{{ url_for('.usage', service_id=current_service.id) }}">Usage</a></li>
+    <li class="usa-sidenav__item"><a class="govuk-link govuk-link--no-visited-state{{ main_navigation.is_selected('team-members') }}" href="{{ url_for('.manage_users', service_id=current_service.id) }}">Team members</a></li>
   {% endif %}
   </ul>
-</nav><br>
+</nav>
     <div>
-        <p class="govuk-body">Messages Left / Daily Limit</p>
-        <ul>
-            <li>{{ daily_remaining_messages }} / {{ current_service.message_limit }}</li>
-        </ul><br>
-        <p class="govuk-body">Messages Left Across Services</p>
-        <ul>
-            <li>{{ daily_global_messages_remaining }}</li>
-        </ul>
+        <p class="usa-body bold margin-bottom-1">Messages Left / Daily Limit</p>
+        <p>{{ daily_remaining_messages }} / {{ current_service.message_limit }}</p>
+        <p class="usa--body bold margin-bottom-1">Messages Left Across Services</p>
+        <p>{{ daily_global_messages_remaining }}</p>
     </div>
 {% endif %}

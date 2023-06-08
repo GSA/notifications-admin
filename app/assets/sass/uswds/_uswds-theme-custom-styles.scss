@@ -57,9 +57,80 @@ h1 {
 p,
 .list li {
    font-family: family("sans");
-   font-size: size("body", 7);
+   font-size: size("body", 6);
 }
 
 .large-number {
    font-size: size("body", 16);
+}
+
+.big-number-with-status .big-number,
+.big-number-with-status .big-number-smaller {
+   @include u-bg("primary");
+}
+
+.big-number-with-status .big-number-status,
+.big-number-with-status .big-number-status-failing {
+   @include u-bg("green-cool-40v");
+}
+
+.show-more-no-border:focus,
+.show-more:focus {
+   box-shadow: none;
+}
+
+.govuk-checkboxes__label::after {
+   top: 13px;
+   left: 9px;
+   width: 22px;
+   height: 11px;
+}
+
+.govuk-checkboxes__input:focus + .govuk-checkboxes__label::before,
+.multiple-choice [type="radio"]:focus + label::before {
+   box-shadow: 0 0 0 3px color("blue-40v");
+}
+
+.usa-dark-background .pill-item__container {
+   color: #fff;
+}
+
+.pill-separate-item:link,
+.pill-separate-item:visited {
+   text-decoration: none;
+   background: initial;
+}
+
+.template-footer .usa-link,
+.template-content-count,
+.table-empty-message,
+td.table-empty-message {
+   font-size: size("body", "sm");
+}
+
+.textbox-highlight-background,
+.textbox-highlight-foreground,
+.textbox-highlight-mask,
+.textbox-highlight-textbox {
+   font-size: units(2);
+   line-height: 1.2;
+   padding: units(1);
+   font-family: family("sans");
+}
+
+.govuk-inset-text {
+   border-color: color("blue-40v");
+}
+
+.usa-dark-background .pill-item__label {
+   color: white;
+   text-decoration: none !important;
+}
+
+.pill-item.usa-link {
+   text-decoration: none !important;
+}
+
+.sub-content .banner-dangerous h1 {
+   margin-top: 0;
 }

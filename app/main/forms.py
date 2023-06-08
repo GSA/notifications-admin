@@ -238,9 +238,8 @@ def govuk_text_input_field_widget(self, field, type=None, param_extensions=None,
             error_message_format: field.errors[0]
         }
 
-    # convert to parameters that govuk understands
+    # convert to parameters that usa understands
     params = {
-        "classes": "govuk-!-width-two-thirds",
         "errorMessage": error_message,
         "id": field.id,
         "label": {"text": field.label.text},
