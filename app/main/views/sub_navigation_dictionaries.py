@@ -36,10 +36,6 @@ def using_notify_nav():
             "link": "main.get_started",
         },
         {
-            "name": "Pricing",
-            "link": "main.pricing",
-        },
-        {
             "name": "Trial mode",
             "link": "main.trial_mode_new",
         },

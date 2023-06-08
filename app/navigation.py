@@ -48,12 +48,16 @@ class HeaderNavigation(Navigation):
             'features',
             'features_email',
             'features_sms',
-            'message_status',
             'roadmap',
             'security',
             'terms',
-            'trial_mode_new',
+        },
+        'using_notify': {
+            'get_started',
             'using_notify',
+            'trial_mode_new',
+            'message_status',
+            'guidance_index',
         },
         'pricing': {
             'pricing',
