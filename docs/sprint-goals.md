@@ -1,6 +1,16 @@
 # Notify Sprint Goals Log
 
-## Sprint: K (5/24/23)
+## Sprint: L (6/7/23)
+
+|             | Goals                                                                                                                              | Impact                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| Engineering | Employ ["smart" retention](https://github.com/orgs/GSA/projects/20/views/1?pane=issue&itemId=30230455) for daily quota; align [delivery receipt UI display](https://github.com/GSA/notifications-admin/issues/536) with user expectations; finalize [timezone implementation](https://github.com/GSA/notifications-admin/issues/525) in UI                                                        |   Maximize the amount of messages a partner can send in a given day; have intuitive and clear display of delivery success/failure and timestamps                                  |
+| UX          | Rework the [navigation structure](https://github.com/GSA/notifications-admin/issues/535); [propose new flows and wireframes](https://github.com/GSA/notifications-admin/issues/455); propose a user-testing strategy             | Simpler user navigation of the site, ongoing collection of user feedback for improvement         |
+| Content/Design/Engineering     | Design and implement the public aspect of beta.notify.gov launch site | A simple display that clearly notes the site is in pilot/beta phase |
+| Security    | Respond to any assessment questions and/or needs                                                  | Keep the LATO award timeline as short as possible
+
+
+## Sprint: Kiwi (5/24/23)
 
 |             | Goals                                                                                                                              | Impact                                                                                                                                     |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
