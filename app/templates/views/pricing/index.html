@@ -21,7 +21,7 @@ data={
 
 <p>U.S. Notify is free to use unless you:</p>
 <ul class="list list-bullet">
-  <li>exceed your <a class="govuk-link govuk-link--no-visited-state" href="#text-messages">free text message
+  <li>exceed your <a class="usa-link" href="#text-messages">free text message
       allowance</a></li>
 </ul>
 
@@ -30,7 +30,7 @@ data={
 
 <p>
   {% if not current_user.is_authenticated %}
-  <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.register') }}">Create an account,</a> then
+  <a class="usa-link" href="{{ url_for('main.register') }}">Create an account,</a> then
   add your unique service(s).
 </p>
 {% else %}
@@ -39,7 +39,7 @@ U.S. Notify team.
 {% endif %}
 </p>
 
-<p>When you add a new service it will start in <a class="govuk-link govuk-link--no-visited-state"
+<p>When you add a new service it will start in <a class="usa-link"
     href="{{ url_for('main.trial_mode_new') }}">trial mode</a>.</p>
 
 <!-- <h2 class="font-body-lg" id="emails">Emails</h2>
@@ -49,17 +49,17 @@ U.S. Notify team.
 <p>During pilot phase, each service has an annual allowance of 250,000 free text messages. Once this allowance is met,
   the application will stop delivering messages.</p>
 <!-- <p>When a service has used its annual allowance, it costs {{ sms_rate }} pence (plus VAT) for each text message you send.</p> -->
-<p>You’ll use more messages towards the allowance, if you send <a class="govuk-link govuk-link--no-visited-state"
+<p>You’ll use more messages towards the allowance, if you send <a class="usa-link"
     href="#long-text-messages">text messages longer than 160 characters</a>.</p>
 <p>You may also use more messages if you:</p>
 <ul class="list list-bullet">
-  <li>use certain <a class="govuk-link govuk-link--no-visited-state" href="#symbols">signs and symbols</a></li>
-  <li>use <a class="govuk-link govuk-link--no-visited-state" href="#accents">accents and accented letters</a></li>
-  <li>send text messages to <a class="govuk-link govuk-link--no-visited-state"
+  <li>use certain <a class="usa-link" href="#symbols">signs and symbols</a></li>
+  <li>use <a class="usa-link" href="#accents">accents and accented letters</a></li>
+  <li>send text messages to <a class="usa-link"
       href="#international-numbers">international numbers</a></li>
 </ul>
 
-<!-- <p>See <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.how_to_pay') }}">how to pay</a>.
+<!-- <p>See <a class="usa-link" href="{{ url_for('main.how_to_pay') }}">how to pay</a>.
 
   <h3 class="font-body-lg" id="free-text-message-allowance">Free text message allowance</h3>
 
