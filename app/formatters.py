@@ -18,7 +18,6 @@ from notifications_utils.recipients import (
     validate_phone_number,
 )
 from notifications_utils.take import Take
-from notifications_utils.timezones import convert_utc_to_local_timezone
 
 from app.utils.time import parse_naive_dt
 
@@ -77,19 +76,19 @@ def format_datetime_numeric(date):
 
 def format_date_numeric(date):
     date = parse_naive_dt(date)
-    return convert_utc_to_local_timezone(date).strftime('%Y-%m-%d')
+    return date.strftime('%Y-%m-%d')
 
 
 def format_time_24h(date):
     date = parse_naive_dt(date)
-    return convert_utc_to_local_timezone(date).strftime('%H:%M')
+    return date.strftime('%H:%M')
 
 
 def get_human_day(time, date_prefix=''):
 
     #  Add 1 minute to transform 00:00 into ‘midnight today’ instead of ‘midnight tomorrow’
     time = parse_naive_dt(time)
-    date = (convert_utc_to_local_timezone(time) - timedelta(minutes=1)).date()
+    date = (time - timedelta(minutes=1)).date()
     now = datetime.now(current_app.config['PY_TIMEZONE'])
 
     if date == (now + timedelta(days=1)).date():
@@ -116,24 +115,24 @@ def format_time(date):
         '12:00AM': 'Midnight',
         '12:00PM': 'Noon'
     }.get(
-        convert_utc_to_local_timezone(date).strftime('%-I:%M%p'),
-        convert_utc_to_local_timezone(date).strftime('%-I:%M%p')
+        date.strftime('%-I:%M%p'),
+        date.strftime('%-I:%M%p')
     ).lower()
 
 
 def format_date(date):
     date = parse_naive_dt(date)
-    return convert_utc_to_local_timezone(date).strftime('%A %d %B %Y')
+    return date.strftime('%A %d %B %Y')
 
 
 def format_date_normal(date):
     date = parse_naive_dt(date)
-    return convert_utc_to_local_timezone(date).strftime('%d %B %Y').lstrip('0')
+    return date.strftime('%d %B %Y').lstrip('0')
 
 
 def format_date_short(date):
     date = parse_naive_dt(date)
-    return _format_datetime_short(convert_utc_to_local_timezone(date))
+    return _format_datetime_short(date)
 
 
 def format_date_human(date):
@@ -149,7 +148,7 @@ def format_datetime_human(date, date_prefix=''):
 
 def format_day_of_week(date):
     date = parse_naive_dt(date)
-    return convert_utc_to_local_timezone(date).strftime('%A')
+    return date.strftime('%A')
 
 
 def _format_datetime_short(datetime):
