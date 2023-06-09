@@ -47,11 +47,6 @@
     {% if current_user.platform_admin %}
       {% set navigation = [
         {
-          "href": url_for('main.support'),
-          "text": "Support",
-          "active": header_navigation.is_selected('support')
-        },
-        {
           "href": url_for('main.user_profile'),
           "text": current_user.name,
           "active": header_navigation.is_selected('user-profile')
@@ -64,13 +59,28 @@
         {
           "href": url_for('main.sign_out'),
           "text": "Sign out"
+        },
+        {
+          "href": url_for('main.support'),
+          "text": "Contact us",
+          "active": header_navigation.is_selected('support')
         }
       ] %}
     {% else %}
       {% set navigation = [
         {
+          "href": url_for('main.get_started'),
+          "text": "Using notify",
+          "active": header_navigation.is_selected('using_notify')
+        },
+        {
+          "href": url_for('main.features'),
+          "text": "Features",
+          "active": header_navigation.is_selected('features')
+        },
+        {
           "href": url_for('main.support'),
-          "text": "Support",
+          "text": "Contact us",
           "active": header_navigation.is_selected('support')
         },
         {
@@ -87,9 +97,9 @@
   {% else %}
     {% set navigation = [
       {
-        "href": url_for('main.support'),
-        "text": "Support",
-        "active": header_navigation.is_selected('support')
+        "href": url_for('main.get_started'),
+        "text": "Using notify",
+        "active": header_navigation.is_selected('using_notify')
       },
       {
         "href": url_for('main.features'),
@@ -97,9 +107,9 @@
         "active": header_navigation.is_selected('features')
       },
       {
-        "href": url_for('main.pricing'),
-        "text": "Pricing",
-        "active": header_navigation.is_selected('pricing')
+        "href": url_for('main.support'),
+        "text": "Contact us",
+        "active": header_navigation.is_selected('support')
       },
       {
         "href": url_for('main.sign_in'),
