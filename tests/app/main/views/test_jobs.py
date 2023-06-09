@@ -329,7 +329,7 @@ def test_should_show_scheduled_job(
     )
 
     assert normalize_spaces(page.select('main p')[1].text) == (
-        'Sending Two week reminder today at midnight'
+        'Sending Two week reminder tomorrow at 5:00am'
     )
     assert page.select('main p a')[0]['href'] == url_for(
         'main.view_template_version',
@@ -402,8 +402,8 @@ def test_should_show_updates_for_one_job_as_json(
     assert '2021234567' in content['notifications']
     assert 'Status' in content['notifications']
     assert 'Delivered' in content['notifications']
-    assert '12:01am' in content['notifications']
-    assert 'Sent by Test User on 1 January at midnight' in content['status']
+    assert '5:01am' in content['notifications']
+    assert 'Sent by Test User on 1 January at 5:00am' in content['status']
 
 
 @freeze_time("2016-01-01 05:00:00.000001")
@@ -439,8 +439,8 @@ def test_should_show_updates_for_scheduled_job_as_json(
     assert '2021234567' in content['notifications']
     assert 'Status' in content['notifications']
     assert 'Delivered' in content['notifications']
-    assert '12:01am' in content['notifications']
-    assert 'Sent by Test User on 1 June at 4:00pm' in content['status']
+    assert '5:01am' in content['notifications']
+    assert 'Sent by Test User on 1 June at 8:00pm' in content['status']
 
 
 @pytest.mark.parametrize(

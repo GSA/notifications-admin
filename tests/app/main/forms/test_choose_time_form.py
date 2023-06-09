@@ -15,16 +15,16 @@ def test_form_contains_next_24h(notify_admin):
     assert choices[13] == ('2016-01-02T00:00:00', 'Today at midnight UTC')
 
     # Saturday
-    assert choices[14] == ('2016-01-02T06:00:00', 'Tomorrow at 6am UTC')
+    assert choices[14] == ('2016-01-02T01:00:00', 'Tomorrow at 1am UTC')
     assert choices[37] == ('2016-01-03T00:00:00', 'Tomorrow at midnight UTC')
 
     # Sunday
-    assert choices[38] == ('2016-01-03T06:00:00', 'Sunday at 6am UTC')
+    assert choices[38] == ('2016-01-03T01:00:00', 'Sunday at 1am UTC')
 
     # Monday
-    assert choices[62] == ('2016-01-04T00:00:00', 'Today at midnight UTC')
-    assert choices[80] == ('2016-01-05T12:00:00', 'Monday at noon UTC')
-    assert choices[84] == ('2016-01-05T19:00:00', 'Monday at 7pm UTC')
+    assert choices[62] == ('2016-01-04T01:00:00', 'Monday at 1am UTC')
+    assert choices[80] == ('2016-01-04T19:00:00', 'Monday at 7pm UTC')
+    assert choices[84] == ('2016-01-04T23:00:00', 'Monday at 11pm UTC')
     assert choices[85] == ('2016-01-05T00:00:00', 'Monday at midnight UTC')
 
     with pytest.raises(IndexError):

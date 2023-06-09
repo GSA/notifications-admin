@@ -389,14 +389,14 @@ def test_download_inbox(
     )
     assert response.get_data(as_text=True) == (
         'Phone number,Message,Received\r\n'
-        '(202) 867-5300,message-1,2016-07-01 13:00\r\n'
-        '(202) 867-5300,message-2,2016-07-01 12:59\r\n'
-        '(202) 867-5300,message-3,2016-07-01 12:59\r\n'
-        '(202) 867-5302,message-4,2016-07-01 10:59\r\n'
-        '+33 1 12 34 56 78,message-5,2016-07-01 08:59\r\n'
-        '(202) 555-0104,message-6,2016-07-01 06:59\r\n'
-        '(202) 555-0104,message-7,2016-07-01 04:59\r\n'
-        '+682 12345,message-8,2016-07-01 04:59\r\n'
+        '(202) 867-5300,message-1,2016-07-01 11:00\r\n'
+        '(202) 867-5300,message-2,2016-07-01 10:59\r\n'
+        '(202) 867-5300,message-3,2016-07-01 10:59\r\n'
+        '(202) 867-5302,message-4,2016-07-01 08:59\r\n'
+        '+33 1 12 34 56 78,message-5,2016-07-01 06:59\r\n'
+        '(202) 555-0104,message-6,2016-07-01 04:59\r\n'
+        '(202) 555-0104,message-7,2016-07-01 02:59\r\n'
+        '+682 12345,message-8,2016-07-01 02:59\r\n'
     )
 
 
@@ -648,7 +648,7 @@ def test_should_show_upcoming_jobs_on_dashboard(
         page.select_one('a.banner-dashboard').text
     ) == (
         '2 files waiting to send '
-        'sending starts today at 6:09am'
+        'sending starts today at 11:09am'
     )
 
     assert page.select_one('a.banner-dashboard')['href'] == url_for(
