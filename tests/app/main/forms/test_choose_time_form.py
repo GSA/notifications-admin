@@ -4,7 +4,7 @@ from freezegun import freeze_time
 from app.main.forms import ChooseTimeForm
 
 
-@freeze_time("2016-01-01 16:09:00.061258")
+@freeze_time("2016-01-01 11:09:00.061258")
 def test_form_contains_next_24h(notify_admin):
 
     choices = ChooseTimeForm().scheduled_for.choices

@@ -370,7 +370,7 @@ def test_view_inbox_updates(
     mock_get_partials.assert_called_once_with(SERVICE_ONE_ID)
 
 
-@freeze_time("2016-07-01 18:00")
+@freeze_time("2016-07-01 12:00")
 def test_download_inbox(
     client_request,
     mock_get_inbound_sms,
@@ -618,7 +618,7 @@ def test_monthly_has_equal_length_tables(
     assert page.select_one('.table-field-headings th').get('width') == "33%"
 
 
-@freeze_time("2016-01-01 11:09:00.061258")
+@freeze_time("2016-01-01 1:09:00.061258")
 def test_should_show_upcoming_jobs_on_dashboard(
     client_request,
     mock_get_service_templates,
