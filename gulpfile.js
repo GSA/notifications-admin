@@ -54,6 +54,10 @@ const copy = {
   fonts: () => {
     return src(paths.src + 'fonts/**/*')
       .pipe(dest(paths.dist + 'fonts/'));
+  },
+  gtm: () => {
+    return src(paths.src + 'js/gtm_head.js')
+      .pipe(dest(paths.dist + 'js/'));
   }
 };
 
@@ -103,8 +107,6 @@ const javascripts = () => {
     paths.toolkit + 'javascripts/govuk/show-hide-content.js',
     paths.src + 'javascripts/govuk/cookie-functions.js',
     paths.src + 'javascripts/consent.js',
-    paths.src + 'javascripts/analytics/analytics.js',
-    paths.src + 'javascripts/analytics/init.js',
     paths.src + 'javascripts/cookieMessage.js',
     paths.src + 'javascripts/stick-to-window-when-scrolling.js',
     paths.src + 'javascripts/copyToClipboard.js',
@@ -244,7 +246,8 @@ const defaultTask = parallel(
     ),
     sass, 
     uswds.compile,
-    uswds.copyAssets
+    uswds.copyAssets,
+    copy.gtm
   )
 );
 
