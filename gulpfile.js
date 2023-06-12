@@ -103,8 +103,6 @@ const javascripts = () => {
     paths.toolkit + 'javascripts/govuk/show-hide-content.js',
     paths.src + 'javascripts/govuk/cookie-functions.js',
     paths.src + 'javascripts/consent.js',
-    paths.src + 'javascripts/analytics/analytics.js',
-    paths.src + 'javascripts/analytics/init.js',
     paths.src + 'javascripts/cookieMessage.js',
     paths.src + 'javascripts/stick-to-window-when-scrolling.js',
     paths.src + 'javascripts/copyToClipboard.js',
