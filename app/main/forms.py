@@ -1,11 +1,9 @@
 import weakref
-
 from datetime import datetime, timedelta
 from itertools import chain
 from numbers import Number
 
 import pytz
-
 from flask import Markup, render_template, request
 from flask_login import current_user
 from flask_wtf import FlaskForm as Form

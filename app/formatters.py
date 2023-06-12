@@ -10,7 +10,6 @@ import ago
 import dateutil
 import humanize
 import pytz
-
 from flask import Markup, url_for
 from notifications_utils.field import Field
 from notifications_utils.formatters import make_quotes_smart

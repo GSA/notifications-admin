@@ -1,7 +1,6 @@
 from datetime import datetime
 
 import pytz
-
 from dateutil import parser
 
 
