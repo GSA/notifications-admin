@@ -472,7 +472,7 @@ def test_caseworker_sees_template_page_if_template_is_deleted(
 
     content = str(page)
     assert url_for("main.send_one_off", service_id=SERVICE_ONE_ID, template_id=fake_uuid) not in content
-    assert page.select('p.hint')[0].text.strip() == 'This template was deleted today at 10:00am.'
+    assert page.select('p.hint')[0].text.strip() == 'This template was deleted today at 3:00pm.'
 
     mock_get_deleted_template.assert_called_with(SERVICE_ONE_ID, template_id, None)
 
@@ -1575,7 +1575,7 @@ def test_should_show_page_for_a_deleted_template(
     content = str(page)
     assert url_for("main.edit_service_template", service_id=SERVICE_ONE_ID, template_id=fake_uuid) not in content
     assert url_for("main.send_one_off", service_id=SERVICE_ONE_ID, template_id=fake_uuid) not in content
-    assert page.select('p.hint')[0].text.strip() == 'This template was deleted today at 10:00am.'
+    assert page.select('p.hint')[0].text.strip() == 'This template was deleted today at 3:00pm.'
     assert 'Delete this template' not in page.select_one('main').text
 
     mock_get_deleted_template.assert_called_with(SERVICE_ONE_ID, template_id, None)
