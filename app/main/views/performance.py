@@ -3,7 +3,8 @@ from itertools import groupby
 from operator import itemgetter
 from statistics import mean
 
-from flask import current_app, render_template
+import pytz
+from flask import render_template
 
 from app import performance_dashboard_api_client, status_api_client
 from app.main import main
@@ -12,8 +13,8 @@ from app.main import main
 @main.route("/performance")
 def performance():
     stats = performance_dashboard_api_client.get_performance_dashboard_stats(
-        start_date=(datetime.now(current_app.config['PY_TIMEZONE']) - timedelta(days=7)).date(),
-        end_date=datetime.now(current_app.config['PY_TIMEZONE']).date(),
+        start_date=(datetime.now(pytz.utc) - timedelta(days=7)).date(),
+        end_date=datetime.now(pytz.utc).date(),
     )
     stats['organisations_using_notify'] = sorted(
         [

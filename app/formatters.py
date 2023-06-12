@@ -9,7 +9,8 @@ from numbers import Number
 import ago
 import dateutil
 import humanize
-from flask import Markup, current_app, url_for
+import pytz
+from flask import Markup, url_for
 from notifications_utils.field import Field
 from notifications_utils.formatters import make_quotes_smart
 from notifications_utils.formatters import nl2br as utils_nl2br
@@ -89,7 +90,7 @@ def get_human_day(time, date_prefix=''):
     #  Add 1 minute to transform 00:00 into ‘midnight today’ instead of ‘midnight tomorrow’
     time = parse_naive_dt(time)
     date = (time - timedelta(minutes=1)).date()
-    now = datetime.now(current_app.config['PY_TIMEZONE'])
+    now = datetime.now(pytz.utc)
 
     if date == (now + timedelta(days=1)).date():
         return 'tomorrow'
