@@ -1,12 +1,12 @@
 from datetime import datetime
 
 import pytz
+
 from dateutil import parser
-from flask import current_app
 
 
 def get_current_financial_year():
-    now = datetime.now(current_app.config['PY_TIMEZONE'])
+    now = datetime.now(pytz.utc)
     current_month = int(now.strftime('%-m'))
     current_year = int(now.strftime('%Y'))
     return current_year if current_month > 9 else current_year - 1
