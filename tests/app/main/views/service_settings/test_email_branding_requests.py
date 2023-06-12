@@ -37,7 +37,7 @@ def test_email_branding_request_page_when_no_branding_is_set(
     )
 
     assert mock_get_email_branding.called is False
-    assert page.find('iframe')['src'] == url_for('main.email_template', branding_style='__NONE__')
+    assert page.find_all('iframe')[1]['src'] == url_for('main.email_template', branding_style='__NONE__')
 
     button_text = normalize_spaces(page.select_one('.page-footer button').text)
 
@@ -68,7 +68,7 @@ def test_email_branding_request_page_shows_branding_if_set(
     page = client_request.get(
         '.email_branding_request', service_id=SERVICE_ONE_ID
     )
-    assert page.find('iframe')['src'] == url_for('main.email_template', branding_style='some-random-branding')
+    assert page.find_all('iframe')[1]['src'] == url_for('main.email_template', branding_style='some-random-branding')
 
 
 def test_email_branding_request_page_back_link(
