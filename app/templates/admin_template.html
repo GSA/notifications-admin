@@ -31,6 +31,7 @@
   {% endblock %}
   {% block meta %}
   {% endblock %}
+  <script type="text/javascript" src="{{ asset_url('js/gtm_head.js') }}"></script>
 {% endblock %}
 
 {% block pageTitle %}
@@ -39,6 +40,10 @@
 
 {% block bodyStart %}
   {% block extra_javascripts_before_body %}
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WX5NGWF"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
   {% endblock %}
 {% endblock %}
 

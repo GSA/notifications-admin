@@ -54,6 +54,10 @@ const copy = {
   fonts: () => {
     return src(paths.src + 'fonts/**/*')
       .pipe(dest(paths.dist + 'fonts/'));
+  },
+  gtm: () => {
+    return src(paths.src + 'js/gtm_head.js')
+      .pipe(dest(paths.dist + 'js/'));
   }
 };
 
@@ -242,7 +246,8 @@ const defaultTask = parallel(
     ),
     sass, 
     uswds.compile,
-    uswds.copyAssets
+    uswds.copyAssets,
+    copy.gtm
   )
 );
 
