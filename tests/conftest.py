@@ -2312,23 +2312,6 @@ def client_request(_logged_in_client, mocker, service_one):  # noqa (C901 too co
                 )
                 if not normalize_spaces(page_title).startswith(h1):
                     raise AssertionError('Page title ‘{}’ does not start with H1 ‘{}’'.format(page_title, h1))
-            if _test_for_elements_without_class and _expected_status not in (301, 302):
-                for tag, hint in (
-                    ('p', 'govuk-body'),
-                    ('a', 'govuk-link govuk-link--no-visited-state'),
-                ):
-                    element = page.select_one(f'{tag}:not([class])')
-                    if (
-                        element
-                        and not element.has_attr('style')  # Elements with inline CSS are exempt
-                        and element.text.strip()  # Empty elements are exempt
-                    ):
-                        raise AssertionError(
-                            f'Found a <{tag}> without a class attribute:\n'
-                            f'    {element}\n'
-                            f'\n'
-                            f'(you probably want to add class="{hint}")'
-                        )
             return page
 
         @staticmethod

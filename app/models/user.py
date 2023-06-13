@@ -3,7 +3,6 @@ from datetime import datetime
 from flask import abort, current_app, request, session
 from flask_login import AnonymousUserMixin, UserMixin, login_user, logout_user
 from notifications_python_client.errors import HTTPError
-from notifications_utils.timezones import convert_utc_to_local_timezone
 from werkzeug.utils import cached_property
 
 from app.event_handlers import (
@@ -129,11 +128,7 @@ class User(JSONModel, UserMixin):
             return False
         datetime_string = parse_naive_dt(datetime_string)
         changed = parse_naive_dt(self.password_changed_at)
-        return convert_utc_to_local_timezone(
-            changed
-        ) > convert_utc_to_local_timezone(
-            datetime_string
-        )
+        return changed > datetime_string
 
     def set_permissions(self, service_id, permissions, folder_permissions, set_by_id):
         user_api_client.set_user_permissions(

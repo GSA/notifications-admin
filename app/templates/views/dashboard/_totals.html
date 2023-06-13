@@ -1,8 +1,8 @@
 {% from "components/big-number.html" import big_number_with_status %}
 
 <div class="ajax-block-container">
-  <div class="govuk-grid-row">
-    <div id="total-sms" class="govuk-grid-column-one-half">
+  <div class="grid-row grid-gap">
+    <div id="total-sms" class="grid-col-6">
       {{ big_number_with_status(
         statistics['sms']['requested'],
         statistics['sms']['requested']|message_count_label('sms', suffix='sent'),
@@ -14,9 +14,9 @@
         smaller=True,
         ) }}
       </div>
-      <div id="total-email" class="govuk-grid-column-one-half">
+      <div id="total-email" class="grid-col-6">
         <span class="big-number-with-status pilot-disabled">
-          <a class="govuk-link govuk-link--no-visited-state big-number-link">
+          <a class="usa-link govuk-link--no-visited-state display-block margin-bottom-1">
             <span class="big-number-smaller">
               <span class="big-number-number">0</span>
               <span class="big-number-label">emails sent</span>

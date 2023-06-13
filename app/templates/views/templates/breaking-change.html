@@ -20,14 +20,14 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-five-sixths">
       {% if template_change.placeholders_removed %}
-        <p class="govuk-body">
+        <p>
           You removed {{ list_of_placeholders(template_change.placeholders_removed) }}
         </p>
       {% endif %}
-      <p class="govuk-body">
+      <p>
         You added {{ list_of_placeholders(template_change.placeholders_added) }}
       </p>
-      <p class="govuk-body">
+      <p>
         Before you send any messages, make sure your API calls include {{ list_of_code_snippets(template_change.placeholders_added) }}.
       </p>
     </div>

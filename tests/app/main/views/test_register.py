@@ -122,9 +122,9 @@ def test_should_return_200_when_email_is_not_gov_uk(
     )
 
     assert 'Enter a public sector email address or find out who can use Notify' in normalize_spaces(
-        page.select_one('.govuk-error-message').text
+        page.select_one('.usa-error-message').text
     )
-    assert page.select_one('.govuk-error-message a')['href'] == url_for(
+    assert page.select_one('.usa-error-message a')['href'] == url_for(
         'main.features'
     )
 
@@ -476,7 +476,7 @@ def test_cannot_register_with_sms_auth_and_missing_mobile_number(
         _expected_status=200,
     )
 
-    err = page.select_one('.govuk-error-message')
+    err = page.select_one('.usa-error-message')
     assert err.text.strip() == 'Error: Cannot be empty'
     assert err.attrs['data-error-label'] == 'mobile_number'
 

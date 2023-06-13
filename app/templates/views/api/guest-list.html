@@ -22,7 +22,7 @@
       <h1 class='banner-title'>
         There was a problem with your guest list
       </h1>
-      <p class="govuk-body">Fix these errors:</p>
+      <p>Fix these errors:</p>
       <ul>
         {% if form.email_addresses.errors %}
           <li>
@@ -40,11 +40,11 @@
     {{ page_header('Guest list') }}
   {% endif %}
 
-  <p class="govuk-body">
+  <p>
     You can use a team and guest list key to send real messages to your team and up to 5 other email addresses or phone numbers.
   </p>
 
-  <p class="govuk-body">
+  <p>
     You do not need to add yourself or your <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.manage_users', service_id=current_service.id) }}">team members</a> to the guest list.
   </p>
 

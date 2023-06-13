@@ -7,12 +7,18 @@
 
 {% block content_column_content %}
 
-  <h1 class="heading-large">Delivery status</h1>
+  <h1 class="font-body-2xl margin-bottom-3">Delivery status</h1>
 
-  <p class="govuk-body">Notify’s real-time dashboard lets you check the status of any message.</p>
-  <p class="govuk-body">For <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for("main.security") }}">security</a>, this information is only available for seven days after a message has been sent. You can download a report, including a list of sent messages, for your own records.</p>
-  <p class="govuk-body">This page describes the statuses you’ll see when you’re signed in to Notify.</p>
-  <!-- <p class="govuk-body">If you’re using the Notify API, read our <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.documentation') }}">documentation</a> for a list of API statuses.<p class="govuk-body"> 
+  <p>Notify’s real-time dashboard lets you check the status of any message.</p>
+  <p>For <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for("main.security") }}">security</a>, this information is only available for seven days after a message has been sent. You can download a report, including a list of sent messages, for your own records.</p>
+  <p>This page describes the statuses you’ll see when you’re signed in to Notify.</p>
+
+  <h2 id="text-message-timezones" class="heading-medium">A note about timezones</h2>
+
+  <p>Notify currently uses UTC (Coordinated Universal Time) for managing and displaying all dates and times in the system.  This means that when you're scheduling messages to send later, or are looking at the time a message was sent, it will be in the UTC timezone.</p>
+
+  <p>You can refer to <a href="https://en.wikipedia.org/wiki/Time_in_the_United_States#United_States_and_regional_time_zones">this chart for help</a> with converting UTC times to your local timezone.</p>
+  <!-- <p>If you’re using the Notify API, read our <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.documentation') }}">documentation</a> for a list of API statuses.<p> 
 
   <h2 id="email-statuses" class="heading-medium">Emails</h2>
   <div class="bottom-gutter-3-2">
@@ -38,10 +44,10 @@
   </div>
 
   <h3 id="spam" class="heading-small">Spam</h3>
-  <p class="govuk-body">If an email is marked as spam, Notify receives a ‘complaint’ from the email provider. We’ll contact you if we receive a complaint about any of your emails. When this happens you should remove the recipient’s email address from your list.</p>
+  <p>If an email is marked as spam, Notify receives a ‘complaint’ from the email provider. We’ll contact you if we receive a complaint about any of your emails. When this happens you should remove the recipient’s email address from your list.</p>
 
   <h3 id="open-rates" class="heading-small">Open rates and click-throughs</h3>
-  <p class="govuk-body">Notify cannot tell you if your users open an email or click on the links in an email. We do not track open rates and click-throughs because there are privacy issues. Tracking emails without asking permission from users could breach General Data Protection Regulations (GDPR).</p> -->
+  <p>Notify cannot tell you if your users open an email or click on the links in an email. We do not track open rates and click-throughs because there are privacy issues. Tracking emails without asking permission from users could breach General Data Protection Regulations (GDPR).</p> -->
 
   <h2 id="text-message-statuses" class="heading-medium">Text messages</h2>
   <div class="bottom-gutter-3-2">

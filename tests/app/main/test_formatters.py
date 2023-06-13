@@ -58,38 +58,38 @@ def test_format_number_in_pounds_as_currency(input_number, formatted_number):
 @pytest.mark.parametrize('time, human_readable_datetime', [
     # incoming in UTC, outgoing in local timezone
     # this test assumes timezone is America/New_York
-    ('2018-03-14 09:00', '14 March at 5:00am'),
-    ('2018-03-14 19:00', '14 March at 3:00pm'),
+    ('2018-03-14 09:00', '14 March at 9:00am'),
+    ('2018-03-14 19:00', '14 March at 7:00pm'),
 
-    ('2018-03-15 09:00', '15 March at 5:00am'),
-    ('2018-03-15 19:00', '15 March at 3:00pm'),
+    ('2018-03-15 09:00', '15 March at 9:00am'),
+    ('2018-03-15 19:00', '15 March at 7:00pm'),
 
-    ('2018-03-19 09:00', '19 March at 5:00am'),
-    ('2018-03-19 19:00', '19 March at 3:00pm'),
-    ('2018-03-19 23:59', '19 March at 7:59pm'),
+    ('2018-03-19 09:00', '19 March at 9:00am'),
+    ('2018-03-19 19:00', '19 March at 7:00pm'),
+    ('2018-03-19 23:59', '19 March at 11:59pm'),
 
-    ('2018-03-20 04:00', '19 March at midnight'),  # we specifically refer to 00:00 as belonging to the day before.
-    ('2018-03-20 04:01', 'yesterday at 12:01am'),
-    ('2018-03-20 09:00', 'yesterday at 5:00am'),
-    ('2018-03-20 19:00', 'yesterday at 3:00pm'),
-    ('2018-03-20 23:59', 'yesterday at 7:59pm'),
+    ('2018-03-20 00:00', '19 March at midnight'),  # we specifically refer to 00:00 as belonging to the day before.
+    ('2018-03-20 04:01', 'yesterday at 4:01am'),
+    ('2018-03-20 09:00', 'yesterday at 9:00am'),
+    ('2018-03-20 19:00', 'yesterday at 7:00pm'),
+    ('2018-03-20 23:59', 'yesterday at 11:59pm'),
 
-    ('2018-03-21 04:00', 'yesterday at midnight'),  # we specifically refer to 00:00 as belonging to the day before.
-    ('2018-03-21 04:01', 'today at 12:01am'),
-    ('2018-03-21 09:00', 'today at 5:00am'),
-    ('2018-03-21 16:00', 'today at noon'),
-    ('2018-03-21 19:00', 'today at 3:00pm'),
-    ('2018-03-21 23:59', 'today at 7:59pm'),
+    ('2018-03-21 00:00', 'yesterday at midnight'),  # we specifically refer to 00:00 as belonging to the day before.
+    ('2018-03-21 04:01', 'today at 4:01am'),
+    ('2018-03-21 09:00', 'today at 9:00am'),
+    ('2018-03-21 12:00', 'today at noon'),
+    ('2018-03-21 19:00', 'today at 7:00pm'),
+    ('2018-03-21 23:59', 'today at 11:59pm'),
 
-    ('2018-03-22 04:00', 'today at midnight'),  # we specifically refer to 00:00 as belonging to the day before.
-    ('2018-03-22 04:01', 'tomorrow at 12:01am'),
-    ('2018-03-22 09:00', 'tomorrow at 5:00am'),
-    ('2018-03-22 19:00', 'tomorrow at 3:00pm'),
-    ('2018-03-22 23:59', 'tomorrow at 7:59pm'),
+    ('2018-03-22 00:00', 'today at midnight'),  # we specifically refer to 00:00 as belonging to the day before.
+    ('2018-03-22 04:01', 'tomorrow at 4:01am'),
+    ('2018-03-22 09:00', 'tomorrow at 9:00am'),
+    ('2018-03-22 19:00', 'tomorrow at 7:00pm'),
+    ('2018-03-22 23:59', 'tomorrow at 11:59pm'),
 
-    ('2018-03-23 04:01', '23 March at 12:01am'),
-    ('2018-03-23 09:00', '23 March at 5:00am'),
-    ('2018-03-23 19:00', '23 March at 3:00pm'),
+    ('2018-03-23 04:01', '23 March at 4:01am'),
+    ('2018-03-23 09:00', '23 March at 9:00am'),
+    ('2018-03-23 19:00', '23 March at 7:00pm'),
 
 ])
 def test_format_datetime_relative(time, human_readable_datetime):

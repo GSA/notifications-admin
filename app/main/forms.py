@@ -4,7 +4,7 @@ from itertools import chain
 from numbers import Number
 
 import pytz
-from flask import Markup, current_app, render_template, request
+from flask import Markup, render_template, request
 from flask_login import current_user
 from flask_wtf import FlaskForm as Form
 from flask_wtf.file import FileAllowed
@@ -73,9 +73,9 @@ from app.utils.user_permissions import all_ui_permissions, permission_options
 def get_time_value_and_label(future_time):
     return (
         future_time.astimezone(pytz.utc).replace(tzinfo=None).isoformat(),
-        '{} at {} ET'.format(
-            get_human_day(future_time.astimezone(current_app.config['PY_TIMEZONE'])),
-            get_human_time(future_time.astimezone(current_app.config['PY_TIMEZONE']))
+        '{} at {} UTC'.format(
+            get_human_day(future_time.astimezone(pytz.utc)),
+            get_human_time(future_time.astimezone(pytz.utc))
         )
     )
 
@@ -93,20 +93,20 @@ def get_human_time(time):
 def get_human_day(time, prefix_today_with='T'):
     #  Add 1 hour to get ‘midnight today’ instead of ‘midnight tomorrow’
     time = (time - timedelta(hours=1)).strftime('%A')
-    if time == datetime.now(current_app.config['PY_TIMEZONE']).strftime('%A'):
+    if time == datetime.now(pytz.utc).strftime('%A'):
         return '{}oday'.format(prefix_today_with)
-    if time == (datetime.now(current_app.config['PY_TIMEZONE']) + timedelta(days=1)).strftime('%A'):
+    if time == (datetime.now(pytz.utc) + timedelta(days=1)).strftime('%A'):
         return 'Tomorrow'
     return time
 
 
 def get_furthest_possible_scheduled_time():
     # We want local time to find date boundaries
-    return (datetime.now(current_app.config['PY_TIMEZONE']) + timedelta(days=4)).replace(hour=0)
+    return (datetime.now(pytz.utc) + timedelta(days=4)).replace(hour=0)
 
 
 def get_next_hours_until(until):
-    now = datetime.now(current_app.config['PY_TIMEZONE'])
+    now = datetime.now(pytz.utc)
     hours = int((until - now).total_seconds() / (60 * 60))
     return [
         (now + timedelta(hours=i)).replace(minute=0, second=0, microsecond=0)
@@ -115,7 +115,7 @@ def get_next_hours_until(until):
 
 
 def get_next_days_until(until):
-    now = datetime.now(current_app.config['PY_TIMEZONE'])
+    now = datetime.now(pytz.utc)
     days = int((until - now).total_seconds() / (60 * 60 * 24))
     return [
         get_human_day(
@@ -238,9 +238,8 @@ def govuk_text_input_field_widget(self, field, type=None, param_extensions=None,
             error_message_format: field.errors[0]
         }
 
-    # convert to parameters that govuk understands
+    # convert to parameters that usa understands
     params = {
-        "classes": "govuk-!-width-two-thirds",
         "errorMessage": error_message,
         "id": field.id,
         "label": {"text": field.label.text},

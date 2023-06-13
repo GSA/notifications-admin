@@ -51,7 +51,7 @@
 
   {% if not request.args.from_test %}
 
-    <h2 class="heading-medium" id="{{ file_contents_header_id }}">{{ original_file_name }}</h2>
+    <h2 class="font-body-lg" id="{{ file_contents_header_id }}">{{ original_file_name }}</h2>
 
     <div class="fullscreen-content" data-module="fullscreen-table">
       {% call(item, row_number) list_table(

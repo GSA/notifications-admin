@@ -11,7 +11,7 @@ from app.main.views.sub_navigation_dictionaries import using_notify_nav
 CURRENT_SMS_RATE = '1.72'
 
 
-@main.route('/pricing')
+@main.route('/using-notify/pricing')
 def pricing():
     return render_template(
         'views/pricing/index.html',

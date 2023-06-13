@@ -90,7 +90,7 @@ def test_default_email_sender_is_checked_and_has_hint(
     )
 
     assert page.select('.govuk-radios input')[0].has_attr('checked')
-    assert normalize_spaces(page.select_one('.govuk-radios .govuk-hint').text) == "(Default)"
+    assert normalize_spaces(page.select_one('.govuk-radios .usa-hint').text) == "(Default)"
     assert not page.select('.govuk-radios input')[1].has_attr('checked')
 
 
@@ -107,7 +107,7 @@ def test_default_sms_sender_is_checked_and_has_hint(
     )
 
     assert page.select('.govuk-radios input')[0].has_attr('checked')
-    assert normalize_spaces(page.select_one('.govuk-radios .govuk-hint').text) == "(Default)"
+    assert normalize_spaces(page.select_one('.govuk-radios .usa-hint').text) == "(Default)"
     assert not page.select('.govuk-radios input')[1].has_attr('checked')
 
 
@@ -124,7 +124,7 @@ def test_default_sms_sender_is_checked_and_has_hint_when_there_are_no_inbound_nu
     )
 
     assert page.select('.govuk-radios input')[0].has_attr('checked')
-    assert normalize_spaces(page.select_one('.govuk-radios .govuk-hint').text) == "(Default)"
+    assert normalize_spaces(page.select_one('.govuk-radios .usa-hint').text) == "(Default)"
     assert not page.select('.govuk-radios input')[1].has_attr('checked')
 
 
@@ -143,7 +143,7 @@ def test_default_inbound_sender_is_checked_and_has_hint_with_default_and_receive
 
     assert page.select('.govuk-radios input')[0].has_attr('checked')
     assert normalize_spaces(
-        page.select_one('.govuk-radios .govuk-hint').text) == "(Default and receives replies)"
+        page.select_one('.govuk-radios .usa-hint').text) == "(Default and receives replies)"
     assert not page.select('.govuk-radios input')[1].has_attr('checked')
     assert not page.select('.govuk-radios input')[2].has_attr('checked')
 
@@ -163,7 +163,7 @@ def test_sms_sender_has_receives_replies_hint(
 
     assert page.select('.govuk-radios input')[0].has_attr('checked')
     assert normalize_spaces(
-        page.select_one('.govuk-radios .govuk-hint').text) == "(Default and receives replies)"
+        page.select_one('.govuk-radios .usa-hint').text) == "(Default and receives replies)"
     assert not page.select('.govuk-radios input')[1].has_attr('checked')
     assert not page.select('.govuk-radios input')[2].has_attr('checked')
 
@@ -310,8 +310,8 @@ def test_should_not_allow_files_to_be_uploaded_without_the_correct_permission(
     )
 
     assert page.select('main p')[0].text.strip() == "Sending text messages has been disabled for your service."
-    assert page.select(".govuk-back-link")[0].text == "Back"
-    assert page.select(".govuk-back-link")[0]['href'] == url_for(
+    assert page.select(".usa-back-link")[0].text == "Back"
+    assert page.select(".usa-back-link")[0]['href'] == url_for(
         '.view_template',
         service_id=service_one['id'],
         template_id=template_id,
@@ -1074,8 +1074,8 @@ def test_send_one_off_does_not_send_without_the_correct_permissions(
     )
 
     assert page.select('main p')[0].text.strip() == "Sending text messages has been disabled for your service."
-    assert page.select(".govuk-back-link")[0].text == "Back"
-    assert page.select(".govuk-back-link")[0]['href'] == url_for(
+    assert page.select(".usa-back-link")[0].text == "Back"
+    assert page.select(".usa-back-link")[0]['href'] == url_for(
         '.view_template',
         service_id=service_one['id'],
         template_id=template_id,
@@ -1281,7 +1281,7 @@ def test_send_one_off_offers_link_to_upload(
         template_id=fake_uuid,
         _follow_redirects=True,
     )
-    back_link = page.select_one('.govuk-back-link')
+    back_link = page.select_one('.usa-back-link')
     link = page.select_one('form a')
 
     assert back_link.text.strip() == 'Back'
@@ -1563,7 +1563,7 @@ def test_send_one_off_step_0_back_link(
         step_index=0
     )
 
-    assert page.select('.govuk-back-link')[0]['href'] == url_for(
+    assert page.select('.usa-back-link')[0]['href'] == url_for(
         expected_back_link_endpoint,
         service_id=SERVICE_ONE_ID,
         **extra_args
@@ -1586,7 +1586,7 @@ def test_send_one_off_sms_message_back_link_with_multiple_placeholders(
         step_index=2,
     )
 
-    assert page.select_one('.govuk-back-link')['href'] == url_for(
+    assert page.select_one('.usa-back-link')['href'] == url_for(
         'main.send_one_off_step',
         service_id=SERVICE_ONE_ID,
         template_id=unchanging_fake_uuid,
@@ -2077,7 +2077,7 @@ def test_check_messages_back_link(
     )
 
     assert (
-        page.find_all('a', {'class': 'govuk-back-link'})[0]['href']
+        page.find_all('a', {'class': 'usa-back-link'})[0]['href']
     ) == expected_url(service_id=SERVICE_ONE_ID, template_id=fake_uuid)
 
 
@@ -2431,7 +2431,7 @@ def test_check_notification_shows_preview(
 
     assert page.h1.text.strip() == 'Preview of ‘Two week reminder’'
     assert (
-        page.find_all('a', {'class': 'govuk-back-link'})[0]['href']
+        page.find_all('a', {'class': 'usa-back-link'})[0]['href']
     ) == url_for(
         'main.send_one_off_step',
         service_id=service_one['id'],

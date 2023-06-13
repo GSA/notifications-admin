@@ -8,15 +8,15 @@
 
 {% block maincolumn_content %}
 
-  <div class="govuk-grid-row">
+  <div class="grid-row">
 
     {% if navigation_links %}
-      <div class="govuk-grid-column-one-quarter">
+      <div class="tablet:grid-col-2">
         {{ sub_navigation(navigation_links) }}
       </div>
-      <div class="govuk-grid-column-five-eighths">
+      <div class="tablet:grid-col-10 padding-left-4 sub-content">
     {% else %}
-      <div class="govuk-grid-column-two-thirds">
+      <div class="tablet:grid-col-10">
     {% endif %}
 
     {% block content_column_content %}

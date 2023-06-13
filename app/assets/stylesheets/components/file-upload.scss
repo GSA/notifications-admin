@@ -1,9 +1,6 @@
 .js-enabled {
-
   .file-upload {
-
     &-label {
-
       @include bold-19;
       display: block;
       margin: 0 0 10px 0;
@@ -11,7 +8,6 @@
       .error-message {
         padding: 0;
       }
-
     }
 
     &-field {
@@ -22,11 +18,10 @@
       position: absolute;
       z-index: -1;
 
-      &:focus + .file-upload-button {
-        background: $govuk-focus-colour;
-        color: $govuk-focus-text-colour;
-      }
-
+      // &:focus + .file-upload-button {
+      //   background: $govuk-focus-colour;
+      //   color: $govuk-focus-text-colour;
+      // }
     }
 
     &-filename {
@@ -46,9 +41,6 @@
       a {
         font-weight: bold;
       }
-
     }
-
   }
-
 }

@@ -12,23 +12,23 @@
 
 {% block maincolumn_content %}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+<div class="grid-row">
+  <div class="tablet:grid-col-12">
 
     {% if again %}
-      <h1 class="heading-large">You need to sign in again</h1>
+      <h1 class="font-body-2xl margin-bottom-3">You need to sign in again</h1>
       {% if other_device %}
-        <p class="govuk-body">
+        <p>
           We signed you out because you logged in to Notify on another device.
         </p>
       {% else %}
-        <p class="govuk-body">
+        <p>
           We signed you out because you have not used Notify for a while.
         </p>
       {% endif %}
     {% else %}
-      <h1 class="heading-large">Sign in</h1>
-      <p class="govuk-body">
+      <h1 class="font-body-2xl margin-bottom-3">Sign in</h1>
+      <p>
         If you do not have an account, you can
         <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.register') }}">create one now</a>.
       </p>

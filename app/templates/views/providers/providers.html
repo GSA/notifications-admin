@@ -10,7 +10,7 @@ Providers
 
   <h1 class="heading-medium">Providers</h1>
 
-  <h2 class="heading-medium">SMS</h2>
+  <h2 class="font-body-lg">SMS</h2>
 
   <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.edit_sms_provider_ratio') }}">Change priority</a>
 
@@ -40,7 +40,7 @@ Providers
 
   {% endcall %}
 
-  <h2 class="heading-medium">Email</h2>
+  <h2 class="font-body-lg">Email</h2>
 
   {% call(item, row_number) list_table(
       email_providers,
@@ -63,7 +63,7 @@ Providers
       {{ optional_text_field(item.created_by_name, default='None') }}
   {% endcall %}
 
-  <h2 class="heading-medium">International SMS Providers</h2>
+  <h2 class="font-body-lg">International SMS Providers</h2>
 
   {% call(item, row_number) list_table(
       intl_sms_providers,

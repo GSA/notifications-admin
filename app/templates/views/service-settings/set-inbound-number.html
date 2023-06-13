@@ -19,9 +19,9 @@
     {{ page_header(page_title) }}
   {% endif %}
   {% if current_service.has_inbound_number %}
-    <p class="govuk-body"> This service already has an inbound number </p>
+    <p> This service already has an inbound number </p>
   {% elif no_available_numbers %}
-    <p class="govuk-body"> No available inbound numbers </p>
+    <p> No available inbound numbers </p>
   {% else %}
     {% call form_wrapper(class="govuk-!-margin-top-3") %}
       {{ form.inbound_number(param_extensions={
