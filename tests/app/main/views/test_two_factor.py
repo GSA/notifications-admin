@@ -365,48 +365,6 @@ def test_two_factor_sms_should_activate_pending_user(
     assert mock_activate_user.called
 
 
-# @pytest.mark.parametrize('extra_args, expected_encoded_next_arg', (
-#     ({}, ''),
-#     ({'next': 'https://example.com'}, '?next=https://example.com')
-# ))
-# def test_valid_two_factor_email_link_shows_interstitial(
-#     client_request,
-#     valid_token,
-#     mocker,
-#     extra_args,
-#     expected_encoded_next_arg,
-# ):
-#     mock_check_code = mocker.patch('app.user_api_client.check_verify_code')
-#     encoded_token = valid_token.replace('%2E', '.')
-#     token_url = url_for(
-#         'main.two_factor_email_interstitial',
-#         token=encoded_token,
-#         **extra_args
-#     )
-#
-#     # This must match the URL we put in the emails
-#     assert token_url == f'/email-auth/{encoded_token}{expected_encoded_next_arg}'
-#
-#     client_request.logout()
-#     page = client_request.get_url(token_url)
-#
-#     assert normalize_spaces(page.select_one('main .js-hidden').text) == (
-#         'Sign in '
-#         'Continue to dashboard'
-#     )
-#
-#     form = page.select_one('form')
-#     expected_form_id = 'use-email-auth'
-#     assert 'action' not in form
-#     assert form['method'] == 'post'
-#     assert form['id'] == expected_form_id
-#     assert page.select_one('main script').string.strip() == (
-#         f'document.getElementById("{expected_form_id}").submit();'
-#     )
-#
-#     assert mock_check_code.called is False
-
-
 def test_valid_two_factor_email_link_logs_in_user(
     client_request,
     valid_token,
