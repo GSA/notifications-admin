@@ -365,46 +365,46 @@ def test_two_factor_sms_should_activate_pending_user(
     assert mock_activate_user.called
 
 
-@pytest.mark.parametrize('extra_args, expected_encoded_next_arg', (
-    ({}, ''),
-    ({'next': 'https://example.com'}, '?next=https://example.com')
-))
-def test_valid_two_factor_email_link_shows_interstitial(
-    client_request,
-    valid_token,
-    mocker,
-    extra_args,
-    expected_encoded_next_arg,
-):
-    mock_check_code = mocker.patch('app.user_api_client.check_verify_code')
-    encoded_token = valid_token.replace('%2E', '.')
-    token_url = url_for(
-        'main.two_factor_email_interstitial',
-        token=encoded_token,
-        **extra_args
-    )
-
-    # This must match the URL we put in the emails
-    assert token_url == f'/email-auth/{encoded_token}{expected_encoded_next_arg}'
-
-    client_request.logout()
-    page = client_request.get_url(token_url)
-
-    assert normalize_spaces(page.select_one('main .js-hidden').text) == (
-        'Sign in '
-        'Continue to dashboard'
-    )
-
-    form = page.select_one('form')
-    expected_form_id = 'use-email-auth'
-    assert 'action' not in form
-    assert form['method'] == 'post'
-    assert form['id'] == expected_form_id
-    assert page.select_one('main script').string.strip() == (
-        f'document.getElementById("{expected_form_id}").submit();'
-    )
-
-    assert mock_check_code.called is False
+# @pytest.mark.parametrize('extra_args, expected_encoded_next_arg', (
+#     ({}, ''),
+#     ({'next': 'https://example.com'}, '?next=https://example.com')
+# ))
+# def test_valid_two_factor_email_link_shows_interstitial(
+#     client_request,
+#     valid_token,
+#     mocker,
+#     extra_args,
+#     expected_encoded_next_arg,
+# ):
+#     mock_check_code = mocker.patch('app.user_api_client.check_verify_code')
+#     encoded_token = valid_token.replace('%2E', '.')
+#     token_url = url_for(
+#         'main.two_factor_email_interstitial',
+#         token=encoded_token,
+#         **extra_args
+#     )
+#
+#     # This must match the URL we put in the emails
+#     assert token_url == f'/email-auth/{encoded_token}{expected_encoded_next_arg}'
+#
+#     client_request.logout()
+#     page = client_request.get_url(token_url)
+#
+#     assert normalize_spaces(page.select_one('main .js-hidden').text) == (
+#         'Sign in '
+#         'Continue to dashboard'
+#     )
+#
+#     form = page.select_one('form')
+#     expected_form_id = 'use-email-auth'
+#     assert 'action' not in form
+#     assert form['method'] == 'post'
+#     assert form['id'] == expected_form_id
+#     assert page.select_one('main script').string.strip() == (
+#         f'document.getElementById("{expected_form_id}").submit();'
+#     )
+#
+#     assert mock_check_code.called is False
 
 
 def test_valid_two_factor_email_link_logs_in_user(
@@ -417,7 +417,7 @@ def test_valid_two_factor_email_link_logs_in_user(
 ):
     mocker.patch('app.user_api_client.check_verify_code', return_value=(True, ''))
 
-    client_request.post_url(
+    client_request.get_url(
         url_for_endpoint_with_token('main.two_factor_email', token=valid_token),
         _expected_redirect=url_for('main.show_accounts_or_dashboard')
     )
@@ -436,14 +436,13 @@ def test_two_factor_email_link_has_expired(
     redirect_url
 ):
     client_request.logout()
-
     with set_config(notify_admin, 'EMAIL_2FA_EXPIRY_SECONDS', -1):
-        page = client_request.post_url(
+        page = client_request.get_url(
             url_for_endpoint_with_token('main.two_factor_email', token=valid_token, next=redirect_url),
             _follow_redirects=True,
         )
 
-    assert page.h1.text.strip() == 'The link has expired'
+    assert page.h1.text.strip() == 'This link has expired'
     assert page.select_one('a:contains("Sign in again")')['href'] == url_for('main.sign_in', next=redirect_url)
 
     assert mock_send_verify_code.called is False
@@ -454,7 +453,7 @@ def test_two_factor_email_link_is_invalid(
 ):
     client_request.logout()
     token = 12345
-    page = client_request.post(
+    page = client_request.get(
         'main.two_factor_email',
         token=token,
         _follow_redirects=True,
@@ -481,12 +480,12 @@ def test_two_factor_email_link_is_already_used(
     client_request.logout()
     mocker.patch('app.user_api_client.check_verify_code', return_value=(False, 'Code has expired'))
 
-    page = client_request.post_url(
+    page = client_request.get_url(
         url_for_endpoint_with_token('main.two_factor_email', token=valid_token, next=redirect_url),
         _follow_redirects=True,
     )
 
-    assert page.h1.text.strip() == 'The link has expired'
+    assert page.h1.text.strip() == 'This link has expired'
     assert page.select_one('a:contains("Sign in again")')['href'] == url_for('main.sign_in', next=redirect_url)
 
     assert mock_send_verify_code.called is False
@@ -501,12 +500,12 @@ def test_two_factor_email_link_when_user_is_locked_out(
     client_request.logout()
     mocker.patch('app.user_api_client.check_verify_code', return_value=(False, 'Code not found'))
 
-    page = client_request.post_url(
+    page = client_request.get_url(
         url_for_endpoint_with_token('main.two_factor_email', token=valid_token),
         _follow_redirects=True,
     )
 
-    assert page.h1.text.strip() == 'The link has expired'
+    assert page.h1.text.strip() == 'This link has expired'
     assert mock_send_verify_code.called is False
 
 
@@ -514,7 +513,7 @@ def test_two_factor_email_link_used_when_user_already_logged_in(
     client_request,
     valid_token
 ):
-    client_request.post_url(
+    client_request.get_url(
         url_for_endpoint_with_token('main.two_factor_email', token=valid_token),
         _expected_redirect=url_for('main.show_accounts_or_dashboard'),
     )

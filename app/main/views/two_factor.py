@@ -35,12 +35,7 @@ def two_factor_email_sent():
     )
 
 
-@main.route('/email-auth/<token>', methods=['GET'])
-def two_factor_email_interstitial(token):
-    return render_template('views/email-link-interstitial.html')
-
-
-@main.route('/email-auth/<token>', methods=['POST'])
+@main.route('/email-auth/<token>')
 def two_factor_email(token):
     redirect_url = request.args.get('next')
     if current_user.is_authenticated:
