@@ -434,7 +434,7 @@ def test_two_factor_email_link_has_expired(
 ):
     client_request.logout()
 
-    with set_config(notify_admin, 'EMAIL_2FA_EXPIRY_SECONDS', -1):
+    with set_config(notify_admin, 'EMAIL_EXPIRY_SECONDS', -1):
         page = client_request.post_url(
             url_for_endpoint_with_token('main.two_factor_email', token=valid_token, next=redirect_url),
             _follow_redirects=True,
