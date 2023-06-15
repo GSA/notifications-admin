@@ -390,9 +390,9 @@ def test_valid_two_factor_email_link_shows_interstitial(
     client_request.logout()
     page = client_request.get_url(token_url)
 
-    assert normalize_spaces(page.select_one('main .js-hidden').text) == (
-        'Sign in '
-        'Continue to dashboard'
+    assert normalize_spaces(page.select_one('main').text) == (
+        'Click below to complete email re-verification and finish signing in. '
+        'Verify email'
     )
 
     form = page.select_one('form')
@@ -400,9 +400,6 @@ def test_valid_two_factor_email_link_shows_interstitial(
     assert 'action' not in form
     assert form['method'] == 'post'
     assert form['id'] == expected_form_id
-    assert page.select_one('main script').string.strip() == (
-        f'document.getElementById("{expected_form_id}").submit();'
-    )
 
     assert mock_check_code.called is False
 
@@ -437,13 +434,13 @@ def test_two_factor_email_link_has_expired(
 ):
     client_request.logout()
 
-    with set_config(notify_admin, 'EMAIL_2FA_EXPIRY_SECONDS', -1):
+    with set_config(notify_admin, 'EMAIL_EXPIRY_SECONDS', -1):
         page = client_request.post_url(
             url_for_endpoint_with_token('main.two_factor_email', token=valid_token, next=redirect_url),
             _follow_redirects=True,
         )
 
-    assert page.h1.text.strip() == 'The link has expired'
+    assert page.h1.text.strip() == 'This link has expired'
     assert page.select_one('a:contains("Sign in again")')['href'] == url_for('main.sign_in', next=redirect_url)
 
     assert mock_send_verify_code.called is False
@@ -486,7 +483,7 @@ def test_two_factor_email_link_is_already_used(
         _follow_redirects=True,
     )
 
-    assert page.h1.text.strip() == 'The link has expired'
+    assert page.h1.text.strip() == 'This link has expired'
     assert page.select_one('a:contains("Sign in again")')['href'] == url_for('main.sign_in', next=redirect_url)
 
     assert mock_send_verify_code.called is False
@@ -506,7 +503,7 @@ def test_two_factor_email_link_when_user_is_locked_out(
         _follow_redirects=True,
     )
 
-    assert page.h1.text.strip() == 'The link has expired'
+    assert page.h1.text.strip() == 'This link has expired'
     assert mock_send_verify_code.called is False
 
 

@@ -3,23 +3,19 @@
 {% from "components/page-footer.html" import page_footer %}
 
 {% block per_page_title %}
-  Sign in
+    Click below to complete email re-verification and finish signing in.
 {% endblock %}
 
 {% block maincolumn_content %}
 
-<div class="js-hidden">
+<div>
 
-  {{ page_header('Sign in') }}
+    <h1 class="font-body-2xl margin-bottom-3">Click below to complete email re-verification and finish signing in.</h1>
 
   <form method="post" id="use-email-auth">
-    {{ page_footer('Continue to dashboard') }}
+    {{ page_footer('Verify email') }}
   </form>
 
 </div>
-
-<script type="text/javascript">
-  document.getElementById("use-email-auth").submit();
-</script>
 
 {% endblock %}
