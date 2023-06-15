@@ -15,7 +15,7 @@ from tests.conftest import (
 
 @pytest.mark.parametrize('key_type, notification_status, expected_status', [
     (None, 'created', 'Sending'),
-    (None, 'sending', 'Sending'),
+    (None, 'sending', "Pending. It will take up to 5 minutes to receive the carrier's response."),
     (None, 'delivered', 'Delivered'),
     (None, 'failed', 'Failed'),
     (None, 'temporary-failure', 'Phone not accepting messages right now'),
@@ -23,7 +23,7 @@ from tests.conftest import (
     (None, 'technical-failure', 'Technical failure'),
     ('team', 'delivered', 'Delivered'),
     ('live', 'delivered', 'Delivered'),
-    ('test', 'sending', 'Sending (test)'),
+    ('test', 'sending', "Pending. It will take up to 5 minutes to receive the carrier's response. (test)"),
     ('test', 'delivered', 'Delivered (test)'),
     ('test', 'permanent-failure', 'Not delivered (test)'),
 ])
@@ -182,16 +182,16 @@ def test_notification_status_shows_expected_back_link(
 
 @pytest.mark.parametrize('time_of_viewing_page, expected_message', (
     ('2012-01-01 06:01', (
-        "‘sample template’ was sent by Test User today at 1:01am"
+        "‘sample template’ was sent by Test User today at 6:01am UTC"
     )),
     ('2012-01-02 06:01', (
-        "‘sample template’ was sent by Test User yesterday at 1:01am"
+        "‘sample template’ was sent by Test User yesterday at 6:01am UTC"
     )),
     ('2012-01-03 06:01', (
-        "‘sample template’ was sent by Test User on 1 January at 1:01am"
+        "‘sample template’ was sent by Test User on 1 January at 6:01am UTC"
     )),
     ('2013-01-03 06:01', (
-        "‘sample template’ was sent by Test User on 1 January 2012 at 1:01am"
+        "‘sample template’ was sent by Test User on 1 January 2012 at 6:01am UTC"
     )),
 ))
 def test_notification_page_doesnt_link_to_template_in_tour(

@@ -153,7 +153,7 @@ def test_can_show_notifications(
     assert normalize_spaces(
         first_row.select_one('.table-field-right-aligned .align-with-message-body').text
     ) == (
-        'Delivered 1 January at 1:01am'
+        'Delivered 1 January at 6:01am'
     )
 
     assert page_title in page.h1.text.strip()
@@ -623,7 +623,7 @@ def test_redacts_templates_that_should_be_redacted(
     )
 
 
-@freeze_time("2017-09-27 16:30:00.000000")
+@freeze_time("2017-09-27 12:30:00.000000")
 @pytest.mark.parametrize(
     "message_type, status, expected_hint_status, single_line", [
         ('email', 'created', 'Sending since 27 September at 12:30pm', True),
