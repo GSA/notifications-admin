@@ -320,7 +320,7 @@ def _get_job_counts(job):
             ],
             [
                 Markup(
-                    f'''sending<span class="govuk-visually-hidden">
+                    f'''pending<span class="govuk-visually-hidden">
                     {message_count_noun(job.notifications_sending, job_type)}</span>'''
                 ),
                 'pending',

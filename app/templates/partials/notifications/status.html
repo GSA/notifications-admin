@@ -15,7 +15,7 @@
 
     {% if notification.status == 'sending' %}
   <p class="notification-status {{ field_status }}">
-     Pending. It will take up to 5 minutes to receive the carrier's response.
+     Pending. Messages will remain in pending state until carrier status is received, typically 5 minutes.
      </p>
     {% endif %}
     {% if status_url %}
