@@ -137,3 +137,9 @@ td.table-empty-message {
 .sub-content h2.user-list-item-heading {
    margin-top: 0;
 }
+
+.user-list-edit-link:active:before,
+.user-list-edit-link:focus:before {
+   box-shadow: none;
+   border: 0;
+}

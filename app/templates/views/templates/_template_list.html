@@ -53,7 +53,7 @@
       {% endset %}
 
       {% set label_content %}
-        <span class="govuk-visually-hidden">
+        <span class="usa-sr-only">
           {%- for ancestor in item.ancestors %}{{ format_item_name(ancestor.name, separators=False) }} {% endfor -%}
           {{ format_item_name(item.name, separators=False) -}}
         </span>

@@ -21,7 +21,7 @@
   {% endif %}
   {% for org in organisations|sort %}
     <li class="browse-list-item">
-      <a href="{{ url_for('.organisation_dashboard', org_id=org.id) }}" class="govuk-link govuk-link--no-visited-state">{{ org.name }}</a>
+      <a href="{{ url_for('.organisation_dashboard', org_id=org.id) }}" class="usa-link">{{ org.name }}</a>
       <p class="browse-list-hint">
         {{ org.count_of_live_services }}
         live service{% if org.count_of_live_services != 1 %}s{% endif %}
@@ -30,7 +30,7 @@
   {% endfor %}
   {% for service in services|sort %}
     <li class="browse-list-item">
-      <a href="{{ url_for('.service_dashboard', service_id=service.id) }}" class="govuk-link govuk-link--no-visited-state">{{ service.name }}</a>
+      <a href="{{ url_for('.service_dashboard', service_id=service.id) }}" class="usa-link">{{ service.name }}</a>
     </li>
   {% endfor %}
   {% if show_heading and (services or organisations) %}
@@ -49,7 +49,7 @@
 
 {% block maincolumn_content %}
 
-  <h1 class="heading-large {% if current_user.has_access_to_live_and_trial_mode_services %}govuk-visually-hidden{% endif %}">
+  <h1 class="heading-large {% if current_user.has_access_to_live_and_trial_mode_services %}usa-sr-only{% endif %}">
     Choose service
   </h1>
 
@@ -64,7 +64,7 @@
         </div>
         <ul class="govuk-grid-column-three-quarters">
           <li class="browse-list-item">
-            <a href="{{ url_for('.organisations') }}" class="govuk-link govuk-link--no-visited-state">All organisations</a>
+            <a href="{{ url_for('.organisations') }}" class="usa-link">All organisations</a>
             <p class="browse-list-hint">
               {{ org_count|format_thousands }} organisations, {{ live_service_count|format_thousands }} live services
             </p>

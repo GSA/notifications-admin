@@ -392,8 +392,8 @@ describe('TemplateFolderForm', () => {
         const cancelLink = formControls.querySelector('.js-cancel');
 
         expect(cancelLink).not.toBeNull();
-        expect(cancelLink.querySelector('.govuk-visually-hidden')).not.toBeNull();
-        expect(cancelLink.querySelector('.govuk-visually-hidden').textContent.trim()).toEqual('new template');
+        expect(cancelLink.querySelector('.usa-sr-only')).not.toBeNull();
+        expect(cancelLink.querySelector('.usa-sr-only').textContent.trim()).toEqual('new template');
 
       });
 
@@ -520,8 +520,8 @@ describe('TemplateFolderForm', () => {
         const cancelLink = formControls.querySelector('.js-cancel');
 
         expect(cancelLink).not.toBeNull();
-        expect(cancelLink.querySelector('.govuk-visually-hidden')).not.toBeNull();
-        expect(cancelLink.querySelector('.govuk-visually-hidden').textContent.trim()).toEqual('new folder');
+        expect(cancelLink.querySelector('.usa-sr-only')).not.toBeNull();
+        expect(cancelLink.querySelector('.usa-sr-only').textContent.trim()).toEqual('new folder');
 
       });
 
@@ -742,8 +742,8 @@ describe('TemplateFolderForm', () => {
           const cancelLink = formControls.querySelector('.js-cancel');
 
           expect(cancelLink).not.toBeNull();
-          expect(cancelLink.querySelector('.govuk-visually-hidden')).not.toBeNull();
-          expect(cancelLink.querySelector('.govuk-visually-hidden').textContent.trim()).toEqual('move to folder');
+          expect(cancelLink.querySelector('.usa-sr-only')).not.toBeNull();
+          expect(cancelLink.querySelector('.usa-sr-only').textContent.trim()).toEqual('move to folder');
 
         });
 
@@ -844,8 +844,8 @@ describe('TemplateFolderForm', () => {
           const cancelLink = formControls.querySelector('.js-cancel');
 
           expect(cancelLink).not.toBeNull();
-          expect(cancelLink.querySelector('.govuk-visually-hidden')).not.toBeNull();
-          expect(cancelLink.querySelector('.govuk-visually-hidden').textContent.trim()).toEqual('move to new folder');
+          expect(cancelLink.querySelector('.usa-sr-only')).not.toBeNull();
+          expect(cancelLink.querySelector('.usa-sr-only').textContent.trim()).toEqual('move to new folder');
 
         });
 

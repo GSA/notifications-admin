@@ -21,7 +21,7 @@ Create an account
         well as the password, but should not be visible to users, nor should
         the view process the input.
       #}
-      <div class="govuk-visually-hidden">
+      <div class="usa-sr-only">
         <label for="username" aria-hidden="true">Email</label>
         <input type="email" name="username" id="username" value="{{ invited_user.email_address }}" disabled="disabled" tabindex="-1" aria-hidden="true" autocomplete="username" />
       </div>

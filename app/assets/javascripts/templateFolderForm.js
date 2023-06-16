@@ -91,7 +91,7 @@
 
       $.each(this.states.filter(state => 'description' in state), (idx, state) => {
         id = `${state.key}__description`;
-        description = `<p class="govuk-visually-hidden" id="${id}">${state.description}</p>`;
+        description = `<p class="usa-sr-only" id="${id}">${state.description}</p>`;
         state.$el
           .prepend(description)
           .attr('aria-describedby', id);
@@ -162,7 +162,7 @@
                     });
 
         if (opts.hasOwnProperty('nonvisualText')) {
-          $btn.append(`<span class="govuk-visually-hidden"> ${opts.nonvisualText}</span>`);
+          $btn.append(`<span class="usa-sr-only"> ${opts.nonvisualText}</span>`);
         }
 
         return $btn;
@@ -316,7 +316,7 @@
       <div id="items_selected">
         <div class="js-stick-at-bottom-when-scrolling">
           <button class="usa-button" value="move-to-existing-folder" aria-expanded="false">
-            Move<span class="govuk-visually-hidden"> selection to folder</span>
+            Move<span class="usa-sr-only"> selection to folder</span>
           </button>
           <button class="usa-button" value="move-to-new-folder" aria-expanded="false">Add to new folder</button>
           <div class="template-list-selected-counter" aria-hidden="true">
