@@ -143,3 +143,30 @@ td.table-empty-message {
    box-shadow: none;
    border: 0;
 }
+
+.template-list-item-without-ancestors .template-list-folder:active,
+.template-list-item-without-ancestors .template-list-folder:active::before,
+.template-list-item-without-ancestors .template-list-folder:focus,
+.template-list-item-without-ancestors .template-list-folder:focus::before,
+.template-list-item-without-ancestors .template-list-template:active,
+.template-list-item-without-ancestors .template-list-template:active::before,
+.template-list-item-without-ancestors .template-list-template:focus,
+.template-list-item-without-ancestors .template-list-template:focus::before {
+   background-color: transparent;
+   box-shadow: none;
+}
+
+.folder-heading a.folder-heading-folder,
+.folder-heading-folder,
+.template-list-folder {
+   background-image: none;
+   padding-left: 0;
+   text-indent: 0;
+   &:hover {
+      color: color("blue-warm-70v");
+   }
+}
+
+.template-list-item-without-ancestors a.template-list-folder:first-of-type {
+   text-indent: 0;
+}
