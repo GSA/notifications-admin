@@ -1234,15 +1234,7 @@ class BaseTemplateForm(StripWhitespaceForm):
             NoCommasInPlaceHolders()
         ]
     )
-    process_type = GovukRadiosField(
-        "Use priority queue?",
-        choices=[
-            ('priority', 'Yes'),
-            ('normal', 'No'),
-        ],
-        thing='yes or no',
-        default='normal'
-    )
+    process_type = HiddenField('normal')
 
 
 class SMSTemplateForm(BaseTemplateForm):
