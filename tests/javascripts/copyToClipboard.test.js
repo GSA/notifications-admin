@@ -25,7 +25,7 @@ describe('copy to clipboard', () => {
         ${options.thing}
       </h2>
       <div data-module="copy-to-clipboard" data-value="${apiKey}" data-thing="${options.thing}" data-name="${options.name}">
-        <span class="copy-to-clipboard__value" aria-live="assertive">${(options.name === options.thing) ? '<span class="govuk-visually-hidden">' + options.thing + ': </span>' : ''}${apiKey}</span>
+        <span class="copy-to-clipboard__value" aria-live="assertive">${(options.name === options.thing) ? '<span class="usa-sr-only">' + options.thing + ': </span>' : ''}${apiKey}</span>
         <span class="copy-to-clipboard__notice" aria-live="assertive"></span>
       </div>`;
 
@@ -177,7 +177,7 @@ describe('copy to clipboard', () => {
         // and so needs some prefix text to label it
         test("The id should have a hidden prefix to label what it is", () => {
 
-          const value = component.querySelector('.copy-to-clipboard__value .govuk-visually-hidden');
+          const value = component.querySelector('.copy-to-clipboard__value .usa-sr-only');
           expect(value).not.toBeNull();
           expect(value.textContent).toEqual('ID: ');
 
@@ -185,7 +185,7 @@ describe('copy to clipboard', () => {
 
         test("the button should have a hidden suffix naming the id it is for", () => {
 
-          const buttonSuffix = component.querySelector('button .govuk-visually-hidden');
+          const buttonSuffix = component.querySelector('button .usa-sr-only');
           expect(buttonSuffix).not.toBeNull();
           expect(buttonSuffix.textContent).toEqual(' for Default');
 
@@ -211,8 +211,8 @@ describe('copy to clipboard', () => {
 
         test("Its button and id shouldn't have extra hidden text to identify them", () => {
 
-          const value = component.querySelector('.copy-to-clipboard__value .govuk-visually-hidden');
-          const buttonSuffix = component.querySelector('button .govuk-visually-hidden');
+          const value = component.querySelector('.copy-to-clipboard__value .usa-sr-only');
+          const buttonSuffix = component.querySelector('button .usa-sr-only');
           expect(value).toBeNull();
           expect(buttonSuffix).toBeNull();
 
@@ -246,7 +246,7 @@ describe('copy to clipboard', () => {
 
           const liveRegion = component.querySelector('.copy-to-clipboard__notice');
 
-          expect(liveRegion.classList.contains('govuk-visually-hidden')).toBe(false);
+          expect(liveRegion.classList.contains('usa-sr-only')).toBe(false);
           expect(liveRegion.textContent.trim()).toEqual(
             expect.stringContaining('Copied to clipboard')
           );
@@ -257,7 +257,7 @@ describe('copy to clipboard', () => {
         // lower priority than the live-region
         test("The live-region should contain some hidden text giving context to the statement shown", () => {
 
-          const liveRegionHiddenText = component.querySelectorAll('.copy-to-clipboard__notice .govuk-visually-hidden');
+          const liveRegionHiddenText = component.querySelectorAll('.copy-to-clipboard__notice .usa-sr-only');
 
           expect(liveRegionHiddenText.length).toEqual(2);
           expect(liveRegionHiddenText[0].textContent).toEqual('Some Thing ');
@@ -342,7 +342,7 @@ describe('copy to clipboard', () => {
 
         test("the button should have a hidden suffix naming the id it is for", () => {
 
-          const buttonSuffix = component.querySelector('button .govuk-visually-hidden');
+          const buttonSuffix = component.querySelector('button .usa-sr-only');
           expect(buttonSuffix).not.toBeNull();
           expect(buttonSuffix.textContent).toEqual(' for Default');
 
@@ -385,8 +385,8 @@ describe('copy to clipboard', () => {
 
         test("Its button and id shouldn't have extra hidden text to identify them", () => {
 
-          const prefix = component.querySelector('.copy-to-clipboard__value .govuk-visually-hidden');
-          const buttonSuffix = component.querySelector('button .govuk-visually-hidden');
+          const prefix = component.querySelector('.copy-to-clipboard__value .usa-sr-only');
+          const buttonSuffix = component.querySelector('button .usa-sr-only');
           expect(prefix).toBeNull();
           expect(buttonSuffix).toBeNull();
 

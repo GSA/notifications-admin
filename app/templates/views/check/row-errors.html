@@ -57,7 +57,7 @@
       caption="Errors in " + original_file_name,
       caption_visible=False,
       field_headings=[
-        '<span class="govuk-visually-hidden">Row in file</span><span aria-hidden="true" class="table-field-invisible-error">1</span>'|safe
+        '<span class="usa-sr-only">Row in file</span><span aria-hidden="true" class="table-field-invisible-error">1</span>'|safe
       ] + recipients.column_headers
     ) %}
       {% for item in recipients.displayed_rows %}

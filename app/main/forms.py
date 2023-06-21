@@ -507,7 +507,7 @@ class NestedFieldMixin:
             "fieldset": {
                 "legend": {
                     "text": label,
-                    "classes": "govuk-visually-hidden"
+                    "classes": "usa-sr-only"
                 }
             },
             "formGroup": {
@@ -1376,7 +1376,7 @@ class SupportRedirect(StripWhitespaceForm):
             ('public', 'I’m a member of the public with a question for the government'),
         ],
         param_extensions={
-            "fieldset": {"legend": {"classes": "govuk-visually-hidden"}}
+            "fieldset": {"legend": {"classes": "usa-sr-only"}}
         }
     )
 
@@ -1575,7 +1575,7 @@ class AdminSetEmailBrandingForm(StripWhitespaceForm):
 
     branding_style = GovukRadiosFieldWithNoneOption(
         'Branding style',
-        param_extensions={'fieldset': {'legend': {'classes': 'govuk-visually-hidden'}}},
+        param_extensions={'fieldset': {'legend': {'classes': 'usa-sr-only'}}},
         thing='a branding style',
     )
 
@@ -2033,7 +2033,7 @@ class TemplateAndFoldersSelectionForm(Form):
         param_extensions={
             "fieldset": {
                 "legend": {
-                    "classes": "govuk-visually-hidden"
+                    "classes": "usa-sr-only"
                 }
             }
         }
