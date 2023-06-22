@@ -51,7 +51,7 @@ describe("List entry", () => {
             <div class="list-entry">
               <div class="govuk-form-group">
                 <label for="domains-${idx + 1}" class="govuk-label govuk-input--numbered__label">
-                  <span class="govuk-visually-hidden">domain number </span>${idx + 1}.
+                  <span class="usa-sr-only">domain number </span>${idx + 1}.
                 </label>
                 <input type="text" name="domains-${idx + 1}" id="domains-${idx + 1}" class="govuk-input govuk-input--numbered govuk-!-width-full" autocomplete="off">
               </div>

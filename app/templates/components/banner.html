@@ -26,7 +26,7 @@
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         {{ govukButton({
           "text": "" if thing else delete_button,
-          "html": delete_button + "<span class=\"govuk-visually-hidden\"> ‘" + thing + "’</span>" if thing else "",
+          "html": delete_button + "<span class=\"usa-sr-only\"> ‘" + thing + "’</span>" if thing else "",
           "name": "delete",
           "classes": "margin-top-2 usa-button--secondary",
         }) }}

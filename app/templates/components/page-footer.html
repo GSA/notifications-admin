@@ -23,7 +23,7 @@
       {% if button_value %}{% set _ = button_data.update({"value": button_value}) %}{% endif %}
       {% if button_text_hidden_suffix %}
         {% set _ = button_data.update({
-          "text": "", "html": button_text + "<span class=\"govuk-visually-hidden\"> " + button_text_hidden_suffix + "</span>"
+          "text": "", "html": button_text + "<span class=\"usa-sr-only\"> " + button_text_hidden_suffix + "</span>"
         }) %}
       {% endif %}
 

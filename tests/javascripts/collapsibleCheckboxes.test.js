@@ -116,7 +116,7 @@ describe('Collapsible fieldset', () => {
 
       const legend = helpers.element(fieldset.querySelector('legend'));
 
-      expect(legend.hasClass('govuk-visually-hidden')).toBe(true);
+      expect(legend.hasClass('usa-sr-only')).toBe(true);
 
     });
 

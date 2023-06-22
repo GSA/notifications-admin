@@ -32,12 +32,12 @@
 
       {% set item_link_content %}
         {% for ancestor in item.ancestors %}
-          <a href="{{ url_for('.choose_template', service_id=current_service.id, template_type=template_type, template_folder_id=ancestor.id) }}" class="govuk-link govuk-link--no-visited-state template-list-folder">
+          <a href="{{ url_for('.choose_template', service_id=current_service.id, template_type=template_type, template_folder_id=ancestor.id) }}" class="usa-link template-list-folder">
             {{- format_item_name(ancestor.name) -}}
           </a> <span class="message-name-separator"></span>
         {% endfor %}
         {% if item.is_folder %}
-          <a href="{{ url_for('.choose_template', service_id=current_service.id, template_type=template_type, template_folder_id=item.id) }}" class="govuk-link govuk-link--no-visited-state template-list-folder">
+          <a href="{{ url_for('.choose_template', service_id=current_service.id, template_type=template_type, template_folder_id=item.id) }}" class="usa-link template-list-folder">
             <span class="live-search-relevant">{{- format_item_name(item.name) -}}</span>
           </a>
         {% else %}
@@ -53,14 +53,14 @@
       {% endset %}
 
       {% set label_content %}
-        <span class="govuk-visually-hidden">
+        <span class="usa-sr-only">
           {%- for ancestor in item.ancestors %}{{ format_item_name(ancestor.name, separators=False) }} {% endfor -%}
           {{ format_item_name(item.name, separators=False) -}}
         </span>
       {% endset %}
 
       {% set item_meta %}
-        <span id="{{ item.id }}-item-hint" class="govuk-hint govuk-checkboxes__hint template-list-item-hint">
+        <span id="{{ item.id }}-item-hint" class="usa-hint template-list-item-hint">
           {{ item.hint }}
         </span>
       {% endset %}

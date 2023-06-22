@@ -44,13 +44,13 @@ h1 {
    h1,
    h2:not(.get-started-list__heading, .usa-process-list__heading) {
       margin-top: units(4);
-      font-weight: bold !important;
+      font-weight: bold;
    }
 
    h2:not(.get-started-list__heading, .usa-process-list__heading),
    h3 {
-      margin-top: units(5) !important;
-      margin-bottom: units(2) !important;
+      margin-top: units(5);
+      margin-bottom: units(2);
    }
 }
 
@@ -75,8 +75,10 @@ p,
 }
 
 .show-more-no-border:focus,
-.show-more:focus {
-   box-shadow: none;
+.show-more:focus,
+.table-field-right-aligned a:active:before,
+.table-field-right-aligned a:focus:before {
+   box-shadow: none !important;
 }
 
 .govuk-checkboxes__label::after {
@@ -131,6 +133,40 @@ td.table-empty-message {
    text-decoration: none !important;
 }
 
-.sub-content .banner-dangerous h1 {
+.sub-content .banner-dangerous h1,
+.sub-content h2.user-list-item-heading {
    margin-top: 0;
+}
+
+.user-list-edit-link:active:before,
+.user-list-edit-link:focus:before {
+   box-shadow: none;
+   border: 0;
+}
+
+.template-list-item-without-ancestors .template-list-folder:active,
+.template-list-item-without-ancestors .template-list-folder:active::before,
+.template-list-item-without-ancestors .template-list-folder:focus,
+.template-list-item-without-ancestors .template-list-folder:focus::before,
+.template-list-item-without-ancestors .template-list-template:active,
+.template-list-item-without-ancestors .template-list-template:active::before,
+.template-list-item-without-ancestors .template-list-template:focus,
+.template-list-item-without-ancestors .template-list-template:focus::before {
+   background-color: transparent;
+   box-shadow: none;
+}
+
+.folder-heading a.folder-heading-folder,
+.folder-heading-folder,
+.template-list-folder {
+   background-image: none;
+   padding-left: 0;
+   text-indent: 0;
+   &:hover {
+      color: color("blue-warm-70v");
+   }
+}
+
+.template-list-item-without-ancestors a.template-list-folder:first-of-type {
+   text-indent: 0;
 }

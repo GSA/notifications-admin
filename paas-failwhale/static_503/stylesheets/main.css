@@ -3595,7 +3595,7 @@ only screen and (min-resolution: 2dppx) {
     clear: both
 }
 
-.govuk-visually-hidden {
+.usa-sr-only {
     position: absolute !important;
     width: 1px !important;
     height: 1px !important;
@@ -3609,7 +3609,7 @@ only screen and (min-resolution: 2dppx) {
     white-space: nowrap !important
 }
 
-.govuk-visually-hidden-focusable {
+.usa-sr-only-focusable {
     position: absolute !important;
     width: 1px !important;
     height: 1px !important;
@@ -3621,8 +3621,8 @@ only screen and (min-resolution: 2dppx) {
     white-space: nowrap !important
 }
 
-.govuk-visually-hidden-focusable:active,
-.govuk-visually-hidden-focusable:focus {
+.usa-sr-only-focusable:active,
+.usa-sr-only-focusable:focus {
     position: static !important;
     width: auto !important;
     height: auto !important;

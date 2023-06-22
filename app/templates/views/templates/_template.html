@@ -19,7 +19,7 @@
       <div class="usa-button-group">
         {% if current_user.has_permissions('send_messages', restrict_admin_usage=True) %}
             <a href="{{ url_for(".set_sender", service_id=current_service.id, template_id=template.id) }}" class="usa-button usa-pill-separate-item">
-              Prepare to send<span class="govuk-visually-hidden"> a message using this template</span>
+              Prepare to send<span class="usa-sr-only"> a message using this template</span>
             </a>
         {% endif %}
         {% if current_user.has_permissions('manage_templates') %}
