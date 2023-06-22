@@ -1,6 +1,16 @@
 # Notify Sprint Goals Log
 
-## Sprint: L (6/7/23)
+## Sprint: M (6/22/23)
+
+|             | Goals                                                                                                                              | Impact                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| Engineering | Implement beta.notify.gov [landing page strategy](https://github.com/GSA/notifications-admin/issues/566); employ ["smart" retention](https://github.com/orgs/GSA/projects/20/views/1?pane=issue&itemId=30230455) for daily quota (remains from last sprint); document and if possible, [configure auto-reply](https://github.com/GSA/notifications-api/issues/271) messages         |   Prepare site for public launch after LATO, expand daily message quota, enable automated replies for first partner                                |
+| UX          | Recruit usability testers; kick-off user testing in earnest; [propose new flows and wireframes](https://github.com/GSA/notifications-admin/issues/455) (remains from last sprint);          | Gain feedback on usability and functionality, streamline confusing flows and processes         |
+| Content    | Contribute to the strategy of the newly forming Content sub-team | Clearer understanding of roles and responsibilities on content strategy |
+| Security    | Respond to any assessment questions and/or needs                                                  | Keep the LATO award timeline as short as possible
+
+
+## Sprint: Lazuli Bunting (6/7/23)
 
 |             | Goals                                                                                                                              | Impact                                                                                                                                     |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
