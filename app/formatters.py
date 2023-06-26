@@ -47,6 +47,10 @@ def format_datetime_24h(date):
     )
 
 
+def format_time(date):
+    return format_datetime_24h(date)
+
+
 def format_datetime_normal(date):
     return '{} at {}'.format(
         format_date_normal(date),

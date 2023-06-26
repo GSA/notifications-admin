@@ -38,7 +38,7 @@
                 {{ user_getter(event.user_id) }}
               </div>
               <div class="history-list-time">
-                {{ event.time|format_time }}
+                {{ event.time | format_time_24h }}
               </div>
             </div>
             <div class="govuk-grid-column-two-thirds">
