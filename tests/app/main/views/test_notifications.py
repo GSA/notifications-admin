@@ -15,7 +15,8 @@ from tests.conftest import (
 
 @pytest.mark.parametrize('key_type, notification_status, expected_status', [
     (None, 'created', 'Sending'),
-    (None, 'sending', 'Sending'),
+    (None, 'sending',
+     "Pending. Messages will remain in pending state until carrier status is received, typically 5 minutes."),
     (None, 'delivered', 'Delivered'),
     (None, 'failed', 'Failed'),
     (None, 'temporary-failure', 'Phone not accepting messages right now'),
@@ -23,7 +24,8 @@ from tests.conftest import (
     (None, 'technical-failure', 'Technical failure'),
     ('team', 'delivered', 'Delivered'),
     ('live', 'delivered', 'Delivered'),
-    ('test', 'sending', 'Sending (test)'),
+    ('test', 'sending',
+     "Pending. Messages will remain in pending state until carrier status is received, typically 5 minutes. (test)"),
     ('test', 'delivered', 'Delivered (test)'),
     ('test', 'permanent-failure', 'Not delivered (test)'),
 ])

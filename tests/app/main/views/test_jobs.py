@@ -182,7 +182,7 @@ def test_should_show_job_in_progress(
         normalize_spaces(link.text)
         for link in page.select('.pill a:not(.pill-item--selected)')
     ] == [
-        '10 sending text messages', '0 delivered text messages', '0 failed text messages'
+        '10 pending text messages', '0 delivered text messages', '0 failed text messages'
     ]
     assert page.select_one('p.hint').text.strip() == 'Report is 50% complete…'
 
@@ -207,7 +207,7 @@ def test_should_show_job_without_notifications(
         normalize_spaces(link.text)
         for link in page.select('.pill a:not(.pill-item--selected)')
     ] == [
-        '10 sending text messages', '0 delivered text messages', '0 failed text messages'
+        '10 pending text messages', '0 delivered text messages', '0 failed text messages'
     ]
     assert page.select_one('p.hint').text.strip() == 'Report is 50% complete…'
     assert page.select_one('tbody').text.strip() == 'No messages to show yet…'
@@ -307,7 +307,7 @@ def test_should_show_old_job(
         for column in page.select('main .govuk-grid-column-one-quarter')
     ] == [
         '1 total text messages',
-        '1 sending text message',
+        '1 pending',
         '0 delivered text messages',
         '0 failed text messages',
     ]
@@ -395,7 +395,7 @@ def test_should_show_updates_for_one_job_as_json(
     )
 
     content = json.loads(response.get_data(as_text=True))
-    assert 'sending' in content['counts']
+    assert 'pending' in content['counts']
     assert 'delivered' in content['counts']
     assert 'failed' in content['counts']
     assert 'Recipient' in content['notifications']
@@ -432,7 +432,7 @@ def test_should_show_updates_for_scheduled_job_as_json(
     )
 
     content = response.json
-    assert 'sending' in content['counts']
+    assert 'pending' in content['counts']
     assert 'delivered' in content['counts']
     assert 'failed' in content['counts']
     assert 'Recipient' in content['notifications']
