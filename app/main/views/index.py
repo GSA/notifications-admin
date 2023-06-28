@@ -264,7 +264,6 @@ def get_started():
 
 
 @main.route('/using-notify/who-its-for')
-#@user_is_logged_in
 def who_its_for():
     return redirect(url_for('.features'), 301)
 
