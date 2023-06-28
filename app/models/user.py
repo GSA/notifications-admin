@@ -225,7 +225,13 @@ class User(JSONModel, UserMixin):
         if not service_id and not org_id:
             # we shouldn't have any pages that require permissions, but don't specify a service or organisation.
             # use @user_is_platform_admin for platform admin only pages
-            raise NotImplementedError
+            #raise NotImplementedError
+
+            # We now have a use case where even a user isn't a part of a service
+            # or an org, we still need to make sure they're authenticated and
+            # logged in.  This way they're able to view static pages and others
+            # that we've had to put behind an authentication check.
+            return True
 
         log_msg = f"has_permissions user: {self.id} service: {service_id}"
         # platform admins should be able to do most things (except eg send messages, or create api keys)
