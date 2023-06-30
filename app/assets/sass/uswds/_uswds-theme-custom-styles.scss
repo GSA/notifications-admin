@@ -156,17 +156,36 @@ td.table-empty-message {
    box-shadow: none;
 }
 
+.template-list-item-without-ancestors a.template-list-folder:first-of-type {
+   background-image: url(../images/folder-blue-bold.svg);
+   background-size: 30px 30px;
+}
+
 .folder-heading a.folder-heading-folder,
-.folder-heading-folder,
 .template-list-folder {
-   background-image: none;
-   padding-left: 0;
-   text-indent: 0;
+   background-image: url(../images/folder-blue-bold.svg);
    &:hover {
       color: color("blue-warm-70v");
+      background-image: url(../images/folder-blue-bold.svg);
    }
 }
 
-.template-list-item-without-ancestors a.template-list-folder:first-of-type {
-   text-indent: 0;
+.folder-heading-folder {
+   background-image: url(../images/folder-black.svg);
+}
+
+.folder-heading a.folder-heading-folder-truncated {
+   background-position: 0;
+}
+
+.js-enabled .live-search {
+   display: flex;
+   margin-bottom: units(2);
+   .usa-form-group {
+      @include u-width("mobile-lg");
+   }
+   input#search {
+      width: 100%;
+      border: 1px solid color("gray-60");
+   }
 }
