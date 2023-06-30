@@ -178,6 +178,12 @@ td.table-empty-message {
    background-position: 0;
 }
 
+.usa-template-list-template {
+   background: url(../img/material-icons/description.svg) no-repeat;
+   padding-left: 40px;
+   background-size: 30px 30px;
+}
+
 .js-enabled .live-search {
    display: flex;
    margin-bottom: units(2);
