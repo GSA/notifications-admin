@@ -451,7 +451,6 @@ def add_service_template(service_id, template_type, template_folder_id=None):
                 form.template_content.data,
                 service_id,
                 form.subject.data if hasattr(form, 'subject') else None,
-                form.process_type.data,
                 template_folder_id
             )
         except HTTPError as e:
@@ -525,8 +524,7 @@ def edit_service_template(service_id, template_id):
                 template['template_type'],
                 form.template_content.data,
                 service_id,
-                subject,
-                form.process_type.data,
+                subject
             )
         except HTTPError as e:
             if e.status_code == 400:
