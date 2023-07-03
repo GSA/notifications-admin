@@ -1110,7 +1110,6 @@ def test_should_redirect_when_saving_a_template(
             'template_content': content,
             'template_type': 'sms',
             'service': SERVICE_ONE_ID,
-            'process_type': 'normal',
         },
         _expected_status=302,
         _expected_redirect=url_for(
@@ -1120,7 +1119,7 @@ def test_should_redirect_when_saving_a_template(
         ),
     )
     mock_update_service_template.assert_called_with(
-        fake_uuid, name, 'sms', content, SERVICE_ONE_ID, None, 'normal',
+        fake_uuid, name, 'sms', content, SERVICE_ONE_ID, None
     )
 
 
@@ -1140,7 +1139,6 @@ def test_should_edit_content_when_process_type_is_priority_not_platform_admin(
             'template_content': "new template <em>content</em> with & entity",
             'template_type': 'sms',
             'service': SERVICE_ONE_ID,
-            'process_type': 'priority',
         },
         _expected_status=302,
         _expected_redirect=url_for(
@@ -1155,8 +1153,7 @@ def test_should_edit_content_when_process_type_is_priority_not_platform_admin(
         'sms',
         "new template <em>content</em> with & entity",
         SERVICE_ONE_ID,
-        None,
-        'priority'
+        None
     )
 
 
@@ -1420,7 +1417,6 @@ def test_should_redirect_when_saving_a_template_email(
             'template_type': 'email',
             'service': SERVICE_ONE_ID,
             'subject': subject,
-            'process_type': 'normal'
         },
         _expected_status=302,
         _expected_redirect=url_for(
@@ -1430,7 +1426,7 @@ def test_should_redirect_when_saving_a_template_email(
         ),
     )
     mock_update_service_template.assert_called_with(
-        fake_uuid, name, 'email', content, SERVICE_ONE_ID, subject, 'normal',
+        fake_uuid, name, 'email', content, SERVICE_ONE_ID, subject
     )
 
 
@@ -1803,7 +1799,6 @@ def test_should_create_sms_template_without_downgrading_unicode_characters(
             'template_content': msg,
             'template_type': template_type,
             'service': SERVICE_ONE_ID,
-            'process_type': 'normal'
         },
         expected_status=302,
     )
@@ -1814,8 +1809,7 @@ def test_should_create_sms_template_without_downgrading_unicode_characters(
         msg,  # content
         ANY,  # service_id
         ANY,  # subject
-        ANY,  # process_type
-        ANY,  # parent_folder_id
+        ANY  # parent_folder_id
     )
 
 
