@@ -16,24 +16,25 @@ def test_non_logged_in_user_can_see_homepage(
     page = client_request.get('main.index', _test_page_title=False)
 
     assert page.h1.text.strip() == (
-        'Send text messages to your users'
+        'Send text messages to your participants'
     )
 
     assert page.select_one('a.usa-button.usa-button--big')['href'] == url_for(
-        'main.register'
+        'main.sign_in',
     )
 
     assert page.select_one('meta[name=description]')['content'].strip() == (
-        'U.S. Notify lets you send text messages '
-        'to your users. Try it now if you work in federal, state, or local government.'
+        'U.S. Notify lets you send text messages to your users. '
+        'Try it now if you work in federal, state, or local government.'
     )
 
-    assert normalize_spaces(page.select_one('#whos-using-notify').text) == (
-        'Who’s using U.S. Notify '  # Hiding this next area for the pilot
-        # Hiding this next area for the pilot
-        # 'See the list of services and organizations. '
-        'There are 111 Organizations and 9,999 Services using Notify.'
-    )
+    # This area is hidden for the pilot
+    # assert normalize_spaces(page.select_one('#whos-using-notify').text) == (
+    #     'Who’s using U.S. Notify '  # Hiding this next area for the pilot
+    #     # Hiding this next area for the pilot
+    #     # 'See the list of services and organizations. '
+    #     'There are 111 Organizations and 9,999 Services using Notify.'
+    # )
 
     assert page.select_one('#whos-using-notify a') is None
 

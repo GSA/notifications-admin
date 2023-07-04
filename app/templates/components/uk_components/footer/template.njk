@@ -60,15 +60,15 @@
 </footer> -->
 
 
-{# <footer class="usa-footer usa-footer--big">
-  <div class="grid-container usa-footer__return-to-top">
+<footer class="usa-footer usa-footer--big">
+  {# <div class="grid-container usa-footer__return-to-top">
     <a href="#">Return to top</a>
-  </div>
+  </div> #}
   <div class="usa-footer__primary-section">
     <div class="grid-container">
       <div class="grid-row">
         <div class="grid-col">
-          {% if params.navigation %}
+          {# {% if params.navigation %}
           <nav class="usa-footer__nav" aria-label="Footer navigation,,">
             <div class="grid-row grid-gap-2">
               {% for nav in params.navigation %}
@@ -95,11 +95,12 @@
               {% endfor %}
             </div>
           </nav>
-          {% endif %}
+          {% endif %} #}
         </div>
       </div>
       <div class="govuk-footer__meta border-top border-gray-10">
-        <div class="govuk-footer__meta-item govuk-footer__meta-item--grow padding-top-2">
+        <div class="govuk-footer__meta-item govuk-footer__meta-item--grow padding-top-1 margin-bottom-1">
+
           {% if params.meta %}
           <h2 class="usa-sr-only">{{ params.meta.visuallyHiddenTitle | default("Support links") }}</h2>
           {% if params.meta.items %}
@@ -125,7 +126,7 @@
       </div>
     </div>
   </div>
-</footer> #}
+</footer>
 
 <div class="usa-identifier site-identifier">
   <section class="usa-identifier__section usa-identifier__section--masthead" aria-label="Agency identifier,,,,,,">
