@@ -1,0 +1,57 @@
+{% extends "main_template.html" %}
+{% from "components/banner.html" import banner %}
+
+{% block headIcons %}
+  <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="{{ asset_url('images/favicon.ico') }}" type="image/x-icon" />
+  <link rel="mask-icon" href="{{ asset_url('images/govuk-mask-icon.svg') }}" color="{{ themeColor | default('#0b0c0c') }}"> {# Hardcoded value of $govuk-black #}
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ asset_url('images/govuk-apple-touch-icon-180x180.png') }}">
+  <link rel="apple-touch-icon" sizes="167x167" href="{{ asset_url('images/govuk-apple-touch-icon-167x167.png') }}">
+  <link rel="apple-touch-icon" sizes="152x152" href="{{ asset_url('images/govuk-apple-touch-icon-152x152.png') }}">
+  <link rel="apple-touch-icon" href="{{ asset_url('images/govuk-apple-touch-icon.png') }}">
+{% endblock %}
+
+{% block head %}
+  {%- for font in font_paths %}
+  <link rel="preload" href="{{ asset_url(font, with_querystring_hash=False) }}" as="font" type="font/woff2" crossorigin>
+  {%- endfor %}
+  <link rel="stylesheet" media="screen" href="{{ asset_url('stylesheets/main.css') }}" />
+  <link rel="stylesheet" media="print" href="{{ asset_url('stylesheets/print.css') }}" />
+  <link rel="stylesheet" media="screen" href="{{ asset_url('css/styles.css') }}" />
+  {% block extra_stylesheets %}
+  {% endblock %}
+  <style nonce="{{ csp_nonce() }}">
+      .govuk-header__container { border-color: {{header_colour}} }
+  </style>
+  {% if g.hide_from_search_engines %}
+    <meta name="robots" content="noindex" />
+  {% endif %}
+  <meta name="google-site-verification" content="niWnSqImOWz6mVQTYqNb5tFK8HaKSB4b3ED4Z9gtUQ0" />
+  {% block meta_format_detection %}
+    <meta name="format-detection" content="telephone=no">
+  {% endblock %}
+  {% block meta %}
+  {% endblock %}
+  <!-- <script type="text/javascript" src="{{ asset_url('js/gtm_head.js') }}"></script> -->
+{% endblock %}
+
+{% block pageTitle %}
+   {% block per_page_title %}{% endblock %} – U.S. Notify
+{% endblock %}
+
+{% block bodyStart %}
+  {% block extra_javascripts_before_body %}
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WX5NGWF"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  {% endblock %}
+{% endblock %}
+
+{% block bodyEnd %}
+  {% block extra_javascripts %}
+  {% endblock %}
+  <!--[if gt IE 8]><!-->
+  <script type="text/javascript" src="{{ asset_url('javascripts/all.js') }}"></script>
+  <script type="text/javascript" src="{{ asset_url('js/uswds.min.js') }}"></script>
+  <!--<![endif]-->
+{% endblock %}
