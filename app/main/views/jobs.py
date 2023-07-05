@@ -275,7 +275,7 @@ def get_status_filters(service, message_type, statistics):
     filters = [
         # key, label, option
         ('requested', 'total', 'sending,delivered,failed'),
-        ('sending', 'sending', 'sending'),
+        ('sending', 'pending', 'pending'),
         ('delivered', 'delivered', 'delivered'),
         ('failed', 'failed', 'failed'),
     ]
@@ -320,10 +320,10 @@ def _get_job_counts(job):
             ],
             [
                 Markup(
-                    f'''sending<span class="usa-sr-only">
+                    f'''pending<span class="usa-sr-only">
                     {message_count_noun(job.notifications_sending, job_type)}</span>'''
                 ),
-                'sending',
+                'pending',
                 job.notifications_sending
             ],
             [

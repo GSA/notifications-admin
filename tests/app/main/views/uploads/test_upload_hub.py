@@ -49,7 +49,7 @@ def test_get_upload_hub_page(
     assert normalize_spaces(uploads[0].text.strip()) == (
         'some.csv '
         'Sent 1 January 2016 at 11:09 '
-        '0 sending 8 delivered 2 failed'
+        '0 pending 8 delivered 2 failed'
     )
     assert uploads[0].select_one('a.file-list-filename-large')['href'] == (
         '/services/{}/jobs/job_id_1'.format(SERVICE_ONE_ID)

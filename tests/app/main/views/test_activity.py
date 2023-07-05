@@ -520,7 +520,7 @@ def test_get_status_filters_calculates_stats(client_request):
 
     assert {label: count for label, _option, _link, count in ret} == {
         'total': 6,
-        'sending': 3,
+        'pending': 3,
         'failed': 2,
         'delivered': 1
     }
@@ -530,7 +530,7 @@ def test_get_status_filters_in_right_order(client_request):
     ret = get_status_filters(Service({'id': 'foo'}), 'sms', STATISTICS)
 
     assert [label for label, _option, _link, _count in ret] == [
-        'total', 'sending', 'delivered', 'failed'
+        'total', 'pending', 'delivered', 'failed'
     ]
 
 

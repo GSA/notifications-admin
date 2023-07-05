@@ -71,7 +71,6 @@ def test_robots(client_request):
     ('bat_phone', {}),
     ('thanks', {}),
     ('register', {}),
-    ('features_email', {}),
     pytest.param('index', {}, marks=pytest.mark.xfail(raises=AssertionError)),
 ))
 @freeze_time('2012-12-12 12:12')  # So we don’t go out of business hours
@@ -116,12 +115,17 @@ def test_static_pages(
         session['service_id'] = None
     request()
 
-    # Check it still works when they sign out
+    # Check it redirects to the login screen when they sign out
     client_request.logout()
     with client_request.session_transaction() as session:
         session['service_id'] = None
         session['user_id'] = None
-    request()
+    request(
+        _expected_status=302,
+        _expected_redirect='/sign-in?next={}'.format(
+            url_for('main.{}'.format(view))
+        )
+    )
 
 
 def test_guidance_pages_link_to_service_pages_when_signed_in(
@@ -143,12 +147,12 @@ def test_guidance_pages_link_to_service_pages_when_signed_in(
     page = request()
     assert not page.select_one(selector)
 
-    # Check it still works when they sign out
+    # Check it redirects to the login screen when they sign out
     client_request.logout()
     with client_request.session_transaction() as session:
         session['service_id'] = None
         session['user_id'] = None
-    page = request()
+    page = request(_expected_status=302)
     assert not page.select_one(selector)
 
 

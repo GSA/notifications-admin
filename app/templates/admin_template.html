@@ -31,7 +31,7 @@
   {% endblock %}
   {% block meta %}
   {% endblock %}
-  <script type="text/javascript" src="{{ asset_url('js/gtm_head.js') }}"></script>
+  <!-- <script type="text/javascript" src="{{ asset_url('js/gtm_head.js') }}"></script> -->
 {% endblock %}
 
 {% block pageTitle %}
@@ -51,6 +51,16 @@
   {% if current_user.is_authenticated %}
     {% if current_user.platform_admin %}
       {% set navigation = [
+        {
+          "href": url_for('main.get_started'),
+          "text": "Using notify",
+          "active": header_navigation.is_selected('using_notify')
+        },
+        {
+          "href": url_for('main.features'),
+          "text": "Features",
+          "active": header_navigation.is_selected('features')
+        },
         {
           "href": url_for('main.user_profile'),
           "text": current_user.name,
