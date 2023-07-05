@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "034b38241face3c8641c7aece5bdc4f2b6688d7163ba4e3d863b7e950606e73a"
+            "sha256": "6ec821f9ee3ca517ec493319e2f3097d731614f98ca2a41aee5c715a7754f813"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -50,19 +50,19 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:9e7242b9059d937f34264125fecd844cb5e01acce6be093f6c44869fdf7c6e30",
-                "sha256:fa85b67147c8dc99b6e7c699fc086103f958f9677db934f70659e6e6a72a818c"
+                "sha256:908f9c277325d68963dfcfce963a05336f0eb19505fc239c0ab9d01f4cba0296",
+                "sha256:e1e535e9fb23977252f13652ed2fa9b4f2d59a53b04a5f2fad3ee415b6a3b2b0"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==1.26.165"
+            "version": "==1.27.0"
         },
         "botocore": {
             "hashes": [
-                "sha256:6f35d59e230095aed7cd747604fe248fa384bebb7d09549077892f936a8ca3df",
-                "sha256:988b948be685006b43c4bbd8f5c0cb93e77c66deb70561994e0c5b31b5a67210"
+                "sha256:b9cb5b78a289f0615a48d85066f01869029aa41b95993f2c0c55003df037c23f",
+                "sha256:cac1333f41ec98e6f75bbba3f2c74b9e76aa3847469ecea6e7773a0af0049bee"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==1.29.165"
+            "version": "==1.30.0"
         },
         "cachetools": {
             "hashes": [
@@ -426,11 +426,11 @@
         },
         "govuk-bank-holidays": {
             "hashes": [
-                "sha256:6c993f59bff512740066ae5891a9ce3155e94291560d1d5169fea6e634111a46",
-                "sha256:9e214828802bbed303f01dacee3facc2296a8bcac9c814654ac7300b37381f78"
+                "sha256:2b91901be492235c4160a64d56d4d1945f6ca7f11c1ea4277395981866c35bef",
+                "sha256:ffb6ac050701cb850fd2f08eb9c7c91753090f00525e69cebec4f869f6f0de41"
             ],
             "index": "pypi",
-            "version": "==0.11"
+            "version": "==0.13"
         },
         "govuk-frontend-jinja": {
             "git": "https://github.com/alphagov/govuk-frontend-jinja.git",
@@ -743,7 +743,7 @@
         "notifications-utils": {
             "editable": true,
             "git": "https://github.com/GSA/notifications-utils.git",
-            "ref": "1492349e323df749771494f13e3eb268ee402a65"
+            "ref": "e81e64199178f5bfdf403f25a4b9a819fb6014ba"
         },
         "numpy": {
             "hashes": [
@@ -1091,11 +1091,11 @@
         },
         "typing-extensions": {
             "hashes": [
-                "sha256:5d8c9dac95c27d20df12fb1d97b9793ab8b2af8a3a525e68c80e21060c161771",
-                "sha256:935ccf31549830cda708b42289d44b6f74084d616a00be651601a4f968e77c82"
+                "sha256:440d5dd3af93b060174bf433bccd69b0babc3b15b1a8dca43789fd7f61514b36",
+                "sha256:b75ddc264f0ba5615db7ba217daeb99701ad295353c45f9e95963337ceeeffb2"
             ],
             "markers": "python_version < '3.10'",
-            "version": "==4.7.0"
+            "version": "==4.7.1"
         },
         "urllib3": {
             "hashes": [
@@ -1179,19 +1179,19 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:9e7242b9059d937f34264125fecd844cb5e01acce6be093f6c44869fdf7c6e30",
-                "sha256:fa85b67147c8dc99b6e7c699fc086103f958f9677db934f70659e6e6a72a818c"
+                "sha256:908f9c277325d68963dfcfce963a05336f0eb19505fc239c0ab9d01f4cba0296",
+                "sha256:e1e535e9fb23977252f13652ed2fa9b4f2d59a53b04a5f2fad3ee415b6a3b2b0"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==1.26.165"
+            "version": "==1.27.0"
         },
         "botocore": {
             "hashes": [
-                "sha256:6f35d59e230095aed7cd747604fe248fa384bebb7d09549077892f936a8ca3df",
-                "sha256:988b948be685006b43c4bbd8f5c0cb93e77c66deb70561994e0c5b31b5a67210"
+                "sha256:b9cb5b78a289f0615a48d85066f01869029aa41b95993f2c0c55003df037c23f",
+                "sha256:cac1333f41ec98e6f75bbba3f2c74b9e76aa3847469ecea6e7773a0af0049bee"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==1.29.165"
+            "version": "==1.30.0"
         },
         "cachecontrol": {
             "extras": [
