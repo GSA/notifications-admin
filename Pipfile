@@ -12,7 +12,7 @@ flask-basicauth = "~=0.2"
 flask-login = "~=0.6"
 flask-wtf = "~=1.1"
 gds-metrics = {version = "==0.2.4", ref = "6f1840a57b6fb1ee40b7e84f2f18ec229de8aa72", git = "https://github.com/alphagov/gds_metrics_python.git"}
-govuk-bank-holidays = "==0.11"
+govuk-bank-holidays = "==0.13"
 govuk-frontend-jinja = {version = "==0.5.8-alpha", git = "https://github.com/alphagov/govuk-frontend-jinja.git"}
 gunicorn = {version = "==20.1.0", extras = ["eventlet"], ref = "1299ea9e967a61ae2edebe191082fd169b864c64", git = "https://github.com/benoitc/gunicorn.git"}
 humanize = "~=4.1"
@@ -26,7 +26,7 @@ pyexcel-ods3 = "==0.6.1"
 pyexcel-xls = "==0.7.0"
 pyexcel-xlsx = "==0.6.0"
 openpyxl = "==3.0.10"
-pyproj = "==3.3.1"
+pyproj = "==3.6.0"
 python-dotenv = "==0.20.0"
 pytz = "==2022.1"
 rtreelib = "==0.2.0"
@@ -34,22 +34,22 @@ werkzeug = "~=2.3"
 wtforms = "~=3.0"
 newrelic = "*"
 flask-talisman = "*"
-notifications-utils = {editable = true, ref = "notify-512", git = "https://github.com/GSA/notifications-utils.git"}
+notifications-utils = {editable = true, ref = "main", git = "https://github.com/GSA/notifications-utils.git"}
 coverage = "*"
 
 [dev-packages]
-isort = "==5.10.1"
+isort = "==5.12.0"
 pytest = "==7.1.2"
 pytest-env = "==0.6.2"
-pytest-mock = "==3.7.0"
+pytest-mock = "==3.11.1"
 pytest-xdist = "==2.5.0"
-beautifulsoup4 = "==4.11.1"
+beautifulsoup4 = "==4.12.2"
 freezegun = "==1.2.1"
 flake8 = "==4.0.1"
 flake8-bugbear = "==22.4.25"
 flake8-print = "==5.0.0"
 moto = "==3.1.7"
-requests-mock = "==1.10.0"
+requests-mock = "==1.11.0"
 # used for creating manifest file locally
 jinja2-cli = {version = "==0.8.2", extras = ["yaml"]}
 pip-audit = "*"

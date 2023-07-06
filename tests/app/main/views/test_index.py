@@ -16,24 +16,25 @@ def test_non_logged_in_user_can_see_homepage(
     page = client_request.get('main.index', _test_page_title=False)
 
     assert page.h1.text.strip() == (
-        'Send text messages to your users'
+        'Send text messages to your participants'
     )
 
     assert page.select_one('a.usa-button.usa-button--big')['href'] == url_for(
-        'main.register'
+        'main.sign_in',
     )
 
     assert page.select_one('meta[name=description]')['content'].strip() == (
-        'U.S. Notify lets you send text messages '
-        'to your users. Try it now if you work in federal, state, or local government.'
+        'U.S. Notify lets you send text messages to your users. '
+        'Try it now if you work in federal, state, or local government.'
     )
 
-    assert normalize_spaces(page.select_one('#whos-using-notify').text) == (
-        'Who’s using U.S. Notify '  # Hiding this next area for the pilot
-        # Hiding this next area for the pilot
-        # 'See the list of services and organizations. '
-        'There are 111 Organizations and 9,999 Services using Notify.'
-    )
+    # This area is hidden for the pilot
+    # assert normalize_spaces(page.select_one('#whos-using-notify').text) == (
+    #     'Who’s using U.S. Notify '  # Hiding this next area for the pilot
+    #     # Hiding this next area for the pilot
+    #     # 'See the list of services and organizations. '
+    #     'There are 111 Organizations and 9,999 Services using Notify.'
+    # )
 
     assert page.select_one('#whos-using-notify a') is None
 
@@ -71,7 +72,6 @@ def test_robots(client_request):
     ('bat_phone', {}),
     ('thanks', {}),
     ('register', {}),
-    ('features_email', {}),
     pytest.param('index', {}, marks=pytest.mark.xfail(raises=AssertionError)),
 ))
 @freeze_time('2012-12-12 12:12')  # So we don’t go out of business hours
@@ -116,12 +116,17 @@ def test_static_pages(
         session['service_id'] = None
     request()
 
-    # Check it still works when they sign out
+    # Check it redirects to the login screen when they sign out
     client_request.logout()
     with client_request.session_transaction() as session:
         session['service_id'] = None
         session['user_id'] = None
-    request()
+    request(
+        _expected_status=302,
+        _expected_redirect='/sign-in?next={}'.format(
+            url_for('main.{}'.format(view))
+        )
+    )
 
 
 def test_guidance_pages_link_to_service_pages_when_signed_in(
@@ -143,12 +148,12 @@ def test_guidance_pages_link_to_service_pages_when_signed_in(
     page = request()
     assert not page.select_one(selector)
 
-    # Check it still works when they sign out
+    # Check it redirects to the login screen when they sign out
     client_request.logout()
     with client_request.session_transaction() as session:
         session['service_id'] = None
         session['user_id'] = None
-    page = request()
+    page = request(_expected_status=302)
     assert not page.select_one(selector)
 
 

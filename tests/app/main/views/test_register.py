@@ -249,7 +249,7 @@ def test_shows_hidden_email_address_on_registration_page_from_invite(
     assert normalize_spaces(page.select_one('main p').text) == (
         'Your account will be created with this email address: invited_user@test.gsa.gov'
     )
-    hidden_input = page.select_one('form .govuk-visually-hidden input')
+    hidden_input = page.select_one('form .usa-sr-only input')
     for attr, value in (
         ('type', 'email'),
         ('name', 'username'),

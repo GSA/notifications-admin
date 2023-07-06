@@ -275,7 +275,7 @@ def get_status_filters(service, message_type, statistics):
     filters = [
         # key, label, option
         ('requested', 'total', 'sending,delivered,failed'),
-        ('sending', 'sending', 'sending'),
+        ('sending', 'pending', 'pending'),
         ('delivered', 'delivered', 'delivered'),
         ('failed', 'failed', 'failed'),
     ]
@@ -312,7 +312,7 @@ def _get_job_counts(job):
         ) for label, query_param, count in [
             [
                 Markup(
-                    f'''total<span class="govuk-visually-hidden">
+                    f'''total<span class="usa-sr-only">
                     {"text message" if job_type == "sms" else job_type}s</span>'''
                 ),
                 '',
@@ -320,15 +320,15 @@ def _get_job_counts(job):
             ],
             [
                 Markup(
-                    f'''sending<span class="govuk-visually-hidden">
+                    f'''pending<span class="usa-sr-only">
                     {message_count_noun(job.notifications_sending, job_type)}</span>'''
                 ),
-                'sending',
+                'pending',
                 job.notifications_sending
             ],
             [
                 Markup(
-                    f'''delivered<span class="govuk-visually-hidden">
+                    f'''delivered<span class="usa-sr-only">
                     {message_count_noun(job.notifications_delivered, job_type)}</span>'''
                 ),
                 'delivered',
@@ -336,7 +336,7 @@ def _get_job_counts(job):
             ],
             [
                 Markup(
-                    f'''failed<span class="govuk-visually-hidden">
+                    f'''failed<span class="usa-sr-only">
                     {message_count_noun(job.notifications_failed, job_type)}</span>'''
                 ),
                 'failed',
@@ -388,7 +388,7 @@ def get_job_partials(job):
 def add_preview_of_content_to_notifications(notifications):
 
     for notification in notifications:
-        yield(dict(
+        yield (dict(
             preview_of_content=get_preview_of_content(notification),
             **notification
         ))

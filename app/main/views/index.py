@@ -18,7 +18,7 @@ from app.main.views.sub_navigation_dictionaries import (
     features_nav,
     using_notify_nav,
 )
-from app.utils import hide_from_search_engines
+from app.utils.user import user_is_logged_in
 
 
 @main.route('/')
@@ -42,11 +42,13 @@ def error(status_code):
 
 
 @main.route('/privacy')
+@user_is_logged_in
 def privacy():
     return render_template('views/privacy.html')
 
 
 @main.route('/accessibility-statement')
+@user_is_logged_in
 def accessibility_statement():
     return render_template('views/accessibility_statement.html')
 
@@ -58,11 +60,13 @@ def delivery_and_failure():
 
 
 @main.route('/design-patterns-content-guidance')
+@user_is_logged_in
 def design_content():
     return redirect('https://www.gov.uk/service-manual/design/sending-emails-and-text-messages', 301)
 
 
 @main.route('/_email')
+@user_is_logged_in
 def email_template():
     branding_type = 'govuk'
     branding_style = request.args.get('branding_style', None)
@@ -152,6 +156,7 @@ def email_template():
 
 
 @main.route('/documentation')
+@user_is_logged_in
 def documentation():
     return render_template(
         'views/documentation.html',
@@ -172,6 +177,7 @@ def callbacks():
 # --- Features page set --- #
 
 @main.route('/features')
+@user_is_logged_in
 def features():
     return render_template(
         'views/features.html',
@@ -180,6 +186,7 @@ def features():
 
 
 @main.route('/features/roadmap', endpoint='roadmap')
+@user_is_logged_in
 def roadmap():
     return render_template(
         'views/roadmap.html',
@@ -188,7 +195,7 @@ def roadmap():
 
 
 @main.route('/features/email')
-@hide_from_search_engines
+@user_is_logged_in
 def features_email():
     return render_template(
         'views/features/emails.html',
@@ -197,6 +204,7 @@ def features_email():
 
 
 @main.route('/features/sms')
+@user_is_logged_in
 def features_sms():
     return render_template(
         'views/features/text-messages.html',
@@ -205,6 +213,7 @@ def features_sms():
 
 
 @main.route('/features/security', endpoint='security')
+@user_is_logged_in
 def security():
     return render_template(
         'views/security.html',
@@ -213,6 +222,7 @@ def security():
 
 
 @main.route('/features/terms', endpoint='terms')
+@user_is_logged_in
 def terms():
     return render_template(
         'views/terms-of-use.html',
@@ -221,6 +231,7 @@ def terms():
 
 
 @main.route('/features/using-notify')
+@user_is_logged_in
 def using_notify():
     return render_template(
         'views/using-notify.html',
@@ -229,6 +240,7 @@ def using_notify():
 
 
 @main.route('/using-notify/delivery-status')
+@user_is_logged_in
 def message_status():
     return render_template(
         'views/message-status.html',
@@ -237,11 +249,13 @@ def message_status():
 
 
 @main.route('/features/get-started')
+@user_is_logged_in
 def get_started_old():
     return redirect(url_for('.get_started'), 301)
 
 
 @main.route('/using-notify/get-started')
+@user_is_logged_in
 def get_started():
     return render_template(
         'views/get-started.html',
@@ -269,6 +283,7 @@ def trial_mode_new():
 
 
 @main.route('/using-notify/guidance')
+@user_is_logged_in
 def guidance_index():
     return render_template(
         'views/guidance/index.html',
@@ -277,6 +292,7 @@ def guidance_index():
 
 
 @main.route('/using-notify/guidance/branding-and-customisation')
+@user_is_logged_in
 def branding_and_customisation():
     return render_template(
         'views/guidance/branding-and-customisation.html',
@@ -285,6 +301,7 @@ def branding_and_customisation():
 
 
 @main.route('/using-notify/guidance/create-and-send-messages')
+@user_is_logged_in
 def create_and_send_messages():
     return render_template(
         'views/guidance/create-and-send-messages.html',
@@ -293,6 +310,7 @@ def create_and_send_messages():
 
 
 @main.route('/using-notify/guidance/edit-and-format-messages')
+@user_is_logged_in
 def edit_and_format_messages():
     return render_template(
         'views/guidance/edit-and-format-messages.html',
@@ -301,6 +319,7 @@ def edit_and_format_messages():
 
 
 @main.route('/using-notify/guidance/send-files-by-email')
+@user_is_logged_in
 def send_files_by_email():
     return render_template(
         'views/guidance/send-files-by-email.html',

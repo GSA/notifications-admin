@@ -7,20 +7,20 @@
 
     const states = {
       'valueVisible': (options) => `
-        <span class="copy-to-clipboard__value">${options.valueLabel ? '<span class="govuk-visually-hidden">' + options.thing + ': </span>' : ''}${options.value}</span>
-        <span class="copy-to-clipboard__notice govuk-visually-hidden" aria-live="assertive">
+        <span class="copy-to-clipboard__value margin-bottom-1">${options.valueLabel ? '<span class="usa-sr-only">' + options.thing + ': </span>' : ''}${options.value}</span>
+        <span class="copy-to-clipboard__notice" aria-live="assertive">
           ${options.onload ? '' : options.thing + ' returned to page, press button to copy to clipboard'}
         </span>
-        <button class="govuk-button govuk-button--secondary copy-to-clipboard__button--copy">
-          Copy ${options.thing} to clipboard${options.name ? '<span class="govuk-visually-hidden"> for ' + options.name + '</span>' : ''}
+        <button class="usa-button usa-button--outline copy-to-clipboard__button--copy">
+          Copy ${options.thing} to clipboard${options.name ? '<span class="usa-sr-only"> for ' + options.name + '</span>' : ''}
         </button>
       `,
       'valueCopied': (options) => `
         <span class="copy-to-clipboard__notice" aria-live="assertive">
-          <span class="govuk-visually-hidden">${options.thing} </span>Copied to clipboard<span class="govuk-visually-hidden">, press button to show in page</span>
+          <span class="usa-sr-only">${options.thing} </span>Copied to clipboard<span class="usa-sr-only">, press button to show in page</span>
         </span>
-        <button class="govuk-button govuk-button--secondary copy-to-clipboard__button--show">
-          Show ${options.thing}${options.name ? '<span class="govuk-visually-hidden"> for ' + options.name + '</span>' : ''}
+        <button class="usa-button copy-to-clipboard__button--show">
+          Show ${options.thing}${options.name ? '<span class="usa-sr-only"> for ' + options.name + '</span>' : ''}
         </button>
       `
     };
@@ -31,7 +31,7 @@
       let prefixIndex = -1;
 
       childNodes.forEach((el, idx) => {
-        if ((el.nodeType === 1) && el.classList.contains('govuk-visually-hidden')) {
+        if ((el.nodeType === 1) && el.classList.contains('usa-sr-only')) {
           prefixIndex = idx;
         }
       });

@@ -25,6 +25,11 @@
     'counts'
   ) }}
 
+
+  <p class="notification-status {{ field_status }}">
+    Messages will remain in pending state until carrier status is received, typically 5 minutes.
+  </p>
+
   {% call form_wrapper(
     action=url_for('.view_notifications', service_id=current_service.id, message_type=message_type),
     class="usa-search margin-bottom-2"
@@ -49,6 +54,10 @@
     </button> 
   
   {% endcall %}
+
+
+
+
 
   {% call form_wrapper(id="search-form") %}
     <input type="hidden" name="to" {% if search_form.to.data %}value="{{ search_form.to.data }}{%  endif %}">
