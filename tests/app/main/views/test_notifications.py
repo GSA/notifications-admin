@@ -184,16 +184,16 @@ def test_notification_status_shows_expected_back_link(
 
 @pytest.mark.parametrize('time_of_viewing_page, expected_message', (
     ('2012-01-01 06:01', (
-        "‘sample template’ was sent by Test User today at 6:01am UTC"
+        "‘sample template’ was sent by Test User today at 06:01 UTC"
     )),
     ('2012-01-02 06:01', (
-        "‘sample template’ was sent by Test User yesterday at 6:01am UTC"
+        "‘sample template’ was sent by Test User yesterday at 06:01 UTC"
     )),
     ('2012-01-03 06:01', (
-        "‘sample template’ was sent by Test User on 1 January at 6:01am UTC"
+        "‘sample template’ was sent by Test User on 1 January at 06:01 UTC"
     )),
     ('2013-01-03 06:01', (
-        "‘sample template’ was sent by Test User on 1 January 2012 at 6:01am UTC"
+        "‘sample template’ was sent by Test User on 1 January 2012 at 06:01 UTC"
     )),
 ))
 def test_notification_page_doesnt_link_to_template_in_tour(

@@ -188,7 +188,7 @@ def test_view_providers_shows_all_providers(
     assert table_data[1].text.strip() == "20"
     assert table_data[2].text.strip() == "42"
     assert table_data[3].text.strip() == "True"
-    assert table_data[4].text.strip() == "16 January at 3:20pm"
+    assert table_data[4].text.strip() == "16 January at 15:20"
     assert table_data[5].text.strip() == "Test User"
 
     domestic_sms_second_row = domestic_sms_table.tbody.find_all('tr')[1]

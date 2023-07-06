@@ -36,7 +36,7 @@ def convert_to_boolean(value):
 def format_datetime(date):
     return '{} at {}'.format(
         format_date(date),
-        format_time(date)
+        format_time_24h(date)
     )
 
 
@@ -47,24 +47,28 @@ def format_datetime_24h(date):
     )
 
 
+def format_time(date):
+    return format_datetime_24h(date)
+
+
 def format_datetime_normal(date):
     return '{} at {}'.format(
         format_date_normal(date),
-        format_time(date)
+        format_time_24h(date)
     )
 
 
 def format_datetime_short(date):
     return '{} at {}'.format(
         format_date_short(date),
-        format_time(date)
+        format_time_24h(date)
     )
 
 
 def format_datetime_relative(date):
     return '{} at {}'.format(
         get_human_day(date),
-        format_time(date)
+        format_time_24h(date)
     )
 
 
@@ -110,17 +114,6 @@ def get_human_day(time, date_prefix=''):
     ).strip()
 
 
-def format_time(date):
-    date = parse_naive_dt(date)
-    return {
-        '12:00AM': 'Midnight',
-        '12:00PM': 'Noon'
-    }.get(
-        date.strftime('%-I:%M%p'),
-        date.strftime('%-I:%M%p')
-    ).lower()
-
-
 def format_date(date):
     date = parse_naive_dt(date)
     return date.strftime('%A %d %B %Y')
@@ -143,7 +136,7 @@ def format_date_human(date):
 def format_datetime_human(date, date_prefix=''):
     return '{} at {}'.format(
         get_human_day(date, date_prefix='on'),
-        format_time(date),
+        format_time_24h(date),
     )
 
 

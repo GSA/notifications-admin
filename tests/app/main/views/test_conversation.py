@@ -114,55 +114,55 @@ def test_view_conversation(
     for index, expected in enumerate([
         (
             'message-8',
-            'yesterday at 2:59pm',
+            'yesterday at 14:59',
         ),
         (
             'message-7',
-            'yesterday at 2:59pm',
+            'yesterday at 14:59',
         ),
         (
             'message-6',
-            'yesterday at 4:59pm',
+            'yesterday at 16:59',
         ),
         (
             'message-5',
-            'yesterday at 6:59pm',
+            'yesterday at 18:59',
         ),
         (
             'message-4',
-            'yesterday at 8:59pm',
+            'yesterday at 20:59',
         ),
         (
             'message-3',
-            'yesterday at 10:59pm',
+            'yesterday at 22:59',
         ),
         (
             'message-2',
-            'yesterday at 10:59pm',
+            'yesterday at 22:59',
         ),
         (
             'message-1',
-            'yesterday at 11:00pm',
+            'yesterday at 23:00',
         ),
         (
             expected_outbound_content,
-            'yesterday at midnight',
+            'yesterday at 00:00',
         ),
         (
             expected_outbound_content,
-            'yesterday at midnight',
+            'yesterday at 00:00',
         ),
         (
             expected_outbound_content,
-            'yesterday at midnight',
+            'yesterday at 00:00',
         ),
         (
             expected_outbound_content,
-            'yesterday at midnight',
+            'yesterday at 00:00',
         ),
         (
             expected_outbound_content,
-            'yesterday at midnight',
+            'yesterday at 00:00',
         ),
     ]):
         assert (
