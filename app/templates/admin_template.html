@@ -110,7 +110,8 @@
       ] %}
     {% endif %}
   {% else %}
-    {% set navigation = [
+  <!-- Add navigation back after pilot -->
+    {# {% set navigation = [
       {
         "href": url_for('main.get_started'),
         "text": "Using notify",
@@ -131,7 +132,7 @@
         "text": "Sign in",
         "active": header_navigation.is_selected('sign-in')
       }
-    ] %}
+    ] %} #}
   {% endif %}
 
   {{ govukHeader({
