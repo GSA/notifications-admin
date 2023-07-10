@@ -19,10 +19,11 @@ def test_render_sign_in_template_for_new_user(
     assert normalize_spaces(page.select('label')[1].text) == 'Password'
     assert page.select_one('#password').get('value') is None
     assert page.select_one('#password')['autocomplete'] == 'current-password'
-    assert page.select('main a')[0].text == 'create one now'
-    assert page.select('main a')[0]['href'] == url_for('main.register')
-    assert page.select('main a')[1].text == 'Forgot your password?'
-    assert page.select('main a')[1]['href'] == url_for('main.forgot_password')
+    # Removing for the pilot
+    # assert page.select('main a')[0].text == 'create one now'
+    # assert page.select('main a')[0]['href'] == url_for('main.register')
+    assert page.select('main a')[0].text == 'Forgot your password?'
+    assert page.select('main a')[0]['href'] == url_for('main.forgot_password')
     assert 'Sign in again' not in normalize_spaces(page.text)
 
 
