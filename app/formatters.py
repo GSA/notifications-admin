@@ -34,14 +34,14 @@ def convert_to_boolean(value):
 
 
 def format_datetime(date):
-    return '{} at {}'.format(
+    return '{} at {} UTC'.format(
         format_date(date),
         format_time_24h(date)
     )
 
 
 def format_datetime_24h(date):
-    return '{} at {}'.format(
+    return '{} at {} UTC'.format(
         format_date(date),
         format_time_24h(date),
     )
@@ -52,28 +52,28 @@ def format_time(date):
 
 
 def format_datetime_normal(date):
-    return '{} at {}'.format(
+    return '{} at {} UTC'.format(
         format_date_normal(date),
         format_time_24h(date)
     )
 
 
 def format_datetime_short(date):
-    return '{} at {}'.format(
+    return '{} at {} UTC'.format(
         format_date_short(date),
         format_time_24h(date)
     )
 
 
 def format_datetime_relative(date):
-    return '{} at {}'.format(
+    return '{} at {} UTC'.format(
         get_human_day(date),
         format_time_24h(date)
     )
 
 
 def format_datetime_numeric(date):
-    return '{} {}'.format(
+    return '{} {} UTC'.format(
         format_date_numeric(date),
         format_time_24h(date),
     )
@@ -134,7 +134,7 @@ def format_date_human(date):
 
 
 def format_datetime_human(date, date_prefix=''):
-    return '{} at {}'.format(
+    return '{} at {} UTC'.format(
         get_human_day(date, date_prefix='on'),
         format_time_24h(date),
     )
