@@ -38,7 +38,7 @@ def test_valid_list_of_white_list_email_domains(
 def test_invalid_list_of_white_list_email_domains(
     client_request,
     email,
-    mock_get_organisations,
+    mock_get_organizations,
 ):
     email_domain_validators = ValidGovEmail()
     with pytest.raises(ValidationError):

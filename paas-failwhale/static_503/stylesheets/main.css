@@ -6019,7 +6019,7 @@ a.table-show-more-link {
     color: #2b8cc4
 }
 
-.navigation-organisation-link {
+.navigation-organization-link {
     font-family: "nta", Arial, sans-serif;
     font-weight: 400;
     text-transform: none;
@@ -6039,13 +6039,13 @@ a.table-show-more-link {
 }
 
 @media (min-width: 641px) {
-    .navigation-organisation-link {
+    .navigation-organization-link {
         font-size: 19px;
         line-height: 1.31579
     }
 }
 
-.navigation-organisation-link:before {
+.navigation-organization-link:before {
     content: "";
     display: block;
     position: absolute;
@@ -6063,12 +6063,12 @@ a.table-show-more-link {
     border-color: #6f777b
 }
 
-.navigation-organisation-link:hover {
+.navigation-organization-link:hover {
     color: #2b8cc4;
     text-decoration: underline
 }
 
-.navigation-organisation-link:focus {
+.navigation-organization-link:focus {
     color: #0b0c0c;
     outline: none;
     box-shadow: 0 1px 0 0 #ffbf47, -3px 0 0 0 #ffbf47, -3px 1px 0 0 #ffbf47

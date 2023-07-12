@@ -15,7 +15,7 @@ from app.main.views.dashboard import (
     get_tuples_of_financial_years,
 )
 from tests import (
-    organisation_json,
+    organization_json,
     service_json,
     validate_route_permission,
     validate_route_permission_with_client,
@@ -1304,7 +1304,7 @@ def test_org_breadcrumbs_do_not_show_if_service_has_no_org(
 ):
     page = client_request.get('main.service_dashboard', service_id=SERVICE_ONE_ID)
 
-    assert not page.select('.navigation-organisation-link')
+    assert not page.select('.navigation-organization-link')
 
 
 def test_org_breadcrumbs_do_not_show_if_user_is_not_an_org_member(
@@ -1321,13 +1321,13 @@ def test_org_breadcrumbs_do_not_show_if_user_is_not_an_org_member(
     service_one_json = service_json(SERVICE_ONE_ID,
                                     users=[active_caseworking_user['id']],
                                     restricted=False,
-                                    organisation_id=ORGANISATION_ID)
+                                    organization_id=ORGANISATION_ID)
     mocker.patch('app.service_api_client.get_service', return_value={'data': service_one_json})
 
     client_request.login(active_caseworking_user, service=service_one_json)
     page = client_request.get('main.service_dashboard', service_id=SERVICE_ONE_ID, _follow_redirects=True)
 
-    assert not page.select('.navigation-organisation-link')
+    assert not page.select('.navigation-organization-link')
 
 
 def test_org_breadcrumbs_show_if_user_is_a_member_of_the_services_org(
@@ -1345,16 +1345,16 @@ def test_org_breadcrumbs_show_if_user_is_a_member_of_the_services_org(
     service_one_json = service_json(SERVICE_ONE_ID,
                                     users=[active_user_with_permissions['id']],
                                     restricted=False,
-                                    organisation_id=ORGANISATION_ID)
+                                    organization_id=ORGANISATION_ID)
 
     mocker.patch('app.service_api_client.get_service', return_value={'data': service_one_json})
-    mocker.patch('app.organisations_client.get_organisation', return_value=organisation_json(
+    mocker.patch('app.organizations_client.get_organization', return_value=organization_json(
         id_=ORGANISATION_ID,
     ))
 
     page = client_request.get('main.service_dashboard', service_id=SERVICE_ONE_ID)
-    assert page.select_one('.navigation-organisation-link')['href'] == url_for(
-        'main.organisation_dashboard',
+    assert page.select_one('.navigation-organization-link')['href'] == url_for(
+        'main.organization_dashboard',
         org_id=ORGANISATION_ID,
     )
 
@@ -1373,10 +1373,10 @@ def test_org_breadcrumbs_do_not_show_if_user_is_a_member_of_the_services_org_but
 
     service_one_json = service_json(SERVICE_ONE_ID,
                                     users=[active_user_with_permissions['id']],
-                                    organisation_id=ORGANISATION_ID)
+                                    organization_id=ORGANISATION_ID)
 
     mocker.patch('app.service_api_client.get_service', return_value={'data': service_one_json})
-    mocker.patch('app.models.service.Organisation')
+    mocker.patch('app.models.service.Organization')
 
     page = client_request.get('main.service_dashboard', service_id=SERVICE_ONE_ID)
 
@@ -1395,18 +1395,18 @@ def test_org_breadcrumbs_show_if_user_is_platform_admin(
 ):
     service_one_json = service_json(SERVICE_ONE_ID,
                                     users=[platform_admin_user['id']],
-                                    organisation_id=ORGANISATION_ID)
+                                    organization_id=ORGANISATION_ID)
 
     mocker.patch('app.service_api_client.get_service', return_value={'data': service_one_json})
-    mocker.patch('app.organisations_client.get_organisation', return_value=organisation_json(
+    mocker.patch('app.organizations_client.get_organization', return_value=organization_json(
         id_=ORGANISATION_ID,
     ))
 
     client_request.login(platform_admin_user, service_one_json)
     page = client_request.get('main.service_dashboard', service_id=SERVICE_ONE_ID)
 
-    assert page.select_one('.navigation-organisation-link')['href'] == url_for(
-        'main.organisation_dashboard',
+    assert page.select_one('.navigation-organization-link')['href'] == url_for(
+        'main.organization_dashboard',
         org_id=ORGANISATION_ID,
     )
 

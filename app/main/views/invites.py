@@ -3,12 +3,12 @@ from flask_login import current_user
 from markupsafe import Markup
 
 from app.main import main
-from app.models.organisation import Organisation
+from app.models.organization import Organization
 from app.models.service import Service
 from app.models.user import (
     InvitedOrgUser,
     InvitedUser,
-    OrganisationUsers,
+    OrganizationUsers,
     User,
     Users,
 )
@@ -74,7 +74,7 @@ def accept_invite(token):
         return redirect(url_for('main.register_from_invite'))
 
 
-@main.route("/organisation-invitation/<token>")
+@main.route("/organization-invitation/<token>")
 def accept_org_invite(token):
     invited_org_user = InvitedOrgUser.from_token(token)
 
@@ -93,25 +93,25 @@ def accept_org_invite(token):
         abort(403)
 
     if invited_org_user.status == 'cancelled':
-        organisation = Organisation.from_id(invited_org_user.organisation)
+        organization = Organization.from_id(invited_org_user.organization)
         return render_template('views/cancelled-invitation.html',
                                from_user=invited_org_user.invited_by.name,
-                               organisation_name=organisation.name)
+                               organization_name=organization.name)
 
     if invited_org_user.status == 'accepted':
         session.pop('invited_org_user_id', None)
-        return redirect(url_for('main.organisation_dashboard', org_id=invited_org_user.organisation))
+        return redirect(url_for('main.organization_dashboard', org_id=invited_org_user.organization))
 
     session['invited_org_user_id'] = invited_org_user.id
 
     existing_user = User.from_email_address_or_none(invited_org_user.email_address)
-    organisation_users = OrganisationUsers(invited_org_user.organisation)
+    organization_users = OrganizationUsers(invited_org_user.organization)
 
     if existing_user:
         existing_user.update_email_access_validated_at()
         invited_org_user.accept_invite()
-        if existing_user not in organisation_users:
-            existing_user.add_to_organisation(organisation_id=invited_org_user.organisation)
-        return redirect(url_for('main.organisation_dashboard', org_id=invited_org_user.organisation))
+        if existing_user not in organization_users:
+            existing_user.add_to_organization(organization_id=invited_org_user.organization)
+        return redirect(url_for('main.organization_dashboard', org_id=invited_org_user.organization))
     else:
         return redirect(url_for('main.register_from_org_invite'))

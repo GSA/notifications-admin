@@ -81,7 +81,7 @@ from app.formatters import (
     square_metres_to_square_miles,
     valid_phone_number,
 )
-from app.models.organisation import Organisation
+from app.models.organization import Organization
 from app.models.service import Service
 from app.models.user import AnonymousUser, User
 from app.navigation import (
@@ -101,7 +101,7 @@ from app.notify_client.invite_api_client import invite_api_client
 from app.notify_client.job_api_client import job_api_client
 from app.notify_client.notification_api_client import notification_api_client
 from app.notify_client.org_invite_api_client import org_invite_api_client
-from app.notify_client.organisations_api_client import organisations_client
+from app.notify_client.organizations_api_client import organizations_client
 from app.notify_client.performance_dashboard_api_client import (
     performance_dashboard_api_client,
 )
@@ -135,8 +135,8 @@ basic_auth = CustomBasicAuth()
 # The current service attached to the request stack.
 current_service = LocalProxy(partial(getattr, request_ctx, 'service'))
 
-# The current organisation attached to the request stack.
-current_organisation = LocalProxy(partial(getattr, request_ctx, 'organisation'))
+# The current organization attached to the request stack.
+current_organization = LocalProxy(partial(getattr, request_ctx, 'organization'))
 
 navigation = {
     'casework_navigation': CaseworkNavigation(),
@@ -215,7 +215,7 @@ def create_app(application):
         job_api_client,
         notification_api_client,
         org_invite_api_client,
-        organisations_client,
+        organizations_client,
         performance_dashboard_api_client,
         platform_stats_api_client,
         provider_client,
@@ -285,7 +285,7 @@ def create_app(application):
 
 def init_app(application):
     application.before_request(load_service_before_request)
-    application.before_request(load_organisation_before_request)
+    application.before_request(load_organization_before_request)
     application.before_request(request_helper.check_proxy_header_before_request)
     application.before_request(make_session_permanent)
     application.after_request(save_service_or_org_after_request)
@@ -300,8 +300,8 @@ def init_app(application):
         return {'current_service': current_service}
 
     @application.context_processor
-    def _attach_current_organisation():
-        return {'current_org': current_organisation}
+    def _attach_current_organization():
+        return {'current_org': current_organization}
 
     @application.context_processor
     def _attach_current_user():
@@ -394,19 +394,19 @@ def load_service_before_request():
                     raise
 
 
-def load_organisation_before_request():
+def load_organization_before_request():
     if '/static/' in request.url:
-        request_ctx.organisation = None
+        request_ctx.organization = None
         return
     if request_ctx is not None:
-        request_ctx.organisation = None
+        request_ctx.organization = None
 
         if request.view_args:
             org_id = request.view_args.get('org_id')
 
             if org_id:
                 try:
-                    request_ctx.organisation = Organisation.from_id(org_id)
+                    request_ctx.organization = Organization.from_id(org_id)
                 except HTTPError as exc:
                     # if org id isn't real, then 404 rather than 500ing later because we expect org to be set
                     if exc.status_code == 404:
@@ -418,14 +418,14 @@ def load_organisation_before_request():
 def save_service_or_org_after_request(response):
     # Only save the current session if the request is 200
     service_id = request.view_args.get('service_id', None) if request.view_args else None
-    organisation_id = request.view_args.get('org_id', None) if request.view_args else None
+    organization_id = request.view_args.get('org_id', None) if request.view_args else None
     if response.status_code == 200:
         if service_id:
             session['service_id'] = service_id
-            session['organisation_id'] = None
-        elif organisation_id:
+            session['organization_id'] = None
+        elif organization_id:
             session['service_id'] = None
-            session['organisation_id'] = organisation_id
+            session['organization_id'] = organization_id
     return response
 
 

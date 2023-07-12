@@ -3,7 +3,7 @@ from flask import url_for
 from freezegun import freeze_time
 from notifications_python_client.errors import HTTPError
 
-from tests import organisation_json, service_json
+from tests import organization_json, service_json
 from tests.conftest import (
     ORGANISATION_ID,
     SERVICE_ONE_ID,
@@ -14,7 +14,7 @@ from tests.conftest import (
 )
 
 
-def test_organisation_page_shows_all_organisations(
+def test_organization_page_shows_all_organizations(
     client_request,
     platform_admin_user,
     mocker
@@ -25,11 +25,11 @@ def test_organisation_page_shows_all_organisations(
         {'id': 'C2', 'name': 'Test 2', 'active': False, 'count_of_live_services': 2},
     ]
 
-    get_organisations = mocker.patch(
-        'app.models.organisation.AllOrganisations.client_method', return_value=orgs
+    get_organizations = mocker.patch(
+        'app.models.organization.AllOrganizations.client_method', return_value=orgs
     )
     client_request.login(platform_admin_user)
-    page = client_request.get('.organisations')
+    page = client_request.get('.organizations')
 
     assert normalize_spaces(
         page.select_one('h1').text
@@ -46,13 +46,13 @@ def test_organisation_page_shows_all_organisations(
         )
     ] == [
         ('Test 1', '1 live service', url_for(
-            'main.organisation_dashboard', org_id='B1'
+            'main.organization_dashboard', org_id='B1'
         )),
         ('Test 2', '2 live services', url_for(
-            'main.organisation_dashboard', org_id='C2'
+            'main.organization_dashboard', org_id='C2'
         )),
         ('Test 3', '0 live services', url_for(
-            'main.organisation_dashboard', org_id='A3'
+            'main.organization_dashboard', org_id='A3'
         )),
     ]
 
@@ -63,23 +63,23 @@ def test_organisation_page_shows_all_organisations(
     assert normalize_spaces(
         page.select_one('a.govuk-button--secondary').text
     ) == 'New organization'
-    get_organisations.assert_called_once_with()
+    get_organizations.assert_called_once_with()
 
 
-def test_view_organisation_shows_the_correct_organisation(
+def test_view_organization_shows_the_correct_organization(
     client_request,
     mocker
 ):
     org = {'id': ORGANISATION_ID, 'name': 'Test 1', 'active': True}
     mocker.patch(
-        'app.organisations_client.get_organisation', return_value=org
+        'app.organizations_client.get_organization', return_value=org
     )
     mocker.patch(
-        'app.organisations_client.get_services_and_usage', return_value={'services': {}}
+        'app.organizations_client.get_services_and_usage', return_value={'services': {}}
     )
 
     page = client_request.get(
-        '.organisation_dashboard',
+        '.organization_dashboard',
         org_id=ORGANISATION_ID,
     )
 
@@ -90,72 +90,72 @@ def test_view_organisation_shows_the_correct_organisation(
     assert not page.select('a[download]')
 
 
-def test_page_to_create_new_organisation(
+def test_page_to_create_new_organization(
     client_request,
     platform_admin_user,
     mocker,
 ):
     client_request.login(platform_admin_user)
-    page = client_request.get('.add_organisation')
+    page = client_request.get('.add_organization')
 
     assert [
         (input['type'], input['name'], input.get('value'))
         for input in page.select('input')
     ] == [
         ('text', 'name', None),
-        ('radio', 'organisation_type', 'federal'),
-        ('radio', 'organisation_type', 'state'),
-        # ('radio', 'organisation_type', 'nhs_central'),
-        # ('radio', 'organisation_type', 'nhs_local'),
-        # ('radio', 'organisation_type', 'nhs_gp'),
-        # ('radio', 'organisation_type', 'emergency_service'),
-        # ('radio', 'organisation_type', 'school_or_college'),
-        ('radio', 'organisation_type', 'other'),
+        ('radio', 'organization_type', 'federal'),
+        ('radio', 'organization_type', 'state'),
+        # ('radio', 'organization_type', 'nhs_central'),
+        # ('radio', 'organization_type', 'nhs_local'),
+        # ('radio', 'organization_type', 'nhs_gp'),
+        # ('radio', 'organization_type', 'emergency_service'),
+        # ('radio', 'organization_type', 'school_or_college'),
+        ('radio', 'organization_type', 'other'),
         ('hidden', 'csrf_token', mocker.ANY),
     ]
 
 
-def test_create_new_organisation(
+def test_create_new_organization(
     client_request,
     platform_admin_user,
     mocker,
 ):
-    mock_create_organisation = mocker.patch(
-        'app.organisations_client.create_organisation',
-        return_value=organisation_json(ORGANISATION_ID),
+    mock_create_organization = mocker.patch(
+        'app.organizations_client.create_organization',
+        return_value=organization_json(ORGANISATION_ID),
     )
 
     client_request.login(platform_admin_user)
     client_request.post(
-        '.add_organisation',
+        '.add_organization',
         _data={
             'name': 'new name',
-            'organisation_type': 'federal',
+            'organization_type': 'federal',
         },
         _expected_redirect=url_for(
-            'main.organisation_settings',
+            'main.organization_settings',
             org_id=ORGANISATION_ID,
         ),
     )
 
-    mock_create_organisation.assert_called_once_with(
+    mock_create_organization.assert_called_once_with(
         name='new name',
-        organisation_type='federal',
+        organization_type='federal',
     )
 
 
-def test_create_new_organisation_validates(
+def test_create_new_organization_validates(
     client_request,
     platform_admin_user,
     mocker,
 ):
-    mock_create_organisation = mocker.patch(
-        'app.organisations_client.create_organisation'
+    mock_create_organization = mocker.patch(
+        'app.organizations_client.create_organization'
     )
 
     client_request.login(platform_admin_user)
     page = client_request.post(
-        '.add_organisation',
+        '.add_organization',
         _expected_status=200,
     )
     assert [
@@ -163,9 +163,9 @@ def test_create_new_organisation_validates(
         for error in page.select('.usa-error-message')
     ] == [
         ('name', 'Error: Cannot be empty'),
-        ('organisation_type', 'Error: Select the type of organization'),
+        ('organization_type', 'Error: Select the type of organization'),
     ]
-    assert mock_create_organisation.called is False
+    assert mock_create_organization.called is False
 
 
 @pytest.mark.parametrize('name, error_message', [
@@ -173,31 +173,31 @@ def test_create_new_organisation_validates(
     ('a', 'at least two alphanumeric characters'),
     ('a' * 256, 'Organization name must be 255 characters or fewer'),
 ])
-def test_create_new_organisation_fails_with_incorrect_input(
+def test_create_new_organization_fails_with_incorrect_input(
     client_request,
     platform_admin_user,
     mocker,
     name,
     error_message,
 ):
-    mock_create_organisation = mocker.patch(
-        'app.organisations_client.create_organisation'
+    mock_create_organization = mocker.patch(
+        'app.organizations_client.create_organization'
     )
 
     client_request.login(platform_admin_user)
     page = client_request.post(
-        '.add_organisation',
+        '.add_organization',
         _data={
             'name': name,
-            'organisation_type': 'local',
+            'organization_type': 'local',
         },
         _expected_status=200,
     )
-    assert mock_create_organisation.called is False
+    assert mock_create_organization.called is False
     assert error_message in page.select_one('.usa-error-message').text
 
 
-def test_create_new_organisation_fails_with_duplicate_name(
+def test_create_new_organization_fails_with_duplicate_name(
     client_request,
     platform_admin_user,
     mocker,
@@ -209,16 +209,16 @@ def test_create_new_organisation_fails_with_duplicate_name(
         raise http_error
 
     mocker.patch(
-        'app.organisations_client.create_organisation',
+        'app.organizations_client.create_organization',
         side_effect=_create
     )
 
     client_request.login(platform_admin_user)
     page = client_request.post(
-        '.add_organisation',
+        '.add_organization',
         _data={
             'name': 'Existing org',
-            'organisation_type': 'federal',
+            'organization_type': 'federal',
         },
         _expected_status=200,
     )
@@ -227,26 +227,26 @@ def test_create_new_organisation_fails_with_duplicate_name(
     assert error_message in page.select_one('.usa-error-message').text
 
 
-@pytest.mark.parametrize('organisation_type, organisation, expected_status', (
+@pytest.mark.parametrize('organization_type, organization, expected_status', (
     ('nhs_gp', None, 200),
     ('central', None, 403),
-    ('nhs_gp', organisation_json(organisation_type='nhs_gp'), 403),
+    ('nhs_gp', organization_json(organization_type='nhs_gp'), 403),
 ))
 @pytest.mark.skip(reason='Update for TTS')
-def test_gps_can_create_own_organisations(
+def test_gps_can_create_own_organizations(
     client_request,
     mocker,
-    mock_get_service_organisation,
+    mock_get_service_organization,
     service_one,
-    organisation_type,
-    organisation,
+    organization_type,
+    organization,
     expected_status,
 ):
-    mocker.patch('app.organisations_client.get_organisation', return_value=organisation)
-    service_one['organisation_type'] = organisation_type
+    mocker.patch('app.organizations_client.get_organization', return_value=organization)
+    service_one['organization_type'] = organization_type
 
     page = client_request.get(
-        '.add_organisation_from_gp_service',
+        '.add_organization_from_gp_service',
         service_id=SERVICE_ONE_ID,
         _expected_status=expected_status,
     )
@@ -279,32 +279,32 @@ def test_gps_can_create_own_organisations(
     ),
 ))
 @pytest.mark.skip(reason='Update for TTS')
-def test_gps_can_name_their_organisation(
+def test_gps_can_name_their_organization(
     client_request,
     mocker,
     service_one,
-    mock_update_service_organisation,
+    mock_update_service_organization,
     data,
     expected_service_name,
 ):
-    service_one['organisation_type'] = 'nhs_gp'
-    mock_create_organisation = mocker.patch(
-        'app.organisations_client.create_organisation',
-        return_value=organisation_json(ORGANISATION_ID),
+    service_one['organization_type'] = 'nhs_gp'
+    mock_create_organization = mocker.patch(
+        'app.organizations_client.create_organization',
+        return_value=organization_json(ORGANISATION_ID),
     )
 
     client_request.post(
-        '.add_organisation_from_gp_service',
+        '.add_organization_from_gp_service',
         service_id=SERVICE_ONE_ID,
         _data=data,
         _expected_status=302,
     )
 
-    mock_create_organisation.assert_called_once_with(
+    mock_create_organization.assert_called_once_with(
         name=expected_service_name,
-        organisation_type='nhs_gp',
+        organization_type='nhs_gp',
     )
-    mock_update_service_organisation.assert_called_once_with(SERVICE_ONE_ID, ORGANISATION_ID)
+    mock_update_service_organization.assert_called_once_with(SERVICE_ONE_ID, ORGANISATION_ID)
 
 
 @pytest.mark.parametrize('data, expected_error', (
@@ -323,16 +323,16 @@ def test_gps_can_name_their_organisation(
     ),
 ))
 @pytest.mark.skip(reason='Update for TTS')
-def test_validation_of_gps_creating_organisations(
+def test_validation_of_gps_creating_organizations(
     client_request,
     mocker,
     service_one,
     data,
     expected_error,
 ):
-    service_one['organisation_type'] = 'nhs_gp'
+    service_one['organization_type'] = 'nhs_gp'
     page = client_request.post(
-        '.add_organisation_from_gp_service',
+        '.add_organization_from_gp_service',
         service_id=SERVICE_ONE_ID,
         _data=data,
         _expected_status=200,
@@ -341,15 +341,15 @@ def test_validation_of_gps_creating_organisations(
 
 
 @freeze_time("2020-02-20 20:20")
-def test_organisation_services_shows_live_services_and_usage(
+def test_organization_services_shows_live_services_and_usage(
     client_request,
-    mock_get_organisation,
+    mock_get_organization,
     mocker,
     active_user_with_permissions,
     fake_uuid,
 ):
     mock = mocker.patch(
-        'app.organisations_client.get_services_and_usage',
+        'app.organizations_client.get_services_and_usage',
         return_value={"services": [
             {'service_id': SERVICE_ONE_ID, 'service_name': '1', 'chargeable_billable_sms': 250122, 'emails_sent': 13000,
              'free_sms_limit': 250000, 'sms_billable_units': 122, 'sms_cost': 0,
@@ -361,7 +361,7 @@ def test_organisation_services_shows_live_services_and_usage(
     )
 
     client_request.login(active_user_with_permissions)
-    page = client_request.get('.organisation_dashboard', org_id=ORGANISATION_ID)
+    page = client_request.get('.organization_dashboard', org_id=ORGANISATION_ID)
     mock.assert_called_once_with(ORGANISATION_ID, 2019)
 
     services = page.select('main h3')
@@ -387,15 +387,15 @@ def test_organisation_services_shows_live_services_and_usage(
 
 
 @freeze_time("2020-02-20 20:20")
-def test_organisation_services_shows_live_services_and_usage_with_count_of_1(
+def test_organization_services_shows_live_services_and_usage_with_count_of_1(
     client_request,
-    mock_get_organisation,
+    mock_get_organization,
     mocker,
     active_user_with_permissions,
     fake_uuid,
 ):
     mocker.patch(
-        'app.organisations_client.get_services_and_usage',
+        'app.organizations_client.get_services_and_usage',
         return_value={"services": [
             {'service_id': SERVICE_ONE_ID, 'service_name': '1', 'chargeable_billable_sms': 1, 'emails_sent': 1,
              'free_sms_limit': 250000, 'sms_billable_units': 1, 'sms_cost': 0,
@@ -404,7 +404,7 @@ def test_organisation_services_shows_live_services_and_usage_with_count_of_1(
     )
 
     client_request.login(active_user_with_permissions)
-    page = client_request.get('.organisation_dashboard', org_id=ORGANISATION_ID)
+    page = client_request.get('.organization_dashboard', org_id=ORGANISATION_ID)
 
     usage_rows = page.select('main .govuk-grid-column-one-half')
 
@@ -422,9 +422,9 @@ def test_organisation_services_shows_live_services_and_usage_with_count_of_1(
     (2018, '2018 to 2019 fiscal year'),
     (2019, '2019 to 2020 fiscal year'),
 ))
-def test_organisation_services_filters_by_financial_year(
+def test_organization_services_filters_by_financial_year(
     client_request,
-    mock_get_organisation,
+    mock_get_organization,
     mocker,
     active_user_with_permissions,
     fake_uuid,
@@ -432,11 +432,11 @@ def test_organisation_services_filters_by_financial_year(
     expected_selected,
 ):
     mock = mocker.patch(
-        'app.organisations_client.get_services_and_usage',
+        'app.organizations_client.get_services_and_usage',
         return_value={"services": []}
     )
     page = client_request.get(
-        '.organisation_dashboard',
+        '.organization_dashboard',
         org_id=ORGANISATION_ID,
         year=financial_year,
     )
@@ -452,15 +452,15 @@ def test_organisation_services_filters_by_financial_year(
 
 
 @freeze_time("2020-02-20 20:20")
-def test_organisation_services_shows_search_bar(
+def test_organization_services_shows_search_bar(
     client_request,
-    mock_get_organisation,
+    mock_get_organization,
     mocker,
     active_user_with_permissions,
     fake_uuid,
 ):
     mocker.patch(
-        'app.organisations_client.get_services_and_usage',
+        'app.organizations_client.get_services_and_usage',
         return_value={"services": [
             {
                 'service_id': SERVICE_ONE_ID,
@@ -476,12 +476,12 @@ def test_organisation_services_shows_search_bar(
     )
 
     client_request.login(active_user_with_permissions)
-    page = client_request.get('.organisation_dashboard', org_id=ORGANISATION_ID)
+    page = client_request.get('.organization_dashboard', org_id=ORGANISATION_ID)
 
-    services = page.select('.organisation-service')
+    services = page.select('.organization-service')
     assert len(services) == 8
 
-    assert page.select_one('.live-search')['data-targets'] == '.organisation-service'
+    assert page.select_one('.live-search')['data-targets'] == '.organization-service'
     assert [
         normalize_spaces(service_name.text)
         for service_name in page.select('.live-search-relevant')
@@ -498,15 +498,15 @@ def test_organisation_services_shows_search_bar(
 
 
 @freeze_time("2020-02-20 20:20")
-def test_organisation_services_hides_search_bar_for_7_or_fewer_services(
+def test_organization_services_hides_search_bar_for_7_or_fewer_services(
     client_request,
-    mock_get_organisation,
+    mock_get_organization,
     mocker,
     active_user_with_permissions,
     fake_uuid,
 ):
     mocker.patch(
-        'app.organisations_client.get_services_and_usage',
+        'app.organizations_client.get_services_and_usage',
         return_value={"services": [
             {
                 'service_id': SERVICE_ONE_ID,
@@ -522,23 +522,23 @@ def test_organisation_services_hides_search_bar_for_7_or_fewer_services(
     )
 
     client_request.login(active_user_with_permissions)
-    page = client_request.get('.organisation_dashboard', org_id=ORGANISATION_ID)
+    page = client_request.get('.organization_dashboard', org_id=ORGANISATION_ID)
 
-    services = page.select('.organisation-service')
+    services = page.select('.organization-service')
     assert len(services) == 7
     assert not page.select_one('.live-search')
 
 
 @freeze_time("2021-11-12 11:09:00.061258")
-def test_organisation_services_links_to_downloadable_report(
+def test_organization_services_links_to_downloadable_report(
     client_request,
-    mock_get_organisation,
+    mock_get_organization,
     mocker,
     active_user_with_permissions,
     fake_uuid,
 ):
     mocker.patch(
-        'app.organisations_client.get_services_and_usage',
+        'app.organizations_client.get_services_and_usage',
         return_value={"services": [
             {
                 'service_id': SERVICE_ONE_ID,
@@ -553,27 +553,27 @@ def test_organisation_services_links_to_downloadable_report(
         ] * 2}
     )
     client_request.login(active_user_with_permissions)
-    page = client_request.get('.organisation_dashboard', org_id=ORGANISATION_ID)
+    page = client_request.get('.organization_dashboard', org_id=ORGANISATION_ID)
 
     link_to_report = page.select_one('a[download]')
     assert normalize_spaces(link_to_report.text) == 'Download this report (CSV)'
     assert link_to_report.attrs["href"] == url_for(
-        '.download_organisation_usage_report',
+        '.download_organization_usage_report',
         org_id=ORGANISATION_ID,
         selected_year=2021
     )
 
 
 @freeze_time("2021-11-12 11:09:00.061258")
-def test_download_organisation_usage_report(
+def test_download_organization_usage_report(
     client_request,
-    mock_get_organisation,
+    mock_get_organization,
     mocker,
     active_user_with_permissions,
     fake_uuid,
 ):
     mocker.patch(
-        'app.organisations_client.get_services_and_usage',
+        'app.organizations_client.get_services_and_usage',
         return_value={"services": [
             {
                 'service_id': SERVICE_ONE_ID,
@@ -599,7 +599,7 @@ def test_download_organisation_usage_report(
     )
     client_request.login(active_user_with_permissions)
     csv_report = client_request.get(
-        '.download_organisation_usage_report',
+        '.download_organization_usage_report',
         org_id=ORGANISATION_ID,
         selected_year=2021,
         _test_page_title=False
@@ -613,15 +613,15 @@ def test_download_organisation_usage_report(
     )
 
 
-def test_organisation_trial_mode_services_shows_all_non_live_services(
+def test_organization_trial_mode_services_shows_all_non_live_services(
     client_request,
     platform_admin_user,
-    mock_get_organisation,
+    mock_get_organization,
     mocker,
     fake_uuid,
 ):
     mocker.patch(
-        'app.organisations_client.get_organisation_services',
+        'app.organizations_client.get_organization_services',
         return_value=[
             service_json(id_='1', name='1', restricted=False, active=True),  # live
             service_json(id_='2', name='2', restricted=True, active=True),  # trial
@@ -631,7 +631,7 @@ def test_organisation_trial_mode_services_shows_all_non_live_services(
 
     client_request.login(platform_admin_user)
     page = client_request.get(
-        '.organisation_trial_mode_services',
+        '.organization_trial_mode_services',
         org_id=ORGANISATION_ID,
         _test_page_title=False
     )
@@ -645,12 +645,12 @@ def test_organisation_trial_mode_services_shows_all_non_live_services(
     assert services[1].find('a')['href'] == url_for('main.service_dashboard', service_id='3')
 
 
-def test_organisation_trial_mode_services_doesnt_work_if_not_platform_admin(
+def test_organization_trial_mode_services_doesnt_work_if_not_platform_admin(
     client_request,
-    mock_get_organisation,
+    mock_get_organization,
 ):
     client_request.get(
-        '.organisation_trial_mode_services',
+        '.organization_trial_mode_services',
         org_id=ORGANISATION_ID,
         _expected_status=403
     )
@@ -658,9 +658,9 @@ def test_organisation_trial_mode_services_doesnt_work_if_not_platform_admin(
 
 def test_manage_org_users_shows_correct_link_next_to_each_user(
     client_request,
-    mock_get_organisation,
-    mock_get_users_for_organisation,
-    mock_get_invited_users_for_organisation,
+    mock_get_organization,
+    mock_get_users_for_organization,
+    mock_get_invited_users_for_organization,
 ):
     page = client_request.get(
         '.manage_org_users',
@@ -685,19 +685,19 @@ def test_manage_org_users_shows_correct_link_next_to_each_user(
         org_id=ORGANISATION_ID,
         invited_user_id='73616d70-6c65-4f6f-b267-5f696e766974'
     )
-    assert users[1].a['href'] == url_for('.edit_organisation_user', org_id=ORGANISATION_ID, user_id='1234')
-    assert users[2].a['href'] == url_for('.edit_organisation_user', org_id=ORGANISATION_ID, user_id='5678')
+    assert users[1].a['href'] == url_for('.edit_organization_user', org_id=ORGANISATION_ID, user_id='1234')
+    assert users[2].a['href'] == url_for('.edit_organization_user', org_id=ORGANISATION_ID, user_id='5678')
 
 
 def test_manage_org_users_shows_no_link_for_cancelled_users(
     client_request,
-    mock_get_organisation,
-    mock_get_users_for_organisation,
+    mock_get_organization,
+    mock_get_users_for_organization,
     sample_org_invite,
     mocker,
 ):
     sample_org_invite['status'] = 'cancelled'
-    mocker.patch('app.models.user.OrganisationInvitedUsers.client_method', return_value=[sample_org_invite])
+    mocker.patch('app.models.user.OrganizationInvitedUsers.client_method', return_value=[sample_org_invite])
 
     page = client_request.get(
         '.manage_org_users',
@@ -716,16 +716,16 @@ def test_manage_org_users_shows_no_link_for_cancelled_users(
 def test_manage_org_users_should_show_live_search_if_more_than_7_users(
     client_request,
     mocker,
-    mock_get_organisation,
+    mock_get_organization,
     active_user_with_permissions,
     number_of_users,
 ):
     mocker.patch(
-        'app.models.user.OrganisationInvitedUsers.client_method',
+        'app.models.user.OrganizationInvitedUsers.client_method',
         return_value=[],
     )
     mocker.patch(
-        'app.models.user.OrganisationUsers.client_method',
+        'app.models.user.OrganizationUsers.client_method',
         return_value=[active_user_with_permissions] * number_of_users,
     )
 
@@ -761,16 +761,16 @@ def test_manage_org_users_should_show_live_search_if_more_than_7_users(
 def test_manage_org_users_should_show_live_search_if_7_users_or_less(
     client_request,
     mocker,
-    mock_get_organisation,
+    mock_get_organization,
     active_user_with_permissions,
     number_of_users,
 ):
     mocker.patch(
-        'app.models.user.OrganisationInvitedUsers.client_method',
+        'app.models.user.OrganizationInvitedUsers.client_method',
         return_value=[],
     )
     mocker.patch(
-        'app.models.user.OrganisationUsers.client_method',
+        'app.models.user.OrganizationUsers.client_method',
         return_value=[active_user_with_permissions] * number_of_users,
     )
 
@@ -785,15 +785,15 @@ def test_manage_org_users_should_show_live_search_if_7_users_or_less(
         )
 
 
-def test_edit_organisation_user_shows_the_delete_confirmation_banner(
+def test_edit_organization_user_shows_the_delete_confirmation_banner(
     client_request,
-    mock_get_organisation,
-    mock_get_invites_for_organisation,
-    mock_get_users_for_organisation,
+    mock_get_organization,
+    mock_get_invites_for_organization,
+    mock_get_users_for_organization,
     active_user_with_permissions,
 ):
     page = client_request.get(
-        '.edit_organisation_user',
+        '.edit_organization_user',
         org_id=ORGANISATION_ID,
         user_id=active_user_with_permissions['id']
     )
@@ -803,22 +803,22 @@ def test_edit_organisation_user_shows_the_delete_confirmation_banner(
     banner = page.select_one('.banner-dangerous')
     assert "Are you sure you want to remove Test User?" in normalize_spaces(banner.contents[0])
     assert banner.form.attrs['action'] == url_for(
-        'main.remove_user_from_organisation',
+        'main.remove_user_from_organization',
         org_id=ORGANISATION_ID,
         user_id=active_user_with_permissions['id']
     )
 
 
-def test_remove_user_from_organisation_makes_api_request_to_remove_user(
+def test_remove_user_from_organization_makes_api_request_to_remove_user(
     client_request,
     mocker,
-    mock_get_organisation,
+    mock_get_organization,
     fake_uuid,
 ):
-    mock_remove_user = mocker.patch('app.organisations_client.remove_user_from_organisation')
+    mock_remove_user = mocker.patch('app.organizations_client.remove_user_from_organization')
 
     client_request.post(
-        '.remove_user_from_organisation',
+        '.remove_user_from_organization',
         org_id=ORGANISATION_ID,
         user_id=fake_uuid,
         _expected_redirect=url_for(
@@ -829,27 +829,27 @@ def test_remove_user_from_organisation_makes_api_request_to_remove_user(
     mock_remove_user.assert_called_with(ORGANISATION_ID, fake_uuid)
 
 
-def test_organisation_settings_platform_admin_only(
+def test_organization_settings_platform_admin_only(
     client_request,
-    mock_get_organisation,
-    organisation_one
+    mock_get_organization,
+    organization_one
 ):
     client_request.get(
-        '.organisation_settings',
-        org_id=organisation_one['id'],
+        '.organization_settings',
+        org_id=organization_one['id'],
         _expected_status=403,
     )
 
 
-def test_organisation_settings_for_platform_admin(
+def test_organization_settings_for_platform_admin(
     client_request,
     platform_admin_user,
-    mock_get_organisation,
-    organisation_one
+    mock_get_organization,
+    organization_one
 ):
     expected_rows = [
         'Label Value Action',
-        'Name Test organisation Change organization name',
+        'Name Test organization Change organization name',
         'Sector Federal government Change sector for the organization',
         'Request to go live notes None Change go live notes for the organization',
         'Billing details None Change billing details for the organization',
@@ -859,19 +859,19 @@ def test_organisation_settings_for_platform_admin(
     ]
 
     client_request.login(platform_admin_user)
-    page = client_request.get('.organisation_settings', org_id=organisation_one['id'])
+    page = client_request.get('.organization_settings', org_id=organization_one['id'])
 
     assert page.find('h1').text == 'Settings'
     rows = page.select('tr')
     assert len(rows) == len(expected_rows)
     for index, row in enumerate(expected_rows):
         assert row == " ".join(rows[index].text.split())
-    mock_get_organisation.assert_called_with(organisation_one['id'])
+    mock_get_organization.assert_called_with(organization_one['id'])
 
 
 @pytest.mark.parametrize('endpoint, expected_options, expected_selected', (
     (
-        '.edit_organisation_type',
+        '.edit_organization_type',
         (
             {'value': 'federal', 'label': 'Federal government'},
             {'value': 'state', 'label': 'State government'},
@@ -889,11 +889,11 @@ def test_organisation_settings_for_platform_admin(
         marks=pytest.mark.xfail
     ),
 ))
-def test_view_organisation_settings(
+def test_view_organization_settings(
     client_request,
     fake_uuid,
-    organisation_one,
-    mock_get_organisation,
+    organization_one,
+    mock_get_organization,
     endpoint,
     expected_options,
     expected_selected,
@@ -901,7 +901,7 @@ def test_view_organisation_settings(
 ):
     client_request.login(user)
 
-    page = client_request.get(endpoint, org_id=organisation_one['id'])
+    page = client_request.get(endpoint, org_id=organization_one['id'])
 
     radios = page.select('input[type=radio]')
 
@@ -923,14 +923,14 @@ def test_view_organisation_settings(
 
 @pytest.mark.parametrize('endpoint, post_data, expected_persisted', (
     (
-        '.edit_organisation_type',
-        {'organisation_type': 'federal'},
-        {'cached_service_ids': [], 'organisation_type': 'federal'},
+        '.edit_organization_type',
+        {'organization_type': 'federal'},
+        {'cached_service_ids': [], 'organization_type': 'federal'},
     ),
     (
-        '.edit_organisation_type',
-        {'organisation_type': 'state'},
-        {'cached_service_ids': [], 'organisation_type': 'state'},
+        '.edit_organization_type',
+        {'organization_type': 'state'},
+        {'cached_service_ids': [], 'organization_type': 'state'},
     ),
 ))
 @pytest.mark.parametrize('user', (
@@ -941,70 +941,70 @@ def test_view_organisation_settings(
         create_active_user_with_permissions(),
     ),
 ))
-def test_update_organisation_settings(
+def test_update_organization_settings(
     mocker,
     client_request,
     fake_uuid,
-    organisation_one,
-    mock_get_organisation,
-    mock_update_organisation,
+    organization_one,
+    mock_get_organization,
+    mock_update_organization,
     endpoint,
     post_data,
     expected_persisted,
     user,
 ):
-    mocker.patch('app.organisations_client.get_organisation_services', return_value=[])
+    mocker.patch('app.organizations_client.get_organization_services', return_value=[])
     client_request.login(user)
 
     if user['email_address'] == 'platform@admin.gsa.gov':
         expected_status = 302
         expected_redirect = url_for(
-            'main.organisation_settings',
-            org_id=organisation_one['id'],
+            'main.organization_settings',
+            org_id=organization_one['id'],
         )
     else:
         expected_status = 403
         expected_redirect = None
     client_request.post(
         endpoint,
-        org_id=organisation_one['id'],
+        org_id=organization_one['id'],
         _data=post_data,
         _expected_status=expected_status,
         _expected_redirect=expected_redirect,
     )
 
     if user['email_address'] == 'platform@admin.gsa.gov':
-        mock_update_organisation.assert_called_once_with(
-            organisation_one['id'],
+        mock_update_organization.assert_called_once_with(
+            organization_one['id'],
             **expected_persisted,
         )
 
 
-def test_update_organisation_sector_sends_service_id_data_to_api_client(
+def test_update_organization_sector_sends_service_id_data_to_api_client(
     client_request,
-    mock_get_organisation,
-    organisation_one,
-    mock_get_organisation_services,
-    mock_update_organisation,
+    mock_get_organization,
+    organization_one,
+    mock_get_organization_services,
+    mock_update_organization,
     platform_admin_user,
 ):
     client_request.login(platform_admin_user)
 
     client_request.post(
-        'main.edit_organisation_type',
-        org_id=organisation_one['id'],
-        _data={'organisation_type': 'federal'},
+        'main.edit_organization_type',
+        org_id=organization_one['id'],
+        _data={'organization_type': 'federal'},
         _expected_status=302,
         _expected_redirect=url_for(
-            'main.organisation_settings',
-            org_id=organisation_one['id'],
+            'main.organization_settings',
+            org_id=organization_one['id'],
         ),
     )
 
-    mock_update_organisation.assert_called_once_with(
-        organisation_one['id'],
+    mock_update_organization.assert_called_once_with(
+        organization_one['id'],
         cached_service_ids=['12345', '67890', SERVICE_ONE_ID],
-        organisation_type='federal'
+        organization_type='federal'
     )
 
 
@@ -1017,7 +1017,7 @@ def test_update_organisation_sector_sends_service_id_data_to_api_client(
         marks=pytest.mark.xfail
     ),
 ))
-def test_view_organisation_domains(
+def test_view_organization_domains(
     mocker,
     client_request,
     fake_uuid,
@@ -1026,8 +1026,8 @@ def test_view_organisation_domains(
     client_request.login(user)
 
     mocker.patch(
-        'app.organisations_client.get_organisation',
-        side_effect=lambda org_id: organisation_json(
+        'app.organizations_client.get_organization',
+        side_effect=lambda org_id: organization_json(
             org_id,
             'Org 1',
             domains=['example.gsa.gov', 'test.example.gsa.gov'],
@@ -1035,7 +1035,7 @@ def test_view_organisation_domains(
     )
 
     page = client_request.get(
-        'main.edit_organisation_domains',
+        'main.edit_organization_domains',
         org_id=ORGANISATION_ID,
     )
 
@@ -1097,12 +1097,12 @@ def test_view_organisation_domains(
         create_active_user_with_permissions(),
     ),
 ))
-def test_update_organisation_domains(
+def test_update_organization_domains(
     client_request,
     fake_uuid,
-    organisation_one,
-    mock_get_organisation,
-    mock_update_organisation,
+    organization_one,
+    mock_get_organization,
+    mock_update_organization,
     post_data,
     expected_persisted,
     user,
@@ -1111,15 +1111,15 @@ def test_update_organisation_domains(
     if user['email_address'] == 'platform@admin.gsa.gov':
         expected_status = 302
         expected_redirect = url_for(
-            'main.organisation_settings',
-            org_id=organisation_one['id'],
+            'main.organization_settings',
+            org_id=organization_one['id'],
         )
     else:
         expected_status = 403
         expected_redirect = None
 
     client_request.post(
-        'main.edit_organisation_domains',
+        'main.edit_organization_domains',
         org_id=ORGANISATION_ID,
         _data=post_data,
         _expected_status=expected_status,
@@ -1127,23 +1127,23 @@ def test_update_organisation_domains(
     )
 
     if user['email_address'] == 'platform@admin.gsa.gov':
-        mock_update_organisation.assert_called_once_with(
+        mock_update_organization.assert_called_once_with(
             ORGANISATION_ID,
             **expected_persisted,
         )
 
 
-def test_update_organisation_domains_when_domain_already_exists(
+def test_update_organization_domains_when_domain_already_exists(
     mocker,
     client_request,
     fake_uuid,
-    organisation_one,
-    mock_get_organisation,
+    organization_one,
+    mock_get_organization,
 ):
     user = create_platform_admin_user()
     client_request.login(user)
 
-    mocker.patch('app.organisations_client.update_organisation', side_effect=HTTPError(
+    mocker.patch('app.organizations_client.update_organization', side_effect=HTTPError(
         response=mocker.Mock(
             status_code=400,
             json={'result': 'error', 'message': 'Domain already exists'}
@@ -1152,7 +1152,7 @@ def test_update_organisation_domains_when_domain_already_exists(
     )
 
     response = client_request.post(
-        'main.edit_organisation_domains',
+        'main.edit_organization_domains',
         org_id=ORGANISATION_ID,
         _data={
             'domains': [
@@ -1165,24 +1165,24 @@ def test_update_organisation_domains_when_domain_already_exists(
     assert response.find("div", class_="banner-dangerous").text.strip() == "This domain is already in use"
 
 
-def test_update_organisation_name(
+def test_update_organization_name(
     client_request,
     platform_admin_user,
     fake_uuid,
-    mock_get_organisation,
-    mock_update_organisation,
+    mock_get_organization,
+    mock_update_organization,
 ):
     client_request.login(platform_admin_user)
     client_request.post(
-        '.edit_organisation_name',
+        '.edit_organization_name',
         org_id=fake_uuid,
         _data={'name': 'TestNewOrgName'},
         _expected_redirect=url_for(
-            '.organisation_settings',
+            '.organization_settings',
             org_id=fake_uuid,
         )
     )
-    mock_update_organisation.assert_called_once_with(
+    mock_update_organization.assert_called_once_with(
         fake_uuid,
         name='TestNewOrgName',
         cached_service_ids=None,
@@ -1194,44 +1194,44 @@ def test_update_organisation_name(
     ('a', 'at least two alphanumeric characters'),
     ('a' * 256, 'Organization name must be 255 characters or fewer'),
 ])
-def test_update_organisation_with_incorrect_input(
+def test_update_organization_with_incorrect_input(
     client_request,
     platform_admin_user,
-    organisation_one,
-    mock_get_organisation,
+    organization_one,
+    mock_get_organization,
     name,
     error_message
 ):
     client_request.login(platform_admin_user)
     page = client_request.post(
-        '.edit_organisation_name',
-        org_id=organisation_one['id'],
+        '.edit_organization_name',
+        org_id=organization_one['id'],
         _data={'name': name},
         _expected_status=200,
     )
     assert error_message in page.select_one('.usa-error-message').text
 
 
-def test_update_organisation_with_non_unique_name(
+def test_update_organization_with_non_unique_name(
     client_request,
     platform_admin_user,
     fake_uuid,
-    mock_get_organisation,
+    mock_get_organization,
     mocker,
 ):
     mocker.patch(
-        'app.organisations_client.update_organisation',
+        'app.organizations_client.update_organization',
         side_effect=HTTPError(
             response=mocker.Mock(
                 status_code=400,
-                json={'result': 'error', 'message': 'Organisation name already exists'}
+                json={'result': 'error', 'message': 'Organization name already exists'}
             ),
             message='Organization name already exists',
         )
     )
     client_request.login(platform_admin_user)
     page = client_request.post(
-        '.edit_organisation_name',
+        '.edit_organization_name',
         org_id=fake_uuid,
         _data={'name': 'TestNewOrgName'},
         _expected_status=200,
@@ -1240,16 +1240,16 @@ def test_update_organisation_with_non_unique_name(
     assert 'This organization name is already in use' in page.select_one('.usa-error-message').text
 
 
-def test_get_edit_organisation_go_live_notes_page(
+def test_get_edit_organization_go_live_notes_page(
     client_request,
     platform_admin_user,
-    mock_get_organisation,
-    organisation_one,
+    mock_get_organization,
+    organization_one,
 ):
     client_request.login(platform_admin_user)
     page = client_request.get(
-        '.edit_organisation_go_live_notes',
-        org_id=organisation_one['id'],
+        '.edit_organization_go_live_notes',
+        org_id=organization_one['id'],
     )
     assert page.find('textarea', id='request_to_go_live_notes')
 
@@ -1258,152 +1258,152 @@ def test_get_edit_organisation_go_live_notes_page(
     ('Needs permission', 'Needs permission'),
     ('  ', None)
 ])
-def test_post_edit_organisation_go_live_notes_updates_go_live_notes(
+def test_post_edit_organization_go_live_notes_updates_go_live_notes(
     client_request,
     platform_admin_user,
-    mock_get_organisation,
-    mock_update_organisation,
-    organisation_one,
+    mock_get_organization,
+    mock_update_organization,
+    organization_one,
     input_note,
     saved_note,
 ):
     client_request.login(platform_admin_user)
     client_request.post(
-        '.edit_organisation_go_live_notes',
-        org_id=organisation_one['id'],
+        '.edit_organization_go_live_notes',
+        org_id=organization_one['id'],
         _data={'request_to_go_live_notes': input_note},
         _expected_redirect=url_for(
-            '.organisation_settings',
-            org_id=organisation_one['id'],
+            '.organization_settings',
+            org_id=organization_one['id'],
         ),
     )
-    mock_update_organisation.assert_called_once_with(
-        organisation_one['id'],
+    mock_update_organization.assert_called_once_with(
+        organization_one['id'],
         request_to_go_live_notes=saved_note
     )
 
 
-def test_organisation_settings_links_to_edit_organisation_notes_page(
+def test_organization_settings_links_to_edit_organization_notes_page(
     mocker,
-    mock_get_organisation,
-    organisation_one,
+    mock_get_organization,
+    organization_one,
     client_request,
     platform_admin_user,
 ):
     client_request.login(platform_admin_user)
     page = client_request.get(
-        '.organisation_settings', org_id=organisation_one['id']
+        '.organization_settings', org_id=organization_one['id']
     )
     assert len(page.find_all(
-        'a', attrs={'href': '/organisations/{}/settings/notes'.format(organisation_one['id'])}
+        'a', attrs={'href': '/organizations/{}/settings/notes'.format(organization_one['id'])}
     )) == 1
 
 
-def test_view_edit_organisation_notes(
+def test_view_edit_organization_notes(
         client_request,
         platform_admin_user,
-        organisation_one,
-        mock_get_organisation,
+        organization_one,
+        mock_get_organization,
 ):
     client_request.login(platform_admin_user)
     page = client_request.get(
-        'main.edit_organisation_notes',
-        org_id=organisation_one['id'],
+        'main.edit_organization_notes',
+        org_id=organization_one['id'],
     )
     assert page.select_one('h1').text == "Edit organization notes"
     assert page.find('label', class_="usa-label").text.strip() == "Notes"
     assert page.find('textarea').attrs["name"] == "notes"
 
 
-def test_update_organisation_notes(
+def test_update_organization_notes(
         client_request,
         platform_admin_user,
-        organisation_one,
-        mock_get_organisation,
-        mock_update_organisation,
+        organization_one,
+        mock_get_organization,
+        mock_update_organization,
 ):
     client_request.login(platform_admin_user)
     client_request.post(
-        'main.edit_organisation_notes',
-        org_id=organisation_one['id'],
+        'main.edit_organization_notes',
+        org_id=organization_one['id'],
         _data={'notes': "Very fluffy"},
         _expected_redirect=url_for(
-            'main.organisation_settings',
-            org_id=organisation_one['id'],
+            'main.organization_settings',
+            org_id=organization_one['id'],
         ),
     )
-    mock_update_organisation.assert_called_with(
-        organisation_one['id'],
+    mock_update_organization.assert_called_with(
+        organization_one['id'],
         cached_service_ids=None,
         notes="Very fluffy"
     )
 
 
-def test_update_organisation_notes_errors_when_user_not_platform_admin(
+def test_update_organization_notes_errors_when_user_not_platform_admin(
         client_request,
-        organisation_one,
-        mock_get_organisation,
-        mock_update_organisation,
+        organization_one,
+        mock_get_organization,
+        mock_update_organization,
 ):
     client_request.post(
-        'main.edit_organisation_notes',
-        org_id=organisation_one['id'],
+        'main.edit_organization_notes',
+        org_id=organization_one['id'],
         _data={'notes': "Very fluffy"},
         _expected_status=403,
     )
 
 
-def test_update_organisation_notes_doesnt_call_api_when_notes_dont_change(
+def test_update_organization_notes_doesnt_call_api_when_notes_dont_change(
         client_request,
         platform_admin_user,
-        organisation_one,
-        mock_update_organisation,
+        organization_one,
+        mock_update_organization,
         mocker
 ):
-    mocker.patch('app.organisations_client.get_organisation', return_value=organisation_json(
-        id_=organisation_one['id'],
+    mocker.patch('app.organizations_client.get_organization', return_value=organization_json(
+        id_=organization_one['id'],
         name="Test Org",
         notes="Very fluffy"
     ))
     client_request.login(platform_admin_user)
     client_request.post(
-        'main.edit_organisation_notes',
-        org_id=organisation_one['id'],
+        'main.edit_organization_notes',
+        org_id=organization_one['id'],
         _data={'notes': "Very fluffy"},
         _expected_redirect=url_for(
-            'main.organisation_settings',
-            org_id=organisation_one['id'],
+            'main.organization_settings',
+            org_id=organization_one['id'],
         ),
     )
-    assert not mock_update_organisation.called
+    assert not mock_update_organization.called
 
 
-def test_organisation_settings_links_to_edit_organisation_billing_details_page(
+def test_organization_settings_links_to_edit_organization_billing_details_page(
     mocker,
-    mock_get_organisation,
-    organisation_one,
+    mock_get_organization,
+    organization_one,
     client_request,
     platform_admin_user,
 ):
     client_request.login(platform_admin_user)
     page = client_request.get(
-        '.organisation_settings', org_id=organisation_one['id']
+        '.organization_settings', org_id=organization_one['id']
     )
     assert len(page.find_all(
-        'a', attrs={'href': '/organisations/{}/settings/edit-billing-details'.format(organisation_one['id'])}
+        'a', attrs={'href': '/organizations/{}/settings/edit-billing-details'.format(organization_one['id'])}
     )) == 1
 
 
-def test_view_edit_organisation_billing_details(
+def test_view_edit_organization_billing_details(
         client_request,
         platform_admin_user,
-        organisation_one,
-        mock_get_organisation,
+        organization_one,
+        mock_get_organization,
 ):
     client_request.login(platform_admin_user)
     page = client_request.get(
-        'main.edit_organisation_billing_details',
-        org_id=organisation_one['id'],
+        'main.edit_organization_billing_details',
+        org_id=organization_one['id'],
     )
     assert page.select_one('h1').text == "Edit organization billing details"
     labels = page.find_all('label', class_="usa-label")
@@ -1430,17 +1430,17 @@ def test_view_edit_organisation_billing_details(
     assert page.find('textarea').attrs["name"] == "notes"
 
 
-def test_update_organisation_billing_details(
+def test_update_organization_billing_details(
         client_request,
         platform_admin_user,
-        organisation_one,
-        mock_get_organisation,
-        mock_update_organisation,
+        organization_one,
+        mock_get_organization,
+        mock_update_organization,
 ):
     client_request.login(platform_admin_user)
     client_request.post(
-        'main.edit_organisation_billing_details',
-        org_id=organisation_one['id'],
+        'main.edit_organization_billing_details',
+        org_id=organization_one['id'],
         _data={
             'billing_contact_email_addresses': 'accounts@fluff.gsa.gov',
             'billing_contact_names': 'Flannellette von Fluff',
@@ -1449,12 +1449,12 @@ def test_update_organisation_billing_details(
             'notes': 'very fluffy, give extra allowance'
         },
         _expected_redirect=url_for(
-            'main.organisation_settings',
-            org_id=organisation_one['id'],
+            'main.organization_settings',
+            org_id=organization_one['id'],
         )
     )
-    mock_update_organisation.assert_called_with(
-        organisation_one['id'],
+    mock_update_organization.assert_called_with(
+        organization_one['id'],
         cached_service_ids=None,
         billing_contact_email_addresses='accounts@fluff.gsa.gov',
         billing_contact_names='Flannellette von Fluff',
@@ -1464,26 +1464,26 @@ def test_update_organisation_billing_details(
     )
 
 
-def test_update_organisation_billing_details_errors_when_user_not_platform_admin(
+def test_update_organization_billing_details_errors_when_user_not_platform_admin(
         client_request,
-        organisation_one,
-        mock_get_organisation,
-        mock_update_organisation,
+        organization_one,
+        mock_get_organization,
+        mock_update_organization,
 ):
     client_request.post(
-        'main.edit_organisation_billing_details',
-        org_id=organisation_one['id'],
+        'main.edit_organization_billing_details',
+        org_id=organization_one['id'],
         _data={'notes': "Very fluffy"},
         _expected_status=403,
     )
 
 
-def test_organisation_billing_page_not_accessible_if_not_platform_admin(
+def test_organization_billing_page_not_accessible_if_not_platform_admin(
     client_request,
-    mock_get_organisation,
+    mock_get_organization,
 ):
     client_request.get(
-        '.organisation_billing',
+        '.organization_billing',
         org_id=ORGANISATION_ID,
         _expected_status=403
     )

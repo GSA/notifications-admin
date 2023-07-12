@@ -9,12 +9,12 @@ from app.main.forms import CreateServiceForm
 from app.utils.user import user_is_gov_user, user_is_logged_in
 
 
-def _create_service(service_name, organisation_type, email_from, form):
+def _create_service(service_name, organization_type, email_from, form):
 
     try:
         service_id = service_api_client.create_service(
             service_name=service_name,
-            organisation_type=organisation_type,
+            organization_type=organization_type,
             message_limit=current_app.config['DEFAULT_SERVICE_LIMIT'],
             restricted=True,
             user_id=session['user_id'],
@@ -45,11 +45,11 @@ def _create_example_template(service_id):
 @user_is_logged_in
 @user_is_gov_user
 def add_service():
-    default_organisation_type = current_user.default_organisation_type
+    default_organization_type = current_user.default_organization_type
     form = CreateServiceForm(
         # avoid setting a default for now; the US gov email addresses aren't as useful as the UK
         # ones for guessing the org type
-        organisation_type=None
+        organization_type=None
     )
 
     if form.validate_on_submit():
@@ -58,12 +58,12 @@ def add_service():
 
         service_id, error = _create_service(
             service_name,
-            default_organisation_type or form.organisation_type.data,
+            default_organization_type or form.organization_type.data,
             email_from,
             form,
         )
         if error:
-            return _render_add_service_page(form, default_organisation_type)
+            return _render_add_service_page(form, default_organization_type)
         if len(service_api_client.get_active_services({'user_id': session['user_id']}).get('data', [])) > 1:
             return redirect(url_for('main.service_dashboard', service_id=service_id))
 
@@ -75,23 +75,23 @@ def add_service():
             template_id=example_sms_template['data']['id']
         ))
     else:
-        return _render_add_service_page(form, default_organisation_type)
+        return _render_add_service_page(form, default_organization_type)
 
 
-def _render_add_service_page(form, default_organisation_type):
+def _render_add_service_page(form, default_organization_type):
     heading = 'About your service'
 
-    if default_organisation_type == 'local':
+    if default_organization_type == 'local':
         return render_template(
             'views/add-service-local.html',
             form=form,
             heading=heading,
-            default_organisation_type=default_organisation_type,
+            default_organization_type=default_organization_type,
         )
 
     return render_template(
         'views/add-service.html',
         form=form,
         heading=heading,
-        default_organisation_type=default_organisation_type,
+        default_organization_type=default_organization_type,
     )

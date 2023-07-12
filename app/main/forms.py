@@ -65,7 +65,7 @@ from app.main.validators import (
     ValidGovEmail,
 )
 from app.models.feedback import PROBLEM_TICKET_TYPE, QUESTION_TICKET_TYPE
-from app.models.organisation import Organisation
+from app.models.organization import Organization
 from app.utils import branding, merge_jsonlike
 from app.utils.user_permissions import all_ui_permissions, permission_options
 
@@ -627,7 +627,7 @@ class RegisterUserFromInviteForm(RegisterUserForm):
 class RegisterUserFromOrgInviteForm(StripWhitespaceForm):
     def __init__(self, invited_org_user):
         super().__init__(
-            organisation=invited_org_user.organisation,
+            organization=invited_org_user.organization,
             email_address=invited_org_user.email_address,
         )
 
@@ -638,7 +638,7 @@ class RegisterUserFromOrgInviteForm(StripWhitespaceForm):
 
     mobile_number = InternationalPhoneNumber('Mobile number', validators=[DataRequired(message='Cannot be empty')])
     password = password()
-    organisation = HiddenField('organisation')
+    organization = HiddenField('organization')
     email_address = HiddenField('email_address')
     auth_type = HiddenField('auth_type', validators=[DataRequired()])
 
@@ -964,7 +964,7 @@ class OnOffField(GovukRadiosField):
             )
 
 
-class OrganisationTypeField(GovukRadiosField):
+class OrganizationTypeField(GovukRadiosField):
     def __init__(
         self,
         *args,
@@ -975,7 +975,7 @@ class OrganisationTypeField(GovukRadiosField):
         super().__init__(
             *args,
             choices=[
-                (value, label) for value, label in Organisation.TYPE_LABELS.items()
+                (value, label) for value, label in Organization.TYPE_LABELS.items()
                 if not include_only or value in include_only
             ],
             thing='the type of organization',
@@ -1130,7 +1130,7 @@ class RenameServiceForm(StripWhitespaceForm):
         ])
 
 
-class RenameOrganisationForm(StripWhitespaceForm):
+class RenameOrganizationForm(StripWhitespaceForm):
     name = GovukTextInputField(
         u'Organization name',
         validators=[
@@ -1140,11 +1140,11 @@ class RenameOrganisationForm(StripWhitespaceForm):
         ])
 
 
-class OrganisationOrganisationTypeForm(StripWhitespaceForm):
-    organisation_type = OrganisationTypeField('What type of organization is this?')
+class OrganizationOrganizationTypeForm(StripWhitespaceForm):
+    organization_type = OrganizationTypeField('What type of organization is this?')
 
 
-class AdminOrganisationDomainsForm(StripWhitespaceForm):
+class AdminOrganizationDomainsForm(StripWhitespaceForm):
 
     def populate(self, domains_list):
         for index, value in enumerate(domains_list):
@@ -1172,12 +1172,12 @@ class CreateServiceForm(StripWhitespaceForm):
             MustContainAlphanumericCharacters(),
             Length(max=255, message='Service name must be 255 characters or fewer')
         ])
-    organisation_type = OrganisationTypeField('Where is this service run?')
+    organization_type = OrganizationTypeField('Where is this service run?')
 
 
-class AdminNewOrganisationForm(
-    RenameOrganisationForm,
-    OrganisationOrganisationTypeForm
+class AdminNewOrganizationForm(
+    RenameOrganizationForm,
+    OrganizationOrganizationTypeForm
 ):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -1834,13 +1834,13 @@ class SetTemplateSenderForm(StripWhitespaceForm):
     sender = GovukRadiosField()
 
 
-class AdminSetOrganisationForm(StripWhitespaceForm):
+class AdminSetOrganizationForm(StripWhitespaceForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.organisations.choices = kwargs['choices']
+        self.organizations.choices = kwargs['choices']
 
-    organisations = GovukRadiosField(
+    organizations = GovukRadiosField(
         'Select an organization',
         validators=[
             DataRequired()
@@ -2059,7 +2059,7 @@ class AdminClearCacheForm(StripWhitespaceForm):
             raise ValidationError('Select at least one option')
 
 
-class AdminOrganisationGoLiveNotesForm(StripWhitespaceForm):
+class AdminOrganizationGoLiveNotesForm(StripWhitespaceForm):
     request_to_go_live_notes = TextAreaField(
         'Go live notes',
         filters=[lambda x: x or None],
