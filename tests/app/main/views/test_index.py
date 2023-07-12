@@ -10,7 +10,7 @@ from tests.conftest import SERVICE_ONE_ID, normalize_spaces, sample_uuid
 
 def test_non_logged_in_user_can_see_homepage(
     client_request,
-    mock_get_service_and_organisation_counts,
+    mock_get_service_and_organization_counts,
 ):
     client_request.logout()
     page = client_request.get('main.index', _test_page_title=False)
@@ -77,7 +77,7 @@ def test_robots(client_request):
 @freeze_time('2012-12-12 12:12')  # So we don’t go out of business hours
 def test_hiding_pages_from_search_engines(
     client_request,
-    mock_get_service_and_organisation_counts,
+    mock_get_service_and_organization_counts,
     endpoint,
     kwargs,
 ):
@@ -102,7 +102,7 @@ def test_hiding_pages_from_search_engines(
 ])
 def test_static_pages(
     client_request,
-    mock_get_organisation_by_domain,
+    mock_get_organization_by_domain,
     view,
 ):
     request = partial(client_request.get, 'main.{}'.format(view))
@@ -284,7 +284,7 @@ def test_email_branding_preview(
 
 def test_font_preload(
     client_request,
-    mock_get_service_and_organisation_counts,
+    mock_get_service_and_organization_counts,
 ):
     client_request.logout()
     page = client_request.get('main.index', _test_page_title=False)
@@ -304,7 +304,7 @@ def test_font_preload(
 @pytest.mark.skip(reason="Currently hidden for TTS")
 def test_sms_price(
     client_request,
-    mock_get_service_and_organisation_counts,
+    mock_get_service_and_organization_counts,
     current_date,
     expected_rate,
 ):

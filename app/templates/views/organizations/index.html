@@ -14,9 +14,9 @@
 
   <nav class="browse-list">
     <ul>
-      {% for org in organisations|sort %}
+      {% for org in organizations|sort %}
         <li class="browse-list-item">
-          <a href="{{ url_for('main.organisation_dashboard', org_id=org.id) }}" class="govuk-link govuk-link--no-visited-state">{{ org.name }}</a>
+          <a href="{{ url_for('main.organization_dashboard', org_id=org.id) }}" class="govuk-link govuk-link--no-visited-state">{{ org.name }}</a>
           {% if not org.active %}
             <span class="table-field-status-default heading-medium">- archived</span>
           {% endif %}
@@ -33,7 +33,7 @@
     {{ govukButton({
       "element": "a",
       "text": "New organization",
-      "href": url_for('main.add_organisation'),
+      "href": url_for('main.add_organization'),
       "classes": "govuk-button--secondary"
     }) }}
   </div>

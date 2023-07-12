@@ -9,10 +9,10 @@ from app.models import (
     SortByNameMixin,
 )
 from app.notify_client.email_branding_client import email_branding_client
-from app.notify_client.organisations_api_client import organisations_client
+from app.notify_client.organizations_api_client import organizations_client
 
 
-class Organisation(JSONModel, SortByNameMixin):
+class Organization(JSONModel, SortByNameMixin):
 
     TYPE_FEDERAL = 'federal'
     TYPE_STATE = 'state'
@@ -28,7 +28,7 @@ class Organisation(JSONModel, SortByNameMixin):
         'id',
         'name',
         'active',
-        'organisation_type',
+        'organization_type',
         'email_branding_id',
         'domains',
         'request_to_go_live_notes',
@@ -44,28 +44,28 @@ class Organisation(JSONModel, SortByNameMixin):
     def from_id(cls, org_id):
         if not org_id:
             return cls({})
-        return cls(organisations_client.get_organisation(org_id))
+        return cls(organizations_client.get_organization(org_id))
 
     @classmethod
     def from_domain(cls, domain):
-        return cls(organisations_client.get_organisation_by_domain(domain))
+        return cls(organizations_client.get_organization_by_domain(domain))
 
     @classmethod
     def from_service(cls, service_id):
-        return cls(organisations_client.get_service_organisation(service_id))
+        return cls(organizations_client.get_service_organization(service_id))
 
     @classmethod
     def create_from_form(cls, form):
         return cls.create(
             name=form.name.data,
-            organisation_type=form.organisation_type.data,
+            organization_type=form.organization_type.data,
         )
 
     @classmethod
-    def create(cls, name, organisation_type):
-        return cls(organisations_client.create_organisation(
+    def create(cls, name, organization_type):
+        return cls(organizations_client.create_organization(
             name=name,
-            organisation_type=organisation_type,
+            organization_type=organization_type,
         ))
 
     def __init__(self, _dict):
@@ -75,13 +75,13 @@ class Organisation(JSONModel, SortByNameMixin):
         if self._dict == {}:
             self.name = None
             self.domains = []
-            self.organisation_type = None
+            self.organization_type = None
             self.request_to_go_live_notes = None
             self.email_branding_id = None
 
     @property
-    def organisation_type_label(self):
-        return self.TYPE_LABELS.get(self.organisation_type)
+    def organization_type_label(self):
+        return self.TYPE_LABELS.get(self.organization_type)
 
     @property
     def billing_details(self):
@@ -98,7 +98,7 @@ class Organisation(JSONModel, SortByNameMixin):
 
     @cached_property
     def services(self):
-        return organisations_client.get_organisation_services(self.id)
+        return organizations_client.get_organization_services(self.id)
 
     @cached_property
     def service_ids(self):
@@ -114,13 +114,13 @@ class Organisation(JSONModel, SortByNameMixin):
 
     @cached_property
     def invited_users(self):
-        from app.models.user import OrganisationInvitedUsers
-        return OrganisationInvitedUsers(self.id)
+        from app.models.user import OrganizationInvitedUsers
+        return OrganizationInvitedUsers(self.id)
 
     @cached_property
     def active_users(self):
-        from app.models.user import OrganisationUsers
-        return OrganisationUsers(self.id)
+        from app.models.user import OrganizationUsers
+        return OrganizationUsers(self.id)
 
     @cached_property
     def team_members(self):
@@ -143,7 +143,7 @@ class Organisation(JSONModel, SortByNameMixin):
         return 'GOV.UK'
 
     def update(self, delete_services_cache=False, **kwargs):
-        response = organisations_client.update_organisation(
+        response = organizations_client.update_organization(
             self.id,
             cached_service_ids=self.service_ids if delete_services_cache else None,
             **kwargs
@@ -151,18 +151,18 @@ class Organisation(JSONModel, SortByNameMixin):
         self.__init__(response)
 
     def associate_service(self, service_id):
-        organisations_client.update_service_organisation(
+        organizations_client.update_service_organization(
             service_id,
             self.id
         )
 
     def services_and_usage(self, financial_year):
-        return organisations_client.get_services_and_usage(self.id, financial_year)
+        return organizations_client.get_services_and_usage(self.id, financial_year)
 
 
-class Organisations(SerialisedModelCollection):
-    model = Organisation
+class Organizations(SerialisedModelCollection):
+    model = Organization
 
 
-class AllOrganisations(ModelList, Organisations):
-    client_method = organisations_client.get_organisations
+class AllOrganizations(ModelList, Organizations):
+    client_method = organizations_client.get_organizations

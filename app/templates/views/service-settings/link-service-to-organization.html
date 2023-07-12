@@ -25,8 +25,8 @@
     autofocus=True
   ) }}
   {% call form_wrapper() %}
-    {% if has_organisations %}
-      {{ form.organisations }}
+    {% if has_organizations %}
+      {{ form.organizations }}
       {{ sticky_page_footer('Save') }}
     {% else %}
       <p class="hint"> No organizations </p>

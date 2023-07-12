@@ -242,7 +242,7 @@
 
           {% call row() %}
             {{ text_field('Live')}}
-            {% if current_service.trial_mode and not current_service.organisation_id %}
+            {% if current_service.trial_mode and not current_service.organization_id %}
               {{ text_field('No (organization must be set first)') }}
               {{ text_field('') }}
             {% else %}
@@ -271,20 +271,20 @@
           {% call row() %}
             {{ text_field('Organization')}}
             {% call field() %}
-              {% if current_service.organisation_id %}
-                <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.organisation_dashboard', org_id=current_service.organisation_id) }}">
-                  {{ current_service.organisation_name }}
+              {% if current_service.organization_id %}
+                <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.organization_dashboard', org_id=current_service.organization_id) }}">
+                  {{ current_service.organization_name }}
                 </a>
               {% else %}
                 <span class="table-field-status-default">Not set</span>
               {% endif %}
-              {% if current_service.organisation_type %}
+              {% if current_service.organization_type %}
                 <div class="hint">
-                  {{ current_service.organisation_type_label }}
+                  {{ current_service.organization_type_label }}
                 </div>
               {% endif %}
             {% endcall %}
-            {{ edit_field('Change', url_for('.link_service_to_organisation', service_id=current_service.id), suffix='organization for service') }}
+            {{ edit_field('Change', url_for('.link_service_to_organization', service_id=current_service.id), suffix='organization for service') }}
           {% endcall %}
 
           {% call row() %}

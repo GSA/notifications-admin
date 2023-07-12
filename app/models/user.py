@@ -10,7 +10,7 @@ from app.event_handlers import (
     create_set_user_permissions_event,
 )
 from app.models import JSONModel, ModelList
-from app.models.organisation import Organisation, Organisations
+from app.models.organization import Organization, Organizations
 from app.models.webauthn_credential import WebAuthnCredentials
 from app.notify_client import InviteTokenError
 from app.notify_client.invite_api_client import invite_api_client
@@ -223,7 +223,7 @@ class User(JSONModel, UserMixin):
         org_id = _get_org_id_from_view_args()
 
         if not service_id and not org_id:
-            # we shouldn't have any pages that require permissions, but don't specify a service or organisation.
+            # we shouldn't have any pages that require permissions, but don't specify a service or organization.
             # use @user_is_platform_admin for platform admin only pages
             raise NotImplementedError
 
@@ -234,7 +234,7 @@ class User(JSONModel, UserMixin):
             return True
 
         if org_id:
-            value = self.belongs_to_organisation(org_id)
+            value = self.belongs_to_organization(org_id)
             current_app.logger.warn(f"{log_msg} org: {org_id} returning {value}")
             return value
 
@@ -250,8 +250,8 @@ class User(JSONModel, UserMixin):
 
         from app.models.service import Service
 
-        org_value = allow_org_user and self.belongs_to_organisation(
-            Service.from_id(service_id).organisation_id
+        org_value = allow_org_user and self.belongs_to_organization(
+            Service.from_id(service_id).organization_id
         )
         current_app.logger.warn(f"{log_msg} returning {org_value}")
         return org_value
@@ -294,8 +294,8 @@ class User(JSONModel, UserMixin):
         if not self.belongs_to_service(service_id):
             abort(403)
 
-    def belongs_to_organisation(self, organisation_id):
-        return str(organisation_id) in self.organisation_ids
+    def belongs_to_organization(self, organization_id):
+        return str(organization_id) in self.organization_ids
 
     @property
     def locked(self):
@@ -307,7 +307,7 @@ class User(JSONModel, UserMixin):
 
     @cached_property
     def orgs_and_services(self):
-        return user_api_client.get_organisations_and_services_for_user(self.id)
+        return user_api_client.get_organizations_and_services_for_user(self.id)
 
     @property
     def services(self):
@@ -315,10 +315,10 @@ class User(JSONModel, UserMixin):
         return Services(self.orgs_and_services['services'])
 
     @property
-    def services_with_organisation(self):
+    def services_with_organization(self):
         return [
             service for service in self.services
-            if self.belongs_to_organisation(service.organisation_id)
+            if self.belongs_to_organization(service.organization_id)
         ]
 
     @property
@@ -338,21 +338,21 @@ class User(JSONModel, UserMixin):
         ]
 
     @property
-    def organisations(self):
-        return Organisations(self.orgs_and_services['organisations'])
+    def organizations(self):
+        return Organizations(self.orgs_and_services['organizations'])
 
     @property
-    def organisation_ids(self):
-        return self._dict['organisations']
+    def organization_ids(self):
+        return self._dict['organizations']
 
     @cached_property
-    def default_organisation(self):
-        return Organisation.from_domain(self.email_domain)
+    def default_organization(self):
+        return Organization.from_domain(self.email_domain)
 
     @property
-    def default_organisation_type(self):
-        if self.default_organisation:
-            return self.default_organisation.organisation_type
+    def default_organization_type(self):
+        if self.default_organization:
+            return self.default_organization.organization_type
         if self.has_nhs_email_address:
             return 'nhs'
         return None
@@ -360,7 +360,7 @@ class User(JSONModel, UserMixin):
     @property
     def has_access_to_live_and_trial_mode_services(self):
         return (
-            self.organisations or self.live_services
+            self.organizations or self.live_services
         ) and (
             self.trial_mode_services
         )
@@ -390,7 +390,7 @@ class User(JSONModel, UserMixin):
             "state": self.state,
             "failed_login_count": self.failed_login_count,
             "permissions": [x for x in self._permissions],
-            "organisations": self.organisation_ids,
+            "organizations": self.organization_ids,
             "current_session_id": self.current_session_id
         }
         if hasattr(self, '_password'):
@@ -450,9 +450,9 @@ class User(JSONModel, UserMixin):
             else:
                 raise exception
 
-    def add_to_organisation(self, organisation_id):
-        user_api_client.add_user_to_organisation(
-            organisation_id,
+    def add_to_organization(self, organization_id):
+        user_api_client.add_user_to_organization(
+            organization_id,
             self.id,
         )
 
@@ -611,7 +611,7 @@ class InvitedOrgUser(JSONModel):
 
     ALLOWED_PROPERTIES = {
         'id',
-        'organisation',
+        'organization',
         'email_address',
         'status',
         'created_at',
@@ -623,11 +623,11 @@ class InvitedOrgUser(JSONModel):
 
     def __eq__(self, other):
         return ((self.id,
-                self.organisation,
+                self.organization,
                 self._invited_by,
                 self.email_address,
                 self.status) == (other.id,
-                other.organisation,
+                other.organization,
                 other._invited_by,
                 other.email_address,
                 other.status))
@@ -657,7 +657,7 @@ class InvitedOrgUser(JSONModel):
 
     def serialize(self, permissions_as_string=False):
         data = {'id': self.id,
-                'organisation': self.organisation,
+                'organization': self.organization,
                 'invited_by': self._invited_by,
                 'email_address': self.email_address,
                 'status': self.status,
@@ -680,7 +680,7 @@ class InvitedOrgUser(JSONModel):
                 raise exception
 
     def accept_invite(self):
-        org_invite_api_client.accept_invite(self.organisation, self.id)
+        org_invite_api_client.accept_invite(self.organization, self.id)
 
 
 class AnonymousUser(AnonymousUserMixin):
@@ -690,8 +690,8 @@ class AnonymousUser(AnonymousUserMixin):
         return False
 
     @property
-    def default_organisation(self):
-        return Organisation(None)
+    def default_organization(self):
+        return Organization(None)
 
 
 class Users(ModelList):
@@ -712,8 +712,8 @@ class Users(ModelList):
         return 'Unknown'
 
 
-class OrganisationUsers(Users):
-    client_method = user_api_client.get_users_for_organisation
+class OrganizationUsers(Users):
+    client_method = user_api_client.get_users_for_organization
 
 
 class InvitedUsers(Users):
@@ -728,6 +728,6 @@ class InvitedUsers(Users):
         ]
 
 
-class OrganisationInvitedUsers(InvitedUsers):
-    client_method = org_invite_api_client.get_invites_for_organisation
+class OrganizationInvitedUsers(InvitedUsers):
+    client_method = org_invite_api_client.get_invites_for_organization
     model = InvitedOrgUser

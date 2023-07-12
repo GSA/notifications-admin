@@ -7,7 +7,7 @@
   $padding-bottom: 11px;
 
   &-service-name,
-  &-organisation-link {
+  &-organization-link {
     display: inline-block;
     overflow: hidden;
     // aligning to the baseline with overflow: hidden adds to the parent's height
@@ -59,7 +59,7 @@
 
   &-service-switch,
   &-service-back-to,
-  &-organisation-link {
+  &-organization-link {
 
     &:link,
     &:visited {
@@ -115,7 +115,7 @@
 
   }
 
-  &-organisation-link {
+  &-organization-link {
 
     max-width: 25%;
     padding: $padding-top 20px $padding-bottom 0;

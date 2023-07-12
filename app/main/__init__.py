@@ -22,7 +22,7 @@ from app.main.views import (  # noqa isort:skip
     manage_users,
     new_password,
     notifications,
-    organisations,
+    organizations,
     performance,
     platform_admin,
     pricing,
