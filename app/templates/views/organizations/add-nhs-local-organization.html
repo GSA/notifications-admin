@@ -17,7 +17,7 @@
   {{ page_header(page_title) }}
   {% call form_wrapper() %}
     <p>
-      {{ form.organisations.label.text }}
+      {{ form.organizations.label.text }}
     </p>
     {{ live_search(
       target_selector='.govuk-radios__item',
@@ -26,7 +26,7 @@
       label='Search by name',
       autofocus=True)
     }}
-    {{ form.organisations }}
+    {{ form.organizations }}
     {{ sticky_page_footer('Continue') }}
   {% endcall %}
 {% endblock %}

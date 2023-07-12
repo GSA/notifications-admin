@@ -19,17 +19,17 @@
         {{ text_field(current_org.name) }}
         {{ edit_field(
             'Change',
-            url_for('.edit_organisation_name', org_id=current_org.id),
+            url_for('.edit_organization_name', org_id=current_org.id),
             suffix='organization name'
           )
         }}
       {% endcall %}
       {% call row() %}
         {{ text_field('Sector') }}
-        {{ optional_text_field(current_org.organisation_type_label) }}
+        {{ optional_text_field(current_org.organization_type_label) }}
         {{ edit_field(
             'Change',
-            url_for('.edit_organisation_type', org_id=current_org.id),
+            url_for('.edit_organization_type', org_id=current_org.id),
             suffix='sector for the organization'
           )
         }}
@@ -39,7 +39,7 @@
         {{ optional_text_field(current_org.request_to_go_live_notes, default='None') }}
         {{ edit_field(
             'Change',
-            url_for('.edit_organisation_go_live_notes', org_id=current_org.id),
+            url_for('.edit_organization_go_live_notes', org_id=current_org.id),
             suffix='go live notes for the organization'
           )
         }}
@@ -50,7 +50,7 @@
         {{ optional_text_field(current_org.billing_details, default="None", wrap=True) }}
         {{ edit_field(
             'Change',
-            url_for('.edit_organisation_billing_details', org_id=current_org.id),
+            url_for('.edit_organization_billing_details', org_id=current_org.id),
             suffix='billing details for the organization'
           )
         }}
@@ -61,7 +61,7 @@
         {{ optional_text_field(current_org.notes, default="None", wrap=True) }}
         {{ edit_field(
             'Change',
-            url_for('.edit_organisation_notes', org_id=current_org.id),
+            url_for('.edit_organization_notes', org_id=current_org.id),
             suffix='the notes for the organization'
           )
         }}
@@ -72,7 +72,7 @@
         {{ text_field(current_org.email_branding_name) }}
         {{ edit_field(
             'Change',
-            url_for('.edit_organisation_email_branding', org_id=current_org.id),
+            url_for('.edit_organization_email_branding', org_id=current_org.id),
             suffix='default email branding for the organization'
           )
         }}
@@ -82,7 +82,7 @@
         {{ optional_text_field(current_org.domains or None, default='None') }}
         {{ edit_field(
             'Change',
-            url_for('.edit_organisation_domains', org_id=current_org.id),
+            url_for('.edit_organization_domains', org_id=current_org.id),
             suffix='known email domains for the organization'
           )
         }}

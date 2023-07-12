@@ -4,7 +4,7 @@ from re import search
 def test_owasp_useful_headers_set(
     client_request,
     mocker,
-    mock_get_service_and_organisation_counts,
+    mock_get_service_and_organization_counts,
 ):
     client_request.logout()
     response = client_request.get_response('.index')

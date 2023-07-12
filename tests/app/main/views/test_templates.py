@@ -770,7 +770,7 @@ def test_choose_a_template_to_copy_when_user_has_one_service(
     mock_get_service_templates,
     mock_get_template_folders,
     mock_get_no_api_keys,
-    mock_get_empty_organisations_and_one_service_for_user,
+    mock_get_empty_organizations_and_one_service_for_user,
 ):
     page = client_request.get(
         'main.choose_template_to_copy',
@@ -816,7 +816,7 @@ def test_choose_a_template_to_copy_from_folder_within_service(
     mocker,
     client_request,
     mock_get_template_folders,
-    mock_get_non_empty_organisations_and_services_for_user,
+    mock_get_non_empty_organizations_and_services_for_user,
     mock_get_no_api_keys,
 ):
     mock_get_template_folders.return_value = [
@@ -944,7 +944,7 @@ def test_load_edit_template_with_copy_of_template(
     active_user_with_permission_to_two_services,
     mock_get_service_templates,
     mock_get_service_email_template,
-    mock_get_non_empty_organisations_and_services_for_user,
+    mock_get_non_empty_organizations_and_services_for_user,
     existing_template_names,
     expected_name,
 ):
@@ -978,7 +978,7 @@ def test_copy_template_loads_template_from_within_subfolder(
     client_request,
     active_user_with_permission_to_two_services,
     mock_get_service_templates,
-    mock_get_non_empty_organisations_and_services_for_user,
+    mock_get_non_empty_organizations_and_services_for_user,
     mocker
 ):
     template = template_json(
@@ -1013,7 +1013,7 @@ def test_copy_template_loads_template_from_within_subfolder(
 def test_cant_copy_template_from_non_member_service(
     client_request,
     mock_get_service_email_template,
-    mock_get_organisations_and_services_for_user,
+    mock_get_organizations_and_services_for_user,
 ):
     client_request.get(
         'main.copy_template',

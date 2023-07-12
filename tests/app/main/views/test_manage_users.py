@@ -849,11 +849,11 @@ def test_should_show_page_for_inviting_user_with_email_prefilled(
     fake_uuid,
     active_user_with_permissions,
     active_user_with_permission_to_other_service,
-    mock_get_organisation_by_domain,
+    mock_get_organization_by_domain,
     mock_get_invites_for_service,
 ):
     client_request.login(active_user_with_permissions)
-    service_one['organisation'] = ORGANISATION_ID
+    service_one['organization'] = ORGANISATION_ID
     mocker.patch('app.models.user.user_api_client.get_user', side_effect=[
         active_user_with_permission_to_other_service,
     ])
@@ -943,7 +943,7 @@ def test_should_show_page_if_prefilled_user_is_already_invited(
     assert not page.select("form")
 
 
-def test_should_403_if_trying_to_prefill_email_address_for_user_with_no_organisation(
+def test_should_403_if_trying_to_prefill_email_address_for_user_with_no_organization(
     mocker,
     client_request,
     service_one,
@@ -952,9 +952,9 @@ def test_should_403_if_trying_to_prefill_email_address_for_user_with_no_organisa
     active_user_with_permissions,
     active_user_with_permission_to_other_service,
     mock_get_invites_for_service,
-    mock_get_no_organisation_by_domain,
+    mock_get_no_organization_by_domain,
 ):
-    service_one['organisation'] = ORGANISATION_ID
+    service_one['organization'] = ORGANISATION_ID
     client_request.login(active_user_with_permissions)
     mocker.patch('app.models.user.user_api_client.get_user', side_effect=[
         active_user_with_permission_to_other_service,
@@ -967,7 +967,7 @@ def test_should_403_if_trying_to_prefill_email_address_for_user_with_no_organisa
     )
 
 
-def test_should_403_if_trying_to_prefill_email_address_for_user_from_other_organisation(
+def test_should_403_if_trying_to_prefill_email_address_for_user_from_other_organization(
     mocker,
     client_request,
     service_one,
@@ -976,9 +976,9 @@ def test_should_403_if_trying_to_prefill_email_address_for_user_from_other_organ
     active_user_with_permissions,
     active_user_with_permission_to_other_service,
     mock_get_invites_for_service,
-    mock_get_organisation_by_domain,
+    mock_get_organization_by_domain,
 ):
-    service_one['organisation'] = ORGANISATION_TWO_ID
+    service_one['organization'] = ORGANISATION_TWO_ID
     client_request.login(active_user_with_permissions)
     mocker.patch('app.models.user.user_api_client.get_user', side_effect=[
         active_user_with_permission_to_other_service,
@@ -1025,7 +1025,7 @@ def test_invite_user(
     email_address,
     gov_user,
     mock_get_template_folders,
-    mock_get_organisations,
+    mock_get_organizations,
 ):
     sample_invite['email_address'] = email_address
 
@@ -1072,9 +1072,9 @@ def test_invite_user_when_email_address_is_prefilled(
     sample_invite,
     mock_get_template_folders,
     mock_get_invites_for_service,
-    mock_get_organisation_by_domain,
+    mock_get_organization_by_domain,
 ):
-    service_one['organisation'] = ORGANISATION_ID
+    service_one['organization'] = ORGANISATION_ID
     client_request.login(active_user_with_permissions)
     mocker.patch('app.models.user.user_api_client.get_user', side_effect=[
         active_user_with_permission_to_other_service,
@@ -1119,7 +1119,7 @@ def test_invite_user_with_email_auth_service(
     gov_user,
     mocker,
     auth_type,
-    mock_get_organisations,
+    mock_get_organizations,
     mock_get_template_folders,
 ):
     service_one['permissions'].append('email_auth')
@@ -1508,7 +1508,7 @@ def test_edit_user_email_can_change_any_email_address_to_a_gov_email_address(
     mock_get_user_by_email_not_found,
     mock_get_users_by_service,
     mock_update_user_attribute,
-    mock_get_organisations,
+    mock_get_organizations,
     original_email_address,
 ):
     active_user_with_permissions['email_address'] = original_email_address
@@ -1535,7 +1535,7 @@ def test_edit_user_email_can_change_a_non_gov_email_address_to_another_non_gov_e
     mock_get_user_by_email_not_found,
     mock_get_users_by_service,
     mock_update_user_attribute,
-    mock_get_organisations,
+    mock_get_organizations,
 ):
     active_user_with_permissions['email_address'] = 'old@example.com'
 
@@ -1561,7 +1561,7 @@ def test_edit_user_email_cannot_change_a_gov_email_address_to_a_non_gov_email_ad
     mock_get_user_by_email_not_found,
     mock_get_users_by_service,
     mock_update_user_attribute,
-    mock_get_organisations,
+    mock_get_organizations,
 ):
     page = client_request.post(
         'main.edit_user_email',

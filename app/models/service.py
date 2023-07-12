@@ -9,7 +9,7 @@ from app.models.job import (
     PaginatedUploads,
     ScheduledJobs,
 )
-from app.models.organisation import Organisation
+from app.models.organization import Organization
 from app.models.user import InvitedUsers, User, Users
 from app.notify_client.api_key_api_client import api_key_api_client
 from app.notify_client.billing_api_client import billing_api_client
@@ -17,7 +17,7 @@ from app.notify_client.email_branding_client import email_branding_client
 from app.notify_client.inbound_number_client import inbound_number_client
 from app.notify_client.invite_api_client import invite_api_client
 from app.notify_client.job_api_client import job_api_client
-from app.notify_client.organisations_api_client import organisations_client
+from app.notify_client.organizations_api_client import organizations_client
 from app.notify_client.service_api_client import service_api_client
 from app.notify_client.template_folder_api_client import (
     template_folder_api_client,
@@ -314,7 +314,7 @@ class Service(JSONModel, SortByNameMixin):
 
     @property
     def shouldnt_use_govuk_as_sms_sender(self):
-        return self.organisation_type != Organisation.TYPE_CENTRAL
+        return self.organization_type != Organization.TYPE_CENTRAL
 
     @cached_property
     def sms_senders(self):
@@ -417,29 +417,29 @@ class Service(JSONModel, SortByNameMixin):
 
     @property
     def needs_to_change_email_branding(self):
-        return self.email_branding_id is None and self.organisation_type != Organisation.TYPE_CENTRAL
+        return self.email_branding_id is None and self.organization_type != Organization.TYPE_CENTRAL
 
     @cached_property
-    def organisation(self):
-        return Organisation.from_id(self.organisation_id)
+    def organization(self):
+        return Organization.from_id(self.organization_id)
 
     @property
-    def organisation_id(self):
-        return self._dict['organisation']
+    def organization_id(self):
+        return self._dict['organization']
 
     @property
-    def organisation_type(self):
-        return self.organisation.organisation_type or self._dict['organisation_type']
+    def organization_type(self):
+        return self.organization.organization_type or self._dict['organization_type']
 
     @property
-    def organisation_name(self):
-        if not self.organisation_id:
+    def organization_name(self):
+        if not self.organization_id:
             return None
-        return organisations_client.get_organisation_name(self.organisation_id)
+        return organizations_client.get_organization_name(self.organization_id)
 
     @property
-    def organisation_type_label(self):
-        return Organisation.TYPE_LABELS.get(self.organisation_type)
+    def organization_type_label(self):
+        return Organization.TYPE_LABELS.get(self.organization_type)
 
     @cached_property
     def inbound_number(self):

@@ -4,7 +4,7 @@ from flask import abort, current_app
 from flask_login import current_user, login_required
 
 from app import config
-from app.notify_client.organisations_api_client import organisations_client
+from app.notify_client.organizations_api_client import organizations_client
 
 user_is_logged_in = login_required
 
@@ -48,7 +48,7 @@ def is_gov_user(email_address):
     return _email_address_ends_with(
         email_address, config.Config.GOVERNMENT_EMAIL_DOMAIN_NAMES
     ) or _email_address_ends_with(
-        email_address, organisations_client.get_domains()
+        email_address, organizations_client.get_domains()
     )
 
 

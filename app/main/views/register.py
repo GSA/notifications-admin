@@ -63,17 +63,17 @@ def register_from_org_invite():
     form.auth_type.data = 'sms_auth'
 
     if form.validate_on_submit():
-        if (form.organisation.data != invited_org_user.organisation or
+        if (form.organization.data != invited_org_user.organization or
                 form.email_address.data != invited_org_user.email_address):
             abort(400)
-        _do_registration(form, send_email=False, send_sms=True, organisation_id=invited_org_user.organisation)
+        _do_registration(form, send_email=False, send_sms=True, organization_id=invited_org_user.organization)
         invited_org_user.accept_invite()
 
         return redirect(url_for('main.verify'))
     return render_template('views/register-from-org-invite.html', invited_org_user=invited_org_user, form=form)
 
 
-def _do_registration(form, send_sms=True, send_email=True, organisation_id=None):
+def _do_registration(form, send_sms=True, send_email=True, organization_id=None):
     user = User.from_email_address_or_none(form.email_address.data)
     if user:
         if send_email:
@@ -96,8 +96,8 @@ def _do_registration(form, send_sms=True, send_email=True, organisation_id=None)
             user.send_verify_code()
         session['expiry_date'] = str(datetime.utcnow() + timedelta(hours=1))
         session['user_details'] = {"email": user.email_address, "id": user.id}
-    if organisation_id:
-        session['organisation_id'] = organisation_id
+    if organization_id:
+        session['organization_id'] = organization_id
 
 
 @main.route('/registration-continue')

@@ -1,22 +1,22 @@
-from app.models.organisation import Organisation
+from app.models.organization import Organization
 
 NHS_EMAIL_BRANDING_ID = 'a7dc4e56-660b-4db7-8cff-12c37b12b5ea'
 
 
 def get_email_choices(service):
-    organisation_branding_id = service.organisation.email_branding_id if service.organisation else None
+    organization_branding_id = service.organization.email_branding_id if service.organization else None
 
     if (
-        service.organisation_type == Organisation.TYPE_FEDERAL
+        service.organization_type == Organization.TYPE_FEDERAL
         and service.email_branding_id is not None  # GOV.UK is not current branding
-        and organisation_branding_id is None  # no default to supersede it (GOV.UK)
+        and organization_branding_id is None  # no default to supersede it (GOV.UK)
     ):
         yield ('govuk', 'GOV.UK')
 
     if (
-        service.organisation_type == Organisation.TYPE_FEDERAL
-        and service.organisation
-        and organisation_branding_id is None  # don't offer both if org has default
-        and service.email_branding_name.lower() != f'GOV.UK and {service.organisation.name}'.lower()
+        service.organization_type == Organization.TYPE_FEDERAL
+        and service.organization
+        and organization_branding_id is None  # don't offer both if org has default
+        and service.email_branding_name.lower() != f'GOV.UK and {service.organization.name}'.lower()
     ):
-        yield ('govuk_and_org', f'GOV.UK and {service.organisation.name}')
+        yield ('govuk_and_org', f'GOV.UK and {service.organization.name}')

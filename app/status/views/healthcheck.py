@@ -47,7 +47,7 @@ def show_redis_status():
             except RedisError as err:
                 current_app.logger.exception(f"Redis service failed to respond with {err}")
 
-            api_status = status_api_client.get_count_of_live_services_and_organisations_cached()
+            api_status = status_api_client.get_count_of_live_services_and_organizations_cached()
         except HTTPError as err:
             current_app.logger.exception("API failed to respond")
             return jsonify(status="error", message=str(err.message)), 500
