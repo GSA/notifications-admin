@@ -9,8 +9,9 @@ if (window.GOVUK.hasConsentFor('analytics', consentData)) {
 
 $(() => $("time.timeago").timeago());
 
-$(() => GOVUK.stickAtTopWhenScrolling.init());
-$(() => GOVUK.stickAtBottomWhenScrolling.init());
+// Removing sticky footer functionality
+// $(() => GOVUK.stickAtTopWhenScrolling.init());
+// $(() => GOVUK.stickAtBottomWhenScrolling.init());
 
 var showHideContent = new GOVUK.ShowHideContent();
 showHideContent.init();
