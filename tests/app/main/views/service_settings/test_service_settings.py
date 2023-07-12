@@ -51,23 +51,23 @@ def mock_get_service_settings_page_common(
 
 
 @pytest.mark.parametrize('user, expected_rows', [
-    # (create_active_user_with_permissions(), [
-    #
-    #     'Label Value Action',
-    #     'Service name Test Service Change service name',
-    #     'Sign-in method Text message code Change sign-in method',
-    #     'Send text messages On Change your settings for sending text messages',
-    #     'Start text messages with service name On Change your settings for starting text messages with service name',
-    #     'Send international text messages Off Change your settings for sending international text messages',
-    #
-    # ]),
+    (create_active_user_with_permissions(), [
+
+        'Label Value Action',
+        'Service name Test Service Change service name',
+        'Sign-in method Text message code Change sign-in method',
+        'Send text messages On Change your settings for sending text messages',
+        'Start text messages with service name On Change your settings for starting text messages with service name',
+        'Send international text messages Off Change your settings for sending international text messages',
+
+    ]),
     (create_platform_admin_user(), [
 
         'Label Value Action',
         'Service name Test Service Change service name',
         'Sign-in method Text message code Change sign-in method',
         'Send text messages On Change your settings for sending text messages',
-        'Text message senders Manage text message senders',
+        'Text message senders GOVUK Manage text message senders',
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
 
@@ -81,7 +81,7 @@ def mock_get_service_settings_page_common(
         'Rate limit 3,000 per minute Change rate limit',
         'Message limit 1,000 per day Change daily message limit',
         'Free text message allowance 250,000 per year Change free text message allowance',
-        'Email branding Change email branding (admin view)',
+        'Email branding GOV.UK Change email branding (admin view)',
         'Custom data retention Email – 7 days Change data retention',
         'Receive inbound SMS Off Change your settings for Receive inbound SMS',
         'Email authentication Off Change your settings for Email authentication',
@@ -110,8 +110,6 @@ def test_should_show_overview(
     page = client_request.get(
         'main.service_settings', service_id=SERVICE_ONE_ID
     )
-    import pdb
-    pdb.set_trace()
     assert page.find('h1').text == 'Settings'
     rows = page.select('tr')
     assert len(rows) == len(expected_rows)
@@ -205,7 +203,6 @@ def test_send_files_by_email_row_on_settings_page(
         'Service name service one Change service name',
         'Sign-in method Text message code Change sign-in method',
         'Send text messages On Change your settings for sending text messages',
-        'Text message senders Manage text message senders',
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages On Change your settings for sending international text messages',
 
@@ -216,7 +213,6 @@ def test_send_files_by_email_row_on_settings_page(
         'Service name service one Change service name',
         'Sign-in method Email link or text message code Change sign-in method',
         'Send text messages On Change your settings for sending text messages',
-        'Text message senders Manage text message senders',
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
 
