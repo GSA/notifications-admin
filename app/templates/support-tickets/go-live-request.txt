@@ -1,21 +1,21 @@
 {% set service = current_service -%}
-{% set organisation = service.organisation -%}
+{% set organization = service.organization -%}
 {% set user = current_user -%}
 
 Service: {{ service.name }}
 {{ url_for('main.service_dashboard', service_id=service.id, _external=True) }}
 
 ---
-Organisation type: {{ service.organisation_type_label }}
-{%- if organisation.name %} (organisation is {{ organisation.name }})
+Organization type: {{ service.organization_type_label }}
+{%- if organization.name %} (organization is {{ organization.name }})
 {%- else %} (domain is {{ user.email_domain }})
 {%- endif %}.
-{%- if organisation.request_to_go_live_notes %} {{ organisation.request_to_go_live_notes }}{% endif %}
-{%- if organisation.agreement_signed_by %}
-Agreement signed by: {{ organisation.agreement_signed_by.email_address }}
+{%- if organization.request_to_go_live_notes %} {{ organization.request_to_go_live_notes }}{% endif %}
+{%- if organization.agreement_signed_by %}
+Agreement signed by: {{ organization.agreement_signed_by.email_address }}
 {% endif -%}
-{%- if organisation.agreement_signed_on_behalf_of_email_address -%}
-Agreement signed on behalf of: {{ organisation.agreement_signed_on_behalf_of_email_address }}
+{%- if organization.agreement_signed_on_behalf_of_email_address -%}
+Agreement signed on behalf of: {{ organization.agreement_signed_on_behalf_of_email_address }}
 {%- endif %}
 
 Emails in next year: {{ service.volume_email|format_thousands }}

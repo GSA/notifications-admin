@@ -12,7 +12,7 @@ from tests.conftest import ORGANISATION_ID, normalize_spaces
 def test_invite_org_user(
     client_request,
     mocker,
-    mock_get_organisation,
+    mock_get_organization,
     sample_org_invite,
 ):
 
@@ -37,7 +37,7 @@ def test_invite_org_user(
 def test_invite_org_user_errors_when_same_email_as_inviter(
     client_request,
     mocker,
-    mock_get_organisation,
+    mock_get_organization,
     sample_org_invite,
 ):
     new_org_user_data = {
@@ -62,10 +62,10 @@ def test_invite_org_user_errors_when_same_email_as_inviter(
 
 def test_cancel_invited_org_user_cancels_user_invitations(
     client_request,
-    mock_get_invites_for_organisation,
+    mock_get_invites_for_organization,
     sample_org_invite,
-    mock_get_organisation,
-    mock_get_users_for_organisation,
+    mock_get_organization,
+    mock_get_users_for_organization,
     mocker,
 ):
     mock_cancel = mocker.patch('app.org_invite_api_client.cancel_invited_user')
@@ -108,7 +108,7 @@ def test_cancelled_invite_opened_by_user(
     client_request,
     api_user_active,
     mock_check_org_cancelled_invite_token,
-    mock_get_organisation,
+    mock_get_organization,
     fake_uuid
 ):
     client_request.logout()
@@ -128,10 +128,10 @@ def test_cancelled_invite_opened_by_user(
     ) == 'Test User decided to cancel this invitation.'
     assert normalize_spaces(
         page.select('main p')[1].text
-    ) == 'If you need access to Test organisation, you’ll have to ask them to invite you again.'
+    ) == 'If you need access to Test organization, you’ll have to ask them to invite you again.'
 
     mock_get_user.assert_called_once_with(fake_uuid)
-    mock_get_organisation.assert_called_once_with(ORGANISATION_ID)
+    mock_get_organization.assert_called_once_with(ORGANISATION_ID)
 
 
 def test_user_invite_already_accepted(
@@ -143,22 +143,22 @@ def test_user_invite_already_accepted(
         'main.accept_org_invite',
         token='thisisnotarealtoken',
         _expected_redirect=url_for(
-            'main.organisation_dashboard',
+            'main.organization_dashboard',
             org_id=ORGANISATION_ID,
         ),
     )
 
 
 @freeze_time('2021-12-12 12:12:12')
-def test_existing_user_invite_already_is_member_of_organisation(
+def test_existing_user_invite_already_is_member_of_organization(
     client_request,
     mock_check_org_invite_token,
     mock_get_user,
     mock_get_user_by_email,
     api_user_active,
-    mock_get_users_for_organisation,
+    mock_get_users_for_organization,
     mock_accept_org_invite,
-    mock_add_user_to_organisation,
+    mock_add_user_to_organization,
     mock_update_user_attribute,
 ):
     client_request.logout()
@@ -167,7 +167,7 @@ def test_existing_user_invite_already_is_member_of_organisation(
         'main.accept_org_invite',
         token='thisisnotarealtoken',
         _expected_redirect=url_for(
-            'main.organisation_dashboard',
+            'main.organization_dashboard',
             org_id=ORGANISATION_ID,
         ),
     )
@@ -175,7 +175,7 @@ def test_existing_user_invite_already_is_member_of_organisation(
     mock_check_org_invite_token.assert_called_once_with('thisisnotarealtoken')
     mock_accept_org_invite.assert_called_once_with(ORGANISATION_ID, ANY)
     mock_get_user_by_email.assert_called_once_with('invited_user@test.gsa.gov')
-    mock_get_users_for_organisation.assert_called_once_with(ORGANISATION_ID)
+    mock_get_users_for_organization.assert_called_once_with(ORGANISATION_ID)
     mock_update_user_attribute.assert_called_once_with(
         api_user_active['id'],
         email_access_validated_at='2021-12-12T12:12:12',
@@ -183,14 +183,14 @@ def test_existing_user_invite_already_is_member_of_organisation(
 
 
 @freeze_time('2021-12-12 12:12:12')
-def test_existing_user_invite_not_a_member_of_organisation(
+def test_existing_user_invite_not_a_member_of_organization(
     client_request,
     api_user_active,
     mock_check_org_invite_token,
     mock_get_user_by_email,
-    mock_get_users_for_organisation,
+    mock_get_users_for_organization,
     mock_accept_org_invite,
-    mock_add_user_to_organisation,
+    mock_add_user_to_organization,
     mock_update_user_attribute,
 ):
     client_request.logout()
@@ -199,7 +199,7 @@ def test_existing_user_invite_not_a_member_of_organisation(
         'main.accept_org_invite',
         token='thisisnotarealtoken',
         _expected_redirect=url_for(
-            'main.organisation_dashboard',
+            'main.organization_dashboard',
             org_id=ORGANISATION_ID,
         ),
     )
@@ -207,8 +207,8 @@ def test_existing_user_invite_not_a_member_of_organisation(
     mock_check_org_invite_token.assert_called_once_with('thisisnotarealtoken')
     mock_accept_org_invite.assert_called_once_with(ORGANISATION_ID, ANY)
     mock_get_user_by_email.assert_called_once_with('invited_user@test.gsa.gov')
-    mock_get_users_for_organisation.assert_called_once_with(ORGANISATION_ID)
-    mock_add_user_to_organisation.assert_called_once_with(
+    mock_get_users_for_organization.assert_called_once_with(ORGANISATION_ID)
+    mock_add_user_to_organization.assert_called_once_with(
         ORGANISATION_ID,
         api_user_active['id'],
     )
@@ -222,7 +222,7 @@ def test_user_accepts_invite(
     client_request,
     mock_check_org_invite_token,
     mock_dont_get_user_by_email,
-    mock_get_users_for_organisation,
+    mock_get_users_for_organization,
 ):
     client_request.logout()
     client_request.get(
@@ -233,7 +233,7 @@ def test_user_accepts_invite(
 
     mock_check_org_invite_token.assert_called_once_with('thisisnotarealtoken')
     mock_dont_get_user_by_email.assert_called_once_with('invited_user@test.gsa.gov')
-    mock_get_users_for_organisation.assert_called_once_with(ORGANISATION_ID)
+    mock_get_users_for_organization.assert_called_once_with(ORGANISATION_ID)
 
 
 def test_registration_from_org_invite_404s_if_user_not_in_session(
@@ -281,10 +281,10 @@ def test_registration_from_org_invite_has_bad_data(
 
 @pytest.mark.parametrize('diff_data', [
     ['email_address'],
-    ['organisation'],
-    ['email_address', 'organisation']
+    ['organization'],
+    ['email_address', 'organization']
 ])
-def test_registration_from_org_invite_has_different_email_or_organisation(
+def test_registration_from_org_invite_has_different_email_or_organization(
     client_request,
     sample_org_invite,
     diff_data,
@@ -299,7 +299,7 @@ def test_registration_from_org_invite_has_different_email_or_organisation(
         'mobile_number': '+12024900460',
         'password': 'validPassword!',
         'email_address': sample_org_invite['email_address'],
-        'organisation': sample_org_invite['organisation']
+        'organization': sample_org_invite['organization']
     }
     for field in diff_data:
         data[field] = 'different'
@@ -316,7 +316,7 @@ def test_org_user_registers_with_email_already_in_use(
     sample_org_invite,
     mock_get_user_by_email,
     mock_accept_org_invite,
-    mock_add_user_to_organisation,
+    mock_add_user_to_organization,
     mock_send_already_registered_email,
     mock_register_user,
     mock_get_invited_org_user_by_id,
@@ -332,7 +332,7 @@ def test_org_user_registers_with_email_already_in_use(
             'mobile_number': '+12024900460',
             'password': 'validPassword!',
             'email_address': sample_org_invite['email_address'],
-            'organisation': sample_org_invite['organisation'],
+            'organization': sample_org_invite['organization'],
         },
         _expected_redirect=url_for('main.verify'),
     )
@@ -353,7 +353,7 @@ def test_org_user_registration(
     mock_get_user_by_email,
     mock_send_verify_email,
     mock_accept_org_invite,
-    mock_add_user_to_organisation,
+    mock_add_user_to_organization,
     mock_get_invited_org_user_by_id,
 ):
     client_request.logout()
@@ -367,7 +367,7 @@ def test_org_user_registration(
             'email_address': sample_org_invite['email_address'],
             'mobile_number': '+12024900460',
             'password': 'validPassword!',
-            'organisation': sample_org_invite['organisation'],
+            'organization': sample_org_invite['organization'],
         },
         _expected_redirect=url_for('main.verify')
     )
@@ -401,13 +401,13 @@ def test_verified_org_user_redirects_to_dashboard(
     with client_request.session_transaction() as session:
         session['expiry_date'] = str(datetime.utcnow() + timedelta(hours=1))
         session['user_details'] = {"email": invited_org_user['email_address'], "id": invited_org_user['id']}
-        session['organisation_id'] = invited_org_user['organisation']
+        session['organization_id'] = invited_org_user['organization']
 
     client_request.post(
         'main.verify',
         _data={'sms_code': '123456'},
         _expected_redirect=url_for(
-            'main.organisation_dashboard',
-            org_id=invited_org_user['organisation'],
+            'main.organization_dashboard',
+            org_id=invited_org_user['organization'],
         ),
     )

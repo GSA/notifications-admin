@@ -110,19 +110,19 @@
   <div class="govuk-grid-row bottom-gutter">
     <div class="govuk-grid-column-one-half">
       <span class="usa-sr-only">There are</span>
-      <div class="product-page-big-number">{{ count_of_live_services_and_organisations.organisations|format_thousands }}</div>
+      <div class="product-page-big-number">{{ count_of_live_services_and_organizations.organizations|format_thousands }}</div>
       organizations
     </div>
     <div class="govuk-grid-column-one-half">
       <span class="usa-sr-only">and</span>
-      <div class="product-page-big-number">{{ count_of_live_services_and_organisations.services|format_thousands }}</div>
+      <div class="product-page-big-number">{{ count_of_live_services_and_organizations.services|format_thousands }}</div>
       services
       <span class="usa-sr-only">using Notify.</span>
     </div>
   </div>
   <div class="dashboard-table">
     {% call(item, row_number) list_table(
-      organisations_using_notify,
+      organizations_using_notify,
       caption='Organizations using Notify',
       caption_visible=False,
       field_headings=[
@@ -131,7 +131,7 @@
       empty_message='No data to show'
     ) %}
       {% call field() %}
-        {{ item.organisation_name }}
+        {{ item.organization_name }}
       {% endcall %}
       {% call field() %}
         {{ item.count_of_live_services }}

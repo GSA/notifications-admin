@@ -14,7 +14,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
     def create_service(
         self,
         service_name,
-        organisation_type,
+        organization_type,
         message_limit,
         restricted,
         user_id,
@@ -25,7 +25,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         """
         data = {
             "name": service_name,
-            "organisation_type": organisation_type,
+            "organization_type": organization_type,
             "active": True,
             "message_limit": message_limit,
             "user_id": user_id,
@@ -94,7 +94,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             'message_limit',
             'name',
             'notes',
-            'organisation_type',
+            'organization_type',
             'permissions',
             'prefix_sms',
             'purchase_order_number',
@@ -114,7 +114,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         endpoint = "/service/{0}".format(service_id)
         return self.post(endpoint, data)
 
-    @cache.delete('live-service-and-organisation-counts')
+    @cache.delete('live-service-and-organization-counts')
     def update_status(self, service_id, live):
         return self.update_service(
             service_id,
@@ -123,7 +123,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             go_live_at=str(datetime.utcnow()) if live else None
         )
 
-    @cache.delete('live-service-and-organisation-counts')
+    @cache.delete('live-service-and-organization-counts')
     def update_count_as_live(self, service_id, count_as_live):
         return self.update_service(
             service_id,

@@ -61,7 +61,7 @@ def test_sign_in_explains_other_browser(client_request, api_user_active, mocker)
 def test_doesnt_redirect_to_sign_in_if_no_session_info(
     client_request,
     api_user_active,
-    mock_get_organisation_by_domain,
+    mock_get_organization_by_domain,
 ):
     api_user_active['current_session_id'] = str(uuid.UUID(int=1))
 

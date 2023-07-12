@@ -7,10 +7,10 @@ from tests.conftest import SERVICE_ONE_ID, USER_ONE_ID
 def test_anonymous_user(notify_admin):
     assert AnonymousUser().is_authenticated is False
     assert AnonymousUser().logged_in_elsewhere() is False
-    assert AnonymousUser().default_organisation.name is None
-    assert AnonymousUser().default_organisation.domains == []
-    assert AnonymousUser().default_organisation.organisation_type is None
-    assert AnonymousUser().default_organisation.request_to_go_live_notes is None
+    assert AnonymousUser().default_organization.name is None
+    assert AnonymousUser().default_organization.domains == []
+    assert AnonymousUser().default_organization.organization_type is None
+    assert AnonymousUser().default_organization.request_to_go_live_notes is None
 
 
 def test_user(notify_admin):
@@ -75,7 +75,7 @@ def test_platform_admin_flag_set_in_session(
 
 def test_has_live_services(
     client_request,
-    mock_get_non_empty_organisations_and_services_for_user,
+    mock_get_non_empty_organizations_and_services_for_user,
     fake_uuid,
 ):
     user = User({
@@ -89,7 +89,7 @@ def test_has_live_services(
 
 def test_has_live_services_when_there_are_no_services(
     client_request,
-    mock_get_organisations_and_services_for_user,
+    mock_get_organizations_and_services_for_user,
     fake_uuid,
 ):
     assert User({
@@ -100,7 +100,7 @@ def test_has_live_services_when_there_are_no_services(
 
 def test_has_live_services_when_service_is_not_live(
     client_request,
-    mock_get_empty_organisations_and_one_service_for_user,
+    mock_get_empty_organizations_and_one_service_for_user,
     fake_uuid,
 ):
     assert User({
