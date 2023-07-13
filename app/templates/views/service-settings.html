@@ -64,7 +64,7 @@
 
        {% if current_user.platform_admin %}
         {% call settings_row(if_has_permission='sms') %}
-          {{ text_field('Text message senders') }}
+          {{ text_field('Text message senders\n(Only visible to Platform Admins)') }}
           {% call field(status='default' if current_service.default_sms_sender == "None" else '') %}
           {{ current_service.default_sms_sender | nl2br if current_service.default_sms_sender else 'None'}}
             {% if current_service.count_sms_senders > 1 %}
