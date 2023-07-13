@@ -215,3 +215,11 @@ td.table-empty-message {
       top: 0;
    }
 }
+
+.sticky-template-form {
+   margin: 0;
+   padding: 0;
+   &:focus {
+      outline-offset: units(1);
+   }
+}
