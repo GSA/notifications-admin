@@ -127,8 +127,8 @@ def feedback(ticket_type):
             p1=out_of_hours_emergency,
             user_name=user_name,
             user_email=user_email,
-            org_id=current_service.organisation_id if current_service else None,
-            org_type=current_service.organisation_type if current_service else None,
+            org_id=current_service.organization_id if current_service else None,
+            org_type=current_service.organization_type if current_service else None,
             service_id=current_service.id if current_service else None,
         )
         zendesk_client.send_ticket_to_zendesk(ticket)

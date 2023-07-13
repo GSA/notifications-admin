@@ -81,7 +81,7 @@ def test_client_creates_service_with_correct_data(
             # ‘service_name’ argument is coerced to ‘name’
             name='My first service',
             # The rest pass through with the same names
-            organisation_type='central_government',
+            organization_type='central_government',
             message_limit=1,
             restricted=True,
             user_id=fake_uuid,
@@ -514,7 +514,7 @@ def test_client_updates_service_with_allowed_attributes(
         'message_limit',
         'name',
         'notes',
-        'organisation_type',
+        'organization_type',
         'permissions',
         'prefix_sms',
         'rate_limit',

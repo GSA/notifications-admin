@@ -107,7 +107,7 @@ def test_process_register_returns_200_when_mobile_number_is_invalid(
 
 def test_should_return_200_when_email_is_not_gov_uk(
     client_request,
-    mock_get_organisations,
+    mock_get_organizations,
 ):
     client_request.logout()
     page = client_request.post(
@@ -139,7 +139,7 @@ def test_should_add_user_details_to_session(
     mock_send_verify_code,
     mock_register_user,
     mock_get_user_by_email_not_found,
-    mock_get_organisations_with_unusual_domains,
+    mock_get_organizations_with_unusual_domains,
     mock_email_is_not_already_in_use,
     mock_send_verify_email,
     mock_login,

@@ -192,7 +192,7 @@ def test_returns_value_from_cache(
     (user_api_client, 'check_verify_code', [user_id, '', ''], {}),
     (user_api_client, 'complete_webauthn_login_attempt', [user_id], {'is_successful': True}),
     (user_api_client, 'add_user_to_service', [SERVICE_ONE_ID, user_id, [], []], {}),
-    (user_api_client, 'add_user_to_organisation', [sample_uuid(), user_id], {}),
+    (user_api_client, 'add_user_to_organization', [sample_uuid(), user_id], {}),
     (user_api_client, 'set_user_permissions', [user_id, SERVICE_ONE_ID, []], {}),
     (user_api_client, 'activate_user', [user_id], {}),
     (user_api_client, 'archive_user', [user_id], {}),

@@ -75,29 +75,29 @@ def _get_example_performance_data():
         ],
         "services_using_notify": [
             {
-                "organisation_id": uuid.uuid4(),
-                "organisation_name": "Department of Examples and Patterns",
+                "organization_id": uuid.uuid4(),
+                "organization_name": "Department of Examples and Patterns",
                 "service_id": uuid.uuid4(),
                 "service_name": "Example service"
             },
             {
-                "organisation_id": uuid.uuid4(),
-                "organisation_name": "Department of Examples and Patterns",
+                "organization_id": uuid.uuid4(),
+                "organization_name": "Department of Examples and Patterns",
                 "service_id": uuid.uuid4(),
                 "service_name": "Example service 2"
             },
             {
-                "organisation_id": uuid.uuid4(),
-                "organisation_name": "Department of One Service",
+                "organization_id": uuid.uuid4(),
+                "organization_name": "Department of One Service",
                 "service_id": uuid.uuid4(),
                 "service_name": "Example service 3"
             },
             {
                 # On production there should be no live services without an
-                # organisation, but this isn’t always true in people’s local
+                # organization, but this isn’t always true in people’s local
                 # environments
-                "organisation_id": None,
-                "organisation_name": None,
+                "organization_id": None,
+                "organization_name": None,
                 "service_id": uuid.uuid4(),
                 "service_name": "Example service 4"
             },
@@ -109,7 +109,7 @@ def _get_example_performance_data():
 def test_should_render_performance_page(
     mocker,
     client_request,
-    mock_get_service_and_organisation_counts,
+    mock_get_service_and_organization_counts,
 ):
     mock_get_performance_data = mocker.patch(
         'app.performance_dashboard_api_client.get_performance_dashboard_stats',

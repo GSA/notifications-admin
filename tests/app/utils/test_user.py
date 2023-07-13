@@ -96,11 +96,11 @@ def test_no_user_returns_redirect_to_sign_in(
     assert response.location.startswith('/sign-in?next=')
 
 
-def test_user_has_permissions_for_organisation(
+def test_user_has_permissions_for_organization(
     client_request,
     api_user_active,
 ):
-    api_user_active['organisations'] = ['org_1', 'org_2']
+    api_user_active['organizations'] = ['org_1', 'org_2']
     client_request.login(api_user_active)
 
     request.view_args = {'org_id': 'org_2'}
@@ -116,7 +116,7 @@ def test_platform_admin_can_see_orgs_they_dont_have(
     client_request,
     platform_admin_user,
 ):
-    platform_admin_user['organisations'] = []
+    platform_admin_user['organizations'] = []
     client_request.login(platform_admin_user)
 
     request.view_args = {'org_id': 'org_2'}
@@ -144,11 +144,11 @@ def test_cant_use_decorator_without_view_args(
         index()
 
 
-def test_user_doesnt_have_permissions_for_organisation(
+def test_user_doesnt_have_permissions_for_organization(
     client_request,
     api_user_active,
 ):
-    api_user_active['organisations'] = ['org_1', 'org_2']
+    api_user_active['organizations'] = ['org_1', 'org_2']
     client_request.login(api_user_active)
 
     request.view_args = {'org_id': 'org_3'}
