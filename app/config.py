@@ -2,6 +2,7 @@ import json
 from os import getenv
 
 import newrelic.agent
+from notifications_utils import DAILY_MESSAGE_LIMIT
 
 from app.cloudfoundry_config import cloud_config
 
@@ -44,7 +45,7 @@ class Config(object):
 
     DEFAULT_SERVICE_LIMIT = 50
 
-    GLOBAL_SERVICE_MESSAGE_LIMIT = 250000
+    GLOBAL_SERVICE_MESSAGE_LIMIT = DAILY_MESSAGE_LIMIT
 
     EMAIL_EXPIRY_SECONDS = 3600  # 1 hour
     INVITATION_EXPIRY_SECONDS = 3600 * 24 * 2  # 2 days - also set on api
