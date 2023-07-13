@@ -546,7 +546,7 @@ describe('TemplateFolderForm', () => {
       // Removing sticky functionality
       // mode should have been set to 'default' as the controls only have one part
       // expect(GOVUK.stickAtBottomWhenScrolling.setMode.mock.calls.length).toEqual(1);
-      // expect(GOVUK.stickAtBottomWhenScrolling.setMode.mock.calls[0][0]).toEqual('default');
+      // expect(GOVUK.stickAtBottomWhenScrolling.setMode.mock.calls[0] [0]).toEqual('default');
 
     });
 
