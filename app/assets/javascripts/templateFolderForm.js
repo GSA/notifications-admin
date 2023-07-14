@@ -285,9 +285,6 @@
       if (['move-to-existing-folder', 'add-new-template'].indexOf(this.currentState) !== -1) {
         mode = 'dialog';
       }
-      // GOVUK.stickAtBottomWhenScrolling.setMode(mode);
-      // make sticky JS recalculate its cache of the element's position
-      // GOVUK.stickAtBottomWhenScrolling.recalculate();
 
       if (currentStateObj && ('setFocus' in currentStateObj)) {
         scrollTop = $(window).scrollTop();
