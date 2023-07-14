@@ -195,3 +195,31 @@ td.table-empty-message {
       border: 1px solid color("gray-60");
    }
 }
+
+.usa-hint {
+   display: block;
+}
+
+.js-stick-at-bottom-when-scrolling {
+   margin: 0 0 units(5);
+   padding: units(2) 0;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   overflow: visible;
+   button {
+      margin-right: units(2);
+   }
+   .template-list-selected-counter {
+      position: relative;
+      top: 0;
+   }
+}
+
+.sticky-template-form {
+   margin: 0;
+   padding: 0;
+   &:focus {
+      outline-offset: units(1);
+   }
+}
