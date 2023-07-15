@@ -54,9 +54,14 @@ py-lint: ## Run python linting scanners
 .PHONY: py-test
 py-test: export NEW_RELIC_ENVIRONMENT=test
 py-test: ## Run python unit tests
-	pipenv run coverage run --omit=*/notifications_utils/* -m pytest --maxfail=10 tests/
+	pipenv run coverage run --omit=*/notifications_utils/* -m pytest --maxfail=10 --ignore=tests/end_to_end tests/
 	pipenv run coverage report --fail-under=90
 	pipenv run coverage html -d .coverage_cache
+
+.PHONY: e2e-test
+e2e-test: export NEW_RELIC_ENVIRONMENT=test
+e2e-test: ## Run end-to-end integration tests
+	pipenv run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
 
 .PHONY: js-lint
 js-lint: ## Run javascript linting scanners
