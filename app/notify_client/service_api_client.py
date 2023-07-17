@@ -1,6 +1,9 @@
 from datetime import datetime
 
-from notifications_utils.clients.redis import daily_limit_cache_key
+from notifications_utils.clients.redis import (
+    daily_limit_cache_key,
+    daily_total_cache_key,
+)
 
 from app.extensions import redis_client
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
@@ -11,7 +14,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
     def create_service(
         self,
         service_name,
-        organisation_type,
+        organization_type,
         message_limit,
         restricted,
         user_id,
@@ -22,7 +25,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         """
         data = {
             "name": service_name,
-            "organisation_type": organisation_type,
+            "organization_type": organization_type,
             "active": True,
             "message_limit": message_limit,
             "user_id": user_id,
@@ -91,7 +94,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             'message_limit',
             'name',
             'notes',
-            'organisation_type',
+            'organization_type',
             'permissions',
             'prefix_sms',
             'purchase_order_number',
@@ -111,7 +114,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         endpoint = "/service/{0}".format(service_id)
         return self.post(endpoint, data)
 
-    @cache.delete('live-service-and-organisation-counts')
+    @cache.delete('live-service-and-organization-counts')
     def update_status(self, service_id, live):
         return self.update_service(
             service_id,
@@ -120,7 +123,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             go_live_at=str(datetime.utcnow()) if live else None
         )
 
-    @cache.delete('live-service-and-organisation-counts')
+    @cache.delete('live-service-and-organization-counts')
     def update_count_as_live(self, service_id, count_as_live):
         return self.update_service(
             service_id,
@@ -160,7 +163,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         return self.delete(endpoint, data)
 
     @cache.delete('service-{service_id}-templates')
-    def create_service_template(self, name, type_, content, service_id, subject=None, process_type='normal',
+    def create_service_template(self, name, type_, content, service_id, subject=None,
                                 parent_folder_id=None):
         """
         Create a service template.
@@ -170,7 +173,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             "template_type": type_,
             "content": content,
             "service": service_id,
-            "process_type": process_type,
+            "process_type": 'normal',
         }
         if subject:
             data.update({
@@ -187,7 +190,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
     @cache.delete('service-{service_id}-templates')
     @cache.delete_by_pattern('service-{service_id}-template-*')
     def update_service_template(
-        self, id_, name, type_, content, service_id, subject=None, process_type=None
+        self, id_, name, type_, content, service_id, subject=None
     ):
         """
         Update a service template.
@@ -203,10 +206,9 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             data.update({
                 'subject': subject
             })
-        if process_type:
-            data.update({
-                'process_type': process_type
-            })
+        data.update({
+            'process_type': 'normal'
+        })
         data = _attach_current_user(data)
         endpoint = "/service/{0}/template/{1}".format(service_id, id_)
         return self.post(endpoint, data)
@@ -527,8 +529,13 @@ class ServiceAPIClient(NotifyAdminAPIClient):
 
     def get_notification_count(self, service_id):
         # if cache is not set, or not enabled, return 0
-
         count = redis_client.get(daily_limit_cache_key(service_id)) or 0
+
+        return int(count)
+
+    def get_global_notification_count(self):
+        # if cache is not set, or not enabled, return 0
+        count = redis_client.get(daily_total_cache_key()) or 0
 
         return int(count)
 

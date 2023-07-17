@@ -1,10 +1,9 @@
 {% from "components/banner.html" import banner_wrapper %}
 
-<div class="govuk-grid-column-full template-container">
+<div class="grid-col-12 template-container">
   {{ template|string }}
 </div>
-<br>
-<div class="govuk-grid-column-full">
+<div class="grid-col-12">
   {% if template._template.archived %}
     <p class="hint">
       This template was deleted {{ template._template.updated_at|format_datetime_relative }}.
@@ -16,26 +15,20 @@
       or edit this template, contact your manager.
     </p>
   {% else %}
-    <div class="bottom-gutter-2-3">
-      <div class="govuk-grid-row">
+    <div class="grid-row margin-bottom-5">
+      <div class="usa-button-group">
         {% if current_user.has_permissions('send_messages', restrict_admin_usage=True) %}
-          <div class="govuk-grid-column-one-half">
-            <a href="{{ url_for(".set_sender", service_id=current_service.id, template_id=template.id) }}" class="govuk-link govuk-link--no-visited-state pill-separate-item">
-              Prepare to send<span class="govuk-visually-hidden"> a message using this template</span>
+            <a href="{{ url_for(".set_sender", service_id=current_service.id, template_id=template.id) }}" class="usa-button usa-pill-separate-item">
+              Prepare to send<span class="usa-sr-only"> a message using this template</span>
             </a>
-          </div>
         {% endif %}
         {% if current_user.has_permissions('manage_templates') %}
-          <div class="govuk-grid-column-one-half">
-            <a href="{{ url_for(".edit_service_template", service_id=current_service.id, template_id=template.id) }}" class="govuk-link govuk-link--no-visited-state pill-separate-item">
+            <a href="{{ url_for(".edit_service_template", service_id=current_service.id, template_id=template.id) }}" class="usa-button usa-button--outline usa-pill-separate-item">
               Edit
             </a>
-          </div>
         {% endif %}
       </div>
     </div>
   {% endif %}
 </div>
-<br>
-<br>
 

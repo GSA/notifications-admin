@@ -6,31 +6,25 @@ from notifications_utils.clients.zendesk.zendesk_client import (
     NotifySupportTicket,
 )
 
-from app.utils.branding import NHS_EMAIL_BRANDING_ID
 from tests import sample_uuid
 from tests.conftest import ORGANISATION_ID, SERVICE_ONE_ID, normalize_spaces
 
 
-@pytest.mark.parametrize('organisation_type, expected_options', (
-    ('nhs_central', [
-        ('nhs', 'NHS'),
-        ('something_else', 'Something else'),
-    ]),
+@pytest.mark.parametrize('organization_type, expected_options', (
     ('other', [
         ('something_else', 'Something else'),
-    ])
+    ]),
 ))
-@pytest.mark.skip(reason='Update for TTS')
 def test_email_branding_request_page_when_no_branding_is_set(
     service_one,
     client_request,
     mocker,
     mock_get_email_branding,
-    organisation_type,
+    organization_type,
     expected_options,
 ):
     service_one['email_branding'] = None
-    service_one['organisation_type'] = organisation_type
+    service_one['organization_type'] = organization_type
 
     mocker.patch(
         'app.models.service.Service.email_branding_id',
@@ -43,7 +37,7 @@ def test_email_branding_request_page_when_no_branding_is_set(
     )
 
     assert mock_get_email_branding.called is False
-    assert page.find('iframe')['src'] == url_for('main.email_template', branding_style='__NONE__')
+    assert page.find_all('iframe')[1]['src'] == url_for('main.email_template', branding_style='__NONE__')
 
     button_text = normalize_spaces(page.select_one('.page-footer button').text)
 
@@ -63,7 +57,7 @@ def test_email_branding_request_page_shows_branding_if_set(
     service_one,
     client_request,
     mock_get_email_branding,
-    mock_get_service_organisation,
+    mock_get_service_organization,
 ):
     mocker.patch(
         'app.models.service.Service.email_branding_id',
@@ -74,10 +68,9 @@ def test_email_branding_request_page_shows_branding_if_set(
     page = client_request.get(
         '.email_branding_request', service_id=SERVICE_ONE_ID
     )
-    assert page.find('iframe')['src'] == url_for('main.email_template', branding_style='some-random-branding')
+    assert page.find_all('iframe')[1]['src'] == url_for('main.email_template', branding_style='some-random-branding')
 
 
-@pytest.mark.skip(reason='Update for TTS')
 def test_email_branding_request_page_back_link(
     client_request,
 ):
@@ -85,8 +78,9 @@ def test_email_branding_request_page_back_link(
         '.email_branding_request', service_id=SERVICE_ONE_ID
     )
 
-    back_link = page.select('a[class=govuk-back-link]')
-    assert back_link[0].attrs['href'] == url_for('.service_settings', service_id=SERVICE_ONE_ID)
+    back_link = page.select_one('a.usa-back-link')
+    assert len(back_link) > 0, "No back link found on the page"
+    assert back_link['href'] == url_for('.service_settings', service_id=SERVICE_ONE_ID)
 
 
 @pytest.mark.parametrize('data, org_type, endpoint', (
@@ -106,37 +100,29 @@ def test_email_branding_request_page_back_link(
     ),
     (
         {
-            'options': 'organisation',
-        },
-        'federal',
-        'main.email_branding_organisation',
-    ),
-    (
-        {
             'options': 'something_else',
         },
         'federal',
         'main.email_branding_something_else',
     ),
 ))
-@pytest.mark.skip(reason='Update for TTS')
 def test_email_branding_request_submit(
     client_request,
     service_one,
     mocker,
     mock_get_email_branding,
-    organisation_one,
+    organization_one,
     data,
     org_type,
     endpoint,
 ):
-    organisation_one['organisation_type'] = org_type
+    organization_one['organization_type'] = org_type
     service_one['email_branding'] = sample_uuid()
-    service_one['organisation'] = organisation_one
+    service_one['organization'] = organization_one
 
     mocker.patch(
-        'app.organisations_client.get_organisation',
-        return_value=organisation_one,
+        'app.organizations_client.get_organization',
+        return_value=organization_one,
     )
 
     client_request.post(
@@ -151,7 +137,6 @@ def test_email_branding_request_submit(
     )
 
 
-@pytest.mark.skip(reason='Update for TTS')
 def test_email_branding_request_submit_when_no_radio_button_is_selected(
     client_request,
     service_one,
@@ -170,24 +155,22 @@ def test_email_branding_request_submit_when_no_radio_button_is_selected(
 
 @pytest.mark.parametrize('endpoint, expected_heading', [
     ('main.email_branding_govuk_and_org', 'Before you request new branding'),
-    ('main.email_branding_organisation', 'When you request new branding'),
 ])
-@pytest.mark.skip(reason='Update for TTS')
 def test_email_branding_description_pages_for_org_branding(
     client_request,
     mocker,
     service_one,
-    organisation_one,
+    organization_one,
     mock_get_email_branding,
     endpoint,
     expected_heading,
 ):
     service_one['email_branding'] = sample_uuid()
-    service_one['organisation'] = organisation_one
+    service_one['organization'] = organization_one
 
     mocker.patch(
-        'app.organisations_client.get_organisation',
-        return_value=organisation_one,
+        'app.organizations_client.get_organization',
+        return_value=organization_one,
     )
 
     page = client_request.get(
@@ -207,19 +190,19 @@ def test_email_branding_govuk_and_nhs_pages(
     client_request,
     mocker,
     service_one,
-    organisation_one,
+    organization_one,
     mock_get_email_branding,
     endpoint,
     service_org_type,
     branding_preview_id,
 ):
-    organisation_one['organisation_type'] = service_org_type
+    organization_one['organization_type'] = service_org_type
     service_one['email_branding'] = sample_uuid()
-    service_one['organisation'] = organisation_one
+    service_one['organization'] = organization_one
 
     mocker.patch(
-        'app.organisations_client.get_organisation',
-        return_value=organisation_one,
+        'app.organizations_client.get_organization',
+        return_value=organization_one,
     )
 
     page = client_request.get(
@@ -236,7 +219,7 @@ def test_email_branding_govuk_and_nhs_pages(
 def test_email_branding_something_else_page(client_request, service_one):
     # expect to have a "NHS" option as well as the
     # fallback, so back button goes to choices page
-    service_one['organisation_type'] = 'nhs_central'
+    service_one['organization_type'] = 'nhs_central'
 
     page = client_request.get(
         'main.email_branding_something_else',
@@ -245,22 +228,21 @@ def test_email_branding_something_else_page(client_request, service_one):
     assert normalize_spaces(page.h1.text) == 'Describe the branding you want'
     assert page.select_one('textarea')['name'] == ('something_else')
     assert normalize_spaces(page.select_one('.page-footer button').text) == 'Request new branding'
-    assert page.select_one('.govuk-back-link')['href'] == url_for(
+    assert page.select_one('.usa-back-link')['href'] == url_for(
         'main.email_branding_request', service_id=SERVICE_ONE_ID,
     )
 
 
-@pytest.mark.skip(reason='Update for TTS')
 def test_get_email_branding_something_else_page_is_only_option(client_request, service_one):
     # should only have a "something else" option
     # so back button goes back to settings page
-    service_one['organisation_type'] = 'other'
+    service_one['organization_type'] = 'other'
 
     page = client_request.get(
         'main.email_branding_something_else',
         service_id=SERVICE_ONE_ID,
     )
-    assert page.select_one('.govuk-back-link')['href'] == url_for(
+    assert page.select_one('.usa-back-link')['href'] == url_for(
         'main.service_settings', service_id=SERVICE_ONE_ID,
     )
 
@@ -268,8 +250,7 @@ def test_get_email_branding_something_else_page_is_only_option(client_request, s
 @pytest.mark.parametrize('endpoint', [
     ('main.email_branding_govuk'),
     ('main.email_branding_govuk_and_org'),
-    # ('main.email_branding_nhs'),
-    ('main.email_branding_organisation'),
+    ('main.email_branding_organization'),
 ])
 def test_email_branding_pages_give_404_if_selected_branding_not_allowed(
     client_request,
@@ -284,23 +265,22 @@ def test_email_branding_pages_give_404_if_selected_branding_not_allowed(
     )
 
 
-@pytest.mark.skip(reason='Update for TTS')
 def test_email_branding_govuk_submit(
     mocker,
     client_request,
     service_one,
-    organisation_one,
+    organization_one,
     no_reply_to_email_addresses,
     mock_get_email_branding,
     single_sms_sender,
     mock_update_service,
 ):
     mocker.patch(
-        'app.organisations_client.get_organisation',
-        return_value=organisation_one,
+        'app.organizations_client.get_organization',
+        return_value=organization_one,
     )
     mocker.patch(
-        'app.models.service.Service.organisation_id',
+        'app.models.service.Service.organization_id',
         new_callable=PropertyMock,
         return_value=ORGANISATION_ID,
     )
@@ -325,17 +305,17 @@ def test_email_branding_govuk_and_org_submit(
     mocker,
     client_request,
     service_one,
-    organisation_one,
+    organization_one,
     no_reply_to_email_addresses,
     mock_get_email_branding,
     single_sms_sender,
 ):
     mocker.patch(
-        'app.organisations_client.get_organisation',
-        return_value=organisation_one,
+        'app.organizations_client.get_organization',
+        return_value=organization_one,
     )
     mocker.patch(
-        'app.models.service.Service.organisation_id',
+        'app.models.service.Service.organization_id',
         new_callable=PropertyMock,
         return_value=ORGANISATION_ID,
     )
@@ -356,13 +336,13 @@ def test_email_branding_govuk_and_org_submit(
     mock_create_ticket.assert_called_once_with(
         ANY,
         message='\n'.join([
-            'Organisation: organisation one',
+            'Organization: organization one',
             'Service: service one',
             'http://localhost/services/596364a0-858e-42c8-9062-a8fe822260eb',
             '',
             '---',
-            'Current branding: Organisation name',
-            'Branding requested: GOV.UK and organisation one\n',
+            'Current branding: Organization name',
+            'Branding requested: GOV.UK and organization one\n',
         ]),
         subject='Email branding request - service one',
         ticket_type='question',
@@ -380,49 +360,21 @@ def test_email_branding_govuk_and_org_submit(
 
 
 @pytest.mark.skip(reason='Update for TTS')
-def test_email_branding_nhs_submit(
+def test_email_branding_organization_submit(
     mocker,
     client_request,
     service_one,
-    organisation_one,
-    no_reply_to_email_addresses,
-    mock_get_email_branding,
-    single_sms_sender,
-    mock_update_service,
-):
-    service_one['email_branding'] = sample_uuid()
-    service_one['organisation_type'] = 'nhs_local'
-
-    page = client_request.post(
-        '.email_branding_nhs',
-        service_id=SERVICE_ONE_ID,
-        _follow_redirects=True,
-    )
-
-    mock_update_service.assert_called_once_with(
-        SERVICE_ONE_ID,
-        email_branding=NHS_EMAIL_BRANDING_ID,
-    )
-    assert page.h1.text == 'Settings'
-    assert normalize_spaces(page.select_one('.banner-default').text) == 'You’ve updated your email branding'
-
-
-@pytest.mark.skip(reason='Update for TTS')
-def test_email_branding_organisation_submit(
-    mocker,
-    client_request,
-    service_one,
-    organisation_one,
+    organization_one,
     no_reply_to_email_addresses,
     mock_get_email_branding,
     single_sms_sender,
 ):
     mocker.patch(
-        'app.organisations_client.get_organisation',
-        return_value=organisation_one,
+        'app.organizations_client.get_organization',
+        return_value=organization_one,
     )
     mocker.patch(
-        'app.models.service.Service.organisation_id',
+        'app.models.service.Service.organization_id',
         new_callable=PropertyMock,
         return_value=ORGANISATION_ID,
     )
@@ -435,7 +387,7 @@ def test_email_branding_organisation_submit(
     )
 
     page = client_request.post(
-        '.email_branding_organisation',
+        '.email_branding_organization',
         service_id=SERVICE_ONE_ID,
         _follow_redirects=True,
     )
@@ -443,13 +395,13 @@ def test_email_branding_organisation_submit(
     mock_create_ticket.assert_called_once_with(
         ANY,
         message='\n'.join([
-            'Organisation: organisation one',
+            'Organization: organization one',
             'Service: service one',
             'http://localhost/services/596364a0-858e-42c8-9062-a8fe822260eb',
             '',
             '---',
-            'Current branding: Organisation name',
-            'Branding requested: organisation one\n',
+            'Current branding: Organization name',
+            'Branding requested: organization one\n',
         ]),
         subject='Email branding request - service one',
         ticket_type='question',
@@ -466,7 +418,6 @@ def test_email_branding_organisation_submit(
     )
 
 
-@pytest.mark.skip(reason='Update for TTS')
 def test_email_branding_something_else_submit(
     client_request,
     mocker,
@@ -476,7 +427,7 @@ def test_email_branding_something_else_submit(
     single_sms_sender,
 ):
     service_one['email_branding'] = sample_uuid()
-    service_one['organisation_type'] = 'nhs_local'
+    service_one['organization_type'] = 'nhs_local'
 
     mock_create_ticket = mocker.spy(NotifySupportTicket, '__init__')
     mock_send_ticket_to_zendesk = mocker.patch(
@@ -494,12 +445,12 @@ def test_email_branding_something_else_submit(
     mock_create_ticket.assert_called_once_with(
         ANY,
         message='\n'.join([
-            'Organisation: Can’t tell (domain is user.gsa.gov)',
+            'Organization: Can’t tell (domain is user.gsa.gov)',
             'Service: service one',
             'http://localhost/services/596364a0-858e-42c8-9062-a8fe822260eb',
             '',
             '---',
-            'Current branding: Organisation name',
+            'Current branding: Organization name',
             'Branding requested: Something else\n',
             'Homer Simpson\n'
         ]),
@@ -518,7 +469,6 @@ def test_email_branding_something_else_submit(
     )
 
 
-@pytest.mark.skip(reason='Update for TTS')
 def test_email_branding_something_else_submit_shows_error_if_textbox_is_empty(
     client_request,
 ):
@@ -529,4 +479,4 @@ def test_email_branding_something_else_submit_shows_error_if_textbox_is_empty(
         _follow_redirects=True,
     )
     assert normalize_spaces(page.h1.text) == 'Describe the branding you want'
-    assert normalize_spaces(page.select_one('.govuk-error-message').text) == 'Error: Cannot be empty'
+    assert normalize_spaces(page.select_one('.usa-error-message').text) == 'Error: Cannot be empty'

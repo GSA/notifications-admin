@@ -16,7 +16,7 @@
   </div>
 
   <h2 class="govuk-heading-m">
-    Messages sent since May 2016
+    Messages sent since May 2023
   </h2>
 
   <div class="govuk-grid-row">
@@ -47,7 +47,7 @@
   <div class="dashboard-table">
     {% call(item, row_number) list_table(
       notifications_by_type|reverse,
-      caption='Messages sent since May 2016',
+      caption='Messages sent since May 2023',
       caption_visible=False,
       field_headings=[
         'Date',
@@ -109,20 +109,20 @@
   </h2>
   <div class="govuk-grid-row bottom-gutter">
     <div class="govuk-grid-column-one-half">
-      <span class="govuk-visually-hidden">There are</span>
-      <div class="product-page-big-number">{{ count_of_live_services_and_organisations.organisations|format_thousands }}</div>
+      <span class="usa-sr-only">There are</span>
+      <div class="product-page-big-number">{{ count_of_live_services_and_organizations.organizations|format_thousands }}</div>
       organizations
     </div>
     <div class="govuk-grid-column-one-half">
-      <span class="govuk-visually-hidden">and</span>
-      <div class="product-page-big-number">{{ count_of_live_services_and_organisations.services|format_thousands }}</div>
+      <span class="usa-sr-only">and</span>
+      <div class="product-page-big-number">{{ count_of_live_services_and_organizations.services|format_thousands }}</div>
       services
-      <span class="govuk-visually-hidden">using Notify.</span>
+      <span class="usa-sr-only">using Notify.</span>
     </div>
   </div>
   <div class="dashboard-table">
     {% call(item, row_number) list_table(
-      organisations_using_notify,
+      organizations_using_notify,
       caption='Organizations using Notify',
       caption_visible=False,
       field_headings=[
@@ -131,7 +131,7 @@
       empty_message='No data to show'
     ) %}
       {% call field() %}
-        {{ item.organisation_name }}
+        {{ item.organization_name }}
       {% endcall %}
       {% call field() %}
         {{ item.count_of_live_services }}

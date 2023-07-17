@@ -10,8 +10,8 @@ Create an account
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="heading-large">Create an account</h1>
-    <p class="govuk-body">
+    <h1 class="font-body-2xl margin-bottom-3">Create an account</h1>
+    <p>
       Your account will be created with this email address:
       <span class="nowrap">{{invited_user.email_address}}</span>
     </p>
@@ -21,7 +21,7 @@ Create an account
         well as the password, but should not be visible to users, nor should
         the view process the input.
       #}
-      <div class="govuk-visually-hidden">
+      <div class="usa-sr-only">
         <label for="username" aria-hidden="true">Email</label>
         <input type="email" name="username" id="username" value="{{ invited_user.email_address }}" disabled="disabled" tabindex="-1" aria-hidden="true" autocomplete="username" />
       </div>

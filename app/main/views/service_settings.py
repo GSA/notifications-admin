@@ -23,7 +23,7 @@ from app import (
     email_branding_client,
     inbound_number_client,
     notification_api_client,
-    organisations_client,
+    organizations_client,
     service_api_client,
 )
 from app.event_handlers import (
@@ -45,7 +45,7 @@ from app.main.forms import (
     AdminServiceRateLimitForm,
     AdminServiceSMSAllowanceForm,
     AdminSetEmailBrandingForm,
-    AdminSetOrganisationForm,
+    AdminSetOrganizationForm,
     ChooseEmailBrandingForm,
     EstimateUsageForm,
     RenameServiceForm,
@@ -108,7 +108,7 @@ def service_name_change(service_id):
         else:
             return redirect(url_for('.service_settings', service_id=service_id))
 
-    if current_service.organisation_type == 'local':
+    if current_service.organization_type == 'local':
         return render_template(
             'views/service-settings/name-local.html',
             form=form,
@@ -174,8 +174,8 @@ def submit_request_to_go_live(service_id):
         user_name=current_user.name,
         user_email=current_user.email_address,
         requester_sees_message_content=False,
-        org_id=current_service.organisation_id,
-        org_type=current_service.organisation_type,
+        org_id=current_service.organization_id,
+        org_type=current_service.organization_type,
         service_id=current_service.id,
     )
     zendesk_client.send_ticket_to_zendesk(ticket)
@@ -818,28 +818,28 @@ def service_preview_email_branding(service_id):
     )
 
 
-@main.route("/services/<uuid:service_id>/service-settings/link-service-to-organisation", methods=['GET', 'POST'])
+@main.route("/services/<uuid:service_id>/service-settings/link-service-to-organization", methods=['GET', 'POST'])
 @user_is_platform_admin
-def link_service_to_organisation(service_id):
+def link_service_to_organization(service_id):
 
-    all_organisations = organisations_client.get_organisations()
+    all_organizations = organizations_client.get_organizations()
 
-    form = AdminSetOrganisationForm(
-        choices=convert_dictionary_to_wtforms_choices_format(all_organisations, 'id', 'name'),
-        organisations=current_service.organisation_id
+    form = AdminSetOrganizationForm(
+        choices=convert_dictionary_to_wtforms_choices_format(all_organizations, 'id', 'name'),
+        organizations=current_service.organization_id
     )
 
     if form.validate_on_submit():
-        if form.organisations.data != current_service.organisation_id:
-            organisations_client.update_service_organisation(
+        if form.organizations.data != current_service.organization_id:
+            organizations_client.update_service_organization(
                 service_id,
-                form.organisations.data
+                form.organizations.data
             )
         return redirect(url_for('.service_settings', service_id=service_id))
 
     return render_template(
-        'views/service-settings/link-service-to-organisation.html',
-        has_organisations=all_organisations,
+        'views/service-settings/link-service-to-organization.html',
+        has_organizations=all_organizations,
         form=form,
         search_form=SearchByNameForm(),
     )
@@ -860,8 +860,8 @@ def create_email_branding_zendesk_ticket(form_option_selected, detail=None):
         ticket_type=NotifySupportTicket.TYPE_QUESTION,
         user_name=current_user.name,
         user_email=current_user.email_address,
-        org_id=current_service.organisation_id,
-        org_type=current_service.organisation_type,
+        org_id=current_service.organization_id,
+        org_type=current_service.organization_type,
         service_id=current_service.id
     )
     zendesk_client.send_ticket_to_zendesk(ticket)
@@ -941,18 +941,18 @@ def email_branding_nhs(service_id):
     )
 
 
-@main.route("/services/<uuid:service_id>/service-settings/email-branding/organisation", methods=['GET', 'POST'])
+@main.route("/services/<uuid:service_id>/service-settings/email-branding/organization", methods=['GET', 'POST'])
 @user_has_permissions('manage_service')
-def email_branding_organisation(service_id):
-    check_email_branding_allowed_for_service('organisation')
+def email_branding_organization(service_id):
+    check_email_branding_allowed_for_service('organization')
 
     if request.method == 'POST':
-        create_email_branding_zendesk_ticket('organisation')
+        create_email_branding_zendesk_ticket('organization')
 
         flash('Thanks for your branding request. We’ll get back to you within one working day.', 'default')
         return redirect(url_for('.service_settings', service_id=current_service.id))
 
-    return render_template('views/service-settings/branding/email-branding-organisation.html')
+    return render_template('views/service-settings/branding/email-branding-organization.html')
 
 
 @main.route("/services/<uuid:service_id>/service-settings/email-branding/something-else", methods=['GET', 'POST'])

@@ -82,7 +82,7 @@
         this.render();
       }
 
-      this.$form.on('click', 'button.govuk-button--secondary', (event) => this.actionButtonClicked(event));
+      this.$form.on('click', 'button.usa-button--event', (event) => this.actionButtonClicked(event));
       this.$form.on('change', 'input[type=checkbox]', () => this.templateFolderCheckboxChanged());
     };
 
@@ -91,7 +91,7 @@
 
       $.each(this.states.filter(state => 'description' in state), (idx, state) => {
         id = `${state.key}__description`;
-        description = `<p class="govuk-visually-hidden" id="${id}">${state.description}</p>`;
+        description = `<p class="usa-sr-only" id="${id}">${state.description}</p>`;
         state.$el
           .prepend(description)
           .attr('aria-describedby', id);
@@ -149,7 +149,7 @@
     this.makeButton = (text, opts) => {
       let $btn = $('<a href=""></a>')
                     .html(text)
-                    .addClass('govuk-link govuk-link--no-visited-state js-cancel')
+                    .addClass('usa-link js-cancel')
                     // isn't set if cancelSelector is undefined
                     .data('target', opts.cancelSelector || undefined)
                     .attr('tabindex', '0')
@@ -162,7 +162,7 @@
                     });
 
         if (opts.hasOwnProperty('nonvisualText')) {
-          $btn.append(`<span class="govuk-visually-hidden"> ${opts.nonvisualText}</span>`);
+          $btn.append(`<span class="usa-sr-only"> ${opts.nonvisualText}</span>`);
         }
 
         return $btn;
@@ -285,9 +285,6 @@
       if (['move-to-existing-folder', 'add-new-template'].indexOf(this.currentState) !== -1) {
         mode = 'dialog';
       }
-      GOVUK.stickAtBottomWhenScrolling.setMode(mode);
-      // make sticky JS recalculate its cache of the element's position
-      GOVUK.stickAtBottomWhenScrolling.recalculate();
 
       if (currentStateObj && ('setFocus' in currentStateObj)) {
         scrollTop = $(window).scrollTop();
@@ -299,10 +296,12 @@
     this.nothingSelectedButtons = $(`
       <div id="nothing_selected">
         <div class="js-stick-at-bottom-when-scrolling">
-          <button class="govuk-button govuk-button--secondary govuk-!-margin-right-3 govuk-!-margin-bottom-1" value="add-new-template" aria-expanded="false">
-            New template
-          </button>
-          <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-1" value="add-new-folder" aria-expanded="false">New folder</button>
+          <div class="usa-button-group">
+            <button class="usa-button usa-button--event" value="add-new-template" aria-expanded="false">
+              New template
+            </button>
+            <button class="usa-button usa-button--event" value="add-new-folder" aria-expanded="false">New folder</button>
+          </div>
           <div class="template-list-selected-counter">
             <span class="template-list-selected-counter__count" aria-hidden="true">
               ${this.selectionStatus.default}
@@ -315,10 +314,12 @@
     this.itemsSelectedButtons = $(`
       <div id="items_selected">
         <div class="js-stick-at-bottom-when-scrolling">
-          <button class="govuk-button govuk-button--secondary govuk-!-margin-right-3 govuk-!-margin-bottom-1" value="move-to-existing-folder" aria-expanded="false">
-            Move<span class="govuk-visually-hidden"> selection to folder</span>
-          </button>
-          <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-1" value="move-to-new-folder" aria-expanded="false">Add to new folder</button>
+          <div class="usa-button-group">
+            <button class="usa-button usa-button--event" value="move-to-existing-folder" aria-expanded="false">
+              Move<span class="usa-sr-only"> selection to folder</span>
+            </button>
+            <button class="usa-button usa-button--event" value="move-to-new-folder" aria-expanded="false">Add to new folder</button>
+          </div>
           <div class="template-list-selected-counter" aria-hidden="true">
             <span class="template-list-selected-counter__count" aria-hidden="true">
               ${this.selectionStatus.selected(1)}

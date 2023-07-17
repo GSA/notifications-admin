@@ -2,16 +2,16 @@
 {% from "components/page-footer.html" import page_footer %}
 
 {% block per_page_title %}
-  Invalid email link
+  This link has expired
 {% endblock %}
 
 {% block maincolumn_content %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="heading-large">The link has expired</h1>
+    <h1 class="font-body-2xl margin-bottom-3">This link has expired</h1>
 
-    <p class="govuk-body">
+    <p>
       <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.sign_in', next=redirect_url) }}">
         Sign in again
       </a> to get a new link.

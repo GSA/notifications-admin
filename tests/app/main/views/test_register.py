@@ -107,7 +107,7 @@ def test_process_register_returns_200_when_mobile_number_is_invalid(
 
 def test_should_return_200_when_email_is_not_gov_uk(
     client_request,
-    mock_get_organisations,
+    mock_get_organizations,
 ):
     client_request.logout()
     page = client_request.post(
@@ -122,9 +122,9 @@ def test_should_return_200_when_email_is_not_gov_uk(
     )
 
     assert 'Enter a public sector email address or find out who can use Notify' in normalize_spaces(
-        page.select_one('.govuk-error-message').text
+        page.select_one('.usa-error-message').text
     )
-    assert page.select_one('.govuk-error-message a')['href'] == url_for(
+    assert page.select_one('.usa-error-message a')['href'] == url_for(
         'main.features'
     )
 
@@ -139,7 +139,7 @@ def test_should_add_user_details_to_session(
     mock_send_verify_code,
     mock_register_user,
     mock_get_user_by_email_not_found,
-    mock_get_organisations_with_unusual_domains,
+    mock_get_organizations_with_unusual_domains,
     mock_email_is_not_already_in_use,
     mock_send_verify_email,
     mock_login,
@@ -249,7 +249,7 @@ def test_shows_hidden_email_address_on_registration_page_from_invite(
     assert normalize_spaces(page.select_one('main p').text) == (
         'Your account will be created with this email address: invited_user@test.gsa.gov'
     )
-    hidden_input = page.select_one('form .govuk-visually-hidden input')
+    hidden_input = page.select_one('form .usa-sr-only input')
     for attr, value in (
         ('type', 'email'),
         ('name', 'username'),
@@ -476,7 +476,7 @@ def test_cannot_register_with_sms_auth_and_missing_mobile_number(
         _expected_status=200,
     )
 
-    err = page.select_one('.govuk-error-message')
+    err = page.select_one('.usa-error-message')
     assert err.text.strip() == 'Error: Cannot be empty'
     assert err.attrs['data-error-label'] == 'mobile_number'
 

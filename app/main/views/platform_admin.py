@@ -193,8 +193,8 @@ def live_services_csv():
 
     column_names = OrderedDict([
         ('service_id', 'Service ID'),
-        ('organisation_name', 'Organization'),
-        ('organisation_type', 'Organization type'),
+        ('organization_name', 'Organization'),
+        ('organization_type', 'Organization type'),
         ('service_name', 'Service name'),
         ('consent_to_research', 'Consent to research'),
         ('contact_name', 'Main contact'),
@@ -258,7 +258,7 @@ def get_billing_report():
         start_date = form.start_date.data
         end_date = form.end_date.data
         headers = [
-            "organisation_id", "organisation_name", "service_id", "service_name",
+            "organization_id", "organization_name", "service_id", "service_name",
             "sms_cost", "sms_chargeable_units",
             "purchase_order_number", "contact_names", "contact_email_addresses", "billing_reference"
         ]
@@ -273,7 +273,7 @@ def get_billing_report():
                 raise e
         rows = [
             [
-                r["organisation_id"], r["organisation_name"], r["service_id"], r["service_name"],
+                r["organization_id"], r["organization_name"], r["service_id"], r["service_name"],
                 r["sms_cost"], r["sms_chargeable_units"],
                 r.get("purchase_order_number"), r.get("contact_names"),
                 r.get("contact_email_addresses"), r.get("billing_reference")
@@ -301,14 +301,14 @@ def get_volumes_by_service():
         start_date = form.start_date.data
         end_date = form.end_date.data
         headers = [
-            "organisation id", "organisation name", "service id", "service name",
+            "organization id", "organization name", "service id", "service name",
             "free allowance", "sms notifications", "sms chargeable units", "email totals",
         ]
         result = billing_api_client.get_data_for_volumes_by_service_report(start_date, end_date)
 
         rows = [
             [
-                r["organisation_id"], r["organisation_name"], r["service_id"], r["service_name"],
+                r["organization_id"], r["organization_name"], r["service_id"], r["service_name"],
                 r["free_allowance"], r["sms_notifications"], r["sms_chargeable_units"], r["email_totals"],
             ]
             for r in result
@@ -447,11 +447,11 @@ def clear_cache():
             'email_branding',
             'email_branding-????????-????-????-????-????????????',
         ]),
-        ('organisation', [
-            'organisations',
+        ('organization', [
+            'organizations',
             'domains',
-            'live-service-and-organisation-counts',
-            'organisation-????????-????-????-????-????????????-name',
+            'live-service-and-organization-counts',
+            'organization-????????-????-????-????-????????????-name',
         ]),
     ])
 

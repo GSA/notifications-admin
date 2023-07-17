@@ -19,16 +19,11 @@
     class="form-group{% if field.errors %} form-group-error{% endif %} {{ extra_form_group_classes }}"
     data-module="{% if autofocus %}autofocus{% elif colour_preview %}colour-preview{% endif %}"
   >
-    <label class="form-label" for="{{ field.name }}">
+    <label class="usa-label" for="{{ field.name }}">
       {% if label %}
         {{ label }}
       {% else %}
         {{ field.label.text }}
-      {% endif %}
-      {% if hint %}
-        <span class="form-hint">
-          {{ hint }}
-        </span>
       {% endif %}
       {% if field.errors %}
         <span class="error-message" data-module="track-error" data-error-type="{{ field.errors[0] }}" data-error-label="{{ field.name }}">
@@ -36,10 +31,15 @@
         </span>
       {% endif %}
     </label>
+    {% if hint %}
+      <div class="usa-hint">
+        {{ hint }}
+      </div>
+    {% endif %}
     {%
       if highlight_placeholders or autosize
     %}
-      {% set field_class = 'form-control-{} textbox-highlight-textbox'.format(width) %}
+      {% set field_class = 'usa-textarea form-control-{} textbox-highlight-textbox'.format(width) %}
     {% else %}
       {% set field_class = 'form-control-{} {}'.format(width, 'textbox-right-aligned' if suffix else '') %}
     {% endif %}

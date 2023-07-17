@@ -4,10 +4,10 @@
 {% macro service_list(
   heading,
   show_heading,
-  organisations=[],
+  organizations=[],
   services=[]
 ) %}
-  {% if show_heading and (services or organisations) %}
+  {% if show_heading and (services or organizations) %}
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-quarter">
         <h2>
@@ -19,9 +19,9 @@
   {% else %}
     <ul>
   {% endif %}
-  {% for org in organisations|sort %}
+  {% for org in organizations|sort %}
     <li class="browse-list-item">
-      <a href="{{ url_for('.organisation_dashboard', org_id=org.id) }}" class="govuk-link govuk-link--no-visited-state">{{ org.name }}</a>
+      <a href="{{ url_for('.organization_dashboard', org_id=org.id) }}" class="usa-link">{{ org.name }}</a>
       <p class="browse-list-hint">
         {{ org.count_of_live_services }}
         live service{% if org.count_of_live_services != 1 %}s{% endif %}
@@ -30,10 +30,10 @@
   {% endfor %}
   {% for service in services|sort %}
     <li class="browse-list-item">
-      <a href="{{ url_for('.service_dashboard', service_id=service.id) }}" class="govuk-link govuk-link--no-visited-state">{{ service.name }}</a>
+      <a href="{{ url_for('.service_dashboard', service_id=service.id) }}" class="usa-link">{{ service.name }}</a>
     </li>
   {% endfor %}
-  {% if show_heading and (services or organisations) %}
+  {% if show_heading and (services or organizations) %}
         </ul>
       </div>
     </div>
@@ -49,7 +49,7 @@
 
 {% block maincolumn_content %}
 
-  <h1 class="heading-large {% if current_user.has_access_to_live_and_trial_mode_services %}govuk-visually-hidden{% endif %}">
+  <h1 class="heading-large {% if current_user.has_access_to_live_and_trial_mode_services %}usa-sr-only{% endif %}">
     Choose service
   </h1>
 
@@ -64,9 +64,9 @@
         </div>
         <ul class="govuk-grid-column-three-quarters">
           <li class="browse-list-item">
-            <a href="{{ url_for('.organisations') }}" class="govuk-link govuk-link--no-visited-state">All organisations</a>
+            <a href="{{ url_for('.organizations') }}" class="usa-link">All organizations</a>
             <p class="browse-list-hint">
-              {{ org_count|format_thousands }} organisations, {{ live_service_count|format_thousands }} live services
+              {{ org_count|format_thousands }} organizations, {{ live_service_count|format_thousands }} live services
             </p>
           </li>
         </ul>
@@ -74,11 +74,11 @@
       <div class="keyline-block"></div>
     {% endif %}
 
-    {% if current_user.organisations %}
+    {% if current_user.organizations %}
       {{ service_list(
         heading='Live services',
         show_heading=current_user.trial_mode_services or current_user.platform_admin,
-        organisations=current_user.organisations,
+        organizations=current_user.organizations,
         services=current_user.live_services
       ) }}
     {% else %}
@@ -92,7 +92,7 @@
     {% if current_user.trial_mode_services %}
       {{ service_list(
         heading='Trial mode services',
-        show_heading=(current_user.organisations or current_user.live_services or current_user.platform_admin),
+        show_heading=(current_user.organizations or current_user.live_services or current_user.platform_admin),
         services=current_user.trial_mode_services
       ) }}
     {% endif %}
@@ -112,7 +112,7 @@
         "element": "a",
         "text": "Add a new service",
         "href": url_for('.add_service'),
-        "classes": "govuk-button--secondary"
+        "classes": ""
       }) }}
       {% if current_user.has_access_to_live_and_trial_mode_services %}
           </div>

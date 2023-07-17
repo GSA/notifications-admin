@@ -4,7 +4,7 @@ from freezegun import freeze_time
 from notifications_python_client.errors import HTTPError
 
 from app.utils.user import is_gov_user
-from tests import organisation_json
+from tests import organization_json
 from tests.conftest import normalize_spaces
 
 
@@ -13,8 +13,8 @@ def test_non_gov_user_cannot_see_add_service_button(
     mock_login,
     mock_get_non_govuser,
     api_nongov_user_active,
-    mock_get_organisations,
-    mock_get_organisations_and_services_for_user,
+    mock_get_organizations,
+    mock_get_organizations_and_services_for_user,
 ):
     client_request.login(api_nongov_user_active)
     page = client_request.get('main.choose_account')
@@ -23,7 +23,7 @@ def test_non_gov_user_cannot_see_add_service_button(
 
 @pytest.mark.parametrize('org_json', (
     None,
-    organisation_json(organisation_type=None),
+    organization_json(organization_type=None),
 ))
 def test_get_should_render_add_service_template(
     client_request,
@@ -31,7 +31,7 @@ def test_get_should_render_add_service_template(
     org_json,
 ):
     mocker.patch(
-        'app.organisations_client.get_organisation_by_domain',
+        'app.organizations_client.get_organization_by_domain',
         return_value=org_json,
     )
     page = client_request.get('main.add_service')
@@ -58,8 +58,8 @@ def test_get_should_not_render_radios_if_org_type_known(
     mocker,
 ):
     mocker.patch(
-        'app.organisations_client.get_organisation_by_domain',
-        return_value=organisation_json(organisation_type='central'),
+        'app.organizations_client.get_organization_by_domain',
+        return_value=organization_json(organization_type='central'),
     )
     page = client_request.get('main.add_service')
     assert page.select_one('h1').text.strip() == 'About your service'
@@ -72,13 +72,13 @@ def test_show_different_page_if_user_org_type_is_local(
     mocker,
 ):
     mocker.patch(
-        'app.organisations_client.get_organisation_by_domain',
-        return_value=organisation_json(organisation_type='local'),
+        'app.organizations_client.get_organization_by_domain',
+        return_value=organization_json(organization_type='local'),
     )
     page = client_request.get('main.add_service')
     assert page.select_one('h1').text.strip() == 'About your service'
     assert page.select_one('input[name=name]').get('value') is None
-    assert page.select_one('main .govuk-body').text.strip() == (
+    assert page.select_one('main .usa-body').text.strip() == (
         'Give your service a name that tells users what your '
         'messages are about, as well as who they’re from. For example:')
 
@@ -112,14 +112,14 @@ def test_should_add_service_and_redirect_to_tour_when_no_services(
     api_user_active['email_address'] = email_address
     client_request.login(api_user_active)
     mocker.patch(
-        'app.organisations_client.get_organisation_by_domain',
-        return_value=organisation_json(organisation_type=inherited),
+        'app.organizations_client.get_organization_by_domain',
+        return_value=organization_json(organization_type=inherited),
     )
     client_request.post(
         'main.add_service',
         _data={
             'name': 'testing the post',
-            'organisation_type': posted,
+            'organization_type': posted,
         },
         _expected_status=302,
         _expected_redirect=url_for(
@@ -131,7 +131,7 @@ def test_should_add_service_and_redirect_to_tour_when_no_services(
     assert mock_get_services_with_no_services.called
     mock_create_service.assert_called_once_with(
         service_name='testing the post',
-        organisation_type=persisted,
+        organization_type=persisted,
         message_limit=50,
         restricted=True,
         user_id=api_user_active['id'],
@@ -160,7 +160,7 @@ def test_add_service_has_to_choose_org_type(
     mock_get_all_email_branding,
 ):
     mocker.patch(
-        'app.organisations_client.get_organisation_by_domain',
+        'app.organizations_client.get_organization_by_domain',
         return_value=None,
     )
     page = client_request.post(
@@ -170,7 +170,7 @@ def test_add_service_has_to_choose_org_type(
         },
         _expected_status=200,
     )
-    assert normalize_spaces(page.select_one('.govuk-error-message').text) == (
+    assert normalize_spaces(page.select_one('.usa-error-message').text) == (
         'Error: Select the type of organization'
     )
     assert mock_create_service.called is False
@@ -193,7 +193,7 @@ def test_get_should_only_show_nhs_org_types_radios_if_user_has_nhs_email(
     api_user_active['email_address'] = email_address
     client_request.login(api_user_active)
     mocker.patch(
-        'app.organisations_client.get_organisation_by_domain',
+        'app.organizations_client.get_organization_by_domain',
         return_value=None,
     )
     page = client_request.get('main.add_service')
@@ -215,7 +215,7 @@ def test_get_should_only_show_nhs_org_types_radios_if_user_has_nhs_email(
     ]
 
 
-@pytest.mark.parametrize('organisation_type, free_allowance', [
+@pytest.mark.parametrize('organization_type, free_allowance', [
     ('federal', 150_000),
     ('state', 150_000),
 ])
@@ -226,9 +226,9 @@ def test_should_add_service_and_redirect_to_dashboard_when_existing_service(
     mock_create_service,
     mock_create_service_template,
     mock_get_services,
-    mock_get_no_organisation_by_domain,
+    mock_get_no_organization_by_domain,
     api_user_active,
-    organisation_type,
+    organization_type,
     free_allowance,
     mock_get_all_email_branding,
 ):
@@ -236,7 +236,7 @@ def test_should_add_service_and_redirect_to_dashboard_when_existing_service(
         'main.add_service',
         _data={
             'name': 'testing the post',
-            'organisation_type': organisation_type,
+            'organization_type': organization_type,
         },
         _expected_status=302,
         _expected_redirect=url_for(
@@ -247,7 +247,7 @@ def test_should_add_service_and_redirect_to_dashboard_when_existing_service(
     assert mock_get_services.called
     mock_create_service.assert_called_once_with(
         service_name='testing the post',
-        organisation_type=organisation_type,
+        organization_type=organization_type,
         message_limit=notify_admin.config['DEFAULT_SERVICE_LIMIT'],
         restricted=True,
         user_id=api_user_active['id'],
@@ -265,7 +265,7 @@ def test_should_add_service_and_redirect_to_dashboard_when_existing_service(
 ])
 def test_add_service_fails_if_service_name_fails_validation(
     client_request,
-    mock_get_organisation_by_domain,
+    mock_get_organization_by_domain,
     name,
     error_message,
 ):
@@ -274,13 +274,13 @@ def test_add_service_fails_if_service_name_fails_validation(
         _data={"name": name},
         _expected_status=200,
     )
-    assert error_message in page.find("span", {"class": "govuk-error-message"}).text
+    assert error_message in page.find("span", {"class": "usa-error-message"}).text
 
 
 @freeze_time("2021-01-01")
 def test_should_return_form_errors_with_duplicate_service_name_regardless_of_case(
     client_request,
-    mock_get_organisation_by_domain,
+    mock_get_organization_by_domain,
     mocker,
 ):
     def _create(**_kwargs):
@@ -298,18 +298,18 @@ def test_should_return_form_errors_with_duplicate_service_name_regardless_of_cas
         'main.add_service',
         _data={
             'name': 'SERVICE ONE',
-            'organisation_type': 'federal',
+            'organization_type': 'federal',
         },
         _expected_status=200,
     )
-    assert 'This service name is already in use' in page.select_one('.govuk-error-message').text.strip()
+    assert 'This service name is already in use' in page.select_one('.usa-error-message').text.strip()
 
 
 def test_non_government_user_cannot_access_create_service_page(
     client_request,
     mock_get_non_govuser,
     api_nongov_user_active,
-    mock_get_organisations,
+    mock_get_organizations,
 ):
     assert is_gov_user(api_nongov_user_active['email_address']) is False
     client_request.login(api_nongov_user_active)
@@ -323,7 +323,7 @@ def test_non_government_user_cannot_create_service(
     client_request,
     mock_get_non_govuser,
     api_nongov_user_active,
-    mock_get_organisations,
+    mock_get_organizations,
 ):
     assert is_gov_user(api_nongov_user_active['email_address']) is False
     client_request.login(api_nongov_user_active)

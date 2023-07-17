@@ -1,0 +1,37 @@
+{% extends "withoutnav_template.html" %}
+{% from "components/page-header.html" import page_header %}
+{% from "components/page-footer.html" import page_footer %}
+{% from "components/form.html" import form_wrapper %}
+
+{% block per_page_title %}
+  New organization
+{% endblock %}
+
+{% block main %}
+  <div class="govuk-width-container">
+    <div class="navigation-service">
+      <a href="{{ url_for('.organizations') }}" class="govuk-link govuk-link--no-visited-state navigation-service-back-to">All organizations</a>
+      <a href="{{ url_for('main.choose_account') }}" class="govuk-link govuk-link--no-visited-state navigation-service-switch">Switch service</a>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-quarter">
+        &nbsp;
+      </div>
+      <div class="govuk-grid-column-three-quarters">
+        <main class="govuk-main-wrapper column-main govuk-!-padding-top-0 govuk-!-padding-bottom-0" id="main-content" role="main" >
+          {% block beforeContent %}{% endblock %}
+          {% block content %}
+            {{ page_header('New organization') }}
+            {% call form_wrapper() %}
+              {{ form.name }}
+              {{ form.organization_type }}
+              {{ page_footer('Save') }}
+            {% endcall %}
+          {% endblock %}
+        </main>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

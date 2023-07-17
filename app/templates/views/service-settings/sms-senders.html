@@ -25,22 +25,22 @@
     {% endif %}
     {% for item in current_service.sms_senders_with_hints %}
       <div class="user-list-item">
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-three-quarters">
+        <div class="grid-row">
+          <div class="grid-col">
             <h2 class="user-list-item-heading">
-              <span class="heading-small">{{ item.sms_sender }}</span>
+              <span class="font-body-lg">{{ item.sms_sender }}</span>
               {% if item.hint %}
                 &ensp;
-                <span class="hint">
+                <span class="usa-hint">
                   {{ item.hint }}
                 </span>
               {% endif %}
             </h2>
           </div>
-          <div class="govuk-grid-column-one-quarter">
+          <div class="grid-col">
             {% if current_user.has_permissions('manage_service') %}
-              <a class="govuk-link govuk-link--no-visited-state user-list-edit-link" href="{{ url_for('.service_edit_sms_sender', service_id=current_service.id, sms_sender_id = item.id) }}">
-               Change<span class="govuk-visually-hidden"> {{ item.sms_sender }}</span>
+              <a class="usa-link user-list-edit-link" href="{{ url_for('.service_edit_sms_sender', service_id=current_service.id, sms_sender_id = item.id) }}">
+               Change<span class="usa-sr-only"> {{ item.sms_sender }}</span>
               </a>
             {% endif %}
           </div>
@@ -63,7 +63,7 @@
       </div>
     </div>
   {% endif %}
-  <p class="govuk-body">
+  <p>
     The text message sender tells your users who the message is from.
   </p>
 {% endblock %}

@@ -1,6 +1,7 @@
 {% extends "content_template.html" %}
 {% from "components/table.html" import mapping_table, row, text_field, edit_field, field with context %}
 {% from "components/sub-navigation.html" import sub_navigation %}
+{% from "components/service-link.html" import service_link %}
 
 {% block per_page_title %}
   Features
@@ -8,7 +9,7 @@
 
 {% block content_column_content %}
 
-<h1 class="heading-large">Features</h1>
+<h1 class="font-body-2xl">Features</h1>
 <p class="govuk-body">If you work for the government, you can use U.S. Notify to keep your users updated.</p>
 <p class="govuk-body">Notify makes it easy to create, customize, and send <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.features_sms') }}">text messages</a>.</p>
 <!-- <ul class="list list-bullet">
@@ -26,7 +27,7 @@
 
 <h2 class="heading-medium" id="personalised-messages">Personalized content</h2>
 <p class="govuk-body">Notify makes it easy to send personalized messages from a single template.</p>
-<p class="govuk-body">See <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.edit_and_format_messages', _anchor='personalised-content') }}">how to personalize your content</a>.</p>
+<p class="govuk-body">See <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.guidance_index', _anchor='personalized-content') }}">how to personalize your content</a>.</p>
 
 <h2 class="heading-medium" id="bulk-sending">Bulk sending</h2>
 <p class="govuk-body">To send a batch of messages at once, upload a list of contact details to Notify. You can also schedule the date and time you want them to be sent.</p>
@@ -56,7 +57,7 @@
 
 <!-- <p class="govuk-body">We send messages through several different providers. If one provider fails, Notify switches to another so that your messages are not affected.</p> -->
 
-<p class="govuk-body">Visit our <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.performance') }}">performance data</a> page to see how Notify is performing.</p>
+<!-- <p class="govuk-body">Visit our <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.performance') }}">performance data</a> page to see how Notify is performing.</p> -->
 
 <h2 class="heading-medium" id="security">Security</h2>
 <p class="govuk-body">Notify protects and manages data to meet the needs of government services.</p>

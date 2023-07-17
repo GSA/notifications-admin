@@ -2,7 +2,7 @@ import json
 from os import getenv
 
 import newrelic.agent
-import pytz
+from notifications_utils import DAILY_MESSAGE_LIMIT
 
 from app.cloudfoundry_config import cloud_config
 
@@ -15,8 +15,6 @@ class Config(object):
     HEADER_COLOUR = '#81878b'  # mix(govuk-colour("dark-grey"), govuk-colour("mid-grey"))
     LOGO_CDN_DOMAIN = 'static-logos.notifications.service.gov.uk'  # TODO use our own CDN
     ASSETS_DEBUG = False
-    TIMEZONE = getenv('TIMEZONE', 'America/New_York')
-    PY_TIMEZONE = pytz.timezone(TIMEZONE)
 
     # Credentials
     ADMIN_CLIENT_SECRET = getenv('ADMIN_CLIENT_SECRET')
@@ -40,10 +38,14 @@ class Config(object):
     TEMPLATE_PREVIEW_API_HOST = getenv('TEMPLATE_PREVIEW_API_HOST', 'http://localhost:9999')
     TEMPLATE_PREVIEW_API_KEY = getenv('TEMPLATE_PREVIEW_API_KEY', 'my-secret-key')
 
+    GOVERNMENT_EMAIL_DOMAIN_NAMES = ['gov']
+
     # Logging
     NOTIFY_LOG_LEVEL = getenv('NOTIFY_LOG_LEVEL', 'INFO')
 
     DEFAULT_SERVICE_LIMIT = 50
+
+    GLOBAL_SERVICE_MESSAGE_LIMIT = DAILY_MESSAGE_LIMIT
 
     EMAIL_EXPIRY_SECONDS = 3600  # 1 hour
     INVITATION_EXPIRY_SECONDS = 3600 * 24 * 2  # 2 days - also set on api

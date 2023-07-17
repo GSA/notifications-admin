@@ -7,11 +7,13 @@ from notifications_utils.international_billing_rates import (
 from app.main import main
 from app.main.forms import SearchByNameForm
 from app.main.views.sub_navigation_dictionaries import using_notify_nav
+from app.utils.user import user_is_logged_in
 
 CURRENT_SMS_RATE = '1.72'
 
 
-@main.route('/pricing')
+@main.route('/using-notify/pricing')
+@user_is_logged_in
 def pricing():
     return render_template(
         'views/pricing/index.html',
@@ -26,6 +28,7 @@ def pricing():
 
 
 @main.route('/pricing/how-to-pay')
+@user_is_logged_in
 def how_to_pay():
     return render_template(
         'views/pricing/how-to-pay.html',
@@ -34,6 +37,7 @@ def how_to_pay():
 
 
 @main.route('/pricing/billing-details')
+@user_is_logged_in
 def billing_details():
     if current_user.is_authenticated:
         return render_template(

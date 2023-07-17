@@ -1,3 +1,4 @@
+
 <div class="ajax-block-container">
   {% set field_status = notification.status|format_notification_status_as_field_status(notification.notification_type) %}
   {% set status_url = notification.status|format_notification_status_as_url(notification.notification_type) %}
@@ -5,9 +6,18 @@
     {% if status_url %}
       <a class="govuk-link govuk-link--destructive" href="{{ status_url }}">
     {% endif %}
+
+    {% if notification.status != 'sending' %}
     {{ notification.status|format_notification_status(
       notification.template.template_type
     ) }}
+    {% endif %}
+
+    {% if notification.status == 'sending' %}
+  <p class="notification-status {{ field_status }}">
+     Pending. Messages will remain in pending state until carrier status is received, typically 5 minutes.
+     </p>
+    {% endif %}
     {% if status_url %}
       </a>
     {% endif %}
@@ -15,4 +25,5 @@
       (test)
     {% endif %}
   </p>
+
 </div>

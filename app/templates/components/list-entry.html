@@ -23,7 +23,7 @@
       })
     %}
     {% if hint %}
-      <div id="{{ field.name }}-hint" class="govuk-hint">
+      <div id="{{ field.name }}-hint" class="usa-hint">
         {{ hint }}
       </div>
     {% endif %}
@@ -45,7 +45,7 @@
             "id": "input-" + field_name,
             "name": field_name,
             "label": {
-              "html": '<span class="govuk-visually-hidden">' + item_name + ' number </span>' + loop.index|string + '.',
+              "html": '<span class="usa-sr-only">' + item_name + ' number </span>' + loop.index|string + '.',
               "classes": label_classes
             },
             "classes": "govuk-input--numbered govuk-!-width-full",

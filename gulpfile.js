@@ -54,6 +54,10 @@ const copy = {
   fonts: () => {
     return src(paths.src + 'fonts/**/*')
       .pipe(dest(paths.dist + 'fonts/'));
+  },
+  gtm: () => {
+    return src(paths.src + 'js/gtm_head.js')
+      .pipe(dest(paths.dist + 'js/'));
   }
 };
 
@@ -103,10 +107,7 @@ const javascripts = () => {
     paths.toolkit + 'javascripts/govuk/show-hide-content.js',
     paths.src + 'javascripts/govuk/cookie-functions.js',
     paths.src + 'javascripts/consent.js',
-    paths.src + 'javascripts/analytics/analytics.js',
-    paths.src + 'javascripts/analytics/init.js',
     paths.src + 'javascripts/cookieMessage.js',
-    paths.src + 'javascripts/stick-to-window-when-scrolling.js',
     paths.src + 'javascripts/copyToClipboard.js',
     paths.src + 'javascripts/autofocus.js',
     paths.src + 'javascripts/enhancedTextbox.js',
@@ -243,7 +244,9 @@ const defaultTask = parallel(
       javascripts
     ),
     sass, 
-    uswds.compile
+    uswds.compile,
+    uswds.copyAssets,
+    copy.gtm
   )
 );
 
@@ -279,6 +282,9 @@ uswds.settings.version = 3;
 * Set as many as you need
 */
 uswds.paths.dist.css = './app/static/css';
+uswds.paths.dist.js = './app/static/js';
+uswds.paths.dist.img = './app/static/img';
+uswds.paths.dist.fonts = './app/static/fonts';
 uswds.paths.dist.theme = './app/assets/sass/uswds';
 
 /**
@@ -287,4 +293,6 @@ uswds.paths.dist.theme = './app/assets/sass/uswds';
 */
 exports.init = uswds.init;
 exports.compile = uswds.compile;
+exports.copyAll = uswds.copyAll;
 exports.watch = uswds.watch;
+exports.copyAssets = uswds.copyAssets;

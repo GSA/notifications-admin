@@ -8,7 +8,7 @@
 
 {% block maincolumn_content %}
 
-    <h1 class="heading-medium">Settings</h1>
+    <h1 class="font-body-lg">Settings</h1>
 
     <div class="bottom-gutter-3-2 settings-table body-copy-table">
 
@@ -192,16 +192,16 @@
     </div>
 
     {% if current_service.trial_mode %}
-      <h2 class="heading-medium top-gutter-0">Your service is in trial mode</h2>
+      <h2 class="font-body-lg top-gutter-0">Your service is in trial mode</h2>
 
-        <p class="govuk-body">You can only:</p>
+        <p>You can only:</p>
 
         <ul class='list list-bullet'>
           <li>send {{ current_service.message_limit }} text messages per day</li>
           <li>send messages to yourself and other people in your team</li>
         </ul>
 
-      <p class="govuk-body">
+      <p>
         {% if current_user.has_permissions('manage_service') %}
           To remove these restrictions, you can send us a
           <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.request_to_go_live', service_id=current_service.id) }}">request to go live</a>.
@@ -213,12 +213,12 @@
     {% else %}
       <h2 class="heading-medium top-gutter-0">Your service is live</h2>
 
-      <p class="govuk-body">
+      <p>
         You can send up to
         {{ "{:,}".format(current_service.message_limit) }} messages
         per day.
       </p>
-      <p class="govuk-body">
+      <p>
         Problems or comments?
         <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.support') }}">Give feedback</a>.
       </p>
@@ -229,7 +229,7 @@
 
       <div class="settings-table body-copy-table top-gutter-4-3">
 
-        <h2 class="heading-medium">Platform admin settings</h2>
+        <h2 class="font-body-lg">Platform admin settings</h2>
 
         {% call mapping_table(
           caption='Settings',
@@ -240,7 +240,7 @@
 
           {% call row() %}
             {{ text_field('Live')}}
-            {% if current_service.trial_mode and not current_service.organisation_id %}
+            {% if current_service.trial_mode and not current_service.organization_id %}
               {{ text_field('No (organization must be set first)') }}
               {{ text_field('') }}
             {% else %}
@@ -269,20 +269,20 @@
           {% call row() %}
             {{ text_field('Organization')}}
             {% call field() %}
-              {% if current_service.organisation_id %}
-                <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.organisation_dashboard', org_id=current_service.organisation_id) }}">
-                  {{ current_service.organisation_name }}
+              {% if current_service.organization_id %}
+                <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.organization_dashboard', org_id=current_service.organization_id) }}">
+                  {{ current_service.organization_name }}
                 </a>
               {% else %}
                 <span class="table-field-status-default">Not set</span>
               {% endif %}
-              {% if current_service.organisation_type %}
+              {% if current_service.organization_type %}
                 <div class="hint">
-                  {{ current_service.organisation_type_label }}
+                  {{ current_service.organization_type_label }}
                 </div>
               {% endif %}
             {% endcall %}
-            {{ edit_field('Change', url_for('.link_service_to_organisation', service_id=current_service.id), suffix='organization for service') }}
+            {{ edit_field('Change', url_for('.link_service_to_organization', service_id=current_service.id), suffix='organization for service') }}
           {% endcall %}
 
           {% call row() %}
@@ -350,7 +350,7 @@
     {% if current_service.active and (current_service.trial_mode or current_user.platform_admin) %}
       <p class="top-gutter-1-2">
         <span class="page-footer-link page-footer-delete-link-without-button">
-          <a class="govuk-link govuk-link--destructive" href="{{ url_for('.archive_service', service_id=current_service.id) }}">
+          <a class="usa-button usa-button--secondary" href="{{ url_for('.archive_service', service_id=current_service.id) }}">
             Delete this service
           </a>
         </span>
@@ -370,7 +370,7 @@
       </p>
     {% endif %}
     {% if (not current_service.active) and current_user.platform_admin %}
-      <p class="govuk-body">
+      <p>
         <div class="hint bottom-gutter-1-2">
           Service suspended
         </div>

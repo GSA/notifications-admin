@@ -2,17 +2,151 @@
 {% from "components/uk_components/button/macro.njk" import govukButton %}
 
 {% block meta %}
-  <meta name="description" content="U.S. Notify lets you send text messages to your users. Try it now if you work in federal, state, or local government.">
+<meta name="description"
+  content="U.S. Notify lets you send text messages to your users. Try it now if you work in federal, state, or local government.">
 {% endblock %}
 
 {% block pageTitle %}
-  U.S. Notify
+U.S. Notify
 {% endblock %}
 
 {% block content %}
 
-  <div class="product-page-intro">
-    <div class="product-page-intro-wrapper" data-module="homepage">
+<section aria-label="Introduction">
+  <div class="grid-container usa-section usa-section--dark padding-y-4">
+    <div class="grid-row grid-gap display-flex flex-align-center">
+      <div class="tablet:grid-col-7">
+        <h1 class="font-serif-2xl usa-hero__heading">Send text messages to your participants</h1>
+        <p class="font-sans-lg">U.S. Notify is a text messaging service that helps federal, state, local, tribal, and territorial governments more
+        effectively communicate with their program participants.</p>
+        <p class="font-sans-lg margin-bottom-5">Currently we are only working with select partners during a pilot period.</p>
+        <div class="usa-button-group margin-bottom-5">
+          <a class="usa-button usa-button--big margin-right-2" href="{{ url_for('main.sign_in' )}}">Sign in</a>
+          if you are an existing pilot partner
+        </div>
+        <p class="font-sans-md">If you are interested in using U.S. Notify in the future, please contact <br><a href="mailto:tts-benefits-studio@gsa.gov">tts-benefits-studio@gsa.gov</a> to learn more.</p>
+      </div>
+      <div class="tablet:grid-col-4 margin-x-5">
+        <img src="{{ asset_url('images/product/phone-text.png') }}"
+          alt="An illustration of notifications to a phone.">
+      </div>
+    </div>
+  </div>
+</section>
+<section class="grid-container usa-section">
+  <div class="grid-row grid-gap">
+    <div class="tablet:grid-col-5 usa-prose">
+      <h2 class="font-heading-xl margin-top-0 margin-bottom-3">
+        Control your content
+      </h2>
+      <p>You do not need any technical knowledge to create message templates.</p>
+    </div>
+    <div class="tablet:grid-col-6 grid-offset-1">
+      <img src="{{ asset_url('images/product/01-templates-no-chrome.svg') }}"
+        alt="Example screenshot of adding a new text message template">
+    </div>
+  </div>
+</section>
+<section class="grid-container usa-section">
+  <div class="grid-row grid-gap">
+    <div class="tablet:grid-col-5 usa-prose">
+      <h2 class="font-heading-xl margin-top-0 margin-bottom-3">
+        See how your messages perform
+      </h2>
+      <p>Track how many messages you’ve sent and find out which ones are not being delivered.</p>
+    </div>
+    <div class="tablet:grid-col-6 grid-offset-1">
+      <img src="{{ asset_url('images/product/02-reporting-no-chrome.svg') }}"
+        alt="A screenshot of U.S. Notify showing counts of emails and text messages sent">
+    </div>
+  </div>
+</section>
+<section class="grid-container usa-section">
+  <div class="grid-row grid-gap">
+    <div class="tablet:grid-col-5 usa-prose">
+      <h2 class="font-heading-xl margin-top-0 margin-bottom-3">
+        No technical integration needed
+      </h2>
+      <p>Upload a spreadsheet of phone numbers and U.S. Notify sends batches of messages for you.</p>
+    </div>
+    <div class="tablet:grid-col-6 grid-offset-1">
+      <img src="{{ asset_url('images/product/03-spreadsheet-no-chrome.svg') }}"
+        alt="A screenshot of a spreadsheet with phone numbers, names, and a reference number">
+    </div>
+  </div>
+</section>
+<!-- <section class="grid-container usa-section border-top border-base-lighter">
+  <div class="grid-row grid-gap">
+    <h2 class="font-heading-xl margin-top-0 margin-bottom-3 bold">
+      Send messages manually or automatically
+    </h2>
+  </div>
+  <div class="grid-row grid-gap">
+    <div class="tablet:grid-col-6 usa-prose">
+      <p>Upload a spreadsheet of phone numbers and Notify sends the messages.</p>
+      <img src="{{ asset_url('images/product/03-spreadsheet-no-chrome.svg') }}"
+        alt="A screenshot of a spreadsheet with columns for email address, name and color">
+    </div>
+    <div class="tablet:grid-col-6 usa-prose">
+      <p>
+        Integrate the U.S. Notify API with your web&nbsp;application or
+        back office system.
+      </p>
+      <img src="{{ asset_url('images/product/04-api-no-chrome.svg') }}"
+        alt="A screenshot of some computer code with a notify.send_email function">
+    </div>
+  </div>
+</section> -->
+<!-- <section id="whos-using-notify"
+  class="grid-container usa-section border-top border-base-lighter padding-top-4 padding-bottom-5">
+  <div class="grid-row grid-gap flex-column">
+    <h2 class="font-heading-xl display-flex flex-justify-center margin-top-0 margin-bottom-3 bold">
+      Who’s using U.S. Notify
+    </h2>
+    <p class="display-flex flex-justify-center font-body-sm margin-bottom-3">
+      See the
+      <a class="usa-link margin-left-05" href="{{ url_for('main.performance') }}">list of services and
+        organizations</a>.
+    </p>
+  </div>
+  <div class="grid-row">
+    <div class="tablet:grid-col-6 display-flex flex-justify-center flex-align-center flex-column">
+      <span class="usa-sr-only">There are</span>
+      <div class="large-number">{{ counts.organizations|format_thousands }}</div>
+      <p class="font-body-lg margin-bottom-0">Organizations</p>
+    </div>
+    <div class="tablet:grid-col-6 display-flex flex-justify-center flex-align-center flex-column">
+      <span class="usa-sr-only">and</span>
+      <div class="large-number">{{ counts.services|format_thousands }}</div>
+      <p class="font-body-lg margin-bottom-0">Services</p>
+      <span class="usa-sr-only">using Notify.</span>
+    </div>
+  </div>
+</section> -->
+<section class="grid-container usa-section border-top border-base-lighter usa-prose">
+  <h2 class="font-heading-xl margin-top-0 margin-bottom-3">
+    About the product
+  </h2>
+  <p class="usa-body">
+    Keeping program participants updated on status changes, due dates, and appointments can be a huge challenge, and many
+    recipients fall through the cracks, ultimately losing their benefits. In the benefits space, data shows that sending
+    text messages helps decrease re-enrollment churn and save money for administering agencies.
+  </p>
+  <p class="usa-body">
+    U.S. Notify is an easy text messaging platform that helps government agencies provide program participants with one-way
+    reminders and updates. With minimal set-up and secure, personalized messaging, U.S. Notify helps agencies include text
+    messaging as part of their outreach program. Administering agencies can quickly assess the impact of text messaging for
+    their programs, after which they can build a case to expand their texting program if they choose to.
+  </p>
+  <p class="usa-body">
+    U.S. Notify is a new shared service currently being piloted by the Public Benefits Studio, within Technology
+    Transformation Services at the General Services Administration.
+  </p>
+</section>
+
+<!-- <div class="product-page-intro"></div> -->
+
+<!-- <div class="product-page-intro-wrapper" data-module="homepage">
       <nav class="breadcrumbs breadcrumbs--inverse" aria-label="Breadcrumbs">
 
       </nav>
@@ -21,7 +155,7 @@
           <h1>
             Send text messages to your users
           </h1>
-          <p class="govuk-body">
+          <p>
             Try U.S. Notify now if you work in federal, state, or local government.
           </p>
           <div class="button-container">
@@ -50,7 +184,7 @@
         <h2>
           Control your content
         </h2>
-        <p class="govuk-body">
+        <p>
           You do not need any technical knowledge to create message templates.
         </p>
       </div>
@@ -67,7 +201,7 @@
         <h2>
           See how your messages perform
         </h2>
-        <p class="govuk-body">
+        <p>
           Track how many messages you’ve sent and
           find out which ones are not being delivered.
         </p>
@@ -86,7 +220,7 @@
     </h2>
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
-        <p class="govuk-body">
+        <p>
           Upload a spreadsheet of phone&nbsp;numbers and Notify sends the messages.
         </p>
         <img
@@ -95,7 +229,7 @@
         >
       </div>
       <div class="govuk-grid-column-one-half">
-        <p class="govuk-body">
+        <p>
           Integrate the U.S. Notify API with your web&nbsp;application or
           back office system.
         </p>
@@ -111,34 +245,34 @@
       <h2>Who’s using U.S. Notify</h2>
       <div class="govuk-grid-row bottom-gutter">
         <div class="govuk-grid-column-one-half">
-          <span class="govuk-visually-hidden">There are</span>
-          <div class="product-page-big-number">{{ counts.organisations|format_thousands }}</div>
+          <span class="usa-sr-only">There are</span>
+          <div class="product-page-big-number">{{ counts.organizations|format_thousands }}</div>
           <span>organizations</span>
         </div>
         <div class="govuk-grid-column-one-half">
-          <span class="govuk-visually-hidden">and</span>
+          <span class="usa-sr-only">and</span>
           <div class="product-page-big-number">{{ counts.services|format_thousands }}</div>
           <span>services</span>
-          <span class="govuk-visually-hidden">using Notify.</span>
+          <span class="usa-sr-only">using Notify.</span>
         </div>
       </div>
-      <p class="govuk-body">
+      <p>
         See the
         <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.performance') }}">list of services and organizations</a>.
       </p>
     </div>
   </div>
-  <!-- <div class="product-page-section">
+  <div class="product-page-section">
     <div class="with-keyline bottom-gutter-2">
       <h2>Pricing</h2>
       <div class="govuk-grid-row bottom-gutter">
         <div class="govuk-grid-column-one-half">
-          <h3 class="govuk-visually-hidden">Emails</h3>
+          <h3 class="usa-sr-only">Emails</h3>
           <div class="product-page-big-number">Unlimited</div>
           <span>free emails</span>
         </div>
         <div class="govuk-grid-column-one-half">
-          <h3 class="govuk-visually-hidden">Text messages</h3>
+          <h3 class="usa-sr-only">Text messages</h3>
           <div class="product-page-big-number">Up to 40,000</div>
           <span>free text messages a year,<br>
           then {{ sms_rate }} pence per message</span>
@@ -147,28 +281,28 @@
           <p class="align-with-big-number-hint">
             There’s no monthly charge, no setup fee and no&nbsp;procurement process.
           </p>
-          <p class="govuk-body">Find out more about <a class="govuk-link govuk-link--no-visited-state" href="https://www.notifications.service.gov.uk/pricing">pricing</a>.
+          <p>Find out more about <a class="govuk-link govuk-link--no-visited-state" href="https://www.notifications.service.gov.uk/pricing">pricing</a>.
           </p>
         </div>
       </div>
     </div>
-  </div> -->
+  </div>
   <div class="product-page-section">
-    <div class="govuk-grid-row">
+    <div class="govuk-grid-row margin-bottom-">
       <div class="govuk-grid-column-full">
         <h2 class="with-keyline">
           The team
         </h2>
-        <p class="govuk-body">
+        <p>
           U.S. Notify is built and maintained by the Public Benefits Studio, within the General Services Administration's Technology Transformation Services.
         </p>
-        <p class="govuk-body">
+        <p>
           <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.support') }}">Contact us</a> if you have a question or want
           to give feedback.
         </p>
       </div>
     </div>
-  </div>
+  </div>-->
 
 
 {% endblock %}

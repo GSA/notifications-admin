@@ -24,7 +24,7 @@ from . import (
     job_json,
     notification_json,
     org_invite_json,
-    organisation_json,
+    organization_json,
     sample_uuid,
     service_json,
     template_json,
@@ -448,7 +448,7 @@ def mock_get_live_service(mocker, api_user_active):
 def mock_create_service(mocker):
     def _create(
         service_name,
-        organisation_type,
+        organization_type,
         message_limit,
         restricted,
         user_id,
@@ -961,7 +961,7 @@ def active_user_with_permission_to_two_services(fake_uuid):
             SERVICE_ONE_ID: permissions,
             SERVICE_TWO_ID: permissions,
         },
-        organisations=[ORGANISATION_ID],
+        organizations=[ORGANISATION_ID],
         services=[SERVICE_ONE_ID, SERVICE_TWO_ID],
     )
 
@@ -2048,8 +2048,8 @@ def mock_no_email_branding(mocker):
 def create_email_branding(id, non_standard_values=None):
     branding = {
         'logo': 'example.png',
-        'name': 'Organisation name',
-        'text': 'Organisation text',
+        'name': 'Organization name',
+        'text': 'Organization text',
         'id': id,
         'colour': '#f00',
         'brand_type': 'org',
@@ -2312,23 +2312,6 @@ def client_request(_logged_in_client, mocker, service_one):  # noqa (C901 too co
                 )
                 if not normalize_spaces(page_title).startswith(h1):
                     raise AssertionError('Page title ‘{}’ does not start with H1 ‘{}’'.format(page_title, h1))
-            if _test_for_elements_without_class and _expected_status not in (301, 302):
-                for tag, hint in (
-                    ('p', 'govuk-body'),
-                    ('a', 'govuk-link govuk-link--no-visited-state'),
-                ):
-                    element = page.select_one(f'{tag}:not([class])')
-                    if (
-                        element
-                        and not element.has_attr('style')  # Elements with inline CSS are exempt
-                        and element.text.strip()  # Empty elements are exempt
-                    ):
-                        raise AssertionError(
-                            f'Found a <{tag}> without a class attribute:\n'
-                            f'    {element}\n'
-                            f'\n'
-                            f'(you probably want to add class="{hint}")'
-                        )
             return page
 
         @staticmethod
@@ -2602,35 +2585,35 @@ def mock_update_service_callback_api(mocker):
 
 
 @pytest.fixture(scope='function')
-def organisation_one(api_user_active):
-    return organisation_json(ORGANISATION_ID, 'organisation one', [api_user_active['id']])
+def organization_one(api_user_active):
+    return organization_json(ORGANISATION_ID, 'organization one', [api_user_active['id']])
 
 
 @pytest.fixture(scope='function')
-def mock_get_organisations(mocker):
-    def _get_organisations():
+def mock_get_organizations(mocker):
+    def _get_organizations():
         return [
-            organisation_json('7aa5d4e9-4385-4488-a489-07812ba13383', 'Org 1'),
-            organisation_json('7aa5d4e9-4385-4488-a489-07812ba13384', 'Org 2'),
-            organisation_json('7aa5d4e9-4385-4488-a489-07812ba13385', 'Org 3'),
+            organization_json('7aa5d4e9-4385-4488-a489-07812ba13383', 'Org 1'),
+            organization_json('7aa5d4e9-4385-4488-a489-07812ba13384', 'Org 2'),
+            organization_json('7aa5d4e9-4385-4488-a489-07812ba13385', 'Org 3'),
         ]
 
     mocker.patch(
-        'app.models.organisation.AllOrganisations.client_method',
-        side_effect=_get_organisations,
+        'app.models.organization.AllOrganizations.client_method',
+        side_effect=_get_organizations,
     )
 
     return mocker.patch(
-        'app.notify_client.organisations_api_client.organisations_client.get_organisations',
-        side_effect=_get_organisations,
+        'app.notify_client.organizations_api_client.organizations_client.get_organizations',
+        side_effect=_get_organizations,
     )
 
 
 @pytest.fixture(scope='function')
-def mock_get_organisations_with_unusual_domains(mocker):
-    def _get_organisations():
+def mock_get_organizations_with_unusual_domains(mocker):
+    def _get_organizations():
         return [
-            organisation_json('7aa5d4e9-4385-4488-a489-07812ba13383', 'Org 1', domains=[
+            organization_json('7aa5d4e9-4385-4488-a489-07812ba13383', 'Org 1', domains=[
                 'ldquo.net',
                 'rdquo.net',
                 'lsquo.net',
@@ -2638,74 +2621,74 @@ def mock_get_organisations_with_unusual_domains(mocker):
             ]),
         ]
 
-    return mocker.patch('app.organisations_client.get_organisations', side_effect=_get_organisations)
+    return mocker.patch('app.organizations_client.get_organizations', side_effect=_get_organizations)
 
 
 @pytest.fixture(scope='function')
-def mock_get_organisation(mocker):
-    def _get_organisation(org_id):
-        return organisation_json(
+def mock_get_organization(mocker):
+    def _get_organization(org_id):
+        return organization_json(
             org_id,
             {
                 'o1': 'Org 1',
                 'o2': 'Org 2',
                 'o3': 'Org 3',
-            }.get(org_id, 'Test organisation'),
+            }.get(org_id, 'Test organization'),
         )
 
-    return mocker.patch('app.organisations_client.get_organisation', side_effect=_get_organisation)
+    return mocker.patch('app.organizations_client.get_organization', side_effect=_get_organization)
 
 
 @pytest.fixture(scope='function')
-def mock_get_organisation_by_domain(mocker):
-    def _get_organisation_by_domain(domain):
-        return organisation_json(ORGANISATION_ID)
+def mock_get_organization_by_domain(mocker):
+    def _get_organization_by_domain(domain):
+        return organization_json(ORGANISATION_ID)
 
     return mocker.patch(
-        'app.organisations_client.get_organisation_by_domain',
-        side_effect=_get_organisation_by_domain,
+        'app.organizations_client.get_organization_by_domain',
+        side_effect=_get_organization_by_domain,
     )
 
 
 @pytest.fixture(scope='function')
-def mock_get_no_organisation_by_domain(mocker):
+def mock_get_no_organization_by_domain(mocker):
     return mocker.patch(
-        'app.organisations_client.get_organisation_by_domain',
+        'app.organizations_client.get_organization_by_domain',
         return_value=None,
     )
 
 
 @pytest.fixture(scope='function')
-def mock_get_service_organisation(
+def mock_get_service_organization(
     mocker,
-    mock_get_organisation,
+    mock_get_organization,
 ):
     return mocker.patch(
-        'app.models.service.Service.organisation_id',
+        'app.models.service.Service.organization_id',
         new_callable=PropertyMock,
         return_value=ORGANISATION_ID,
     )
 
 
 @pytest.fixture(scope='function')
-def mock_update_service_organisation(mocker):
-    def _update_service_organisation(service_id, org_id):
+def mock_update_service_organization(mocker):
+    def _update_service_organization(service_id, org_id):
         return
 
     return mocker.patch(
-        'app.organisations_client.update_service_organisation',
-        side_effect=_update_service_organisation
+        'app.organizations_client.update_service_organization',
+        side_effect=_update_service_organization
     )
 
 
-def _get_organisation_services(organisation_id):
-    if organisation_id == 'o1':
+def _get_organization_services(organization_id):
+    if organization_id == 'o1':
         return [
             service_json('12345', 'service one', restricted=False),
             service_json('67890', 'service two'),
             service_json('abcde', 'service three'),
         ]
-    if organisation_id == 'o2':
+    if organization_id == 'o2':
         return [
             service_json('12345', 'service one (org 2)', restricted=False),
             service_json('67890', 'service two (org 2)', restricted=False),
@@ -2719,54 +2702,54 @@ def _get_organisation_services(organisation_id):
 
 
 @pytest.fixture(scope='function')
-def mock_get_organisation_services(mocker, api_user_active):
+def mock_get_organization_services(mocker, api_user_active):
     return mocker.patch(
-        'app.organisations_client.get_organisation_services',
-        side_effect=_get_organisation_services
+        'app.organizations_client.get_organization_services',
+        side_effect=_get_organization_services
     )
 
 
 @pytest.fixture(scope='function')
-def mock_get_users_for_organisation(mocker):
-    def _get_users_for_organisation(org_id):
+def mock_get_users_for_organization(mocker):
+    def _get_users_for_organization(org_id):
         return [
             user_json(id_='1234', name='Test User 1'),
             user_json(id_='5678', name='Test User 2', email_address='testt@gsa.gov'),
         ]
 
     return mocker.patch(
-        'app.models.user.OrganisationUsers.client_method',
-        side_effect=_get_users_for_organisation
+        'app.models.user.OrganizationUsers.client_method',
+        side_effect=_get_users_for_organization
     )
 
 
 @pytest.fixture(scope='function')
-def mock_get_invited_users_for_organisation(mocker, sample_org_invite):
-    def _get_invited_invited_users_for_organisation(org_id):
+def mock_get_invited_users_for_organization(mocker, sample_org_invite):
+    def _get_invited_invited_users_for_organization(org_id):
         return [
             sample_org_invite
         ]
 
     return mocker.patch(
-        'app.models.user.OrganisationInvitedUsers.client_method',
-        side_effect=_get_invited_invited_users_for_organisation
+        'app.models.user.OrganizationInvitedUsers.client_method',
+        side_effect=_get_invited_invited_users_for_organization
     )
 
 
 @pytest.fixture(scope='function')
-def sample_org_invite(mocker, organisation_one):
+def sample_org_invite(mocker, organization_one):
     id_ = str(UUID(bytes=b'sample_org_invit', version=4))
-    invited_by = organisation_one['users'][0]
+    invited_by = organization_one['users'][0]
     email_address = 'invited_user@test.gsa.gov'
-    organisation = organisation_one['id']
+    organization = organization_one['id']
     created_at = str(datetime.utcnow())
     status = 'pending'
 
-    return org_invite_json(id_, invited_by, organisation, email_address, created_at, status)
+    return org_invite_json(id_, invited_by, organization, email_address, created_at, status)
 
 
 @pytest.fixture(scope='function')
-def mock_get_invites_for_organisation(mocker, sample_org_invite):
+def mock_get_invites_for_organization(mocker, sample_org_invite):
     def _get_org_invites(org_id):
         data = []
         for i in range(0, 5):
@@ -2775,7 +2758,7 @@ def mock_get_invites_for_organisation(mocker, sample_org_invite):
             data.append(invite)
         return data
 
-    return mocker.patch('app.models.user.OrganisationInvitedUsers.client_method', side_effect=_get_org_invites)
+    return mocker.patch('app.models.user.OrganizationInvitedUsers.client_method', side_effect=_get_org_invites)
 
 
 @pytest.fixture(scope='function')
@@ -2807,56 +2790,56 @@ def mock_check_org_accepted_invite_token(mocker, sample_org_invite):
 
 @pytest.fixture(scope='function')
 def mock_accept_org_invite(mocker, sample_org_invite):
-    def _accept(organisation_id, invite_id):
+    def _accept(organization_id, invite_id):
         return sample_org_invite
 
     return mocker.patch('app.org_invite_api_client.accept_invite', side_effect=_accept)
 
 
 @pytest.fixture(scope='function')
-def mock_add_user_to_organisation(mocker, organisation_one, api_user_active):
-    def _add_user(organisation_id, user_id):
+def mock_add_user_to_organization(mocker, organization_one, api_user_active):
+    def _add_user(organization_id, user_id):
         return api_user_active
 
-    return mocker.patch('app.user_api_client.add_user_to_organisation', side_effect=_add_user)
+    return mocker.patch('app.user_api_client.add_user_to_organization', side_effect=_add_user)
 
 
 @pytest.fixture(scope='function')
-def mock_update_organisation(mocker):
+def mock_update_organization(mocker):
     def _update_org(org, **kwargs):
         return
 
-    return mocker.patch('app.organisations_client.update_organisation', side_effect=_update_org)
+    return mocker.patch('app.organizations_client.update_organization', side_effect=_update_org)
 
 
 @pytest.fixture
-def mock_get_organisations_and_services_for_user(mocker, organisation_one, api_user_active):
+def mock_get_organizations_and_services_for_user(mocker, organization_one, api_user_active):
     def _get_orgs_and_services(user_id):
         return {
-            'organisations': [],
+            'organizations': [],
             'services': []
         }
 
     return mocker.patch(
-        'app.user_api_client.get_organisations_and_services_for_user',
+        'app.user_api_client.get_organizations_and_services_for_user',
         side_effect=_get_orgs_and_services
     )
 
 
 @pytest.fixture
-def mock_get_non_empty_organisations_and_services_for_user(mocker, organisation_one, api_user_active):
+def mock_get_non_empty_organizations_and_services_for_user(mocker, organization_one, api_user_active):
 
     def _make_services(name, trial_mode=False):
         return [{
             'name': '{} {}'.format(name, i),
             'id': SERVICE_TWO_ID,
             'restricted': trial_mode,
-            'organisation': None,
+            'organization': None,
         } for i in range(1, 3)]
 
     def _get_orgs_and_services(user_id):
         return {
-            'organisations': [
+            'organizations': [
                 {
                     'name': 'Org 1',
                     'id': 'o1',
@@ -2874,47 +2857,47 @@ def mock_get_non_empty_organisations_and_services_for_user(mocker, organisation_
                 },
             ],
             'services': (
-                _get_organisation_services('o1')
-                + _get_organisation_services('o2')
+                _get_organization_services('o1')
+                + _get_organization_services('o2')
                 + _make_services('Service')
             )
         }
 
     return mocker.patch(
-        'app.user_api_client.get_organisations_and_services_for_user',
+        'app.user_api_client.get_organizations_and_services_for_user',
         side_effect=_get_orgs_and_services
     )
 
 
 @pytest.fixture
-def mock_get_just_services_for_user(mocker, organisation_one, api_user_active):
+def mock_get_just_services_for_user(mocker, organization_one, api_user_active):
 
     def _make_services(name, trial_mode=False):
         return [{
             'name': '{} {}'.format(name, i + 1),
             'id': id,
             'restricted': trial_mode,
-            'organisation': None,
+            'organization': None,
         } for i, id in enumerate([SERVICE_TWO_ID, SERVICE_ONE_ID])]
 
     def _get_orgs_and_services(user_id):
         return {
-            'organisations': [],
+            'organizations': [],
             'services': _make_services('Service'),
         }
 
     return mocker.patch(
-        'app.user_api_client.get_organisations_and_services_for_user',
+        'app.user_api_client.get_organizations_and_services_for_user',
         side_effect=_get_orgs_and_services
     )
 
 
 @pytest.fixture
-def mock_get_empty_organisations_and_one_service_for_user(mocker, organisation_one, api_user_active):
+def mock_get_empty_organizations_and_one_service_for_user(mocker, organization_one, api_user_active):
 
     def _get_orgs_and_services(user_id):
         return {
-            'organisations': [],
+            'organizations': [],
             'services': [{
                 'name': 'Only service',
                 'id': SERVICE_TWO_ID,
@@ -2923,7 +2906,7 @@ def mock_get_empty_organisations_and_one_service_for_user(mocker, organisation_o
         }
 
     return mocker.patch(
-        'app.user_api_client.get_organisations_and_services_for_user',
+        'app.user_api_client.get_organizations_and_services_for_user',
         side_effect=_get_orgs_and_services
     )
 
@@ -2960,9 +2943,9 @@ def mock_create_template_folder(mocker):
 
 
 @pytest.fixture(scope='function')
-def mock_get_service_and_organisation_counts(mocker):
-    return mocker.patch('app.status_api_client.get_count_of_live_services_and_organisations', return_value={
-        'organisations': 111,
+def mock_get_service_and_organization_counts(mocker):
+    return mocker.patch('app.status_api_client.get_count_of_live_services_and_organizations', return_value={
+        'organizations': 111,
         'services': 9999,
     })
 
@@ -3125,7 +3108,7 @@ def create_service_one_admin(**overrides):
 
 def create_service_one_user(**overrides):
     user_data = {
-        'organisations': [ORGANISATION_ID],
+        'organizations': [ORGANISATION_ID],
         'services': [SERVICE_ONE_ID],
     }
     user_data.update(overrides)
@@ -3145,7 +3128,7 @@ def create_user(**overrides):
         'auth_type': 'sms_auth',
         'password_changed_at': str(datetime.utcnow()),
         'services': [],
-        'organisations': [],
+        'organizations': [],
         'current_session_id': None,
         'logged_in_at': None,
         'email_access_validated_at': None,

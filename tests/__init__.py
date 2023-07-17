@@ -68,7 +68,7 @@ def user_json(
     state='active',
     platform_admin=False,
     current_session_id='1234',
-    organisations=None,
+    organizations=None,
     services=None
 
 ):
@@ -99,7 +99,7 @@ def user_json(
         'state': state,
         'platform_admin': platform_admin,
         'current_session_id': current_session_id,
-        'organisations': organisations or [],
+        'organizations': organizations or [],
         'services': services
     }
 
@@ -113,7 +113,7 @@ def invited_user(
     status='pending',
     created_at=None,
     auth_type='sms_auth',
-    organisation=None
+    organization=None
 ):
     data = {
         'id': _id,
@@ -127,8 +127,8 @@ def invited_user(
         data['service'] = service
     if permissions:
         data['permissions'] = permissions
-    if organisation:
-        data['organisation'] = organisation
+    if organization:
+        data['organization'] = organization
 
     return data
 
@@ -150,10 +150,10 @@ def service_json(
     inbound_api=None,
     service_callback_api=None,
     permissions=None,
-    organisation_type='federal',
+    organization_type='federal',
     prefix_sms=True,
     contact_link=None,
-    organisation_id=None,
+    organization_id=None,
     rate_limit=3000,
     notes=None,
     billing_contact_email_addresses=None,
@@ -181,7 +181,7 @@ def service_json(
         'reply_to_email_address': reply_to_email_address,
         'sms_sender': sms_sender,
         'research_mode': research_mode,
-        'organisation_type': organisation_type,
+        'organization_type': organization_type,
         'email_branding': email_branding,
         'branding': branding,
         'created_at': created_at or str(datetime.utcnow()),
@@ -194,7 +194,7 @@ def service_json(
         'volume_sms': 222222,
         'consent_to_research': True,
         'count_as_live': True,
-        'organisation': organisation_id,
+        'organization': organization_id,
         'notes': notes,
         'billing_contact_email_addresses': billing_contact_email_addresses,
         'billing_contact_names': billing_contact_names,
@@ -203,7 +203,7 @@ def service_json(
     }
 
 
-def organisation_json(
+def organization_json(
     id_='1234',
     name=False,
     users=None,
@@ -217,7 +217,7 @@ def organisation_json(
     agreement_signed_by_id=None,
     agreement_signed_on_behalf_of_name=None,
     agreement_signed_on_behalf_of_email_address=None,
-    organisation_type='federal',
+    organization_type='federal',
     request_to_go_live_notes=None,
     notes=None,
     billing_contact_email_addresses=None,
@@ -231,12 +231,12 @@ def organisation_json(
         services = []
     return {
         'id': id_,
-        'name': 'Test Organisation' if name is False else name,
+        'name': 'Test Organization' if name is False else name,
         'active': active,
         'users': users,
         'created_at': created_at or str(datetime.utcnow()),
         'email_branding_id': email_branding_id,
-        'organisation_type': organisation_type,
+        'organization_type': organization_type,
         'agreement_signed': agreement_signed,
         'agreement_signed_at': None,
         'agreement_signed_by_id': agreement_signed_by_id,
@@ -345,7 +345,7 @@ def org_invite_json(id_, invited_by, org_id, email_address, created_at, status):
     return {
         'id': id_,
         'invited_by': invited_by,
-        'organisation': org_id,
+        'organization': org_id,
         'email_address': email_address,
         'status': status,
         'created_at': created_at,

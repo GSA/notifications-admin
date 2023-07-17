@@ -60,7 +60,7 @@ def test_old_jobs_hub_redirects(
         )
     ]
 )
-@freeze_time("2016-01-01 16:09:00.061258")
+@freeze_time("2016-01-01 11:09:00.061258")
 def test_should_show_page_for_one_job(
     client_request,
     mock_get_service_template,
@@ -83,7 +83,7 @@ def test_should_show_page_for_one_job(
 
     assert page.h1.text.strip() == 'thisisatest.csv'
     assert ' '.join(page.find('tbody').find('tr').text.split()) == (
-        '2021234567 template content Delivered 1 January at 11:10am'
+        '2021234567 template content Delivered 1 January at 11:10'
     )
     assert page.find('div', {'data-key': 'notifications'})['data-resource'] == url_for(
         'main.view_job_updates',
@@ -104,7 +104,7 @@ def test_should_show_page_for_one_job(
     assert normalize_spaces(page.select_one('tbody tr').text) == normalize_spaces(
         '2021234567 '
         'template content '
-        'Delivered 1 January at 11:10am'
+        'Delivered 1 January at 11:10'
     )
     assert page.select_one('tbody tr a')['href'] == url_for(
         'main.view_notification',
@@ -182,7 +182,7 @@ def test_should_show_job_in_progress(
         normalize_spaces(link.text)
         for link in page.select('.pill a:not(.pill-item--selected)')
     ] == [
-        '10 sending text messages', '0 delivered text messages', '0 failed text messages'
+        '10 pending text messages', '0 delivered text messages', '0 failed text messages'
     ]
     assert page.select_one('p.hint').text.strip() == 'Report is 50% complete…'
 
@@ -207,7 +207,7 @@ def test_should_show_job_without_notifications(
         normalize_spaces(link.text)
         for link in page.select('.pill a:not(.pill-item--selected)')
     ] == [
-        '10 sending text messages', '0 delivered text messages', '0 failed text messages'
+        '10 pending text messages', '0 delivered text messages', '0 failed text messages'
     ]
     assert page.select_one('p.hint').text.strip() == 'Report is 50% complete…'
     assert page.select_one('tbody').text.strip() == 'No messages to show yet…'
@@ -230,7 +230,7 @@ def test_should_show_job_with_sending_limit_exceeded_status(
     )
 
     assert normalize_spaces(page.select('main p')[1].text) == (
-        "Notify cannot send these messages because you have reached your daily limit. You can only send 1,000 messages per day."  # noqa
+        "Notify cannot send these messages because you have reached a limit. You can only send 1,000 messages per day and 250,000 messages in total."  # noqa
     )
     assert normalize_spaces(page.select('main p')[2].text) == (
         "Upload this spreadsheet again tomorrow or contact the U.S. Notify team to raise the limit."
@@ -245,16 +245,19 @@ def test_should_show_job_with_sending_limit_exceeded_status(
     )),
     # Just started
     (datetime(2020, 1, 10, 0, 0, 0), datetime(2020, 1, 10, 0, 0, 1), (
-        'No messages to show yet…'
+       'No messages to show yet…'
     )),
     # Created a while ago, just started
     (datetime(2020, 1, 1, 0, 0, 0), datetime(2020, 1, 10, 0, 0, 1), (
-        'No messages to show yet…'
+       'No messages to show yet…'
     )),
     # Created a while ago, started just within the last 24h
-    (datetime(2020, 1, 1, 0, 0, 0), datetime(2020, 1, 9, 6, 0, 1), (
-        'No messages to show yet…'
-    )),
+    # TODO -- fails locally, should pass, tech debt due to timezone changes, re-evaluate after UTC changes
+    pytest.param(
+        datetime(2020, 1, 1, 0, 0, 0),
+        datetime(2020, 1, 9, 6, 0, 1),
+        ('No messages to show yet…'),
+    ),
     # Created a while ago, started exactly 24h ago
     # ---
     # It doesn’t matter that 24h (1 day) and 7 days (the service’s data
@@ -304,7 +307,7 @@ def test_should_show_old_job(
         for column in page.select('main .govuk-grid-column-one-quarter')
     ] == [
         '1 total text messages',
-        '1 sending text message',
+        '1 pending',
         '0 delivered text messages',
         '0 failed text messages',
     ]
@@ -326,7 +329,7 @@ def test_should_show_scheduled_job(
     )
 
     assert normalize_spaces(page.select('main p')[1].text) == (
-        'Sending Two week reminder today at midnight'
+        'Sending Two week reminder tomorrow at 05:00'
     )
     assert page.select('main p a')[0]['href'] == url_for(
         'main.view_template_version',
@@ -392,15 +395,15 @@ def test_should_show_updates_for_one_job_as_json(
     )
 
     content = json.loads(response.get_data(as_text=True))
-    assert 'sending' in content['counts']
+    assert 'pending' in content['counts']
     assert 'delivered' in content['counts']
     assert 'failed' in content['counts']
     assert 'Recipient' in content['notifications']
     assert '2021234567' in content['notifications']
     assert 'Status' in content['notifications']
     assert 'Delivered' in content['notifications']
-    assert '12:01am' in content['notifications']
-    assert 'Sent by Test User on 1 January at midnight' in content['status']
+    assert '05:01' in content['notifications']
+    assert 'Sent by Test User on 1 January at 05:00' in content['status']
 
 
 @freeze_time("2016-01-01 05:00:00.000001")
@@ -429,15 +432,15 @@ def test_should_show_updates_for_scheduled_job_as_json(
     )
 
     content = response.json
-    assert 'sending' in content['counts']
+    assert 'pending' in content['counts']
     assert 'delivered' in content['counts']
     assert 'failed' in content['counts']
     assert 'Recipient' in content['notifications']
     assert '2021234567' in content['notifications']
     assert 'Status' in content['notifications']
     assert 'Delivered' in content['notifications']
-    assert '12:01am' in content['notifications']
-    assert 'Sent by Test User on 1 June at 4:00pm' in content['status']
+    assert '05:01' in content['notifications']
+    assert 'Sent by Test User on 1 June at 20:00' in content['status']
 
 
 @pytest.mark.parametrize(

@@ -15,7 +15,7 @@ from tests.conftest import (
 
 
 @pytest.mark.parametrize(
-    'user_services, user_organisations, expected_status, organisation_checked',
+    'user_services, user_organizations, expected_status, organization_checked',
     (
         ([SERVICE_ONE_ID], [], 200, False),
         ([SERVICE_ONE_ID, SERVICE_TWO_ID], [], 200, False),
@@ -41,15 +41,15 @@ def test_services_pages_that_org_users_are_allowed_to_see(
     mock_get_invites_for_service,
     mock_get_users_by_service,
     mock_get_template_folders,
-    mock_get_organisation,
+    mock_get_organization,
     mock_has_jobs,
     user_services,
-    user_organisations,
+    user_organizations,
     expected_status,
-    organisation_checked,
+    organization_checked,
 ):
     api_user_active['services'] = user_services
-    api_user_active['organisations'] = user_organisations
+    api_user_active['organizations'] = user_organizations
     api_user_active['permissions'] = {
         service_id: ['manage_users', 'manage_settings']
         for service_id in user_services
@@ -58,7 +58,7 @@ def test_services_pages_that_org_users_are_allowed_to_see(
         name='SERVICE WITH ORG',
         id_=SERVICE_ONE_ID,
         users=[api_user_active['id']],
-        organisation_id=ORGANISATION_ID,
+        organization_id=ORGANISATION_ID,
     )
 
     mock_get_service = mocker.patch(
@@ -82,7 +82,7 @@ def test_services_pages_that_org_users_are_allowed_to_see(
             _expected_status=expected_status,
         )
 
-    assert mock_get_service.called is organisation_checked
+    assert mock_get_service.called is organization_checked
 
 
 def test_service_navigation_for_org_user(
@@ -96,13 +96,13 @@ def test_service_navigation_for_org_user(
     mock_get_service,
     mock_get_invites_for_service,
     mock_get_users_by_service,
-    mock_get_organisation,
+    mock_get_organization,
 ):
     api_user_active['services'] = []
-    api_user_active['organisations'] = [ORGANISATION_ID]
+    api_user_active['organizations'] = [ORGANISATION_ID]
     service = service_json(
         id_=SERVICE_ONE_ID,
-        organisation_id=ORGANISATION_ID,
+        organization_id=ORGANISATION_ID,
     )
     mocker.patch(
         'app.service_api_client.get_service',
@@ -115,14 +115,14 @@ def test_service_navigation_for_org_user(
         service_id=SERVICE_ONE_ID,
     )
     assert [
-        item.text.strip() for item in page.select('nav.navigation a')
+        item.text.strip() for item in page.select('nav.nav a')
     ] == [
         'Usage',
         'Team members',
     ]
 
 
-@pytest.mark.parametrize('user_organisations, expected_menu_items, expected_status', [
+@pytest.mark.parametrize('user_organizations, expected_menu_items, expected_status', [
     (
         [],
         (
@@ -155,19 +155,19 @@ def test_service_user_without_manage_service_permission_can_see_usage_page_when_
     mock_get_service,
     mock_get_invites_for_service,
     mock_get_users_by_service,
-    mock_get_organisation,
+    mock_get_organization,
     mock_get_service_templates,
     mock_get_template_folders,
     mock_get_api_keys,
-    user_organisations,
+    user_organizations,
     expected_status,
     expected_menu_items,
 ):
     active_caseworking_user['services'] = [SERVICE_ONE_ID]
-    active_caseworking_user['organisations'] = user_organisations
+    active_caseworking_user['organizations'] = user_organizations
     service = service_json(
         id_=SERVICE_ONE_ID,
-        organisation_id=ORGANISATION_ID,
+        organization_id=ORGANISATION_ID,
     )
     mocker.patch(
         'app.service_api_client.get_service',
@@ -179,7 +179,7 @@ def test_service_user_without_manage_service_permission_can_see_usage_page_when_
         service_id=SERVICE_ONE_ID,
     )
     assert tuple(
-        item.text.strip() for item in page.select('nav.navigation a')
+        item.text.strip() for item in page.select('nav.nav a')
     ) == expected_menu_items
 
     client_request.get(
@@ -238,7 +238,7 @@ def test_code_to_extract_decorators_works_with_known_examples():
         get_routes_and_decorators(SERVICE_ID_ARGUMENT)
     )
     assert (
-        'organisations.organisation_dashboard',
+        'organizations.organization_dashboard',
         ['main.route', 'user_has_permissions'],
     ) in list(
         get_routes_and_decorators(ORGANISATION_ID_ARGUMENT)
@@ -260,7 +260,7 @@ def test_routes_have_permissions_decorators():
         file, function = endpoint.split('.')
 
         assert 'user_is_logged_in' not in decorators, (
-            '@user_is_logged_in used on service or organisation specific endpoint\n'
+            '@user_is_logged_in used on service or organization specific endpoint\n'
             'Use @user_has_permissions() or @user_is_platform_admin only\n'
             'app/main/views/{}.py::{}\n'
         ).format(file, function)

@@ -35,7 +35,7 @@ def test_render_sign_in_template_with_next_link_for_password_reset(
         _optional_args=f"?next=/services/{SERVICE_ONE_ID}/templates",
         _test_page_title=False
     )
-    forgot_password_link = page.find('a', class_="govuk-link govuk-link--no-visited-state page-footer-secondary-link")
+    forgot_password_link = page.find('a', class_="usa-link")
     assert forgot_password_link.text == 'Forgot your password?'
     assert forgot_password_link['href'] == url_for('main.forgot_password', next=f'/services/{SERVICE_ONE_ID}/templates')
 
@@ -61,7 +61,7 @@ def test_sign_in_explains_other_browser(client_request, api_user_active, mocker)
 def test_doesnt_redirect_to_sign_in_if_no_session_info(
     client_request,
     api_user_active,
-    mock_get_organisation_by_domain,
+    mock_get_organization_by_domain,
 ):
     api_user_active['current_session_id'] = str(uuid.UUID(int=1))
 

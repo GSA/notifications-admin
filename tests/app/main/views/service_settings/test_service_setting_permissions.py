@@ -13,7 +13,7 @@ def get_service_settings_page(
     platform_admin_user,
     service_one,
     mock_get_inbound_number_for_service,
-    mock_get_organisation,
+    mock_get_organization,
     mock_get_free_sms_fragment_limit,
     no_reply_to_email_addresses,
     single_sms_sender,
@@ -68,7 +68,7 @@ def test_service_set_permission(
     platform_admin_user,
     service_one,
     mock_get_inbound_number_for_service,
-    mock_update_service_organisation,
+    mock_update_service_organization,
     permission,
     initial_permissions,
     form_data,
@@ -102,7 +102,7 @@ def test_service_set_permission(
 ])
 def test_service_setting_toggles_show(
     mocker,
-    mock_get_service_organisation,
+    mock_get_service_organization,
     get_service_settings_page,
     service_one,
     service_fields,
@@ -122,10 +122,6 @@ def test_service_setting_toggles_show(
     ({'active': True}, '.history', 2, 'Service history'),
     ({'active': False}, '.resume_service', 0, 'Resume service'),
     ({'active': False}, '.history', 1, 'Service history'),
-    pytest.param(
-        {'active': False}, '.archive_service', 2, 'Resume service',
-        marks=pytest.mark.xfail(raises=IndexError)
-    )
 ])
 def test_service_setting_link_toggles(
     get_service_settings_page,
@@ -141,6 +137,26 @@ def test_service_setting_link_toggles(
     link = page.select('.page-footer-link a')[index]
     assert normalize_spaces(link.text) == text
     assert link['href'] == link_url
+
+
+@pytest.mark.parametrize('service_fields, endpoint, index, text', [
+    pytest.param(
+        {'active': False}, '.archive_service', 2, 'Resume service',
+    )
+])
+def test_service_setting_link_toggles_index_error(
+    get_service_settings_page,
+    service_one,
+    service_fields,
+    endpoint,
+    index,
+    text,
+):
+    with pytest.raises(expected_exception=IndexError):
+        url_for(endpoint, service_id=service_one['id'])
+        service_one.update(service_fields)
+        page = get_service_settings_page()
+        page.select('.page-footer-link a')[index]
 
 
 @pytest.mark.parametrize('permissions,permissions_text,visible', [
@@ -179,7 +195,7 @@ def test_normal_user_doesnt_see_any_platform_admin_settings(
     client_request,
     service_one,
     no_reply_to_email_addresses,
-    mock_get_organisation,
+    mock_get_organization,
     single_sms_sender,
     mock_get_inbound_number_for_service,
     mock_get_free_sms_fragment_limit,

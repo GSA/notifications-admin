@@ -9,14 +9,14 @@
       </div>
       <a href="{{ url_for('main.choose_account') }}" class="govuk-link govuk-link--no-visited-state navigation-service-switch">Switch service</a>
     </div>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-quarter">
+    <div class="grid-row">
+      <div class="tablet:grid-col-2">
         <nav class="navigation">
             {% for link_text, url in [
             ('Summary', url_for('main.platform_admin')),
             ('Live services', url_for('main.live_services')),
             ('Trial mode services', url_for('main.trial_services')),
-            ('Organizations', url_for('main.organisations')),
+            ('Organizations', url_for('main.organizations')),
             ('Providers', url_for('main.view_providers')),
             ('Reports', url_for('main.platform_admin_reports')),
             ('Email branding', url_for('main.email_branding')),
@@ -34,7 +34,7 @@
           {% endfor %}
         </nav>
       </div>
-      <div class="govuk-grid-column-three-quarters">
+      <div class="grid-col-10 tablet:grid-col-10">
       {% block backLink %}{% endblock %}
         <main class="govuk-main-wrapper column-main govuk-!-padding-top-0 govuk-!-padding-bottom-0" id="main-content" role="main">
           {% block content %}

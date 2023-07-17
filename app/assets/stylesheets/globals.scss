@@ -1,4 +1,4 @@
-@import 'settings/typography-font-families';
+@import "settings/typography-font-families";
 
 // needed for IE10 desktop snap mode: http://menacingcloud.com/?c=cssViewportOrMetaTag
 @-ms-viewport {
@@ -62,8 +62,7 @@ input[type="search"]::-webkit-search-decoration {
 
 input:focus,
 textarea:focus,
-select:focus
-{
+select:focus {
   outline: 3px solid $focus-colour;
   outline-offset: 0;
 }

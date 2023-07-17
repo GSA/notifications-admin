@@ -19,7 +19,7 @@
 
      {{ page_header(page_title, size='medium') }}
 
-     <p class="govuk-body">
+     <p>
         Every message starts with a template. You can change it later.
               
         {% if current_user.has_permissions('manage_templates') %}
@@ -34,10 +34,13 @@
 
     <div class="govuk-grid-row">
       <div class="{% if current_user.has_permissions('manage_templates') %} govuk-grid-column-five-sixths {% else %} govuk-grid-column-full {% endif %}">
-        <p class="govuk-body">
-          <br>
-          🚨 Every message starts with a template. To send, choose or create a template.
-        </p>
+        <div class="usa-alert usa-alert--info usa-alert--slim margin-y-5">
+          <div class="usa-alert__body">
+            <p class="usa-alert__text">
+              Every message starts with a template. To send, choose or create a template.
+            </p>
+          </div>
+        </div>
         {{ folder_path(
           folders=template_folder_path,
           service_id=current_service.id,
@@ -47,7 +50,7 @@
       </div>
       {% if current_user.has_permissions('manage_templates') and current_template_folder_id and user_has_template_folder_permission %}
         <div class="govuk-grid-column-one-sixth">
-          <a href="{{ url_for('.manage_template_folder', service_id=current_service.id, template_folder_id=current_template_folder_id) }}" class="govuk-link govuk-link--no-visited-state folder-heading-manage-link">Manage<span class="govuk-visually-hidden"> this folder</span></a>
+          <a href="{{ url_for('.manage_template_folder', service_id=current_service.id, template_folder_id=current_template_folder_id) }}" class="usa-link folder-heading-manage-link">Manage<span class="usa-sr-only"> this folder</span></a>
         </div>
       {% endif %}
     </div>

@@ -10,32 +10,33 @@ from tests.conftest import SERVICE_ONE_ID, normalize_spaces, sample_uuid
 
 def test_non_logged_in_user_can_see_homepage(
     client_request,
-    mock_get_service_and_organisation_counts,
+    mock_get_service_and_organization_counts,
 ):
     client_request.logout()
     page = client_request.get('main.index', _test_page_title=False)
 
     assert page.h1.text.strip() == (
-        'Send text messages to your users'
+        'Send text messages to your participants'
     )
 
-    assert page.select_one('a[role=button][draggable=false]')['href'] == url_for(
-        'main.register'
+    assert page.select_one('a.usa-button.usa-button--big')['href'] == url_for(
+        'main.sign_in',
     )
 
     assert page.select_one('meta[name=description]')['content'].strip() == (
-        'U.S. Notify lets you send text messages '
-        'to your users. Try it now if you work in federal, state, or local government.'
+        'U.S. Notify lets you send text messages to your users. '
+        'Try it now if you work in federal, state, or local government.'
     )
 
-    assert normalize_spaces(page.select_one('#whos-using-notify').text) == (
-        'Who’s using U.S. Notify '
-        'There are 111 organizations and 9,999 services using Notify. '
-        'See the list of services and organizations.'
-    )
-    assert page.select_one('#whos-using-notify a')['href'] == url_for(
-        'main.performance'
-    )
+    # This area is hidden for the pilot
+    # assert normalize_spaces(page.select_one('#whos-using-notify').text) == (
+    #     'Who’s using U.S. Notify '  # Hiding this next area for the pilot
+    #     # Hiding this next area for the pilot
+    #     # 'See the list of services and organizations. '
+    #     'There are 111 Organizations and 9,999 Services using Notify.'
+    # )
+
+    assert page.select_one('#whos-using-notify a') is None
 
 
 def test_logged_in_user_redirects_to_choose_account(
@@ -71,13 +72,12 @@ def test_robots(client_request):
     ('bat_phone', {}),
     ('thanks', {}),
     ('register', {}),
-    ('features_email', {}),
     pytest.param('index', {}, marks=pytest.mark.xfail(raises=AssertionError)),
 ))
 @freeze_time('2012-12-12 12:12')  # So we don’t go out of business hours
 def test_hiding_pages_from_search_engines(
     client_request,
-    mock_get_service_and_organisation_counts,
+    mock_get_service_and_organization_counts,
     endpoint,
     kwargs,
 ):
@@ -102,7 +102,7 @@ def test_hiding_pages_from_search_engines(
 ])
 def test_static_pages(
     client_request,
-    mock_get_organisation_by_domain,
+    mock_get_organization_by_domain,
     view,
 ):
     request = partial(client_request.get, 'main.{}'.format(view))
@@ -116,12 +116,17 @@ def test_static_pages(
         session['service_id'] = None
     request()
 
-    # Check it still works when they sign out
+    # Check it redirects to the login screen when they sign out
     client_request.logout()
     with client_request.session_transaction() as session:
         session['service_id'] = None
         session['user_id'] = None
-    request()
+    request(
+        _expected_status=302,
+        _expected_redirect='/sign-in?next={}'.format(
+            url_for('main.{}'.format(view))
+        )
+    )
 
 
 def test_guidance_pages_link_to_service_pages_when_signed_in(
@@ -143,12 +148,12 @@ def test_guidance_pages_link_to_service_pages_when_signed_in(
     page = request()
     assert not page.select_one(selector)
 
-    # Check it still works when they sign out
+    # Check it redirects to the login screen when they sign out
     client_request.logout()
     with client_request.session_transaction() as session:
         session['service_id'] = None
         session['user_id'] = None
-    page = request()
+    page = request(_expected_status=302)
     assert not page.select_one(selector)
 
 
@@ -200,21 +205,21 @@ def test_old_using_notify_page(client_request):
     client_request.get('main.using_notify', _expected_status=410)
 
 
-def test_old_integration_testing_page(
-    client_request,
-):
-    page = client_request.get(
-        'main.integration_testing',
-        _expected_status=410,
-    )
-    assert normalize_spaces(page.select_one('.govuk-grid-row').text) == (
-        'Integration testing '
-        'This information has moved. '
-        'Refer to the documentation for the client library you are using.'
-    )
-    assert page.select_one('.govuk-grid-row a')['href'] == url_for(
-        'main.documentation'
-    )
+# def test_old_integration_testing_page(
+#     client_request,
+# ):
+#     page = client_request.get(
+#         'main.integration_testing',
+#         _expected_status=410,
+#     )
+#     assert normalize_spaces(page.select_one('.grid-row').text) == (
+#         'Integration testing '
+#         'This information has moved. '
+#         'Refer to the documentation for the client library you are using.'
+#     )
+#     assert page.select_one('.grid-row a')['href'] == url_for(
+#         'main.documentation'
+#     )
 
 
 def test_terms_page_has_correct_content(client_request):
@@ -233,20 +238,19 @@ def test_css_is_served_from_correct_path(client_request):
         page.select('link[rel=stylesheet]')
     ):
         assert link['href'].startswith([
-            # 'https://static.example.com/css/styles.css?',
             'https://static.example.com/stylesheets/main.css?',
             'https://static.example.com/stylesheets/print.css?',
+            'https://static.example.com/css/styles.css?',
         ][index])
 
 
-@pytest.mark.skip(reason="Update for TTS")
 def test_resources_that_use_asset_path_variable_have_correct_path(client_request):
 
     page = client_request.get('main.documentation')  # easy static page
 
-    logo_svg_fallback = page.select_one('.govuk-header__logotype-fallback-image')
+    logo_svg_fallback = page.select_one('.usa-flag-logo')
 
-    assert logo_svg_fallback['src'].startswith('https://static.example.com/images/govuk-logotype.png')
+    assert logo_svg_fallback['src'].startswith('https://static.example.com/images/us-notify-color.png')
 
 
 @pytest.mark.parametrize('extra_args, email_branding_retrieved', (
@@ -280,7 +284,7 @@ def test_email_branding_preview(
 
 def test_font_preload(
     client_request,
-    mock_get_service_and_organisation_counts,
+    mock_get_service_and_organization_counts,
 ):
     client_request.logout()
     page = client_request.get('main.index', _test_page_title=False)
@@ -300,7 +304,7 @@ def test_font_preload(
 @pytest.mark.skip(reason="Currently hidden for TTS")
 def test_sms_price(
     client_request,
-    mock_get_service_and_organisation_counts,
+    mock_get_service_and_organization_counts,
     current_date,
     expected_rate,
 ):

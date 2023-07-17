@@ -20,7 +20,7 @@
     {{ page_header(
       1|message_count_label(template.template_type, suffix='') | capitalize
     ) }}
-    <p class="govuk-body">
+    <p>
       {% if help %}
         ‘{{ template.name }}’
       {% else %}
@@ -35,7 +35,7 @@
       {% elif created_by %}
         by {{ created_by.name }}
       {% endif %}
-      {{ created_at|format_datetime_human }}
+      {{ created_at|format_datetime_human }} UTC
     </p>
 
     <div class="">
@@ -51,7 +51,7 @@
     {% endif %}
 
     {% if current_user.has_permissions('send_messages') and current_user.has_permissions('view_activity') and template.template_type == 'sms' and can_receive_inbound %}
-      <p class="govuk-body">
+      <p>
         <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.conversation', service_id=current_service.id, notification_id=notification_id, _anchor='n{}'.format(notification_id)) }}">See all text messages sent to this phone number</a>
       </p>
     {% endif %}

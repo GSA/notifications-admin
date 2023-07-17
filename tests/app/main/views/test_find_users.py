@@ -86,7 +86,7 @@ def test_find_users_by_email_validates_against_empty_search_submission(
     document = client_request.post('main.find_users_by_email', _data={"search": ""}, _expected_status=200)
 
     expected_message = "Error: You need to enter full or partial email address to search by."
-    assert document.find('span', {'class': 'govuk-error-message'}).text.strip() == expected_message
+    assert document.find('span', {'class': 'usa-error-message'}).text.strip() == expected_message
 
 
 def test_user_information_page_shows_information_about_user(
@@ -103,8 +103,8 @@ def test_user_information_page_shows_information_about_user(
     ], autospec=True)
 
     mocker.patch(
-        'app.user_api_client.get_organisations_and_services_for_user',
-        return_value={'organisations': [], 'services': [
+        'app.user_api_client.get_organizations_and_services_for_user',
+        return_value={'organizations': [], 'services': [
             {"id": user_service_one, "name": "Fresh Orchard Juice", "restricted": True},
             {"id": user_service_two, "name": "Nature Therapy", "restricted": False},
         ]},
@@ -146,7 +146,7 @@ def test_user_information_page_shows_change_auth_type_link(
     client_request,
     platform_admin_user,
     api_user_active,
-    mock_get_organisations_and_services_for_user,
+    mock_get_organizations_and_services_for_user,
     mocker
 ):
     client_request.login(platform_admin_user)
@@ -167,7 +167,7 @@ def test_user_information_page_doesnt_show_change_auth_type_link_if_user_on_weba
     client_request,
     platform_admin_user,
     api_user_active,
-    mock_get_organisations_and_services_for_user,
+    mock_get_organizations_and_services_for_user,
     mocker
 ):
     client_request.login(platform_admin_user)
@@ -252,8 +252,8 @@ def test_user_information_page_displays_if_there_are_failed_login_attempts(
     ], autospec=True)
 
     mocker.patch(
-        'app.user_api_client.get_organisations_and_services_for_user',
-        return_value={'organisations': [], 'services': []},
+        'app.user_api_client.get_organizations_and_services_for_user',
+        return_value={'organizations': [], 'services': []},
         autospec=True
     )
     page = client_request.get('main.user_information', user_id=fake_uuid)
@@ -267,7 +267,7 @@ def test_user_information_page_shows_archive_link_for_active_users(
     client_request,
     platform_admin_user,
     api_user_active,
-    mock_get_organisations_and_services_for_user,
+    mock_get_organizations_and_services_for_user,
 ):
     client_request.login(platform_admin_user)
     page = client_request.get(
@@ -283,7 +283,7 @@ def test_user_information_page_does_not_show_archive_link_for_inactive_users(
     mocker,
     client_request,
     platform_admin_user,
-    mock_get_organisations_and_services_for_user,
+    mock_get_organizations_and_services_for_user,
 ):
     inactive_user_id = uuid.uuid4()
     inactive_user = user_json(id_=inactive_user_id, state='inactive')
@@ -302,7 +302,7 @@ def test_archive_user_prompts_for_confirmation(
     client_request,
     platform_admin_user,
     api_user_active,
-    mock_get_organisations_and_services_for_user,
+    mock_get_organizations_and_services_for_user,
 ):
     client_request.login(platform_admin_user)
     page = client_request.get(
@@ -340,7 +340,7 @@ def test_archive_user_shows_error_message_if_user_cannot_be_archived(
     platform_admin_user,
     api_user_active,
     mocker,
-    mock_get_non_empty_organisations_and_services_for_user,
+    mock_get_non_empty_organizations_and_services_for_user,
 ):
     mocker.patch(
         'app.user_api_client.post',

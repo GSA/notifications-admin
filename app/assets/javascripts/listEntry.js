@@ -28,7 +28,7 @@
   ListEntry.prototype.entryTemplate = Hogan.compile(
     '<div class="list-entry">' +
       '<label for="{{{id}}}" class="govuk-input--numbered__label">' +
-        '<span class="govuk-visually-hidden">{{listItemName}} number </span>{{number}}.' +
+        '<span class="usa-sr-only">{{listItemName}} number </span>{{number}}.' +
       '</label>' +
       '<input' +
         ' name="{{name}}"' +
@@ -38,7 +38,7 @@
       '/>' +
       '{{#button}}' +
         '<button type="button" class="govuk-button govuk-button--secondary input-list__button--remove">' +
-          'Remove<span class="govuk-visually-hidden"> {{listItemName}} number {{number}}</span>' +
+          'Remove<span class="usa-sr-only"> {{listItemName}} number {{number}}</span>' +
         '</button>' +
       '{{/button}}' +
     '</div>'

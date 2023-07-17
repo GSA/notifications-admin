@@ -48,8 +48,8 @@ def test_get_upload_hub_page(
 
     assert normalize_spaces(uploads[0].text.strip()) == (
         'some.csv '
-        'Sent 1 January 2016 at 6:09am '
-        '0 sending 8 delivered 2 failed'
+        'Sent 1 January 2016 at 11:09 '
+        '0 pending 8 delivered 2 failed'
     )
     assert uploads[0].select_one('a.file-list-filename-large')['href'] == (
         '/services/{}/jobs/job_id_1'.format(SERVICE_ONE_ID)
@@ -79,12 +79,12 @@ def test_uploads_page_shows_scheduled_jobs(
         ),
         (
             'even_later.csv '
-            'Sending 1 January 2016 at 6:09pm '
+            'Sending 1 January 2016 at 23:09 '
             '1 text message waiting to send'
         ),
         (
             'send_me_later.csv '
-            'Sending 1 January 2016 at 6:09am '
+            'Sending 1 January 2016 at 11:09 '
             '1 text message waiting to send'
         ),
     ]

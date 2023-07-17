@@ -74,7 +74,7 @@ def test_get_support_index_page_when_signed_out(
 ])
 def test_choose_support_type(
     client_request,
-    mock_get_non_empty_organisations_and_services_for_user,
+    mock_get_non_empty_organizations_and_services_for_user,
     support_type,
     expected_h1
 ):
@@ -197,7 +197,7 @@ def test_passed_non_logged_in_user_details_through_flow(client_request, mocker, 
 ])
 def test_passes_user_details_through_flow(
     client_request,
-    mock_get_non_empty_organisations_and_services_for_user,
+    mock_get_non_empty_organizations_and_services_for_user,
     mocker,
     ticket_type,
     zendesk_ticket_type,
@@ -269,7 +269,7 @@ def test_email_address_required_for_problems_and_questions(
         _data=data,
         _expected_status=200
     )
-    assert normalize_spaces(page.select_one('.govuk-error-message').text) == (
+    assert normalize_spaces(page.select_one('.usa-error-message').text) == (
         'Error: Cannot be empty'
     )
 
@@ -294,7 +294,7 @@ def test_email_address_must_be_valid_if_provided_to_support_form(
         _expected_status=200,
     )
 
-    assert normalize_spaces(page.select_one('span.govuk-error-message').text) == (
+    assert normalize_spaces(page.select_one('span.usa-error-message').text) == (
         'Error: Enter a valid email address'
     )
 
@@ -318,7 +318,7 @@ def test_email_address_must_be_valid_if_provided_to_support_form(
 ])
 def test_urgency(
     client_request,
-    mock_get_non_empty_organisations_and_services_for_user,
+    mock_get_non_empty_organizations_and_services_for_user,
     mocker,
     ticket_type,
     severe,
@@ -522,7 +522,7 @@ def test_triage_redirects_to_correct_url(
 @freeze_time('2012-12-12 12:12')
 def test_back_link_from_form(
     client_request,
-    mock_get_non_empty_organisations_and_services_for_user,
+    mock_get_non_empty_organizations_and_services_for_user,
     extra_args,
     expected_back_link,
 ):
@@ -531,7 +531,7 @@ def test_back_link_from_form(
         ticket_type=PROBLEM_TICKET_TYPE,
         **extra_args
     )
-    assert page.select_one('.govuk-back-link')['href'] == expected_back_link()
+    assert page.select_one('.usa-back-link')['href'] == expected_back_link()
     assert normalize_spaces(page.select_one('h1').text) == 'Report a problem'
 
 
@@ -585,7 +585,7 @@ def test_should_be_shown_the_bat_email(
     active_user_with_permissions,
     mocker,
     service_one,
-    mock_get_non_empty_organisations_and_services_for_user,
+    mock_get_non_empty_organizations_and_services_for_user,
     is_in_business_hours,
     severe,
     expected_status_code,
@@ -641,7 +641,7 @@ def test_should_be_shown_the_bat_email_for_general_questions(
     active_user_with_permissions,
     mocker,
     service_one,
-    mock_get_non_empty_organisations_and_services_for_user,
+    mock_get_non_empty_organizations_and_services_for_user,
     severe,
     expected_status_code,
     expected_redirect,
@@ -680,8 +680,8 @@ def test_bat_email_page(
     client_request.logout()
     page = client_request.get(bat_phone_page)
 
-    assert page.select_one('.govuk-back-link').text == 'Back'
-    assert page.select_one('.govuk-back-link')['href'] == url_for('main.support')
+    assert page.select_one('.usa-back-link').text == 'Back'
+    assert page.select_one('.usa-back-link')['href'] == url_for('main.support')
     assert page.select('main a')[1].text == 'Fill in this form'
     assert page.select('main a')[1]['href'] == url_for('main.feedback', ticket_type=PROBLEM_TICKET_TYPE, severe='no')
     next_page = client_request.get_url(page.select('main a')[1]['href'])

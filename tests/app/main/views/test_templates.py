@@ -253,7 +253,7 @@ def test_should_show_live_search_if_list_of_templates_taller_than_screen(
         'Search by name'
     )
 
-    assert len(page.select(search['data-targets'])) == len(page.select('#template-list .govuk-label')) == 20
+    assert len(page.select(search['data-targets'])) == len(page.select('#template-list .usa-label')) == 20
 
 
 def test_should_label_search_by_id_for_services_with_api_keys(
@@ -290,7 +290,7 @@ def test_should_show_live_search_if_service_has_lots_of_folders(
         service_id=SERVICE_ONE_ID,
     )
 
-    count_of_templates_and_folders = len(page.select('#template-list .govuk-label'))
+    count_of_templates_and_folders = len(page.select('#template-list .usa-label'))
     count_of_folders = len(page.select('.template-list-folder:first-of-type'))
     count_of_templates = count_of_templates_and_folders - count_of_folders
 
@@ -472,7 +472,7 @@ def test_caseworker_sees_template_page_if_template_is_deleted(
 
     content = str(page)
     assert url_for("main.send_one_off", service_id=SERVICE_ONE_ID, template_id=fake_uuid) not in content
-    assert page.select('p.hint')[0].text.strip() == 'This template was deleted today at 10:00am.'
+    assert page.select('p.hint')[0].text.strip() == 'This template was deleted today at 15:00.'
 
     mock_get_deleted_template.assert_called_with(SERVICE_ONE_ID, template_id, None)
 
@@ -559,7 +559,7 @@ def test_should_be_able_to_view_a_template_with_links(
 
     assert [
         (link['href'], normalize_spaces(link.text))
-        for link in page.select('.pill-separate-item')
+        for link in page.select('.usa-pill-separate-item')
     ] == [
         (url_for(
             endpoint,
@@ -658,7 +658,7 @@ def test_should_show_page_template_with_priority_select_if_platform_admin(
 
     assert page.select_one('input[name=name]')['value'] == "Two week reminder"
     assert "Template &lt;em&gt;content&lt;/em&gt; with &amp; entity" in str(page.select_one('textarea'))
-    assert "Use priority queue?" in page.text
+    assert "Use priority queue?" not in page.text
     mock_get_service_template.assert_called_with(service_one['id'], template_id, None)
 
 
@@ -770,7 +770,7 @@ def test_choose_a_template_to_copy_when_user_has_one_service(
     mock_get_service_templates,
     mock_get_template_folders,
     mock_get_no_api_keys,
-    mock_get_empty_organisations_and_one_service_for_user,
+    mock_get_empty_organizations_and_one_service_for_user,
 ):
     page = client_request.get(
         'main.choose_template_to_copy',
@@ -816,7 +816,7 @@ def test_choose_a_template_to_copy_from_folder_within_service(
     mocker,
     client_request,
     mock_get_template_folders,
-    mock_get_non_empty_organisations_and_services_for_user,
+    mock_get_non_empty_organizations_and_services_for_user,
     mock_get_no_api_keys,
 ):
     mock_get_template_folders.return_value = [
@@ -944,7 +944,7 @@ def test_load_edit_template_with_copy_of_template(
     active_user_with_permission_to_two_services,
     mock_get_service_templates,
     mock_get_service_email_template,
-    mock_get_non_empty_organisations_and_services_for_user,
+    mock_get_non_empty_organizations_and_services_for_user,
     existing_template_names,
     expected_name,
 ):
@@ -978,7 +978,7 @@ def test_copy_template_loads_template_from_within_subfolder(
     client_request,
     active_user_with_permission_to_two_services,
     mock_get_service_templates,
-    mock_get_non_empty_organisations_and_services_for_user,
+    mock_get_non_empty_organizations_and_services_for_user,
     mocker
 ):
     template = template_json(
@@ -1013,7 +1013,7 @@ def test_copy_template_loads_template_from_within_subfolder(
 def test_cant_copy_template_from_non_member_service(
     client_request,
     mock_get_service_email_template,
-    mock_get_organisations_and_services_for_user,
+    mock_get_organizations_and_services_for_user,
 ):
     client_request.get(
         'main.copy_template',
@@ -1054,8 +1054,8 @@ def test_should_not_allow_creation_of_template_through_form_without_correct_perm
         _expected_status=403,
     )
     assert normalize_spaces(page.select('main p')[0].text) == expected_error
-    assert page.select(".govuk-back-link")[0].text == "Back"
-    assert page.select(".govuk-back-link")[0]['href'] == url_for(
+    assert page.select(".usa-back-link")[0].text == "Back"
+    assert page.select(".usa-back-link")[0]['href'] == url_for(
         '.choose_template',
         service_id=SERVICE_ONE_ID,
     )
@@ -1084,8 +1084,8 @@ def test_should_not_allow_creation_of_a_template_without_correct_permission(
         _expected_status=403,
     )
     assert page.select('main p')[0].text.strip() == expected_error
-    assert page.select(".govuk-back-link")[0].text == "Back"
-    assert page.select(".govuk-back-link")[0]['href'] == url_for(
+    assert page.select(".usa-back-link")[0].text == "Back"
+    assert page.select(".usa-back-link")[0]['href'] == url_for(
         '.choose_template',
         service_id=service_one['id'],
     )
@@ -1110,7 +1110,6 @@ def test_should_redirect_when_saving_a_template(
             'template_content': content,
             'template_type': 'sms',
             'service': SERVICE_ONE_ID,
-            'process_type': 'normal',
         },
         _expected_status=302,
         _expected_redirect=url_for(
@@ -1120,7 +1119,7 @@ def test_should_redirect_when_saving_a_template(
         ),
     )
     mock_update_service_template.assert_called_with(
-        fake_uuid, name, 'sms', content, SERVICE_ONE_ID, None, 'normal',
+        fake_uuid, name, 'sms', content, SERVICE_ONE_ID, None
     )
 
 
@@ -1140,7 +1139,6 @@ def test_should_edit_content_when_process_type_is_priority_not_platform_admin(
             'template_content': "new template <em>content</em> with & entity",
             'template_type': 'sms',
             'service': SERVICE_ONE_ID,
-            'process_type': 'priority',
         },
         _expected_status=302,
         _expected_redirect=url_for(
@@ -1155,8 +1153,7 @@ def test_should_edit_content_when_process_type_is_priority_not_platform_admin(
         'sms',
         "new template <em>content</em> with & entity",
         SERVICE_ONE_ID,
-        None,
-        'priority'
+        None
     )
 
 
@@ -1177,8 +1174,8 @@ def test_should_not_allow_template_edits_without_correct_permission(
     )
 
     assert page.select('main p')[0].text.strip() == "Sending text messages has been disabled for your service."
-    assert page.select(".govuk-back-link")[0].text == "Back"
-    assert page.select(".govuk-back-link")[0]['href'] == url_for(
+    assert page.select(".usa-back-link")[0].text == "Back"
+    assert page.select(".usa-back-link")[0]['href'] == url_for(
         '.view_template',
         service_id=SERVICE_ONE_ID,
         template_id=fake_uuid,
@@ -1304,7 +1301,7 @@ def test_should_show_interstitial_when_making_breaking_change(
     )
 
     assert page.h1.string.strip() == "Confirm changes"
-    assert page.find('a', {'class': 'govuk-back-link'})['href'] == url_for(
+    assert page.find('a', {'class': 'usa-back-link'})['href'] == url_for(
         ".edit_service_template",
         service_id=SERVICE_ONE_ID,
         template_id=fake_uuid,
@@ -1420,7 +1417,6 @@ def test_should_redirect_when_saving_a_template_email(
             'template_type': 'email',
             'service': SERVICE_ONE_ID,
             'subject': subject,
-            'process_type': 'normal'
         },
         _expected_status=302,
         _expected_redirect=url_for(
@@ -1430,7 +1426,7 @@ def test_should_redirect_when_saving_a_template_email(
         ),
     )
     mock_update_service_template.assert_called_with(
-        fake_uuid, name, 'email', content, SERVICE_ONE_ID, subject, 'normal',
+        fake_uuid, name, 'email', content, SERVICE_ONE_ID, subject
     )
 
 
@@ -1575,7 +1571,7 @@ def test_should_show_page_for_a_deleted_template(
     content = str(page)
     assert url_for("main.edit_service_template", service_id=SERVICE_ONE_ID, template_id=fake_uuid) not in content
     assert url_for("main.send_one_off", service_id=SERVICE_ONE_ID, template_id=fake_uuid) not in content
-    assert page.select('p.hint')[0].text.strip() == 'This template was deleted today at 10:00am.'
+    assert page.select('p.hint')[0].text.strip() == 'This template was deleted today at 15:00.'
     assert 'Delete this template' not in page.select_one('main').text
 
     mock_get_deleted_template.assert_called_with(SERVICE_ONE_ID, template_id, None)
@@ -1803,7 +1799,6 @@ def test_should_create_sms_template_without_downgrading_unicode_characters(
             'template_content': msg,
             'template_type': template_type,
             'service': SERVICE_ONE_ID,
-            'process_type': 'normal'
         },
         expected_status=302,
     )
@@ -1814,8 +1809,7 @@ def test_should_create_sms_template_without_downgrading_unicode_characters(
         msg,  # content
         ANY,  # service_id
         ANY,  # subject
-        ANY,  # process_type
-        ANY,  # parent_folder_id
+        ANY  # parent_folder_id
     )
 
 
@@ -1956,21 +1950,21 @@ def test_set_template_sender(
             # Can’t make a 7 fragment text template from content alone
             'sms', False, 'a' * 919,
             'You have 1 character too many',
-            'govuk-error-message',
+            'usa-error-message',
         ),
         (
             # Service name increases content count but character count
             # is based on content alone
             'sms', True, 'a' * 919,
             'You have 1 character too many',
-            'govuk-error-message',
+            'usa-error-message',
         ),
         (
             # Service name increases content count but character count
             # is based on content alone
             'sms', True, 'a' * 920,
             'You have 2 characters too many',
-            'govuk-error-message',
+            'usa-error-message',
         ),
         (
             'sms', False, 'Ẅ' * 70,
@@ -1990,7 +1984,7 @@ def test_set_template_sender(
         (
             'sms', False, 'Ẅ' * 919,
             'You have 1 character too many',
-            'govuk-error-message',
+            'usa-error-message',
         ),
         (
             'sms', False, 'Hello ((name))',

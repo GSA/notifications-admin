@@ -4,7 +4,7 @@ from itertools import chain
 from numbers import Number
 
 import pytz
-from flask import Markup, current_app, render_template, request
+from flask import Markup, render_template, request
 from flask_login import current_user
 from flask_wtf import FlaskForm as Form
 from flask_wtf.file import FileAllowed
@@ -65,7 +65,7 @@ from app.main.validators import (
     ValidGovEmail,
 )
 from app.models.feedback import PROBLEM_TICKET_TYPE, QUESTION_TICKET_TYPE
-from app.models.organisation import Organisation
+from app.models.organization import Organization
 from app.utils import branding, merge_jsonlike
 from app.utils.user_permissions import all_ui_permissions, permission_options
 
@@ -73,9 +73,9 @@ from app.utils.user_permissions import all_ui_permissions, permission_options
 def get_time_value_and_label(future_time):
     return (
         future_time.astimezone(pytz.utc).replace(tzinfo=None).isoformat(),
-        '{} at {} ET'.format(
-            get_human_day(future_time.astimezone(current_app.config['PY_TIMEZONE'])),
-            get_human_time(future_time.astimezone(current_app.config['PY_TIMEZONE']))
+        '{} at {} UTC'.format(
+            get_human_day(future_time.astimezone(pytz.utc)),
+            get_human_time(future_time.astimezone(pytz.utc))
         )
     )
 
@@ -93,20 +93,20 @@ def get_human_time(time):
 def get_human_day(time, prefix_today_with='T'):
     #  Add 1 hour to get ‘midnight today’ instead of ‘midnight tomorrow’
     time = (time - timedelta(hours=1)).strftime('%A')
-    if time == datetime.now(current_app.config['PY_TIMEZONE']).strftime('%A'):
+    if time == datetime.now(pytz.utc).strftime('%A'):
         return '{}oday'.format(prefix_today_with)
-    if time == (datetime.now(current_app.config['PY_TIMEZONE']) + timedelta(days=1)).strftime('%A'):
+    if time == (datetime.now(pytz.utc) + timedelta(days=1)).strftime('%A'):
         return 'Tomorrow'
     return time
 
 
 def get_furthest_possible_scheduled_time():
     # We want local time to find date boundaries
-    return (datetime.now(current_app.config['PY_TIMEZONE']) + timedelta(days=4)).replace(hour=0)
+    return (datetime.now(pytz.utc) + timedelta(days=4)).replace(hour=0)
 
 
 def get_next_hours_until(until):
-    now = datetime.now(current_app.config['PY_TIMEZONE'])
+    now = datetime.now(pytz.utc)
     hours = int((until - now).total_seconds() / (60 * 60))
     return [
         (now + timedelta(hours=i)).replace(minute=0, second=0, microsecond=0)
@@ -115,7 +115,7 @@ def get_next_hours_until(until):
 
 
 def get_next_days_until(until):
-    now = datetime.now(current_app.config['PY_TIMEZONE'])
+    now = datetime.now(pytz.utc)
     days = int((until - now).total_seconds() / (60 * 60 * 24))
     return [
         get_human_day(
@@ -238,9 +238,8 @@ def govuk_text_input_field_widget(self, field, type=None, param_extensions=None,
             error_message_format: field.errors[0]
         }
 
-    # convert to parameters that govuk understands
+    # convert to parameters that usa understands
     params = {
-        "classes": "govuk-!-width-two-thirds",
         "errorMessage": error_message,
         "id": field.id,
         "label": {"text": field.label.text},
@@ -508,7 +507,7 @@ class NestedFieldMixin:
             "fieldset": {
                 "legend": {
                     "text": label,
-                    "classes": "govuk-visually-hidden"
+                    "classes": "usa-sr-only"
                 }
             },
             "formGroup": {
@@ -628,7 +627,7 @@ class RegisterUserFromInviteForm(RegisterUserForm):
 class RegisterUserFromOrgInviteForm(StripWhitespaceForm):
     def __init__(self, invited_org_user):
         super().__init__(
-            organisation=invited_org_user.organisation,
+            organization=invited_org_user.organization,
             email_address=invited_org_user.email_address,
         )
 
@@ -639,7 +638,7 @@ class RegisterUserFromOrgInviteForm(StripWhitespaceForm):
 
     mobile_number = InternationalPhoneNumber('Mobile number', validators=[DataRequired(message='Cannot be empty')])
     password = password()
-    organisation = HiddenField('organisation')
+    organization = HiddenField('organization')
     email_address = HiddenField('email_address')
     auth_type = HiddenField('auth_type', validators=[DataRequired()])
 
@@ -965,7 +964,7 @@ class OnOffField(GovukRadiosField):
             )
 
 
-class OrganisationTypeField(GovukRadiosField):
+class OrganizationTypeField(GovukRadiosField):
     def __init__(
         self,
         *args,
@@ -976,7 +975,7 @@ class OrganisationTypeField(GovukRadiosField):
         super().__init__(
             *args,
             choices=[
-                (value, label) for value, label in Organisation.TYPE_LABELS.items()
+                (value, label) for value, label in Organization.TYPE_LABELS.items()
                 if not include_only or value in include_only
             ],
             thing='the type of organization',
@@ -1131,7 +1130,7 @@ class RenameServiceForm(StripWhitespaceForm):
         ])
 
 
-class RenameOrganisationForm(StripWhitespaceForm):
+class RenameOrganizationForm(StripWhitespaceForm):
     name = GovukTextInputField(
         u'Organization name',
         validators=[
@@ -1141,11 +1140,11 @@ class RenameOrganisationForm(StripWhitespaceForm):
         ])
 
 
-class OrganisationOrganisationTypeForm(StripWhitespaceForm):
-    organisation_type = OrganisationTypeField('What type of organization is this?')
+class OrganizationOrganizationTypeForm(StripWhitespaceForm):
+    organization_type = OrganizationTypeField('What type of organization is this?')
 
 
-class AdminOrganisationDomainsForm(StripWhitespaceForm):
+class AdminOrganizationDomainsForm(StripWhitespaceForm):
 
     def populate(self, domains_list):
         for index, value in enumerate(domains_list):
@@ -1173,12 +1172,12 @@ class CreateServiceForm(StripWhitespaceForm):
             MustContainAlphanumericCharacters(),
             Length(max=255, message='Service name must be 255 characters or fewer')
         ])
-    organisation_type = OrganisationTypeField('Where is this service run?')
+    organization_type = OrganizationTypeField('Where is this service run?')
 
 
-class AdminNewOrganisationForm(
-    RenameOrganisationForm,
-    OrganisationOrganisationTypeForm
+class AdminNewOrganizationForm(
+    RenameOrganizationForm,
+    OrganizationOrganizationTypeForm
 ):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -1235,15 +1234,7 @@ class BaseTemplateForm(StripWhitespaceForm):
             NoCommasInPlaceHolders()
         ]
     )
-    process_type = GovukRadiosField(
-        "Use priority queue?",
-        choices=[
-            ('priority', 'Yes'),
-            ('normal', 'No'),
-        ],
-        thing='yes or no',
-        default='normal'
-    )
+    process_type = HiddenField('normal')
 
 
 class SMSTemplateForm(BaseTemplateForm):
@@ -1377,7 +1368,7 @@ class SupportRedirect(StripWhitespaceForm):
             ('public', 'I’m a member of the public with a question for the government'),
         ],
         param_extensions={
-            "fieldset": {"legend": {"classes": "govuk-visually-hidden"}}
+            "fieldset": {"legend": {"classes": "usa-sr-only"}}
         }
     )
 
@@ -1576,7 +1567,7 @@ class AdminSetEmailBrandingForm(StripWhitespaceForm):
 
     branding_style = GovukRadiosFieldWithNoneOption(
         'Branding style',
-        param_extensions={'fieldset': {'legend': {'classes': 'govuk-visually-hidden'}}},
+        param_extensions={'fieldset': {'legend': {'classes': 'usa-sr-only'}}},
         thing='a branding style',
     )
 
@@ -1843,13 +1834,13 @@ class SetTemplateSenderForm(StripWhitespaceForm):
     sender = GovukRadiosField()
 
 
-class AdminSetOrganisationForm(StripWhitespaceForm):
+class AdminSetOrganizationForm(StripWhitespaceForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.organisations.choices = kwargs['choices']
+        self.organizations.choices = kwargs['choices']
 
-    organisations = GovukRadiosField(
+    organizations = GovukRadiosField(
         'Select an organization',
         validators=[
             DataRequired()
@@ -2034,7 +2025,7 @@ class TemplateAndFoldersSelectionForm(Form):
         param_extensions={
             "fieldset": {
                 "legend": {
-                    "classes": "govuk-visually-hidden"
+                    "classes": "usa-sr-only"
                 }
             }
         }
@@ -2068,7 +2059,7 @@ class AdminClearCacheForm(StripWhitespaceForm):
             raise ValidationError('Select at least one option')
 
 
-class AdminOrganisationGoLiveNotesForm(StripWhitespaceForm):
+class AdminOrganizationGoLiveNotesForm(StripWhitespaceForm):
     request_to_go_live_notes = TextAreaField(
         'Go live notes',
         filters=[lambda x: x or None],

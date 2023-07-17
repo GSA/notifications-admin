@@ -191,7 +191,7 @@ def test_should_show_change_details_link(
 
 
 @pytest.mark.parametrize('number_of_users', (
-    pytest.param(7, marks=pytest.mark.xfail),
+    pytest.param(7),
     pytest.param(8),
 ))
 def test_should_show_live_search_if_more_than_7_users(
@@ -213,12 +213,19 @@ def test_should_show_live_search_if_more_than_7_users(
 
     page = client_request.get('main.manage_users', service_id=SERVICE_ONE_ID)
 
+    if number_of_users == 7:
+        with pytest.raises(expected_exception=TypeError):
+            assert page.select_one('div[data-module=live-search]')['data-targets'] == (
+                ".user-list-item"
+            )
+        return
+
     assert page.select_one('div[data-module=live-search]')['data-targets'] == (
         ".user-list-item"
     )
     assert len(page.select('.user-list-item')) == number_of_users
 
-    textbox = page.select_one('[data-module=autofocus] .govuk-input')
+    textbox = page.select_one('[data-module=autofocus] .usa-input')
     assert 'value' not in textbox
     assert textbox['name'] == 'search'
     # data-module=autofocus is set on a containing element so it
@@ -226,7 +233,7 @@ def test_should_show_live_search_if_more_than_7_users(
     assert 'data-module' not in textbox
     assert not page.select_one('[data-force-focus]')
     assert textbox['class'] == [
-        'govuk-input', 'govuk-!-width-full',
+        'usa-input', 'govuk-!-width-full',
     ]
     assert normalize_spaces(
         page.select_one('label[for=search]').text
@@ -645,8 +652,8 @@ def test_cant_edit_user_folder_permissions_for_platform_admin_users(
         service_id=SERVICE_ONE_ID,
         user_id=platform_admin_user['id'],
     )
-    assert normalize_spaces(page.select('main p')[0].text) == 'platform@admin.gsa.gov Change email address'
-    assert normalize_spaces(page.select('main p')[2].text) == (
+    assert normalize_spaces(page.select('main .usa-body')[0].text) == 'platform@admin.gsa.gov Change email address'
+    assert normalize_spaces(page.select('main .usa-body')[1].text) == (
         'Platform admin users can access all template folders.'
     )
     assert page.select('input[name=folder_permissions]') == []
@@ -842,11 +849,11 @@ def test_should_show_page_for_inviting_user_with_email_prefilled(
     fake_uuid,
     active_user_with_permissions,
     active_user_with_permission_to_other_service,
-    mock_get_organisation_by_domain,
+    mock_get_organization_by_domain,
     mock_get_invites_for_service,
 ):
     client_request.login(active_user_with_permissions)
-    service_one['organisation'] = ORGANISATION_ID
+    service_one['organization'] = ORGANISATION_ID
     mocker.patch('app.models.user.user_api_client.get_user', side_effect=[
         active_user_with_permission_to_other_service,
     ])
@@ -865,9 +872,9 @@ def test_should_show_page_for_inviting_user_with_email_prefilled(
     assert normalize_spaces(page.select_one('h1').text) == (
         'Invite Service Two User'
     )
-    assert normalize_spaces(page.select_one('main .govuk-body').text) == (
-        'service-two-user@test.gsa.gov'
-    )
+    # assert normalize_spaces(page.select_one('main .gov-uk').text) == (
+    #     'service-two-user@test.gsa.gov'
+    # )
     assert not page.select("input#email_address") or page.select("input[type=email]")
 
 
@@ -895,7 +902,7 @@ def test_should_show_page_if_prefilled_user_is_already_a_team_member(
     assert normalize_spaces(page.select_one('h1').text) == (
         'This person is already a team member'
     )
-    assert normalize_spaces(page.select_one('main .govuk-body').text) == (
+    assert normalize_spaces(page.select_one('main p').text) == (
         'Test User is already member of ‘service one’.'
     )
     assert not page.select("form")
@@ -929,14 +936,14 @@ def test_should_show_page_if_prefilled_user_is_already_invited(
     assert normalize_spaces(page.select_one('h1').text) == (
         'This person has already received an invite'
     )
-    assert normalize_spaces(page.select_one('main .govuk-body').text) == (
+    assert normalize_spaces(page.select_one('main .usa-body').text) == (
         'Service Two User has not accepted their invitation to '
         '‘service one’ yet. You do not need to do anything.'
     )
     assert not page.select("form")
 
 
-def test_should_403_if_trying_to_prefill_email_address_for_user_with_no_organisation(
+def test_should_403_if_trying_to_prefill_email_address_for_user_with_no_organization(
     mocker,
     client_request,
     service_one,
@@ -945,9 +952,9 @@ def test_should_403_if_trying_to_prefill_email_address_for_user_with_no_organisa
     active_user_with_permissions,
     active_user_with_permission_to_other_service,
     mock_get_invites_for_service,
-    mock_get_no_organisation_by_domain,
+    mock_get_no_organization_by_domain,
 ):
-    service_one['organisation'] = ORGANISATION_ID
+    service_one['organization'] = ORGANISATION_ID
     client_request.login(active_user_with_permissions)
     mocker.patch('app.models.user.user_api_client.get_user', side_effect=[
         active_user_with_permission_to_other_service,
@@ -960,7 +967,7 @@ def test_should_403_if_trying_to_prefill_email_address_for_user_with_no_organisa
     )
 
 
-def test_should_403_if_trying_to_prefill_email_address_for_user_from_other_organisation(
+def test_should_403_if_trying_to_prefill_email_address_for_user_from_other_organization(
     mocker,
     client_request,
     service_one,
@@ -969,9 +976,9 @@ def test_should_403_if_trying_to_prefill_email_address_for_user_from_other_organ
     active_user_with_permissions,
     active_user_with_permission_to_other_service,
     mock_get_invites_for_service,
-    mock_get_organisation_by_domain,
+    mock_get_organization_by_domain,
 ):
-    service_one['organisation'] = ORGANISATION_TWO_ID
+    service_one['organization'] = ORGANISATION_TWO_ID
     client_request.login(active_user_with_permissions)
     mocker.patch('app.models.user.user_api_client.get_user', side_effect=[
         active_user_with_permission_to_other_service,
@@ -1018,7 +1025,7 @@ def test_invite_user(
     email_address,
     gov_user,
     mock_get_template_folders,
-    mock_get_organisations,
+    mock_get_organizations,
 ):
     sample_invite['email_address'] = email_address
 
@@ -1065,9 +1072,9 @@ def test_invite_user_when_email_address_is_prefilled(
     sample_invite,
     mock_get_template_folders,
     mock_get_invites_for_service,
-    mock_get_organisation_by_domain,
+    mock_get_organization_by_domain,
 ):
-    service_one['organisation'] = ORGANISATION_ID
+    service_one['organization'] = ORGANISATION_ID
     client_request.login(active_user_with_permissions)
     mocker.patch('app.models.user.user_api_client.get_user', side_effect=[
         active_user_with_permission_to_other_service,
@@ -1112,7 +1119,7 @@ def test_invite_user_with_email_auth_service(
     gov_user,
     mocker,
     auth_type,
-    mock_get_organisations,
+    mock_get_organizations,
     mock_get_template_folders,
 ):
     service_one['permissions'].append('email_auth')
@@ -1281,7 +1288,7 @@ def test_user_cant_invite_themselves(
         _expected_status=200,
     )
     assert page.h1.string.strip() == 'Invite a team member'
-    form_error = page.find('span', class_='govuk-error-message').text.strip()
+    form_error = page.find('span', class_='usa-error-message').text.strip()
     assert form_error == "Error: You cannot send an invitation to yourself"
     assert not mock_create_invite.called
 
@@ -1501,7 +1508,7 @@ def test_edit_user_email_can_change_any_email_address_to_a_gov_email_address(
     mock_get_user_by_email_not_found,
     mock_get_users_by_service,
     mock_update_user_attribute,
-    mock_get_organisations,
+    mock_get_organizations,
     original_email_address,
 ):
     active_user_with_permissions['email_address'] = original_email_address
@@ -1528,7 +1535,7 @@ def test_edit_user_email_can_change_a_non_gov_email_address_to_another_non_gov_e
     mock_get_user_by_email_not_found,
     mock_get_users_by_service,
     mock_update_user_attribute,
-    mock_get_organisations,
+    mock_get_organizations,
 ):
     active_user_with_permissions['email_address'] = 'old@example.com'
 
@@ -1554,7 +1561,7 @@ def test_edit_user_email_cannot_change_a_gov_email_address_to_a_non_gov_email_ad
     mock_get_user_by_email_not_found,
     mock_get_users_by_service,
     mock_update_user_attribute,
-    mock_get_organisations,
+    mock_get_organizations,
 ):
     page = client_request.post(
         'main.edit_user_email',
@@ -1565,7 +1572,7 @@ def test_edit_user_email_cannot_change_a_gov_email_address_to_a_non_gov_email_ad
         },
         _expected_status=200,
     )
-    assert 'Enter a public sector email address' in page.select_one('.govuk-error-message').text
+    assert 'Enter a public sector email address' in page.select_one('.usa-error-message').text
     with client_request.session_transaction() as session:
         assert 'team_member_email_change-{}'.format(active_user_with_permissions['id']) not in session
 

@@ -51,7 +51,7 @@
 
   {% if not request.args.from_test %}
 
-    <h2 class="heading-medium" id="{{ file_contents_header_id }}">{{ original_file_name }}</h2>
+    <h2 class="font-body-lg" id="{{ file_contents_header_id }}">{{ original_file_name }}</h2>
 
     <div class="fullscreen-content" data-module="fullscreen-table">
       {% call(item, row_number) list_table(
@@ -59,7 +59,7 @@
         caption=original_file_name,
         caption_visible=False,
         field_headings=[
-          '<span class="govuk-visually-hidden">Row in file</span><span aria-hidden="true">1</span>'|safe
+          '<span class="usa-sr-only">Row in file</span><span aria-hidden="true">1</span>'|safe
         ] + recipients.column_headers
       ) %}
         {% call index_field() %}
@@ -93,5 +93,8 @@
       Only showing the first {{ count_of_displayed_recipients }} rows
     </p>
   {% endif %}
-
+    <div>
+        <h2 class="heading-medium">Messages remaining today / Messages left if list is sent </h2>
+        <p class="govuk-body">{{ remaining_messages }} / {{ remaining_messages - count_of_recipients }}</p>
+    </div>
 {% endblock %}

@@ -15,7 +15,7 @@ from app.main.views.dashboard import (
     get_tuples_of_financial_years,
 )
 from tests import (
-    organisation_json,
+    organization_json,
     service_json,
     validate_route_permission,
     validate_route_permission_with_client,
@@ -370,7 +370,7 @@ def test_view_inbox_updates(
     mock_get_partials.assert_called_once_with(SERVICE_ONE_ID)
 
 
-@freeze_time("2016-07-01 18:00")
+@freeze_time("2016-07-01 12:00")
 def test_download_inbox(
     client_request,
     mock_get_inbound_sms,
@@ -389,14 +389,14 @@ def test_download_inbox(
     )
     assert response.get_data(as_text=True) == (
         'Phone number,Message,Received\r\n'
-        '(202) 867-5300,message-1,2016-07-01 13:00\r\n'
-        '(202) 867-5300,message-2,2016-07-01 12:59\r\n'
-        '(202) 867-5300,message-3,2016-07-01 12:59\r\n'
-        '(202) 867-5302,message-4,2016-07-01 10:59\r\n'
-        '+33 1 12 34 56 78,message-5,2016-07-01 08:59\r\n'
-        '(202) 555-0104,message-6,2016-07-01 06:59\r\n'
-        '(202) 555-0104,message-7,2016-07-01 04:59\r\n'
-        '+682 12345,message-8,2016-07-01 04:59\r\n'
+        '(202) 867-5300,message-1,2016-07-01 11:00\r\n'
+        '(202) 867-5300,message-2,2016-07-01 10:59\r\n'
+        '(202) 867-5300,message-3,2016-07-01 10:59\r\n'
+        '(202) 867-5302,message-4,2016-07-01 08:59\r\n'
+        '+33 1 12 34 56 78,message-5,2016-07-01 06:59\r\n'
+        '(202) 555-0104,message-6,2016-07-01 04:59\r\n'
+        '(202) 555-0104,message-7,2016-07-01 02:59\r\n'
+        '+682 12345,message-8,2016-07-01 02:59\r\n'
     )
 
 
@@ -618,7 +618,7 @@ def test_monthly_has_equal_length_tables(
     assert page.select_one('.table-field-headings th').get('width') == "33%"
 
 
-@freeze_time("2016-01-01 11:09:00.061258")
+@freeze_time("2016-01-01 1:09:00.061258")
 def test_should_show_upcoming_jobs_on_dashboard(
     client_request,
     mock_get_service_templates,
@@ -648,7 +648,7 @@ def test_should_show_upcoming_jobs_on_dashboard(
         page.select_one('a.banner-dashboard').text
     ) == (
         '2 files waiting to send '
-        'sending starts today at 6:09am'
+        'sending starts today at 11:09'
     )
 
     assert page.select_one('a.banner-dashboard')['href'] == url_for(
@@ -746,9 +746,9 @@ def test_correct_font_size_for_big_numbers(
     )
 
     assert (
-        len(page.select_one('[data-key=totals]').select('.govuk-grid-column-one-half'))
+        len(page.select_one('[data-key=totals]').select('.grid-col-6'))
     ) == (
-        len(page.select_one('[data-key=usage]').select('.govuk-grid-column-one-half'))
+        len(page.select_one('[data-key=usage]').select('.grid-col-6'))
     ) == (
         len(page.select('.big-number-with-status .big-number-smaller'))
     ) == 2
@@ -1304,7 +1304,7 @@ def test_org_breadcrumbs_do_not_show_if_service_has_no_org(
 ):
     page = client_request.get('main.service_dashboard', service_id=SERVICE_ONE_ID)
 
-    assert not page.select('.navigation-organisation-link')
+    assert not page.select('.navigation-organization-link')
 
 
 def test_org_breadcrumbs_do_not_show_if_user_is_not_an_org_member(
@@ -1321,13 +1321,13 @@ def test_org_breadcrumbs_do_not_show_if_user_is_not_an_org_member(
     service_one_json = service_json(SERVICE_ONE_ID,
                                     users=[active_caseworking_user['id']],
                                     restricted=False,
-                                    organisation_id=ORGANISATION_ID)
+                                    organization_id=ORGANISATION_ID)
     mocker.patch('app.service_api_client.get_service', return_value={'data': service_one_json})
 
     client_request.login(active_caseworking_user, service=service_one_json)
     page = client_request.get('main.service_dashboard', service_id=SERVICE_ONE_ID, _follow_redirects=True)
 
-    assert not page.select('.navigation-organisation-link')
+    assert not page.select('.navigation-organization-link')
 
 
 def test_org_breadcrumbs_show_if_user_is_a_member_of_the_services_org(
@@ -1345,16 +1345,16 @@ def test_org_breadcrumbs_show_if_user_is_a_member_of_the_services_org(
     service_one_json = service_json(SERVICE_ONE_ID,
                                     users=[active_user_with_permissions['id']],
                                     restricted=False,
-                                    organisation_id=ORGANISATION_ID)
+                                    organization_id=ORGANISATION_ID)
 
     mocker.patch('app.service_api_client.get_service', return_value={'data': service_one_json})
-    mocker.patch('app.organisations_client.get_organisation', return_value=organisation_json(
+    mocker.patch('app.organizations_client.get_organization', return_value=organization_json(
         id_=ORGANISATION_ID,
     ))
 
     page = client_request.get('main.service_dashboard', service_id=SERVICE_ONE_ID)
-    assert page.select_one('.navigation-organisation-link')['href'] == url_for(
-        'main.organisation_dashboard',
+    assert page.select_one('.navigation-organization-link')['href'] == url_for(
+        'main.organization_dashboard',
         org_id=ORGANISATION_ID,
     )
 
@@ -1373,10 +1373,10 @@ def test_org_breadcrumbs_do_not_show_if_user_is_a_member_of_the_services_org_but
 
     service_one_json = service_json(SERVICE_ONE_ID,
                                     users=[active_user_with_permissions['id']],
-                                    organisation_id=ORGANISATION_ID)
+                                    organization_id=ORGANISATION_ID)
 
     mocker.patch('app.service_api_client.get_service', return_value={'data': service_one_json})
-    mocker.patch('app.models.service.Organisation')
+    mocker.patch('app.models.service.Organization')
 
     page = client_request.get('main.service_dashboard', service_id=SERVICE_ONE_ID)
 
@@ -1395,18 +1395,18 @@ def test_org_breadcrumbs_show_if_user_is_platform_admin(
 ):
     service_one_json = service_json(SERVICE_ONE_ID,
                                     users=[platform_admin_user['id']],
-                                    organisation_id=ORGANISATION_ID)
+                                    organization_id=ORGANISATION_ID)
 
     mocker.patch('app.service_api_client.get_service', return_value={'data': service_one_json})
-    mocker.patch('app.organisations_client.get_organisation', return_value=organisation_json(
+    mocker.patch('app.organizations_client.get_organization', return_value=organization_json(
         id_=ORGANISATION_ID,
     ))
 
     client_request.login(platform_admin_user, service_one_json)
     page = client_request.get('main.service_dashboard', service_id=SERVICE_ONE_ID)
 
-    assert page.select_one('.navigation-organisation-link')['href'] == url_for(
-        'main.organisation_dashboard',
+    assert page.select_one('.navigation-organization-link')['href'] == url_for(
+        'main.organization_dashboard',
         org_id=ORGANISATION_ID,
     )
 

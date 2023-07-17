@@ -1,0 +1,35 @@
+{% extends "withnav_template.html" %}
+{% from "components/page-header.html" import page_header %}
+{% from "components/page-footer.html" import sticky_page_footer %}
+{% from "components/live-search.html" import live_search %}
+{% from "components/form.html" import form_wrapper %}
+{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+
+{% set page_title = "Link service to organization" %}
+
+{% block service_page_title %}
+  {{ page_title }}
+{% endblock %}
+
+{% block backLink %}
+  {{ govukBackLink({ "href": url_for('.service_settings', service_id=current_service.id) }) }}
+{% endblock %}
+
+{% block maincolumn_content %}
+
+  {{ page_header(page_title) }}
+  {{ live_search(
+    target_selector='.govuk-radios__item',
+    show=True, form=search_form,
+    label='Search by name',
+    autofocus=True
+  ) }}
+  {% call form_wrapper() %}
+    {% if has_organizations %}
+      {{ form.organizations }}
+      {{ sticky_page_footer('Save') }}
+    {% else %}
+      <p class="hint"> No organizations </p>
+    {% endif %}
+  {% endcall %}
+{% endblock %}

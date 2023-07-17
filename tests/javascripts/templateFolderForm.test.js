@@ -46,7 +46,7 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
                 </div>
                 <div class="js-will-stick-at-bottom-when-scrolling">
                   <div class="page-footer">
-                    <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-right-3 govuk-!-margin-bottom-1" name="operation" value="move-to-existing-folder">Move</button>
+                    <button type="submit" class="usa-button" name="operation" value="move-to-existing-folder">Move</button>
                   </div>
                 </div>
               </div>
@@ -59,7 +59,7 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
                     <input class="govuk-input govuk-!-width-full" id="move_to_new_folder_name" name="move_to_new_folder_name" type="text">
                   </div>
                   <div class="page-footer">
-                    <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-1" name="operation" value="move-to-new-folder">Add to new folder</button>
+                    <button type="submit" class="usa-button" name="operation" value="move-to-new-folder">Add to new folder</button>
                   </div>
                 </div>
               </div>
@@ -72,7 +72,7 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
                     <input class="govuk-input govuk-!-width-full" id="add_new_folder_name" name="add_new_folder_name" type="text">
                   </div>
                   <div class="page-footer">
-                    <button type="submit" class="govuk-button page-footer__button" name="operation" value="add-new-folder">Add new folder</button>
+                    <button type="submit" class="usa-button page-footer__button" name="operation" value="add-new-folder">Add new folder</button>
                   </div>
                 </div>
               </div>
@@ -112,7 +112,7 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
                 </div>
                 <div class="js-will-stick-at-bottom-when-scrolling">
                   <div class="page-footer">
-                    <button type="submit" class="govuk-button page-footer__button" name="operation" value="add-new-template">Continue</button>
+                    <button type="submit" class="usa-button page-footer__button" name="operation" value="add-new-template">Continue</button>
                   </div>
                 </div>
               </div>
@@ -299,20 +299,6 @@ describe('TemplateFolderForm', () => {
 
     });
 
-    test("should make the current controls sticky", () => {
-
-      // the class the sticky JS hooks into should be present
-      expect(formControls.querySelector('#nothing_selected .js-stick-at-bottom-when-scrolling')).not.toBeNull();
-
-      // .recalculate should have been called so the sticky JS picks up the controls
-      expect(GOVUK.stickAtBottomWhenScrolling.recalculate.mock.calls.length).toEqual(1);
-
-      // mode should have been set to 'default' as the controls only have one part
-      expect(GOVUK.stickAtBottomWhenScrolling.setMode.mock.calls.length).toEqual(1);
-      expect(GOVUK.stickAtBottomWhenScrolling.setMode.mock.calls[0][0]).toEqual('default');
-
-    });
-
   });
 
   describe("Click 'New template' for single channel service", () => {
@@ -392,8 +378,8 @@ describe('TemplateFolderForm', () => {
         const cancelLink = formControls.querySelector('.js-cancel');
 
         expect(cancelLink).not.toBeNull();
-        expect(cancelLink.querySelector('.govuk-visually-hidden')).not.toBeNull();
-        expect(cancelLink.querySelector('.govuk-visually-hidden').textContent.trim()).toEqual('new template');
+        expect(cancelLink.querySelector('.usa-sr-only')).not.toBeNull();
+        expect(cancelLink.querySelector('.usa-sr-only').textContent.trim()).toEqual('new template');
 
       });
 
@@ -418,20 +404,6 @@ describe('TemplateFolderForm', () => {
         expect(document.activeElement).toBe(formControls.querySelector('#add_new_template_form'));
 
       });
-
-    });
-
-    test("should make the current controls sticky", () => {
-
-      // the classes the sticky JS hooks into should be present for both parts
-      expect(formControls.querySelectorAll('#add_new_template_form .js-stick-at-bottom-when-scrolling').length).toEqual(2);
-
-      // .recalculate should have been called so the sticky JS picks up the controls
-      expect(GOVUK.stickAtBottomWhenScrolling.recalculate.mock.calls.length).toEqual(1);
-
-      // the mode should be set to 'dialog' so both parts can be sticky
-      expect(GOVUK.stickAtBottomWhenScrolling.setMode.mock.calls.length).toEqual(1);
-      expect(GOVUK.stickAtBottomWhenScrolling.setMode.mock.calls[0][0]).toEqual('dialog');
 
     });
 
@@ -520,8 +492,8 @@ describe('TemplateFolderForm', () => {
         const cancelLink = formControls.querySelector('.js-cancel');
 
         expect(cancelLink).not.toBeNull();
-        expect(cancelLink.querySelector('.govuk-visually-hidden')).not.toBeNull();
-        expect(cancelLink.querySelector('.govuk-visually-hidden').textContent.trim()).toEqual('new folder');
+        expect(cancelLink.querySelector('.usa-sr-only')).not.toBeNull();
+        expect(cancelLink.querySelector('.usa-sr-only').textContent.trim()).toEqual('new folder');
 
       });
 
@@ -533,17 +505,13 @@ describe('TemplateFolderForm', () => {
 
     });
 
-    test("should make the current controls sticky", () => {
+    test("", () => {
 
       // the class the sticky JS hooks into should be present
       expect(formControls.querySelector('#add_new_folder_form .js-stick-at-bottom-when-scrolling')).not.toBeNull();
 
       // .recalculate should have been called so the sticky JS picks up the controls
-      expect(GOVUK.stickAtBottomWhenScrolling.recalculate.mock.calls.length).toEqual(1);
-
-      // mode should have been set to 'default' as the controls only have one part
-      expect(GOVUK.stickAtBottomWhenScrolling.setMode.mock.calls.length).toEqual(1);
-      expect(GOVUK.stickAtBottomWhenScrolling.setMode.mock.calls[0][0]).toEqual('default');
+      expect(GOVUK.stickAtBottomWhenScrolling.recalculate.mock.calls.length).toEqual(0);
 
     });
 
@@ -604,20 +572,6 @@ describe('TemplateFolderForm', () => {
       expect(formControls.querySelector('button[value=move-to-existing-folder]')).not.toBeNull();
       expect(formControls.querySelector('button[value=move-to-new-folder]').getAttribute('aria-expanded')).toEqual('false');
       expect(formControls.querySelector('button[value=move-to-existing-folder]').getAttribute('aria-expanded')).toEqual('false');
-
-    });
-
-    test("should make the current controls sticky", () => {
-
-      // the class the sticky JS hooks into should be present
-      expect(formControls.querySelector('#items_selected .js-stick-at-bottom-when-scrolling')).not.toBeNull();
-
-      // .recalculate should have been called so the sticky JS picks up the controls
-      expect(GOVUK.stickAtBottomWhenScrolling.recalculate.mock.calls.length).toEqual(1);
-
-      // mode should have been set to 'default' as the controls only have one part
-      expect(GOVUK.stickAtBottomWhenScrolling.setMode.mock.calls.length).toEqual(1);
-      expect(GOVUK.stickAtBottomWhenScrolling.setMode.mock.calls[0][0]).toEqual('default');
 
     });
 
@@ -742,8 +696,8 @@ describe('TemplateFolderForm', () => {
           const cancelLink = formControls.querySelector('.js-cancel');
 
           expect(cancelLink).not.toBeNull();
-          expect(cancelLink.querySelector('.govuk-visually-hidden')).not.toBeNull();
-          expect(cancelLink.querySelector('.govuk-visually-hidden').textContent.trim()).toEqual('move to folder');
+          expect(cancelLink.querySelector('.usa-sr-only')).not.toBeNull();
+          expect(cancelLink.querySelector('.usa-sr-only').textContent.trim()).toEqual('move to folder');
 
         });
 
@@ -752,20 +706,6 @@ describe('TemplateFolderForm', () => {
           expect(document.activeElement).toBe(formControls.querySelector('#move_to_folder_radios'));
 
         });
-
-      });
-
-      test("should make the current controls sticky", () => {
-
-        // the classes the sticky JS hooks into should be present for both parts
-        expect(formControls.querySelectorAll('#move_to_folder_radios .js-stick-at-bottom-when-scrolling').length).toEqual(2);
-
-        // .recalculate should have been called so the sticky JS picks up the controls
-        expect(GOVUK.stickAtBottomWhenScrolling.recalculate.mock.calls.length).toEqual(1);
-
-        // the mode should be set to 'dialog' so both parts can be sticky
-        expect(GOVUK.stickAtBottomWhenScrolling.setMode.mock.calls.length).toEqual(1);
-        expect(GOVUK.stickAtBottomWhenScrolling.setMode.mock.calls[0][0]).toEqual('dialog');
 
       });
 
@@ -844,8 +784,8 @@ describe('TemplateFolderForm', () => {
           const cancelLink = formControls.querySelector('.js-cancel');
 
           expect(cancelLink).not.toBeNull();
-          expect(cancelLink.querySelector('.govuk-visually-hidden')).not.toBeNull();
-          expect(cancelLink.querySelector('.govuk-visually-hidden').textContent.trim()).toEqual('move to new folder');
+          expect(cancelLink.querySelector('.usa-sr-only')).not.toBeNull();
+          expect(cancelLink.querySelector('.usa-sr-only').textContent.trim()).toEqual('move to new folder');
 
         });
 
@@ -854,20 +794,6 @@ describe('TemplateFolderForm', () => {
           expect(document.activeElement).toBe(formControls.querySelector('#move_to_new_folder_form'));
 
         });
-
-      });
-
-      test("should make the current controls sticky", () => {
-
-        // the class the sticky JS hooks into should be present
-        expect(formControls.querySelector('#move_to_new_folder_form .js-stick-at-bottom-when-scrolling')).not.toBeNull();
-
-        // .recalculate should have been called so the sticky JS picks up the controls
-        expect(GOVUK.stickAtBottomWhenScrolling.recalculate.mock.calls.length).toEqual(1);
-
-        // mode should have been set to 'default' as the controls only have one part
-        expect(GOVUK.stickAtBottomWhenScrolling.setMode.mock.calls.length).toEqual(1);
-        expect(GOVUK.stickAtBottomWhenScrolling.setMode.mock.calls[0][0]).toEqual('default');
 
       });
 

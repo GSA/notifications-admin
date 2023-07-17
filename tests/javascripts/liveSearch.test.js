@@ -70,7 +70,7 @@ describe('Live search', () => {
                 ${searchLabelText}
             </label>
             <input autocomplete="off" class="form-control form-control-1-1 " id="search" name="search" rows="8" type="search" value="">
-            <div role="region" aria-live="polite" class="live-search__status govuk-visually-hidden"></div>
+            <div role="region" aria-live="polite" class="live-search__status usa-sr-only"></div>
           </div>
         </div>
         <form method="post" autocomplete="off" novalidate>
@@ -559,7 +559,7 @@ describe('Live search', () => {
                 ${searchLabelText}
             </label>
             <input autocomplete="off" class="form-control form-control-1-1 " data-module="" id="search" name="search" rows="8" type="search" value="">
-            <div role="region" aria-live="polite" class="live-search__status govuk-visually-hidden"></div>
+            <div role="region" aria-live="polite" class="live-search__status usa-sr-only"></div>
           </div>
         </div>
         <form method="post" autocomplete="off" novalidate>

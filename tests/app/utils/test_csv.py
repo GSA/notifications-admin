@@ -77,14 +77,14 @@ def _get_notifications_csv_mock(
 @pytest.mark.parametrize('created_by_name, expected_content', [
     (
         None, [
-            'Recipient,Reference,Template,Type,Sent by,Sent by email,Job,Status,Time\n',
-            'foo@bar.com,ref 1234,foo,sms,,sender@email.gsa.gov,,Delivered,1943-04-19 12:00:00\r\n',
+            'Recipient,Template,Type,Sent by,Job,Status,Time\n',
+            'foo@bar.com,foo,sms,,,Delivered,1943-04-19 12:00:00\r\n',
         ]
     ),
     (
         'Anne Example', [
-            'Recipient,Reference,Template,Type,Sent by,Sent by email,Job,Status,Time\n',
-            'foo@bar.com,ref 1234,foo,sms,Anne Example,sender@email.gsa.gov,,Delivered,1943-04-19 12:00:00\r\n',
+            'Recipient,Template,Type,Sent by,Job,Status,Time\n',
+            'foo@bar.com,foo,sms,Anne Example,,Delivered,1943-04-19 12:00:00\r\n',
         ]
     ),
 ])

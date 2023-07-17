@@ -26,7 +26,7 @@ def test_email_branding_page_shows_full_branding_list(
         page.select_one('h1').text
     ) == "Email branding"
 
-    assert page.select('.govuk-grid-column-three-quarters a')[-1]['href'] == url_for('main.create_email_branding')
+    assert page.select('.grid-col-10 a')[-1]['href'] == url_for('main.create_email_branding')
 
     assert brand_names == [
         'org 1',
@@ -58,9 +58,9 @@ def test_edit_email_branding_shows_the_correct_branding_info(
     )
 
     assert page.select_one('#logo-img > img')['src'].endswith('/example.png')
-    assert page.select_one('#name').attrs.get('value') == 'Organisation name'
+    assert page.select_one('#name').attrs.get('value') == 'Organization name'
     assert page.select_one('#file').attrs.get('accept') == '.png'
-    assert page.select_one('#text').attrs.get('value') == 'Organisation text'
+    assert page.select_one('#text').attrs.get('value') == 'Organization text'
     assert page.select_one('#colour').attrs.get('value') == '#f00'
 
 
@@ -142,7 +142,7 @@ def test_create_email_branding_requires_a_name_when_submitting_logo_details(
         _expected_status=200,
     )
 
-    assert page.select_one('.govuk-error-message').text.strip() == 'Error: This field is required'
+    assert page.select_one('.usa-error-message').text.strip() == 'Error: This field is required'
     assert mock_create_email_branding.called is False
 
 
@@ -359,7 +359,7 @@ def test_temp_logo_is_shown_after_uploading_logo(
     assert page.select_one('#logo-img > img').attrs['src'].endswith(temp_filename)
 
 
-def test_logo_persisted_when_organisation_saved(
+def test_logo_persisted_when_organization_saved(
     client_request,
     platform_admin_user,
     mock_create_email_branding,

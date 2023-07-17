@@ -15,7 +15,8 @@ from tests.conftest import (
 
 @pytest.mark.parametrize('key_type, notification_status, expected_status', [
     (None, 'created', 'Sending'),
-    (None, 'sending', 'Sending'),
+    (None, 'sending',
+     "Pending. Messages will remain in pending state until carrier status is received, typically 5 minutes."),
     (None, 'delivered', 'Delivered'),
     (None, 'failed', 'Failed'),
     (None, 'temporary-failure', 'Phone not accepting messages right now'),
@@ -23,7 +24,8 @@ from tests.conftest import (
     (None, 'technical-failure', 'Technical failure'),
     ('team', 'delivered', 'Delivered'),
     ('live', 'delivered', 'Delivered'),
-    ('test', 'sending', 'Sending (test)'),
+    ('test', 'sending',
+     "Pending. Messages will remain in pending state until carrier status is received, typically 5 minutes. (test)"),
     ('test', 'delivered', 'Delivered (test)'),
     ('test', 'permanent-failure', 'Not delivered (test)'),
 ])
@@ -172,7 +174,7 @@ def test_notification_status_shows_expected_back_link(
         notification_id=fake_uuid,
         **extra_args
     )
-    back_link = page.select_one('.govuk-back-link')
+    back_link = page.select_one('.usa-back-link')
 
     if expected_back_link:
         assert back_link['href'] == expected_back_link(service_id=SERVICE_ONE_ID)
@@ -182,16 +184,16 @@ def test_notification_status_shows_expected_back_link(
 
 @pytest.mark.parametrize('time_of_viewing_page, expected_message', (
     ('2012-01-01 06:01', (
-        "‘sample template’ was sent by Test User today at 1:01am"
+        "‘sample template’ was sent by Test User today at 06:01 UTC"
     )),
     ('2012-01-02 06:01', (
-        "‘sample template’ was sent by Test User yesterday at 1:01am"
+        "‘sample template’ was sent by Test User yesterday at 06:01 UTC"
     )),
     ('2012-01-03 06:01', (
-        "‘sample template’ was sent by Test User on 1 January at 1:01am"
+        "‘sample template’ was sent by Test User on 1 January at 06:01 UTC"
     )),
     ('2013-01-03 06:01', (
-        "‘sample template’ was sent by Test User on 1 January 2012 at 1:01am"
+        "‘sample template’ was sent by Test User on 1 January 2012 at 06:01 UTC"
     )),
 ))
 def test_notification_page_doesnt_link_to_template_in_tour(

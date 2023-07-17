@@ -1,0 +1,92 @@
+{% extends "org_template.html" %}
+{% from "components/table.html" import mapping_table, optional_text_field, row, text_field, edit_field with context %}
+
+{% block org_page_title %}
+  Settings
+{% endblock %}
+
+{% block maincolumn_content %}
+  <h1 class="heading-medium">Settings</h1>
+  <div class="bottom-gutter-3-2 settings-table body-copy-table">
+    {% call mapping_table(
+      caption='General',
+      field_headings=['Label', 'Value', 'Action'],
+      field_headings_visible=False,
+      caption_visible=False
+    ) %}
+      {% call row() %}
+        {{ text_field('Name') }}
+        {{ text_field(current_org.name) }}
+        {{ edit_field(
+            'Change',
+            url_for('.edit_organization_name', org_id=current_org.id),
+            suffix='organization name'
+          )
+        }}
+      {% endcall %}
+      {% call row() %}
+        {{ text_field('Sector') }}
+        {{ optional_text_field(current_org.organization_type_label) }}
+        {{ edit_field(
+            'Change',
+            url_for('.edit_organization_type', org_id=current_org.id),
+            suffix='sector for the organization'
+          )
+        }}
+      {% endcall %}
+      {% call row() %}
+        {{ text_field('Request to go live notes') }}
+        {{ optional_text_field(current_org.request_to_go_live_notes, default='None') }}
+        {{ edit_field(
+            'Change',
+            url_for('.edit_organization_go_live_notes', org_id=current_org.id),
+            suffix='go live notes for the organization'
+          )
+        }}
+      {% endcall %}
+
+      {% call row() %}
+        {{ text_field('Billing details')}}
+        {{ optional_text_field(current_org.billing_details, default="None", wrap=True) }}
+        {{ edit_field(
+            'Change',
+            url_for('.edit_organization_billing_details', org_id=current_org.id),
+            suffix='billing details for the organization'
+          )
+        }}
+      {% endcall %}
+
+      {% call row() %}
+        {{ text_field('Notes')}}
+        {{ optional_text_field(current_org.notes, default="None", wrap=True) }}
+        {{ edit_field(
+            'Change',
+            url_for('.edit_organization_notes', org_id=current_org.id),
+            suffix='the notes for the organization'
+          )
+        }}
+      {% endcall %}
+
+      {% call row() %}
+        {{ text_field('Default email branding') }}
+        {{ text_field(current_org.email_branding_name) }}
+        {{ edit_field(
+            'Change',
+            url_for('.edit_organization_email_branding', org_id=current_org.id),
+            suffix='default email branding for the organization'
+          )
+        }}
+      {% endcall %}
+      {% call row() %}
+        {{ text_field('Known email domains') }}
+        {{ optional_text_field(current_org.domains or None, default='None') }}
+        {{ edit_field(
+            'Change',
+            url_for('.edit_organization_domains', org_id=current_org.id),
+            suffix='known email domains for the organization'
+          )
+        }}
+      {% endcall %}
+    {% endcall %}
+  </div>
+{% endblock %}

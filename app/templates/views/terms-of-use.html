@@ -7,14 +7,14 @@
 
 {% block content_column_content %}
 
-  <h1 class="heading-large">Terms of use</h1>
+  <h1 class="font-body-2xl margin-bottom-3">Terms of use</h1>
 
-  <p class="govuk-body">
+  <p>
     These terms apply to your service’s use of U.S.&nbsp;Notify. You must be the service manager to accept them.
   </p>
 
-  <h2 class="heading-medium" id="when-using-notify">When using Notify</h2>
-  <p class="govuk-body">You must:</p>
+  <h2 class="font-body-lg" id="when-using-notify">When using Notify</h2>
+  <p>You must:</p>
   <ul class="list list-bullet">
     <li>ensure your organization has reviewed and approved any messages you will send</li>
     <li>tell us immediately if you have any security breaches</li>
@@ -23,20 +23,20 @@
     <li>not send unsolicited messages, only ones related to official government services and information</li>
     <li>check that the data you add to Notify is accurate and complies with data protection legislation</li>
   </ul>
-  <p class="govuk-body">If you do not keep to these terms, we might have to stop sending your messages.</p>
+  <p>If you do not keep to these terms, we might have to stop sending your messages.</p>
 
-  <p class="govuk-body"> U.S. Notify will:</p>
+  <p> U.S. Notify will:</p>
   <ul class="list list-bullet">
     <li>send all the messages you pass to us, as long as they meet our guidelines</li>
-    <li>
-      show how Notify is performing (through our <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.performance') }}">performance</a> <!--and <a class="govuk-link govuk-link--no-visited-state" href="https://status.notifications.service.gov.uk/">status</a>-->page)
-    </li>
+    <!-- <li>
+      show how Notify is performing (through our <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.performance') }}">performance</a> and <a class="govuk-link govuk-link--no-visited-state" href="https://status.notifications.service.gov.uk/">status</a> page)
+    </li> -->
     <li>keep your data <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.security') }}">secure</a></li>
     <li>give you one month’s notice by email if we change our terms of use or delivery providers</li>
   </ul>
 
-  <h2 class="heading-medium" id="leaving-notify">Leaving Notify</h2>
-  <p class="govuk-body">You can leave Notify at any time. Just <a class="govuk-link govuk-link--no-visited-state" href="{{url_for('.support')}}">contact us</a> and we’ll close your account.</p>
-  <p class="govuk-body">When you leave Notify, all your data will be deleted.</p>
+  <h2 class="font-body-lg" id="leaving-notify">Leaving Notify</h2>
+  <p>You can leave Notify at any time. Just <a class="govuk-link govuk-link--no-visited-state" href="{{url_for('.support')}}">contact us</a> and we’ll close your account.</p>
+  <p>When you leave Notify, all your data will be deleted.</p>
 
 {% endblock %}

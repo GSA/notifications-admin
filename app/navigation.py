@@ -6,7 +6,7 @@ from flask import request
 class Navigation:
 
     mapping = {}
-    selected_class = "selected"
+    selected_class = "usa-current"
 
     def __init__(self):
         self.mapping = {
@@ -25,7 +25,7 @@ class Navigation:
 
     def is_selected(self, navigation_item):
         if request.endpoint in self.mapping[navigation_item]:
-            return " " + self.selected_class
+            return self.selected_class
         return ''
 
     @staticmethod
@@ -48,15 +48,19 @@ class HeaderNavigation(Navigation):
             'features',
             'features_email',
             'features_sms',
-            'message_status',
             'roadmap',
             'security',
             'terms',
-            'trial_mode_new',
+        },
+        'using_notify': {
+            'get_started',
             'using_notify',
+            'pricing',
+            'trial_mode_new',
+            'message_status',
+            'guidance_index',
         },
         'pricing': {
-            'pricing',
             'how_to_pay',
             'billing_details',
         },
@@ -94,7 +98,7 @@ class HeaderNavigation(Navigation):
             'get_daily_volumes',
             'get_daily_sms_provider_volumes',
             'get_volumes_by_service',
-            'organisations',
+            'organizations',
             'platform_admin',
             'platform_admin_list_complaints',
             'platform_admin_reports',
@@ -178,16 +182,16 @@ class MainNavigation(Navigation):
             'usage',
         },
         'settings': {
-            # 'add_organisation_from_gp_service',
-            # 'add_organisation_from_nhs_local_service',
+            # 'add_organization_from_gp_service',
+            # 'add_organization_from_nhs_local_service',
             'email_branding_govuk',
             'email_branding_govuk_and_org',
             'email_branding_nhs',
-            'email_branding_organisation',
+            'email_branding_organization',
             'email_branding_request',
             'email_branding_something_else',
             'estimate_usage',
-            'link_service_to_organisation',
+            'link_service_to_organization',
             'request_to_go_live',
             'service_add_email_reply_to',
             'service_add_sms_sender',
@@ -256,31 +260,31 @@ class OrgNavigation(Navigation):
 
     mapping = {
         'dashboard': {
-            'organisation_dashboard',
+            'organization_dashboard',
         },
         'settings': {
-            'edit_organisation_billing_details',
-            'edit_organisation_domains',
-            'edit_organisation_email_branding',
-            'edit_organisation_domains',
-            'edit_organisation_go_live_notes',
-            'edit_organisation_name',
-            'edit_organisation_notes',
-            'edit_organisation_type',
-            'organisation_preview_email_branding',
-            'organisation_settings',
+            'edit_organization_billing_details',
+            'edit_organization_domains',
+            'edit_organization_email_branding',
+            'edit_organization_domains',
+            'edit_organization_go_live_notes',
+            'edit_organization_name',
+            'edit_organization_notes',
+            'edit_organization_type',
+            'organization_preview_email_branding',
+            'organization_settings',
 
         },
         'team-members': {
-            'edit_organisation_user',
+            'edit_organization_user',
             'invite_org_user',
             'manage_org_users',
-            'remove_user_from_organisation',
+            'remove_user_from_organization',
         },
         'trial-services': {
-            'organisation_trial_mode_services',
+            'organization_trial_mode_services',
         },
         'billing': {
-            'organisation_billing',
+            'organization_billing',
         }
     }

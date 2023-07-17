@@ -1,6 +1,6 @@
 {% macro big_number(number, label, link=None, currency='', smaller=False, smallest=False) %}
   {% if link %}
-    <a class="govuk-link govuk-link--no-visited-state big-number-link" href="{{ link }}">
+    <a class="usa-link govuk-link--no-visited-state display-block margin-bottom-1" href="{{ link }}">
   {% endif %}
       <span class="big-number{% if smaller %}-smaller{% endif %}{% if smallest %}-smallest{% endif %}">
         <span class="big-number-number">

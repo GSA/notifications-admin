@@ -188,7 +188,7 @@ def test_view_providers_shows_all_providers(
     assert table_data[1].text.strip() == "20"
     assert table_data[2].text.strip() == "42"
     assert table_data[3].text.strip() == "True"
-    assert table_data[4].text.strip() == "16 January at 10:20am"
+    assert table_data[4].text.strip() == "16 January at 15:20"
     assert table_data[5].text.strip() == "Test User"
 
     domestic_sms_second_row = domestic_sms_table.tbody.find_all('tr')[1]
@@ -317,10 +317,10 @@ def test_edit_sms_provider_provider_ratio(
         '.edit_sms_provider_ratio',
     )
 
-    inputs = page.select('.govuk-input[type="text"]')
+    inputs = page.select('.usa-input[type="text"]')
     assert len(inputs) == 2
 
-    first_input = page.select_one('.govuk-input[name="sms_provider_1"]')
+    first_input = page.select_one('.usa-input[name="sms_provider_1"]')
     assert first_input.attrs['value'] == str(sms_provider_1['priority'])
 
 
@@ -343,7 +343,7 @@ def test_edit_sms_provider_provider_ratio_only_shows_active_providers(
         '.edit_sms_provider_ratio',
     )
 
-    inputs = page.select('.govuk-input[type="text"]')
+    inputs = page.select('.usa-input[type="text"]')
     assert len(inputs) == 1
 
 
@@ -436,5 +436,5 @@ def test_edit_sms_provider_submit_invalid_percentages(
         _follow_redirects=True
     )
 
-    assert expected_error in page.select_one('.govuk-error-message').text
+    assert expected_error in page.select_one('.usa-error-message').text
     mock_update_provider.assert_not_called()

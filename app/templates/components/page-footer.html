@@ -12,18 +12,18 @@
   delete_link_text="delete",
   centered_button=False
 ) %}
-  <div class="page-footer">
+  <div class="page-footer margin-top-4">
     {% if button_text %}
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-      {% set button_data = {"text": button_text, "classes": "page-footer__button"} %}
+      {% set button_data = {"text": button_text} %}
       {% if destructive %}{% set _ = button_data.update({"classes": "govuk-button--warning page-footer__button"}) %}{% endif %}
       {% if centered_button %}{% set _ = button_data.update({"classes": "page-footer__button--centred"}) %}{% endif %}
       {% if button_name %}{% set _ = button_data.update({"name": button_name}) %}{% endif %}
       {% if button_value %}{% set _ = button_data.update({"value": button_value}) %}{% endif %}
       {% if button_text_hidden_suffix %}
         {% set _ = button_data.update({
-          "text": "", "html": button_text + "<span class=\"govuk-visually-hidden\"> " + button_text_hidden_suffix + "</span>"
+          "text": "", "html": button_text + "<span class=\"usa-sr-only\"> " + button_text_hidden_suffix + "</span>"
         }) %}
       {% endif %}
 
@@ -36,7 +36,9 @@
       </span>
     {% endif %}
     {% if secondary_link and secondary_link_text %}
-      <a class="govuk-link govuk-link--no-visited-state page-footer-secondary-link" href="{{ secondary_link }}">{{ secondary_link_text }}</a>
+    <div class="margin-top-4">
+      <a class="usa-link font-body-sm" href="{{ secondary_link }}">{{ secondary_link_text }}</a>
+    </div>
     {% endif %}
   </div>
 {% endmacro %}
