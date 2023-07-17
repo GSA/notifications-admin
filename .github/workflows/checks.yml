@@ -42,6 +42,8 @@ jobs:
         run: npm test
       - name: Run py tests with coverage
         run: pipenv run coverage run --omit=*/notifications_utils/* -m pytest --maxfail=10
+      - name: Run E2E tests
+        run: pipenv run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
       - name: Check coverage threshold
         run: pipenv run coverage report --fail-under=90
 

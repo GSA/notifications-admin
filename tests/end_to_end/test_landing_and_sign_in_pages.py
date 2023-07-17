@@ -72,7 +72,7 @@ def test_sign_in_page(end_to_end_auth_context):
     expect(sign_in_heading).to_be_visible()
 
     # Check for the sign in form elements.
-    # NOTE:  Playwright cannot find input elements by role, and recommends using
+    # NOTE:  Playwright cannot find input elements by role and recommends using
     #        get_by_label() instead; however, hidden form elements do not have
     #        labels associated with them, hence the XPath!
     # See https://playwright.dev/python/docs/api/class-page#page-get-by-label
