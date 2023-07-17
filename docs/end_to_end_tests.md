@@ -96,3 +96,6 @@ This is done for a couple of reasons:
 
 - Keeps unit tests isolated from the E2E tests
 - Allows us to configure E2E tests separately
+
+The environment variables are managed as a part of the GitHub
+repository settings.
