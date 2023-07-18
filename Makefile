@@ -16,7 +16,7 @@ NVMSH := $(shell [ -f "$(HOME)/.nvm/nvm.sh" ] && echo "$(HOME)/.nvm/nvm.sh" || e
 .PHONY: bootstrap
 bootstrap: generate-version-file ## Set up everything to run the app
 	pipenv install --dev
-	pipenv run playwright install
+	pipenv run playwright install --with-deps
 	source $(NVMSH) --no-use && nvm install && npm ci --no-audit
 	source $(NVMSH) && npm run build
 
