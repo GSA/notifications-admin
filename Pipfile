@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 ago = "~=0.0.95"
 blinker = "~=1.4"
-fido2 = "~=0.9"
+fido2 = "==0.9.3"
 flask = "~=2.3"
 flask-basicauth = "~=0.2"
 flask-login = "~=0.6"
