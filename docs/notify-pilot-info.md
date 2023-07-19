@@ -34,7 +34,7 @@ agency money.</td>
 </tbody>
 </table>
 
-### OUR FIRST BET: U.S. Notify
+### OUR FIRST BET: Notify.gov
 
 <table>
 <colgroup>
@@ -58,7 +58,7 @@ rates</p></td>
 </tbody>
 </table>
 
-**U.S. Notify** will be a federally-run shared service allowing staff to
+**Notify.gov** will be a federally-run shared service allowing staff to
 send thousands of customized-to-the-user text messages per year at
 little-to-no-cost. The easy interface requires no technical expertise to
 use and the setup process takes only ten minutes.
@@ -94,11 +94,11 @@ To get involved, email us at [notify-support@gsa.gov](mailto:notify-support@gsa.
 
 3.  **Sign up to pilot Notify:** Already think this might be the tool
     for you? We’re looking for benefit-administering partners to
-    co-design a pilot program to test U.S. Notify for specific use cases.
+    co-design a pilot program to test Notify,gov for specific use cases.
     Early adopters will have wrap-around set-up support from the Studio
     and an opportunity to shape the future of this product.
     
-## US Notify Demo
+## Notify.gov Demo
 
 
 
