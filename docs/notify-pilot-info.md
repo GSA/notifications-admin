@@ -81,7 +81,7 @@ additional features based on partner needs.
 
 ##  OPPORTUNITIES TO GET INVOLVED
 
-To get involved, email us at [tts-benefits-studio@gsa.gov](mailto: tts-benefits-studio@gsa.gov) with the following in the subject line!
+To get involved, email us at [tts-benefits-studio@gsa.gov](mailto:tts-benefits-studio@gsa.gov) with the following in the subject line!
 
 1.  **Request a Studio introduction and/or a Notify.gov demo:** Request an
     introductory call to  
