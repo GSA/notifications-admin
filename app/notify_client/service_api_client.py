@@ -1,9 +1,6 @@
 from datetime import datetime
 
-from notifications_utils.clients.redis import (
-    daily_limit_cache_key,
-    daily_total_cache_key,
-)
+from notifications_utils.clients.redis import daily_total_cache_key
 
 from app.extensions import redis_client
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
@@ -528,8 +525,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         return self.get("/service/{}/data-retention".format(service_id))
 
     def get_notification_count(self, service_id):
-        # if cache is not set, or not enabled, return 0
-        count = redis_client.get(daily_limit_cache_key(service_id)) or 0
+        count = 0
 
         return int(count)
 
