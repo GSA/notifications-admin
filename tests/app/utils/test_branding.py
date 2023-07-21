@@ -4,7 +4,7 @@ import pytest
 
 from app.models.service import Service
 from app.utils.branding import get_email_choices
-from tests import organisation_json
+from tests import organization_json
 from tests.conftest import create_email_branding
 
 
@@ -19,7 +19,7 @@ def test_get_choices_service_not_assigned_to_org(
     org_type,
     expected_options,
 ):
-    service_one['organisation_type'] = org_type
+    service_one['organization_type'] = org_type
     service = Service(service_one)
 
     options = function(service)
@@ -28,19 +28,19 @@ def test_get_choices_service_not_assigned_to_org(
 
 @pytest.mark.parametrize('org_type, branding_id, expected_options', [
     ('federal', None, [
-        ('govuk_and_org', 'GOV.UK and Test Organisation'),
-        ('organisation', 'Test Organisation'),
+        ('govuk_and_org', 'GOV.UK and Test Organization'),
+        ('organization', 'Test Organization'),
     ]),
     ('federal', 'some-branding-id', [
         ('govuk', 'GOV.UK'),  # central orgs can switch back to gsa.gov
-        ('govuk_and_org', 'GOV.UK and Test Organisation'),
-        ('organisation', 'Test Organisation'),
+        ('govuk_and_org', 'GOV.UK and Test Organization'),
+        ('organization', 'Test Organization'),
     ]),
     ('state', None, [
-        ('organisation', 'Test Organisation')
+        ('organization', 'Test Organization')
     ]),
     ('state', 'some-branding-id', [
-        ('organisation', 'Test Organisation')
+        ('organization', 'Test Organization')
     ]),
     # ('nhs_central', None, [
     #     ('nhs', 'NHS')
@@ -56,14 +56,14 @@ def test_get_email_choices_service_assigned_to_org(
     org_type,
     branding_id,
     expected_options,
-    mock_get_service_organisation,
+    mock_get_service_organization,
     mock_get_email_branding
 ):
     service = Service(service_one)
 
     mocker.patch(
-        'app.organisations_client.get_organisation',
-        return_value=organisation_json(organisation_type=org_type)
+        'app.organizations_client.get_organization',
+        return_value=organization_json(organization_type=org_type)
     )
     mocker.patch(
         'app.models.service.Service.email_branding_id',
@@ -78,7 +78,7 @@ def test_get_email_choices_service_assigned_to_org(
 @pytest.mark.parametrize('org_type, branding_id, expected_options', [
     ('federal', 'some-branding-id', [
         # don't show gsa.gov options as org default supersedes it
-        ('organisation', 'Test Organisation'),
+        ('organization', 'Test Organization'),
     ]),
     ('federal', 'org-branding-id', [
         # also don't show org option if it's the current branding
@@ -94,15 +94,15 @@ def test_get_email_choices_org_has_default_branding(
     org_type,
     branding_id,
     expected_options,
-    mock_get_service_organisation,
+    mock_get_service_organization,
     mock_get_email_branding
 ):
     service = Service(service_one)
 
     mocker.patch(
-        'app.organisations_client.get_organisation',
-        return_value=organisation_json(
-            organisation_type=org_type,
+        'app.organizations_client.get_organization',
+        return_value=organization_json(
+            organization_type=org_type,
             email_branding_id='org-branding-id'
         )
     )
@@ -119,12 +119,12 @@ def test_get_email_choices_org_has_default_branding(
 @pytest.mark.parametrize('branding_name, expected_options', [
     ('gsa.gov and something else', [
         ('govuk', 'GOV.UK'),
-        ('govuk_and_org', 'GOV.UK and Test Organisation'),
-        ('organisation', 'Test Organisation'),
+        ('govuk_and_org', 'GOV.UK and Test Organization'),
+        ('organization', 'Test Organization'),
     ]),
     ('gsa.gov and test OrganisatioN', [
         ('govuk', 'GOV.UK'),
-        ('organisation', 'Test Organisation'),
+        ('organization', 'Test Organization'),
     ])
 ])
 @pytest.mark.skip(reason='Update for TTS')
@@ -133,13 +133,13 @@ def test_get_email_choices_branding_name_in_use(
     service_one,
     branding_name,
     expected_options,
-    mock_get_service_organisation,
+    mock_get_service_organization,
 ):
     service = Service(service_one)
 
     mocker.patch(
-        'app.organisations_client.get_organisation',
-        return_value=organisation_json(organisation_type='central')
+        'app.organizations_client.get_organization',
+        return_value=organization_json(organization_type='central')
     )
     mocker.patch(
         'app.models.service.Service.email_branding_id',

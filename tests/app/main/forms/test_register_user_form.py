@@ -23,7 +23,7 @@ def test_should_raise_validation_error_for_password(
 
 def test_valid_email_not_in_valid_domains(
     client_request,
-    mock_get_organisations,
+    mock_get_organizations,
 ):
     form = RegisterUserForm(email_address="test@test.com", mobile_number='2021231231')
     assert not form.validate()
@@ -44,7 +44,7 @@ def test_valid_email_in_valid_domains(
 
 def test_invalid_email_address_error_message(
     client_request,
-    mock_get_organisations,
+    mock_get_organizations,
 ):
     form = RegisterUserForm(
         name="test",

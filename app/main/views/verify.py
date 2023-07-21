@@ -72,7 +72,7 @@ def activate_user(user_id):
     user = User.from_id(user_id)
     # the user will have a new current_session_id set by the API - store it in the cookie for future requests
     session['current_session_id'] = user.current_session_id
-    organisation_id = session.get('organisation_id')
+    organization_id = session.get('organization_id')
     activated_user = user.activate()
     activated_user.login()
 
@@ -83,10 +83,10 @@ def activate_user(user_id):
 
     invited_org_user = InvitedOrgUser.from_session()
     if invited_org_user:
-        user_api_client.add_user_to_organisation(invited_org_user.organisation, user_id)
+        user_api_client.add_user_to_organization(invited_org_user.organization, user_id)
 
-    if organisation_id:
-        return redirect(url_for('main.organisation_dashboard', org_id=organisation_id))
+    if organization_id:
+        return redirect(url_for('main.organization_dashboard', org_id=organization_id))
     else:
         return redirect(url_for('main.add_service', first='first'))
 

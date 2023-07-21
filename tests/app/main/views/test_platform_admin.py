@@ -660,7 +660,7 @@ def test_clear_cache_shows_form(
         'service',
         'template',
         'email_branding',
-        'organisation',
+        'organization',
     }
 
 
@@ -670,17 +670,17 @@ def test_clear_cache_shows_form(
         call('service-????????-????-????-????-????????????-template-????????-????-????-????-????????????-version-*'),
         call('service-????????-????-????-????-????????????-template-????????-????-????-????-????????????-versions'),
     ], 'Removed 6 objects across 3 key formats for template'),
-    (['service', 'organisation'], [
+    (['service', 'organization'], [
         call('has_jobs-????????-????-????-????-????????????'),
         call('service-????????-????-????-????-????????????'),
         call('service-????????-????-????-????-????????????-templates'),
         call('service-????????-????-????-????-????????????-data-retention'),
         call('service-????????-????-????-????-????????????-template-folders'),
-        call('organisations'),
+        call('organizations'),
         call('domains'),
-        call('live-service-and-organisation-counts'),
-        call('organisation-????????-????-????-????-????????????-name'),
-    ], 'Removed 18 objects across 9 key formats for service, organisation'),
+        call('live-service-and-organization-counts'),
+        call('organization-????????-????-????-????-????????????-name'),
+    ], 'Removed 18 objects across 9 key formats for service, organization'),
 ))
 def test_clear_cache_submits_and_tells_you_how_many_things_were_deleted(
     client_request,
@@ -745,14 +745,14 @@ def test_get_live_services_report(
     mocker.patch(
         'app.service_api_client.get_live_services_data',
         return_value={'data': [
-            {'service_id': 1, 'service_name': 'jessie the oak tree', 'organisation_name': 'Forest',
-                'consent_to_research': True, 'contact_name': 'Forest fairy', 'organisation_type': 'Ecosystem',
+            {'service_id': 1, 'service_name': 'jessie the oak tree', 'organization_name': 'Forest',
+                'consent_to_research': True, 'contact_name': 'Forest fairy', 'organization_type': 'Ecosystem',
                 'contact_email': 'forest.fairy@digital.cabinet-office.gov.uk', 'contact_mobile': '+12028675109',
                 'live_date': 'Sat, 29 Mar 2014 00:00:00 GMT', 'sms_volume_intent': 100, 'email_volume_intent': 50,
                 'sms_totals': 300, 'email_totals': 1200,
                 'free_sms_fragment_limit': 100},
-            {'service_id': 2, 'service_name': 'james the pine tree', 'organisation_name': 'Forest',
-                'consent_to_research': None, 'contact_name': None, 'organisation_type': 'Ecosystem',
+            {'service_id': 2, 'service_name': 'james the pine tree', 'organization_name': 'Forest',
+                'consent_to_research': None, 'contact_name': None, 'organization_type': 'Ecosystem',
                 'contact_email': None, 'contact_mobile': None,
                 'live_date': None, 'sms_volume_intent': None, 'email_volume_intent': 60,
                 'sms_totals': 0, 'email_totals': 0,
@@ -839,8 +839,8 @@ def test_get_billing_report_calls_api_and_download_data(
     mocker.patch(
         "app.main.views.platform_admin.billing_api_client.get_data_for_billing_report",
         return_value=[{
-            'organisation_id': '7832a1be-a1f0-4f2a-982f-05adfd3d6354',
-            'organisation_name': 'Org for a - with sms',
+            'organization_id': '7832a1be-a1f0-4f2a-982f-05adfd3d6354',
+            'organization_name': 'Org for a - with sms',
             'service_id': '48e82ac0-c8c4-4e46-8712-c83c35a94006',
             'service_name': 'a - with sms',
             'sms_cost': 0,
@@ -865,7 +865,7 @@ def test_get_billing_report_calls_api_and_download_data(
     )
 
     assert response.get_data(as_text=True) == (
-        'organisation_id,organisation_name,service_id,service_name,sms_cost,sms_chargeable_units,' +
+        'organization_id,organization_name,service_id,service_name,sms_cost,sms_chargeable_units,' +
         'purchase_order_number,contact_names,contact_email_addresses,' +
         'billing_reference\r\n' +
 
@@ -927,8 +927,8 @@ def test_get_volumes_by_service_report_calls_api_and_download_data(
     mocker.patch(
         "app.main.views.platform_admin.billing_api_client.get_data_for_volumes_by_service_report",
         return_value=[{
-            "organisation_id": "7832a1be-a1f0-4f2a-982f-05adfd3d6354",
-            "organisation_name": "Org name",
+            "organization_id": "7832a1be-a1f0-4f2a-982f-05adfd3d6354",
+            "organization_name": "Org name",
             "service_id": "48e82ac0-c8c4-4e46-8712-c83c35a94006",
             "service_name": "service name",
             "free_allowance": 10000,
@@ -951,7 +951,7 @@ def test_get_volumes_by_service_report_calls_api_and_download_data(
     )
 
     assert response.get_data(as_text=True) == (
-        "organisation id,organisation name,service id,service name,free allowance,sms notifications," +
+        "organization id,organization name,service id,service name,free allowance,sms notifications," +
         "sms chargeable units,email totals\r\n" +
 
         '7832a1be-a1f0-4f2a-982f-05adfd3d6354,' +

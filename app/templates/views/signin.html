@@ -28,10 +28,11 @@
       {% endif %}
     {% else %}
       <h1 class="font-body-2xl margin-bottom-3">Sign in</h1>
-      <p>
+      <!-- Removing temporarily for pilot -->
+      <!-- <p>
         If you do not have an account, you can
         <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.register') }}">create one now</a>.
-      </p>
+      </p> -->
     {% endif %}
 
     {% call form_wrapper(autocomplete=True) %}
