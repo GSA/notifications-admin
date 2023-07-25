@@ -1,4 +1,5 @@
 import itertools
+import json
 from collections import OrderedDict
 from datetime import datetime
 
@@ -312,7 +313,7 @@ def get_users_report():
     if rows:
         return Spreadsheet.from_rows([headers] + rows).as_csv_data, 200, {
             'Content-Type': 'text/csv; charset=utf-8',
-            'Content-Disposition': 'attachment; filename="User Report.csv"'
+            'Content-Disposition': f'attachment; filename="User Report {datetime.utcnow()}.csv"'
         }
     else:
         flash('No results')
@@ -599,7 +600,7 @@ def _get_user_row(r):
             permissions[v] = permissions[k]
             del permissions[k]
 
-    permissions = str(permissions)
+    permissions = json.dumps(permissions, indent=4)
     row.append(permissions)
     row.append(r['password_changed_at'])
     row.append(r['state'])

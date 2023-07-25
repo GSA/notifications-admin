@@ -1,4 +1,5 @@
 import datetime
+import json
 import re
 import uuid
 from functools import partial
@@ -1006,6 +1007,52 @@ def test_get_daily_volumes_report_calls_api_and_download_data(
 
         '\r\n'
     )
+
+
+def test_get_users_report(
+    client_request,
+    platform_admin_user,
+    mocker
+):
+    mocker.patch(
+        "app.main.views.platform_admin.user_api_client.get_all_users",
+        return_value=[{
+         'name': 'Johnny Sokko',
+         'organizations': [],
+         'password_changed_at': '2023-07-21 14:12:54.832850', 'permissions': {
+                'test service': [
+                    'manage_users', 'manage_templates', 'manage_settings', 'send_texts',
+                    'send_emails', 'manage_api_keys', 'view_activity']},
+         'platform_admin': True, 'services': ['test service'], 'state': 'active'}
+        ]
+
+
+    )
+
+    client_request.login(platform_admin_user)
+    response = client_request.post_response(
+        'main.get_users_report',
+        _data={},
+        _expected_status=200,
+    )
+
+    assert response.content_type == 'text/csv; charset=utf-8'
+    assert response.headers['Content-Disposition'] == (
+        'attachment; filename="User Report.csv"'
+    )
+
+    permissions = {
+        'test service': [
+            'manage_users', 'manage_templates', 'manage_settings', 'send_texts',
+            'send_emails', 'manage_api_keys', 'view_activity'
+        ]
+    }
+    my_response = response.get_data(as_text=True)
+
+    assert 'Johnny Sokko' in my_response
+    assert 'manage_users' in my_response
+    assert 'test service' in my_response
+    assert 'active' in my_response
 
 
 def test_get_daily_sms_provider_volumes_report_calls_api_and_download_data(
