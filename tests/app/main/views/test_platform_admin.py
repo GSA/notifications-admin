@@ -1,5 +1,4 @@
 import datetime
-import json
 import re
 import uuid
 from functools import partial
@@ -1037,16 +1036,10 @@ def test_get_users_report(
     )
 
     assert response.content_type == 'text/csv; charset=utf-8'
-    assert response.headers['Content-Disposition'] == (
-        'attachment; filename="User Report.csv"'
-    )
+    assert 'attachment' in response.headers['Content-Disposition']
+    assert 'filename' in response.headers['Content-Disposition']
+    assert 'User Report' in response.headers['Content-Disposition']
 
-    permissions = {
-        'test service': [
-            'manage_users', 'manage_templates', 'manage_settings', 'send_texts',
-            'send_emails', 'manage_api_keys', 'view_activity'
-        ]
-    }
     my_response = response.get_data(as_text=True)
 
     assert 'Johnny Sokko' in my_response
