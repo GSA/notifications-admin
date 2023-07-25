@@ -297,7 +297,7 @@ def get_billing_report():
 @user_is_platform_admin
 def get_users_report():
     headers = [
-            "name", "services", "platform_admin", "permissions", "password_changed_at",
+            "name", "services", "platform admin", "permissions", "password changed at",
             "state"
     ]
     try:
@@ -588,11 +588,18 @@ def _get_user_row(r):
         my_service = service_api_client.get_service(s)
         service_id_name_lookup[my_service['data']['id']] = my_service['data']['name']
         services.append(my_service['data']['name'])
+    services = str(services)
+    services = services.replace("[", "")
+    services = services.replace("]", "")
     row.append(services)
     row.append(r['platform_admin'])
-    permissions = str(r['permissions'])
+    permissions = r['permissions']
     for k, v in service_id_name_lookup.items():
-        permissions = permissions.replace(k, v)
+        if permissions.get(k):
+            permissions[v] = permissions[k]
+            del permissions[k]
+
+    permissions = str(permissions)
     row.append(permissions)
     row.append(r['password_changed_at'])
     row.append(r['state'])
