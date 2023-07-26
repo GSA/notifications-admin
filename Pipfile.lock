@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6caca205deea077b4abccb1f3f5a3d77ffec7785e1005414d9a726200e536d03"
+            "sha256": "d4cb8b10d5a8c4f87daa0a4d3c72e66d1532facfcf86f8647b7033a6ff0da699"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -369,6 +369,14 @@
                 "sha256:e43b9ae05ba4bb477a10307699c9aff7ff86121b2640f9184d29059f5a687df8"
             ],
             "version": "==0.33.3"
+        },
+        "exceptiongroup": {
+            "hashes": [
+                "sha256:12c3e887d6485d16943a309616de20ae5582633e0a2eda17f4e10fd61c1e8af5",
+                "sha256:e346e69d186172ca7cf029c8c1d16235aa0e04035e5750b4b95039e65204328f"
+            ],
+            "index": "pypi",
+            "version": "==1.1.2"
         },
         "fido2": {
             "hashes": [
@@ -1440,7 +1448,7 @@
                 "sha256:12c3e887d6485d16943a309616de20ae5582633e0a2eda17f4e10fd61c1e8af5",
                 "sha256:e346e69d186172ca7cf029c8c1d16235aa0e04035e5750b4b95039e65204328f"
             ],
-            "markers": "python_version < '3.11'",
+            "index": "pypi",
             "version": "==1.1.2"
         },
         "execnet": {

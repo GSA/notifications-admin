@@ -95,6 +95,7 @@ class HeaderNavigation(Navigation):
             'live_services_csv',
             'notifications_sent_by_service',
             'get_billing_report',
+            'get_users_report',
             'get_daily_volumes',
             'get_daily_sms_provider_volumes',
             'get_volumes_by_service',
