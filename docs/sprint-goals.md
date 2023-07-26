@@ -1,5 +1,14 @@
 # Notify Sprint Goals Log
 
+## Sprint: Osprey (7/19/23)
+
+|             | Goals                                                                                                                              | Impact                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| Engineering | Reduce [technical debt](https://github.com/GSA/notifications-api/issues/361) and stabilize application; carry out rigorous [testing](https://github.com/GSA/notifications-api/issues/312) of features and [infrastructure](https://github.com/GSA/notifications-api/issues/87); solve known [bugs](https://github.com/GSA/notifications-api/issues/360)    |   Increase app reliability prior to first partner use                                |
+| UX          | Continue [user testing interviews](https://github.com/GSA/notifications-admin/issues/592) and feedback; Kick off internal message recipient [opt-out test](https://github.com/GSA/notifications-admin/issues/395)          | Gain feedback on usability and functionality in order to find bugs, streamline confusing flows, and adjust processes         |
+| Security    | (Assessment has begun!) Respond to any assessment questions and/or needs                                                  | Keep the LATO award timeline as short as possible|
+| Content    | Perform an application and documentation audit to [replace instances](https://github.com/GSA/notifications-admin/issues/631) of `U.S. Notify` with `Notify.gov` | Reflect a more streamlined brand
+
 ## Sprint: Northern Screamer (7/5/23)
 
 |             | Goals                                                                                                                              | Impact                                                                                                                                     |
