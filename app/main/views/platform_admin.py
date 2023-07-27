@@ -1,4 +1,5 @@
 import itertools
+import json
 from collections import OrderedDict
 from datetime import datetime
 
@@ -12,6 +13,7 @@ from app import (
     notification_api_client,
     platform_stats_api_client,
     service_api_client,
+    user_api_client,
 )
 from app.extensions import redis_client
 from app.main import main
@@ -292,6 +294,32 @@ def get_billing_report():
     return render_template('views/platform-admin/get-billing-report.html', form=form)
 
 
+@main.route("/platform-admin/reports/get-users-report", methods=['GET', 'POST'])
+@user_is_platform_admin
+def get_users_report():
+    headers = [
+            "name", "services", "platform admin", "permissions", "password changed at",
+            "state"
+    ]
+    try:
+        result = user_api_client.get_all_users()
+
+    except HTTPError as e:
+        raise e
+
+    rows = []
+    for r in result:
+        rows.append(_get_user_row(r))
+    if rows:
+        return Spreadsheet.from_rows([headers] + rows).as_csv_data, 200, {
+            'Content-Type': 'text/csv; charset=utf-8',
+            'Content-Disposition': f'attachment; filename="User Report {datetime.utcnow()}.csv"'
+        }
+    else:
+        flash('No results')
+    return render_template('views/platform-admin/get-users-report.html')
+
+
 @main.route("/platform-admin/reports/volumes-by-service", methods=['GET', 'POST'])
 @user_is_platform_admin
 def get_volumes_by_service():
@@ -540,3 +568,40 @@ def format_stats_by_service(services):
             'created_at': service['created_at'],
             'active': service['active']
         }
+
+
+def _get_user_row(r):
+
+    # [{
+    #     'name': 'Kenneth Kehl',
+    #     'organizations': [],
+    #     'password_changed_at': '2023-07-21 14:12:54.832850', 'permissions': {
+    #     '672b8a66-e22e-40f6-b1e5-39cc1c6bf857': ['manage_users', 'manage_templates', 'manage_settings', 'send_texts',
+    #                                               'send_emails', 'manage_api_keys', 'view_activity']},
+    #     'platform_admin': True, 'services': ['672b8a66-e22e-40f6-b1e5-39cc1c6bf857'], 'state': 'active'}]
+
+    row = []
+    row.append(r['name'])
+
+    service_id_name_lookup = {}
+    services = []
+    for s in r['services']:
+        my_service = service_api_client.get_service(s)
+        service_id_name_lookup[my_service['data']['id']] = my_service['data']['name']
+        services.append(my_service['data']['name'])
+    services = str(services)
+    services = services.replace("[", "")
+    services = services.replace("]", "")
+    row.append(services)
+    row.append(r['platform_admin'])
+    permissions = r['permissions']
+    for k, v in service_id_name_lookup.items():
+        if permissions.get(k):
+            permissions[v] = permissions[k]
+            del permissions[k]
+
+    permissions = json.dumps(permissions, indent=4)
+    row.append(permissions)
+    row.append(r['password_changed_at'])
+    row.append(r['state'])
+    return row
