@@ -28,6 +28,25 @@ make bootstrap
 This takes care of installing all of your dependencies, including those
 now needed for Playwright.
 
+If you run into certificate errors at the `playwright install` step, try
+doing this:
+
+1. Run `brew --prefix` to see Homebrew's root directory
+
+1. Create or modify the local `.env` file in the project and add this line:
+
+   `NODE_EXTRA_CA_CERTS=/CHANGE-TO-HOMEBREW-INSTALL-PATH/etc/ca-certificates/cert.pem`
+
+   Make sure to change `CHANGE-TO-HOMEBREW-INSTALL-PATH` to the path
+   given by `brew --prefix` in the step above.  For example, if `brew --prefix`
+   gave `/opt/homebrew` as output, then the line would look like this:
+
+   `NODE_EXTRA_CA_CERTS=/opt/homebrew/etc/ca-certificates/cert.pem`
+
+1. Save the changes to the `.env` file
+
+1. Run `make bootstrap` again
+
 
 ### Manual Installation
 
@@ -38,7 +57,7 @@ At your shell in the project root folder, run the following commands:
 
 ```sh
 pipenv install pytest-playwright
-pipenv run playwright install
+pipenv run playwright install --with-deps
 ```
 
 This will install Playwright and its `pytest` plugin, then the
