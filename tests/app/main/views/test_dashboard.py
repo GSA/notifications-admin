@@ -853,7 +853,7 @@ def test_usage_page_no_sms_spend(
     assert 'pence per message' not in sms_column
 
 
-@ freeze_time("2012-03-31 12:12:12")
+@freeze_time("2012-03-31 12:12:12")
 def test_usage_page_monthly_breakdown(
     client_request,
     service_one,
