@@ -150,8 +150,12 @@ class UserApiClient(NotifyAdminAPIClient):
         endpoint = '/service/{}/users'.format(service_id)
         return self.get(endpoint)['data']
 
-    def get_users_for_organisation(self, org_id):
-        endpoint = '/organisations/{}/users'.format(org_id)
+    def get_users_for_organization(self, org_id):
+        endpoint = '/organizations/{}/users'.format(org_id)
+        return self.get(endpoint)['data']
+
+    def get_all_users(self):
+        endpoint = '/user'
         return self.get(endpoint)['data']
 
     @cache.delete('service-{service_id}')
@@ -168,8 +172,8 @@ class UserApiClient(NotifyAdminAPIClient):
         self.post(endpoint, data=data)
 
     @cache.delete('user-{user_id}')
-    def add_user_to_organisation(self, org_id, user_id):
-        resp = self.post('/organisations/{}/users/{}'.format(org_id, user_id), data={})
+    def add_user_to_organization(self, org_id, user_id):
+        resp = self.post('/organizations/{}/users/{}'.format(org_id, user_id), data={})
         return resp['data']
 
     @cache.delete('service-{service_id}-template-folders')
@@ -211,8 +215,8 @@ class UserApiClient(NotifyAdminAPIClient):
         data = {'email': new_email}
         self.post(endpoint, data)
 
-    def get_organisations_and_services_for_user(self, user_id):
-        endpoint = '/user/{}/organisations-and-services'.format(user_id)
+    def get_organizations_and_services_for_user(self, user_id):
+        endpoint = '/user/{}/organizations-and-services'.format(user_id)
         return self.get(endpoint)
 
     def get_webauthn_credentials_for_user(self, user_id):

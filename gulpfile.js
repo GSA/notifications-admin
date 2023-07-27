@@ -108,7 +108,6 @@ const javascripts = () => {
     paths.src + 'javascripts/govuk/cookie-functions.js',
     paths.src + 'javascripts/consent.js',
     paths.src + 'javascripts/cookieMessage.js',
-    paths.src + 'javascripts/stick-to-window-when-scrolling.js',
     paths.src + 'javascripts/copyToClipboard.js',
     paths.src + 'javascripts/autofocus.js',
     paths.src + 'javascripts/enhancedTextbox.js',

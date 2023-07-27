@@ -71,9 +71,9 @@ def invite_user(service_id, user_id=None):
                 'views/user-already-invited.html',
                 user_to_invite=user_to_invite,
             )
-        if not user_to_invite.default_organisation:
+        if not user_to_invite.default_organization:
             abort(403)
-        if user_to_invite.default_organisation.id != current_service.organisation_id:
+        if user_to_invite.default_organization.id != current_service.organization_id:
             abort(403)
         form.email_address.data = user_to_invite.email_address
     else:

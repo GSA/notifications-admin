@@ -1,9 +1,6 @@
 from datetime import datetime
 
-from notifications_utils.clients.redis import (
-    daily_limit_cache_key,
-    daily_total_cache_key,
-)
+from notifications_utils.clients.redis import daily_total_cache_key
 
 from app.extensions import redis_client
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
@@ -14,7 +11,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
     def create_service(
         self,
         service_name,
-        organisation_type,
+        organization_type,
         message_limit,
         restricted,
         user_id,
@@ -25,7 +22,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         """
         data = {
             "name": service_name,
-            "organisation_type": organisation_type,
+            "organization_type": organization_type,
             "active": True,
             "message_limit": message_limit,
             "user_id": user_id,
@@ -94,7 +91,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             'message_limit',
             'name',
             'notes',
-            'organisation_type',
+            'organization_type',
             'permissions',
             'prefix_sms',
             'purchase_order_number',
@@ -114,7 +111,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         endpoint = "/service/{0}".format(service_id)
         return self.post(endpoint, data)
 
-    @cache.delete('live-service-and-organisation-counts')
+    @cache.delete('live-service-and-organization-counts')
     def update_status(self, service_id, live):
         return self.update_service(
             service_id,
@@ -123,7 +120,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             go_live_at=str(datetime.utcnow()) if live else None
         )
 
-    @cache.delete('live-service-and-organisation-counts')
+    @cache.delete('live-service-and-organization-counts')
     def update_count_as_live(self, service_id, count_as_live):
         return self.update_service(
             service_id,
@@ -528,8 +525,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         return self.get("/service/{}/data-retention".format(service_id))
 
     def get_notification_count(self, service_id):
-        # if cache is not set, or not enabled, return 0
-        count = redis_client.get(daily_limit_cache_key(service_id)) or 0
+        count = 0
 
         return int(count)
 

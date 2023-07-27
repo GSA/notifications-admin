@@ -1751,7 +1751,7 @@ def test_upload_csvfile_with_valid_phone_shows_all_numbers(
     assert '202 867 0750' not in page.text
     assert 'Only showing the first 50 rows' in page.text
 
-    mock_get_notification_count.assert_called_with(service_id=service_one['id'])
+    mock_get_notification_count.assert_called_with(service_one['id'])
 
 
 @pytest.mark.parametrize('international_sms_permission, should_allow_international', [
@@ -2084,7 +2084,8 @@ def test_check_messages_back_link(
 @pytest.mark.parametrize('num_requested,expected_msg', [
     (None, '‘example.csv’ contains 1,234 phone numbers.'),
     ("0", '‘example.csv’ contains 1,234 phone numbers.'),
-    ("1", 'You can still send 49 messages today, but ‘example.csv’ contains 1,234 phone numbers.')
+    # This used to trigger the too many messages errors but we removed the daily limit
+    ("1", '‘example.csv’ contains 1,234 phone numbers.')
 ], ids=['none_sent', 'none_sent', 'some_sent'])
 def test_check_messages_shows_too_many_messages_errors(
     mocker,

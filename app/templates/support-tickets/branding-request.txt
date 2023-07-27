@@ -1,5 +1,5 @@
-Organisation: {% if current_service.organisation -%}
-  {{ current_service.organisation.name }}
+Organization: {% if current_service.organization -%}
+  {{ current_service.organization.name }}
 {%- else -%}
   Can’t tell (domain is {{ current_user.email_domain }})
 {%- endif %}

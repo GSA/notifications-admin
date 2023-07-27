@@ -120,7 +120,7 @@ def test_should_redirect_after_email_change(
 def test_should_show_errors_if_new_email_address_does_not_validate(
     client_request,
     mock_email_is_not_already_in_use,
-    mock_get_organisations,
+    mock_get_organizations,
     email_address,
     error_message,
 ):
@@ -387,7 +387,7 @@ def test_should_redirect_after_password_change(
 def test_non_gov_user_cannot_see_change_email_link(
     client_request,
     api_nongov_user_active,
-    mock_get_organisations,
+    mock_get_organizations,
 ):
     client_request.login(api_nongov_user_active)
     page = client_request.get('main.user_profile')
@@ -398,7 +398,7 @@ def test_non_gov_user_cannot_see_change_email_link(
 def test_non_gov_user_cannot_access_change_email_page(
     client_request,
     api_nongov_user_active,
-    mock_get_organisations,
+    mock_get_organizations,
 ):
     client_request.login(api_nongov_user_active)
     client_request.get('main.user_profile_email', _expected_status=403)

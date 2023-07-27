@@ -18,30 +18,15 @@ def test_renders(client_request, mocker, query_args, result):
     assert response.get_data(as_text=True) == 'rendered'
 
 
-def test_displays_govuk_branding_by_default(client_request):
-
-    page = client_request.get('main.email_template', _test_page_title=False)
-
-    assert page.find("a", attrs={"href": "https://www.gov.uk"})
-
-
-def test_displays_govuk_branding(client_request, mock_get_email_branding_with_govuk_brand_type):
-
-    page = client_request.get('main.email_template', branding_style="1", _test_page_title=False)
-
-    assert page.find("a", attrs={"href": "https://www.gov.uk"})
-
-
 def test_displays_both_branding(client_request, mock_get_email_branding_with_both_brand_type):
 
     page = client_request.get('main.email_template', branding_style="1", _test_page_title=False)
 
     mock_get_email_branding_with_both_brand_type.assert_called_once_with('1')
 
-    assert page.find("a", attrs={"href": "https://www.gov.uk"})
     assert page.find("img", attrs={"src": re.compile("example.png$")})
     assert page.select("body > table:nth-of-type(3) table > tr:nth-of-type(1) > td:nth-of-type(2)")[0]\
-        .get_text().strip() == 'Organisation text'  # brand text is set
+        .get_text().strip() == 'Organization text'  # brand text is set
 
 
 def test_displays_org_branding(client_request, mock_get_email_branding):
@@ -54,7 +39,7 @@ def test_displays_org_branding(client_request, mock_get_email_branding):
     assert page.find("img", attrs={"src": re.compile("example.png")})
     assert not page.select("body > table > tr > td[bgcolor='#f00']")  # banner colour is not set
     assert page.select("body > table:nth-of-type(1) > tr:nth-of-type(1) > td:nth-of-type(2)")[0]\
-        .get_text().strip() == 'Organisation text'  # brand text is set
+        .get_text().strip() == 'Organization text'  # brand text is set
 
 
 def test_displays_org_branding_with_banner(
@@ -68,7 +53,7 @@ def test_displays_org_branding_with_banner(
     assert page.find("img", attrs={"src": re.compile("example.png")})
     assert page.select("body > table > tr > td[bgcolor='#f00']")  # banner colour is set
     assert page.select("body > table table > tr > td > span")[0]\
-        .get_text().strip() == 'Organisation text'  # brand text is set
+        .get_text().strip() == 'Organization text'  # brand text is set
 
 
 def test_displays_org_branding_with_banner_without_brand_text(

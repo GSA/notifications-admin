@@ -1,4 +1,5 @@
 import itertools
+import json
 from collections import OrderedDict
 from datetime import datetime
 
@@ -12,6 +13,7 @@ from app import (
     notification_api_client,
     platform_stats_api_client,
     service_api_client,
+    user_api_client,
 )
 from app.extensions import redis_client
 from app.main import main
@@ -193,8 +195,8 @@ def live_services_csv():
 
     column_names = OrderedDict([
         ('service_id', 'Service ID'),
-        ('organisation_name', 'Organization'),
-        ('organisation_type', 'Organization type'),
+        ('organization_name', 'Organization'),
+        ('organization_type', 'Organization type'),
         ('service_name', 'Service name'),
         ('consent_to_research', 'Consent to research'),
         ('contact_name', 'Main contact'),
@@ -258,7 +260,7 @@ def get_billing_report():
         start_date = form.start_date.data
         end_date = form.end_date.data
         headers = [
-            "organisation_id", "organisation_name", "service_id", "service_name",
+            "organization_id", "organization_name", "service_id", "service_name",
             "sms_cost", "sms_chargeable_units",
             "purchase_order_number", "contact_names", "contact_email_addresses", "billing_reference"
         ]
@@ -273,7 +275,7 @@ def get_billing_report():
                 raise e
         rows = [
             [
-                r["organisation_id"], r["organisation_name"], r["service_id"], r["service_name"],
+                r["organization_id"], r["organization_name"], r["service_id"], r["service_name"],
                 r["sms_cost"], r["sms_chargeable_units"],
                 r.get("purchase_order_number"), r.get("contact_names"),
                 r.get("contact_email_addresses"), r.get("billing_reference")
@@ -292,6 +294,32 @@ def get_billing_report():
     return render_template('views/platform-admin/get-billing-report.html', form=form)
 
 
+@main.route("/platform-admin/reports/get-users-report", methods=['GET', 'POST'])
+@user_is_platform_admin
+def get_users_report():
+    headers = [
+            "name", "services", "platform admin", "permissions", "password changed at",
+            "state"
+    ]
+    try:
+        result = user_api_client.get_all_users()
+
+    except HTTPError as e:
+        raise e
+
+    rows = []
+    for r in result:
+        rows.append(_get_user_row(r))
+    if rows:
+        return Spreadsheet.from_rows([headers] + rows).as_csv_data, 200, {
+            'Content-Type': 'text/csv; charset=utf-8',
+            'Content-Disposition': f'attachment; filename="User Report {datetime.utcnow()}.csv"'
+        }
+    else:
+        flash('No results')
+    return render_template('views/platform-admin/get-users-report.html')
+
+
 @main.route("/platform-admin/reports/volumes-by-service", methods=['GET', 'POST'])
 @user_is_platform_admin
 def get_volumes_by_service():
@@ -301,14 +329,14 @@ def get_volumes_by_service():
         start_date = form.start_date.data
         end_date = form.end_date.data
         headers = [
-            "organisation id", "organisation name", "service id", "service name",
+            "organization id", "organization name", "service id", "service name",
             "free allowance", "sms notifications", "sms chargeable units", "email totals",
         ]
         result = billing_api_client.get_data_for_volumes_by_service_report(start_date, end_date)
 
         rows = [
             [
-                r["organisation_id"], r["organisation_name"], r["service_id"], r["service_name"],
+                r["organization_id"], r["organization_name"], r["service_id"], r["service_name"],
                 r["free_allowance"], r["sms_notifications"], r["sms_chargeable_units"], r["email_totals"],
             ]
             for r in result
@@ -447,11 +475,11 @@ def clear_cache():
             'email_branding',
             'email_branding-????????-????-????-????-????????????',
         ]),
-        ('organisation', [
-            'organisations',
+        ('organization', [
+            'organizations',
             'domains',
-            'live-service-and-organisation-counts',
-            'organisation-????????-????-????-????-????????????-name',
+            'live-service-and-organization-counts',
+            'organization-????????-????-????-????-????????????-name',
         ]),
     ])
 
@@ -540,3 +568,40 @@ def format_stats_by_service(services):
             'created_at': service['created_at'],
             'active': service['active']
         }
+
+
+def _get_user_row(r):
+
+    # [{
+    #     'name': 'Kenneth Kehl',
+    #     'organizations': [],
+    #     'password_changed_at': '2023-07-21 14:12:54.832850', 'permissions': {
+    #     '672b8a66-e22e-40f6-b1e5-39cc1c6bf857': ['manage_users', 'manage_templates', 'manage_settings', 'send_texts',
+    #                                               'send_emails', 'manage_api_keys', 'view_activity']},
+    #     'platform_admin': True, 'services': ['672b8a66-e22e-40f6-b1e5-39cc1c6bf857'], 'state': 'active'}]
+
+    row = []
+    row.append(r['name'])
+
+    service_id_name_lookup = {}
+    services = []
+    for s in r['services']:
+        my_service = service_api_client.get_service(s)
+        service_id_name_lookup[my_service['data']['id']] = my_service['data']['name']
+        services.append(my_service['data']['name'])
+    services = str(services)
+    services = services.replace("[", "")
+    services = services.replace("]", "")
+    row.append(services)
+    row.append(r['platform_admin'])
+    permissions = r['permissions']
+    for k, v in service_id_name_lookup.items():
+        if permissions.get(k):
+            permissions[v] = permissions[k]
+            del permissions[k]
+
+    permissions = json.dumps(permissions, indent=4)
+    row.append(permissions)
+    row.append(r['password_changed_at'])
+    row.append(r['state'])
+    return row
