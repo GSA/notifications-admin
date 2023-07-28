@@ -37,6 +37,7 @@ newrelic = "*"
 flask-talisman = "*"
 notifications-utils = {editable = true, ref = "main", git = "https://github.com/GSA/notifications-utils.git"}
 coverage = "*"
+pytest-playwright = "*"
 
 [dev-packages]
 isort = "==5.12.0"

@@ -15,7 +15,9 @@ The [Notify API](https://github.com/GSA/notifications-api) provides the UI's bac
 
 ### Common steps
 
-1.  Install pre-requisites for setup:
+1.  Install pre-requisites for setup (on a Mac):
+    - Install XCode or at least the XCode Command Line Tools
+    - [Homebrew](https://brew.sh/) (follow instructions on page)
     - [jq](https://stedolan.github.io/jq/): `brew install jq`
     - [terraform](https://www.terraform.io/): `brew install terraform` or `brew install tfenv` and use `tfenv` to install `terraform ~> 1.4.0`
     - [cf-cli@8](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html): `brew install cloudfoundry/tap/cf-cli@8`
@@ -43,6 +45,23 @@ The [Notify API](https://github.com/GSA/notifications-api) provides the UI's bac
 1. Install Python and Node dependencies
 
    `make bootstrap`
+
+   If you run into certificate errors at the `playwright install` step, try doing this:
+
+   1. Run `brew --prefix` to see Homebrew's root directory
+
+   1. Create or modify the local `.env` file in the project and add this line:
+
+      `NODE_EXTRA_CA_CERTS=/CHANGE-TO-HOMEBREW-INSTALL-PATH/etc/ca-certificates/cert.pem`
+
+      Make sure to change `CHANGE-TO-HOMEBREW-INSTALL-PATH` to the path given by `brew --prefix` in the step above.
+      For example, if `brew --prefix` gave `/opt/homebrew` as output, then the line would look like this:
+
+      `NODE_EXTRA_CA_CERTS=/opt/homebrew/etc/ca-certificates/cert.pem`
+
+   1. Save the changes to the `.env` file
+
+   1. Run `make bootstrap` again
 
 1. Run the Flask server
 
