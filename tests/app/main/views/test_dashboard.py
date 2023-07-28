@@ -746,12 +746,12 @@ def test_correct_font_size_for_big_numbers(
     )
 
     assert (
-        len(page.select_one('[data-key=totals]').select('.grid-col-6'))
+        len(page.select_one('[data-key=totals]').select('.grid-col-12'))
     ) == (
-        len(page.select_one('[data-key=usage]').select('.grid-col-6'))
-    ) == (
+        #     len(page.select_one('[data-key=usage]').select('.grid-col-6'))
+        # ) == (
         len(page.select('.big-number-with-status .big-number-smaller'))
-    ) == 2
+    ) == 1
 
 
 def test_should_not_show_jobs_on_dashboard_for_users_with_uploads_page(
@@ -804,14 +804,13 @@ def test_usage_page(
     assert normalize_spaces(unselected_nav_links[1].text) == '2009 to 2010 fiscal year'
 
     annual_usage = page.find_all('div', {'class': 'govuk-grid-column-one-half'})
-    # print(annual_usage)
 
     # annual stats are shown in two rows, each with three column; email is col 1
     # email_column = normalize_spaces(annual_usage[0].text + annual_usage[2].text)
     # assert 'Emails' in email_column
     # assert '1,000 sent' in email_column
 
-    sms_column = normalize_spaces(annual_usage[0].text + annual_usage[1].text)
+    sms_column = normalize_spaces(annual_usage[0].text)
     assert 'Text messages' in sms_column
     assert '251,800 sent' in sms_column
     assert '250,000 free allowance' in sms_column
@@ -845,8 +844,9 @@ def test_usage_page_no_sms_spend(
     )
 
     annual_usage = page.find_all('div', {'class': 'govuk-grid-column-one-half'})
-    sms_column = normalize_spaces(annual_usage[0].text + annual_usage[1].text)
+    sms_column = normalize_spaces(annual_usage[0].text)
     assert 'Text messages' in sms_column
+    assert '1,000 sent' in sms_column
     assert '250,000 free allowance' in sms_column
     assert '249,000 free allowance remaining' in sms_column
     assert '$0.00 spent' not in sms_column
@@ -879,7 +879,7 @@ def test_usage_page_monthly_breakdown(
     assert '1,230 text messages at 1.70p' in monthly_breakdown
 
 
-@pytest.mark.parametrize(
+@ pytest.mark.parametrize(
     'now, expected_number_of_months', [
         (freeze_time("2017-03-31 11:09:00.061258"), 6),
         (freeze_time("2017-01-01 11:09:00.061258"), 4)
@@ -954,7 +954,7 @@ def test_usage_page_for_invalid_year(
     )
 
 
-@freeze_time("2012-03-31 12:12:12")
+@ freeze_time("2012-03-31 12:12:12")
 def test_future_usage_page(
     client_request,
     mock_get_annual_usage_for_service_in_future,
@@ -1199,7 +1199,7 @@ def test_get_dashboard_totals_adds_percentages():
     assert get_dashboard_totals(stats)['email']['failed_percentage'] == '0'
 
 
-@pytest.mark.parametrize(
+@ pytest.mark.parametrize(
     'failures,expected', [
         (2, False),
         (3, False),
@@ -1253,7 +1253,7 @@ def _stats(requested, delivered, failed):
     return {'requested': requested, 'delivered': delivered, 'failed': failed}
 
 
-@pytest.mark.parametrize('dict_in, expected_failed, expected_requested', [
+@ pytest.mark.parametrize('dict_in, expected_failed, expected_requested', [
     (
         {},
         0,
@@ -1433,7 +1433,7 @@ def test_breadcrumb_shows_if_service_is_suspended(
     assert 'Suspended' in page.select_one('.navigation-service-name').text
 
 
-@pytest.mark.parametrize('permissions', (
+@ pytest.mark.parametrize('permissions', (
     ['email', 'sms'],
 ))
 def test_service_dashboard_shows_usage(
@@ -1453,9 +1453,10 @@ def test_service_dashboard_shows_usage(
         page.select_one('[data-key=usage]').text
     ) == (
         '$29.85 '
-        'spent on text messages '
-        '0 '
-        'email disabled during SMS pilot'
+        'spent on text messages'
+        # Disabled for pilot
+        # '0 '
+        # 'email disabled during SMS pilot'
     )
 
 
