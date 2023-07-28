@@ -99,7 +99,7 @@ def test_view_conversation(
     )
 
     assert normalize_spaces(page.select_one('title').text) == (
-        'Received text message – service one – U.S. Notify'
+        'Received text message – service one – Notify.gov'
     )
     assert normalize_spaces(page.select_one('h1').text) == (
         '2021234567'

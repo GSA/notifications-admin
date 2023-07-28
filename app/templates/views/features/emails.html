@@ -8,7 +8,7 @@
 {% block content_column_content %}
 
   <h1 class="font-body-2xl">Emails</h1>
-  <p>Send an unlimited number of emails for free with U.S. Notify.</p>
+  <p>Send an unlimited number of emails for free with Notify.gov.</p>
   {% if not current_user.is_authenticated %}
     <p><a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.register') }}">Create an account</a> and try Notify for yourself.</p>
   {% endif %}
