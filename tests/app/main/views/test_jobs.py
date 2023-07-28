@@ -83,7 +83,7 @@ def test_should_show_page_for_one_job(
 
     assert page.h1.text.strip() == 'thisisatest.csv'
     assert ' '.join(page.find('tbody').find('tr').text.split()) == (
-        '2021234567 template content Delivered 1 January at 11:10'
+        '2021234567 template content Delivered 1 January at 11:10 UTC'
     )
     assert page.find('div', {'data-key': 'notifications'})['data-resource'] == url_for(
         'main.view_job_updates',
@@ -104,7 +104,7 @@ def test_should_show_page_for_one_job(
     assert normalize_spaces(page.select_one('tbody tr').text) == normalize_spaces(
         '2021234567 '
         'template content '
-        'Delivered 1 January at 11:10'
+        'Delivered 1 January at 11:10 UTC'
     )
     assert page.select_one('tbody tr a')['href'] == url_for(
         'main.view_notification',
@@ -329,7 +329,7 @@ def test_should_show_scheduled_job(
     )
 
     assert normalize_spaces(page.select('main p')[1].text) == (
-        'Sending Two week reminder tomorrow at 05:00'
+        'Sending Two week reminder tomorrow at 05:00 UTC'
     )
     assert page.select('main p a')[0]['href'] == url_for(
         'main.view_template_version',

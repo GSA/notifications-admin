@@ -153,7 +153,7 @@ def test_can_show_notifications(
     assert normalize_spaces(
         first_row.select_one('.table-field-right-aligned .align-with-message-body').text
     ) == (
-        'Delivered 1 January at 06:01'
+        'Delivered 1 January at 06:01 UTC'
     )
 
     assert page_title in page.h1.text.strip()
@@ -377,7 +377,7 @@ def test_search_recipient_form(
     assert page.select_one('label[for=to]').text.strip() == expected_search_box_label
 
     recipient_inputs = page.select("input[name=to]")
-    assert(len(recipient_inputs) == 2)
+    assert (len(recipient_inputs) == 2)
 
     for field in recipient_inputs:
         assert field.get("value") == expected_search_box_contents
@@ -626,16 +626,16 @@ def test_redacts_templates_that_should_be_redacted(
 @freeze_time("2017-09-27 12:30:00.000000")
 @pytest.mark.parametrize(
     "message_type, status, expected_hint_status, single_line", [
-        ('email', 'created', 'Sending since 27 September at 12:30', True),
-        ('email', 'sending', 'Sending since 27 September at 12:30', True),
-        ('email', 'temporary-failure', 'Inbox not accepting messages right now 27 September at 12:31', False),
-        ('email', 'permanent-failure', 'Email address does not exist 27 September at 12:31', False),
-        ('email', 'delivered', 'Delivered 27 September at 12:31', True),
-        ('sms', 'created', 'Sending since 27 September at 12:30', True),
-        ('sms', 'sending', 'Sending since 27 September at 12:30', True),
-        ('sms', 'temporary-failure', 'Phone not accepting messages right now 27 September at 12:31', False),
-        ('sms', 'permanent-failure', 'Not delivered 27 September at 12:31', False),
-        ('sms', 'delivered', 'Delivered 27 September at 12:31', True),
+        ('email', 'created', 'Sending since 27 September at 12:30 UTC', True),
+        ('email', 'sending', 'Sending since 27 September at 12:30 UTC', True),
+        ('email', 'temporary-failure', 'Inbox not accepting messages right now 27 September at 12:31 UTC', False),
+        ('email', 'permanent-failure', 'Email address does not exist 27 September at 12:31 UTC', False),
+        ('email', 'delivered', 'Delivered 27 September at 12:31 UTC', True),
+        ('sms', 'created', 'Sending since 27 September at 12:30 UTC', True),
+        ('sms', 'sending', 'Sending since 27 September at 12:30 UTC', True),
+        ('sms', 'temporary-failure', 'Phone not accepting messages right now 27 September at 12:31 UTC', False),
+        ('sms', 'permanent-failure', 'Not delivered 27 September at 12:31 UTC', False),
+        ('sms', 'delivered', 'Delivered 27 September at 12:31 UTC', True),
     ]
 )
 def test_sending_status_hint_displays_correctly_on_notifications_page(
