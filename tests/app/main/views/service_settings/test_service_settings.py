@@ -57,7 +57,6 @@ def mock_get_service_settings_page_common(
         'Service name Test Service Change service name',
         'Sign-in method Text message code Change sign-in method',
         'Send text messages On Change your settings for sending text messages',
-        'Text message senders GOVUK Manage text message senders',
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
 
@@ -68,7 +67,7 @@ def mock_get_service_settings_page_common(
         'Service name Test Service Change service name',
         'Sign-in method Text message code Change sign-in method',
         'Send text messages On Change your settings for sending text messages',
-        'Text message senders GOVUK Manage text message senders',
+        'Text message senders (Only visible to Platform Admins) GOVUK Manage text message senders',
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
 
@@ -111,7 +110,6 @@ def test_should_show_overview(
     page = client_request.get(
         'main.service_settings', service_id=SERVICE_ONE_ID
     )
-
     assert page.find('h1').text == 'Settings'
     rows = page.select('tr')
     assert len(rows) == len(expected_rows)
@@ -205,7 +203,6 @@ def test_send_files_by_email_row_on_settings_page(
         'Service name service one Change service name',
         'Sign-in method Text message code Change sign-in method',
         'Send text messages On Change your settings for sending text messages',
-        'Text message senders GOVUK Manage text message senders',
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages On Change your settings for sending international text messages',
 
@@ -216,7 +213,6 @@ def test_send_files_by_email_row_on_settings_page(
         'Service name service one Change service name',
         'Sign-in method Email link or text message code Change sign-in method',
         'Send text messages On Change your settings for sending text messages',
-        'Text message senders GOVUK Manage text message senders',
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
 
