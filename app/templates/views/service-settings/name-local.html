@@ -28,14 +28,12 @@
   <div class="form-group">
     {% if current_service.prefix_sms %}
       <p>Users will see your service name at the start of every text message</p>
-      <!-- <ul class="govuk-list govuk-list--bullet">
-        <li>at the start of every text message</li>
-        <li>as your email sender name</li>
-      </ul> -->
     {% else %}
       <p>Users will see your service name as your email sender name.</p>
     {% endif %}
   </div>
+  <p>The service name you enter here will appear at the beginning of each text message, unless you turn off this off in Settings > Start text message with service name.
+
 
   {% call form_wrapper() %}
     {{ form.name }}

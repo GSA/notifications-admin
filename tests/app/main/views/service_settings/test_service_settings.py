@@ -250,10 +250,9 @@ def test_should_show_service_name(
     assert page.select_one(
         'main .govuk-body'
     ).text == 'Your service name should tell users what the message is about as well as who it’s from.'
-    assert normalize_spaces(page.select_one('main ul').text) == (
-        'at the start of every text message '
-        'as your email sender name'
-    )
+
+    assert "The service name you enter here will appear at the beginning of each text message, unless" in page.text
+
     app.service_api_client.get_service.assert_called_with(SERVICE_ONE_ID)
 
 
