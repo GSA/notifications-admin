@@ -10,7 +10,7 @@ def test_landing_page(end_to_end_auth_context):
     page.goto(os.environ.get('NOTIFY_STAGING_URI'))
 
     # Check the page title exists and matches what we expect.
-    expect(page).to_have_title(re.compile('U.S. Notify'))
+    expect(page).to_have_title(re.compile('Notify.gov'))
 
     # Retrieve some prominent elements on the page for testing.
     main_header = page.get_by_role(
@@ -65,7 +65,7 @@ def test_sign_in_page(end_to_end_auth_context):
     #        the template itself.
     # TODO:  Improve this check, or change it so no special character is
     #        needed.  Better yet, fix the template(s) character too.
-    expect(page).to_have_title(re.compile('Sign in – U.S. Notify'))
+    expect(page).to_have_title(re.compile('Sign in – Notify.gov'))
 
     # Check for the sign in heading.
     sign_in_heading = page.get_by_role('heading', name='Sign in')
