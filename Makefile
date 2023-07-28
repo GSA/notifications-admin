@@ -56,7 +56,7 @@ py-lint: ## Run python linting scanners
 py-test: export NEW_RELIC_ENVIRONMENT=test
 py-test: ## Run python unit tests
 	pipenv run coverage run --omit=*/notifications_utils/* -m pytest --maxfail=10 --ignore=tests/end_to_end tests/
-	pipenv run coverage report --fail-under=90
+	pipenv run coverage report --fail-under=96
 	pipenv run coverage html -d .coverage_cache
 
 .PHONY: e2e-test
