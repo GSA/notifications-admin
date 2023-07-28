@@ -61,9 +61,10 @@
             suffix='your settings for sending text messages',
           )}}
         {% endcall %}
-        
+
+       {% if current_user.platform_admin %}
         {% call settings_row(if_has_permission='sms') %}
-          {{ text_field('Text message senders') }}
+          {{ text_field('Text message senders\n(Only visible to Platform Admins)') }}
           {% call field(status='default' if current_service.default_sms_sender == "None" else '') %}
           {{ current_service.default_sms_sender | nl2br if current_service.default_sms_sender else 'None'}}
             {% if current_service.count_sms_senders > 1 %}
@@ -80,7 +81,8 @@
           )
         }}
         {% endcall %}
-        
+       {% endif %}
+
         {% call settings_row(if_has_permission='sms') %}
           {{ text_field('Start text messages with service name') }}
           {{ boolean_field(current_service.prefix_sms) }}

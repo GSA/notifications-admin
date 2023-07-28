@@ -37,6 +37,7 @@ newrelic = "*"
 flask-talisman = "*"
 notifications-utils = {editable = true, ref = "main", git = "https://github.com/GSA/notifications-utils.git"}
 coverage = "*"
+pytest-playwright = "*"
 
 [dev-packages]
 isort = "==5.12.0"
@@ -47,7 +48,7 @@ pytest-xdist = "==3.3.1"
 beautifulsoup4 = "==4.12.2"
 freezegun = "==1.2.2"
 flake8 = "==6.0.0"
-flake8-bugbear = "==23.3.12"
+flake8-bugbear = "==23.7.10"
 flake8-print = "==5.0.0"
 moto = "~=4.1"
 requests-mock = "==1.11.0"

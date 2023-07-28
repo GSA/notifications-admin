@@ -141,7 +141,7 @@ def test_should_add_service_and_redirect_to_tour_when_no_services(
         'Example text message template',
         'sms',
         (
-            "Hi, I’m trying out U.S. Notify. Today is "
+            "Hi, I’m trying out Notify.gov. Today is "
             "((day of week)) and my favorite color is ((color))."
         ),
         101,

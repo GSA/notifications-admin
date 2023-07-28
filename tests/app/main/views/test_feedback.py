@@ -102,7 +102,7 @@ def test_get_support_as_someone_in_the_public_sector(
         _follow_redirects=True,
     )
     assert normalize_spaces(page.select('h1')) == (
-        'Contact U.S. Notify support'
+        'Contact Notify.gov support'
     )
     assert page.select_one('form textarea[name=feedback]')
     assert page.select_one('form input[name=name]')
@@ -120,7 +120,7 @@ def test_get_support_as_member_of_public(
         _follow_redirects=True,
     )
     assert normalize_spaces(page.select('h1')) == (
-        'The U.S. Notify service is for people who work in the government'
+        'The Notify.gov service is for people who work in the government'
     )
     assert len(page.select('h2 a')) == 3
     assert not page.select('form')
@@ -410,7 +410,7 @@ def test_redirects_to_triage(
 
 @pytest.mark.parametrize('ticket_type, expected_h1', (
     (PROBLEM_TICKET_TYPE, 'Report a problem'),
-    (GENERAL_TICKET_TYPE, 'Contact U.S. Notify support'),
+    (GENERAL_TICKET_TYPE, 'Contact Notify.gov support'),
 ))
 def test_options_on_triage_page(
     client_request,

@@ -267,7 +267,6 @@ class OrgNavigation(Navigation):
             'edit_organization_billing_details',
             'edit_organization_domains',
             'edit_organization_email_branding',
-            'edit_organization_domains',
             'edit_organization_go_live_notes',
             'edit_organization_name',
             'edit_organization_notes',

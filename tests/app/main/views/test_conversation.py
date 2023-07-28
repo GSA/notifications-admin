@@ -99,7 +99,7 @@ def test_view_conversation(
     )
 
     assert normalize_spaces(page.select_one('title').text) == (
-        'Received text message – service one – U.S. Notify'
+        'Received text message – service one – Notify.gov'
     )
     assert normalize_spaces(page.select_one('h1').text) == (
         '2021234567'
@@ -114,55 +114,55 @@ def test_view_conversation(
     for index, expected in enumerate([
         (
             'message-8',
-            'yesterday at 14:59',
+            'yesterday at 14:59 UTC',
         ),
         (
             'message-7',
-            'yesterday at 14:59',
+            'yesterday at 14:59 UTC',
         ),
         (
             'message-6',
-            'yesterday at 16:59',
+            'yesterday at 16:59 UTC',
         ),
         (
             'message-5',
-            'yesterday at 18:59',
+            'yesterday at 18:59 UTC',
         ),
         (
             'message-4',
-            'yesterday at 20:59',
+            'yesterday at 20:59 UTC',
         ),
         (
             'message-3',
-            'yesterday at 22:59',
+            'yesterday at 22:59 UTC',
         ),
         (
             'message-2',
-            'yesterday at 22:59',
+            'yesterday at 22:59 UTC',
         ),
         (
             'message-1',
-            'yesterday at 23:00',
+            'yesterday at 23:00 UTC',
         ),
         (
             expected_outbound_content,
-            'yesterday at 00:00',
+            'yesterday at 00:00 UTC',
         ),
         (
             expected_outbound_content,
-            'yesterday at 00:00',
+            'yesterday at 00:00 UTC',
         ),
         (
             expected_outbound_content,
-            'yesterday at 00:00',
+            'yesterday at 00:00 UTC',
         ),
         (
             expected_outbound_content,
-            'yesterday at 00:00',
+            'yesterday at 00:00 UTC',
         ),
         (
             expected_outbound_content,
-            'yesterday at 00:00',
+            'yesterday at 00:00 UTC',
         ),
     ]):
         assert (
