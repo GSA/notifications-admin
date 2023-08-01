@@ -94,7 +94,7 @@ To get involved, email us at [tts-benefits-studio@gsa.gov](mailto:tts-benefits-s
 
 3.  **Sign up to pilot Notify.gov:** Already think this might be the tool
     for you? We’re looking for benefit-administering partners to
-    co-design a pilot program to test U.S. Notify for specific use cases.
+    co-design a pilot program to test Notify.gov for specific use cases.
     Early adopters will have wrap-around set-up support from the Studio
     and an opportunity to shape the future of this product.
     
