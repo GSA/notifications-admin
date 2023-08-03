@@ -367,7 +367,8 @@ def test_show_restricted_service(
 
     if expected_link:
         assert request_to_live_link.text.strip() == 'request to go live'
-        assert request_to_live_link['href'] == url_for('main.request_to_go_live', service_id=SERVICE_ONE_ID)
+        email_address = 'notify-support@gsa.gov'
+        assert request_to_live_link['href'] == f'mailto:{email_address}'
     else:
         assert not request_to_live_link
 
