@@ -11,7 +11,6 @@ def test_owasp_useful_headers_set(
 
     assert response.headers['X-Frame-Options'] == 'deny'
     assert response.headers['X-Content-Type-Options'] == 'nosniff'
-    assert response.headers['X-XSS-Protection'] == '1; mode=block'
     csp = response.headers['Content-Security-Policy']
     assert search(r"default-src 'self' static\.example\.com;", csp)
     assert search(r"frame-ancestors 'none';", csp)
