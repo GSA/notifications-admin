@@ -556,7 +556,8 @@ def test_should_show_monthly_breakdown_of_template_usage(
     assert ' '.join(table_rows[0].text.split()) == (
         'My first template '
         'Text message template '
-        '2'
+        '2 '
+        'messages sent'
     )
 
     assert len(table_rows) == len(['October'])
