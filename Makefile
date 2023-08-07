@@ -16,6 +16,7 @@ NVMSH := $(shell [ -f "$(HOME)/.nvm/nvm.sh" ] && echo "$(HOME)/.nvm/nvm.sh" || e
 .PHONY: bootstrap
 bootstrap: generate-version-file ## Set up everything to run the app
 	pipenv install --dev
+	pipenv run playwright install --with-deps
 	source $(NVMSH) --no-use && nvm install && npm ci --no-audit
 	source $(NVMSH) && npm run build
 
@@ -54,9 +55,14 @@ py-lint: ## Run python linting scanners
 .PHONY: py-test
 py-test: export NEW_RELIC_ENVIRONMENT=test
 py-test: ## Run python unit tests
-	pipenv run coverage run --omit=*/notifications_utils/* -m pytest --maxfail=10 tests/
-	pipenv run coverage report --fail-under=90
+	pipenv run coverage run --omit=*/notifications_utils/* -m pytest --maxfail=10 --ignore=tests/end_to_end tests/
+	pipenv run coverage report --fail-under=96
 	pipenv run coverage html -d .coverage_cache
+
+.PHONY: e2e-test
+e2e-test: export NEW_RELIC_ENVIRONMENT=test
+e2e-test: ## Run end-to-end integration tests
+	pipenv run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
 
 .PHONY: js-lint
 js-lint: ## Run javascript linting scanners

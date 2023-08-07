@@ -2,7 +2,7 @@
 
 <div class="ajax-block-container">
   <div class="grid-row grid-gap">
-    <div id="total-sms" class="grid-col-6">
+    <div id="total-sms" class="grid-col-12">
       {{ big_number_with_status(
         statistics['sms']['requested'],
         statistics['sms']['requested']|message_count_label('sms', suffix='sent'),
@@ -14,7 +14,7 @@
         smaller=True,
         ) }}
       </div>
-      <div id="total-email" class="grid-col-6">
+      <!-- <div id="total-email" class="grid-col-6">
         <span class="big-number-with-status pilot-disabled">
           <a class="usa-link govuk-link--no-visited-state display-block margin-bottom-1">
             <span class="big-number-smaller">
@@ -24,6 +24,6 @@
           </a>
           <span class="big-number-status">No failures</span>
         </span>
-      </div>
+      </div> -->
     </div>
 </div>

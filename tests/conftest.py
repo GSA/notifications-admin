@@ -3384,3 +3384,15 @@ def webauthn_credential_2():
         'registration_response': 'stuff',
         'created_at': '2021-05-14T16:57:14.154185Z',
     }
+
+
+@pytest.fixture(scope='session')
+def end_to_end_auth_context(browser):
+    # Create a context with HTTP Authentication credentials for Playwright E2E
+    # tests.
+    context = browser.new_context(http_credentials={
+        'username': os.environ.get('NOTIFY_STAGING_HTTP_AUTH_USER'),
+        'password': os.environ.get('NOTIFY_STAGING_HTTP_AUTH_PASSWORD'),
+    })
+
+    yield context

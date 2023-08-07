@@ -83,7 +83,7 @@ def test_should_show_page_for_one_job(
 
     assert page.h1.text.strip() == 'thisisatest.csv'
     assert ' '.join(page.find('tbody').find('tr').text.split()) == (
-        '2021234567 template content Delivered 1 January at 11:10'
+        '2021234567 template content Delivered 1 January at 11:10 UTC'
     )
     assert page.find('div', {'data-key': 'notifications'})['data-resource'] == url_for(
         'main.view_job_updates',
@@ -104,7 +104,7 @@ def test_should_show_page_for_one_job(
     assert normalize_spaces(page.select_one('tbody tr').text) == normalize_spaces(
         '2021234567 '
         'template content '
-        'Delivered 1 January at 11:10'
+        'Delivered 1 January at 11:10 UTC'
     )
     assert page.select_one('tbody tr a')['href'] == url_for(
         'main.view_notification',
@@ -233,7 +233,7 @@ def test_should_show_job_with_sending_limit_exceeded_status(
         "Notify cannot send these messages because you have reached a limit. You can only send 1,000 messages per day and 250,000 messages in total."  # noqa
     )
     assert normalize_spaces(page.select('main p')[2].text) == (
-        "Upload this spreadsheet again tomorrow or contact the U.S. Notify team to raise the limit."
+        "Upload this spreadsheet again tomorrow or contact the Notify.gov team to raise the limit."
     )
 
 
@@ -245,11 +245,11 @@ def test_should_show_job_with_sending_limit_exceeded_status(
     )),
     # Just started
     (datetime(2020, 1, 10, 0, 0, 0), datetime(2020, 1, 10, 0, 0, 1), (
-       'No messages to show yet…'
+        'No messages to show yet…'
     )),
     # Created a while ago, just started
     (datetime(2020, 1, 1, 0, 0, 0), datetime(2020, 1, 10, 0, 0, 1), (
-       'No messages to show yet…'
+        'No messages to show yet…'
     )),
     # Created a while ago, started just within the last 24h
     # TODO -- fails locally, should pass, tech debt due to timezone changes, re-evaluate after UTC changes
@@ -329,7 +329,7 @@ def test_should_show_scheduled_job(
     )
 
     assert normalize_spaces(page.select('main p')[1].text) == (
-        'Sending Two week reminder tomorrow at 05:00'
+        'Sending Two week reminder tomorrow at 05:00 UTC'
     )
     assert page.select('main p a')[0]['href'] == url_for(
         'main.view_template_version',

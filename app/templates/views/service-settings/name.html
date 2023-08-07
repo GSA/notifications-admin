@@ -22,17 +22,17 @@
 
   <p class="govuk-body">You should only use an acronym or initialism if your users are already familiar with it.</p>
 
-  <div class="form-group">
+  <div>
     {% if current_service.prefix_sms %}
-      <p>Users will see your service name:</p>
-      <ul class="list-bullet">
-        <li>at the start of every text message</li>
-        <li>as your email sender name</li>
-      </ul>
+
+      <p class="govuk-body">Users will see your service name at the start of every text message</p>
     {% else %}
-      <p>Users will see your service name as your email sender name.</p>
+      <p class="govuk-body">Users will see your service name as your email sender name.</p>
     {% endif %}
+
   </div>
+  <p class="govuk-body">The service name you enter here will appear at the beginning of each text message, unless you turn off this off in Settings > Start text message with service name.
+
 
   {% call form_wrapper() %}
     {{ form.name }}

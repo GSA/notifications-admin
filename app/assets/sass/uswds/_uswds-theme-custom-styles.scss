@@ -22,8 +22,9 @@ i.e.
 
 @use "uswds-core" as *;
 
-.usa-logo {
+.usa-header--extended .usa-logo {
    font-family: family("sans");
+   margin: units(4) 0;
    img {
       @include at-media($theme-header-min-width) {
          width: 80px;
@@ -222,4 +223,9 @@ td.table-empty-message {
    &:focus {
       outline-offset: units(1);
    }
+}
+
+.spark-bar-bar {
+   font-size: units(3);
+   background-color: transparent;
 }

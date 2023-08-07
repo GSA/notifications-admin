@@ -57,7 +57,6 @@ def mock_get_service_settings_page_common(
         'Service name Test Service Change service name',
         'Sign-in method Text message code Change sign-in method',
         'Send text messages On Change your settings for sending text messages',
-        'Text message senders GOVUK Manage text message senders',
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
 
@@ -68,7 +67,7 @@ def mock_get_service_settings_page_common(
         'Service name Test Service Change service name',
         'Sign-in method Text message code Change sign-in method',
         'Send text messages On Change your settings for sending text messages',
-        'Text message senders GOVUK Manage text message senders',
+        'Text message senders (Only visible to Platform Admins) GOVUK Manage text message senders',
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
 
@@ -111,7 +110,6 @@ def test_should_show_overview(
     page = client_request.get(
         'main.service_settings', service_id=SERVICE_ONE_ID
     )
-
     assert page.find('h1').text == 'Settings'
     rows = page.select('tr')
     assert len(rows) == len(expected_rows)
@@ -205,7 +203,6 @@ def test_send_files_by_email_row_on_settings_page(
         'Service name service one Change service name',
         'Sign-in method Text message code Change sign-in method',
         'Send text messages On Change your settings for sending text messages',
-        'Text message senders GOVUK Manage text message senders',
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages On Change your settings for sending international text messages',
 
@@ -216,7 +213,6 @@ def test_send_files_by_email_row_on_settings_page(
         'Service name service one Change service name',
         'Sign-in method Email link or text message code Change sign-in method',
         'Send text messages On Change your settings for sending text messages',
-        'Text message senders GOVUK Manage text message senders',
         'Start text messages with service name On Change your settings for starting text messages with service name',
         'Send international text messages Off Change your settings for sending international text messages',
 
@@ -254,10 +250,9 @@ def test_should_show_service_name(
     assert page.select_one(
         'main .govuk-body'
     ).text == 'Your service name should tell users what the message is about as well as who it’s from.'
-    assert normalize_spaces(page.select_one('main ul').text) == (
-        'at the start of every text message '
-        'as your email sender name'
-    )
+
+    assert "The service name you enter here will appear at the beginning of each text message, unless" in page.text
+
     app.service_api_client.get_service.assert_called_with(SERVICE_ONE_ID)
 
 
@@ -372,7 +367,8 @@ def test_show_restricted_service(
 
     if expected_link:
         assert request_to_live_link.text.strip() == 'request to go live'
-        assert request_to_live_link['href'] == url_for('main.request_to_go_live', service_id=SERVICE_ONE_ID)
+        email_address = 'notify-support@gsa.gov'
+        assert request_to_live_link['href'] == f'mailto:{email_address}'
     else:
         assert not request_to_live_link
 
@@ -3072,7 +3068,7 @@ def test_unknown_channel_404s(
     ),
     (
         'email',
-        'It’s free to send emails through U.S. Notify.',
+        'It’s free to send emails through Notify.gov.',
         'Send emails',
         [],
         'False',
@@ -3081,7 +3077,7 @@ def test_unknown_channel_404s(
     ),
     (
         'email',
-        'It’s free to send emails through U.S. Notify.',
+        'It’s free to send emails through Notify.gov.',
         'Send emails',
         ['email', 'sms'],
         'True',

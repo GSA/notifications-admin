@@ -183,16 +183,14 @@
   id=None
 ) %}
   {% call field(align='right') %}
-    {% if id %}
-      <style nonce="{{ csp_nonce() }}">
-        #{{id}} .spark-bar-bar {
-          width: {{ count / max_count * 100 }}%;
-        }
-      </style>
-    {% endif %}
     <span {% if id %}id="{{ id }}"{% endif %} class="spark-bar">
       <span class="spark-bar-bar">
-        {{ '{:,.0f}'.format(count) }}
+        {{ '{:,.0f}'.format(count) }} 
+          {% if count == 1 -%}
+            message sent
+          {% else -%}
+            messages sent
+          {% endif %}
       </span>
     </span>
   {% endcall %}

@@ -472,7 +472,7 @@ def test_caseworker_sees_template_page_if_template_is_deleted(
 
     content = str(page)
     assert url_for("main.send_one_off", service_id=SERVICE_ONE_ID, template_id=fake_uuid) not in content
-    assert page.select('p.hint')[0].text.strip() == 'This template was deleted today at 15:00.'
+    assert page.select('p.hint')[0].text.strip() == 'This template was deleted today at 15:00 UTC.'
 
     mock_get_deleted_template.assert_called_with(SERVICE_ONE_ID, template_id, None)
 
@@ -554,7 +554,7 @@ def test_should_be_able_to_view_a_template_with_links(
         'Review your message'
     )
     assert normalize_spaces(page.select_one('title').text) == (
-        'Two week reminder – Templates – service one – U.S. Notify'
+        'Two week reminder – Templates – service one – Notify.gov'
     )
 
     assert [
@@ -1571,7 +1571,7 @@ def test_should_show_page_for_a_deleted_template(
     content = str(page)
     assert url_for("main.edit_service_template", service_id=SERVICE_ONE_ID, template_id=fake_uuid) not in content
     assert url_for("main.send_one_off", service_id=SERVICE_ONE_ID, template_id=fake_uuid) not in content
-    assert page.select('p.hint')[0].text.strip() == 'This template was deleted today at 15:00.'
+    assert page.select('p.hint')[0].text.strip() == 'This template was deleted today at 15:00 UTC.'
     assert 'Delete this template' not in page.select_one('main').text
 
     mock_get_deleted_template.assert_called_with(SERVICE_ONE_ID, template_id, None)
