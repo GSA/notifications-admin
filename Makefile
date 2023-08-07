@@ -59,8 +59,8 @@ avg-complexity:
 
 .PHONY: too-complex
 too-complex:
-	echo "*** Shows code that got a rating of D or F in radon ***"
-	pipenv run radon cc ./app -a -nd
+	echo "*** Shows code that got a rating of C, D or F in radon ***"
+	pipenv run radon cc ./app -a -nc
 
 .PHONY: py-test
 py-test: export NEW_RELIC_ENVIRONMENT=test
