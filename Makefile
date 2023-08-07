@@ -52,6 +52,16 @@ py-lint: ## Run python linting scanners
 	pipenv run flake8 .
 	pipenv run isort --check-only ./app ./tests
 
+.PHONY: avg-complexity
+avg-complexity:
+	echo "*** Shows average complexity in radon of all code ***"
+	pipenv run radon cc ./app -a -na
+
+.PHONY: too-complex
+too-complex:
+	echo "*** Shows code that got a rating of D or F in radon ***"
+	pipenv run radon cc ./app -a -nd
+
 .PHONY: py-test
 py-test: export NEW_RELIC_ENVIRONMENT=test
 py-test: ## Run python unit tests
