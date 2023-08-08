@@ -3,7 +3,7 @@
 {% from "components/radios.html" import radio_select %}
 {% from "components/table.html" import mapping_table, row, field, text_field, index_field, hidden_field_heading %}
 {% from "components/file-upload.html" import file_upload %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/us_components/back-link/macro.njk" import govukBackLink %}
 
 {% block service_page_title %}
   Error
@@ -49,7 +49,7 @@
         button_text='Upload your file again'
       ) }}
     </div>
-    <a href="#content" class="govuk-link govuk-link--no-visited-state back-to-top-link">Back to top</a>
+    <a href="#content" class="usa-link back-to-top-link">Back to top</a>
   </div>
 
   <div class="fullscreen-content" data-module="fullscreen-table">

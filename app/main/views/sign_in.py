@@ -66,7 +66,7 @@ def sign_in():
         flash(Markup(
             (
                 f"The email address or password you entered is incorrect."
-                f"&ensp;<a href={password_reset_url} class='govuk-link'>Forgot your password?</a>"
+                f"&ensp;<a href={password_reset_url} class='usa-link'>Forgot your password?</a>"
             )
         ))
 

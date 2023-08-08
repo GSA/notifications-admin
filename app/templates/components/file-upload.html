@@ -1,4 +1,4 @@
-{% from "components/uk_components/button/macro.njk" import govukButton %}
+{% from "components/us_components/button/macro.njk" import govukButton %}
 
 {% macro file_upload(
   field,
@@ -34,7 +34,7 @@
     </label>
     {% if alternate_link and alternate_link_text %}
       <span class="file-upload-alternate-link">
-        or <a class="govuk-link govuk-link--no-visited-state" href="{{ alternate_link }}">{{ alternate_link_text }}</a>
+        or <a class="usa-link" href="{{ alternate_link }}">{{ alternate_link_text }}</a>
       </span>
     {% endif %}
     <label class="file-upload-filename" for="{{ field.name }}"></label>

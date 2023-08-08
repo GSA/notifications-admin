@@ -3,7 +3,7 @@
 {% from "components/radios.html" import radio_select %}
 {% from "components/table.html" import list_table, field, text_field, index_field, hidden_field_heading %}
 {% from "components/file-upload.html" import file_upload %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/us_components/back-link/macro.njk" import govukBackLink %}
 
 {% block service_page_title %}
   Error
@@ -127,7 +127,7 @@
         ) }}
       {% endif %}
     </div>
-    <a href="#content" class="govuk-link govuk-link--no-visited-state back-to-top-link">Back to top</a>
+    <a href="#content" class="usa-link back-to-top-link">Back to top</a>
   </div>
 
   {% if not request.args.from_test %}

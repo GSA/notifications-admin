@@ -2,7 +2,7 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/us_components/back-link/macro.njk" import govukBackLink %}
 
 {% block service_page_title %}
   Callbacks for delivery receipts
@@ -21,7 +21,7 @@
 
       <p>
         When you send an email or text message, we can tell you if Notify was able to deliver it.
-        Read the Callbacks section of our <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.documentation') }}">API documentation</a> for more information.
+        Read the Callbacks section of our <a class="usa-link" href="{{ url_for('main.documentation') }}">API documentation</a> for more information.
       </p>
 
       {% call form_wrapper() %}

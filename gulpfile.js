@@ -145,29 +145,6 @@ const javascripts = () => {
 };
 
 
-const sass = () => {
-  return src([
-    paths.src + '/stylesheets/main*.scss',
-    paths.src + '/stylesheets/print.scss'
-  ])
-    .pipe(plugins.prettyerror())
-    .pipe(plugins.sass.sync({
-      includePaths: [
-        paths.npm + 'govuk-elements-sass/public/sass/',
-        paths.toolkit + 'stylesheets/',
-        paths.govuk_frontend,
-        paths.npm
-      ]
-    }))
-    .pipe(plugins.cssUrlAdjuster({
-      replace: [staticPathMatcher, '/']
-    }))
-    // cssUrlAdjuster outputs uncompressed CSS so we need to perform the compression here
-    .pipe(plugins.cleanCSS({ compatibility: '*' }))
-    .pipe(dest(paths.dist + 'stylesheets/'))
-};
-
-
 // Copy images
 
 const images = () => {
@@ -243,7 +220,6 @@ const defaultTask = parallel(
     series(
       javascripts
     ),
-    sass, 
     uswds.compile,
     uswds.copyAssets,
     copy.gtm

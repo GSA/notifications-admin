@@ -1,8 +1,8 @@
 {% extends "withnav_template.html" %}
 {% from "components/table.html" import list_table, field, hidden_field_heading %}
 {% from "components/page-header.html" import page_header %}
-{% from "components/uk_components/button/macro.njk" import govukButton %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/us_components/button/macro.njk" import govukButton %}
+{% from "components/us_components/back-link/macro.njk" import govukBackLink %}
 
 {% block service_page_title %}
   API keys
@@ -48,7 +48,7 @@
         {% endcall %}
       {% else %}
         {% call field(align='right', status='error') %}
-          <a class="govuk-link govuk-link--destructive" href='{{ url_for('.revoke_api_key', service_id=current_service.id, key_id=item.id) }}'>
+          <a class="usa-link usa-link--destructive" href='{{ url_for('.revoke_api_key', service_id=current_service.id, key_id=item.id) }}'>
             Revoke<span class="usa-sr-only"> {{ item.name }}</span>
           </a>
         {% endcall %}

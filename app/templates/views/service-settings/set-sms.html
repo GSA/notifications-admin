@@ -2,7 +2,7 @@
 {% from "components/form.html" import form_wrapper %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/us_components/back-link/macro.njk" import govukBackLink %}
 
 {% block service_page_title %}
   Send text messages
@@ -27,7 +27,7 @@
         after your free allowance.
       </p> -->
       <p>
-        See <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for(".pricing") }}">pricing</a> for more details.
+        See <a class="usa-link" href="{{ url_for(".pricing") }}">pricing</a> for more details.
       </p>
       {% call form_wrapper() %}
         {{ form.enabled }}

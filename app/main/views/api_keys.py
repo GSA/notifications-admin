@@ -93,7 +93,7 @@ def create_api_key(service_id):
             'hint': {
                 'html': Markup(
                     'Not available because your service is in '
-                    '<a class="govuk-link govuk-link--no-visited-state" href="/features/trial-mode">trial mode</a>')
+                    '<a class="usa-link" href="/features/trial-mode">trial mode</a>')
             }
         }
     if form.validate_on_submit():

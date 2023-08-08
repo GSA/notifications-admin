@@ -1,7 +1,7 @@
 {% extends "withnav_template.html" %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/us_components/back-link/macro.njk" import govukBackLink %}
 
 {% block service_page_title %}
   {{ notification_type.capitalize() }} are disabled
@@ -21,7 +21,7 @@
       </p>
       <p>
         If you need to send {{ 999|message_count_label(notification_type, suffix='') }}
-        <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.support') }}">get in touch with the Notify.gov team</a>.
+        <a class="usa-link" href="{{ url_for('.support') }}">get in touch with the Notify.gov team</a>.
       </p>
 
     </div>

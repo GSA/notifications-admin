@@ -48,7 +48,7 @@ function templatesAndFoldersCheckboxes (hierarchy) {
         <label class="usa-checkbox__label template-list-item-label margin-top-05" for="templates-or-folder-${idx}">
           <span class="usa-sr-only">${node.label}</span>
         </label>
-        <a href="/services/6658542f-0cad-491f-bec8-ab8457700ead/templates/all/folders/3d057d9a-51fc-45ea-8b63-0003206350a6" class="govuk-link govuk-link--no-visited-state template-list-${node.type === 'folder' ? 'folder' : 'template'}">
+        <a href="/services/6658542f-0cad-491f-bec8-ab8457700ead/templates/all/folders/3d057d9a-51fc-45ea-8b63-0003206350a6" class="usa-link template-list-${node.type === 'folder' ? 'folder' : 'template'}">
           <span class="live-search-relevant">${node.label}</span>
         </a>
         ${node.meta}

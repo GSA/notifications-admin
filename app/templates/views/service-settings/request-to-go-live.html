@@ -3,7 +3,7 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/task-list.html" import task_list_wrapper, task_list_item %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/us_components/back-link/macro.njk" import govukBackLink %}
 
 {% block service_page_title %}
   Before you request to go live
@@ -64,7 +64,7 @@
           When we receive your request we’ll get back to you within one working day.
         </p>
         <p class="bottom-gutter">
-          By requesting to go live you’re agreeing to our <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.terms') }}">terms of use</a>.
+          By requesting to go live you’re agreeing to our <a class="usa-link" href="{{ url_for('.terms') }}">terms of use</a>.
         </p>
         {% call form_wrapper() %}
           {{ page_footer('Request to go live') }}

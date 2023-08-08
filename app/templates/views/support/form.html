@@ -3,7 +3,7 @@
 {% from "components/page-footer.html" import sticky_page_footer %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/us_components/back-link/macro.njk" import govukBackLink %}
 
 {% block per_page_title %}
   {{ page_title }}
@@ -21,7 +21,7 @@
         {% if show_status_page_banner %}
           <div class="panel panel-border-wide">
             <p>
-              Check our <a class="govuk-link govuk-link--no-visited-state" href="https://status.notifications.service.gov.uk">system status</a>
+              Check our <a class="usa-link" href="https://status.notifications.service.gov.uk">system status</a>
               page to see if there are any known issues with Notify.gov.
             </p>
           </div>

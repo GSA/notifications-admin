@@ -41,20 +41,6 @@ h1 {
    font-weight: bold !important;
 }
 
-.sub-content {
-   h1,
-   h2:not(.get-started-list__heading, .usa-process-list__heading) {
-      margin-top: units(4);
-      font-weight: bold;
-   }
-
-   h2:not(.get-started-list__heading, .usa-process-list__heading),
-   h3 {
-      margin-top: units(5);
-      margin-bottom: units(2);
-   }
-}
-
 p,
 .list li {
    font-family: family("sans");
@@ -132,11 +118,6 @@ td.table-empty-message {
 
 .pill-item.usa-link {
    text-decoration: none !important;
-}
-
-.sub-content .banner-dangerous h1,
-.sub-content h2.user-list-item-heading {
-   margin-top: 0;
 }
 
 .user-list-edit-link:active:before,
@@ -229,3 +210,18 @@ td.table-empty-message {
    font-size: units(3);
    background-color: transparent;
 }
+
+.usa-hero {
+   background-image: none; 
+}
+
+.usa-prose {
+   h1, h2, h3, h4, h5 {
+      font-family: family("sans");
+   }
+} 
+
+.navigation-service.usa-breadcrumb {
+   padding-bottom: 0; 
+}
+

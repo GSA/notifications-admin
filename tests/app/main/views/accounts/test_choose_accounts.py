@@ -231,7 +231,7 @@ def test_choose_account_should_show_back_to_service_link(
 ):
     resp = client_request.get('main.choose_account')
 
-    service_navigation = resp.find('div', {'class': 'navigation-service'})
+    service_navigation = resp.find('div', {'class': 'navigation-service usa-breadcrumb'})
     back_to_service_link = service_navigation.a
 
     assert back_to_service_link['href'] == url_for('main.show_accounts_or_dashboard')
@@ -248,7 +248,7 @@ def test_choose_account_should_not_show_back_to_service_link_if_no_service_in_se
         session['service_id'] = None
     page = client_request.get('main.choose_account')
 
-    assert len(page.select('.navigation-service a')) == 0
+    assert len(page.select('.navigation-service usa-breadcrumb a')) == 0
 
 
 def test_choose_account_should_not_show_back_to_service_link_if_not_signed_in(
@@ -262,7 +262,7 @@ def test_choose_account_should_not_show_back_to_service_link_if_not_signed_in(
     page = client_request.get('main.sign_in')
 
     assert page.select_one('h1').text == 'Sign in'  # We’re not signed in
-    assert page.select_one('.navigation-service a') is None
+    assert page.select_one('.navigation-service usa-breadcrumb a') is None
 
 
 @pytest.mark.parametrize('active', (
