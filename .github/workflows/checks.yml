@@ -36,6 +36,8 @@ jobs:
         run: pipenv run flake8 .
       - name: Check imports alphabetized
         run: pipenv run isort --check-only ./app ./tests
+      - name: Check dead-code
+        run: make dead-code
       - name: Run js lint
         run: npm run lint
       - name: Run js tests
