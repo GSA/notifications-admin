@@ -59,9 +59,6 @@ py-test: ## Run python unit tests
 	pipenv run coverage report --fail-under=96
 	pipenv run coverage html -d .coverage_cache
 
-.PHONY: dead-code
-dead-code:
-	pipenv run vulture ./app --min-confidence=100
 
 .PHONY: e2e-test
 e2e-test: export NEW_RELIC_ENVIRONMENT=test

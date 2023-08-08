@@ -165,7 +165,7 @@ def get_notifications_as_json(service_id, message_type=None):
     endpoint="view_notifications_csv"
 )
 @user_has_permissions()
-def get_notifications(service_id, message_type, status_override=None):
+def get_notifications(service_id, message_type, status_override=None): # noqa
     # TODO get the api to return count of pages as well.
     page = get_page_from_request()
     if page is None:
