@@ -3059,7 +3059,7 @@ def test_unknown_channel_404s(
 ), [
     (
         'sms',
-        'You have a free allowance of 250,000 text messages each financial year.',
+        'You may send up to 250,000 text messages during the pilot period.',
         'Send text messages',
         [],
         'False',
