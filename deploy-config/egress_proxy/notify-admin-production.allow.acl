@@ -1,2 +1,4 @@
+s3-fips.us-gov-east-1.amazonaws.com
+s3-fips.us-gov-west-1.amazonaws.com
 gov-collector.newrelic.com
 egress-proxy-notify-admin-production.apps.internal
