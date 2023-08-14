@@ -487,7 +487,6 @@ def format_auth_type(auth_type, with_indefinite_article=False):
     indefinite_article, auth_type = {
         'email_auth': ('an', 'Email link'),
         'sms_auth': ('a', 'Text message code'),
-        'webauthn_auth': ('a', 'Security key'),
     }[auth_type]
 
     if with_indefinite_article:

@@ -295,54 +295,6 @@ def test_two_factor_sms_post_should_redirect_to_sign_in_if_user_not_in_session(
     )
 
 
-@pytest.mark.parametrize('endpoint', ['main.two_factor_webauthn', 'main.two_factor_sms'])
-def test_two_factor_endpoints_get_should_redirect_to_sign_in_if_user_not_in_session(
-    client_request,
-    endpoint,
-):
-    client_request.get(
-        endpoint,
-        _expected_redirect=url_for('main.sign_in')
-    )
-
-
-def test_two_factor_webauthn_should_have_auth_signin_button(
-    client_request,
-    platform_admin_user,
-    mocker,
-):
-    client_request.logout()
-    mock_get_user = mocker.patch('app.user_api_client.get_user', return_value=platform_admin_user)
-    with client_request.session_transaction() as session:
-        session['user_details'] = {'id': platform_admin_user['id'], 'email': platform_admin_user['email_address']}
-
-    page = client_request.get('main.two_factor_webauthn')
-
-    button = page.select_one("button[data-module=authenticate-security-key]")
-
-    assert button.text.strip() == 'Check security key'
-
-    assert button.name == 'button'
-    mock_get_user.assert_called_once_with(platform_admin_user['id'])
-
-
-def test_two_factor_webauthn_should_reject_non_webauthn_auth_users(
-    client_request,
-    platform_admin_user,
-    mocker,
-):
-    client_request.logout()
-    platform_admin_user['auth_type'] = 'sms_auth'
-    mocker.patch('app.user_api_client.get_user', return_value=platform_admin_user)
-    with client_request.session_transaction() as session:
-        session['user_details'] = {'id': platform_admin_user['id'], 'email': platform_admin_user['email_address']}
-
-    client_request.get(
-        'main.two_factor_webauthn',
-        _expected_status=403,
-    )
-
-
 def test_two_factor_sms_should_activate_pending_user(
     client_request,
     mocker,

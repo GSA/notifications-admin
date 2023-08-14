@@ -34,7 +34,7 @@ from werkzeug.exceptions import HTTPException as WerkzeugHTTPException
 from werkzeug.exceptions import abort
 from werkzeug.local import LocalProxy
 
-from app import proxy_fix, webauthn_server
+from app import proxy_fix
 from app.asset_fingerprinter import asset_fingerprinter
 from app.config import configs
 from app.custom_auth import CustomBasicAuth
@@ -257,7 +257,6 @@ def create_app(application):
         force_https=(application.config['HTTP_PROTOCOL'] == 'https')
     )
     logging.init_app(application)
-    webauthn_server.init_app(application)
 
     login_manager.login_view = 'main.sign_in'
     login_manager.login_message_category = 'default'

@@ -47,8 +47,6 @@ def new_password(token):
         if user.email_auth:
             # they've just clicked an email link, so have done an email auth journey anyway. Just log them in.
             return log_in_user(user.id)
-        elif user.webauthn_auth:
-            return redirect(url_for('main.two_factor_webauthn', next=request.args.get('next')))
         else:
             # send user a 2fa sms code
             user.send_verify_code()
