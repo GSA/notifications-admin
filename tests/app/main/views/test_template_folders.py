@@ -407,7 +407,7 @@ def test_should_show_templates_folder_page(
         assert links_in_page[index].text.strip() == expected_link
 
     all_page_items = page.select('.template-list-item')
-    all_page_items_styled_with_checkboxes = page.select('.template-list-item.govuk-checkboxes__item')
+    all_page_items_styled_with_checkboxes = page.select('.usa-checkbox.template-list-item')
 
     assert len(all_page_items) == len(all_page_items_styled_with_checkboxes)
 
