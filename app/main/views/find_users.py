@@ -1,4 +1,4 @@
-from flask import abort, flash, redirect, render_template, request, url_for
+from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user
 from notifications_python_client.errors import HTTPError
 
@@ -56,8 +56,6 @@ def archive_user(user_id):
 @user_is_platform_admin
 def change_user_auth(user_id):
     user = User.from_id(user_id)
-    if user.webauthn_auth:
-        abort(403)
 
     form = AuthTypeForm(auth_type=user.auth_type)
 

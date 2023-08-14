@@ -1,7 +1,6 @@
 import json
 
 from flask import (
-    abort,
     current_app,
     redirect,
     render_template,
@@ -86,18 +85,6 @@ def two_factor_sms():
             return log_in_user(user_id)
 
     return render_template('views/two-factor-sms.html', form=form, redirect_url=redirect_url)
-
-
-@main.route('/two-factor-webauthn', methods=['GET'])
-@redirect_to_sign_in
-def two_factor_webauthn():
-    user_id = session['user_details']['id']
-    user = User.from_id(user_id)
-
-    if not user.webauthn_auth:
-        abort(403)
-
-    return render_template('views/two-factor-webauthn.html')
 
 
 @main.route('/re-validate-email', methods=['GET'])

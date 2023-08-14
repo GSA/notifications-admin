@@ -12,7 +12,7 @@ from flask import Flask, url_for
 from notifications_python_client.errors import HTTPError
 from notifications_utils.url_safe_token import generate_token
 
-from app import create_app, webauthn_server
+from app import create_app
 
 from . import (
     TestClient,
@@ -2483,20 +2483,6 @@ def set_config_values(app, dict):
         app.config[key] = old_values[key]
 
 
-@pytest.fixture
-def webauthn_dev_server(notify_admin, mocker):
-    overrides = {
-        'NOTIFY_ENVIRONMENT': 'development',
-        'ADMIN_BASE_URL': 'https://webauthn.io',
-    }
-
-    with set_config_values(notify_admin, overrides):
-        webauthn_server.init_app(notify_admin)
-        yield
-
-    webauthn_server.init_app(notify_admin)
-
-
 @pytest.fixture(scope='function')
 def valid_token(notify_admin, fake_uuid):
     return generate_token(
@@ -3078,15 +3064,13 @@ def create_active_user_manage_template_permissions(with_unique_id=False):
     )
 
 
-def create_platform_admin_user(with_unique_id=False, auth_type='webauthn_auth', permissions=None):
+def create_platform_admin_user(with_unique_id=False, permissions=None):
     return create_user(
         id=str(uuid4()) if with_unique_id else sample_uuid(),
         name='Platform admin user',
         email_address='platform@admin.gsa.gov',
         permissions=permissions or {},
-        platform_admin=True,
-        auth_type=auth_type,
-        can_use_webauthn=True,
+        platform_admin=True
     )
 
 
@@ -3132,7 +3116,6 @@ def create_user(**overrides):
         'current_session_id': None,
         'logged_in_at': None,
         'email_access_validated_at': None,
-        'can_use_webauthn': False,
     }
     user_data.update(overrides)
     return user_data
@@ -3362,28 +3345,6 @@ def mock_get_invited_org_user_by_id(mocker, sample_org_invite):
         'app.org_invite_api_client.get_invited_user',
         side_effect=_get,
     )
-
-
-@pytest.fixture
-def webauthn_credential():
-    return {
-        'id': str(uuid4()),
-        'name': 'Test credential',
-        'credential_data': 'WJ8AAAAAAAAAAAAAAAAAAAAAAECKU1ppjl9gmhHWyDkgHsUvZmhr6oF3/lD3llzLE2SaOSgOGIsIuAQqgp8JQSUu3r/oOaP8RS44dlQjrH+ALfYtpQECAyYgASFYIDGeoB8RJc5iMpRzZYAK5dndyHQkfFXRUWutPKPKMgdcIlggWfHwfzsvhsClHgz6E9xX58d6EQ55b4oLJ3Qf5YZjyzo=',  # noqa
-        'registration_response': 'anything',
-        'created_at': '2017-10-18T16:57:14.154185Z',
-    }
-
-
-@pytest.fixture
-def webauthn_credential_2():
-    return {
-        'id': str(uuid4()),
-        'name': 'Another test credential',
-        'credential_data': 'WJ0AAAAAAAAAAAAAAAAAAAAAAECKU1jppl9mhgHWyDkgHsUvZmhr6oF3/lD3llzLE2SaOSgOGIsIuAQqgp8JQSUu3r/oOaP8RS44dlQjrH+ALfYtpAECAyYhWCAxnqAfESXOYjKUc2WACuXZ3ch0JHxV0VFrrTyjyjIHXCJYIFnx8L4H87bApR4M+hPcV+fHehEOeW+KCyd0H+WGY8s6',  # noqa
-        'registration_response': 'stuff',
-        'created_at': '2021-05-14T16:57:14.154185Z',
-    }
 
 
 @pytest.fixture(scope='session')
