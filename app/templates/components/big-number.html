@@ -1,6 +1,6 @@
 {% macro big_number(number, label, link=None, currency='', smaller=False, smallest=False) %}
   {% if link %}
-    <a class="usa-link display-block margin-bottom-1" href="{{ link }}">
+    <a class="usa-link display-flex" href="{{ link }}">
   {% endif %}
       <span class="big-number{% if smaller %}-smaller{% endif %}{% if smallest %}-smallest{% endif %}">
         <span class="big-number-number">

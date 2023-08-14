@@ -183,7 +183,7 @@ describe('Update content', () => {
       });
 
       return `
-        <div class="bottom-gutter ajax-block-container">
+        <div class="tabs ajax-block-container">
           <ul role="tablist" class="pill">
             ${pillsHTML}
           </ul>

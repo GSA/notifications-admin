@@ -51,16 +51,6 @@ p,
    font-size: size("body", 16);
 }
 
-.big-number-with-status .big-number,
-.big-number-with-status .big-number-smaller {
-   @include u-bg("primary");
-}
-
-.big-number-with-status .big-number-status,
-.big-number-with-status .big-number-status-failing {
-   @include u-bg("green-cool-40v");
-}
-
 .show-more-no-border:focus,
 .show-more:focus,
 .table-field-right-aligned a:active:before,
@@ -138,22 +128,31 @@ td.table-empty-message {
    box-shadow: none;
 }
 
-.template-list-item-without-ancestors a.template-list-folder:first-of-type {
-   background-image: url(../images/folder-blue-bold.svg);
-   background-size: 30px 30px;
-}
+// .template-list-item-without-ancestors a.template-list-folder:first-of-type {
+//    background: url(../img/material-icons/folder.svg) no-repeat;
+// }
 
 .folder-heading a.folder-heading-folder,
 .template-list-folder {
-   background-image: url(../images/folder-blue-bold.svg);
+   background: url(../img/material-icons/folder.svg) no-repeat;
+   padding-left: units(4);
+   display: inline-block; 
+   height: units(4);
    &:hover {
-      color: color("blue-warm-70v");
-      background-image: url(../images/folder-blue-bold.svg);
+      background: url(../img/material-icons/folder.svg) no-repeat;
    }
 }
 
 .folder-heading-folder {
-   background-image: url(../images/folder-black.svg);
+   background: url(../img/material-icons/folder.svg) no-repeat;
+   padding-left: units(4);
+   display: inline-block;
+   height: units(4);
+}
+
+.message-name-separator:before, .folder-heading-separator:before {
+   content: ">";
+   margin: 0 units(0.5);
 }
 
 .folder-heading a.folder-heading-folder-truncated {
@@ -162,8 +161,13 @@ td.table-empty-message {
 
 .usa-template-list-template {
    background: url(../img/material-icons/description.svg) no-repeat;
-   padding-left: 40px;
-   background-size: 30px 30px;
+   padding-left: units(4);
+   display: inline-flex; 
+   height: units(4);
+}
+
+.template-list-item-hint {
+   padding-left: units(4);
 }
 
 .js-enabled .live-search {
@@ -207,7 +211,7 @@ td.table-empty-message {
 }
 
 .spark-bar-bar {
-   font-size: units(3);
+   font-size: units(2);
    background-color: transparent;
 }
 
@@ -222,6 +226,92 @@ td.table-empty-message {
 } 
 
 .navigation-service.usa-breadcrumb {
-   padding-bottom: 0; 
+   -bottom: 0; 
 }
 
+// Dashboard
+
+.dashboard {
+   .big-number-with-status {
+      a {
+         background: color("blue-60v");
+         padding: units(2);
+         margin-bottom: units(1);
+         text-decoration: none;
+         &:hover{
+            background: color("blue-warm-70v");
+         } 
+      }
+      span {
+         color: white; 
+      }
+      .big-number-smaller {
+         display: flex; 
+         flex-direction: column;
+         .big-number-number {
+               font-size: units(5);
+               line-height: units(6);
+         }
+         .big-number-label {
+               font-size: units(3);
+         }
+      }
+      .big-number-status {
+         background: color("green-cool-40v");
+         display: flex; 
+         padding: units(1) units(2);
+      }
+   }
+   .usa-table {
+      width: 100%; 
+      caption {
+         margin-bottom: 0; 
+      }
+      .table-field-center-aligned  {
+         text-align: center; 
+      }
+      .template-statistics-table-template-name {
+         padding-left: units(4);
+         display: inline-block;
+         background-repeat: no-repeat;
+         background-image: url(../img/material-icons/description.svg);
+      }
+   }
+}
+
+.dashboard-table {
+   .file-list-filename {
+      font-weight: bold;
+   }
+   .file-list-hint {
+      margin: 0; 
+   }
+}
+
+// Tabs
+
+.tabs {
+   .pill {
+      display: flex; 
+      list-style: none;
+      padding: 0; 
+      .pill-item__container {
+         border: 1px solid color("gray-cool-10");
+         width: 25%;
+         display: flex; 
+         flex-direction: column; 
+         text-align: center; 
+         font-size: units(2);
+         a { 
+            padding: units(4);
+            .big-number-smaller {
+               font-size: units(5);
+               line-height: units(6);
+            }
+            &:not(.pill-item--selected):hover {
+               background: color("blue-warm-70v");
+            }  
+         }
+      }
+   }
+}
