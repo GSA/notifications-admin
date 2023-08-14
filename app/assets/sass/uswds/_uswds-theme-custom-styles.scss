@@ -128,26 +128,20 @@ td.table-empty-message {
    box-shadow: none;
 }
 
-// .template-list-item-without-ancestors a.template-list-folder:first-of-type {
-//    background: url(../img/material-icons/folder.svg) no-repeat;
-// }
-
 .folder-heading a.folder-heading-folder,
 .template-list-folder {
    background: url(../img/material-icons/folder.svg) no-repeat;
    padding-left: units(4);
    display: inline-block; 
-   height: units(4);
-   &:hover {
-      background: url(../img/material-icons/folder.svg) no-repeat;
-   }
+   background-position: 0;
 }
 
 .folder-heading-folder {
-   background: url(../img/material-icons/folder.svg) no-repeat;
+   background: url(../img/material-icons/folder_open.svg) no-repeat;
    padding-left: units(4);
    display: inline-block;
-   height: units(4);
+   background-size: units(3) units(3);
+   background-position: 0;
 }
 
 .message-name-separator:before, .folder-heading-separator:before {
@@ -155,15 +149,10 @@ td.table-empty-message {
    margin: 0 units(0.5);
 }
 
-.folder-heading a.folder-heading-folder-truncated {
-   background-position: 0;
-}
-
 .usa-template-list-template {
    background: url(../img/material-icons/description.svg) no-repeat;
    padding-left: units(4);
    display: inline-flex; 
-   height: units(4);
 }
 
 .template-list-item-hint {
@@ -187,10 +176,8 @@ td.table-empty-message {
 }
 
 .js-stick-at-bottom-when-scrolling {
-   margin: 0 0 units(5);
-   padding: units(2) 0;
    display: flex;
-   align-items: center;
+   align-items: flex-end;
    justify-content: space-between;
    overflow: visible;
    button {
@@ -280,12 +267,22 @@ td.table-empty-message {
 }
 
 .dashboard-table {
+   table {
+      width: 100%; 
+   }
    .file-list-filename {
       font-weight: bold;
    }
    .file-list-hint {
       margin: 0; 
    }
+}
+
+#template-list {
+   max-height: 500px;
+   overflow-y: auto;
+   padding-left: units(1);
+   margin: units(2) 0; 
 }
 
 // Tabs

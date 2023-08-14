@@ -41,8 +41,8 @@
     {% if is_collapsible %}
     <div class="selection-summary" role="region" aria-live="polite"></div>
     {% endif %}
-    <fieldset id="{{ field.id }}" {% if inline %}class="inline"{% endif %}>
-      <legend class="{{ 'form-label' if not hide_legend else '' }}{% if legend_style != 'text' %} {{ legend_style }}{% endif %}">
+    <fieldset id="{{ field.id }}" class="usa-fieldset" {% if inline %}class="inline"{% endif %}>
+      <legend class="{{ 'usa-legend' if not hide_legend else '' }}{% if legend_style != 'text' %} {{ legend_style }}{% endif %}">
         {% if hide_legend %}<span class="usa-sr-only">{% endif %}
           {{ field.label.text|safe }}
         {% if hide_legend %}</span>{% endif %}
@@ -64,12 +64,12 @@
 
 {% macro select_input(option, disable=[], option_hints={}, data_target=None, as_list_item=False, input="radio") %}
   {% if as_list_item %}
-  <li class="multiple-choice" {% if data_target %}data-target="{{ data_target }}"{% endif %}>
+  <li class="multiple-choice test-one" {% if data_target %}data-target="{{ data_target }}"{% endif %}>
   {% else %}
-  <div class="multiple-choice" {% if data_target %}data-target="{{ data_target }}"{% endif %}>
+  <div class="usa-radio" {% if data_target %}data-target="{{ data_target }}"{% endif %}>
   {% endif %}
     <input
-      id="{{ option.id }}" name="{{ option.name }}" type="{{ input }}" value="{{ option.data }}"
+      id="{{ option.id }}" class="usa-radio__input" name="{{ option.name }}" type="{{ input }}" value="{{ option.data }}"
       {% if option.data in disable %}
         disabled
       {% endif %}
@@ -77,7 +77,7 @@
         checked
       {% endif %}
     >
-    <label class="block-label" for="{{ option.id }}">
+    <label class="usa-radio__label" for="{{ option.id }}">
       {{ option.label.text }}
       {% if option_hints[option.data] %}
         <div class="block-label-hint">

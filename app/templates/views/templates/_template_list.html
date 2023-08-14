@@ -57,13 +57,11 @@
             </span>
           </a>
           {% endif %}
+          <span id="{{ item.id }}-item-hint" class="usa-checkbox__label-description template-list-item-hint">
+            {{ item.hint }}
+          </span>
       {% endset %}
 
-      {% set item_meta %}
-        <span id="{{ item.id }}-item-hint" class="usa-hint template-list-item-hint">
-          {{ item.hint }}
-        </span>
-      {% endset %}
 
       {# create the item config now to include the label content -#}
       {# TODO: "attributes": { "aria-describedby": item.id ~ "-hint" } needs to be added but govuk-frontend-jinja doesn't currently support this -#}
