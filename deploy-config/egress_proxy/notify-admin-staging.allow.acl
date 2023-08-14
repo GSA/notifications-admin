@@ -1,6 +1,2 @@
-s3-fips.us-east-1.amazonaws.com
-s3-fips.us-east-2.amazonaws.com
-s3-fips.us-west-1.amazonaws.com
-s3-fips.us-west-2.amazonaws.com
 gov-collector.newrelic.com
 egress-proxy-notify-admin-staging.apps.internal
