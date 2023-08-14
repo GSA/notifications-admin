@@ -1,6 +1,17 @@
 import botocore
 from boto3 import Session
+from botocore.config import Config
 from flask import current_app
+
+AWS_CLIENT_CONFIG = Config(
+    # This config is required to enable S3 to connect to FIPS-enabled
+    # endpoints.  See https://aws.amazon.com/compliance/fips/ for more
+    # information.
+    s3={
+        'addressing_style': 'virtual',
+    },
+    use_fips_endpoint=True
+)
 
 
 def get_s3_object(
@@ -11,8 +22,12 @@ def get_s3_object(
     region,
 ):
     # To inspect contents: obj.get()['Body'].read().decode('utf-8')
-    session = Session(aws_access_key_id=access_key, aws_secret_access_key=secret_key, region_name=region)
-    s3 = session.resource('s3')
+    session = Session(
+        aws_access_key_id=access_key,
+        aws_secret_access_key=secret_key,
+        region_name=region
+    )
+    s3 = session.resource('s3', config=AWS_CLIENT_CONFIG)
     obj = s3.Object(bucket_name, filename)
     return obj
 
