@@ -18,17 +18,13 @@
     <div class="grid-col-9">
       {{ page_header('Send text messages') }}
       <p>
+        You may send up to 250,000 text messages during the pilot period.
+      </p>
+      <!--<p>
         You have a free allowance of
         {{ '{:,}'.format(current_service.free_sms_fragment_limit) }} text messages each
         financial year.
-      </p>
-      <!-- <p>
-        It costs 1.58 pence (plus VAT) for each text message you send
-        after your free allowance.
-      </p> -->
-      <p>
-        See <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for(".pricing") }}">pricing</a> for more details.
-      </p>
+      </p>-->
       {% call form_wrapper() %}
         {{ form.enabled }}
         {{ page_footer('Save') }}

@@ -1,5 +1,14 @@
 # Notify Sprint Goals Log
 
+## Sprint: P (8/3/23)
+
+|             | Goals                                                                                                                              | Impact                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| Engineering | (Due to low engineering availability, the goals from last sprint continue) Reduce [technical debt](https://github.com/GSA/notifications-api/issues/361) and stabilize application; carry out rigorous [testing](https://github.com/GSA/notifications-api/issues/312) of features and [infrastructure](https://github.com/GSA/notifications-api/issues/87); solve known [bugs](https://github.com/GSA/notifications-api/issues/360)    |   Increase app reliability prior to first partner use                                |
+| UX          | Analyze data gathered from user-testing and propose changes from that analyzation; Hone a visual brand strategy for proposal to leadership    | Improve upon oft-identified user barriers; create a consisten look and feel for Notify.gov         |
+| Security    | Respond to any assessment questions and/or needs (assessment is nearing end)                                                 | Keep the LATO award timeline as short as possible|
+| Content    | Collate research to inform future best practices content | Have content ready for later addition to the site
+
 ## Sprint: Osprey (7/19/23)
 
 |             | Goals                                                                                                                              | Impact                                                                                                                                     |
