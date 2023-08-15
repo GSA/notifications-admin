@@ -601,7 +601,7 @@ def test_get_manage_folder_viewing_permissions_for_users(
     assert normalize_spaces(page.select_one('title').text) == (
         'folder_two – Templates – service one – Notify.gov'
     )
-    form_labels = page.select('legend.govuk-fieldset__legend')
+    form_labels = page.select('legend.usa-legend')
     assert normalize_spaces(form_labels[0].text) == "Team members who can see this folder"
     checkboxes = page.select('input[name=users_with_permission]')
 

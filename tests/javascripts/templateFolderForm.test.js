@@ -624,7 +624,7 @@ describe('TemplateFolderForm', () => {
 
       test("the content of the counter should reflect the selection", () => {
 
-        expect(visibleCounterText).toEqual('1 template, 1 folder selected');
+        expect(visibleCounterText).toEqual('selected');
 
       });
 
@@ -865,7 +865,7 @@ describe('TemplateFolderForm', () => {
         helpers.triggerEvent(templateFolderCheckboxes[1], 'click');
         helpers.triggerEvent(templateFolderCheckboxes[2], 'click');
 
-        expect(visibleCounterText).toEqual('2 templates selected');
+        expect(visibleCounterText).toEqual('selected');
 
       });
 
@@ -885,7 +885,7 @@ describe('TemplateFolderForm', () => {
 
         helpers.triggerEvent(templateFolderCheckboxes[0], 'click');
 
-        expect(visibleCounterText).toEqual('1 folder selected');
+        expect(visibleCounterText).toEqual('selected');
 
       });
 

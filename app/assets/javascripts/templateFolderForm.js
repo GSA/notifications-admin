@@ -261,7 +261,7 @@
 
     this.countSelectedCheckboxes = function() {
       const allSelected = this.$form.find('input:checkbox:checked');
-      const templates = allSelected.filter((idx, el) => $(el).siblings('.template-list-template').length > 0).length;
+      const templates = allSelected.filter((idx, el) => $(el).siblings('.usa-template-list-template').length > 0).length;
       const folders = allSelected.filter((idx, el) => $(el).siblings('.template-list-folder').length > 0).length;
       const results = {
         'templates': templates,

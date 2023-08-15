@@ -253,7 +253,7 @@ def test_should_show_live_search_if_list_of_templates_taller_than_screen(
         'Search by name'
     )
 
-    assert len(page.select(search['data-targets'])) == len(page.select('#template-list .usa-label')) == 20
+    assert len(page.select(search['data-targets'])) == len(page.select('#template-list .usa-checkbox')) == 20
 
 
 def test_should_label_search_by_id_for_services_with_api_keys(
@@ -290,7 +290,7 @@ def test_should_show_live_search_if_service_has_lots_of_folders(
         service_id=SERVICE_ONE_ID,
     )
 
-    count_of_templates_and_folders = len(page.select('#template-list .usa-label'))
+    count_of_templates_and_folders = len(page.select('#template-list .usa-checkbox'))
     count_of_folders = len(page.select('.template-list-folder:first-of-type'))
     count_of_templates = count_of_templates_and_folders - count_of_folders
 
