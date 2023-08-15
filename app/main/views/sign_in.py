@@ -59,8 +59,6 @@ def sign_in():
                     return redirect(url_for('.two_factor_sms', next=redirect_url))
                 if user.email_auth:
                     return redirect(url_for('.two_factor_email_sent', next=redirect_url))
-                if user.webauthn_auth:
-                    return redirect(url_for('.two_factor_webauthn', next=redirect_url))
 
         # Vague error message for login in case of user not known, locked, inactive or password not verified
         flash(Markup(

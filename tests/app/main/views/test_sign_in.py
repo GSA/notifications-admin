@@ -192,34 +192,6 @@ def test_process_email_auth_sign_in_return_2fa_template(
     mock_verify_password.assert_called_with(api_user_active_email_auth['id'], 'val1dPassw0rd!')
 
 
-@pytest.mark.parametrize('redirect_url', [
-    None,
-    f'/services/{SERVICE_ONE_ID}/templates',
-])
-def test_process_webauthn_auth_sign_in_redirects_to_webauthn_with_next_redirect(
-    client_request,
-    api_user_active,
-    mocker,
-    mock_verify_password,
-    redirect_url
-):
-    client_request.logout()
-    api_user_active['auth_type'] = 'webauthn_auth'
-    mock_get_user_by_email = mocker.patch('app.user_api_client.get_user_by_email', return_value=api_user_active)
-
-    client_request.post(
-        'main.sign_in',
-        next=redirect_url,
-        _data={
-            'email_address': 'valid@example.gsa.gov',
-            'password': 'val1dPassw0rd!',
-        },
-        _expected_redirect=url_for('.two_factor_webauthn', next=redirect_url)
-    )
-
-    mock_get_user_by_email.assert_called_once_with('valid@example.gsa.gov')
-
-
 def test_should_return_locked_out_true_when_user_is_locked(
     client_request,
     mock_get_user_by_email_locked,

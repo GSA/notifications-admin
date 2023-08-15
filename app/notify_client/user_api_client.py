@@ -132,20 +132,6 @@ class UserApiClient(NotifyAdminAPIClient):
                 return False, e.message
             raise
 
-    @cache.delete('user-{user_id}')
-    def complete_webauthn_login_attempt(self, user_id, is_successful):
-        data = {'successful': is_successful}
-        endpoint = f'/user/{user_id}/complete/webauthn-login'
-        try:
-            current_app.logger.warn(f"Sending webauthn-login for {user_id}")
-            self.post(endpoint, data=data)
-            return True, ''
-        except HTTPError as e:
-            if e.status_code == 403:
-                current_app.logger.error(f"Webauthn-login attempt for {user_id} was invalid")
-                return False, e.message
-            raise
-
     def get_users_for_service(self, service_id):
         endpoint = '/service/{}/users'.format(service_id)
         return self.get(endpoint)['data']
@@ -218,26 +204,6 @@ class UserApiClient(NotifyAdminAPIClient):
     def get_organizations_and_services_for_user(self, user_id):
         endpoint = '/user/{}/organizations-and-services'.format(user_id)
         return self.get(endpoint)
-
-    def get_webauthn_credentials_for_user(self, user_id):
-        endpoint = f'/user/{user_id}/webauthn'
-
-        return self.get(endpoint)['data']
-
-    def create_webauthn_credential_for_user(self, user_id, credential):
-        endpoint = f'/user/{user_id}/webauthn'
-
-        return self.post(endpoint, data=credential.serialize())
-
-    def update_webauthn_credential_name_for_user(self, *, user_id, credential_id, new_name_for_credential):
-        endpoint = f'/user/{user_id}/webauthn/{credential_id}'
-
-        return self.post(endpoint, data={"name": new_name_for_credential})
-
-    def delete_webauthn_credential_for_user(self, *, user_id, credential_id):
-        endpoint = f'/user/{user_id}/webauthn/{credential_id}'
-
-        return self.delete(endpoint)
 
 
 user_api_client = UserApiClient()

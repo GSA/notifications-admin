@@ -163,28 +163,6 @@ def test_user_information_page_shows_change_auth_type_link(
     assert normalize_spaces(link.text) == 'Change authentication for this user'
 
 
-def test_user_information_page_doesnt_show_change_auth_type_link_if_user_on_webauthn(
-    client_request,
-    platform_admin_user,
-    api_user_active,
-    mock_get_organizations_and_services_for_user,
-    mocker
-):
-    client_request.login(platform_admin_user)
-    mocker.patch('app.user_api_client.get_user', side_effect=[
-        platform_admin_user,
-        user_json(id_=api_user_active['id'], name="Apple Bloom", auth_type='webauthn_auth')
-    ], autospec=True)
-
-    page = client_request.get(
-        'main.user_information', user_id=api_user_active['id']
-    )
-    change_auth_url = url_for('main.change_user_auth', user_id=api_user_active['id'])
-
-    link = page.find_all('a', {'href': change_auth_url})
-    assert len(link) == 0
-
-
 @pytest.mark.parametrize('current_auth_type', ['email_auth', 'sms_auth'])
 def test_change_user_auth_preselects_current_auth_type(
     client_request,

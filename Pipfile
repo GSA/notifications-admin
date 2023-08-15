@@ -6,8 +6,7 @@ name = "pypi"
 [packages]
 ago = "~=0.0.95"
 blinker = "~=1.4"
-exceptiongroup = "==1.1.2"
-fido2 = "~=0.9"
+exceptiongroup = "==1.1.3"
 flask = "~=2.3"
 flask-basicauth = "~=0.2"
 flask-login = "~=0.6"
@@ -37,6 +36,8 @@ newrelic = "*"
 flask-talisman = "*"
 notifications-utils = {editable = true, ref = "main", git = "https://github.com/GSA/notifications-utils.git"}
 coverage = "*"
+pytest-playwright = "*"
+radon = "==6.0.1"
 
 [dev-packages]
 isort = "==5.12.0"

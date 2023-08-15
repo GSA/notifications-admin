@@ -11,11 +11,7 @@
 {% endif %}
 
 {% if service_has_email_auth %}
-  {% if user.webauthn_auth %}
-    <p class="bottom-gutter govuk-body">
-      This user will login with a security key.
-    </p>
-  {% elif not mobile_number %}
+  {% if not mobile_number %}
     {{ radios(
       form.login_authentication,
       disable=['sms_auth'],

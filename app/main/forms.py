@@ -1058,10 +1058,6 @@ class BasePermissionsForm(StripWhitespaceForm):
             login_authentication=user.auth_type
         )
 
-        # If a user logs in with a security key, we generally don't want a service admin to be able to change this.
-        # As well as enforcing this in the backend, we need to delete the auth radios to prevent validation errors.
-        if user.webauthn_auth:
-            del form.login_authentication
         return form
 
 
