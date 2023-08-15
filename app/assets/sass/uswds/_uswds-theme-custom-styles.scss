@@ -136,6 +136,16 @@ td.table-empty-message {
    background-position: 0;
 }
 
+.usa-checkbox .usa-checkbox__label {
+   + a.template-list-folder, + a.usa-template-list-template {
+      margin-left: units(4);
+   }
+}
+
+.usa-checkbox__label-description {
+   margin: units(2px) 0 units(1) units(4);
+}
+
 .folder-heading-folder {
    background: url(../img/material-icons/folder_open.svg) no-repeat;
    padding-left: units(4);
@@ -273,12 +283,20 @@ td.table-empty-message {
    .file-list-hint {
       margin: 0; 
    }
+   .table-field, .table-field-right-aligned {
+      width: 50%; 
+   }
+   &.usage-table {
+      .table-field, .table-field-left-aligned, .table-field-right-aligned {
+         width: auto; 
+      }
+   }
 }
 
 #template-list {
    max-height: 500px;
    overflow-y: auto;
-   padding-left: units(1);
+   padding: units(1) 0 units(1) units(1);
    margin: units(2) 0 units(5);
    ul {
       padding: 0; 
@@ -296,7 +314,7 @@ td.table-empty-message {
       padding: 0; 
       .pill-item__container {
          border: 1px solid color("gray-cool-10");
-         width: 25%;
+         flex: 1; 
          display: flex; 
          flex-direction: column; 
          text-align: center; 
@@ -306,6 +324,9 @@ td.table-empty-message {
             .big-number-smaller {
                font-size: units(5);
                line-height: units(6);
+            }
+            .big-number-smallest {
+               font-size: units(3);
             }
             &:not(.pill-item--selected):hover {
                background: color("blue-warm-70v");
