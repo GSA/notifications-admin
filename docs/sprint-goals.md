@@ -1,6 +1,16 @@
 # Notify Sprint Goals Log
 
-## Sprint: P (8/3/23)
+## Sprint: Q (8/17/23)
+
+|             | Goals                                                                                                                              | Impact                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| Engineering | Continue app stabilization efforts, including: [Completing UK stylesheet removal] (https://github.com/GSA/notifications-admin/issues/686), [Removing GDS libraries](https://github.com/GSA/notifications-admin/issues/674), and working to improve documentation    |   Increase app reliability and simplicity prior to first partner use                                |
+| UX          | Hone a visual brand strategy for proposal to leadership, ensure that USWDS elements are rendering properly    | Consistent look and feel for Notify.gov, smooth, non-glitchy experience for users         |
+| Security    | Begin scoping and planning for addressing LATO findings                                               | Complete resolving POA&Ms in their designated timeline|
+| Content    | Use research and user test information to begin crafting more concise content | Have content ready for later addition to the site
+
+
+## Sprint: Puffin (8/3/23)
 
 |             | Goals                                                                                                                              | Impact                                                                                                                                     |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
