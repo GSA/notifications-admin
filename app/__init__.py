@@ -349,7 +349,7 @@ def make_session_permanent():
     """
     Make sessions permanent. By permanent, we mean "admin app sets when it expires". Normally the cookie would expire
     whenever you close the browser. With this, the session expiry is set in `config['PERMANENT_SESSION_LIFETIME']`
-    (20 hours) and is refreshed after every request. IE: you will be logged out after twenty hours of inactivity.
+    (30 min) and is refreshed after every request. IE: you will be logged out after thirty minutes of inactivity.
 
     We don't _need_ to set this every request (it's saved within the cookie itself under the `_permanent` flag), only
     when you first log in/sign up/get invited/etc, but we do it just to be safe. For more reading, check here:
