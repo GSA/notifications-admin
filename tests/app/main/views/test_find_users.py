@@ -36,7 +36,8 @@ def test_find_users_by_email_displays_users_found(
     assert any(element.text.strip() == 'test@gsa.gov' for element in document.find_all(
         'a', {'class': 'browse-list-link'}, href=True)
     )
-    assert any(element.text.strip() == 'Test User' for element in document.find_all('span', {'class': 'browse-list-hint'}))
+    assert any(element.text.strip() == 'Test User' for element in document.find_all(
+        'span', {'class': 'browse-list-hint'}))
 
     assert document.find('a', {'class': 'browse-list-link'}).text.strip() == 'test@gsa.gov'
     assert document.find('span', {'class': 'browse-list-hint'}).text.strip() == 'Test User'
@@ -74,7 +75,7 @@ def test_find_users_by_email_displays_message_if_no_users_found(
         'main.find_users_by_email', _data={"search": "twilight.sparkle"}, _expected_status=200
     )
 
-    assert document.find('span', {'class': 'browse-list-hint'}).text.strip() == 'No users found.'
+    assert document.find('p', {'class': 'browse-list-hint'}).text.strip() == 'No users found.'
 
 
 def test_find_users_by_email_validates_against_empty_search_submission(
