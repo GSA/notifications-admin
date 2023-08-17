@@ -16,20 +16,16 @@
 
   {% call form_wrapper(
       action=url_for('.find_services_by_name'),
-      class='govuk-grid-row'
+      class='usa-search margin-bottom-4'
   ) %}
-    <div class="govuk-grid-column-three-quarters">
       {{ form.search(param_extensions={
         "label": {"text": "Find services by name, partial name, or service ID"}
       }) }}
-    </div>
-    <div class="govuk-grid-column-one-quarter">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       {{ govukButton({
         "text": "Search",
-        "classes": "search-form__button"
+        "classes": "usa-button search-form__button"
       }) }}
-    </div>
   {% endcall %}
 
   {% call form_wrapper(id='search-form' ) %}
@@ -43,7 +39,6 @@
       <li class="browse-list-item">
         <a href="{{url_for('.service_dashboard', service_id=service.id)}}" class="usa-link">{{ service.name }}</a>
       </li>
-      <hr>
     {% endfor %}
     </ul>
   </nav>

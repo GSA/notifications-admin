@@ -20,11 +20,11 @@
   {{ page_header('Change billing details') }}
 
   {% call form_wrapper() %}
-    {{ form.billing_contact_names(param_extensions={"classes": "govuk-!-width-full"}) }}
-    {{ form.billing_contact_email_addresses(param_extensions={"classes": "govuk-!-width-full"}) }}
+    {{ form.billing_contact_names(param_extensions={"classes": ""}) }}
+    {{ form.billing_contact_email_addresses(param_extensions={"classes": ""}) }}
   <div class="extra-tracking">
-      {{ form.billing_reference(param_extensions={"classes": "govuk-!-width-full"}) }}
-      {{ form.purchase_order_number(param_extensions={"classes": "govuk-!-width-full"}) }}
+      {{ form.billing_reference(param_extensions={"classes": ""}) }}
+      {{ form.purchase_order_number(param_extensions={"classes": ""}) }}
   </div>
     {{ textbox(
       form.notes,

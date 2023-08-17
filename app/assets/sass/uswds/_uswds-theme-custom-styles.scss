@@ -47,6 +47,12 @@ p,
    font-size: size("body", 6);
 }
 
+ul {
+   padding: 0; 
+   margin: 0;
+   list-style: none; 
+}
+
 .large-number {
    font-size: size("body", 16);
 }
@@ -354,4 +360,20 @@ td.table-empty-message {
          }
       }
    }
+}
+
+// Etc
+
+.email-brand, .browse-list {
+   padding: 0; 
+   margin: 0; 
+   list-style: none; 
+   margin-bottom: units(2);
+   li {
+      padding: 8px 0; 
+   }
+}
+
+details form {
+   box-sizing:border-box;
 }

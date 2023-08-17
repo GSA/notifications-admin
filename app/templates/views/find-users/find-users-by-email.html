@@ -16,20 +16,16 @@
 
   {% call form_wrapper(
       action=url_for('.find_users_by_email'),
-      class='govuk-grid-row'
+      class='usa-search margin-bottom-4'
   ) %}
-    <div class="govuk-grid-column-three-quarters">
       {{ form.search(param_extensions={
             "label": {"text": "Find users by email, or by partial email"}
       }) }}
-    </div>
-    <div class="govuk-grid-column-one-quarter">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       {{ govukButton({
         "text": "Search",
         "classes": "search-form__button"
       }) }}
-    </div>
   {% endcall %}
 
   {% call form_wrapper(id='search-form' ) %}
@@ -42,9 +38,9 @@
     {% for user in users_found %}
       <li class="browse-list-item">
         <a href="{{url_for('.user_information', user_id=user.id)}}" class="usa-link browse-list-link">{{ user.email_address }}</a>
-        <p class="browse-list-hint">{{ user.name }}</p>
+        <span>  -  </span>
+        <span class="browse-list-hint">{{ user.name }}</span>
       </li>
-      <hr>
     {% endfor %}
     </ul>
   </nav>

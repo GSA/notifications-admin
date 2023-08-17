@@ -20,7 +20,7 @@
       {{ form.start_date(param_extensions={"hint": {"text":"Enter start date in format YYYY-MM-DD"}}) }}
       {{ form.end_date(param_extensions={"hint": {"text":"Enter end date in format YYYY-MM-DD"}}) }}
       </br>
-      {{ govukButton({ "text": "Filter" }) }}
+      {{ govukButton({ "text": "Filter", "classes": "margin-y-2" }) }}
     {% endcall %}
   {% endset %}
 

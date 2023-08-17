@@ -233,7 +233,7 @@ def test_should_show_live_search_if_more_than_7_users(
     assert 'data-module' not in textbox
     assert not page.select_one('[data-force-focus]')
     assert textbox['class'] == [
-        'usa-input', 'govuk-!-width-full',
+        'usa-input',
     ]
     assert normalize_spaces(
         page.select_one('label[for=search]').text

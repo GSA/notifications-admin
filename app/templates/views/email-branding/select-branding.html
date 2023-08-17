@@ -12,17 +12,17 @@
 {% block platform_admin_content %}
 
   <h1 class="font-body-2xl">{{ page_title }}</h1>
-  {{ live_search(target_selector='.email-brand', show=True, form=search_form, autofocus=True) }}
+  {{ live_search(target_selector='.message-name', show=True, form=search_form, autofocus=True) }}
   <nav>
-    {% for brand in email_brandings %}
-      <div class="email-brand">
-        <div class="message-name">
+      <ul class="email-brand">
+        {% for brand in email_brandings %}
+        <li class="message-name">
           <a class="usa-link" href="{{ url_for('.update_email_branding', branding_id=brand.id) }}">
             {{ brand.name or 'Unnamed' }}
           </a>
-        </div>
-      </div>
-    {% endfor %}
+        </li>
+        {% endfor %}
+      </ul>
   </nav>
   <div class="js-stick-at-bottom-when-scrolling">
     {{ govukButton({

@@ -7,7 +7,7 @@ in the form $setting: value,
 ----------------------------------------
 */
 
-@use "uswds-core" with (
+@use "uswds-global" with (
    $theme-font-type-sans: "public-sans",
    $theme-show-notifications: false
 );

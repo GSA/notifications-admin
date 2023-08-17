@@ -36,7 +36,7 @@
 
             {{ radio(option, data_target=data_target) }}
             <div class="panel panel-border-narrow js-hidden" id={{data_target}}>
-              {{ form|attr(option.data)(param_extensions={"classes": "govuk-!-width-full", "label": {"text": " "}}) }}
+              {{ form|attr(option.data)(param_extensions={"classes": "", "label": {"text": " "}}) }}
             </div>
           {% endfor %}
         {% endcall %}

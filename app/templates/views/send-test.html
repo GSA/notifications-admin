@@ -25,7 +25,7 @@
   ) %}
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full {% if form.placeholder_value.label.text == 'phone number' %}extra-tracking{% endif %}">
-        {{ form.placeholder_value(param_extensions={"classes": "govuk-!-width-full"}) }}
+        {{ form.placeholder_value(param_extensions={"classes": ""}) }}
       </div>
       {% if skip_link or link_to_upload %}
         <div class="govuk-grid-column-full">

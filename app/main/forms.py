@@ -313,7 +313,7 @@ class GovukSearchField(SearchField):
     # this bypasses that by making self.widget a method with the same interface as widget.__call__
     def widget(self, field, param_extensions=None, **kwargs):
 
-        params = {"classes": "govuk-!-width-full"}  # email addresses don't need to be spellchecked
+        params = {"classes": ""}  # email addresses don't need to be spellchecked
         merge_jsonlike(params, param_extensions)
 
         return govuk_text_input_field_widget(self, field, type="search", param_extensions=params, **kwargs)

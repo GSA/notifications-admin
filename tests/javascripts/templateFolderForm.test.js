@@ -56,7 +56,7 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
                     <label class="govuk-label" for="move_to_new_folder_name">
                       Folder name
                     </label>
-                    <input class="govuk-input govuk-!-width-full" id="move_to_new_folder_name" name="move_to_new_folder_name" type="text">
+                    <input class="govuk-input " id="move_to_new_folder_name" name="move_to_new_folder_name" type="text">
                   </div>
                   <div class="page-footer">
                     <button type="submit" class="usa-button" name="operation" value="move-to-new-folder">Add to new folder</button>
@@ -69,7 +69,7 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
                     <label class="govuk-label" for="add_new_folder_name">
                       Folder name
                     </label>
-                    <input class="govuk-input govuk-!-width-full" id="add_new_folder_name" name="add_new_folder_name" type="text">
+                    <input class="govuk-input " id="add_new_folder_name" name="add_new_folder_name" type="text">
                   </div>
                   <div class="page-footer">
                     <button type="submit" class="usa-button page-footer__button" name="operation" value="add-new-folder">Add new folder</button>
