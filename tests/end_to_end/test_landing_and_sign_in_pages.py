@@ -2,7 +2,6 @@ import os
 import re
 
 import pyotp
-
 from playwright.sync_api import expect
 
 
