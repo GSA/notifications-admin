@@ -87,6 +87,7 @@ NOTIFY_E2E_TEST_HTTP_AUTH_USER         # This is optional
 NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD     # This is optional
 NOTIFY_E2E_TEST_EMAIL
 NOTIFY_E2E_TEST_PASSWORD
+NOTIFY_E2E_AUTH_STATE_PATH
 ```
 
 This file is **not** checked into source control and is configured to be
@@ -163,6 +164,7 @@ NOTIFY_E2E_TEST_HTTP_AUTH_USER         # This is optional
 NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD     # This is optional
 NOTIFY_E2E_TEST_EMAIL
 NOTIFY_E2E_TEST_PASSWORD
+NOTIFY_E2E_AUTH_STATE_PATH
 ```
 
 These are only set for the Admin site in GitHub, but must be set

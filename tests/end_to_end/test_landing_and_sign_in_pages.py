@@ -12,7 +12,7 @@ def test_landing_page(end_to_end_context):
     page.goto(os.getenv('NOTIFY_E2E_TEST_URI'))
 
     # Check to make sure that we've arrived at the next page.
-    page.wait_for_load_state('networkidle')
+    page.wait_for_load_state('domcontentloaded')
 
     # Check the page title exists and matches what we expect.
     expect(page).to_have_title(re.compile('Notify.gov'))
@@ -66,7 +66,7 @@ def test_sign_in_and_mfa_pages(end_to_end_context):
     sign_in_button.click()
 
     # Check to make sure that we've arrived at the next page.
-    page.wait_for_load_state('networkidle')
+    page.wait_for_load_state('domcontentloaded')
 
     # Check the page title exists and matches what we expect.
     expect(page).to_have_title(re.compile('Sign in'))
@@ -121,7 +121,7 @@ def test_sign_in_and_mfa_pages(end_to_end_context):
     continue_button.click()
 
     # Wait for the next page to fully load.
-    page.wait_for_load_state('networkidle')
+    page.wait_for_load_state('domcontentloaded')
 
     # Check the page title exists and matches what we expect.
     expect(page).to_have_title(re.compile('Check your phone'))
@@ -179,10 +179,9 @@ def test_sign_in_and_mfa_pages(end_to_end_context):
     continue_button.click()
 
     # Check to make sure that we've arrived at the next page.
-    page.wait_for_load_state('networkidle')
+    page.wait_for_load_state('domcontentloaded')
 
     # Check the page title exists and matches what we expect.
-    expect(page).to_have_title(re.compile('Dashboard'))
-
-    # Save storage state into the file.
-    end_to_end_context.storage_state(path='state.json')
+    # This could be either the Dashboard of a service if there is only
+    # one, or choosing a service if there are multiple.
+    expect(page).to_have_title(re.compile('Dashboard|Choose service'))

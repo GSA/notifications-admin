@@ -3361,7 +3361,7 @@ def login_for_end_to_end_testing(browser):
     sign_in_button.click()
 
     # Wait for the next page to fully load.
-    page.wait_for_load_state('networkidle')
+    page.wait_for_load_state('domcontentloaded')
 
     # Check for the sign in form elements.
     # NOTE:  Playwright cannot find input elements by role and recommends using
@@ -3380,7 +3380,7 @@ def login_for_end_to_end_testing(browser):
     continue_button.click()
 
     # Wait for the next page to fully load.
-    page.wait_for_load_state('networkidle')
+    page.wait_for_load_state('domcontentloaded')
 
     # Check for the sign in form elements.
     # NOTE:  Playwright cannot find input elements by role and recommends using
@@ -3401,10 +3401,14 @@ def login_for_end_to_end_testing(browser):
     mfa_input.fill(totp.now())
     continue_button.click()
 
-    page.wait_for_load_state('networkidle')
+    page.wait_for_load_state('domcontentloaded')
 
     # Save storage state into the file.
-    context.storage_state(path='state.json')
+    auth_state_path = os.path.join(
+        os.getenv('NOTIFY_E2E_AUTH_STATE_PATH'),
+        'state.json'
+    )
+    context.storage_state(path=auth_state_path)
 
 
 @pytest.fixture(scope='session')
@@ -3427,6 +3431,11 @@ def end_to_end_authenticated_context(browser):
     # Create and load a previously authenticated context for Playwright E2E
     # tests.
     login_for_end_to_end_testing(browser)
-    context = browser.new_context(storage_state='state.json')
+
+    auth_state_path = os.path.join(
+        os.getenv('NOTIFY_E2E_AUTH_STATE_PATH'),
+        'state.json'
+    )
+    context = browser.new_context(storage_state=auth_state_path)
 
     yield context
