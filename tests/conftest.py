@@ -1,11 +1,13 @@
 import copy
 import json
 import os
+import re
 from contextlib import contextmanager
 from datetime import date, datetime, timedelta
 from unittest.mock import Mock, PropertyMock
 from uuid import UUID, uuid4
 
+import pyotp
 import pytest
 from bs4 import BeautifulSoup
 from flask import Flask, url_for
@@ -3347,13 +3349,84 @@ def mock_get_invited_org_user_by_id(mocker, sample_org_invite):
     )
 
 
+def login_for_end_to_end_testing(browser):
+    # Open a new page and go to the staging site.
+    context = browser.new_context()
+    page = context.new_page()
+    page.goto(os.getenv('NOTIFY_E2E_TEST_URI'))
+
+    sign_in_button = page.get_by_role('link', name='Sign in')
+
+    # Test trying to sign in.
+    sign_in_button.click()
+
+    # Wait for the next page to fully load.
+    page.wait_for_load_state('networkidle')
+
+    # Check for the sign in form elements.
+    # NOTE:  Playwright cannot find input elements by role and recommends using
+    #        get_by_label() instead; however, hidden form elements do not have
+    #        labels associated with them, hence the XPath!
+    # See https://playwright.dev/python/docs/api/class-page#page-get-by-label
+    # and https://playwright.dev/python/docs/locators#locate-by-css-or-xpath
+    # for more information.
+    email_address_input = page.get_by_label('Email address')
+    password_input = page.get_by_label('Password')
+    continue_button = page.get_by_role('button', name=re.compile('Continue'))
+
+    # Sign in to the site.
+    email_address_input.fill(os.getenv('NOTIFY_E2E_TEST_EMAIL'))
+    password_input.fill(os.getenv('NOTIFY_E2E_TEST_PASSWORD'))
+    continue_button.click()
+
+    # Wait for the next page to fully load.
+    page.wait_for_load_state('networkidle')
+
+    # Check for the sign in form elements.
+    # NOTE:  Playwright cannot find input elements by role and recommends using
+    #        get_by_label() instead; however, hidden form elements do not have
+    #        labels associated with them, hence the XPath!
+    # See https://playwright.dev/python/docs/api/class-page#page-get-by-label
+    # and https://playwright.dev/python/docs/locators#locate-by-css-or-xpath
+    # for more information.
+    mfa_input = page.get_by_label('Text message code')
+    continue_button = page.get_by_role('button', name=re.compile('Continue'))
+
+    # Enter MFA code and continue.
+    totp = pyotp.TOTP(
+        os.getenv('MFA_TOTP_SECRET'),
+        digits=int(os.getenv('MFA_TOTP_LENGTH'))
+    )
+
+    mfa_input.fill(totp.now())
+    continue_button.click()
+
+    page.wait_for_load_state('networkidle')
+
+    # Save storage state into the file.
+    context.storage_state(path='state.json')
+
+
 @pytest.fixture(scope='session')
-def end_to_end_auth_context(browser):
+def end_to_end_context(browser):
     # Create a context with HTTP Authentication credentials for Playwright E2E
+    # tests, if the environment variables exist.
+    if os.getenv('NOTIFY_E2E_TEST_HTTP_AUTH_USER'):
+        context = browser.new_context(http_credentials={
+            'username': os.getenv('NOTIFY_E2E_TEST_HTTP_AUTH_USER'),
+            'password': os.getenv('NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD'),
+        })
+    else:
+        context = browser.new_context()
+
+    yield context
+
+
+@pytest.fixture(scope='session')
+def end_to_end_authenticated_context(browser):
+    # Create and load a previously authenticated context for Playwright E2E
     # tests.
-    context = browser.new_context(http_credentials={
-        'username': os.environ.get('NOTIFY_STAGING_HTTP_AUTH_USER'),
-        'password': os.environ.get('NOTIFY_STAGING_HTTP_AUTH_PASSWORD'),
-    })
+    login_for_end_to_end_testing(browser)
+    context = browser.new_context(storage_state='state.json')
 
     yield context
