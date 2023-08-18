@@ -25,6 +25,7 @@ from tests.conftest import (
         create_active_user_with_permissions(),
         (
             'Test User (you) '
+            'Permissions '
             'Can See dashboard '
             'Can Send messages '
             'Can Add and edit templates '
@@ -33,6 +34,7 @@ from tests.conftest import (
         ),
         (
             'ZZZZZZZZ zzzzzzz@example.gsa.gov '
+            'Permissions '
             'Can See dashboard '
             'Cannot Send messages '
             'Cannot Add and edit templates '
@@ -45,6 +47,7 @@ from tests.conftest import (
         create_active_user_empty_permissions(),
         (
             'Test User With Empty Permissions (you) '
+            'Permissions '
             'Cannot See dashboard '
             'Cannot Send messages '
             'Cannot Add and edit templates '
@@ -53,6 +56,7 @@ from tests.conftest import (
         ),
         (
             'ZZZZZZZZ zzzzzzz@example.gsa.gov '
+            'Permissions '
             'Can See dashboard '
             'Cannot Send messages '
             'Cannot Add and edit templates '
@@ -64,6 +68,7 @@ from tests.conftest import (
         create_active_user_view_permissions(),
         (
             'Test User With Permissions (you) '
+            'Permissions '
             'Can See dashboard '
             'Cannot Send messages '
             'Cannot Add and edit templates '
@@ -72,25 +77,7 @@ from tests.conftest import (
         ),
         (
             'ZZZZZZZZ zzzzzzz@example.gsa.gov '
-            'Can See dashboard '
-            'Cannot Send messages '
-            'Cannot Add and edit templates '
-            'Cannot Manage settings, team and usage '
-            'Cannot Manage API integration'
-        )
-    ),
-    (
-        create_active_user_manage_template_permissions(),
-        (
-            'Test User With Permissions (you) '
-            'Can See dashboard '
-            'Cannot Send messages '
-            'Can Add and edit templates '
-            'Cannot Manage settings, team and usage '
-            'Cannot Manage API integration'
-        ),
-        (
-            'ZZZZZZZZ zzzzzzz@example.gsa.gov '
+            'Permissions '
             'Can See dashboard '
             'Cannot Send messages '
             'Cannot Add and edit templates '
@@ -102,6 +89,7 @@ from tests.conftest import (
         create_active_user_manage_template_permissions(),
         (
             'Test User With Permissions (you) '
+            'Permissions '
             'Can See dashboard '
             'Cannot Send messages '
             'Can Add and edit templates '
@@ -110,6 +98,28 @@ from tests.conftest import (
         ),
         (
             'ZZZZZZZZ zzzzzzz@example.gsa.gov '
+            'Permissions '
+            'Can See dashboard '
+            'Cannot Send messages '
+            'Cannot Add and edit templates '
+            'Cannot Manage settings, team and usage '
+            'Cannot Manage API integration'
+        )
+    ),
+    (
+        create_active_user_manage_template_permissions(),
+        (
+            'Test User With Permissions (you) '
+            'Permissions '
+            'Can See dashboard '
+            'Cannot Send messages '
+            'Can Add and edit templates '
+            'Cannot Manage settings, team and usage '
+            'Cannot Manage API integration'
+        ),
+        (
+            'ZZZZZZZZ zzzzzzz@example.gsa.gov '
+            'Permissions '
             'Can See dashboard '
             'Cannot Send messages '
             'Cannot Add and edit templates '
@@ -267,6 +277,7 @@ def test_should_show_caseworker_on_overview_page(
     assert normalize_spaces(page.select_one('h1').text) == 'Team members'
     assert normalize_spaces(page.select('.user-list-item')[0].text) == (
         'Test User With Permissions (you) '
+        'Permissions '
         'Can See dashboard '
         'Cannot Send messages '
         'Cannot Add and edit templates '
@@ -276,6 +287,7 @@ def test_should_show_caseworker_on_overview_page(
     # [1:5] are invited users
     assert normalize_spaces(page.select('.user-list-item')[6].text) == (
         'Test User zzzzzzz@example.gsa.gov '
+        'Permissions '
         'Cannot See dashboard '
         'Can Send messages '
         'Cannot Add and edit templates '
@@ -1154,6 +1166,7 @@ def test_cancel_invited_user_doesnt_work_if_user_not_invited_to_this_service(
 @pytest.mark.parametrize('invite_status, expected_text', [
     ('pending', (
         'invited_user@test.gsa.gov (invited) '
+        'Permissions '
         'Can See dashboard '
         'Can Send messages '
         'Cannot Add and edit templates '
@@ -1163,6 +1176,7 @@ def test_cancel_invited_user_doesnt_work_if_user_not_invited_to_this_service(
     )),
     ('cancelled', (
         'invited_user@test.gsa.gov (cancelled invite) '
+        'Permissions '
         # all permissions are greyed out
         'Cannot See dashboard '
         'Cannot Send messages '

@@ -20,7 +20,7 @@ function getRadios (fields, name) {
 function getRadioGroup (data) {
   let radioGroup = document.createElement('div');
 
-  radioGroup.classList.add('govuk-form-group');
+  radioGroup.classList.add('usa-form-group');
   if ('cssClasses' in data) {
     data.cssClasses.forEach(cssClass => radioGroup.classList.add(cssClass));
   }

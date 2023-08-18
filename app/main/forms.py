@@ -511,7 +511,7 @@ class NestedFieldMixin:
                 }
             },
             "formGroup": {
-                "classes": "govuk-form-group--nested"
+                "classes": "usa-form-group--nested"
             },
             "asList": True,
             "items": []
@@ -720,7 +720,6 @@ def govuk_checkboxes_field_widget(self, field, wrap_in_collapsible=False, param_
             "attributes": {"id": field.name},
             "legend": {
                 "text": field.label.text,
-                "classes": "govuk-fieldset__legend--s"
             }
         },
         "asList": self.render_as_list,

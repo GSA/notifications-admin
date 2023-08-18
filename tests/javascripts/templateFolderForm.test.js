@@ -52,7 +52,7 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
               </div>
               <div id="move_to_new_folder_form" class="sticky-template-form" role="region" aria-label="Enter name of the new folder to move selected items to">
                 <div class="js-will-stick-at-bottom-when-scrolling">
-                  <div class="govuk-form-group">
+                  <div class="usa-form-group">
                     <label class="govuk-label" for="move_to_new_folder_name">
                       Folder name
                     </label>
@@ -65,7 +65,7 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
               </div>
               <div id="add_new_folder_form" class="sticky-template-form" role="region" aria-label="Enter name of the new folder">
                 <div class="js-will-stick-at-bottom-when-scrolling">
-                  <div class="govuk-form-group">
+                  <div class="usa-form-group">
                     <label class="govuk-label" for="add_new_folder_name">
                       Folder name
                     </label>

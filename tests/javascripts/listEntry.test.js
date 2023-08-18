@@ -49,7 +49,7 @@ describe("List entry", () => {
       for (let idx = 0; idx < 10; idx++) {
         result += `
             <div class="list-entry">
-              <div class="govuk-form-group">
+              <div class="usa-form-group">
                 <label for="domains-${idx + 1}" class="govuk-label govuk-input--numbered__label">
                   <span class="usa-sr-only">domain number </span>${idx + 1}.
                 </label>
@@ -62,7 +62,7 @@ describe("List entry", () => {
     };
 
     document.body.innerHTML =
-      `<fieldset class="govuk-form-group" aria-describedby="domains-hint">
+      `<fieldset class="usa-form-group" aria-describedby="domains-hint">
         <legend class="govuk-fieldset__legend">
           Domain names
           </span>

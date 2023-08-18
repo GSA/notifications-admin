@@ -357,6 +357,9 @@ td.table-empty-message {
             &:not(.pill-item--selected):hover {
                background: color("blue-warm-70v");
             }  
+            &.pill-item--selected:hover {
+               color: color("blue-60v");
+            }
          }
       }
    }
