@@ -33,7 +33,8 @@ doing this:
 
 1. Run `brew --prefix` to see Homebrew's root directory
 
-1. Create or modify the local `.env` file in the project and add this line:
+1. Create or modify the local `.env` file in the project and add this
+   line:
 
    `NODE_EXTRA_CA_CERTS=/CHANGE-TO-HOMEBREW-INSTALL-PATH/etc/ca-certificates/cert.pem`
 
@@ -56,26 +57,31 @@ your environment is set up and configured as outlined in the README.
 At your shell in the project root folder, run the following commands:
 
 ```sh
-pipenv install pytest-playwright
+pipenv install pytest-playwright --dev
 pipenv run playwright install --with-deps
 ```
 
 This will install Playwright and its `pytest` plugin, then the
 additional dependencies that Playwright requires.
 
-See more details on the [Playwright for Python Installation page](https://playwright.dev/python/docs/intro).
+See more details on the
+[Playwright for Python Installation page](https://playwright.dev/python/docs/intro).
 
 
 ## Local Configuration
 
-In order to run the E2E tests successfully on your local machine, you'll also
-need to make sure you have a `.env` file in the root project folder, and that it
-has at least these environment variables set in it:
+In order to run the E2E tests successfully on your local machine, you'll
+also need to make sure you have a `.env` file in the root project folder
+and that it has at least these environment variables set in it:
 
 ```
-NOTIFY_STAGING_URI
-NOTIFY_STAGING_HTTP_AUTH_USER
-NOTIFY_STAGING_HTTP_AUTH_PASSWORD
+# E2E Test Configuration - only set for the Admin site.
+NOTIFY_E2E_TEST_URI
+NOTIFY_E2E_TEST_HTTP_AUTH_USER         # This is optional
+NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD     # This is optional
+NOTIFY_E2E_TEST_EMAIL
+NOTIFY_E2E_TEST_PASSWORD
+NOTIFY_E2E_AUTH_STATE_PATH
 ```
 
 This file is **not** checked into source control and is configured to be
@@ -99,7 +105,8 @@ tests run in multiple headless browsers.
 ## How to Create and Maintain E2E Tests
 
 All of the E2E tests are found in the `tests/end_to_end` folder and are
-written as `pytest` scripts using [Playwright's Python Framework](https://playwright.dev/python/docs/writing-tests).
+written as `pytest` scripts using
+[Playwright's Python Framework](https://playwright.dev/python/docs/writing-tests).
 
 
 ## Maintaining E2E Tests with GitHub
@@ -117,4 +124,22 @@ This is done for a couple of reasons:
 - Allows us to configure E2E tests separately
 
 The environment variables are managed as a part of the GitHub
-repository settings.
+environment and repository settings.
+
+
+### E2E Environment Variable Management
+
+These are the E2E test environment variables that must be set:
+
+```
+NOTIFY_E2E_TEST_URI
+NOTIFY_E2E_TEST_HTTP_AUTH_USER         # This is optional
+NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD     # This is optional
+NOTIFY_E2E_TEST_EMAIL
+NOTIFY_E2E_TEST_PASSWORD
+NOTIFY_E2E_AUTH_STATE_PATH
+```
+
+These are only set for the Admin site in GitHub, but must be set
+for both GitHub Actions and Dependabot for the same reason as
+the MFA environment variables.
