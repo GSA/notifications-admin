@@ -149,9 +149,9 @@ deployment per environment.  These are added in as environment
 secrets.
 
 These variables also need to be set as repository secrets in the
-Admin site for the E2E tests to run successfully in the CI/CD
-pipeline.  They must be added as repository secrets for both
-GitHub Actions and Dependabot.
+Admin site and API for both the regular tests and E2E tests to
+run successfully in the CI/CD pipeline.  They must be added as
+repository secrets for both GitHub Actions and Dependabot.
 
 
 ### E2E Environment Variable Management
