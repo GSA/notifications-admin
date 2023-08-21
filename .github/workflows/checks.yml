@@ -45,15 +45,15 @@ jobs:
       - name: Run E2E tests
         run: pipenv run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
         env:
-          MFA_TOTP_INTERVAL: ${{ MFA_TOTP_INTERVAL }}
-          MFA_TOTP_LENGTH: ${{ MFA_TOTP_LENGTH }}
-          MFA_TOTP_SECRET: ${{ MFA_TOTP_SECRET }}
-          NOTIFY_E2E_AUTH_STATE_PATH: ${{ NOTIFY_E2E_AUTH_STATE_PATH }}
-          NOTIFY_E2E_TEST_EMAIL: ${{ NOTIFY_E2E_TEST_EMAIL }}
-          NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD: ${{ NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD }}
-          NOTIFY_E2E_TEST_HTTP_AUTH_USER: ${{ NOTIFY_E2E_TEST_HTTP_AUTH_USER }}
-          NOTIFY_E2E_TEST_PASSWORD: ${{ NOTIFY_E2E_TEST_PASSWORD }}
-          NOTIFY_E2E_TEST_URI: ${{ NOTIFY_E2E_TEST_URI }}
+          MFA_TOTP_INTERVAL: ${{ secrets.MFA_TOTP_INTERVAL }}
+          MFA_TOTP_LENGTH: ${{ secrets.MFA_TOTP_LENGTH }}
+          MFA_TOTP_SECRET: ${{ secrets.MFA_TOTP_SECRET }}
+          NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
+          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
+          NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD }}
+          NOTIFY_E2E_TEST_HTTP_AUTH_USER: ${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_USER }}
+          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
+          NOTIFY_E2E_TEST_URI: ${{ secrets.NOTIFY_E2E_TEST_URI }}
       - name: Check coverage threshold
         run: pipenv run coverage report --fail-under=90
 
