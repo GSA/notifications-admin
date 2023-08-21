@@ -180,6 +180,10 @@ def test_sign_in_and_mfa_pages(end_to_end_context):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state('domcontentloaded')
 
+    # Check that no MFA code error happened.
+    code_not_found_error = page.get_by_text('Code not found')
+    expect(code_not_found_error).to_have_count(0)
+
     # Check the page title exists and matches what we expect.
     # This could be either the Dashboard of a service if there is only
     # one, or choosing a service if there are multiple.
