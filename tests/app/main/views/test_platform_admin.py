@@ -534,7 +534,7 @@ def test_platform_admin_splash_doesnt_talk_to_api(
 
     page = client_request.get('main.platform_admin_splash_page')
 
-    assert page.select_one('main .govuk-body a')['href'] == url_for(
+    assert page.select_one('main .usa-body a')['href'] == url_for(
         'main.platform_admin',
     )
 

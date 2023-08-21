@@ -27,7 +27,7 @@
 
   <p class="usa-body">
     {{ user.email_address }}&emsp;
-    <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.edit_user_email', service_id=current_service.id, user_id=user.id)}}">
+    <a class="usa-link " href="{{ url_for('.edit_user_email', service_id=current_service.id, user_id=user.id)}}">
     Change<span class="usa-sr-only"> email address</span>
     </a>
   </p>
@@ -37,7 +37,7 @@
   {% if mobile_number %}
     <p class="usa-body" id="user_mobile_number">
       {{ mobile_number }}&emsp;
-      <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.edit_user_mobile_number', service_id=current_service.id, user_id=user.id)}}">
+      <a class="usa-link " href="{{ url_for('.edit_user_mobile_number', service_id=current_service.id, user_id=user.id)}}">
       Change<span class="usa-sr-only"> mobile number</span>
       </a>
     </p>

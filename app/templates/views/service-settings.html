@@ -206,7 +206,7 @@
       <p>
         {% if current_user.has_permissions('manage_service') %}
           To remove these restrictions, you can send us a
-          <a class="govuk-link govuk-link--no-visited-state" href="mailto:notify-support@gsa.gov">request to go live</a>.
+          <a class="usa-link " href="mailto:notify-support@gsa.gov">request to go live</a>.
         {% else %}
           Your service manager can ask to have these restrictions removed.
         {% endif %}
@@ -222,7 +222,7 @@
       </p>
       <p>
         Problems or comments?
-        <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.support') }}">Give feedback</a>.
+        <a class="usa-link " href="{{ url_for('main.support') }}">Give feedback</a>.
       </p>
 
     {% endif %}
@@ -272,7 +272,7 @@
             {{ text_field('Organization')}}
             {% call field() %}
               {% if current_service.organization_id %}
-                <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.organization_dashboard', org_id=current_service.organization_id) }}">
+                <a class="usa-link " href="{{ url_for('main.organization_dashboard', org_id=current_service.organization_id) }}">
                   {{ current_service.organization_name }}
                 </a>
               {% else %}
@@ -358,13 +358,13 @@
         </span>
         {% if current_user.platform_admin %}
           <span class="page-footer-link">
-            <a href="{{ url_for('.suspend_service', service_id=current_service.id) }}" class="govuk-link govuk-link--destructive page-footer-link">
+            <a href="{{ url_for('.suspend_service', service_id=current_service.id) }}" class="usa-link usa-link--destructive page-footer-link">
                 Suspend service
               </a>
           </span>
 
           <span class="page-footer-link">
-            <a href="{{ url_for('.history', service_id=current_service.id) }}" class="govuk-link govuk-link--no-visited-state page-footer-link">
+            <a href="{{ url_for('.history', service_id=current_service.id) }}" class="usa-link  page-footer-link">
               Service history
             </a>
           </span>
@@ -378,13 +378,13 @@
         </div>
 
         <span class="page-footer-link page-footer-delete-link-without-button">
-          <a class="govuk-link govuk-link--destructive" href="{{ url_for('.resume_service', service_id=current_service.id) }}">
+          <a class="usa-link usa-link--destructive" href="{{ url_for('.resume_service', service_id=current_service.id) }}">
             Resume service
           </a>
         </span>
 
         <span class="page-footer-link">
-          <a href="{{ url_for('.history', service_id=current_service.id) }}" class="govuk-link govuk-link--no-visited-state page-footer-link">
+          <a href="{{ url_for('.history', service_id=current_service.id) }}" class="usa-link  page-footer-link">
             Service history
           </a>
         </span>

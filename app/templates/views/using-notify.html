@@ -7,11 +7,11 @@
 
 {% block maincolumn_content %}
 
-<div class="govuk-grid-row">
+<div class="grid-row">
   <div class="govuk-grid-column-one-third">
     {{ sub_navigation(navigation_links) }}
   </div>
-  <div class="govuk-grid-column-two-thirds">
+  <div class="grid-col-8">
 
     <h1 class="font-body-2xl margin-bottom-3">Using Notify</h1>
 
@@ -19,10 +19,10 @@
 
     <p>Find out more about:</p>
     <ul class="list list-bullet">
-      <li><a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.trial_mode_new') }}">trial mode</a></li>
-      <li><a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.message_status') }}">message status types</a></li>
-      <li><a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.features_email') }}">email replies</a></li>
-      <li><a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.features_sms') }}">text message replies</a></li>
+      <li><a class="usa-link " href="{{ url_for('main.trial_mode_new') }}">trial mode</a></li>
+      <li><a class="usa-link " href="{{ url_for('main.message_status') }}">message status types</a></li>
+      <li><a class="usa-link " href="{{ url_for('main.features_email') }}">email replies</a></li>
+      <li><a class="usa-link " href="{{ url_for('main.features_sms') }}">text message replies</a></li>
     </ul>
 
   </div>

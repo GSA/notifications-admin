@@ -30,7 +30,7 @@
     "open": form.errors | convert_to_boolean
   }) }}
 
-  <div class="govuk-grid-row bottom-gutter">
+  <div class="grid-row bottom-gutter">
     {% for noti_type in global_stats %}
       <div class="govuk-grid-column-one-half">
         {{ big_number_simple(
@@ -51,7 +51,7 @@
     {% endfor %}
   </div>
 
-  <div class="govuk-grid-row bottom-gutter">
+  <div class="grid-row bottom-gutter">
     {% for noti_type in global_stats %}
       <div class="govuk-grid-column-one-half">
         <div class="bordered-text-box">

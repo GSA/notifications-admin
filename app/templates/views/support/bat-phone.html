@@ -14,11 +14,11 @@
 {% block maincolumn_content %}
 
     {{ page_header('Out of hours emergencies')}}
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
+    <div class="grid-row">
+      <div class="grid-col-8">
         <p>
           First, check the
-          <a class="govuk-link govuk-link--no-visited-state" href="https://status.notifications.service.gov.uk">system status page</a>.
+          <a class="usa-link " href="https://status.notifications.service.gov.uk">system status page</a>.
           You do not need to contact us if
           the problem you’re having is listed on that page.
         </p>
@@ -36,7 +36,7 @@
         </p>
         <h2 class="font-body-lg">Any other problems</h2>
         <p class="bottom-gutter-2">
-          <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.feedback', ticket_type='report-problem', severe='no') }}">Fill in this form</a>
+          <a class="usa-link " href="{{ url_for('main.feedback', ticket_type='report-problem', severe='no') }}">Fill in this form</a>
           and we’ll get back to you by the next working day.
         </p>
       </div>

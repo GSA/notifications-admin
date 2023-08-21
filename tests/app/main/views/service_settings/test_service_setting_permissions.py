@@ -187,7 +187,7 @@ def test_service_settings_doesnt_show_option_if_parent_permission_disabled(
 def test_service_setting_toggles_dont_show(get_service_settings_page, service_one, service_fields, link_text):
     service_one.update(service_fields)
     page = get_service_settings_page()
-    toggles = page.find_all('a', {'class': 'govuk-link'})
+    toggles = page.find_all('a', {'class': 'usa-link'})
     assert not any(link for link in toggles if link_text in link.text)
 
 

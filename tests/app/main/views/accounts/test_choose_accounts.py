@@ -310,7 +310,7 @@ def test_should_not_show_back_to_service_if_user_doesnt_belong_to_service(
     )
 
     assert normalize_spaces(
-        page.select_one('.govuk-grid-row').text
+        page.select_one('.grid-row').text
     ).startswith(
         normalize_spaces(expected_page_text)
     )

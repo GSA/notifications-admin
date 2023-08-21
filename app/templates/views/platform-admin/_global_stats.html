@@ -1,6 +1,6 @@
 {% from "components/big-number.html" import big_number_with_status %}
 
-<div class="govuk-grid-row bottom-gutter">
+<div class="grid-row bottom-gutter">
   <div class="govuk-grid-column-one-half">
     {{ big_number_with_status(
       global_stats.email.delivered + global_stats.email.failed,

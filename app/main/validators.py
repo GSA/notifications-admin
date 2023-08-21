@@ -46,7 +46,7 @@ class ValidGovEmail:
         from flask import url_for
         message = '''
             Enter a public sector email address or
-            <a class="govuk-link govuk-link--no-visited-state" href="{}">find out who can use Notify</a>
+            <a class="usa-link" href="{}">find out who can use Notify</a>
         '''.format(url_for('main.features'))
         if not is_gov_user(field.data.lower()):
             raise ValidationError(message)

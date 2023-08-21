@@ -15,7 +15,7 @@
 
 {% block maincolumn_content %}
 
-  <div class="govuk-grid-row govuk-!-margin-top-3">
+  <div class="grid-row govuk-!-margin-top-3">
     {% call form_wrapper() %}
       {{ form.sender(param_extensions={
         'fieldset': {
@@ -29,7 +29,7 @@
       }) }}
       <div class="govuk-grid-column-three-quarters">
         {{ page_footer('Continue') }}
-        <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.service_add_letter_contact', service_id=current_service.id, from_template=template_id) }}">Add new sender</a>
+        <a class="usa-link " href="{{ url_for('.service_add_letter_contact', service_id=current_service.id, from_template=template_id) }}">Add new sender</a>
     </div>
     {% endcall %}
   </div>

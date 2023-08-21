@@ -52,7 +52,7 @@ Inbound SMS
               {% endif %}
               </td>
               <td>
-                  <a href="{{ url_for('main.service_dashboard', service_id=value.service.id) }}" class="govuk-link govuk-link--no-visited-state govuk-!-font-size-24 govuk-!-font-weight-bold">{{ value.service.name }}</a>
+                  <a href="{{ url_for('main.service_dashboard', service_id=value.service.id) }}" class="usa-link  govuk-!-font-size-24 govuk-!-font-weight-bold">{{ value.service.name }}</a>
               </td>
           </tr>
           {% endfor %}

@@ -11,7 +11,7 @@
   {% if current_service.organization_id %}
     {% if current_user.platform_admin or
       (current_user.belongs_to_organization(current_service.organization_id) and current_service.live) %}
-      <a href="{{ url_for('.organization_dashboard', org_id=current_service.organization_id) }}" class="govuk-link govuk-link--no-visited-state navigation-organization-link">{{ current_service.organization_name }}</a>
+      <a href="{{ url_for('.organization_dashboard', org_id=current_service.organization_id) }}" class="usa-link  navigation-organization-link">{{ current_service.organization_name }}</a>
     {% endif %}
   {% endif %}
   {{ navigation_service_name(current_service) }}

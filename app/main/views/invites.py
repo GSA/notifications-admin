@@ -22,7 +22,7 @@ def accept_invite(token):
         message = Markup("""
             You’re signed in as {}.
             This invite is for another email address.
-            <a href={} class="govuk-link govuk-link--no-visited-state">Sign out</a>
+            <a href={} class="usa-link ">Sign out</a>
             and click the link again to accept this invite.
             """.format(
             current_user.email_address,
@@ -82,7 +82,7 @@ def accept_org_invite(token):
         message = Markup("""
             You’re signed in as {}.
             This invite is for another email address.
-            <a class="govuk-link govuk-link--no-visited-state" href={}>Sign out</a>
+            <a class="usa-link " href={}>Sign out</a>
             and click the link again to accept this invite.
             """.format(
             current_user.email_address,

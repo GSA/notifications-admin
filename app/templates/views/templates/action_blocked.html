@@ -13,7 +13,7 @@
 
 {% block maincolumn_content %}
 
-  <div class="govuk-grid-row">
+  <div class="grid-row">
     <div class="govuk-grid-column-five-sixths">
       {{ page_header('{} are disabled'.format(notification_type.capitalize())) }}
       <p>
@@ -21,7 +21,7 @@
       </p>
       <p>
         If you need to send {{ 999|message_count_label(notification_type, suffix='') }}
-        <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.support') }}">get in touch with the Notify.gov team</a>.
+        <a class="usa-link " href="{{ url_for('.support') }}">get in touch with the Notify.gov team</a>.
       </p>
 
     </div>

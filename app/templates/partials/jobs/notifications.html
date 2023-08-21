@@ -5,9 +5,9 @@
 <div class="ajax-block-container" aria-labelledby='pill-selected-item' role="region">
   {% if job.scheduled %}
 
-    <p class="govuk-body">
+    <p class="usa-body">
       Sending
-      <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.view_template_version', service_id=current_service.id, template_id=job.template.id, version=job.template_version) }}">{{ job.template.name }}</a>
+      <a class="usa-link " href="{{ url_for('.view_template_version', service_id=current_service.id, template_id=job.template.id, version=job.template_version) }}">{{ job.template.name }}</a>
       {{ job.scheduled_for|format_datetime_relative }}
     </p>
     <div class="page-footer">
@@ -30,7 +30,7 @@
         </p>
       {% elif notifications %}
         <p class="bottom-gutter">
-          <a href="{{ download_link }}" download class="govuk-link govuk-link--no-visited-state heading-small">Download this report (<abbr title="Comma separated values">CSV</abbr>)</a>
+          <a href="{{ download_link }}" download class="usa-link  heading-small">Download this report (<abbr title="Comma separated values">CSV</abbr>)</a>
           &emsp;
           <span id="time-left">{{ time_left }}</span>
         </p>
@@ -48,7 +48,7 @@
         field_headings_visible=False
       ) %}
         {% call row_heading() %}
-          <a class="govuk-link govuk-link--no-visited-state file-list-filename" href="{{ url_for('.view_notification', service_id=current_service.id, notification_id=item.id, from_job=job.id) }}">{{ item.to }}</a>
+          <a class="usa-link  file-list-filename" href="{{ url_for('.view_notification', service_id=current_service.id, notification_id=item.id, from_job=job.id) }}">{{ item.to }}</a>
           <p class="file-list-hint">
             {{ item.preview_of_content }}
           </p>

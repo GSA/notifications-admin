@@ -8,8 +8,8 @@
 
 {% block maincolumn_content %}
 
-  <div class="govuk-grid-row bottom-gutter">
-    <div class="govuk-grid-column-two-thirds">
+  <div class="grid-row bottom-gutter">
+    <div class="grid-col-8">
       <h1 class="font-body-2xl margin-bottom-3">
         Data retention
       </h1>
@@ -23,7 +23,7 @@
     }) }}
   </div>
   </div>
-  <div class="govuk-grid-row bottom-gutter">
+  <div class="grid-row bottom-gutter">
       <div class="govuk-grid-column-full">
           By default data is kept for 7 days
       </div>
@@ -31,7 +31,7 @@
   {% if not current_service.data_retention %}
     <div class="user-list">
       <div class="user-list-item">
-        <p class="govuk-body user-list-item-blank hint">You have not added any data retention</p>
+        <p class="usa-body user-list-item-blank hint">You have not added any data retention</p>
       </div>
     </div>
   {% else %}

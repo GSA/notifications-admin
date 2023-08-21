@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block maincolumn_content %}
-  <div class="govuk-grid-row">
+  <div class="grid-row">
     <div class="govuk-grid-column-full">
       {{ page_header('Your service is already live') }}
 
@@ -19,7 +19,7 @@
         </p>
 
       <p>
-        <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.choose_account') }}">Switch service</a>
+        <a class="usa-link " href="{{ url_for('.choose_account') }}">Switch service</a>
          if you want to make a different service live.
       </p>
 

@@ -10,7 +10,7 @@
   <h1 class="font-body-2xl margin-bottom-3">Delivery status</h1>
 
   <p>Notify’s real-time dashboard lets you check the status of any message.</p>
-  <p>For <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for("main.security") }}">security</a>, this information is only available for seven days after a message has been sent. You can download a report, including a list of sent messages, for your own records.</p>
+  <p>For <a class="usa-link " href="{{ url_for("main.security") }}">security</a>, this information is only available for seven days after a message has been sent. You can download a report, including a list of sent messages, for your own records.</p>
   <p>This page describes the statuses you’ll see when you’re signed in to Notify.</p>
 
   <h2 id="text-message-timezones" class="heading-medium">A note about timezones</h2>
@@ -18,7 +18,7 @@
   <p>Notify currently uses UTC (Coordinated Universal Time) for managing and displaying all dates and times in the system.  This means that when you're scheduling messages to send later, or are looking at the time a message was sent, it will be in the UTC timezone.</p>
 
   <p>You can refer to <a href="https://en.wikipedia.org/wiki/Time_in_the_United_States#United_States_and_regional_time_zones">this chart for help</a> with converting UTC times to your local timezone.</p>
-  <!-- <p>If you’re using the Notify API, read our <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.documentation') }}">documentation</a> for a list of API statuses.<p> 
+  <!-- <p>If you’re using the Notify API, read our <a class="usa-link " href="{{ url_for('.documentation') }}">documentation</a> for a list of API statuses.<p> 
 
   <h2 id="email-statuses" class="heading-medium">Emails</h2>
   <div class="bottom-gutter-3-2">
@@ -32,7 +32,7 @@
         ('Sending', 'Notify has sent the message to the provider. The provider will try to deliver the message to the recipient for up to 72 hours. Notify is waiting for delivery information.'),
         ('Delivered', 'The message was successfully delivered. Notify cannot tell you if a user has opened or read a message.'),
         ('Email address does not exist', 'The provider could not deliver the message because the email address was wrong. You should remove these email addresses from your database.'),
-        ('Inbox not accepting messages right now', 'The provider could not deliver the message. This can happen when the recipient’s inbox is full or their anti-spam filter rejects your email. <a class="govuk-link govuk-link--no-visited-state" href="https://www.gov.uk/service-manual/design/sending-emails-and-text-messages#protect-your-users-from-spam-and-phishing">Check your content does not look like spam</a> before you try to send the message again.' | safe),
+        ('Inbox not accepting messages right now', 'The provider could not deliver the message. This can happen when the recipient’s inbox is full or their anti-spam filter rejects your email. <a class="usa-link " href="https://www.gov.uk/service-manual/design/sending-emails-and-text-messages#protect-your-users-from-spam-and-phishing">Check your content does not look like spam</a> before you try to send the message again.' | safe),
         ('Technical failure', 'Your message was not sent because there was a problem between Notify and the provider. You’ll have to try sending your messages again.'),
       ] %}
         {% call row() %}
@@ -61,7 +61,7 @@
         ('Sending', 'Notify has sent the message to the provider. The provider will try to deliver the message to the recipient for up to 72 hours. Notify is waiting for delivery information.'),
         ('Sent', 'The mobile networks may not provide any more delivery information.'),
         ('Delivered', 'The message was successfully delivered. Notify cannot tell you if a user has opened or read a message.'),
-        ('Not delivered', ('The provider could not deliver the message. This can happen if the phone number was wrong or if the network operator rejects the message. If you’re sure that these phone numbers are correct, you should <a class="govuk-link govuk-link--no-visited-state" href="' + url_for(".support") + '">contact us</a>. If not, you should remove them from your database. You’ll still be charged for text messages that cannot be delivered.')|safe),
+        ('Not delivered', ('The provider could not deliver the message. This can happen if the phone number was wrong or if the network operator rejects the message. If you’re sure that these phone numbers are correct, you should <a class="usa-link " href="' + url_for(".support") + '">contact us</a>. If not, you should remove them from your database. You’ll still be charged for text messages that cannot be delivered.')|safe),
         ('Phone not accepting messages right now', 'The provider could not deliver the message. This can happen when the recipient’s phone is off, has no signal, or their text message inbox is full. You can try to send the message again. You’ll still be charged for text messages to phones that are not accepting messages.'),
         ('Technical failure', 'Your message was not sent because there was a problem between Notify and the provider. You’ll have to try sending your messages again. You will not be charged for text messages that are affected by a technical failure.'),
       ] %}

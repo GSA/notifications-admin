@@ -32,7 +32,7 @@
   <div class="user-list">
     {% for user in users %}
       <div class="user-list-item">
-        <div class="govuk-grid-row">
+        <div class="grid-row">
           <div class="govuk-grid-column-three-quarters">
             <h2 class="user-list-item-heading">
               {%- if user.name -%}
@@ -53,9 +53,9 @@
           </div>
           <div class="govuk-grid-column-one-quarter">
             {% if user.status == 'pending' %}
-              <a class="govuk-link govuk-link--no-visited-state user-list-edit-link" href="{{ url_for('.cancel_invited_org_user', org_id=current_org.id, invited_user_id=user.id)}}">Cancel invitation<span class="usa-sr-only"> for {{ user.email_address }}</span></a>
+              <a class="usa-link  user-list-edit-link" href="{{ url_for('.cancel_invited_org_user', org_id=current_org.id, invited_user_id=user.id)}}">Cancel invitation<span class="usa-sr-only"> for {{ user.email_address }}</span></a>
             {% elif user.status != 'cancelled' %}
-              <a class="govuk-link govuk-link--destructive user-list-edit-link" href="{{ url_for('.edit_organization_user', org_id=current_org.id, user_id=user.id)}}">Remove<span class="usa-sr-only"> {{ user.name }} {{ user.email_address }}</span></a>
+              <a class="usa-link usa-link--destructive user-list-edit-link" href="{{ url_for('.edit_organization_user', org_id=current_org.id, user_id=user.id)}}">Remove<span class="usa-sr-only"> {{ user.name }} {{ user.email_address }}</span></a>
             {% endif %}
           </div>
         </div>

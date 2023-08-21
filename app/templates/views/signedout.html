@@ -149,8 +149,8 @@ Notify.gov
       <nav class="breadcrumbs breadcrumbs--inverse" aria-label="Breadcrumbs">
 
       </nav>
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+      <div class="grid-row">
+        <div class="grid-col-8">
           <h1>
             Send text messages to your users
           </h1>
@@ -164,7 +164,7 @@ Notify.gov
               "classes": "product-page-button button-container__button govuk-!-margin-right-3",
               "href": url_for('main.register' )
             }) }}
-            or <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.sign_in' )}}">sign in</a> if you’ve used
+            or <a class="usa-link " href="{{ url_for('.sign_in' )}}">sign in</a> if you’ve used
             it before
           </div>
         </div>
@@ -178,7 +178,7 @@ Notify.gov
   </div>
 
   <div class="product-page-section">
-    <div class="govuk-grid-row">
+    <div class="grid-row">
       <div class="govuk-grid-column-one-half">
         <h2>
           Control your content
@@ -195,7 +195,7 @@ Notify.gov
     </div>
   </div>
   <div class="product-page-section">
-    <div class="govuk-grid-row">
+    <div class="grid-row">
       <div class="govuk-grid-column-one-half">
         <h2>
           See how your messages perform
@@ -217,7 +217,7 @@ Notify.gov
     <h2 class="with-keyline">
       Send messages manually or automatically
     </h2>
-    <div class="govuk-grid-row">
+    <div class="grid-row">
       <div class="govuk-grid-column-one-half">
         <p>
           Upload a spreadsheet of phone&nbsp;numbers and Notify sends the messages.
@@ -242,7 +242,7 @@ Notify.gov
   <div class="product-page-section">
     <div class="with-keyline bottom-gutter-2" id="whos-using-notify">
       <h2>Who’s using Notify.gov</h2>
-      <div class="govuk-grid-row bottom-gutter">
+      <div class="grid-row bottom-gutter">
         <div class="govuk-grid-column-one-half">
           <span class="usa-sr-only">There are</span>
           <div class="product-page-big-number">{{ counts.organizations|format_thousands }}</div>
@@ -257,14 +257,14 @@ Notify.gov
       </div>
       <p>
         See the
-        <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.performance') }}">list of services and organizations</a>.
+        <a class="usa-link " href="{{ url_for('main.performance') }}">list of services and organizations</a>.
       </p>
     </div>
   </div>
   <div class="product-page-section">
     <div class="with-keyline bottom-gutter-2">
       <h2>Pricing</h2>
-      <div class="govuk-grid-row bottom-gutter">
+      <div class="grid-row bottom-gutter">
         <div class="govuk-grid-column-one-half">
           <h3 class="usa-sr-only">Emails</h3>
           <div class="product-page-big-number">Unlimited</div>
@@ -280,14 +280,14 @@ Notify.gov
           <p class="align-with-big-number-hint">
             There’s no monthly charge, no setup fee and no&nbsp;procurement process.
           </p>
-          <p>Find out more about <a class="govuk-link govuk-link--no-visited-state" href="https://www.notifications.service.gov.uk/pricing">pricing</a>.
+          <p>Find out more about <a class="usa-link " href="https://www.notifications.service.gov.uk/pricing">pricing</a>.
           </p>
         </div>
       </div>
     </div>
   </div>
   <div class="product-page-section">
-    <div class="govuk-grid-row margin-bottom-">
+    <div class="grid-row margin-bottom-">
       <div class="govuk-grid-column-full">
         <h2 class="with-keyline">
           The team
@@ -296,7 +296,7 @@ Notify.gov
           Notify.gov is built and maintained by the Public Benefits Studio, within the General Services Administration's Technology Transformation Services.
         </p>
         <p>
-          <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.support') }}">Contact us</a> if you have a question or want
+          <a class="usa-link " href="{{ url_for('main.support') }}">Contact us</a> if you have a question or want
           to give feedback.
         </p>
       </div>
