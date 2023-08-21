@@ -22,12 +22,12 @@
           'legend': {
             'isPageHeading': True,
             'text': page_title,
-            'classes': 'govuk-fieldset__legend--l govuk-grid-column-full'
+            'classes': 'govuk-fieldset__legend--l grid-col-12'
           }
         },
-        'classes': 'govuk-grid-column-three-quarters'
+        'classes': 'grid-col-9'
       }) }}
-      <div class="govuk-grid-column-three-quarters">
+      <div class="grid-col-9">
         {{ page_footer('Continue') }}
         <a class="usa-link " href="{{ url_for('.service_add_letter_contact', service_id=current_service.id, from_template=template_id) }}">Add new sender</a>
     </div>

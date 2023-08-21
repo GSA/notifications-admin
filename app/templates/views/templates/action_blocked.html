@@ -14,7 +14,7 @@
 {% block maincolumn_content %}
 
   <div class="grid-row">
-    <div class="govuk-grid-column-five-sixths">
+    <div class="grid-col-10">
       {{ page_header('{} are disabled'.format(notification_type.capitalize())) }}
       <p>
         Sending {{ 999|message_count_label(notification_type, suffix='') }} has been disabled for your service.

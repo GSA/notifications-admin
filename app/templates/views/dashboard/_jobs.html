@@ -46,17 +46,17 @@
         ) }}
       {% else %}
         <div class="grid-row">
-          <div class="govuk-grid-column-one-third">
+          <div class="grid-col-4">
             {{ big_number(
               item.notifications_sending,
               smallest=True,
               label='pending',
             ) }}
           </div>
-          <div class="govuk-grid-column-one-third">
+          <div class="grid-col-4">
         {{ big_number(item.notifications_delivered, smallest=True, label='delivered') }}
       </div>
-      <div class="govuk-grid-column-one-third">
+      <div class="grid-col-4">
         {{ big_number(item.notifications_failed, smallest=True, label='failed') }}
       </div></div>
 

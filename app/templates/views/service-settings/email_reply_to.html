@@ -26,7 +26,7 @@
     {% for item in current_service.email_reply_to_addresses %}
       <div class="user-list-item">
         <div class="grid-row">
-          <div class="govuk-grid-column-three-quarters">
+          <div class="grid-col-9">
             <h2 class="user-list-item-heading">
               <span class="heading-small">{{ item.email_address }}</span>&ensp;<span class="hint">
                 {%- if item.is_default -%}
@@ -35,7 +35,7 @@
               </span>
             </h2>
           </div>
-          <div class="govuk-grid-column-one-quarter">
+          <div class="grid-col-3">
             {% if current_user.has_permissions('manage_service') %}
               <a class="usa-link  user-list-edit-link"href="{{ url_for('.service_edit_email_reply_to', service_id =current_service.id, reply_to_email_id = item.id) }}">
                 Change<span class="usa-sr-only"> {{ item.email_address }}</span>
@@ -44,7 +44,7 @@
           </div>
         </div>
         <div class="grid-row">
-          <div class="govuk-grid-column-full">
+          <div class="grid-col-12">
             {% if current_service.count_email_reply_to_addresses > 1 %}
               {{ copy_to_clipboard(item.id, name=item.email_address, thing="ID") }}
             {% endif %}
@@ -54,7 +54,7 @@
     {% endfor %}
   </div>
   <div class="grid-row">
-    <div class="govuk-grid-column-full">
+    <div class="grid-col-12">
       {% if current_user.has_permissions('manage_service') %}
         <div class="js-stick-at-bottom-when-scrolling">
           {{ govukButton({
@@ -65,7 +65,7 @@
         </div>
       {% endif %}
     </div>
-    <div class="govuk-grid-column-five-sixths">
+    <div class="grid-col-10">
       <p>
         You need to add at least one reply-to address so recipients can reply to your messages.
       </p>

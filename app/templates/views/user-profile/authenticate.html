@@ -17,7 +17,7 @@
   {{ page_header('Change your {}'.format(thing)) }}
 
   <div class="grid-row">
-    <div class="govuk-grid-column-three-quarters">
+    <div class="grid-col-9">
 
     {% call form_wrapper(autocomplete=True) %}
       {{ form.password(param_extensions={"autocomplete": "current-password"}) }}

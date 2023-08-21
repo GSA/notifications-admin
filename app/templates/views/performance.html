@@ -20,20 +20,20 @@
   </h2>
 
   <div class="grid-row">
-    <div class="govuk-grid-column-one-half">
+    <div class="grid-col-6">
       <div class="product-page-big-number">{{ total_notifications|format_billions }}</div>
       total
     </div>
-    <div class="govuk-grid-column-one-half">
+    <div class="grid-col-6">
       <div class="grid-row govuk-!-padding-top-4">
-        <div class="govuk-grid-column-one-half">
+        <div class="grid-col-6">
           {{ big_number(
             email_notifications|format_billions,
             label=email_notifications|message_count_noun('email'),
             smallest=True,
           ) }}
         </div>
-        <div class="govuk-grid-column-one-half">
+        <div class="grid-col-6">
           {{ big_number(
             sms_notifications|format_billions,
             label=sms_notifications|message_count_noun('sms'),
@@ -75,7 +75,7 @@
     Messages sent within 10 seconds
   </h2>
   <div class="grid-row">
-    <div class="govuk-grid-column-one-half">
+    <div class="grid-col-6">
       {{ big_number(
         '{:.2f}%'.format(average_percentage_under_10_seconds),
         label='on average',
@@ -108,12 +108,12 @@
     Organizations using Notify
   </h2>
   <div class="grid-row bottom-gutter">
-    <div class="govuk-grid-column-one-half">
+    <div class="grid-col-6">
       <span class="usa-sr-only">There are</span>
       <div class="product-page-big-number">{{ count_of_live_services_and_organizations.organizations|format_thousands }}</div>
       organizations
     </div>
-    <div class="govuk-grid-column-one-half">
+    <div class="grid-col-6">
       <span class="usa-sr-only">and</span>
       <div class="product-page-big-number">{{ count_of_live_services_and_organizations.services|format_thousands }}</div>
       services

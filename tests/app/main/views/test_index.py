@@ -315,7 +315,7 @@ def test_sms_price(
         pricing_page = client_request.get('main.pricing')
 
     assert normalize_spaces(
-        home_page.select('.product-page-section')[5].select('.govuk-grid-column-one-half')[1].text
+        home_page.select('.product-page-section')[5].select('.grid-col-6')[1].text
     ) == (
         f'Text messages '
         f'Up to 40,000 free text messages a year, '
