@@ -12,7 +12,7 @@ flask-basicauth = "~=0.2"
 flask-login = "~=0.6"
 flask-wtf = "~=1.1"
 govuk-bank-holidays = "==0.13"
-govuk-frontend-jinja = {version = "==v0.5.8-alpha", ref = "191bc87c5c29cb8e2e65a21c1bb320eb0526f14a", git = "https://github.com/Crown-Commercial-Service/govuk-frontend-jinja.git"}
+govuk-frontend-jinja = {version = "*", git = "https://github.com/alphagov/govuk-frontend-jinja.git"}
 gunicorn = {version = "==20.1.0", extras = ["eventlet"], ref = "1299ea9e967a61ae2edebe191082fd169b864c64", git = "https://github.com/benoitc/gunicorn.git"}
 humanize = "~=4.8"
 itsdangerous = "~=2.1"
