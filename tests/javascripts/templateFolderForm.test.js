@@ -220,7 +220,7 @@ describe('TemplateFolderForm', () => {
   });
 
   function getTemplateFolderCheckboxes () {
-    return templateFolderForm.querySelectorAll('input[type=checkbox]');
+    return templateFolderForm.querySelectorAll('label.usa-checkbox__label');
   };
 
   function getVisibleCounter () {
@@ -612,6 +612,7 @@ describe('TemplateFolderForm', () => {
       beforeEach(() => {
 
         visibleCounterText = getVisibleCounter().textContent.trim();
+        print(visibleCounterText);
         hiddenCounterText = getHiddenCounter().textContent.trim();
 
       });
@@ -624,7 +625,7 @@ describe('TemplateFolderForm', () => {
 
       test("the content of the counter should reflect the selection", () => {
 
-        expect(visibleCounterText).toEqual('selected');
+        expect(visibleCounterText).toEqual('1 template, 1 folder selected');
 
       });
 
@@ -865,7 +866,7 @@ describe('TemplateFolderForm', () => {
         helpers.triggerEvent(templateFolderCheckboxes[1], 'click');
         helpers.triggerEvent(templateFolderCheckboxes[2], 'click');
 
-        expect(visibleCounterText).toEqual('selected');
+        expect(visibleCounterText).toEqual('2 templates selected');
 
       });
 
@@ -885,7 +886,7 @@ describe('TemplateFolderForm', () => {
 
         helpers.triggerEvent(templateFolderCheckboxes[0], 'click');
 
-        expect(visibleCounterText).toEqual('selected');
+        expect(visibleCounterText).toEqual('1 folder selected');
 
       });
 

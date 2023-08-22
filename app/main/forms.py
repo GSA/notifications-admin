@@ -256,7 +256,7 @@ def govuk_text_input_field_widget(self, field, type=None, param_extensions=None,
     merge_jsonlike(params, param_extensions)
 
     return Markup(
-        render_template('components/us_components/input/template.njk', params=params))
+        render_template('components/components/input/template.njk', params=params))
 
 
 class GovukTextInputField(StringField):
@@ -790,7 +790,7 @@ def govuk_radios_field_widget(self, field, param_extensions=None, **kwargs):
         merge_jsonlike(params, param_extensions)
 
     return Markup(
-        render_template('components/us_components/radios/template.njk', params=params))
+        render_template('components/components/radios/template.njk', params=params))
 
 
 class GovukCheckboxField(BooleanField):
@@ -847,7 +847,7 @@ class GovukTextareaField(TextAreaField):
             merge_jsonlike(params, param_extensions)
 
         return Markup(
-            render_template('components/us_components/textarea/template.njk', params=params))
+            render_template('components/components/textarea/template.njk', params=params))
 
 
 # based on work done by @richardjpope: https://github.com/richardjpope/recourse/blob/master/recourse/forms.py#L6
