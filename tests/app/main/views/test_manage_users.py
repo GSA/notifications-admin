@@ -770,62 +770,6 @@ def test_edit_user_permissions_shows_authentication_for_email_auth_service(
     assert not any(button.has_attr("disabled") for button in radio_buttons)
 
 
-def test_edit_user_permissions_hides_authentication_for_webauthn_user(
-    client_request,
-    service_one,
-    mock_get_users_by_service,
-    mock_get_template_folders,
-    active_user_with_permissions,
-):
-    active_user_with_permissions['auth_type'] = 'webauthn_auth'
-    service_one['permissions'].append('email_auth')
-
-    page = client_request.get(
-        'main.edit_user_permissions',
-        service_id=SERVICE_ONE_ID,
-        user_id=active_user_with_permissions['id'],
-    )
-
-    assert 'This user will login with a security key' in str(page)
-    assert page.select_one('#login_authentication') is None
-
-
-@pytest.mark.parametrize('new_auth_type', ['sms_auth', 'email_auth'])
-def test_edit_user_permissions_preserves_auth_type_for_webauthn_user(
-    client_request,
-    service_one,
-    active_user_with_permissions,
-    mock_get_users_by_service,
-    mock_get_invites_for_service,
-    mock_set_user_permissions,
-    mock_update_user_attribute,
-    mock_get_template_folders,
-    new_auth_type,
-):
-    active_user_with_permissions['auth_type'] = 'webauthn_auth'
-    service_one['permissions'].append('email_auth')
-
-    client_request.post(
-        'main.edit_user_permissions',
-        service_id=SERVICE_ONE_ID,
-        user_id=active_user_with_permissions['id'],
-        _data={
-            'email_address': active_user_with_permissions['email_address'],
-            'permissions_field': [],
-            'login_authentication': new_auth_type,
-        },
-        _expected_status=302,
-    )
-
-    mock_set_user_permissions.assert_called_with(
-        str(active_user_with_permissions['id']),
-        SERVICE_ONE_ID,
-        permissions=set(),
-        folder_permissions=[],
-    )
-    mock_update_user_attribute.assert_not_called()
-
-
 def test_should_show_page_for_inviting_user(
     client_request,
     mock_get_template_folders,

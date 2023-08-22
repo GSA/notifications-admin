@@ -49,11 +49,9 @@
 
       <h2 class="font-body-lg">Authentication</h2>
       <p>{{ user.auth_type | format_auth_type }}</p>
-      {% if user.auth_type != 'webauthn_auth' %}
-        <a class="govuk-link govuk-link" href="{{ url_for('main.change_user_auth', user_id=user.id) }}">
-          Change authentication for this user
-        </a>
-      {% endif %}
+      <a class="govuk-link govuk-link" href="{{ url_for('main.change_user_auth', user_id=user.id) }}">
+        Change authentication for this user
+      </a>
 
       <h2 class="font-body-lg">Last login</h2>
       {% if not user.logged_in_at %}

@@ -11,7 +11,6 @@ from app.event_handlers import (
 )
 from app.models import JSONModel, ModelList
 from app.models.organization import Organization, Organizations
-from app.models.webauthn_credential import WebAuthnCredentials
 from app.notify_client import InviteTokenError
 from app.notify_client.invite_api_client import invite_api_client
 from app.notify_client.org_invite_api_client import org_invite_api_client
@@ -37,7 +36,6 @@ class User(JSONModel, UserMixin):
     MAX_FAILED_LOGIN_COUNT = 10
 
     ALLOWED_PROPERTIES = {
-        'can_use_webauthn',
         'id',
         'name',
         'email_address',
@@ -179,10 +177,6 @@ class User(JSONModel, UserMixin):
     @property
     def email_auth(self):
         return self.auth_type == 'email_auth'
-
-    @property
-    def webauthn_auth(self):
-        return self.auth_type == 'webauthn_auth'
 
     def reset_failed_login_count(self):
         user_api_client.reset_failed_login_count(self.id)
@@ -371,15 +365,6 @@ class User(JSONModel, UserMixin):
             '@nhs.uk', '.nhs.uk', '@nhs.net', '.nhs.net',
         ))
 
-    @property
-    def webauthn_credentials(self):
-        return WebAuthnCredentials(self.id)
-
-    def create_webauthn_credential(self, credential):
-        user_api_client.create_webauthn_credential_for_user(
-            self.id, credential
-        )
-
     def serialize(self):
         dct = {
             "id": self.id,
@@ -455,9 +440,6 @@ class User(JSONModel, UserMixin):
             organization_id,
             self.id,
         )
-
-    def complete_webauthn_login_attempt(self, is_successful=True):
-        return user_api_client.complete_webauthn_login_attempt(self.id, is_successful)
 
     def is_editable_by(self, other_user):
         if other_user == self:
