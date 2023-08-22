@@ -15,7 +15,7 @@ runs:
         python-version: "3.9"
     - name: Install pipenv  
       shell: bash
-      run: pip install pipenv==2023.8.19
+      run: pip install pipenv==2023.7.23
     - name: Install application dependencies
       shell: bash
       run: make bootstrap
