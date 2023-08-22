@@ -192,10 +192,6 @@ def create_app(application):
     init_jinja(application)
 
     for client in (
-        # Gubbins
-        # Note, metrics purposefully first so we start measuring response times as early as possible before any
-        # other `app.before_request` handlers (introduced by any of these clients) are processed (which would
-        # otherwise mean we aren't measuring the full response time)
         csrf,
         login_manager,
         proxy_fix,
