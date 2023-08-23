@@ -37,6 +37,7 @@ flask-talisman = "*"
 notifications-utils = {editable = true, ref = "main", git = "https://github.com/GSA/notifications-utils.git"}
 coverage = "*"
 pytest-playwright = "*"
+vulture = "==2.7"
 radon = "==6.0.1"
 
 [dev-packages]
