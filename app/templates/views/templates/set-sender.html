@@ -13,19 +13,19 @@
 
 {% block maincolumn_content %}
 
-  <div class="govuk-grid-row govuk-!-margin-top-3">
+  <div class="grid-row govuk-!-margin-top-3">
     {% call form_wrapper() %}
       {{ form.sender(param_extensions={
         'fieldset': {
           'legend': {
             'isPageHeading': True,
             'text': sender_context.title,
-            'classes': 'govuk-fieldset__legend--l govuk-grid-column-full'
+            'classes': 'govuk-fieldset__legend--l grid-col-12'
           }
         },
-        'classes': 'govuk-grid-column-three-quarters'
+        'classes': 'grid-col-9'
       }) }}
-      <div class="govuk-grid-column-three-quarters">
+      <div class="grid-col-9">
         {{ page_footer('Continue') }}
       </div>
     {% endcall %}

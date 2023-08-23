@@ -8,13 +8,13 @@
   services=[]
 ) %}
   {% if show_heading and (services or organizations) %}
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-quarter">
+    <div class="grid-row">
+      <div class="grid-col-3">
         <h2>
           {{ heading }}
         </h2>
       </div>
-      <div class="govuk-grid-column-three-quarters">
+      <div class="grid-col-9">
         <ul>
   {% else %}
     <ul>
@@ -56,13 +56,13 @@
   <nav class="browse-list {% if current_user.has_access_to_live_and_trial_mode_services %}top-gutter-2-3{% endif %}">
 
     {% if current_user.platform_admin %}
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
+      <div class="grid-row">
+        <div class="grid-col-3">
           <h2>
             Platform admin
           </h2>
         </div>
-        <ul class="govuk-grid-column-three-quarters">
+        <ul class="grid-col-9">
           <li class="browse-list-item">
             <a href="{{ url_for('.organizations') }}" class="usa-link">All organizations</a>
             <p class="browse-list-hint">
@@ -102,11 +102,11 @@
   {% if can_add_service %}
     <div class="js-stick-at-bottom-when-scrolling">
       {% if current_user.has_access_to_live_and_trial_mode_services %}
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-quarter">
+        <div class="grid-row">
+          <div class="grid-col-3">
             &nbsp;
           </div>
-          <div class="govuk-grid-column-three-quarters">
+          <div class="grid-col-9">
       {% endif %}
       {{ govukButton({
         "element": "a",

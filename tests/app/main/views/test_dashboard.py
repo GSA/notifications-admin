@@ -803,7 +803,7 @@ def test_usage_page(
     assert normalize_spaces(unselected_nav_links[0].text) == '2010 to 2011 fiscal year'
     assert normalize_spaces(unselected_nav_links[1].text) == '2009 to 2010 fiscal year'
 
-    annual_usage = page.find_all('div', {'class': 'govuk-grid-column-one-half'})
+    annual_usage = page.find_all('div', {'class': 'grid-col-6'})
 
     # annual stats are shown in two rows, each with three column; email is col 1
     # email_column = normalize_spaces(annual_usage[0].text + annual_usage[2].text)
@@ -843,7 +843,7 @@ def test_usage_page_no_sms_spend(
         service_id=SERVICE_ONE_ID,
     )
 
-    annual_usage = page.find_all('div', {'class': 'govuk-grid-column-one-half'})
+    annual_usage = page.find_all('div', {'class': 'grid-col-6'})
     sms_column = normalize_spaces(annual_usage[0].text)
     assert 'Text messages' in sms_column
     assert '1,000 sent' in sms_column
@@ -918,7 +918,7 @@ def test_usage_page_with_0_free_allowance(
         year=2020,
     )
 
-    annual_usage = page.select('main .govuk-grid-column-one-half')
+    annual_usage = page.select('main .grid-col-6')
     sms_column = normalize_spaces(annual_usage[0].text)
 
     assert '0 free allowance' in sms_column

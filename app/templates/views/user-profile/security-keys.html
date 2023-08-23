@@ -45,7 +45,7 @@
   }) }}
 {% endset %}
 
-  <div class="govuk-grid-row">
+  <div class="grid-row">
 
     {{ govukErrorMessage({
       "classes": "banner-dangerous govuk-!-display-none",
@@ -63,7 +63,7 @@
     }) }}
 
     {% if credentials %}
-      <div class="govuk-grid-column-five-sixths">
+      <div class="grid-col-10">
         {{ page_header(page_title) }}
         <div class="body-copy-table">
           {% call mapping_table(
@@ -86,7 +86,7 @@
         {{ webauthn_button }}
       </div>
     {% else %}
-      <div class="govuk-grid-column-one-half">
+      <div class="grid-col-6">
         {{ page_header(page_title) }}
         <p>
           Security keys are an alternative way of signing in to Notify,
@@ -98,7 +98,7 @@
         </p>
         {{ webauthn_button }}
       </div>
-      <div class="govuk-grid-column-one-quarter">
+      <div class="grid-col-3">
         <img src="{{ asset_url('images/security-key.svg') }}" alt="" class="webauthn-illustration" width="149" height="150">
       </div>
       {% endif %}

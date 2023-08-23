@@ -22,8 +22,8 @@
   <div class="user-list">
     {% for user in users %}
       <div class="user-list-item">
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-three-quarters">
+        <div class="grid-row">
+          <div class="grid-col-9">
             <h2 class="user-list-item-heading" title="{{ user.email_address }}">
               {%- if user.name -%}
               <span class="heading-small live-search-relevant">{{ user.name }}</span>&ensp;
@@ -70,7 +70,7 @@
               </p>
             {% endif %}
             </div>
-            <div class="govuk-grid-column-one-quarter">
+            <div class="grid-col-3">
               {% if current_user.has_permissions('manage_service') %}
                 {% if user.status == 'pending' %}
                   <a class="user-list-edit-link usa-link" href="{{ url_for('.cancel_invited_user', service_id=current_service.id, invited_user_id=user.id)}}">Cancel invitation<span class="usa-sr-only"> for {{ user.email_address }}</span></a>
