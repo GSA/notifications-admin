@@ -14,7 +14,7 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
         .forEach(node => {
           result += `<li class="multiple-choice">
                       <input id="node-${count}" name="move_to" type="radio" value="node-${count}">
-                      <label class="block-label" for="node-${count}">
+                      <label class="usa-label" for="node-${count}">
                         ${node.label}
                       </label>
                       ${node.children ? foldersCheckboxesHTML(node.children) : ''}
@@ -53,10 +53,10 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
               <div id="move_to_new_folder_form" class="sticky-template-form" role="region" aria-label="Enter name of the new folder to move selected items to">
                 <div class="js-will-stick-at-bottom-when-scrolling">
                   <div class="usa-form-group">
-                    <label class="govuk-label" for="move_to_new_folder_name">
+                    <label class="usa-label" for="move_to_new_folder_name">
                       Folder name
                     </label>
-                    <input class="govuk-input " id="move_to_new_folder_name" name="move_to_new_folder_name" type="text">
+                    <input class="usa-input " id="move_to_new_folder_name" name="move_to_new_folder_name" type="text">
                   </div>
                   <div class="page-footer">
                     <button type="submit" class="usa-button" name="operation" value="move-to-new-folder">Add to new folder</button>
@@ -66,10 +66,10 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
               <div id="add_new_folder_form" class="sticky-template-form" role="region" aria-label="Enter name of the new folder">
                 <div class="js-will-stick-at-bottom-when-scrolling">
                   <div class="usa-form-group">
-                    <label class="govuk-label" for="add_new_folder_name">
+                    <label class="usa-label" for="add_new_folder_name">
                       Folder name
                     </label>
-                    <input class="govuk-input " id="add_new_folder_name" name="add_new_folder_name" type="text">
+                    <input class="usa-input " id="add_new_folder_name" name="add_new_folder_name" type="text">
                   </div>
                   <div class="page-footer">
                     <button type="submit" class="usa-button page-footer__button" name="operation" value="add-new-folder">Add new folder</button>
@@ -85,25 +85,25 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
                       </legend>
                       <div class="multiple-choice">
                         <input id="add_template_by_template_type-0" name="add_template_by_template_type" type="radio" value="email">
-                        <label class="block-label" for="add_template_by_template_type-0">
+                        <label class="usa-label" for="add_template_by_template_type-0">
                           Email
                         </label>
                       </div>
                       <div class="multiple-choice">
                         <input id="add_template_by_template_type-1" name="add_template_by_template_type" type="radio" value="sms">
-                        <label class="block-label" for="add_template_by_template_type-1">
+                        <label class="usa-label" for="add_template_by_template_type-1">
                           Text message
                         </label>
                       </div>
                       <div class="multiple-choice">
                         <input id="add_template_by_template_type-2" name="add_template_by_template_type" type="radio" value="letter">
-                        <label class="block-label" for="add_template_by_template_type-2">
+                        <label class="usa-label" for="add_template_by_template_type-2">
                           Letter
                         </label>
                       </div>
                       <div class="multiple-choice">
                         <input id="add_template_by_template_type-3" name="add_template_by_template_type" type="radio" value="copy-existing">
-                        <label class="block-label" for="add_template_by_template_type-3">
+                        <label class="usa-label" for="add_template_by_template_type-3">
                           Copy an existing template
                         </label>
                       </div>
@@ -220,7 +220,7 @@ describe('TemplateFolderForm', () => {
   });
 
   function getTemplateFolderCheckboxes () {
-    return templateFolderForm.querySelectorAll('label.usa-checkbox__label');
+    return templateFolderForm.querySelectorAll('.usa-checkbox__label');
   };
 
   function getVisibleCounter () {
@@ -612,7 +612,6 @@ describe('TemplateFolderForm', () => {
       beforeEach(() => {
 
         visibleCounterText = getVisibleCounter().textContent.trim();
-        print(visibleCounterText);
         hiddenCounterText = getHiddenCounter().textContent.trim();
 
       });
