@@ -10,16 +10,16 @@ from app.s3_client import (
     set_s3_metadata,
 )
 
-FILE_LOCATION_STRUCTURE = 'service-{}-notify/{}.csv'
+FILE_LOCATION_STRUCTURE = "service-{}-notify/{}.csv"
 
 
 def get_csv_location(service_id, upload_id):
     return (
-        current_app.config['CSV_UPLOAD_BUCKET']['bucket'],
+        current_app.config["CSV_UPLOAD_BUCKET"]["bucket"],
         FILE_LOCATION_STRUCTURE.format(service_id, upload_id),
-        current_app.config['CSV_UPLOAD_BUCKET']['access_key_id'],
-        current_app.config['CSV_UPLOAD_BUCKET']['secret_access_key'],
-        current_app.config['CSV_UPLOAD_BUCKET']['region'],
+        current_app.config["CSV_UPLOAD_BUCKET"]["access_key_id"],
+        current_app.config["CSV_UPLOAD_BUCKET"]["secret_access_key"],
+        current_app.config["CSV_UPLOAD_BUCKET"]["region"],
     )
 
 
@@ -29,9 +29,11 @@ def get_csv_upload(service_id, upload_id):
 
 def s3upload(service_id, filedata):
     upload_id = str(uuid.uuid4())
-    bucket_name, file_location, access_key, secret_key, region = get_csv_location(service_id, upload_id)
+    bucket_name, file_location, access_key, secret_key, region = get_csv_location(
+        service_id, upload_id
+    )
     utils_s3upload(
-        filedata=filedata['data'],
+        filedata=filedata["data"],
         region=region,
         bucket_name=bucket_name,
         file_location=file_location,

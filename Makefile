@@ -49,6 +49,7 @@ test: py-lint py-test js-lint js-test ## Run tests
 
 .PHONY: py-lint
 py-lint: ## Run python linting scanners
+	pipenv run black .
 	pipenv run flake8 .
 	pipenv run isort --check-only ./app ./tests
 
