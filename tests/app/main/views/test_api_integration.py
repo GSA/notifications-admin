@@ -119,7 +119,7 @@ def test_should_show_api_keys_page(
 ):
     page = client_request.get('main.api_keys', service_id=SERVICE_ONE_ID)
     rows = [normalize_spaces(row.text) for row in page.select('main tr')]
-    revoke_link = page.select_one('main tr a.govuk-link.govuk-link--destructive')
+    revoke_link = page.select_one('main tr a.usa-link.usa-link--destructive')
 
     assert rows[0] == 'API keys Action'
     assert rows[1] == f"another key name Revoked {format_datetime_short(date.fromtimestamp(0).isoformat())}"

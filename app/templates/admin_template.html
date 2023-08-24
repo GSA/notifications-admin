@@ -14,8 +14,6 @@
   {%- for font in font_paths %}
   <link rel="preload" href="{{ asset_url(font, with_querystring_hash=False) }}" as="font" type="font/woff2" crossorigin>
   {%- endfor %}
-  <link rel="stylesheet" media="screen" href="{{ asset_url('stylesheets/main.css') }}" />
-  <link rel="stylesheet" media="print" href="{{ asset_url('stylesheets/print.css') }}" />
   <link rel="stylesheet" media="screen" href="{{ asset_url('css/styles.css') }}" />
   {% block extra_stylesheets %}
   {% endblock %}
@@ -148,9 +146,9 @@
   
 
   {% if current_service and current_service.research_mode %}
-    {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="govuk-footer__link">Technology Transformation Services</a><span id="research-mode" class="research-mode">research mode</span>' %}
+    {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="usa-link">Technology Transformation Services</a><span id="research-mode" class="research-mode">research mode</span>' %}
   {% else %}
-    {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="govuk-footer__link">Technology Transformation Services</a>' %}
+    {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="usa-link">Technology Transformation Services</a>' %}
   {% endif %}
 
   {{ govukFooter({

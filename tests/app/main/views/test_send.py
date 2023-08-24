@@ -59,7 +59,7 @@ def test_show_correct_title_and_description_for_email_sender_type(
         template_id=fake_uuid
     )
 
-    assert page.select_one('.govuk-fieldset__legend h1').text.strip() == 'Where should replies come back to?'
+    assert page.select_one('.usa-fieldset h1').text.strip() == 'Where should replies come back to?'
 
 
 def test_show_correct_title_and_description_for_sms_sender_type(
@@ -74,7 +74,7 @@ def test_show_correct_title_and_description_for_sms_sender_type(
         template_id=fake_uuid
     )
 
-    assert page.select_one('.govuk-fieldset__legend h1').text.strip() == 'Who should the message come from?'
+    assert page.select_one('.usa-fieldset h1').text.strip() == 'Who should the message come from?'
 
 
 def test_default_email_sender_is_checked_and_has_hint(

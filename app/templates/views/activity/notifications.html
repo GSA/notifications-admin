@@ -16,7 +16,7 @@
       field_headings_visible=False
     ) %}
       {% call row_heading() %}
-        <a class="govuk-link govuk-link--no-visited-state file-list-filename" href="{{ single_notification_url(notification_id=item.id) }}">{{ item.to.splitlines()|join(', ') if item.to else '' }}</a>
+        <a class="usa-link file-list-filename" href="{{ single_notification_url(notification_id=item.id) }}">{{ item.to.splitlines()|join(', ') if item.to else '' }}</a>
         <p class="file-list-hint">
           {{ item.preview_of_content }}
         </p>
