@@ -60,7 +60,6 @@ from app.main.forms import (
     SomethingElseBrandingForm,
 )
 from app.utils import DELIVERED_STATUSES, FAILURE_STATUSES, SENDING_STATUSES
-from app.utils.branding import NHS_EMAIL_BRANDING_ID
 from app.utils.branding import get_email_choices as get_email_branding_choices
 from app.utils.time import parse_naive_dt
 from app.utils.user import (
@@ -922,23 +921,6 @@ def email_branding_govuk_and_org(service_id):
         return redirect(url_for('.service_settings', service_id=current_service.id))
 
     return render_template('views/service-settings/branding/email-branding-govuk-org.html')
-
-
-@main.route("/services/<uuid:service_id>/service-settings/email-branding/nhs", methods=['GET', 'POST'])
-@user_has_permissions('manage_service')
-def email_branding_nhs(service_id):
-    check_email_branding_allowed_for_service('nhs')
-
-    if request.method == 'POST':
-        current_service.update(email_branding=NHS_EMAIL_BRANDING_ID)
-
-        flash('You’ve updated your email branding', 'default')
-        return redirect(url_for('.service_settings', service_id=current_service.id))
-
-    return render_template(
-        'views/service-settings/branding/email-branding-nhs.html',
-        nhs_branding_id=NHS_EMAIL_BRANDING_ID
-    )
 
 
 @main.route("/services/<uuid:service_id>/service-settings/email-branding/organization", methods=['GET', 'POST'])

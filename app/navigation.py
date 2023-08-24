@@ -183,10 +183,8 @@ class MainNavigation(Navigation):
         },
         'settings': {
             # 'add_organization_from_gp_service',
-            # 'add_organization_from_nhs_local_service',
             'email_branding_govuk',
             'email_branding_govuk_and_org',
-            'email_branding_nhs',
             'email_branding_organization',
             'email_branding_request',
             'email_branding_something_else',
