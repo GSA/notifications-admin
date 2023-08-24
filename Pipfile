@@ -14,7 +14,8 @@ flask-wtf = "~=1.1"
 gds-metrics = {version = "==0.2.4", ref = "6f1840a57b6fb1ee40b7e84f2f18ec229de8aa72", git = "https://github.com/alphagov/gds_metrics_python.git"}
 govuk-bank-holidays = "==0.13"
 govuk-frontend-jinja = {version = "==0.5.8-alpha", git = "https://github.com/alphagov/govuk-frontend-jinja.git"}
-gunicorn = {version = "==20.1.0", extras = ["eventlet"], ref = "1299ea9e967a61ae2edebe191082fd169b864c64", git = "https://github.com/benoitc/gunicorn.git"}
+gunicorn = "==21.2.0"
+# gunicorn = {version = "==20.1.0", extras = ["eventlet"], ref = "1299ea9e967a61ae2edebe191082fd169b864c64", git = "https://github.com/benoitc/gunicorn.git"}
 humanize = "~=4.8"
 itsdangerous = "~=2.1"
 jinja2 = "~=3.1"
