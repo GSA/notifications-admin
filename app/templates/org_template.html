@@ -6,14 +6,14 @@
 
 {% block main %}
   <div class="grid-container">
-    <div class="navigation-service">
+    <div class="navigation-service usa-breadcrumb">
       {% if current_user.platform_admin %}
-        <a href="{{ url_for('.organizations') }}" class="govuk-link govuk-link--no-visited-state navigation-organization-link">Organizations</a>
+        <a href="{{ url_for('.organizations') }}" class="usa-link navigation-organization-link">Organizations</a>
       {% endif %}
-      <div class="navigation-service-name govuk-!-font-weight-bold">
+      <div class="navigation-service govuk-!-font-weight-bold">
         {{ current_org.name }}
       </div>
-      <a href="{{ url_for('main.choose_account') }}" class="govuk-link govuk-link--no-visited-state navigation-service-switch">Switch service</a>
+      <a href="{{ url_for('main.choose_account') }}" class="usa-link navigation-service">Switch service</a>
     </div>
     <div class="govuk-grid-row govuk-!-padding-bottom-12">
       <div class="govuk-grid-column-one-quarter">

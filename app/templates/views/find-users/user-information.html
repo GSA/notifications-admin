@@ -20,7 +20,7 @@
           <ul>
           {% for service in user.live_services|sort %}
             <li class="browse-list-item">
-              <a class="govuk-link govuk-link--no-visited-state browse-list-hint" href={{url_for('.service_dashboard', service_id=service.id)}}>{{ service.name }}</a>
+              <a class="usa-link browse-list-hint" href={{url_for('.service_dashboard', service_id=service.id)}}>{{ service.name }}</a>
             </li>
           {% endfor %}
           </ul>
@@ -36,7 +36,7 @@
           <ul>
           {% for service in user.trial_mode_services|sort %}
             <li class="browse-list-item">
-              <a class="govuk-link govuk-link--no-visited-state browse-list-hint" href={{url_for('.service_dashboard', service_id=service.id)}}>{{ service.name }}</a>
+              <a class="usa-link browse-list-hint" href={{url_for('.service_dashboard', service_id=service.id)}}>{{ service.name }}</a>
             </li>
           {% endfor %}
           </ul>
@@ -49,9 +49,11 @@
 
       <h2 class="font-body-lg">Authentication</h2>
       <p>{{ user.auth_type | format_auth_type }}</p>
-      <a class="govuk-link govuk-link" href="{{ url_for('main.change_user_auth', user_id=user.id) }}">
-        Change authentication for this user
-      </a>
+      {% if user.auth_type != 'webauthn_auth' %}
+        <a class="usa-link" href="{{ url_for('main.change_user_auth', user_id=user.id) }}">
+          Change authentication for this user
+        </a>
+      {% endif %}
 
       <h2 class="font-body-lg">Last login</h2>
       {% if not user.logged_in_at %}
@@ -70,7 +72,7 @@
       {% endif %}
       {% if user.state == 'active' %}
         <span class="page-footer-link page-footer-delete-link-without-button">
-          <a class="govuk-link govuk-link--destructive" href="{{ url_for('main.archive_user', user_id=user.id) }}">
+          <a class="usa-link usa-link--destructive" href="{{ url_for('main.archive_user', user_id=user.id) }}">
             Archive user
           </a>
         </span>

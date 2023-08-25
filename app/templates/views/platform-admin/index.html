@@ -2,8 +2,8 @@
 {% from "components/big-number.html" import big_number_simple %}
 {% from "components/status-box.html" import status_box %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/details/macro.njk" import govukDetails %}
-{% from "components/uk_components/button/macro.njk" import govukButton %}
+{% from "components/components/details/macro.njk" import govukDetails %}
+{% from "components/components/button/macro.njk" import govukButton %}
 
 {% block per_page_title %}
   Summary
@@ -11,7 +11,7 @@
 
 {% block platform_admin_content %}
 
-  <h1 class="heading-medium">
+  <h1 class="font-body-2xl">
     Summary
   </h1>
 
@@ -20,7 +20,7 @@
       {{ form.start_date(param_extensions={"hint": {"text":"Enter start date in format YYYY-MM-DD"}}) }}
       {{ form.end_date(param_extensions={"hint": {"text":"Enter end date in format YYYY-MM-DD"}}) }}
       </br>
-      {{ govukButton({ "text": "Filter" }) }}
+      {{ govukButton({ "text": "Filter", "classes": "margin-y-2" }) }}
     {% endcall %}
   {% endset %}
 

@@ -747,7 +747,7 @@ def test_manage_org_users_should_show_live_search_if_more_than_7_users(
     assert 'data-module' not in textbox
     assert not page.select_one('[data-force-focus]')
     assert textbox['class'] == [
-        'usa-input', 'govuk-!-width-full',
+        'usa-input'
     ]
     assert normalize_spaces(
         page.select_one('label[for=search]').text
@@ -1416,7 +1416,7 @@ def test_view_edit_organization_billing_details(
     ]
     for label in labels:
         assert label.text.strip() in labels_list
-    textbox_names = page.find_all('input', class_='govuk-input govuk-!-width-full')
+    textbox_names = page.find_all('input', class_='govuk-input ')
     names_list = [
         'billing_contact_email_addresses',
         'billing_contact_names',

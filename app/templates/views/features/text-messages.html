@@ -11,7 +11,7 @@
   <h1 class="font-body-2xl">Text messages</h1>
   <p>Send thousands of free text messages to US phone numbers with Notify.</p>
   {% if not current_user.is_authenticated %}
-  <p><a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.register') }}">Create an account</a> and try Notify for yourself.</p>
+  <p><a class="usa-link" href="{{ url_for('main.register') }}">Create an account</a> and try Notify for yourself.</p>
   {% endif %}
 
   <h2 class="heading heading-medium">Features</h2>
@@ -20,12 +20,12 @@
     <li>create reusable text message templates</li>
     <li>personalize the content of your texts</li>
     <li>send and schedule bulk messages</li></ul>
-  <!-- <p>You can also <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.documentation') }}">integrate with our API</a> to send text messages automatically.<p>
+  <!-- <p>You can also <a class="usa-link" href="{{ url_for('.documentation') }}">integrate with our API</a> to send text messages automatically.<p>
 
   <h3 class="font-body-md margin-bottom-2" id="receive">Receive text messages</h3>
   <p>Let people send messages to your service or reply to your texts.</p>
   <p>You can see and reply to the messages you receive when you sign in to Notify. If you’re using our API, you can set up your own automated processes to manage replies.</p>
-  <p><a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.support') }}">Contact us</a> to request a unique number for text message replies.</p> -->
+  <p><a class="usa-link" href="{{ url_for('.support') }}">Contact us</a> to request a unique number for text message replies.</p> -->
 
   <h3 class="font-body-md margin-bottom-2" id="sender">Show people who your texts are from</h3>
   <p>When you send a text message with Notify, the sender name tells people who it’s from.</p>
@@ -40,6 +40,6 @@
 
   <h2 class="heading heading-medium">Pricing<h2>
     <p>Each service you add has an annual allowance of free text messages.</p>
-    <p><a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.pricing', _anchor='text-messages') }}">See pricing</a> for more details.</p>
+    <p><a class="usa-link" href="{{ url_for('.pricing', _anchor='text-messages') }}">See pricing</a> for more details.</p>
 
 {% endblock %}

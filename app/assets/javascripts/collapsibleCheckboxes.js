@@ -90,7 +90,7 @@
   };
   CollapsibleCheckboxes.prototype.start = function(component) {
     this.$component = $(component);
-    this.$formGroup = this.$component.find('.govuk-form-group').first();
+    this.$formGroup = this.$component.find('.usa-form-group').first();
     this.$fieldset = this.$formGroup.find('fieldset').first();
     this.$checkboxes = this.$fieldset.find('input[type=checkbox]');
     this.fieldLabel = this.$component.data('fieldLabel');

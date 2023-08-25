@@ -2,7 +2,7 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import govukBackLink %}
 
 {% block service_page_title %}
   {{ page_title }}
@@ -25,15 +25,15 @@
   ) %}
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full {% if form.placeholder_value.label.text == 'phone number' %}extra-tracking{% endif %}">
-        {{ form.placeholder_value(param_extensions={"classes": "govuk-!-width-full"}) }}
+        {{ form.placeholder_value(param_extensions={"classes": ""}) }}
       </div>
       {% if skip_link or link_to_upload %}
         <div class="govuk-grid-column-full">
           {% if link_to_upload %}
-            <a class="govuk-link govuk-link--no-visited-state govuk-!-margin-right-3" href="{{ url_for('.send_messages', service_id=current_service.id, template_id=template.id) }}">Upload a list of {{ 999|recipient_count_label(template.template_type) }}</a>
+            <a class="usa-link govuk-!-margin-right-3" href="{{ url_for('.send_messages', service_id=current_service.id, template_id=template.id) }}">Upload a list of {{ 999|recipient_count_label(template.template_type) }}</a>
           {% endif %}
           {% if skip_link %}
-            <a href="{{ skip_link[1] }}" class="govuk-link govuk-link--no-visited-state govuk-!-margin-right-3">{{ skip_link[0] }}</a>
+            <a href="{{ skip_link[1] }}" class="usa-link govuk-!-margin-right-3">{{ skip_link[0] }}</a>
           {% endif %}
         </div>
       {% endif %}

@@ -26,7 +26,7 @@ def test_email_branding_page_shows_full_branding_list(
         page.select_one('h1').text
     ) == "Email branding"
 
-    assert page.select('.grid-col-10 a')[-1]['href'] == url_for('main.create_email_branding')
+    assert page.select('.grid-col-9 a')[-1]['href'] == url_for('main.create_email_branding')
 
     assert brand_names == [
         'org 1',

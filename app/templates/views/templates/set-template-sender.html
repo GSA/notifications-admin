@@ -1,7 +1,7 @@
 {% extends "withnav_template.html" %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import govukBackLink %}
 
 {% set page_title = 'Set letter contact block' %}
 
@@ -29,7 +29,7 @@
       }) }}
       <div class="govuk-grid-column-three-quarters">
         {{ page_footer('Continue') }}
-        <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.service_add_letter_contact', service_id=current_service.id, from_template=template_id) }}">Add new sender</a>
+        <a class="usa-link" href="{{ url_for('.service_add_letter_contact', service_id=current_service.id, from_template=template_id) }}">Add new sender</a>
     </div>
     {% endcall %}
   </div>

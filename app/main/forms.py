@@ -256,7 +256,7 @@ def govuk_text_input_field_widget(self, field, type=None, param_extensions=None,
     merge_jsonlike(params, param_extensions)
 
     return Markup(
-        render_template('components/uk_components/input/template.njk', params=params))
+        render_template('components/components/input/template.njk', params=params))
 
 
 class GovukTextInputField(StringField):
@@ -313,7 +313,7 @@ class GovukSearchField(SearchField):
     # this bypasses that by making self.widget a method with the same interface as widget.__call__
     def widget(self, field, param_extensions=None, **kwargs):
 
-        params = {"classes": "govuk-!-width-full"}  # email addresses don't need to be spellchecked
+        params = {"classes": ""}  # email addresses don't need to be spellchecked
         merge_jsonlike(params, param_extensions)
 
         return govuk_text_input_field_widget(self, field, type="search", param_extensions=params, **kwargs)
@@ -511,7 +511,7 @@ class NestedFieldMixin:
                 }
             },
             "formGroup": {
-                "classes": "govuk-form-group--nested"
+                "classes": "usa-form-group--nested"
             },
             "asList": True,
             "items": []
@@ -720,7 +720,6 @@ def govuk_checkboxes_field_widget(self, field, wrap_in_collapsible=False, param_
             "attributes": {"id": field.name},
             "legend": {
                 "text": field.label.text,
-                "classes": "govuk-fieldset__legend--s"
             }
         },
         "asList": self.render_as_list,
@@ -791,7 +790,7 @@ def govuk_radios_field_widget(self, field, param_extensions=None, **kwargs):
         merge_jsonlike(params, param_extensions)
 
     return Markup(
-        render_template('components/uk_components/radios/template.njk', params=params))
+        render_template('components/components/radios/template.njk', params=params))
 
 
 class GovukCheckboxField(BooleanField):
@@ -848,7 +847,7 @@ class GovukTextareaField(TextAreaField):
             merge_jsonlike(params, param_extensions)
 
         return Markup(
-            render_template('components/uk_components/textarea/template.njk', params=params))
+            render_template('components/components/textarea/template.njk', params=params))
 
 
 # based on work done by @richardjpope: https://github.com/richardjpope/recourse/blob/master/recourse/forms.py#L6

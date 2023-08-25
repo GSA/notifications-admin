@@ -184,7 +184,7 @@ def test_should_show_empty_text_box(
     assert 'value' not in textbox
     assert textbox['name'] == 'placeholder_value'
     assert textbox['class'] == [
-        'usa-input', 'govuk-!-width-full',
+        'usa-input',
     ]
     # data-module=autofocus is set on a containing element so it
     # shouldn’t also be set on the textbox itself
