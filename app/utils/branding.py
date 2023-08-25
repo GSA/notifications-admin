@@ -1,7 +1,5 @@
 from app.models.organization import Organization
 
-NHS_EMAIL_BRANDING_ID = 'a7dc4e56-660b-4db7-8cff-12c37b12b5ea'
-
 
 def get_email_choices(service):
     organization_branding_id = service.organization.email_branding_id if service.organization else None
