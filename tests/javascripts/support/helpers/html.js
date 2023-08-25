@@ -20,7 +20,7 @@ function getRadios (fields, name) {
 function getRadioGroup (data) {
   let radioGroup = document.createElement('div');
 
-  radioGroup.classList.add('govuk-form-group');
+  radioGroup.classList.add('usa-form-group');
   if ('cssClasses' in data) {
     data.cssClasses.forEach(cssClass => radioGroup.classList.add(cssClass));
   }
@@ -43,17 +43,17 @@ function templatesAndFoldersCheckboxes (hierarchy) {
   hierarchy.forEach((node, idx) => {
 
     result += `
-      <div class="govuk-checkboxes__item template-list-item template-list-item-with-checkbox template-list-item-without-ancestors">
+      <div class="usa-checkbox template-list-item template-list-item-with-checkbox template-list-item-without-ancestors">
         <input class="usa-checkbox__input" id="templates-or-folder-${idx}" name="templates_and_folders" type="checkbox" value="templates-or-folder-${idx}">
-        <label class="usa-checkbox__label template-list-item-label margin-top-05" for="templates-or-folder-${idx}">
+        <label class="usa-checkbox__label template-list-item-label" for="templates-or-folder-${idx}">
           <span class="usa-sr-only">${node.label}</span>
+          ${node.label}
         </label>
-        <a href="/services/6658542f-0cad-491f-bec8-ab8457700ead/templates/all/folders/3d057d9a-51fc-45ea-8b63-0003206350a6" class="govuk-link govuk-link--no-visited-state template-list-${node.type === 'folder' ? 'folder' : 'template'}">
+        <a href="/services/6658542f-0cad-491f-bec8-ab8457700ead/templates/all/folders/${idx}" class="usa-link template-list-${node.type === 'folder' ? 'folder' : 'template'}">
           <span class="live-search-relevant">${node.label}</span>
         </a>
         ${node.meta}
       </div>`;
-
   });
 
   return result;

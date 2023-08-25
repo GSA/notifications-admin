@@ -1,5 +1,5 @@
 {% extends "fullwidth_template.html" %}
-{% from "components/uk_components/button/macro.njk" import govukButton %}
+{% from "components/components/button/macro.njk" import govukButton %}
 
 {% block meta %}
 <meta name="description"
@@ -12,7 +12,7 @@ Notify.gov
 
 {% block content %}
 
-<section class="usa-section--dark" aria-label="Introduction">
+<section class="usa-section--dark usa-hero" aria-label="Introduction">
   <div class="grid-container padding-y-4">
     <div class="grid-row grid-gap display-flex flex-align-center">
       <div class="desktop:grid-col-7 tablet:grid-col-12">
@@ -32,7 +32,7 @@ Notify.gov
     </div>
   </div>
 </section>
-<section class="grid-container usa-section">
+<section class="grid-container usa-section usa-section__home">
   <div class="grid-row grid-gap">
     <div class="tablet:grid-col-5 margin-bottom-3 usa-prose">
       <h2 class="font-heading-xl margin-top-0 margin-bottom-3">
@@ -46,7 +46,7 @@ Notify.gov
     </div>
   </div>
 </section>
-<section class="grid-container usa-section">
+<section class="grid-container usa-section usa-section__home">
   <div class="grid-row grid-gap">
     <div class="tablet:grid-col-5 margin-bottom-3 usa-prose">
       <h2 class="font-heading-xl margin-top-0 margin-bottom-3">
@@ -60,7 +60,7 @@ Notify.gov
     </div>
   </div>
 </section>
-<section class="grid-container usa-section">
+<section class="grid-container usa-section usa-section__home">
   <div class="grid-row grid-gap">
     <div class="tablet:grid-col-5 margin-bottom-3 usa-prose">
       <h2 class="font-heading-xl margin-top-0 margin-bottom-3">
@@ -122,7 +122,7 @@ Notify.gov
     </div>
   </div>
 </section> -->
-<section class="grid-container usa-section border-top border-base-lighter usa-prose">
+<section class="grid-container usa-section usa-section__home border-top border-base-lighter usa-prose">
   <h2 class="font-heading-xl margin-top-0 margin-bottom-3">
     About the product
   </h2>
@@ -164,7 +164,7 @@ Notify.gov
               "classes": "product-page-button button-container__button govuk-!-margin-right-3",
               "href": url_for('main.register' )
             }) }}
-            or <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.sign_in' )}}">sign in</a> if you’ve used
+            or <a class="usa-link" href="{{ url_for('.sign_in' )}}">sign in</a> if you’ve used
             it before
           </div>
         </div>
@@ -257,7 +257,7 @@ Notify.gov
       </div>
       <p>
         See the
-        <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.performance') }}">list of services and organizations</a>.
+        <a class="usa-link" href="{{ url_for('main.performance') }}">list of services and organizations</a>.
       </p>
     </div>
   </div>
@@ -280,7 +280,7 @@ Notify.gov
           <p class="align-with-big-number-hint">
             There’s no monthly charge, no setup fee and no&nbsp;procurement process.
           </p>
-          <p>Find out more about <a class="govuk-link govuk-link--no-visited-state" href="https://www.notifications.service.gov.uk/pricing">pricing</a>.
+          <p>Find out more about <a class="usa-link" href="https://www.notifications.service.gov.uk/pricing">pricing</a>.
           </p>
         </div>
       </div>
@@ -296,7 +296,7 @@ Notify.gov
           Notify.gov is built and maintained by the Public Benefits Studio, within the General Services Administration's Technology Transformation Services.
         </p>
         <p>
-          <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.support') }}">Contact us</a> if you have a question or want
+          <a class="usa-link" href="{{ url_for('main.support') }}">Contact us</a> if you have a question or want
           to give feedback.
         </p>
       </div>

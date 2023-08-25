@@ -1,0 +1,117 @@
+<footer class="usa-footer usa-footer--big">
+  {# <div class="grid-container usa-footer__return-to-top">
+    <a href="#">Return to top</a>
+  </div> #}
+  <div class="usa-footer__primary-section">
+    <div class="grid-container">
+      <div class="grid-row">
+        <div class="grid-col">
+          {# {% if params.navigation %}
+          <nav class="usa-footer__nav" aria-label="Footer navigation,,">
+            <div class="grid-row grid-gap-2">
+              {% for nav in params.navigation %}
+              <div class="mobile-lg:grid-col-6 desktop:grid-col-4">
+                <section class="
+                    usa-footer__primary-content
+                    usa-footer__primary-content--collapsible
+                  ">
+                  <h4 class="usa-footer__primary-link">{{ nav.title }}</h4>
+                  <ul class="usa-list usa-list--unstyled">
+                    {% for item in nav.items %}
+                      {% if item.href and item.text %}
+                      <li class="usa-footer__secondary-link">
+                        <a href="{{ item.href }}" {% for attribute, value in item.attributes %}
+                          {{attribute}}="{{value}}" {% endfor %}>
+                          {{ item.text }}
+                        </a>
+                      </li>
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                </section>
+              </div>
+              {% endfor %}
+            </div>
+          </nav>
+          {% endif %} #}
+        </div>
+      </div>
+      <div class="padding-y-1">
+          {% if params.meta %}
+          <h2 class="usa-sr-only">{{ params.meta.visuallyHiddenTitle | default("Support links") }}</h2>
+          {% if params.meta.items %}
+            {% for item in params.meta.items %}
+              <a class="govuk-footer__link" href="{{ item.href }}" {% for attribute, value in item.attributes %}
+                {{attribute}}="{{value}}" {% endfor %}>
+                {{ item.text }}
+              </a>
+            {% endfor %}
+          {% endif %}
+          {% if params.meta.text or params.meta.html %}
+          <div>
+            {{ params.meta.html | safe if params.meta.html else params.meta.text }}
+          </div>
+          {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="usa-identifier site-identifier">
+  <section class="usa-identifier__section usa-identifier__section--masthead" aria-label="Agency identifier,,,,,,">
+    <div class="usa-identifier__container">
+      <div class="usa-identifier__logos"><a href="javascript:void(0);" class="usa-identifier__logo">
+          <img class="usa-identifier__logo-img" src="{{ params.assetsPath | default('/static/images') }}/gsa-logo.svg"  alt="GSA Logo" role="img" width="48"
+            height="48">
+        </a></div>
+      <section class="usa-identifier__identity" aria-label="Agency description">
+        <p class="usa-identifier__identity-domain">beta.notify.gov</p>
+        <p class="usa-identifier__identity-disclaimer">An official website of the <a href="https://gsa.gov">General
+            Services Administration</a></p>
+      </section>
+    </div>
+  </section>
+  <nav class="usa-identifier__section usa-identifier__section--required-links" aria-label="Important links">
+    <div class="usa-identifier__container">
+      <ul class="usa-identifier__required-links-list">
+        <li class="usa-identifier__required-links-item">
+          <a href="https://www.gsa.gov/about-us" class="usa-identifier__required-link">About GSA</a>
+        </li>
+        <li class="usa-identifier__required-links-item">
+          <a href="https://www.gsa.gov/website-information/accessibility-aids"
+            class="usa-identifier__required-link">Accessibility support</a>
+        </li>
+        <li class="usa-identifier__required-links-item">
+          <a href="https://www.gsa.gov/reference/freedom-of-information-act-foia"
+            class="usa-identifier__required-link">FOIA requests</a>
+        </li>
+        <li class="usa-identifier__required-links-item">
+          <a href="https://www.gsa.gov/reference/civil-rights-programs/notification-and-federal-employee-antidiscrimination-and-retaliation-act-of-2002"
+            class="usa-identifier__required-link">No FEAR Act data</a>
+        </li>
+        <li class="usa-identifier__required-links-item">
+          <a href="https://www.gsaig.gov/" class="usa-identifier__required-link">Office of the Inspector General</a>
+        </li>
+        <li class="usa-identifier__required-links-item">
+          <a href="https://www.gsa.gov/reference/reports/budget-performance"
+            class="usa-identifier__required-link">Performance reports</a>
+        </li>
+        <li class="usa-identifier__required-links-item">
+          <a href="https://www.gsa.gov/website-information/website-policies"
+            class="usa-identifier__required-link">Privacy policy</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <section class="usa-identifier__section usa-identifier__section--usagov"
+    aria-label="Government information and services">
+    <div class="usa-identifier__container">
+      <div class="usa-identifier__usagov-description">
+        Looking for U.S. government information and services?
+      </div>
+      <a href="https://www.usa.gov/" class="usa-link">Visit USA.gov</a>
+    </div>
+  </section>
+</div>

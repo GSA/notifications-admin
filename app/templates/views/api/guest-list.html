@@ -5,7 +5,7 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/list-entry.html" import list_entry %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import govukBackLink %}
 
 {% block service_page_title %}
   Guest list
@@ -26,12 +26,12 @@
       <ul>
         {% if form.email_addresses.errors %}
           <li>
-            <a class="govuk-link govuk-link--destructive" href="#{{ form.email_addresses.name }}">Enter valid email addresses</a>
+            <a class="usa-link usa-link--destructive" href="#{{ form.email_addresses.name }}">Enter valid email addresses</a>
           </li>
         {% endif %}
         {% if form.phone_numbers.errors %}
           <li>
-            <a class="govuk-link govuk-link--destructive" href="#{{ form.phone_numbers.name }}">Enter valid phone numbers</a>
+            <a class="usa-link usa-link--destructive" href="#{{ form.phone_numbers.name }}">Enter valid phone numbers</a>
           </li>
         {% endif %}
       </ul>
@@ -45,7 +45,7 @@
   </p>
 
   <p>
-    You do not need to add yourself or your <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.manage_users', service_id=current_service.id) }}">team members</a> to the guest list.
+    You do not need to add yourself or your <a class="usa-link" href="{{ url_for('main.manage_users', service_id=current_service.id) }}">team members</a> to the guest list.
   </p>
 
   {% call form_wrapper() %}

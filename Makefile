@@ -48,7 +48,8 @@ generate-version-file: ## Generates the app version file
 test: py-lint py-test js-lint js-test ## Run tests
 
 .PHONY: py-lint
-py-lint: ## Run python linting scanners
+py-lint: ## Run python linting scanners and black
+	pipenv run black .
 	pipenv run flake8 .
 	pipenv run isort --check-only ./app ./tests
 

@@ -1,5 +1,5 @@
-{% from "components/uk_components/fieldset/macro.njk" import govukFieldset %}
-{% from "components/uk_components/error-message/macro.njk" import govukErrorMessage %}
+{% from "components/components/fieldset/macro.njk" import govukFieldset %}
+{% from "components/components/error-message/macro.njk" import govukErrorMessage %}
 
 {% macro list_entry(
   field,
@@ -8,7 +8,7 @@
   autocomplete=True
 ) %}
 
-  <div class="govuk-form-group">
+  <div class="usa-form-group">
     {% if hint %}
       {% set attributes = {"aria-describedby": field.name + '-hint'} %}
     {% else %}
@@ -48,7 +48,7 @@
               "html": '<span class="usa-sr-only">' + item_name + ' number </span>' + loop.index|string + '.',
               "classes": label_classes
             },
-            "classes": "govuk-input--numbered govuk-!-width-full",
+            "classes": "govuk-input--numbered ",
             "value": field.data[loop.index0],
             "autocomplete": autocomplete
           }) }}

@@ -1,12 +1,12 @@
-{% from "components/uk_components/error-message/macro.njk" import govukErrorMessage -%}
-{% from "components/uk_components/fieldset/macro.njk" import govukFieldset %}
-{% from "components/uk_components/hint/macro.njk" import govukHint %}
-{% from "components/uk_components/label/macro.njk" import govukLabel %}
+{% from "components/components/error-message/macro.njk" import govukErrorMessage -%}
+{% from "components/components/fieldset/macro.njk" import govukFieldset %}
+{% from "components/components/hint/macro.njk" import govukHint %}
+{% from "components/components/radio-label/macro.njk" import usaRadioLabel %}
 
 
 {#- Copied from https://github.com/alphagov/govuk-frontend/blob/v2.13.0/src/components/checkboxes/template.njk
     Changes:
-    - `formGroup` option to control whether or not the checkboxes are wrapped with a `govuk-form-group` class
+    - `formGroup` option to control whether or not the checkboxes are wrapped with a `usa-form-group` class
     - `classes` option added to `item` allow custom classes on the `.govuk-checkboxes__item` element
     - `classes` option added to `item.hint` allow custom classes on the `.govuk-hint` element (added to GOVUK Frontend in v3.5.0 - remove when we update)
     - `asList` option added the root `params` object to allow setting of the `.govuk-checkboxes` and `.govuk-checkboxes__item` element types
@@ -73,7 +73,7 @@
     visuallyHiddenText: params.errorMessage.visuallyHiddenText
   }) | indent(2) | trim }}
 {% endif %}
-  <{{ groupElement }} class="govuk-checkboxes {%- if params.classes %} {{ params.classes }}{% endif %}"
+  <{{ groupElement }} class="{%- if params.classes %} {{ params.classes }}{% endif %}"
     {%- for attribute, value in params.attributes %} {{ attribute }}="{{ value }}"{% endfor %}
     {%- if isConditional %} data-module="checkboxes"{% endif -%}>
     {% for item in params.items %}
@@ -84,18 +84,18 @@
     {% set itemHintId = id + "-item-hint" if hasHint else "" %}
     {% set itemDescribedBy = describedBy if not hasFieldset else "" %}
     {% set itemDescribedBy = (itemDescribedBy + " " + itemHintId) | trim %}
-    <{{ groupItemElement }} class="govuk-checkboxes__item {%- if item.classes %} {{ item.classes }}{% endif %}">
+    <{{ groupItemElement }} class="usa-checkbox {%- if item.classes %} {{ item.classes }}{% endif %}">
       {%- if item.before %}{{ item.before }}{% endif -%}
-      <input class="govuk-checkboxes__input" id="{{ id }}" name="{{ name }}" type="checkbox" value="{{ item.value }}"
+      <input class="usa-checkbox__input" id="{{ id }}" name="{{ name }}" type="checkbox" value="{{ item.value }}"
       {{-" checked" if item.checked }}
       {{-" disabled" if item.disabled }}
       {%- if item.conditional %} data-aria-controls="{{ conditionalId }}"{% endif -%}
       {%- if itemDescribedBy %} aria-describedby="{{ itemDescribedBy }}"{% endif -%}
       {%- for attribute, value in item.attributes %} {{ attribute }}="{{ value }}"{% endfor -%}>
-      {{ govukLabel({
+      {{ usaRadioLabel({
         html: item.html,
         text: item.text,
-        classes: 'govuk-checkboxes__label' + (' ' + item.label.classes if item.label.classes),
+        classes: (' ' + item.label.classes if item.label.classes),
         attributes: item.label.attributes,
         for: id
       }) | indent(6) | trim }}
@@ -127,7 +127,7 @@
   </{{ groupElement }}>
 {% endset -%}
 
-<div class="{% if formGroup %}govuk-form-group{% endif %} {%- if params.errorMessage %} govuk-form-group--error{% endif %} {%- if params.formGroup.classes %} {{ params.formGroup.classes }}{% endif %}">
+<div class="{% if formGroup %}usa-form-group{% endif %} {%- if params.errorMessage %} usa-form-group--error{% endif %} {%- if params.formGroup.classes %} {{ params.formGroup.classes }}{% endif %}">
 {% if params.fieldset %}
   {% call govukFieldset({
     describedBy: describedBy,

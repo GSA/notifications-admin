@@ -41,7 +41,7 @@ describe('Collapsible fieldset', () => {
     // set up DOM
     document.body.innerHTML =
       `<div class="selection-wrapper" data-module="collapsible-checkboxes" data-field-label="folder">
-        <div class="govuk-form-group">
+        <div class="usa-form-group">
           <fieldset class="govuk-fieldset" id="folder_permissions" aria-describedby="users_with_permission-hint">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
               Folders this team member can see
@@ -57,7 +57,7 @@ describe('Collapsible fieldset', () => {
       </div>`;
 
       wrapper = document.querySelector('.selection-wrapper');
-      formGroup = wrapper.querySelector('.govuk-form-group');
+      formGroup = wrapper.querySelector('.usa-form-group');
       fieldset = formGroup.querySelector('fieldset');
       checkboxesContainer = fieldset.querySelector('.govuk-checkboxes');
       checkboxes = checkboxesContainer.querySelectorAll('input[type=checkbox]');
@@ -321,7 +321,7 @@ describe('Collapsible fieldset', () => {
 
         // add a nested list of checkboxes to the first checkbox item
         const nestedCheckboxes = document.createElement('div');
-        nestedCheckboxes.className = 'govuk-form-group govuk-form-group--nested';
+        nestedCheckboxes.className = 'usa-form-group usa-form-group--nested';
         nestedCheckboxes.innerHTML = _checkboxes(11, 20);
         checkboxesContainer.querySelector('.govuk-checkboxes__item').appendChild(nestedCheckboxes);
 

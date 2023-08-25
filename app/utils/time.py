@@ -6,8 +6,8 @@ from dateutil import parser
 
 def get_current_financial_year():
     now = datetime.now(pytz.utc)
-    current_month = int(now.strftime('%-m'))
-    current_year = int(now.strftime('%Y'))
+    current_month = int(now.strftime("%-m"))
+    current_year = int(now.strftime("%Y"))
     return current_year if current_month > 9 else current_year - 1
 
 

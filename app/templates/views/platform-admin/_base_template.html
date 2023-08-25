@@ -2,41 +2,49 @@
 {% from "components/page-footer.html" import page_footer %}
 
 {% block main %}
-<div class="govuk-width-container {{ mainClasses }}">
-    <div class="navigation-service">
-      <div class="navigation-service-name govuk-!-font-weight-bold">
-        Platform admin
-      </div>
-      <a href="{{ url_for('main.choose_account') }}" class="govuk-link govuk-link--no-visited-state navigation-service-switch">Switch service</a>
-    </div>
-    <div class="grid-row">
-      <div class="tablet:grid-col-2">
+<div class="grid-container">
+    <nav class="navigation-service usa-breadcrumb">
+      <ol class="usa-breadcrumb__list">
+        <li class="usa-breadcrumb__list-item">
+          <span class="usa-breadcrumb__label">Platform admin</span>
+        </li>
+        <li class="usa-breadcrumb__list-item">
+          <a class="usa-breadcrumb__link" href="{{ url_for('main.choose_account') }}">
+            <span class="usa-breadcrumb__label">Switch service</span>
+          </a>
+        </li>
+      </ol>
+    </nav>
+    <div class="grid-row margin-bottom-10">
+      <div class="tablet:grid-col-3 margin-top-4">
         <nav class="navigation">
+          <ul class="usa-sidenav">
             {% for link_text, url in [
-            ('Summary', url_for('main.platform_admin')),
-            ('Live services', url_for('main.live_services')),
-            ('Trial mode services', url_for('main.trial_services')),
-            ('Organizations', url_for('main.organizations')),
-            ('Providers', url_for('main.view_providers')),
-            ('Reports', url_for('main.platform_admin_reports')),
-            ('Email branding', url_for('main.email_branding')),
-            ('Inbound SMS numbers', url_for('main.inbound_sms_admin')),
-            ('Find services by name', url_for('main.find_services_by_name')),
-            ('Find users by email', url_for('main.find_users_by_email')),
-            ('Email complaints', url_for('main.platform_admin_list_complaints')),
-            ('Clear cache', url_for('main.clear_cache')),
-          ] %}
-            <li>
-              <a class="govuk-link govuk-link--no-visited-state" href="{{ url }}">
-                {{ link_text }}
+              ('Summary', ('main.platform_admin')),
+              ('Live services', ('main.live_services')),
+              ('Trial mode services', ('main.trial_services')),
+              ('Organizations', ('main.organizations')),
+              ('Providers', ('main.view_providers')),
+              ('Reports', ('main.platform_admin_reports')),
+              ('Email branding', ('main.email_branding')),
+              ('Inbound SMS numbers', ('main.inbound_sms_admin')),
+              ('Find services by name', ('main.find_services_by_name')),
+              ('Find users by email', ('main.find_users_by_email')),
+              ('Email complaints', ('main.platform_admin_list_complaints')),
+              ('Clear cache', ('main.clear_cache')),
+            ] %}
+            <li class="usa-sidenav__item">
+              <a class="{% if url == request.endpoint %} usa-current {% endif %}" href="{{ url_for(url) }}">
+                <span class="usa-sidenav__label">{{ link_text }}</span>
               </a>
             </li>
           {% endfor %}
+          </ul>
         </nav>
       </div>
-      <div class="grid-col-10 tablet:grid-col-10">
+      <div class="grid-col-9 tablet:grid-col-9 padding-left-4 sub-content">
       {% block backLink %}{% endblock %}
-        <main class="govuk-main-wrapper column-main govuk-!-padding-top-0 govuk-!-padding-bottom-0" id="main-content" role="main">
+        <main id="main-content" role="main">
           {% block content %}
             {% include 'flash_messages.html' %}
             {% block platform_admin_content %}{% endblock %}
