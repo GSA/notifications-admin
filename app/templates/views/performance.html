@@ -9,7 +9,7 @@
 
 {% block maincolumn_content %}
 
-  <div class="grid-row govuk-!-margin-bottom-8">
+  <div class="grid-row">
     <div class="grid-col-8">
       {{ page_header('Performance data') }}
     </div>
@@ -25,7 +25,7 @@
       total
     </div>
     <div class="grid-col-6">
-      <div class="grid-row govuk-!-padding-top-4">
+      <div class="grid-row">
         <div class="grid-col-6">
           {{ big_number(
             email_notifications|format_billions,

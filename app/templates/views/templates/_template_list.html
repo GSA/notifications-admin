@@ -21,8 +21,7 @@
   {% endif %}
 </p>
 {% else %}
-<nav id="template-list"
-  class="{{ 'govuk-!-margin-top-1' if (not show_template_nav and not show_search_box) else 'govuk-!-margin-top-6' }}">
+<nav id="template-list">
   {% set checkboxes_data = [] %}
 
   {% if not current_user.has_permissions('manage_templates') %}
@@ -95,7 +94,7 @@
     <li
       class="template-list-item {%- if item.ancestors %} template-list-item-hidden-by-default {%- else %} template-list-item-without-ancestors{%- endif %}">
       {{ item_link_content }}
-      <p class="template-list-item-hint govuk-!-margin-bottom-4">
+      <p class="template-list-item-hint">
         {{ item.hint }}
       </p>
     </li>

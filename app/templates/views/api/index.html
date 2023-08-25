@@ -46,7 +46,7 @@
       </div>
     {% endif %}
     {% for notification in api_notifications.notifications %}
-      <details class="api-notifications-item govuk-details govuk-!-margin-bottom-0" data-module="govuk-details">
+      <details class="api-notifications-item govuk-details" data-module="govuk-details">
         <summary class="govuk-details__summary govuk-clearfix api-notifications-item__heading">
           <h3>
             <span class="govuk-details__summary-text">
@@ -64,7 +64,7 @@
             </span>
           </h3>
         </summary>
-        <div class="govuk-details__text api-notifications-item__data govuk-!-padding-top-0">
+        <div class="govuk-details__text api-notifications-item__data">
           <dl id="notification-{{ notification.id }}">
             {% for key in [
               'id', 'client_reference', 'notification_type', 'created_at', 'updated_at', 'sent_at', 'status'
