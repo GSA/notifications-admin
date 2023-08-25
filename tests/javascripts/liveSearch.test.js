@@ -64,7 +64,7 @@ describe('Live search', () => {
 
       // set up DOM
       document.body.innerHTML = `
-        <div class="live-search js-header" data-module="live-search" data-targets=".govuk-radios__item">
+        <div class="live-search js-header" data-module="live-search" data-targets=".usa-radio">
           <div class="form-group">
             <label class="form-label" for="search">
                 ${searchLabelText}
@@ -92,7 +92,7 @@ describe('Live search', () => {
         // start the module
         window.GOVUK.modules.start();
 
-        const listItems = list.querySelectorAll('.govuk-radios__item');
+        const listItems = list.querySelectorAll('.usa-radio');
         const listItemsShowing = Array.from(listItems).filter(item => window.getComputedStyle(item).display !== 'none');
 
         expect(listItemsShowing.length).toEqual(listItems.length);
@@ -107,7 +107,7 @@ describe('Live search', () => {
         // start the module
         window.GOVUK.modules.start();
 
-        const listItems = list.querySelectorAll('.govuk-radios__item');
+        const listItems = list.querySelectorAll('.usa-radio');
         const listItemsShowing = Array.from(listItems).filter(item => window.getComputedStyle(item).display !== 'none');
 
         expect(listItemsShowing.length).toEqual(2);
@@ -123,7 +123,7 @@ describe('Live search', () => {
         // start the module
         window.GOVUK.modules.start();
 
-        const listItems = list.querySelectorAll('.govuk-radios__item');
+        const listItems = list.querySelectorAll('.usa-radio');
         const listItemsShowing = Array.from(listItems).filter(item => window.getComputedStyle(item).display !== 'none');
 
         expect(listItemsShowing.length).toEqual(1);
@@ -162,7 +162,7 @@ describe('Live search', () => {
         searchTextbox.value = '';
         helpers.triggerEvent(searchTextbox, 'input');
 
-        const listItems = list.querySelectorAll('.govuk-radios__item');
+        const listItems = list.querySelectorAll('.usa-radio');
         const listItemsShowing = Array.from(listItems).filter(item => window.getComputedStyle(item).display !== 'none');
 
         expect(listItemsShowing.length).toEqual(listItems.length);
@@ -181,7 +181,7 @@ describe('Live search', () => {
         searchTextbox.value = 'Home';
         helpers.triggerEvent(searchTextbox, 'input');
 
-        const listItems = list.querySelectorAll('.govuk-radios__item');
+        const listItems = list.querySelectorAll('.usa-radio');
         const listItemsShowing = Array.from(listItems).filter(item => window.getComputedStyle(item).display !== 'none');
 
         expect(listItemsShowing.length).toEqual(1);
@@ -200,7 +200,7 @@ describe('Live search', () => {
         searchTextbox.value = 'Department for';
         helpers.triggerEvent(searchTextbox, 'input');
 
-        const listItems = list.querySelectorAll('.govuk-radios__item');
+        const listItems = list.querySelectorAll('.usa-radio');
         const listItemsShowing = Array.from(listItems).filter(item => window.getComputedStyle(item).display !== 'none');
 
         expect(listItemsShowing.length).toEqual(2);

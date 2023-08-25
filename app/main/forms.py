@@ -774,7 +774,7 @@ def govuk_radios_field_widget(self, field, param_extensions=None, **kwargs):
             "attributes": {"id": field.name},
             "legend": {
                 "text": field.label.text,
-                "classes": "govuk-fieldset__legend--s"
+                "classes": "usa-fieldset"
             }
         },
         'errorMessage': error_message,
@@ -1432,10 +1432,7 @@ class AdminProviderRatioForm(Form):
                     f"{provider['display_name']} (%)",
                     validators=[validators.NumberRange(
                         min=0, max=100, message="Must be between 0 and 100"
-                    )],
-                    param_extensions={
-                        'classes': "govuk-input--width-3",
-                    }
+                    )]
                 )
             ) for provider in providers
         ]
@@ -1591,13 +1588,12 @@ class AdminEditEmailBrandingForm(StripWhitespaceForm):
     name = GovukTextInputField('Name of brand')
     text = GovukTextInputField('Text')
     colour = GovukTextInputField(
-        'Colour',
+        'colour',
         validators=[
             Regexp(regex="^$|^#(?:[0-9a-fA-F]{3}){1,2}$", message='Must be a valid color hex code (starting with #)')
         ],
         param_extensions={
-            "classes": "govuk-input--width-6",
-            "attributes": {"data-module": "colour-preview"}
+            "attributes": {"data-module": "color-preview"}
         }
     )
     file = FileField_wtf('Upload a PNG logo', validators=[FileAllowed(['png'], 'PNG Images only!')])
@@ -1871,7 +1867,6 @@ class SomethingElseBrandingForm(StripWhitespaceForm):
         param_extensions={
             "label": {
                 "isPageHeading": True,
-                "classes": "govuk-label--l",
             },
             "hint": {
                 "text": "Include links to your brand guidelines or examples of how to use your branding."

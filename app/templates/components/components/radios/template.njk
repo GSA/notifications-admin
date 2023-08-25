@@ -54,8 +54,8 @@
     {%- else %}
     {% set hasHint = true if item.hint.text or item.hint.html %}
     {% set itemHintId = id + '-item-hint' %}
-    <div class="govuk-radios__item">
-      <input class="govuk-radios__input" id="{{ id }}" name="{{ params.name }}" type="radio" value="{{ item.value }}"
+    <div class="usa-radio">
+      <input class="usa-radio__input" id="{{ id }}" name="{{ params.name }}" type="radio" value="{{ item.value }}"
       {{-" checked" if item.checked }}
       {{-" disabled" if item.disabled }}
       {%- if item.conditional %} data-aria-controls="{{ conditionalId }}"{% endif -%}
@@ -64,14 +64,14 @@
       {{ govukLabel({
         html: item.html,
         text: item.text,
-        classes: 'govuk-radios__label' + (' ' + item.label.classes if item.label.classes),
+        classes: 'usa-radio__label' + (' ' + item.label.classes if item.label.classes),
         attributes: item.label.attributes,
         for: id
       }) | indent(6) | trim }}
       {%- if hasHint %}
       {{ govukHint({
         id: itemHintId,
-        classes: 'govuk-radios__hint',
+        classes: 'usa-checkbox__label-description',
         attributes: item.hint.attributes,
         html: item.hint.html,
         text: item.hint.text

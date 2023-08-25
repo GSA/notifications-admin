@@ -22,7 +22,7 @@ describe('Collapsible fieldset', () => {
 
         result += `<li class="govuk-checkboxes__item">
           <input class="govuk-checkboxes__input" id="${id}" name="folder-permissions" type="checkbox" value="${id}">
-          <label class="govuk-label govuk-checkboxes__label" for="${id}">
+          <label class="usa-radio__label govuk-checkboxes__label" for="${id}">
             Folder ${id}
           </label>
         </li>`;
