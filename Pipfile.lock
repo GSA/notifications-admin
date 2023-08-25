@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "fac46aace8fde798b2bf2288410bfd865433cbc969dd4f462ad3a96081d7574f"
+            "sha256": "38185e0c6d864b4be766da7762a71b9a7922d6c8466d78ce660786e49e06b507"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -425,11 +425,6 @@
             "index": "pypi",
             "version": "==1.1.1"
         },
-        "gds-metrics": {
-            "git": "https://github.com/alphagov/gds_metrics_python.git",
-            "ref": "6f1840a57b6fb1ee40b7e84f2f18ec229de8aa72",
-            "version": "==0.2.4"
-        },
         "geojson": {
             "hashes": [
                 "sha256:e49df982b204ed481e4c1236c57f587adf71537301cf8faf7120ab27d73c7568",
@@ -833,14 +828,6 @@
             ],
             "version": "==8.13.19"
         },
-        "prometheus-client": {
-            "hashes": [
-                "sha256:21e674f39831ae3f8acde238afd9a27a37d0d2fb5a28ea094f0ce25d2cbf2091",
-                "sha256:e537f37160f6807b8202a6fc4764cdd19bac5480ddd3e0d463c3002b34462101"
-            ],
-            "index": "pypi",
-            "version": "==0.17.1"
-        },
         "pycparser": {
             "hashes": [
                 "sha256:8ee45429555515e1f6b185e78100aea234072576aa43ab53aefcae078162fca9",
@@ -1143,11 +1130,11 @@
         },
         "vulture": {
             "hashes": [
-                "sha256:67fb80a014ed9fdb599dd44bb96cb54311032a104106fc2e706ef7a6dad88032",
-                "sha256:bccc51064ed76db15a6b58277cea8885936af047f53d2655fb5de575e93d0bca"
+                "sha256:a46857014619bd4b785a506b9ddb738cd4621043558309b03a879d18f86e2d72",
+                "sha256:b6a2aa632b6fd51488a8eeac650ab4a509bb1a032e81943817a8a2e6a63a30b3"
             ],
             "index": "pypi",
-            "version": "==2.7"
+            "version": "==2.9.1"
         },
         "webencodings": {
             "hashes": [
@@ -1652,7 +1639,7 @@
                 "sha256:355216845c60bd96232cd8d8c40e8f9765cc86f46880e43a8fd22dc1a1a8cab1",
                 "sha256:e3f60a94fa066dc52ec76661e37c851cb232d92f9886b15cb560aaada2df8feb"
             ],
-            "markers": "python_full_version >= '3.8.0'",
+            "markers": "python_version >= '3.8'",
             "version": "==3.0.0"
         },
         "markupsafe": {
@@ -1869,7 +1856,7 @@
                 "sha256:b476f63251876f1625f490af8d58ec0db90b555c623b7f54105f91d33878c06d",
                 "sha256:b574889ef97b7f44a633aa10d72b8966a850a4354d915fd0bc7e8658e825dd63"
             ],
-            "markers": "python_full_version >= '3.8.0'",
+            "markers": "python_version >= '3.8'",
             "version": "==1.37.0"
         },
         "pluggy": {
@@ -1893,7 +1880,7 @@
                 "sha256:259bcc17857d8a8b3b4a2327324b79e5f020a13c16074670f9c8c8f872ea76d0",
                 "sha256:5d1013ba8dc7895b548be5afb05740ca82454fd899971563d2ef625d090326f8"
             ],
-            "markers": "python_full_version >= '3.8.0'",
+            "markers": "python_version >= '3.8'",
             "version": "==2.11.0"
         },
         "pycparser": {
@@ -1915,7 +1902,7 @@
                 "sha256:4132f6d49cb4dae6819e5379898f2b8cce3c5f23994194c24b77d5da2e36f774",
                 "sha256:a0aae034c444db0071aa077972ba4768d40c830d9539fd45bf4cd3f8f6992efc"
             ],
-            "markers": "python_full_version >= '3.8.0'",
+            "markers": "python_version >= '3.8'",
             "version": "==3.1.0"
         },
         "pygments": {
@@ -2120,7 +2107,7 @@
                 "sha256:8cc040628f3cea5d7128f2e76cf486b2251a4e543c7b938f58d9a377f6694a2d",
                 "sha256:a54534acf9b89bc7ed264807013b505bf07f74dbe4bcfa37d32bd063870b087c"
             ],
-            "markers": "python_full_version >= '3.8.0'",
+            "markers": "python_version >= '3.8'",
             "version": "==5.1.0"
         },
         "text-unidecode": {
