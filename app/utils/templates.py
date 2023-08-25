@@ -2,10 +2,12 @@ from notifications_utils.template import EmailPreviewTemplate, SMSPreviewTemplat
 
 
 def get_sample_template(template_type):
-    if template_type == 'email':
-        return EmailPreviewTemplate({'content': 'any', 'subject': '', 'template_type': 'email'})
-    if template_type == 'sms':
-        return SMSPreviewTemplate({'content': 'any', 'template_type': 'sms'})
+    if template_type == "email":
+        return EmailPreviewTemplate(
+            {"content": "any", "subject": "", "template_type": "email"}
+        )
+    if template_type == "sms":
+        return SMSPreviewTemplate({"content": "any", "template_type": "sms"})
 
 
 def get_template(
@@ -16,16 +18,16 @@ def get_template(
     email_reply_to=None,
     sms_sender=None,
 ):
-    if 'email' == template['template_type']:
+    if "email" == template["template_type"]:
         return EmailPreviewTemplate(
             template,
             from_name=service.name,
-            from_address='{}@notifications.service.gov.uk'.format(service.email_from),
+            from_address="{}@notifications.service.gov.uk".format(service.email_from),
             show_recipient=show_recipient,
             redact_missing_personalisation=redact_missing_personalisation,
             reply_to=email_reply_to,
         )
-    if 'sms' == template['template_type']:
+    if "sms" == template["template_type"]:
         return SMSPreviewTemplate(
             template,
             prefix=service.name,
