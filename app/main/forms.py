@@ -12,10 +12,7 @@ from flask_wtf.file import FileField as FileField_wtf
 from flask_wtf.file import FileSize
 from notifications_utils.formatters import strip_all_whitespace
 from notifications_utils.insensitive_dict import InsensitiveDict
-from notifications_utils.recipients import (
-    InvalidPhoneError,
-    validate_phone_number,
-)
+from notifications_utils.recipients import InvalidPhoneError, validate_phone_number
 from werkzeug.utils import cached_property
 from wtforms import (
     BooleanField,

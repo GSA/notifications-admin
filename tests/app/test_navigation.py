@@ -9,6 +9,7 @@ from app.navigation import (
     Navigation,
     OrgNavigation,
 )
+
 # from tests.conftest import ORGANISATION_ID, SERVICE_ONE_ID, normalize_spaces
 from tests.conftest import SERVICE_ONE_ID, normalize_spaces
 

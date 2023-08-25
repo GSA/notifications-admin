@@ -14,10 +14,7 @@ from flask import Markup, url_for
 from notifications_utils.field import Field
 from notifications_utils.formatters import make_quotes_smart
 from notifications_utils.formatters import nl2br as utils_nl2br
-from notifications_utils.recipients import (
-    InvalidPhoneError,
-    validate_phone_number,
-)
+from notifications_utils.recipients import InvalidPhoneError, validate_phone_number
 from notifications_utils.take import Take
 
 from app.utils.time import parse_naive_dt

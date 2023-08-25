@@ -1,13 +1,6 @@
 import json
 
-from flask import (
-    current_app,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
+from flask import current_app, redirect, render_template, request, session, url_for
 from flask_login import current_user
 from itsdangerous import SignatureExpired
 from notifications_utils.url_safe_token import check_token

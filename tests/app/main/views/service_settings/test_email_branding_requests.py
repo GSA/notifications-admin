@@ -2,9 +2,7 @@ from unittest.mock import ANY, PropertyMock
 
 import pytest
 from flask import url_for
-from notifications_utils.clients.zendesk.zendesk_client import (
-    NotifySupportTicket,
-)
+from notifications_utils.clients.zendesk.zendesk_client import NotifySupportTicket
 
 from tests import sample_uuid
 from tests.conftest import ORGANISATION_ID, SERVICE_ONE_ID, normalize_spaces

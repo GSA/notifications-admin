@@ -5,13 +5,7 @@ from markupsafe import Markup
 from app.main import main
 from app.models.organization import Organization
 from app.models.service import Service
-from app.models.user import (
-    InvitedOrgUser,
-    InvitedUser,
-    OrganizationUsers,
-    User,
-    Users,
-)
+from app.models.user import InvitedOrgUser, InvitedUser, OrganizationUsers, User, Users
 
 
 @main.route("/invitation/<token>")

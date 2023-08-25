@@ -104,18 +104,12 @@ from app.notify_client.organizations_api_client import organizations_client
 from app.notify_client.performance_dashboard_api_client import (
     performance_dashboard_api_client,
 )
-from app.notify_client.platform_stats_api_client import (
-    platform_stats_api_client,
-)
+from app.notify_client.platform_stats_api_client import platform_stats_api_client
 from app.notify_client.provider_client import provider_client
 from app.notify_client.service_api_client import service_api_client
 from app.notify_client.status_api_client import status_api_client
-from app.notify_client.template_folder_api_client import (
-    template_folder_api_client,
-)
-from app.notify_client.template_statistics_api_client import (
-    template_statistics_client,
-)
+from app.notify_client.template_folder_api_client import template_folder_api_client
+from app.notify_client.template_statistics_api_client import template_statistics_client
 from app.notify_client.upload_api_client import upload_api_client
 from app.notify_client.user_api_client import user_api_client
 from app.url_converters import (

@@ -1,11 +1,7 @@
 import pytest
 
 from app.models.job import Job
-from app.statistics_utils import (
-    add_rates_to,
-    statistics_by_state,
-    sum_of_statistics,
-)
+from app.statistics_utils import add_rates_to, statistics_by_state, sum_of_statistics
 
 
 @pytest.mark.parametrize('delivery_statistics', [

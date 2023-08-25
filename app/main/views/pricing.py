@@ -1,8 +1,6 @@
 from flask import current_app, render_template
 from flask_login import current_user
-from notifications_utils.international_billing_rates import (
-    INTERNATIONAL_BILLING_RATES,
-)
+from notifications_utils.international_billing_rates import INTERNATIONAL_BILLING_RATES
 
 from app.main import main
 from app.main.forms import SearchByNameForm

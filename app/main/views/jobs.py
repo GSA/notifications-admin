@@ -14,10 +14,7 @@ from flask import (
     url_for,
 )
 from flask_login import current_user
-from notifications_utils.template import (
-    EmailPreviewTemplate,
-    SMSBodyPreviewTemplate,
-)
+from notifications_utils.template import EmailPreviewTemplate, SMSBodyPreviewTemplate
 
 from app import (
     current_service,

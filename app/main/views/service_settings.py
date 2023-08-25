@@ -13,9 +13,7 @@ from flask import (
 )
 from flask_login import current_user
 from notifications_python_client.errors import HTTPError
-from notifications_utils.clients.zendesk.zendesk_client import (
-    NotifySupportTicket,
-)
+from notifications_utils.clients.zendesk.zendesk_client import NotifySupportTicket
 
 from app import (
     billing_api_client,
