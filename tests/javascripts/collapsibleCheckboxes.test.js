@@ -45,7 +45,7 @@ describe('Collapsible fieldset', () => {
           <fieldset class="govuk-fieldset" id="folder_permissions" aria-describedby="users_with_permission-hint">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
               Folders this team member can see
-              <span class="govuk-hint" id="users_with_permission-hint">
+              <span class="usa-hint" id="users_with_permission-hint">
                 <div class="selection-summary" role="region" aria-live="polite"></div>
               </span>
             </legend>
@@ -146,7 +146,7 @@ describe('Collapsible fieldset', () => {
 
     test("the hint is removed", () => {
 
-      expect(document.querySelector('.govuk-hint')).toBeNull();
+      expect(document.querySelector('.usa-hint')).toBeNull();
 
     });
 

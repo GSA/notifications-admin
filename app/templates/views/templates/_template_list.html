@@ -52,10 +52,10 @@
     </a>
     {% else %}
     <a href="{{ url_for('.view_template', service_id=current_service.id, template_id=item.id) }}"
-      class="usa-link usa-template-list-template">
+      class="usa-link template-list-template">
       <span class="live-search-relevant">
         {%- if current_service.api_keys -%}
-        <span class="govuk-!-display-none">{{ item.id }} </span>
+        <span class="display-none">{{ item.id }} </span>
         {%- endif -%}
         {{- format_item_name(item.name) -}}
       </span>

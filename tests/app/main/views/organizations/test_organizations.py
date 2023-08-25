@@ -84,7 +84,7 @@ def test_view_organization_shows_the_correct_organization(
     )
 
     assert normalize_spaces(page.select_one('h1').text) == 'Usage'
-    assert normalize_spaces(page.select_one('.govuk-hint').text) == (
+    assert normalize_spaces(page.select_one('.usa-hint').text) == (
         'Test 1 has no live services on Notify.gov'
     )
     assert not page.select('a[download]')
@@ -383,7 +383,7 @@ def test_organization_services_shows_live_services_and_usage(
     assert normalize_spaces(usage_rows[5].text) == "$42.00 spent on text messages"
 
     # Ensure there’s no ‘this org has no services message’
-    assert not page.select('.govuk-hint')
+    assert not page.select('.usa-hint')
 
 
 @freeze_time("2020-02-20 20:20")
@@ -912,7 +912,7 @@ def test_view_organization_settings(
         }
         if 'hint' in option:
             option_values['hint'] = normalize_spaces(
-                page.select_one('label[for={}] + .govuk-hint'.format(radios[index]['id'])).text)
+                page.select_one('label[for={}] + .usa-hint'.format(radios[index]['id'])).text)
         assert option_values == option
 
     if expected_selected:

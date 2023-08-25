@@ -23,7 +23,7 @@
 
         {% call row() %}
           {% call field(border=False, colspan=3) %}
-            <a href="{{ url_for('main.service_dashboard', service_id=service['id']) }}" class="file-list-filename-large usa-link govuk-!-padding-bottom-4">{{ service['name'] }}</a>
+            <a href="{{ url_for('main.service_dashboard', service_id=service['id']) }}" class="file-list-filename-large usa-link">{{ service['name'] }}</a>
             {% if not service['active'] %}
               <span class="heading-medium hint">&ensp;Archived</span>
             {% endif %}

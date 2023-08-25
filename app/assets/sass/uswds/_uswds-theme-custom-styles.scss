@@ -143,7 +143,7 @@ td.table-empty-message {
 }
 
 .usa-checkbox .usa-checkbox__label {
-   + a.template-list-folder, + a.usa-template-list-template {
+   + a.template-list-folder {
       margin-left: units(4);
    }
 }
@@ -165,7 +165,7 @@ td.table-empty-message {
    margin: 0 units(0.5);
 }
 
-.usa-template-list-template, .template-list-template {
+.template-list-template {
    background: url(../img/material-icons/description.svg) no-repeat;
    padding-left: units(4);
    display: inline-flex; 

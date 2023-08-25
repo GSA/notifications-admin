@@ -41,7 +41,7 @@
           <h2 class="usa-sr-only">{{ params.meta.visuallyHiddenTitle | default("Support links") }}</h2>
           {% if params.meta.items %}
             {% for item in params.meta.items %}
-              <a class="govuk-footer__link" href="{{ item.href }}" {% for attribute, value in item.attributes %}
+              <a class="usa-footer__link" href="{{ item.href }}" {% for attribute, value in item.attributes %}
                 {{attribute}}="{{value}}" {% endfor %}>
                 {{ item.text }}
               </a>

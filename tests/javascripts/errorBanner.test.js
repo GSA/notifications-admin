@@ -17,21 +17,21 @@ describe("Error Banner", () => {
       <span class="usa-error-message banner-dangerous js-error-visible">
       </span>`;
       window.GOVUK.ErrorBanner.hideBanner();
-      expect(document.querySelector('.banner-dangerous').classList).toContain('govuk-!-display-none')
+      expect(document.querySelector('.banner-dangerous').classList).toContain('display-none')
     });
   });
 
   describe("The `showBanner` method", () => {
     beforeEach(() => {
       document.body.innerHTML = `
-        <span class="usa-error-message banner-dangerous js-error-visible govuk-!-display-none">
+        <span class="usa-error-message banner-dangerous js-error-visible display-none">
         </span>`;
 
       window.GOVUK.ErrorBanner.showBanner('Some Err');
     });
 
     test("Will show the element", () => {
-      expect(document.querySelector('.banner-dangerous').classList).not.toContain('govuk-!-display-none')
+      expect(document.querySelector('.banner-dangerous').classList).not.toContain('display-none')
     });
   });
 });

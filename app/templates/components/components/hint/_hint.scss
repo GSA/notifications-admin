@@ -3,7 +3,7 @@
 @import "../../helpers/all";
 
 @include govuk-exports("govuk/component/hint") {
-  .govuk-hint {
+  .usa-hint {
     @include govuk-font($size: 19);
 
     display: block;
@@ -23,7 +23,7 @@
   // This adjustment will not work in browsers that do not support :not(). 
   // Users with these browsers will see the default size margin (5px larger).
 
-  .govuk-label:not(.govuk-label--m):not(.govuk-label--l):not(.govuk-label--xl) + .govuk-hint {
+  .govuk-label:not(.govuk-label--m):not(.govuk-label--l):not(.govuk-label--xl) + .usa-hint {
     margin-bottom: govuk-spacing(2);
   }
 
@@ -37,14 +37,14 @@
   // This adjustment will not work in browsers that do not support :not(). 
   // Users with these browsers will see the default size margin (5px larger).
 
-  .govuk-fieldset__legend:not(.govuk-fieldset__legend--m):not(.govuk-fieldset__legend--l):not(.govuk-fieldset__legend--xl) + .govuk-hint {
+  .govuk-fieldset__legend:not(.govuk-fieldset__legend--m):not(.govuk-fieldset__legend--l):not(.govuk-fieldset__legend--xl) + .usa-hint {
     margin-bottom: govuk-spacing(2);
   }
 
   // Reduces visual spacing of legend when there is a hint
 
-  .govuk-fieldset__legend + .govuk-hint,
-  .govuk-fieldset__legend + .govuk-hint {
+  .govuk-fieldset__legend + .usa-hint,
+  .govuk-fieldset__legend + .usa-hint {
     margin-top: -(govuk-spacing(1));
   }
 }

@@ -67,7 +67,7 @@ describe("List entry", () => {
           Domain names
           </span>
         </legend>
-        <span id="domains-hint" class="govuk-hint">
+        <span id="domains-hint" class="usa-hint">
           For example cabinet-office.gov.uk
         </span>
         <div class="input-list" data-module="list-entry" data-list-item-name="domain" id="list-entry-domains">
