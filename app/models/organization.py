@@ -2,12 +2,7 @@ from collections import OrderedDict
 
 from werkzeug.utils import cached_property
 
-from app.models import (
-    JSONModel,
-    ModelList,
-    SerialisedModelCollection,
-    SortByNameMixin,
-)
+from app.models import JSONModel, ModelList, SerialisedModelCollection, SortByNameMixin
 from app.notify_client.email_branding_client import email_branding_client
 from app.notify_client.organizations_api_client import organizations_client
 

@@ -1,12 +1,4 @@
-from flask import (
-    Markup,
-    abort,
-    flash,
-    redirect,
-    render_template,
-    request,
-    url_for,
-)
+from flask import Markup, abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user
 
 from app import (

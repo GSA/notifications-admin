@@ -4,19 +4,12 @@ import pytz
 from flask import redirect, render_template, request, session, url_for
 from flask_login import current_user
 from govuk_bank_holidays.bank_holidays import BankHolidays
-from notifications_utils.clients.zendesk.zendesk_client import (
-    NotifySupportTicket,
-)
+from notifications_utils.clients.zendesk.zendesk_client import NotifySupportTicket
 
 from app import convert_to_boolean, current_service
 from app.extensions import zendesk_client
 from app.main import main
-from app.main.forms import (
-    FeedbackOrProblem,
-    SupportRedirect,
-    SupportType,
-    Triage,
-)
+from app.main.forms import FeedbackOrProblem, SupportRedirect, SupportType, Triage
 from app.models.feedback import (
     GENERAL_TICKET_TYPE,
     PROBLEM_TICKET_TYPE,

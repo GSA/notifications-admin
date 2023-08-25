@@ -3,12 +3,7 @@ from notifications_utils.serialised_model import SerialisedModelCollection
 from werkzeug.utils import cached_property
 
 from app.models import JSONModel, SortByNameMixin
-from app.models.job import (
-    ImmediateJobs,
-    PaginatedJobs,
-    PaginatedUploads,
-    ScheduledJobs,
-)
+from app.models.job import ImmediateJobs, PaginatedJobs, PaginatedUploads, ScheduledJobs
 from app.models.organization import Organization
 from app.models.user import InvitedUsers, User, Users
 from app.notify_client.api_key_api_client import api_key_api_client
@@ -19,9 +14,7 @@ from app.notify_client.invite_api_client import invite_api_client
 from app.notify_client.job_api_client import job_api_client
 from app.notify_client.organizations_api_client import organizations_client
 from app.notify_client.service_api_client import service_api_client
-from app.notify_client.template_folder_api_client import (
-    template_folder_api_client,
-)
+from app.notify_client.template_folder_api_client import template_folder_api_client
 from app.utils import get_default_sms_sender
 
 

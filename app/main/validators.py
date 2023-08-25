@@ -3,10 +3,7 @@ from abc import ABC, abstractmethod
 
 from notifications_utils.field import Field
 from notifications_utils.formatters import formatted_list
-from notifications_utils.recipients import (
-    InvalidEmailError,
-    validate_email_address,
-)
+from notifications_utils.recipients import InvalidEmailError, validate_email_address
 from notifications_utils.sanitise_text import SanitiseSMS
 from wtforms import ValidationError
 

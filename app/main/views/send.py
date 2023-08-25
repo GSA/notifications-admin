@@ -42,11 +42,7 @@ from app.s3_client.s3_csv_client import (
     s3upload,
     set_metadata_on_csv_upload,
 )
-from app.utils import (
-    PermanentRedirect,
-    should_skip_template_page,
-    unicode_truncate,
-)
+from app.utils import PermanentRedirect, should_skip_template_page, unicode_truncate
 from app.utils.csv import Spreadsheet, get_errors_for_csv
 from app.utils.templates import get_template
 from app.utils.user import user_has_permissions

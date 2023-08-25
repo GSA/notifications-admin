@@ -1,7 +1,4 @@
-from notifications_utils.template import (
-    EmailPreviewTemplate,
-    SMSPreviewTemplate,
-)
+from notifications_utils.template import EmailPreviewTemplate, SMSPreviewTemplate
 
 
 def get_sample_template(template_type):
