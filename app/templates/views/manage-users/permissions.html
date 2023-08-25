@@ -5,7 +5,7 @@
 {% if form.folder_permissions.all_template_folders %}
   {{ form.folder_permissions }}
 {% elif user and user.platform_admin %}
-  <p class="bottom-gutter govuk-body">
+  <p class="bottom-gutter usa-body">
     Platform admin users can access all template folders.
   </p>
 {% endif %}

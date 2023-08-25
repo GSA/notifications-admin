@@ -248,7 +248,7 @@ def test_should_show_service_name(
     assert page.find('h1').text == 'Change your service name'
     assert page.find('input', attrs={"type": "text"})['value'] == 'service one'
     assert page.select_one(
-        'main .govuk-body'
+        'main .usa-body'
     ).text == 'Your service name should tell users what the message is about as well as who it’s from.'
 
     assert "The service name you enter here will appear at the beginning of each text message, unless" in page.text
@@ -269,7 +269,7 @@ def test_should_show_different_change_service_name_page_for_local_services(
     page = client_request.get('main.service_name_change', service_id=SERVICE_ONE_ID)
     assert page.find('h1').text == 'Change your service name'
     assert page.find('input', attrs={"type": "text"})['value'] == 'service one'
-    assert page.select_one('main .govuk-body').text.strip() == (
+    assert page.select_one('main .usa-body').text.strip() == (
         'Your service name should tell users what the message is about as well as who it’s from. For example:'
     )
     # when no organization on the service object, default org for the user is used for hint
@@ -305,7 +305,7 @@ def test_should_show_service_name_with_no_prefixing(
     page = client_request.get('main.service_name_change', service_id=SERVICE_ONE_ID)
     assert page.find('h1').text == 'Change your service name'
     assert page.select_one(
-        'main .govuk-body'
+        'main .usa-body'
     ).text == 'Your service name should tell users what the message is about as well as who it’s from.'
 
 

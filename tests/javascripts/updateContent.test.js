@@ -302,7 +302,7 @@ describe('Update content', () => {
                   </span>
                 </div>
                 <div class="govuk-grid-column-one-half file-list-status">
-                  <p class="govuk-body govuk-!-margin-bottom-0 usa-hint">
+                  <p class="usa-body govuk-!-margin-bottom-0 usa-hint">
                     ${content.status}
                   </p>
                 </div>

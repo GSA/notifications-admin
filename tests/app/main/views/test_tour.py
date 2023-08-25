@@ -24,7 +24,7 @@ def test_should_200_for_tour_start(
         'Try sending yourself this example'
     )
     selected_hint = page.select('.banner-tour .grid-row')[0]
-    selected_hint_text = normalize_spaces(selected_hint.select(".govuk-body")[0].text)
+    selected_hint_text = normalize_spaces(selected_hint.select(".usa-body")[0].text)
     assert "greyed-out-step" not in selected_hint["class"]
     assert selected_hint_text == 'Every message is sent from a template'
 
@@ -147,7 +147,7 @@ def test_should_200_for_get_tour_step(
         'Try sending yourself this example'
     )
     selected_hint = page.select('.banner-tour .grid-row')[1]
-    selected_hint_text = normalize_spaces(selected_hint.select(".govuk-body")[0].text)
+    selected_hint_text = normalize_spaces(selected_hint.select(".usa-body")[0].text)
     assert "greyed-out-step" not in selected_hint["class"]
     assert selected_hint_text == 'The template pulls in the data you provide'
 
@@ -547,7 +547,7 @@ def test_should_200_for_check_tour_notification(
         'Try sending yourself this example'
     )
     selected_hint = page.select('.banner-tour .grid-row')[1]
-    selected_hint_text = normalize_spaces(selected_hint.select(".govuk-body")[0].text)
+    selected_hint_text = normalize_spaces(selected_hint.select(".usa-body")[0].text)
     assert "greyed-out-step" not in selected_hint["class"]
     assert selected_hint_text == 'The template pulls in the data you provide'
 

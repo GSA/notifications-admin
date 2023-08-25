@@ -2209,8 +2209,8 @@ a:focus {
     }
 }
 
-.govuk-body-l,
-.govuk-body-lead {
+.usa-body-l,
+.usa-body-lead {
     color: #0b0c0c;
     font-family: "nta", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -2225,24 +2225,24 @@ a:focus {
 
 @media print {
 
-    .govuk-body-l,
-    .govuk-body-lead {
+    .usa-body-l,
+    .usa-body-lead {
         color: #000
     }
 }
 
 @media print {
 
-    .govuk-body-l,
-    .govuk-body-lead {
+    .usa-body-l,
+    .usa-body-lead {
         font-family: sans-serif
     }
 }
 
 @media (min-width: 40.0625em) {
 
-    .govuk-body-l,
-    .govuk-body-lead {
+    .usa-body-l,
+    .usa-body-lead {
         font-size: 24px;
         font-size: 1.5rem;
         line-height: 1.25
@@ -2251,8 +2251,8 @@ a:focus {
 
 @media print {
 
-    .govuk-body-l,
-    .govuk-body-lead {
+    .usa-body-l,
+    .usa-body-lead {
         font-size: 18pt;
         line-height: 1.15
     }
@@ -2260,14 +2260,14 @@ a:focus {
 
 @media (min-width: 40.0625em) {
 
-    .govuk-body-l,
-    .govuk-body-lead {
+    .usa-body-l,
+    .usa-body-lead {
         margin-bottom: 30px
     }
 }
 
-.govuk-body-m,
-.govuk-body {
+.usa-body-m,
+.usa-body {
     color: #0b0c0c;
     font-family: "nta", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -2282,24 +2282,24 @@ a:focus {
 
 @media print {
 
-    .govuk-body-m,
-    .govuk-body {
+    .usa-body-m,
+    .usa-body {
         color: #000
     }
 }
 
 @media print {
 
-    .govuk-body-m,
-    .govuk-body {
+    .usa-body-m,
+    .usa-body {
         font-family: sans-serif
     }
 }
 
 @media (min-width: 40.0625em) {
 
-    .govuk-body-m,
-    .govuk-body {
+    .usa-body-m,
+    .usa-body {
         font-size: 19px;
         font-size: 1.1875rem;
         line-height: 1.31579
@@ -2308,8 +2308,8 @@ a:focus {
 
 @media print {
 
-    .govuk-body-m,
-    .govuk-body {
+    .usa-body-m,
+    .usa-body {
         font-size: 14pt;
         line-height: 1.15
     }
@@ -2317,13 +2317,13 @@ a:focus {
 
 @media (min-width: 40.0625em) {
 
-    .govuk-body-m,
-    .govuk-body {
+    .usa-body-m,
+    .usa-body {
         margin-bottom: 20px
     }
 }
 
-.govuk-body-s {
+.usa-body-s {
     color: #0b0c0c;
     font-family: "nta", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -2337,19 +2337,19 @@ a:focus {
 }
 
 @media print {
-    .govuk-body-s {
+    .usa-body-s {
         color: #000
     }
 }
 
 @media print {
-    .govuk-body-s {
+    .usa-body-s {
         font-family: sans-serif
     }
 }
 
 @media (min-width: 40.0625em) {
-    .govuk-body-s {
+    .usa-body-s {
         font-size: 16px;
         font-size: 1rem;
         line-height: 1.25
@@ -2357,19 +2357,19 @@ a:focus {
 }
 
 @media print {
-    .govuk-body-s {
+    .usa-body-s {
         font-size: 14pt;
         line-height: 1.2
     }
 }
 
 @media (min-width: 40.0625em) {
-    .govuk-body-s {
+    .usa-body-s {
         margin-bottom: 20px
     }
 }
 
-.govuk-body-xs {
+.usa-body-xs {
     color: #0b0c0c;
     font-family: "nta", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -2383,19 +2383,19 @@ a:focus {
 }
 
 @media print {
-    .govuk-body-xs {
+    .usa-body-xs {
         color: #000
     }
 }
 
 @media print {
-    .govuk-body-xs {
+    .usa-body-xs {
         font-family: sans-serif
     }
 }
 
 @media (min-width: 40.0625em) {
-    .govuk-body-xs {
+    .usa-body-xs {
         font-size: 14px;
         font-size: .875rem;
         line-height: 1.42857
@@ -2403,68 +2403,68 @@ a:focus {
 }
 
 @media print {
-    .govuk-body-xs {
+    .usa-body-xs {
         font-size: 12pt;
         line-height: 1.2
     }
 }
 
 @media (min-width: 40.0625em) {
-    .govuk-body-xs {
+    .usa-body-xs {
         margin-bottom: 20px
     }
 }
 
-.govuk-body-l+.govuk-heading-l,
-.govuk-body-lead+.govuk-heading-l {
+.usa-body-l+.govuk-heading-l,
+.usa-body-lead+.govuk-heading-l {
     padding-top: 5px
 }
 
 @media (min-width: 40.0625em) {
 
-    .govuk-body-l+.govuk-heading-l,
-    .govuk-body-lead+.govuk-heading-l {
+    .usa-body-l+.govuk-heading-l,
+    .usa-body-lead+.govuk-heading-l {
         padding-top: 10px
     }
 }
 
-.govuk-body-m+.govuk-heading-l,
-.govuk-body+.govuk-heading-l,
-.govuk-body-s+.govuk-heading-l,
+.usa-body-m+.govuk-heading-l,
+.usa-body+.govuk-heading-l,
+.usa-body-s+.govuk-heading-l,
 .govuk-list+.govuk-heading-l {
     padding-top: 15px
 }
 
 @media (min-width: 40.0625em) {
 
-    .govuk-body-m+.govuk-heading-l,
-    .govuk-body+.govuk-heading-l,
-    .govuk-body-s+.govuk-heading-l,
+    .usa-body-m+.govuk-heading-l,
+    .usa-body+.govuk-heading-l,
+    .usa-body-s+.govuk-heading-l,
     .govuk-list+.govuk-heading-l {
         padding-top: 20px
     }
 }
 
-.govuk-body-m+.govuk-heading-m,
-.govuk-body+.govuk-heading-m,
-.govuk-body-s+.govuk-heading-m,
+.usa-body-m+.govuk-heading-m,
+.usa-body+.govuk-heading-m,
+.usa-body-s+.govuk-heading-m,
 .govuk-list+.govuk-heading-m,
-.govuk-body-m+.govuk-heading-s,
-.govuk-body+.govuk-heading-s,
-.govuk-body-s+.govuk-heading-s,
+.usa-body-m+.govuk-heading-s,
+.usa-body+.govuk-heading-s,
+.usa-body-s+.govuk-heading-s,
 .govuk-list+.govuk-heading-s {
     padding-top: 5px
 }
 
 @media (min-width: 40.0625em) {
 
-    .govuk-body-m+.govuk-heading-m,
-    .govuk-body+.govuk-heading-m,
-    .govuk-body-s+.govuk-heading-m,
+    .usa-body-m+.govuk-heading-m,
+    .usa-body+.govuk-heading-m,
+    .usa-body-s+.govuk-heading-m,
     .govuk-list+.govuk-heading-m,
-    .govuk-body-m+.govuk-heading-s,
-    .govuk-body+.govuk-heading-s,
-    .govuk-body-s+.govuk-heading-s,
+    .usa-body-m+.govuk-heading-s,
+    .usa-body+.govuk-heading-s,
+    .usa-body-s+.govuk-heading-s,
     .govuk-list+.govuk-heading-s {
         padding-top: 10px
     }
