@@ -12,7 +12,7 @@ def features_nav():
                 #     "name": "Text messages",
                 #     "link": "main.features_sms",
                 # },
-            ]
+            ],
         },
         {
             "name": "Roadmap",

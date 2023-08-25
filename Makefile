@@ -48,7 +48,8 @@ generate-version-file: ## Generates the app version file
 test: py-lint py-test js-lint js-test ## Run tests
 
 .PHONY: py-lint
-py-lint: ## Run python linting scanners
+py-lint: ## Run python linting scanners and black
+	pipenv run black .
 	pipenv run flake8 .
 	pipenv run isort --check-only ./app ./tests
 
@@ -76,9 +77,7 @@ dead-code:
 .PHONY: e2e-test
 e2e-test: export NEW_RELIC_ENVIRONMENT=test
 e2e-test: ## Run end-to-end integration tests
-	rm -rf playwright
-	mkdir -p playwright/.auth
-	pipenv run pytest -vv --browser chromium --browser firefox --browser webkit tests/end_to_end
+	pipenv run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
 
 .PHONY: js-lint
 js-lint: ## Run javascript linting scanners

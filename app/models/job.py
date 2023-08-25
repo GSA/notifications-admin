@@ -9,65 +9,68 @@ from app.utils.time import is_less_than_days_ago
 
 
 class Job(JSONModel):
-
     ALLOWED_PROPERTIES = {
-        'id',
-        'service',
-        'template_name',
-        'template_version',
-        'original_file_name',
-        'created_at',
-        'notification_count',
-        'created_by',
-        'template_type',
-        'recipient',
+        "id",
+        "service",
+        "template_name",
+        "template_version",
+        "original_file_name",
+        "created_at",
+        "notification_count",
+        "created_by",
+        "template_type",
+        "recipient",
     }
 
     @classmethod
     def from_id(cls, job_id, service_id):
-        return cls(job_api_client.get_job(service_id, job_id)['data'])
+        return cls(job_api_client.get_job(service_id, job_id)["data"])
 
     @property
     def status(self):
-        return self._dict.get('job_status')
+        return self._dict.get("job_status")
 
     @property
     def cancelled(self):
-        return self.status == 'cancelled'
+        return self.status == "cancelled"
 
     @property
     def scheduled(self):
-        return self.status == 'scheduled'
+        return self.status == "scheduled"
 
     @property
     def scheduled_for(self):
-        return self._dict.get('scheduled_for')
+        return self._dict.get("scheduled_for")
 
     @property
     def upload_type(self):
-        return self._dict.get('upload_type')
+        return self._dict.get("upload_type")
 
     @property
     def processing_started(self):
-        if not self._dict.get('processing_started'):
+        if not self._dict.get("processing_started"):
             return None
-        return self._dict['processing_started']
+        return self._dict["processing_started"]
 
     def _aggregate_statistics(self, *statuses):
         return sum(
-            outcome['count'] for outcome in self._dict['statistics']
-            if not statuses or outcome['status'] in statuses
+            outcome["count"]
+            for outcome in self._dict["statistics"]
+            if not statuses or outcome["status"] in statuses
         )
 
     @property
     def notifications_delivered(self):
-        return self._aggregate_statistics('delivered', 'sent')
+        return self._aggregate_statistics("delivered", "sent")
 
     @property
     def notifications_failed(self):
         return self._aggregate_statistics(
-            'failed', 'technical-failure', 'temporary-failure',
-            'permanent-failure', 'cancelled',
+            "failed",
+            "technical-failure",
+            "temporary-failure",
+            "permanent-failure",
+            "cancelled",
         )
 
     @property
@@ -92,9 +95,7 @@ class Job(JSONModel):
 
     @property
     def still_processing(self):
-        return (
-            self.status != 'finished' or self.percentage_complete < 100
-        )
+        return self.status != "finished" or self.percentage_complete < 100
 
     @cached_property
     def finished_processing(self):
@@ -111,7 +112,7 @@ class Job(JSONModel):
 
     @property
     def template_id(self):
-        return self._dict['template']
+        return self._dict["template"]
 
     @cached_property
     def template(self):
@@ -119,7 +120,7 @@ class Job(JSONModel):
             service_id=self.service,
             template_id=self.template_id,
             version=self.template_version,
-        )['data']
+        )["data"]
 
     @property
     def percentage_complete(self):
@@ -127,23 +128,21 @@ class Job(JSONModel):
 
     @cached_property
     def all_notifications(self):
-        return self.get_notifications(set_status_filters({}))['notifications']
+        return self.get_notifications(set_status_filters({}))["notifications"]
 
     @property
     def uncancellable_notifications(self):
         # TODO: this is redundant now
-        return (
-            n for n in self.all_notifications
-        )
+        return (n for n in self.all_notifications)
 
     @property
     def failure_rate(self):
         if not self.notifications_delivered:
             return 100 if self.notifications_failed else 0
         return (
-            self.notifications_failed / (
-                self.notifications_failed + self.notifications_delivered
-            ) * 100
+            self.notifications_failed
+            / (self.notifications_failed + self.notifications_delivered)
+            * 100
         )
 
     @property
@@ -152,7 +151,9 @@ class Job(JSONModel):
 
     def get_notifications(self, status):
         return notification_api_client.get_notifications_for_service(
-            self.service, self.id, status=status,
+            self.service,
+            self.id,
+            status=status,
         )
 
     def cancel(self):

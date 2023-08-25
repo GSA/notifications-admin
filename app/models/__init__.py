@@ -8,7 +8,6 @@ from notifications_utils.serialised_model import (
 
 
 class JSONModel(SerialisedModel):
-
     def __init__(self, _dict):
         # in the case of a bad request _dict may be `None`
         self._dict = _dict or {}
@@ -27,13 +26,12 @@ class JSONModel(SerialisedModel):
 
     def _get_by_id(self, things, id):
         try:
-            return next(thing for thing in things if thing['id'] == str(id))
+            return next(thing for thing in things if thing["id"] == str(id))
         except StopIteration:
             abort(404)
 
 
 class ModelList(SerialisedModelCollection):
-
     @property
     @abstractmethod
     def client_method(self):
@@ -44,8 +42,7 @@ class ModelList(SerialisedModelCollection):
 
 
 class PaginatedModelList(ModelList):
-
-    response_key = 'data'
+    response_key = "data"
 
     def __init__(self, *args, page=None, **kwargs):
         try:
@@ -58,11 +55,10 @@ class PaginatedModelList(ModelList):
             page=self.current_page,
         )
         self.items = response[self.response_key]
-        self.prev_page = response.get('links', {}).get('prev', None)
-        self.next_page = response.get('links', {}).get('next', None)
+        self.prev_page = response.get("links", {}).get("prev", None)
+        self.next_page = response.get("links", {}).get("next", None)
 
 
-class SortByNameMixin():
-
+class SortByNameMixin:
     def __lt__(self, other):
         return self.name.lower() < other.name.lower()
