@@ -123,3 +123,6 @@ app/templates/vendor
 secrets.auto.tfvars
 terraform.tfstate
 terraform.tfstate.backup
+
+# Playwright
+playwright/

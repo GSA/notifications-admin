@@ -347,8 +347,6 @@ class User(JSONModel, UserMixin):
     def default_organization_type(self):
         if self.default_organization:
             return self.default_organization.organization_type
-        if self.has_nhs_email_address:
-            return 'nhs'
         return None
 
     @property
@@ -358,12 +356,6 @@ class User(JSONModel, UserMixin):
         ) and (
             self.trial_mode_services
         )
-
-    @property
-    def has_nhs_email_address(self):
-        return self.email_address.lower().endswith((
-            '@nhs.uk', '.nhs.uk', '@nhs.net', '.nhs.net',
-        ))
 
     def serialize(self):
         dct = {
