@@ -57,7 +57,6 @@
     "rollup": "1.32.1",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-node-resolve": "5.2.0",
-    "sass": "1.55.0",
     "streamqueue": "1.1.2"
   }
 }
