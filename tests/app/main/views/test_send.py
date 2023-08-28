@@ -81,11 +81,11 @@ def test_default_email_sender_is_checked_and_has_hint(
         ".set_sender", service_id=SERVICE_ONE_ID, template_id=fake_uuid
     )
 
-    assert page.select(".govuk-radios input")[0].has_attr("checked")
+    assert page.select(".usa-radios input")[0].has_attr("checked")
     assert (
-        normalize_spaces(page.select_one(".govuk-radios .usa-hint").text) == "(Default)"
+        normalize_spaces(page.select_one(".usa-radios .usa-hint").text) == "(Default)"
     )
-    assert not page.select(".govuk-radios input")[1].has_attr("checked")
+    assert not page.select(".usa-radios input")[1].has_attr("checked")
 
 
 def test_default_sms_sender_is_checked_and_has_hint(
@@ -98,11 +98,11 @@ def test_default_sms_sender_is_checked_and_has_hint(
         ".set_sender", service_id=SERVICE_ONE_ID, template_id=fake_uuid
     )
 
-    assert page.select(".govuk-radios input")[0].has_attr("checked")
+    assert page.select(".usa-radios input")[0].has_attr("checked")
     assert (
-        normalize_spaces(page.select_one(".govuk-radios .usa-hint").text) == "(Default)"
+        normalize_spaces(page.select_one(".usa-radios .usa-hint").text) == "(Default)"
     )
-    assert not page.select(".govuk-radios input")[1].has_attr("checked")
+    assert not page.select(".usa-radios input")[1].has_attr("checked")
 
 
 def test_default_sms_sender_is_checked_and_has_hint_when_there_are_no_inbound_numbers(
@@ -115,11 +115,11 @@ def test_default_sms_sender_is_checked_and_has_hint_when_there_are_no_inbound_nu
         ".set_sender", service_id=SERVICE_ONE_ID, template_id=fake_uuid
     )
 
-    assert page.select(".govuk-radios input")[0].has_attr("checked")
+    assert page.select(".usa-radios input")[0].has_attr("checked")
     assert (
-        normalize_spaces(page.select_one(".govuk-radios .usa-hint").text) == "(Default)"
+        normalize_spaces(page.select_one(".usa-radios .usa-hint").text) == "(Default)"
     )
-    assert not page.select(".govuk-radios input")[1].has_attr("checked")
+    assert not page.select(".usa-radios input")[1].has_attr("checked")
 
 
 def test_default_inbound_sender_is_checked_and_has_hint_with_default_and_receives_text(
@@ -133,13 +133,13 @@ def test_default_inbound_sender_is_checked_and_has_hint_with_default_and_receive
         ".set_sender", service_id=service_one["id"], template_id=fake_uuid
     )
 
-    assert page.select(".govuk-radios input")[0].has_attr("checked")
+    assert page.select(".usa-radios input")[0].has_attr("checked")
     assert (
-        normalize_spaces(page.select_one(".govuk-radios .usa-hint").text)
+        normalize_spaces(page.select_one(".usa-radios .usa-hint").text)
         == "(Default and receives replies)"
     )
-    assert not page.select(".govuk-radios input")[1].has_attr("checked")
-    assert not page.select(".govuk-radios input")[2].has_attr("checked")
+    assert not page.select(".usa-radios input")[1].has_attr("checked")
+    assert not page.select(".usa-radios input")[2].has_attr("checked")
 
 
 def test_sms_sender_has_receives_replies_hint(
@@ -153,13 +153,13 @@ def test_sms_sender_has_receives_replies_hint(
         ".set_sender", service_id=service_one["id"], template_id=fake_uuid
     )
 
-    assert page.select(".govuk-radios input")[0].has_attr("checked")
+    assert page.select(".usa-radios input")[0].has_attr("checked")
     assert (
-        normalize_spaces(page.select_one(".govuk-radios .usa-hint").text)
+        normalize_spaces(page.select_one(".usa-radios .usa-hint").text)
         == "(Default and receives replies)"
     )
-    assert not page.select(".govuk-radios input")[1].has_attr("checked")
-    assert not page.select(".govuk-radios input")[2].has_attr("checked")
+    assert not page.select(".usa-radios input")[1].has_attr("checked")
+    assert not page.select(".usa-radios input")[2].has_attr("checked")
 
 
 @pytest.mark.parametrize(

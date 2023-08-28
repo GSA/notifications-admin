@@ -4409,7 +4409,7 @@ def test_view_edit_service_billing_details(
     ]
     for label in labels:
         assert label.text.strip() in labels_list
-    textbox_names = page.find_all("input", class_="govuk-input ")
+    textbox_names = page.find_all("input", class_="usa-input ")
     names_list = [
         "billing_contact_email_addresses",
         "billing_contact_names",
