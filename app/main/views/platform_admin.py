@@ -44,29 +44,29 @@ ZERO_FAILURE_THRESHOLD = 0
 @user_is_platform_admin
 def platform_admin_splash_page():
     return render_template(
-        'views/platform-admin/splash-page.html',
+        "views/platform-admin/splash-page.html",
     )
 
 
 @main.route("/platform-admin/summary")
 @user_is_platform_admin
 def platform_admin():
-    form = DateFilterForm(request.args, meta={'csrf': False})
+    form = DateFilterForm(request.args, meta={"csrf": False})
     api_args = {}
 
     form.validate()
 
     if form.start_date.data:
-        api_args['start_date'] = form.start_date.data
-        api_args['end_date'] = form.end_date.data or datetime.utcnow().date()
+        api_args["start_date"] = form.start_date.data
+        api_args["end_date"] = form.end_date.data or datetime.utcnow().date()
 
     platform_stats = platform_stats_api_client.get_aggregate_platform_stats(api_args)
     number_of_complaints = complaint_api_client.get_complaint_count(api_args)
 
     return render_template(
-        'views/platform-admin/index.html',
+        "views/platform-admin/index.html",
         form=form,
-        global_stats=make_columns(platform_stats, number_of_complaints)
+        global_stats=make_columns(platform_stats, number_of_complaints),
     )
 
 
@@ -77,20 +77,18 @@ def is_over_threshold(number, total, threshold):
 
 def get_status_box_data(stats, key, label, threshold=FAILURE_THRESHOLD):
     return {
-        'number': "{:,}".format(stats['failures'][key]),
-        'label': label,
-        'failing': is_over_threshold(
-            stats['failures'][key],
-            stats['total'],
-            threshold
-        ),
-        'percentage': get_formatted_percentage(stats['failures'][key], stats['total'])
+        "number": "{:,}".format(stats["failures"][key]),
+        "label": label,
+        "failing": is_over_threshold(stats["failures"][key], stats["total"], threshold),
+        "percentage": get_formatted_percentage(stats["failures"][key], stats["total"]),
     }
 
 
 def get_tech_failure_status_box_data(stats):
-    stats = get_status_box_data(stats, 'technical-failure', 'technical failures', ZERO_FAILURE_THRESHOLD)
-    stats.pop('percentage')
+    stats = get_status_box_data(
+        stats, "technical-failure", "technical failures", ZERO_FAILURE_THRESHOLD
+    )
+    stats.pop("percentage")
     return stats
 
 
@@ -98,83 +96,99 @@ def make_columns(global_stats, complaints_number):
     return [
         # email
         {
-            'black_box': {
-                'number': global_stats['email']['total'],
-                'notification_type': 'email'
+            "black_box": {
+                "number": global_stats["email"]["total"],
+                "notification_type": "email",
             },
-            'other_data': [
-                get_tech_failure_status_box_data(global_stats['email']),
-                get_status_box_data(global_stats['email'], 'permanent-failure', 'permanent failures'),
-                get_status_box_data(global_stats['email'], 'temporary-failure', 'temporary failures'),
+            "other_data": [
+                get_tech_failure_status_box_data(global_stats["email"]),
+                get_status_box_data(
+                    global_stats["email"], "permanent-failure", "permanent failures"
+                ),
+                get_status_box_data(
+                    global_stats["email"], "temporary-failure", "temporary failures"
+                ),
                 {
-                    'number': complaints_number,
-                    'label': 'complaints',
-                    'failing': is_over_threshold(complaints_number,
-                                                 global_stats['email']['total'], COMPLAINT_THRESHOLD),
-                    'percentage': get_formatted_percentage_two_dp(complaints_number, global_stats['email']['total']),
-                    'url': url_for('main.platform_admin_list_complaints')
-                }
+                    "number": complaints_number,
+                    "label": "complaints",
+                    "failing": is_over_threshold(
+                        complaints_number,
+                        global_stats["email"]["total"],
+                        COMPLAINT_THRESHOLD,
+                    ),
+                    "percentage": get_formatted_percentage_two_dp(
+                        complaints_number, global_stats["email"]["total"]
+                    ),
+                    "url": url_for("main.platform_admin_list_complaints"),
+                },
             ],
-            'test_data': {
-                'number': global_stats['email']['test-key'],
-                'label': 'test emails'
-            }
+            "test_data": {
+                "number": global_stats["email"]["test-key"],
+                "label": "test emails",
+            },
         },
         # sms
         {
-            'black_box': {
-                'number': global_stats['sms']['total'],
-                'notification_type': 'sms'
+            "black_box": {
+                "number": global_stats["sms"]["total"],
+                "notification_type": "sms",
             },
-            'other_data': [
-                get_tech_failure_status_box_data(global_stats['sms']),
-                get_status_box_data(global_stats['sms'], 'permanent-failure', 'permanent failures'),
-                get_status_box_data(global_stats['sms'], 'temporary-failure', 'temporary failures')
+            "other_data": [
+                get_tech_failure_status_box_data(global_stats["sms"]),
+                get_status_box_data(
+                    global_stats["sms"], "permanent-failure", "permanent failures"
+                ),
+                get_status_box_data(
+                    global_stats["sms"], "temporary-failure", "temporary failures"
+                ),
             ],
-            'test_data': {
-                'number': global_stats['sms']['test-key'],
-                'label': 'test text messages'
-            }
+            "test_data": {
+                "number": global_stats["sms"]["test-key"],
+                "label": "test text messages",
+            },
         },
     ]
 
 
-@main.route("/platform-admin/live-services", endpoint='live_services')
-@main.route("/platform-admin/trial-services", endpoint='trial_services')
+@main.route("/platform-admin/live-services", endpoint="live_services")
+@main.route("/platform-admin/trial-services", endpoint="trial_services")
 @user_is_platform_admin
 def platform_admin_services():
     form = DateFilterForm(request.args)
-    if all((
-        request.args.get('include_from_test_key') is None,
-        request.args.get('start_date') is None,
-        request.args.get('end_date') is None,
-    )):
+    if all(
+        (
+            request.args.get("include_from_test_key") is None,
+            request.args.get("start_date") is None,
+            request.args.get("end_date") is None,
+        )
+    ):
         # Default to True if the user hasn’t done any filtering,
         # otherwise respect their choice
         form.include_from_test_key.data = True
 
     include_from_test_key = form.include_from_test_key.data
-    api_args = {'detailed': True,
-                'only_active': False,    # specifically DO get inactive services
-                'include_from_test_key': include_from_test_key,
-                }
+    api_args = {
+        "detailed": True,
+        "only_active": False,  # specifically DO get inactive services
+        "include_from_test_key": include_from_test_key,
+    }
 
     if form.start_date.data:
-        api_args['start_date'] = form.start_date.data
-        api_args['end_date'] = form.end_date.data or datetime.utcnow().date()
+        api_args["start_date"] = form.start_date.data
+        api_args["end_date"] = form.end_date.data or datetime.utcnow().date()
 
     services = filter_and_sort_services(
-        service_api_client.get_services(api_args)['data'],
-        trial_mode_services=request.endpoint == 'main.trial_services',
+        service_api_client.get_services(api_args)["data"],
+        trial_mode_services=request.endpoint == "main.trial_services",
     )
 
     return render_template(
-        'views/platform-admin/services.html',
+        "views/platform-admin/services.html",
         include_from_test_key=include_from_test_key,
         form=form,
         services=list(format_stats_by_service(services)),
-        page_title='{} services'.format(
-            'Trial mode' if request.endpoint == 'main.trial_services' else 'Live'
+        page_title="{} services".format(
+            "Trial mode" if request.endpoint == "main.trial_services" else "Live"
         ),
         global_stats=create_global_stats(services),
     )
@@ -183,9 +197,7 @@ def platform_admin_services():
 @main.route("/platform-admin/reports")
 @user_is_platform_admin
 def platform_admin_reports():
-    return render_template(
-        'views/platform-admin/reports.html'
-    )
+    return render_template("views/platform-admin/reports.html")
 
 
 @main.route("/platform-admin/reports/live-services.csv")
@@ -193,41 +205,51 @@ def platform_admin_reports():
 def live_services_csv():
     results = service_api_client.get_live_services_data()["data"]
 
-    column_names = OrderedDict([
-        ('service_id', 'Service ID'),
-        ('organization_name', 'Organization'),
-        ('organization_type', 'Organization type'),
-        ('service_name', 'Service name'),
-        ('consent_to_research', 'Consent to research'),
-        ('contact_name', 'Main contact'),
-        ('contact_email', 'Contact email'),
-        ('contact_mobile', 'Contact mobile'),
-        ('live_date', 'Live date'),
-        ('sms_volume_intent', 'SMS volume intent'),
-        ('email_volume_intent', 'Email volume intent'),
-        ('sms_totals', 'SMS sent this year'),
-        ('email_totals', 'Emails sent this year'),
-        ('free_sms_fragment_limit', 'Free sms allowance'),
-    ])
+    column_names = OrderedDict(
+        [
+            ("service_id", "Service ID"),
+            ("organization_name", "Organization"),
+            ("organization_type", "Organization type"),
+            ("service_name", "Service name"),
+            ("consent_to_research", "Consent to research"),
+            ("contact_name", "Main contact"),
+            ("contact_email", "Contact email"),
+            ("contact_mobile", "Contact mobile"),
+            ("live_date", "Live date"),
+            ("sms_volume_intent", "SMS volume intent"),
+            ("email_volume_intent", "Email volume intent"),
+            ("sms_totals", "SMS sent this year"),
+            ("email_totals", "Emails sent this year"),
+            ("free_sms_fragment_limit", "Free sms allowance"),
+        ]
+    )
 
     # initialise with header row
     live_services_data = [[x for x in column_names.values()]]
 
     for row in results:
-        if row['live_date']:
-            row['live_date'] = datetime.strptime(row["live_date"], '%a, %d %b %Y %X %Z').strftime("%d-%m-%Y")
+        if row["live_date"]:
+            row["live_date"] = datetime.strptime(
+                row["live_date"], "%a, %d %b %Y %X %Z"
+            ).strftime("%d-%m-%Y")
 
         live_services_data.append([row[api_key] for api_key in column_names.keys()])
 
-    return Spreadsheet.from_rows(live_services_data).as_csv_data, 200, {
-        'Content-Type': 'text/csv; charset=utf-8',
-        'Content-Disposition': 'inline; filename="{} live services report.csv"'.format(
-            format_date_numeric(datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")),
-        )
-    }
+    return (
+        Spreadsheet.from_rows(live_services_data).as_csv_data,
+        200,
+        {
+            "Content-Type": "text/csv; charset=utf-8",
+            "Content-Disposition": 'inline; filename="{} live services report.csv"'.format(
+                format_date_numeric(datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")),
+            ),
+        },
+    )
 
 
-@main.route("/platform-admin/reports/notifications-sent-by-service", methods=['GET', 'POST'])
+@main.route(
+    "/platform-admin/reports/notifications-sent-by-service", methods=["GET", "POST"]
+)
 @user_is_platform_admin
 def notifications_sent_by_service():
     form = RequiredDateFilterForm()
@@ -237,21 +259,39 @@ def notifications_sent_by_service():
         end_date = form.end_date.data
 
         headers = [
-            'date_created', 'service_id', 'service_name', 'notification_type', 'count_sending', 'count_delivered',
-            'count_technical_failure', 'count_temporary_failure', 'count_permanent_failure', 'count_sent'
+            "date_created",
+            "service_id",
+            "service_name",
+            "notification_type",
+            "count_sending",
+            "count_delivered",
+            "count_technical_failure",
+            "count_temporary_failure",
+            "count_permanent_failure",
+            "count_sent",
         ]
-        result = notification_api_client.get_notification_status_by_service(start_date, end_date)
+        result = notification_api_client.get_notification_status_by_service(
+            start_date, end_date
+        )
+        content_disposition = (
+            'attachment; filename="{} to {} notification status '
+            'per service report.csv"'.format(start_date, end_date)
+        )
+        return (
+            Spreadsheet.from_rows([headers] + result).as_csv_data,
+            200,
+            {
+                "Content-Type": "text/csv; charset=utf-8",
+                "Content-Disposition": content_disposition,
+            },
+        )
 
-        return Spreadsheet.from_rows([headers] + result).as_csv_data, 200, {
-            'Content-Type': 'text/csv; charset=utf-8',
-            'Content-Disposition': 'attachment; filename="{} to {} notification status per service report.csv"'.format(
-                start_date, end_date)
-        }
-
-    return render_template('views/platform-admin/notifications_by_service.html', form=form)
+    return render_template(
+        "views/platform-admin/notifications_by_service.html", form=form
+    )
 
 
-@main.route("/platform-admin/reports/usage-for-all-services", methods=['GET', 'POST'])
+@main.route("/platform-admin/reports/usage-for-all-services", methods=["GET", "POST"])
 @user_is_platform_admin
 def get_billing_report():
     form = BillingReportDateFilterForm()
@@ -260,46 +300,71 @@ def get_billing_report():
         start_date = form.start_date.data
         end_date = form.end_date.data
         headers = [
-            "organization_id", "organization_name", "service_id", "service_name",
-            "sms_cost", "sms_chargeable_units",
-            "purchase_order_number", "contact_names", "contact_email_addresses", "billing_reference"
+            "organization_id",
+            "organization_name",
+            "service_id",
+            "service_name",
+            "sms_cost",
+            "sms_chargeable_units",
+            "purchase_order_number",
+            "contact_names",
+            "contact_email_addresses",
+            "billing_reference",
         ]
         try:
-            result = billing_api_client.get_data_for_billing_report(start_date, end_date)
+            result = billing_api_client.get_data_for_billing_report(
+                start_date, end_date
+            )
         except HTTPError as e:
-            message = 'Date must be in a single financial year.'
+            message = "Date must be in a single financial year."
             if e.status_code == 400 and e.message == message:
                 flash(message)
-                return render_template('views/platform-admin/get-billing-report.html', form=form)
+                return render_template(
+                    "views/platform-admin/get-billing-report.html", form=form
+                )
             else:
                 raise e
         rows = [
             [
-                r["organization_id"], r["organization_name"], r["service_id"], r["service_name"],
-                r["sms_cost"], r["sms_chargeable_units"],
-                r.get("purchase_order_number"), r.get("contact_names"),
-                r.get("contact_email_addresses"), r.get("billing_reference")
+                r["organization_id"],
+                r["organization_name"],
+                r["service_id"],
+                r["service_name"],
+                r["sms_cost"],
+                r["sms_chargeable_units"],
+                r.get("purchase_order_number"),
+                r.get("contact_names"),
+                r.get("contact_email_addresses"),
+                r.get("billing_reference"),
             ]
             for r in result
         ]
         if rows:
-            return Spreadsheet.from_rows([headers] + rows).as_csv_data, 200, {
-                'Content-Type': 'text/csv; charset=utf-8',
-                'Content-Disposition': 'attachment; filename="Billing Report from {} to {}.csv"'.format(
-                    start_date, end_date
-                )
-            }
+            return (
+                Spreadsheet.from_rows([headers] + rows).as_csv_data,
+                200,
+                {
+                    "Content-Type": "text/csv; charset=utf-8",
+                    "Content-Disposition": 'attachment; filename="Billing Report from {} to {}.csv"'.format(
+                        start_date, end_date
+                    ),
+                },
+            )
         else:
-            flash('No results for dates')
-    return render_template('views/platform-admin/get-billing-report.html', form=form)
+            flash("No results for dates")
+    return render_template("views/platform-admin/get-billing-report.html", form=form)
 
 
-@main.route("/platform-admin/reports/get-users-report", methods=['GET', 'POST'])
+@main.route("/platform-admin/reports/get-users-report", methods=["GET", "POST"])
 @user_is_platform_admin
 def get_users_report():
     headers = [
-            "name", "services", "platform admin", "permissions", "password changed at",
-            "state"
+        "name",
+        "services",
+        "platform admin",
+        "permissions",
+        "password changed at",
+        "state",
     ]
     try:
         result = user_api_client.get_all_users()
@@ -311,16 +376,20 @@ def get_users_report():
     for r in result:
         rows.append(_get_user_row(r))
     if rows:
-        return Spreadsheet.from_rows([headers] + rows).as_csv_data, 200, {
-            'Content-Type': 'text/csv; charset=utf-8',
-            'Content-Disposition': f'attachment; filename="User Report {datetime.utcnow()}.csv"'
-        }
+        return (
+            Spreadsheet.from_rows([headers] + rows).as_csv_data,
+            200,
+            {
+                "Content-Type": "text/csv; charset=utf-8",
+                "Content-Disposition": f'attachment; filename="User Report {datetime.utcnow()}.csv"',
+            },
+        )
     else:
-        flash('No results')
-    return render_template('views/platform-admin/get-users-report.html')
+        flash("No results")
+    return render_template("views/platform-admin/get-users-report.html")
 
 
-@main.route("/platform-admin/reports/volumes-by-service", methods=['GET', 'POST'])
+@main.route("/platform-admin/reports/volumes-by-service", methods=["GET", "POST"])
 @user_is_platform_admin
 def get_volumes_by_service():
     form = BillingReportDateFilterForm()
@@ -329,31 +398,51 @@ def get_volumes_by_service():
         start_date = form.start_date.data
         end_date = form.end_date.data
         headers = [
-            "organization id", "organization name", "service id", "service name",
-            "free allowance", "sms notifications", "sms chargeable units", "email totals",
+            "organization id",
+            "organization name",
+            "service id",
+            "service name",
+            "free allowance",
+            "sms notifications",
+            "sms chargeable units",
+            "email totals",
         ]
-        result = billing_api_client.get_data_for_volumes_by_service_report(start_date, end_date)
+        result = billing_api_client.get_data_for_volumes_by_service_report(
+            start_date, end_date
+        )
 
         rows = [
             [
-                r["organization_id"], r["organization_name"], r["service_id"], r["service_name"],
-                r["free_allowance"], r["sms_notifications"], r["sms_chargeable_units"], r["email_totals"],
+                r["organization_id"],
+                r["organization_name"],
+                r["service_id"],
+                r["service_name"],
+                r["free_allowance"],
+                r["sms_notifications"],
+                r["sms_chargeable_units"],
+                r["email_totals"],
             ]
             for r in result
         ]
         if rows:
-            return Spreadsheet.from_rows([headers] + rows).as_csv_data, 200, {
-                'Content-Type': 'text/csv; charset=utf-8',
-                'Content-Disposition': 'attachment; filename="Volumes by service report from {} to {}.csv"'.format(
-                    start_date, end_date
-                )
-            }
+            return (
+                Spreadsheet.from_rows([headers] + rows).as_csv_data,
+                200,
+                {
+                    "Content-Type": "text/csv; charset=utf-8",
+                    "Content-Disposition": 'attachment; filename="Volumes by service report from {} to {}.csv"'.format(
+                        start_date, end_date
+                    ),
+                },
+            )
         else:
-            flash('No results for dates')
-    return render_template('views/platform-admin/volumes-by-service-report.html', form=form)
+            flash("No results for dates")
+    return render_template(
+        "views/platform-admin/volumes-by-service-report.html", form=form
+    )
 
 
-@main.route("/platform-admin/reports/daily-volumes-report", methods=['GET', 'POST'])
+@main.route("/platform-admin/reports/daily-volumes-report", methods=["GET", "POST"])
 @user_is_platform_admin
 def get_daily_volumes():
     form = BillingReportDateFilterForm()
@@ -362,31 +451,45 @@ def get_daily_volumes():
         start_date = form.start_date.data
         end_date = form.end_date.data
         headers = [
-            "day", "sms totals", "sms fragment totals", "sms chargeable units",
+            "day",
+            "sms totals",
+            "sms fragment totals",
+            "sms chargeable units",
             "email totals",
         ]
-        result = billing_api_client.get_data_for_daily_volumes_report(start_date, end_date)
+        result = billing_api_client.get_data_for_daily_volumes_report(
+            start_date, end_date
+        )
 
         rows = [
             [
-                r["day"], r["sms_totals"], r["sms_fragment_totals"], r["sms_chargeable_units"],
+                r["day"],
+                r["sms_totals"],
+                r["sms_fragment_totals"],
+                r["sms_chargeable_units"],
                 r["email_totals"],
             ]
             for r in result
         ]
         if rows:
-            return Spreadsheet.from_rows([headers] + rows).as_csv_data, 200, {
-                'Content-Type': 'text/csv; charset=utf-8',
-                'Content-Disposition': 'attachment; filename="Daily volumes report from {} to {}.csv"'.format(
-                    start_date, end_date
-                )
-            }
+            return (
+                Spreadsheet.from_rows([headers] + rows).as_csv_data,
+                200,
+                {
+                    "Content-Type": "text/csv; charset=utf-8",
+                    "Content-Disposition": 'attachment; filename="Daily volumes report from {} to {}.csv"'.format(
+                        start_date, end_date
+                    ),
+                },
+            )
         else:
-            flash('No results for dates')
-    return render_template('views/platform-admin/daily-volumes-report.html', form=form)
+            flash("No results for dates")
+    return render_template("views/platform-admin/daily-volumes-report.html", form=form)
 
 
-@main.route("/platform-admin/reports/daily-sms-provider-volumes-report", methods=['GET', 'POST'])
+@main.route(
+    "/platform-admin/reports/daily-sms-provider-volumes-report", methods=["GET", "POST"]
+)
 @user_is_platform_admin
 def get_daily_sms_provider_volumes():
     form = BillingReportDateFilterForm()
@@ -402,7 +505,9 @@ def get_daily_sms_provider_volumes():
             "sms chargeable units",
             "sms cost",
         ]
-        result = billing_api_client.get_data_for_daily_sms_provider_volumes_report(start_date, end_date)
+        result = billing_api_client.get_data_for_daily_sms_provider_volumes_report(
+            start_date, end_date
+        )
 
         rows = [
             [
@@ -411,19 +516,25 @@ def get_daily_sms_provider_volumes():
                 r["sms_totals"],
                 r["sms_fragment_totals"],
                 r["sms_chargeable_units"],
-                r["sms_cost"]
+                r["sms_cost"],
             ]
             for r in result
         ]
+        content_disp = f'attachment; filename="Daily SMS provider volumes report from {start_date} to {end_date}.csv"'
         if rows:
-            return Spreadsheet.from_rows([headers] + rows).as_csv_data, 200, {
-                'Content-Type': 'text/csv; charset=utf-8',
-                'Content-Disposition':
-                    f'attachment; filename="Daily SMS provider volumes report from {start_date} to {end_date}.csv"'
-            }
+            return (
+                Spreadsheet.from_rows([headers] + rows).as_csv_data,
+                200,
+                {
+                    "Content-Type": "text/csv; charset=utf-8",
+                    "Content-Disposition": content_disp,
+                },
+            )
         else:
-            flash('No results for dates')
-    return render_template('views/platform-admin/daily-sms-provider-volumes-report.html', form=form)
+            flash("No results for dates")
+    return render_template(
+        "views/platform-admin/daily-sms-provider-volumes-report.html", form=form
+    )
 
 
 @main.route("/platform-admin/complaints")
@@ -431,62 +542,83 @@ def get_daily_sms_provider_volumes():
 def platform_admin_list_complaints():
     page = get_page_from_request()
     if page is None:
-        abort(404, "Invalid page argument ({}).".format(request.args.get('page')))
+        abort(404, "Invalid page argument ({}).".format(request.args.get("page")))
 
     response = complaint_api_client.get_all_complaints(page=page)
 
     prev_page = None
-    if response['links'].get('prev'):
-        prev_page = generate_previous_dict('main.platform_admin_list_complaints', None, page)
+    if response["links"].get("prev"):
+        prev_page = generate_previous_dict(
+            "main.platform_admin_list_complaints", None, page
+        )
     next_page = None
-    if response['links'].get('next'):
-        next_page = generate_next_dict('main.platform_admin_list_complaints', None, page)
+    if response["links"].get("next"):
+        next_page = generate_next_dict(
+            "main.platform_admin_list_complaints", None, page
+        )
 
     return render_template(
-        'views/platform-admin/complaints.html',
-        complaints=response['complaints'],
+        "views/platform-admin/complaints.html",
+        complaints=response["complaints"],
         page=page,
         prev_page=prev_page,
         next_page=next_page,
     )
 
 
-@main.route("/platform-admin/clear-cache", methods=['GET', 'POST'])
+@main.route("/platform-admin/clear-cache", methods=["GET", "POST"])
 @user_is_platform_admin
 def clear_cache():
     # note: `service-{uuid}-templates` cache is cleared for both services and templates.
-    CACHE_KEYS = OrderedDict([
-        ('user', [
-            'user-????????-????-????-????-????????????',
-        ]),
-        ('service', [
-            'has_jobs-????????-????-????-????-????????????',
-            'service-????????-????-????-????-????????????',
-            'service-????????-????-????-????-????????????-templates',
-            'service-????????-????-????-????-????????????-data-retention',
-            'service-????????-????-????-????-????????????-template-folders',
-        ]),
-        ('template', [
-            'service-????????-????-????-????-????????????-templates',
-            'service-????????-????-????-????-????????????-template-????????-????-????-????-????????????-version-*',
-            'service-????????-????-????-????-????????????-template-????????-????-????-????-????????????-versions',
-        ]),
-        ('email_branding', [
-            'email_branding',
-            'email_branding-????????-????-????-????-????????????',
-        ]),
-        ('organization', [
-            'organizations',
-            'domains',
-            'live-service-and-organization-counts',
-            'organization-????????-????-????-????-????????????-name',
-        ]),
-    ])
+    CACHE_KEYS = OrderedDict(
+        [
+            (
+                "user",
+                [
+                    "user-????????-????-????-????-????????????",
+                ],
+            ),
+            (
+                "service",
+                [
+                    "has_jobs-????????-????-????-????-????????????",
+                    "service-????????-????-????-????-????????????",
+                    "service-????????-????-????-????-????????????-templates",
+                    "service-????????-????-????-????-????????????-data-retention",
+                    "service-????????-????-????-????-????????????-template-folders",
+                ],
+            ),
+            (
+                "template",
+                [
+                    "service-????????-????-????-????-????????????-templates",
+                    "service-????????-????-????-????-????????????-template-????????-????-????-????-????????????-version-*",  # noqa
+                    "service-????????-????-????-????-????????????-template-????????-????-????-????-????????????-versions",  # noqa
+                ],
+            ),
+            (
+                "email_branding",
+                [
+                    "email_branding",
+                    "email_branding-????????-????-????-????-????????????",
+                ],
+            ),
+            (
+                "organization",
+                [
+                    "organizations",
+                    "domains",
+                    "live-service-and-organization-counts",
+                    "organization-????????-????-????-????-????????????-name",
+                ],
+            ),
+        ]
+    )
 
     form = AdminClearCacheForm()
 
     form.model_type.choices = [
-        (key, key.replace('_', ' ').title()) for key in CACHE_KEYS
+        (key, key.replace("_", " ").title()) for key in CACHE_KEYS
     ]
 
     if form.validate_on_submit():
@@ -495,83 +627,75 @@ def clear_cache():
         patterns = list(itertools.chain(*groups))
 
         num_deleted = sum(
-            redis_client.delete_by_pattern(pattern)
-            for pattern in patterns
+            redis_client.delete_by_pattern(pattern) for pattern in patterns
         )
 
         msg = (
-            f'Removed {num_deleted} objects '
-            f'across {len(patterns)} key formats '
+            f"Removed {num_deleted} objects "
+            f"across {len(patterns)} key formats "
             f'for {", ".join(group_keys)}'
         )
 
-        flash(msg, category='default')
+        flash(msg, category="default")
 
-    return render_template(
-        'views/platform-admin/clear-cache.html',
-        form=form
-    )
+    return render_template("views/platform-admin/clear-cache.html", form=form)
 
 
 def sum_service_usage(service):
     total = 0
-    for notification_type in service['statistics'].keys():
-        total += service['statistics'][notification_type]['requested']
+    for notification_type in service["statistics"].keys():
+        total += service["statistics"][notification_type]["requested"]
     return total
 
 
 def filter_and_sort_services(services, trial_mode_services=False):
     return [
-        service for service in sorted(
+        service
+        for service in sorted(
             services,
             key=lambda service: (
-                service['active'],
+                service["active"],
                 sum_service_usage(service),
-                service['created_at']
+                service["created_at"],
             ),
             reverse=True,
         )
-        if service['restricted'] == trial_mode_services
+        if service["restricted"] == trial_mode_services
     ]
 
 
 def create_global_stats(services):
     stats = {
-        'email': {
-            'delivered': 0,
-            'failed': 0,
-            'requested': 0
-        },
-        'sms': {
-            'delivered': 0,
-            'failed': 0,
-            'requested': 0
-        },
+        "email": {"delivered": 0, "failed": 0, "requested": 0},
+        "sms": {"delivered": 0, "failed": 0, "requested": 0},
     }
     for service in services:
-        for msg_type, status in itertools.product(('sms', 'email'), ('delivered', 'failed', 'requested')):
-            stats[msg_type][status] += service['statistics'][msg_type][status]
+        for msg_type, status in itertools.product(
+            ("sms", "email"), ("delivered", "failed", "requested")
+        ):
+            stats[msg_type][status] += service["statistics"][msg_type][status]
 
     for stat in stats.values():
-        stat['failure_rate'] = get_formatted_percentage(stat['failed'], stat['requested'])
+        stat["failure_rate"] = get_formatted_percentage(
+            stat["failed"], stat["requested"]
+        )
     return stats
 
 
 def format_stats_by_service(services):
     for service in services:
         yield {
-            'id': service['id'],
-            'name': service['name'],
-            'stats': service['statistics'],
-            'restricted': service['restricted'],
-            'research_mode': service['research_mode'],
-            'created_at': service['created_at'],
-            'active': service['active']
+            "id": service["id"],
+            "name": service["name"],
+            "stats": service["statistics"],
+            "restricted": service["restricted"],
+            "research_mode": service["research_mode"],
+            "created_at": service["created_at"],
+            "active": service["active"],
         }
 
 
 def _get_user_row(r):
-
     # [{
     #     'name': 'Kenneth Kehl',
     #     'organizations': [],
@@ -581,20 +705,20 @@ def _get_user_row(r):
     #     'platform_admin': True, 'services': ['672b8a66-e22e-40f6-b1e5-39cc1c6bf857'], 'state': 'active'}]
 
     row = []
-    row.append(r['name'])
+    row.append(r["name"])
 
     service_id_name_lookup = {}
     services = []
-    for s in r['services']:
+    for s in r["services"]:
         my_service = service_api_client.get_service(s)
-        service_id_name_lookup[my_service['data']['id']] = my_service['data']['name']
-        services.append(my_service['data']['name'])
+        service_id_name_lookup[my_service["data"]["id"]] = my_service["data"]["name"]
+        services.append(my_service["data"]["name"])
     services = str(services)
     services = services.replace("[", "")
     services = services.replace("]", "")
     row.append(services)
-    row.append(r['platform_admin'])
-    permissions = r['permissions']
+    row.append(r["platform_admin"])
+    permissions = r["permissions"]
     for k, v in service_id_name_lookup.items():
         if permissions.get(k):
             permissions[v] = permissions[k]
@@ -602,6 +726,6 @@ def _get_user_row(r):
 
     permissions = json.dumps(permissions, indent=4)
     row.append(permissions)
-    row.append(r['password_changed_at'])
-    row.append(r['state'])
+    row.append(r["password_changed_at"])
+    row.append(r["state"])
     return row

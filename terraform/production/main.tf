@@ -1,5 +1,5 @@
 locals {
-  cf_org_name      = "gsa-tts-benefits-studio-prototyping"
+  cf_org_name      = "gsa-tts-benefits-studio"
   cf_space_name    = "notify-production"
   env              = "production"
   app_name         = "notify-admin"
@@ -45,7 +45,7 @@ module "api_network_route" {
 # It can be re-enabled after:
 # 1) the app has first been deployed
 # 2) the route has been manually created by an OrgManager:
-#     `cf create-domain gsa-tts-benefits-studio-prototyping beta.notify.gov`
+#     `cf create-domain gsa-tts-benefits-studio beta.notify.gov`
 # 3) the acme-challenge CNAME record must be created
 #       https://cloud.gov/docs/services/external-domain-service/#how-to-create-an-instance-of-this-service
 ###########################################################################

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "0cf6fd5827de938eb059e0b04bb4408d59992627dc14e30c5b1eeac80af31498"
+            "sha256": "38185e0c6d864b4be766da7762a71b9a7922d6c8466d78ce660786e49e06b507"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -235,7 +235,7 @@
                 "sha256:f779d3ad205f108d14e99bb3859aa7dd8e9c68874617c72354d7ecaec2a054ac",
                 "sha256:f87f746ee241d30d6ed93969de31e5ffd09a2961a051e60ae6bddde9ec3583aa"
             ],
-            "markers": "python_full_version >= '3.7.0'",
+            "markers": "python_version >= '3.7'",
             "version": "==3.2.0"
         },
         "click": {
@@ -443,7 +443,8 @@
         },
         "govuk-frontend-jinja": {
             "git": "https://github.com/alphagov/govuk-frontend-jinja.git",
-            "ref": "ddbe208a976ffa4ca330881c506c5200dfa69851"
+            "ref": "ddbe208a976ffa4ca330881c506c5200dfa69851",
+            "version": "==0.5.8-alpha"
         },
         "greenlet": {
             "hashes": [
@@ -1129,11 +1130,11 @@
         },
         "vulture": {
             "hashes": [
-                "sha256:67fb80a014ed9fdb599dd44bb96cb54311032a104106fc2e706ef7a6dad88032",
-                "sha256:bccc51064ed76db15a6b58277cea8885936af047f53d2655fb5de575e93d0bca"
+                "sha256:a46857014619bd4b785a506b9ddb738cd4621043558309b03a879d18f86e2d72",
+                "sha256:b6a2aa632b6fd51488a8eeac650ab4a509bb1a032e81943817a8a2e6a63a30b3"
             ],
             "index": "pypi",
-            "version": "==2.7"
+            "version": "==2.9.1"
         },
         "webencodings": {
             "hashes": [
@@ -1389,7 +1390,7 @@
                 "sha256:f779d3ad205f108d14e99bb3859aa7dd8e9c68874617c72354d7ecaec2a054ac",
                 "sha256:f87f746ee241d30d6ed93969de31e5ffd09a2961a051e60ae6bddde9ec3583aa"
             ],
-            "markers": "python_full_version >= '3.7.0'",
+            "markers": "python_version >= '3.7'",
             "version": "==3.2.0"
         },
         "cryptography": {
@@ -1842,7 +1843,7 @@
                 "sha256:4659bc2a667783e7a15d190f6fccf8b2486685b6dba4c19c3876314769c57526",
                 "sha256:b4fa3a7a0be38243123cf9d1f3518da10c51bdb165a2b2985566247f9155a7d3"
             ],
-            "markers": "python_full_version >= '3.6.0'",
+            "markers": "python_version >= '3.6'",
             "version": "==32.0.1"
         },
         "playwright": {
@@ -2059,7 +2060,7 @@
                 "sha256:146a90b3b6b47cac4a73c12866a499e9817426423f57c5a66949c086191a8808",
                 "sha256:fb9d6c0a0f643c99eed3875b5377a184132ba9be4d61516a55273d3554d75a39"
             ],
-            "markers": "python_full_version >= '3.7.0'",
+            "markers": "python_version >= '3.7'",
             "version": "==13.5.2"
         },
         "s3transfer": {
