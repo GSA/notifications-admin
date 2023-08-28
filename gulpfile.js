@@ -21,7 +21,6 @@ plugins.cssUrlAdjuster = require('gulp-css-url-adjuster');
 plugins.jshint = require('gulp-jshint');
 plugins.prettyerror = require('gulp-prettyerror');
 plugins.rollup = require('gulp-better-rollup')
-plugins.sass = require('gulp-sass')(require('sass'));
 plugins.sassLint = require('gulp-sass-lint');
 plugins.uglify = require('gulp-uglify');
 
@@ -163,10 +162,6 @@ const watchFiles = {
     watch([paths.src + 'javascripts/**/*'], javascripts);
     cb();
   },
-  sass: (cb) => {
-    watch([paths.src + 'stylesheets/**/*'], sass);
-    cb();
-  },
   images: (cb) => {
     watch([paths.src + 'images/**/*'], images);
     cb();
@@ -183,19 +178,6 @@ const watchFiles = {
 
 
 const lint = {
-  'sass': () => {
-    return src([
-      paths.src + 'stylesheets/*.scss',
-      paths.src + 'stylesheets/components/*.scss',
-      paths.src + 'stylesheets/views/*.scss',
-    ])
-      .pipe(plugins.sassLint({
-        'options': { 'formatter': 'stylish' },
-        'rules': { 'mixins-before-declarations': [2, { 'exclude': ['media', 'govuk-media-query'] }] }
-      }))
-      .pipe(plugins.sassLint.format())
-      .pipe(plugins.sassLint.failOnError());
-  },
   'js': (cb) => {
     return src(
       paths.src + 'javascripts/**/*.js'
@@ -228,7 +210,6 @@ const defaultTask = parallel(
 // Watch for changes and re-run tasks
 const watchForChanges = parallel(
   watchFiles.javascripts,
-  watchFiles.sass,
   watchFiles.images,
   watchFiles.self
 );
@@ -236,7 +217,7 @@ const watchForChanges = parallel(
 
 exports.default = defaultTask;
 
-exports.lint = series(lint.sass, lint.js);
+exports.lint = series(lint.js);
 
 // Optional: recompile on changes
 exports.watch = series(defaultTask, watchForChanges);
