@@ -324,8 +324,7 @@ def test_should_show_old_job(
     assert not page.select("a[download]")
     assert page.select_one("tbody").text.strip() == expected_message
     assert [
-        normalize_spaces(column.text)
-        for column in page.select("main .govuk-grid-column-one-quarter")
+        normalize_spaces(column.text) for column in page.select("main .grid-col-3")
     ] == [
         "1 total text messages",
         "1 pending",

@@ -278,7 +278,7 @@ def test_should_show_service_name(
     assert page.find("h1").text == "Change your service name"
     assert page.find("input", attrs={"type": "text"})["value"] == "service one"
     assert (
-        page.select_one("main .govuk-body").text
+        page.select_one("main .usa-body").text
         == "Your service name should tell users what the message is about as well as who it’s from."
     )
 
@@ -303,13 +303,13 @@ def test_should_show_different_change_service_name_page_for_local_services(
     page = client_request.get("main.service_name_change", service_id=SERVICE_ONE_ID)
     assert page.find("h1").text == "Change your service name"
     assert page.find("input", attrs={"type": "text"})["value"] == "service one"
-    assert page.select_one("main .govuk-body").text.strip() == (
+    assert page.select_one("main .usa-body").text.strip() == (
         "Your service name should tell users what the message is about as well as who it’s from. For example:"
     )
     # when no organization on the service object, default org for the user is used for hint
     assert (
         "School admissions - Test Org"
-        in page.find_all("ul", class_="govuk-list govuk-list--bullet")[0].text
+        in page.find_all("ul", class_="usa-list usa-list--bullet")[0].text
     )
 
     app.service_api_client.get_service.assert_called_with(SERVICE_ONE_ID)
@@ -336,7 +336,7 @@ def test_should_show_service_org_in_hint_on_change_service_name_page_for_local_s
     # when there is organization on the service object, it is used for hint text instead of user default org
     assert (
         "School admissions - Local Authority"
-        in page.find_all("ul", class_="govuk-list govuk-list--bullet")[0].text
+        in page.find_all("ul", class_="usa-list usa-list--bullet")[0].text
     )
 
 
@@ -348,7 +348,7 @@ def test_should_show_service_name_with_no_prefixing(
     page = client_request.get("main.service_name_change", service_id=SERVICE_ONE_ID)
     assert page.find("h1").text == "Change your service name"
     assert (
-        page.select_one("main .govuk-body").text
+        page.select_one("main .usa-body").text
         == "Your service name should tell users what the message is about as well as who it’s from."
     )
 
@@ -3340,7 +3340,7 @@ def test_show_international_sms_as_radio_button(
     checked_radios = client_request.get(
         f"main.service_set_{permission}",
         service_id=service_one["id"],
-    ).select(".govuk-radios__item input[checked]")
+    ).select(".usa-radio input[checked]")
 
     assert len(checked_radios) == 1
     assert checked_radios[0]["value"] == expected_checked
@@ -4107,10 +4107,10 @@ def test_select_organization(
         service_id=service_one["id"],
     )
 
-    assert len(page.select(".govuk-radios__item")) == 3
+    assert len(page.select(".usa-radio")) == 3
     for i in range(0, 3):
         assert normalize_spaces(
-            page.select(".govuk-radios__item label")[i].text
+            page.select(".usa-radio label")[i].text
         ) == "Org {}".format(i + 1)
 
 

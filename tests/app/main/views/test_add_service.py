@@ -40,14 +40,12 @@ def test_get_should_render_add_service_template(
     page = client_request.get("main.add_service")
     assert page.select_one("h1").text.strip() == "About your service"
     assert page.select_one("input[name=name]").get("value") is None
-    assert [
-        label.text.strip() for label in page.select(".govuk-radios__item label")
-    ] == [
+    assert [label.text.strip() for label in page.select(".usa-radio label")] == [
         "Federal government",
         "State government",
         "Other",
     ]
-    assert [radio["value"] for radio in page.select(".govuk-radios__item input")] == [
+    assert [radio["value"] for radio in page.select(".usa-radio input")] == [
         "federal",
         "state",
         "other",
@@ -210,14 +208,12 @@ def test_get_should_only_show_nhs_org_types_radios_if_user_has_nhs_email(
     page = client_request.get("main.add_service")
     assert page.select_one("h1").text.strip() == "About your service"
     assert page.select_one("input[name=name]").get("value") is None
-    assert [
-        label.text.strip() for label in page.select(".govuk-radios__item label")
-    ] == [
+    assert [label.text.strip() for label in page.select(".usa-radio label")] == [
         "NHS – central government agency or public body",
         "NHS Trust or Clinical Commissioning Group",
         "GP practice",
     ]
-    assert [radio["value"] for radio in page.select(".govuk-radios__item input")] == [
+    assert [radio["value"] for radio in page.select(".usa-radio input")] == [
         "nhs_central",
         "nhs_local",
         "nhs_gp",
