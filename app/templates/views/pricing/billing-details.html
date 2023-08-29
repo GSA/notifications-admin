@@ -19,7 +19,7 @@
       <a class="usa-link" href="{{ url_for('main.support') }}">Contact us</a> if you need any other details.
     </p>
 
-    <h2 class="heading-medium govuk-!-margin-top-7" id="supplier-details">
+    <h2 class="heading-medium" id="supplier-details">
       Supplier details
     </h2>
 
@@ -38,7 +38,7 @@
       Email addresses
     </h3>
 
-    <ul class="govuk-list govuk-list--bullet">
+    <ul class="usa-list usa-list--bullet">
       {% for email in billing_details['notify_billing_email_addresses'] %}
       <li>
         {{ email }}
@@ -50,14 +50,14 @@
       <abbr title="Value Added Tax">VAT</abbr> number
     </h3>
 
-    <div class="govuk-!-margin-bottom-4">
+    <div>
     {{ copy_to_clipboard(
         'GB 88 88 010 80',
         thing='<abbr title="Value Added Tax">VAT</abbr> number',
     ) }}
     </div>
 
-    <h2 class="heading-medium govuk-!-margin-top-7" id="bank-details">
+    <h2 class="heading-medium" id="bank-details">
       Bank details
     </h2>
 
@@ -82,7 +82,7 @@
       Account number
     </h3>
 
-    <div class="govuk-!-margin-bottom-4">
+    <div>
     {{ copy_to_clipboard(
         billing_details['account_number'],
         thing='account number',
@@ -93,7 +93,7 @@
       Sort code
     </h3>
 
-    <div class="govuk-!-margin-bottom-4">
+    <div>
     {{ copy_to_clipboard(
         billing_details['sort_code'],
         thing='sort code',
@@ -104,7 +104,7 @@
     <h3 class="font-body-lg" id="iban">
       <abbr title="International Bank Account Number">IBAN</abbr>
     </h3>
-    <div class="govuk-!-margin-bottom-4">
+    <div>
     {{ copy_to_clipboard(
         billing_details['IBAN'],
         thing='IBAN',
@@ -115,14 +115,14 @@
       Swift code
     </h3>
 
-    <div class="govuk-!-margin-bottom-4">
+    <div>
     {{ copy_to_clipboard(
         billing_details['swift'],
         thing='Swift code',
       ) }}
     </div>
 
-    <h2 class="heading-medium govuk-!-margin-top-7" id="invoice-address">
+    <h2 class="heading-medium" id="invoice-address">
       Invoice address
     </h2>
 

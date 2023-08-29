@@ -23,17 +23,17 @@
     module="autofocus",
     data_kwargs={'force-focus': True}
   ) %}
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full {% if form.placeholder_value.label.text == 'phone number' %}extra-tracking{% endif %}">
+    <div class="grid-row">
+      <div class="grid-col-12 {% if form.placeholder_value.label.text == 'phone number' %}extra-tracking{% endif %}">
         {{ form.placeholder_value(param_extensions={"classes": ""}) }}
       </div>
       {% if skip_link or link_to_upload %}
-        <div class="govuk-grid-column-full">
+        <div class="grid-col-12">
           {% if link_to_upload %}
-            <a class="usa-link govuk-!-margin-right-3" href="{{ url_for('.send_messages', service_id=current_service.id, template_id=template.id) }}">Upload a list of {{ 999|recipient_count_label(template.template_type) }}</a>
+            <a class="usa-link" href="{{ url_for('.send_messages', service_id=current_service.id, template_id=template.id) }}">Upload a list of {{ 999|recipient_count_label(template.template_type) }}</a>
           {% endif %}
           {% if skip_link %}
-            <a href="{{ skip_link[1] }}" class="usa-link govuk-!-margin-right-3">{{ skip_link[0] }}</a>
+            <a href="{{ skip_link[1] }}" class="usa-link">{{ skip_link[0] }}</a>
           {% endif %}
         </div>
       {% endif %}

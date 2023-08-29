@@ -83,7 +83,7 @@ def test_view_organization_shows_the_correct_organization(client_request, mocker
     )
 
     assert normalize_spaces(page.select_one("h1").text) == "Usage"
-    assert normalize_spaces(page.select_one(".govuk-hint").text) == (
+    assert normalize_spaces(page.select_one(".usa-hint").text) == (
         "Test 1 has no live services on Notify.gov"
     )
     assert not page.select("a[download]")
@@ -391,7 +391,7 @@ def test_organization_services_shows_live_services_and_usage(
     mock.assert_called_once_with(ORGANISATION_ID, 2019)
 
     services = page.select("main h3")
-    usage_rows = page.select("main .govuk-grid-column-one-half")
+    usage_rows = page.select("main .grid-col-6")
     assert len(services) == 2
 
     # Totals
@@ -413,7 +413,7 @@ def test_organization_services_shows_live_services_and_usage(
     assert normalize_spaces(usage_rows[5].text) == "$42.00 spent on text messages"
 
     # Ensure there’s no ‘this org has no services message’
-    assert not page.select(".govuk-hint")
+    assert not page.select(".usa-hint")
 
 
 @freeze_time("2020-02-20 20:20")
@@ -445,7 +445,7 @@ def test_organization_services_shows_live_services_and_usage_with_count_of_1(
     client_request.login(active_user_with_permissions)
     page = client_request.get(".organization_dashboard", org_id=ORGANISATION_ID)
 
-    usage_rows = page.select("main .govuk-grid-column-one-half")
+    usage_rows = page.select("main .grid-col-6")
 
     # Totals
     assert normalize_spaces(usage_rows[0].text) == "Emails 1 sent"
@@ -995,7 +995,7 @@ def test_view_organization_settings(
         if "hint" in option:
             option_values["hint"] = normalize_spaces(
                 page.select_one(
-                    "label[for={}] + .govuk-hint".format(radios[index]["id"])
+                    "label[for={}] + .usa-hint".format(radios[index]["id"])
                 ).text
             )
         assert option_values == option
@@ -1536,7 +1536,7 @@ def test_view_edit_organization_billing_details(
     ]
     for label in labels:
         assert label.text.strip() in labels_list
-    textbox_names = page.find_all("input", class_="govuk-input ")
+    textbox_names = page.find_all("input", class_="usa-input ")
     names_list = [
         "billing_contact_email_addresses",
         "billing_contact_names",

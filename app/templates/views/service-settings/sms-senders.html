@@ -20,7 +20,7 @@
   <div class="user-list">
     {% if not current_service.sms_senders %}
       <div class="user-list-item">
-        <p class="govuk-body user-list-item-blank hint">You have not added any text message senders yet</p>
+        <p class="usa-body user-list-item-blank hint">You have not added any text message senders yet</p>
       </div>
     {% endif %}
     {% for item in current_service.sms_senders_with_hints %}
@@ -53,8 +53,8 @@
   </div>
 
   {% if current_user.has_permissions('manage_service') %}
-    <div class="govuk-grid-row bottom-gutter">
-      <div class="govuk-grid-column-full">
+    <div class="grid-row bottom-gutter">
+      <div class="grid-col-12">
         {{ govukButton({
           "element": "a",
           "text": "Add text message sender",

@@ -10,20 +10,20 @@
       {% if current_user.platform_admin %}
         <a href="{{ url_for('.organizations') }}" class="usa-link navigation-organization-link">Organizations</a>
       {% endif %}
-      <div class="navigation-service govuk-!-font-weight-bold">
+      <div class="navigation-service">
         {{ current_org.name }}
       </div>
       <a href="{{ url_for('main.choose_account') }}" class="usa-link navigation-service">Switch service</a>
     </div>
-    <div class="govuk-grid-row govuk-!-padding-bottom-12">
-      <div class="govuk-grid-column-one-quarter">
+    <div class="grid-row">
+      <div class="grid-col-3">
         {% include "org_nav.html" %}
       </div>
-      <div class="govuk-grid-column-three-quarters">
+      <div class="grid-col-9">
         {% block beforeContent %}
           {% block backLink %}{% endblock %}
         {% endblock %}
-        <main class="govuk-main-wrapper column-main govuk-!-padding-top-0 govuk-!-padding-bottom-0" id="main-content" role="main" >
+        <main class="main" id="main-content" role="main" >
           {% block content %}
             {% include 'flash_messages.html' %}
             {% block maincolumn_content %}{% endblock %}

@@ -20,7 +20,7 @@
     }[field] || `No ${field}s`)
   };
   Summary.prototype.addContent = function() {
-    const $hint = this.module.$formGroup.find('.govuk-hint');
+    const $hint = this.module.$formGroup.find('.usa-hint');
     this.$text = $(`<p class="selection-summary__text" />`);
 
     if (this.fieldLabel === 'folder') { this.$text.addClass('selection-summary__text--folders'); }

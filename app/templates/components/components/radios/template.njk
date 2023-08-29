@@ -43,19 +43,19 @@
     visuallyHiddenText: params.errorMessage.visuallyHiddenText
   }) | indent(2) | trim }}
 {% endif %}
-  <div class="govuk-radios {%- if params.classes %} {{ params.classes }}{% endif %}{%- if isConditional %} govuk-radios--conditional{% endif -%}"
+  <div class="usa-radios {%- if params.classes %} {{ params.classes }}{% endif %}{%- if isConditional %} usa-radios--conditional{% endif -%}"
     {%- for attribute, value in params.attributes %} {{ attribute }}="{{ value }}"{% endfor %}
     {%- if isConditional %} data-module="radios"{% endif -%}>
     {% for item in params.items %}
     {% set id = item.id if item.id else idPrefix + "-" + loop.index %}
     {% set conditionalId = "conditional-" + id %}
     {%- if item.divider %}
-    <div class="govuk-radios__divider">{{ item.divider }}</div>
+    <div class="usa-radios__divider">{{ item.divider }}</div>
     {%- else %}
     {% set hasHint = true if item.hint.text or item.hint.html %}
     {% set itemHintId = id + '-item-hint' %}
-    <div class="govuk-radios__item">
-      <input class="govuk-radios__input" id="{{ id }}" name="{{ params.name }}" type="radio" value="{{ item.value }}"
+    <div class="usa-radio">
+      <input class="usa-radio__input" id="{{ id }}" name="{{ params.name }}" type="radio" value="{{ item.value }}"
       {{-" checked" if item.checked }}
       {{-" disabled" if item.disabled }}
       {%- if item.conditional %} data-aria-controls="{{ conditionalId }}"{% endif -%}
@@ -64,14 +64,14 @@
       {{ govukLabel({
         html: item.html,
         text: item.text,
-        classes: 'govuk-radios__label' + (' ' + item.label.classes if item.label.classes),
+        classes: 'usa-radio__label' + (' ' + item.label.classes if item.label.classes),
         attributes: item.label.attributes,
         for: id
       }) | indent(6) | trim }}
       {%- if hasHint %}
       {{ govukHint({
         id: itemHintId,
-        classes: 'govuk-radios__hint',
+        classes: 'usa-checkbox__label-description',
         attributes: item.hint.attributes,
         html: item.hint.html,
         text: item.hint.text
@@ -79,7 +79,7 @@
       {%- endif %}
     </div>
     {% if item.conditional %}
-      <div class="govuk-radios__conditional{% if not item.checked %} govuk-radios__conditional--hidden{% endif %}" id="{{ conditionalId }}">
+      <div class="usa-radios__conditional{% if not item.checked %} usa-radios__conditional--hidden{% endif %}" id="{{ conditionalId }}">
         {{ item.conditional.html | safe }}
       </div>
     {% endif %}

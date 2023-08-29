@@ -9,9 +9,9 @@
   This may behave in unexpected ways if you have more than one element with the `banner-dangerous` class on your page.
   */
   window.GOVUK.ErrorBanner = {
-    hideBanner: () => $('.banner-dangerous').addClass('govuk-!-display-none'),
+    hideBanner: () => $('.banner-dangerous').addClass('display-none'),
     showBanner: () => $('.banner-dangerous')
-      .removeClass('govuk-!-display-none')
+      .removeClass('display-none')
       .trigger('focus'),
   };
 })(window);
