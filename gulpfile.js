@@ -21,7 +21,6 @@ plugins.cssUrlAdjuster = require('gulp-css-url-adjuster');
 plugins.jshint = require('gulp-jshint');
 plugins.prettyerror = require('gulp-prettyerror');
 plugins.rollup = require('gulp-better-rollup')
-plugins.sassLint = require('gulp-sass-lint');
 plugins.uglify = require('gulp-uglify');
 
 // 2. CONFIGURATION
