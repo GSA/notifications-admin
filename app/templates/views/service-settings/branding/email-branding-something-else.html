@@ -1,6 +1,6 @@
 {% extends "withnav_template.html" %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/textbox.html" import textbox %}
 {% from "components/components/textarea/macro.njk" import govukTextarea %}
@@ -16,7 +16,7 @@
 {% endif %}
 
 {% block backLink %}
-  {{ govukBackLink({"href": back_url}) }}
+  {{ usaBackLink({"href": back_url}) }}
 {% endblock %}
 
 {% block maincolumn_content %}

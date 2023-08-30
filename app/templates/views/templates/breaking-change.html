@@ -4,14 +4,14 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/list.html" import list_of_placeholders, list_of_code_snippets %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block service_page_title %}
   Confirm changes
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for(".edit_service_template", service_id=current_service.id, template_id=new_template.id) }) }}
+  {{ usaBackLink({ "href": url_for(".edit_service_template", service_id=current_service.id, template_id=new_template.id) }) }}
 {% endblock %}
 
 {% block maincolumn_content %}

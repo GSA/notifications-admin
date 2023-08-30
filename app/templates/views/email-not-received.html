@@ -1,5 +1,5 @@
 {% extends "withoutnav_template.html" %}
-{% from "components/components/button/macro.njk" import govukButton %}
+{% from "components/components/button/macro.njk" import usaButton %}
 
 {% block per_page_title %}
   Resend email link
@@ -13,7 +13,7 @@
 
     <p>Emails sometimes take a few minutes to arrive. If you do not receive an email link, Notify can send you a new one.</p>
     <p>
-      {{ govukButton({
+      {{ usaButton({
         "element": "a",
         "text": "Resend email link",
         "href": url_for('main.resend_email_link', next=redirect_url)

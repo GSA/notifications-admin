@@ -2,15 +2,15 @@
 {% from "components/copy-to-clipboard.html" import copy_to_clipboard %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/table.html" import row_group, row, text_field, edit_field, field, boolean_field, list_table with context %}
-{% from "components/components/button/macro.njk" import govukButton %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/button/macro.njk" import usaButton %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block service_page_title %}
   Reply-to email addresses
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for('main.service_settings', service_id=current_service.id) }) }}
+  {{ usaBackLink({ "href": url_for('main.service_settings', service_id=current_service.id) }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
@@ -57,7 +57,7 @@
     <div class="govuk-grid-column-full">
       {% if current_user.has_permissions('manage_service') %}
         <div class="js-stick-at-bottom-when-scrolling">
-          {{ govukButton({
+          {{ usaButton({
             "element": "a",
             "text": "Add reply-to email address",
             "href": url_for('.service_add_email_reply_to', service_id=current_service.id),

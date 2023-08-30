@@ -1,5 +1,5 @@
 {% extends "withoutnav_template.html" %}
-{% from "components/components/button/macro.njk" import govukButton %}
+{% from "components/components/button/macro.njk" import usaButton %}
 
 {% block per_page_title %}
   Resend security code
@@ -13,7 +13,7 @@
 
     <p>Text messages sometimes take a few minutes to arrive. If you do not receive a security code, Notify can send you a new one.</p>
     <p>
-      {{ govukButton({
+      {{ usaButton({
         "element": "a",
         "text": "Resend security code",
         "href": url_for('main.check_and_resend_verification_code', next=redirect_url)

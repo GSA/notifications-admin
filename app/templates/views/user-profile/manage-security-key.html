@@ -2,7 +2,7 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% set page_title = 'Manage ' + '‘' + security_key.name + '’' %}
 
@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for('.user_profile_security_keys') }) }}
+  {{ usaBackLink({ "href": url_for('.user_profile_security_keys') }) }}
 {% endblock %}
 
 {% block maincolumn_content %}

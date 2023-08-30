@@ -5,14 +5,14 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/list-entry.html" import list_entry %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block service_page_title %}
   Guest list
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for('main.api_integration', service_id=current_service.id) }) }}
+  {{ usaBackLink({ "href": url_for('main.api_integration', service_id=current_service.id) }) }}
 {% endblock %}
 
 {% block maincolumn_content %}

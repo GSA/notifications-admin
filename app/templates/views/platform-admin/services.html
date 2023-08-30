@@ -3,8 +3,8 @@
 {% from "components/big-number.html" import big_number, big_number_with_status %}
 {% from "components/table.html" import mapping_table, field, stats_fields, row_group, row, right_aligned_field_heading, hidden_field_heading, text_field %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/components/button/macro.njk" import govukButton %}
-{% from "components/components/details/macro.njk" import govukDetails %}
+{% from "components/components/button/macro.njk" import usaButton %}
+{% from "components/components/details/macro.njk" import usaDetails %}
 
 {% macro services_table(services, caption) %}
   {% call(item, row_number) mapping_table(
@@ -67,11 +67,11 @@
       {{ form.start_date(param_extensions={"hint": {"text": "Enter start date in format YYYY-MM-DD"}}) }}
       {{ form.end_date(param_extensions={"hint": {"text": "Enter end date in format YYYY-MM-DD"}}) }}
       {{ form.include_from_test_key }}
-      {{ govukButton({ "text": "Filter", "classes": "margin-y-2" }) }}
+      {{ usaButton({ "text": "Filter", "classes": "margin-y-2" }) }}
     {% endcall %}
   {% endset %}
 
-  {{ govukDetails({
+  {{ usaDetails({
     "summaryText": "Apply filters",
     "html": details_content
   }) }}

@@ -1,5 +1,5 @@
 {% extends "fullwidth_template.html" %}
-{% from "components/components/button/macro.njk" import govukButton %}
+{% from "components/components/button/macro.njk" import usaButton %}
 
 {% block meta %}
 <meta name="description"
@@ -158,7 +158,7 @@ Notify.gov
             Try Notify.gov now if you work in federal, state, or local government.
           </p>
           <div class="button-container">
-            {{ govukButton({
+            {{ usaButton({
               "element": "a",
               "text": "Create an account",
               "classes": "product-page-button button-container__button govuk-!-margin-right-3",

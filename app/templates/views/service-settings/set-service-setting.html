@@ -1,14 +1,14 @@
 {% extends "withnav_template.html" %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block service_page_title %}
   {{ title }}
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for('.service_settings', service_id=current_service.id) }) }}
+  {{ usaBackLink({ "href": url_for('.service_settings', service_id=current_service.id) }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
