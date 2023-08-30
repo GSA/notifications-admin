@@ -1,7 +1,7 @@
 {% extends "withoutnav_template.html" %}
 
 {% from "components/page-header.html" import page_header %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import govukBackLink %}
 
 {% block per_page_title %}
   The Notify.gov service is for people who work in the government
@@ -13,8 +13,8 @@
 
 {% block maincolumn_content %}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+<div class="grid-row">
+  <div class="grid-col-8">
 
     {{ page_header('The Notify.gov service is for people who work in the government') }}
 
@@ -26,20 +26,20 @@
       There are other pages on Notify.gov where you can get help:
     </p>
 
-    <h2 class="govuk-heading-m govuk-!-margin-bottom-1">
-      <a class="govuk-link govuk-link--no-visited-state" href="https://www.gov.uk/coronavirus">Coronavirus (COVID-19)</a>
+    <h2 class="govuk-heading-m">
+      <a class="usa-link" href="https://www.gov.uk/coronavirus">Coronavirus (COVID-19)</a>
     </h2>
     <p>
       Find guidance and support.
     </p>
-    <h2 class="govuk-heading-m govuk-!-margin-bottom-1">
-      <a class="govuk-link govuk-link--no-visited-state" href="https://www.gov.uk/contact">Contact the government</a>
+    <h2 class="govuk-heading-m">
+      <a class="usa-link" href="https://www.gov.uk/contact">Contact the government</a>
     </h2>
     <p>
       Ask about benefits, driving, transport, tax, and more.
     </p>
-    <h2 class="govuk-heading-m govuk-!-margin-bottom-1">
-      <a class="govuk-link govuk-link--no-visited-state" href="https://www.gov.uk/report-suspicious-emails-websites-phishing">Report internet scams and phishing</a>
+    <h2 class="govuk-heading-m">
+      <a class="usa-link" href="https://www.gov.uk/report-suspicious-emails-websites-phishing">Report internet scams and phishing</a>
     </h2>
     <p>
       Advice on suspicious emails and text messages.

@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-main = Blueprint('main', __name__)
+main = Blueprint("main", __name__)
 
 from app.main.views import (  # noqa isort:skip
     add_service,
@@ -39,5 +39,4 @@ from app.main.views import (  # noqa isort:skip
     uploads,
     user_profile,
     verify,
-    webauthn_credentials,
 )

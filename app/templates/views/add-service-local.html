@@ -9,13 +9,13 @@
 
 {% block maincolumn_content %}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+<div class="grid-row">
+  <div class="grid-col-8">
 
     {{ page_header('About your service') }}
 
     <p class="usa-body">Give your service a name that tells users what your messages are about, as well as who they’re from. For example:</p>
-        <ul class="govuk-list govuk-list--bullet">
+        <ul class="usa-list usa-list--bullet">
           <li>School admissions – {{ current_user.default_organization.name }}</li>
           <li>Electoral services – {{ current_user.default_organization.name }}</li>
           <li>Blue Badge – {{ current_user.default_organization.name }}</li>

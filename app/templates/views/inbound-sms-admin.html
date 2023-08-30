@@ -20,15 +20,11 @@ Inbound SMS
 
 {% block platform_admin_content %}
 
-  <h1 class="heading-medium">
+  <h1 class="font-body-2xl">
     Inbound SMS
   </h1>
 
-  <table class="inbound">
-          <col style="width:8%">
-          <col style="width:20%">
-          <col style="width:17%">
-          <col style="width:30%">
+  <table class="usa-table usa-table--borderless inbound">
           <thread>
               <tr>
                 <th>{{table_headings.field_headings[0]}}</th>
@@ -52,7 +48,7 @@ Inbound SMS
               {% endif %}
               </td>
               <td>
-                  <a href="{{ url_for('main.service_dashboard', service_id=value.service.id) }}" class="govuk-link govuk-link--no-visited-state govuk-!-font-size-24 govuk-!-font-weight-bold">{{ value.service.name }}</a>
+                  <a href="{{ url_for('main.service_dashboard', service_id=value.service.id) }}" class="usa-link bold">{{ value.service.name }}</a>
               </td>
           </tr>
           {% endfor %}

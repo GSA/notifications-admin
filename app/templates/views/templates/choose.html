@@ -32,9 +32,9 @@
 
   {% else %}
 
-    <div class="govuk-grid-row">
-      <div class="{% if current_user.has_permissions('manage_templates') %} govuk-grid-column-five-sixths {% else %} govuk-grid-column-full {% endif %}">
-        <div class="usa-alert usa-alert--info usa-alert--slim margin-y-5">
+    <div class="grid-row">
+      <div class="{% if current_user.has_permissions('manage_templates') %} grid-col-10 {% else %} grid-col-12 {% endif %}">
+        <div class="usa-alert usa-alert--info usa-alert--slim">
           <div class="usa-alert__body">
             <p class="usa-alert__text">
               Every message starts with a template. To send, choose or create a template.
@@ -49,7 +49,7 @@
         ) }}
       </div>
       {% if current_user.has_permissions('manage_templates') and current_template_folder_id and user_has_template_folder_permission %}
-        <div class="govuk-grid-column-one-sixth">
+        <div class="grid-col-2">
           <a href="{{ url_for('.manage_template_folder', service_id=current_service.id, template_folder_id=current_template_folder_id) }}" class="usa-link folder-heading-manage-link">Manage<span class="usa-sr-only"> this folder</span></a>
         </div>
       {% endif %}

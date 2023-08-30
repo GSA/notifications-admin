@@ -6,7 +6,7 @@
     "hideElements": [
       "nav > ol a",
       "#sms-pricing-details",
-      "a.govuk-footer__link.govuk-footer__copyright-logo"
+      "a.usa-footer__link.usa-footer__copyright-logo"
     ]
   },
   "urls": [

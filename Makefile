@@ -48,9 +48,20 @@ generate-version-file: ## Generates the app version file
 test: py-lint py-test js-lint js-test ## Run tests
 
 .PHONY: py-lint
-py-lint: ## Run python linting scanners
+py-lint: ## Run python linting scanners and black
+	pipenv run black .
 	pipenv run flake8 .
 	pipenv run isort --check-only ./app ./tests
+
+.PHONY: avg-complexity
+avg-complexity:
+	echo "*** Shows average complexity in radon of all code ***"
+	pipenv run radon cc ./app -a -na
+
+.PHONY: too-complex
+too-complex:
+	echo "*** Shows code that got a rating of C, D or F in radon ***"
+	pipenv run radon cc ./app -a -nc
 
 .PHONY: py-test
 py-test: export NEW_RELIC_ENVIRONMENT=test
@@ -58,6 +69,10 @@ py-test: ## Run python unit tests
 	pipenv run coverage run --omit=*/notifications_utils/* -m pytest --maxfail=10 --ignore=tests/end_to_end tests/
 	pipenv run coverage report --fail-under=96
 	pipenv run coverage html -d .coverage_cache
+
+.PHONY: dead-code
+dead-code:
+	pipenv run vulture ./app --min-confidence=100
 
 .PHONY: e2e-test
 e2e-test: export NEW_RELIC_ENVIRONMENT=test

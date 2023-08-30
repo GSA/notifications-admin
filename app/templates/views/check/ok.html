@@ -2,9 +2,9 @@
 {% from "components/banner.html" import banner_wrapper %}
 {% from "components/table.html" import list_table, field, text_field, index_field, hidden_field_heading %}
 {% from "components/page-header.html" import page_header %}
-{% from "components/uk_components/button/macro.njk" import govukButton %}
-{% from "components/uk_components/skip-link/macro.njk" import govukSkipLink %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/button/macro.njk" import govukButton %}
+{% from "components/components/skip-link/macro.njk" import govukSkipLink %}
+{% from "components/components/back-link/macro.njk" import govukBackLink %}
 
 {% set file_contents_header_id = 'file-preview' %}
 
@@ -67,7 +67,7 @@
             {% if (item.index + 2) == preview_row %}
               {{ item.index + 2 }}
             {% else %}
-              <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.check_messages', service_id=current_service.id, template_id=template.id, upload_id=upload_id, row_index=(item.index + 2), original_file_name=original_file_name) }}">{{ item.index + 2 }}</a>
+              <a class="usa-link" href="{{ url_for('.check_messages', service_id=current_service.id, template_id=template.id, upload_id=upload_id, row_index=(item.index + 2), original_file_name=original_file_name) }}">{{ item.index + 2 }}</a>
             {% endif %}
           </span>
         {% endcall %}
@@ -93,8 +93,4 @@
       Only showing the first {{ count_of_displayed_recipients }} rows
     </p>
   {% endif %}
-    <div>
-        <h2 class="heading-medium">Messages remaining today / Messages left if list is sent </h2>
-        <p class="govuk-body">{{ remaining_messages }} / {{ remaining_messages - count_of_recipients }}</p>
-    </div>
 {% endblock %}

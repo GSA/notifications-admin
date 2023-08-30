@@ -2,7 +2,7 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import govukBackLink %}
 
 {% block per_page_title %}
   Change team member’s mobile number
@@ -17,8 +17,8 @@
   {{ page_header('Change team member’s mobile number') }}
 
   <p id="user_name">This will change the mobile number for {{ user.name }}.</p>
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-three-quarters">
+  <div class="grid-row">
+    <div class="grid-col-9">
       {% call form_wrapper(class="extra-tracking") %}
         {{ form.mobile_number }}
         {{ page_footer('Save') }}

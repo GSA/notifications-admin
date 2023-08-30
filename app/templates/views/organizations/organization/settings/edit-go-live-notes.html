@@ -3,7 +3,7 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/textbox.html" import textbox %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import govukBackLink %}
 
 {% block org_page_title %}
   Edit request to go live notes
@@ -15,8 +15,8 @@
 
 {% block maincolumn_content %}
   {{ page_header("Edit request to go live notes") }}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-five-sixths">
+  <div class="grid-row">
+    <div class="grid-col-10">
       <p>
         Text entered here will be displayed in the Zendesk ticket when a service
         belonging to this organization requests to go live.

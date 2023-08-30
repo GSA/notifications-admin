@@ -3,7 +3,7 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import govukBackLink %}
 
 {% block service_page_title %}
   Change your service name
@@ -18,20 +18,20 @@
 
   {{ page_header('Change your service name') }}
 
-  <p class="govuk-body">Your service name should tell users what the message is about as well as who it’s from.</p>
+  <p class="usa-body">Your service name should tell users what the message is about as well as who it’s from.</p>
 
-  <p class="govuk-body">You should only use an acronym or initialism if your users are already familiar with it.</p>
+  <p class="usa-body">You should only use an acronym or initialism if your users are already familiar with it.</p>
 
   <div>
     {% if current_service.prefix_sms %}
 
-      <p class="govuk-body">Users will see your service name at the start of every text message</p>
+      <p class="usa-body">Users will see your service name at the start of every text message</p>
     {% else %}
-      <p class="govuk-body">Users will see your service name as your email sender name.</p>
+      <p class="usa-body">Users will see your service name as your email sender name.</p>
     {% endif %}
 
   </div>
-  <p class="govuk-body">The service name you enter here will appear at the beginning of each text message, unless you turn off this off in Settings > Start text message with service name.
+  <p class="usa-body">The service name you enter here will appear at the beginning of each text message, unless you turn off this off in Settings > Start text message with service name.
 
 
   {% call form_wrapper() %}

@@ -10,39 +10,39 @@
 {% block content_column_content %}
 
 <h1 class="font-body-2xl">Features</h1>
-<p class="govuk-body">If you work for the government, you can use Notify.gov to keep your users updated.</p>
-<p class="govuk-body">Notify makes it easy to create, customize, and send <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.features_sms') }}">text messages</a>.</p>
+<p class="usa-body">If you work for the government, you can use Notify.gov to keep your users updated.</p>
+<p class="usa-body">Notify makes it easy to create, customize, and send <a class="usa-link" href="{{ url_for('main.features_sms') }}">text messages</a>.</p>
 <!-- <ul class="list list-bullet">
-  <li><a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.features_email') }}">emails</a></li>
-  <li><a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.features_sms') }}">text messages</a></li>
+  <li><a class="usa-link" href="{{ url_for('main.features_email') }}">emails</a></li>
+  <li><a class="usa-link" href="{{ url_for('main.features_sms') }}">text messages</a></li>
 </ul> -->
-<p class="govuk-body">You do not need any technical knowledge to use Notify.</p>
+<p class="usa-body">You do not need any technical knowledge to use Notify.</p>
 {% if not current_user.is_authenticated %}
-  <p class="govuk-body"><a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.register') }}">Create an account</a> for free and try it yourself.</p>
+  <p class="usa-body"><a class="usa-link" href="{{ url_for('main.register') }}">Create an account</a> for free and try it yourself.</p>
 {% endif %}
 
 <h2 class="heading-medium" id="templates">Reusable message templates</h2>
-<p class="govuk-body">To send a text with Notify, you need to create a reusable message template first.</p>
-<p class="govuk-body">Templates let you send the same thing to lots of people, as often as you need to, without writing a new message each time.</p>
+<p class="usa-body">To send a text with Notify, you need to create a reusable message template first.</p>
+<p class="usa-body">Templates let you send the same thing to lots of people, as often as you need to, without writing a new message each time.</p>
 
 <h2 class="heading-medium" id="personalised-messages">Personalized content</h2>
-<p class="govuk-body">Notify makes it easy to send personalized messages from a single template.</p>
-<p class="govuk-body">See <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.guidance_index', _anchor='personalized-content') }}">how to personalize your content</a>.</p>
+<p class="usa-body">Notify makes it easy to send personalized messages from a single template.</p>
+<p class="usa-body">See <a class="usa-link" href="{{ url_for('.guidance_index', _anchor='personalized-content') }}">how to personalize your content</a>.</p>
 
 <h2 class="heading-medium" id="bulk-sending">Bulk sending</h2>
-<p class="govuk-body">To send a batch of messages at once, upload a list of contact details to Notify. You can also schedule the date and time you want them to be sent.</p>
+<p class="usa-body">To send a batch of messages at once, upload a list of contact details to Notify. You can also schedule the date and time you want them to be sent.</p>
 
 <!-- <h2 class="heading-medium" id="api">API integration</h2>
-<p class="govuk-body">You can integrate the Notify API with your web application or back-office system to send messages automatically.</p>
-<p class="govuk-body">Read our <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.documentation') }}">API documentation</a> for more information.</p> -->
+<p class="usa-body">You can integrate the Notify API with your web application or back-office system to send messages automatically.</p>
+<p class="usa-body">Read our <a class="usa-link" href="{{ url_for('.documentation') }}">API documentation</a> for more information.</p> -->
 
 <h2 class="heading-medium" id="reporting">Reporting</h2>
-<p class="govuk-body">Notify’s real-time dashboard lets you see the number of messages sent. You can also check the current status of any message to see when it was delivered.</p>
-<p class="govuk-body">Read more about the <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.message_status') }}">delivery status</a> of your messages.</p>
+<p class="usa-body">Notify’s real-time dashboard lets you see the number of messages sent. You can also check the current status of any message to see when it was delivered.</p>
+<p class="usa-body">Read more about the <a class="usa-link" href="{{ url_for('main.message_status') }}">delivery status</a> of your messages.</p>
 
 <h2 class="heading-medium" id="permissions">Permissions</h2>
-<p class="govuk-body">Control which members of your team can see, create, edit, and send messages.</p>
-<p class="govuk-body">Notify lets you:</p>
+<p class="usa-body">Control which members of your team can see, create, edit, and send messages.</p>
+<p class="usa-body">Notify lets you:</p>
 <ul class="list list-bullet">
   <li>set different permission levels for each team member</li>
   <li>invite team members who do not have a government email address</li>
@@ -50,27 +50,27 @@
 </ul>
 
 <h2 class="heading-medium" id="performance">Performance</h2>
-<p class="govuk-body">Notify commits to sending 95% of text messages within 10 seconds.</p>
+<p class="usa-body">Notify commits to sending 95% of text messages within 10 seconds.</p>
 <!-- <ul class="list list-bullet">
   <li>sending 95% of text messages within 10 seconds</li>
 </ul> -->
 
-<!-- <p class="govuk-body">We send messages through several different providers. If one provider fails, Notify switches to another so that your messages are not affected.</p> -->
+<!-- <p class="usa-body">We send messages through several different providers. If one provider fails, Notify switches to another so that your messages are not affected.</p> -->
 
-<!-- <p class="govuk-body">Visit our <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.performance') }}">performance data</a> page to see how Notify is performing.</p> -->
+<!-- <p class="usa-body">Visit our <a class="usa-link" href="{{ url_for('main.performance') }}">performance data</a> page to see how Notify is performing.</p> -->
 
 <h2 class="heading-medium" id="security">Security</h2>
-<p class="govuk-body">Notify protects and manages data to meet the needs of government services.</p>
+<p class="usa-body">Notify protects and manages data to meet the needs of government services.</p>
 
 <h3 class="heading-small">Hide sensitive information</h3>
-<p class="govuk-body">Notify lets you redact personal information from your messages after they have been sent. This means that only the recipient can see that information.</p>
+<p class="usa-body">Notify lets you redact personal information from your messages after they have been sent. This means that only the recipient can see that information.</p>
 
 <h3 class="heading-small">Two-factor authentication</h3>
-<p class="govuk-body">Notify uses two-factor authentication (2FA) to keep your account secure. When you sign in, we’ll send a unique one-time code to your phone and ask you to enter it before we let you use your account.</p>
-<p class="govuk-body">Read more about <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.security') }}">security</a>.
+<p class="usa-body">Notify uses two-factor authentication (2FA) to keep your account secure. When you sign in, we’ll send a unique one-time code to your phone and ask you to enter it before we let you use your account.</p>
+<p class="usa-body">Read more about <a class="usa-link" href="{{ url_for('main.security') }}">security</a>.
 
 <!-- <h2 class="heading-medium" id="support">Support</h2>
-<p class="govuk-body">Notify provides 24-hour online support. If you have an emergency outside office hours, we’ll reply within 30 minutes.</p>
-<p class="govuk-body">Find out more about <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.support') }}">support</a>.</p> -->
+<p class="usa-body">Notify provides 24-hour online support. If you have an emergency outside office hours, we’ll reply within 30 minutes.</p>
+<p class="usa-body">Find out more about <a class="usa-link" href="{{ url_for('.support') }}">support</a>.</p> -->
 
 {% endblock %}

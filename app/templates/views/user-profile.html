@@ -65,22 +65,6 @@
         }}
       {% endcall %}
 
-      {% if current_user.can_use_webauthn %}
-        {% call row(id='security-keys') %}
-          {{ text_field('Security keys') }}
-          {{ optional_text_field(
-            ('{} registered'.format(current_user.webauthn_credentials|length)) if current_user.webauthn_credentials else None,
-            default='None registered'
-          ) }}
-          {{ edit_field(
-              'Change',
-              url_for('.user_profile_security_keys'),
-              suffix='security keys'
-            )
-          }}
-        {% endcall %}
-      {% endif %}
-
       {% if current_user.platform_admin or session.get('disable_platform_admin_view') %}
         {% call row(id='disable-platform-admin') %}
           {{ text_field('Use platform admin view') }}

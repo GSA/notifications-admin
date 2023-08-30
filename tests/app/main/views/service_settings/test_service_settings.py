@@ -8,9 +8,7 @@ import pytest
 from flask import url_for
 from freezegun import freeze_time
 from notifications_python_client.errors import HTTPError
-from notifications_utils.clients.zendesk.zendesk_client import (
-    NotifySupportTicket,
-)
+from notifications_utils.clients.zendesk.zendesk_client import NotifySupportTicket
 
 import app
 from tests import (
@@ -50,68 +48,74 @@ def mock_get_service_settings_page_common(
     return
 
 
-@pytest.mark.parametrize('user, expected_rows', [
-    (create_active_user_with_permissions(), [
-
-        'Label Value Action',
-        'Service name Test Service Change service name',
-        'Sign-in method Text message code Change sign-in method',
-        'Send text messages On Change your settings for sending text messages',
-        'Start text messages with service name On Change your settings for starting text messages with service name',
-        'Send international text messages Off Change your settings for sending international text messages',
-
-    ]),
-    (create_platform_admin_user(), [
-
-        'Label Value Action',
-        'Service name Test Service Change service name',
-        'Sign-in method Text message code Change sign-in method',
-        'Send text messages On Change your settings for sending text messages',
-        'Text message senders (Only visible to Platform Admins) GOVUK Manage text message senders',
-        'Start text messages with service name On Change your settings for starting text messages with service name',
-        'Send international text messages Off Change your settings for sending international text messages',
-
-
-        'Label Value Action',
-        'Live Off Change service status',
-        'Count in list of live services Yes Change if service is counted in list of live services',
-        'Billing details None Change billing details for service',
-        'Notes None Change the notes for the service',
-        'Organization Test organization Federal government Change organization for service',
-        'Rate limit 3,000 per minute Change rate limit',
-        'Message limit 1,000 per day Change daily message limit',
-        'Free text message allowance 250,000 per year Change free text message allowance',
-        'Email branding GOV.UK Change email branding (admin view)',
-        'Custom data retention Email – 7 days Change data retention',
-        'Receive inbound SMS Off Change your settings for Receive inbound SMS',
-        'Email authentication Off Change your settings for Email authentication',
-    ]),
-])
+@pytest.mark.parametrize(
+    "user, expected_rows",
+    [
+        (
+            create_active_user_with_permissions(),
+            [
+                "Label Value Action",
+                "Service name Test Service Change service name",
+                "Sign-in method Text message code Change sign-in method",
+                "Send text messages On Change your settings for sending text messages",
+                "Start text messages with service name On Change your settings "
+                "for starting text messages with service name",
+                "Send international text messages Off Change your settings for sending international text messages",
+            ],
+        ),
+        (
+            create_platform_admin_user(),
+            [
+                "Label Value Action",
+                "Service name Test Service Change service name",
+                "Sign-in method Text message code Change sign-in method",
+                "Send text messages On Change your settings for sending text messages",
+                "Text message senders (Only visible to Platform Admins) GOVUK Manage text message senders",
+                "Start text messages with service name On Change your settings "
+                "for starting text messages with service name",
+                "Send international text messages Off Change your settings for sending international text messages",
+                "Label Value Action",
+                "Live Off Change service status",
+                "Count in list of live services Yes Change if service is counted in list of live services",
+                "Billing details None Change billing details for service",
+                "Notes None Change the notes for the service",
+                "Organization Test organization Federal government Change organization for service",
+                "Rate limit 3,000 per minute Change rate limit",
+                "Message limit 1,000 per day Change daily message limit",
+                "Free text message allowance 250,000 per year Change free text message allowance",
+                "Email branding GOV.UK Change email branding (admin view)",
+                "Custom data retention Email – 7 days Change data retention",
+                "Receive inbound SMS Off Change your settings for Receive inbound SMS",
+                "Email authentication Off Change your settings for Email authentication",
+            ],
+        ),
+    ],
+)
 def test_should_show_overview(
-        client_request,
-        mocker,
-        api_user_active,
-        no_reply_to_email_addresses,
-        single_sms_sender,
-        user,
-        expected_rows,
-        mock_get_service_settings_page_common,
+    client_request,
+    mocker,
+    api_user_active,
+    no_reply_to_email_addresses,
+    single_sms_sender,
+    user,
+    expected_rows,
+    mock_get_service_settings_page_common,
 ):
     service_one = service_json(
         SERVICE_ONE_ID,
-        users=[api_user_active['id']],
-        permissions=['sms', 'email'],
+        users=[api_user_active["id"]],
+        permissions=["sms", "email"],
         organization_id=ORGANISATION_ID,
-        contact_link='contact_us@gsa.gov',
+        contact_link="contact_us@gsa.gov",
     )
-    mocker.patch('app.service_api_client.get_service', return_value={'data': service_one})
+    mocker.patch(
+        "app.service_api_client.get_service", return_value={"data": service_one}
+    )
 
     client_request.login(user, service_one)
-    page = client_request.get(
-        'main.service_settings', service_id=SERVICE_ONE_ID
-    )
-    assert page.find('h1').text == 'Settings'
-    rows = page.select('tr')
+    page = client_request.get("main.service_settings", service_id=SERVICE_ONE_ID)
+    assert page.find("h1").text == "Settings"
+    rows = page.select("tr")
     assert len(rows) == len(expected_rows)
     for index, row in enumerate(expected_rows):
         assert row == " ".join(rows[index].text.split())
@@ -126,18 +130,29 @@ def test_no_go_live_link_for_service_without_organization(
     platform_admin_user,
     mock_get_service_settings_page_common,
 ):
-    mocker.patch('app.organizations_client.get_organization', return_value=None)
+    mocker.patch("app.organizations_client.get_organization", return_value=None)
     client_request.login(platform_admin_user)
-    page = client_request.get('main.service_settings', service_id=SERVICE_ONE_ID)
+    page = client_request.get("main.service_settings", service_id=SERVICE_ONE_ID)
 
-    assert page.find('h1').text == 'Settings'
+    assert page.find("h1").text == "Settings"
 
-    is_live = find_element_by_tag_and_partial_text(page, tag='td', string='Live')
-    assert normalize_spaces(is_live.find_next_sibling().text) == 'No (organization must be set first)'
+    is_live = find_element_by_tag_and_partial_text(page, tag="td", string="Live")
+    assert (
+        normalize_spaces(is_live.find_next_sibling().text)
+        == "No (organization must be set first)"
+    )
 
-    organization = find_element_by_tag_and_partial_text(page, tag='td', string='Organization')
-    assert normalize_spaces(organization.find_next_siblings()[0].text) == 'Not set Federal government'
-    assert normalize_spaces(organization.find_next_siblings()[1].text) == 'Change organization for service'
+    organization = find_element_by_tag_and_partial_text(
+        page, tag="td", string="Organization"
+    )
+    assert (
+        normalize_spaces(organization.find_next_siblings()[0].text)
+        == "Not set Federal government"
+    )
+    assert (
+        normalize_spaces(organization.find_next_siblings()[1].text)
+        == "Change organization for service"
+    )
 
 
 def test_organization_name_links_to_org_dashboard(
@@ -148,27 +163,37 @@ def test_organization_name_links_to_org_dashboard(
     mock_get_service_settings_page_common,
     mocker,
 ):
-    service_one = service_json(SERVICE_ONE_ID,
-                               permissions=['sms', 'email'],
-                               organization_id=ORGANISATION_ID)
-
-    mocker.patch('app.service_api_client.get_service', return_value={'data': service_one})
-
-    client_request.login(platform_admin_user, service_one)
-    response = client_request.get(
-        'main.service_settings', service_id=SERVICE_ONE_ID
+    service_one = service_json(
+        SERVICE_ONE_ID, permissions=["sms", "email"], organization_id=ORGANISATION_ID
     )
 
-    org_row = find_element_by_tag_and_partial_text(response, tag='tr', string='Organization')
-    assert org_row.find('a')['href'] == url_for('main.organization_dashboard', org_id=ORGANISATION_ID)
-    assert normalize_spaces(org_row.find('a').text) == 'Test organization'
+    mocker.patch(
+        "app.service_api_client.get_service", return_value={"data": service_one}
+    )
+
+    client_request.login(platform_admin_user, service_one)
+    response = client_request.get("main.service_settings", service_id=SERVICE_ONE_ID)
+
+    org_row = find_element_by_tag_and_partial_text(
+        response, tag="tr", string="Organization"
+    )
+    assert org_row.find("a")["href"] == url_for(
+        "main.organization_dashboard", org_id=ORGANISATION_ID
+    )
+    assert normalize_spaces(org_row.find("a").text) == "Test organization"
 
 
 @pytest.mark.skip(reason="Email currently deactivated")
-@pytest.mark.parametrize('service_contact_link,expected_text', [
-    ('contact.me@gsa.gov', 'Send files by email contact.me@gsa.gov Manage sending files by email'),
-    (None, 'Send files by email Not set up Manage sending files by email'),
-])
+@pytest.mark.parametrize(
+    "service_contact_link,expected_text",
+    [
+        (
+            "contact.me@gsa.gov",
+            "Send files by email contact.me@gsa.gov Manage sending files by email",
+        ),
+        (None, "Send files by email Not set up Manage sending files by email"),
+    ],
+)
 def test_send_files_by_email_row_on_settings_page(
     client_request,
     platform_admin_user,
@@ -177,81 +202,90 @@ def test_send_files_by_email_row_on_settings_page(
     mock_get_service_settings_page_common,
     mocker,
     service_contact_link,
-    expected_text
+    expected_text,
 ):
     service_one = service_json(
         SERVICE_ONE_ID,
-        permissions=['sms', 'email'],
+        permissions=["sms", "email"],
         organization_id=ORGANISATION_ID,
-        contact_link=service_contact_link
+        contact_link=service_contact_link,
     )
 
-    mocker.patch('app.service_api_client.get_service', return_value={'data': service_one})
+    mocker.patch(
+        "app.service_api_client.get_service", return_value={"data": service_one}
+    )
 
     client_request.login(platform_admin_user, service_one)
-    response = client_request.get(
-        'main.service_settings', service_id=SERVICE_ONE_ID
-    )
+    response = client_request.get("main.service_settings", service_id=SERVICE_ONE_ID)
 
-    org_row = find_element_by_tag_and_partial_text(response, tag='tr', string='Send files by email')
+    org_row = find_element_by_tag_and_partial_text(
+        response, tag="tr", string="Send files by email"
+    )
     assert normalize_spaces(org_row.get_text()) == expected_text
 
 
-@pytest.mark.parametrize('permissions, expected_rows', [
-    (['email', 'sms', 'international_sms'], [
-
-        'Service name service one Change service name',
-        'Sign-in method Text message code Change sign-in method',
-        'Send text messages On Change your settings for sending text messages',
-        'Start text messages with service name On Change your settings for starting text messages with service name',
-        'Send international text messages On Change your settings for sending international text messages',
-
-
-    ]),
-    (['email', 'sms', 'email_auth'], [
-
-        'Service name service one Change service name',
-        'Sign-in method Email link or text message code Change sign-in method',
-        'Send text messages On Change your settings for sending text messages',
-        'Start text messages with service name On Change your settings for starting text messages with service name',
-        'Send international text messages Off Change your settings for sending international text messages',
-
-
-    ]),
-])
+@pytest.mark.parametrize(
+    "permissions, expected_rows",
+    [
+        (
+            ["email", "sms", "international_sms"],
+            [
+                "Service name service one Change service name",
+                "Sign-in method Text message code Change sign-in method",
+                "Send text messages On Change your settings for sending text messages",
+                "Start text messages with service name On Change your settings "
+                "for starting text messages with service name",
+                "Send international text messages On Change your settings for sending international text messages",
+            ],
+        ),
+        (
+            ["email", "sms", "email_auth"],
+            [
+                "Service name service one Change service name",
+                "Sign-in method Email link or text message code Change sign-in method",
+                "Send text messages On Change your settings for sending text messages",
+                "Start text messages with service name On Change your settings "
+                "for starting text messages with service name",
+                "Send international text messages Off Change your settings for sending international text messages",
+            ],
+        ),
+    ],
+)
 def test_should_show_overview_for_service_with_more_things_set(
-        client_request,
-        active_user_with_permissions,
-        mocker,
-        service_one,
-        single_reply_to_email_address,
-        single_sms_sender,
-        mock_get_email_branding,
-        mock_get_service_settings_page_common,
-        permissions,
-        expected_rows
+    client_request,
+    active_user_with_permissions,
+    mocker,
+    service_one,
+    single_reply_to_email_address,
+    single_sms_sender,
+    mock_get_email_branding,
+    mock_get_service_settings_page_common,
+    permissions,
+    expected_rows,
 ):
     client_request.login(active_user_with_permissions)
-    service_one['permissions'] = permissions
-    service_one['email_branding'] = uuid4()
-    page = client_request.get(
-        'main.service_settings', service_id=service_one['id']
-    )
+    service_one["permissions"] = permissions
+    service_one["email_branding"] = uuid4()
+    page = client_request.get("main.service_settings", service_id=service_one["id"])
     for index, row in enumerate(expected_rows):
-        assert row == " ".join(page.find_all('tr')[index + 1].text.split())
+        assert row == " ".join(page.find_all("tr")[index + 1].text.split())
 
 
 def test_should_show_service_name(
     client_request,
 ):
-    page = client_request.get('main.service_name_change', service_id=SERVICE_ONE_ID)
-    assert page.find('h1').text == 'Change your service name'
-    assert page.find('input', attrs={"type": "text"})['value'] == 'service one'
-    assert page.select_one(
-        'main .govuk-body'
-    ).text == 'Your service name should tell users what the message is about as well as who it’s from.'
+    page = client_request.get("main.service_name_change", service_id=SERVICE_ONE_ID)
+    assert page.find("h1").text == "Change your service name"
+    assert page.find("input", attrs={"type": "text"})["value"] == "service one"
+    assert (
+        page.select_one("main .usa-body").text
+        == "Your service name should tell users what the message is about as well as who it’s from."
+    )
 
-    assert "The service name you enter here will appear at the beginning of each text message, unless" in page.text
+    assert (
+        "The service name you enter here will appear at the beginning of each text message, unless"
+        in page.text
+    )
 
     app.service_api_client.get_service.assert_called_with(SERVICE_ONE_ID)
 
@@ -262,18 +296,21 @@ def test_should_show_different_change_service_name_page_for_local_services(
     mocker,
 ):
     mocker.patch(
-        'app.organizations_client.get_organization_by_domain',
-        return_value=organization_json(organization_type='local'),
+        "app.organizations_client.get_organization_by_domain",
+        return_value=organization_json(organization_type="local"),
     )
-    service_one['organization_type'] = 'local'
-    page = client_request.get('main.service_name_change', service_id=SERVICE_ONE_ID)
-    assert page.find('h1').text == 'Change your service name'
-    assert page.find('input', attrs={"type": "text"})['value'] == 'service one'
-    assert page.select_one('main .govuk-body').text.strip() == (
-        'Your service name should tell users what the message is about as well as who it’s from. For example:'
+    service_one["organization_type"] = "local"
+    page = client_request.get("main.service_name_change", service_id=SERVICE_ONE_ID)
+    assert page.find("h1").text == "Change your service name"
+    assert page.find("input", attrs={"type": "text"})["value"] == "service one"
+    assert page.select_one("main .usa-body").text.strip() == (
+        "Your service name should tell users what the message is about as well as who it’s from. For example:"
     )
     # when no organization on the service object, default org for the user is used for hint
-    assert "School admissions - Test Org" in page.find_all("ul", class_="govuk-list govuk-list--bullet")[0].text
+    assert (
+        "School admissions - Test Org"
+        in page.find_all("ul", class_="usa-list usa-list--bullet")[0].text
+    )
 
     app.service_api_client.get_service.assert_called_with(SERVICE_ONE_ID)
 
@@ -284,36 +321,46 @@ def test_should_show_service_org_in_hint_on_change_service_name_page_for_local_s
     mocker,
 ):
     mocker.patch(
-        'app.organizations_client.get_organization_by_domain',
-        return_value=organization_json(organization_type='local'),
+        "app.organizations_client.get_organization_by_domain",
+        return_value=organization_json(organization_type="local"),
     )
-    mocker.patch('app.organizations_client.get_organization', return_value=organization_json(
-        organization_type='local', name="Local Authority")
+    mocker.patch(
+        "app.organizations_client.get_organization",
+        return_value=organization_json(
+            organization_type="local", name="Local Authority"
+        ),
     )
-    service_one['organization_type'] = 'local'
-    service_one['organization'] = '1234'
-    page = client_request.get('main.service_name_change', service_id=SERVICE_ONE_ID)
+    service_one["organization_type"] = "local"
+    service_one["organization"] = "1234"
+    page = client_request.get("main.service_name_change", service_id=SERVICE_ONE_ID)
     # when there is organization on the service object, it is used for hint text instead of user default org
-    assert "School admissions - Local Authority" in page.find_all("ul", class_="govuk-list govuk-list--bullet")[0].text
+    assert (
+        "School admissions - Local Authority"
+        in page.find_all("ul", class_="usa-list usa-list--bullet")[0].text
+    )
 
 
 def test_should_show_service_name_with_no_prefixing(
     client_request,
     service_one,
 ):
-    service_one['prefix_sms'] = False
-    page = client_request.get('main.service_name_change', service_id=SERVICE_ONE_ID)
-    assert page.find('h1').text == 'Change your service name'
-    assert page.select_one(
-        'main .govuk-body'
-    ).text == 'Your service name should tell users what the message is about as well as who it’s from.'
+    service_one["prefix_sms"] = False
+    page = client_request.get("main.service_name_change", service_id=SERVICE_ONE_ID)
+    assert page.find("h1").text == "Change your service name"
+    assert (
+        page.select_one("main .usa-body").text
+        == "Your service name should tell users what the message is about as well as who it’s from."
+    )
 
 
-@pytest.mark.parametrize('name, error_message', [
-    ('', 'Cannot be empty'),
-    ('.', 'Must include at least two alphanumeric characters'),
-    ('a' * 256, 'Service name must be 255 characters or fewer'),
-])
+@pytest.mark.parametrize(
+    "name, error_message",
+    [
+        ("", "Cannot be empty"),
+        (".", "Must include at least two alphanumeric characters"),
+        ("a" * 256, "Service name must be 255 characters or fewer"),
+    ],
+)
 def test_service_name_change_fails_if_new_name_fails_validation(
     client_request,
     mock_update_service,
@@ -321,27 +368,30 @@ def test_service_name_change_fails_if_new_name_fails_validation(
     error_message,
 ):
     page = client_request.post(
-        'main.service_name_change',
+        "main.service_name_change",
         service_id=SERVICE_ONE_ID,
-        _data={'name': name},
+        _data={"name": name},
         _expected_status=200,
     )
     assert not mock_update_service.called
     assert error_message in page.find("span", {"class": "usa-error-message"}).text
 
 
-@pytest.mark.parametrize('user, expected_text, expected_link', [
-    (
-        create_active_user_with_permissions(),
-        'To remove these restrictions, you can send us a request to go live.',
-        True,
-    ),
-    (
-        create_active_user_no_settings_permission(),
-        'Your service manager can ask to have these restrictions removed.',
-        False,
-    ),
-])
+@pytest.mark.parametrize(
+    "user, expected_text, expected_link",
+    [
+        (
+            create_active_user_with_permissions(),
+            "To remove these restrictions, you can send us a request to go live.",
+            True,
+        ),
+        (
+            create_active_user_no_settings_permission(),
+            "Your service manager can ask to have these restrictions removed.",
+            False,
+        ),
+    ],
+)
 def test_show_restricted_service(
     client_request,
     service_one,
@@ -354,21 +404,21 @@ def test_show_restricted_service(
 ):
     client_request.login(user)
     page = client_request.get(
-        'main.service_settings',
+        "main.service_settings",
         service_id=SERVICE_ONE_ID,
     )
 
-    assert page.find('h1').text == 'Settings'
-    assert page.select('main h2')[0].text == 'Your service is in trial mode'
+    assert page.find("h1").text == "Settings"
+    assert page.select("main h2")[0].text == "Your service is in trial mode"
 
-    request_to_live = page.select('main p')[1]
-    request_to_live_link = request_to_live.select_one('a')
+    request_to_live = page.select("main p")[1]
+    request_to_live_link = request_to_live.select_one("a")
     assert normalize_spaces(request_to_live.text) == expected_text
 
     if expected_link:
-        assert request_to_live_link.text.strip() == 'request to go live'
-        email_address = 'notify-support@gsa.gov'
-        assert request_to_live_link['href'] == f'mailto:{email_address}'
+        assert request_to_live_link.text.strip() == "request to go live"
+        email_address = "notify-support@gsa.gov"
+        assert request_to_live_link["href"] == f"mailto:{email_address}"
     else:
         assert not request_to_live_link
 
@@ -378,24 +428,24 @@ def test_switch_service_to_live(
     client_request,
     platform_admin_user,
     mock_update_service,
-    mock_get_inbound_number_for_service
+    mock_get_inbound_number_for_service,
 ):
     client_request.login(platform_admin_user)
     client_request.post(
-        'main.service_switch_live',
+        "main.service_switch_live",
         service_id=SERVICE_ONE_ID,
-        _data={'enabled': 'True'},
+        _data={"enabled": "True"},
         _expected_status=302,
         _expected_redirect=url_for(
-            'main.service_settings',
+            "main.service_settings",
             service_id=SERVICE_ONE_ID,
-        )
+        ),
     )
     mock_update_service.assert_called_with(
         SERVICE_ONE_ID,
         message_limit=250000,
         restricted=False,
-        go_live_at="2017-04-01 11:09:00.061258"
+        go_live_at="2017-04-01 11:09:00.061258",
     )
 
 
@@ -407,11 +457,11 @@ def test_show_live_service(
     mock_get_service_settings_page_common,
 ):
     page = client_request.get(
-        'main.service_settings',
+        "main.service_settings",
         service_id=SERVICE_ONE_ID,
     )
-    assert page.find('h1').text.strip() == 'Settings'
-    assert 'Your service is in trial mode' not in page.text
+    assert page.find("h1").text.strip() == "Settings"
+    assert "Your service is in trial mode" not in page.text
 
 
 def test_switch_service_to_restricted(
@@ -423,27 +473,27 @@ def test_switch_service_to_restricted(
 ):
     client_request.login(platform_admin_user)
     client_request.post(
-        'main.service_switch_live',
+        "main.service_switch_live",
         service_id=SERVICE_ONE_ID,
-        _data={'enabled': 'False'},
+        _data={"enabled": "False"},
         _expected_status=302,
         _expected_response=url_for(
-            'main.service_settings',
+            "main.service_settings",
             service_id=SERVICE_ONE_ID,
-        )
+        ),
     )
     mock_update_service.assert_called_with(
-        SERVICE_ONE_ID,
-        message_limit=50,
-        restricted=True,
-        go_live_at=None
+        SERVICE_ONE_ID, message_limit=50, restricted=True, go_live_at=None
     )
 
 
-@pytest.mark.parametrize('count_as_live, selected, labelled', (
-    (True, 'True', 'Yes'),
-    (False, 'False', 'No'),
-))
+@pytest.mark.parametrize(
+    "count_as_live, selected, labelled",
+    (
+        (True, "True", "Yes"),
+        (False, "False", "No"),
+    ),
+)
 def test_show_switch_service_to_count_as_live_page(
     mocker,
     client_request,
@@ -454,26 +504,32 @@ def test_show_switch_service_to_count_as_live_page(
     labelled,
 ):
     mocker.patch(
-        'app.models.service.Service.count_as_live',
+        "app.models.service.Service.count_as_live",
         create=True,
         new_callable=PropertyMock,
         return_value=count_as_live,
     )
     client_request.login(platform_admin_user)
     page = client_request.get(
-        'main.service_switch_count_as_live',
+        "main.service_switch_count_as_live",
         service_id=SERVICE_ONE_ID,
     )
-    assert page.select_one('[checked]')['value'] == selected
-    assert page.select_one('label[for={}]'.format(
-        page.select_one('[checked]')['id']
-    )).text.strip() == labelled
+    assert page.select_one("[checked]")["value"] == selected
+    assert (
+        page.select_one(
+            "label[for={}]".format(page.select_one("[checked]")["id"])
+        ).text.strip()
+        == labelled
+    )
 
 
-@pytest.mark.parametrize('post_data, expected_persisted_value', (
-    ('True', True),
-    ('False', False),
-))
+@pytest.mark.parametrize(
+    "post_data, expected_persisted_value",
+    (
+        ("True", True),
+        ("False", False),
+    ),
+)
 def test_switch_service_to_count_as_live(
     client_request,
     platform_admin_user,
@@ -483,14 +539,14 @@ def test_switch_service_to_count_as_live(
 ):
     client_request.login(platform_admin_user)
     client_request.post(
-        'main.service_switch_count_as_live',
+        "main.service_switch_count_as_live",
         service_id=SERVICE_ONE_ID,
-        _data={'enabled': post_data},
+        _data={"enabled": post_data},
         _expected_status=302,
         _expected_redirect=url_for(
-            'main.service_settings',
+            "main.service_settings",
             service_id=SERVICE_ONE_ID,
-        )
+        ),
     )
     mock_update_service.assert_called_with(
         SERVICE_ONE_ID,
@@ -504,13 +560,13 @@ def test_should_not_allow_duplicate_service_names(
     service_one,
 ):
     page = client_request.post(
-        'main.service_name_change',
+        "main.service_name_change",
         service_id=SERVICE_ONE_ID,
-        _data={'name': "SErvICE TWO"},
+        _data={"name": "SErvICE TWO"},
         _expected_status=200,
     )
 
-    assert 'This service name is already in use' in page.text
+    assert "This service name is already in use" in page.text
 
 
 def test_should_redirect_after_service_name_change(
@@ -518,32 +574,33 @@ def test_should_redirect_after_service_name_change(
     mock_update_service,
 ):
     client_request.post(
-        'main.service_name_change',
+        "main.service_name_change",
         service_id=SERVICE_ONE_ID,
-        _data={
-            'name': 'New Name'
-        },
+        _data={"name": "New Name"},
         _expected_status=302,
         _expected_redirect=url_for(
-            'main.service_settings',
+            "main.service_settings",
             service_id=SERVICE_ONE_ID,
         ),
     )
 
     mock_update_service.assert_called_once_with(
         SERVICE_ONE_ID,
-        name='New Name',
-        email_from='new.name',
+        name="New Name",
+        email_from="new.name",
     )
 
 
-@pytest.mark.parametrize('volumes, consent_to_research, expected_estimated_volumes_item', [
-    ((0, 0), None, 'Tell us how many messages you expect to send Not completed'),
-    ((1, 0), None, 'Tell us how many messages you expect to send Not completed'),
-    ((1, 0), False, 'Tell us how many messages you expect to send Completed'),
-    ((1, 0), True, 'Tell us how many messages you expect to send Completed'),
-    ((9, 99), True, 'Tell us how many messages you expect to send Completed'),
-])
+@pytest.mark.parametrize(
+    "volumes, consent_to_research, expected_estimated_volumes_item",
+    [
+        ((0, 0), None, "Tell us how many messages you expect to send Not completed"),
+        ((1, 0), None, "Tell us how many messages you expect to send Not completed"),
+        ((1, 0), False, "Tell us how many messages you expect to send Completed"),
+        ((1, 0), True, "Tell us how many messages you expect to send Completed"),
+        ((9, 99), True, "Tell us how many messages you expect to send Completed"),
+    ],
+)
 def test_should_check_if_estimated_volumes_provided(
     client_request,
     mocker,
@@ -557,47 +614,45 @@ def test_should_check_if_estimated_volumes_provided(
     consent_to_research,
     expected_estimated_volumes_item,
 ):
-
-    for volume, channel in zip(volumes, ('sms', 'email')):
+    for volume, channel in zip(volumes, ("sms", "email")):
         mocker.patch(
-            'app.models.service.Service.volume_{}'.format(channel),
+            "app.models.service.Service.volume_{}".format(channel),
             create=True,
             new_callable=PropertyMock,
             return_value=volume,
         )
 
     mocker.patch(
-        'app.models.service.Service.consent_to_research',
+        "app.models.service.Service.consent_to_research",
         create=True,
         new_callable=PropertyMock,
         return_value=consent_to_research,
     )
 
-    page = client_request.get(
-        'main.request_to_go_live', service_id=SERVICE_ONE_ID
-    )
-    assert page.h1.text == 'Before you request to go live'
+    page = client_request.get("main.request_to_go_live", service_id=SERVICE_ONE_ID)
+    assert page.h1.text == "Before you request to go live"
 
-    assert normalize_spaces(
-        page.select_one('.task-list .task-list-item').text
-    ) == (
+    assert normalize_spaces(page.select_one(".task-list .task-list-item").text) == (
         expected_estimated_volumes_item
     )
 
 
-@pytest.mark.parametrize((
-    'volume_email,'
-    'count_of_email_templates,'
-    'reply_to_email_addresses,'
-    'expected_reply_to_checklist_item'
-), [
-    (None, 1, [], 'Add a reply-to email address Not completed'),
-    (None, 1, [{}], 'Add a reply-to email address Completed'),
-    (1, 1, [], 'Add a reply-to email address Not completed'),
-    (1, 1, [{}], 'Add a reply-to email address Completed'),
-    (1, 0, [], 'Add a reply-to email address Not completed'),
-    (1, 0, [{}], 'Add a reply-to email address Completed'),
-])
+@pytest.mark.parametrize(
+    (
+        "volume_email,"
+        "count_of_email_templates,"
+        "reply_to_email_addresses,"
+        "expected_reply_to_checklist_item"
+    ),
+    [
+        (None, 1, [], "Add a reply-to email address Not completed"),
+        (None, 1, [{}], "Add a reply-to email address Completed"),
+        (1, 1, [], "Add a reply-to email address Not completed"),
+        (1, 1, [{}], "Add a reply-to email address Completed"),
+        (1, 0, [], "Add a reply-to email address Not completed"),
+        (1, 0, [{}], "Add a reply-to email address Completed"),
+    ],
+)
 def test_should_check_for_reply_to_on_go_live(
     client_request,
     mocker,
@@ -612,47 +667,50 @@ def test_should_check_for_reply_to_on_go_live(
     mock_get_users_by_service,
 ):
     mocker.patch(
-        'app.service_api_client.get_service_templates',
-        return_value={'data': [
-            create_template(template_type='email')
-            for _ in range(0, count_of_email_templates)
-        ]}
+        "app.service_api_client.get_service_templates",
+        return_value={
+            "data": [
+                create_template(template_type="email")
+                for _ in range(0, count_of_email_templates)
+            ]
+        },
     )
 
     mock_get_reply_to_email_addresses = mocker.patch(
-        'app.main.views.service_settings.service_api_client.get_reply_to_email_addresses',
-        return_value=reply_to_email_addresses
+        "app.main.views.service_settings.service_api_client.get_reply_to_email_addresses",
+        return_value=reply_to_email_addresses,
     )
 
-    for channel, volume in (('email', volume_email), ('sms', 0)):
+    for channel, volume in (("email", volume_email), ("sms", 0)):
         mocker.patch(
-            'app.models.service.Service.volume_{}'.format(channel),
+            "app.models.service.Service.volume_{}".format(channel),
             create=True,
             new_callable=PropertyMock,
             return_value=volume,
         )
 
-    page = client_request.get(
-        'main.request_to_go_live', service_id=SERVICE_ONE_ID
-    )
-    assert page.h1.text == 'Before you request to go live'
+    page = client_request.get("main.request_to_go_live", service_id=SERVICE_ONE_ID)
+    assert page.h1.text == "Before you request to go live"
 
-    checklist_items = page.select('.task-list .task-list-item')
+    checklist_items = page.select(".task-list .task-list-item")
     assert normalize_spaces(checklist_items[3].text) == expected_reply_to_checklist_item
 
     if count_of_email_templates:
         mock_get_reply_to_email_addresses.assert_called_once_with(SERVICE_ONE_ID)
 
 
-@pytest.mark.parametrize((
-    'volume_email,'
-    'count_of_email_templates,'
-    'reply_to_email_addresses,'
-    'expected_reply_to_checklist_item'
-), [
-    (None, 0, [], ''),
-    (0, 0, [], ''),
-])
+@pytest.mark.parametrize(
+    (
+        "volume_email,"
+        "count_of_email_templates,"
+        "reply_to_email_addresses,"
+        "expected_reply_to_checklist_item"
+    ),
+    [
+        (None, 0, [], ""),
+        (0, 0, [], ""),
+    ],
+)
 def test_should_check_for_reply_to_on_go_live_index_error(
     client_request,
     mocker,
@@ -667,50 +725,66 @@ def test_should_check_for_reply_to_on_go_live_index_error(
     mock_get_users_by_service,
 ):
     mocker.patch(
-        'app.service_api_client.get_service_templates',
-        return_value={'data': [
-            create_template(template_type='email')
-            for _ in range(0, count_of_email_templates)
-        ]}
+        "app.service_api_client.get_service_templates",
+        return_value={
+            "data": [
+                create_template(template_type="email")
+                for _ in range(0, count_of_email_templates)
+            ]
+        },
     )
 
     mocker.patch(
-        'app.main.views.service_settings.service_api_client.get_reply_to_email_addresses',
-        return_value=reply_to_email_addresses
+        "app.main.views.service_settings.service_api_client.get_reply_to_email_addresses",
+        return_value=reply_to_email_addresses,
     )
 
-    for channel, volume in (('email', volume_email), ('sms', 0)):
+    for channel, volume in (("email", volume_email), ("sms", 0)):
         mocker.patch(
-            'app.models.service.Service.volume_{}'.format(channel),
+            "app.models.service.Service.volume_{}".format(channel),
             create=True,
             new_callable=PropertyMock,
             return_value=volume,
         )
 
     with pytest.raises(expected_exception=IndexError):
-        page = client_request.get(
-            'main.request_to_go_live', service_id=SERVICE_ONE_ID
+        page = client_request.get("main.request_to_go_live", service_id=SERVICE_ONE_ID)
+        assert page.h1.text == "Before you request to go live"
+
+        checklist_items = page.select(".task-list .task-list-item")
+        assert (
+            normalize_spaces(checklist_items[3].text)
+            == expected_reply_to_checklist_item
         )
-        assert page.h1.text == 'Before you request to go live'
-
-        checklist_items = page.select('.task-list .task-list-item')
-        assert normalize_spaces(checklist_items[3].text) == expected_reply_to_checklist_item
 
 
-@pytest.mark.parametrize((
-    'count_of_users_with_manage_service,'
-    'count_of_invites_with_manage_service,'
-    'expected_user_checklist_item'
-), [
-    (1, 0, 'Add a team member who can manage settings, team and usage Not completed'),
-    (2, 0, 'Add a team member who can manage settings, team and usage Completed'),
-    (1, 1, 'Add a team member who can manage settings, team and usage Completed'),
-])
-@pytest.mark.parametrize('count_of_templates, expected_templates_checklist_item', [
-    (0, 'Add templates with examples of the content you plan to send Not completed'),
-    (1, 'Add templates with examples of the content you plan to send Completed'),
-    (2, 'Add templates with examples of the content you plan to send Completed'),
-])
+@pytest.mark.parametrize(
+    (
+        "count_of_users_with_manage_service,"
+        "count_of_invites_with_manage_service,"
+        "expected_user_checklist_item"
+    ),
+    [
+        (
+            1,
+            0,
+            "Add a team member who can manage settings, team and usage Not completed",
+        ),
+        (2, 0, "Add a team member who can manage settings, team and usage Completed"),
+        (1, 1, "Add a team member who can manage settings, team and usage Completed"),
+    ],
+)
+@pytest.mark.parametrize(
+    "count_of_templates, expected_templates_checklist_item",
+    [
+        (
+            0,
+            "Add templates with examples of the content you plan to send Not completed",
+        ),
+        (1, "Add templates with examples of the content you plan to send Completed"),
+        (2, "Add templates with examples of the content you plan to send Completed"),
+    ],
+)
 def test_should_check_for_sending_things_right(
     client_request,
     mocker,
@@ -727,59 +801,65 @@ def test_should_check_for_sending_things_right(
     single_reply_to_email_address,
 ):
     mocker.patch(
-        'app.service_api_client.get_service_templates',
-        return_value={'data': [
-            create_template(template_type='sms')
-            for _ in range(0, count_of_templates)
-        ]}
+        "app.service_api_client.get_service_templates",
+        return_value={
+            "data": [
+                create_template(template_type="sms")
+                for _ in range(0, count_of_templates)
+            ]
+        },
     )
 
     mock_get_users = mocker.patch(
-        'app.models.user.Users.client_method',
+        "app.models.user.Users.client_method",
         return_value=(
-            [active_user_with_permissions] * count_of_users_with_manage_service +
-            [active_user_no_settings_permission]
-        )
+            [active_user_with_permissions] * count_of_users_with_manage_service
+            + [active_user_no_settings_permission]
+        ),
     )
-    invite_one = invite_json(id_=uuid4(),
-                             from_user=service_one['users'][0],
-                             service_id=service_one['id'],
-                             email_address='invited_user@test.gsa.gov',
-                             permissions='view_activity,send_messages,manage_service,manage_api_keys',
-                             created_at=datetime.utcnow(),
-                             status='pending',
-                             auth_type='sms_auth',
-                             folder_permissions=[])
+    invite_one = invite_json(
+        id_=uuid4(),
+        from_user=service_one["users"][0],
+        service_id=service_one["id"],
+        email_address="invited_user@test.gsa.gov",
+        permissions="view_activity,send_messages,manage_service,manage_api_keys",
+        created_at=datetime.utcnow(),
+        status="pending",
+        auth_type="sms_auth",
+        folder_permissions=[],
+    )
 
     invite_two = invite_one.copy()
-    invite_two['permissions'] = 'view_activity'
+    invite_two["permissions"] = "view_activity"
 
     mock_get_invites = mocker.patch(
-        'app.models.user.InvitedUsers.client_method',
+        "app.models.user.InvitedUsers.client_method",
         return_value=(
-            ([invite_one] * count_of_invites_with_manage_service) +
-            [invite_two]
-        )
+            ([invite_one] * count_of_invites_with_manage_service) + [invite_two]
+        ),
     )
 
-    page = client_request.get(
-        'main.request_to_go_live', service_id=SERVICE_ONE_ID
-    )
-    assert page.h1.text == 'Before you request to go live'
+    page = client_request.get("main.request_to_go_live", service_id=SERVICE_ONE_ID)
+    assert page.h1.text == "Before you request to go live"
 
-    checklist_items = page.select('.task-list .task-list-item')
+    checklist_items = page.select(".task-list .task-list-item")
     assert normalize_spaces(checklist_items[1].text) == expected_user_checklist_item
-    assert normalize_spaces(checklist_items[2].text) == expected_templates_checklist_item
+    assert (
+        normalize_spaces(checklist_items[2].text) == expected_templates_checklist_item
+    )
 
     mock_get_users.assert_called_once_with(SERVICE_ONE_ID)
     mock_get_invites.assert_called_once_with(SERVICE_ONE_ID)
 
 
-@pytest.mark.parametrize('checklist_completed, expected_button', (
-    (True, True),
-    (True, True),
-    (False, False),
-))
+@pytest.mark.parametrize(
+    "checklist_completed, expected_button",
+    (
+        (True, True),
+        (True, True),
+        (False, False),
+    ),
+)
 def test_should_not_show_go_live_button_if_checklist_not_complete(
     client_request,
     mocker,
@@ -792,125 +872,131 @@ def test_should_not_show_go_live_button_if_checklist_not_complete(
     expected_button,
 ):
     mocker.patch(
-        'app.models.service.Service.go_live_checklist_completed',
+        "app.models.service.Service.go_live_checklist_completed",
         new_callable=PropertyMock,
         return_value=checklist_completed,
     )
 
-    for channel in ('email', 'sms'):
+    for channel in ("email", "sms"):
         mocker.patch(
-            'app.models.service.Service.volume_{}'.format(channel),
+            "app.models.service.Service.volume_{}".format(channel),
             create=True,
             new_callable=PropertyMock,
             return_value=0,
         )
 
-    page = client_request.get(
-        'main.request_to_go_live', service_id=SERVICE_ONE_ID
-    )
-    assert page.h1.text == 'Before you request to go live'
+    page = client_request.get("main.request_to_go_live", service_id=SERVICE_ONE_ID)
+    assert page.h1.text == "Before you request to go live"
 
     if expected_button:
-        assert page.select_one('form')['method'] == 'post'
-        assert 'action' not in page.select_one('form')
-        assert normalize_spaces(page.select('main p')[0].text) == (
-            'When we receive your request we’ll get back to you within one working day.'
+        assert page.select_one("form")["method"] == "post"
+        assert "action" not in page.select_one("form")
+        assert normalize_spaces(page.select("main p")[0].text) == (
+            "When we receive your request we’ll get back to you within one working day."
         )
-        assert normalize_spaces(page.select('main p')[1].text) == (
-            'By requesting to go live you’re agreeing to our terms of use.'
+        assert normalize_spaces(page.select("main p")[1].text) == (
+            "By requesting to go live you’re agreeing to our terms of use."
         )
-        assert page.select_one('main [type=submit]').text.strip() == ('Request to go live')
+        assert page.select_one("main [type=submit]").text.strip() == (
+            "Request to go live"
+        )
     else:
-        assert not page.select('form')
-        assert not page.select('main [type=submit]')
-        assert len(page.select('main p')) == 1
-        assert normalize_spaces(page.select_one('main p').text) == (
-            'You must complete these steps before you can request to go live.'
+        assert not page.select("form")
+        assert not page.select("main [type=submit]")
+        assert len(page.select("main p")) == 1
+        assert normalize_spaces(page.select_one("main p").text) == (
+            "You must complete these steps before you can request to go live."
         )
 
 
-@pytest.mark.parametrize('go_live_at, message', [
-    (None, '‘service one’ is already live.'),
-    ('2020-10-09 13:55:20', '‘service one’ went live on 9 October 2020.'),
-])
+@pytest.mark.parametrize(
+    "go_live_at, message",
+    [
+        (None, "‘service one’ is already live."),
+        ("2020-10-09 13:55:20", "‘service one’ went live on 9 October 2020."),
+    ],
+)
 def test_request_to_go_live_redirects_if_service_already_live(
     client_request,
     service_one,
     go_live_at,
     message,
 ):
-    service_one['restricted'] = False
-    service_one['go_live_at'] = go_live_at
+    service_one["restricted"] = False
+    service_one["go_live_at"] = go_live_at
 
     page = client_request.get(
-        'main.request_to_go_live',
+        "main.request_to_go_live",
         service_id=SERVICE_ONE_ID,
     )
 
-    assert page.h1.text == 'Your service is already live'
-    assert normalize_spaces(page.select_one('main p').text) == message
+    assert page.h1.text == "Your service is already live"
+    assert normalize_spaces(page.select_one("main p").text) == message
 
 
-@pytest.mark.parametrize((
-    'estimated_sms_volume,'
-    'organization_type,'
-    'count_of_sms_templates,'
-    'sms_senders,'
-    'expected_sms_sender_checklist_item'
-), [
+@pytest.mark.parametrize(
     (
-        0,
-        'state',
-        0,
-        [],
-        '',
+        "estimated_sms_volume,"
+        "organization_type,"
+        "count_of_sms_templates,"
+        "sms_senders,"
+        "expected_sms_sender_checklist_item"
     ),
-    (
-        None,
-        'state',
-        0,
-        [{'is_default': True, 'sms_sender': 'GOVUK'}],
-        '',
-    ),
-    (
-        1,
-        'federal',
-        99,
-        [{'is_default': True, 'sms_sender': 'GOVUK'}],
-        '',
-    ),
-    (
-        None,
-        'federal',
-        99,
-        [{'is_default': True, 'sms_sender': 'GOVUK'}],
-        '',
-    ),
-    (
-        1,
-        'federal',
-        99,
-        [{'is_default': True, 'sms_sender': 'GOVUK'}],
-        '',
-    ),
-    (
-        1,
-        'state',
-        1,
-        [],
-        'Change your text message sender name Not completed',
-    ),
-    (
-        1,
-        'state',
-        1,
-        [
-            {'is_default': False, 'sms_sender': 'GOVUK'},
-            {'is_default': True, 'sms_sender': 'KUVOG'},
-        ],
-        'Change your text message sender name Completed',
-    ),
-])
+    [
+        (
+            0,
+            "state",
+            0,
+            [],
+            "",
+        ),
+        (
+            None,
+            "state",
+            0,
+            [{"is_default": True, "sms_sender": "GOVUK"}],
+            "",
+        ),
+        (
+            1,
+            "federal",
+            99,
+            [{"is_default": True, "sms_sender": "GOVUK"}],
+            "",
+        ),
+        (
+            None,
+            "federal",
+            99,
+            [{"is_default": True, "sms_sender": "GOVUK"}],
+            "",
+        ),
+        (
+            1,
+            "federal",
+            99,
+            [{"is_default": True, "sms_sender": "GOVUK"}],
+            "",
+        ),
+        (
+            1,
+            "state",
+            1,
+            [],
+            "Change your text message sender name Not completed",
+        ),
+        (
+            1,
+            "state",
+            1,
+            [
+                {"is_default": False, "sms_sender": "GOVUK"},
+                {"is_default": True, "sms_sender": "KUVOG"},
+            ],
+            "Change your text message sender name Completed",
+        ),
+    ],
+)
 def test_should_check_for_sms_sender_on_go_live(
     client_request,
     service_one,
@@ -923,42 +1009,45 @@ def test_should_check_for_sms_sender_on_go_live(
     expected_sms_sender_checklist_item,
     estimated_sms_volume,
 ):
-    service_one['organization_type'] = organization_type
+    service_one["organization_type"] = organization_type
 
     mocker.patch(
-        'app.service_api_client.get_service_templates',
-        return_value={'data': [
-            create_template(template_type='sms')
-            for _ in range(0, count_of_sms_templates)
-        ]}
+        "app.service_api_client.get_service_templates",
+        return_value={
+            "data": [
+                create_template(template_type="sms")
+                for _ in range(0, count_of_sms_templates)
+            ]
+        },
     )
 
     mocker.patch(
-        'app.models.service.Service.has_team_members',
+        "app.models.service.Service.has_team_members",
         return_value=True,
     )
 
     mock_get_sms_senders = mocker.patch(
-        'app.main.views.service_settings.service_api_client.get_sms_senders',
+        "app.main.views.service_settings.service_api_client.get_sms_senders",
         return_value=sms_senders,
     )
 
-    for channel, volume in (('email', 0), ('sms', estimated_sms_volume)):
+    for channel, volume in (("email", 0), ("sms", estimated_sms_volume)):
         mocker.patch(
-            'app.models.service.Service.volume_{}'.format(channel),
+            "app.models.service.Service.volume_{}".format(channel),
             create=True,
             new_callable=PropertyMock,
             return_value=volume,
         )
 
     with pytest.raises(expected_exception=IndexError):
-        page = client_request.get(
-            'main.request_to_go_live', service_id=SERVICE_ONE_ID
-        )
-        assert page.h1.text == 'Before you request to go live'
+        page = client_request.get("main.request_to_go_live", service_id=SERVICE_ONE_ID)
+        assert page.h1.text == "Before you request to go live"
 
-        checklist_items = page.select('.task-list .task-list-item')
-        assert normalize_spaces(checklist_items[3].text) == expected_sms_sender_checklist_item
+        checklist_items = page.select(".task-list .task-list-item")
+        assert (
+            normalize_spaces(checklist_items[3].text)
+            == expected_sms_sender_checklist_item
+        )
 
         mock_get_sms_senders.assert_called_once_with(SERVICE_ONE_ID)
 
@@ -972,48 +1061,52 @@ def test_non_gov_user_is_told_they_cant_go_live(
     mock_get_organization,
 ):
     mocker.patch(
-        'app.models.service.Service.has_team_members',
+        "app.models.service.Service.has_team_members",
         return_value=False,
     )
     mocker.patch(
-        'app.models.service.Service.all_templates',
+        "app.models.service.Service.all_templates",
         new_callable=PropertyMock,
         return_value=[],
     )
     mocker.patch(
-        'app.main.views.service_settings.service_api_client.get_sms_senders',
+        "app.main.views.service_settings.service_api_client.get_sms_senders",
         return_value=[],
     )
     mocker.patch(
-        'app.main.views.service_settings.service_api_client.get_reply_to_email_addresses',
+        "app.main.views.service_settings.service_api_client.get_reply_to_email_addresses",
         return_value=[],
     )
     client_request.login(api_nongov_user_active)
-    page = client_request.get(
-        'main.request_to_go_live', service_id=SERVICE_ONE_ID
+    page = client_request.get("main.request_to_go_live", service_id=SERVICE_ONE_ID)
+    assert normalize_spaces(page.select_one("main p").text) == (
+        "Only team members with a government email address can request to go live."
     )
-    assert normalize_spaces(page.select_one('main p').text) == (
-        'Only team members with a government email address can request to go live.'
-    )
-    assert len(page.select('main form')) == 0
-    assert len(page.select('main button')) == 0
+    assert len(page.select("main form")) == 0
+    assert len(page.select("main button")) == 0
 
 
-@pytest.mark.parametrize('consent_to_research, displayed_consent', (
-    (None, None),
-    (True, 'yes'),
-    (False, 'no'),
-))
-@pytest.mark.parametrize('volumes, displayed_volumes', (
+@pytest.mark.parametrize(
+    "consent_to_research, displayed_consent",
     (
-        (('email', None), ('sms', None)),
         (None, None),
+        (True, "yes"),
+        (False, "no"),
     ),
+)
+@pytest.mark.parametrize(
+    "volumes, displayed_volumes",
     (
-        (('email', 1234), ('sms', 0)),
-        ('1,234', '0'),
+        (
+            (("email", None), ("sms", None)),
+            (None, None),
+        ),
+        (
+            (("email", 1234), ("sms", 0)),
+            ("1,234", "0"),
+        ),
     ),
-))
+)
 def test_should_show_estimate_volumes(
     mocker,
     client_request,
@@ -1024,56 +1117,61 @@ def test_should_show_estimate_volumes(
 ):
     for channel, volume in volumes:
         mocker.patch(
-            'app.models.service.Service.volume_{}'.format(channel),
+            "app.models.service.Service.volume_{}".format(channel),
             create=True,
             new_callable=PropertyMock,
             return_value=volume,
         )
     mocker.patch(
-        'app.models.service.Service.consent_to_research',
+        "app.models.service.Service.consent_to_research",
         create=True,
         new_callable=PropertyMock,
         return_value=consent_to_research,
     )
-    page = client_request.get(
-        'main.estimate_usage', service_id=SERVICE_ONE_ID
-    )
-    assert page.h1.text == 'Tell us how many messages you expect to send'
+    page = client_request.get("main.estimate_usage", service_id=SERVICE_ONE_ID)
+    assert page.h1.text == "Tell us how many messages you expect to send"
     for channel, label, hint, value in (
         (
-            'email',
-            'How many emails do you expect to send in the next year?',
-            'For example, 50,000',
+            "email",
+            "How many emails do you expect to send in the next year?",
+            "For example, 50,000",
             displayed_volumes[0],
         ),
         (
-            'sms',
-            'How many text messages do you expect to send in the next year?',
-            'For example, 50,000',
+            "sms",
+            "How many text messages do you expect to send in the next year?",
+            "For example, 50,000",
             displayed_volumes[1],
         ),
     ):
-        assert normalize_spaces(
-            page.select_one('label[for=volume_{}]'.format(channel)).text
-        ) == label
-        assert normalize_spaces(
-            page.select_one('#volume_{}-hint'.format(channel)).text
-        ) == hint
-        assert page.select_one('#volume_{}'.format(channel)).get('value') == value
+        assert (
+            normalize_spaces(
+                page.select_one("label[for=volume_{}]".format(channel)).text
+            )
+            == label
+        )
+        assert (
+            normalize_spaces(page.select_one("#volume_{}-hint".format(channel)).text)
+            == hint
+        )
+        assert page.select_one("#volume_{}".format(channel)).get("value") == value
 
-    assert len(page.select('input[type=radio]')) == 2
+    assert len(page.select("input[type=radio]")) == 2
 
     if displayed_consent is None:
-        assert len(page.select('input[checked]')) == 0
+        assert len(page.select("input[checked]")) == 0
     else:
-        assert len(page.select('input[checked]')) == 1
-        assert page.select_one('input[checked]')['value'] == displayed_consent
+        assert len(page.select("input[checked]")) == 1
+        assert page.select_one("input[checked]")["value"] == displayed_consent
 
 
-@pytest.mark.parametrize('consent_to_research, expected_persisted_consent_to_research', (
-    ('yes', True),
-    ('no', False),
-))
+@pytest.mark.parametrize(
+    "consent_to_research, expected_persisted_consent_to_research",
+    (
+        ("yes", True),
+        ("no", False),
+    ),
+)
 def test_should_show_persist_estimated_volumes(
     client_request,
     mock_update_service,
@@ -1081,18 +1179,18 @@ def test_should_show_persist_estimated_volumes(
     expected_persisted_consent_to_research,
 ):
     client_request.post(
-        'main.estimate_usage',
+        "main.estimate_usage",
         service_id=SERVICE_ONE_ID,
         _data={
-            'volume_email': '1,234,567',
-            'volume_sms': '',
-            'consent_to_research': consent_to_research,
+            "volume_email": "1,234,567",
+            "volume_sms": "",
+            "consent_to_research": consent_to_research,
         },
         _expected_status=302,
         _expected_redirect=url_for(
-            'main.request_to_go_live',
+            "main.request_to_go_live",
             service_id=SERVICE_ONE_ID,
-        )
+        ),
     )
     mock_update_service.assert_called_once_with(
         SERVICE_ONE_ID,
@@ -1102,26 +1200,29 @@ def test_should_show_persist_estimated_volumes(
     )
 
 
-@pytest.mark.parametrize('data, error_selector, expected_error_message', (
+@pytest.mark.parametrize(
+    "data, error_selector, expected_error_message",
     (
-        {
-            'volume_email': '1234',
-            'volume_sms': '2000000001',
-            'consent_to_research': 'yes',
-        },
-        '#volume_sms-error',
-        'Number of text messages must be 2,000,000,000 or less'
+        (
+            {
+                "volume_email": "1234",
+                "volume_sms": "2000000001",
+                "consent_to_research": "yes",
+            },
+            "#volume_sms-error",
+            "Number of text messages must be 2,000,000,000 or less",
+        ),
+        (
+            {
+                "volume_email": "1 234",
+                "volume_sms": "0",
+                "consent_to_research": "",
+            },
+            '[data-error-label="consent_to_research"]',
+            "Select yes or no",
+        ),
     ),
-    (
-        {
-            'volume_email': '1 234',
-            'volume_sms': '0',
-            'consent_to_research': '',
-        },
-        '[data-error-label="consent_to_research"]',
-        'Select yes or no'
-    ),
-))
+)
 def test_should_error_if_bad_estimations_given(
     client_request,
     mock_update_service,
@@ -1130,7 +1231,7 @@ def test_should_error_if_bad_estimations_given(
     expected_error_message,
 ):
     page = client_request.post(
-        'main.estimate_usage',
+        "main.estimate_usage",
         service_id=SERVICE_ONE_ID,
         _data=data,
         _expected_status=200,
@@ -1144,19 +1245,19 @@ def test_should_error_if_all_volumes_zero(
     mock_update_service,
 ):
     page = client_request.post(
-        'main.estimate_usage',
+        "main.estimate_usage",
         service_id=SERVICE_ONE_ID,
         _data={
-            'volume_email': '',
-            'volume_sms': '0',
-            'consent_to_research': 'yes',
+            "volume_email": "",
+            "volume_sms": "0",
+            "consent_to_research": "yes",
         },
         _expected_status=200,
     )
-    assert page.select('input[type=text]')[0].get('value') is None
-    assert page.select('input[type=text]')[1]['value'] == '0'
-    assert normalize_spaces(page.select_one('.banner-dangerous').text) == (
-        'Enter the number of messages you expect to send in the next year'
+    assert page.select("input[type=text]")[0].get("value") is None
+    assert page.select("input[type=text]")[1]["value"] == "0"
+    assert normalize_spaces(page.select_one(".banner-dangerous").text) == (
+        "Enter the number of messages you expect to send in the next year"
     )
     assert mock_update_service.called is False
 
@@ -1166,20 +1267,21 @@ def test_should_not_default_to_zero_if_some_fields_dont_validate(
     mock_update_service,
 ):
     page = client_request.post(
-        'main.estimate_usage',
+        "main.estimate_usage",
         service_id=SERVICE_ONE_ID,
         _data={
-            'volume_email': 'aaaaaaaaaaaaa',
-            'volume_sms': '',
-            'consent_to_research': 'yes',
+            "volume_email": "aaaaaaaaaaaaa",
+            "volume_sms": "",
+            "consent_to_research": "yes",
         },
         _expected_status=200,
     )
-    assert page.select('input[type=text]')[0]['value'] == 'aaaaaaaaaaaaa'
-    assert page.select('input[type=text]')[1].get('value') is None
-    assert normalize_spaces(
-        page.select_one('#volume_email-error').text
-    ) == 'Error: Enter the number of emails you expect to send'
+    assert page.select("input[type=text]")[0]["value"] == "aaaaaaaaaaaaa"
+    assert page.select("input[type=text]")[1].get("value") is None
+    assert (
+        normalize_spaces(page.select_one("#volume_email-error").text)
+        == "Error: Enter the number of emails you expect to send"
+    )
     assert mock_update_service.called is False
 
 
@@ -1190,30 +1292,27 @@ def test_non_gov_users_cant_request_to_go_live(
 ):
     client_request.login(api_nongov_user_active)
     client_request.post(
-        'main.request_to_go_live',
+        "main.request_to_go_live",
         service_id=SERVICE_ONE_ID,
         _expected_status=403,
     )
 
 
-@pytest.mark.parametrize('volumes, displayed_volumes, formatted_displayed_volumes', (
+@pytest.mark.parametrize(
+    "volumes, displayed_volumes, formatted_displayed_volumes",
     (
-        (('email', None), ('sms', None)),
-        ', ',
         (
-            'Emails in next year: \n'
-            'Text messages in next year: \n'
+            (("email", None), ("sms", None)),
+            ", ",
+            ("Emails in next year: \n" "Text messages in next year: \n"),
+        ),
+        (
+            (("email", 1234), ("sms", 0)),
+            "0, 1234",  # This is a different order to match the spreadsheet
+            ("Emails in next year: 1,234\n" "Text messages in next year: 0\n"),
         ),
     ),
-    (
-        (('email', 1234), ('sms', 0)),
-        '0, 1234',  # This is a different order to match the spreadsheet
-        (
-            'Emails in next year: 1,234\n'
-            'Text messages in next year: 0\n'
-        ),
-    ),
-))
+)
 @freeze_time("2012-12-21 13:12:12.12354")
 def test_should_redirect_after_request_to_go_live(
     client_request,
@@ -1233,67 +1332,62 @@ def test_should_redirect_after_request_to_go_live(
 ):
     for channel, volume in volumes:
         mocker.patch(
-            'app.models.service.Service.volume_{}'.format(channel),
+            "app.models.service.Service.volume_{}".format(channel),
             create=True,
             new_callable=PropertyMock,
             return_value=volume,
         )
-    mock_create_ticket = mocker.spy(NotifySupportTicket, '__init__')
+    mock_create_ticket = mocker.spy(NotifySupportTicket, "__init__")
     mock_send_ticket_to_zendesk = mocker.patch(
-        'app.main.views.service_settings.zendesk_client.send_ticket_to_zendesk',
+        "app.main.views.service_settings.zendesk_client.send_ticket_to_zendesk",
         autospec=True,
     )
     page = client_request.post(
-        'main.request_to_go_live',
-        service_id=SERVICE_ONE_ID,
-        _follow_redirects=True
+        "main.request_to_go_live", service_id=SERVICE_ONE_ID, _follow_redirects=True
     )
 
     expected_message = (
-        'Service: service one\n'
-        'http://localhost/services/{service_id}\n'
-        '\n'
-        '---\n'
-        'Organization type: Federal government (domain is user.gsa.gov).\n'
-        '\n'
-        '{formatted_displayed_volumes}'
-        '\n'
-        'Consent to research: Yes\n'
-        'Other live services for that user: No\n'
-        '\n'
-        'Service reply-to address: test@example.com\n'
-        '\n'
-        '---\n'
-        'Request sent by test@user.gsa.gov\n'
-        'Requester’s user page: http://localhost/users/{user_id}\n'
+        "Service: service one\n"
+        "http://localhost/services/{service_id}\n"
+        "\n"
+        "---\n"
+        "Organization type: Federal government (domain is user.gsa.gov).\n"
+        "\n"
+        "{formatted_displayed_volumes}"
+        "\n"
+        "Consent to research: Yes\n"
+        "Other live services for that user: No\n"
+        "\n"
+        "Service reply-to address: test@example.com\n"
+        "\n"
+        "---\n"
+        "Request sent by test@user.gsa.gov\n"
+        "Requester’s user page: http://localhost/users/{user_id}\n"
     ).format(
         service_id=SERVICE_ONE_ID,
         formatted_displayed_volumes=formatted_displayed_volumes,
-        user_id=active_user_with_permissions['id'],
+        user_id=active_user_with_permissions["id"],
     )
     mock_create_ticket.assert_called_once_with(
         ANY,
-        subject='Request to go live - service one',
+        subject="Request to go live - service one",
         message=expected_message,
-        ticket_type='question',
-        user_name=active_user_with_permissions['name'],
-        user_email=active_user_with_permissions['email_address'],
+        ticket_type="question",
+        user_name=active_user_with_permissions["name"],
+        user_email=active_user_with_permissions["email_address"],
         requester_sees_message_content=False,
         org_id=None,
-        org_type='federal',
+        org_type="federal",
         service_id=SERVICE_ONE_ID,
     )
     mock_send_ticket_to_zendesk.assert_called_once()
 
-    assert normalize_spaces(page.select_one('.banner-default').text) == (
-        'Thanks for your request to go live. We’ll get back to you within one working day.'
+    assert normalize_spaces(page.select_one(".banner-default").text) == (
+        "Thanks for your request to go live. We’ll get back to you within one working day."
     )
-    assert normalize_spaces(page.select_one('h1').text) == (
-        'Settings'
-    )
+    assert normalize_spaces(page.select_one("h1").text) == ("Settings")
     mock_update_service.assert_called_once_with(
-        SERVICE_ONE_ID,
-        go_live_user=active_user_with_permissions['id']
+        SERVICE_ONE_ID, go_live_user=active_user_with_permissions["id"]
     )
 
 
@@ -1311,62 +1405,60 @@ def test_request_to_go_live_displays_go_live_notes_in_zendesk_ticket(
     mock_update_service,
     mock_get_invites_without_manage_permission,
 ):
-    go_live_note = 'This service is not allowed to go live'
+    go_live_note = "This service is not allowed to go live"
 
     mocker.patch(
-        'app.organizations_client.get_organization',
+        "app.organizations_client.get_organization",
         side_effect=lambda org_id: organization_json(
             ORGANISATION_ID,
-            'Org 1',
+            "Org 1",
             request_to_go_live_notes=go_live_note,
-        )
+        ),
     )
-    mock_create_ticket = mocker.spy(NotifySupportTicket, '__init__')
+    mock_create_ticket = mocker.spy(NotifySupportTicket, "__init__")
     mock_send_ticket_to_zendesk = mocker.patch(
-        'app.main.views.service_settings.zendesk_client.send_ticket_to_zendesk',
+        "app.main.views.service_settings.zendesk_client.send_ticket_to_zendesk",
         autospec=True,
     )
     client_request.post(
-        'main.request_to_go_live',
-        service_id=SERVICE_ONE_ID,
-        _follow_redirects=True
+        "main.request_to_go_live", service_id=SERVICE_ONE_ID, _follow_redirects=True
     )
 
     expected_message = (
-        'Service: service one\n'
-        'http://localhost/services/{service_id}\n'
-        '\n'
-        '---\n'
-        'Organization type: Federal government (organization is Org 1). {go_live_note}\n'
-        '\n'
-        'Emails in next year: 111,111\n'
-        'Text messages in next year: 222,222\n'
-        '\n'
-        'Consent to research: Yes\n'
-        'Other live services for that user: No\n'
-        '\n'
-        'Service reply-to address: test@example.com\n'
-        '\n'
-        '---\n'
-        'Request sent by test@user.gsa.gov\n'
-        'Requester’s user page: http://localhost/users/{user_id}\n'
+        "Service: service one\n"
+        "http://localhost/services/{service_id}\n"
+        "\n"
+        "---\n"
+        "Organization type: Federal government (organization is Org 1). {go_live_note}\n"
+        "\n"
+        "Emails in next year: 111,111\n"
+        "Text messages in next year: 222,222\n"
+        "\n"
+        "Consent to research: Yes\n"
+        "Other live services for that user: No\n"
+        "\n"
+        "Service reply-to address: test@example.com\n"
+        "\n"
+        "---\n"
+        "Request sent by test@user.gsa.gov\n"
+        "Requester’s user page: http://localhost/users/{user_id}\n"
     ).format(
         service_id=SERVICE_ONE_ID,
         go_live_note=go_live_note,
-        user_id=active_user_with_permissions['id'],
+        user_id=active_user_with_permissions["id"],
     )
 
     mock_create_ticket.assert_called_once_with(
         ANY,
-        subject='Request to go live - service one',
+        subject="Request to go live - service one",
         message=expected_message,
-        ticket_type='question',
-        user_name=active_user_with_permissions['name'],
-        user_email=active_user_with_permissions['email_address'],
+        ticket_type="question",
+        user_name=active_user_with_permissions["name"],
+        user_email=active_user_with_permissions["email_address"],
         requester_sees_message_content=False,
         org_id=ORGANISATION_ID,
-        org_type='federal',
-        service_id=SERVICE_ONE_ID
+        org_type="federal",
+        service_id=SERVICE_ONE_ID,
     )
     mock_send_ticket_to_zendesk.assert_called_once()
 
@@ -1387,33 +1479,31 @@ def test_request_to_go_live_displays_mou_signatories(
     mock_get_invites_without_manage_permission,
 ):
     mocker.patch(
-        'app.organizations_client.get_organization',
+        "app.organizations_client.get_organization",
         side_effect=lambda org_id: organization_json(
             ORGANISATION_ID,
-            'Org 1',
+            "Org 1",
             agreement_signed=True,
             agreement_signed_by_id=fake_uuid,
-            agreement_signed_on_behalf_of_email_address='bigdog@example.gsa.gov',
-        )
+            agreement_signed_on_behalf_of_email_address="bigdog@example.gsa.gov",
+        ),
     )
     mocker.patch(
-        'app.main.views.service_settings.zendesk_client.send_ticket_to_zendesk',
+        "app.main.views.service_settings.zendesk_client.send_ticket_to_zendesk",
         autospec=True,
     )
-    mock_create_ticket = mocker.spy(NotifySupportTicket, '__init__')
+    mock_create_ticket = mocker.spy(NotifySupportTicket, "__init__")
     client_request.post(
-        'main.request_to_go_live',
-        service_id=SERVICE_ONE_ID,
-        _follow_redirects=True
+        "main.request_to_go_live", service_id=SERVICE_ONE_ID, _follow_redirects=True
     )
 
-    assert (
-        'Organization type: Federal government'
-    ) in mock_create_ticket.call_args[1]['message']
+    assert ("Organization type: Federal government") in mock_create_ticket.call_args[1][
+        "message"
+    ]
 
-    assert (
-        'Emails in next year: 111,111\n'
-    ) in mock_create_ticket.call_args[1]['message']
+    assert ("Emails in next year: 111,111\n") in mock_create_ticket.call_args[1][
+        "message"
+    ]
 
 
 def test_should_be_able_to_request_to_go_live_with_no_organization(
@@ -1428,22 +1518,20 @@ def test_should_be_able_to_request_to_go_live_with_no_organization(
     mock_update_service,
     mock_get_invites_without_manage_permission,
 ):
-    for channel in {'email', 'sms'}:
+    for channel in {"email", "sms"}:
         mocker.patch(
-            'app.models.service.Service.volume_{}'.format(channel),
+            "app.models.service.Service.volume_{}".format(channel),
             create=True,
             new_callable=PropertyMock,
             return_value=1,
         )
     mock_post = mocker.patch(
-        'app.main.views.service_settings.zendesk_client.send_ticket_to_zendesk',
-        autospec=True
+        "app.main.views.service_settings.zendesk_client.send_ticket_to_zendesk",
+        autospec=True,
     )
 
     client_request.post(
-        'main.request_to_go_live',
-        service_id=SERVICE_ONE_ID,
-        _follow_redirects=True
+        "main.request_to_go_live", service_id=SERVICE_ONE_ID, _follow_redirects=True
     )
 
     assert mock_post.called is True
@@ -1451,17 +1539,17 @@ def test_should_be_able_to_request_to_go_live_with_no_organization(
 
 @pytest.mark.parametrize(
     (
-        'has_team_members,'
-        'has_templates,'
-        'has_email_templates,'
-        'has_sms_templates,'
-        'has_email_reply_to_address,'
-        'shouldnt_use_govuk_as_sms_sender,'
-        'sms_sender_is_govuk,'
-        'volume_email,'
-        'volume_sms,'
-        'expected_readyness,'
-        'agreement_signed,'
+        "has_team_members,"
+        "has_templates,"
+        "has_email_templates,"
+        "has_sms_templates,"
+        "has_email_reply_to_address,"
+        "shouldnt_use_govuk_as_sms_sender,"
+        "sms_sender_is_govuk,"
+        "volume_email,"
+        "volume_sms,"
+        "expected_readyness,"
+        "agreement_signed,"
     ),
     (
         (  # Just sending email
@@ -1472,8 +1560,9 @@ def test_should_be_able_to_request_to_go_live_with_no_organization(
             True,
             True,
             True,
-            1, 0,
-            'Yes',
+            1,
+            0,
+            "Yes",
             True,
         ),
         (  # Needs to set reply to address
@@ -1484,8 +1573,9 @@ def test_should_be_able_to_request_to_go_live_with_no_organization(
             False,
             True,
             True,
-            1, 0,
-            'No',
+            1,
+            0,
+            "No",
             True,
         ),
         (  # Just sending SMS
@@ -1496,8 +1586,9 @@ def test_should_be_able_to_request_to_go_live_with_no_organization(
             True,
             True,
             False,
-            0, 1,
-            'Yes',
+            0,
+            1,
+            "Yes",
             True,
         ),
         (  # Needs to change SMS sender
@@ -1508,8 +1599,9 @@ def test_should_be_able_to_request_to_go_live_with_no_organization(
             True,
             True,
             True,
-            0, 1,
-            'No',
+            0,
+            1,
+            "No",
             True,
         ),
         (  # Needs team members
@@ -1520,8 +1612,9 @@ def test_should_be_able_to_request_to_go_live_with_no_organization(
             True,
             True,
             False,
-            1, 0,
-            'No',
+            1,
+            0,
+            "No",
             True,
         ),
         (  # Needs templates
@@ -1532,8 +1625,9 @@ def test_should_be_able_to_request_to_go_live_with_no_organization(
             True,
             True,
             False,
-            0, 1,
-            'No',
+            0,
+            1,
+            "No",
             True,
         ),
         (  # Not done anything yet
@@ -1544,8 +1638,9 @@ def test_should_be_able_to_request_to_go_live_with_no_organization(
             False,
             False,
             True,
-            None, None,
-            'No',
+            None,
+            None,
+            "No",
             False,
         ),
     ),
@@ -1567,164 +1662,184 @@ def test_ready_to_go_live(
     agreement_signed,
 ):
     mocker.patch(
-        'app.organizations_client.get_organization',
-        return_value=organization_json(agreement_signed=agreement_signed)
+        "app.organizations_client.get_organization",
+        return_value=organization_json(agreement_signed=agreement_signed),
     )
 
     for prop in {
-        'has_team_members',
-        'has_templates',
-        'has_email_templates',
-        'has_sms_templates',
-        'has_email_reply_to_address',
-        'shouldnt_use_govuk_as_sms_sender',
-        'sms_sender_is_govuk',
+        "has_team_members",
+        "has_templates",
+        "has_email_templates",
+        "has_sms_templates",
+        "has_email_reply_to_address",
+        "shouldnt_use_govuk_as_sms_sender",
+        "sms_sender_is_govuk",
     }:
         mocker.patch(
-            'app.models.service.Service.{}'.format(prop),
-            new_callable=PropertyMock
+            "app.models.service.Service.{}".format(prop), new_callable=PropertyMock
         ).return_value = locals()[prop]
 
     for channel, volume in (
-        ('sms', volume_sms),
-        ('email', volume_email),
+        ("sms", volume_sms),
+        ("email", volume_email),
     ):
         mocker.patch(
-            'app.models.service.Service.volume_{}'.format(channel),
+            "app.models.service.Service.volume_{}".format(channel),
             create=True,
             new_callable=PropertyMock,
             return_value=volume,
         )
 
-    assert app.models.service.Service({
-        'id': SERVICE_ONE_ID
-    }).go_live_checklist_completed_as_yes_no == expected_readyness
+    assert (
+        app.models.service.Service(
+            {"id": SERVICE_ONE_ID}
+        ).go_live_checklist_completed_as_yes_no
+        == expected_readyness
+    )
 
 
-@pytest.mark.parametrize('route', [
-    'main.service_settings',
-    'main.service_name_change',
-    'main.request_to_go_live',
-    'main.submit_request_to_go_live',
-    'main.archive_service'
-])
+@pytest.mark.parametrize(
+    "route",
+    [
+        "main.service_settings",
+        "main.service_name_change",
+        "main.request_to_go_live",
+        "main.submit_request_to_go_live",
+        "main.archive_service",
+    ],
+)
 def test_route_permissions(
-        mocker,
-        notify_admin,
-        client_request,
-        api_user_active,
-        service_one,
-        single_reply_to_email_address,
-        mock_get_invites_for_service,
-        single_sms_sender,
-        route,
-        mock_get_service_settings_page_common,
-        mock_get_service_templates,
+    mocker,
+    notify_admin,
+    client_request,
+    api_user_active,
+    service_one,
+    single_reply_to_email_address,
+    mock_get_invites_for_service,
+    single_sms_sender,
+    route,
+    mock_get_service_settings_page_common,
+    mock_get_service_templates,
 ):
     validate_route_permission(
         mocker,
         notify_admin,
         "GET",
         200,
-        url_for(route, service_id=service_one['id']),
-        ['manage_service'],
+        url_for(route, service_id=service_one["id"]),
+        ["manage_service"],
         api_user_active,
         service_one,
-        session={'service_name_change': "New Service Name"}
+        session={"service_name_change": "New Service Name"},
     )
 
 
-@pytest.mark.parametrize('route', [
-    'main.service_settings',
-    'main.service_name_change',
-    'main.request_to_go_live',
-    'main.submit_request_to_go_live',
-    'main.service_switch_live',
-    'main.archive_service',
-])
+@pytest.mark.parametrize(
+    "route",
+    [
+        "main.service_settings",
+        "main.service_name_change",
+        "main.request_to_go_live",
+        "main.submit_request_to_go_live",
+        "main.service_switch_live",
+        "main.archive_service",
+    ],
+)
 def test_route_invalid_permissions(
-        mocker,
-        notify_admin,
-        client_request,
-        api_user_active,
-        service_one,
-        route,
-        mock_get_service_templates,
-        mock_get_invites_for_service,
+    mocker,
+    notify_admin,
+    client_request,
+    api_user_active,
+    service_one,
+    route,
+    mock_get_service_templates,
+    mock_get_invites_for_service,
 ):
     validate_route_permission(
         mocker,
         notify_admin,
         "GET",
         403,
-        url_for(route, service_id=service_one['id']),
-        ['blah'],
+        url_for(route, service_id=service_one["id"]),
+        ["blah"],
         api_user_active,
-        service_one)
-
-
-@pytest.mark.parametrize('route', [
-    'main.service_settings',
-    'main.service_name_change',
-    'main.request_to_go_live',
-    'main.submit_request_to_go_live',
-])
-def test_route_for_platform_admin(
-        mocker,
-        notify_admin,
-        client_request,
-        platform_admin_user,
         service_one,
-        single_reply_to_email_address,
-        single_sms_sender,
-        route,
-        mock_get_service_settings_page_common,
-        mock_get_service_templates,
-        mock_get_invites_for_service,
+    )
+
+
+@pytest.mark.parametrize(
+    "route",
+    [
+        "main.service_settings",
+        "main.service_name_change",
+        "main.request_to_go_live",
+        "main.submit_request_to_go_live",
+    ],
+)
+def test_route_for_platform_admin(
+    mocker,
+    notify_admin,
+    client_request,
+    platform_admin_user,
+    service_one,
+    single_reply_to_email_address,
+    single_sms_sender,
+    route,
+    mock_get_service_settings_page_common,
+    mock_get_service_templates,
+    mock_get_invites_for_service,
 ):
     validate_route_permission(
         mocker,
         notify_admin,
         "GET",
         200,
-        url_for(route, service_id=service_one['id']),
+        url_for(route, service_id=service_one["id"]),
         [],
         platform_admin_user,
         service_one,
-        session={'service_name_change': "New Service Name"}
+        session={"service_name_change": "New Service Name"},
     )
 
 
 @pytest.mark.skip(reason="Email currently deactivated")
 def test_and_more_hint_appears_on_settings_with_more_than_just_a_single_sender(
-        client_request,
-        service_one,
-        multiple_reply_to_email_addresses,
-        multiple_sms_senders,
-        mock_get_service_settings_page_common,
+    client_request,
+    service_one,
+    multiple_reply_to_email_addresses,
+    multiple_sms_senders,
+    mock_get_service_settings_page_common,
 ):
-    service_one['permissions'] = ['email', 'sms']
+    service_one["permissions"] = ["email", "sms"]
 
-    page = client_request.get(
-        'main.service_settings',
-        service_id=service_one['id']
-    )
+    page = client_request.get("main.service_settings", service_id=service_one["id"])
 
     def get_row(page, label):
         return normalize_spaces(
-            find_element_by_tag_and_partial_text(page, tag='tr', string=label).text
+            find_element_by_tag_and_partial_text(page, tag="tr", string=label).text
         )
 
-    assert get_row(page, 'Reply-to email addresses') == \
-        "Reply-to email addresses test@example.com …and 2 more Manage reply-to email addresses"
-    assert get_row(page, 'Text message senders') == \
-        "Text message senders Example …and 2 more Manage text message senders"
+    assert (
+        get_row(page, "Reply-to email addresses")
+        == "Reply-to email addresses test@example.com …and 2 more Manage reply-to email addresses"
+    )
+    assert (
+        get_row(page, "Text message senders")
+        == "Text message senders Example …and 2 more Manage text message senders"
+    )
 
 
-@pytest.mark.parametrize('sender_list_page, index, expected_output', [
-    ('main.service_email_reply_to', 0, 'test@example.com (default) Change test@example.com'),
-    ('main.service_sms_senders', 0, 'GOVUK (default) Change GOVUK')
-])
+@pytest.mark.parametrize(
+    "sender_list_page, index, expected_output",
+    [
+        (
+            "main.service_email_reply_to",
+            0,
+            "test@example.com (default) Change test@example.com",
+        ),
+        ("main.service_sms_senders", 0, "GOVUK (default) Change GOVUK"),
+    ],
+)
 def test_api_ids_dont_show_on_option_pages_with_a_single_sender(
     client_request,
     single_reply_to_email_address,
@@ -1734,11 +1849,8 @@ def test_api_ids_dont_show_on_option_pages_with_a_single_sender(
     index,
     expected_output,
 ):
-    rows = client_request.get(
-        sender_list_page,
-        service_id=SERVICE_ONE_ID
-    ).select(
-        '.user-list-item'
+    rows = client_request.get(sender_list_page, service_id=SERVICE_ONE_ID).select(
+        ".user-list-item"
     )
 
     assert normalize_spaces(rows[index].text) == expected_output
@@ -1746,32 +1858,29 @@ def test_api_ids_dont_show_on_option_pages_with_a_single_sender(
 
 
 @pytest.mark.parametrize(
-    (
-        'sender_list_page,'
-        'endpoint_to_mock,'
-        'sample_data,'
-        'expected_items,'
-    ),
-    [(
-        'main.service_email_reply_to',
-        'app.service_api_client.get_reply_to_email_addresses',
-        create_multiple_email_reply_to_addresses(),
-        [
-            'test@example.com (default) Change test@example.com ID: 1234',
-            'test2@example.com Change test2@example.com ID: 5678',
-            'test3@example.com Change test3@example.com ID: 9457',
-        ],
-    ), (
-        'main.service_sms_senders',
-        'app.service_api_client.get_sms_senders',
-        create_multiple_sms_senders(),
-        [
-            'Example (default and receives replies) Change Example ID: 1234',
-            'Example 2 Change Example 2 ID: 5678',
-            'Example 3 Change Example 3 ID: 9457',
-        ],
-    ),
-    ]
+    ("sender_list_page," "endpoint_to_mock," "sample_data," "expected_items,"),
+    [
+        (
+            "main.service_email_reply_to",
+            "app.service_api_client.get_reply_to_email_addresses",
+            create_multiple_email_reply_to_addresses(),
+            [
+                "test@example.com (default) Change test@example.com ID: 1234",
+                "test2@example.com Change test2@example.com ID: 5678",
+                "test3@example.com Change test3@example.com ID: 9457",
+            ],
+        ),
+        (
+            "main.service_sms_senders",
+            "app.service_api_client.get_sms_senders",
+            create_multiple_sms_senders(),
+            [
+                "Example (default and receives replies) Change Example ID: 1234",
+                "Example 2 Change Example 2 ID: 5678",
+                "Example 3 Change Example 3 ID: 9457",
+            ],
+        ),
+    ],
 )
 def test_default_option_shows_for_default_sender(
     client_request,
@@ -1783,77 +1892,75 @@ def test_default_option_shows_for_default_sender(
 ):
     mocker.patch(endpoint_to_mock, return_value=sample_data)
 
-    rows = client_request.get(
-        sender_list_page,
-        service_id=SERVICE_ONE_ID
-    ).select(
-        '.user-list-item'
+    rows = client_request.get(sender_list_page, service_id=SERVICE_ONE_ID).select(
+        ".user-list-item"
     )
 
     assert [normalize_spaces(row.text) for row in rows] == expected_items
 
 
-@pytest.mark.parametrize('sender_list_page, endpoint_to_mock, expected_output', [
-    (
-        'main.service_email_reply_to',
-        'app.service_api_client.get_reply_to_email_addresses',
-        'You have not added any reply-to email addresses yet'
-    ),
-    (
-        'main.service_sms_senders',
-        'app.service_api_client.get_sms_senders',
-        'You have not added any text message senders yet'
-    ),
-])
+@pytest.mark.parametrize(
+    "sender_list_page, endpoint_to_mock, expected_output",
+    [
+        (
+            "main.service_email_reply_to",
+            "app.service_api_client.get_reply_to_email_addresses",
+            "You have not added any reply-to email addresses yet",
+        ),
+        (
+            "main.service_sms_senders",
+            "app.service_api_client.get_sms_senders",
+            "You have not added any text message senders yet",
+        ),
+    ],
+)
 def test_no_senders_message_shows(
-    client_request,
-    sender_list_page,
-    endpoint_to_mock,
-    expected_output,
-    mocker
+    client_request, sender_list_page, endpoint_to_mock, expected_output, mocker
 ):
     mocker.patch(endpoint_to_mock, return_value=[])
 
-    rows = client_request.get(
-        sender_list_page,
-        service_id=SERVICE_ONE_ID
-    ).select(
-        '.user-list-item'
+    rows = client_request.get(sender_list_page, service_id=SERVICE_ONE_ID).select(
+        ".user-list-item"
     )
 
     assert normalize_spaces(rows[0].text) == expected_output
     assert len(rows) == 1
 
 
-@pytest.mark.parametrize('reply_to_input, expected_error', [
-    ('', 'Cannot be empty'),
-    ('testtest', 'Enter a valid email address'),
-])
+@pytest.mark.parametrize(
+    "reply_to_input, expected_error",
+    [
+        ("", "Cannot be empty"),
+        ("testtest", "Enter a valid email address"),
+    ],
+)
 def test_incorrect_reply_to_email_address_input(
-    reply_to_input,
-    expected_error,
-    client_request,
-    no_reply_to_email_addresses
+    reply_to_input, expected_error, client_request, no_reply_to_email_addresses
 ):
     page = client_request.post(
-        'main.service_add_email_reply_to',
+        "main.service_add_email_reply_to",
         service_id=SERVICE_ONE_ID,
-        _data={'email_address': reply_to_input},
-        _expected_status=200
+        _data={"email_address": reply_to_input},
+        _expected_status=200,
     )
 
-    assert expected_error in normalize_spaces(page.select_one('.usa-error-message').text)
+    assert expected_error in normalize_spaces(
+        page.select_one(".usa-error-message").text
+    )
 
 
-@pytest.mark.parametrize('sms_sender_input, expected_error', [
-    ('elevenchars', None),
-    ('11 chars', None),
-    ('', 'Cannot be empty'),
-    ('abcdefghijkhgkg', 'Enter 11 characters or fewer'),
-    (r' ¯\_(ツ)_/¯ ', 'Use letters and numbers only'),
-    ('blood.co.uk', None),
-    ('00123', "Cannot start with 00")
-])
+@pytest.mark.parametrize(
+    "sms_sender_input, expected_error",
+    [
+        ("elevenchars", None),
+        ("11 chars", None),
+        ("", "Cannot be empty"),
+        ("abcdefghijkhgkg", "Enter 11 characters or fewer"),
+        (r" ¯\_(ツ)_/¯ ", "Use letters and numbers only"),
+        ("blood.co.uk", None),
+        ("00123", "Cannot start with 00"),
+    ],
+)
 def test_incorrect_sms_sender_input(
     sms_sender_input,
     expected_error,
@@ -1862,13 +1969,13 @@ def test_incorrect_sms_sender_input(
     mock_add_sms_sender,
 ):
     page = client_request.post(
-        'main.service_add_sms_sender',
+        "main.service_add_sms_sender",
         service_id=SERVICE_ONE_ID,
-        _data={'sms_sender': sms_sender_input},
-        _expected_status=(200 if expected_error else 302)
+        _data={"sms_sender": sms_sender_input},
+        _expected_status=(200 if expected_error else 302),
     )
 
-    error_message = page.select_one('.usa-error-message')
+    error_message = page.select_one(".usa-error-message")
     count_of_api_calls = len(mock_add_sms_sender.call_args_list)
 
     if not expected_error:
@@ -1887,84 +1994,93 @@ def test_incorrect_sms_sender_input_with_multiple_errors_only_shows_the_first(
     # There are two errors with the SMS sender - the length and characters used. Only one
     # should be displayed on the page.
     page = client_request.post(
-        'main.service_add_sms_sender',
+        "main.service_add_sms_sender",
         service_id=SERVICE_ONE_ID,
-        _data={'sms_sender': '{}'},
-        _expected_status=200
+        _data={"sms_sender": "{}"},
+        _expected_status=200,
     )
 
-    error_message = page.select_one('.usa-error-message')
+    error_message = page.select_one(".usa-error-message")
     count_of_api_calls = len(mock_add_sms_sender.call_args_list)
 
-    assert normalize_spaces(error_message.text) == 'Error: Enter 3 characters or more'
+    assert normalize_spaces(error_message.text) == "Error: Enter 3 characters or more"
     assert count_of_api_calls == 0
 
 
-@pytest.mark.parametrize('reply_to_addresses, data, api_default_args', [
-    ([], {}, True),
-    (create_multiple_email_reply_to_addresses(), {}, False),
-    (create_multiple_email_reply_to_addresses(), {"is_default": "y"}, True)
-])
+@pytest.mark.parametrize(
+    "reply_to_addresses, data, api_default_args",
+    [
+        ([], {}, True),
+        (create_multiple_email_reply_to_addresses(), {}, False),
+        (create_multiple_email_reply_to_addresses(), {"is_default": "y"}, True),
+    ],
+)
 def test_add_reply_to_email_address_sends_test_notification(
     mocker, client_request, reply_to_addresses, data, api_default_args
 ):
-    mocker.patch('app.service_api_client.get_reply_to_email_addresses', return_value=reply_to_addresses)
-    data['email_address'] = "test@example.com"
+    mocker.patch(
+        "app.service_api_client.get_reply_to_email_addresses",
+        return_value=reply_to_addresses,
+    )
+    data["email_address"] = "test@example.com"
     mock_verify = mocker.patch(
-        'app.service_api_client.verify_reply_to_email_address', return_value={"data": {"id": "123"}}
+        "app.service_api_client.verify_reply_to_email_address",
+        return_value={"data": {"id": "123"}},
     )
     client_request.post(
-        'main.service_add_email_reply_to',
+        "main.service_add_email_reply_to",
         service_id=SERVICE_ONE_ID,
         _data=data,
         _expected_status=302,
         _expected_redirect=url_for(
-            'main.service_verify_reply_to_address',
+            "main.service_verify_reply_to_address",
             service_id=SERVICE_ONE_ID,
             notification_id="123",
-        ) + "?is_default={}".format(api_default_args)
+        )
+        + "?is_default={}".format(api_default_args),
     )
     mock_verify.assert_called_once_with(SERVICE_ONE_ID, "test@example.com")
 
 
 def test_service_add_reply_to_email_address_without_verification_for_platform_admin(
-    mocker,
-    client_request,
-    platform_admin_user
+    mocker, client_request, platform_admin_user
 ):
     client_request.login(platform_admin_user)
 
-    mock_update = mocker.patch(
-        'app.service_api_client.add_reply_to_email_address'
-    )
+    mock_update = mocker.patch("app.service_api_client.add_reply_to_email_address")
     mocker.patch(
-        'app.service_api_client.get_reply_to_email_addresses',
-        return_value=[create_reply_to_email_address(is_default=True)]
+        "app.service_api_client.get_reply_to_email_addresses",
+        return_value=[create_reply_to_email_address(is_default=True)],
     )
     data = {"is_default": "y", "email_address": "test@example.gsa.gov"}
 
     client_request.post(
-        'main.service_add_email_reply_to',
+        "main.service_add_email_reply_to",
         service_id=SERVICE_ONE_ID,
         _data=data,
         _expected_status=302,
         _expected_redirect=url_for(
-            'main.service_email_reply_to',
+            "main.service_email_reply_to",
             service_id=SERVICE_ONE_ID,
-        )
+        ),
     )
     mock_update.assert_called_once_with(
-        SERVICE_ONE_ID,
-        email_address='test@example.gsa.gov',
-        is_default=True)
+        SERVICE_ONE_ID, email_address="test@example.gsa.gov", is_default=True
+    )
 
 
-@pytest.mark.parametrize("is_default,replace,expected_header", [(True, "&replace=123", "Change"), (False, "", "Add")])
-@pytest.mark.parametrize("status,expected_failure,expected_success", [
-    ("delivered", 0, 1),
-    ("sending", 0, 0),
-    ("permanent-failure", 1, 0),
-])
+@pytest.mark.parametrize(
+    "is_default,replace,expected_header",
+    [(True, "&replace=123", "Change"), (False, "", "Add")],
+)
+@pytest.mark.parametrize(
+    "status,expected_failure,expected_success",
+    [
+        ("delivered", 0, 1),
+        ("sending", 0, 0),
+        ("permanent-failure", 1, 0),
+    ],
+)
 @freeze_time("2018-06-01 11:11:00.061258")
 def test_service_verify_reply_to_address(
     mocker,
@@ -1976,7 +2092,7 @@ def test_service_verify_reply_to_address(
     expected_success,
     is_default,
     replace,
-    expected_header
+    expected_header,
 ):
     notification = {
         "id": fake_uuid,
@@ -1985,33 +2101,42 @@ def test_service_verify_reply_to_address(
         "service_id": SERVICE_ONE_ID,
         "template_id": TEMPLATE_ONE_ID,
         "notification_type": "email",
-        "created_at": '2018-06-01T11:10:52.499230+00:00'
+        "created_at": "2018-06-01T11:10:52.499230+00:00",
     }
-    mocker.patch('app.notification_api_client.get_notification', return_value=notification)
-    mock_add_reply_to_email_address = mocker.patch('app.service_api_client.add_reply_to_email_address')
-    mock_update_reply_to_email_address = mocker.patch('app.service_api_client.update_reply_to_email_address')
     mocker.patch(
-        'app.service_api_client.get_reply_to_email_addresses', return_value=[]
+        "app.notification_api_client.get_notification", return_value=notification
     )
+    mock_add_reply_to_email_address = mocker.patch(
+        "app.service_api_client.add_reply_to_email_address"
+    )
+    mock_update_reply_to_email_address = mocker.patch(
+        "app.service_api_client.update_reply_to_email_address"
+    )
+    mocker.patch("app.service_api_client.get_reply_to_email_addresses", return_value=[])
     page = client_request.get(
-        'main.service_verify_reply_to_address',
+        "main.service_verify_reply_to_address",
         service_id=SERVICE_ONE_ID,
         notification_id=notification["id"],
-        _optional_args="?is_default={}{}".format(is_default, replace)
+        _optional_args="?is_default={}{}".format(is_default, replace),
     )
-    assert page.find('h1').text == '{} email reply-to address'.format(expected_header)
+    assert page.find("h1").text == "{} email reply-to address".format(expected_header)
     if replace:
-        assert "/email-reply-to/123/edit" in page.find('a', text="Back").attrs["href"]
+        assert "/email-reply-to/123/edit" in page.find("a", text="Back").attrs["href"]
     else:
-        assert "/email-reply-to/add" in page.find('a', text="Back").attrs["href"]
+        assert "/email-reply-to/add" in page.find("a", text="Back").attrs["href"]
 
-    assert len(page.find_all('div', class_='banner-dangerous')) == expected_failure
-    assert len(page.find_all('div', class_='banner-default-with-tick')) == expected_success
+    assert len(page.find_all("div", class_="banner-dangerous")) == expected_failure
+    assert (
+        len(page.find_all("div", class_="banner-default-with-tick")) == expected_success
+    )
 
     if status == "delivered":
         if replace:
             mock_update_reply_to_email_address.assert_called_once_with(
-                SERVICE_ONE_ID, "123", email_address=notification["to"], is_default=is_default
+                SERVICE_ONE_ID,
+                "123",
+                email_address=notification["to"],
+                is_default=is_default,
             )
             assert mock_add_reply_to_email_address.called is False
         else:
@@ -2022,11 +2147,13 @@ def test_service_verify_reply_to_address(
     else:
         assert mock_add_reply_to_email_address.called is False
     if status == "permanent-failure":
-        assert page.find('input', type='email').attrs["value"] == notification["to"]
+        assert page.find("input", type="email").attrs["value"] == notification["to"]
 
 
 @freeze_time("2018-06-01 11:11:00.061258")
-def test_add_reply_to_email_address_fails_if_notification_not_delivered_in_45_sec(mocker, client_request, fake_uuid):
+def test_add_reply_to_email_address_fails_if_notification_not_delivered_in_45_sec(
+    mocker, client_request, fake_uuid
+):
     notification = {
         "id": fake_uuid,
         "status": "sending",
@@ -2034,78 +2161,81 @@ def test_add_reply_to_email_address_fails_if_notification_not_delivered_in_45_se
         "service_id": SERVICE_ONE_ID,
         "template_id": TEMPLATE_ONE_ID,
         "notification_type": "email",
-        "created_at": '2018-06-01T11:10:12.499230+00:00'
+        "created_at": "2018-06-01T11:10:12.499230+00:00",
     }
+    mocker.patch("app.service_api_client.get_reply_to_email_addresses", return_value=[])
     mocker.patch(
-        'app.service_api_client.get_reply_to_email_addresses', return_value=[]
+        "app.notification_api_client.get_notification", return_value=notification
     )
-    mocker.patch('app.notification_api_client.get_notification', return_value=notification)
-    mock_add_reply_to_email_address = mocker.patch('app.service_api_client.add_reply_to_email_address')
+    mock_add_reply_to_email_address = mocker.patch(
+        "app.service_api_client.add_reply_to_email_address"
+    )
     page = client_request.get(
-        'main.service_verify_reply_to_address',
+        "main.service_verify_reply_to_address",
         service_id=SERVICE_ONE_ID,
         notification_id=notification["id"],
-        _optional_args="?is_default={}".format(False)
+        _optional_args="?is_default={}".format(False),
     )
-    expected_banner = page.find_all('div', class_='banner-dangerous')[0]
-    assert 'There’s a problem with your reply-to address' in expected_banner.text.strip()
+    expected_banner = page.find_all("div", class_="banner-dangerous")[0]
+    assert (
+        "There’s a problem with your reply-to address" in expected_banner.text.strip()
+    )
     assert mock_add_reply_to_email_address.called is False
 
 
-@pytest.mark.parametrize('sms_senders, data, api_default_args', [
-    ([], {}, True),
-    (create_multiple_sms_senders(), {}, False),
-    (create_multiple_sms_senders(), {"is_default": "y"}, True)
-])
+@pytest.mark.parametrize(
+    "sms_senders, data, api_default_args",
+    [
+        ([], {}, True),
+        (create_multiple_sms_senders(), {}, False),
+        (create_multiple_sms_senders(), {"is_default": "y"}, True),
+    ],
+)
 def test_add_sms_sender(
-    sms_senders,
-    data,
-    api_default_args,
-    mocker,
-    client_request,
-    mock_add_sms_sender
+    sms_senders, data, api_default_args, mocker, client_request, mock_add_sms_sender
 ):
-    mocker.patch('app.service_api_client.get_sms_senders', return_value=sms_senders)
-    data['sms_sender'] = "Example"
+    mocker.patch("app.service_api_client.get_sms_senders", return_value=sms_senders)
+    data["sms_sender"] = "Example"
     client_request.post(
-        'main.service_add_sms_sender',
-        service_id=SERVICE_ONE_ID,
-        _data=data
+        "main.service_add_sms_sender", service_id=SERVICE_ONE_ID, _data=data
     )
 
     mock_add_sms_sender.assert_called_once_with(
-        SERVICE_ONE_ID,
-        sms_sender="Example",
-        is_default=api_default_args
+        SERVICE_ONE_ID, sms_sender="Example", is_default=api_default_args
     )
 
 
-@pytest.mark.parametrize('reply_to_addresses, checkbox_present', [
-    ([], False),
-    (create_multiple_email_reply_to_addresses(), True),
-])
+@pytest.mark.parametrize(
+    "reply_to_addresses, checkbox_present",
+    [
+        ([], False),
+        (create_multiple_email_reply_to_addresses(), True),
+    ],
+)
 def test_default_box_doesnt_show_on_first_email_sender(
-    reply_to_addresses,
-    mocker,
-    checkbox_present,
-    client_request
+    reply_to_addresses, mocker, checkbox_present, client_request
 ):
-    mocker.patch('app.service_api_client.get_reply_to_email_addresses', return_value=reply_to_addresses)
+    mocker.patch(
+        "app.service_api_client.get_reply_to_email_addresses",
+        return_value=reply_to_addresses,
+    )
 
     page = client_request.get(
-        'main.service_add_email_reply_to',
-        service_id=SERVICE_ONE_ID
+        "main.service_add_email_reply_to", service_id=SERVICE_ONE_ID
     )
 
-    assert bool(page.select_one('[name=is_default]')) == checkbox_present
+    assert bool(page.select_one("[name=is_default]")) == checkbox_present
 
 
-@pytest.mark.parametrize('reply_to_address, data, api_default_args', [
-    (create_reply_to_email_address(is_default=True), {"is_default": "y"}, True),
-    (create_reply_to_email_address(is_default=True), {}, True),
-    (create_reply_to_email_address(is_default=False), {}, False),
-    (create_reply_to_email_address(is_default=False), {"is_default": "y"}, True)
-])
+@pytest.mark.parametrize(
+    "reply_to_address, data, api_default_args",
+    [
+        (create_reply_to_email_address(is_default=True), {"is_default": "y"}, True),
+        (create_reply_to_email_address(is_default=True), {}, True),
+        (create_reply_to_email_address(is_default=False), {}, False),
+        (create_reply_to_email_address(is_default=False), {"is_default": "y"}, True),
+    ],
+)
 def test_edit_reply_to_email_address_sends_verification_notification_if_address_is_changed(
     reply_to_address,
     data,
@@ -2115,60 +2245,63 @@ def test_edit_reply_to_email_address_sends_verification_notification_if_address_
     client_request,
 ):
     mock_verify = mocker.patch(
-        'app.service_api_client.verify_reply_to_email_address', return_value={"data": {"id": "123"}}
+        "app.service_api_client.verify_reply_to_email_address",
+        return_value={"data": {"id": "123"}},
     )
-    mocker.patch('app.service_api_client.get_reply_to_email_address', return_value=reply_to_address)
-    data['email_address'] = "test@example.gsa.gov"
+    mocker.patch(
+        "app.service_api_client.get_reply_to_email_address",
+        return_value=reply_to_address,
+    )
+    data["email_address"] = "test@example.gsa.gov"
     client_request.post(
-        'main.service_edit_email_reply_to',
+        "main.service_edit_email_reply_to",
         service_id=SERVICE_ONE_ID,
         reply_to_email_id=fake_uuid,
-        _data=data
+        _data=data,
     )
     mock_verify.assert_called_once_with(SERVICE_ONE_ID, "test@example.gsa.gov")
 
 
 def test_service_edit_email_reply_to_updates_email_address_without_verification_for_platform_admin(
-    mocker,
-    fake_uuid,
-    client_request,
-    platform_admin_user
+    mocker, fake_uuid, client_request, platform_admin_user
 ):
     client_request.login(platform_admin_user)
 
-    mock_update = mocker.patch(
-        'app.service_api_client.update_reply_to_email_address'
-    )
+    mock_update = mocker.patch("app.service_api_client.update_reply_to_email_address")
     mocker.patch(
-        'app.service_api_client.get_reply_to_email_address',
-        return_value=create_reply_to_email_address(is_default=True)
+        "app.service_api_client.get_reply_to_email_address",
+        return_value=create_reply_to_email_address(is_default=True),
     )
     data = {"is_default": "y", "email_address": "test@example.gsa.gov"}
 
     client_request.post(
-        'main.service_edit_email_reply_to',
+        "main.service_edit_email_reply_to",
         service_id=SERVICE_ONE_ID,
         reply_to_email_id=fake_uuid,
         _data=data,
         _expected_status=302,
         _expected_redirect=url_for(
-            'main.service_email_reply_to',
+            "main.service_email_reply_to",
             service_id=SERVICE_ONE_ID,
-        )
+        ),
     )
     mock_update.assert_called_once_with(
         SERVICE_ONE_ID,
         reply_to_email_id=fake_uuid,
-        email_address='test@example.gsa.gov',
-        is_default=True)
+        email_address="test@example.gsa.gov",
+        is_default=True,
+    )
 
 
-@pytest.mark.parametrize('reply_to_address, data, api_default_args', [
-    (create_reply_to_email_address(), {"is_default": "y"}, True),
-    (create_reply_to_email_address(), {}, True),
-    (create_reply_to_email_address(is_default=False), {}, False),
-    (create_reply_to_email_address(is_default=False), {"is_default": "y"}, True)
-])
+@pytest.mark.parametrize(
+    "reply_to_address, data, api_default_args",
+    [
+        (create_reply_to_email_address(), {"is_default": "y"}, True),
+        (create_reply_to_email_address(), {}, True),
+        (create_reply_to_email_address(is_default=False), {}, False),
+        (create_reply_to_email_address(is_default=False), {"is_default": "y"}, True),
+    ],
+)
 def test_edit_reply_to_email_address_goes_straight_to_update_if_address_not_changed(
     reply_to_address,
     data,
@@ -2176,79 +2309,91 @@ def test_edit_reply_to_email_address_goes_straight_to_update_if_address_not_chan
     mocker,
     fake_uuid,
     client_request,
-    mock_update_reply_to_email_address
+    mock_update_reply_to_email_address,
 ):
-    mocker.patch('app.service_api_client.get_reply_to_email_address', return_value=reply_to_address)
-    mock_verify = mocker.patch('app.service_api_client.verify_reply_to_email_address')
-    data['email_address'] = "test@example.com"
+    mocker.patch(
+        "app.service_api_client.get_reply_to_email_address",
+        return_value=reply_to_address,
+    )
+    mock_verify = mocker.patch("app.service_api_client.verify_reply_to_email_address")
+    data["email_address"] = "test@example.com"
     client_request.post(
-        'main.service_edit_email_reply_to',
+        "main.service_edit_email_reply_to",
         service_id=SERVICE_ONE_ID,
         reply_to_email_id=fake_uuid,
-        _data=data
+        _data=data,
     )
 
     mock_update_reply_to_email_address.assert_called_once_with(
         SERVICE_ONE_ID,
         reply_to_email_id=fake_uuid,
         email_address="test@example.com",
-        is_default=api_default_args
+        is_default=api_default_args,
     )
     assert mock_verify.called is False
 
 
-@pytest.mark.parametrize('url', [
-    'main.service_edit_email_reply_to',
-    'main.service_add_email_reply_to',
-])
+@pytest.mark.parametrize(
+    "url",
+    [
+        "main.service_edit_email_reply_to",
+        "main.service_add_email_reply_to",
+    ],
+)
 def test_add_edit_reply_to_email_address_goes_straight_to_update_if_address_not_changed(
-    mocker,
-    fake_uuid,
-    client_request,
-    mock_update_reply_to_email_address,
-    url
+    mocker, fake_uuid, client_request, mock_update_reply_to_email_address, url
 ):
     reply_to_email_address = create_reply_to_email_address()
-    mocker.patch('app.service_api_client.get_reply_to_email_addresses', return_value=[reply_to_email_address])
-    mocker.patch('app.service_api_client.get_reply_to_email_address', return_value=reply_to_email_address)
-    error_message = 'Your service already uses ‘reply_to@example.com’ as an email reply-to address.'
     mocker.patch(
-        'app.service_api_client.verify_reply_to_email_address', side_effect=[HTTPError(
-            response=Mock(
-                status_code=409,
-                json={
-                    'result': 'error',
-                    'message': error_message
-                }
-            ),
-            message=error_message
-        )]
+        "app.service_api_client.get_reply_to_email_addresses",
+        return_value=[reply_to_email_address],
     )
-    data = {"is_default": "y", 'email_address': "reply_to@example.com"}
+    mocker.patch(
+        "app.service_api_client.get_reply_to_email_address",
+        return_value=reply_to_email_address,
+    )
+    error_message = (
+        "Your service already uses ‘reply_to@example.com’ as an email reply-to address."
+    )
+    mocker.patch(
+        "app.service_api_client.verify_reply_to_email_address",
+        side_effect=[
+            HTTPError(
+                response=Mock(
+                    status_code=409, json={"result": "error", "message": error_message}
+                ),
+                message=error_message,
+            )
+        ],
+    )
+    data = {"is_default": "y", "email_address": "reply_to@example.com"}
     page = client_request.post(
         url,
         service_id=SERVICE_ONE_ID,
         reply_to_email_id=fake_uuid,
         _data=data,
-        _follow_redirects=True
+        _follow_redirects=True,
     )
 
-    assert page.find('h1').text == "Reply-to email addresses"
-    assert error_message in page.find('div', class_='banner-dangerous').text
+    assert page.find("h1").text == "Reply-to email addresses"
+    assert error_message in page.find("div", class_="banner-dangerous").text
 
     assert mock_update_reply_to_email_address.called is False
 
 
-@pytest.mark.parametrize('reply_to_address, default_choice_and_delete_link_expected', [
-    (
-        create_reply_to_email_address(is_default=False),
-        True,
-    ),
-    (
-        create_reply_to_email_address(is_default=True),
-        False,
-    ),
-])
+@pytest.mark.parametrize(
+    "reply_to_address, default_choice_and_delete_link_expected",
+    [
+        (
+            create_reply_to_email_address(is_default=False),
+            True,
+        ),
+        (
+            create_reply_to_email_address(is_default=True),
+            False,
+        ),
+    ],
+)
 def test_shows_delete_link_for_get_request_for_edit_email_reply_to_address(
     mocker,
     reply_to_address,
@@ -2256,51 +2401,49 @@ def test_shows_delete_link_for_get_request_for_edit_email_reply_to_address(
     fake_uuid,
     client_request,
 ):
-    mocker.patch('app.service_api_client.get_reply_to_email_address', return_value=reply_to_address)
+    mocker.patch(
+        "app.service_api_client.get_reply_to_email_address",
+        return_value=reply_to_address,
+    )
 
     page = client_request.get(
-        'main.service_edit_email_reply_to',
+        "main.service_edit_email_reply_to",
         service_id=SERVICE_ONE_ID,
         reply_to_email_id=sample_uuid(),
     )
 
-    assert page.select_one('.usa-back-link').text.strip() == 'Back'
-    assert page.select_one('.usa-back-link')['href'] == url_for(
-        '.service_email_reply_to',
+    assert page.select_one(".usa-back-link").text.strip() == "Back"
+    assert page.select_one(".usa-back-link")["href"] == url_for(
+        ".service_email_reply_to",
         service_id=SERVICE_ONE_ID,
     )
 
     if default_choice_and_delete_link_expected:
-        link = page.select_one('.page-footer a')
-        assert normalize_spaces(link.text) == 'Delete'
-        assert link['href'] == url_for(
-            'main.service_confirm_delete_email_reply_to',
+        link = page.select_one(".page-footer a")
+        assert normalize_spaces(link.text) == "Delete"
+        assert link["href"] == url_for(
+            "main.service_confirm_delete_email_reply_to",
             service_id=SERVICE_ONE_ID,
-            reply_to_email_id=sample_uuid()
+            reply_to_email_id=sample_uuid(),
         )
-        assert not page.select_one('input#is_default').has_attr('checked')
+        assert not page.select_one("input#is_default").has_attr("checked")
 
     else:
-        assert not page.select('.page-footer a')
+        assert not page.select(".page-footer a")
 
 
-@pytest.mark.parametrize('reply_to_address, default_choice_and_delete_link_expected, default_checkbox_checked', [
-    (
-        create_reply_to_email_address(is_default=False),
-        True,
-        False
-    ),
-    (
-        create_reply_to_email_address(is_default=False),
-        True,
-        True
-    ),
-    (
-        create_reply_to_email_address(is_default=True),
-        False,
-        False  # not expecting a checkbox to even be shown to be ticked
-    ),
-])
+@pytest.mark.parametrize(
+    "reply_to_address, default_choice_and_delete_link_expected, default_checkbox_checked",
+    [
+        (create_reply_to_email_address(is_default=False), True, False),
+        (create_reply_to_email_address(is_default=False), True, True),
+        (
+            create_reply_to_email_address(is_default=True),
+            False,
+            False,  # not expecting a checkbox to even be shown to be ticked
+        ),
+    ],
+)
 def test_shows_delete_link_for_error_on_post_request_for_edit_email_reply_to_address(
     mocker,
     reply_to_address,
@@ -2309,60 +2452,68 @@ def test_shows_delete_link_for_error_on_post_request_for_edit_email_reply_to_add
     fake_uuid,
     client_request,
 ):
-    mocker.patch('app.service_api_client.get_reply_to_email_address', return_value=reply_to_address)
+    mocker.patch(
+        "app.service_api_client.get_reply_to_email_address",
+        return_value=reply_to_address,
+    )
 
-    data = {'email_address': "not a valid email address"}
+    data = {"email_address": "not a valid email address"}
     if default_checkbox_checked:
         data["is_default"] = "y"
 
     page = client_request.post(
-        'main.service_edit_email_reply_to',
+        "main.service_edit_email_reply_to",
         service_id=SERVICE_ONE_ID,
         reply_to_email_id=sample_uuid(),
         _data=data,
-        _expected_status=200
+        _expected_status=200,
     )
 
-    assert page.select_one('.usa-back-link').text.strip() == 'Back'
-    assert page.select_one('.usa-back-link')['href'] == url_for(
-        '.service_email_reply_to',
+    assert page.select_one(".usa-back-link").text.strip() == "Back"
+    assert page.select_one(".usa-back-link")["href"] == url_for(
+        ".service_email_reply_to",
         service_id=SERVICE_ONE_ID,
     )
-    assert page.select_one('.usa-error-message').text.strip() == 'Error: Enter a valid email address'
-    assert page.select_one('input#email_address').get('value') == 'not a valid email address'
+    assert (
+        page.select_one(".usa-error-message").text.strip()
+        == "Error: Enter a valid email address"
+    )
+    assert (
+        page.select_one("input#email_address").get("value")
+        == "not a valid email address"
+    )
 
     if default_choice_and_delete_link_expected:
-        link = page.select_one('.page-footer a')
+        link = page.select_one(".page-footer a")
         assert normalize_spaces(link.text) == "Delete"
-        assert link['href'] == url_for(
-            'main.service_confirm_delete_email_reply_to',
+        assert link["href"] == url_for(
+            "main.service_confirm_delete_email_reply_to",
             service_id=SERVICE_ONE_ID,
-            reply_to_email_id=sample_uuid()
+            reply_to_email_id=sample_uuid(),
         )
-        assert page.select_one('input#is_default').has_attr('checked') == default_checkbox_checked
+        assert (
+            page.select_one("input#is_default").has_attr("checked")
+            == default_checkbox_checked
+        )
     else:
-        assert not page.select('.page-footer a')
+        assert not page.select(".page-footer a")
 
 
 def test_confirm_delete_reply_to_email_address(
-    fake_uuid,
-    client_request,
-    get_non_default_reply_to_email_address
+    fake_uuid, client_request, get_non_default_reply_to_email_address
 ):
-
     page = client_request.get(
-        'main.service_confirm_delete_email_reply_to',
+        "main.service_confirm_delete_email_reply_to",
         service_id=SERVICE_ONE_ID,
         reply_to_email_id=fake_uuid,
         _test_page_title=False,
     )
 
-    assert normalize_spaces(page.select_one('.banner-dangerous').text) == (
-        'Are you sure you want to delete this reply-to email address? '
-        'Yes, delete'
+    assert normalize_spaces(page.select_one(".banner-dangerous").text) == (
+        "Are you sure you want to delete this reply-to email address? " "Yes, delete"
     )
-    assert 'action' not in page.select_one('.banner-dangerous form')
-    assert page.select_one('.banner-dangerous form')['method'] == 'post'
+    assert "action" not in page.select_one(".banner-dangerous form")
+    assert page.select_one(".banner-dangerous form")["method"] == "post"
 
 
 def test_delete_reply_to_email_address(
@@ -2372,25 +2523,34 @@ def test_delete_reply_to_email_address(
     get_non_default_reply_to_email_address,
     mocker,
 ):
-    mock_delete = mocker.patch('app.service_api_client.delete_reply_to_email_address')
+    mock_delete = mocker.patch("app.service_api_client.delete_reply_to_email_address")
     client_request.post(
-        '.service_delete_email_reply_to',
+        ".service_delete_email_reply_to",
         service_id=SERVICE_ONE_ID,
         reply_to_email_id=fake_uuid,
         _expected_redirect=url_for(
-            'main.service_email_reply_to',
+            "main.service_email_reply_to",
             service_id=SERVICE_ONE_ID,
-        )
+        ),
     )
-    mock_delete.assert_called_once_with(service_id=SERVICE_ONE_ID, reply_to_email_id=fake_uuid)
+    mock_delete.assert_called_once_with(
+        service_id=SERVICE_ONE_ID, reply_to_email_id=fake_uuid
+    )
 
 
-@pytest.mark.parametrize('sms_sender, data, api_default_args', [
-    (create_sms_sender(), {"is_default": "y", "sms_sender": "test"}, True),
-    (create_sms_sender(), {"sms_sender": "test"}, True),
-    (create_sms_sender(is_default=False), {"sms_sender": "test"}, False),
-    (create_sms_sender(is_default=False), {"is_default": "y", "sms_sender": "test"}, True)
-])
+@pytest.mark.parametrize(
+    "sms_sender, data, api_default_args",
+    [
+        (create_sms_sender(), {"is_default": "y", "sms_sender": "test"}, True),
+        (create_sms_sender(), {"sms_sender": "test"}, True),
+        (create_sms_sender(is_default=False), {"sms_sender": "test"}, False),
+        (
+            create_sms_sender(is_default=False),
+            {"is_default": "y", "sms_sender": "test"},
+            True,
+        ),
+    ],
+)
 def test_edit_sms_sender(
     sms_sender,
     data,
@@ -2398,59 +2558,62 @@ def test_edit_sms_sender(
     mocker,
     fake_uuid,
     client_request,
-    mock_update_sms_sender
+    mock_update_sms_sender,
 ):
-    mocker.patch('app.service_api_client.get_sms_sender', return_value=sms_sender)
+    mocker.patch("app.service_api_client.get_sms_sender", return_value=sms_sender)
 
     client_request.post(
-        'main.service_edit_sms_sender',
+        "main.service_edit_sms_sender",
         service_id=SERVICE_ONE_ID,
         sms_sender_id=fake_uuid,
-        _data=data
+        _data=data,
     )
 
     mock_update_sms_sender.assert_called_once_with(
         SERVICE_ONE_ID,
         sms_sender_id=fake_uuid,
         sms_sender="test",
-        is_default=api_default_args
+        is_default=api_default_args,
     )
 
 
-@pytest.mark.parametrize('sender_page, endpoint_to_mock, sender_details, default_message, params, checkbox_present', [
-    (
-        'main.service_edit_email_reply_to',
-        'app.service_api_client.get_reply_to_email_address',
-        create_reply_to_email_address(is_default=True),
-        'This is the default reply-to address for service one emails',
-        'reply_to_email_id',
-        False
-    ),
-    (
-        'main.service_edit_email_reply_to',
-        'app.service_api_client.get_reply_to_email_address',
-        create_reply_to_email_address(is_default=False),
-        'This is the default reply-to address for service one emails',
-        'reply_to_email_id',
-        True
-    ),
-    (
-        'main.service_edit_sms_sender',
-        'app.service_api_client.get_sms_sender',
-        create_sms_sender(is_default=True),
-        'This is the default text message sender.',
-        'sms_sender_id',
-        False
-    ),
-    (
-        'main.service_edit_sms_sender',
-        'app.service_api_client.get_sms_sender',
-        create_sms_sender(is_default=False),
-        'This is the default text message sender.',
-        'sms_sender_id',
-        True
-    )
-])
+@pytest.mark.parametrize(
+    "sender_page, endpoint_to_mock, sender_details, default_message, params, checkbox_present",
+    [
+        (
+            "main.service_edit_email_reply_to",
+            "app.service_api_client.get_reply_to_email_address",
+            create_reply_to_email_address(is_default=True),
+            "This is the default reply-to address for service one emails",
+            "reply_to_email_id",
+            False,
+        ),
+        (
+            "main.service_edit_email_reply_to",
+            "app.service_api_client.get_reply_to_email_address",
+            create_reply_to_email_address(is_default=False),
+            "This is the default reply-to address for service one emails",
+            "reply_to_email_id",
+            True,
+        ),
+        (
+            "main.service_edit_sms_sender",
+            "app.service_api_client.get_sms_sender",
+            create_sms_sender(is_default=True),
+            "This is the default text message sender.",
+            "sms_sender_id",
+            False,
+        ),
+        (
+            "main.service_edit_sms_sender",
+            "app.service_api_client.get_sms_sender",
+            create_sms_sender(is_default=False),
+            "This is the default text message sender.",
+            "sms_sender_id",
+            True,
+        ),
+    ],
+)
 def test_default_box_shows_on_non_default_sender_details_while_editing(
     fake_uuid,
     mocker,
@@ -2460,40 +2623,40 @@ def test_default_box_shows_on_non_default_sender_details_while_editing(
     client_request,
     default_message,
     checkbox_present,
-    params
+    params,
 ):
-    page_arguments = {
-        'service_id': SERVICE_ONE_ID
-    }
+    page_arguments = {"service_id": SERVICE_ONE_ID}
     page_arguments[params] = fake_uuid
 
     mocker.patch(endpoint_to_mock, return_value=sender_details)
 
-    page = client_request.get(
-        sender_page,
-        **page_arguments
-    )
+    page = client_request.get(sender_page, **page_arguments)
 
     if checkbox_present:
-        assert page.select_one('[name=is_default]')
+        assert page.select_one("[name=is_default]")
     else:
-        assert normalize_spaces(page.select_one('form p').text) == (
-            default_message
-        )
+        assert normalize_spaces(page.select_one("form p").text) == (default_message)
 
 
-@pytest.mark.parametrize('sms_sender, expected_link_text, partial_href', [
-    (
-        create_sms_sender(is_default=False),
-        'Delete',
-        partial(url_for, 'main.service_confirm_delete_sms_sender', sms_sender_id=sample_uuid()),
-    ),
-    (
-        create_sms_sender(is_default=True),
-        None,
-        None,
-    ),
-])
+@pytest.mark.parametrize(
+    "sms_sender, expected_link_text, partial_href",
+    [
+        (
+            create_sms_sender(is_default=False),
+            "Delete",
+            partial(
+                url_for,
+                "main.service_confirm_delete_sms_sender",
+                sms_sender_id=sample_uuid(),
+            ),
+        ),
+        (
+            create_sms_sender(is_default=True),
+            None,
+            None,
+        ),
+    ],
+)
 def test_shows_delete_link_for_sms_sender(
     mocker,
     sms_sender,
@@ -2502,27 +2665,26 @@ def test_shows_delete_link_for_sms_sender(
     fake_uuid,
     client_request,
 ):
-
-    mocker.patch('app.service_api_client.get_sms_sender', return_value=sms_sender)
+    mocker.patch("app.service_api_client.get_sms_sender", return_value=sms_sender)
 
     page = client_request.get(
-        'main.service_edit_sms_sender',
+        "main.service_edit_sms_sender",
         service_id=SERVICE_ONE_ID,
         sms_sender_id=sample_uuid(),
     )
 
-    link = page.select_one('.page-footer a')
-    back_link = page.select_one('.usa-back-link')
+    link = page.select_one(".page-footer a")
+    back_link = page.select_one(".usa-back-link")
 
-    assert back_link.text.strip() == 'Back'
-    assert back_link['href'] == url_for(
-        '.service_sms_senders',
+    assert back_link.text.strip() == "Back"
+    assert back_link["href"] == url_for(
+        ".service_sms_senders",
         service_id=SERVICE_ONE_ID,
     )
 
     if expected_link_text:
         assert normalize_spaces(link.text) == expected_link_text
-        assert link['href'] == partial_href(service_id=SERVICE_ONE_ID)
+        assert link["href"] == partial_href(service_id=SERVICE_ONE_ID)
     else:
         assert not link
 
@@ -2532,46 +2694,42 @@ def test_confirm_delete_sms_sender(
     client_request,
     get_non_default_sms_sender,
 ):
-
     page = client_request.get(
-        'main.service_confirm_delete_sms_sender',
+        "main.service_confirm_delete_sms_sender",
         service_id=SERVICE_ONE_ID,
         sms_sender_id=fake_uuid,
         _test_page_title=False,
     )
 
-    assert normalize_spaces(page.select_one('.banner-dangerous').text) == (
-        'Are you sure you want to delete this text message sender? '
-        'Yes, delete'
+    assert normalize_spaces(page.select_one(".banner-dangerous").text) == (
+        "Are you sure you want to delete this text message sender? " "Yes, delete"
     )
-    assert 'action' not in page.select_one('.banner-dangerous form')
-    assert page.select_one('.banner-dangerous form')['method'] == 'post'
+    assert "action" not in page.select_one(".banner-dangerous form")
+    assert page.select_one(".banner-dangerous form")["method"] == "post"
 
 
-@pytest.mark.parametrize('sms_sender, expected_link_text', [
-    (create_sms_sender(is_default=False, inbound_number_id='1234'), None),
-    (create_sms_sender(is_default=True), None),
-    (create_sms_sender(is_default=False), 'Delete'),
-])
+@pytest.mark.parametrize(
+    "sms_sender, expected_link_text",
+    [
+        (create_sms_sender(is_default=False, inbound_number_id="1234"), None),
+        (create_sms_sender(is_default=True), None),
+        (create_sms_sender(is_default=False), "Delete"),
+    ],
+)
 def test_inbound_sms_sender_is_not_deleteable(
-    client_request,
-    service_one,
-    fake_uuid,
-    sms_sender,
-    expected_link_text,
-    mocker
+    client_request, service_one, fake_uuid, sms_sender, expected_link_text, mocker
 ):
-    mocker.patch('app.service_api_client.get_sms_sender', return_value=sms_sender)
+    mocker.patch("app.service_api_client.get_sms_sender", return_value=sms_sender)
 
     page = client_request.get(
-        '.service_edit_sms_sender',
+        ".service_edit_sms_sender",
         service_id=SERVICE_ONE_ID,
         sms_sender_id=fake_uuid,
     )
 
-    back_link = page.select_one('.usa-back-link')
-    footer_link = page.select_one('.page-footer a')
-    assert normalize_spaces(back_link.text) == 'Back'
+    back_link = page.select_one(".usa-back-link")
+    footer_link = page.select_one(".page-footer a")
+    assert normalize_spaces(back_link.text) == "Back"
 
     if expected_link_text:
         assert normalize_spaces(footer_link.text) == expected_link_text
@@ -2586,44 +2744,45 @@ def test_delete_sms_sender(
     get_non_default_sms_sender,
     mocker,
 ):
-    mock_delete = mocker.patch('app.service_api_client.delete_sms_sender')
+    mock_delete = mocker.patch("app.service_api_client.delete_sms_sender")
     client_request.post(
-        '.service_delete_sms_sender',
+        ".service_delete_sms_sender",
         service_id=SERVICE_ONE_ID,
         sms_sender_id=fake_uuid,
         _expected_redirect=url_for(
-            'main.service_sms_senders',
+            "main.service_sms_senders",
             service_id=SERVICE_ONE_ID,
-        )
+        ),
     )
-    mock_delete.assert_called_once_with(service_id=SERVICE_ONE_ID, sms_sender_id=fake_uuid)
+    mock_delete.assert_called_once_with(
+        service_id=SERVICE_ONE_ID, sms_sender_id=fake_uuid
+    )
 
 
-@pytest.mark.parametrize('sms_sender, hide_textbox', [
-    (create_sms_sender(is_default=False, inbound_number_id='1234'), True),
-    (create_sms_sender(is_default=True), False),
-])
+@pytest.mark.parametrize(
+    "sms_sender, hide_textbox",
+    [
+        (create_sms_sender(is_default=False, inbound_number_id="1234"), True),
+        (create_sms_sender(is_default=True), False),
+    ],
+)
 def test_inbound_sms_sender_is_not_editable(
-    client_request,
-    service_one,
-    fake_uuid,
-    sms_sender,
-    hide_textbox,
-    mocker
+    client_request, service_one, fake_uuid, sms_sender, hide_textbox, mocker
 ):
-    mocker.patch('app.service_api_client.get_sms_sender', return_value=sms_sender)
+    mocker.patch("app.service_api_client.get_sms_sender", return_value=sms_sender)
 
     page = client_request.get(
-        '.service_edit_sms_sender',
+        ".service_edit_sms_sender",
         service_id=SERVICE_ONE_ID,
         sms_sender_id=fake_uuid,
     )
 
-    assert bool(page.find('input', attrs={'name': "sms_sender"})) != hide_textbox
+    assert bool(page.find("input", attrs={"name": "sms_sender"})) != hide_textbox
     if hide_textbox:
-        assert normalize_spaces(
-            page.select_one('form[method="post"] p').text
-        ) == "GOVUK This phone number receives replies and cannot be changed"
+        assert (
+            normalize_spaces(page.select_one('form[method="post"] p').text)
+            == "GOVUK This phone number receives replies and cannot be changed"
+        )
 
 
 def test_shows_research_mode_indicator(
@@ -2634,16 +2793,16 @@ def test_shows_research_mode_indicator(
     single_sms_sender,
     mock_get_service_settings_page_common,
 ):
-    service_one['research_mode'] = True
-    mocker.patch('app.service_api_client.update_service', return_value=service_one)
+    service_one["research_mode"] = True
+    mocker.patch("app.service_api_client.update_service", return_value=service_one)
 
     page = client_request.get(
-        'main.service_settings',
+        "main.service_settings",
         service_id=SERVICE_ONE_ID,
     )
 
-    element = page.find('span', {"id": "research-mode"})
-    assert element.text == 'research mode'
+    element = page.find("span", {"id": "research-mode"})
+    assert element.text == "research mode"
 
 
 def test_does_not_show_research_mode_indicator(
@@ -2653,36 +2812,63 @@ def test_does_not_show_research_mode_indicator(
     mock_get_service_settings_page_common,
 ):
     page = client_request.get(
-        'main.service_settings',
+        "main.service_settings",
         service_id=SERVICE_ONE_ID,
     )
 
-    element = page.find('span', {"id": "research-mode"})
+    element = page.find("span", {"id": "research-mode"})
     assert not element
 
 
-@pytest.mark.parametrize('current_branding, expected_values, expected_labels', [
-    (None, [
-        '__NONE__', '1', '2', '3', '4', '5',
-    ], [
-        'GOV.UK', 'org 1', 'org 2', 'org 3', 'org 4', 'org 5'
-    ]),
-    ('5', [
-        '5', '__NONE__', '1', '2', '3', '4',
-    ], [
-        'org 5', 'GOV.UK', 'org 1', 'org 2', 'org 3', 'org 4',
-    ]),
-])
-@pytest.mark.parametrize('endpoint, extra_args', (
+@pytest.mark.parametrize(
+    "current_branding, expected_values, expected_labels",
+    [
+        (
+            None,
+            [
+                "__NONE__",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+            ],
+            ["GOV.UK", "org 1", "org 2", "org 3", "org 4", "org 5"],
+        ),
+        (
+            "5",
+            [
+                "5",
+                "__NONE__",
+                "1",
+                "2",
+                "3",
+                "4",
+            ],
+            [
+                "org 5",
+                "GOV.UK",
+                "org 1",
+                "org 2",
+                "org 3",
+                "org 4",
+            ],
+        ),
+    ],
+)
+@pytest.mark.parametrize(
+    "endpoint, extra_args",
     (
-        'main.service_set_email_branding',
-        {'service_id': SERVICE_ONE_ID},
+        (
+            "main.service_set_email_branding",
+            {"service_id": SERVICE_ONE_ID},
+        ),
+        (
+            "main.edit_organization_email_branding",
+            {"org_id": ORGANISATION_ID},
+        ),
     ),
-    (
-        'main.edit_organization_email_branding',
-        {'org_id': ORGANISATION_ID},
-    ),
-))
+)
 def test_should_show_branding_styles(
     mocker,
     client_request,
@@ -2695,56 +2881,62 @@ def test_should_show_branding_styles(
     endpoint,
     extra_args,
 ):
-    service_one['email_branding'] = current_branding
+    service_one["email_branding"] = current_branding
     mocker.patch(
-        'app.organizations_client.get_organization',
+        "app.organizations_client.get_organization",
         side_effect=lambda org_id: organization_json(
             org_id,
-            'Org 1',
+            "Org 1",
             email_branding_id=current_branding,
-        )
+        ),
     )
 
     client_request.login(platform_admin_user)
     page = client_request.get(endpoint, **extra_args)
 
-    branding_style_choices = page.find_all('input', attrs={"name": "branding_style"})
+    branding_style_choices = page.find_all("input", attrs={"name": "branding_style"})
 
     radio_labels = [
-        page.find('label', attrs={"for": branding_style_choices[idx]['id']}).get_text().strip()
-        for idx, element in enumerate(branding_style_choices)]
+        page.find("label", attrs={"for": branding_style_choices[idx]["id"]})
+        .get_text()
+        .strip()
+        for idx, element in enumerate(branding_style_choices)
+    ]
 
     assert len(branding_style_choices) == 6
 
     for index, expected_value in enumerate(expected_values):
-        assert branding_style_choices[index]['value'] == expected_value
+        assert branding_style_choices[index]["value"] == expected_value
 
     # radios should be in alphabetical order, based on their labels
     assert radio_labels == expected_labels
 
-    assert 'checked' in branding_style_choices[0].attrs
-    assert 'checked' not in branding_style_choices[1].attrs
-    assert 'checked' not in branding_style_choices[2].attrs
-    assert 'checked' not in branding_style_choices[3].attrs
-    assert 'checked' not in branding_style_choices[4].attrs
-    assert 'checked' not in branding_style_choices[5].attrs
+    assert "checked" in branding_style_choices[0].attrs
+    assert "checked" not in branding_style_choices[1].attrs
+    assert "checked" not in branding_style_choices[2].attrs
+    assert "checked" not in branding_style_choices[3].attrs
+    assert "checked" not in branding_style_choices[4].attrs
+    assert "checked" not in branding_style_choices[5].attrs
 
     app.email_branding_client.get_all_email_branding.assert_called_once_with()
-    app.service_api_client.get_service.assert_called_once_with(service_one['id'])
+    app.service_api_client.get_service.assert_called_once_with(service_one["id"])
 
 
-@pytest.mark.parametrize('endpoint, extra_args, expected_redirect', (
+@pytest.mark.parametrize(
+    "endpoint, extra_args, expected_redirect",
     (
-        'main.service_set_email_branding',
-        {'service_id': SERVICE_ONE_ID},
-        'main.service_preview_email_branding',
+        (
+            "main.service_set_email_branding",
+            {"service_id": SERVICE_ONE_ID},
+            "main.service_preview_email_branding",
+        ),
+        (
+            "main.edit_organization_email_branding",
+            {"org_id": ORGANISATION_ID},
+            "main.organization_preview_email_branding",
+        ),
     ),
-    (
-        'main.edit_organization_email_branding',
-        {'org_id': ORGANISATION_ID},
-        'main.organization_preview_email_branding',
-    ),
-))
+)
 def test_should_send_branding_and_organizations_to_preview(
     client_request,
     platform_admin_user,
@@ -2759,32 +2951,28 @@ def test_should_send_branding_and_organizations_to_preview(
     client_request.login(platform_admin_user)
     client_request.post(
         endpoint,
-        _data={
-            'branding_type': 'org',
-            'branding_style': '1'
-        },
+        _data={"branding_type": "org", "branding_style": "1"},
         _expected_status=302,
-        _expected_location=url_for(
-            expected_redirect,
-            branding_style='1',
-            **extra_args
-        ),
-        **extra_args
+        _expected_location=url_for(expected_redirect, branding_style="1", **extra_args),
+        **extra_args,
     )
 
     mock_get_all_email_branding.assert_called_once_with()
 
 
-@pytest.mark.parametrize('endpoint, extra_args', (
+@pytest.mark.parametrize(
+    "endpoint, extra_args",
     (
-        'main.service_preview_email_branding',
-        {'service_id': SERVICE_ONE_ID},
+        (
+            "main.service_preview_email_branding",
+            {"service_id": SERVICE_ONE_ID},
+        ),
+        (
+            "main.organization_preview_email_branding",
+            {"org_id": ORGANISATION_ID},
+        ),
     ),
-    (
-        'main.organization_preview_email_branding',
-        {'org_id': ORGANISATION_ID},
-    ),
-))
+)
 def test_should_preview_email_branding(
     client_request,
     platform_admin_user,
@@ -2794,38 +2982,41 @@ def test_should_preview_email_branding(
 ):
     client_request.login(platform_admin_user)
     page = client_request.get(
-        endpoint,
-        branding_type='org',
-        branding_style='1',
-        **extra_args
+        endpoint, branding_type="org", branding_style="1", **extra_args
     )
 
-    iframe = page.find('iframe', attrs={"class": "branding-preview"})
-    iframeURLComponents = urlparse(iframe['src'])
+    iframe = page.find("iframe", attrs={"class": "branding-preview"})
+    iframeURLComponents = urlparse(iframe["src"])
     iframeQString = parse_qs(iframeURLComponents.query)
 
-    assert page.find('input', attrs={"id": "branding_style"})['value'] == '1'
-    assert iframeURLComponents.path == '/_email'
-    assert iframeQString['branding_style'] == ['1']
+    assert page.find("input", attrs={"id": "branding_style"})["value"] == "1"
+    assert iframeURLComponents.path == "/_email"
+    assert iframeQString["branding_style"] == ["1"]
 
 
-@pytest.mark.parametrize('posted_value, submitted_value', (
-    ('1', '1'),
-    ('__NONE__', None),
-    pytest.param('None', None, marks=pytest.mark.xfail(raises=AssertionError)),
-))
-@pytest.mark.parametrize('endpoint, extra_args, expected_redirect', (
+@pytest.mark.parametrize(
+    "posted_value, submitted_value",
     (
-        'main.service_preview_email_branding',
-        {'service_id': SERVICE_ONE_ID},
-        'main.service_settings',
+        ("1", "1"),
+        ("__NONE__", None),
+        pytest.param("None", None, marks=pytest.mark.xfail(raises=AssertionError)),
     ),
+)
+@pytest.mark.parametrize(
+    "endpoint, extra_args, expected_redirect",
     (
-        'main.organization_preview_email_branding',
-        {'org_id': ORGANISATION_ID},
-        'main.organization_settings',
+        (
+            "main.service_preview_email_branding",
+            {"service_id": SERVICE_ONE_ID},
+            "main.service_settings",
+        ),
+        (
+            "main.organization_preview_email_branding",
+            {"org_id": ORGANISATION_ID},
+            "main.organization_settings",
+        ),
     ),
-))
+)
 def test_should_set_branding_and_organizations(
     client_request,
     platform_admin_user,
@@ -2843,31 +3034,26 @@ def test_should_set_branding_and_organizations(
     client_request.login(platform_admin_user)
     client_request.post(
         endpoint,
-        _data={
-            'branding_style': posted_value
-        },
+        _data={"branding_style": posted_value},
         _expected_status=302,
-        _expected_redirect=url_for(
-            expected_redirect,
-            **extra_args
-        ),
-        **extra_args
+        _expected_redirect=url_for(expected_redirect, **extra_args),
+        **extra_args,
     )
 
-    if endpoint == 'main.service_preview_email_branding':
+    if endpoint == "main.service_preview_email_branding":
         mock_update_service.assert_called_once_with(
             SERVICE_ONE_ID,
             email_branding=submitted_value,
         )
         assert mock_update_organization.called is False
-    elif endpoint == 'main.organization_preview_email_branding':
+    elif endpoint == "main.organization_preview_email_branding":
         mock_update_organization.assert_called_once_with(
             ORGANISATION_ID,
             email_branding_id=submitted_value,
             cached_service_ids=[
-                '12345',
-                '67890',
-                '596364a0-858e-42c8-9062-a8fe822260eb',
+                "12345",
+                "67890",
+                "596364a0-858e-42c8-9062-a8fe822260eb",
             ],
         )
         assert mock_update_service.called is False
@@ -2875,12 +3061,15 @@ def test_should_set_branding_and_organizations(
         raise Exception
 
 
-@pytest.mark.parametrize('method', ['get', 'post'])
-@pytest.mark.parametrize('endpoint', [
-    'main.set_free_sms_allowance',
-    'main.set_message_limit',
-    'main.set_rate_limit',
-])
+@pytest.mark.parametrize("method", ["get", "post"])
+@pytest.mark.parametrize(
+    "endpoint",
+    [
+        "main.set_free_sms_allowance",
+        "main.set_message_limit",
+        "main.set_rate_limit",
+    ],
+)
 def test_organization_type_pages_are_platform_admin_only(
     client_request,
     method,
@@ -2895,26 +3084,27 @@ def test_organization_type_pages_are_platform_admin_only(
 
 
 def test_should_show_page_to_set_sms_allowance(
-    client_request,
-    platform_admin_user,
-    mock_get_free_sms_fragment_limit
+    client_request, platform_admin_user, mock_get_free_sms_fragment_limit
 ):
     client_request.login(platform_admin_user)
-    page = client_request.get(
-        'main.set_free_sms_allowance',
-        service_id=SERVICE_ONE_ID
-    )
+    page = client_request.get("main.set_free_sms_allowance", service_id=SERVICE_ONE_ID)
 
-    assert normalize_spaces(page.select_one('label').text) == 'Numbers of text message fragments per year'
+    assert (
+        normalize_spaces(page.select_one("label").text)
+        == "Numbers of text message fragments per year"
+    )
     mock_get_free_sms_fragment_limit.assert_called_once_with(SERVICE_ONE_ID)
 
 
 @freeze_time("2017-04-01 11:09:00.061258")
-@pytest.mark.parametrize('given_allowance, expected_api_argument', [
-    ('0', 0),
-    ('1', 1),
-    ('250000', 250000),
-])
+@pytest.mark.parametrize(
+    "given_allowance, expected_api_argument",
+    [
+        ("0", 0),
+        ("1", 1),
+        ("250000", 250000),
+    ],
+)
 def test_should_set_sms_allowance(
     client_request,
     platform_admin_user,
@@ -2923,30 +3113,31 @@ def test_should_set_sms_allowance(
     mock_get_free_sms_fragment_limit,
     mock_create_or_update_free_sms_fragment_limit,
 ):
-
     client_request.login(platform_admin_user)
     client_request.post(
-        'main.set_free_sms_allowance',
+        "main.set_free_sms_allowance",
         service_id=SERVICE_ONE_ID,
         _data={
-            'free_sms_allowance': given_allowance,
+            "free_sms_allowance": given_allowance,
         },
         _expected_redirect=url_for(
-            'main.service_settings',
+            "main.service_settings",
             service_id=SERVICE_ONE_ID,
         ),
     )
 
     mock_create_or_update_free_sms_fragment_limit.assert_called_with(
-        SERVICE_ONE_ID,
-        expected_api_argument
+        SERVICE_ONE_ID, expected_api_argument
     )
 
 
 @freeze_time("2017-04-01 11:09:00.061258")
-@pytest.mark.parametrize('given_allowance, expected_api_argument', [
-    pytest.param('foo', 'foo'),
-])
+@pytest.mark.parametrize(
+    "given_allowance, expected_api_argument",
+    [
+        pytest.param("foo", "foo"),
+    ],
+)
 def test_should_set_sms_allowance_fails(
     client_request,
     platform_admin_user,
@@ -2955,17 +3146,16 @@ def test_should_set_sms_allowance_fails(
     mock_get_free_sms_fragment_limit,
     mock_create_or_update_free_sms_fragment_limit,
 ):
-
     with pytest.raises(expected_exception=AssertionError):
         client_request.login(platform_admin_user)
         client_request.post(
-            'main.set_free_sms_allowance',
+            "main.set_free_sms_allowance",
             service_id=SERVICE_ONE_ID,
             _data={
-                'free_sms_allowance': given_allowance,
+                "free_sms_allowance": given_allowance,
             },
             _expected_redirect=url_for(
-                'main.service_settings',
+                "main.service_settings",
                 service_id=SERVICE_ONE_ID,
             ),
         )
@@ -2976,16 +3166,11 @@ def test_should_show_page_to_set_message_limit(
     platform_admin_user,
 ):
     client_request.login(platform_admin_user)
-    page = client_request.get(
-        'main.set_message_limit',
-        service_id=SERVICE_ONE_ID
+    page = client_request.get("main.set_message_limit", service_id=SERVICE_ONE_ID)
+    assert normalize_spaces(page.select_one("label").text) == (
+        "Number of messages the service is allowed to send each day"
     )
-    assert normalize_spaces(page.select_one('label').text) == (
-        'Number of messages the service is allowed to send each day'
-    )
-    assert normalize_spaces(page.select_one('input[type=text]')['value']) == (
-        '1000'
-    )
+    assert normalize_spaces(page.select_one("input[type=text]")["value"]) == ("1000")
 
 
 def test_should_show_page_to_set_rate_limit(
@@ -2993,27 +3178,28 @@ def test_should_show_page_to_set_rate_limit(
     platform_admin_user,
 ):
     client_request.login(platform_admin_user)
-    page = client_request.get(
-        'main.set_rate_limit',
-        service_id=SERVICE_ONE_ID
+    page = client_request.get("main.set_rate_limit", service_id=SERVICE_ONE_ID)
+    assert normalize_spaces(page.select_one("label").text) == (
+        "Number of messages the service can send in a rolling 60 second window"
     )
-    assert normalize_spaces(page.select_one('label').text) == (
-        'Number of messages the service can send in a rolling 60 second window'
-    )
-    assert normalize_spaces(page.select_one('input[type=text]')['value']) == (
-        '3000'
-    )
+    assert normalize_spaces(page.select_one("input[type=text]")["value"]) == ("3000")
 
 
-@pytest.mark.parametrize('endpoint, field_name', (
-    ('main.set_message_limit', 'message_limit'),
-    ('main.set_rate_limit', 'rate_limit'),
-))
-@pytest.mark.parametrize('new_limit, expected_api_argument', [
-    ('1', 1),
-    ('250000', 250000),
-    pytest.param('foo', 'foo', marks=pytest.mark.xfail),
-])
+@pytest.mark.parametrize(
+    "endpoint, field_name",
+    (
+        ("main.set_message_limit", "message_limit"),
+        ("main.set_rate_limit", "rate_limit"),
+    ),
+)
+@pytest.mark.parametrize(
+    "new_limit, expected_api_argument",
+    [
+        ("1", 1),
+        ("250000", 250000),
+        pytest.param("foo", "foo", marks=pytest.mark.xfail),
+    ],
+)
 def test_should_set_message_limit(
     client_request,
     platform_admin_user,
@@ -3041,50 +3227,53 @@ def test_unknown_channel_404s(
     client_request,
 ):
     client_request.get(
-        'main.service_set_channel',
+        "main.service_set_channel",
         service_id=SERVICE_ONE_ID,
-        channel='message-in-a-bottle',
+        channel="message-in-a-bottle",
         _expected_status=404,
     )
 
 
-@pytest.mark.parametrize((
-    'channel,'
-    'expected_first_para,'
-    'expected_legend,'
-    'initial_permissions,'
-    'expected_initial_value,'
-    'posted_value,'
-    'expected_updated_permissions'
-), [
+@pytest.mark.parametrize(
     (
-        'sms',
-        'You have a free allowance of 250,000 text messages each financial year.',
-        'Send text messages',
-        [],
-        'False',
-        'True',
-        ['sms'],
+        "channel,"
+        "expected_first_para,"
+        "expected_legend,"
+        "initial_permissions,"
+        "expected_initial_value,"
+        "posted_value,"
+        "expected_updated_permissions"
     ),
-    (
-        'email',
-        'It’s free to send emails through Notify.gov.',
-        'Send emails',
-        [],
-        'False',
-        'True',
-        ['email'],
-    ),
-    (
-        'email',
-        'It’s free to send emails through Notify.gov.',
-        'Send emails',
-        ['email', 'sms'],
-        'True',
-        'True',
-        ['email', 'sms'],
-    ),
-])
+    [
+        (
+            "sms",
+            "You may send up to 250,000 text messages during the pilot period.",
+            "Send text messages",
+            [],
+            "False",
+            "True",
+            ["sms"],
+        ),
+        (
+            "email",
+            "It’s free to send emails through Notify.gov.",
+            "Send emails",
+            [],
+            "False",
+            "True",
+            ["email"],
+        ),
+        (
+            "email",
+            "It’s free to send emails through Notify.gov.",
+            "Send emails",
+            ["email", "sms"],
+            "True",
+            "True",
+            ["email", "sms"],
+        ),
+    ],
+)
 def test_switch_service_channels_on_and_off(
     client_request,
     service_one,
@@ -3098,39 +3287,46 @@ def test_switch_service_channels_on_and_off(
     posted_value,
     expected_updated_permissions,
 ):
-    mocked_fn = mocker.patch('app.service_api_client.update_service', return_value=service_one)
-    service_one['permissions'] = initial_permissions
+    mocked_fn = mocker.patch(
+        "app.service_api_client.update_service", return_value=service_one
+    )
+    service_one["permissions"] = initial_permissions
 
     page = client_request.get(
-        'main.service_set_channel',
-        service_id=service_one['id'],
+        "main.service_set_channel",
+        service_id=service_one["id"],
         channel=channel,
     )
 
-    assert normalize_spaces(page.select_one('main p').text) == expected_first_para
-    assert normalize_spaces(page.select_one('legend').text) == expected_legend
+    assert normalize_spaces(page.select_one("main p").text) == expected_first_para
+    assert normalize_spaces(page.select_one("legend").text) == expected_legend
 
-    assert page.select_one('input[checked]')['value'] == expected_initial_value
-    assert len(page.select('input[checked]')) == 1
+    assert page.select_one("input[checked]")["value"] == expected_initial_value
+    assert len(page.select("input[checked]")) == 1
 
     client_request.post(
-        'main.service_set_channel',
-        service_id=service_one['id'],
+        "main.service_set_channel",
+        service_id=service_one["id"],
         channel=channel,
-        _data={'enabled': posted_value},
+        _data={"enabled": posted_value},
         _expected_redirect=url_for(
-            'main.service_settings',
-            service_id=service_one['id'],
-        )
+            "main.service_settings",
+            service_id=service_one["id"],
+        ),
     )
-    assert set(mocked_fn.call_args[1]['permissions']) == set(expected_updated_permissions)
-    assert mocked_fn.call_args[0][0] == service_one['id']
+    assert set(mocked_fn.call_args[1]["permissions"]) == set(
+        expected_updated_permissions
+    )
+    assert mocked_fn.call_args[0][0] == service_one["id"]
 
 
-@pytest.mark.parametrize('permission, permissions, expected_checked', [
-    ('international_sms', ['international_sms'], 'True'),
-    ('international_sms', [''], 'False'),
-])
+@pytest.mark.parametrize(
+    "permission, permissions, expected_checked",
+    [
+        ("international_sms", ["international_sms"], "True"),
+        ("international_sms", [""], "False"),
+    ],
+)
 def test_show_international_sms_as_radio_button(
     client_request,
     service_one,
@@ -3139,26 +3335,25 @@ def test_show_international_sms_as_radio_button(
     permissions,
     expected_checked,
 ):
-    service_one['permissions'] = permissions
+    service_one["permissions"] = permissions
 
     checked_radios = client_request.get(
-        f'main.service_set_{permission}',
-        service_id=service_one['id'],
-    ).select(
-        '.govuk-radios__item input[checked]'
-    )
+        f"main.service_set_{permission}",
+        service_id=service_one["id"],
+    ).select(".usa-radio input[checked]")
 
     assert len(checked_radios) == 1
-    assert checked_radios[0]['value'] == expected_checked
+    assert checked_radios[0]["value"] == expected_checked
 
 
-@pytest.mark.parametrize('permission', (
-    'international_sms',
-))
-@pytest.mark.parametrize('post_value, permission_expected_in_api_call', [
-    ('True', True),
-    ('False', False),
-])
+@pytest.mark.parametrize("permission", ("international_sms",))
+@pytest.mark.parametrize(
+    "post_value, permission_expected_in_api_call",
+    [
+        ("True", True),
+        ("False", False),
+    ],
+)
 def test_switch_service_enable_international_sms(
     client_request,
     service_one,
@@ -3167,29 +3362,34 @@ def test_switch_service_enable_international_sms(
     post_value,
     permission_expected_in_api_call,
 ):
-    mocked_fn = mocker.patch('app.service_api_client.update_service', return_value=service_one)
+    mocked_fn = mocker.patch(
+        "app.service_api_client.update_service", return_value=service_one
+    )
     client_request.post(
-        f'main.service_set_{permission}',
-        service_id=service_one['id'],
-        _data={
-            'enabled': post_value
-        },
-        _expected_redirect=url_for('main.service_settings', service_id=service_one['id'])
+        f"main.service_set_{permission}",
+        service_id=service_one["id"],
+        _data={"enabled": post_value},
+        _expected_redirect=url_for(
+            "main.service_settings", service_id=service_one["id"]
+        ),
     )
 
     if permission_expected_in_api_call:
-        assert permission in mocked_fn.call_args[1]['permissions']
+        assert permission in mocked_fn.call_args[1]["permissions"]
     else:
-        assert permission not in mocked_fn.call_args[1]['permissions']
+        assert permission not in mocked_fn.call_args[1]["permissions"]
 
-    assert mocked_fn.call_args[0][0] == service_one['id']
+    assert mocked_fn.call_args[0][0] == service_one["id"]
 
 
-@pytest.mark.parametrize('user, is_trial_service', (
-    [create_platform_admin_user(), True],
-    [create_platform_admin_user(), False],
-    [create_active_user_with_permissions(), True],
-))
+@pytest.mark.parametrize(
+    "user, is_trial_service",
+    (
+        [create_platform_admin_user(), True],
+        [create_platform_admin_user(), False],
+        [create_active_user_with_permissions(), True],
+    ),
+)
 def test_archive_service_after_confirm(
     client_request,
     mocker,
@@ -3202,34 +3402,45 @@ def test_archive_service_after_confirm(
     user,
     is_trial_service,
 ):
-    service_one['restricted'] = is_trial_service
-    mock_api = mocker.patch('app.service_api_client.post')
-    mock_event = mocker.patch('app.main.views.service_settings.create_archive_service_event')
-    redis_delete_mock = mocker.patch('app.notify_client.service_api_client.redis_client.delete')
-    mocker.patch('app.notify_client.service_api_client.redis_client.delete_by_pattern')
+    service_one["restricted"] = is_trial_service
+    mock_api = mocker.patch("app.service_api_client.post")
+    mock_event = mocker.patch(
+        "app.main.views.service_settings.create_archive_service_event"
+    )
+    redis_delete_mock = mocker.patch(
+        "app.notify_client.service_api_client.redis_client.delete"
+    )
+    mocker.patch("app.notify_client.service_api_client.redis_client.delete_by_pattern")
 
     client_request.login(user)
     page = client_request.post(
-        'main.archive_service',
+        "main.archive_service",
         service_id=SERVICE_ONE_ID,
         _follow_redirects=True,
     )
 
-    mock_api.assert_called_once_with('/service/{}/archive'.format(SERVICE_ONE_ID), data=None)
-    mock_event.assert_called_once_with(service_id=SERVICE_ONE_ID, archived_by_id=user['id'])
+    mock_api.assert_called_once_with(
+        "/service/{}/archive".format(SERVICE_ONE_ID), data=None
+    )
+    mock_event.assert_called_once_with(
+        service_id=SERVICE_ONE_ID, archived_by_id=user["id"]
+    )
 
-    assert normalize_spaces(page.select_one('h1').text) == 'Choose service'
-    assert normalize_spaces(page.select_one('.banner-default-with-tick').text) == (
-        '‘service one’ was deleted'
+    assert normalize_spaces(page.select_one("h1").text) == "Choose service"
+    assert normalize_spaces(page.select_one(".banner-default-with-tick").text) == (
+        "‘service one’ was deleted"
     )
     # The one user which is part of this service has the sample_uuid as it's user ID
     assert call(f"user-{sample_uuid()}") in redis_delete_mock.call_args_list
 
 
-@pytest.mark.parametrize('user, is_trial_service', (
-    pytest.param(create_active_user_with_permissions(), False),
-    pytest.param(create_active_user_no_settings_permission(), True),
-))
+@pytest.mark.parametrize(
+    "user, is_trial_service",
+    (
+        pytest.param(create_active_user_with_permissions(), False),
+        pytest.param(create_active_user_no_settings_permission(), True),
+    ),
+)
 def test_archive_service_after_confirm_error(
     client_request,
     mocker,
@@ -3242,26 +3453,29 @@ def test_archive_service_after_confirm_error(
     user,
     is_trial_service,
 ):
-    service_one['restricted'] = is_trial_service
-    mocker.patch('app.service_api_client.post')
-    mocker.patch('app.main.views.service_settings.create_archive_service_event')
-    mocker.patch('app.notify_client.service_api_client.redis_client.delete')
-    mocker.patch('app.notify_client.service_api_client.redis_client.delete_by_pattern')
+    service_one["restricted"] = is_trial_service
+    mocker.patch("app.service_api_client.post")
+    mocker.patch("app.main.views.service_settings.create_archive_service_event")
+    mocker.patch("app.notify_client.service_api_client.redis_client.delete")
+    mocker.patch("app.notify_client.service_api_client.redis_client.delete_by_pattern")
 
     with pytest.raises(expected_exception=AssertionError):
         client_request.login(user)
         client_request.post(
-            'main.archive_service',
+            "main.archive_service",
             service_id=SERVICE_ONE_ID,
             _follow_redirects=True,
         )
 
 
-@pytest.mark.parametrize('user, is_trial_service', (
-    [create_platform_admin_user(), True],
-    [create_platform_admin_user(), False],
-    [create_active_user_with_permissions(), True],
-))
+@pytest.mark.parametrize(
+    "user, is_trial_service",
+    (
+        [create_platform_admin_user(), True],
+        [create_platform_admin_user(), False],
+        [create_active_user_with_permissions(), True],
+    ),
+)
 def test_archive_service_prompts_user(
     client_request,
     mocker,
@@ -3272,37 +3486,39 @@ def test_archive_service_prompts_user(
     user,
     is_trial_service,
 ):
-    mock_api = mocker.patch('app.service_api_client.post')
-    service_one['restricted'] = is_trial_service
+    mock_api = mocker.patch("app.service_api_client.post")
+    service_one["restricted"] = is_trial_service
     client_request.login(user)
 
     settings_page = client_request.get(
-        'main.archive_service',
-        service_id=SERVICE_ONE_ID
+        "main.archive_service", service_id=SERVICE_ONE_ID
     )
-    delete_link = settings_page.select('.page-footer-link a')[0]
-    assert normalize_spaces(delete_link.text) == 'Delete this service'
-    assert delete_link['href'] == url_for(
-        'main.archive_service',
+    delete_link = settings_page.select(".page-footer-link a")[0]
+    assert normalize_spaces(delete_link.text) == "Delete this service"
+    assert delete_link["href"] == url_for(
+        "main.archive_service",
         service_id=SERVICE_ONE_ID,
     )
 
     delete_page = client_request.get(
-        'main.archive_service',
+        "main.archive_service",
         service_id=SERVICE_ONE_ID,
     )
-    assert normalize_spaces(delete_page.select_one('.banner-dangerous').text) == (
-        'Are you sure you want to delete ‘service one’? '
-        'There’s no way to undo this. '
-        'Yes, delete'
+    assert normalize_spaces(delete_page.select_one(".banner-dangerous").text) == (
+        "Are you sure you want to delete ‘service one’? "
+        "There’s no way to undo this. "
+        "Yes, delete"
     )
     assert mock_api.called is False
 
 
-@pytest.mark.parametrize('user, is_trial_service', (
-    pytest.param(create_active_user_with_permissions(), False),
-    pytest.param(create_active_user_no_settings_permission(), True),
-))
+@pytest.mark.parametrize(
+    "user, is_trial_service",
+    (
+        pytest.param(create_active_user_with_permissions(), False),
+        pytest.param(create_active_user_no_settings_permission(), True),
+    ),
+)
 def test_archive_service_prompts_user_error(
     client_request,
     mocker,
@@ -3313,15 +3529,12 @@ def test_archive_service_prompts_user_error(
     user,
     is_trial_service,
 ):
-    mocker.patch('app.service_api_client.post')
-    service_one['restricted'] = is_trial_service
+    mocker.patch("app.service_api_client.post")
+    service_one["restricted"] = is_trial_service
     client_request.login(user)
 
     with pytest.raises(expected_exception=AssertionError):
-        client_request.get(
-            'main.archive_service',
-            service_id=SERVICE_ONE_ID
-        )
+        client_request.get("main.archive_service", service_id=SERVICE_ONE_ID)
 
 
 def test_cant_archive_inactive_service(
@@ -3330,70 +3543,75 @@ def test_cant_archive_inactive_service(
     service_one,
     single_reply_to_email_address,
     single_sms_sender,
-    mock_get_service_settings_page_common
+    mock_get_service_settings_page_common,
 ):
-    service_one['active'] = False
+    service_one["active"] = False
 
     client_request.login(platform_admin_user)
     page = client_request.get(
-        'main.service_settings',
-        service_id=service_one['id'],
+        "main.service_settings",
+        service_id=service_one["id"],
     )
 
-    assert 'Delete service' not in {a.text for a in page.find_all('a', class_='button')}
+    assert "Delete service" not in {a.text for a in page.find_all("a", class_="button")}
 
 
-@pytest.mark.parametrize('user', (
-    create_platform_admin_user(),
-))
+@pytest.mark.parametrize("user", (create_platform_admin_user(),))
 def test_suspend_service_after_confirm(
     client_request,
     user,
     mocker,
 ):
-    mock_api = mocker.patch('app.service_api_client.post')
-    mock_event = mocker.patch('app.main.views.service_settings.create_suspend_service_event')
+    mock_api = mocker.patch("app.service_api_client.post")
+    mock_event = mocker.patch(
+        "app.main.views.service_settings.create_suspend_service_event"
+    )
 
     client_request.login(user)
     client_request.post(
-        'main.suspend_service',
+        "main.suspend_service",
         service_id=SERVICE_ONE_ID,
         _expected_redirect=url_for(
-            'main.service_settings',
+            "main.service_settings",
             service_id=SERVICE_ONE_ID,
         ),
     )
 
-    mock_api.assert_called_once_with('/service/{}/suspend'.format(SERVICE_ONE_ID), data=None)
-    mock_event.assert_called_once_with(service_id=SERVICE_ONE_ID, suspended_by_id=user['id'])
+    mock_api.assert_called_once_with(
+        "/service/{}/suspend".format(SERVICE_ONE_ID), data=None
+    )
+    mock_event.assert_called_once_with(
+        service_id=SERVICE_ONE_ID, suspended_by_id=user["id"]
+    )
 
 
-@pytest.mark.parametrize('user', (
-    pytest.param(create_active_user_with_permissions()),
-))
+@pytest.mark.parametrize("user", (pytest.param(create_active_user_with_permissions()),))
 def test_suspend_service_after_confirm_error(
     client_request,
     user,
     mocker,
 ):
-    mocker.patch('app.service_api_client.post')
-    mocker.patch('app.main.views.service_settings.create_suspend_service_event')
+    mocker.patch("app.service_api_client.post")
+    mocker.patch("app.main.views.service_settings.create_suspend_service_event")
     with pytest.raises(expected_exception=AssertionError):
         client_request.login(user)
         client_request.post(
-            'main.suspend_service',
+            "main.suspend_service",
             service_id=SERVICE_ONE_ID,
             _expected_redirect=url_for(
-                'main.service_settings',
+                "main.service_settings",
                 service_id=SERVICE_ONE_ID,
             ),
         )
 
 
-@pytest.mark.parametrize('user', (
-    create_platform_admin_user(),
-    pytest.param(create_active_user_with_permissions()),
-))
+@pytest.mark.parametrize(
+    "user",
+    (
+        create_platform_admin_user(),
+        pytest.param(create_active_user_with_permissions()),
+    ),
+)
 def test_suspend_service_prompts_user(
     client_request,
     user,
@@ -3403,19 +3621,21 @@ def test_suspend_service_prompts_user(
     single_sms_sender,
     mock_get_service_settings_page_common,
 ):
-    mock_api = mocker.patch('app.service_api_client.post')
+    mock_api = mocker.patch("app.service_api_client.post")
 
     client_request.login(user)
 
-    if user['email_address'] != 'platform@admin.gsa.gov':
+    if user["email_address"] != "platform@admin.gsa.gov":
         with pytest.raises(expected_exception=AssertionError):
-            client_request.get('main.suspend_service', service_id=service_one['id'])
+            client_request.get("main.suspend_service", service_id=service_one["id"])
         return
 
-    page = client_request.get('main.suspend_service', service_id=service_one['id'])
+    page = client_request.get("main.suspend_service", service_id=service_one["id"])
 
-    assert 'This will suspend the service and revoke all api keys. Are you sure you want to suspend this service?' in \
-           page.find('div', class_='banner-dangerous').text
+    assert (
+        "This will suspend the service and revoke all api keys. Are you sure you want to suspend this service?"
+        in page.find("div", class_="banner-dangerous").text
+    )
     assert mock_api.called is False
 
 
@@ -3427,57 +3647,71 @@ def test_cant_suspend_inactive_service(
     single_sms_sender,
     mock_get_service_settings_page_common,
 ):
-    service_one['active'] = False
+    service_one["active"] = False
 
     client_request.login(platform_admin_user)
     page = client_request.get(
-        'main.service_settings',
-        service_id=service_one['id'],
+        "main.service_settings",
+        service_id=service_one["id"],
     )
 
-    assert 'Suspend service' not in {a.text for a in page.find_all('a', class_='button')}
+    assert "Suspend service" not in {
+        a.text for a in page.find_all("a", class_="button")
+    }
 
 
-@pytest.mark.parametrize('user', (
-    create_platform_admin_user(),
-    create_active_user_with_permissions(),
-))
+@pytest.mark.parametrize(
+    "user",
+    (
+        create_platform_admin_user(),
+        create_active_user_with_permissions(),
+    ),
+)
 def test_resume_service_after_confirm(
     mocker,
     user,
     service_one,
     client_request,
 ):
-    service_one['active'] = False
-    mock_api = mocker.patch('app.service_api_client.post')
-    mock_event = mocker.patch('app.main.views.service_settings.create_resume_service_event')
+    service_one["active"] = False
+    mock_api = mocker.patch("app.service_api_client.post")
+    mock_event = mocker.patch(
+        "app.main.views.service_settings.create_resume_service_event"
+    )
 
     client_request.login(user)
-    if user['email_address'] != "platform@admin.gsa.gov":
+    if user["email_address"] != "platform@admin.gsa.gov":
         client_request.post(
-            'main.resume_service',
+            "main.resume_service",
             service_id=SERVICE_ONE_ID,
             _expected_status=403,
         )
         return
 
     client_request.post(
-        'main.resume_service',
+        "main.resume_service",
         service_id=SERVICE_ONE_ID,
         _expected_redirect=url_for(
-            'main.service_settings',
+            "main.service_settings",
             service_id=SERVICE_ONE_ID,
-        )
+        ),
     )
 
-    assert mock_api.called_once_with('/service/{}/resume'.format(SERVICE_ONE_ID), data=None)
-    assert mock_event.called_once_with(service_id=SERVICE_ONE_ID, resumed_by_id=user['id'])
+    assert mock_api.called_once_with(
+        "/service/{}/resume".format(SERVICE_ONE_ID), data=None
+    )
+    assert mock_event.called_once_with(
+        service_id=SERVICE_ONE_ID, resumed_by_id=user["id"]
+    )
 
 
-@pytest.mark.parametrize('user', (
-    create_platform_admin_user(),
-    pytest.param(create_active_user_with_permissions(), marks=pytest.mark.xfail),
-))
+@pytest.mark.parametrize(
+    "user",
+    (
+        create_platform_admin_user(),
+        pytest.param(create_active_user_with_permissions(), marks=pytest.mark.xfail),
+    ),
+)
 def test_resume_service_prompts_user(
     client_request,
     user,
@@ -3487,14 +3721,16 @@ def test_resume_service_prompts_user(
     mocker,
     mock_get_service_settings_page_common,
 ):
-    service_one['active'] = False
-    mock_api = mocker.patch('app.service_api_client.post')
+    service_one["active"] = False
+    mock_api = mocker.patch("app.service_api_client.post")
 
     client_request.login(user)
-    page = client_request.get('main.resume_service', service_id=service_one['id'])
+    page = client_request.get("main.resume_service", service_id=service_one["id"])
 
-    assert 'This will resume the service. New api key are required for this service to use the API.' in \
-           page.find('div', class_='banner-dangerous').text
+    assert (
+        "This will resume the service. New api key are required for this service to use the API."
+        in page.find("div", class_="banner-dangerous").text
+    )
     assert mock_api.called is False
 
 
@@ -3504,41 +3740,52 @@ def test_cant_resume_active_service(
     service_one,
     single_reply_to_email_address,
     single_sms_sender,
-    mock_get_service_settings_page_common
+    mock_get_service_settings_page_common,
 ):
     client_request.login(platform_admin_user)
     page = client_request.get(
-        'main.service_settings',
-        service_id=service_one['id'],
+        "main.service_settings",
+        service_id=service_one["id"],
     )
-    assert 'Resume service' not in {a.text for a in page.find_all('a', class_='button')}
+    assert "Resume service" not in {a.text for a in page.find_all("a", class_="button")}
 
 
-@pytest.mark.parametrize('contact_details_type, contact_details_value', [
-    ('url', 'http://example.com/'),
-    ('email_address', 'me@example.com'),
-    ('phone_number', '202 867 5309'),
-])
+@pytest.mark.parametrize(
+    "contact_details_type, contact_details_value",
+    [
+        ("url", "http://example.com/"),
+        ("email_address", "me@example.com"),
+        ("phone_number", "202 867 5309"),
+    ],
+)
 def test_send_files_by_email_contact_details_prefills_the_form_with_the_existing_contact_details(
     client_request,
     service_one,
     contact_details_type,
     contact_details_value,
 ):
-    service_one['contact_link'] = contact_details_value
+    service_one["contact_link"] = contact_details_value
 
     page = client_request.get(
-        'main.send_files_by_email_contact_details', service_id=SERVICE_ONE_ID
+        "main.send_files_by_email_contact_details", service_id=SERVICE_ONE_ID
     )
-    assert page.find('input', attrs={'name': 'contact_details_type', 'value': contact_details_type}).has_attr('checked')
-    assert page.find('input', {'id': contact_details_type}).get('value') == contact_details_value
+    assert page.find(
+        "input", attrs={"name": "contact_details_type", "value": contact_details_type}
+    ).has_attr("checked")
+    assert (
+        page.find("input", {"id": contact_details_type}).get("value")
+        == contact_details_value
+    )
 
 
-@pytest.mark.parametrize('contact_details_type, old_value, new_value', [
-    ('url', 'http://example.com/', 'http://new-link.com/'),
-    ('email_address', 'old@example.com', 'new@example.com'),
-    ('phone_number', '2021234567', '2028901234'),
-])
+@pytest.mark.parametrize(
+    "contact_details_type, old_value, new_value",
+    [
+        ("url", "http://example.com/", "http://new-link.com/"),
+        ("email_address", "old@example.com", "new@example.com"),
+        ("phone_number", "2021234567", "2028901234"),
+    ],
+)
 def test_send_files_by_email_contact_details_updates_contact_details_and_redirects_to_settings_page(
     client_request,
     service_one,
@@ -3550,18 +3797,19 @@ def test_send_files_by_email_contact_details_updates_contact_details_and_redirec
     old_value,
     new_value,
 ):
-    service_one['contact_link'] = old_value
+    service_one["contact_link"] = old_value
 
     page = client_request.post(
-        'main.send_files_by_email_contact_details', service_id=SERVICE_ONE_ID,
+        "main.send_files_by_email_contact_details",
+        service_id=SERVICE_ONE_ID,
         _data={
-            'contact_details_type': contact_details_type,
+            "contact_details_type": contact_details_type,
             contact_details_type: new_value,
         },
-        _follow_redirects=True
+        _follow_redirects=True,
     )
 
-    assert page.h1.text == 'Settings'
+    assert page.h1.text == "Settings"
     mock_update_service.assert_called_once_with(SERVICE_ONE_ID, contact_link=new_value)
 
 
@@ -3573,67 +3821,95 @@ def test_send_files_by_email_contact_details_uses_the_selected_field_when_multip
     no_reply_to_email_addresses,
     single_sms_sender,
 ):
-    service_one['contact_link'] = 'http://www.old-url.com'
+    service_one["contact_link"] = "http://www.old-url.com"
 
     page = client_request.post(
-        'main.send_files_by_email_contact_details', service_id=SERVICE_ONE_ID,
+        "main.send_files_by_email_contact_details",
+        service_id=SERVICE_ONE_ID,
         _data={
-            'contact_details_type': 'url',
-            'url': 'http://www.new-url.com',
-            'email_address': 'me@example.com',
-            'phone_number': '202 867 5309'
+            "contact_details_type": "url",
+            "url": "http://www.new-url.com",
+            "email_address": "me@example.com",
+            "phone_number": "202 867 5309",
         },
-        _follow_redirects=True
+        _follow_redirects=True,
     )
 
-    assert page.h1.text == 'Settings'
-    mock_update_service.assert_called_once_with(SERVICE_ONE_ID, contact_link='http://www.new-url.com')
+    assert page.h1.text == "Settings"
+    mock_update_service.assert_called_once_with(
+        SERVICE_ONE_ID, contact_link="http://www.new-url.com"
+    )
 
 
 @pytest.mark.parametrize(
-    'contact_link, subheader, button_selected',
+    "contact_link, subheader, button_selected",
     [
-        ('contact.me@gsa.gov', 'Change contact details for the file download page', True),
-        (None, 'Add contact details to the file download page', False),
-    ]
+        (
+            "contact.me@gsa.gov",
+            "Change contact details for the file download page",
+            True,
+        ),
+        (None, "Add contact details to the file download page", False),
+    ],
 )
 def test_send_files_by_email_contact_details_page(
-    client_request, service_one, active_user_with_permissions, contact_link, subheader, button_selected
+    client_request,
+    service_one,
+    active_user_with_permissions,
+    contact_link,
+    subheader,
+    button_selected,
 ):
     service_one["contact_link"] = contact_link
     page = client_request.get(
-        'main.send_files_by_email_contact_details', service_id=SERVICE_ONE_ID
+        "main.send_files_by_email_contact_details", service_id=SERVICE_ONE_ID
     )
-    assert normalize_spaces(page.find_all('h2')[0].text) == subheader
+    assert normalize_spaces(page.find_all("h2")[0].text) == subheader
     if button_selected:
-        assert 'checked' in page.find('input', {'name': 'contact_details_type', 'value': 'email_address'}).attrs
+        assert (
+            "checked"
+            in page.find(
+                "input", {"name": "contact_details_type", "value": "email_address"}
+            ).attrs
+        )
     else:
-        assert 'checked' not in page.find('input', {'name': 'contact_details_type', 'value': 'email_address'}).attrs
+        assert (
+            "checked"
+            not in page.find(
+                "input", {"name": "contact_details_type", "value": "email_address"}
+            ).attrs
+        )
 
 
 def test_send_files_by_email_contact_details_displays_error_message_when_no_radio_button_selected(
-    client_request,
-    service_one
+    client_request, service_one
 ):
     page = client_request.post(
-        'main.send_files_by_email_contact_details', service_id=SERVICE_ONE_ID,
+        "main.send_files_by_email_contact_details",
+        service_id=SERVICE_ONE_ID,
         _data={
-            'contact_details_type': None,
-            'url': '',
-            'email_address': '',
-            'phone_number': '',
+            "contact_details_type": None,
+            "url": "",
+            "email_address": "",
+            "phone_number": "",
         },
-        _follow_redirects=True
+        _follow_redirects=True,
     )
-    assert normalize_spaces(page.find('span', class_='error-message').text) == 'Select an option'
+    assert (
+        normalize_spaces(page.find("span", class_="error-message").text)
+        == "Select an option"
+    )
     assert normalize_spaces(page.h1.text) == "Send files by email"
 
 
-@pytest.mark.parametrize('contact_details_type, invalid_value, error', [
-    ('url', 'invalid.com/', 'Must be a valid URL'),
-    ('email_address', 'me@co', 'Enter a valid email address'),
-    ('phone_number', 'abcde', 'Must be a valid phone number'),
-])
+@pytest.mark.parametrize(
+    "contact_details_type, invalid_value, error",
+    [
+        ("url", "invalid.com/", "Must be a valid URL"),
+        ("email_address", "me@co", "Enter a valid email address"),
+        ("phone_number", "abcde", "Must be a valid phone number"),
+    ],
+)
 def test_send_files_by_email_contact_details_does_not_update_invalid_contact_details(
     mocker,
     client_request,
@@ -3642,38 +3918,34 @@ def test_send_files_by_email_contact_details_does_not_update_invalid_contact_det
     invalid_value,
     error,
 ):
-    service_one['contact_link'] = 'http://example.com/'
-    service_one['permissions'].append('upload_document')
+    service_one["contact_link"] = "http://example.com/"
+    service_one["permissions"].append("upload_document")
 
     page = client_request.post(
-        'main.send_files_by_email_contact_details', service_id=SERVICE_ONE_ID,
+        "main.send_files_by_email_contact_details",
+        service_id=SERVICE_ONE_ID,
         _data={
-            'contact_details_type': contact_details_type,
+            "contact_details_type": contact_details_type,
             contact_details_type: invalid_value,
         },
-        _follow_redirects=True
+        _follow_redirects=True,
     )
 
-    assert error in page.find('span', class_='usa-error-message').text
+    assert error in page.find("span", class_="usa-error-message").text
     assert normalize_spaces(page.h1.text) == "Send files by email"
 
 
-@pytest.mark.parametrize('endpoint, permissions, expected_p', [
-    (
-        'main.service_set_auth_type',
-        [],
+@pytest.mark.parametrize(
+    "endpoint, permissions, expected_p",
+    [
+        ("main.service_set_auth_type", [], ("Text message code")),
         (
-            'Text message code'
-        )
-    ),
-    (
-        'main.service_set_auth_type',
-        ['email_auth'],
-        (
-            'Email link or text message code'
-        )
-    ),
-])
+            "main.service_set_auth_type",
+            ["email_auth"],
+            ("Email link or text message code"),
+        ),
+    ],
+)
 def test_invitation_pages(
     client_request,
     service_one,
@@ -3683,13 +3955,13 @@ def test_invitation_pages(
     permissions,
     expected_p,
 ):
-    service_one['permissions'] = permissions
+    service_one["permissions"] = permissions
     page = client_request.get(
         endpoint,
         service_id=SERVICE_ONE_ID,
     )
 
-    assert normalize_spaces(page.select('main p')[0].text) == expected_p
+    assert normalize_spaces(page.select("main p")[0].text) == expected_p
 
 
 def test_service_settings_when_inbound_number_is_not_set(
@@ -3702,10 +3974,12 @@ def test_service_settings_when_inbound_number_is_not_set(
     mock_get_free_sms_fragment_limit,
     mock_get_service_data_retention,
 ):
-    mocker.patch('app.inbound_number_client.get_inbound_sms_number_for_service',
-                 return_value={'data': {}})
+    mocker.patch(
+        "app.inbound_number_client.get_inbound_sms_number_for_service",
+        return_value={"data": {}},
+    )
     client_request.get(
-        'main.service_settings',
+        "main.service_settings",
         service_id=SERVICE_ONE_ID,
     )
 
@@ -3717,29 +3991,40 @@ def test_set_inbound_sms_when_inbound_number_is_not_set(
     single_sms_sender,
     mocker,
 ):
-    mocker.patch('app.inbound_number_client.get_inbound_sms_number_for_service',
-                 return_value={'data': {}})
+    mocker.patch(
+        "app.inbound_number_client.get_inbound_sms_number_for_service",
+        return_value={"data": {}},
+    )
     client_request.get(
-        'main.service_set_inbound_sms',
+        "main.service_set_inbound_sms",
         service_id=SERVICE_ONE_ID,
     )
 
 
-@pytest.mark.parametrize('user, expected_paragraphs', [
-    (create_active_user_with_permissions(), [
-        'Your service can receive text messages sent to 2028675309.',
-        'You can still send text messages from a sender name if you '
-        'need to, but users will not be able to reply to those messages.',
-        'Contact us if you want to switch this feature off.',
-        'You can set up callbacks for received text messages on the API integration page.',
-    ]),
-    (create_active_user_no_api_key_permission(), [
-        'Your service can receive text messages sent to 2028675309.',
-        'You can still send text messages from a sender name if you '
-        'need to, but users will not be able to reply to those messages.',
-        'Contact us if you want to switch this feature off.',
-    ]),
-])
+@pytest.mark.parametrize(
+    "user, expected_paragraphs",
+    [
+        (
+            create_active_user_with_permissions(),
+            [
+                "Your service can receive text messages sent to 2028675309.",
+                "You can still send text messages from a sender name if you "
+                "need to, but users will not be able to reply to those messages.",
+                "Contact us if you want to switch this feature off.",
+                "You can set up callbacks for received text messages on the API integration page.",
+            ],
+        ),
+        (
+            create_active_user_no_api_key_permission(),
+            [
+                "Your service can receive text messages sent to 2028675309.",
+                "You can still send text messages from a sender name if you "
+                "need to, but users will not be able to reply to those messages.",
+                "Contact us if you want to switch this feature off.",
+            ],
+        ),
+    ],
+)
 def test_set_inbound_sms_when_inbound_number_is_set(
     client_request,
     service_one,
@@ -3747,16 +4032,17 @@ def test_set_inbound_sms_when_inbound_number_is_set(
     user,
     expected_paragraphs,
 ):
-    service_one['permissions'] = ['inbound_sms']
-    mocker.patch('app.inbound_number_client.get_inbound_sms_number_for_service', return_value={
-        'data': {'number': '2028675309'}
-    })
+    service_one["permissions"] = ["inbound_sms"]
+    mocker.patch(
+        "app.inbound_number_client.get_inbound_sms_number_for_service",
+        return_value={"data": {"number": "2028675309"}},
+    )
     client_request.login(user)
     page = client_request.get(
-        'main.service_set_inbound_sms',
+        "main.service_set_inbound_sms",
         service_id=SERVICE_ONE_ID,
     )
-    paragraphs = page.select('main p')
+    paragraphs = page.select("main p")
 
     assert len(paragraphs) == len(expected_paragraphs)
 
@@ -3768,36 +4054,39 @@ def test_show_sms_prefixing_setting_page(
     client_request,
     mock_update_service,
 ):
-    page = client_request.get(
-        'main.service_set_sms_prefix', service_id=SERVICE_ONE_ID
+    page = client_request.get("main.service_set_sms_prefix", service_id=SERVICE_ONE_ID)
+    assert normalize_spaces(page.select_one("legend").text) == (
+        "Start all text messages with ‘service one:’"
     )
-    assert normalize_spaces(page.select_one('legend').text) == (
-        'Start all text messages with ‘service one:’'
-    )
-    radios = page.select('input[type=radio]')
+    radios = page.select("input[type=radio]")
     assert len(radios) == 2
-    assert radios[0]['value'] == 'True'
-    assert radios[0]['checked'] == ''
-    assert radios[1]['value'] == 'False'
+    assert radios[0]["value"] == "True"
+    assert radios[0]["checked"] == ""
+    assert radios[1]["value"] == "False"
     with pytest.raises(KeyError):
-        assert radios[1]['checked']
+        assert radios[1]["checked"]
 
 
-@pytest.mark.parametrize('post_value', [
-    True,
-    False,
-])
+@pytest.mark.parametrize(
+    "post_value",
+    [
+        True,
+        False,
+    ],
+)
 def test_updates_sms_prefixing(
     client_request,
     mock_update_service,
     post_value,
 ):
     client_request.post(
-        'main.service_set_sms_prefix', service_id=SERVICE_ONE_ID,
-        _data={'enabled': post_value},
+        "main.service_set_sms_prefix",
+        service_id=SERVICE_ONE_ID,
+        _data={"enabled": post_value},
         _expected_redirect=url_for(
-            'main.service_settings', service_id=SERVICE_ONE_ID,
-        )
+            "main.service_settings",
+            service_id=SERVICE_ONE_ID,
+        ),
     )
     mock_update_service.assert_called_once_with(
         SERVICE_ONE_ID,
@@ -3810,38 +4099,34 @@ def test_select_organization(
     platform_admin_user,
     service_one,
     mock_get_organization,
-    mock_get_organizations
+    mock_get_organizations,
 ):
     client_request.login(platform_admin_user)
     page = client_request.get(
-        '.link_service_to_organization',
-        service_id=service_one['id'],
+        ".link_service_to_organization",
+        service_id=service_one["id"],
     )
 
-    assert len(page.select('.govuk-radios__item')) == 3
+    assert len(page.select(".usa-radio")) == 3
     for i in range(0, 3):
         assert normalize_spaces(
-            page.select('.govuk-radios__item label')[i].text
-        ) == 'Org {}'.format(i + 1)
+            page.select(".usa-radio label")[i].text
+        ) == "Org {}".format(i + 1)
 
 
 def test_select_organization_shows_message_if_no_orgs(
-    client_request,
-    platform_admin_user,
-    service_one,
-    mock_get_organization,
-    mocker
+    client_request, platform_admin_user, service_one, mock_get_organization, mocker
 ):
-    mocker.patch('app.organizations_client.get_organizations', return_value=[])
+    mocker.patch("app.organizations_client.get_organizations", return_value=[])
 
     client_request.login(platform_admin_user)
     page = client_request.get(
-        '.link_service_to_organization',
-        service_id=service_one['id'],
+        ".link_service_to_organization",
+        service_id=service_one["id"],
     )
 
-    assert normalize_spaces(page.select_one('main p').text) == "No organizations"
-    assert not page.select_one('main button')
+    assert normalize_spaces(page.select_one("main p").text) == "No organizations"
+    assert not page.select_one("main button")
 
 
 def test_update_service_organization(
@@ -3854,13 +4139,12 @@ def test_update_service_organization(
 ):
     client_request.login(platform_admin_user)
     client_request.post(
-        '.link_service_to_organization',
-        service_id=service_one['id'],
-        _data={'organizations': '7aa5d4e9-4385-4488-a489-07812ba13384'},
+        ".link_service_to_organization",
+        service_id=service_one["id"],
+        _data={"organizations": "7aa5d4e9-4385-4488-a489-07812ba13384"},
     )
     mock_update_service_organization.assert_called_once_with(
-        service_one['id'],
-        '7aa5d4e9-4385-4488-a489-07812ba13384'
+        service_one["id"], "7aa5d4e9-4385-4488-a489-07812ba13384"
     )
 
 
@@ -3873,20 +4157,26 @@ def test_update_service_organization_does_not_update_if_same_value(
     mock_update_service_organization,
 ):
     org_id = "7aa5d4e9-4385-4488-a489-07812ba13383"
-    service_one['organization'] = org_id
+    service_one["organization"] = org_id
     client_request.login(platform_admin_user)
     client_request.post(
-        '.link_service_to_organization',
-        service_id=service_one['id'],
-        _data={'organizations': org_id},
+        ".link_service_to_organization",
+        service_id=service_one["id"],
+        _data={"organizations": org_id},
     )
     assert mock_update_service_organization.called is False
 
 
 @pytest.mark.skip(reason="Email currently deactivated")
-@pytest.mark.parametrize('single_branding_option, expected_href', [
-    (True, f'/services/{SERVICE_ONE_ID}/service-settings/email-branding/something-else'),
-])
+@pytest.mark.parametrize(
+    "single_branding_option, expected_href",
+    [
+        (
+            True,
+            f"/services/{SERVICE_ONE_ID}/service-settings/email-branding/something-else",
+        ),
+    ],
+)
 def test_service_settings_links_to_branding_request_page_for_emails(
     service_one,
     client_request,
@@ -3898,128 +4188,121 @@ def test_service_settings_links_to_branding_request_page_for_emails(
     if single_branding_option:
         # should only have a "something else" option
         # so we go straight to that form
-        service_one['organization_type'] = 'other'
+        service_one["organization_type"] = "other"
 
-    page = client_request.get(
-        '.service_settings', service_id=SERVICE_ONE_ID
-    )
-    assert len(page.find_all('a', attrs={'href': expected_href})) == 1
+    page = client_request.get(".service_settings", service_id=SERVICE_ONE_ID)
+    assert len(page.find_all("a", attrs={"href": expected_href})) == 1
 
 
 def test_show_service_data_retention(
-        client_request,
-        platform_admin_user,
-        service_one,
-        mock_get_service_data_retention,
-
+    client_request,
+    platform_admin_user,
+    service_one,
+    mock_get_service_data_retention,
 ):
-
-    mock_get_service_data_retention.return_value[0]['days_of_retention'] = 5
+    mock_get_service_data_retention.return_value[0]["days_of_retention"] = 5
 
     client_request.login(platform_admin_user)
     page = client_request.get(
-        'main.data_retention',
-        service_id=service_one['id'],
+        "main.data_retention",
+        service_id=service_one["id"],
     )
 
-    rows = page.select('tbody tr')
+    rows = page.select("tbody tr")
     assert len(rows) == 1
-    assert normalize_spaces(rows[0].text) == 'Email 5 days Change'
+    assert normalize_spaces(rows[0].text) == "Email 5 days Change"
 
 
 def test_view_add_service_data_retention(
-        client_request,
-        platform_admin_user,
-        service_one,
-
+    client_request,
+    platform_admin_user,
+    service_one,
 ):
     client_request.login(platform_admin_user)
     page = client_request.get(
-        'main.add_data_retention',
-        service_id=service_one['id'],
+        "main.add_data_retention",
+        service_id=service_one["id"],
     )
-    assert normalize_spaces(page.select_one('input')['value']) == "email"
-    assert page.find('input', attrs={'name': 'days_of_retention'})
+    assert normalize_spaces(page.select_one("input")["value"]) == "email"
+    assert page.find("input", attrs={"name": "days_of_retention"})
 
 
 def test_add_service_data_retention(
-        client_request,
-        platform_admin_user,
-        service_one,
-        mock_create_service_data_retention
+    client_request, platform_admin_user, service_one, mock_create_service_data_retention
 ):
     client_request.login(platform_admin_user)
     client_request.post(
-        'main.add_data_retention',
-        service_id=service_one['id'],
-        _data={'notification_type': "email", 'days_of_retention': 5},
+        "main.add_data_retention",
+        service_id=service_one["id"],
+        _data={"notification_type": "email", "days_of_retention": 5},
         _expected_redirect=url_for(
-            'main.data_retention',
-            service_id=service_one['id'],
+            "main.data_retention",
+            service_id=service_one["id"],
         ),
     )
     assert mock_create_service_data_retention.called
 
 
 def test_update_service_data_retention(
-        client_request,
-        platform_admin_user,
-        service_one,
-        fake_uuid,
-        mock_get_service_data_retention,
-        mock_update_service_data_retention,
+    client_request,
+    platform_admin_user,
+    service_one,
+    fake_uuid,
+    mock_get_service_data_retention,
+    mock_update_service_data_retention,
 ):
     client_request.login(platform_admin_user)
     client_request.post(
-        'main.edit_data_retention',
-        service_id=service_one['id'],
+        "main.edit_data_retention",
+        service_id=service_one["id"],
         data_retention_id=str(fake_uuid),
-        _data={'days_of_retention': 5},
+        _data={"days_of_retention": 5},
         _expected_redirect=url_for(
-            'main.data_retention',
-            service_id=service_one['id'],
+            "main.data_retention",
+            service_id=service_one["id"],
         ),
     )
     assert mock_update_service_data_retention.called
 
 
 def test_update_service_data_retention_return_validation_error_for_negative_days_of_retention(
-        client_request,
-        platform_admin_user,
-        service_one,
-        fake_uuid,
-        mock_get_service_data_retention,
-        mock_update_service_data_retention,
+    client_request,
+    platform_admin_user,
+    service_one,
+    fake_uuid,
+    mock_get_service_data_retention,
+    mock_update_service_data_retention,
 ):
     client_request.login(platform_admin_user)
     page = client_request.post(
-        'main.edit_data_retention',
-        service_id=service_one['id'],
+        "main.edit_data_retention",
+        service_id=service_one["id"],
         data_retention_id=fake_uuid,
-        _data={'days_of_retention': -5},
+        _data={"days_of_retention": -5},
         _expected_status=200,
     )
-    assert 'Must be between 3 and 90' in page.find('span', class_='usa-error-message').text
+    assert (
+        "Must be between 3 and 90" in page.find("span", class_="usa-error-message").text
+    )
     assert mock_get_service_data_retention.called
     assert not mock_update_service_data_retention.called
 
 
 def test_update_service_data_retention_populates_form(
-        client_request,
-        platform_admin_user,
-        service_one,
-        fake_uuid,
-        mock_get_service_data_retention,
+    client_request,
+    platform_admin_user,
+    service_one,
+    fake_uuid,
+    mock_get_service_data_retention,
 ):
-
-    mock_get_service_data_retention.return_value[0]['days_of_retention'] = 5
+    mock_get_service_data_retention.return_value[0]["days_of_retention"] = 5
     client_request.login(platform_admin_user)
     page = client_request.get(
-        'main.edit_data_retention',
-        service_id=service_one['id'],
+        "main.edit_data_retention",
+        service_id=service_one["id"],
         data_retention_id=fake_uuid,
     )
-    assert page.find('input', attrs={'name': 'days_of_retention'})['value'] == '5'
+    assert page.find("input", attrs={"name": "days_of_retention"})["value"] == "5"
 
 
 def test_service_settings_links_to_edit_service_notes_page_for_platform_admins(
@@ -4033,43 +4316,46 @@ def test_service_settings_links_to_edit_service_notes_page_for_platform_admins(
 ):
     client_request.login(platform_admin_user)
     page = client_request.get(
-        '.service_settings',
+        ".service_settings",
         service_id=SERVICE_ONE_ID,
     )
-    assert len(page.find_all('a', attrs={'href': '/services/{}/notes'.format(SERVICE_ONE_ID)})) == 1
+    assert (
+        len(
+            page.find_all(
+                "a", attrs={"href": "/services/{}/notes".format(SERVICE_ONE_ID)}
+            )
+        )
+        == 1
+    )
 
 
 def test_view_edit_service_notes(
-        client_request,
-        platform_admin_user,
-        service_one,
-
+    client_request,
+    platform_admin_user,
+    service_one,
 ):
     client_request.login(platform_admin_user)
     page = client_request.get(
-        'main.edit_service_notes',
+        "main.edit_service_notes",
         service_id=SERVICE_ONE_ID,
     )
-    assert page.select_one('h1').text == "Edit service notes"
-    assert page.find('label', class_="usa-label").text.strip() == "Notes"
-    assert page.find('textarea').attrs["name"] == "notes"
+    assert page.select_one("h1").text == "Edit service notes"
+    assert page.find("label", class_="usa-label").text.strip() == "Notes"
+    assert page.find("textarea").attrs["name"] == "notes"
 
 
 def test_update_service_notes(
-        client_request,
-        platform_admin_user,
-        service_one,
-        mock_update_service
+    client_request, platform_admin_user, service_one, mock_update_service
 ):
     client_request.login(platform_admin_user)
     client_request.post(
-        'main.edit_service_notes',
+        "main.edit_service_notes",
         service_id=SERVICE_ONE_ID,
-        _data={'notes': "Very fluffy"},
+        _data={"notes": "Very fluffy"},
         _expected_redirect=url_for(
-            'main.service_settings',
+            "main.service_settings",
             service_id=SERVICE_ONE_ID,
-        )
+        ),
     )
     mock_update_service.assert_called_with(SERVICE_ONE_ID, notes="Very fluffy")
 
@@ -4085,76 +4371,82 @@ def test_service_settings_links_to_edit_service_billing_details_page_for_platfor
 ):
     client_request.login(platform_admin_user)
     page = client_request.get(
-        '.service_settings',
+        ".service_settings",
         service_id=SERVICE_ONE_ID,
     )
-    assert len(page.find_all('a', attrs={'href': '/services/{}/edit-billing-details'.format(SERVICE_ONE_ID)})) == 1
+    assert (
+        len(
+            page.find_all(
+                "a",
+                attrs={
+                    "href": "/services/{}/edit-billing-details".format(SERVICE_ONE_ID)
+                },
+            )
+        )
+        == 1
+    )
 
 
 def test_view_edit_service_billing_details(
-        client_request,
-        platform_admin_user,
-        service_one,
-
+    client_request,
+    platform_admin_user,
+    service_one,
 ):
     client_request.login(platform_admin_user)
     page = client_request.get(
-        'main.edit_service_billing_details',
+        "main.edit_service_billing_details",
         service_id=SERVICE_ONE_ID,
     )
 
-    assert page.select_one('h1').text == "Change billing details"
-    labels = page.find_all('label', class_="form-label")
+    assert page.select_one("h1").text == "Change billing details"
+    labels = page.find_all("label", class_="form-label")
     labels_list = [
-        'Contact email addresses',
-        'Contact names',
-        'Reference',
-        'Purchase order number',
-        'Notes'
+        "Contact email addresses",
+        "Contact names",
+        "Reference",
+        "Purchase order number",
+        "Notes",
     ]
     for label in labels:
         assert label.text.strip() in labels_list
-    textbox_names = page.find_all('input', class_='govuk-input govuk-!-width-full')
+    textbox_names = page.find_all("input", class_="usa-input ")
     names_list = [
-        'billing_contact_email_addresses',
-        'billing_contact_names',
-        'billing_reference',
-        'purchase_order_number',
+        "billing_contact_email_addresses",
+        "billing_contact_names",
+        "billing_reference",
+        "purchase_order_number",
     ]
 
     for name in textbox_names:
         assert name.attrs["name"] in names_list
 
-    assert page.find('textarea').attrs["name"] == "notes"
+    assert page.find("textarea").attrs["name"] == "notes"
 
 
 def test_update_service_billing_details(
-        client_request,
-        platform_admin_user,
-        service_one,
-        mock_update_service
+    client_request, platform_admin_user, service_one, mock_update_service
 ):
     client_request.login(platform_admin_user)
     client_request.post(
-        'main.edit_service_billing_details',
+        "main.edit_service_billing_details",
         service_id=SERVICE_ONE_ID,
         _data={
-            'billing_contact_email_addresses': 'accounts@fluff.gsa.gov',
-            'billing_contact_names': 'Flannellette von Fluff',
-            'billing_reference': '',
-            'purchase_order_number': 'PO1234',
-            'notes': 'very fluffy, give extra allowance'
+            "billing_contact_email_addresses": "accounts@fluff.gsa.gov",
+            "billing_contact_names": "Flannellette von Fluff",
+            "billing_reference": "",
+            "purchase_order_number": "PO1234",
+            "notes": "very fluffy, give extra allowance",
         },
         _expected_redirect=url_for(
-            'main.service_settings',
+            "main.service_settings",
             service_id=SERVICE_ONE_ID,
         ),
     )
     mock_update_service.assert_called_with(
         SERVICE_ONE_ID,
-        billing_contact_email_addresses='accounts@fluff.gsa.gov',
-        billing_contact_names='Flannellette von Fluff',
-        billing_reference='',
-        purchase_order_number='PO1234',
-        notes='very fluffy, give extra allowance'
+        billing_contact_email_addresses="accounts@fluff.gsa.gov",
+        billing_contact_names="Flannellette von Fluff",
+        billing_reference="",
+        purchase_order_number="PO1234",
+        notes="very fluffy, give extra allowance",
     )

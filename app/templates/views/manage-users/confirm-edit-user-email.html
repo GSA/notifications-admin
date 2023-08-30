@@ -2,7 +2,7 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import govukBackLink %}
 
 {% block per_page_title %}
   Confirm change of email address
@@ -17,8 +17,8 @@
 
 {{ page_header('Confirm change of email address') }}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
+<div class="grid-row">
+  <div class="grid-col-12">
   {% call form_wrapper() %}
     <p>New email address:</p>
     <div class="panel panel-border-wide bottom-gutter">

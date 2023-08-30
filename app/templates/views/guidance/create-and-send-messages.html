@@ -9,14 +9,14 @@
 
   <h1 class="font-body-2xl margin-bottom-3">Send messages</h1>
 
-  <p><a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.register') }}">Create an account</a> to see a short tutorial explaining how to create and send messages.</p>
+  <p><a class="usa-link" href="{{ url_for('main.register') }}">Create an account</a> to see a short tutorial explaining how to create and send messages.</p>
 
   <h2 class="font-body-lg" id="bulk-sending">Bulk sending</h2>
 
   <p>To send a batch of messages at once:</p>
   <ol class="list list-number">
     <li>Go to the {{ service_link(current_service, 'main.choose_template', 'templates') }} page and choose an existing template.</li>
-    <li>Select <b class="govuk-!-font-weight-bold">Send</b>.</li>
-    <li>If you’re sending emails, select <b class="govuk-!-font-weight-bold">Upload a list of email addresses</b>. If you’re sending text messages, select <b class="govuk-!-font-weight-bold">Upload a list of phone numbers</b>.</li>
+    <li>Select <b class="bold">Send</b>.</li>
+    <li>If you’re sending emails, select <b class="bold">Upload a list of email addresses</b>. If you’re sending text messages, select <b class="bold">Upload a list of phone numbers</b>.</li>
 
   {% endblock %}

@@ -14,13 +14,13 @@
       Usage
     </h1>
 
-    <div class="bottom-gutter">
+    <div class="tabs tabs__usage">
       {{ pill(years, selected_year, big_number_args={'smallest': True}) }}
     </div>
     <div id='pill-selected-item'>
-      <div class='govuk-grid-row'>
+      <div class='grid-row'>
         
-        <div class='govuk-grid-column-one-half'>
+        <div class='grid-col-6'>
           <h2 class='heading-small'>Text messages</h2>
           <div class="keyline-block">
             {{ big_number(sms_sent, 'sent', smaller=True) }}
@@ -39,7 +39,7 @@
             {% endfor %}
           </div>
         </div>
-        {# <div class='govuk-grid-column-one-half'>
+        {# <div class='grid-col-6'>
           <h2 class='heading-small'>Emails</h2>
           <div class="keyline-block">
             {{ big_number(emails_sent, 'email disabled during SMS pilot', smaller=True) }}
@@ -48,8 +48,8 @@
         </div> #}
       </div>
 
-      {# <div class='govuk-grid-row'>
-        <div class='govuk-grid-column-one-half'>
+      {# <div class='grid-row'>
+        <div class='grid-col-6'>
           <div class="keyline-block">
             {{ big_number(
               sms_cost,
@@ -59,7 +59,7 @@
               ) }}
             </div>
           </div>
-          <div class='govuk-grid-column-one-half'>
+          <div class='grid-col-6'>
             <div class="keyline-block">
               &nbsp;
             </div>
@@ -126,13 +126,13 @@
       {% endif %}
     </div>
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-third">
+    <div class="grid-row">
+      <div class="grid-col-4">
         <p class="align-with-heading-copy">
           Federal fiscal year ends September&nbsp;30
         </p>
       </div>
-      <div class="govuk-grid-column-two-thirds">
+      <div class="grid-col-8">
         <p class="align-with-heading-copy">
           What counts as 1 text message?<br />
           See <a class="usa-link" href="{{ url_for('.pricing') }}">pricing</a>.

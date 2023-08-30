@@ -16,8 +16,8 @@
     {{ pill(years, selected_year, big_number_args={'smallest': True}) }}
   </div>
 
-  <div class="govuk-grid-row bottom-gutter">
-    <div class="govuk-grid-column-one-half">
+  <div class="grid-row bottom-gutter">
+    <div class="grid-col-6">
       <h2 class="heading-small">Emails</h2>
       <div class="keyline-block">
         {{ big_number(
@@ -27,7 +27,7 @@
         ) }}
       </div>
     </div>
-    <div class="govuk-grid-column-one-half">
+    <div class="grid-col-6">
       <h2 class="heading-small">Text messages</h2>
       <div class="keyline-block">
         {{ big_number(
@@ -41,7 +41,7 @@
   </div>
 
   {% if search_form %}
-    <div class="govuk-!-margin-bottom-5">
+    <div>
       {{ live_search(
         target_selector='.organization-service',
         show=True,
@@ -54,19 +54,19 @@
   <h2 class="heading-small {% if search_form %}visually-hidden{% endif %}">By service</h2>
 
   {% for service in services %}
-    <div class="keyline-block govuk-!-margin-top-2 organization-service">
-      <h3 class="govuk-!-font-weight-bold govuk-!-font-size-24 govuk-!-margin-bottom-3 govuk-!-margin-top-1 live-search-relevant">
-        <a href="{{ url_for('main.usage', service_id=service.service_id) }}" class="govuk-link govuk-link--no-visited-state browse-list-link">{{ service.service_name  }}</a>
+    <div class="keyline-block organization-service">
+      <h3 class="live-search-relevant">
+        <a href="{{ url_for('main.usage', service_id=service.service_id) }}" class="usa-link browse-list-link">{{ service.service_name  }}</a>
       </h3>
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-half">
+      <div class="grid-row">
+        <div class="grid-col-6">
           {{ big_number(
             service.emails_sent,
             label=service.emails_sent|message_count_label('email'),
             smallest=True
           ) }}
         </div>
-        <div class="govuk-grid-column-one-half">
+        <div class="grid-col-6">
           {% if service.sms_cost %}
             {{ big_number(
               service.sms_cost,
@@ -85,16 +85,16 @@
       </div>
     </div>
   {% endfor %}
-  <div class="keyline-block govuk-!-margin-top-2"></div>
+  <div class="keyline-block"></div>
   {% if not services %}
-    <p class="govuk-body govuk-hint">
+    <p class="usa-body usa-hint">
       {{ current_org.name }} has no live services on Notify.gov
     </p>
-    <div class="keyline-block govuk-!-margin-top-2"></div>
+    <div class="keyline-block"></div>
   {% else %}
     <div class="js-stick-at-bottom-when-scrolling">
-      <p class="govuk-!-margin-bottom-1">
-        <a href="{{ download_link }}" download="download" class="govuk-link govuk-link--no-visited-state govuk-!-font-weight-bold">Download this report (<abbr title="Comma separated values">CSV</abbr>)</a>
+      <p>
+        <a href="{{ download_link }}" download="download" class="usa-link">Download this report (<abbr title="Comma separated values">CSV</abbr>)</a>
       </p>
     </div>
   {% endif %}

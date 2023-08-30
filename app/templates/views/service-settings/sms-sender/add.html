@@ -2,7 +2,7 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import govukBackLink %}
 
 {% block service_page_title %}
   Add text message sender
@@ -18,7 +18,6 @@
 
   {% call form_wrapper() %}
     {{ form.sms_sender(param_extensions={
-      "classes": "govuk-!-width-one-quarter",
       "hint": {"text": "Up to 11 characters, letters, numbers and spaces only"}
     }) }}
     {% if not first_sms_sender %}

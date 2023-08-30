@@ -4,7 +4,7 @@
   {% set status_url = notification.status|format_notification_status_as_url(notification.notification_type) %}
   <p class="notification-status {{ field_status }}">
     {% if status_url %}
-      <a class="govuk-link govuk-link--destructive" href="{{ status_url }}">
+      <a class="usa-link usa-link--destructive" href="{{ status_url }}">
     {% endif %}
 
     {% if notification.status != 'sending' %}

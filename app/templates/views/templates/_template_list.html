@@ -13,91 +13,103 @@
 {%- endmacro %}
 
 {% if template_list.template_folder_id and not template_list.templates_to_show %}
-  <p class="template-list-empty">
-    {% if template_list.folder_is_empty %}
-      This folder is empty
-    {% else %}
-      There are no {{ 1|message_count_label(template_type, suffix='') }} templates in this folder
-    {% endif %}
-  </p>
+<p class="template-list-empty">
+  {% if template_list.folder_is_empty %}
+  This folder is empty
+  {% else %}
+  There are no {{ 1|message_count_label(template_type, suffix='') }} templates in this folder
+  {% endif %}
+</p>
 {% else %}
-  <nav id="template-list" class="{{ 'govuk-!-margin-top-1' if (not show_template_nav and not show_search_box) else 'govuk-!-margin-top-6' }}">
-    {% set checkboxes_data = [] %}
+<nav id="template-list">
+  {% set checkboxes_data = [] %}
 
-    {% if not current_user.has_permissions('manage_templates') %}
-    <ul>
+  {% if not current_user.has_permissions('manage_templates') %}
+  <ul>
     {% endif %}
+
+    {% set label_content %}
+    <span class="usa-sr-only">
+      {%- for ancestor in item.ancestors %}{{ format_item_name(ancestor.name, separators=False) }} {% endfor -%}
+      {{ format_item_name(item.name, separators=False) -}}
+    </span>
+    {% endset %}
 
     {% for item in template_list %}
 
-      {% set item_link_content %}
-        {% for ancestor in item.ancestors %}
-          <a href="{{ url_for('.choose_template', service_id=current_service.id, template_type=template_type, template_folder_id=ancestor.id) }}" class="usa-link template-list-folder">
-            {{- format_item_name(ancestor.name) -}}
-          </a> <span class="message-name-separator"></span>
-        {% endfor %}
-        {% if item.is_folder %}
-          <a href="{{ url_for('.choose_template', service_id=current_service.id, template_type=template_type, template_folder_id=item.id) }}" class="usa-link template-list-folder">
-            <span class="live-search-relevant">{{- format_item_name(item.name) -}}</span>
-          </a>
-        {% else %}
-          <a href="{{ url_for('.view_template', service_id=current_service.id, template_id=item.id) }}" class="usa-link font-body-lg usa-template-list-template">
-            <span class="live-search-relevant">
-              {%- if current_service.api_keys -%}
-                <span class="govuk-!-display-none">{{ item.id }} </span>
-              {%- endif -%}
-              {{- format_item_name(item.name) -}}
-            </span>
-          </a>
-        {% endif %}
-      {% endset %}
+    {% set item_link_content %}
+    {% for ancestor in item.ancestors %}
+    <a href="{{ url_for('.choose_template', service_id=current_service.id, template_type=template_type, template_folder_id=ancestor.id) }}"
+      class="usa-link template-list-folder">
+      {{- format_item_name(ancestor.name) -}}
+    </a> <span class="message-name-separator"></span>
+    {% endfor %}
+    {% if item.is_folder %}
+    <a href="{{ url_for('.choose_template', service_id=current_service.id, template_type=template_type, template_folder_id=item.id) }}"
+      class="usa-link template-list-folder">
+      <span class="live-search-relevant">{{- format_item_name(item.name) -}}</span>
+    </a>
+    {% else %}
+    <a href="{{ url_for('.view_template', service_id=current_service.id, template_id=item.id) }}"
+      class="usa-link template-list-template">
+      <span class="live-search-relevant">
+        {%- if current_service.api_keys -%}
+        <span class="display-none">{{ item.id }} </span>
+        {%- endif -%}
+        {{- format_item_name(item.name) -}}
+      </span>
+    </a>
+    {% endif %}
+    {% endset %}
 
-      {% set label_content %}
-        <span class="usa-sr-only">
-          {%- for ancestor in item.ancestors %}{{ format_item_name(ancestor.name, separators=False) }} {% endfor -%}
-          {{ format_item_name(item.name, separators=False) -}}
-        </span>
-      {% endset %}
+    {% set label_content %}
+    <span class="usa-sr-only">
+      {%- for ancestor in item.ancestors %}{{ format_item_name(ancestor.name, separators=False) }} {% endfor -%}
+      {{ format_item_name(item.name, separators=False) -}}
+    </span>
+    {% endset %}
 
-      {% set item_meta %}
-        <span id="{{ item.id }}-item-hint" class="usa-hint template-list-item-hint">
-          {{ item.hint }}
-        </span>
-      {% endset %}
+    {% set item_meta %}
+    <span id="{{ item.id }}-item-hint" class="usa-hint usa-checkbox__label-description template-list-item-hint">
+      {{ item.hint }}
+    </span>
+    {% endset %}
 
-      {# create the item config now to include the label content -#}
-      {# TODO: "attributes": { "aria-describedby": item.id ~ "-hint" } needs to be added but govuk-frontend-jinja doesn't currently support this -#}
-      {% set checkbox_config = {
-        "html": label_content,
-        "label": {
-          "classes": "template-list-item-label margin-top-05",
-        },
-        "id": "templates-or-folder-" ~ item.id,
-        "classes": "template-list-item template-list-item-with-checkbox {}".format(
-          "template-list-item-hidden-by-default" if item.ancestors else "template-list-item-without-ancestors"),
-        "after": item_link_content ~ item_meta
-      } %}
-      {% set _ = checkboxes_data.append(checkbox_config) %}
+    {# create the item config now to include the label content -#}
+    {# TODO: "attributes": { "aria-describedby": item.id ~ "-hint" } needs to be added but govuk-frontend-jinja doesn't
+    currently support this -#}
+    {% set checkbox_config = {
+    "html": label_content,
+    "label": {
+    "classes": "template-list-item-label margin-top-05",
+    },
+    "id": "templates-or-folder-" ~ item.id,
+    "classes": "template-list-item template-list-item-with-checkbox {}".format(
+    "template-list-item-hidden-by-default" if item.ancestors else "template-list-item-without-ancestors"),
+    "after": item_link_content ~ item_meta
+    } %}
+    {% set _ = checkboxes_data.append(checkbox_config) %}
 
-      {% if not current_user.has_permissions('manage_templates') %}
-        <li class="template-list-item {%- if item.ancestors %} template-list-item-hidden-by-default {%- else %} template-list-item-without-ancestors{%- endif %}">
-          {{ item_link_content }}
-          <p class="template-list-item-hint govuk-!-margin-bottom-4">
-            {{ item.hint }}
-          </p>
-        </li>
-      {% endif %}
+    {% if not current_user.has_permissions('manage_templates') %}
+    <li
+      class="template-list-item {%- if item.ancestors %} template-list-item-hidden-by-default {%- else %} template-list-item-without-ancestors{%- endif %}">
+      {{ item_link_content }}
+      <p class="template-list-item-hint">
+        {{ item.hint }}
+      </p>
+    </li>
+    {% endif %}
     {% endfor %}
 
     {% if not current_user.has_permissions('manage_templates') %}
-    </ul>
-    {% endif %}
+  </ul>
+  {% endif %}
 
-    {% if current_user.has_permissions('manage_templates') %}
-      {{ templates_and_folders_form.templates_and_folders(param_extensions={
-        "items": checkboxes_data,
-        "formGroup": False
-      }) }}
-    {% endif %}
-  </nav>
+  {% if current_user.has_permissions('manage_templates') %}
+  {{ templates_and_folders_form.templates_and_folders(param_extensions={
+  "items": checkboxes_data,
+  "formGroup": False
+  }) }}
+  {% endif %}
+</nav>
 {% endif %}

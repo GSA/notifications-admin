@@ -2,7 +2,7 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import sticky_page_footer %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import govukBackLink %}
 
 {% set page_title = 'Set inbound number' %}
 
@@ -23,7 +23,7 @@
   {% elif no_available_numbers %}
     <p> No available inbound numbers </p>
   {% else %}
-    {% call form_wrapper(class="govuk-!-margin-top-3") %}
+    {% call form_wrapper() %}
       {{ form.inbound_number(param_extensions={
         'fieldset': {
           'legend': {

@@ -8,8 +8,8 @@ Create an account
 
 {% block maincolumn_content %}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+<div class="grid-row">
+  <div class="grid-col-8">
     <h1 class="font-body-2xl margin-bottom-3">Create an account</h1>
     <p>
       Your account will be created with this email address:
@@ -25,17 +25,15 @@ Create an account
         <label for="username" aria-hidden="true">Email</label>
         <input type="email" name="username" id="username" value="{{ invited_user.email_address }}" disabled="disabled" tabindex="-1" aria-hidden="true" autocomplete="username" />
       </div>
-      {{ form.name(param_extensions={"classes": "govuk-!-width-three-quarters"}) }}
+      {{ form.name(param_extensions={}) }}
       {% if invited_user.auth_type == 'sms_auth' %}
         <div class="extra-tracking">
           {{ form.mobile_number(param_extensions={
-              "classes": "govuk-!-width-three-quarters",
               "hint": {"text": "We’ll send you a security code by text message"}
           }) }}
         </div>
       {% endif %}
       {{ form.password(param_extensions={
-          "classes": "govuk-!-width-three-quarters",
           "hint": {"text": "At least 8 characters"},
           "autocomplete": "new-password"
         }) }}
