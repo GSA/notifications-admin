@@ -521,7 +521,7 @@ def test_template_id_is_searchable_for_services_with_api_keys(
         normalize_spaces(item.text)
         for item in page.select(
             # Text which should be hidden from all users
-            r".template-list-item .govuk-\!-display-none"
+            r".template-list-item .display-none"
         )
     ] == [
         template_2["id"],

@@ -3,12 +3,12 @@
 <h2 class="heading-medium">
   Send a document by email
 </h2>
-<p class="govuk-body">
+<p class="usa-body">
   Use double brackets to add a placeholder field to your template. This will contain a secure link to download the document.
 </p>
 {{ govukInsetText({
   "text": "Download your document at: ((link_to_file))",
-  "classes": "govuk-!-margin-top-0 govuk-!-margin-bottom-3"})
+  "classes": ""})
 }}
 
 Next, use the API to upload your document. Follow the instructions to send a document by email in the <a class="usa-link" href="{{ url_for('main.documentation') }}">API documentation</a>.

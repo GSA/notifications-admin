@@ -215,7 +215,7 @@ def test_change_user_auth_preselects_current_auth_type(
     checked_radios = client_request.get(
         "main.change_user_auth",
         user_id=api_user_active["id"],
-    ).select(".govuk-radios__item input[checked]")
+    ).select(".usa-radio input[checked]")
 
     assert len(checked_radios) == 1
     assert checked_radios[0]["value"] == current_auth_type

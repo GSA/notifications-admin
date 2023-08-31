@@ -22,7 +22,7 @@
 {% block maincolumn_content %}
 
     {{ usaErrorMessage({
-      "classes": "banner-dangerous govuk-!-display-none",
+      "classes": "banner-dangerous display-none",
       "html": (
         'There’s a problem with your security key' +
         '<p>Check you have the right key and try again. ' +
@@ -36,8 +36,8 @@
       }
     }) }}
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half">
+  <div class="grid-row">
+    <div class="grid-col-6">
       {{ page_header(page_title) }}
 
       <p>
@@ -64,7 +64,7 @@
         "text": "JavaScript is not available for this page. Security keys need JavaScript to work."
       }) }}
     </div>
-    <div class="govuk-grid-column-one-quarter">
+    <div class="grid-col-3">
       <img src="{{ asset_url('images/security-key.svg') }}" alt="" class="webauthn-illustration" width="149" height="150">
     </div>
   </div>

@@ -12,25 +12,25 @@
     API integration
   </h1>
 
-  <nav class="govuk-grid-row bottom-gutter-1-2">
-    <div class="govuk-grid-column-one-third">
+  <nav class="grid-row bottom-gutter-1-2">
+    <div class="grid-col-4">
       <a class="usa-link pill-separate-item"  href="{{ url_for('.api_keys', service_id=current_service.id) }}">API keys</a>
     </div>
-    <div class="govuk-grid-column-one-third">
+    <div class="grid-col-4">
       <a class="usa-link pill-separate-item" href="{{ url_for('.guest_list', service_id=current_service.id) }}">Guest list</a>
     </div>
-    <div class="govuk-grid-column-one-third">
+    <div class="grid-col-4">
       <a class="usa-link pill-separate-item" href="{{ url_for(callbacks_link, service_id=current_service.id) }}">Callbacks</a>
     </div>
   </nav>
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half">
+  <div class="grid-row">
+    <div class="grid-col-6">
       <h2 class="heading-small">
         Message log
       </h2>
     </div>
-    <div class="govuk-grid-column-one-half align-with-heading-copy-right">
+    <div class="grid-col-6 align-with-heading-copy-right">
       <a class="usa-link" href="{{ url_for('.api_integration', service_id=current_service.id) }}">Refresh</a>
     </div>
   </div>
@@ -46,17 +46,17 @@
       </div>
     {% endif %}
     {% for notification in api_notifications.notifications %}
-      <details class="api-notifications-item govuk-details govuk-!-margin-bottom-0" data-module="govuk-details">
+      <details class="api-notifications-item govuk-details" data-module="govuk-details">
         <summary class="govuk-details__summary govuk-clearfix api-notifications-item__heading">
           <h3>
             <span class="govuk-details__summary-text">
             {{ notification.to }}
             </span>
-            <span class="govuk-grid-row api-notifications-item__meta">
-              <span class="govuk-grid-column-one-half api-notifications-item__meta-key">
+            <span class="grid-row api-notifications-item__meta">
+              <span class="grid-col-6 api-notifications-item__meta-key">
                 {{notification.key_name}}
               </span>
-              <span class="govuk-grid-column-one-half api-notifications-item__meta-time">
+              <span class="grid-col-6 api-notifications-item__meta-time">
                 <time class="timeago" datetime="{{ notification.created_at }}">
                   {{ notification.created_at|format_delta }}
                 </time>
@@ -64,7 +64,7 @@
             </span>
           </h3>
         </summary>
-        <div class="govuk-details__text api-notifications-item__data govuk-!-padding-top-0">
+        <div class="govuk-details__text api-notifications-item__data">
           <dl id="notification-{{ notification.id }}">
             {% for key in [
               'id', 'client_reference', 'notification_type', 'created_at', 'updated_at', 'sent_at', 'status'

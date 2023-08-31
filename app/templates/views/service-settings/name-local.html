@@ -16,8 +16,8 @@
 
   {{ page_header('Change your service name') }}
 
-  <p class="govuk-body">Your service name should tell users what the message is about as well as who it’s from. For example:</p>
-    <ul class="govuk-list govuk-list--bullet">
+  <p class="usa-body">Your service name should tell users what the message is about as well as who it’s from. For example:</p>
+    <ul class="usa-list usa-list--bullet">
       <li>School admissions - {{ current_service.organization.name or current_user.default_organization.name }}</li>
       <li>Electoral services - {{ current_service.organization.name or current_user.default_organization.name }}</li>
       <li>Blue Badge - {{ current_service.organization.name or current_user.default_organization.name }}</li>

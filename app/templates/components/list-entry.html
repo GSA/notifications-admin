@@ -36,9 +36,9 @@
             {% set autocomplete = "" %}
           {% endif %}
           {% if entry.errors %}
-            {% set label_classes = "govuk-input--numbered__label govuk-input--numbered__label--error" %}
+            {% set label_classes = "usa-input--numbered__label usa-input--numbered__label--error" %}
           {% else %}
-            {% set label_classes = "govuk-input--numbered__label" %}
+            {% set label_classes = "usa-input--numbered__label" %}
           {% endif %}
           {% set field_name = field.name + "-" + loop.index|string %}
           {{ entry(param_extensions={
@@ -48,7 +48,7 @@
               "html": '<span class="usa-sr-only">' + item_name + ' number </span>' + loop.index|string + '.',
               "classes": label_classes
             },
-            "classes": "govuk-input--numbered ",
+            "classes": "usa-input--numbered ",
             "value": field.data[loop.index0],
             "autocomplete": autocomplete
           }) }}

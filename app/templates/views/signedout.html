@@ -149,8 +149,8 @@ Notify.gov
       <nav class="breadcrumbs breadcrumbs--inverse" aria-label="Breadcrumbs">
 
       </nav>
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+      <div class="grid-row">
+        <div class="grid-col-8">
           <h1>
             Send text messages to your users
           </h1>
@@ -161,14 +161,14 @@ Notify.gov
             {{ usaButton({
               "element": "a",
               "text": "Create an account",
-              "classes": "product-page-button button-container__button govuk-!-margin-right-3",
+              "classes": "product-page-button button-container__button",
               "href": url_for('main.register' )
             }) }}
             or <a class="usa-link" href="{{ url_for('.sign_in' )}}">sign in</a> if you’ve used
             it before
           </div>
         </div>
-        <div class="govuk-grid-column-one-third">
+        <div class="grid-col-4">
           <img
             src="{{ asset_url('images/product/proposition-illustration.png') }}"
             alt="An illustration of notifications to a phone, a laptop, and a letter.">
@@ -178,8 +178,8 @@ Notify.gov
   </div>
 
   <div class="product-page-section">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
+    <div class="grid-row">
+      <div class="grid-col-6">
         <h2>
           Control your content
         </h2>
@@ -187,7 +187,7 @@ Notify.gov
           You do not need any technical knowledge to create message templates.
         </p>
       </div>
-      <div class="govuk-grid-column-one-half">
+      <div class="grid-col-6">
         <img
           src="{{ asset_url('images/product/01-templates.svg') }}"
           alt="Example screenshot of adding a new text message template">
@@ -195,8 +195,8 @@ Notify.gov
     </div>
   </div>
   <div class="product-page-section">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
+    <div class="grid-row">
+      <div class="grid-col-6">
         <h2>
           See how your messages perform
         </h2>
@@ -205,7 +205,7 @@ Notify.gov
           find out which ones are not being delivered.
         </p>
       </div>
-      <div class="govuk-grid-column-one-half">
+      <div class="grid-col-6">
         <img
           src="{{ asset_url('images/product/02-reporting.svg') }}"
           alt="A screenshot of Notify.gov showing counts of emails and text messages sent"
@@ -217,8 +217,8 @@ Notify.gov
     <h2 class="with-keyline">
       Send messages manually or automatically
     </h2>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
+    <div class="grid-row">
+      <div class="grid-col-6">
         <p>
           Upload a spreadsheet of phone&nbsp;numbers and Notify sends the messages.
         </p>
@@ -227,7 +227,7 @@ Notify.gov
           alt="A screenshot of a spreadsheet with columns for email address, name and color"
         >
       </div>
-      <div class="govuk-grid-column-one-half">
+      <div class="grid-col-6">
         <p>
           Integrate the Notify.gov API with your web&nbsp;application or
           back office system.
@@ -242,13 +242,13 @@ Notify.gov
   <div class="product-page-section">
     <div class="with-keyline bottom-gutter-2" id="whos-using-notify">
       <h2>Who’s using Notify.gov</h2>
-      <div class="govuk-grid-row bottom-gutter">
-        <div class="govuk-grid-column-one-half">
+      <div class="grid-row bottom-gutter">
+        <div class="grid-col-6">
           <span class="usa-sr-only">There are</span>
           <div class="product-page-big-number">{{ counts.organizations|format_thousands }}</div>
           <span>organizations</span>
         </div>
-        <div class="govuk-grid-column-one-half">
+        <div class="grid-col-6">
           <span class="usa-sr-only">and</span>
           <div class="product-page-big-number">{{ counts.services|format_thousands }}</div>
           <span>services</span>
@@ -264,19 +264,19 @@ Notify.gov
   <div class="product-page-section">
     <div class="with-keyline bottom-gutter-2">
       <h2>Pricing</h2>
-      <div class="govuk-grid-row bottom-gutter">
-        <div class="govuk-grid-column-one-half">
+      <div class="grid-row bottom-gutter">
+        <div class="grid-col-6">
           <h3 class="usa-sr-only">Emails</h3>
           <div class="product-page-big-number">Unlimited</div>
           <span>free emails</span>
         </div>
-        <div class="govuk-grid-column-one-half">
+        <div class="grid-col-6">
           <h3 class="usa-sr-only">Text messages</h3>
           <div class="product-page-big-number">Up to 40,000</div>
           <span>free text messages a year,<br>
           then {{ sms_rate }} pence per message</span>
         </div>
-        <div class="govuk-grid-column-one-half">
+        <div class="grid-col-6">
           <p class="align-with-big-number-hint">
             There’s no monthly charge, no setup fee and no&nbsp;procurement process.
           </p>
@@ -287,8 +287,8 @@ Notify.gov
     </div>
   </div>
   <div class="product-page-section">
-    <div class="govuk-grid-row margin-bottom-">
-      <div class="govuk-grid-column-full">
+    <div class="grid-row margin-bottom-">
+      <div class="grid-col-12">
         <h2 class="with-keyline">
           The team
         </h2>

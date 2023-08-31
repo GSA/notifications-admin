@@ -770,7 +770,7 @@ def govuk_radios_field_widget(self, field, param_extensions=None, **kwargs):
             "attributes": {"id": field.name},
             "legend": {
                 "text": field.label.text,
-                "classes": "govuk-fieldset__legend--s",
+                "classes": "usa-legend text-bold",
             },
         },
         "errorMessage": error_message,
@@ -1431,7 +1431,7 @@ class AdminProviderRatioForm(Form):
                         )
                     ],
                     param_extensions={
-                        "classes": "govuk-input--width-3",
+                        "classes": "width-8",
                     },
                 ),
             )
@@ -1602,7 +1602,6 @@ class AdminEditEmailBrandingForm(StripWhitespaceForm):
             )
         ],
         param_extensions={
-            "classes": "govuk-input--width-6",
             "attributes": {"data-module": "colour-preview"},
         },
     )
@@ -1865,7 +1864,7 @@ class SomethingElseBrandingForm(StripWhitespaceForm):
         param_extensions={
             "label": {
                 "isPageHeading": True,
-                "classes": "govuk-label--l",
+                "classes": "font-body-xl",
             },
             "hint": {
                 "text": "Include links to your brand guidelines or examples of how to use your branding."

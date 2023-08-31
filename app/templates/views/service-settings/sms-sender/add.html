@@ -18,7 +18,6 @@
 
   {% call form_wrapper() %}
     {{ form.sms_sender(param_extensions={
-      "classes": "govuk-!-width-one-quarter",
       "hint": {"text": "Up to 11 characters, letters, numbers and spaces only"}
     }) }}
     {% if not first_sms_sender %}

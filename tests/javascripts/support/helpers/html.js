@@ -8,9 +8,9 @@ function getRadios (fields, name) {
     const id = field.id || `${name}-${count}`;
 
     return `
-      <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="${id}" name="${name}" type="radio" value="${field.value}" ${field.checked ? 'checked' : ''}>
-        <label class="govuk-label govuk-radios__label" for="${id}">
+      <div class="usa-radio">
+        <input class="usa-radio__input" id="${id}" name="${name}" type="radio" value="${field.value}" ${field.checked ? 'checked' : ''}>
+        <label class="usa-radio__label" for="${id}">
           ${field.label}
         </label>
       </div>`;

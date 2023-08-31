@@ -13,19 +13,18 @@
 
 {% block maincolumn_content %}
 
-  <div class="govuk-grid-row govuk-!-margin-top-3">
+  <div class="grid-row">
     {% call form_wrapper() %}
       {{ form.sender(param_extensions={
         'fieldset': {
           'legend': {
             'isPageHeading': True,
-            'text': sender_context.title,
-            'classes': 'govuk-fieldset__legend--l govuk-grid-column-full'
+            'text': sender_context.title
           }
         },
-        'classes': 'govuk-grid-column-three-quarters'
+        'classes': 'grid-col-9'
       }) }}
-      <div class="govuk-grid-column-three-quarters">
+      <div class="grid-col-9">
         {{ page_footer('Continue') }}
       </div>
     {% endcall %}

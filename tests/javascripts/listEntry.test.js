@@ -50,7 +50,7 @@ describe("List entry", () => {
         result += `
             <div class="list-entry">
               <div class="usa-form-group">
-                <label for="domains-${idx + 1}" class="govuk-label govuk-input--numbered__label">
+                <label for="domains-${idx + 1}" class="usa-radio__label govuk-input--numbered__label">
                   <span class="usa-sr-only">domain number </span>${idx + 1}.
                 </label>
                 <input type="text" name="domains-${idx + 1}" id="domains-${idx + 1}" class="govuk-input govuk-input--numbered " autocomplete="off">
@@ -67,7 +67,7 @@ describe("List entry", () => {
           Domain names
           </span>
         </legend>
-        <span id="domains-hint" class="govuk-hint">
+        <span id="domains-hint" class="usa-hint">
           For example cabinet-office.gov.uk
         </span>
         <div class="input-list" data-module="list-entry" data-list-item-name="domain" id="list-entry-domains">
