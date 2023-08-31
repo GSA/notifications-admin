@@ -4,7 +4,7 @@
 {% from "components/components/back-link/macro.njk" import usaBackLink %}
 {% from "components/table.html" import edit_field, mapping_table, row, field, row_heading %}
 {% from "components/webauthn-api-check.html" import webauthn_api_check %}
-{% from "components/components/error-message/macro.njk" import govukErrorMessage %}
+{% from "components/components/error-message/macro.njk" import usaErrorMessage %}
 
 {% set page_title = 'Security keys' %}
 {% set credentials = current_user.webauthn_credentials %}
@@ -34,12 +34,12 @@
     }
   }) }}
 
-  {{ govukErrorMessage({
+  {{ usaErrorMessage({
     "classes": "webauthn__api-missing",
     "text": "Your browser does not support security keys. Try signing in to Notify using a different browser."
   }) }}
 
-  {{ govukErrorMessage({
+  {{ usaErrorMessage({
     "classes": "webauthn__no-js",
     "text": "JavaScript is not available for this page. Security keys need JavaScript to work."
   }) }}
@@ -47,7 +47,7 @@
 
   <div class="govuk-grid-row">
 
-    {{ govukErrorMessage({
+    {{ usaErrorMessage({
       "classes": "banner-dangerous govuk-!-display-none",
       "html": (
         'There’s a problem with your security key' +

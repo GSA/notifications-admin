@@ -1,4 +1,4 @@
-{% from "./components/components/skip-link/macro.njk" import govukSkipLink -%}
+{% from "./components/components/skip-link/macro.njk" import usaSkipLink -%}
 {% from "./components/components/header/macro.njk" import govukHeader -%}
 {% from "./components/components/footer/macro.njk" import govukFooter -%}
 {# specify absolute url for the static assets folder e.g. http://wwww.domain.com/assets #}
@@ -36,7 +36,7 @@
     {% block bodyStart %}{% endblock %}
 
     {% block skipLink %}
-      {{ govukSkipLink({
+      {{ usaSkipLink({
         "href": '#main-content',
         "text": 'Skip to main content'
       }) }}

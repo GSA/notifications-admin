@@ -3,7 +3,7 @@
 {% from "components/table.html" import list_table, field, text_field, index_field, hidden_field_heading %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/components/button/macro.njk" import usaButton %}
-{% from "components/components/skip-link/macro.njk" import govukSkipLink %}
+{% from "components/components/skip-link/macro.njk" import usaSkipLink %}
 {% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% set file_contents_header_id = 'file-preview' %}
@@ -21,7 +21,7 @@
 
   {{ page_header('Preview of {}'.format(template.name)) }}
 
-  {{ govukSkipLink({
+  {{ usaSkipLink({
     "text": "Skip to file contents",
     "href": "#" + file_contents_header_id
   }) }}
