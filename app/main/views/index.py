@@ -135,7 +135,7 @@ def email_template():
             "\n"
             "10. Three"
             "\n\n"
-            "This is an example of an email sent using U.S. Notify."
+            "This is an example of an email sent using Notify.gov."
             "\n\n"
             "https://www.notifications.service.gov.uk"
         ),
