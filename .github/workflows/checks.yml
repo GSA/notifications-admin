@@ -33,9 +33,9 @@ jobs:
           annotations: failed-tests
           prnumber: ${{ steps.findPr.outputs.number }}
       - name: Run style checks
-        run: pipenv run flake8 .
+        run: poetry run flake8 .
       - name: Check imports alphabetized
-        run: pipenv run isort --check-only ./app ./tests
+        run: poetry run isort --check-only ./app ./tests
       - name: Check dead code
         run: make dead-code
       - name: Run js lint
@@ -43,9 +43,9 @@ jobs:
       - name: Run js tests
         run: npm test
       - name: Run py tests with coverage
-        run: pipenv run coverage run --omit=*/notifications_utils/* -m pytest --maxfail=10 --ignore=tests/end_to_end tests/
+        run: poetry run coverage run --omit=*/notifications_utils/* -m pytest --maxfail=10 --ignore=tests/end_to_end tests/
       - name: Run E2E tests
-        run: pipenv run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
+        run: poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
         env:
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
@@ -54,7 +54,7 @@ jobs:
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
           NOTIFY_E2E_TEST_URI: ${{ secrets.NOTIFY_E2E_TEST_URI }}
       - name: Check coverage threshold
-        run: pipenv run coverage report --fail-under=90
+        run: poetry run coverage report --fail-under=90
 
   validate-new-relic-config:
     runs-on: ubuntu-latest
@@ -67,7 +67,7 @@ jobs:
           NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
           # Need to set a NEW_RELIC_ENVIRONMENT with monitor_mode: true
           NEW_RELIC_ENVIRONMENT: staging
-        run: pipenv run newrelic-admin validate-config $NEW_RELIC_CONFIG_FILE
+        run: poetry run newrelic-admin validate-config $NEW_RELIC_CONFIG_FILE
 
   dependency-audits:
     runs-on: ubuntu-latest
@@ -75,7 +75,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-project
       - name: Create requirements.txt
-        run: pipenv requirements > requirements.txt
+        run: poetry export --without-hashes --format=requirements.txt > requirements.txt
       - uses: pypa/gh-action-pip-audit@v1.0.6
         with:
           inputs: requirements.txt
@@ -88,7 +88,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-project
       - name: Run scan
-        run: pipenv run bandit -r app/ --confidence-level medium
+        run: poetry run bandit -r app/ --confidence-level medium
 
   dynamic-scan:
     runs-on: ubuntu-latest
