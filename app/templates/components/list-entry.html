@@ -1,4 +1,4 @@
-{% from "components/components/fieldset/macro.njk" import usaFieldset %}
+{% from "components/components/fieldset/macro.njk" import govukFieldset %}
 {% from "components/components/error-message/macro.njk" import usaErrorMessage %}
 
 {% macro list_entry(
@@ -14,7 +14,7 @@
     {% else %}
       {% set attributes = {} %}
     {% endif %}
-    {% call usaFieldset({
+    {% call govukFieldset({
         "legend": {
           "text": field.label.text,
           "isPageHeading": False

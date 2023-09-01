@@ -1,5 +1,5 @@
 {% from "components/components/error-message/macro.njk" import usaErrorMessage -%}
-{% from "components/components/fieldset/macro.njk" import usaFieldset %}
+{% from "components/components/fieldset/macro.njk" import govukFieldset %}
 {% from "components/components/hint/macro.njk" import usaHint %}
 {% from "components/components/radio-label/macro.njk" import usaRadioLabel %}
 
@@ -129,7 +129,7 @@
 
 <div class="{% if formGroup %}usa-form-group{% endif %} {%- if params.errorMessage %} usa-form-group--error{% endif %} {%- if params.formGroup.classes %} {{ params.formGroup.classes }}{% endif %}">
 {% if params.fieldset %}
-  {% call usaFieldset({
+  {% call govukFieldset({
     describedBy: describedBy,
     classes: params.fieldset.classes,
     attributes: params.fieldset.attributes,
