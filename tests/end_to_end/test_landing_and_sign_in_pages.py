@@ -49,7 +49,6 @@ def test_landing_page(end_to_end_context):
         ).to_be_visible()
 
 
-@pytest.mark.skip(reason="Not authenticating test users.")
 def test_sign_in_and_mfa_pages(end_to_end_context):
     # Open a new page and go to the staging site.
     page = end_to_end_context.new_page()

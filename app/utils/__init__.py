@@ -1,3 +1,4 @@
+import os
 from functools import wraps
 from itertools import chain
 
@@ -7,6 +8,8 @@ from notifications_utils.field import Field
 from orderedset._orderedset import OrderedSet
 from werkzeug.datastructures import MultiDict
 from werkzeug.routing import RequestRedirect
+
+from app.notify_client import user_api_client
 
 SENDING_STATUSES = ["created", "pending", "sending"]
 DELIVERED_STATUSES = ["delivered", "sent"]
@@ -116,6 +119,16 @@ def hide_from_search_engines(f):
 
     return decorated_function
 
+
+def skip_auth_for_tests(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if os.getenv("NOTIFY_ENVIRONMENT") == 'development':
+            users = user_api_client.user_api_client.get_all_users()
+            print(users)
+
+
+    return decorated_function
 
 # Function to merge two dict or lists with a JSON-like structure into one.
 # JSON-like means they can contain all types JSON can: all the main primitives

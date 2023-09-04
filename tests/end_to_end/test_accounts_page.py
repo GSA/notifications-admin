@@ -3,13 +3,17 @@ import os
 import re
 
 import pytest
+from flask_login import current_user
 from playwright.sync_api import expect
 
+from app import user_api_client
+from app.utils import skip_auth_for_tests
 
-@pytest.mark.skip(reason="Not authenticating test users.")
-def test_accounts_page(end_to_end_authenticated_context):
+
+@skip_auth_for_tests
+def test_accounts_page(browser):
     # Open a new page and go to the staging site.
-    page = end_to_end_authenticated_context.new_page()
+    page = browser.new_page()
 
     accounts_uri = "{}accounts".format(os.getenv("NOTIFY_E2E_TEST_URI"))
 
@@ -34,17 +38,17 @@ def test_accounts_page(end_to_end_authenticated_context):
     expect(add_service_button).to_be_visible()
 
 
-@pytest.mark.skip(reason="Not authenticating test users.")
-def test_add_new_service_workflow(end_to_end_authenticated_context):
+@skip_auth_for_tests
+def test_add_new_service_workflow(browser):
     # Prepare for adding a new service later in the test.
     current_date_time = datetime.datetime.now()
     new_service_name = "E2E Federal Test Service {now} - {browser_type}".format(
         now=current_date_time.strftime("%m/%d/%Y %H:%M:%S"),
-        browser_type=end_to_end_authenticated_context.browser.browser_type.name,
+        browser_type=browser.browser_type.name,
     )
 
     # Open a new page and go to the staging site.
-    page = end_to_end_authenticated_context.new_page()
+    page = browser.new_page()
 
     accounts_uri = "{}accounts".format(os.getenv("NOTIFY_E2E_TEST_URI"))
 
