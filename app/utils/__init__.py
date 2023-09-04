@@ -124,11 +124,10 @@ def skip_auth_for_tests(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if os.getenv("NOTIFY_ENVIRONMENT") == 'development':
-            users = user_api_client.user_api_client.get_all_users()
-            print(users)
-
+            user_api_client.user_api_client.get_all_users()
 
     return decorated_function
+
 
 # Function to merge two dict or lists with a JSON-like structure into one.
 # JSON-like means they can contain all types JSON can: all the main primitives

@@ -2,11 +2,8 @@ import datetime
 import os
 import re
 
-import pytest
-from flask_login import current_user
 from playwright.sync_api import expect
 
-from app import user_api_client
 from app.utils import skip_auth_for_tests
 
 
