@@ -13,9 +13,9 @@ runs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.9"
-    - name: Install pipenv  
+    - name: Install poetry
       shell: bash
-      run: pip install pipenv==2023.7.23
+      run: pip install poetry
     - name: Install application dependencies
       shell: bash
       run: make bootstrap
