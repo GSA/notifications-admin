@@ -57,8 +57,8 @@ your environment is set up and configured as outlined in the README.
 At your shell in the project root folder, run the following commands:
 
 ```sh
-pipenv install pytest-playwright --dev
-pipenv run playwright install --with-deps
+poetry install pytest-playwright --dev
+poetry run playwright install --with-deps
 ```
 
 This will install Playwright and its `pytest` plugin, then the
