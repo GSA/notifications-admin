@@ -24,13 +24,6 @@
         .on('scroll', this.maintainHeight)
         .on('focus blur', () => this.$component.toggleClass('js-focus-style'));
 
-      if (
-        window.GOVUK.stickAtBottomWhenScrolling &&
-        window.GOVUK.stickAtBottomWhenScrolling.recalculate
-      ) {
-        window.GOVUK.stickAtBottomWhenScrolling.recalculate();
-      }
-
       this.maintainWidth();
 
     };

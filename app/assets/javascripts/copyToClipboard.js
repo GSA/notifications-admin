@@ -90,10 +90,6 @@
               .find('.govuk-button').focus()
         );
 
-      if ('stickAtBottomWhenScrolling' in GOVUK) {
-        GOVUK.stickAtBottomWhenScrolling.recalculate();
-      }
-
     };
   };
 

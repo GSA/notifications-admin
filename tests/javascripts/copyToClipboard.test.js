@@ -136,13 +136,6 @@ describe('copy to clipboard', () => {
 
         });
 
-        test("It should tell any sticky JS present the page has changed", () => {
-
-          // recalculate forces the sticky JS to recalculate any stored DOM position/dimensions
-          expect(window.GOVUK.stickAtBottomWhenScrolling.recalculate).toHaveBeenCalled();
-
-        });
-
         test("It should set the component's minimum height based on its height when the page loads", () => {
 
           // to prevent the position of the button moving when the state changes

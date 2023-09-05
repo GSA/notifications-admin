@@ -77,9 +77,6 @@
     this.$el = this.getEl(expanded);
 
     this.module.$formGroup.append(this.$el);
-
-    // make footer sticky if expanded, clear up from it being sticky if not
-    GOVUK.stickAtBottomWhenScrolling.recalculate();
   };
 
   function CollapsibleCheckboxes () {}

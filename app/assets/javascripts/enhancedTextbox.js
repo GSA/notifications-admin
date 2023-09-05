@@ -58,10 +58,6 @@
         )
       );
 
-      if ('stickAtBottomWhenScrolling' in GOVUK) {
-        GOVUK.stickAtBottomWhenScrolling.recalculate();
-      }
-
     };
 
     this.contentEscaped = () => $('<div/>').text(this.$textbox.val()).html();

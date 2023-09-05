@@ -1,9 +1,6 @@
 const helpers = require('./support/helpers');
 
 beforeAll(() => {
-  // TODO: remove this when tests for sticky JS are written
-  require('../../app/assets/javascripts/stick-to-window-when-scrolling.js');
-
   require('../../app/assets/javascripts/fullscreenTable.js');
 });
 
@@ -129,19 +126,6 @@ describe('FullscreenTable', () => {
       expect(tableFrame).not.toBeNull();
       expect(numberColumnFrame).not.toBeNull();
       expect(numberColumnFrame.getAttribute('aria-hidden')).toEqual('true');
-
-    });
-
-    test("it calls the sticky JS to update any cached dimensions", () => {
-
-      const stickyJSSpy = jest.spyOn(window.GOVUK.stickAtBottomWhenScrolling, 'recalculate');
-
-      // start module
-      window.GOVUK.modules.start();
-
-      expect(stickyJSSpy.mock.calls.length).toBe(1);
-
-      stickyJSSpy.mockClear();
 
     });
 
