@@ -17,7 +17,7 @@ flask-login = "~=0.6"
 flask-wtf = "~=1.1"
 poetry = "==1.6.1"
 govuk-bank-holidays = "==0.13"
-govuk-frontend-jinja = "==0.5.8-alpha"
+govuk-frontend-jinja = {git = "https://github.com/alphagov/govuk-frontend-jinja.git", tag = "v0.5.8-alpha"}
 gunicorn = {version = "==21.2.0", extras = ["eventlet"]}
 humanize = "~=4.8"
 itsdangerous = "~=2.1"
@@ -37,7 +37,7 @@ werkzeug = "~=2.3"
 wtforms = "~=3.0"
 newrelic = "*"
 flask-talisman = "*"
-notifications-utils = {git = "https://github.com/GSA/notifications-utils.git", develop = true, tag = "main"}
+notifications-utils = {git = "https://github.com/GSA/notifications-utils.git", develop = true, branch = "main"}
 coverage = "*"
 vulture = "==2.9.1"
 radon = "==6.0.1"
