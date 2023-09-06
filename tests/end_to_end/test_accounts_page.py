@@ -12,7 +12,7 @@ from app import user_api_client
 
 def test_accounts_page(end_to_end_context):
     # Open a new page and go to the staging site.
-
+    user_api_client.route_secret = "proxy-secret"
     user = user_api_client.register_user(
         "Fake Personson",
         "somebody@fake.gov",
