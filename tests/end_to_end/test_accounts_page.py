@@ -1,15 +1,35 @@
 import datetime
+import os
 import re
 
 from playwright.sync_api import expect
+
+# @user_is_fine
+from app import user_api_client
 
 # from app.utils.user import user_is_fine
 # from tests.conftest import skip_auth_for_tests
 
 
-# @user_is_fine
 def test_accounts_page(end_to_end_context):
     # Open a new page and go to the staging site.
+
+    assert os.getenv("NOTIFY_E2E_TEST_URI") is not None
+    assert os.getenv("NOTIFY_E2E_TEST_URI") == "http://localhost:6012/"
+
+    user = user_api_client.register_user(
+        "Fake Personson",
+        "somebody@fake.gov",
+        "202-555-5555",
+        "correct horse battery staple",
+        "sms",
+    )
+    assert user is not None
+
+    user2 = user_api_client.get_user(user.id)
+
+    assert user2 == user
+
     page = end_to_end_context.browser.new_page()
 
     # TODO
