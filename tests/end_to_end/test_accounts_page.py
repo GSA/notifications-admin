@@ -1,36 +1,26 @@
 import datetime
+import os
 import re
 
 from playwright.sync_api import expect
 
-# @user_is_fine
-from app import user_api_client
 
-# from app.utils.user import user_is_fine
-# from tests.conftest import skip_auth_for_tests
+def test_accounts_page(end_to_end_authenticated_context):
+    # user_data = {
+    #     "id": 1,
+    #     "name": "Test User",
+    #     "email_address": "test@user.gsa.gov",
+    #     "mobile_number": "+12021231234",
+    #     "state": "pending",
+    #     "failed_login_count": 0,
+    #     "platform_admin": False,
+    # }
+    # user = User(**user_data)
+    # user = user.register("Test User", "test@user.gsa.gov", "+12021231234", "password", "sms")
 
+    page = end_to_end_authenticated_context.browser.new_page()
 
-def test_accounts_page(end_to_end_context):
-    # Open a new page and go to the staging site.
-    user_api_client.route_secret = "proxy-secret"
-    user = user_api_client.register_user(
-        "Fake Personson",
-        "somebody@fake.gov",
-        "202-555-5555",
-        "correct horse battery staple",
-        "sms",
-    )
-    assert user is not None
-
-    user2 = user_api_client.get_user(user.id)
-
-    assert user2 == user
-
-    page = end_to_end_context.browser.new_page()
-
-    # TODO
-    # accounts_uri = "{}accounts".format(os.getenv("NOTIFY_E2E_TEST_URI"))
-    accounts_uri = "https://notify-staging.app.cloud.gov/"
+    accounts_uri = "{}accounts".format(os.getenv("NOTIFY_E2E_TEST_URI"))
 
     page.goto(accounts_uri)
 
