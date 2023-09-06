@@ -17,7 +17,7 @@ def test_get_upload_hub_with_no_uploads(
     mocker,
     client_request,
     service_one,
-    mock_get_no_uploads,
+    _mock_get_no_uploads,
     extra_permissions,
     expected_empty_message,
 ):
@@ -67,7 +67,7 @@ def test_get_upload_hub_page(
 def test_uploads_page_shows_scheduled_jobs(
     mocker,
     client_request,
-    mock_get_no_uploads,
+    _mock_get_no_uploads,
     mock_get_jobs,
     user,
 ):
