@@ -4,6 +4,7 @@ import os
 import re
 from contextlib import contextmanager
 from datetime import date, datetime, timedelta
+from functools import wraps
 from unittest.mock import Mock, PropertyMock
 from uuid import UUID, uuid4
 
@@ -3594,6 +3595,16 @@ def mock_get_invited_org_user_by_id(mocker, sample_org_invite):
         "app.org_invite_api_client.get_invited_user",
         side_effect=_get,
     )
+
+
+def skip_auth_for_tests(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if os.getenv("NOTIFY_ENVIRONMENT") == "development":
+            pass
+        return f(*args, **kwargs)
+
+    return decorated_function
 
 
 def login_for_end_to_end_testing(browser):

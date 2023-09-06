@@ -3,14 +3,17 @@ import re
 
 from playwright.sync_api import expect
 
-from app.utils import skip_auth_for_tests
+from tests.conftest import skip_auth_for_tests
 
 
 @skip_auth_for_tests
 def test_landing_page(end_to_end_context):
     # Open a new page and go to the staging site.
     page = end_to_end_context.new_page()
-    page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
+
+    # TODO
+    # page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
+    page.goto("https://notify-staging.app.cloud.gov/")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
@@ -51,11 +54,14 @@ def test_landing_page(end_to_end_context):
         ).to_be_visible()
 
 
-@skip_auth_for_tests
+# @skip_auth_for_tests
 def test_sign_in_and_mfa_pages(end_to_end_context):
     # Open a new page and go to the staging site.
     page = end_to_end_context.new_page()
-    page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
+
+    # TODO
+    # page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
+    page.goto("https://notify-staging.app.cloud.gov/")
 
     sign_in_button = page.get_by_role("link", name="Sign in")
 

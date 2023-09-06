@@ -36,6 +36,14 @@ def user_is_gov_user(f):
     return wrapped
 
 
+def user_is_fine(f):
+    @wraps(f)
+    def wrapped(*args, **kwargs):
+        return f(*args, **kwargs)
+
+    return wrapped
+
+
 def user_is_platform_admin(f):
     @wraps(f)
     def wrapped(*args, **kwargs):

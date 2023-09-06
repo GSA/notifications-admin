@@ -1,18 +1,20 @@
 import datetime
-import os
 import re
 
 from playwright.sync_api import expect
 
-from app.utils import skip_auth_for_tests
+# from app.utils.user import user_is_fine
+# from tests.conftest import skip_auth_for_tests
 
 
-@skip_auth_for_tests
-def test_accounts_page(browser):
+# @user_is_fine
+def test_accounts_page(end_to_end_context):
     # Open a new page and go to the staging site.
-    page = browser.new_page()
+    page = end_to_end_context.browser.new_page()
 
-    accounts_uri = "{}accounts".format(os.getenv("NOTIFY_E2E_TEST_URI"))
+    # TODO
+    # accounts_uri = "{}accounts".format(os.getenv("NOTIFY_E2E_TEST_URI"))
+    accounts_uri = "https://notify-staging.app.cloud.gov/"
 
     page.goto(accounts_uri)
 
@@ -35,7 +37,7 @@ def test_accounts_page(browser):
     expect(add_service_button).to_be_visible()
 
 
-@skip_auth_for_tests
+# @skip_auth_for_tests
 def test_add_new_service_workflow(browser):
     # Prepare for adding a new service later in the test.
     current_date_time = datetime.datetime.now()
@@ -47,7 +49,9 @@ def test_add_new_service_workflow(browser):
     # Open a new page and go to the staging site.
     page = browser.new_page()
 
-    accounts_uri = "{}accounts".format(os.getenv("NOTIFY_E2E_TEST_URI"))
+    # TODO
+    # accounts_uri = "{}accounts".format(os.getenv("NOTIFY_E2E_TEST_URI"))
+    accounts_uri = "https://notify-staging.app.cloud.gov/"
 
     page.goto(accounts_uri)
 

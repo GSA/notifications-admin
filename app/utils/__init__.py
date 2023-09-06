@@ -1,4 +1,3 @@
-import os
 from functools import wraps
 from itertools import chain
 
@@ -8,8 +7,6 @@ from notifications_utils.field import Field
 from orderedset._orderedset import OrderedSet
 from werkzeug.datastructures import MultiDict
 from werkzeug.routing import RequestRedirect
-
-from app.notify_client import user_api_client
 
 SENDING_STATUSES = ["created", "pending", "sending"]
 DELIVERED_STATUSES = ["delivered", "sent"]
@@ -116,15 +113,6 @@ def hide_from_search_engines(f):
         response = make_response(f(*args, **kwargs))
         response.headers["X-Robots-Tag"] = "noindex"
         return response
-
-    return decorated_function
-
-
-def skip_auth_for_tests(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if os.getenv("NOTIFY_ENVIRONMENT") == 'development':
-            user_api_client.user_api_client.get_all_users()
 
     return decorated_function
 
