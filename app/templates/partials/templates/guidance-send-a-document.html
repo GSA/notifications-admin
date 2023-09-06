@@ -1,4 +1,4 @@
-{% from "components/components/inset-text/macro.njk" import govukInsetText %}
+{% from "components/components/inset-text/macro.njk" import usaInsetText %}
 
 <h2 class="heading-medium">
   Send a document by email
@@ -6,7 +6,7 @@
 <p class="usa-body">
   Use double brackets to add a placeholder field to your template. This will contain a secure link to download the document.
 </p>
-{{ govukInsetText({
+{{ usaInsetText({
   "text": "Download your document at: ((link_to_file))",
   "classes": ""})
 }}

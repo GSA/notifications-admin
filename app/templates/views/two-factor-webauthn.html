@@ -1,9 +1,9 @@
 {% extends "withoutnav_template.html" %}
 {% from "components/page-header.html" import page_header %}
-{% from "components/components/button/macro.njk" import govukButton %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/button/macro.njk" import usaButton %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 {% from "components/webauthn-api-check.html" import webauthn_api_check %}
-{% from "components/components/error-message/macro.njk" import govukErrorMessage %}
+{% from "components/components/error-message/macro.njk" import usaErrorMessage %}
 
 {% set page_title = 'Get your security key' %}
 
@@ -16,12 +16,12 @@
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for('.user_profile') }) }}
+  {{ usaBackLink({ "href": url_for('.user_profile') }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
 
-    {{ govukErrorMessage({
+    {{ usaErrorMessage({
       "classes": "banner-dangerous display-none",
       "html": (
         'There’s a problem with your security key' +
@@ -44,7 +44,7 @@
         You need to have your security key to sign in.
       </p>
 
-      {{ govukButton({
+      {{ usaButton({
         "element": "button",
         "text": "Check security key",
         "classes": "govuk-button--secondary webauthn__api-required",
@@ -54,12 +54,12 @@
         }
       }) }}
 
-      {{ govukErrorMessage({
+      {{ usaErrorMessage({
         "classes": "webauthn__api-missing",
         "text": "Your browser does not support security keys. Try signing in to Notify using a different browser."
       }) }}
 
-      {{ govukErrorMessage({
+      {{ usaErrorMessage({
         "classes": "webauthn__no-js",
         "text": "JavaScript is not available for this page. Security keys need JavaScript to work."
       }) }}

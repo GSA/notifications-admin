@@ -1,6 +1,6 @@
-{% from "components/components/error-message/macro.njk" import govukErrorMessage -%}
+{% from "components/components/error-message/macro.njk" import usaErrorMessage -%}
 {% from "components/components/fieldset/macro.njk" import govukFieldset %}
-{% from "components/components/hint/macro.njk" import govukHint %}
+{% from "components/components/hint/macro.njk" import usaHint %}
 {% from "components/components/radio-label/macro.njk" import usaRadioLabel %}
 
 
@@ -53,7 +53,7 @@
 {% if params.hint %}
   {% set hintId = idPrefix + '-hint' %}
   {% set describedBy = describedBy + ' ' + hintId if describedBy else hintId %}
-  {{ govukHint({
+  {{ usaHint({
     id: hintId,
     classes: params.hint.classes,
     attributes: params.hint.attributes,
@@ -64,7 +64,7 @@
 {% if params.errorMessage %}
   {% set errorId = idPrefix + '-error' %}
   {% set describedBy = describedBy + ' ' + errorId if describedBy else errorId %}
-  {{ govukErrorMessage({
+  {{ usaErrorMessage({
     id: errorId,
     classes: params.errorMessage.classes,
     attributes: params.errorMessage.attributes,
@@ -100,7 +100,7 @@
         for: id
       }) | indent(6) | trim }}
       {%- if hasHint %}
-      {{ govukHint({
+      {{ usaHint({
         id: itemHintId,
         classes: 'govuk-checkboxes__hint' + (' ' + item.hint.classes if item.hint.classes),
         attributes: item.hint.attributes,

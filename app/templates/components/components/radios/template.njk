@@ -1,7 +1,7 @@
-{% from "../error-message/macro.njk" import govukErrorMessage -%}
+{% from "../error-message/macro.njk" import usaErrorMessage -%}
 {% from "../fieldset/macro.njk" import govukFieldset %}
-{% from "../hint/macro.njk" import govukHint %}
-{% from "../label/macro.njk" import govukLabel %}
+{% from "../hint/macro.njk" import usaHint %}
+{% from "../label/macro.njk" import usaLabel %}
 
 {#- If an id 'prefix' is not passed, fall back to using the name attribute
    instead. We need this for error messages and hints as well -#}
@@ -23,7 +23,7 @@
 {% if params.hint %}
   {% set hintId = idPrefix + '-hint' %}
   {% set describedBy = describedBy + ' ' + hintId if describedBy else hintId %}
-  {{ govukHint({
+  {{ usaHint({
     id: hintId,
     classes: params.hint.classes,
     attributes: params.hint.attributes,
@@ -34,7 +34,7 @@
 {% if params.errorMessage %}
   {% set errorId = idPrefix + '-error' %}
   {% set describedBy = describedBy + ' ' + errorId if describedBy else errorId %}
-  {{ govukErrorMessage({
+  {{ usaErrorMessage({
     id: errorId,
     classes: params.errorMessage.classes,
     attributes: params.errorMessage.attributes,
@@ -61,7 +61,7 @@
       {%- if item.conditional %} data-aria-controls="{{ conditionalId }}"{% endif -%}
       {%- if hasHint %} aria-describedby="{{ itemHintId }}"{% endif -%}
       {%- for attribute, value in item.attributes %} {{ attribute }}="{{ value }}"{% endfor -%}>
-      {{ govukLabel({
+      {{ usaLabel({
         html: item.html,
         text: item.text,
         classes: 'usa-radio__label' + (' ' + item.label.classes if item.label.classes),
@@ -69,7 +69,7 @@
         for: id
       }) | indent(6) | trim }}
       {%- if hasHint %}
-      {{ govukHint({
+      {{ usaHint({
         id: itemHintId,
         classes: 'usa-checkbox__label-description',
         attributes: item.hint.attributes,
