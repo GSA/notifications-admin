@@ -65,8 +65,8 @@ def _get_notifications_csv(
     return _get
 
 
-@pytest.fixture(scope="function")
-def _get_notifications_csv_mock(
+@pytest.fixture()
+def get_notifications_csv_mock(
     mocker,
     api_user_active,
 ):
@@ -77,7 +77,7 @@ def _get_notifications_csv_mock(
 
 
 @pytest.mark.parametrize(
-    "created_by_name, expected_content",
+    ("created_by_name", "expected_content"),
     [
         (
             None,
@@ -114,7 +114,7 @@ def test_generate_notifications_csv_without_job(
 
 
 @pytest.mark.parametrize(
-    "original_file_contents, expected_column_headers, expected_1st_row",
+    ("original_file_contents", "expected_column_headers", "expected_1st_row"),
     [
         (
             """
@@ -211,7 +211,7 @@ def test_generate_notifications_csv_without_job(
 def test_generate_notifications_csv_returns_correct_csv_file(
     notify_admin,
     mocker,
-    _get_notifications_csv_mock,
+    get_notifications_csv_mock,
     original_file_contents,
     expected_column_headers,
     expected_1st_row,
@@ -231,11 +231,11 @@ def test_generate_notifications_csv_returns_correct_csv_file(
 
 def test_generate_notifications_csv_only_calls_once_if_no_next_link(
     notify_admin,
-    _get_notifications_csv_mock,
+    get_notifications_csv_mock,
 ):
     list(generate_notifications_csv(service_id="1234"))
 
-    assert _get_notifications_csv_mock.call_count == 1
+    assert get_notifications_csv_mock.call_count == 1
 
 
 @pytest.mark.parametrize("job_id", ["some", None])
@@ -303,8 +303,14 @@ MockRecipients = namedtuple(
 
 
 @pytest.mark.parametrize(
-    "rows_with_bad_recipients, rows_with_missing_data, "
-    "rows_with_message_too_long, rows_with_empty_message, template_type, expected_errors",
+    (
+        "rows_with_bad_recipients",
+        "rows_with_missing_data",
+        "rows_with_message_too_long",
+        "rows_with_empty_message",
+        "template_type",
+        "expected_errors",
+    ),
     [
         ([], [], [], [], "sms", []),
         ({2}, [], [], [], "sms", ["fix 1 phone number"]),

@@ -7,7 +7,7 @@ from app.utils.user_permissions import (
 
 
 @pytest.mark.parametrize(
-    "db_permissions,expected_ui_permissions",
+    ("db_permissions", "expected_ui_permissions"),
     [
         (
             ["manage_templates"],
