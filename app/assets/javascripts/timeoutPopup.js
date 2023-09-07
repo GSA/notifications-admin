@@ -1,15 +1,16 @@
 (function(global) {
     "use strict";
-    hideTimerButtons();
+    //hideTimerButtons();
+
+    const sessionTimer = document.getElementById("sessionTimer");
 
     setTimeout(function() {
-        var timeTillSessionEnd = new Date().getTime() + (5 * 60 * 1000);
+        var timeTillSessionEnd = new Date().getTime() + (1 * 10 * 1000);
         var x = setInterval(function() {
             var now = new Date().getTime();
             var difference = timeTillSessionEnd - now;
             var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
             var seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
             document.getElementById("timerWarning").innerHTML = "Your session will " +
                 "expire in " + minutes + "m " + seconds + "s ";
             showTimerButtons();
@@ -20,7 +21,7 @@
                 redirectToSignin();
             }
         }, 1000);
-    }, 25 * 60 * 1000);
+    }, 1 * 20 * 1000);
 
     function redirectToSignin() {
         window.location.href = '/sign-in';
@@ -40,7 +41,7 @@
     }
 
     function showTimerButtons() {
-        document.getElementById("logOutTimer").style.display = 'block';
+        sessionTimer.showModal();
         document.getElementById("extendSessionTimer").style.display = 'block';
     }
 

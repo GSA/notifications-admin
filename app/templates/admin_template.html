@@ -12,11 +12,46 @@
 
 {% block head %}
     {% block sessionUserWarning %}
-        <div id="sessionTimerContent">
-            <p id="timerWarning"></p>
-            <button id="logOutTimer">Log Out</button>
-            <button id="extendSessionTimer">Extend Session</button>
+    <div class="usa-modal" id="sessionTimer" aria-labelledby="sessionTimerHeading" aria-describedby="timerWarning">
+      <div class="usa-modal__content">
+        <div class="usa-modal__main">
+          <h2 class="usa-modal__heading" id="sessionTimerHeading">
+            Your session will end soon.
+          </h2>
+          <div class="usa-prose">
+            <p aria-live="polite" id="timerWarning">
+              You’ve been inactive for too long. Please choose to stay signed in
+              or sign out. Otherwise, you’ll be signed out automatically in 5
+              minutes.
+            </p>
+          </div>
+          <div class="usa-modal__footer">
+            <ul class="usa-button-group">
+              <li class="usa-button-group__item">
+                <button type="button" class="usa-button" id="extendSessionTimer">
+                  Extend Session
+                </button>
+              </li>
+              <li class="usa-button-group__item">
+                <button type="button" class="usa-button usa-button--unstyled padding-105 text-center" id="logOutTimer">
+                  Sign out
+                </button>
+              </li>
+            </ul>
+          </div>
+          <button type="button" class="usa-button usa-modal__close" aria-label="Close this window">
+            <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+              <use xlink:href="/assets/img/usa-icons/close.svg"></use>
+            </svg>
+          </button>
         </div>
+      </div>
+    </div>
+    <!-- <dialog id="sessionTimer">
+        <p aria-live="polite" id="timerWarning"></p>
+        <button class="usa-button" id="logOutTimer">Log Out</button>
+        <button class="usa-button" id="extendSessionTimer">Extend Session</button>
+    </dialog> -->
     {% endblock %}
   {%- for font in font_paths %}
   <link rel="preload" href="{{ asset_url(font, with_querystring_hash=False) }}" as="font" type="font/woff2" crossorigin>
