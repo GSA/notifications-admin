@@ -19,14 +19,14 @@ svg_filename = "test.svg"
 upload_id = "test_uuid"
 
 
-@pytest.fixture
+@pytest.fixture()
 def upload_filename(fake_uuid):
     return EMAIL_LOGO_LOCATION_STRUCTURE.format(
         temp=TEMP_TAG.format(user_id=fake_uuid), unique_id=upload_id, filename=filename
     )
 
 
-@pytest.fixture
+@pytest.fixture()
 def bucket_credentials(notify_admin):
     return notify_admin.config["LOGO_UPLOAD_BUCKET"]
 

@@ -352,7 +352,7 @@ def test_raises_on_invalid_navigation_item(client_request, navigation_instance):
 
 
 @pytest.mark.parametrize(
-    "endpoint, selected_nav_item",
+    ("endpoint", "selected_nav_item"),
     [
         ("main.choose_template", "Send messages"),
         ("main.manage_users", "Team members"),
@@ -392,7 +392,7 @@ def test_a_page_should_nave_selected_navigation_item(
 
 
 @pytest.mark.parametrize(
-    "endpoint, selected_nav_item",
+    ("endpoint", "selected_nav_item"),
     [
         ("main.organization_dashboard", "Usage"),
         ("main.manage_org_users", "Team members"),

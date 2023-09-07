@@ -53,7 +53,7 @@ def test_sum_of_statistics_sums_inputs():
 
 
 @pytest.mark.parametrize(
-    "emails_failed,emails_requested,expected_failure_rate",
+    ("emails_failed", "emails_requested", "expected_failure_rate"),
     [(0, 0, "0"), (0, 1, "0.0"), (1, 3, "33.3")],
 )
 def test_add_rates_sets_email_failure_rate(
@@ -72,7 +72,7 @@ def test_add_rates_sets_email_failure_rate(
 
 
 @pytest.mark.parametrize(
-    "sms_failed,sms_requested,expected_failure_rate",
+    ("sms_failed", "sms_requested", "expected_failure_rate"),
     [(0, 0, "0"), (0, 1, "0.0"), (1, 3, "33.3")],
 )
 def test_add_rates_sets_sms_failure_rate(
@@ -121,7 +121,7 @@ def test_service_statistics_by_state():
 
 
 @pytest.mark.parametrize(
-    "failed, delivered, expected_failure_rate",
+    ("failed", "delivered", "expected_failure_rate"),
     [(0, 0, 0), (0, 1, 0), (1, 1, 50), (1, 0, 100), (1, 4, 20)],
 )
 def test_add_rate_to_job_calculates_rate(failed, delivered, expected_failure_rate):

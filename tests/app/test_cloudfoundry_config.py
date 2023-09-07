@@ -13,7 +13,7 @@ bucket_credentials = {
 }
 
 
-@pytest.fixture
+@pytest.fixture()
 def vcap_services():
     return {
         "aws-elasticache-redis": [{"credentials": {"uri": "redis://xxx:6379"}}],
