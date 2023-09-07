@@ -2,20 +2,20 @@
 {% from "components/form.html" import form_wrapper %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block service_page_title %}
   Send emails
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for('main.service_settings', service_id=current_service.id) }) }}
+  {{ usaBackLink({ "href": url_for('main.service_settings', service_id=current_service.id) }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-five-sixths">
+  <div class="grid-row">
+    <div class="grid-col-10">
       {{ page_header('Send emails') }}
       <p>
         It’s free to send emails through Notify.gov.

@@ -1,4 +1,4 @@
-{% from "components/uk_components/button/macro.njk" import govukButton %}
+{% from "components/components/button/macro.njk" import usaButton %}
 
 {% macro page_footer(
   button_text=None,
@@ -27,12 +27,12 @@
         }) %}
       {% endif %}
 
-      {{ govukButton(button_data) }}
+      {{ usaButton(button_data) }}
 
     {% endif %}
     {% if delete_link %}
       <span class="page-footer-link {% if not button_text %}page-footer-delete-link-without-button{% endif %}">
-        <a class="govuk-link govuk-link--destructive" href="{{ delete_link }}">{{ delete_link_text }}</a>
+        <a class="usa-link usa-link--destructive" href="{{ delete_link }}">{{ delete_link_text }}</a>
       </span>
     {% endif %}
     {% if secondary_link and secondary_link_text %}

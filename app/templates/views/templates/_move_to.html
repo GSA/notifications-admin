@@ -15,14 +15,14 @@
     </div>
     <div id="move_to_new_folder_form" class="sticky-template-form" role="region" aria-label="Enter name of the new folder to move selected items to">
       <div class="js-will-stick-at-bottom-when-scrolling">
-        {{ templates_and_folders_form.move_to_new_folder_name(param_extensions={"classes": "govuk-!-width-full"}) }}
+        {{ templates_and_folders_form.move_to_new_folder_name(param_extensions={"classes": ""}) }}
         {{ page_footer('Add to new folder', button_name='operation', button_value='move-to-new-folder') }}
       </div>
     </div>
   {% endif %}
   <div id="add_new_folder_form" class="sticky-template-form" role="region" aria-label="Enter name of the new folder">
     <div class="js-will-stick-at-bottom-when-scrolling">
-      {{ templates_and_folders_form.add_new_folder_name(param_extensions={"classes": "govuk-!-width-full"}) }}
+      {{ templates_and_folders_form.add_new_folder_name(param_extensions={"classes": ""}) }}
       {{ page_footer('Add new folder', button_name='operation', button_value='add-new-folder') }}
     </div>
   </div>

@@ -3,10 +3,7 @@ from abc import ABC, abstractmethod
 
 from notifications_utils.field import Field
 from notifications_utils.formatters import formatted_list
-from notifications_utils.recipients import (
-    InvalidEmailError,
-    validate_email_address,
-)
+from notifications_utils.recipients import InvalidEmailError, validate_email_address
 from notifications_utils.sanitise_text import SanitiseSMS
 from wtforms import ValidationError
 
@@ -18,7 +15,7 @@ from app.utils.user import is_gov_user
 class CommonlyUsedPassword:
     def __init__(self, message=None):
         if not message:
-            message = 'Password is in list of commonly used passwords.'
+            message = "Password is in list of commonly used passwords."
         self.message = message
 
     def __call__(self, form, field):
@@ -27,37 +24,39 @@ class CommonlyUsedPassword:
 
 
 class CsvFileValidator:
-
-    def __init__(self, message='Not a csv file'):
+    def __init__(self, message="Not a csv file"):
         self.message = message
 
     def __call__(self, form, field):
         if not Spreadsheet.can_handle(field.data.filename):
-            raise ValidationError("{} is not a spreadsheet that Notify can read".format(field.data.filename))
+            raise ValidationError(
+                "{} is not a spreadsheet that Notify can read".format(
+                    field.data.filename
+                )
+            )
 
 
 class ValidGovEmail:
-
     def __call__(self, form, field):
-
-        if field.data == '':
+        if field.data == "":
             return
 
         from flask import url_for
-        message = '''
+
+        message = """
             Enter a public sector email address or
-            <a class="govuk-link govuk-link--no-visited-state" href="{}">find out who can use Notify</a>
-        '''.format(url_for('main.features'))
+            <a class="usa-link" href="{}">find out who can use Notify</a>
+        """.format(
+            url_for("main.features")
+        )
         if not is_gov_user(field.data.lower()):
             raise ValidationError(message)
 
 
 class ValidEmail:
-
-    message = 'Enter a valid email address'
+    message = "Enter a valid email address"
 
     def __call__(self, form, field):
-
         if not field.data:
             return
 
@@ -68,17 +67,15 @@ class ValidEmail:
 
 
 class NoCommasInPlaceHolders:
-
-    def __init__(self, message='You cannot put commas between double brackets'):
+    def __init__(self, message="You cannot put commas between double brackets"):
         self.message = message
 
     def __call__(self, form, field):
-        if ',' in ''.join(Field(field.data).placeholders):
+        if "," in "".join(Field(field.data).placeholders):
             raise ValidationError(self.message)
 
 
 class NoElementInSVG(ABC):
-
     @property
     @abstractmethod
     def element(self):
@@ -92,36 +89,42 @@ class NoElementInSVG(ABC):
     def __call__(self, form, field):
         svg_contents = field.data.stream.read().decode("utf-8")
         field.data.stream.seek(0)
-        if f'<{self.element}' in svg_contents.lower():
+        if f"<{self.element}" in svg_contents.lower():
             raise ValidationError(self.message)
 
 
 class NoEmbeddedImagesInSVG(NoElementInSVG):
-    element = 'image'
-    message = 'This SVG has an embedded raster image in it and will not render well'
+    element = "image"
+    message = "This SVG has an embedded raster image in it and will not render well"
 
 
 class NoTextInSVG(NoElementInSVG):
-    element = 'text'
-    message = 'This SVG has text which has not been converted to paths and may not render well'
+    element = "text"
+    message = "This SVG has text which has not been converted to paths and may not render well"
 
 
 class OnlySMSCharacters:
-
     def __init__(self, *args, template_type, **kwargs):
         self._template_type = template_type
         super().__init__(*args, **kwargs)
 
     def __call__(self, form, field):
-        non_sms_characters = sorted(list(SanitiseSMS.get_non_compatible_characters(field.data)))
+        non_sms_characters = sorted(
+            list(SanitiseSMS.get_non_compatible_characters(field.data))
+        )
         if non_sms_characters:
             raise ValidationError(
-                'You cannot use {} in {}. {} will not show up properly on everyone’s phones.'.format(
-                    formatted_list(non_sms_characters, conjunction='or', before_each='', after_each=''),
+                "You cannot use {} in {}. {} will not show up properly on everyone’s phones.".format(
+                    formatted_list(
+                        non_sms_characters,
+                        conjunction="or",
+                        before_each="",
+                        after_each="",
+                    ),
                     {
-                        'sms': 'text messages',
+                        "sms": "text messages",
                     }.get(self._template_type),
-                    ('It' if len(non_sms_characters) == 1 else 'They')
+                    ("It" if len(non_sms_characters) == 1 else "They"),
                 )
             )
 
@@ -139,10 +142,9 @@ class OnlySMSCharacters:
 
 
 class LettersNumbersSingleQuotesFullStopsAndUnderscoresOnly:
-
     regex = re.compile(r"^[a-zA-Z0-9\s\._']+$")
 
-    def __init__(self, message='Use letters and numbers only'):
+    def __init__(self, message="Use letters and numbers only"):
         self.message = message
 
     def __call__(self, form, field):
@@ -151,7 +153,6 @@ class LettersNumbersSingleQuotesFullStopsAndUnderscoresOnly:
 
 
 class DoesNotStartWithDoubleZero:
-
     def __init__(self, message="Cannot start with 00"):
         self.message = message
 
@@ -161,13 +162,9 @@ class DoesNotStartWithDoubleZero:
 
 
 class MustContainAlphanumericCharacters:
-
     regex = re.compile(r".*[a-zA-Z0-9].*[a-zA-Z0-9].*")
 
-    def __init__(
-        self,
-        message="Must include at least two alphanumeric characters"
-    ):
+    def __init__(self, message="Must include at least two alphanumeric characters"):
         self.message = message
 
     def __call__(self, form, field):

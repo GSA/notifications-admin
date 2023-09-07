@@ -11,7 +11,7 @@
       {% for label, option, link, count in items %}
         <li class="pill-item__container">
         {% if current_value == option %}
-          <a id="pill-selected-item" class="pill-item pill-item--selected usa-link {% if not show_count %} pill-item--centered{% endif %}" href="{{ link }}" aria-current="page">
+          <a id="pill-item-selected" class="pill-item pill-item--selected usa-link {% if not show_count %} pill-item--centered{% endif %}" aria-disabled="true" aria-current="page">
         {% else %}
           <a class="pill-item usa-dark-background usa-link usa-link--alt bg-primary" href="{{ link }}">
         {% endif %}

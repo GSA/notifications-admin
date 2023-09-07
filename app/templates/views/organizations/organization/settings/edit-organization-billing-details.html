@@ -3,14 +3,14 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
 {% from "components/textbox.html" import textbox %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block org_page_title %}
   Edit organization billing details
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for('.organization_settings', org_id=current_org.id) }) }}
+  {{ usaBackLink({ "href": url_for('.organization_settings', org_id=current_org.id) }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
@@ -18,11 +18,11 @@
     {{ page_header('Edit organization billing details') }}
 
     {% call form_wrapper() %}
-      {{ form.billing_contact_names(param_extensions={"classes": "govuk-!-width-full"}) }}
-      {{ form.billing_contact_email_addresses(param_extensions={"classes": "govuk-!-width-full"}) }}
+      {{ form.billing_contact_names(param_extensions={"classes": ""}) }}
+      {{ form.billing_contact_email_addresses(param_extensions={"classes": ""}) }}
     <div class="extra-tracking">
-        {{ form.billing_reference(param_extensions={"classes": "govuk-!-width-full"}) }}
-        {{ form.purchase_order_number(param_extensions={"classes": "govuk-!-width-full"}) }}
+        {{ form.billing_reference(param_extensions={"classes": ""}) }}
+        {{ form.purchase_order_number(param_extensions={"classes": ""}) }}
     </div>
       {{ textbox(
         form.notes,

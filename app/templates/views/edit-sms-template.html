@@ -3,14 +3,15 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
+{% from "components/components/alert/macro.njk" import usaAlert %}
 
 {% block service_page_title %}
   {{ heading_action }} text message template
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({
+  {{ usaBackLink({
     "href": url_for('main.choose_template', service_id=current_service.id, template_folder_id=template_folder_id) if template_folder_id else url_for('main.choose_template', service_id=current_service.id)
   }) }}
 {% endblock %}
@@ -19,23 +20,21 @@
 
     {{ page_header('{} text message template'.format(heading_action)) }}
 
-    <div class="usa-alert usa-alert--info usa-alert--slim">
-      <div class="usa-alert__body">
-        <p class="usa-alert__text">
-          Don't worry, saving the template will not send        
-        </p>
-      </div>
-    </div>
+    {{ usaAlert({
+      "type": "info",
+      "text": "Don't worry, saving the template will not send",
+      "classes": "margin-top-2 usa-button--secondary"
+    }) }}
 
     {% if current_service.prefix_sms %}
       {% set content_hint = 'Your service name will be added to the start of your message. You can turn this off in Settings.' %}
     {% endif %}
 
     {% call form_wrapper() %}
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+      <div class="grid-row">
+        <div class="grid-col-8">
           {{ form.name(param_extensions={
-            "classes": "govuk-!-width-full",
+            "extra_form_group_classes": "margin-bottom-2",
             "hint": {"text": "Your recipients will not see this"}
           }) }}
           {{ textbox(
@@ -44,14 +43,14 @@
             width='1-1',
             hint=content_hint,
             rows=5,
-            extra_form_group_classes='govuk-!-margin-bottom-2',
+            extra_form_group_classes='margin-bottom-1',
             placeholder='Edit me! Check out the Personalization section below for details on cool ((stuff)) you can do with your messages!'
           ) }}
           {% if current_user.platform_admin %}
             {{ form.process_type }}
           {% endif %}
         </div>
-        <div class="govuk-grid-column-full">
+        <div class="grid-col-12">
           <div class="template-content-count">
             <div data-module="update-status" data-target="template_content" data-updates-url="{{ url_for('.count_content_length', service_id=current_service.id, template_type='sms') }}" aria-live="polite">
               &nbsp;
@@ -62,7 +61,7 @@
             After saving, you'll have the option to send 🚀
           </p>
         </div>
-        <div class="govuk-grid-column-full">
+        <div class="grid-col-12">
           {% include "partials/templates/guidance-personalisation.html" %}
           {% include "partials/templates/guidance-optional-content.html" %}
           {% include "partials/templates/guidance-links.html" %}

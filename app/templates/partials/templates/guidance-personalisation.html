@@ -1,4 +1,4 @@
-{% from "components/uk_components/inset-text/macro.njk" import govukInsetText %}
+{% from "components/components/inset-text/macro.njk" import usaInsetText %}
 
 <h2 class="font-body-lg">
   Personalization
@@ -6,7 +6,7 @@
 <p class="bottom-gutter-1-3">
   Use double brackets to personalize your message:
 </p>
-{{ govukInsetText({
+{{ usaInsetText({
   "text": "Hello ((first name)), your reference is ((ref number))",
-  "classes": "govuk-!-margin-top-0"})
+  "classes": ""})
 }}

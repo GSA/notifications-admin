@@ -1,4 +1,4 @@
-{% from "components/uk_components/inset-text/macro.njk" import govukInsetText %}
+{% from "components/components/inset-text/macro.njk" import usaInsetText %}
 
 <h2 class="font-body-lg">
   Optional content
@@ -10,7 +10,7 @@
   For example if you only want to show something to people who are under
   18:
 </p>
-{{ govukInsetText({
+{{ usaInsetText({
   "text": "((under18??Please get your application signed by a parent or
   guardian.))",
   "classes": "usa-body"})

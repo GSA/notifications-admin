@@ -10,7 +10,7 @@
 
       this.$input = $(component);
 
-      this.$input.closest('.govuk-form-group').append(
+      this.$input.closest('.usa-form-group').append(
         this.$preview = $('<span class="textbox-colour-preview"></span>')
       );
 

@@ -1,6 +1,6 @@
 {% macro mapping_table(caption='', field_headings=[], field_headings_visible=True, caption_visible=True, equal_length=False) -%}
-  <table class="table usa-table usa-table--borderless table-font-xsmall">
-    <caption class="heading-medium table-heading{{ ' usa-sr-only' if not caption_visible}}">
+  <table class="usa-table usa-table--borderless">
+    <caption class="font-body-lg table-heading{{ ' usa-sr-only' if not caption_visible}}">
       {{ caption }}
     </caption>
     <thead class="table-field-headings{% if field_headings_visible %}-visible{% endif %}">
@@ -10,7 +10,7 @@
             {% if field_headings_visible %}
               {{ field_heading }}
             {% else %}
-              <span class="usa-sr-only">{{ field_heading }}</span>
+              <span>{{ field_heading }}</span>
             {% endif %}
           </th>
         {% endfor %}
@@ -65,7 +65,11 @@
 
 {% macro field(align='left', status='', border=True, colspan=None, wrap=False) -%}
 
-    {% set field_alignment = 'table-field-right-aligned' if align == 'right' else 'table-field-left-aligned' %}
+    {% set field_alignment =
+    'table-field-right-aligned' if align == 'right' else
+    'table-field-center-aligned' if align == 'center' else
+    'table-field-left-aligned'
+    %}    
     {% set border = '' if border else 'table-field-noborder' %}
     {% set wrap = 'table-field-wrap-text' if wrap else '' %}
 
@@ -165,12 +169,12 @@
       {% if notification.status|format_notification_status_as_url(notification.notification_type) %}
         </a>
       {% endif %}
-      <span class="status-hint">
+      <p class="status-hint margin-0 width-card-lg">
         {{ notification.status|format_notification_status_as_time(
           notification.created_at|format_datetime_short,
           (notification.updated_at or notification.created_at)|format_datetime_short
         ) }}
-      </span>
+        </p>
       {% if displayed_on_single_line %}</span>{% endif %}
     {% endcall %}
   {% endif %}
@@ -186,11 +190,11 @@
     <span {% if id %}id="{{ id }}"{% endif %} class="spark-bar">
       <span class="spark-bar-bar">
         {{ '{:,.0f}'.format(count) }} 
-          {% if count == 1 -%}
+          <!-- {% if count == 1 -%}
             message sent
           {% else -%}
             messages sent
-          {% endif %}
+          {% endif %} -->
       </span>
     </span>
   {% endcall %}

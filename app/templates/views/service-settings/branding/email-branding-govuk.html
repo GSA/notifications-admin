@@ -1,6 +1,6 @@
 {% extends "withnav_template.html" %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/branding-preview.html" import email_branding_preview %}
@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({
+  {{ usaBackLink({
     "href": url_for('.email_branding_request', service_id=current_service.id)
   }) }}
 {% endblock %}
@@ -31,7 +31,7 @@
 
   <p>
     You cannot use Notify.gov branding if your organization is
-    <a class="govuk-link govuk-link--no-visited-state"
+    <a class="usa-link"
       href="https://www.gov.uk/government/publications/govuk-proposition/govuk-proposition#organizations-independent-from-government">independent
       from government</a>.
   </p>

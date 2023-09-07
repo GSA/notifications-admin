@@ -1,5 +1,5 @@
 {% from "components/ajax-block.html" import ajax_block %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% extends "withnav_template.html" %}
 
@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for("main.inbox", service_id=current_service.id) }) }}
+  {{ usaBackLink({ "href": url_for("main.inbox", service_id=current_service.id) }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
@@ -16,7 +16,7 @@
   <div class="dashboard">
 
     <div class="bottom-gutter js-stick-at-top-when-scrolling">
-      <h1 class="heading-large govuk-!-margin-top-0">
+      <h1 class="heading-large">
         {{ user_number }}
       </h1>
     </div>
@@ -29,7 +29,7 @@
 
     {% if current_user.has_permissions('send_messages') %}
       <p class="sms-message-reply-link">
-        <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.conversation_reply', service_id=current_service.id, notification_id=notification_id) }}">Send a text message to this phone number</a>
+        <a class="usa-link" href="{{ url_for('.conversation_reply', service_id=current_service.id, notification_id=notification_id) }}">Send a text message to this phone number</a>
       </p>
     {% endif %}
 

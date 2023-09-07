@@ -1,0 +1,71 @@
+{% extends "withoutnav_template.html" %}
+{% from "components/page-header.html" import page_header %}
+{% from "components/components/button/macro.njk" import usaButton %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
+{% from "components/webauthn-api-check.html" import webauthn_api_check %}
+{% from "components/components/error-message/macro.njk" import usaErrorMessage %}
+
+{% set page_title = 'Get your security key' %}
+
+{% block extra_javascripts_before_body %}
+  {{ webauthn_api_check() }}
+{% endblock %}
+
+{% block per_page_title %}
+  {{ page_title }}
+{% endblock %}
+
+{% block backLink %}
+  {{ usaBackLink({ "href": url_for('.user_profile') }) }}
+{% endblock %}
+
+{% block maincolumn_content %}
+
+    {{ usaErrorMessage({
+      "classes": "banner-dangerous display-none",
+      "html": (
+        'There’s a problem with your security key' +
+        '<p>Check you have the right key and try again. ' +
+        'If this does not work, ' +
+        '<a class="usa-link" href=' + url_for('main.support') + ">contact us</a>." +
+        '</p>'
+      ),
+      "attributes": {
+        "aria-live": "polite",
+        "tabindex": '-1'
+      }
+    }) }}
+
+  <div class="grid-row">
+    <div class="grid-col-6">
+      {{ page_header(page_title) }}
+
+      <p>
+        You need to have your security key to sign in.
+      </p>
+
+      {{ usaButton({
+        "element": "button",
+        "text": "Check security key",
+        "classes": "govuk-button--secondary webauthn__api-required",
+        "attributes": {
+          "data-module": "authenticate-security-key",
+          "data-csrf-token": csrf_token(),
+        }
+      }) }}
+
+      {{ usaErrorMessage({
+        "classes": "webauthn__api-missing",
+        "text": "Your browser does not support security keys. Try signing in to Notify using a different browser."
+      }) }}
+
+      {{ usaErrorMessage({
+        "classes": "webauthn__no-js",
+        "text": "JavaScript is not available for this page. Security keys need JavaScript to work."
+      }) }}
+    </div>
+    <div class="grid-col-3">
+      <img src="{{ asset_url('images/security-key.svg') }}" alt="" class="webauthn-illustration" width="149" height="150">
+    </div>
+  </div>
+{% endblock %}

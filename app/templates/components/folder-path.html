@@ -40,7 +40,7 @@
   {% if folder_path %}
     <h2 class="heading-medium folder-heading">
       {% if folder_path|length == 1 %}
-        <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.choose_template_to_copy', service_id=current_service_id) }}">Services</a>
+        <a class="usa-link" href="{{ url_for('.choose_template_to_copy', service_id=current_service_id) }}">Services</a>
         {{ folder_path_separator() }}
       {% endif %}
       {% for folder in folder_path %}
@@ -51,15 +51,15 @@
         {% else %}
           {% if folder.id %}
             {% if current_user.has_template_folder_permission(folder) %}
-              <a href="{{ url_for('.choose_template_to_copy', service_id=current_service_id, from_service=from_service.id, from_folder=folder.id) }}" class="govuk-link govuk-link--no-visited-state folder-heading-folder">{{ folder.name }}</a>
+              <a href="{{ url_for('.choose_template_to_copy', service_id=current_service_id, from_service=from_service.id, from_folder=folder.id) }}" class="usa-link folder-heading-folder">{{ folder.name }}</a>
              {% else %}
               <span class="folder-heading-folder">{{ folder.name }}</span>
             {% endif %}
             {% if not loop.last %}{{ folder_path_separator() }}{% endif %}
           {% elif folder.parent_id == None %}
-            <a href="{{ url_for('.choose_template_to_copy', service_id=current_service_id, from_service=from_service.id, from_folder=folder.id) }}" class="govuk-link govuk-link--no-visited-state folder-heading-folder">{{ from_service.name }}</a> {% if not loop.last %}{{ folder_path_separator() }}{% endif %}
+            <a href="{{ url_for('.choose_template_to_copy', service_id=current_service_id, from_service=from_service.id, from_folder=folder.id) }}" class="usa-link folder-heading-folder">{{ from_service.name }}</a> {% if not loop.last %}{{ folder_path_separator() }}{% endif %}
           {% else %}
-            <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.choose_template_to_copy', service_id=current_service_id, from_service=from_service.id) }}">{{ from_service.name }}</a> {% if not loop.last %}{{ folder_path_separator() }}{% endif %}
+            <a class="usa-link" href="{{ url_for('.choose_template_to_copy', service_id=current_service_id, from_service=from_service.id) }}">{{ from_service.name }}</a> {% if not loop.last %}{{ folder_path_separator() }}{% endif %}
           {% endif %}
         {% endif %}
       {% endfor %}

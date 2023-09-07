@@ -1,15 +1,16 @@
-{% from "./components/uk_components/skip-link/macro.njk" import govukSkipLink -%}
-{% from "./components/uk_components/header/macro.njk" import govukHeader -%}
-{% from "./components/uk_components/footer/macro.njk" import govukFooter -%}
+{% from "./components/components/skip-link/macro.njk" import usaSkipLink -%}
+{% from "./components/components/header/macro.njk" import usaHeader -%}
+{% from "./components/components/footer/macro.njk" import usaFooter -%}
 {# specify absolute url for the static assets folder e.g. http://wwww.domain.com/assets #}
 {%- set assetUrl = assetUrl | default(assetPath) -%}
 <!DOCTYPE html>
-<html lang="{{ htmlLang | default('en') }}" class="govuk-template {{ htmlClasses }}">
+<html lang="{{ htmlLang | default('en') }}" class="{{ htmlClasses }}">
   <head>
     <meta charset="utf-8" />
     <title>{% block pageTitle %}Notify.gov{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="{{ themeColor | default('#0b0c0c') }}" /> {# Hardcoded value of $govuk-black #}
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="f0f0f0" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="1b1b1b" />
     {% if config['NR_MONITOR_ON'] %}
       {% include "partials/newrelic.html" -%}
     {% endif %}
@@ -31,19 +32,19 @@
     {# image url needs to be absolute e.g. http://wwww.domain.com/.../govuk-opengraph-image.png #}
     <!-- <meta property="og:image" content="{{ assetUrl | default('/assets') }}/images/govuk-opengraph-image.png"> -->
   </head>
-  <body class="govuk-template__body {{ bodyClasses }}">
+  <body class="usa-template__body {{ bodyClasses }}">
     <script nonce="{{ csp_nonce() }}">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     {% block bodyStart %}{% endblock %}
 
     {% block skipLink %}
-      {{ govukSkipLink({
+      {{ usaSkipLink({
         "href": '#main-content',
         "text": 'Skip to main content'
       }) }}
     {% endblock %}
 
     {% block header %}
-      {{ govukHeader({}) }}
+      {{ usaHeader({}) }}
     {% endblock %}
 
     {% block main %}
@@ -56,7 +57,7 @@
     {% endblock %}
 
     {% block footer %}
-      {{ govukFooter({}) }}
+      {{ usaFooter({}) }}
     {% endblock %}
 
     {% block bodyEnd %}{% endblock %}

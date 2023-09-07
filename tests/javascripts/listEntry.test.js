@@ -49,11 +49,11 @@ describe("List entry", () => {
       for (let idx = 0; idx < 10; idx++) {
         result += `
             <div class="list-entry">
-              <div class="govuk-form-group">
-                <label for="domains-${idx + 1}" class="govuk-label govuk-input--numbered__label">
+              <div class="usa-form-group">
+                <label for="domains-${idx + 1}" class="usa-radio__label govuk-input--numbered__label">
                   <span class="usa-sr-only">domain number </span>${idx + 1}.
                 </label>
-                <input type="text" name="domains-${idx + 1}" id="domains-${idx + 1}" class="govuk-input govuk-input--numbered govuk-!-width-full" autocomplete="off">
+                <input type="text" name="domains-${idx + 1}" id="domains-${idx + 1}" class="govuk-input govuk-input--numbered " autocomplete="off">
               </div>
             </div>`;
       }
@@ -62,12 +62,12 @@ describe("List entry", () => {
     };
 
     document.body.innerHTML =
-      `<fieldset class="govuk-form-group" aria-describedby="domains-hint">
-        <legend class="govuk-fieldset__legend">
+      `<fieldset class="usa-form-group" aria-describedby="domains-hint">
+        <legend class="usa-fieldset__legend">
           Domain names
           </span>
         </legend>
-        <span id="domains-hint" class="govuk-hint">
+        <span id="domains-hint" class="usa-hint">
           For example cabinet-office.gov.uk
         </span>
         <div class="input-list" data-module="list-entry" data-list-item-name="domain" id="list-entry-domains">

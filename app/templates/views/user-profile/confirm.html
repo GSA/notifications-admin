@@ -2,28 +2,28 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block per_page_title %}
   Change your {{ thing }}
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for('.user_profile') }) }}
+  {{ usaBackLink({ "href": url_for('.user_profile') }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
 
   {{ page_header('Change your {}'.format(thing)) }}
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-three-quarters">
+  <div class="grid-row">
+    <div class="grid-col-9">
       <p>
         We’ve sent a security code to your new {{ thing }}.
       </p>
       {% call form_wrapper() %}
         {{ form_field(param_extensions={
-            "classes": "govuk-input govuk-input--width-5",
+            "classes": "usa-input width-15",
             "attributes": {"data-module": "autofocus"}
         }) }}
 

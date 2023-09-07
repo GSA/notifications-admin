@@ -1,5 +1,5 @@
-{% from "components/uk_components/fieldset/macro.njk" import govukFieldset %}
-{% from "components/uk_components/error-message/macro.njk" import govukErrorMessage %}
+{% from "components/components/fieldset/macro.njk" import govukFieldset %}
+{% from "components/components/error-message/macro.njk" import usaErrorMessage %}
 
 {% macro list_entry(
   field,
@@ -8,7 +8,7 @@
   autocomplete=True
 ) %}
 
-  <div class="govuk-form-group">
+  <div class="usa-form-group">
     {% if hint %}
       {% set attributes = {"aria-describedby": field.name + '-hint'} %}
     {% else %}
@@ -36,9 +36,9 @@
             {% set autocomplete = "" %}
           {% endif %}
           {% if entry.errors %}
-            {% set label_classes = "govuk-input--numbered__label govuk-input--numbered__label--error" %}
+            {% set label_classes = "usa-input--numbered__label usa-input--numbered__label--error" %}
           {% else %}
-            {% set label_classes = "govuk-input--numbered__label" %}
+            {% set label_classes = "usa-input--numbered__label" %}
           {% endif %}
           {% set field_name = field.name + "-" + loop.index|string %}
           {{ entry(param_extensions={
@@ -48,7 +48,7 @@
               "html": '<span class="usa-sr-only">' + item_name + ' number </span>' + loop.index|string + '.',
               "classes": label_classes
             },
-            "classes": "govuk-input--numbered govuk-!-width-full",
+            "classes": "usa-input--numbered ",
             "value": field.data[loop.index0],
             "autocomplete": autocomplete
           }) }}

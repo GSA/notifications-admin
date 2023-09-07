@@ -2,7 +2,7 @@
 {% from "components/table.html" import list_table, row, field, hidden_field_heading %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/live-search.html" import live_search %}
-{% from "components/uk_components/button/macro.njk" import govukButton %}
+{% from "components/components/button/macro.njk" import usaButton %}
 
 {% block org_page_title %}
   Team members
@@ -19,7 +19,7 @@
     ) }}
   {% endif %}
 
-  <h1 class="heading-medium">
+  <h1 class="font-body-2xl">
     Team members
   </h1>
 
@@ -32,8 +32,8 @@
   <div class="user-list">
     {% for user in users %}
       <div class="user-list-item">
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-three-quarters">
+        <div class="grid-row">
+          <div class="grid-col-9">
             <h2 class="user-list-item-heading">
               {%- if user.name -%}
                 <span class="heading-small">{{ user.name }}</span>&ensp;
@@ -51,11 +51,11 @@
               </span>
             </h2>
           </div>
-          <div class="govuk-grid-column-one-quarter">
+          <div class="grid-col-3">
             {% if user.status == 'pending' %}
-              <a class="govuk-link govuk-link--no-visited-state user-list-edit-link" href="{{ url_for('.cancel_invited_org_user', org_id=current_org.id, invited_user_id=user.id)}}">Cancel invitation<span class="usa-sr-only"> for {{ user.email_address }}</span></a>
+              <a class="usa-link user-list-edit-link" href="{{ url_for('.cancel_invited_org_user', org_id=current_org.id, invited_user_id=user.id)}}">Cancel invitation<span class="usa-sr-only"> for {{ user.email_address }}</span></a>
             {% elif user.status != 'cancelled' %}
-              <a class="govuk-link govuk-link--destructive user-list-edit-link" href="{{ url_for('.edit_organization_user', org_id=current_org.id, user_id=user.id)}}">Remove<span class="usa-sr-only"> {{ user.name }} {{ user.email_address }}</span></a>
+              <a class="usa-link usa-link--destructive user-list-edit-link" href="{{ url_for('.edit_organization_user', org_id=current_org.id, user_id=user.id)}}">Remove<span class="usa-sr-only"> {{ user.name }} {{ user.email_address }}</span></a>
             {% endif %}
           </div>
         </div>
@@ -64,7 +64,7 @@
   </div>
 
   <div class="js-stick-at-bottom-when-scrolling">
-    {{ govukButton({
+    {{ usaButton({
       "element": "a",
       "text": "Invite team member",
       "href": url_for('.invite_org_user', org_id=current_org.id),

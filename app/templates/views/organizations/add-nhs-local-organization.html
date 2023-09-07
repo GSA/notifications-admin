@@ -3,14 +3,14 @@
 {% from "components/page-footer.html" import sticky_page_footer %}
 {% from "components/live-search.html" import live_search %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block per_page_title %}
   {{ page_title }}
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for('main.request_to_go_live', service_id=current_service.id) }) }}
+  {{ usaBackLink({ "href": url_for('main.request_to_go_live', service_id=current_service.id) }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
@@ -20,7 +20,7 @@
       {{ form.organizations.label.text }}
     </p>
     {{ live_search(
-      target_selector='.govuk-radios__item',
+      target_selector='.usa-radio',
       show=True,
       form=search_form,
       label='Search by name',

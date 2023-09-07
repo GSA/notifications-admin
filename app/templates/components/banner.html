@@ -1,5 +1,5 @@
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/button/macro.njk" import govukButton %}
+{% from "components/components/button/macro.njk" import usaButton %}
 
 {% macro banner(body, type=None, with_tick=False, delete_button=None, subhead=None, context=None, action=None, id=None, thing=None) %}
   <div
@@ -24,7 +24,7 @@
     {% if delete_button %}
       {% call form_wrapper(action=action) %}
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        {{ govukButton({
+        {{ usaButton({
           "text": "" if thing else delete_button,
           "html": delete_button + "<span class=\"usa-sr-only\"> ‘" + thing + "’</span>" if thing else "",
           "name": "delete",

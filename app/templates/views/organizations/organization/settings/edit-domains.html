@@ -3,20 +3,20 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/list-entry.html" import list_entry %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block org_page_title %}
   Known email domains
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for('.organization_settings', org_id=current_org.id) }) }}
+  {{ usaBackLink({ "href": url_for('.organization_settings', org_id=current_org.id) }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
   {{ page_header("Known email domains") }}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-five-sixths">
+  <div class="grid-row">
+    <div class="grid-col-10">
       <p>
         If a user’s email addresses ends with one of these domains then
         any services they create will be associated with this organization.

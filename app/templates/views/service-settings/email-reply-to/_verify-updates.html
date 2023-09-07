@@ -1,7 +1,7 @@
 {% from "components/banner.html" import banner, banner_wrapper %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/button/macro.njk" import govukButton %}
+{% from "components/components/button/macro.njk" import usaButton %}
 
 <div class="ajax-block-container">
   {% if verification_status == "pending" %}
@@ -12,13 +12,13 @@
       <span class='loading-indicator'>This can take a minute</span>
     </p>
 
-    <p class="js-hidden govuk-body">
-      <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.service_verify_reply_to_address', service_id=service_id, notification_id=notification_id, is_default=is_default, replace=replace) }}">Refresh</a>
+    <p class="js-hidden usa-body">
+      <a class="usa-link" href="{{ url_for('main.service_verify_reply_to_address', service_id=service_id, notification_id=notification_id, is_default=is_default, replace=replace) }}">Refresh</a>
     </p>
   {% elif verification_status == "success" %}
     {{ banner("‘{}’ is ready to use".format(reply_to_email_address), type='default', with_tick=True) }}
     <div class="js-stick-at-bottom-when-scrolling">
-      {{ govukButton({
+      {{ usaButton({
         "element": "a",
         "text": "Continue",
         "href": url_for('.service_email_reply_to', service_id=service_id)
@@ -49,7 +49,7 @@
       {{ form.email_address(
           param_extensions={
             "hint": {"text": "This should be a shared inbox managed by your team, not your own email address"},
-            "classes": "govuk-!-width-full"
+            "classes": ""
           },
           error_message_with_html=True
       ) }}

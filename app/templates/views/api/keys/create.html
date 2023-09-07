@@ -3,14 +3,14 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/banner.html" import banner_wrapper %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/uk_components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block service_page_title %}
   Create an API key
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for('main.api_keys', service_id=current_service.id) }) }}
+  {{ usaBackLink({ "href": url_for('main.api_keys', service_id=current_service.id) }) }}
 {% endblock %}
 
 {% block maincolumn_content %}

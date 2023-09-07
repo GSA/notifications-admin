@@ -22,7 +22,7 @@ describe('Collapsible fieldset', () => {
 
         result += `<li class="govuk-checkboxes__item">
           <input class="govuk-checkboxes__input" id="${id}" name="folder-permissions" type="checkbox" value="${id}">
-          <label class="govuk-label govuk-checkboxes__label" for="${id}">
+          <label class="usa-radio__label govuk-checkboxes__label" for="${id}">
             Folder ${id}
           </label>
         </li>`;
@@ -41,11 +41,11 @@ describe('Collapsible fieldset', () => {
     // set up DOM
     document.body.innerHTML =
       `<div class="selection-wrapper" data-module="collapsible-checkboxes" data-field-label="folder">
-        <div class="govuk-form-group">
-          <fieldset class="govuk-fieldset" id="folder_permissions" aria-describedby="users_with_permission-hint">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+        <div class="usa-form-group">
+          <fieldset class="usa-fieldset" id="folder_permissions" aria-describedby="users_with_permission-hint">
+            <legend class="usa-fieldset__legend usa-fieldset__legend--s">
               Folders this team member can see
-              <span class="govuk-hint" id="users_with_permission-hint">
+              <span class="usa-hint" id="users_with_permission-hint">
                 <div class="selection-summary" role="region" aria-live="polite"></div>
               </span>
             </legend>
@@ -57,7 +57,7 @@ describe('Collapsible fieldset', () => {
       </div>`;
 
       wrapper = document.querySelector('.selection-wrapper');
-      formGroup = wrapper.querySelector('.govuk-form-group');
+      formGroup = wrapper.querySelector('.usa-form-group');
       fieldset = formGroup.querySelector('fieldset');
       checkboxesContainer = fieldset.querySelector('.govuk-checkboxes');
       checkboxes = checkboxesContainer.querySelectorAll('input[type=checkbox]');
@@ -146,7 +146,7 @@ describe('Collapsible fieldset', () => {
 
     test("the hint is removed", () => {
 
-      expect(document.querySelector('.govuk-hint')).toBeNull();
+      expect(document.querySelector('.usa-hint')).toBeNull();
 
     });
 
@@ -321,7 +321,7 @@ describe('Collapsible fieldset', () => {
 
         // add a nested list of checkboxes to the first checkbox item
         const nestedCheckboxes = document.createElement('div');
-        nestedCheckboxes.className = 'govuk-form-group govuk-form-group--nested';
+        nestedCheckboxes.className = 'usa-form-group usa-form-group--nested';
         nestedCheckboxes.innerHTML = _checkboxes(11, 20);
         checkboxesContainer.querySelector('.govuk-checkboxes__item').appendChild(nestedCheckboxes);
 

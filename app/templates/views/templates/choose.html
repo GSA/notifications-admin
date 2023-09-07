@@ -4,6 +4,8 @@
 {% from "components/form.html" import form_wrapper %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
+{% from "components/components/alert/macro.njk" import usaAlert %}
+
 
 {% extends "withnav_template.html" %}
 
@@ -32,15 +34,13 @@
 
   {% else %}
 
-    <div class="govuk-grid-row">
-      <div class="{% if current_user.has_permissions('manage_templates') %} govuk-grid-column-five-sixths {% else %} govuk-grid-column-full {% endif %}">
-        <div class="usa-alert usa-alert--info usa-alert--slim margin-y-5">
-          <div class="usa-alert__body">
-            <p class="usa-alert__text">
-              Every message starts with a template. To send, choose or create a template.
-            </p>
-          </div>
-        </div>
+    <div class="grid-row">
+      <div class="{% if current_user.has_permissions('manage_templates') %} grid-col-10 {% else %} grid-col-12 {% endif %}">
+        {{ usaAlert({
+          "text": "Every message starts with a template. To send, choose or create a template.",
+          "slim": true,
+          "type": "info",
+        }) }}
         {{ folder_path(
           folders=template_folder_path,
           service_id=current_service.id,
@@ -49,7 +49,7 @@
         ) }}
       </div>
       {% if current_user.has_permissions('manage_templates') and current_template_folder_id and user_has_template_folder_permission %}
-        <div class="govuk-grid-column-one-sixth">
+        <div class="grid-col-2">
           <a href="{{ url_for('.manage_template_folder', service_id=current_service.id, template_folder_id=current_template_folder_id) }}" class="usa-link folder-heading-manage-link">Manage<span class="usa-sr-only"> this folder</span></a>
         </div>
       {% endif %}

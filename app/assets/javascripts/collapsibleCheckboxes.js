@@ -20,7 +20,7 @@
     }[field] || `No ${field}s`)
   };
   Summary.prototype.addContent = function() {
-    const $hint = this.module.$formGroup.find('.govuk-hint');
+    const $hint = this.module.$formGroup.find('.usa-hint');
     this.$text = $(`<p class="selection-summary__text" />`);
 
     if (this.fieldLabel === 'folder') { this.$text.addClass('selection-summary__text--folders'); }
@@ -90,7 +90,7 @@
   };
   CollapsibleCheckboxes.prototype.start = function(component) {
     this.$component = $(component);
-    this.$formGroup = this.$component.find('.govuk-form-group').first();
+    this.$formGroup = this.$component.find('.usa-form-group').first();
     this.$fieldset = this.$formGroup.find('fieldset').first();
     this.$checkboxes = this.$fieldset.find('input[type=checkbox]');
     this.fieldLabel = this.$component.data('fieldLabel');

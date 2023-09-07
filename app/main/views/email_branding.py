@@ -14,47 +14,55 @@ from app.s3_client.s3_logo_client import (
 from app.utils.user import user_is_platform_admin
 
 
-@main.route("/email-branding", methods=['GET', 'POST'])
+@main.route("/email-branding", methods=["GET", "POST"])
 @user_is_platform_admin
 def email_branding():
-    brandings = email_branding_client.get_all_email_branding(sort_key='name')
+    brandings = email_branding_client.get_all_email_branding(sort_key="name")
 
     return render_template(
-        'views/email-branding/select-branding.html',
+        "views/email-branding/select-branding.html",
         email_brandings=brandings,
-        search_form=SearchByNameForm()
+        search_form=SearchByNameForm(),
     )
 
 
-@main.route("/email-branding/<uuid:branding_id>/edit", methods=['GET', 'POST'])
-@main.route("/email-branding/<uuid:branding_id>/edit/<logo>", methods=['GET', 'POST'])
+@main.route("/email-branding/<uuid:branding_id>/edit", methods=["GET", "POST"])
+@main.route("/email-branding/<uuid:branding_id>/edit/<logo>", methods=["GET", "POST"])
 @user_is_platform_admin
 def update_email_branding(branding_id, logo=None):
-    email_branding = email_branding_client.get_email_branding(branding_id)['email_branding']
+    email_branding = email_branding_client.get_email_branding(branding_id)[
+        "email_branding"
+    ]
 
     form = AdminEditEmailBrandingForm(
-        name=email_branding['name'],
-        text=email_branding['text'],
-        colour=email_branding['colour'],
-        brand_type=email_branding['brand_type']
+        name=email_branding["name"],
+        text=email_branding["text"],
+        colour=email_branding["colour"],
+        brand_type=email_branding["brand_type"],
     )
 
-    logo = logo if logo else email_branding.get('logo') if email_branding else None
+    logo = logo if logo else email_branding.get("logo") if email_branding else None
 
     if form.validate_on_submit():
         if form.file.data:
             upload_filename = upload_email_logo(
-                form.file.data.filename,
-                form.file.data,
-                user_id=session["user_id"]
+                form.file.data.filename, form.file.data, user_id=session["user_id"]
             )
 
-            if logo and logo.startswith(TEMP_TAG.format(user_id=session['user_id'])):
+            if logo and logo.startswith(TEMP_TAG.format(user_id=session["user_id"])):
                 delete_email_temp_file(logo)
 
-            return redirect(url_for('.update_email_branding', branding_id=branding_id, logo=upload_filename))
+            return redirect(
+                url_for(
+                    ".update_email_branding",
+                    branding_id=branding_id,
+                    logo=upload_filename,
+                )
+            )
 
-        updated_logo_name = permanent_email_logo_name(logo, session["user_id"]) if logo else None
+        updated_logo_name = (
+            permanent_email_logo_name(logo, session["user_id"]) if logo else None
+        )
 
         email_branding_client.update_email_branding(
             branding_id=branding_id,
@@ -70,37 +78,37 @@ def update_email_branding(branding_id, logo=None):
 
         delete_email_temp_files_created_by(session["user_id"])
 
-        return redirect(url_for('.email_branding', branding_id=branding_id))
+        return redirect(url_for(".email_branding", branding_id=branding_id))
 
     return render_template(
-        'views/email-branding/manage-branding.html',
+        "views/email-branding/manage-branding.html",
         form=form,
         email_branding=email_branding,
-        cdn_url=current_app.config['LOGO_CDN_DOMAIN'],
-        logo=logo
+        cdn_url=current_app.config["LOGO_CDN_DOMAIN"],
+        logo=logo,
     )
 
 
-@main.route("/email-branding/create", methods=['GET', 'POST'])
-@main.route("/email-branding/create/<logo>", methods=['GET', 'POST'])
+@main.route("/email-branding/create", methods=["GET", "POST"])
+@main.route("/email-branding/create/<logo>", methods=["GET", "POST"])
 @user_is_platform_admin
 def create_email_branding(logo=None):
-    form = AdminEditEmailBrandingForm(brand_type='org')
+    form = AdminEditEmailBrandingForm(brand_type="org")
 
     if form.validate_on_submit():
         if form.file.data:
             upload_filename = upload_email_logo(
-                form.file.data.filename,
-                form.file.data,
-                user_id=session["user_id"]
+                form.file.data.filename, form.file.data, user_id=session["user_id"]
             )
 
-            if logo and logo.startswith(TEMP_TAG.format(user_id=session['user_id'])):
+            if logo and logo.startswith(TEMP_TAG.format(user_id=session["user_id"])):
                 delete_email_temp_file(logo)
 
-            return redirect(url_for('.create_email_branding', logo=upload_filename))
+            return redirect(url_for(".create_email_branding", logo=upload_filename))
 
-        updated_logo_name = permanent_email_logo_name(logo, session["user_id"]) if logo else None
+        updated_logo_name = (
+            permanent_email_logo_name(logo, session["user_id"]) if logo else None
+        )
 
         email_branding_client.create_email_branding(
             logo=updated_logo_name,
@@ -115,11 +123,11 @@ def create_email_branding(logo=None):
 
         delete_email_temp_files_created_by(session["user_id"])
 
-        return redirect(url_for('.email_branding'))
+        return redirect(url_for(".email_branding"))
 
     return render_template(
-        'views/email-branding/manage-branding.html',
+        "views/email-branding/manage-branding.html",
         form=form,
-        cdn_url=current_app.config['LOGO_CDN_DOMAIN'],
-        logo=logo
+        cdn_url=current_app.config["LOGO_CDN_DOMAIN"],
+        logo=logo,
     )

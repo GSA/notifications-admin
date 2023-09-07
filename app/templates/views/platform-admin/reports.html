@@ -6,29 +6,29 @@
 
 {% block platform_admin_content %}
 
-  <h1 class="heading-medium">
+  <h1 class="font-body-2xl">
     Reports
   </h1>
 
 <p>
-  <a class="govuk-link govuk-link--no-visited-state" target="_blank" href="{{ url_for('main.live_services_csv') }}">Download live services csv report</a>
+  <a class="usa-link" target="_blank" href="{{ url_for('main.live_services_csv') }}">Download live services csv report</a>
 </p>
 <p>
-  <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.notifications_sent_by_service') }}">Monthly notification statuses for live services</a>
+  <a class="usa-link" href="{{ url_for('main.notifications_sent_by_service') }}">Monthly notification statuses for live services</a>
 </p>
 <p>
-  <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.get_billing_report') }}">Billing Report</a>
+  <a class="usa-link" href="{{ url_for('main.get_billing_report') }}">Billing Report</a>
 </p>
 <p>
-  <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.get_volumes_by_service') }}">Volumes by service Report</a>
+  <a class="usa-link" href="{{ url_for('main.get_volumes_by_service') }}">Volumes by service Report</a>
 </p>
 <p>
-  <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.get_daily_volumes') }}">Daily volumes Report</a>
+  <a class="usa-link" href="{{ url_for('main.get_daily_volumes') }}">Daily volumes Report</a>
 </p>
 <p>
-  <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.get_daily_sms_provider_volumes') }}">Daily SMS provider volumes Report</a>
+  <a class="usa-link" href="{{ url_for('main.get_daily_sms_provider_volumes') }}">Daily SMS provider volumes Report</a>
 </p>
 <p>
-  <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('main.get_users_report') }}">Users Report</a>
+  <a class="usa-link" href="{{ url_for('main.get_users_report') }}">Users Report</a>
 </p>
 {% endblock %}
