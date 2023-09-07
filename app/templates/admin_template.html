@@ -11,6 +11,13 @@
 {% endblock %}
 
 {% block head %}
+    {% block sessionUserWarning %}
+        <div id="sessionTimerContent">
+            <p id="timerWarning"></p>
+            <button id="logOutTimer">Log Out</button>
+            <button id="extendSessionTimer">Extend Session</button>
+        </div>
+    {% endblock %}
   {%- for font in font_paths %}
   <link rel="preload" href="{{ asset_url(font, with_querystring_hash=False) }}" as="font" type="font/woff2" crossorigin>
   {%- endfor %}
@@ -231,6 +238,6 @@
   {% endblock %}
   <!--[if gt IE 8]><!-->
   <script type="text/javascript" src="{{ asset_url('javascripts/all.js') }}"></script>
-  <script type="text/javascript" src="{{ asset_url('js/uswds.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset_url('js/uswds.min.js') }}"></script>
   <!--<![endif]-->
 {% endblock %}
