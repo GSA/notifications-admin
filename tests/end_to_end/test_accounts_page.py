@@ -2,51 +2,51 @@ import datetime
 import os
 import re
 
-import pytest
-from dotenv import load_dotenv
 from playwright.sync_api import expect
 
 
-def test_accounts_page(end_to_end_context):
-    load_dotenv()
+def _bypass_sign_in(end_to_end_context):
     # Open a new page and go to the staging site.
     page = end_to_end_context.new_page()
-    print(page)
+    page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
 
-    accounts_uri = "{}accounts".format(os.getenv("NOTIFY_E2E_TEST_URI"))
-    page.goto(accounts_uri)
+    sign_in_button = page.get_by_role("link", name="Sign in")
 
-    # Check to make sure that we've arrived at the next page.
+    # Test trying to sign in. Because we are loading the email and password
+    sign_in_button.click()
+
+    # Wait for the next page to fully load.
     page.wait_for_load_state("domcontentloaded")
-    print(page)
+    return page
 
-    # Check to make sure that we've arrived at the next page.
+
+def test_accounts_page(end_to_end_context):
+
+    page = _bypass_sign_in(end_to_end_context)
+
     # Check the page title exists and matches what we expect.
-    expect(page).to_have_title(re.compile("Choose service"))
-
-    # Check for the sign in heading.
-    sign_in_heading = page.get_by_role("heading", name="Choose service")
-    expect(sign_in_heading).to_be_visible()
-
-    # Retrieve some prominent elements on the page for testing.
-    add_service_button = page.get_by_role(
-        "button", name=re.compile("Add a new service")
-    )
-
-    expect(add_service_button).to_be_visible()
+    expect(page).to_have_title(re.compile("Dashboard"))
 
 
-@pytest.mark.skip(reason="Not authenticating test users.")
-def test_add_new_service_workflow(end_to_end_authenticated_context):
+def test_add_new_service_workflow(end_to_end_context):
+    page = end_to_end_context.new_page()
+    page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
+
+    #sign_in_button = page.get_by_role("link", name="Sign in")
+
+    # Test trying to sign in. Because we are loading the email and password
+    #sign_in_button.click()
+
+    # Wait for the next page to fully load.
+    page.wait_for_load_state("domcontentloaded")
+
+
     # Prepare for adding a new service later in the test.
     current_date_time = datetime.datetime.now()
     new_service_name = "E2E Federal Test Service {now} - {browser_type}".format(
         now=current_date_time.strftime("%m/%d/%Y %H:%M:%S"),
-        browser_type=end_to_end_authenticated_context.browser.browser_type.name,
+        browser_type=end_to_end_context.browser.browser_type.name,
     )
-
-    # Open a new page and go to the staging site.
-    page = end_to_end_authenticated_context.new_page()
 
     accounts_uri = "{}accounts".format(os.getenv("NOTIFY_E2E_TEST_URI"))
 

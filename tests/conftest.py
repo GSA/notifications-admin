@@ -9,6 +9,7 @@ from uuid import UUID, uuid4
 
 import pytest
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
 from flask import Flask, url_for
 from notifications_python_client.errors import HTTPError
 from notifications_utils.url_safe_token import generate_token
@@ -32,6 +33,8 @@ from . import (
     template_version_json,
     user_json,
 )
+
+load_dotenv()
 
 
 class ElementNotFound(Exception):
@@ -3689,7 +3692,8 @@ def end_to_end_authenticated_context(browser):
 
     auth_state_path = os.path.join(
         # TODO
-        "playwright/.auth/", "state.json"
+        "playwright/.auth/",
+        "state.json"
         # os.getenv("NOTIFY_E2E_AUTH_STATE_PATH"), "state.json"
     )
     context = browser.new_context(storage_state=auth_state_path)
