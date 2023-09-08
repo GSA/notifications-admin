@@ -103,9 +103,6 @@ const javascripts = () => {
   const local = src([
     paths.toolkit + 'javascripts/govuk/modules.js',
     paths.toolkit + 'javascripts/govuk/show-hide-content.js',
-    paths.src + 'javascripts/govuk/cookie-functions.js',
-    paths.src + 'javascripts/consent.js',
-    paths.src + 'javascripts/cookieMessage.js',
     paths.src + 'javascripts/copyToClipboard.js',
     paths.src + 'javascripts/autofocus.js',
     paths.src + 'javascripts/enhancedTextbox.js',
