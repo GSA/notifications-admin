@@ -109,8 +109,8 @@ def test_get_precompiled_template(mocker):
 
 
 @pytest.mark.parametrize(
-    "template_data, extra_args, expected_count",
-    (
+    ("template_data", "extra_args", "expected_count"),
+    [
         (
             [],
             {},
@@ -137,7 +137,7 @@ def test_get_precompiled_template(mocker):
             {"template_type": "email"},
             1,
         ),
-    ),
+    ],
 )
 def test_client_returns_count_of_service_templates(
     notify_admin,
@@ -159,13 +159,13 @@ def test_client_returns_count_of_service_templates(
 
 @pytest.mark.parametrize(
     (
-        "client_method,"
-        "extra_args,"
-        "expected_cache_get_calls,"
-        "cache_value,"
-        "expected_api_calls,"
-        "expected_cache_set_calls,"
-        "expected_return_value,"
+        "client_method",
+        "extra_args",
+        "expected_cache_get_calls",
+        "cache_value",
+        "expected_api_calls",
+        "expected_cache_set_calls",
+        "expected_return_value",
     ),
     [
         (
@@ -374,7 +374,7 @@ def test_returns_value_from_cache(
 
 
 @pytest.mark.parametrize(
-    "client, method, extra_args, extra_kwargs",
+    ("client", "method", "extra_args", "extra_kwargs"),
     [
         (service_api_client, "update_service", [SERVICE_ONE_ID], {"name": "foo"}),
         (
@@ -450,7 +450,7 @@ def test_deletes_service_cache(
 
 
 @pytest.mark.parametrize(
-    "method, extra_args, expected_cache_deletes",
+    ("method", "extra_args", "expected_cache_deletes"),
     [
         (
             "create_service_template",

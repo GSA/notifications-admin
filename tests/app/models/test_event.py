@@ -5,8 +5,8 @@ from tests.conftest import sample_uuid
 
 
 @pytest.mark.parametrize(
-    "key, value_from, value_to, expected",
-    (
+    ("key", "value_from", "value_to", "expected"),
+    [
         ("restricted", True, False, ("Made this service live")),
         ("restricted", False, True, ("Put this service back into trial mode")),
         ("active", False, True, ("Unsuspended this service")),
@@ -70,7 +70,7 @@ from tests.conftest import sample_uuid
             "bar",
             ("Updated the callback for delivery receipts"),
         ),
-    ),
+    ],
 )
 def test_service_event(
     key,

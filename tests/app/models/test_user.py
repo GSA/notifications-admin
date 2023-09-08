@@ -57,7 +57,7 @@ def test_activate_user_already_active(
 
 
 @pytest.mark.parametrize(
-    "is_platform_admin, value_in_session, expected_result",
+    ("is_platform_admin", "value_in_session", "expected_result"),
     [
         (True, True, False),
         (True, False, True),

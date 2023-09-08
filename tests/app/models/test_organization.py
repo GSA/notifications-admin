@@ -5,8 +5,8 @@ from tests import organization_json
 
 
 @pytest.mark.parametrize(
-    "purchase_order_number,expected_result",
-    [[None, None], ["PO1234", [None, None, None, "PO1234"]]],
+    ("purchase_order_number", "expected_result"),
+    [(None, None), ("PO1234", [None, None, None, "PO1234"])],
 )
 def test_organization_billing_details(purchase_order_number, expected_result):
     organization = Organization(
