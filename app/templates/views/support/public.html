@@ -1,14 +1,14 @@
 {% extends "withoutnav_template.html" %}
 
 {% from "components/page-header.html" import page_header %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block per_page_title %}
   The Notify.gov service is for people who work in the government
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for('.support') }) }}
+  {{ usaBackLink({ "href": url_for('.support') }) }}
 {% endblock %}
 
 {% block maincolumn_content %}

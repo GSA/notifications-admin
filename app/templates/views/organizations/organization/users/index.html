@@ -2,7 +2,7 @@
 {% from "components/table.html" import list_table, row, field, hidden_field_heading %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/live-search.html" import live_search %}
-{% from "components/components/button/macro.njk" import govukButton %}
+{% from "components/components/button/macro.njk" import usaButton %}
 
 {% block org_page_title %}
   Team members
@@ -64,7 +64,7 @@
   </div>
 
   <div class="js-stick-at-bottom-when-scrolling">
-    {{ govukButton({
+    {{ usaButton({
       "element": "a",
       "text": "Invite team member",
       "href": url_for('.invite_org_user', org_id=current_org.id),

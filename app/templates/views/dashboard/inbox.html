@@ -1,7 +1,7 @@
 {% extends "withnav_template.html" %}
 {% from "components/ajax-block.html" import ajax_block %}
 {% from "components/page-header.html" import page_header %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block service_page_title %}
   Received text messages
@@ -9,7 +9,7 @@
 
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for('main.service_dashboard', service_id=current_service.id) }) }}
+  {{ usaBackLink({ "href": url_for('main.service_dashboard', service_id=current_service.id) }) }}
 {% endblock %}
 
 {% block maincolumn_content %}

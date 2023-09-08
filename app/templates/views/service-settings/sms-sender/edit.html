@@ -3,7 +3,7 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block service_page_title %}
   Change text message sender
@@ -11,7 +11,7 @@
 
 {% block backLink %}
   {% if not request.args.get('from_template') %}
-    {{ govukBackLink({ "href": url_for('.service_sms_senders', service_id=current_service.id) }) }}
+    {{ usaBackLink({ "href": url_for('.service_sms_senders', service_id=current_service.id) }) }}
   {% endif %}
 {% endblock %}
 

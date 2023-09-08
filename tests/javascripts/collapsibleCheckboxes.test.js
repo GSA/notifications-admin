@@ -39,8 +39,8 @@ describe('Collapsible fieldset', () => {
     document.body.innerHTML =
       `<div class="selection-wrapper" data-module="collapsible-checkboxes" data-field-label="folder">
         <div class="usa-form-group">
-          <fieldset class="govuk-fieldset" id="folder_permissions" aria-describedby="users_with_permission-hint">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+          <fieldset class="usa-fieldset" id="folder_permissions" aria-describedby="users_with_permission-hint">
+            <legend class="usa-fieldset__legend usa-fieldset__legend--s">
               Folders this team member can see
               <span class="usa-hint" id="users_with_permission-hint">
                 <div class="selection-summary" role="region" aria-live="polite"></div>

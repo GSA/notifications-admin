@@ -1,7 +1,7 @@
 {% from "components/content-metadata.html" import content_metadata %}
 {% from "components/table.html" import mapping_table, row, text_field, field, row_heading %}
 {% from "components/live-search.html" import live_search %}
-{% from "components/components/details/macro.njk" import govukDetails %}
+{% from "components/components/details/macro.njk" import usaDetails %}
 
 {% extends "content_template.html" %}
 
@@ -169,7 +169,7 @@ Notify.gov team.
   {% endcall %}
 </div>
 {% endset %}
-{{ govukDetails({
+{{ usaDetails({
 "summaryText": "Accented characters that affect text message charges",
 "html": accentedChars
 }) }}
@@ -229,7 +229,7 @@ Notify.gov team.
     </div>
   {% endset %}
 
-  {{ govukDetails({
+  {{ usaDetails({
     "summaryText": "International text message rates",
     "id": "sms-pricing-details",
     "html": smsIntRates

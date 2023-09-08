@@ -25,11 +25,11 @@ function getRadioGroup (data) {
     data.cssClasses.forEach(cssClass => radioGroup.classList.add(cssClass));
   }
   radioGroup.innerHTML = `
-    <fieldset class="govuk-fieldset" id="${data.name}">
-      <legend class="govuk-fieldset__legend${data.hideLegend ? " usa-sr-only" : ""}">
+    <fieldset class="usa-fieldset" id="${data.name}">
+      <legend class="usa-fieldset__legend${data.hideLegend ? " usa-sr-only" : ""}">
         ${data.label}
       </legend>
-      <div class="govuk-radios">
+      <div class="usa-radios">
         ${getRadios(data.fields, data.name)}
       </div>
     </fieldset>`;
