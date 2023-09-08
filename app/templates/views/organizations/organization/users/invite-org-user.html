@@ -3,14 +3,14 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block service_page_title %}
   Invite a team member
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for('.manage_org_users', org_id=current_org.id) }) }}
+  {{ usaBackLink({ "href": url_for('.manage_org_users', org_id=current_org.id) }) }}
 {% endblock %}
 
 {% block maincolumn_content %}

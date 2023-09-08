@@ -2,7 +2,7 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import sticky_page_footer %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% set page_title = 'Set inbound number' %}
 
@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for('.service_settings', service_id=current_service.id) }) }}
+  {{ usaBackLink({ "href": url_for('.service_settings', service_id=current_service.id) }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
@@ -28,7 +28,7 @@
         'fieldset': {
           'legend': {
             'isPageHeading': True,
-            'classes': 'govuk-fieldset__legend--l'
+            'classes': 'usa-legend usa-legend--large'
           }
         }
       }) }}

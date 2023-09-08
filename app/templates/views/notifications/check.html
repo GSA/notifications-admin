@@ -1,15 +1,15 @@
 {% extends "withnav_template.html" %}
 {% from "components/banner.html" import banner_wrapper %}
 {% from "components/page-header.html" import page_header %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
-{% from "components/components/button/macro.njk" import govukButton %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
+{% from "components/components/button/macro.njk" import usaButton %}
 
 {% block service_page_title %}
   {{ "Error" if error else "Preview of ‘{}’".format(template.name) }}
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": back_link }) }}
+  {{ usaBackLink({ "href": back_link }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
@@ -55,7 +55,7 @@
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       {% if not error %}
         {% set button_text %}Send 1 {{ 1|message_count_label(template.template_type, suffix='') }}{% endset %}
-        {{ govukButton({ "text": button_text }) }}
+        {{ usaButton({ "text": button_text }) }}
       {% endif %}
     </form>
   </div>

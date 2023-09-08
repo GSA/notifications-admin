@@ -133,7 +133,7 @@
     ] %} #}
   {% endif %}
 
-  {{ govukHeader({
+  {{ usaHeader({
     "homepageUrl": url_for('main.show_accounts_or_dashboard'),
     "productName": "Notify",
     "navigation": navigation,
@@ -151,7 +151,7 @@
     {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="usa-link">Technology Transformation Services</a>' %}
   {% endif %}
 
-  {{ govukFooter({
+  {{ usaFooter({
     "classes": "js-footer",
     "navigation": [
       {

@@ -25,7 +25,8 @@ def test_accounts_page(end_to_end_context):
     page = _bypass_sign_in(end_to_end_context)
 
     # Check the page title exists and matches what we expect.
-    expect(page).to_have_title(re.compile("Dashboard"))
+    # TODO this value depends on how many pre-existing services there are.  If 0, "Choose service", else "Dashboard"
+    expect(page).to_have_title(re.compile("Choose service"))
 
 
 def test_add_new_service_workflow(end_to_end_context):
@@ -102,7 +103,12 @@ def test_add_new_service_workflow(end_to_end_context):
 
     # Fill in the form.
     service_name_input.fill(new_service_name)
-    federal_radio_button.click()
+    print(f"page before federal radio_button click {page}")
+    expect(federal_radio_button).to_be_enabled()
+    # Trying to click directly on the radio button resulted in a "not in viewport error" and this is the
+    # suggested workaround.  Googling, the reason seems to be that there might be some (invisible?) css positioned
+    # above the radio button itself.
+    page.click("text='Federal government'")
 
     # Click on add service.
     add_service_button.click()

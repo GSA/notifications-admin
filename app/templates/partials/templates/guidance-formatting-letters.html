@@ -1,17 +1,17 @@
-{% from "components/components/inset-text/macro.njk" import govukInsetText %}
+{% from "components/components/inset-text/macro.njk" import usaInsetText %}
 
 <h2 class="heading-medium">Formatting</h2>
 <p class="usa-body">
   To put a heading in your template, use a hash:
 </p>
-{{ govukInsetText({
+{{ usaInsetText({
   "text": "# This is a heading",
   "classes": ""})
 }}
 <p class="usa-body">
   To make bullet points, use asterisks:
 </p>
-{{ govukInsetText({
+{{ usaInsetText({
   "html": "* point 1<br/>
             * point 2<br/>
             * point 3<br/>",
@@ -20,7 +20,7 @@
 <p class="usa-body">
   To insert a page break, use three asterisks:
 </p>
-{{ govukInsetText({
+{{ usaInsetText({
   "html": "Content on page 1<br/>
             <br/>
             ***<br/>

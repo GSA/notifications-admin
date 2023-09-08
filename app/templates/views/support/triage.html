@@ -2,14 +2,14 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block per_page_title %}
   {{ page_title }}
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for('.support') }) }}
+  {{ usaBackLink({ "href": url_for('.support') }) }}
 {% endblock %}
 
 {% block maincolumn_content %}

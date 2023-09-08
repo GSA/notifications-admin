@@ -3,7 +3,7 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
 {% from "components/ajax-block.html" import ajax_block %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block service_page_title %}
   {{ verb }} email reply-to address
@@ -16,7 +16,7 @@
     {% set back_link_href = url_for('.service_add_email_reply_to', service_id=service_id) %}
   {% endif %}
 
-  {{ govukBackLink({ "href": back_link_href }) }}
+  {{ usaBackLink({ "href": back_link_href }) }}
 {% endblock %}
 
 {% block maincolumn_content %}

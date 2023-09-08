@@ -1,6 +1,6 @@
 {% extends "withnav_template.html" %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/branding-preview.html" import email_branding_preview %}
@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({
+  {{ usaBackLink({
     "href": url_for('.email_branding_request', service_id=current_service.id)
   }) }}
 {% endblock %}

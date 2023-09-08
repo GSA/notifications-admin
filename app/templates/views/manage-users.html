@@ -1,7 +1,7 @@
 {% extends "withnav_template.html" %}
 {% from "components/tick-cross.html" import tick_cross %}
 {% from "components/live-search.html" import live_search %}
-{% from "components/components/button/macro.njk" import govukButton %}
+{% from "components/components/button/macro.njk" import usaButton %}
 
 {% block service_page_title %}
   Team members
@@ -86,7 +86,7 @@
 
   {% if current_user.has_permissions('manage_service') %}
     <div class="js-stick-at-bottom-when-scrolling">
-      {{ govukButton({
+      {{ usaButton({
         "element": "a",
         "text": "Invite a team member",
         "href": url_for('.invite_user', service_id=current_service.id),

@@ -38,7 +38,7 @@ The [Notify API](https://github.com/GSA/notifications-api) provides the UI's bac
 
 1. Get the API running
 
-1. Install [poetry](https://poetry.pypa.io/en/latest/)
+1. Install [poetry](https://python-poetry.org/docs/#installation)
 
 1. Install [nvm (Node Version Manager)](https://github.com/nvm-sh/nvm#installing-and-updating)
 
