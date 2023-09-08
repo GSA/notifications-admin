@@ -1,7 +1,6 @@
 import os
 import re
 
-import pytest
 from playwright.sync_api import expect
 
 
@@ -22,7 +21,6 @@ def test_landing_page(browser):
     )
     sign_in_button = page.get_by_role("link", name="Sign in")
     benefits_studio_email = page.get_by_role("link", name="tts-benefits-studio@gsa.gov")
-    print(page)
 
     # Check to make sure the elements are visible.
     expect(main_header).to_be_visible()

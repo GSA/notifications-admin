@@ -21,7 +21,6 @@ def _bypass_sign_in(end_to_end_context):
 
 
 def test_accounts_page(end_to_end_context):
-
     page = _bypass_sign_in(end_to_end_context)
 
     # Check the page title exists and matches what we expect.
@@ -33,14 +32,13 @@ def test_add_new_service_workflow(end_to_end_context):
     page = end_to_end_context.new_page()
     page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
 
-    #sign_in_button = page.get_by_role("link", name="Sign in")
-
+    # sign_in_button = page.get_by_role("link", name="Sign in")
+    #
     # Test trying to sign in. Because we are loading the email and password
-    #sign_in_button.click()
-
+    # sign_in_button.click()
+    #
     # Wait for the next page to fully load.
     page.wait_for_load_state("domcontentloaded")
-
 
     # Prepare for adding a new service later in the test.
     current_date_time = datetime.datetime.now()
@@ -103,7 +101,6 @@ def test_add_new_service_workflow(end_to_end_context):
 
     # Fill in the form.
     service_name_input.fill(new_service_name)
-    print(f"page before federal radio_button click {page}")
     expect(federal_radio_button).to_be_enabled()
     # Trying to click directly on the radio button resulted in a "not in viewport error" and this is the
     # suggested workaround.  Googling, the reason seems to be that there might be some (invisible?) css positioned
