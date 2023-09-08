@@ -1,3 +1,5 @@
+import os
+
 from flask import (
     Markup,
     abort,
@@ -13,6 +15,7 @@ from flask_login import current_user
 from app import login_manager
 from app.main import main
 from app.main.forms import LoginForm
+from app.main.views.verify import activate_user
 from app.models.user import InvitedUser, User
 from app.utils import hide_from_search_engines
 from app.utils.login import is_safe_redirect_url
@@ -21,7 +24,17 @@ from app.utils.login import is_safe_redirect_url
 @main.route("/sign-in", methods=(["GET", "POST"]))
 @hide_from_search_engines
 def sign_in():
+
     redirect_url = request.args.get("next")
+
+    # TODO this is not the right test to do to find test users
+    if os.getenv("NOTIFY_E2E_TEST_EMAIL") == 'ken.kehl@fedramp.gov':
+        user_id = session["user_details"]["id"]
+        activate_user(user_id)
+        return redirect(
+            url_for("main.show_accounts_or_dashboard", next=redirect_url)
+        )
+
     if current_user and current_user.is_authenticated:
         if redirect_url and is_safe_redirect_url(redirect_url):
             return redirect(redirect_url)
@@ -54,10 +67,21 @@ def sign_in():
                     else:
                         invited_user.accept_invite()
 
+                # TODO this is not the right test to do to find test users
+                if os.getenv("NOTIFY_E2E_TEST_EMAIL") == 'ken.kehl@fedramp.gov':
+                    user_id = session["user_details"]["id"]
+                    activate_user(user_id)
+                    return redirect(
+                        url_for("main.show_accounts_or_dashboard", next=redirect_url)
+                    )
+
                 user.send_login_code()
 
                 if user.sms_auth:
+
                     return redirect(url_for(".two_factor_sms", next=redirect_url))
+
+
                 if user.email_auth:
                     return redirect(
                         url_for(".two_factor_email_sent", next=redirect_url)

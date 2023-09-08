@@ -3,20 +3,22 @@ import os
 import re
 
 import pytest
+from dotenv import load_dotenv
 from playwright.sync_api import expect
 
 
-@pytest.mark.skip(reason="Not authenticating test users.")
-def test_accounts_page(end_to_end_authenticated_context):
+def test_accounts_page(end_to_end_context):
+    load_dotenv()
     # Open a new page and go to the staging site.
-    page = end_to_end_authenticated_context.new_page()
+    page = end_to_end_context.new_page()
+    print(page)
 
     accounts_uri = "{}accounts".format(os.getenv("NOTIFY_E2E_TEST_URI"))
-
     page.goto(accounts_uri)
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    print(page)
 
     # Check to make sure that we've arrived at the next page.
     # Check the page title exists and matches what we expect.

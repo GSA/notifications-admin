@@ -16,6 +16,9 @@ from app.utils.login import redirect_to_sign_in
 def verify():
     user_id = session["user_details"]["id"]
 
+    print(f"RETURN ABRUPT WITH ACTIVATE USER")
+    return activate_user(user_id)
+
     def _check_code(code):
         return user_api_client.check_verify_code(user_id, code, "sms")
 
