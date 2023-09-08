@@ -5,7 +5,7 @@
     const sessionTimer = document.getElementById("sessionTimer");
 
     setTimeout(function() {
-        var timeTillSessionEnd = new Date().getTime() + (1 * 10 * 1000);
+        var timeTillSessionEnd = new Date().getTime() + (5 * 60 * 1000);
         var x = setInterval(function() {
             var now = new Date().getTime();
             var difference = timeTillSessionEnd - now;
@@ -21,7 +21,7 @@
                 redirectToSignin();
             }
         }, 1000);
-    }, 1 * 20 * 1000);
+    }, 1 * 60 * 1000);
 
     function redirectToSignin() {
         window.location.href = '/sign-in';

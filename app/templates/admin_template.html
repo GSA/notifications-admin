@@ -11,6 +11,7 @@
 {% endblock %}
 
 {% block head %}
+    {% if current_user.is_authenticated %}
     {% block sessionUserWarning %}
     <div class="usa-modal" id="sessionTimer" aria-labelledby="sessionTimerHeading" aria-describedby="timerWarning">
       <div class="usa-modal__content">
@@ -53,6 +54,7 @@
         <button class="usa-button" id="extendSessionTimer">Extend Session</button>
     </dialog> -->
     {% endblock %}
+    {% endif %}
   {%- for font in font_paths %}
   <link rel="preload" href="{{ asset_url(font, with_querystring_hash=False) }}" as="font" type="font/woff2" crossorigin>
   {%- endfor %}
