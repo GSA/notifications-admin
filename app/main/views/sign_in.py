@@ -27,8 +27,8 @@ def sign_in():
     redirect_url = request.args.get("next")
 
     # TODO this is not the right test to do to find test users
-    if os.getenv("NOTIFY_E2E_TEST_EMAIL") == "ken.kehl@fedramp.gov":
-        user = user_api_client.get_user_by_email("ken.kehl@fedramp.gov")
+    if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
+        user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
         activate_user(user["id"])
         return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
 

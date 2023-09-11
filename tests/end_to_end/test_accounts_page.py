@@ -8,6 +8,7 @@ from playwright.sync_api import expect
 def _bypass_sign_in(end_to_end_context):
     # Open a new page and go to the staging site.
     page = end_to_end_context.new_page()
+
     page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
 
     sign_in_button = page.get_by_role("link", name="Sign in")
@@ -20,16 +21,10 @@ def _bypass_sign_in(end_to_end_context):
     return page
 
 
-def test_accounts_page(end_to_end_context):
-    page = _bypass_sign_in(end_to_end_context)
-
-    # Check the page title exists and matches what we expect.
-    # TODO this value depends on how many pre-existing services there are.  If 0, "Choose service", else "Dashboard"
-    expect(page).to_have_title(re.compile("Choose service"))
-
 
 def test_add_new_service_workflow(end_to_end_context):
-    page = end_to_end_context.new_page()
+    #page = end_to_end_context.new_page()
+    page = _bypass_sign_in(end_to_end_context)
     page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
 
     # sign_in_button = page.get_by_role("link", name="Sign in")
@@ -117,3 +112,23 @@ def test_add_new_service_workflow(end_to_end_context):
     service_heading = page.get_by_text(new_service_name)
     expect(service_heading).to_be_visible()
     expect(page).to_have_title(re.compile(new_service_name))
+
+    page.click("text='Settings'")
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    page.click("text='Delete this service'")
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    page.click("text='Yes, delete'")
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    # Check to make sure that we've arrived at the next page.
+    # Check the page title exists and matches what we expect.
+    expect(page).to_have_title(re.compile("Choose service"))
+
