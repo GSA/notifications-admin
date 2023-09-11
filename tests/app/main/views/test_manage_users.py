@@ -20,8 +20,8 @@ from tests.conftest import (
 )
 
 
-@pytest.mark.parametrize(
-    "user, expected_self_text, expected_coworker_text",
+@pytest.mark.parametrize(  # noqa: PT014  # Duplicate parameters have different permissions.
+    ("user", "expected_self_text", "expected_coworker_text"),
     [
         (
             create_active_user_with_permissions(),
@@ -174,10 +174,10 @@ def test_should_show_overview_page(
 
 @pytest.mark.parametrize(
     "state",
-    (
+    [
         "active",
         "pending",
-    ),
+    ],
 )
 def test_should_show_change_details_link(
     client_request,
@@ -220,10 +220,10 @@ def test_should_show_change_details_link(
 
 @pytest.mark.parametrize(
     "number_of_users",
-    (
+    [
         pytest.param(7),
         pytest.param(8),
-    ),
+    ],
 )
 def test_should_show_live_search_if_more_than_7_users(
     client_request,
@@ -324,7 +324,7 @@ def test_should_show_caseworker_on_overview_page(
 
 
 @pytest.mark.parametrize(
-    "endpoint, extra_args, service_has_email_auth, auth_options_hidden",
+    ("endpoint", "extra_args", "service_has_email_auth", "auth_options_hidden"),
     [
         ("main.edit_user_permissions", {"user_id": sample_uuid()}, True, False),
         ("main.edit_user_permissions", {"user_id": sample_uuid()}, False, True),
@@ -350,9 +350,9 @@ def test_service_with_no_email_auth_hides_auth_type_options(
     ) == auth_options_hidden
 
 
-@pytest.mark.parametrize("service_has_caseworking", (True, False))
+@pytest.mark.parametrize("service_has_caseworking", [True, False])
 @pytest.mark.parametrize(
-    "endpoint, extra_args",
+    ("endpoint", "extra_args"),
     [
         (
             "main.edit_user_permissions",
@@ -385,7 +385,7 @@ def test_service_without_caseworking_doesnt_show_admin_vs_caseworker(
 
 
 @pytest.mark.parametrize(
-    "service_has_email_auth, displays_auth_type", [(True, True), (False, False)]
+    ("service_has_email_auth", "displays_auth_type"), [(True, True), (False, False)]
 )
 def test_manage_users_page_shows_member_auth_type_if_service_has_email_auth_activated(
     client_request,
@@ -403,7 +403,7 @@ def test_manage_users_page_shows_member_auth_type_if_service_has_email_auth_acti
 
 
 @pytest.mark.parametrize(
-    "sms_option_disabled, mobile_number, expected_label",
+    ("sms_option_disabled", "mobile_number", "expected_label"),
     [
         (
             True,
@@ -455,7 +455,7 @@ def test_user_with_no_mobile_number_cant_be_set_to_sms_auth(
 
 
 @pytest.mark.parametrize(
-    "endpoint, extra_args, expected_checkboxes",
+    ("endpoint", "extra_args", "expected_checkboxes"),
     [
         (
             "main.edit_user_permissions",
@@ -542,7 +542,7 @@ def test_should_not_show_page_for_non_team_member(
 
 
 @pytest.mark.parametrize(
-    "submitted_permissions, permissions_sent_to_api",
+    ("submitted_permissions", "permissions_sent_to_api"),
     [
         (
             {
@@ -1045,7 +1045,7 @@ def test_should_show_folder_permission_form_if_service_has_folder_permissions_en
 
 
 @pytest.mark.parametrize(
-    "email_address, gov_user",
+    ("email_address", "gov_user"),
     [("test@example.gsa.gov", True), ("test@example.com", False)],
 )
 def test_invite_user(
@@ -1151,7 +1151,7 @@ def test_invite_user_when_email_address_is_prefilled(
 
 @pytest.mark.parametrize("auth_type", [("sms_auth"), ("email_auth")])
 @pytest.mark.parametrize(
-    "email_address, gov_user",
+    ("email_address", "gov_user"),
     [("test@example.gsa.gov", True), ("test@example.com", False)],
 )
 def test_invite_user_with_email_auth_service(
@@ -1267,7 +1267,7 @@ def test_cancel_invited_user_doesnt_work_if_user_not_invited_to_this_service(
 
 
 @pytest.mark.parametrize(
-    "invite_status, expected_text",
+    ("invite_status", "expected_text"),
     [
         (
             "pending",
@@ -1385,7 +1385,7 @@ def test_no_permission_manage_users_page(
 
 
 @pytest.mark.parametrize(
-    "folders_user_can_see, expected_message",
+    ("folders_user_can_see", "expected_message"),
     [
         (3, "Can see all folders"),
         (2, "Can see 2 folders"),

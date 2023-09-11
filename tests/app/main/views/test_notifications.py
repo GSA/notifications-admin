@@ -14,7 +14,7 @@ from tests.conftest import (
 
 
 @pytest.mark.parametrize(
-    "key_type, notification_status, expected_status",
+    ("key_type", "notification_status", "expected_status"),
     [
         (None, "created", "Sending"),
         (
@@ -87,7 +87,7 @@ def test_notification_status_page_shows_details(
 
 
 @pytest.mark.parametrize(
-    "notification_type, notification_status, expected_class",
+    ("notification_type", "notification_status", "expected_class"),
     [
         ("sms", "failed", "error"),
         ("email", "failed", "error"),
@@ -130,7 +130,7 @@ def test_notification_status_page_formats_email_and_sms_status_correctly(
 
 
 @pytest.mark.parametrize(
-    "template_redaction_setting, expected_content",
+    ("template_redaction_setting", "expected_content"),
     [
         (False, "service one: hello Jo"),
         (True, "service one: hello hidden"),
@@ -170,7 +170,7 @@ def test_notification_status_page_respects_redaction(
 
 
 @pytest.mark.parametrize(
-    "extra_args, expected_back_link",
+    ("extra_args", "expected_back_link"),
     [
         (
             {},
@@ -222,8 +222,8 @@ def test_notification_status_shows_expected_back_link(
 
 
 @pytest.mark.parametrize(
-    "time_of_viewing_page, expected_message",
-    (
+    ("time_of_viewing_page", "expected_message"),
+    [
         (
             "2012-01-01 06:01",
             ("‘sample template’ was sent by Test User today at 06:01 UTC"),
@@ -240,7 +240,7 @@ def test_notification_status_shows_expected_back_link(
             "2013-01-03 06:01",
             ("‘sample template’ was sent by Test User on 1 January 2012 at 06:01 UTC"),
         ),
-    ),
+    ],
 )
 def test_notification_page_doesnt_link_to_template_in_tour(
     mocker,
@@ -295,7 +295,7 @@ def test_notification_page_does_not_show_cancel_link_for_sms_or_email_notificati
 
 
 @pytest.mark.parametrize(
-    "service_permissions, template_type, link_expected",
+    ("service_permissions", "template_type", "link_expected"),
     [
         ([], "", False),
         (["inbound_sms"], "email", False),
