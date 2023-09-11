@@ -4,7 +4,7 @@ import pytest
 
 
 @pytest.mark.parametrize(
-    "query_args, result", [({}, True), ({"govuk_banner": "false"}, "false")]
+    ("query_args", "result"), [({}, True), ({"govuk_banner": "false"}, "false")]
 )
 def test_renders(client_request, mocker, query_args, result):
     mocker.patch(
