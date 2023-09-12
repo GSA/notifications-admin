@@ -184,47 +184,6 @@
 {% endblock %}
 
 {% block footer %}
-  {% if current_user.is_authenticated %}
-    {% block sessionUserWarning %}
-    <dialog class="usa-modal" id="sessionTimer" aria-labelledby="sessionTimerHeading" aria-describedby="timerWarning">
-      <div class="usa-modal__content">
-        <div class="usa-modal__main">
-          <h2 class="usa-modal__heading" id="sessionTimerHeading">
-            Your session will end soon.
-          </h2>
-          <div class="usa-prose">
-            <p aria-live="polite" id="timerWarning">
-            </p>
-          </div>
-          <div class="usa-modal__footer">
-            <ul class="usa-button-group">
-              <li class="usa-button-group__item">
-                <button type="button" class="usa-button usa-button--unstyled" id="extendSessionTimer" data-close-modal>
-                  Extend Session
-                </button>
-              </li>
-              <li class="usa-button-group__item">
-                <button type="button" class="usa-button usa-button--unstyled padding-105 text-center" id="logOutTimer" data-close-modal>
-                  Sign out
-                </button>
-              </li>
-            </ul>
-          </div>
-          <button type="button" class="usa-button usa-modal__close" aria-label="Close this window">
-            <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
-              <use xlink:href="/assets/img/usa-icons/close.svg"></use>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </dialog>
-    <!-- <dialog id="sessionTimer">
-        <p aria-live="polite" id="timerWarning"></p>
-        <button class="usa-button" id="logOutTimer">Log Out</button>
-        <button class="usa-button" id="extendSessionTimer">Extend Session</button>
-    </dialog> -->
-    {% endblock %}
-    {% endif %}
 
   {% if current_service and current_service.research_mode %}
     {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="usa-link">Technology Transformation Services</a><span id="research-mode" class="research-mode">research mode</span>' %}
@@ -303,13 +262,53 @@
       "html": meta_suffix
     }
   }) }}
+
+  {% if current_user.is_authenticated %}
+    {% block sessionUserWarning %}
+    <dialog class="usa-modal" id="sessionTimer" aria-labelledby="sessionTimerHeading" aria-describedby="timerWarning">
+      <div class="usa-modal__content">
+        <div class="usa-modal__main">
+          <h2 class="usa-modal__heading" id="sessionTimerHeading">
+            Your session will end soon.
+            <span class="usa-sr-only">Please choose to extend your session or sign out. Your session will expire in 5 minutes or less.</span>
+          </h2>
+          <div class="usa-prose">
+            <p>You have been inactive for too long. 
+              Your session will expire in <span id="timeLeft" role="timer"></span>.
+            </p>
+          </div>
+          <div class="usa-modal__footer">
+            <ul class="usa-button-group">
+              <li class="usa-button-group__item">
+                <button type="button" class="usa-button" id="extendSessionTimer" data-close-modal>
+                  Extend Session
+                </button>
+              </li>
+              <li class="usa-button-group__item">
+                <button type="button" class="usa-button usa-button--unstyled padding-105 text-center" id="logOutTimer"
+                  data-close-modal>
+                  Sign out
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </dialog>
+    {% endblock %}
+  {% endif %}
+
 {% endblock %}
+
 
 {% block bodyEnd %}
   {% block extra_javascripts %}
   {% endblock %}
   <!--[if gt IE 8]><!-->
   <script type="text/javascript" src="{{ asset_url('javascripts/all.js') }}"></script>
-    <script type="text/javascript" src="{{ asset_url('js/uswds.min.js') }}"></script>
+  <script type="text/javascript" src="{{ asset_url('js/uswds.min.js') }}"></script>
   <!--<![endif]-->
+
 {% endblock %}
+
+

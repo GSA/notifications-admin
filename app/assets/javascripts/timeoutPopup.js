@@ -10,9 +10,7 @@
             var difference = timeTillSessionEnd - now;
             var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
             var seconds = Math.floor((difference % (1000 * 60)) / 1000);
-            document.getElementById("timerWarning").innerHTML = "You have been inactive " +
-                "for too long. Please choose to stay signed in or sign out. Your session will " +
-                "expire in " + minutes + "m " + seconds + "s ";
+            document.getElementById("timeLeft").innerHTML = + minutes + "m " + seconds + "s";
             showTimer();
             document.getElementById("logOutTimer").addEventListener("click", logoutByUser);
             document.getElementById("extendSessionTimer").addEventListener("click", extendSession);
