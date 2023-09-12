@@ -32,6 +32,8 @@ jobs:
           output: report-markdown
           annotations: failed-tests
           prnumber: ${{ steps.findPr.outputs.number }}
+      - name: Install curl
+        run: sudo apt install curl
       - name: Run style checks
         run: poetry run flake8 .
       - name: Check imports alphabetized
