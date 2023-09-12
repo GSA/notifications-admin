@@ -58,7 +58,7 @@ jobs:
       - name: Health check
         run: |
           # response = $(curl -v https://notify-staging.app.cloud.gov/_status)
-          response = $(curl -v http://localhost:6012/_status)
+          response = $(curl -v ${{ secrets.NOTIFY_E2E_TEST_URI }}_status)
           
           echo "response from curl= $response" 
           # exit 1
