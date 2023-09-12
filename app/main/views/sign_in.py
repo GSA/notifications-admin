@@ -26,7 +26,6 @@ from app.utils.login import is_safe_redirect_url
 def sign_in():
     redirect_url = request.args.get("next")
 
-    # TODO this is not the right test to do to find test users
     if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
         user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
         activate_user(user["id"])
