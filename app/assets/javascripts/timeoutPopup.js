@@ -1,6 +1,5 @@
 (function(global) {
     "use strict";
-    //hideTimerButtons();
 
     const sessionTimer = document.getElementById("sessionTimer");
 
@@ -11,17 +10,19 @@
             var difference = timeTillSessionEnd - now;
             var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
             var seconds = Math.floor((difference % (1000 * 60)) / 1000);
-            document.getElementById("timerWarning").innerHTML = "Your session will " +
+            document.getElementById("timerWarning").innerHTML = "You have been inactive " +
+                "for too long. Please choose to stay signed in or sign out. Your session will " +
                 "expire in " + minutes + "m " + seconds + "s ";
-            showTimerButtons();
+            showTimer();
             document.getElementById("logOutTimer").addEventListener("click", logoutByUser);
             document.getElementById("extendSessionTimer").addEventListener("click", extendSession);
-            if (difference === 0) {
+            if (difference < 0) {
                 clearInterval(x);
+                closeTimer();
                 redirectToSignin();
             }
         }, 1000);
-    }, 1 * 60 * 1000);
+    }, 60 * 1000);
 
     function redirectToSignin() {
         window.location.href = '/sign-in';
@@ -35,14 +36,12 @@
         window.location.reload();
     }
 
-    function hideTimerButtons() {
-        document.getElementById("logOutTimer").style.display = 'none';
-        document.getElementById("extendSessionTimer").style.display = 'none';
+    function showTimer() {
+        sessionTimer.showModal();
     }
 
-    function showTimerButtons() {
-        sessionTimer.showModal();
-        document.getElementById("extendSessionTimer").style.display = 'block';
+    function closeTimer() {
+        sessionTimer.close();
     }
 
 })(window);
