@@ -32,8 +32,6 @@ jobs:
           output: report-markdown
           annotations: failed-tests
           prnumber: ${{ steps.findPr.outputs.number }}
-      - name: Install curl
-        run: sudo apt install curl
       - name: Run style checks
         run: poetry run flake8 .
       - name: Check imports alphabetized
@@ -60,7 +58,8 @@ jobs:
       - name: Health check
         if: ${{ (curl -v https://notify-staging.app.cloud.gov/_status) != *"ok"* }}
         run: |
-          echo "blaahahaha"
+          response = $(curl -v https://notify-staging.app.cloud.gov/_status)        
+          echo "response from curl= $response" 
           exit 1
 
   validate-new-relic-config:
