@@ -57,10 +57,11 @@ jobs:
         run: poetry run coverage report --fail-under=90
       - name: Health check
         if: ${{ (curl -v https://notify-staging.app.cloud.gov/_status) != *"ok"* }}
-          uses: actions/github-script@v3
-          with:
-            script: |
-              core.setFailed('Health check failed')
+        steps:
+          - uses: actions/github-script@v3
+            with:
+              script: |
+                core.setFailed('Health check failed')
 
   validate-new-relic-config:
     runs-on: ubuntu-latest
