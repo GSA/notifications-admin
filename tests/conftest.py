@@ -3603,9 +3603,7 @@ def login_for_end_to_end_testing(browser):
     # Open a new page and go to the staging site.
     context = browser.new_context()
     page = context.new_page()
-    # TODO
-    page.goto("http://localhost:6012/")
-    # page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
+    page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
 
     sign_in_button = page.get_by_role("link", name="Sign in")
 
@@ -3627,11 +3625,8 @@ def login_for_end_to_end_testing(browser):
     continue_button = page.get_by_role("button", name=re.compile("Continue"))
 
     # Sign in to the site.
-    # TODO
-    email_address_input.fill("ken.kehl@fedramp.gov")
-    password_input.fill("SunPra1r13")
-    # email_address_input.fill(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
-    # password_input.fill(os.getenv("NOTIFY_E2E_TEST_PASSWORD"))
+    email_address_input.fill(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
+    password_input.fill(os.getenv("NOTIFY_E2E_TEST_PASSWORD"))
     continue_button.click()
 
     # Wait for the next page to fully load.
