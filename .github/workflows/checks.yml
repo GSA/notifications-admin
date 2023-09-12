@@ -62,6 +62,13 @@ jobs:
           
           echo "response from curl= $response" 
           # exit 1
+        env:
+          NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
+          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
+          NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD }}
+          NOTIFY_E2E_TEST_HTTP_AUTH_USER: ${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_USER }}
+          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
+          NOTIFY_E2E_TEST_URI: ${{ secrets.NOTIFY_E2E_TEST_URI }}
 
   validate-new-relic-config:
     runs-on: ubuntu-latest
