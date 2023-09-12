@@ -56,7 +56,6 @@ jobs:
       - name: Check coverage threshold
         run: poetry run coverage report --fail-under=90
       - name: Health check
-        if: ${{ (curl -v https://notify-staging.app.cloud.gov/_status) != *"ok"* }}
         run: |
           response = $(curl -v https://notify-staging.app.cloud.gov/_status)        
           echo "response from curl= $response" 
