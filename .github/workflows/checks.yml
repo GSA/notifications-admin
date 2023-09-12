@@ -59,7 +59,7 @@ jobs:
         run: |
           response = $(curl -v https://notify-staging.app.cloud.gov/_status)        
           echo "response from curl= $response" 
-          exit 1
+          # exit 1
 
   validate-new-relic-config:
     runs-on: ubuntu-latest
