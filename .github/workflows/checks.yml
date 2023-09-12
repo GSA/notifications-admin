@@ -58,7 +58,7 @@ jobs:
       - name: Health check
         run: |
           # response = $(curl -v https://notify-staging.app.cloud.gov/_status)
-          $(curl -v ${{ secrets.NOTIFY_E2E_TEST_URI }}_status)
+          $(curl -u ${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_USER }}:${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD }} -v ${{ secrets.NOTIFY_E2E_TEST_URI }}_status)
           
           # exit 1
         env:
