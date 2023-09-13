@@ -21,9 +21,8 @@ def _bypass_sign_in(end_to_end_context):
     return page
 
 
-
 def test_add_new_service_workflow(end_to_end_context):
-    #page = end_to_end_context.new_page()
+    # page = end_to_end_context.new_page()
     page = _bypass_sign_in(end_to_end_context)
     page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
 
@@ -131,4 +130,3 @@ def test_add_new_service_workflow(end_to_end_context):
     # Check to make sure that we've arrived at the next page.
     # Check the page title exists and matches what we expect.
     expect(page).to_have_title(re.compile("Choose service"))
-

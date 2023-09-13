@@ -63,14 +63,6 @@ def sign_in():
                     else:
                         invited_user.accept_invite()
 
-                # TODO this is not the right test to do to find test users
-                if os.getenv("NOTIFY_E2E_TEST_EMAIL") == "ken.kehl@fedramp.gov":
-                    user_id = session["user_details"]["id"]
-                    activate_user(user_id)
-                    return redirect(
-                        url_for("main.show_accounts_or_dashboard", next=redirect_url)
-                    )
-
                 user.send_login_code()
 
                 if user.sms_auth:

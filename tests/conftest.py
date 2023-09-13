@@ -3686,10 +3686,7 @@ def end_to_end_authenticated_context(browser):
     login_for_end_to_end_testing(browser)
 
     auth_state_path = os.path.join(
-        # TODO
-        "playwright/.auth/",
-        "state.json"
-        # os.getenv("NOTIFY_E2E_AUTH_STATE_PATH"), "state.json"
+        os.getenv("NOTIFY_E2E_AUTH_STATE_PATH"), "state.json"
     )
     context = browser.new_context(storage_state=auth_state_path)
 
