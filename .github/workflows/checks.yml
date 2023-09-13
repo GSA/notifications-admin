@@ -55,20 +55,14 @@ jobs:
           NOTIFY_E2E_TEST_URI: ${{ secrets.NOTIFY_E2E_TEST_URI }}
       - name: Check coverage threshold
         run: poetry run coverage report --fail-under=90
-#      - name: Health check
-#        if: (curl -u "$login" -v "$status_page") != *"ok"*
-#        uses: actions/github-script@v6
-#        with:
-#          script: core.setFailed('Health check failed')
-
       - name: Health check
         run: |
           response=$(curl -url ${{secrets.NOTIFY_E2E_TEST_URI}}_status -u "${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_USER }}:${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD }}")
           if grep -q "ok" <<< "$response"; then
+            echo "Health check passed"
+          else
             echo "Health check failed"
             exit 1
-          else
-            echo "Health check passed"
           fi
         env:
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
