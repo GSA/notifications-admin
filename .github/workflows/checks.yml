@@ -62,19 +62,16 @@ jobs:
 #          script: core.setFailed('Health check failed')
 
       - name: Health check
-        if: $(curl -url "${{secrets.NOTIFY_E2E_TEST_URI}}_status" -u "${{ login}} ") == *"ok"*
-        uses: actions/github-script@v6
-        with:
-          script: core.setFailed('Health check failed')
-#        run: |
-#          response=$(curl -url ${{secrets.NOTIFY_E2E_TEST_URI}}_status -u "${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_USER }}:${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD }}")
-#          echo "curl response is $response"
-#          if $response == *"ok"*; then
-#            exit 1
-#          endif
+        run: |
+          response=$(curl -url ${{secrets.NOTIFY_E2E_TEST_URI}}_status -u "${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_USER }}:${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD }}")
+          echo "curl response is $response"
+          if $response == *"ok"*; then
+            exit 1
+          endif
+      - name: Health check passed
+        run: |
+          echo "Health check passed"
         env:
-          login: ${{secrets.NOTIFY_E2E_TEST_HTTP_AUTH_USER}}:${{secrets.NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD}}
-          status_page: ${{secrets.NOTIFY_E2E_TEST_URI}}_status
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD }}
