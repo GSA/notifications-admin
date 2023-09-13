@@ -65,7 +65,7 @@ jobs:
         run: |
           response=$(curl -url ${{secrets.NOTIFY_E2E_TEST_URI}}_status -u "${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_USER }}:${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD }}")
           echo "curl response is $response"
-          if $response != *"ok"*; then
+          if $response == *"ok"*; then
             echo "Health check failed"
             exit 1
           else
