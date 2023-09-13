@@ -1,6 +1,6 @@
 # Notify Sprint Goals Log
 
-## Sprint: S 
+## Sprint: S (9/14/23)
 
 |             | Goals                                                                                                                              | Impact                                                                                                                                     |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
@@ -10,7 +10,7 @@
 | Content    | Kick off cloud.gov pages IAA for content site | Enable an easy static website for future content
 
 
-## Sprint: Rook (8/17/23)
+## Sprint: Rook (8/31/23)
 
 (Sprint planning cancelled)
 
