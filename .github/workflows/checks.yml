@@ -58,8 +58,8 @@ jobs:
       - name: Health check
         if: ${{ (curl -u "$login" -v "$status_page") != *"ok"* }}
         uses: actions/github-script@v6
-          with:
-            script: core.setFailed('Health check failed')
+        with:
+          script: core.setFailed('Health check failed')
         env:
           login: ${{secrets.NOTIFY_E2E_TEST_HTTP_AUTH_USER}}:${{secrets.NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD}}
           status_page: ${{secrets.NOTIFY_E2E_TEST_URI}}_status
