@@ -64,7 +64,7 @@ jobs:
       - name: Health check
         run: |
           response=$(curl -url ${{secrets.NOTIFY_E2E_TEST_URI}}_status -u "${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_USER }}:${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD }}")
-          if [$response == *"ok"*]; then
+          if grep -q "ok" <<< "$response"; then
             echo "Health check failed"
             exit 1
           else
