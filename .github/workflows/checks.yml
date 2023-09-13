@@ -62,7 +62,7 @@ jobs:
 #          script: core.setFailed('Health check failed')
 
       - name: Health check
-        if: $(curl -url "${{ status_page }}" -u "${{ login}} ") == *"ok"*
+        if: $(curl -url "${{secrets.NOTIFY_E2E_TEST_URI}}_status" -u "${{ login}} ") == *"ok"*
         uses: actions/github-script@v6
         with:
           script: core.setFailed('Health check failed')
