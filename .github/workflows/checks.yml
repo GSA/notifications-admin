@@ -56,12 +56,14 @@ jobs:
       - name: Check coverage threshold
         run: poetry run coverage report --fail-under=90
       - name: Health check
-        run: |
-          # response = $(curl -v https://notify-staging.app.cloud.gov/_status)
-          $(curl -u ${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_USER }}:${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD }} -v ${{ secrets.NOTIFY_E2E_TEST_URI }}_status)
-          
-          # exit 1
+        if: ${{ (curl -u "$login" -v "$status_page") != *"ok"* }}
+        steps:
+          - uses: actions/github-script@v6
+            with:
+              script: core.setFailed('Health check failed')
         env:
+          login: ${{secrets.NOTIFY_E2E_TEST_HTTP_AUTH_USER}}:${{secrets.NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD}}
+          status_page: ${{secrets.NOTIFY_E2E_TEST_URI}}_status
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD }}

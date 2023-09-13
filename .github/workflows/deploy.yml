@@ -84,7 +84,7 @@ jobs:
             deploy-config/egress_proxy/notify-admin-staging.*.acl
             .github/actions/deploy-proxy/action.yml
             .github/workflows/deploy.yml
-      - name: Deploy egress proxy
+      - name: Deploy egress proxyf
         if: steps.changed-egress-config.outputs.any_changed == 'true'
         uses: ./.github/actions/deploy-proxy
         with:
