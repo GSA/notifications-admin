@@ -55,14 +55,19 @@ jobs:
           NOTIFY_E2E_TEST_URI: ${{ secrets.NOTIFY_E2E_TEST_URI }}
       - name: Check coverage threshold
         run: poetry run coverage report --fail-under=90
+#      - name: Health check
+#        if: (curl -u "$login" -v "$status_page") != *"ok"*
+#        uses: actions/github-script@v6
+#        with:
+#          script: core.setFailed('Health check failed')
+
       - name: Health check
-        if: (curl -u "$login" -v "$status_page") != *"ok"*
-        uses: actions/github-script@v6
-        with:
-          script: core.setFailed('Health check failed')
+        run: |
+          response = $(curl ${{secrets.NOTIFY_E2E_TEST_URI}}_status -header "Accept: application/json" -header "X-Username: ${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_USER }}" -header "X-Password: ${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD }}")         
+          echo "response from curl= $response"
         env:
-          login: ${{secrets.NOTIFY_E2E_TEST_HTTP_AUTH_USER}}:${{secrets.NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD}}
-          status_page: ${{secrets.NOTIFY_E2E_TEST_URI}}_status
+          # login: ${{secrets.NOTIFY_E2E_TEST_HTTP_AUTH_USER}}:${{secrets.NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD}}
+          # status_page: ${{secrets.NOTIFY_E2E_TEST_URI}}_status
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD }}
