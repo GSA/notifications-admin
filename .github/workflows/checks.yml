@@ -56,7 +56,7 @@ jobs:
       - name: Check coverage threshold
         run: poetry run coverage report --fail-under=90
       - name: Health check
-        if: ${{ (curl -u "$login" -v "$status_page") != *"ok"* }}
+        if: (curl -u "$login" -v "$status_page") != *"ok"*
         uses: actions/github-script@v6
         with:
           script: core.setFailed('Health check failed')
