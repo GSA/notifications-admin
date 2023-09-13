@@ -70,7 +70,7 @@ jobs:
             exit 1
           else
             echo "Health check passed"
-          endif
+          fi
         env:
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
