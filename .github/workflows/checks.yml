@@ -68,7 +68,7 @@ jobs:
           if $response != *"ok"*; then
             echo "Health check failed"
             exit 1
-          else;
+          else
             echo "Health check passed"
           endif
         env:
