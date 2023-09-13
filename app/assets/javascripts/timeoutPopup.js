@@ -12,21 +12,17 @@
             var seconds = Math.floor((difference % (1000 * 60)) / 1000);
             document.getElementById("timeLeft").innerHTML = + minutes + "m " + seconds + "s";
             showTimer();
-            document.getElementById("logOutTimer").addEventListener("click", logoutByUser);
+            document.getElementById("logOutTimer").addEventListener("click", logoutUser);
             document.getElementById("extendSessionTimer").addEventListener("click", extendSession);
             if (difference < 0) {
                 clearInterval(x);
                 closeTimer();
-                redirectToSignin();
+                logoutUser();
             }
         }, 1000);
-    }, 60 * 1000);
+    }, 25 * 60 * 1000);
 
-    function redirectToSignin() {
-        window.location.href = '/sign-in';
-    }
-
-    function logoutByUser() {
+    function logoutUser() {
         window.location.href = '/sign-out';
     }
 
