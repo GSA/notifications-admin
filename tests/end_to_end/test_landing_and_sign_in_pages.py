@@ -4,9 +4,9 @@ import re
 from playwright.sync_api import expect
 
 
-def test_landing_page(browser):
+def test_landing_page(end_to_end_context):
     # Open a new page and go to the staging site.
-    page = browser.new_page()
+    page = end_to_end_context.browser.new_page()
     page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
 
     # Check to make sure that we've arrived at the next page.
