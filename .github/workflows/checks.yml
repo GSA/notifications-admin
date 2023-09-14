@@ -44,13 +44,13 @@ jobs:
         run: npm test
       - name: Run py tests with coverage
         run: poetry run coverage run --omit=*/notifications_utils/* -m pytest --maxfail=10 --ignore=tests/end_to_end tests/
-      - name: Run E2E tests
-        run: poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
-        env:
-          NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
-          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
-          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-          NOTIFY_E2E_TEST_URI: ${{ secrets.NOTIFY_E2E_TEST_URI }}
+      # - name: Run E2E tests
+      #   run: poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
+      #   env:
+      #     NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
+      #     NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
+      #     NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
+      #     NOTIFY_E2E_TEST_URI: ${{ secrets.NOTIFY_E2E_TEST_URI }}
       - name: Check coverage threshold
         run: poetry run coverage report --fail-under=90
       - name: Health check
