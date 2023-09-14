@@ -1,6 +1,6 @@
-(function(global) {
+const sessionTimerWrapper = function() {
     "use strict";
-
+    (function(global) {
     const sessionTimer = document.getElementById("sessionTimer");
 
     setTimeout(function() {
@@ -20,7 +20,7 @@
                 logoutUser();
             }
         }, 1000);
-    }, 25 * 60 * 1000);
+    }, 60 * 1000);
 
     function logoutUser() {
         window.location.href = '/sign-out';
@@ -37,5 +37,11 @@
     function closeTimer() {
         sessionTimer.close();
     }
+    })(window);
+};
 
-})(window);
+module.exports = sessionTimerWrapper;
+
+(function(){
+    sessionTimerWrapper();
+})();
