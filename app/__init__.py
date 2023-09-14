@@ -37,7 +37,6 @@ from werkzeug.local import LocalProxy
 from app import proxy_fix
 from app.asset_fingerprinter import asset_fingerprinter
 from app.config import configs
-from app.custom_auth import CustomBasicAuth
 from app.extensions import redis_client, zendesk_client
 from app.formatters import (
     convert_to_boolean,
@@ -122,7 +121,6 @@ from app.url_converters import (
 login_manager = LoginManager()
 csrf = CSRFProtect()
 talisman = Talisman()
-basic_auth = CustomBasicAuth()
 
 
 # The current service attached to the request stack.
@@ -234,8 +232,6 @@ def create_app(application):
     login_manager.login_message_category = "default"
     login_manager.session_protection = None
     login_manager.anonymous_user = AnonymousUser
-
-    setup_basic_auth(application)
 
     # make sure we handle unicode correctly
     redis_client.redis_store.decode_responses = True
@@ -583,7 +579,3 @@ def init_jinja(application):
     ]
     jinja_loader = jinja2.FileSystemLoader(template_folders)
     application.jinja_loader = jinja_loader
-
-
-def setup_basic_auth(application):
-    application.basic_auth = CustomBasicAuth(application)

@@ -77,8 +77,6 @@ and that it has at least these environment variables set in it:
 ```
 # E2E Test Configuration - only set for the Admin site.
 NOTIFY_E2E_TEST_URI
-NOTIFY_E2E_TEST_HTTP_AUTH_USER         # This is optional
-NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD     # This is optional
 NOTIFY_E2E_TEST_EMAIL
 NOTIFY_E2E_TEST_PASSWORD
 NOTIFY_E2E_AUTH_STATE_PATH
@@ -133,8 +131,6 @@ These are the E2E test environment variables that must be set:
 
 ```
 NOTIFY_E2E_TEST_URI
-NOTIFY_E2E_TEST_HTTP_AUTH_USER         # This is optional
-NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD     # This is optional
 NOTIFY_E2E_TEST_EMAIL
 NOTIFY_E2E_TEST_PASSWORD
 NOTIFY_E2E_AUTH_STATE_PATH
