@@ -7,8 +7,6 @@ ADMIN_CLIENT_USERNAME: notify-admin
 ADMIN_CLIENT_SECRET: sandbox-notify-secret-key
 DANGEROUS_SALT: sandbox-notify-salt
 SECRET_KEY: sandbox-notify-secret-key
-BASIC_AUTH_USERNAME: sandbox
-BASIC_AUTH_PASSWORD: sandbox
 nr_agent_id: ""
 nr_app_id: ""
 NR_BROWSER_KEY: ""

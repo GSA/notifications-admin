@@ -3661,18 +3661,7 @@ def login_for_end_to_end_testing(browser):
 
 @pytest.fixture(scope="session")
 def end_to_end_context(browser):
-    # Create a context with HTTP Authentication credentials for Playwright E2E
-    # tests, if the environment variables exist.
-    if os.getenv("NOTIFY_E2E_TEST_HTTP_AUTH_USER"):
-        context = browser.new_context(
-            http_credentials={
-                "username": os.getenv("NOTIFY_E2E_TEST_HTTP_AUTH_USER"),
-                "password": os.getenv("NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD"),
-            }
-        )
-    else:
-        context = browser.new_context()
-
+    context = browser.new_context()
     yield context
 
 
