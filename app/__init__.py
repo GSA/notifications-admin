@@ -2,6 +2,7 @@ import os
 import pathlib
 from functools import partial
 from time import monotonic
+from urllib.parse import urlparse, urlunparse
 
 import jinja2
 from flask import (
@@ -254,6 +255,7 @@ def create_app(application):
 
 
 def init_app(application):
+    application.before_request(redirect_notify_to_beta)
     application.before_request(load_service_before_request)
     application.before_request(load_organization_before_request)
     application.before_request(request_helper.check_proxy_header_before_request)
@@ -330,6 +332,22 @@ def make_session_permanent():
     https://stackoverflow.com/questions/34118093/flask-permanent-session-where-to-define-them
     """
     session.permanent = True
+
+
+def create_url(environment, url):
+    url_created = urlparse(url)
+    if environment == "production":
+        url_list = list(url_created)
+        url_list[1] = "beta.notify.gov"
+        url_for_redirect = urlunparse(url_list)
+        return url_for_redirect
+    return url
+
+
+def redirect_notify_to_beta():
+    url_to_beta = create_url(current_app.config["NOTIFY_ENVIRONMENT"], request.url)
+    if current_app.config["NOTIFY_ENVIRONMENT"] == "production":
+        redirect(url_to_beta, 301)
 
 
 def load_service_before_request():

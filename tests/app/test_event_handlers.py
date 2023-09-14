@@ -1,6 +1,7 @@
 import uuid
 from unittest.mock import ANY
 
+from app import create_url
 from app.event_handlers import (
     create_add_user_to_service_event,
     create_archive_service_event,
@@ -129,3 +130,15 @@ def test_set_user_permissions(client_request, mock_events):
 
     create_set_user_permissions_event(**kwargs)
     mock_events.assert_called_with("set_user_permissions", event_dict(**kwargs))
+
+
+def test_create_url():
+    url_for_redirect = create_url(
+        "production", "https://notify.gov/using-notify/get-started"
+    )
+    assert url_for_redirect == "https://beta.notify.gov/using-notify/get-started"
+
+
+def test_create_url_non_production():
+    url = create_url("development", "https://notify.gov/using-notify/get-started")
+    assert url == "https://notify.gov/using-notify/get-started"
