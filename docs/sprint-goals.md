@@ -1,6 +1,21 @@
 # Notify Sprint Goals Log
 
-## Sprint: Q (8/17/23)
+## Sprint: S (9/14/23)
+
+|             | Goals                                                                                                                              | Impact                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| Engineering | Resolve High and Urgent [bugs](https://github.com/GSA/notifications-admin/issues/758), remove cloud.gov [auth wall](https://github.com/GSA/notifications-admin/issues/679), [redirect](https://github.com/GSA/notifications-admin/issues/680) notify.gov to beta.notify.gov, change retention and [quota strategy](https://github.com/GSA/notifications-api/issues/443), begin scoping and obtain access to Login.gov sandbox   |   Ensure the best possible experience for first partner use, start down path of ATO-required auth solution                             |
+| UX          | Perform observational and formal user feedback sessions with partners to inform flow and look/feel redesign, surface and remedy straightforward UI changes   | Inform future features, flow, and feel of the application       |
+| Security    | Align personnel to begin ATO                                             | Source adequate resources to begin process|
+| Content    | Kick off cloud.gov pages IAA for content site | Enable an easy static website for future content
+
+
+## Sprint: Rook (8/31/23)
+
+(Sprint planning cancelled)
+
+
+## Sprint: Quetzal (8/17/23)
 
 |             | Goals                                                                                                                              | Impact                                                                                                                                     |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
