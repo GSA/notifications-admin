@@ -19,7 +19,7 @@
 
     {{ ajax_block(partials, updates_url, 'upcoming') }}
 
-    <h2 class="font-body-xl margin-top-0 margin-bottom-1">
+    <h2 class="font-body-lg margin-top-0 margin-bottom-1">
       In the last seven days
     </h2>
 
@@ -30,7 +30,7 @@
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
 
     {% if current_user.has_permissions('manage_service') %}
-      <h2 class='font-body-lg'>This year</h2>
+      <h2 class='font-body-lg margin-bottom-0'>This year</h2>
       {{ ajax_block(partials, updates_url, 'usage') }}
       {{ show_more(
         url_for(".usage", service_id=current_service['id']),
