@@ -33,9 +33,18 @@ i.e.
    }
 }
 
-.usa-nav__primary > .usa-nav__primary-item > a {
-   font-size: size("body", 4);
+.usa-nav__primary {
+   &> .usa-nav__primary-item > a {
+      font-size: size("body", 4);
+   }
+   &> .usa-nav__primary-item:last-child {
+      margin-left: auto; 
+      @include u-margin-right(-4);
+   }
 }
+
+.usa-nav__primary 
+
 
 h1 {
    font-weight: bold !important;
@@ -444,15 +453,3 @@ details form {
   letter-spacing: 0.04em;
 }
 
-// .textbox-colour-preview {
-//   @include govuk-media-query($from: desktop) {
-//     width: 38px;
-//     height: 38px;
-//     margin-left: 5px;
-//     border-radius: 50%;
-//     box-shadow: inset 0 0 0 1px rgba(govuk-colour("black"), 0.2);
-//     display: inline-block;
-//     vertical-align: top;
-//     transition: background 0.3s ease-out;
-//   }
-// }
