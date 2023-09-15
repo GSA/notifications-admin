@@ -21,11 +21,6 @@
 
   {{ page_header('Preview of {}'.format(template.name)) }}
 
-  {{ usaSkipLink({
-    "text": "Skip to file contents",
-    "href": "#" + file_contents_header_id
-  }) }}
-
   {{ template|string }}
   <div class="bottom-gutter-3-2">
     <form method="post" enctype="multipart/form-data" action="{{url_for('main.start_job', service_id=current_service.id, upload_id=upload_id)}}" class='page-footer'>
