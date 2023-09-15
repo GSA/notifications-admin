@@ -64,7 +64,7 @@ def test_get_user_phone_number_raises_if_both_api_requests_fail(mocker):
 
 
 @pytest.mark.parametrize(
-    "outbound_redacted, expected_outbound_content",
+    ("outbound_redacted", "expected_outbound_content"),
     [
         (True, "Hello hidden"),
         (False, "Hello Jo"),
