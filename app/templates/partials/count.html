@@ -3,7 +3,7 @@
 
 <div class="ajax-block-container">
   {% if notifications_deleted %}
-    <div class="grid-row bottom-gutter-1-2">
+    <div class="grid-row ">
       {% for label, query_param, url, count in counts %}
         {% if query_param == 'pending' %}
             <div class="grid-col-3">{{ big_number(count, query_param, smaller=True) }}</div>
@@ -14,7 +14,7 @@
       {% endfor %}
     </div>
   {% else %}
-    <div class="bottom-gutter">
+    <div class="tabs">
       {{ pill(counts, request.args.get('status', '')) }}
     </div>
   {% endif %}
