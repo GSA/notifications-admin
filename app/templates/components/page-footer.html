@@ -1,4 +1,4 @@
-{% from "components/components/button/macro.njk" import govukButton %}
+{% from "components/components/button/macro.njk" import usaButton %}
 
 {% macro page_footer(
   button_text=None,
@@ -27,7 +27,7 @@
         }) %}
       {% endif %}
 
-      {{ govukButton(button_data) }}
+      {{ usaButton(button_data) }}
 
     {% endif %}
     {% if delete_link %}

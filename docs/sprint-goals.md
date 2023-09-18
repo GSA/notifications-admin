@@ -1,6 +1,21 @@
 # Notify Sprint Goals Log
 
-## Sprint: Q (8/17/23)
+## Sprint: S (9/14/23)
+
+|             | Goals                                                                                                                              | Impact                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| Engineering | Resolve High and Urgent [bugs](https://github.com/GSA/notifications-admin/issues/758), remove cloud.gov [auth wall](https://github.com/GSA/notifications-admin/issues/679), [redirect](https://github.com/GSA/notifications-admin/issues/680) notify.gov to beta.notify.gov, change retention and [quota strategy](https://github.com/GSA/notifications-api/issues/443), begin scoping and obtain access to Login.gov sandbox   |   Ensure the best possible experience for first partner use, start down path of ATO-required auth solution                             |
+| UX          | Perform observational and formal user feedback sessions with partners to inform flow and look/feel redesign, surface and remedy straightforward UI changes   | Inform future features, flow, and feel of the application       |
+| Security    | Align personnel to begin ATO                                             | Source adequate resources to begin process|
+| Content    | Kick off cloud.gov pages IAA for content site | Enable an easy static website for future content
+
+
+## Sprint: Rook (8/31/23)
+
+(Sprint planning cancelled)
+
+
+## Sprint: Quetzal (8/17/23)
 
 |             | Goals                                                                                                                              | Impact                                                                                                                                     |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
@@ -26,7 +41,7 @@
 | Engineering | Reduce [technical debt](https://github.com/GSA/notifications-api/issues/361) and stabilize application; carry out rigorous [testing](https://github.com/GSA/notifications-api/issues/312) of features and [infrastructure](https://github.com/GSA/notifications-api/issues/87); solve known [bugs](https://github.com/GSA/notifications-api/issues/360)    |   Increase app reliability prior to first partner use                                |
 | UX          | Continue [user testing interviews](https://github.com/GSA/notifications-admin/issues/592) and feedback; Kick off internal message recipient [opt-out test](https://github.com/GSA/notifications-admin/issues/395)          | Gain feedback on usability and functionality in order to find bugs, streamline confusing flows, and adjust processes         |
 | Security    | (Assessment has begun!) Respond to any assessment questions and/or needs                                                  | Keep the LATO award timeline as short as possible|
-| Content    | Perform an application and documentation audit to [replace instances](https://github.com/GSA/notifications-admin/issues/631) of `U.S. Notify` with `Notify.gov` | Reflect a more streamlined brand
+| Content    | Perform an application and documentation audit to [replace instances](https://github.com/GSA/notifications-admin/issues/631) of `Notify.gov` with `Notify.gov` | Reflect a more streamlined brand
 
 ## Sprint: Northern Screamer (7/5/23)
 
@@ -64,7 +79,7 @@
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
 | Engineering | Moving from an ad-hoc "complete must-haves" process to a more strategic, themed progression; examining and implementing a structure for [Architecture Decision Records](https://github.com/GSA/notifications-admin/issues/522); assessing and planning for timezone accommodations in both [back-end](https://github.com/GSA/notifications-api/issues/260) and [UI](https://github.com/GSA/notifications-admin/issues/525)                                                          |   Less context-switching; better documentation and prioritization; a clear strategy and content regarding timezones for users                                   |
 | UX          | Wrap first iteration of [USWDS component migration](https://github.com/GSA/notifications-admin/issues/453); [propose new flows and wireframes](https://github.com/GSA/notifications-admin/issues/455)             | A U.S. government look and feel; easier user navigation          |
-| Content     | [Hone content](https://github.com/GSA/notifications-admin/issues/523) for [U.S. Notify-specific aspects](https://github.com/GSA/notifications-admin/issues/521); finalize [style and terminology docs](https://github.com/GSA/notifications-admin/issues/481) | Clear and applicable documentation and direction in the application |
+| Content     | [Hone content](https://github.com/GSA/notifications-admin/issues/523) for [Notify.gov-specific aspects](https://github.com/GSA/notifications-admin/issues/521); finalize [style and terminology docs](https://github.com/GSA/notifications-admin/issues/481) | Clear and applicable documentation and direction in the application |
 | Security    | Respond to any assessment questions and/or needs                                                  | Keep the LATO award timeline as short as possible
 
 ## Sprint: Jabiru (5/11/23)
@@ -83,7 +98,7 @@
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
 | Engineering | Focus effort on Pilot "Must Haves", settle on a retention strategy                                                              | A usable, functioning MVP that meets LATO restrictions while maximizing message volume and experience                                      |
 | UX          | Remove unnecessary components from existing site, create strategy to implement USWDS and begin migrating components.              | A better, more simple experience that will start to accomplish a common look and feel as well as meet accessibility standards.             |
-| Content     | Execute low-lift content tweaks; make necessary decisions and begin medium-to-high effort changes based on audit recommendations. | Future users will have at least logical content and documentation to follow, that reflects actual quotas and is applicable to U.S. Notify. |
+| Content     | Execute low-lift content tweaks; make necessary decisions and begin medium-to-high effort changes based on audit recommendations. | Future users will have at least logical content and documentation to follow, that reflects actual quotas and is applicable to Notify.gov. |
 | Security    | Respond to any assessment questions ASAP, shore up docs, transition to new POC                                                    | Keep the LATO award timeline as short as possible, prepare for Ryan's rolling off the project                                              |
 
 ## Sprint: Heron (4/13/23)

@@ -3,19 +3,19 @@
 {% from "components/radios.html" import radio_select %}
 {% from "components/table.html" import list_table, field, text_field, index_field, hidden_field_heading %}
 {% from "components/file-upload.html" import file_upload %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block service_page_title %}
   Error
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": back_link }) }}
+  {{ usaBackLink({ "href": back_link }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
 
-  <div class="bottom-gutter-1-2">
+  <div class="">
     {% call banner_wrapper(type='dangerous') %}
 
       {% if recipients.too_many_rows %}

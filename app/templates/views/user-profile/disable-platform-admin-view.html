@@ -1,7 +1,7 @@
 {% extends "withoutnav_template.html" %}
 {% from "components/form.html" import form_wrapper %}
 {% from "components/page-footer.html" import page_footer %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% set page_title = 'Use platform admin view' %}
 
@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for('.user_profile') }) }}
+  {{ usaBackLink({ "href": url_for('.user_profile') }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
@@ -23,7 +23,7 @@
           'fieldset': {
             'legend': {
               'isPageHeading': True,
-              'classes': 'govuk-fieldset__legend--l'
+              'classes': 'usa-legend usa-legend--large'
             }
           },
           'hint': {

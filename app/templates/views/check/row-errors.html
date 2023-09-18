@@ -3,39 +3,44 @@
 {% from "components/radios.html" import radio_select %}
 {% from "components/table.html" import mapping_table, row, field, text_field, index_field, hidden_field_heading %}
 {% from "components/file-upload.html" import file_upload %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
+{% from "components/components/alert/macro.njk" import usaAlert %}
 
 {% block service_page_title %}
   Error
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": back_link }) }}
+  {{ usaBackLink({ "href": back_link }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
 
-  <div class="bottom-gutter-1-2">
+  <div class="">
     {% call banner_wrapper(type='dangerous') %}
       {% if row_errors|length == 1 %}
-        <h1 class='banner-title' data-module="track-error" data-error-type="Bad rows" data-error-label="{{ upload_id }}">
-          There’s a problem with {{ original_file_name }}
-        </h1>
-        <p>
-          You need to {{ row_errors[0] }}.
-        </p>
+        <div class="usa-alert usa-alert--error" role="alert">
+          <div class="usa-alert__body">
+            <h1 class="usa-alert__heading">There’s a problem with {{ original_file_name }}</h1>
+            <p class="usa-alert__text">
+            You need to {{ row_errors[0] }}.
+            </p>
+          </div>
+        </div>
       {% else %}
-        <h1 class='banner-title' data-module="track-error" data-error-type="Bad rows" data-error-label="{{ upload_id }}">
-          There are some problems with {{ original_file_name }}
-        </h1>
-        <p>
-          You need to:
-        </p>
-        <ul class="list-bullet">
-          {% for error in row_errors %}
-            <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
+        <div class="usa-alert usa-alert--error" role="alert">
+          <div class="usa-alert__body">
+            <h1 class="usa-alert__heading">There’s a problem with {{ original_file_name }}</h1>
+            <p class="usa-alert__text">
+              You need to:
+              <ul class="list-bullet">
+                {% for error in row_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            </p>
+          </div>
+        </div>
       {% endif %}
     {% endcall %}
   </div>
@@ -49,7 +54,6 @@
         button_text='Upload your file again'
       ) }}
     </div>
-    <a href="#content" class="usa-link back-to-top-link">Back to top</a>
   </div>
 
   <div class="fullscreen-content" data-module="fullscreen-table">

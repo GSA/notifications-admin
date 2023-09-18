@@ -1,6 +1,6 @@
 {% from "components/live-search.html" import live_search %}
 {% from "components/folder-path.html" import folder_path %}
-{% from "components/components/button/macro.njk" import govukButton %}
+{% from "components/components/button/macro.njk" import usaButton %}
 
 {% extends "withnav_template.html" %}
 
@@ -10,7 +10,7 @@
 
 {% block maincolumn_content %}
 
-<div class="bottom-gutter-1-2">
+<div class="">
   <h1 class="font-body-2xl margin-bottom-3">Choose a template</h1>
   {{ folder_path(template_folder_path, current_service.id, template_type, current_user, root_element='h2') }}
 </div>
@@ -21,7 +21,7 @@
        <p class="bottom-gutter">
          You need a template before you can send text messages.
        </p>
-       {{ govukButton({
+       {{ usaButton({
         "element": "a",
         "text": "Add a new template",
         "href": url_for('.choose_template', service_id=current_service.id, initial_state='add-new-template')

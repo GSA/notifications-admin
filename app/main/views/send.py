@@ -371,7 +371,7 @@ def send_one_off_step(service_id, template_id, step_index):
     elif db_template["template_type"] == "sms":
         sms_sender = (
             get_sms_sender_from_session()
-        )  # TODO: verify default sender is U.S. Notify
+        )  # TODO: verify default sender is Notify.gov
 
     template_values = get_recipient_and_placeholders_from_session(
         db_template["template_type"]

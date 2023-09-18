@@ -2,7 +2,7 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block per_page_title %}
   Change team member’s email address
@@ -10,7 +10,7 @@
 
 
 {% block backLink %}
-  {{ govukBackLink({ "href": url_for('main.edit_user_permissions', service_id=current_service.id, user_id=user.id) }) }}
+  {{ usaBackLink({ "href": url_for('main.edit_user_permissions', service_id=current_service.id, user_id=user.id) }) }}
 {% endblock %}
 
 {% block maincolumn_content %}

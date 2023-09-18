@@ -3,7 +3,7 @@
 {% from "components/folder-path.html" import folder_path, page_title_folder_path %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/copy-to-clipboard.html" import copy_to_clipboard %}
-{% from "components/components/button/macro.njk" import govukButton %}
+{% from "components/components/button/macro.njk" import usaButton %}
 
 {% block service_page_title %}
   {{ page_title_folder_path(current_service.get_template_path(template._template)) }}
@@ -25,14 +25,14 @@
         </ul>
         <form method='post'>
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-          {{ govukButton({ "text": "Confirm", "classes": "usa-button--secondary margin-top-2" }) }}
+          {{ usaButton({ "text": "Confirm", "classes": "usa-button--secondary margin-top-2" }) }}
         </form>
       {% endcall %}
     </div>
   {% else %}
     <div class="grid-row">
       <div class="grid-col-12">
-        <h1 class="font-body-lg folder-heading">
+        <h1 class="font-body-xl folder-heading margin-top-0">
           Review your message
         </h1>
         {{ folder_path(
@@ -70,7 +70,7 @@
     {% endif %}
   </div>
 
-  <!--<div class="bottom-gutter-1-2">
+  <!--<div class="">
     {{ copy_to_clipboard(template.id, name="Template ID", thing='template ID') }}
   </div>-->
 

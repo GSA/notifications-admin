@@ -4,6 +4,8 @@
 {% from "components/form.html" import form_wrapper %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
+{% from "components/components/alert/macro.njk" import usaAlert %}
+
 
 {% extends "withnav_template.html" %}
 
@@ -34,13 +36,11 @@
 
     <div class="grid-row">
       <div class="{% if current_user.has_permissions('manage_templates') %} grid-col-10 {% else %} grid-col-12 {% endif %}">
-        <div class="usa-alert usa-alert--info usa-alert--slim">
-          <div class="usa-alert__body">
-            <p class="usa-alert__text">
-              Every message starts with a template. To send, choose or create a template.
-            </p>
-          </div>
-        </div>
+        {{ usaAlert({
+          "text": "Every message starts with a template. To send, choose or create a template.",
+          "slim": true,
+          "type": "info",
+        }) }}
         {{ folder_path(
           folders=template_folder_path,
           service_id=current_service.id,

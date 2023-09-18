@@ -2,14 +2,14 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block service_page_title %}
   {{ page_title }}
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink({ "href": back_link }) }}
+  {{ usaBackLink({ "href": back_link }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
@@ -28,9 +28,9 @@
         {{ form.placeholder_value(param_extensions={"classes": ""}) }}
       </div>
       {% if skip_link or link_to_upload %}
-        <div class="grid-col-12">
+        <div class="grid-col-12 margin-top-1">
           {% if link_to_upload %}
-            <a class="usa-link" href="{{ url_for('.send_messages', service_id=current_service.id, template_id=template.id) }}">Upload a list of {{ 999|recipient_count_label(template.template_type) }}</a>
+            <a class="usa-link margin-right-2" href="{{ url_for('.send_messages', service_id=current_service.id, template_id=template.id) }}">Upload a list of {{ 999|recipient_count_label(template.template_type) }}</a>
           {% endif %}
           {% if skip_link %}
             <a href="{{ skip_link[1] }}" class="usa-link">{{ skip_link[0] }}</a>

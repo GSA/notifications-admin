@@ -2,9 +2,9 @@
 {% from "components/banner.html" import banner_wrapper %}
 {% from "components/table.html" import list_table, field, text_field, index_field, hidden_field_heading %}
 {% from "components/page-header.html" import page_header %}
-{% from "components/components/button/macro.njk" import govukButton %}
-{% from "components/components/skip-link/macro.njk" import govukSkipLink %}
-{% from "components/components/back-link/macro.njk" import govukBackLink %}
+{% from "components/components/button/macro.njk" import usaButton %}
+{% from "components/components/skip-link/macro.njk" import usaSkipLink %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% set file_contents_header_id = 'file-preview' %}
 
@@ -14,17 +14,12 @@
 
 
 {% block backLink %}
-  {{ govukBackLink({ "href": back_link }) }}
+  {{ usaBackLink({ "href": back_link }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
 
   {{ page_header('Preview of {}'.format(template.name)) }}
-
-  {{ govukSkipLink({
-    "text": "Skip to file contents",
-    "href": "#" + file_contents_header_id
-  }) }}
 
   {{ template|string }}
   <div class="bottom-gutter-3-2">
@@ -44,7 +39,7 @@
       {% set button_text %}
         Send {{ count_of_recipients|message_count(template.template_type) }}
       {% endset %}
-      {{ govukButton({ "text": button_text }) }}
+      {{ usaButton({ "text": button_text }) }}
 
     </form>
   </div>

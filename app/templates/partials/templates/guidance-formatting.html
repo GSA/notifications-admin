@@ -1,17 +1,17 @@
-{% from "components/components/inset-text/macro.njk" import govukInsetText %}
+{% from "components/components/inset-text/macro.njk" import usaInsetText %}
 
 <h2 class="heading-medium">Formatting</h2>
 <p class="bottom-gutter-1-3">
   To put a title in your template, use a hash:
 </p>
 <div>
-  {{ govukInsetText({"text": "# This is a title", "classes": ""})}}
+  {{ usaInsetText({"text": "# This is a title", "classes": ""})}}
 </div>
 <p class="bottom-gutter-1-3">
   To make bullet points, use asterisks:
 </p>
 <div>
-  {{ govukInsetText({
+  {{ usaInsetText({
     "html": "* point 1<br/>
              * point 2<br/>
              * point 3<br/>",
@@ -22,12 +22,12 @@
   To add inset text, use a caret:
 </p>
 <div>
-  {{ govukInsetText({"text": "^ You must tell us if your circumstances change", "classes": ""})}}
+  {{ usaInsetText({"text": "^ You must tell us if your circumstances change", "classes": ""})}}
 </div>
 <p class="bottom-gutter-1-3">
   To add a horizontal line, use three dashes:
 </p>
-{{ govukInsetText({
+{{ usaInsetText({
   "html": '<p class="usa-body">First paragraph</p>
             <p class="usa-body" style="letter-spacing: 1px;">---</p>
             <p class="usa-body">Second paragraph</p>',

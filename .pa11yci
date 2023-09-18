@@ -1,7 +1,7 @@
 {
   "defaults": {
     "standard": "WCAG2AA",
-    "runners": ["axe"],
+    "runners": ["htmlcs"],    
     "concurrency": 1,
     "hideElements": [
       "nav > ol a",

@@ -15,8 +15,8 @@ NVMSH := $(shell [ -f "$(HOME)/.nvm/nvm.sh" ] && echo "$(HOME)/.nvm/nvm.sh" || e
 
 .PHONY: bootstrap
 bootstrap: generate-version-file ## Set up everything to run the app
-	pipenv install --dev
-	pipenv run playwright install --with-deps
+	poetry install
+	poetry run playwright install --with-deps
 	source $(NVMSH) --no-use && nvm install && npm ci --no-audit
 	source $(NVMSH) && npm run build
 
@@ -26,10 +26,10 @@ watch-frontend:  ## Build frontend and watch for changes
 
 .PHONY: run-flask
 run-flask:  ## Run flask
-	pipenv run newrelic-admin run-program flask run -p 6012 --host=0.0.0.0
+	poetry run newrelic-admin run-program flask run -p 6012 --host=0.0.0.0
 
 .PHONY: run-flask-bare
-run-flask-bare:  ## Run flask without invoking pipenv so we can override ENV variables in .env
+run-flask-bare:  ## Run flask without invoking poetry so we can override ENV variables in .env
 	flask run -p 6012 --host=0.0.0.0
 
 .PHONY: npm-audit
@@ -49,35 +49,36 @@ test: py-lint py-test js-lint js-test ## Run tests
 
 .PHONY: py-lint
 py-lint: ## Run python linting scanners and black
-	pipenv run black .
-	pipenv run flake8 .
-	pipenv run isort --check-only ./app ./tests
+	poetry self add poetry-dotenv-plugin
+	poetry run black .
+	poetry run flake8 .
+	poetry run isort --check-only ./app ./tests
 
 .PHONY: avg-complexity
 avg-complexity:
 	echo "*** Shows average complexity in radon of all code ***"
-	pipenv run radon cc ./app -a -na
+	poetry run radon cc ./app -a -na
 
 .PHONY: too-complex
 too-complex:
 	echo "*** Shows code that got a rating of C, D or F in radon ***"
-	pipenv run radon cc ./app -a -nc
+	poetry run radon cc ./app -a -nc
 
 .PHONY: py-test
 py-test: export NEW_RELIC_ENVIRONMENT=test
 py-test: ## Run python unit tests
-	pipenv run coverage run --omit=*/notifications_utils/* -m pytest --maxfail=10 --ignore=tests/end_to_end tests/
-	pipenv run coverage report --fail-under=96
-	pipenv run coverage html -d .coverage_cache
+	poetry run coverage run --omit=*/notifications_utils/* -m pytest --maxfail=10 --ignore=tests/end_to_end tests/
+	poetry run coverage report --fail-under=96
+	poetry run coverage html -d .coverage_cache
 
 .PHONY: dead-code
 dead-code:
-	pipenv run vulture ./app --min-confidence=100
+	poetry run vulture ./app --min-confidence=100
 
 .PHONY: e2e-test
 e2e-test: export NEW_RELIC_ENVIRONMENT=test
 e2e-test: ## Run end-to-end integration tests
-	pipenv run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
+	poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
 
 .PHONY: js-lint
 js-lint: ## Run javascript linting scanners
@@ -89,25 +90,25 @@ js-test: ## Run javascript unit tests
 
 .PHONY: fix-imports
 fix-imports: ## Fix imports using isort
-	pipenv run isort ./app ./tests
+	poetry run isort ./app ./tests
 
 .PHONY: freeze-requirements
 freeze-requirements: ## create static requirements.txt
-	pipenv requirements > requirements.txt
+	poetry export --without-hashes --format=requirements.txt > requirements.txt
 
 .PHONY: pip-audit
 pip-audit:
-	pipenv requirements > requirements.txt
-	pipenv requirements --dev > requirements_for_test.txt
-	pipenv run pip-audit -r requirements.txt
-	-pipenv run pip-audit -r requirements_for_test.txt
+	poetry requirements > requirements.txt
+	poetry requirements --dev > requirements_for_test.txt
+	poetry run pip-audit -r requirements.txt
+	-poetry run pip-audit -r requirements_for_test.txt
 
 .PHONY: audit
 audit: npm-audit pip-audit
 
 .PHONY: static-scan
 static-scan:
-	pipenv run bandit -r app/
+	poetry run bandit -r app/
 
 .PHONY: a11y-scan
 a11y-scan:

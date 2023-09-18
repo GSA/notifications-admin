@@ -12,7 +12,7 @@
 
 {#- Define common attributes that we can use across all element types #}
 
-{%- set commonAttributes %} class="usa-button{% if params.classes %} {{ params.classes }}{% endif %}{% if params.disabled %} govuk-button--disabled{% endif %}"{% for attribute, value in params.attributes %} {{attribute}}="{{value}}"{% endfor %}{% endset %}
+{%- set commonAttributes %} class="usa-button{% if params.classes %} {{ params.classes }}{% endif %}{% if params.disabled %} usa-button--disabled{% endif %}"{% for attribute, value in params.attributes %} {{attribute}}="{{value}}"{% endfor %}{% endset %}
 
 {#- Define common attributes we can use for both button and input types #}
 
@@ -26,7 +26,7 @@
 </a>
 
 {%- elseif element == 'button' %}
-<button {%- if params.value %} value="{{ params.value }}"{% endif %} {{- buttonAttributes | safe }} {{- commonAttributes | safe }}>
+<button {%- if params.value %} value="{{ params.value }}"{% endif %} {{- buttonAttributes | safe }} {{- commonAttributes | safe }} {% if params.disabled %}disabled{% endif %}>
   {{ params.html | safe if params.html else params.text }}
 </button>
 

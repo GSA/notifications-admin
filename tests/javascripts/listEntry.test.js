@@ -63,7 +63,7 @@ describe("List entry", () => {
 
     document.body.innerHTML =
       `<fieldset class="usa-form-group" aria-describedby="domains-hint">
-        <legend class="govuk-fieldset__legend">
+        <legend class="usa-fieldset__legend">
           Domain names
           </span>
         </legend>
