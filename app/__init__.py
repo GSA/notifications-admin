@@ -344,7 +344,7 @@ def redirect_notify_to_beta():
         and "beta.notify.gov" not in request.url
     ):
         url_to_beta = create_beta_url(request.url)
-        redirect(url_to_beta, 301)
+        return redirect(url_to_beta, 302)
 
 
 def load_service_before_request():
