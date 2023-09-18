@@ -1,5 +1,4 @@
 from flask import current_app
-from unittest.mock import patch
 
 from app import create_beta_url
 
