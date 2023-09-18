@@ -53,7 +53,7 @@
     <a class="usa-link" href="{{ url_for('.get_example_csv', service_id=current_service.id, template_id=template.id) }}" download>Download this example (<abbr title="Comma separated values">CSV</abbr>)</a>
   </p>
 
-  <h2 class="font-body-lg">Your file will populate this template ({{ template.name }})</h2>
+  <h2 class="font-body-lg margin-bottom-1">Your file will populate this template:<br><span class="font-body-lg">({{ template.name }})</span></h2>
   {{ template|string }}
 
 {% endblock %}

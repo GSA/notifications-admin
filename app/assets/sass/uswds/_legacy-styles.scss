@@ -1,0 +1,342 @@
+@use "uswds-core" as *;
+
+// SMS Box Style
+
+.sms-message-wrapper {
+
+  position: relative;
+  width: 100%;
+  max-width: 464px;
+  box-sizing: border-box;
+  padding: units(1);
+  background: color('gray-cool-10');
+  border: 1px solid color('gray-cool-10');
+  border-radius: 5px;
+  white-space: normal;
+  margin: 0 0 units(1) 0;
+  clear: both;
+  word-wrap: break-word;
+
+  &:after {
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: -5px;
+    right: -20px;
+    border: 10px solid transparent;
+    border-left-width: 13px;
+    border-right-width: 13px;
+    border-bottom-color: color('gray-cool-10');
+    border-left-color: color('gray-cool-10');
+    transform: rotate(17deg);
+  }
+
+}
+
+.sms-message-inbound {
+
+  .sms-message-wrapper {
+
+    &:after {
+      border-left-color: transparent;
+      border-bottom-color: color('gray-cool-10');
+      border-right-color: color('gray-cool-10');
+      right: auto;
+      left: -20px;
+      transform: rotate(17deg);
+    }
+  }
+}
+
+.sms-message-sender {
+  margin: units(1) 0 0;
+}
+
+.sms-message-recipient {
+  color: color('gray-cool-90');
+  margin: 0 0 units(1);
+}
+
+.sms-message-status {
+  color: color('gray-cool-90');
+  margin: -20px units(1) 20px units(1);
+}
+
+.sms-message-status-outbound {
+  text-align: right;
+}
+
+.sms-message-row {
+  &:focus {
+    outline: none;
+    padding-top: 120px;
+    margin-top: -120px;
+  }
+}
+
+.sms-message-reply-link {
+  text-align: right;
+}
+
+// File upload area
+
+.page-footer {
+  position: relative;
+  margin-bottom: 30px;
+  &-link {
+    line-height: 40px;
+    padding: 1px 0 0 15px;
+    font-weight: normal;
+    &:first-of-type {
+      padding-left: 0px;
+    }
+  }
+
+  &-delete-link-without-button {
+    padding: 0;
+    display: inline-block;
+  }
+
+  &-secondary-link {
+    display: block;
+    margin-top: units(1);
+  }
+
+  &-right-aligned-link {
+    position: absolute;
+    right: 0;
+    top: 9px;  // align baseline with buttons
+    &-without-button {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+
+  &__button {
+    margin-right: 10px;
+  }
+
+  .js-cancel {
+    margin: 0;
+  }
+
+  &__button--centred {
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+.file-upload {
+  &-label,
+  &-button-label {
+    font-weight: bold;
+    font-size: 19px; 
+    display: block;
+    margin: 0 0 10px 0;
+  }
+
+  &-label .error-message,
+  &-button-label.error-message {
+    padding: 0;
+  }
+
+  &-field {
+    margin-bottom: 10px;
+  }
+
+  // Hide normal upload form if we're adding a custom version with JS
+  .js-enabled &-label,
+  .js-enabled &-field,
+  .js-enabled &-submit {
+    display: none;
+  }
+
+  &-alternate-link {
+    display: inline-block;
+    line-height: 35px;
+    a {
+      font-weight: bold;
+    }
+   }
+}
+
+.spreadsheet {
+
+  margin-bottom: units (1);
+
+  .table {
+    margin-bottom: 0;
+  }
+
+  .usa-table--borderless thead th {
+    border-top: 1px solid color('gray-cool-10');
+  }
+
+  th,
+  .table-field-index {
+    background: color('gray-cool-10');
+    border: 1px solid color('gray-cool-10');
+    font-weight: bold;
+    text-align: center;
+  }
+
+  th, td {
+    padding-left: 10px;
+    padding-right: 10px;
+    border: 1px solid color('gray-cool-10');
+  }
+
+  td {
+    border-top: 0;
+    // 194 is the width of the table * 1/3.5, so the overflow cuts off
+    // at 3.5 columns wide.
+    // 11 accounts for the padding of the table cell
+    min-width: 194px - 11px;
+    &:first-child {
+      min-width: auto;
+    }
+  }
+
+  .fullscreen-fixed-table {
+    z-index: 1000;
+    .table-field-heading-first {
+      background: color('gray-cool-10');
+    }
+  }
+}
+
+.fullscreen {
+  &-content {
+    background: #FFFFFF;
+    z-index: 10;
+    overflow-y: hidden;
+    box-sizing: border-box;
+    margin: 0 0 units(1) 0;
+    padding: 0 0 0 0;
+    overflow: hidden;
+    border-bottom: 1px solid color('gray-cool-10');
+    .table {
+      margin-bottom: 0;
+      tr:last-child {
+        td {
+          border-bottom: 1px solid #FFFFFF;
+        }
+      }
+
+    }
+
+    th,
+    .table-field-error-label,
+    .table-field-left-aligned {
+      white-space: nowrap;
+    }
+  }
+
+  &-right-shadow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    z-index: 200;
+    &.visible {
+      &.with-transition {
+        transition: box-shadow 0.6s ease-out;
+      }
+      box-shadow: inset -1px 0 0 0 color('gray-cool-10'), inset -3px 0 0 0 rgba(color('gray-cool-10'), 0.2);
+    }
+  }
+
+  &-scrollable-table {
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    .table-field-heading-first,
+    .table-field-index {
+      display: none;
+    }
+
+    .table-field-left-aligned {
+      position: relative;
+      z-index: 150;
+      background: #FFFFFF;
+    }
+
+    &::-webkit-scrollbar {
+      -webkit-appearance: none;
+    }
+
+    &::-webkit-scrollbar:horizontal {
+      height: 11px;
+      background-color: #FFFFFF;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 8px;
+      border: 2px solid #FFFFFF;
+      background-color: rgba(0, 0, 0, .5);
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: #FFFFFF;
+      border-radius: 8px;
+    }
+
+  }
+
+  &-fixed-table {
+
+    position: absolute;
+    top: 0;
+    overflow: hidden;
+
+    .table-field-heading {
+      visibility: hidden;
+    }
+
+    .table-field-left-aligned {
+      width: 0;
+      position: relative;
+      z-index: 100;
+      visibility: hidden;
+    }
+
+    .table-field-heading-first,
+    .table-field-index {
+      transition: none;
+      position: relative;
+      z-index: 200;
+      background: #FFFFFF;
+    }
+  }
+
+  &-scrolled-table {
+    padding-bottom: 20px;
+    .table-field-heading-first,
+    .table-field-index {
+      transition: box-shadow 0.3s ease-in-out;
+      box-shadow: 1px 0 0 0 color('gray-cool-10'), 3px 0 0 0 rgba(color('gray-cool-10'), 0.2);
+    }
+  }
+
+  &-shim {
+    width: 100%;
+    position: relative;
+    z-index: 9;
+    margin-bottom: 30px;
+    pointer-events: none;
+    & + .table-show-more-link {
+      margin-top: -20px;
+    }
+  }
+}
+
+.js-focus-style {
+  outline: 3px solid color("blue-40v");
+  box-shadow: 0 0 0 7px color("blue-40v");
+  *:focus {
+    outline: none;
+  }
+}

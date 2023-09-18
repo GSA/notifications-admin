@@ -659,7 +659,7 @@ def test_should_show_upcoming_jobs_on_dashboard(
     assert normalize_spaces(page.select_one("main h2").text) == ("In the next few days")
 
     assert normalize_spaces(page.select_one("a.banner-dashboard").text) == (
-        "2 files waiting to send " "sending starts today at 11:09 UTC"
+        "2 files waiting to send " "- sending starts today at 11:09 UTC"
     )
 
     assert page.select_one("a.banner-dashboard")["href"] == url_for(
