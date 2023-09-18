@@ -330,19 +330,20 @@ def make_session_permanent():
     session.permanent = True
 
 
-def create_url(environment, url):
+def create_beta_url(url):
     url_created = urlparse(url)
-    if environment == "production":
-        url_list = list(url_created)
-        url_list[1] = "beta.notify.gov"
-        url_for_redirect = urlunparse(url_list)
-        return url_for_redirect
-    return url
+    url_list = list(url_created)
+    url_list[1] = "beta.notify.gov"
+    url_for_redirect = urlunparse(url_list)
+    return url_for_redirect
 
 
 def redirect_notify_to_beta():
-    url_to_beta = create_url(current_app.config["NOTIFY_ENVIRONMENT"], request.url)
-    if current_app.config["NOTIFY_ENVIRONMENT"] == "production":
+    if (
+        current_app.config["NOTIFY_ENVIRONMENT"] == "production"
+        and "beta.notify.gov" not in request.url
+    ):
+        url_to_beta = create_beta_url(request.url)
         redirect(url_to_beta, 301)
 
 
