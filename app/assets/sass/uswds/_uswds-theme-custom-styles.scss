@@ -33,9 +33,18 @@ i.e.
    }
 }
 
-.usa-nav__primary > .usa-nav__primary-item > a {
-   font-size: size("body", 4);
+.usa-nav__primary {
+   &> .usa-nav__primary-item > a {
+      font-size: size("body", 4);
+   }
+   &> .usa-nav__primary-item:last-child {
+      margin-left: auto; 
+      @include u-margin-right(-4);
+   }
 }
+
+.usa-nav__primary 
+
 
 h1 {
    font-weight: bold !important;
