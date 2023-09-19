@@ -18,8 +18,8 @@
 
       {{ form.name(param_extensions={"hint": {"text": "You can change this later"}}) }}
 
-      <!--on demo, default_organization_type is defined as something so we never get these radio buttons,
-          but then it becomes impossible to add a service-->
+      <!--See add_service.py  the default_organization_type is not currently useful for Notify.gov
+          and here it is causing an issue where services can't be created -->
       <!--{% if not default_organization_type %}-->
         {{ form.organization_type }}
       <!--{% endif %}-->
