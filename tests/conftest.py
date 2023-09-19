@@ -2395,6 +2395,7 @@ def _client(notify_admin):
     Do not use this fixture directly – use `client_request` instead
     """
     with notify_admin.test_request_context(), notify_admin.test_client() as client:
+        client.allow_subdomain_redirects = True
         yield client
 
 
@@ -3664,18 +3665,7 @@ def login_for_end_to_end_testing(browser):
 
 @pytest.fixture(scope="session")
 def end_to_end_context(browser):
-    # Create a context with HTTP Authentication credentials for Playwright E2E
-    # tests, if the environment variables exist.
-    if os.getenv("NOTIFY_E2E_TEST_HTTP_AUTH_USER"):
-        context = browser.new_context(
-            http_credentials={
-                "username": os.getenv("NOTIFY_E2E_TEST_HTTP_AUTH_USER"),
-                "password": os.getenv("NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD"),
-            }
-        )
-    else:
-        context = browser.new_context()
-
+    context = browser.new_context()
     yield context
 
 

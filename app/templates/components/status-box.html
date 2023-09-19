@@ -1,6 +1,6 @@
 {% macro status_box(number, label, failing=false, percentage=None, url=None) %}
   <div class="big-number-with-status">
-    <div class="big-number-status{% if failing %}-failing{% endif %}">
+    <div class="big-number-status{% if failing %} big-number-status--failing{% endif %}">
       {% if url %}
         <a class="usa-link" href="{{ url }}">{{ number }} {{ label }}</a>
       {% else %}

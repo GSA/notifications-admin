@@ -9,48 +9,48 @@
   let states = {
     'initial': Hogan.compile(`
       {{#showNowAsDefault}}
-        <div class="radio-select__column">
+        <div class="radio-select__column margin-y-2">
           <div class="usa-radio">
             <input class="usa-radio__input" checked="checked" id="{{name}}-0" name="{{name}}" type="radio" value="">
             <label class="usa-radio__label" for="{{name}}-0">Now</label>
           </div>
         </div>
       {{/showNowAsDefault}}
-      <div class="radio-select__column">
+      <div class="radio-select__column margin-y-2">
         {{#categories}}
-          <input type='button' class='govuk-button govuk-button--secondary radio-select__button--category' aria-expanded="false" value='{{.}}' />
+          <input type='button' class='usa-button usa-button--outline radio-select__button--category' aria-expanded="false" value='{{.}}' />
         {{/categories}}
       </div>
     `),
     'choose': Hogan.compile(`
       {{#showNowAsDefault}}
-        <div class="radio-select__column">
+        <div class="radio-select__column margin-y-2">
           <div class="usa-radio">
             <input class="usa-radio__input" checked="checked" id="{{name}}-0" name="{{name}}" type="radio" value="">
             <label class="usa-radio__label" for="{{name}}-0">Now</label>
           </div>
         </div>
       {{/showNowAsDefault}}
-      <div class="radio-select__column">
+      <div class="radio-select__column margin-y-2">
         {{#choices}}
           <div class="usa-radio js-option">
             <input class="usa-radio__input" type="radio" value="{{value}}" id="{{id}}" name="{{name}}" />
             <label class="usa-radio__label" for="{{id}}">{{label}}</label>
           </div>
         {{/choices}}
-        <input type='button' class='govuk-button govuk-button--secondary radio-select__button--done' aria-expanded='true' value='Done' />
+        <input type='button' class='usa-button usa-button--outline radio-select__button--done' aria-expanded='true' value='Done' />
       </div>
     `),
     'chosen': Hogan.compile(`
       {{#showNowAsDefault}}
-        <div class="radio-select__column">
+        <div class="radio-select__column margin-y-2">
           <div class="usa-radio">
             <input class="usa-radio__input" id="{{name}}-0" name="{{name}}" type="radio" value="">
             <label class="usa-radio__label" for="{{name}}-0">Now</label>
           </div>
         </div>
       {{/showNowAsDefault}}
-      <div class="radio-select__column">
+      <div class="radio-select__column margin-y-2">
         {{#choices}}
           <div class="usa-radio">
             <input class="usa-radio__input" checked="checked" type="radio" value="{{value}}" id="{{id}}" name="{{name}}" />
@@ -58,8 +58,8 @@
           </div>
         {{/choices}}
       </div>
-      <div class="radio-select__column">
-        <input type='button' class='govuk-button govuk-button--secondary radio-select__button--reset' aria-expanded='false' value='Choose a different time' />
+      <div class="radio-select__column margin-y-2">
+        <input type='button' class='usa-button usa-button--outline radio-select__button--reset' aria-expanded='false' value='Choose a different time' />
       </div>
     `)
   };
