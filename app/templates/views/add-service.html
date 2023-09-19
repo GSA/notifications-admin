@@ -18,9 +18,11 @@
 
       {{ form.name(param_extensions={"hint": {"text": "You can change this later"}}) }}
 
-      {% if not default_organization_type %}
+      <!--on demo, default_organization_type is defined as something so we never get these radio buttons,
+          but then it becomes impossible to add a service-->
+      <!--{% if not default_organization_type %}-->
         {{ form.organization_type }}
-      {% endif %}
+      <!--{% endif %}-->
 
       {{ page_footer('Add service') }}
 
