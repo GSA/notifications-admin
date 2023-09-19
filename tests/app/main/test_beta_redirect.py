@@ -13,8 +13,7 @@ def test_no_redirect_notify_to_beta_non_production(monkeypatch, client_request):
     assert current_app.config["NOTIFY_ENVIRONMENT"] == "development"
 
     client_request.get_response_from_url(
-        "https://notify.gov/using-notify/get-started",
-        _expected_status=200
+        "https://notify.gov/using-notify/get-started", _expected_status=200
     )
 
 
@@ -23,8 +22,7 @@ def test_redirect_notify_to_beta(monkeypatch, client_request):
     assert current_app.config["NOTIFY_ENVIRONMENT"] == "production"
 
     client_request.get_response_from_url(
-        "https://notify.gov/using-notify/get-started",
-        _expected_status=302
+        "https://notify.gov/using-notify/get-started", _expected_status=302
     )
 
 
@@ -33,6 +31,5 @@ def test_no_redirect_beta_notify_to_beta(monkeypatch, client_request):
     assert current_app.config["NOTIFY_ENVIRONMENT"] == "production"
 
     client_request.get_response_from_url(
-        "https://beta.notify.gov/using-notify/get-started",
-        _expected_status=200
+        "https://beta.notify.gov/using-notify/get-started", _expected_status=200
     )

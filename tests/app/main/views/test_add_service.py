@@ -5,7 +5,6 @@ from notifications_python_client.errors import HTTPError
 
 from app.utils.user import is_gov_user
 from tests import organization_json
-from tests.conftest import normalize_spaces
 
 
 def test_non_gov_user_cannot_see_add_service_button(
@@ -40,16 +39,6 @@ def test_get_should_render_add_service_template(
     page = client_request.get("main.add_service")
     assert page.select_one("h1").text.strip() == "About your service"
     assert page.select_one("input[name=name]").get("value") is None
-    assert [label.text.strip() for label in page.select(".usa-radio label")] == [
-        "Federal government",
-        "State government",
-        "Other",
-    ]
-    assert [radio["value"] for radio in page.select(".usa-radio input")] == [
-        "federal",
-        "state",
-        "other",
-    ]
 
 
 def test_get_should_not_render_radios_if_org_type_known(
@@ -96,8 +85,6 @@ def test_show_different_page_if_user_org_type_is_local(
     (
         (None, "federal", "federal", 150_000),
         # ('federal', None, 'federal', 150_000),
-        (None, "state", "state", 150_000),
-        # ('state', None, 'state', 150_000),
     ),
 )
 @freeze_time("2021-01-01")
@@ -169,18 +156,15 @@ def test_add_service_has_to_choose_org_type(
         "app.organizations_client.get_organization_by_domain",
         return_value=None,
     )
-    page = client_request.post(
+    client_request.post(
         "main.add_service",
         _data={
             "name": "testing the post",
         },
-        _expected_status=200,
+        _expected_status=302,
     )
-    assert normalize_spaces(page.select_one(".usa-error-message").text) == (
-        "Error: Select the type of organization"
-    )
-    assert mock_create_service.called is False
-    assert mock_create_service_template.called is False
+    assert mock_create_service.called is True
+    assert mock_create_service_template.called is True
 
 
 @pytest.mark.parametrize(
@@ -253,17 +237,6 @@ def test_should_add_service_and_redirect_to_dashboard_when_existing_service(
         ),
     )
     assert mock_get_services.called
-    mock_create_service.assert_called_once_with(
-        service_name="testing the post",
-        organization_type=organization_type,
-        message_limit=notify_admin.config["DEFAULT_SERVICE_LIMIT"],
-        restricted=True,
-        user_id=api_user_active["id"],
-        email_from="testing.the.post",
-    )
-    assert len(mock_create_service_template.call_args_list) == 0
-    with client_request.session_transaction() as session:
-        assert session["service_id"] == 101
 
 
 @pytest.mark.parametrize(

@@ -18,11 +18,9 @@
 
       {{ form.name(param_extensions={"hint": {"text": "You can change this later"}}) }}
 
-      <!--See add_service.py  the default_organization_type is not currently useful for Notify.gov
-          and here it is causing an issue where services can't be created -->
-      <!--{% if not default_organization_type %}-->
+      <!--{% if not default_organization_type %}
         {{ form.organization_type }}
-      <!--{% endif %}-->
+      {% endif %}-->
 
       {{ page_footer('Add service') }}
 
