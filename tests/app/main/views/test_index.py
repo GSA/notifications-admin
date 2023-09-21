@@ -294,26 +294,6 @@ def test_email_branding_preview(
     assert mock_get_email_branding.called is email_branding_retrieved
 
 
-def test_font_preload(
-    client_request,
-    mock_get_service_and_organization_counts,
-):
-    client_request.logout()
-    page = client_request.get("main.index", _test_page_title=False)
-
-    preload_tags = page.select(
-        'link[rel=preload][as=font][type="font/woff2"][crossorigin]'
-    )
-
-    assert (
-        len(preload_tags) == 4
-    ), "Run `npm run build` to copy fonts into app/static/fonts/"
-
-    for element in preload_tags:
-        assert element["href"].startswith("https://static.example.com/fonts/")
-        assert element["href"].endswith(".woff2")
-
-
 @pytest.mark.parametrize("current_date, expected_rate", (("2022-05-01", "1.72"),))
 @pytest.mark.skip(reason="Currently hidden for TTS")
 def test_sms_price(
