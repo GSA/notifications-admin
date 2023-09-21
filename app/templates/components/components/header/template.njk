@@ -55,7 +55,9 @@
         <a href="/" title="notify.gov">notify.gov</a>
       </em>
     </div>
-    <button type="button" class="usa-menu-btn">Menu</button>
+    {% if current_user.is_authenticated %}
+      <button type="button" class="usa-menu-btn">Menu</button>
+    {% endif %}
   </div>
   <nav aria-label="Primary navigation" class="usa-nav">
     <div class="usa-nav__inner">
