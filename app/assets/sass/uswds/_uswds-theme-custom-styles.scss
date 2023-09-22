@@ -260,7 +260,17 @@ td.table-empty-message {
          display: flex; 
          padding: units(1) units(2);
          &--failing {
-            background: color("red-warm-50v");
+            padding: 0; 
+            a.usa-link {
+               color: white;
+               background: color("red-warm-50v");
+               padding: units(1) units(2);
+               margin: 0; 
+               width: 100%;
+               &:hover {
+                  background: color("red-warm-60v");
+               }
+            }
          }
       }
    }
