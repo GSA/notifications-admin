@@ -3492,3 +3492,11 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 lock-version = "2.0"
 python-versions = "^3.9"
 content-hash = "acc2115b5eaa279182864792a37cca84eb5ac24b4901a896c7ffa12b71e5f378"
+
+
+cf login -a api.fr.cloud.gov --sso
+
+cf t -s notify-staging
+
+cf logs notify-staging-api (get list of apps with cf apps)
+
