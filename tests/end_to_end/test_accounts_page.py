@@ -2,49 +2,44 @@ import datetime
 import os
 import re
 
-import pytest
 from playwright.sync_api import expect
 
 
-@pytest.mark.skip(reason="Not authenticating test users.")
-def test_accounts_page(end_to_end_authenticated_context):
+def _bypass_sign_in(end_to_end_context):
     # Open a new page and go to the staging site.
-    page = end_to_end_authenticated_context.new_page()
+    page = end_to_end_context.new_page()
 
-    accounts_uri = "{}accounts".format(os.getenv("NOTIFY_E2E_TEST_URI"))
+    page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
 
-    page.goto(accounts_uri)
+    sign_in_button = page.get_by_role("link", name="Sign in")
 
-    # Check to make sure that we've arrived at the next page.
+    # Test trying to sign in. Because we are loading the email and password
+    sign_in_button.click()
+
+    # Wait for the next page to fully load.
+    page.wait_for_load_state("domcontentloaded")
+    return page
+
+
+def test_add_new_service_workflow(end_to_end_context):
+    # page = end_to_end_context.new_page()
+    page = _bypass_sign_in(end_to_end_context)
+    page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
+
+    # sign_in_button = page.get_by_role("link", name="Sign in")
+    #
+    # Test trying to sign in. Because we are loading the email and password
+    # sign_in_button.click()
+    #
+    # Wait for the next page to fully load.
     page.wait_for_load_state("domcontentloaded")
 
-    # Check to make sure that we've arrived at the next page.
-    # Check the page title exists and matches what we expect.
-    expect(page).to_have_title(re.compile("Choose service"))
-
-    # Check for the sign in heading.
-    sign_in_heading = page.get_by_role("heading", name="Choose service")
-    expect(sign_in_heading).to_be_visible()
-
-    # Retrieve some prominent elements on the page for testing.
-    add_service_button = page.get_by_role(
-        "button", name=re.compile("Add a new service")
-    )
-
-    expect(add_service_button).to_be_visible()
-
-
-@pytest.mark.skip(reason="Not authenticating test users.")
-def test_add_new_service_workflow(end_to_end_authenticated_context):
     # Prepare for adding a new service later in the test.
     current_date_time = datetime.datetime.now()
     new_service_name = "E2E Federal Test Service {now} - {browser_type}".format(
         now=current_date_time.strftime("%m/%d/%Y %H:%M:%S"),
-        browser_type=end_to_end_authenticated_context.browser.browser_type.name,
+        browser_type=end_to_end_context.browser.browser_type.name,
     )
-
-    # Open a new page and go to the staging site.
-    page = end_to_end_authenticated_context.new_page()
 
     accounts_uri = "{}accounts".format(os.getenv("NOTIFY_E2E_TEST_URI"))
 
@@ -100,7 +95,11 @@ def test_add_new_service_workflow(end_to_end_authenticated_context):
 
     # Fill in the form.
     service_name_input.fill(new_service_name)
-    federal_radio_button.click()
+    expect(federal_radio_button).to_be_enabled()
+    # Trying to click directly on the radio button resulted in a "not in viewport error" and this is the
+    # suggested workaround.  Googling, the reason seems to be that there might be some (invisible?) css positioned
+    # above the radio button itself.
+    page.click("text='Federal government'")
 
     # Click on add service.
     add_service_button.click()
@@ -112,3 +111,22 @@ def test_add_new_service_workflow(end_to_end_authenticated_context):
     service_heading = page.get_by_text(new_service_name)
     expect(service_heading).to_be_visible()
     expect(page).to_have_title(re.compile(new_service_name))
+
+    page.click("text='Settings'")
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    page.click("text='Delete this service'")
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    page.click("text='Yes, delete'")
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    # Check to make sure that we've arrived at the next page.
+    # Check the page title exists and matches what we expect.
+    expect(page).to_have_title(re.compile("Choose service"))

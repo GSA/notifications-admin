@@ -735,7 +735,7 @@ def test_platform_admin_displays_stats_in_right_boxes_and_with_correct_styling(
     assert (
         "1 technical failures"
         in page.find_all("div", class_="grid-col-6")[1]
-        .find("div", class_="big-number-status-failing")
+        .find("div", class_="big-number-status--failing")
         .text
     )
 

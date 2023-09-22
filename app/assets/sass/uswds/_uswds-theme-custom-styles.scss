@@ -259,6 +259,9 @@ td.table-empty-message {
          background: color("green-cool-40v");
          display: flex; 
          padding: units(1) units(2);
+         &--failing {
+            background: color("red-warm-50v");
+         }
       }
    }
    .usa-table {
