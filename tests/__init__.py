@@ -517,7 +517,7 @@ def notification_json(
                 "notification_type": template_type,
                 "reply_to_text": reply_to_text,
                 "client_reference": client_reference,
-                "created_by_name": created_by_name,
+                "created_by_name": None,
             }
             for i in range(rows)
         ],
