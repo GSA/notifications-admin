@@ -20,7 +20,11 @@ data={
 ) }}
 
 <p>During pilot period, each service has an allowance of 250,000 free text messages. Once this allowance is met, the
-application will stop delivering messages. There’s no monthly charge, no setup fee and no procurement cost.</p>
+application will stop delivering messages. There's no monthly charge, no setup fee and no procurement cost.</p>
+<p>When a new service is added, it will start in <a class="usa-link" href="{{ url_for('main.trial_mode_new') }}">trial mode</a>. Moving a service out of trial mode is subject to approval by
+the Notify.gov team.</p>
+<p>You'll use more messages towards the allowance if you send text messages longer than 160 characters.
+</p>
 
 <p>
   {% if not current_user.is_authenticated %}

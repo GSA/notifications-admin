@@ -19,8 +19,8 @@ def _get_notifications_csv(
     rows=1,
     with_links=False,
     job_id=fake_uuid,
-    created_by_name=None,
-    created_by_email_address=None,
+    created_by_name="Fake Person",
+    created_by_email_address="FakePerson@fake.gov",
 ):
     def _get(
         service_id,
@@ -121,12 +121,22 @@ def test_generate_notifications_csv_without_job(
             phone_number
             2028675309
         """,
-            ["Row number", "phone_number", "Template", "Type", "Job", "Status", "Time"],
+            [
+                "Row number",
+                "phone_number",
+                "Template",
+                "Type",
+                "Sent by",
+                "Job",
+                "Status",
+                "Time",
+            ],
             [
                 "1",
                 "2028675309",
                 "foo",
                 "sms",
+                "Fake Person",
                 "bar.csv",
                 "Delivered",
                 "1943-04-19 12:00:00",
@@ -145,6 +155,7 @@ def test_generate_notifications_csv_without_job(
                 "c",
                 "Template",
                 "Type",
+                "Sent by",
                 "Job",
                 "Status",
                 "Time",
@@ -157,6 +168,7 @@ def test_generate_notifications_csv_without_job(
                 "🦀",
                 "foo",
                 "sms",
+                "Fake Person",
                 "bar.csv",
                 "Delivered",
                 "1943-04-19 12:00:00",
@@ -175,6 +187,7 @@ def test_generate_notifications_csv_without_job(
                 "c",
                 "Template",
                 "Type",
+                "Sent by",
                 "Job",
                 "Status",
                 "Time",
@@ -187,6 +200,7 @@ def test_generate_notifications_csv_without_job(
                 "🦀",
                 "foo",
                 "sms",
+                "Fake Person",
                 "bar.csv",
                 "Delivered",
                 "1943-04-19 12:00:00",
@@ -209,6 +223,7 @@ def test_generate_notifications_csv_returns_correct_csv_file(
     csv_content = generate_notifications_csv(
         service_id="1234", job_id=fake_uuid, template_type="sms"
     )
+
     csv_file = DictReader(StringIO("\n".join(csv_content)))
     assert csv_file.fieldnames == expected_column_headers
     assert next(csv_file) == dict(zip(expected_column_headers, expected_1st_row))

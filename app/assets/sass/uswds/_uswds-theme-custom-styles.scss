@@ -25,12 +25,19 @@ i.e.
 .usa-header--extended .usa-logo {
    font-family: family("sans");
    margin: units(4) 0;
+   @include at-media-max('mobile-lg') {
+      margin: units(4) 0 units(4) units(2);
+   }
    img {
       @include at-media($theme-header-min-width) {
          width: 80px;
          height: 70px;
       }
    }
+}
+
+.usa-banner__header-action {
+   font-size: size("body", 2);
 }
 
 .usa-nav__primary {
@@ -260,7 +267,17 @@ td.table-empty-message {
          display: flex; 
          padding: units(1) units(2);
          &--failing {
-            background: color("red-warm-50v");
+            padding: 0; 
+            a.usa-link {
+               color: white;
+               background: color("red-warm-50v");
+               padding: units(1) units(2);
+               margin: 0; 
+               width: 100%;
+               &:hover {
+                  background: color("red-warm-60v");
+               }
+            }
          }
       }
    }
