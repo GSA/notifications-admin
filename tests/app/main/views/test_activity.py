@@ -20,7 +20,13 @@ from tests.conftest import (
 
 
 @pytest.mark.parametrize(
-    "user,extra_args,expected_update_endpoint,expected_limit_days,page_title",
+    (
+        "user",
+        "extra_args",
+        "expected_update_endpoint",
+        "expected_limit_days",
+        "page_title",
+    ),
     [
         (
             create_active_user_view_permissions(),
@@ -46,7 +52,7 @@ from tests.conftest import (
     ],
 )
 @pytest.mark.parametrize(
-    "status_argument, expected_api_call",
+    ("status_argument", "expected_api_call"),
     [
         (
             "",
@@ -78,10 +84,10 @@ from tests.conftest import (
     ],
 )
 @pytest.mark.parametrize(
-    "page_argument, expected_page_argument", [(1, 1), (22, 22), (None, 1)]
+    ("page_argument", "expected_page_argument"), [(1, 1), (22, 22), (None, 1)]
 )
 @pytest.mark.parametrize(
-    "to_argument, expected_to_argument",
+    ("to_argument", "expected_to_argument"),
     [
         ("", ""),
         ("+12029000123", "+12029000123"),
@@ -210,7 +216,7 @@ def test_can_show_notifications_if_data_retention_not_available(
 
 
 @pytest.mark.parametrize(
-    "user, query_parameters, expected_download_link",
+    ("user", "query_parameters", "expected_download_link"),
     [
         (
             create_active_user_with_permissions(),
@@ -303,10 +309,10 @@ def test_shows_message_when_no_notifications(
 
 @pytest.mark.parametrize(
     (
-        "initial_query_arguments,"
-        "form_post_data,"
-        "expected_search_box_label,"
-        "expected_search_box_contents"
+        "initial_query_arguments",
+        "form_post_data",
+        "expected_search_box_label",
+        "expected_search_box_contents",
     ),
     [
         (
@@ -385,7 +391,7 @@ def test_search_recipient_form(
 
 
 @pytest.mark.parametrize(
-    "message_type, expected_search_box_label",
+    ("message_type", "expected_search_box_label"),
     [
         (None, "Search by recipient or reference"),
         ("sms", "Search by phone number or reference"),
@@ -412,7 +418,7 @@ def test_api_users_are_told_they_can_search_by_reference_when_service_has_api_ke
 
 
 @pytest.mark.parametrize(
-    "message_type, expected_search_box_label",
+    ("message_type", "expected_search_box_label"),
     [
         (None, "Search by recipient"),
         ("sms", "Search by phone number"),
@@ -509,7 +515,7 @@ def test_doesnt_show_pagination_with_search_term(
 
 
 @pytest.mark.parametrize(
-    "job_created_at, expected_message",
+    ("job_created_at", "expected_message"),
     [
         ("2016-01-10 11:09:00.000000+00:00", "Data available for 7 days"),
         ("2016-01-04 11:09:00.000000+00:00", "Data available for 1 day"),
@@ -604,11 +610,11 @@ def test_html_contains_links_for_failed_notifications(
 
 
 @pytest.mark.parametrize(
-    "notification_type, expected_row_contents",
-    (
+    ("notification_type", "expected_row_contents"),
+    [
         ("sms", ("2021234567 hello & welcome hidden")),
         ("email", ("example@gsa.gov hidden, hello & welcome")),
-    ),
+    ],
 )
 def test_redacts_templates_that_should_be_redacted(
     client_request,
@@ -645,7 +651,7 @@ def test_redacts_templates_that_should_be_redacted(
 
 @freeze_time("2017-09-27 12:30:00.000000")
 @pytest.mark.parametrize(
-    "message_type, status, expected_hint_status, single_line",
+    ("message_type", "status", "expected_hint_status", "single_line"),
     [
         ("email", "created", "Sending since 27 September at 12:30 UTC", True),
         ("email", "sending", "Sending since 27 September at 12:30 UTC", True),

@@ -138,7 +138,7 @@ def test_should_show_api_keys_page(
 
 
 @pytest.mark.parametrize(
-    "restricted, expected_options",
+    ("restricted", "expected_options"),
     [
         (
             True,
@@ -436,7 +436,7 @@ def test_should_validate_guestlist_items(
     ],
 )
 @pytest.mark.parametrize(
-    "url, bearer_token, expected_errors",
+    ("url", "bearer_token", "expected_errors"),
     [
         ("https://example.com", "", "Cannot be empty"),
         ("http://not_https.com", "1234567890", "Must be a valid https URL"),
@@ -472,7 +472,7 @@ def test_callback_forms_validation(
 
 @pytest.mark.parametrize("bearer_token", ["", "some-bearer-token"])
 @pytest.mark.parametrize(
-    "endpoint, expected_delete_url",
+    ("endpoint", "expected_delete_url"),
     [
         (
             "main.delivery_status_callback",
@@ -522,7 +522,7 @@ def test_callback_forms_can_be_cleared(
 
 @pytest.mark.parametrize("bearer_token", ["", "some-bearer-token"])
 @pytest.mark.parametrize(
-    "endpoint, expected_delete_url",
+    ("endpoint", "expected_delete_url"),
     [
         (
             "main.delivery_status_callback",
@@ -565,7 +565,7 @@ def test_callback_forms_can_be_cleared_when_callback_and_inbound_apis_are_empty(
 
 
 @pytest.mark.parametrize(
-    "has_inbound_sms, expected_link",
+    ("has_inbound_sms", "expected_link"),
     [
         (True, "main.api_callbacks"),
         (False, "main.delivery_status_callback"),
@@ -611,7 +611,7 @@ def test_callbacks_page_redirects_to_delivery_status_if_service_has_no_inbound_s
 
 
 @pytest.mark.parametrize(
-    "has_inbound_sms, expected_link",
+    ("has_inbound_sms", "expected_link"),
     [
         (True, "main.api_callbacks"),
         (False, "main.api_integration"),
@@ -791,7 +791,7 @@ def test_update_receive_text_message_callback_without_changes_does_not_update(
 
 
 @pytest.mark.parametrize(
-    "service_callback_api, delivery_url, expected_1st_table_row",
+    ("service_callback_api", "delivery_url", "expected_1st_table_row"),
     [
         (None, {}, "Delivery receipts Not set Change"),
         (
@@ -802,7 +802,7 @@ def test_update_receive_text_message_callback_without_changes_does_not_update(
     ],
 )
 @pytest.mark.parametrize(
-    "inbound_api, inbound_url, expected_2nd_table_row",
+    ("inbound_api", "inbound_url", "expected_2nd_table_row"),
     [
         (None, {}, "Received text messages Not set Change"),
         (
