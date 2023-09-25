@@ -25,12 +25,19 @@ i.e.
 .usa-header--extended .usa-logo {
    font-family: family("sans");
    margin: units(4) 0;
+   @include at-media-max('mobile-lg') {
+      margin: units(4) 0 units(4) units(2);
+   }
    img {
       @include at-media($theme-header-min-width) {
          width: 80px;
          height: 70px;
       }
    }
+}
+
+.usa-banner__header-action {
+   font-size: size("body", 2);
 }
 
 .usa-nav__primary {
