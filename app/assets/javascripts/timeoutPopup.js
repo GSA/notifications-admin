@@ -1,6 +1,5 @@
-const sessionTimerWrapper = function() {
+(function(global) {
     "use strict";
-    (function(global) {
     const sessionTimer = document.getElementById("sessionTimer");
 
     setTimeout(function() {
@@ -38,10 +37,8 @@ const sessionTimerWrapper = function() {
         sessionTimer.close();
     }
     })(window);
-};
 
-module.exports = sessionTimerWrapper;
 
-(function(){
-    sessionTimerWrapper();
-})();
+
+
+
