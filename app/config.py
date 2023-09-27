@@ -28,8 +28,6 @@ class Config(object):
     # ZENDESK_API_KEY = getenv('ZENDESK_API_KEY')
     ROUTE_SECRET_KEY_1 = getenv("ROUTE_SECRET_KEY_1", "dev-route-secret-key-1")
     ROUTE_SECRET_KEY_2 = getenv("ROUTE_SECRET_KEY_2", "dev-route-secret-key-2")
-    BASIC_AUTH_USERNAME = getenv("BASIC_AUTH_USERNAME")
-    BASIC_AUTH_PASSWORD = getenv("BASIC_AUTH_PASSWORD")
 
     NR_ACCOUNT_ID = getenv("NR_ACCOUNT_ID")
     NR_TRUST_KEY = getenv("NR_TRUST_KEY")
@@ -101,7 +99,6 @@ def _s3_credentials_from_env(bucket_prefix):
 
 
 class Development(Config):
-    BASIC_AUTH_FORCE = False
     DEBUG = True
     SESSION_COOKIE_SECURE = False
     SESSION_PROTECTION = None
@@ -138,7 +135,6 @@ class Test(Development):
 class Production(Config):
     HEADER_COLOUR = "#005EA5"  # $govuk-blue
     HTTP_PROTOCOL = "https"
-    BASIC_AUTH_FORCE = True
     ASSET_DOMAIN = ""  # TODO use a CDN
     ASSET_PATH = "/static/"  # TODO use a CDN
     DEBUG = False
@@ -153,7 +149,6 @@ class Production(Config):
 
 
 class Staging(Production):
-    BASIC_AUTH_FORCE = True
     HEADER_COLOUR = "#00ff00"  # $green
 
 
@@ -166,7 +161,6 @@ class Sandbox(Staging):
 
 
 class Scanning(Production):
-    BASIC_AUTH_FORCE = False
     HTTP_PROTOCOL = "http"
     API_HOST_NAME = "https://notify-api-staging.app.cloud.gov/"
     SECRET_KEY = "dev-notify-secret-key"  # nosec B105 - only used in development

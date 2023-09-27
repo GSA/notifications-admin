@@ -1,3 +1,4 @@
+from flask import current_app
 from notifications_utils.recipients import RecipientCSV
 
 from app.models.spreadsheet import Spreadsheet
@@ -75,7 +76,7 @@ def generate_notifications_csv(**kwargs):
         fieldnames = (
             ["Row number"]
             + original_column_headers
-            + ["Template", "Type", "Job", "Status", "Time"]
+            + ["Template", "Type", "Sent by", "Job", "Status", "Time"]
         )
     else:
         fieldnames = [
@@ -95,6 +96,7 @@ def generate_notifications_csv(**kwargs):
             **kwargs
         )
         for notification in notifications_resp["notifications"]:
+            current_app.logger.info(notification)
             if kwargs.get("job_id"):
                 values = (
                     [
@@ -107,6 +109,7 @@ def generate_notifications_csv(**kwargs):
                     + [
                         notification["template_name"],
                         notification["template_type"],
+                        notification["created_by_name"],
                         notification["job_name"],
                         notification["status"],
                         notification["created_at"],

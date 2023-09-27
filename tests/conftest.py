@@ -9,6 +9,7 @@ from uuid import UUID, uuid4
 
 import pytest
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
 from flask import Flask, url_for
 from notifications_python_client.errors import HTTPError
 from notifications_utils.url_safe_token import generate_token
@@ -32,6 +33,8 @@ from . import (
     template_version_json,
     user_json,
 )
+
+load_dotenv()
 
 
 class ElementNotFound(Exception):
@@ -2392,6 +2395,7 @@ def _client(notify_admin):
     Do not use this fixture directly – use `client_request` instead
     """
     with notify_admin.test_request_context(), notify_admin.test_client() as client:
+        client.allow_subdomain_redirects = True
         yield client
 
 
@@ -3661,18 +3665,7 @@ def login_for_end_to_end_testing(browser):
 
 @pytest.fixture(scope="session")
 def end_to_end_context(browser):
-    # Create a context with HTTP Authentication credentials for Playwright E2E
-    # tests, if the environment variables exist.
-    if os.getenv("NOTIFY_E2E_TEST_HTTP_AUTH_USER"):
-        context = browser.new_context(
-            http_credentials={
-                "username": os.getenv("NOTIFY_E2E_TEST_HTTP_AUTH_USER"),
-                "password": os.getenv("NOTIFY_E2E_TEST_HTTP_AUTH_PASSWORD"),
-            }
-        )
-    else:
-        context = browser.new_context()
-
+    context = browser.new_context()
     yield context
 
 
