@@ -19,7 +19,7 @@
                 logoutUser();
             }
         }, 1000);
-    }, 60 * 1000);
+    }, 25 * 60 * 1000);
 
     function logoutUser() {
         window.location.href = '/sign-out';
