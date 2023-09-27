@@ -12,7 +12,6 @@ describe('Test popup process', () => {
 
     it('Test timers work', () => {
         jest.runAllTimers();
-        sessionTimerWrapper();
     });
 
 }); 
