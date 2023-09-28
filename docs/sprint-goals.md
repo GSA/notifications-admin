@@ -1,6 +1,16 @@
 # Notify Sprint Goals Log
 
-## Sprint: S (9/14/23)
+## Sprint: T (9/28/23)
+
+|             | Goals                                                                                                                              | Impact                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| Engineering | Finish retention and [quota strategy](https://github.com/GSA/notifications-api/issues/443), obtain access to [Login.gov sandbox](https://github.com/GSA/notifications-admin/issues/338) and begin integration work, tend to remaining low/medium bugs, request more toll-free [partner numbers](https://github.com/GSA/notifications-admin/issues/764), create a formal [manual qa script](https://github.com/GSA/notifications-admin/issues/809)  |  Greater sending volume for partners, start down path of ATO-required auth solution                             |
+| UX          | Perform observational and formal user feedback sessions with partners to inform flow and look/feel redesign, surface and remedy straightforward UI changes   | Inform future features, flow, and feel of the application       |
+| Security    | Complete pre-requisite documentation, start project planning timelines and control group deadlines                                             | Aim to have package completed with enough time to allow for long assessment|
+| Content    | Work on cloud.gov pages IAA mod for content site | Enable an easy static website for future content |
+| Ops    | Onboard new back-end dev, get access to tools for them, meet with POC and team, get them oriented to start work |  Add valuable dev resources to increase our capacity
+
+## Sprint: Snowy Owl (9/14/23)
 
 |             | Goals                                                                                                                              | Impact                                                                                                                                     |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
