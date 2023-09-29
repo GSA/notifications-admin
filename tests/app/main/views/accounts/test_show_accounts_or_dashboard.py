@@ -14,7 +14,7 @@ def user_with_orgs_and_services(num_orgs, num_services, platform_admin=False):
 
 
 @pytest.mark.parametrize(
-    "num_orgs,num_services,endpoint,endpoint_kwargs",
+    ("num_orgs", "num_services", "endpoint", "endpoint_kwargs"),
     [
         (0, 0, ".choose_account", {}),
         (0, 2, ".choose_account", {}),

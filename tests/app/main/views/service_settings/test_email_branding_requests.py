@@ -9,15 +9,15 @@ from tests.conftest import ORGANISATION_ID, SERVICE_ONE_ID, normalize_spaces
 
 
 @pytest.mark.parametrize(
-    "organization_type, expected_options",
-    (
+    ("organization_type", "expected_options"),
+    [
         (
             "other",
             [
                 ("something_else", "Something else"),
             ],
         ),
-    ),
+    ],
 )
 def test_email_branding_request_page_when_no_branding_is_set(
     service_one,
@@ -86,8 +86,8 @@ def test_email_branding_request_page_back_link(
 
 
 @pytest.mark.parametrize(
-    "data, org_type, endpoint",
-    (
+    ("data", "org_type", "endpoint"),
+    [
         (
             {
                 "options": "govuk",
@@ -109,7 +109,7 @@ def test_email_branding_request_page_back_link(
             "federal",
             "main.email_branding_something_else",
         ),
-    ),
+    ],
 )
 def test_email_branding_request_submit(
     client_request,
@@ -162,7 +162,7 @@ def test_email_branding_request_submit_when_no_radio_button_is_selected(
 
 
 @pytest.mark.parametrize(
-    "endpoint, expected_heading",
+    ("endpoint", "expected_heading"),
     [
         ("main.email_branding_govuk_and_org", "Before you request new branding"),
     ],
@@ -196,11 +196,8 @@ def test_email_branding_description_pages_for_org_branding(
 
 
 @pytest.mark.parametrize(
-    "endpoint, service_org_type, branding_preview_id",
-    [
-        ("main.email_branding_govuk", "central", "__NONE__"),
-        # ('main.email_branding_nhs', 'nhs_local', NHS_EMAIL_BRANDING_ID),
-    ],
+    ("endpoint", "service_org_type", "branding_preview_id"),
+    [("main.email_branding_govuk", "central", "__NONE__")],
 )
 @pytest.mark.skip(reason="Update for TTS")
 def test_email_branding_govuk_and_nhs_pages(
