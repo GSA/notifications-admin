@@ -200,7 +200,7 @@ def test_service_setting_link_toggles_index_error(
 
 
 @pytest.mark.parametrize(
-    ("permissions", "permissions_text,visible"),
+    ("permissions", "permissions_text", "visible"),
     [
         ("sms", "inbound SMS", True),
         ("inbound_sms", "inbound SMS", False),  # no sms parent permission
