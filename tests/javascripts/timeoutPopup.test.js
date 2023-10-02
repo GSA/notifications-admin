@@ -94,4 +94,10 @@ describe('The session timer ', () => {
 
         expect(closeTimerMock).toHaveBeenCalled();
     });
+
+    test('checkTimer is called', () => {
+        const checkTimerMock = jest.spyOn(window.GOVUK.Modules.TimeoutPopup, "checkTimer");
+        window.GOVUK.Modules.TimeoutPopup.checkTimer();
+        expect(checkTimerMock).toHaveBeenCalled();
+    });
 });
