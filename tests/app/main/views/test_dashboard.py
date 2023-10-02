@@ -819,7 +819,7 @@ def test_usage_page(
     assert normalize_spaces(unselected_nav_links[0].text) == "2010 to 2011 fiscal year"
     assert normalize_spaces(unselected_nav_links[1].text) == "2009 to 2010 fiscal year"
 
-    annual_usage = page.find_all("div", {"class": "grid-col-6"})
+    annual_usage = page.find_all("div", {"class": "keyline-block"})
 
     # annual stats are shown in two rows, each with three column; email is col 1
     # email_column = normalize_spaces(annual_usage[0].text + annual_usage[2].text)
@@ -827,13 +827,13 @@ def test_usage_page(
     # assert '1,000 sent' in email_column
 
     sms_column = normalize_spaces(annual_usage[0].text)
-    assert "Text messages" in sms_column
-    assert "251,800 sent" in sms_column
-    assert "250,000 free allowance" in sms_column
-    assert "0 free allowance remaining" in sms_column
+    assert (
+        "You have sent 251,800 messages of your 250,000 free messages allowance. You have 0 messages remaining."
+        in sms_column
+    )
     assert "$29.85 spent" not in sms_column
-    assert "1,500 at 1.65 pence" in sms_column
-    assert "300 at 1.70 pence" in sms_column
+    assert "1,500 at 1.65 pence" not in sms_column
+    assert "300 at 1.70 pence" not in sms_column
 
 
 @freeze_time("2012-03-31 12:12:12")
@@ -862,12 +862,12 @@ def test_usage_page_no_sms_spend(
         service_id=SERVICE_ONE_ID,
     )
 
-    annual_usage = page.find_all("div", {"class": "grid-col-6"})
+    annual_usage = page.find_all("div", {"class": "keyline-block"})
     sms_column = normalize_spaces(annual_usage[0].text)
-    assert "Text messages" in sms_column
-    assert "1,000 sent" in sms_column
-    assert "250,000 free allowance" in sms_column
-    assert "249,000 free allowance remaining" in sms_column
+    assert (
+        "You have sent 1,000 messages of your 250,000 free messages allowance. You have 249,000 messages remaining."
+        in sms_column
+    )
     assert "$0.00 spent" not in sms_column
     assert "pence per message" not in sms_column
 
@@ -938,10 +938,13 @@ def test_usage_page_with_0_free_allowance(
         year=2020,
     )
 
-    annual_usage = page.select("main .grid-col-6")
+    annual_usage = page.select("main .grid-col-12 .keyline-block")
     sms_column = normalize_spaces(annual_usage[0].text)
 
-    assert "0 free allowance" in sms_column
+    assert (
+        "You have sent 251,800 messages of your 0 free messages allowance. You have"
+        in sms_column
+    )
     assert "free allowance remaining" not in sms_column
 
 
