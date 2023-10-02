@@ -15,17 +15,21 @@ window.GOVUK.Modules.TimeoutPopup = window.GOVUK.Modules.TimeoutPopup || {};
         var seconds = Math.floor((difference % (1000 * 60)) / 1000);
         document.getElementById("timeLeft").innerHTML = + minutes + "m " + seconds + "s";
         showTimer();
-        document.getElementById("logOutTimer").addEventListener("click", logoutUser);
+        document.getElementById("logOutTimer").addEventListener("click", signoutUser);
         document.getElementById("extendSessionTimer").addEventListener("click", extendSession);
         if (difference < 0) {
             clearInterval(intervalId);
             intervalId = null;
             closeTimer();
-            logoutUser();
+            expireUserSession();
         }
     }
 
-    function logoutUser() {
+    function expireUserSession() {
+        window.location.href = '/sign-out' + '?next=' + window.location.pathname;
+    }
+
+    function signoutUser() {
         window.location.href = '/sign-out';
     }
 
@@ -51,7 +55,8 @@ window.GOVUK.Modules.TimeoutPopup = window.GOVUK.Modules.TimeoutPopup || {};
     }
 
     global.GOVUK.Modules.TimeoutPopup.checkTimer = checkTimer;
-    global.GOVUK.Modules.TimeoutPopup.logoutUser = logoutUser;
+    global.GOVUK.Modules.TimeoutPopup.expireUserSession = expireUserSession;
+    global.GOVUK.Modules.TimeoutPopup.signoutUser = signoutUser;
     global.GOVUK.Modules.TimeoutPopup.extendSession = extendSession;
     global.GOVUK.Modules.TimeoutPopup.showTimer = showTimer;
     global.GOVUK.Modules.TimeoutPopup.closeTimer = closeTimer;
