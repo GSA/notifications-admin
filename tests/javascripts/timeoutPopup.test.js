@@ -1,5 +1,4 @@
 beforeAll(() => {
-    jest.useFakeTimers();
     jest.spyOn(global, 'setTimeout');
 
     document.body.innerHTML = `
@@ -40,13 +39,24 @@ beforeAll(() => {
 });
 
 afterAll(() => {
-    jest.useRealTimers();
     document.body.innerHTML = '';
 });
 
 
-describe('When an authenticated user', () => {
-    test('does whatever', () => {
+describe('When the session timer module is loaded', () => {
+    beforeEach(() => {
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.useFakeTimers();
+    });
+
+    test('everything initializes properly', () => {
+        const sessionTimer = document.getElementById("sessionTimer");
+        sessionTimer.showModal = jest.fn();
+        sessionTimer.close = jest.fn();
+
         jest.runAllTimers();
     });
 
@@ -54,6 +64,14 @@ describe('When an authenticated user', () => {
 
 
 describe('The session timer ', () => {
+    beforeEach(() => {
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.useFakeTimers();
+    });
+
     test('logoutUser method logs the user out', () => {
         const logoutUserMethod = window.GOVUK.Modules.TimeoutPopup.logoutUser;
 
