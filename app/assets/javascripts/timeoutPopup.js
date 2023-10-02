@@ -51,7 +51,7 @@ window.GOVUK.Modules.TimeoutPopup = window.GOVUK.Modules.TimeoutPopup || {};
     }
 
     if (document.getElementById("timeLeft") !== null) {
-        setTimeout(setSessionTimer, 60 * 1000);
+        setTimeout(setSessionTimer, 25 * 60 * 1000);
     }
 
     global.GOVUK.Modules.TimeoutPopup.checkTimer = checkTimer;
