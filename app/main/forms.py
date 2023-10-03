@@ -1980,7 +1980,7 @@ class TemplateAndFoldersSelectionForm(Form):
                 None,
                 [
                     # ('email', 'Email') if 'email' in available_template_types else None,
-                    ("sms", "Text message")
+                    ("sms", "Start with a blank template")
                     if "sms" in available_template_types
                     else None,
                     ("copy-existing", "Copy an existing template")
