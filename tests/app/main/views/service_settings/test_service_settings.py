@@ -54,7 +54,7 @@ def mock_get_service_settings_page_common(
         (
             create_active_user_with_permissions(),
             [
-                "Label Value Action",
+                "",
                 "Service name Test Service Change service name",
                 "Sign-in method Text message code Change sign-in method",
                 "Send text messages On Change your settings for sending text messages",
@@ -66,7 +66,7 @@ def mock_get_service_settings_page_common(
         (
             create_platform_admin_user(),
             [
-                "Label Value Action",
+                "",
                 "Service name Test Service Change service name",
                 "Sign-in method Text message code Change sign-in method",
                 "Send text messages On Change your settings for sending text messages",
