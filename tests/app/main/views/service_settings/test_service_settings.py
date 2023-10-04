@@ -60,7 +60,6 @@ def mock_get_service_settings_page_common(
                 "Send text messages On Change your settings for sending text messages",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",
-                "Send international text messages Off Change your settings for sending international text messages",
             ],
         ),
         (
@@ -235,7 +234,6 @@ def test_send_files_by_email_row_on_settings_page(
                 "Send text messages On Change your settings for sending text messages",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",
-                "Send international text messages On Change your settings for sending international text messages",
             ],
         ),
         (
@@ -246,7 +244,6 @@ def test_send_files_by_email_row_on_settings_page(
                 "Send text messages On Change your settings for sending text messages",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",
-                "Send international text messages Off Change your settings for sending international text messages",
             ],
         ),
     ],
