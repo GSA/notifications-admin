@@ -20,15 +20,18 @@
     <div id='pill-selected-item'>
       <div class='grid-row'>
         
-        <div class='grid-col-6'>
+        <div class='grid-col-12'>
           <h2 class='heading-small'>Text messages</h2>
           <div class="keyline-block">
-            {{ big_number(sms_sent, 'sent', smaller=True) }}
-            {{ big_number(sms_free_allowance, 'free allowance', smaller=True) }}
+            You have sent
+            {{ big_number(sms_sent, 'messages of your', smaller=True) }}
+            {{ big_number(sms_free_allowance, 'free messages allowance.', smaller=True) }}
+            <br />
+            You have
             {% if sms_free_allowance > 0 %}
-              {{ big_number(sms_allowance_remaining, 'free allowance remaining', smaller=True) }}
+              {{ big_number(sms_allowance_remaining, 'messages remaining.', smaller=True) }}
             {% endif %}
-            {% for row in sms_breakdown %}
+            {# {% for row in sms_breakdown %}
               {% if row.charged_units > 0 %}
                 {{ big_number(
                   row.charged_units,
@@ -36,7 +39,7 @@
                   smaller=True
                 ) }}
               {% endif %}
-            {% endfor %}
+            {% endfor %} #}
           </div>
         </div>
         {# <div class='grid-col-6'>

@@ -310,7 +310,7 @@ def test_should_show_live_search_if_service_has_lots_of_folders(
             ],
             [
                 # 'Email',
-                "Text message",
+                "Start with a blank template",
                 "Copy an existing template",
             ],
         ),
@@ -323,7 +323,7 @@ def test_should_show_live_search_if_service_has_lots_of_folders(
             ],
             [
                 # 'Email',
-                "Text message",
+                "Start with a blank template",
                 "Copy an existing template",
             ],
         ),
