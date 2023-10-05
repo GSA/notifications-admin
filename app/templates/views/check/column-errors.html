@@ -4,6 +4,8 @@
 {% from "components/table.html" import list_table, field, text_field, index_field, hidden_field_heading %}
 {% from "components/file-upload.html" import file_upload %}
 {% from "components/components/back-link/macro.njk" import usaBackLink %}
+{% from "components/components/alert/macro.njk" import usaAlert %}
+
 
 {% block service_page_title %}
   Error
@@ -64,34 +66,35 @@
 
       {% elif recipients.duplicate_recipient_column_headers %}
 
-        <h1 class='banner-title' data-module="track-error" data-error-type="Duplicate recipient columns" data-error-label="{{ upload_id }}">
-          There’s a problem with your column names
-        </h1>
-           <p>
-            We found more than one column called {{ (
-            recipients.duplicate_recipient_column_headers
-            ) | formatted_list(
-              conjunction='or',
-              prefix='',
-              prefix_plural=''
-            ) }}.
-          </p>
-        <p>
-          Delete or rename one of these columns and try again.
-        </p>
+      {% set duplicate_recipient_column_headers = recipients.duplicate_recipient_column_headers
+        | formatted_list(
+        conjunction='or',
+        prefix='',
+        prefix_plural=''
+      ) %}
+      
+      {{ usaAlert({
+          "heading": "There’s a problem with your column names",
+          "text": "We found more than one column called " + duplicate_recipient_column_headers + ". Delete or rename one of these columns and try again.",
+          "type": "error",
+        })
+      }}
 
       {% elif recipients.missing_column_headers %}
 
-        <h1 class='banner-title' data-module="track-error" data-error-type="Missing placeholder columns" data-error-label="{{ upload_id }}">
-          Your column names need to match the double brackets in your template
-        </h1>
-          <p>
-            Your file is missing {{ recipients.missing_column_headers | formatted_list(
-              conjunction='and',
-              prefix='a column called ',
-              prefix_plural='columns called '
-            ) }}.
-          </p>
+      {% set missing_column_headers = recipients.missing_column_headers | formatted_list(
+        conjunction='and',
+        prefix='a column called ',
+        prefix_plural='columns called ' 
+      )%}
+
+      {{ usaAlert({
+        "heading": "Your column names need to match the double brackets in your template",
+        "text": "Your file is missing " + missing_column_headers + ".",
+        "type": "error",
+        }) 
+      }}
+
 
       {% elif sent_previously %}
 
