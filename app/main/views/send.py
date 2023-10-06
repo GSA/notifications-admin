@@ -210,6 +210,8 @@ def set_sender(service_id, template_id):
 
     sender_details = get_sender_details(service_id, template["template_type"])
 
+    sender_details = remove_notify_from_sender_options(sender_details)
+
     if len(sender_details) == 1:
         session["sender_id"] = sender_details[0]["id"]
 
@@ -260,6 +262,24 @@ def set_sender(service_id, template_id):
         },
         option_hints=option_hints,
     )
+
+
+def remove_notify_from_sender_options(sender_details):
+    # Remove US Notify, soon to be (Notify.gov) from users list of sender
+    # options during message send flow if not default sender.
+    senders_to_remove = []
+    for sender in sender_details:
+        sms_sender_value = sender.get("sms_sender")
+        if sms_sender_value:
+            if (
+                sms_sender_value in ["Notify.gov", "US Notify"]
+                and not sender["is_default"]
+            ):
+                senders_to_remove.append(sender)
+    for sender in senders_to_remove:
+        if sender in sender_details:
+            sender_details.remove(sender)
+    return sender_details
 
 
 def get_sender_context(sender_details, template_type):
