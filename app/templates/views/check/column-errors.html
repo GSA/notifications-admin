@@ -4,198 +4,210 @@
 {% from "components/table.html" import list_table, field, text_field, index_field, hidden_field_heading %}
 {% from "components/file-upload.html" import file_upload %}
 {% from "components/components/back-link/macro.njk" import usaBackLink %}
-{% from "components/components/alert/macro.njk" import usaAlert %}
-
 
 {% block service_page_title %}
-  Error
+Error
 {% endblock %}
 
 {% block backLink %}
-  {{ usaBackLink({ "href": back_link }) }}
+{{ usaBackLink({ "href": back_link }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
 
-  <div class="">
-    {% call banner_wrapper(type='dangerous') %}
+<div class="">
+  {% call banner_wrapper(type='dangerous') %}
 
-      {% if recipients.too_many_rows %}
+  {% if recipients.too_many_rows %}
 
-        <h1 class='banner-title' data-module="track-error" data-error-type="Too many rows" data-error-label="{{ upload_id }}">
-          Your file has too many rows
-        </h1>
-        <p>
+  <div class="usa-alert usa-alert--error" role="alert">
+    <div class="usa-alert__body">
+      <h1 class="usa-alert__heading banner-title" data-module="track-error" data-error-type="Too many rows" data-error-label="{{ upload_id }}">Your file has too many rows</h1>
+      <p class="usa-alert__text">
           Notify can process up to
           {{ "{:,}".format(recipients.max_rows) }} rows at once. Your
           file has {{ "{:,}".format(recipients|length) }} rows.
-        </p>
+      </p>
+    </div>
+  </div>
 
-      {% elif not count_of_recipients %}
+  {% elif not count_of_recipients %}
 
-        <h1 class='banner-title' data-module="track-error" data-error-type="No rows" data-error-label="{{ upload_id }}">
-          Your file is missing some rows
-        </h1>
-        {% if recipients.missing_column_headers %}
-          <p>
-            It needs at least one row of data, and {{ recipients.missing_column_headers | sort() | formatted_list(
-              prefix='a column called',
-              prefix_plural='columns called'
-            ) }}.
-          </p>
-        {% else %}
-          <p>
-            It needs at least one row of data.
-          </p>
-        {% endif %}
+  <div class="usa-alert usa-alert--error" role="alert">
+    <div class="usa-alert__body">
+      <h1 class="usa-alert__heading banner-title" data-module="track-error" data-error-type="No rows"
+        data-error-label="{{ upload_id }}">Your file is missing some rows
+      </h1>
+      {% if recipients.missing_column_headers %}
+      <p class="usa-alert-text">
+        It needs at least one row of data, and {{ recipients.missing_column_headers | sort() | formatted_list(
+        prefix='a column called',
+        prefix_plural='columns called'
+        ) }}.
+      </p>
+      {% else %}
+      <p class="usa-alert-text">
+        It needs at least one row of data.
+      </p>
+      {% endif %}
+    </div>
+  </div>
 
-      {% elif not recipients.has_recipient_columns %}
+  {% elif not recipients.has_recipient_columns %}
 
-        <h1 class='banner-title' data-module="track-error" data-error-type="Missing recipient columns" data-error-label="{{ upload_id }}">
-          There’s a problem with your column names
-        </h1>
-          <p>
-            Your file needs a column called ‘{{ first_recipient_column }}’.
-          </p>
-          <p>
-            Right now it has {{ recipients.column_headers | formatted_list(
-              prefix='one column, called ',
-              prefix_plural='columns called '
-            ) }}.
-          </p>
+  <div class="usa-alert usa-alert--error" role="alert">
+    <div class="usa-alert__body">
+      <h1 class="usa-alert__heading banner-title" data-module="track-error" data-error-type="Missing recipient columns"
+        data-error-label="{{ upload_id }}">There’s a problem with your column names</h1>
+      <p class="usa-alert-text">
+        Your file needs a column called ‘{{ first_recipient_column }}’.
+      </p>
+      <p class="usa-alert-text">
+        Right now it has {{ recipients.column_headers | formatted_list(
+        prefix='one column, called ',
+        prefix_plural='columns called '
+        ) }}.
+      </p>
+    </div>
+  </div>
 
-      {% elif recipients.duplicate_recipient_column_headers %}
+  {% elif recipients.duplicate_recipient_column_headers %}
 
-      {% set duplicate_recipient_column_headers = recipients.duplicate_recipient_column_headers
-        | formatted_list(
+  <div class="usa-alert usa-alert--error" role="alert">
+    <div class="usa-alert__body">
+      <h1 class="usa-alert__heading banner-title" data-module="track-error" data-error-type="Duplicate recipient columns"
+        data-error-label="{{ upload_id }}">There’s a problem with your column names</h1>
+      <p class="usa-alert__text">
+        We found more than one column called {{ (
+        recipients.duplicate_recipient_column_headers
+        ) | formatted_list(
         conjunction='or',
         prefix='',
         prefix_plural=''
-      ) %}
-      
-      {{ usaAlert({
-          "heading": "There’s a problem with your column names",
-          "text": "We found more than one column called " + duplicate_recipient_column_headers + ". Delete or rename one of these columns and try again.",
-          "type": "error",
-        })
-      }}
+        ) }}.
+      </p>
+      <p class="usa-alert__text">
+        Delete or rename one of these columns and try again.
+      </p>
+    </div>
+  </div>
 
-      {% elif recipients.missing_column_headers %}
+  {% elif recipients.missing_column_headers %}
 
-      {% set missing_column_headers = recipients.missing_column_headers | formatted_list(
+  <div class="usa-alert usa-alert--error" role="alert">
+    <div class="usa-alert__body">
+      <h1 class="usa-alert__heading banner-title" data-module="track-error" data-error-type="Missing placeholder columns"
+        data-error-label="{{ upload_id }}">Your column names need to match the double brackets in your template</h1>
+      <p class="usa-alert__text">
+        Your file is missing {{ recipients.missing_column_headers | formatted_list(
         conjunction='and',
         prefix='a column called ',
-        prefix_plural='columns called ' 
-      )%}
-
-      {{ usaAlert({
-        "heading": "Your column names need to match the double brackets in your template",
-        "text": "Your file is missing " + missing_column_headers + ".",
-        "type": "error",
-        }) 
-      }}
-
-
-      {% elif sent_previously %}
-
-        {% include "partials/check/sent-previously.html" %}
-
-      {% elif not recipients.allowed_to_send_to %}
-
-        {% with
-          count_of_recipients=count_of_recipients,
-          template_type_label=recipients.recipient_column_headers[0]
-        %}
-          {% include "partials/check/not-allowed-to-send-to.html" %}
-        {% endwith %}
-
-      {% elif recipients.more_rows_than_can_send %}
-
-        {% include "partials/check/too-many-messages.html" %}
-
-      {% endif %}
-
-    {% endcall %}
-  </div>
-
-
-  <div class="js-stick-at-top-when-scrolling">
-    <div class="form-group">
-      {% if not request.args.from_test %}
-        {{ file_upload(
-          form.file,
-          allowed_file_extensions=allowed_file_extensions,
-          action=url_for('.send_messages', service_id=current_service.id, template_id=template.id),
-          button_text='Upload your file again'
-        ) }}
-      {% endif %}
+        prefix_plural='columns called '
+        ) }}.
+      </p>
     </div>
-    <a href="#content" class="usa-link back-to-top-link">Back to top</a>
   </div>
 
-  {% if not request.args.from_test %}
+  {% elif sent_previously %}
 
-    {% set column_headers = recipients._raw_column_headers if recipients.duplicate_recipient_column_headers else recipients.column_headers %}
+  {% include "partials/check/sent-previously.html" %}
 
-    <h2 class="font-body-lg" id="file-preview">{{ original_file_name }}</h2>
+  {% elif not recipients.allowed_to_send_to %}
 
-    <div class="fullscreen-content" data-module="fullscreen-table">
-      {% call(item, row_number) list_table(
-        recipients.displayed_rows,
-        caption=original_file_name,
-        caption_visible=False,
-        field_headings=[
-          '<span class="usa-sr-only">Row in file</span><span aria-hidden="true">1</span>'|safe
-        ] + column_headers
-      ) %}
-        {% call index_field() %}
-          <span>
-            {% set displayed_index = item.index + 2 %}
-            {{ displayed_index }}
-          </span>
-        {% endcall %}
-        {% for column in column_headers %}
-          {% if item[column].error and not recipients.missing_column_headers %}
-            {% call field() %}
-              <span>
-                <span class="table-field-error-label">{{ item[column].error }}</span>
-                {{ item[column].data if item[column].data != None }}
-              </span>
-            {% endcall %}
-          {% elif item[column].ignore %}
-            {{ text_field(item[column].data or '', status='default') }}
-          {% else %}
-            {{ text_field(item[column].data or '') }}
-          {% endif %}
-        {% endfor %}
-        {% if item[None].data %}
-          {% for column in item[None].data %}
-            {{ text_field(column, status='default') }}
-          {% endfor %}
-        {% endif %}
-      {% endcall %}
+  {% with
+  count_of_recipients=count_of_recipients,
+  template_type_label=recipients.recipient_column_headers[0]
+  %}
+  {% include "partials/check/not-allowed-to-send-to.html" %}
+  {% endwith %}
+
+  {% elif recipients.more_rows_than_can_send %}
+
+  {% include "partials/check/too-many-messages.html" %}
+
+  {% endif %}
+
+  {% endcall %}
+</div>
+
+
+<div class="js-stick-at-top-when-scrolling">
+  <div class="form-group">
+    {% if not request.args.from_test %}
+    {{ file_upload(
+    form.file,
+    allowed_file_extensions=allowed_file_extensions,
+    action=url_for('.send_messages', service_id=current_service.id, template_id=template.id),
+    button_text='Upload your file again'
+    ) }}
     {% endif %}
   </div>
+  <a href="#content" class="usa-link back-to-top-link">Back to top</a>
+</div>
 
-  {% if recipients.too_many_rows %}
-    <p class="table-show-more-link">
-        Only showing the first {{ count_of_displayed_recipients }} rows
-    </p>
-  {% elif count_of_displayed_recipients < count_of_recipients %}
-    <p class="table-show-more-link">
-      {% if row_errors and not recipients.missing_column_headers %}
-        Only showing the first {{ count_of_displayed_recipients }} rows with errors
-      {% else %}
-        Only showing the first {{ count_of_displayed_recipients }} rows
-      {% endif %}
-    </p>
+{% if not request.args.from_test %}
+
+{% set column_headers = recipients._raw_column_headers if recipients.duplicate_recipient_column_headers else
+recipients.column_headers %}
+
+<h2 class="font-body-lg" id="file-preview">{{ original_file_name }}</h2>
+
+<div class="fullscreen-content" data-module="fullscreen-table">
+  {% call(item, row_number) list_table(
+  recipients.displayed_rows,
+  caption=original_file_name,
+  caption_visible=False,
+  field_headings=[
+  '<span class="usa-sr-only">Row in file</span><span aria-hidden="true">1</span>'|safe
+  ] + column_headers
+  ) %}
+  {% call index_field() %}
+  <span>
+    {% set displayed_index = item.index + 2 %}
+    {{ displayed_index }}
+  </span>
+  {% endcall %}
+  {% for column in column_headers %}
+  {% if item[column].error and not recipients.missing_column_headers %}
+  {% call field() %}
+  <span>
+    <span class="table-field-error-label">{{ item[column].error }}</span>
+    {{ item[column].data if item[column].data != None }}
+  </span>
+  {% endcall %}
+  {% elif item[column].ignore %}
+  {{ text_field(item[column].data or '', status='default') }}
+  {% else %}
+  {{ text_field(item[column].data or '') }}
+  {% endif %}
+  {% endfor %}
+  {% if item[None].data %}
+  {% for column in item[None].data %}
+  {{ text_field(column, status='default') }}
+  {% endfor %}
+  {% endif %}
+  {% endcall %}
+  {% endif %}
+</div>
+
+{% if recipients.too_many_rows %}
+<p class="table-show-more-link">
+  Only showing the first {{ count_of_displayed_recipients }} rows
+</p>
+{% elif count_of_displayed_recipients < count_of_recipients %} <p class="table-show-more-link">
+  {% if row_errors and not recipients.missing_column_headers %}
+  Only showing the first {{ count_of_displayed_recipients }} rows with errors
+  {% else %}
+  Only showing the first {{ count_of_displayed_recipients }} rows
+  {% endif %}
+  </p>
   {% elif row_errors and not recipients.missing_column_headers %}
-    <p class="table-show-more-link">
-      Only showing rows with errors
-    </p>
+  <p class="table-show-more-link">
+    Only showing rows with errors
+  </p>
   {% endif %}
 
   <h2 class="font-body-lg">Preview of {{ template.name }}</h2>
   {{ template|string }}
 
-{% endblock %}
+  {% endblock %}
