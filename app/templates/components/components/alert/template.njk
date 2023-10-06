@@ -11,7 +11,7 @@
   <div class="usa-alert__body">
     <h{{params.header_level}} class="usa-alert__heading">{{params.heading}}</h{{params.header_level}}>
     <p class="usa-alert__text">
-      {{params.text}}
+      {{params.text | safe }}
     </p>
   </div>
 </div>

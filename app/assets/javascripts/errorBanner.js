@@ -12,6 +12,5 @@
     hideBanner: () => $('.banner-dangerous').addClass('display-none'),
     showBanner: () => $('.banner-dangerous')
       .removeClass('display-none')
-      .trigger('focus'),
   };
 })(window);
