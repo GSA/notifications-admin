@@ -545,7 +545,7 @@ def test_user_with_only_send_and_view_redirected_to_set_sender_for_one_off(
         (
             ["send_messages", "manage_templates"],
             [
-                (".set_sender", "Prepare to send a message using this template"),
+                (".set_sender", "Use this template"),
                 (".edit_service_template", "Edit"),
             ],
             None,
