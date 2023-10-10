@@ -20,11 +20,9 @@
 
     {{ page_header('{} text message template'.format(heading_action)) }}
 
-    {{ usaAlert({
-      "type": "info",
-      "text": "Don't worry, saving the template will not send",
-      "classes": "margin-top-2 usa-button--secondary"
-    }) }}
+    <a class="usa-link display-inline-flex margin-top-05" href="#help">
+      How to customize your message
+    </a>
 
     {% if current_service.prefix_sms %}
       {% set content_hint = 'Your service name will be added to the start of your message. You can turn this off in Settings.' %}
@@ -32,7 +30,7 @@
 
     {% call form_wrapper() %}
       <div class="grid-row">
-        <div class="grid-col-8">
+        <div class="tablet:grid-col-8 mobile-lg:grid-col-12">
           {{ form.name(param_extensions={
             "extra_form_group_classes": "margin-bottom-2",
             "hint": {"text": "Your recipients will not see this"}
@@ -50,22 +48,36 @@
             {{ form.process_type }}
           {% endif %}
         </div>
-        <div class="grid-col-12">
-          <div class="template-content-count">
-            <div data-module="update-status" data-target="template_content" data-updates-url="{{ url_for('.count_content_length', service_id=current_service.id, template_type='sms') }}" aria-live="polite">
-              &nbsp;
+        <div class="grid-row">
+          <div class="grid-col-12">
+            <div class="template-content-count">
+              <div data-module="update-status" data-target="template_content"
+                data-updates-url="{{ url_for('.count_content_length', service_id=current_service.id, template_type='sms') }}"
+                aria-live="polite">
+                &nbsp;
+              </div>
             </div>
           </div>
-          {{ page_footer('Save') }}
-          <p class="usa-hint">
-            After saving, you'll have the option to send 🚀
-          </p>
         </div>
-        <div class="grid-col-12">
-          {% include "partials/templates/guidance-personalisation.html" %}
-          {% include "partials/templates/guidance-optional-content.html" %}
-          {% include "partials/templates/guidance-links.html" %}
-          {% include "partials/templates/guidance-character-count.html" %}
+        <div class="grid-row width-full">
+            <div class="tablet:grid-col-2 mobile-lg:grid-col-12">
+              {{ page_footer('Save') }}
+            </div>
+          <div class="tablet:grid-col-10 mobile-lg:grid-col-12">
+              <p class="usa-hint margin-top-5 tablet:margin-left-neg-2">
+                After saving, you'll have the option to send.
+              </p>
+          </div>
+        </div>
+      
+        <div class="tablet:grid-col-9 mobile-lg:grid-col-12">
+          <h2 id="help" class="font-body-xl margin-top-2">How to customize your message</h2>
+          <div class="usa-accordion usa-accordion--bordered usa-accordion--multiselectable" data-allow-multiple>
+            {% include "partials/templates/guidance-personalization.html" %}
+            {% include "partials/templates/guidance-optional-content.html" %}
+            {% include "partials/templates/guidance-links.html" %}
+            {% include "partials/templates/guidance-character-count.html" %}
+          </div>
         </div>
       </div>
     {% endcall %}
