@@ -30,7 +30,7 @@
 
     {% call form_wrapper() %}
       <div class="grid-row">
-        <div class="tablet:grid-col-8 mobile-lg:grid-col-12">
+        <div class="tablet:grid-col-9 mobile-lg:grid-col-12">
           {{ form.name(param_extensions={
             "extra_form_group_classes": "margin-bottom-2",
             "hint": {"text": "Your recipients will not see this"}
@@ -72,7 +72,7 @@
       
         <div class="tablet:grid-col-9 mobile-lg:grid-col-12">
           <h2 id="help" class="font-body-xl margin-top-2">How to customize your message</h2>
-          <div class="usa-accordion usa-accordion--bordered usa-accordion--multiselectable" data-allow-multiple>
+          <div class="usa-accordion usa-accordion--bordered usa-accordion--multiselectable maxw-mobile-lg" data-allow-multiple>
             {% include "partials/templates/guidance-personalization.html" %}
             {% include "partials/templates/guidance-optional-content.html" %}
             {% include "partials/templates/guidance-links.html" %}
