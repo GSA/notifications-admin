@@ -1,9 +1,15 @@
 {% from "components/components/inset-text/macro.njk" import usaInsetText %}
 
-<h2 class="font-body-lg">Links and URLs</h2>
-<p class="bottom-gutter-1-3">
-  Always use full URLs, starting with https://. For example:
-{{ usaInsetText({
-  "text": "Apply now at https://www.usa.gov/example",
-  "classes": "usa-body"})
-}}
+<h3 class="usa-accordion__heading">
+  <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="links-and-urls">
+    Links and URLs
+  </button>
+</h3>
+<div id="links-and-urls" class="usa-accordion__content usa-prose">
+  <p>
+    Always use full URLs, starting with https://. For example:
+    {{ usaInsetText({
+    "text": "Apply now at https://www.usa.gov/example",
+    "classes": "usa-body"})
+    }}
+</div>
