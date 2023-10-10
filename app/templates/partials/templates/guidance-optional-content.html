@@ -1,21 +1,25 @@
 {% from "components/components/inset-text/macro.njk" import usaInsetText %}
 
-<h2 class="font-body-lg">
-  Optional content
-</h2>
-<p class="usa-body">
-  Use double brackets and ‘??’ to define optional content.
-</p>
-<p class="bottom-gutter-1-3">
-  For example if you only want to show something to people who are under
-  18:
-</p>
-{{ usaInsetText({
+<h3 class="usa-accordion__heading">
+  <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="m-a2">
+    Optional content
+  </button>
+</h3>
+<div id="m-a2" class="usa-accordion__content usa-prose">
+  <p class="usa-body">
+    Use double brackets and ‘??’ to define optional content.
+  </p>
+  <p class="bottom-gutter-1-3">
+    For example if you only want to show something to people who are under
+    18:
+  </p>
+  {{ usaInsetText({
   "text": "((under18??Please get your application signed by a parent or
   guardian.))",
   "classes": "usa-body"})
-}}
-<p class="usa-body">
-  For each person you send this message to, specify ‘yes’ or ‘no’ to
-  show or hide this content.
-</p>
+  }}
+  <p class="usa-body">
+    For each person you send this message to, specify ‘yes’ or ‘no’ to
+    show or hide this content.
+  </p>
+</div>
