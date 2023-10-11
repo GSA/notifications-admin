@@ -26,7 +26,8 @@ window.GOVUK.Modules.TimeoutPopup = window.GOVUK.Modules.TimeoutPopup || {};
     }
 
     function expireUserSession() {
-        window.location.assign('/sign-out?next=' + window.location.pathname);
+        var signOutLink = '/sign-out?next=' + window.location.pathname;
+        window.location.assign(signOutLink);
     }
 
     function signoutUser() {
