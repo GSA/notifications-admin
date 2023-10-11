@@ -39,7 +39,7 @@ newrelic = "*"
 flask-talisman = "*"
 notifications-utils = {git = "https://github.com/GSA/notifications-utils.git", develop = true, branch = "main"}
 coverage = "*"
-vulture = "==2.9.1"
+vulture = "==2.10"
 radon = "==6.0.1"
 
 
