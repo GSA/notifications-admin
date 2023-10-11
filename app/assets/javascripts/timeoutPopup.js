@@ -26,11 +26,11 @@ window.GOVUK.Modules.TimeoutPopup = window.GOVUK.Modules.TimeoutPopup || {};
     }
 
     function expireUserSession() {
-        window.location.href = '/sign-out' + '?next=' + window.location.pathname;
+        window.location.assign('/sign-out?next=' + window.location.pathname);
     }
 
     function signoutUser() {
-        window.location.href = '/sign-out';
+        window.location.assign('/sign-out');
     }
 
     function extendSession() {
