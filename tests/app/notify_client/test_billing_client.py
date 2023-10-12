@@ -56,7 +56,7 @@ def test_post_free_sms_fragment_limit_for_year_endpoint(mocker, api_user_active)
 
 
 @pytest.mark.parametrize(
-    "func, expected_url",
+    ("func", "expected_url"),
     [
         (
             BillingAPIClient.get_data_for_volumes_by_service_report,

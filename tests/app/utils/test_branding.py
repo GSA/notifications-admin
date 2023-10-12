@@ -10,7 +10,7 @@ from tests.conftest import create_email_branding
 
 @pytest.mark.parametrize("function", [get_email_choices])
 @pytest.mark.parametrize(
-    "org_type, expected_options",
+    ("org_type", "expected_options"),
     [
         ("federal", []),
         ("state", []),
@@ -30,7 +30,7 @@ def test_get_choices_service_not_assigned_to_org(
 
 
 @pytest.mark.parametrize(
-    "org_type, branding_id, expected_options",
+    ("org_type", "branding_id", "expected_options"),
     [
         (
             "federal",
@@ -86,7 +86,7 @@ def test_get_email_choices_service_assigned_to_org(
 
 
 @pytest.mark.parametrize(
-    "org_type, branding_id, expected_options",
+    ("org_type", "branding_id", "expected_options"),
     [
         (
             "federal",
@@ -141,7 +141,7 @@ def test_get_email_choices_org_has_default_branding(
 
 
 @pytest.mark.parametrize(
-    "branding_name, expected_options",
+    ("branding_name", "expected_options"),
     [
         (
             "gsa.gov and something else",

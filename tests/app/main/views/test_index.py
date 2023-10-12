@@ -60,8 +60,8 @@ def test_robots(client_request):
 
 
 @pytest.mark.parametrize(
-    "endpoint, kwargs",
-    (
+    ("endpoint", "kwargs"),
+    [
         ("sign_in", {}),
         ("support", {}),
         ("support_public", {}),
@@ -73,7 +73,7 @@ def test_robots(client_request):
         ("thanks", {}),
         ("register", {}),
         pytest.param("index", {}, marks=pytest.mark.xfail(raises=AssertionError)),
-    ),
+    ],
 )
 @freeze_time("2012-12-12 12:12")  # So we don’t go out of business hours
 def test_hiding_pages_from_search_engines(
@@ -170,12 +170,11 @@ def test_guidance_pages_link_to_service_pages_when_signed_in(
 
 
 @pytest.mark.parametrize(
-    "view, expected_view",
+    ("view", "expected_view"),
     [
         ("information_risk_management", "security"),
         ("old_integration_testing", "integration_testing"),
         ("old_roadmap", "roadmap"),
-        ("information_risk_management", "security"),
         ("old_terms", "terms"),
         ("information_security", "using_notify"),
         ("old_using_notify", "using_notify"),
@@ -265,8 +264,8 @@ def test_css_is_served_from_correct_path(client_request):
 
 
 @pytest.mark.parametrize(
-    "extra_args, email_branding_retrieved",
-    (
+    ("extra_args", "email_branding_retrieved"),
+    [
         (
             {},
             False,
@@ -279,7 +278,7 @@ def test_css_is_served_from_correct_path(client_request):
             {"branding_style": sample_uuid()},
             True,
         ),
-    ),
+    ],
 )
 def test_email_branding_preview(
     client_request,
@@ -294,7 +293,12 @@ def test_email_branding_preview(
     assert mock_get_email_branding.called is email_branding_retrieved
 
 
-@pytest.mark.parametrize("current_date, expected_rate", (("2022-05-01", "1.72"),))
+@pytest.mark.parametrize(
+    ("current_date", "expected_rate"),
+    [
+        ("2022-05-01", "1.72"),
+    ],
+)
 @pytest.mark.skip(reason="Currently hidden for TTS")
 def test_sms_price(
     client_request,

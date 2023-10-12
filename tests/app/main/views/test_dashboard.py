@@ -62,10 +62,10 @@ stub_template_stats = [
 
 @pytest.mark.parametrize(
     "user",
-    (
+    [
         create_active_user_view_permissions(),
         create_active_caseworking_user(),
-    ),
+    ],
 )
 def test_redirect_from_old_dashboard(
     client_request,
@@ -226,7 +226,7 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_no_messages(
 
 
 @pytest.mark.parametrize(
-    "index, expected_row",
+    ("index", "expected_row"),
     enumerate(
         [
             "(202) 867-5300 message-1 1 hour ago",
@@ -407,7 +407,7 @@ def test_download_inbox(
 
 @freeze_time("2016-07-01 13:00")
 @pytest.mark.parametrize(
-    "message_content, expected_cell",
+    ("message_content", "expected_cell"),
     [
         ("=2+5", "2+5"),
         ("==2+5", "2+5"),
@@ -488,7 +488,7 @@ def test_should_show_recent_templates_on_dashboard(
 
 @pytest.mark.parametrize(
     "stats",
-    (
+    [
         pytest.param(
             [stub_template_stats[0]],
         ),
@@ -496,7 +496,7 @@ def test_should_show_recent_templates_on_dashboard(
             [stub_template_stats[0], stub_template_stats[1]],
             marks=pytest.mark.xfail(raises=AssertionError),
         ),
-    ),
+    ],
 )
 def test_should_not_show_recent_templates_on_dashboard_if_only_one_template_used(
     client_request,
@@ -716,7 +716,12 @@ def test_should_not_show_upcoming_jobs_on_dashboard_if_service_has_no_jobs(
     assert "files waiting to send " not in page.select_one("main").text
 
 
-@pytest.mark.parametrize("permissions", (["email", "sms"],))
+@pytest.mark.parametrize(
+    "permissions",
+    [
+        ("email", "sms"),
+    ],
+)
 @pytest.mark.parametrize(
     "totals",
     [
@@ -899,7 +904,7 @@ def test_usage_page_monthly_breakdown(
 
 
 @pytest.mark.parametrize(
-    "now, expected_number_of_months",
+    ("now", "expected_number_of_months"),
     [
         (freeze_time("2017-03-31 11:09:00.061258"), 6),
         (freeze_time("2017-01-01 11:09:00.061258"), 4),
@@ -1243,7 +1248,7 @@ def test_get_dashboard_totals_adds_percentages():
     assert get_dashboard_totals(stats)["email"]["failed_percentage"] == "0"
 
 
-@pytest.mark.parametrize("failures,expected", [(2, False), (3, False), (4, True)])
+@pytest.mark.parametrize(("failures", "expected"), [(2, False), (3, False), (4, True)])
 def test_get_dashboard_totals_adds_warning(failures, expected):
     stats = {"sms": {"requested": 100, "delivered": 0, "failed": failures}}
     assert get_dashboard_totals(stats)["sms"]["show_warning"] == expected
@@ -1286,7 +1291,7 @@ def _stats(requested, delivered, failed):
 
 
 @pytest.mark.parametrize(
-    "dict_in, expected_failed, expected_requested",
+    ("dict_in", "expected_failed", "expected_requested"),
     [
         ({}, 0, 0),
         (
@@ -1497,7 +1502,12 @@ def test_breadcrumb_shows_if_service_is_suspended(
     assert "Suspended" in page.select_one(".navigation-service-name").text
 
 
-@pytest.mark.parametrize("permissions", (["email", "sms"],))
+@pytest.mark.parametrize(
+    "permissions",
+    [
+        ("email", "sms"),
+    ],
+)
 def test_service_dashboard_shows_usage(
     client_request,
     service_one,

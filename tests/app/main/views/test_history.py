@@ -5,8 +5,8 @@ from tests.conftest import SERVICE_ONE_ID, normalize_spaces
 
 
 @pytest.mark.parametrize(
-    "extra_args, expected_headings_and_events",
-    (
+    ("extra_args", "expected_headings_and_events"),
+    [
         (
             {},
             [
@@ -83,7 +83,7 @@ from tests.conftest import SERVICE_ONE_ID, normalize_spaces
                 ),
             ],
         ),
-    ),
+    ],
 )
 @freeze_time("2012-01-01 01:01:01")
 def test_history(

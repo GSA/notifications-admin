@@ -80,7 +80,7 @@ def test_should_redirect_after_email_change(
 
 
 @pytest.mark.parametrize(
-    "email_address,error_message",
+    ("email_address", "error_message"),
     [
         (
             "me@example.com",

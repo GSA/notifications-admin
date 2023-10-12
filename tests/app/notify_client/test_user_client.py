@@ -141,11 +141,11 @@ def test_client_converts_admin_permissions_to_db_permissions_on_add_to_service(
 
 @pytest.mark.parametrize(
     (
-        "expected_cache_get_calls,"
-        "cache_value,"
-        "expected_api_calls,"
-        "expected_cache_set_calls,"
-        "expected_return_value,"
+        "expected_cache_get_calls",
+        "cache_value",
+        "expected_api_calls",
+        "expected_cache_set_calls",
+        "expected_return_value",
     ),
     [
         (
@@ -192,8 +192,8 @@ def test_returns_value_from_cache(
     assert mock_redis_set.call_args_list == expected_cache_set_calls
 
 
-@pytest.mark.parametrize(
-    "client, method, extra_args, extra_kwargs",
+@pytest.mark.parametrize(  # noqa: PT014  # Duplicate add_user_to_service has different params for each
+    ("client", "method", "extra_args", "extra_kwargs"),
     [
         (
             user_api_client,

@@ -76,7 +76,7 @@ def test_doesnt_redirect_to_sign_in_if_no_session_info(
 
 
 @pytest.mark.parametrize(
-    "db_sess_id, cookie_sess_id",
+    ("db_sess_id", "cookie_sess_id"),
     [
         (None, None),
         (None, uuid.UUID(int=1)),  # BAD - cookie doesn't match db
@@ -139,7 +139,7 @@ def test_logged_in_user_doesnt_do_evil_redirect(client_request):
     ],
 )
 @pytest.mark.parametrize(
-    "email_address, password",
+    ("email_address", "password"),
     [
         ("valid@example.gsa.gov", "val1dPassw0rd!"),
         (" valid@example.gsa.gov  ", "  val1dPassw0rd!  "),

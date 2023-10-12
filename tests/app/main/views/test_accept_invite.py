@@ -16,22 +16,23 @@ from tests.conftest import (
 
 
 @pytest.fixture()
-def mock_no_users_for_service(mocker):
+def _mock_no_users_for_service(mocker):
     mocker.patch("app.models.user.Users.client_method", return_value=[])
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def mock_get_existing_user_by_email(mocker, api_user_active):
     return mocker.patch(
         "app.user_api_client.get_user_by_email", return_value=api_user_active
     )
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def mock_check_invite_token(mocker, sample_invite):
     return mocker.patch("app.invite_api_client.check_token", return_value=sample_invite)
 
 
+@pytest.mark.usefixtures("_mock_no_users_for_service")
 @freeze_time("2021-12-12 12:12:12")
 def test_existing_user_accept_invite_calls_api_and_redirects_to_dashboard(
     client_request,
@@ -39,7 +40,6 @@ def test_existing_user_accept_invite_calls_api_and_redirects_to_dashboard(
     api_user_active,
     mock_check_invite_token,
     mock_get_existing_user_by_email,
-    mock_no_users_for_service,
     mock_accept_invite,
     mock_add_user_to_service,
     mock_get_service,
@@ -76,6 +76,7 @@ def test_existing_user_accept_invite_calls_api_and_redirects_to_dashboard(
     )
 
 
+@pytest.mark.usefixtures("_mock_no_users_for_service")
 def test_existing_user_with_no_permissions_or_folder_permissions_accept_invite(
     client_request,
     mocker,
@@ -84,7 +85,6 @@ def test_existing_user_with_no_permissions_or_folder_permissions_accept_invite(
     sample_invite,
     mock_check_invite_token,
     mock_get_existing_user_by_email,
-    mock_no_users_for_service,
     mock_add_user_to_service,
     mock_get_service,
     mock_events,
@@ -143,6 +143,7 @@ def test_if_existing_user_accepts_twice_they_redirect_to_sign_in(
     assert mock_update_user_attribute.called is False
 
 
+@pytest.mark.usefixtures("_mock_no_users_for_service")
 def test_invite_goes_in_session(
     client_request,
     mocker,
@@ -151,7 +152,6 @@ def test_invite_goes_in_session(
     api_user_active,
     mock_check_invite_token,
     mock_get_user_by_email,
-    mock_no_users_for_service,
     mock_add_user_to_service,
     mock_accept_invite,
 ):
@@ -172,8 +172,9 @@ def test_invite_goes_in_session(
         assert session["invited_user_id"] == sample_invite["id"]
 
 
+@pytest.mark.usefixtures("_mock_no_users_for_service")
 @pytest.mark.parametrize(
-    "user, landing_page_title",
+    ("user", "landing_page_title"),
     [
         (create_active_user_with_permissions(), "Dashboard"),
         (create_active_caseworking_user(), "Templates"),
@@ -187,7 +188,6 @@ def test_accepting_invite_removes_invite_from_session(
     service_one,
     mock_check_invite_token,
     mock_get_user_by_email,
-    mock_no_users_for_service,
     mock_add_user_to_service,
     mock_accept_invite,
     mock_get_service_templates,
@@ -251,6 +251,7 @@ def test_existing_user_of_service_get_redirected_to_signin(
     assert mock_accept_invite.call_count == 1
 
 
+@pytest.mark.usefixtures("_mock_no_users_for_service")
 def test_accept_invite_redirects_if_api_raises_an_error_that_they_are_already_part_of_the_service(
     client_request,
     mocker,
@@ -260,7 +261,6 @@ def test_accept_invite_redirects_if_api_raises_an_error_that_they_are_already_pa
     mock_check_invite_token,
     mock_accept_invite,
     mock_get_service,
-    mock_no_users_for_service,
     mock_get_user,
     mock_update_user_attribute,
 ):
@@ -290,6 +290,7 @@ def test_accept_invite_redirects_if_api_raises_an_error_that_they_are_already_pa
     )
 
 
+@pytest.mark.usefixtures("_mock_no_users_for_service")
 def test_existing_signed_out_user_accept_invite_redirects_to_sign_in(
     client_request,
     service_one,
@@ -297,7 +298,6 @@ def test_existing_signed_out_user_accept_invite_redirects_to_sign_in(
     sample_invite,
     mock_check_invite_token,
     mock_get_existing_user_by_email,
-    mock_no_users_for_service,
     mock_add_user_to_service,
     mock_accept_invite,
     mock_get_service,
@@ -339,13 +339,13 @@ def test_existing_signed_out_user_accept_invite_redirects_to_sign_in(
     )
 
 
+@pytest.mark.usefixtures("_mock_no_users_for_service")
 def test_new_user_accept_invite_calls_api_and_redirects_to_registration(
     client_request,
     service_one,
     mock_check_invite_token,
     mock_dont_get_user_by_email,
     mock_add_user_to_service,
-    mock_no_users_for_service,
     mock_get_service,
     mocker,
 ):
@@ -360,6 +360,7 @@ def test_new_user_accept_invite_calls_api_and_redirects_to_registration(
     mock_dont_get_user_by_email.assert_called_with("invited_user@test.gsa.gov")
 
 
+@pytest.mark.usefixtures("_mock_no_users_for_service")
 def test_new_user_accept_invite_calls_api_and_views_registration_page(
     client_request,
     service_one,
@@ -368,7 +369,6 @@ def test_new_user_accept_invite_calls_api_and_views_registration_page(
     mock_dont_get_user_by_email,
     mock_get_invited_user_by_id,
     mock_add_user_to_service,
-    mock_no_users_for_service,
     mock_get_service,
     mocker,
 ):
@@ -426,7 +426,7 @@ def test_cancelled_invited_user_accepts_invited_redirect_to_cancelled_invitation
 
 
 @pytest.mark.parametrize(
-    "admin_endpoint, api_endpoint",
+    ("admin_endpoint", "api_endpoint"),
     [
         ("main.accept_invite", "app.invite_api_client.check_token"),
         ("main.accept_org_invite", "app.org_invite_api_client.check_token"),
@@ -470,6 +470,7 @@ def test_new_user_accept_invite_with_malformed_token(
     )
 
 
+@pytest.mark.usefixtures("_mock_no_users_for_service")
 def test_new_user_accept_invite_completes_new_registration_redirects_to_verify(
     client_request,
     service_one,
@@ -482,7 +483,6 @@ def test_new_user_accept_invite_completes_new_registration_redirects_to_verify(
     mock_send_verify_code,
     mock_get_invited_user_by_id,
     mock_accept_invite,
-    mock_no_users_for_service,
     mock_add_user_to_service,
     mock_get_service,
     mocker,
@@ -583,6 +583,7 @@ def test_accept_invite_does_not_treat_email_addresses_as_case_sensitive(
     )
 
 
+@pytest.mark.usefixtures("_mock_no_users_for_service")
 def test_new_invited_user_verifies_and_added_to_service(
     client_request,
     service_one,
@@ -604,7 +605,6 @@ def test_new_invited_user_verifies_and_added_to_service(
     mock_get_template_statistics,
     mock_has_no_jobs,
     mock_has_permissions,
-    mock_no_users_for_service,
     mock_get_service_statistics,
     mock_get_annual_usage_for_service,
     mock_get_free_sms_fragment_limit,
@@ -666,11 +666,11 @@ def test_new_invited_user_verifies_and_added_to_service(
 
 
 @pytest.mark.parametrize(
-    "service_permissions, trial_mode, expected_endpoint, extra_args",
-    (
+    ("service_permissions", "trial_mode", "expected_endpoint", "extra_args"),
+    [
         ([], True, "main.service_dashboard", {}),
         ([], False, "main.service_dashboard", {}),
-    ),
+    ],
 )
 def test_new_invited_user_is_redirected_to_correct_place(
     mocker,
@@ -721,6 +721,7 @@ def test_new_invited_user_is_redirected_to_correct_place(
     )
 
 
+@pytest.mark.usefixtures("_mock_no_users_for_service")
 @freeze_time("2021-12-12 12:12:12")
 def test_existing_user_accepts_and_sets_email_auth(
     client_request,
@@ -728,7 +729,6 @@ def test_existing_user_accepts_and_sets_email_auth(
     service_one,
     sample_invite,
     mock_get_existing_user_by_email,
-    mock_no_users_for_service,
     mock_accept_invite,
     mock_check_invite_token,
     mock_update_user_attribute,
@@ -759,6 +759,7 @@ def test_existing_user_accepts_and_sets_email_auth(
     )
 
 
+@pytest.mark.usefixtures("_mock_no_users_for_service")
 @freeze_time("2021-12-12 12:12:12")
 def test_platform_admin_user_accepts_and_preserves_auth(
     client_request,
@@ -766,7 +767,6 @@ def test_platform_admin_user_accepts_and_preserves_auth(
     service_one,
     sample_invite,
     mock_check_invite_token,
-    mock_no_users_for_service,
     mock_accept_invite,
     mock_add_user_to_service,
     mocker,
@@ -801,6 +801,7 @@ def test_platform_admin_user_accepts_and_preserves_auth(
     assert mock_add_user_to_service.called
 
 
+@pytest.mark.usefixtures("_mock_no_users_for_service")
 @freeze_time("2021-12-12 12:12:12")
 def test_existing_user_doesnt_get_auth_changed_by_service_without_permission(
     client_request,
@@ -808,7 +809,6 @@ def test_existing_user_doesnt_get_auth_changed_by_service_without_permission(
     service_one,
     sample_invite,
     mock_get_user_by_email,
-    mock_no_users_for_service,
     mock_check_invite_token,
     mock_accept_invite,
     mock_update_user_attribute,
@@ -836,13 +836,13 @@ def test_existing_user_doesnt_get_auth_changed_by_service_without_permission(
     )
 
 
+@pytest.mark.usefixtures("_mock_no_users_for_service")
 @freeze_time("2021-12-12 12:12:12")
 def test_existing_email_auth_user_without_phone_cannot_set_sms_auth(
     client_request,
     api_user_active,
     service_one,
     sample_invite,
-    mock_no_users_for_service,
     mock_check_invite_token,
     mock_accept_invite,
     mock_update_user_attribute,
@@ -874,13 +874,13 @@ def test_existing_email_auth_user_without_phone_cannot_set_sms_auth(
     )
 
 
+@pytest.mark.usefixtures("_mock_no_users_for_service")
 @freeze_time("2021-12-12 12:12:12")
 def test_existing_email_auth_user_with_phone_can_set_sms_auth(
     client_request,
     api_user_active,
     service_one,
     sample_invite,
-    mock_no_users_for_service,
     mock_get_existing_user_by_email,
     mock_check_invite_token,
     mock_accept_invite,
