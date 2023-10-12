@@ -61,6 +61,8 @@ class HeaderNavigation(Navigation):
             "message_status",
             "guidance_index",
         },
+        "accounts-or-dashboard": {
+        },
         "pricing": {
             "how_to_pay",
             "billing_details",
