@@ -236,7 +236,7 @@ def using_notify():
     )
 
 
-@main.route("/using_notify/delivery-status")
+@main.route("/using-notify/delivery-status")
 @user_is_logged_in
 def message_status():
     return render_template(
@@ -251,7 +251,7 @@ def get_started_old():
     return redirect(url_for(".get_started"), 301)
 
 
-@main.route("/using_notify/get-started")
+@main.route("/using-notify/get-started")
 @user_is_logged_in
 def get_started():
     return render_template(
@@ -260,7 +260,7 @@ def get_started():
     )
 
 
-@main.route("/using_notify/who-its-for")
+@main.route("/using-notify/who-its-for")
 def who_its_for():
     return redirect(url_for(".features"), 301)
 
@@ -271,7 +271,7 @@ def trial_mode():
     return redirect(url_for(".trial_mode_new"), 301)
 
 
-@main.route("/using_notify/trial-mode")
+@main.route("/using-notify/trial-mode")
 def trial_mode_new():
     return render_template(
         "views/trial-mode.html",
@@ -279,7 +279,7 @@ def trial_mode_new():
     )
 
 
-@main.route("/using_notify/guidance")
+@main.route("/using-notify/guidance")
 @user_is_logged_in
 def guidance_index():
     return render_template(
@@ -288,7 +288,7 @@ def guidance_index():
     )
 
 
-@main.route("/using_notify/guidance/branding-and-customisation")
+@main.route("/using-notify/guidance/branding-and-customisation")
 @user_is_logged_in
 def branding_and_customisation():
     return render_template(
@@ -297,7 +297,7 @@ def branding_and_customisation():
     )
 
 
-@main.route("/using_notify/guidance/create-and-send-messages")
+@main.route("/using-notify/guidance/create-and-send-messages")
 @user_is_logged_in
 def create_and_send_messages():
     return render_template(
@@ -306,7 +306,7 @@ def create_and_send_messages():
     )
 
 
-@main.route("/using_notify/guidance/edit-and-format-messages")
+@main.route("/using-notify/guidance/edit-and-format-messages")
 @user_is_logged_in
 def edit_and_format_messages():
     return render_template(
@@ -315,7 +315,7 @@ def edit_and_format_messages():
     )
 
 
-@main.route("/using_notify/guidance/send-files-by-email")
+@main.route("/using-notify/guidance/send-files-by-email")
 @user_is_logged_in
 def send_files_by_email():
     return render_template(
