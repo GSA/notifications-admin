@@ -44,6 +44,11 @@
     {% if current_user.platform_admin %}
       {% set navigation = [
         {
+          "href": url_for("main.show_accounts_or_dashboard"),
+          "text": "Current Service",
+          "active": header_navigation.is_selected('accounts-or-dashboard')
+        },
+        {
           "href": url_for('main.get_started'),
           "text": "Using Notify",
           "active": header_navigation.is_selected('using_notify')
