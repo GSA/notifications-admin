@@ -62,6 +62,7 @@ class HeaderNavigation(Navigation):
             "guidance_index",
         },
         "accounts-or-dashboard": {
+            "usage",
         },
         "pricing": {
             "how_to_pay",
