@@ -26,7 +26,7 @@ def provider_json(overrides):
     return provider
 
 
-@pytest.fixture
+@pytest.fixture()
 def sms_provider_1():
     return provider_json(
         {
@@ -42,7 +42,7 @@ def sms_provider_1():
     )
 
 
-@pytest.fixture
+@pytest.fixture()
 def sms_provider_2():
     return provider_json(
         {
@@ -56,7 +56,7 @@ def sms_provider_2():
     )
 
 
-@pytest.fixture
+@pytest.fixture()
 def email_provider_1():
     return provider_json(
         {
@@ -68,7 +68,7 @@ def email_provider_1():
     )
 
 
-@pytest.fixture
+@pytest.fixture()
 def email_provider_2():
     return provider_json(
         {
@@ -80,7 +80,7 @@ def email_provider_2():
     )
 
 
-@pytest.fixture
+@pytest.fixture()
 def sms_provider_intl_1():
     return provider_json(
         {
@@ -94,7 +94,7 @@ def sms_provider_intl_1():
     )
 
 
-@pytest.fixture
+@pytest.fixture()
 def sms_provider_intl_2():
     return provider_json(
         {
@@ -108,7 +108,7 @@ def sms_provider_intl_2():
     )
 
 
-@pytest.fixture
+@pytest.fixture()
 def stub_providers(
     sms_provider_1,
     sms_provider_2,
@@ -129,7 +129,7 @@ def stub_providers(
     }
 
 
-@pytest.fixture
+@pytest.fixture()
 def stub_provider_history():
     return {
         "data": [
@@ -365,7 +365,7 @@ def test_edit_sms_provider_provider_ratio_only_shows_active_providers(
 
 
 @pytest.mark.parametrize(
-    "post_data, expected_calls",
+    ("post_data", "expected_calls"),
     [
         (
             {"sms_provider_1": 10, "sms_provider_2": 90},
@@ -407,7 +407,7 @@ def test_edit_sms_provider_ratio_submit(
 
 
 @pytest.mark.parametrize(
-    "post_data, expected_error",
+    ("post_data", "expected_error"),
     [
         ({"sms_provider_1": 90, "sms_provider_2": 20}, "Must add up to 100%"),
         ({"sms_provider_1": 101, "sms_provider_2": 20}, "Must be between 0 and 100"),

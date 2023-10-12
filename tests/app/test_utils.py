@@ -4,7 +4,7 @@ from app.utils import merge_jsonlike
 
 
 @pytest.mark.parametrize(
-    "source_object, destination_object, expected_result",
+    ("source_object", "destination_object", "expected_result"),
     [
         # simple dicts:
         ({"a": "b"}, {"c": "d"}, {"a": "b", "c": "d"}),

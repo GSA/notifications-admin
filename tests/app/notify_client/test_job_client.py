@@ -327,7 +327,7 @@ def test_cancel_job(mocker):
 
 
 @pytest.mark.parametrize(
-    "job_data, expected_cache_value",
+    ("job_data", "expected_cache_value"),
     [
         (
             [{"data": [1, 2, 3], "statistics": []}],
@@ -364,7 +364,7 @@ def test_has_jobs_sets_cache(
 
 
 @pytest.mark.parametrize(
-    "cache_value, return_value",
+    ("cache_value", "return_value"),
     [
         (b"true", True),
         (b"false", False),

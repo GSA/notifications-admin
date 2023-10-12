@@ -5,7 +5,7 @@ from werkzeug.exceptions import Forbidden
 from app.utils.user import user_has_permissions
 
 
-@pytest.mark.parametrize(
+@pytest.mark.parametrize(  # noqa: PT007  # Ignoring wrong values type because of the list unpacking in the test.
     "permissions",
     (
         [
@@ -48,7 +48,7 @@ def test_permissions(
     index()
 
 
-@pytest.mark.parametrize(
+@pytest.mark.parametrize(  # noqa: PT007  # Ignoring wrong values type because of the list unpacking in the test.
     "permissions",
     (
         [

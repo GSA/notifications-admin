@@ -66,7 +66,7 @@ def test_sms_character_validation(client_request, msg):
 
 
 @pytest.mark.parametrize(
-    "data, err_msg",
+    ("data", "err_msg"),
     [
         (
             "∆ abc 📲 def 📵 ghi",

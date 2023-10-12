@@ -168,7 +168,7 @@ def test_create_new_organization_validates(
 
 
 @pytest.mark.parametrize(
-    "name, error_message",
+    ("name", "error_message"),
     [
         ("", "Cannot be empty"),
         ("a", "at least two alphanumeric characters"),
@@ -229,12 +229,12 @@ def test_create_new_organization_fails_with_duplicate_name(
 
 
 @pytest.mark.parametrize(
-    "organization_type, organization, expected_status",
-    (
+    ("organization_type", "organization", "expected_status"),
+    [
         ("nhs_gp", None, 200),
         ("central", None, 403),
         ("nhs_gp", organization_json(organization_type="nhs_gp"), 403),
-    ),
+    ],
 )
 @pytest.mark.skip(reason="Update for TTS")
 def test_gps_can_create_own_organizations(
@@ -265,8 +265,8 @@ def test_gps_can_create_own_organizations(
 
 
 @pytest.mark.parametrize(
-    "data, expected_service_name",
-    (
+    ("data", "expected_service_name"),
+    [
         (
             {
                 "same_as_service_name": False,
@@ -281,7 +281,7 @@ def test_gps_can_create_own_organizations(
             },
             "service one",
         ),
-    ),
+    ],
 )
 @pytest.mark.skip(reason="Update for TTS")
 def test_gps_can_name_their_organization(
@@ -315,8 +315,8 @@ def test_gps_can_name_their_organization(
 
 
 @pytest.mark.parametrize(
-    "data, expected_error",
-    (
+    ("data", "expected_error"),
+    [
         (
             {
                 "name": "Dr. Example",
@@ -330,7 +330,7 @@ def test_gps_can_name_their_organization(
             },
             "Cannot be empty",
         ),
-    ),
+    ],
 )
 @pytest.mark.skip(reason="Update for TTS")
 def test_validation_of_gps_creating_organizations(
@@ -457,12 +457,12 @@ def test_organization_services_shows_live_services_and_usage_with_count_of_1(
 
 @freeze_time("2020-02-20 20:20")
 @pytest.mark.parametrize(
-    "financial_year, expected_selected",
-    (
+    ("financial_year", "expected_selected"),
+    [
         (2017, "2017 to 2018 fiscal year"),
         (2018, "2018 to 2019 fiscal year"),
         (2019, "2019 to 2020 fiscal year"),
-    ),
+    ],
 )
 def test_organization_services_filters_by_financial_year(
     client_request,
@@ -784,10 +784,10 @@ def test_manage_org_users_shows_no_link_for_cancelled_users(
 
 @pytest.mark.parametrize(
     "number_of_users",
-    (
+    [
         pytest.param(8),
         pytest.param(800),
-    ),
+    ],
 )
 def test_manage_org_users_should_show_live_search_if_more_than_7_users(
     client_request,
@@ -831,10 +831,10 @@ def test_manage_org_users_should_show_live_search_if_more_than_7_users(
 
 @pytest.mark.parametrize(
     "number_of_users",
-    (
+    [
         pytest.param(3),
         pytest.param(7),
-    ),
+    ],
 )
 def test_manage_org_users_should_show_live_search_if_7_users_or_less(
     client_request,
@@ -947,8 +947,8 @@ def test_organization_settings_for_platform_admin(
 
 
 @pytest.mark.parametrize(
-    "endpoint, expected_options, expected_selected",
-    (
+    ("endpoint", "expected_options", "expected_selected"),
+    [
         (
             ".edit_organization_type",
             (
@@ -958,16 +958,16 @@ def test_organization_settings_for_platform_admin(
             ),
             "federal",
         ),
-    ),
+    ],
 )
 @pytest.mark.parametrize(
     "user",
-    (
+    [
         pytest.param(
             create_platform_admin_user(),
         ),
         pytest.param(create_active_user_with_permissions(), marks=pytest.mark.xfail),
-    ),
+    ],
 )
 def test_view_organization_settings(
     client_request,
@@ -1007,8 +1007,8 @@ def test_view_organization_settings(
 
 
 @pytest.mark.parametrize(
-    "endpoint, post_data, expected_persisted",
-    (
+    ("endpoint", "post_data", "expected_persisted"),
+    [
         (
             ".edit_organization_type",
             {"organization_type": "federal"},
@@ -1019,18 +1019,18 @@ def test_view_organization_settings(
             {"organization_type": "state"},
             {"cached_service_ids": [], "organization_type": "state"},
         ),
-    ),
+    ],
 )
 @pytest.mark.parametrize(
     "user",
-    (
+    [
         pytest.param(
             create_platform_admin_user(),
         ),
         pytest.param(
             create_active_user_with_permissions(),
         ),
-    ),
+    ],
 )
 def test_update_organization_settings(
     mocker,
@@ -1101,12 +1101,12 @@ def test_update_organization_sector_sends_service_id_data_to_api_client(
 
 @pytest.mark.parametrize(
     "user",
-    (
+    [
         pytest.param(
             create_platform_admin_user(),
         ),
         pytest.param(create_active_user_with_permissions(), marks=pytest.mark.xfail),
-    ),
+    ],
 )
 def test_view_organization_domains(
     mocker,
@@ -1155,8 +1155,8 @@ def test_view_organization_domains(
 
 
 @pytest.mark.parametrize(
-    "post_data, expected_persisted",
-    (
+    ("post_data", "expected_persisted"),
+    [
         (
             {
                 "domains-0": "example.gsa.gov",
@@ -1179,18 +1179,18 @@ def test_view_organization_domains(
             },
             {"domains": []},
         ),
-    ),
+    ],
 )
 @pytest.mark.parametrize(
     "user",
-    (
+    [
         pytest.param(
             create_platform_admin_user(),
         ),
         pytest.param(
             create_active_user_with_permissions(),
         ),
-    ),
+    ],
 )
 def test_update_organization_domains(
     client_request,
@@ -1291,7 +1291,7 @@ def test_update_organization_name(
 
 
 @pytest.mark.parametrize(
-    "name, error_message",
+    ("name", "error_message"),
     [
         ("", "Cannot be empty"),
         ("a", "at least two alphanumeric characters"),
@@ -1362,7 +1362,8 @@ def test_get_edit_organization_go_live_notes_page(
 
 
 @pytest.mark.parametrize(
-    "input_note,saved_note", [("Needs permission", "Needs permission"), ("  ", None)]
+    ("input_note", "saved_note"),
+    [("Needs permission", "Needs permission"), ("  ", None)],
 )
 def test_post_edit_organization_go_live_notes_updates_go_live_notes(
     client_request,

@@ -67,7 +67,7 @@ SAMPLE_DATA = {
 }
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_get_orgs_and_services(mocker):
     return mocker.patch(
         "app.user_api_client.get_organizations_and_services_for_user",
@@ -177,8 +177,8 @@ def test_choose_account_should_show_choose_accounts_page_if_no_services(
 
 
 @pytest.mark.parametrize(
-    "orgs_and_services, expected_headings",
-    (
+    ("orgs_and_services", "expected_headings"),
+    [
         (
             {"organizations": [], "services": []},
             [
@@ -227,7 +227,7 @@ def test_choose_account_should_show_choose_accounts_page_if_no_services(
                 "Trial mode services",
             ],
         ),
-    ),
+    ],
 )
 def test_choose_account_should_should_organizations_link_for_platform_admin(
     client_request,
@@ -304,10 +304,10 @@ def test_choose_account_should_not_show_back_to_service_link_if_not_signed_in(
 
 @pytest.mark.parametrize(
     "active",
-    (
+    [
         False,
         pytest.param(True),
-    ),
+    ],
 )
 def test_choose_account_should_not_show_back_to_service_link_if_service_archived(
     client_request,

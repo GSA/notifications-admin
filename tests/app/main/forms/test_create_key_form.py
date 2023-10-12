@@ -5,11 +5,11 @@ from app.main.forms import CreateKeyForm
 
 
 @pytest.mark.parametrize(
-    "expiry_date, expected_errors",
-    (
+    ("expiry_date", "expected_errors"),
+    [
         (None, ["A key with this name already exists"]),
         ("2001-01-01 01:01:01", None),
-    ),
+    ],
 )
 def test_return_validation_error_when_key_name_exists(
     client_request,
@@ -35,7 +35,7 @@ def test_return_validation_error_when_key_name_exists(
 
 
 @pytest.mark.parametrize(
-    "key_type, expected_error",
+    ("key_type", "expected_error"),
     [("", "Select the type of key"), ("invalid", "Select the type of key")],
 )
 def test_return_validation_error_when_key_type_not_chosen(

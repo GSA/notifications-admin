@@ -4,7 +4,7 @@ from app.main.forms import ServiceSmsSenderForm
 
 
 @pytest.mark.parametrize(
-    "sms_sender,error_expected,error_message",
+    ("sms_sender", "error_expected", "error_message"),
     [
         ("", True, "Cannot be empty"),
         ("22", True, "Enter 3 characters or more"),

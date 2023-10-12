@@ -256,24 +256,24 @@ def test_registration_from_org_invite_404s_if_user_not_in_session(
 
 
 @pytest.mark.parametrize(
-    "data, error",
+    ("data", "error"),
     [
-        [
+        (
             {
                 "name": "Bad Mobile",
                 "mobile_number": "not good",
                 "password": "validPassword!",
             },
             "The string supplied did not seem to be a phone number",
-        ],
-        [
+        ),
+        (
             {
                 "name": "Bad Password",
                 "mobile_number": "+12021234123",
                 "password": "password",
             },
             "Choose a password that’s harder to guess",
-        ],
+        ),
     ],
 )
 def test_registration_from_org_invite_has_bad_data(

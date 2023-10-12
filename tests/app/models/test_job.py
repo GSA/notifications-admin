@@ -6,7 +6,7 @@ from tests.conftest import SERVICE_ONE_ID
 
 
 @pytest.mark.parametrize(
-    "job_status, num_notifications_created, expected_still_processing",
+    ("job_status", "num_notifications_created", "expected_still_processing"),
     [
         ("scheduled", 0, True),
         ("cancelled", 10, True),

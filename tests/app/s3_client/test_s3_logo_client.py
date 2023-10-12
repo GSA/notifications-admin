@@ -19,14 +19,14 @@ svg_filename = "test.svg"
 upload_id = "test_uuid"
 
 
-@pytest.fixture
+@pytest.fixture()
 def upload_filename(fake_uuid):
     return EMAIL_LOGO_LOCATION_STRUCTURE.format(
         temp=TEMP_TAG.format(user_id=fake_uuid), unique_id=upload_id, filename=filename
     )
 
 
-@pytest.fixture
+@pytest.fixture()
 def bucket_credentials(notify_admin):
     return notify_admin.config["LOGO_UPLOAD_BUCKET"]
 
@@ -134,7 +134,7 @@ def test_does_not_delete_non_temp_email_file(client_request, mocker):
         "app.s3_client.s3_logo_client.delete_s3_object"
     )
 
-    with pytest.raises(ValueError) as error:
+    with pytest.raises(ValueError) as error:  # noqa: PT011  # Requires more research.
         delete_email_temp_file(filename)
 
     assert mocked_delete_s3_object.called is False

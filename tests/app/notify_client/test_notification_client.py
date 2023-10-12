@@ -4,7 +4,7 @@ from app.notify_client.notification_api_client import NotificationApiClient
 
 
 @pytest.mark.parametrize(
-    "arguments,expected_call",
+    ("arguments", "expected_call"),
     [
         ({}, {"url": "/service/abcd1234/notifications", "params": {}}),
         (
@@ -63,7 +63,7 @@ def test_client_gets_notifications_for_service_and_job_by_page(
 
 
 @pytest.mark.parametrize(
-    "arguments,expected_call",
+    ("arguments", "expected_call"),
     [
         (
             {"to": "2028675309"},
