@@ -498,7 +498,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         return int(count)
 
     def get_global_notification_count(self, service_id):
-       return self.get("/service/{}/notification-count".format(service_id))
+        return self.get("/service/{}/notification-count".format(service_id))
 
 
 service_api_client = ServiceAPIClient()
