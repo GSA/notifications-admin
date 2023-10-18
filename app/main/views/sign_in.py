@@ -24,6 +24,15 @@ from app.utils.login import is_safe_redirect_url
 @main.route("/sign-in", methods=(["GET", "POST"]))
 @hide_from_search_engines
 def sign_in():
+    code = request.args.get("code")
+    state = request.args.get("state")
+    if code and state:
+        print(f"HURRAY!  THIS IS REDIRECT FROM LOGIN DOT GOV AND WE HAVE CODE {code} and STATE {state}")
+        # TODO use the code to get the access_token with jwt
+        # Using the access_token get the email from the user info
+        # Use the call five lines down to look up the user from the email
+        # activate the user and redirect as five lines down
+
     redirect_url = request.args.get("next")
 
     if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
