@@ -38,7 +38,7 @@ werkzeug = "~=2.3"
 wtforms = "~=3.0"
 newrelic = "*"
 flask-talisman = "*"
-notifications-utils = {git = "https://github.com/GSA/notifications-utils.git", develop = true, branch = "main"}
+notifications-utils = {git = "https://github.com/GSA/notifications-utils.git", develop = true, branch = "notify-admin-687"}
 coverage = "*"
 vulture = "==2.10"
 radon = "==6.0.1"

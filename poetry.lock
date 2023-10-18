@@ -1901,8 +1901,8 @@ smartypants = ">=2.0.1"
 [package.source]
 type = "git"
 url = "https://github.com/GSA/notifications-utils.git"
-reference = "main"
-resolved_reference = "5eadd38702fd187fd2954a5c763314b9b2446bea"
+reference = "notify-admin-687"
+resolved_reference = "48cee8c04d2911b099044d0bf2ee7697be899889"
 
 [[package]]
 name = "numpy"
@@ -3642,4 +3642,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "82c78ea4d740c9d9e1261d8bc282546a4f06e6505bab98aea2a128f04d948b6e"
+content-hash = "57b55f8c75771ec42e868a1bd14deb84113e8ab76db832d0fd48468c8af68275"

@@ -1226,8 +1226,8 @@ class BaseTemplateForm(StripWhitespaceForm):
 
 class SMSTemplateForm(BaseTemplateForm):
     def validate_template_content(self, field):
-        OnlySMSCharacters(template_type="sms")(None, field)
-
+        # OnlySMSCharacters(template_type="sms")(None, field)
+        pass
 
 class EmailTemplateForm(BaseTemplateForm):
     subject = TextAreaField(
