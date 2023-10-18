@@ -42,6 +42,7 @@ notifications-utils = {git = "https://github.com/GSA/notifications-utils.git", d
 coverage = "*"
 vulture = "==2.10"
 radon = "==6.0.1"
+urllib3 = "==1.26.18"
 
 [tool.poetry.group.dev.dependencies]
 isort = "~5.12.0"
