@@ -6,7 +6,7 @@ authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.9,<3.12"
 ago = "~=0.0.95"
 black = "==23.9.1"
 blinker = "~=1.6"
@@ -37,7 +37,7 @@ werkzeug = "~=2.3"
 wtforms = "~=3.0"
 newrelic = "*"
 flask-talisman = "*"
-notifications-utils = {git = "https://github.com/GSA/notifications-utils.git", develop = true, branch = "main"}
+notifications-utils = {git = "https://github.com/GSA/notifications-utils.git", develop = true, branch = "notify-admin-867b"}
 coverage = "*"
 vulture = "==2.10"
 radon = "==6.0.1"
