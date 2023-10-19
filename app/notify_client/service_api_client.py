@@ -1,10 +1,11 @@
 from datetime import datetime
 
+from app.extensions import redis_client
+from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
+
 # TODO why is this broken?
 # from notifications_utils.clients.redis import daily_total_cache_key
 
-from app.extensions import redis_client
-from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
 
 
 class ServiceAPIClient(NotifyAdminAPIClient):
