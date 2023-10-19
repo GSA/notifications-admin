@@ -7,7 +7,6 @@ from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
 # from notifications_utils.clients.redis import daily_total_cache_key
 
 
-
 class ServiceAPIClient(NotifyAdminAPIClient):
     @cache.delete("user-{user_id}")
     def create_service(
