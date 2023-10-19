@@ -1,8 +1,13 @@
 import os
+import time
+import uuid
 
+import jwt
+import requests
 from flask import (
     Markup,
     abort,
+    current_app,
     flash,
     redirect,
     render_template,
@@ -21,17 +26,73 @@ from app.utils import hide_from_search_engines
 from app.utils.login import is_safe_redirect_url
 
 
+def _get_access_token(code, state):
+    current_app.logger.info(
+        f"HURRAY!  THIS IS REDIRECT FROM LOGIN DOT GOV AND WE HAVE CODE {code} and STATE {state}"
+    )
+    # TODO use the code to get the access_token with jwt
+    # Using the access_token get the email from the user info
+    # Use the call five lines down to look up the user from the email
+    # activate the user and redirect as five lines down
+    pemfile = open("./private.pem", "r")
+    keystring = pemfile.read()
+    pemfile.close()
+    payload = {
+        "iss": "urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:test_notify_gov",
+        "sub": "urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:test_notify_gov",
+        "aud": "https://idp.int.identitysandbox.gov/api/openid_connect/token",
+        "jti": str(uuid.uuid4()),
+        # JWT expiration time (10 minute maximum)
+        "exp": int(time.time()) + (10 * 60),
+    }
+
+    jwt_instance = jwt.PyJWT()
+    token = jwt_instance.encode(payload, keystring, algorithm="RS256")
+    base_url = "https://idp.int.identitysandbox.gov/api/openid_connect/token?"
+    cli_assert = f"client_assertion={token}"
+    cli_assert_type = "client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer"
+    code_param = f"code={code}"
+    url = f"{base_url}{cli_assert}&{cli_assert_type}&{code_param}&grant_type=authorization_code"
+    headers = {"Authorization": "Bearer %s" % token}
+    response = requests.post(url, headers=headers)
+    current_app.logger.info(f"GOT A RESPONSE {response.json()}")
+    access_token = response.json()["access_token"]
+    current_app.logger.info(f"HURRAY GOT THE ACCESS TOKEN! {access_token}")
+    return access_token
+
+
+def _get_user_email(access_token):
+    headers = {"Authorization": "Bearer %s" % access_token}
+    user_attributes = requests.get(
+        "https://idp.int.identitysandbox.gov/api/openid_connect/userinfo",
+        headers=headers,
+    )
+    current_app.logger.info(f"HURRAY GOT USER ATTRIBUTES {user_attributes.json()}")
+    user_email = user_attributes.json()["email"]
+    return user_email
+
+
 @main.route("/sign-in", methods=(["GET", "POST"]))
 @hide_from_search_engines
 def sign_in():
+    # start login.gov
     code = request.args.get("code")
     state = request.args.get("state")
+    login_gov_error = request.args.get("error")
     if code and state:
-        print(f"HURRAY!  THIS IS REDIRECT FROM LOGIN DOT GOV AND WE HAVE CODE {code} and STATE {state}")
-        # TODO use the code to get the access_token with jwt
-        # Using the access_token get the email from the user info
-        # Use the call five lines down to look up the user from the email
-        # activate the user and redirect as five lines down
+        access_token = _get_access_token(code, state)
+        user_email = _get_user_email(access_token)
+        redirect_url = request.args.get("next")
+
+        # activate the user
+        user = user_api_client.get_user_by_email(user_email)
+        activate_user(user["id"])
+        return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
+
+    elif login_gov_error:
+        current_app.logger.error(f"BOO!  GOT A LOGIN GOV ERROR {login_gov_error}")
+        raise Exception(f"Could not login with login.gov {login_gov_error}")
+    # end login.gov
 
     redirect_url = request.args.get("next")
 
