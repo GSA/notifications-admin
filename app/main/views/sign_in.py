@@ -62,6 +62,7 @@ def _get_user_email(access_token):
         user_info_url,
         headers=headers,
     )
+    current_app.logger.info(f"HURRAY GOT USER ATTRIBUTES {user_attributes.json()}")
     user_email = user_attributes.json()["email"]
     return user_email
 
