@@ -122,7 +122,6 @@ def test_service_navigation_for_org_user(
         (
             [],
             (
-                "Send messages",
                 "Sent messages",
                 "Team members",
             ),
@@ -131,7 +130,6 @@ def test_service_navigation_for_org_user(
         (
             [ORGANISATION_ID],
             (
-                "Send messages",
                 "Sent messages",
                 "Team members",
                 "Usage",
