@@ -5,11 +5,13 @@
 {% from "components/form.html" import form_wrapper %}
 {% from "components/components/button/macro.njk" import usaButton %}
 
+
 {% set page_title = (
   (99|message_count_label(message_type, suffix='')) | capitalize
   if current_user.has_permissions('view_activity')
   else 'Sent messages'
 ) %}
+
 
 {% block service_page_title %}
   {{ page_title }}
@@ -26,10 +28,23 @@
   ) }}
 
 
-  <p class="notification-status {{ field_status }}">
-    Messages will remain in pending state until carrier status is received, typically 5 minutes.
-  </p>
+  <ul class="usa-list notification-status {{ field_status }}">
+    <li><strong>Pending</strong> means that Notify has sent the message, but has not received the delivery status from the carrier. Messages
+    remain in the Pending state until Notify has received the status, typically about five minutes.</li>
+    <li><strong>Delivered</strong> means that the message was successfully delivered to the mobile device.</li>
+    <li><strong>Failed</strong> means that the carrier could not deliver the message, generally because the phone is unavailable or the number is
+    no longer active.</li>
+  </ul>
 
+  <h2>Message status</h2>
+  <p>In order to help you manage your service and to protect text recipient data:</p>
+  <ul class="usa-list">
+    <li>Aggregate data on your service is always available.</li>
+    <li>After a message has been successfully sent, data is anonymized and aggregated.</li>
+    <li>Failed message data is anonymized and aggregated after seven days.</li>
+  </ul>
+
+  <h2>Detailed data</h2>
   {% call form_wrapper(
     action=url_for('.view_notifications', service_id=current_service.id, message_type=message_type),
     class="usa-search margin-bottom-2"
@@ -58,30 +73,31 @@
 
 
 
+<h2>Download CSV report</h2>
+{% call form_wrapper(id="search-form") %}
+  <input type="hidden" name="to" {% if search_form.to.data %}value="{{ search_form.to.data }}{%  endif %}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+{% endcall %}
 
-  {% call form_wrapper(id="search-form") %}
-    <input type="hidden" name="to" {% if search_form.to.data %}value="{{ search_form.to.data }}{%  endif %}">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-  {% endcall %}
+{% if current_user.has_permissions('view_activity') %}
+  <p class="font-body-sm">
+    <a href="{{ download_link }}" download="download" class="usa-link">Download this report (<abbr title="Comma separated values">CSV</abbr>)</a>
+    &emsp;
+    Data available for {{ partials.service_data_retention_days }} days
+  </p>
+  <p class="font-body-sm">
+    <a href="https://en.wikipedia.org/wiki/Time_in_the_United_States#United_States_and_regional_time_zones">View timezone chart</a>
+    &emsp;
+    For help with understanding and converting UTC times
+  </p>
+{% endif %}
 
-  {% if current_user.has_permissions('view_activity') %}
-    <p class="font-body-sm">
-      <a href="{{ download_link }}" download="download" class="usa-link">Download this report (<abbr title="Comma separated values">CSV</abbr>)</a>
-      &emsp;
-      Data available for {{ partials.service_data_retention_days }} days
-    </p>
-    <p class="font-body-sm">
-      <a href="https://en.wikipedia.org/wiki/Time_in_the_United_States#United_States_and_regional_time_zones">View timezone chart</a>
-      &emsp;
-      For help with understanding and converting UTC times
-    </p>
-  {% endif %}
-
-  {{ ajax_block(
-    partials,
-    url_for('.get_notifications_as_json', service_id=current_service.id, message_type=message_type, status=status, page=page),
-    'notifications',
-    form='search-form'
-  ) }}
+<h2>Activity in the last seven days</h2>
+{{ ajax_block(
+  partials,
+  url_for('.get_notifications_as_json', service_id=current_service.id, message_type=message_type, status=status, page=page),
+  'notifications',
+  form='search-form'
+) }}
 
 {% endblock %}
