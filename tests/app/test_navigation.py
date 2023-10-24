@@ -422,9 +422,9 @@ def test_navigation_urls(
     mock_get_api_keys,
 ):
     page = client_request.get("main.choose_template", service_id=SERVICE_ONE_ID)
-    assert [a["href"] for a in page.select(".nav.margin-bottom-5 a")] == [
-        "/services/{}".format(SERVICE_ONE_ID),
+    assert [a["href"] for a in page.select(".nav a")] == [
         "/services/{}/templates".format(SERVICE_ONE_ID),
+        "/services/{}".format(SERVICE_ONE_ID),
         "/services/{}/users".format(SERVICE_ONE_ID),
         "/services/{}/usage".format(SERVICE_ONE_ID),
         "/services/{}/service-settings".format(SERVICE_ONE_ID),
@@ -443,7 +443,7 @@ def test_caseworkers_get_caseworking_navigation(
     client_request.login(active_caseworking_user)
     page = client_request.get("main.choose_template", service_id=SERVICE_ONE_ID)
     assert normalize_spaces(page.select_one("header + .grid-container nav").text) == (
-        "Sent messages Team members"
+        "Send messages Sent messages Team members"
     )
 
 
@@ -458,5 +458,5 @@ def test_caseworkers_see_jobs_nav_if_jobs_exist(
     client_request.login(active_caseworking_user)
     page = client_request.get("main.choose_template", service_id=SERVICE_ONE_ID)
     assert normalize_spaces(page.select_one("header + .grid-container nav").text) == (
-        "Sent messages Team members"
+        "Send messages Sent messages Team members"
     )

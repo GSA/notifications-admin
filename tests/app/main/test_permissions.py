@@ -111,6 +111,7 @@ def test_service_navigation_for_org_user(
         service_id=SERVICE_ONE_ID,
     )
     assert [item.text.strip() for item in page.select("nav.nav a")] == [
+        "Send messages",
         "Usage",
         "Team members",
     ]
@@ -122,6 +123,7 @@ def test_service_navigation_for_org_user(
         (
             [],
             (
+                "Send messages",
                 "Sent messages",
                 "Team members",
             ),
@@ -130,6 +132,7 @@ def test_service_navigation_for_org_user(
         (
             [ORGANISATION_ID],
             (
+                "Send messages",
                 "Sent messages",
                 "Team members",
                 "Usage",
