@@ -286,7 +286,10 @@ def init_app(application):
     def _attach_current_global_daily_messages():
         remaining_global_messages = 0
         if current_app:
-            service_id = session.get("service_id")
+            if request.view_args:
+                service_id = request.view_args.get("service_id", session.get("service_id"))
+            else:
+                service_id = session.get("service_id")
 
             if service_id:
                 global_limit = current_app.config["GLOBAL_SERVICE_MESSAGE_LIMIT"]
