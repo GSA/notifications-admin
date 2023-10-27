@@ -290,8 +290,12 @@ def init_app(application):
 
             if service_id:
                 global_limit = current_app.config["GLOBAL_SERVICE_MESSAGE_LIMIT"]
-                global_messages_count = service_api_client.get_global_notification_count(service_id)
-                remaining_global_messages = global_limit - global_messages_count.get("count")
+                global_messages_count = (
+                    service_api_client.get_global_notification_count(service_id)
+                )
+                remaining_global_messages = global_limit - global_messages_count.get(
+                    "count"
+                )
         return {"daily_global_messages_remaining": remaining_global_messages}
 
     @application.before_request

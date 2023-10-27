@@ -2423,8 +2423,15 @@ def _os_environ():
         os.environ[k] = v
 
 
-@pytest.fixture()
-def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too complex)
+@pytest.fixture()  # noqa (C901 too complex)
+def client_request(_logged_in_client, mocker, service_one):  # noqa (C901 too complex)
+    def _get(mocker):
+        return {"count": 0}
+
+    mocker.patch(
+        "app.service_api_client.get_global_notification_count", side_effect=_get
+    )
+
     class ClientRequest:
         @staticmethod
         @contextmanager
