@@ -287,7 +287,9 @@ def init_app(application):
         remaining_global_messages = 0
         if current_app:
             if request.view_args:
-                service_id = request.view_args.get("service_id", session.get("service_id"))
+                service_id = request.view_args.get(
+                    "service_id", session.get("service_id")
+                )
             else:
                 service_id = session.get("service_id")
 

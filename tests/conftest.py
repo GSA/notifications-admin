@@ -2424,7 +2424,7 @@ def _os_environ():
 
 
 @pytest.fixture()  # noqa (C901 too complex)
-def client_request(_logged_in_client, mocker, service_one):  # noqa (C901 too complex)
+def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too complex)
     def _get(mocker):
         return {"count": 0}
 
