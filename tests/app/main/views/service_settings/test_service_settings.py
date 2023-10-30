@@ -744,13 +744,11 @@ def test_should_check_for_reply_to_on_go_live_index_error(
             return_value=volume,
         )
 
-    with pytest.raises(  # noqa: PT012  # This will require more research for refactoring.
-        expected_exception=IndexError
-    ):
-        page = client_request.get("main.request_to_go_live", service_id=SERVICE_ONE_ID)
-        assert page.h1.text == "Before you request to go live"
+    page = client_request.get("main.request_to_go_live", service_id=SERVICE_ONE_ID)
+    assert page.h1.text == "Before you request to go live"
+    checklist_items = page.select(".task-list .task-list-item")
 
-        checklist_items = page.select(".task-list .task-list-item")
+    with pytest.raises(expected_exception=IndexError):
         assert (
             normalize_spaces(checklist_items[3].text)
             == expected_reply_to_checklist_item
@@ -1030,19 +1028,24 @@ def test_should_check_for_sms_sender_on_go_live(
             return_value=volume,
         )
 
-    with pytest.raises(  # noqa: PT012  # Requires more research for how to refactor.
-        expected_exception=IndexError
-    ):
-        page = client_request.get("main.request_to_go_live", service_id=SERVICE_ONE_ID)
-        assert page.h1.text == "Before you request to go live"
-
-        checklist_items = page.select(".task-list .task-list-item")
-        assert (
-            normalize_spaces(checklist_items[3].text)
-            == expected_sms_sender_checklist_item
+    with pytest.raises(expected_exception=IndexError):
+        simple_statement_for_test_should_check_for_sms_sender_on_go_live(
+            client_request, expected_sms_sender_checklist_item, mock_get_sms_senders
         )
 
-        mock_get_sms_senders.assert_called_once_with(SERVICE_ONE_ID)
+
+def simple_statement_for_test_should_check_for_sms_sender_on_go_live(
+    client_request, expected_sms_sender_checklist_item, mock_get_sms_senders
+):
+    page = client_request.get("main.request_to_go_live", service_id=SERVICE_ONE_ID)
+    assert page.h1.text == "Before you request to go live"
+    checklist_items = page.select(".task-list .task-list-item")
+
+    assert (
+        normalize_spaces(checklist_items[3].text) == expected_sms_sender_checklist_item
+    )
+
+    mock_get_sms_senders.assert_called_once_with(SERVICE_ONE_ID)
 
 
 def test_non_gov_user_is_told_they_cant_go_live(
@@ -3145,10 +3148,8 @@ def test_should_set_sms_allowance_fails(
     mock_get_free_sms_fragment_limit,
     mock_create_or_update_free_sms_fragment_limit,
 ):
-    with pytest.raises(  # noqa: PT012  # Needs more research for refactoring.
-        expected_exception=AssertionError
-    ):
-        client_request.login(platform_admin_user)
+    client_request.login(platform_admin_user)
+    with pytest.raises(expected_exception=AssertionError):
         client_request.post(
             "main.set_free_sms_allowance",
             service_id=SERVICE_ONE_ID,
@@ -3460,10 +3461,8 @@ def test_archive_service_after_confirm_error(
     mocker.patch("app.notify_client.service_api_client.redis_client.delete")
     mocker.patch("app.notify_client.service_api_client.redis_client.delete_by_pattern")
 
-    with pytest.raises(  # noqa: PT012  # Needs more research for refactoring.
-        expected_exception=AssertionError
-    ):
-        client_request.login(user)
+    client_request.login(user)
+    with pytest.raises(expected_exception=AssertionError):
         client_request.post(
             "main.archive_service",
             service_id=SERVICE_ONE_ID,
@@ -3596,10 +3595,8 @@ def test_suspend_service_after_confirm_error(
 ):
     mocker.patch("app.service_api_client.post")
     mocker.patch("app.main.views.service_settings.create_suspend_service_event")
-    with pytest.raises(  # noqa: PT012  # Needs more research for refactoring.
-        expected_exception=AssertionError
-    ):
-        client_request.login(user)
+    client_request.login(user)
+    with pytest.raises(expected_exception=AssertionError):
         client_request.post(
             "main.suspend_service",
             service_id=SERVICE_ONE_ID,
