@@ -1,6 +1,17 @@
 # Notify Sprint Goals Log
 
-## Sprint: U (10/12/23)
+## Sprint: V (10/30/23)
+
+|             | Goals                                                                                                                              | Impact                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| Engineering | Continue login.gov [sandbox implementation](https://github.com/GSA/notifications-admin/issues/338), catch up deploys that lag from last week's dependency audit failures, change timezones displays to [Eastern time](https://github.com/GSA/notifications-admin/issues/861), Persist [individal send reports](https://github.com/GSA/notifications-admin/issues/855) somwehere in the app|  Stronger auth security, streamlined UX, better timezone familiarity                            |
+| UX          | Continue making common-sense [UI/UX changes](https://github.com/GSA/notifications-admin/issues/828), review and finalize proposal for [Notify logo](https://github.com/GSA/notifications-admin/issues/859) & begin approvals chain | Improve ease of use, begin process of brand creation       |
+| Security    | Complete pre-requisite documentation, start project planning timelines and control group deadlines                                             | Aim to have package completed with enough time to allow for long assessment|
+| Content    | Finalize cloud.gov pages IAA mod for content site | Enable an easy static website for future content |
+| Ops    | Onboard Beverly, get access to tools for them once possible |  Add valuable dev resources to increase our capacity
+
+
+## Sprint: Upupa Marginata (10/12/23)
 
 |             | Goals                                                                                                                              | Impact                                                                                                                                     |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
