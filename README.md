@@ -73,6 +73,35 @@ The [Notify API](https://github.com/GSA/notifications-api) provides the UI's bac
 
 If you are using VS Code, there are also instructions for [running inside Docker](./docs/docker-remote-containers.md)
 
+### Python dependency management
+
+We're using [`Poetry`](https://python-poetry.org/) for managing our Python
+dependencies and local virtual environments.  When it comes to managing the
+Python dependencies, there are a couple of things to bear in mind.
+
+For situations where you manually manipulate the `pyproject.toml` file, you
+should use the `make py-lock` command to sync the `poetry.lock` file.  This will
+ensure that you don't inadvertently bring in other transitive dependency updates
+that have not been fully tested with the project yet.
+
+If you're just trying to update a dependency to a newer (or the latest) version,
+you should let Poetry take care of that for you by running the following:
+
+```
+poetry update <dependency> [<dependency>...]
+```
+
+You can specify more than one dependency together.  With this command, Poetry
+will do the following for you:
+
+- Find the latest compatible version(s) of the specified dependency/dependencies
+- Install the new versions
+- Update and sync the `poetry.lock` file
+
+In either situation, once you are finished and have verified the dependency
+changes are working, please be sure to commit both the `pyproject.toml` and
+`poetry.lock` files.
+
 ## To test the application
 
 From a terminal within the running devcontainer:
