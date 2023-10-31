@@ -92,6 +92,10 @@ js-test: ## Run javascript unit tests
 fix-imports: ## Fix imports using isort
 	poetry run isort ./app ./tests
 
+.PHONY: py-lock
+py-lock: ## Syncs dependencies and updates lock file without performing recursive internal updates
+	poetry lock --no-update
+
 .PHONY: freeze-requirements
 freeze-requirements: ## create static requirements.txt
 	poetry export --without-hashes --format=requirements.txt > requirements.txt
