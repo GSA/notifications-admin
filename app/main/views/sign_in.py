@@ -17,6 +17,7 @@ from flask import (
 )
 from flask_login import current_user
 
+
 from app import login_manager, user_api_client
 from app.main import main
 from app.main.forms import LoginForm
@@ -41,8 +42,7 @@ def _get_access_token(code, state):
         "exp": int(time.time()) + (10 * 60),
     }
 
-    jwt_instance = jwt.PyJWT()
-    token = jwt_instance.encode(payload, keystring, algorithm="RS256")
+    token = jwt.encode(payload, keystring, algorithm="RS256")
     base_url = f"{access_token_url}?"
     cli_assert = f"client_assertion={token}"
     cli_assert_type = "client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer"
