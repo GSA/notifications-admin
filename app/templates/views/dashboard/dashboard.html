@@ -19,9 +19,10 @@
 
     {{ ajax_block(partials, updates_url, 'upcoming') }}
 
-    <h2 class="font-body-lg margin-top-0 margin-bottom-1">
-      In the last seven days
+    <h2 class="font-body-xl margin-0">
+      Messages sent
     </h2>
+    <p class="margin-top-0">In the last seven days</p>
 
     {{ ajax_block(partials, updates_url, 'inbox') }}
 
@@ -29,15 +30,35 @@
 
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
 
-    <h2 class="heading-small margin-bottom-1">Daily messages across all services</h2>
-    <p class="margin-top-0"><strong>{{ daily_global_messages_remaining }}</strong> free text messages left</p>
+    <h2 class="margin-bottom-1">Usage</h2>
+    <h3 class="margin-bottom-0">Daily</h3>
+    <p class="margin-0">Across all services</p>
+    <table class="usa-table usa-table--borderless margin-bottom-5">
+      <caption class="usa-sr-only">
+        Daily
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Usage</th>
+          <th scope="col">Remaining</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ 5000 - daily_global_messages_remaining }}</td>
+          <td>
+            {{ daily_global_messages_remaining }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
     {% if current_user.has_permissions('manage_service') %}
-      <h2 class='font-body-lg margin-bottom-1'>This year</h2>
+      <h3 class='font-body-md margin-bottom-1'>2023</h3>
       {{ ajax_block(partials, updates_url, 'usage') }}
       {{ show_more(
         url_for(".usage", service_id=current_service['id']),
-        'See usage'
+        'See all usage'
       ) }}
     {% endif %}
   </div>
