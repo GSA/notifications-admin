@@ -35,7 +35,7 @@ python-dotenv = "==1.0.0"
 pytz = "==2023.3.post1"
 rtreelib = "==0.2.0"
 werkzeug = "^3.0.1"
-wtforms = "~=3.0"
+wtforms = "~=3.1"
 
 
 [tool.poetry.group.dev.dependencies]
