@@ -21,7 +21,9 @@
       <div class='grid-row'>
         
         <div class='grid-col-12'>
-          <h2 class='heading-small'>Text messages</h2>
+          <h2 class="heading-small margin-bottom-1">Daily messages across all services</h2>
+          <p class="margin-top-0"><strong>{{ daily_global_messages_remaining }}</strong> free text messages left</p>
+          <h2 class='heading-small margin-bottom-1'>Text messages</h2>
           <div class="keyline-block">
             You have sent
             {{ big_number(sms_sent, 'messages of your', smaller=True) }}
