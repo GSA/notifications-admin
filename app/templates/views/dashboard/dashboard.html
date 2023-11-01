@@ -54,7 +54,7 @@
     </table>
 
     {% if current_user.has_permissions('manage_service') %}
-      <h3 class='font-body-md margin-bottom-0'>2023</h3>
+      <h3 class='margin-bottom-0'>2023</h3>
       {{ ajax_block(partials, updates_url, 'usage') }}
       {{ show_more(
         url_for(".usage", service_id=current_service['id']),
