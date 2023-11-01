@@ -1,23 +1,30 @@
-<h1 class='banner-title' data-module="track-error" data-error-type="Trial mode: too many recipients" data-error-label="{{ upload_id }}">
-  {% if original_file_name %}
-    Too many recipients
-  {% else %}
-    Daily limit reached
-  {% endif %}
-</h1>
-<p class="usa-body">
-  You can only send {{ current_service.message_limit|format_thousands }} messages per day
-  {%- if current_service.trial_mode %}
-    in <a class="usa-link" href="{{ url_for('.trial_mode_new')}}">trial mode</a>
-  {%- endif -%}
-  .
-</p>
-{% if original_file_name %}
-  <p class="usa-body">
-    {% if current_service.message_limit != remaining_messages %}
+<div class="usa-alert usa-alert--error" role="alert">
+  <div class="usa-alert__body">
+    <h1 class="usa-alert__heading">
+      {% if original_file_name %}
+      Too many recipients
+      {% else %}
+      Daily limit reached
+      {% endif %}
+    </h1>
+    <p class="usa-alert__text">
+      You can only send {{ current_service.message_limit|format_thousands }} messages per day
+      {%- if current_service.trial_mode %}
+      in <a class="usa-link" href="{{ url_for('.trial_mode_new')}}">trial mode</a>
+      {%- endif -%}
+      .
+    </p>
+    {% if original_file_name %}
+    <p class="usa-alert__text">
+      {% if current_service.message_limit != remaining_messages %}
       You can still send {{ remaining_messages|format_thousands }} messages today, but
+      {% endif %}
+      ‘{{ original_file_name }}’ contains
+      {{ count_of_recipients|recipient_count(template.template_type) }}.
+    </p>
     {% endif %}
-    ‘{{ original_file_name }}’ contains
-    {{ count_of_recipients|recipient_count(template.template_type) }}.
-  </p>
-{% endif %}
+  </div>
+</div>
+
+
+

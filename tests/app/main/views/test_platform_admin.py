@@ -52,7 +52,7 @@ def test_should_403_if_not_platform_admin(
 
 
 @pytest.mark.parametrize(
-    "endpoint, expected_services_shown",
+    ("endpoint", "expected_services_shown"),
     [
         ("main.live_services", 1),
         ("main.trial_services", 1),
@@ -87,7 +87,7 @@ def test_should_render_platform_admin_page(
     ],
 )
 @pytest.mark.parametrize(
-    "partial_url_for, inc",
+    ("partial_url_for", "inc"),
     [
         (partial(url_for), True),
         (partial(url_for, include_from_test_key="y", start_date="", end_date=""), True),
@@ -137,7 +137,7 @@ def test_live_trial_services_with_date_filter(
 
 
 @pytest.mark.parametrize(
-    "endpoint, expected_big_numbers",
+    ("endpoint", "expected_big_numbers"),
     [
         (
             "main.live_services",
@@ -263,7 +263,7 @@ def test_format_stats_by_service_returns_correct_values(fake_uuid):
 
 
 @pytest.mark.parametrize(
-    "endpoint, restricted, research_mode",
+    ("endpoint", "restricted", "research_mode"),
     [("main.trial_services", True, False), ("main.live_services", False, False)],
 )
 def test_should_show_email_and_sms_stats_for_all_service_types(
@@ -311,7 +311,7 @@ def test_should_show_email_and_sms_stats_for_all_service_types(
 
 
 @pytest.mark.parametrize(
-    "endpoint, restricted",
+    ("endpoint", "restricted"),
     [("main.live_services", False), ("main.trial_services", True)],
     ids=["live", "trial"],
 )
@@ -363,7 +363,7 @@ def test_should_show_archived_services_last(
 
 
 @pytest.mark.parametrize(
-    "endpoint, restricted, research_mode",
+    ("endpoint", "restricted", "research_mode"),
     [("main.trial_services", True, False), ("main.live_services", False, False)],
 )
 def test_should_order_services_by_usage_with_inactive_last(
@@ -561,7 +561,7 @@ def test_platform_admin_list_complaints_returns_404_with_invalid_page(
 
 
 @pytest.mark.parametrize(
-    "number, total, threshold, result",
+    ("number", "total", "threshold", "result"),
     [
         (0, 0, 0, False),
         (1, 1, 0, True),
@@ -763,8 +763,8 @@ def test_clear_cache_shows_form(
 
 
 @pytest.mark.parametrize(
-    "model_type, expected_calls, expected_confirmation",
-    (
+    ("model_type", "expected_calls", "expected_confirmation"),
+    [
         (
             "template",
             [
@@ -793,7 +793,7 @@ def test_clear_cache_shows_form(
             ],
             "Removed 18 objects across 9 key formats for service, organization",
         ),
-    ),
+    ],
 )
 def test_clear_cache_submits_and_tells_you_how_many_things_were_deleted(
     client_request,

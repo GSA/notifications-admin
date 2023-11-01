@@ -23,7 +23,7 @@
     <meta property="og:site_name" content="Notify.gov">
     <meta property="og:image" content="{{ asset_url('images/usa-opengraph-image.png') }}">
   {% endblock %}
-  <!-- <script type="text/javascript" src="{{ asset_url('js/gtm_head.js') }}"></script> -->
+  <script type="text/javascript" src="{{ asset_url('js/gtm_head.js') }}"></script>
 {% endblock %}
 
 {% block pageTitle %}
@@ -137,7 +137,6 @@
 {% endblock %}
 
 {% block footer %}
-  
 
   {% if current_service and current_service.research_mode %}
     {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="usa-link">Technology Transformation Services</a><span id="research-mode" class="research-mode">research mode</span>' %}
@@ -216,7 +215,44 @@
       "html": meta_suffix
     }
   }) }}
+
+  {% if current_user.is_authenticated %}
+    {% block sessionUserWarning %}
+    <dialog class="usa-modal" id="sessionTimer" aria-labelledby="sessionTimerHeading" aria-describedby="timerWarning">
+      <div class="usa-modal__content">
+        <div class="usa-modal__main">
+          <h2 class="usa-modal__heading" id="sessionTimerHeading">
+            Your session will end soon.
+            <span class="usa-sr-only">Please choose to extend your session or sign out. Your session will expire in 5 minutes or less.</span>
+          </h2>
+          <div class="usa-prose">
+            <p>You have been inactive for too long. 
+              Your session will expire in <span id="timeLeft" role="timer"></span>.
+            </p>
+          </div>
+          <div class="usa-modal__footer">
+            <ul class="usa-button-group">
+              <li class="usa-button-group__item">
+                <button type="button" class="usa-button" id="extendSessionTimer" data-close-modal>
+                  Extend Session
+                </button>
+              </li>
+              <li class="usa-button-group__item">
+                <button type="button" class="usa-button usa-button--unstyled padding-105 text-center" id="logOutTimer"
+                  data-close-modal>
+                  Sign out
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </dialog>
+    {% endblock %}
+  {% endif %}
+
 {% endblock %}
+
 
 {% block bodyEnd %}
   {% block extra_javascripts %}
@@ -225,4 +261,7 @@
   <script type="text/javascript" src="{{ asset_url('javascripts/all.js') }}"></script>
   <script type="text/javascript" src="{{ asset_url('js/uswds.min.js') }}"></script>
   <!--<![endif]-->
+
 {% endblock %}
+
+

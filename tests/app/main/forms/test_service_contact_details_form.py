@@ -13,7 +13,7 @@ def test_form_fails_validation_with_no_radio_buttons_selected(notify_admin):
 
 
 @pytest.mark.parametrize(
-    "selected_radio_button, selected_text_box, text_box_data",
+    ("selected_radio_button", "selected_text_box", "text_box_data"),
     [
         ("email_address", "url", "http://www.example.com"),
         ("phone_number", "url", "http://www.example.com"),
@@ -40,7 +40,7 @@ def test_form_fails_validation_when_radio_button_selected_and_text_box_filled_in
 
 
 @pytest.mark.parametrize(
-    "selected_field, url, email_address, phone_number",
+    ("selected_field", "url", "email_address", "phone_number"),
     [
         ("url", "http://www.example.com", "invalid-email.com", "phone"),
         ("email_address", "www.invalid-url.com", "me@example.com", "phone"),

@@ -7,12 +7,12 @@ from app import organizations_client
 
 @pytest.mark.parametrize(
     (
-        "client_method,"
-        "expected_cache_get_calls,"
-        "cache_value,"
-        "expected_api_calls,"
-        "expected_cache_set_calls,"
-        "expected_return_value,"
+        "client_method",
+        "expected_cache_get_calls",
+        "cache_value",
+        "expected_api_calls",
+        "expected_cache_set_calls",
+        "expected_return_value",
     ),
     [
         (
@@ -132,8 +132,8 @@ def test_deletes_domain_cache(
 
 
 @pytest.mark.parametrize(
-    "post_data, expected_cache_delete_calls",
-    (
+    ("post_data", "expected_cache_delete_calls"),
+    [
         (
             {"foo": "bar"},
             [
@@ -149,7 +149,7 @@ def test_deletes_domain_cache(
                 call("domains"),
             ],
         ),
-    ),
+    ],
 )
 def test_update_organization_when_not_updating_org_type(
     mocker,
