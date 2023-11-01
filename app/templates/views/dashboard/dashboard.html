@@ -30,10 +30,10 @@
 
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
 
-    <h2 class="margin-bottom-1">Usage</h2>
+    <h2 class="margin-top-4 margin-bottom-1">Usage</h2>
     <h3 class="margin-bottom-0">Daily</h3>
     <p class="margin-0">Across all services</p>
-    <table class="usa-table usa-table--borderless margin-bottom-5">
+    <table class="usa-table usa-table--borderless margin-top-1 margin-bottom-5">
       <caption class="usa-sr-only">
         Daily
       </caption>
@@ -54,7 +54,7 @@
     </table>
 
     {% if current_user.has_permissions('manage_service') %}
-      <h3 class='font-body-md margin-bottom-1'>2023</h3>
+      <h3 class='font-body-md margin-bottom-0'>2023</h3>
       {{ ajax_block(partials, updates_url, 'usage') }}
       {{ show_more(
         url_for(".usage", service_id=current_service['id']),
