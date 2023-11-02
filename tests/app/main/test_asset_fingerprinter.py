@@ -18,11 +18,11 @@ class TestAssetFingerprint(object):
         asset_fingerprinter = AssetFingerprinter(asset_root="/suppliers/static/")
         assert (
             asset_fingerprinter.get_url("application.css")
-            == "/suppliers/static/application.css?418e6f4a6cdf1142e45c072ed3e1c90a"  # noqa
+            == "/suppliers/static/application.css?418e6f4a6cdf1142e45c072ed3e1c90a"
         )
         assert (
             asset_fingerprinter.get_url("application-ie6.css")
-            == "/suppliers/static/application-ie6.css?418e6f4a6cdf1142e45c072ed3e1c90a"  # noqa
+            == "/suppliers/static/application-ie6.css?418e6f4a6cdf1142e45c072ed3e1c90a"
         )
 
     def test_building_file_path(self, mocker):

@@ -3,8 +3,6 @@ from datetime import datetime
 from app.extensions import redis_client
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
 
-# from notifications_utils.clients.redis import daily_total_cache_key
-
 
 class ServiceAPIClient(NotifyAdminAPIClient):
     @cache.delete("user-{user_id}")
@@ -497,13 +495,8 @@ class ServiceAPIClient(NotifyAdminAPIClient):
 
         return int(count)
 
-    def get_global_notification_count(self):
-        # if cache is not set, or not enabled, return 0
-        # TODO FIX
-        # count = redis_client.get(daily_total_cache_key()) or 0
-
-        # return int(count)
-        return 0
+    def get_global_notification_count(self, service_id):
+        return self.get("/service/{}/notification-count".format(service_id))
 
 
 service_api_client = ServiceAPIClient()

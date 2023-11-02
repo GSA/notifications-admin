@@ -354,7 +354,6 @@ def test_raises_on_invalid_navigation_item(client_request, navigation_instance):
 @pytest.mark.parametrize(
     ("endpoint", "selected_nav_item"),
     [
-        ("main.choose_template", "Send messages"),
         ("main.manage_users", "Team members"),
     ],
 )
@@ -423,9 +422,9 @@ def test_navigation_urls(
     mock_get_api_keys,
 ):
     page = client_request.get("main.choose_template", service_id=SERVICE_ONE_ID)
-    assert [a["href"] for a in page.select(".nav.margin-bottom-5 a")] == [
-        "/services/{}".format(SERVICE_ONE_ID),
+    assert [a["href"] for a in page.select(".nav a")] == [
         "/services/{}/templates".format(SERVICE_ONE_ID),
+        "/services/{}".format(SERVICE_ONE_ID),
         "/services/{}/users".format(SERVICE_ONE_ID),
         "/services/{}/usage".format(SERVICE_ONE_ID),
         "/services/{}/service-settings".format(SERVICE_ONE_ID),
