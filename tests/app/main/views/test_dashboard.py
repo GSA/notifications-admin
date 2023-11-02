@@ -1174,6 +1174,14 @@ def test_route_for_service_permissions(
     mock_get_inbound_sms_summary,
 ):
     with notify_admin.test_request_context():
+
+        def _get(mocker):
+            return {"count": 0}
+
+        mocker.patch(
+            "app.service_api_client.get_global_notification_count", side_effect=_get
+        )
+
         validate_route_permission(
             mocker,
             notify_admin,
