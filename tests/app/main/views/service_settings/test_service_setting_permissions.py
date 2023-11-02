@@ -190,12 +190,10 @@ def test_service_setting_link_toggles_index_error(
     index,
     text,
 ):
-    with pytest.raises(  # noqa: PT012  # Requires more research to refactor.
-        expected_exception=IndexError
-    ):
-        url_for(endpoint, service_id=service_one["id"])
-        service_one.update(service_fields)
-        page = get_service_settings_page()
+    url_for(endpoint, service_id=service_one["id"])
+    service_one.update(service_fields)
+    page = get_service_settings_page()
+    with pytest.raises(expected_exception=IndexError):
         page.select(".page-footer-link a")[index]
 
 

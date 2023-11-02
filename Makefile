@@ -15,7 +15,7 @@ NVMSH := $(shell [ -f "$(HOME)/.nvm/nvm.sh" ] && echo "$(HOME)/.nvm/nvm.sh" || e
 
 .PHONY: bootstrap
 bootstrap: generate-version-file ## Set up everything to run the app
-	poetry install
+	poetry install --sync
 	poetry run playwright install --with-deps
 	source $(NVMSH) --no-use && nvm install && npm ci --no-audit
 	source $(NVMSH) && npm run build
@@ -95,6 +95,14 @@ fix-imports: ## Fix imports using isort
 .PHONY: py-lock
 py-lock: ## Syncs dependencies and updates lock file without performing recursive internal updates
 	poetry lock --no-update
+	poetry install --sync
+
+.PHONY: update-utils
+update-utils: ## Forces Poetry to pull the latest changes from the notifications-utils repo; requires that you commit the changes to poetry.lock!
+	poetry update notifications-utils
+	@echo
+	@echo !!! PLEASE MAKE SURE TO COMMIT AND PUSH THE UPDATED poetry.lock FILE !!!
+	@echo
 
 .PHONY: freeze-requirements
 freeze-requirements: ## create static requirements.txt
@@ -105,7 +113,7 @@ pip-audit:
 	poetry requirements > requirements.txt
 	poetry requirements --dev > requirements_for_test.txt
 	poetry run pip-audit -r requirements.txt
-	-poetry run pip-audit -r requirements_for_test.txt
+	poetry run pip-audit -r requirements_for_test.txt
 
 .PHONY: audit
 audit: npm-audit pip-audit

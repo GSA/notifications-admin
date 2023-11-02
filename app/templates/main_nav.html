@@ -1,13 +1,15 @@
 {% if help %}
   {% include 'partials/tour.html' %}
 {% else %}
-<nav class="nav margin-bottom-5">
+<nav class="nav">
+  <a class="usa-button margin-top-1 margin-bottom-5 width-full"
+    href="{{ url_for('.choose_template', service_id=current_service.id) }}">Send messages</a>
   <ul class="usa-sidenav">
   {% if current_user.has_permissions() %}
     {% if current_user.has_permissions('view_activity') %}
       <li class="usa-sidenav__item"><a class="{{ main_navigation.is_selected('dashboard') }}" href="{{ url_for('.service_dashboard', service_id=current_service.id) }}">Dashboard</a></li>
     {% endif %}
-      <li class="usa-sidenav__item"><a class="{{ main_navigation.is_selected('templates') }}" href="{{ url_for('.choose_template', service_id=current_service.id) }}">Send messages</a></li>
+      {# <li class="usa-sidenav__item"><a class="{{ main_navigation.is_selected('templates') }}" href="{{ url_for('.choose_template', service_id=current_service.id) }}">Send messages</a></li> #}
     {% if not current_user.has_permissions('view_activity') %}
       <li class="usa-sidenav__item"><a class="{{ casework_navigation.is_selected('sent-messages') }}" href="{{ url_for('.view_notifications', service_id=current_service.id, status='sending,delivered,failed') }}">Sent messages</a></li>
     {% endif %}

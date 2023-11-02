@@ -2423,7 +2423,7 @@ def _os_environ():
         os.environ[k] = v
 
 
-@pytest.fixture  # noqa (C901 too complex)
+@pytest.fixture()
 def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too complex)
     class ClientRequest:
         @staticmethod

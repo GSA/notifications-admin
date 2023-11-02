@@ -192,18 +192,11 @@ def test_returns_value_from_cache(
     assert mock_redis_set.call_args_list == expected_cache_set_calls
 
 
-@pytest.mark.parametrize(  # noqa: PT014  # Duplicate add_user_to_service has different params for each
+@pytest.mark.parametrize(
     ("client", "method", "extra_args", "extra_kwargs"),
     [
-        (
-            user_api_client,
-            "add_user_to_service",
-            [SERVICE_ONE_ID, sample_uuid(), [], []],
-            {},
-        ),
         (user_api_client, "update_user_attribute", [user_id], {}),
         (user_api_client, "reset_failed_login_count", [user_id], {}),
-        (user_api_client, "update_user_attribute", [user_id], {}),
         (user_api_client, "update_password", [user_id, "hunter2"], {}),
         (user_api_client, "verify_password", [user_id, "hunter2"], {}),
         (user_api_client, "check_verify_code", [user_id, "", ""], {}),
