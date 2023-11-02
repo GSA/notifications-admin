@@ -3,16 +3,16 @@
 {% from "components/table.html" import mapping_table, row, text_field, optional_text_field, edit_field, field, boolean_field with context %}
 
 {% block per_page_title %}
-  Your profile
+  User profile
 {% endblock %}
 
 {% block maincolumn_content %}
 
-  <h1 class="font-body-2xl margin-bottom-3">Your profile</h1>
+  <h1 class="font-body-2xl margin-bottom-3">User profile</h1>
 
   <div class="body-copy-table">
     {% call mapping_table(
-      caption='Your profile',
+      caption='User profile',
       field_headings_visible=False,
       caption_visible=False
     ) %}

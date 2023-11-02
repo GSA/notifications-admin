@@ -44,6 +44,11 @@
     {% if current_user.platform_admin %}
       {% set navigation = [
         {
+          "href": url_for("main.show_accounts_or_dashboard"),
+          "text": "Current service",
+          "active": header_navigation.is_selected('accounts-or-dashboard')
+        },
+        {
           "href": url_for('main.get_started'),
           "text": "Using Notify",
           "active": header_navigation.is_selected('using_notify')
@@ -76,6 +81,11 @@
     {% else %}
       {% set navigation = [
         {
+          "href": url_for("main.show_accounts_or_dashboard"),
+          "text": "Current service",
+          "active": header_navigation.is_selected('accounts-or-dashboard')
+        },
+        {
           "href": url_for('main.get_started'),
           "text": "Using Notify",
           "active": header_navigation.is_selected('using_notify')
@@ -92,7 +102,7 @@
         },
         {
           "href": url_for('main.user_profile'),
-          "text": current_user.name,
+          "text": "User profile",
           "active": header_navigation.is_selected('user-profile')
         },
         {
