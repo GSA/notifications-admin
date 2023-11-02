@@ -8,8 +8,10 @@ How to integrate with the login.gov sandbox:  https://dashboard.int.identitysand
    b. Select OpenIdConnect and private key JWT
    c. select authentication only
    d. select MFA required + remember device 30 days only (AAL1)
+   e. set redirect urls like:  http://localhost:6012/sign-in
 3. generate a cert: openssl req -nodes -x509 -days 365 -newkey rsa:2048 -keyout private.pem -out public.crt
 4. Upload the public.crt to your app in the sandbox
+5. put the private.pem contents and public.crt contents in github secrets (?)
 
 
 ## Open Issues

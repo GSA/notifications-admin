@@ -28,11 +28,12 @@
       {% endif %}
     {% else %}
       <h1 class="font-body-2xl margin-bottom-3">Sign in</h1>
-      <!-- Removing temporarily for pilot -->
+      {% if notify_env_is_dev %}
       <p>
-        If you do not have an account, you can
+        Test login.gov authentication:
         <a class="usa-link" href="https://idp.int.identitysandbox.gov/openid_connect/authorize?acr_values=http%3A%2F%2Fidmanagement.gov%2Fns%2Fassurance%2Fial%2F1&client_id=urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:test_notify_gov&nonce=01234567890123456789012345&prompt=select_account&redirect_uri=http://localhost:6012/sign-in&response_type=code&scope=openid+email&state=abcdefghijklmnopabcdefghijklmnop">Login.gov</a>.
       </p>
+      {% endif %}
     {% endif %}
 
     {% call form_wrapper(autocomplete=True) %}

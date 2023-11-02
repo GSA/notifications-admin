@@ -17,7 +17,6 @@ from flask import (
 )
 from flask_login import current_user
 
-
 from app import login_manager, user_api_client
 from app.main import main
 from app.main.forms import LoginForm
@@ -62,7 +61,6 @@ def _get_user_email(access_token):
         user_info_url,
         headers=headers,
     )
-    current_app.logger.info(f"HURRAY GOT USER ATTRIBUTES {user_attributes.json()}")
     user_email = user_attributes.json()["email"]
     return user_email
 
@@ -85,7 +83,7 @@ def sign_in():
         return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
 
     elif login_gov_error:
-        current_app.logger.error(f"BOO!  GOT A LOGIN GOV ERROR {login_gov_error}")
+        current_app.logger.error(f"login.gov error: {login_gov_error}")
         raise Exception(f"Could not login with login.gov {login_gov_error}")
     # end login.gov
 
@@ -149,11 +147,13 @@ def sign_in():
         )
 
     other_device = current_user.logged_in_elsewhere()
+    notify_env = os.getenv("NOTIFY_ENVIRONMENT")
     return render_template(
         "views/signin.html",
         form=form,
         again=bool(redirect_url),
         other_device=other_device,
+        notify_env_is_dev=bool(notify_env == "development"),
         password_reset_url=password_reset_url,
     )
 
