@@ -1117,25 +1117,31 @@ def test_should_show_checkboxes_for_selecting_templates_assertion_error(
     mock_get_no_api_keys,
     user,
 ):
-    with pytest.raises(  # noqa: PT012  #  This will require more research into refactoring.
-        expected_exception=AssertionError
-    ):
-        client_request.login(user)
-
-        page = client_request.get(
-            "main.choose_template",
-            service_id=SERVICE_ONE_ID,
+    with pytest.raises(expected_exception=AssertionError):
+        _stmt_for_test_should_show_checkboxes_for_selecting_templates_assertion_error(
+            client_request, user
         )
-        checkboxes = page.select("input[name=templates_and_folders]")
 
-        assert len(checkboxes) == 4
 
-        assert checkboxes[0]["value"] == TEMPLATE_ONE_ID
-        assert checkboxes[0]["id"] == "templates-or-folder-{}".format(TEMPLATE_ONE_ID)
+def _stmt_for_test_should_show_checkboxes_for_selecting_templates_assertion_error(
+    client_request, user
+):
+    client_request.login(user)
 
-        for index in (1, 2, 3):
-            assert checkboxes[index]["value"] != TEMPLATE_ONE_ID
-            assert TEMPLATE_ONE_ID not in checkboxes[index]["id"]
+    page = client_request.get(
+        "main.choose_template",
+        service_id=SERVICE_ONE_ID,
+    )
+    checkboxes = page.select("input[name=templates_and_folders]")
+
+    assert len(checkboxes) == 4
+
+    assert checkboxes[0]["value"] == TEMPLATE_ONE_ID
+    assert checkboxes[0]["id"] == "templates-or-folder-{}".format(TEMPLATE_ONE_ID)
+
+    for index in (1, 2, 3):
+        assert checkboxes[index]["value"] != TEMPLATE_ONE_ID
+        assert TEMPLATE_ONE_ID not in checkboxes[index]["id"]
 
 
 @pytest.mark.parametrize(

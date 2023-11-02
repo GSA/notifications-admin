@@ -20,8 +20,8 @@ from tests.conftest import (
 )
 
 
-@pytest.mark.parametrize(  # noqa: PT014  # Duplicate parameters have different permissions.
-    ("user", "expected_self_text", "expected_coworker_text"),
+@pytest.mark.parametrize(
+    ("user", "expected_self_text", "add_details"),
     [
         (
             create_active_user_with_permissions(),
@@ -34,16 +34,7 @@ from tests.conftest import (
                 "Can Manage settings, team and usage "
                 "Can Manage API integration"
             ),
-            (
-                "ZZZZZZZZ zzzzzzz@example.gsa.gov "
-                "Permissions "
-                "Can See dashboard "
-                "Cannot Send messages "
-                "Cannot Add and edit templates "
-                "Cannot Manage settings, team and usage "
-                "Cannot Manage API integration "
-                "Change details for ZZZZZZZZ zzzzzzz@example.gsa.gov"
-            ),
+            True,
         ),
         (
             create_active_user_empty_permissions(),
@@ -56,15 +47,7 @@ from tests.conftest import (
                 "Cannot Manage settings, team and usage "
                 "Cannot Manage API integration"
             ),
-            (
-                "ZZZZZZZZ zzzzzzz@example.gsa.gov "
-                "Permissions "
-                "Can See dashboard "
-                "Cannot Send messages "
-                "Cannot Add and edit templates "
-                "Cannot Manage settings, team and usage "
-                "Cannot Manage API integration"
-            ),
+            False,
         ),
         (
             create_active_user_view_permissions(),
@@ -77,15 +60,7 @@ from tests.conftest import (
                 "Cannot Manage settings, team and usage "
                 "Cannot Manage API integration"
             ),
-            (
-                "ZZZZZZZZ zzzzzzz@example.gsa.gov "
-                "Permissions "
-                "Can See dashboard "
-                "Cannot Send messages "
-                "Cannot Add and edit templates "
-                "Cannot Manage settings, team and usage "
-                "Cannot Manage API integration"
-            ),
+            False,
         ),
         (
             create_active_user_manage_template_permissions(),
@@ -98,36 +73,7 @@ from tests.conftest import (
                 "Cannot Manage settings, team and usage "
                 "Cannot Manage API integration"
             ),
-            (
-                "ZZZZZZZZ zzzzzzz@example.gsa.gov "
-                "Permissions "
-                "Can See dashboard "
-                "Cannot Send messages "
-                "Cannot Add and edit templates "
-                "Cannot Manage settings, team and usage "
-                "Cannot Manage API integration"
-            ),
-        ),
-        (
-            create_active_user_manage_template_permissions(),
-            (
-                "Test User With Permissions (you) "
-                "Permissions "
-                "Can See dashboard "
-                "Cannot Send messages "
-                "Can Add and edit templates "
-                "Cannot Manage settings, team and usage "
-                "Cannot Manage API integration"
-            ),
-            (
-                "ZZZZZZZZ zzzzzzz@example.gsa.gov "
-                "Permissions "
-                "Can See dashboard "
-                "Cannot Send messages "
-                "Cannot Add and edit templates "
-                "Cannot Manage settings, team and usage "
-                "Cannot Manage API integration"
-            ),
+            False,
         ),
     ],
 )
@@ -140,8 +86,8 @@ def test_should_show_overview_page(
     service_one,
     user,
     expected_self_text,
-    expected_coworker_text,
     active_user_view_permissions,
+    add_details,
 ):
     current_user = user
     other_user = copy.deepcopy(active_user_view_permissions)
@@ -164,11 +110,20 @@ def test_should_show_overview_page(
     assert (
         normalize_spaces(page.select(".user-list-item")[0].text) == expected_self_text
     )
-    # [1:5] are invited users
-    assert (
-        normalize_spaces(page.select(".user-list-item")[6].text)
-        == expected_coworker_text
+
+    expected = (
+        "ZZZZZZZZ zzzzzzz@example.gsa.gov "
+        "Permissions "
+        "Can See dashboard "
+        "Cannot Send messages "
+        "Cannot Add and edit templates "
+        "Cannot Manage settings, team and usage "
+        "Cannot Manage API integration"
     )
+
+    if add_details is True:
+        expected = f"{expected} Change details for ZZZZZZZZ zzzzzzz@example.gsa.gov"
+    assert normalize_spaces(page.select(".user-list-item")[6].text) == expected
     mock_get_users.assert_called_once_with(SERVICE_ONE_ID)
 
 
