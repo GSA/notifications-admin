@@ -4,7 +4,7 @@ from tests.conftest import set_config_values
 
 
 @pytest.mark.parametrize(
-    "check_proxy_header,header_value,expected_code",
+    ("check_proxy_header", "header_value", "expected_code"),
     [
         (True, "key_1", 200),
         (True, "wrong_key", 403),

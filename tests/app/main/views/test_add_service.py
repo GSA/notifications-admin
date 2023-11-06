@@ -22,10 +22,10 @@ def test_non_gov_user_cannot_see_add_service_button(
 
 @pytest.mark.parametrize(
     "org_json",
-    (
+    [
         None,
         organization_json(organization_type=None),
-    ),
+    ],
 )
 def test_get_should_render_add_service_template(
     client_request,
@@ -74,18 +74,18 @@ def test_show_different_page_if_user_org_type_is_local(
 
 @pytest.mark.parametrize(
     "email_address",
-    (
+    [
         # User’s email address doesn’t matter when the organization is known
         "test@example.gsa.gov",
         "test@anotherexample.gsa.gov",
-    ),
+    ],
 )
 @pytest.mark.parametrize(
-    "inherited, posted, persisted, sms_limit",
-    (
+    ("inherited", "posted", "persisted", "sms_limit"),
+    [
         (None, "federal", "federal", 150_000),
         # ('federal', None, 'federal', 150_000),
-    ),
+    ],
 )
 @freeze_time("2021-01-01")
 def test_should_add_service_and_redirect_to_tour_when_no_services(
@@ -169,12 +169,12 @@ def test_add_service_has_to_choose_org_type(
 
 @pytest.mark.parametrize(
     "email_address",
-    (
+    [
         "test@nhs.net",
         "test@nhs.uk",
         "test@example.NhS.uK",
         "test@EXAMPLE.NHS.NET",
-    ),
+    ],
 )
 @pytest.mark.skip(reason="Update for TTS")
 def test_get_should_only_show_nhs_org_types_radios_if_user_has_nhs_email(
@@ -205,7 +205,7 @@ def test_get_should_only_show_nhs_org_types_radios_if_user_has_nhs_email(
 
 
 @pytest.mark.parametrize(
-    "organization_type, free_allowance",
+    ("organization_type", "free_allowance"),
     [
         ("federal", 150_000),
         ("state", 150_000),
@@ -240,7 +240,7 @@ def test_should_add_service_and_redirect_to_dashboard_when_existing_service(
 
 
 @pytest.mark.parametrize(
-    "name, error_message",
+    ("name", "error_message"),
     [
         ("", "Cannot be empty"),
         (".", "Must include at least two alphanumeric characters"),

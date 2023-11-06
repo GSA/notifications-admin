@@ -9,7 +9,7 @@ from tests.conftest import (
 )
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_email_validated_recently(mocker):
     return mocker.patch(
         "app.main.views.two_factor.email_needs_revalidating", return_value=False
@@ -23,7 +23,7 @@ def mock_email_validated_recently(mocker):
     "redirect_url", [None, f"/services/{SERVICE_ONE_ID}/templates"]
 )
 @pytest.mark.parametrize(
-    "email_resent, page_title", [(None, "Check your email"), (True, "Email resent")]
+    ("email_resent", "page_title"), [(None, "Check your email"), (True, "Email resent")]
 )
 def test_two_factor_email_sent_page(
     client_request, email_resent, page_title, redirect_url, request_url
@@ -168,10 +168,10 @@ def test_should_login_user_and_not_redirect_to_external_url(
 
 @pytest.mark.parametrize(
     "platform_admin",
-    (
+    [
         True,
         False,
-    ),
+    ],
 )
 def test_should_login_user_and_redirect_to_show_accounts(
     client_request,
@@ -334,8 +334,8 @@ def test_two_factor_sms_should_activate_pending_user(
 
 
 @pytest.mark.parametrize(
-    "extra_args, expected_encoded_next_arg",
-    (({}, ""), ({"next": "https://example.com"}, "?next=https://example.com")),
+    ("extra_args", "expected_encoded_next_arg"),
+    [({}, ""), ({"next": "https://example.com"}, "?next=https://example.com")],
 )
 def test_valid_two_factor_email_link_shows_interstitial(
     client_request,

@@ -285,11 +285,22 @@ def init_app(application):
     @application.context_processor
     def _attach_current_global_daily_messages():
         remaining_global_messages = 0
-
         if current_app:
-            global_limit = current_app.config["GLOBAL_SERVICE_MESSAGE_LIMIT"]
-            global_messages_count = service_api_client.get_global_notification_count()
-            remaining_global_messages = global_limit - global_messages_count
+            if request.view_args:
+                service_id = request.view_args.get(
+                    "service_id", session.get("service_id")
+                )
+            else:
+                service_id = session.get("service_id")
+
+            if service_id:
+                global_limit = current_app.config["GLOBAL_SERVICE_MESSAGE_LIMIT"]
+                global_messages_count = (
+                    service_api_client.get_global_notification_count(service_id)
+                )
+                remaining_global_messages = global_limit - global_messages_count.get(
+                    "count"
+                )
         return {"daily_global_messages_remaining": remaining_global_messages}
 
     @application.before_request
@@ -321,7 +332,7 @@ def make_session_permanent():
     """
     Make sessions permanent. By permanent, we mean "admin app sets when it expires". Normally the cookie would expire
     whenever you close the browser. With this, the session expiry is set in `config['PERMANENT_SESSION_LIFETIME']`
-    (20 hours) and is refreshed after every request. IE: you will be logged out after twenty hours of inactivity.
+    (30 min) and is refreshed after every request. IE: you will be logged out after thirty minutes of inactivity.
 
     We don't _need_ to set this every request (it's saved within the cookie itself under the `_permanent` flag), only
     when you first log in/sign up/get invited/etc, but we do it just to be safe. For more reading, check here:

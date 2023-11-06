@@ -15,8 +15,8 @@ from tests.conftest import (
 
 
 @pytest.mark.parametrize(
-    "user_services, user_organizations, expected_status, organization_checked",
-    (
+    ("user_services", "user_organizations", "expected_status", "organization_checked"),
+    [
         ([SERVICE_ONE_ID], [], 200, False),
         ([SERVICE_ONE_ID, SERVICE_TWO_ID], [], 200, False),
         ([], [ORGANISATION_ID], 200, True),
@@ -27,7 +27,7 @@ from tests.conftest import (
         ([SERVICE_ONE_ID, SERVICE_TWO_ID], [ORGANISATION_ID], 200, False),
         ([], [ORGANISATION_TWO_ID], 403, True),
         ([], [ORGANISATION_ID, ORGANISATION_TWO_ID], 200, True),
-    ),
+    ],
 )
 def test_services_pages_that_org_users_are_allowed_to_see(
     client_request,
@@ -111,13 +111,14 @@ def test_service_navigation_for_org_user(
         service_id=SERVICE_ONE_ID,
     )
     assert [item.text.strip() for item in page.select("nav.nav a")] == [
+        "Send messages",
         "Usage",
         "Team members",
     ]
 
 
 @pytest.mark.parametrize(
-    "user_organizations, expected_menu_items, expected_status",
+    ("user_organizations", "expected_menu_items", "expected_status"),
     [
         (
             [],

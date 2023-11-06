@@ -39,15 +39,15 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
 
 @pytest.mark.parametrize(
     (
-        "expected_title_tag,"
-        "expected_page_title,"
-        "expected_parent_link_args,"
-        "extra_args,"
-        "expected_nav_links,"
-        "expected_items, "
-        "expected_displayed_items, "
-        "expected_searchable_text, "
-        "expected_empty_message "
+        "expected_title_tag",
+        "expected_page_title",
+        "expected_parent_link_args",
+        "extra_args",
+        "expected_nav_links",
+        "expected_items",
+        "expected_displayed_items",
+        "expected_searchable_text",
+        "expected_empty_message",
     ),
     [
         (
@@ -1026,10 +1026,10 @@ def test_delete_template_folder_should_detect_non_empty_folder_on_get(
 
 @pytest.mark.parametrize(
     "parent_folder_id",
-    (
+    [
         None,
         PARENT_FOLDER_ID,
-    ),
+    ],
 )
 def test_delete_folder(
     client_request,
@@ -1118,22 +1118,30 @@ def test_should_show_checkboxes_for_selecting_templates_assertion_error(
     user,
 ):
     with pytest.raises(expected_exception=AssertionError):
-        client_request.login(user)
-
-        page = client_request.get(
-            "main.choose_template",
-            service_id=SERVICE_ONE_ID,
+        _stmt_for_test_should_show_checkboxes_for_selecting_templates_assertion_error(
+            client_request, user
         )
-        checkboxes = page.select("input[name=templates_and_folders]")
 
-        assert len(checkboxes) == 4
 
-        assert checkboxes[0]["value"] == TEMPLATE_ONE_ID
-        assert checkboxes[0]["id"] == "templates-or-folder-{}".format(TEMPLATE_ONE_ID)
+def _stmt_for_test_should_show_checkboxes_for_selecting_templates_assertion_error(
+    client_request, user
+):
+    client_request.login(user)
 
-        for index in (1, 2, 3):
-            assert checkboxes[index]["value"] != TEMPLATE_ONE_ID
-            assert TEMPLATE_ONE_ID not in checkboxes[index]["id"]
+    page = client_request.get(
+        "main.choose_template",
+        service_id=SERVICE_ONE_ID,
+    )
+    checkboxes = page.select("input[name=templates_and_folders]")
+
+    assert len(checkboxes) == 4
+
+    assert checkboxes[0]["value"] == TEMPLATE_ONE_ID
+    assert checkboxes[0]["id"] == "templates-or-folder-{}".format(TEMPLATE_ONE_ID)
+
+    for index in (1, 2, 3):
+        assert checkboxes[index]["value"] != TEMPLATE_ONE_ID
+        assert TEMPLATE_ONE_ID not in checkboxes[index]["id"]
 
 
 @pytest.mark.parametrize(
@@ -1289,7 +1297,7 @@ def test_should_be_able_to_move_to_existing_folder(
 
 
 @pytest.mark.parametrize(
-    "user, expected_status, expected_called",
+    ("user", "expected_status", "expected_called"),
     [
         (create_active_user_view_permissions(), 403, False),
         (create_active_user_with_permissions(), 302, True),
@@ -1618,7 +1626,7 @@ def test_radio_button_with_no_value_shows_custom_error_message(
 
 
 @pytest.mark.parametrize(
-    "data, error_msg",
+    ("data", "error_msg"),
     [
         # nothing selected when moving
         (
@@ -1678,10 +1686,10 @@ def test_show_custom_error_message(
 
 @pytest.mark.parametrize(
     (
-        "extra_args,"
-        "expected_displayed_items, "
-        "expected_items, "
-        "expected_empty_message "
+        "extra_args",
+        "expected_displayed_items",
+        "expected_items",
+        "expected_empty_message",
     ),
     [
         (

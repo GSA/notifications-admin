@@ -30,8 +30,8 @@ def test_form_is_valid_returns_no_errors(
 
 
 @pytest.mark.parametrize(
-    "post_data, expected_error",
-    (
+    ("post_data", "expected_error"),
+    [
         (
             {"sms_code": "1234"},
             "Not enough numbers",
@@ -52,7 +52,7 @@ def test_form_is_valid_returns_no_errors(
             {"sms_code": " ! 2 3 4 5 6"},
             "Numbers only",
         ),
-    ),
+    ],
 )
 def test_check_verify_code_returns_errors(
     notify_admin,

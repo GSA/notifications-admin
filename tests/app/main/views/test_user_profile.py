@@ -17,7 +17,7 @@ def test_should_show_overview_page(
     client_request,
 ):
     page = client_request.get("main.user_profile")
-    assert page.select_one("h1").text.strip() == "Your profile"
+    assert page.select_one("h1").text.strip() == "User profile"
     assert "Use platform admin view" not in page
     assert "Security keys" not in page
 
@@ -27,7 +27,7 @@ def test_overview_page_shows_disable_for_platform_admin(
 ):
     client_request.login(platform_admin_user)
     page = client_request.get("main.user_profile")
-    assert page.select_one("h1").text.strip() == "Your profile"
+    assert page.select_one("h1").text.strip() == "User profile"
     disable_platform_admin_row = page.select_one("#disable-platform-admin")
     assert (
         " ".join(disable_platform_admin_row.text.split())
@@ -80,7 +80,7 @@ def test_should_redirect_after_email_change(
 
 
 @pytest.mark.parametrize(
-    "email_address,error_message",
+    ("email_address", "error_message"),
     [
         (
             "me@example.com",
@@ -365,7 +365,7 @@ def test_non_gov_user_cannot_see_change_email_link(
     client_request.login(api_nongov_user_active)
     page = client_request.get("main.user_profile")
     assert not page.find("a", {"href": url_for("main.user_profile_email")})
-    assert page.select_one("h1").text.strip() == "Your profile"
+    assert page.select_one("h1").text.strip() == "User profile"
 
 
 def test_non_gov_user_cannot_access_change_email_page(

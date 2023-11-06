@@ -163,7 +163,7 @@ def test_sms_sender_has_receives_replies_hint(
 
 
 @pytest.mark.parametrize(
-    "template_type, sender_data",
+    ("template_type", "sender_data"),
     [
         (
             "email",
@@ -336,7 +336,7 @@ def test_example_spreadsheet(
 
 
 @pytest.mark.parametrize(
-    "filename, acceptable_file, expected_status",
+    ("filename", "acceptable_file", "expected_status"),
     list(zip(test_spreadsheet_files, repeat(True), repeat(302)))
     + list(zip(test_non_spreadsheet_files, repeat(False), repeat(200))),
 )
@@ -412,7 +412,7 @@ def test_send_messages_sanitises_and_truncates_file_name_for_metadata(
 
 
 @pytest.mark.parametrize(
-    "exception, expected_error_message",
+    ("exception", "expected_error_message"),
     [
         (
             partial(UnicodeDecodeError, "codec", b"", 1, 2, "reason"),
@@ -641,7 +641,7 @@ def test_upload_csv_file_with_very_long_placeholder_shows_check_page_with_errors
 
 
 @pytest.mark.parametrize(
-    "file_contents, expected_error,",
+    ("file_contents", "expected_error"),
     [
         (
             """
@@ -819,7 +819,12 @@ def test_upload_valid_csv_redirects_to_check_page(
 
 
 @pytest.mark.parametrize(
-    "extra_args, expected_link_in_first_row, expected_recipient, expected_message",
+    (
+        "extra_args",
+        "expected_link_in_first_row",
+        "expected_recipient",
+        "expected_message",
+    ),
     [
         (
             {},
@@ -995,7 +1000,7 @@ def test_show_all_columns_if_there_are_duplicate_recipient_columns(
 
 
 @pytest.mark.parametrize(
-    "row_index, expected_status",
+    ("row_index", "expected_status"),
     [
         (0, 404),
         (1, 404),
@@ -1108,10 +1113,10 @@ def test_send_one_off_does_not_send_without_the_correct_permissions(
 
 @pytest.mark.parametrize(
     "user",
-    (
+    [
         create_active_user_with_permissions(),
         create_active_caseworking_user(),
-    ),
+    ],
 )
 def test_send_one_off_has_correct_page_title(
     client_request,
@@ -1143,7 +1148,7 @@ def test_send_one_off_has_correct_page_title(
 
 
 @pytest.mark.parametrize(
-    "step_index, prefilled, expected_field_label",
+    ("step_index", "prefilled", "expected_field_label"),
     [
         (
             0,
@@ -1186,7 +1191,7 @@ def test_send_one_off_shows_placeholders_in_correct_order(
 
 
 @pytest.mark.parametrize(
-    "user, template_type, expected_link_text, expected_link_url",
+    ("user", "template_type", "expected_link_text", "expected_link_url"),
     [
         (
             create_active_user_with_permissions(),
@@ -1244,7 +1249,7 @@ def test_send_one_off_has_skip_link(
 
 
 @pytest.mark.parametrize(
-    "template_type, expected_sticky",
+    ("template_type", "expected_sticky"),
     [
         ("sms", False),
         ("email", True),
@@ -1277,10 +1282,10 @@ def test_send_one_off_has_sticky_header_for_email(
 
 @pytest.mark.parametrize(
     "user",
-    (
+    [
         create_active_user_with_permissions(),
         create_active_caseworking_user(),
-    ),
+    ],
 )
 def test_skip_link_will_not_show_on_sms_one_off_if_service_has_no_mobile_number(
     client_request,
@@ -1310,10 +1315,10 @@ def test_skip_link_will_not_show_on_sms_one_off_if_service_has_no_mobile_number(
 
 @pytest.mark.parametrize(
     "user",
-    (
+    [
         create_active_user_with_permissions(),
         create_active_caseworking_user(),
-    ),
+    ],
 )
 def test_send_one_off_offers_link_to_upload(
     client_request,
@@ -1378,10 +1383,10 @@ def test_send_one_off_has_link_to_use_existing_list(
 
 @pytest.mark.parametrize(
     "user",
-    (
+    [
         create_active_user_with_permissions(),
         create_active_caseworking_user(),
-    ),
+    ],
 )
 def test_link_to_upload_not_offered_when_entering_personalisation(
     client_request,
@@ -1413,10 +1418,10 @@ def test_link_to_upload_not_offered_when_entering_personalisation(
 
 @pytest.mark.parametrize(
     "user",
-    (
+    [
         create_active_user_with_permissions(),
         create_active_caseworking_user(),
-    ),
+    ],
 )
 def test_send_one_off_redirects_to_end_if_step_out_of_bounds(
     client_request,
@@ -1448,10 +1453,10 @@ def test_send_one_off_redirects_to_end_if_step_out_of_bounds(
 
 @pytest.mark.parametrize(
     "user",
-    (
+    [
         create_active_user_with_permissions(),
         create_active_caseworking_user(),
-    ),
+    ],
 )
 def test_send_one_off_redirects_to_start_if_you_skip_steps(
     client_request,
@@ -1483,10 +1488,10 @@ def test_send_one_off_redirects_to_start_if_you_skip_steps(
 
 @pytest.mark.parametrize(
     "user",
-    (
+    [
         create_active_user_with_permissions(),
         create_active_caseworking_user(),
-    ),
+    ],
 )
 def test_send_one_off_redirects_to_start_if_index_out_of_bounds_and_some_placeholders_empty(
     client_request,
@@ -1520,10 +1525,10 @@ def test_send_one_off_redirects_to_start_if_index_out_of_bounds_and_some_placeho
 
 @pytest.mark.parametrize(
     "user",
-    (
+    [
         create_active_user_with_permissions(),
         create_active_caseworking_user(),
-    ),
+    ],
 )
 def test_send_one_off_sms_message_redirects(
     client_request,
@@ -1552,10 +1557,10 @@ def test_send_one_off_sms_message_redirects(
 
 @pytest.mark.parametrize(
     "user",
-    (
+    [
         create_active_user_with_permissions(),
         create_active_caseworking_user(),
-    ),
+    ],
 )
 def test_send_one_off_email_to_self_without_placeholders_redirects_to_check_page(
     client_request,
@@ -1587,8 +1592,8 @@ def test_send_one_off_email_to_self_without_placeholders_redirects_to_check_page
 
 
 @pytest.mark.parametrize(
-    "permissions, expected_back_link_endpoint, extra_args",
-    (
+    ("permissions", "expected_back_link_endpoint", "extra_args"),
+    [
         (
             {"send_messages", "manage_templates"},
             "main.view_template",
@@ -1604,7 +1609,7 @@ def test_send_one_off_email_to_self_without_placeholders_redirects_to_check_page
             "main.choose_template",
             {},
         ),
-    ),
+    ],
 )
 def test_send_one_off_step_0_back_link(
     client_request,
@@ -1819,7 +1824,7 @@ def test_upload_csvfile_with_valid_phone_shows_all_numbers(
 
 
 @pytest.mark.parametrize(
-    "international_sms_permission, should_allow_international",
+    ("international_sms_permission", "should_allow_international"),
     [
         (False, False),
         (True, True),
@@ -1975,7 +1980,7 @@ def test_create_job_should_call_api(
 
 
 @pytest.mark.parametrize(
-    "route, response_code",
+    ("route", "response_code"),
     [
         ("main.send_messages", 200),
         ("main.get_example_csv", 200),
@@ -2011,7 +2016,7 @@ def test_route_permissions(
 
 
 @pytest.mark.parametrize(
-    "route, response_code, method",
+    ("route", "response_code", "method"),
     [("main.check_notification", 200, "GET"), ("main.send_notification", 302, "POST")],
 )
 def test_route_permissions_send_check_notifications(
@@ -2043,7 +2048,7 @@ def test_route_permissions_send_check_notifications(
 
 
 @pytest.mark.parametrize(
-    "route, expected_status",
+    ("route", "expected_status"),
     [
         ("main.send_messages", 403),
         ("main.get_example_csv", 403),
@@ -2083,7 +2088,7 @@ def test_route_permissions_sending(
 
 
 @pytest.mark.parametrize(
-    "template_type, has_placeholders, extra_args, expected_url",
+    ("template_type", "has_placeholders", "extra_args", "expected_url"),
     [
         ("sms", False, dict(), partial(url_for, ".send_messages")),
         ("sms", True, dict(), partial(url_for, ".send_messages")),
@@ -2142,7 +2147,7 @@ def test_check_messages_back_link(
 
 
 @pytest.mark.parametrize(
-    "num_requested,expected_msg",
+    ("num_requested", "expected_msg"),
     [
         (None, "‘example.csv’ contains 1,234 phone numbers."),
         ("0", "‘example.csv’ contains 1,234 phone numbers."),
@@ -2245,10 +2250,10 @@ def test_check_messages_shows_trial_mode_error(
 
 @pytest.mark.parametrize(
     "uploaded_file_name",
-    (
+    [
         pytest.param("applicants.ods"),  # normal job
         pytest.param("send_me_later.csv"),  # should look at scheduled job
-    ),
+    ],
 )
 def test_warns_if_file_sent_already(
     client_request,
@@ -2289,10 +2294,10 @@ def test_warns_if_file_sent_already(
 
 @pytest.mark.parametrize(
     "uploaded_file_name",
-    (
+    [
         pytest.param("thisisatest.csv"),  # different template version
         pytest.param("full_of_regret.csv"),  # job is cancelled
-    ),
+    ],
 )
 def test_warns_if_file_sent_already_errors(
     client_request,
@@ -2314,23 +2319,31 @@ def test_warns_if_file_sent_already_errors(
         "app.main.views.send.get_csv_metadata",
         return_value={"original_file_name": uploaded_file_name},
     )
-    # Should be botocore.errorfactory.NoSuchKey but for some reason can't use that
-    with pytest.raises(expected_exception=Exception):
-        page = client_request.get(
-            "main.check_messages",
-            service_id=SERVICE_ONE_ID,
-            template_id="5d729fbd-239c-44ab-b498-75a985f3198f",
-            upload_id=fake_uuid,
-            original_file_name=uploaded_file_name,
-            _test_page_title=False,
+
+    with pytest.raises(
+        expected_exception=Exception, match="Unable to locate credentials"
+    ):
+        stmt_for_test_warns_if_file_sent_already_errors(
+            client_request, uploaded_file_name, fake_uuid, mock_get_jobs
         )
 
-        assert normalize_spaces(page.select_one(".banner-dangerous").text) == (
-            "These messages have already been sent today "
-            "If you need to resend them, rename the file and upload it again."
-        )
 
-        mock_get_jobs.assert_called_once_with(SERVICE_ONE_ID, limit_days=0)
+def stmt_for_test_warns_if_file_sent_already_errors(
+    client_request, uploaded_file_name, fake_uuid, mock_get_jobs
+):
+    page = client_request.get(
+        "main.check_messages",
+        service_id=SERVICE_ONE_ID,
+        template_id="5d729fbd-239c-44ab-b498-75a985f3198f",
+        upload_id=fake_uuid,
+        original_file_name=uploaded_file_name,
+        _test_page_title=False,
+    )
+    assert normalize_spaces(page.select_one(".banner-dangerous").text) == (
+        "These messages have already been sent today "
+        "If you need to resend them, rename the file and upload it again."
+    )
+    mock_get_jobs.assert_called_once_with(SERVICE_ONE_ID, limit_days=0)
 
 
 def test_check_messages_column_error_doesnt_show_optional_columns(
@@ -2516,8 +2529,8 @@ def test_check_notification_shows_preview(
 
 
 @pytest.mark.parametrize(
-    "template, recipient, placeholders, expected_personalisation",
-    (
+    ("template", "recipient", "placeholders", "expected_personalisation"),
+    [
         (
             mock_get_service_template,
             "2028675301",
@@ -2530,7 +2543,7 @@ def test_check_notification_shows_preview(
             {},
             {},
         ),
-    ),
+    ],
 )
 def test_send_notification_submits_data(
     client_request,
@@ -2609,7 +2622,7 @@ def test_send_notification_redirects_if_missing_data(
 
 
 @pytest.mark.parametrize(
-    "extra_args, extra_redirect_args", [({}, {}), ({"help": "3"}, {"help": "3"})]
+    ("extra_args", "extra_redirect_args"), [({}, {}), ({"help": "3"}, {"help": "3"})]
 )
 def test_send_notification_redirects_to_view_page(
     client_request,
@@ -2647,7 +2660,7 @@ SERVICE_DAILY_LIMIT_MSG = "Exceeded send limits (1000) for today"
 
 
 @pytest.mark.parametrize(
-    "exception_msg, expected_h1, expected_err_details",
+    ("exception_msg", "expected_h1", "expected_err_details"),
     [
         (
             TRIAL_MODE_MSG,
@@ -2736,7 +2749,7 @@ def test_send_notification_shows_email_error_in_trial_mode(
 
 
 @pytest.mark.parametrize(
-    "endpoint, extra_args",
+    ("endpoint", "extra_args"),
     [
         ("main.check_messages", {"template_id": uuid4(), "upload_id": uuid4()}),
         ("main.send_one_off_step", {"template_id": uuid4(), "step_index": 0}),
@@ -2791,7 +2804,7 @@ def test_reply_to_is_previewed_if_chosen(
 
 
 @pytest.mark.parametrize(
-    "endpoint, extra_args",
+    ("endpoint", "extra_args"),
     [
         ("main.check_messages", {"template_id": uuid4(), "upload_id": uuid4()}),
         ("main.send_one_off_step", {"template_id": uuid4(), "step_index": 0}),

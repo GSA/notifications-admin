@@ -7,7 +7,7 @@ from app.main.views.service_settings import PLATFORM_ADMIN_SERVICE_PERMISSIONS
 from tests.conftest import normalize_spaces
 
 
-@pytest.fixture
+@pytest.fixture()
 def get_service_settings_page(
     client_request,
     platform_admin_user,
@@ -41,7 +41,7 @@ def test_service_set_permission_requires_platform_admin(
 
 
 @pytest.mark.parametrize(
-    "initial_permissions, permission, form_data, expected_update",
+    ("initial_permissions", "permission", "form_data", "expected_update"),
     [
         (
             [],
@@ -102,7 +102,7 @@ def test_service_set_permission(
 
 
 @pytest.mark.parametrize(
-    "service_fields, endpoint, kwargs, text",
+    ("service_fields", "endpoint", "kwargs", "text"),
     [
         (
             {"restricted": True},
@@ -146,7 +146,7 @@ def test_service_setting_toggles_show(
 
 
 @pytest.mark.parametrize(
-    "service_fields, endpoint, index, text",
+    ("service_fields", "endpoint", "index", "text"),
     [
         ({"active": True}, ".archive_service", 0, "Delete this service"),
         ({"active": True}, ".suspend_service", 1, "Suspend service"),
@@ -172,7 +172,7 @@ def test_service_setting_link_toggles(
 
 
 @pytest.mark.parametrize(
-    "service_fields, endpoint, index, text",
+    ("service_fields", "endpoint", "index", "text"),
     [
         pytest.param(
             {"active": False},
@@ -190,15 +190,15 @@ def test_service_setting_link_toggles_index_error(
     index,
     text,
 ):
+    url_for(endpoint, service_id=service_one["id"])
+    service_one.update(service_fields)
+    page = get_service_settings_page()
     with pytest.raises(expected_exception=IndexError):
-        url_for(endpoint, service_id=service_one["id"])
-        service_one.update(service_fields)
-        page = get_service_settings_page()
         page.select(".page-footer-link a")[index]
 
 
 @pytest.mark.parametrize(
-    "permissions,permissions_text,visible",
+    ("permissions", "permissions_text", "visible"),
     [
         ("sms", "inbound SMS", True),
         ("inbound_sms", "inbound SMS", False),  # no sms parent permission
@@ -216,7 +216,7 @@ def test_service_settings_doesnt_show_option_if_parent_permission_disabled(
 
 
 @pytest.mark.parametrize(
-    "service_fields, link_text",
+    ("service_fields", "link_text"),
     [
         # can't archive or suspend inactive service. Can't resume active service.
         ({"active": False}, "Archive service"),

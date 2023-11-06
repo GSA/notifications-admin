@@ -37,7 +37,7 @@ def test_old_jobs_hub_redirects(
     ],
 )
 @pytest.mark.parametrize(
-    "status_argument, expected_api_call",
+    ("status_argument", "expected_api_call"),
     [
         (
             "",
@@ -238,7 +238,8 @@ def test_should_show_job_with_sending_limit_exceeded_status(
     )
 
     assert normalize_spaces(page.select("main p")[1].text) == (
-        "Notify cannot send these messages because you have reached a limit. You can only send 1,000 messages per day and 250,000 messages in total."  # noqa
+        "Notify cannot send these messages because you have reached a limit. "
+        "You can only send 1,000 messages per day and 250,000 messages in total."
     )
     assert normalize_spaces(page.select("main p")[2].text) == (
         "Upload this spreadsheet again tomorrow or contact the Notify.gov team to raise the limit."
@@ -247,8 +248,8 @@ def test_should_show_job_with_sending_limit_exceeded_status(
 
 @freeze_time("2020-01-10 1:0:0")
 @pytest.mark.parametrize(
-    "created_at, processing_started, expected_message",
-    (
+    ("created_at", "processing_started", "expected_message"),
+    [
         # Recently created, not yet started
         (datetime(2020, 1, 10, 0, 0, 0), None, ("No messages to show yet…")),
         # Just started
@@ -284,7 +285,7 @@ def test_should_show_job_with_sending_limit_exceeded_status(
                 "These messages have been deleted because they were sent more than 7 days ago"
             ),
         ),
-    ),
+    ],
 )
 def test_should_show_old_job(
     client_request,
@@ -469,7 +470,7 @@ def test_should_show_updates_for_scheduled_job_as_json(
 
 
 @pytest.mark.parametrize(
-    "job_created_at, expected_message",
+    ("job_created_at", "expected_message"),
     [
         ("2016-01-10 11:09:00.000000+00:00", "Data available for 7 days"),
         ("2016-01-04 11:09:00.000000+00:00", "Data available for 1 day"),

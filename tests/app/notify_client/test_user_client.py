@@ -141,11 +141,11 @@ def test_client_converts_admin_permissions_to_db_permissions_on_add_to_service(
 
 @pytest.mark.parametrize(
     (
-        "expected_cache_get_calls,"
-        "cache_value,"
-        "expected_api_calls,"
-        "expected_cache_set_calls,"
-        "expected_return_value,"
+        "expected_cache_get_calls",
+        "cache_value",
+        "expected_api_calls",
+        "expected_cache_set_calls",
+        "expected_return_value",
     ),
     [
         (
@@ -193,17 +193,10 @@ def test_returns_value_from_cache(
 
 
 @pytest.mark.parametrize(
-    "client, method, extra_args, extra_kwargs",
+    ("client", "method", "extra_args", "extra_kwargs"),
     [
-        (
-            user_api_client,
-            "add_user_to_service",
-            [SERVICE_ONE_ID, sample_uuid(), [], []],
-            {},
-        ),
         (user_api_client, "update_user_attribute", [user_id], {}),
         (user_api_client, "reset_failed_login_count", [user_id], {}),
-        (user_api_client, "update_user_attribute", [user_id], {}),
         (user_api_client, "update_password", [user_id, "hunter2"], {}),
         (user_api_client, "verify_password", [user_id, "hunter2"], {}),
         (user_api_client, "check_verify_code", [user_id, "", ""], {}),

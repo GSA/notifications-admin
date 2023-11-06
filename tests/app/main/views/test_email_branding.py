@@ -217,7 +217,7 @@ def test_create_new_email_branding_when_branding_saved(
 
 
 @pytest.mark.parametrize(
-    "endpoint, has_data",
+    ("endpoint", "has_data"),
     [
         ("main.create_email_branding", False),
         ("main.update_email_branding", True),
@@ -416,7 +416,7 @@ def test_logo_does_not_get_persisted_if_updating_email_branding_client_throws_an
 
 
 @pytest.mark.parametrize(
-    "colour_hex, expected_status_code",
+    ("colour_hex", "expected_status_code"),
     [
         ("#FF00FF", 302),
         ("hello", 200),

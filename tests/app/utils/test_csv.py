@@ -14,6 +14,8 @@ def _get_notifications_csv(
     template_name="foo",
     template_type="sms",
     job_name="bar.csv",
+    carrier="ATT Mobility",
+    provider_response="Did not like it",
     status="Delivered",
     created_at="1943-04-19 12:00:00",
     rows=1,
@@ -47,6 +49,8 @@ def _get_notifications_csv(
                     "template_type": template_type,
                     "template": {"name": template_name, "template_type": template_type},
                     "job_name": job_name,
+                    "carrier": carrier,
+                    "provider_response": provider_response,
                     "status": status,
                     "created_at": created_at,
                     "updated_at": None,
@@ -65,8 +69,8 @@ def _get_notifications_csv(
     return _get
 
 
-@pytest.fixture(scope="function")
-def _get_notifications_csv_mock(
+@pytest.fixture()
+def get_notifications_csv_mock(
     mocker,
     api_user_active,
 ):
@@ -77,20 +81,20 @@ def _get_notifications_csv_mock(
 
 
 @pytest.mark.parametrize(
-    "created_by_name, expected_content",
+    ("created_by_name", "expected_content"),
     [
         (
             None,
             [
-                "Recipient,Template,Type,Sent by,Job,Status,Time\n",
-                "foo@bar.com,foo,sms,,,Delivered,1943-04-19 12:00:00\r\n",
+                "Recipient,Template,Type,Sent by,Job,Carrier,Carrier Response,Status,Time\n",
+                "foo@bar.com,foo,sms,,,ATT Mobility,Did not like it,Delivered,1943-04-19 12:00:00\r\n",
             ],
         ),
         (
             "Anne Example",
             [
-                "Recipient,Template,Type,Sent by,Job,Status,Time\n",
-                "foo@bar.com,foo,sms,Anne Example,,Delivered,1943-04-19 12:00:00\r\n",
+                "Recipient,Template,Type,Sent by,Job,Carrier,Carrier Response,Status,Time\n",
+                "foo@bar.com,foo,sms,Anne Example,,ATT Mobility,Did not like it,Delivered,1943-04-19 12:00:00\r\n",
             ],
         ),
     ],
@@ -114,7 +118,7 @@ def test_generate_notifications_csv_without_job(
 
 
 @pytest.mark.parametrize(
-    "original_file_contents, expected_column_headers, expected_1st_row",
+    ("original_file_contents", "expected_column_headers", "expected_1st_row"),
     [
         (
             """
@@ -128,6 +132,8 @@ def test_generate_notifications_csv_without_job(
                 "Type",
                 "Sent by",
                 "Job",
+                "Carrier",
+                "Carrier Response",
                 "Status",
                 "Time",
             ],
@@ -138,6 +144,8 @@ def test_generate_notifications_csv_without_job(
                 "sms",
                 "Fake Person",
                 "bar.csv",
+                "ATT Mobility",
+                "Did not like it",
                 "Delivered",
                 "1943-04-19 12:00:00",
             ],
@@ -157,6 +165,8 @@ def test_generate_notifications_csv_without_job(
                 "Type",
                 "Sent by",
                 "Job",
+                "Carrier",
+                "Carrier Response",
                 "Status",
                 "Time",
             ],
@@ -170,6 +180,8 @@ def test_generate_notifications_csv_without_job(
                 "sms",
                 "Fake Person",
                 "bar.csv",
+                "ATT Mobility",
+                "Did not like it",
                 "Delivered",
                 "1943-04-19 12:00:00",
             ],
@@ -189,6 +201,8 @@ def test_generate_notifications_csv_without_job(
                 "Type",
                 "Sent by",
                 "Job",
+                "Carrier",
+                "Carrier Response",
                 "Status",
                 "Time",
             ],
@@ -202,6 +216,8 @@ def test_generate_notifications_csv_without_job(
                 "sms",
                 "Fake Person",
                 "bar.csv",
+                "ATT Mobility",
+                "Did not like it",
                 "Delivered",
                 "1943-04-19 12:00:00",
             ],
@@ -211,7 +227,7 @@ def test_generate_notifications_csv_without_job(
 def test_generate_notifications_csv_returns_correct_csv_file(
     notify_admin,
     mocker,
-    _get_notifications_csv_mock,
+    get_notifications_csv_mock,
     original_file_contents,
     expected_column_headers,
     expected_1st_row,
@@ -231,11 +247,11 @@ def test_generate_notifications_csv_returns_correct_csv_file(
 
 def test_generate_notifications_csv_only_calls_once_if_no_next_link(
     notify_admin,
-    _get_notifications_csv_mock,
+    get_notifications_csv_mock,
 ):
     list(generate_notifications_csv(service_id="1234"))
 
-    assert _get_notifications_csv_mock.call_count == 1
+    assert get_notifications_csv_mock.call_count == 1
 
 
 @pytest.mark.parametrize("job_id", ["some", None])
@@ -303,8 +319,14 @@ MockRecipients = namedtuple(
 
 
 @pytest.mark.parametrize(
-    "rows_with_bad_recipients, rows_with_missing_data, "
-    "rows_with_message_too_long, rows_with_empty_message, template_type, expected_errors",
+    (
+        "rows_with_bad_recipients",
+        "rows_with_missing_data",
+        "rows_with_message_too_long",
+        "rows_with_empty_message",
+        "template_type",
+        "expected_errors",
+    ),
     [
         ([], [], [], [], "sms", []),
         ({2}, [], [], [], "sms", ["fix 1 phone number"]),

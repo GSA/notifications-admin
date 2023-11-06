@@ -88,8 +88,8 @@ def test_bad_permission_raises(service_one):
 
 
 @pytest.mark.parametrize(
-    "purchase_order_number,expected_result",
-    [[None, None], ["PO1234", [None, None, None, "PO1234"]]],
+    ("purchase_order_number", "expected_result"),
+    [(None, None), ("PO1234", [None, None, None, "PO1234"])],
 )
 def test_service_billing_details(purchase_order_number, expected_result):
     service = Service(service_json(purchase_order_number=purchase_order_number))

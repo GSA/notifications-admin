@@ -31,14 +31,14 @@ def test_can_create_spreadsheet_from_dict_with_filename():
 
 
 @pytest.mark.parametrize(
-    "args, kwargs",
-    (
+    ("args", "kwargs"),
+    [
         (
             ("hello", ["hello"]),
             {},
         ),
         ((), {"csv_data": "hello", "rows": ["hello"]}),
-    ),
+    ],
 )
 def test_spreadsheet_checks_for_bad_arguments(args, kwargs):
     with pytest.raises(TypeError) as exception:

@@ -68,7 +68,7 @@ def test_get_support_index_page_when_signed_out(
 
 @freeze_time("2016-12-12 12:00:00.000000")
 @pytest.mark.parametrize(
-    "support_type, expected_h1",
+    ("support_type", "expected_h1"),
     [
         (PROBLEM_TICKET_TYPE, "Report a problem"),
         (QUESTION_TICKET_TYPE, "Ask a question or give feedback"),
@@ -130,7 +130,7 @@ def test_get_support_as_member_of_public(
 
 @freeze_time("2016-12-12 12:00:00.000000")
 @pytest.mark.parametrize(
-    "ticket_type, expected_status_code",
+    ("ticket_type", "expected_status_code"),
     [(PROBLEM_TICKET_TYPE, 200), (QUESTION_TICKET_TYPE, 200), ("gripe", 404)],
 )
 def test_get_feedback_page(client_request, ticket_type, expected_status_code):
@@ -144,7 +144,7 @@ def test_get_feedback_page(client_request, ticket_type, expected_status_code):
 
 @freeze_time("2016-12-12 12:00:00.000000")
 @pytest.mark.parametrize(
-    "ticket_type, zendesk_ticket_type",
+    ("ticket_type", "zendesk_ticket_type"),
     [
         (PROBLEM_TICKET_TYPE, "incident"),
         (QUESTION_TICKET_TYPE, "question"),
@@ -202,7 +202,7 @@ def test_passed_non_logged_in_user_details_through_flow(
     ],
 )
 @pytest.mark.parametrize(
-    "ticket_type, zendesk_ticket_type",
+    ("ticket_type", "zendesk_ticket_type"),
     [
         (PROBLEM_TICKET_TYPE, "incident"),
         (QUESTION_TICKET_TYPE, "question"),
@@ -294,7 +294,7 @@ def test_email_address_required_for_problems_and_questions(
 
 
 @freeze_time("2016-12-12 12:00:00.000000")
-@pytest.mark.parametrize("ticket_type", (PROBLEM_TICKET_TYPE, QUESTION_TICKET_TYPE))
+@pytest.mark.parametrize("ticket_type", [PROBLEM_TICKET_TYPE, QUESTION_TICKET_TYPE])
 def test_email_address_must_be_valid_if_provided_to_support_form(
     client_request,
     mocker,
@@ -317,7 +317,7 @@ def test_email_address_must_be_valid_if_provided_to_support_form(
 
 
 @pytest.mark.parametrize(
-    "ticket_type, severe, is_in_business_hours, is_out_of_hours_emergency",
+    ("ticket_type", "severe", "is_in_business_hours", "is_out_of_hours_emergency"),
     [
         # business hours, never an emergency
         (PROBLEM_TICKET_TYPE, "yes", True, False),
@@ -408,8 +408,12 @@ ids, params = zip(
 
 @pytest.mark.parametrize(
     (
-        "ticket_type, is_in_business_hours, logged_in, has_live_services,"
-        "expected_status, expected_redirect"
+        "ticket_type",
+        "is_in_business_hours",
+        "logged_in",
+        "has_live_services",
+        "expected_status",
+        "expected_redirect",
     ),
     params,
     ids=ids,
@@ -446,11 +450,11 @@ def test_redirects_to_triage(
 
 
 @pytest.mark.parametrize(
-    "ticket_type, expected_h1",
-    (
+    ("ticket_type", "expected_h1"),
+    [
         (PROBLEM_TICKET_TYPE, "Report a problem"),
         (GENERAL_TICKET_TYPE, "Contact Notify.gov support"),
-    ),
+    ],
 )
 def test_options_on_triage_page(
     client_request,
@@ -492,7 +496,7 @@ def test_doesnt_lose_message_if_post_across_closing(
 
 
 @pytest.mark.parametrize(
-    "when, is_in_business_hours",
+    ("when", "is_in_business_hours"),
     [
         ("2016-06-06 09:29:59+0100", False),  # opening time, summer and winter
         ("2016-12-12 09:29:59+0000", False),
@@ -513,13 +517,13 @@ def test_in_business_hours(when, is_in_business_hours):
 
 @pytest.mark.parametrize(
     "ticket_type",
-    (
+    [
         GENERAL_TICKET_TYPE,
         PROBLEM_TICKET_TYPE,
-    ),
+    ],
 )
 @pytest.mark.parametrize(
-    "choice, expected_redirect_param",
+    ("choice", "expected_redirect_param"),
     [
         ("yes", "yes"),
         ("no", "no"),
@@ -545,7 +549,7 @@ def test_triage_redirects_to_correct_url(
 
 
 @pytest.mark.parametrize(
-    "extra_args, expected_back_link",
+    ("extra_args", "expected_back_link"),
     [
         (
             {"severe": "yes"},
@@ -575,9 +579,12 @@ def test_back_link_from_form(
 
 @pytest.mark.parametrize(
     (
-        "is_in_business_hours, severe,"
-        "expected_status_code, expected_redirect,"
-        "expected_status_code_when_logged_in, expected_redirect_when_logged_in"
+        "is_in_business_hours",
+        "severe",
+        "expected_status_code",
+        "expected_redirect",
+        "expected_status_code_when_logged_in",
+        "expected_redirect_when_logged_in",
     ),
     [
         (True, "yes", 200, no_redirect(), 200, no_redirect()),
@@ -658,9 +665,11 @@ def test_should_be_shown_the_bat_email(
 
 @pytest.mark.parametrize(
     (
-        "severe,"
-        "expected_status_code, expected_redirect,"
-        "expected_status_code_when_logged_in, expected_redirect_when_logged_in"
+        "severe",
+        "expected_status_code",
+        "expected_redirect",
+        "expected_status_code_when_logged_in",
+        "expected_redirect_when_logged_in",
     ),
     [
         # User hasn’t answered the triage question
@@ -743,8 +752,8 @@ def test_bat_email_page(
 
 
 @pytest.mark.parametrize(
-    "out_of_hours_emergency, email_address_provided, out_of_hours, message",
-    (
+    ("out_of_hours_emergency", "email_address_provided", "out_of_hours", "message"),
+    [
         # Out of hours emergencies trump everything else
         (
             True,
@@ -780,7 +789,7 @@ def test_bat_email_page(
             "We’ll aim to read your message in the next 30 minutes and we’ll reply within one working day.",
         ),
         (False, True, True, "We’ll reply within one working day."),
-    ),
+    ],
 )
 def test_thanks(
     client_request,

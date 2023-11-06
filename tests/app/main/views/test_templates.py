@@ -28,8 +28,8 @@ from tests.conftest import (
 
 
 @pytest.mark.parametrize(
-    "permissions, expected_message",
-    (
+    ("permissions", "expected_message"),
+    [
         (
             ["email"],
             (
@@ -51,7 +51,7 @@ from tests.conftest import (
                 "You need a template before you can send messages."
             ),
         ),
-    ),
+    ],
 )
 def test_should_show_empty_page_when_no_templates(
     client_request,
@@ -100,7 +100,13 @@ def test_should_show_add_template_form_if_service_has_folder_permission(
 
 
 @pytest.mark.parametrize(
-    "user, expected_page_title, extra_args, expected_nav_links, expected_templates",
+    (
+        "user",
+        "expected_page_title",
+        "extra_args",
+        "expected_nav_links",
+        "expected_templates",
+    ),
     [
         (
             create_active_user_view_permissions(),
@@ -299,8 +305,8 @@ def test_should_show_live_search_if_service_has_lots_of_folders(
 
 
 @pytest.mark.parametrize(
-    "service_permissions, expected_values, expected_labels",
-    (
+    ("service_permissions", "expected_values", "expected_labels"),
+    [
         pytest.param(
             ["email", "sms"],
             [
@@ -314,20 +320,21 @@ def test_should_show_live_search_if_service_has_lots_of_folders(
                 "Copy an existing template",
             ],
         ),
-        pytest.param(
-            ["email", "sms"],
-            [
-                # 'email',
-                "sms",
-                "copy-existing",
-            ],
-            [
-                # 'Email',
-                "Start with a blank template",
-                "Copy an existing template",
-            ],
-        ),
-    ),
+        # TODO This is a duplicate of above. Why?
+        # pytest.param(
+        #     ["email", "sms"],
+        #     [
+        #         # 'email',
+        #         "sms",
+        #         "copy-existing",
+        #     ],
+        #     [
+        #         # 'Email',
+        #         "Start with a blank template",
+        #         "Copy an existing template",
+        #     ],
+        # ),
+    ],
 )
 def test_should_show_new_template_choices_if_service_has_folder_permission(
     client_request,
@@ -363,7 +370,7 @@ def test_should_show_new_template_choices_if_service_has_folder_permission(
 
 
 @pytest.mark.parametrize(
-    "permissions,are_data_attrs_added",
+    ("permissions", "are_data_attrs_added"),
     [
         (["sms"], True),
         (["email"], True),
@@ -523,7 +530,7 @@ def test_user_with_only_send_and_view_redirected_to_set_sender_for_one_off(
 
 
 @pytest.mark.parametrize(
-    "permissions, links_to_be_shown, permissions_warning_to_be_shown",
+    ("permissions", "links_to_be_shown", "permissions_warning_to_be_shown"),
     [
         (
             ["view_activity"],
@@ -747,9 +754,9 @@ def test_choose_a_template_to_copy(
 
     assert len(actual) == len(expected)
 
-    for actual, expected in zip(actual, expected):  # noqa: B020
+    zipobject = zip(actual, expected)
+    for actual, expected in zipobject:
         assert normalize_spaces(actual.text) == expected
-
     links = page.select("main nav a")
     assert links[0]["href"] == url_for(
         "main.choose_template_to_copy",
@@ -793,7 +800,8 @@ def test_choose_a_template_to_copy_when_user_has_one_service(
 
     assert len(actual) == len(expected)
 
-    for actual, expected in zip(actual, expected):  # noqa: B020
+    zipobject = zip(actual, expected)
+    for actual, expected in zipobject:
         assert normalize_spaces(actual.text) == expected
 
     assert page.select("main nav a")[0]["href"] == url_for(
@@ -869,7 +877,8 @@ def test_choose_a_template_to_copy_from_folder_within_service(
 
     assert len(actual) == len(expected)
 
-    for actual, expected in zip(actual, expected):  # noqa: B020
+    zipobject = zip(actual, expected)
+    for actual, expected in zipobject:
         assert normalize_spaces(actual.text) == expected
 
     links = page.select("main nav a")
@@ -899,8 +908,8 @@ def test_choose_a_template_to_copy_from_folder_within_service(
 
 
 @pytest.mark.parametrize(
-    "existing_template_names, expected_name",
-    (
+    ("existing_template_names", "expected_name"),
+    [
         (["Two week reminder"], "Two week reminder (copy)"),
         (["Two week reminder (copy)"], "Two week reminder (copy 2)"),
         (
@@ -919,7 +928,7 @@ def test_choose_a_template_to_copy_from_folder_within_service(
             ["Two week reminder (copy)", "Two week reminder (copy 10)"],
             "Two week reminder (copy 2)",
         ),
-    ),
+    ],
 )
 def test_load_edit_template_with_copy_of_template(
     client_request,
@@ -1002,8 +1011,8 @@ def test_cant_copy_template_from_non_member_service(
 
 
 @pytest.mark.parametrize(
-    "service_permissions, data, expected_error",
-    (
+    ("service_permissions", "data", "expected_error"),
+    [
         (
             ["email"],
             {
@@ -1012,7 +1021,7 @@ def test_cant_copy_template_from_non_member_service(
             },
             "Sending text messages has been disabled for your service.",
         ),
-    ),
+    ],
 )
 def test_should_not_allow_creation_of_template_through_form_without_correct_permission(
     client_request,
@@ -1040,9 +1049,9 @@ def test_should_not_allow_creation_of_template_through_form_without_correct_perm
     )
 
 
-@pytest.mark.parametrize("method", ("get", "post"))
+@pytest.mark.parametrize("method", ["get", "post"])
 @pytest.mark.parametrize(
-    "type_of_template, expected_error",
+    ("type_of_template", "expected_error"),
     [
         ("email", "Sending emails has been disabled for your service."),
         ("sms", "Sending text messages has been disabled for your service."),
@@ -1236,7 +1245,7 @@ def test_should_403_when_create_template_with_process_type_of_priority_for_non_p
 
 
 @pytest.mark.parametrize(
-    "old_content, new_content, expected_paragraphs",
+    ("old_content", "new_content", "expected_paragraphs"),
     [
         (
             "my favorite color is blue",
@@ -1521,7 +1530,7 @@ def test_should_show_delete_template_page_with_never_used_block(
     mock_get_service_template.assert_called_with(SERVICE_ONE_ID, fake_uuid, None)
 
 
-@pytest.mark.parametrize("parent", (PARENT_FOLDER_ID, None))
+@pytest.mark.parametrize("parent", [PARENT_FOLDER_ID, None])
 def test_should_redirect_when_deleting_a_template(
     mocker,
     client_request,
@@ -1706,11 +1715,11 @@ def test_route_invalid_permissions(
 
 
 @pytest.mark.parametrize(
-    "template_type, expected",
-    (
+    ("template_type", "expected"),
+    [
         ("email", "New email template"),
         ("sms", "New text message template"),
-    ),
+    ],
 )
 def test_add_template_page_title(
     client_request,
@@ -1748,7 +1757,10 @@ def test_can_create_email_template_with_emoji(
 
 
 @pytest.mark.parametrize(
-    "template_type, expected_error", (("sms", ("You cannot use 🍜 in text messages.")),)
+    ("template_type", "expected_error"),
+    [
+        ("sms", ("You cannot use 🍜 in text messages.")),
+    ],
 )
 def test_should_not_create_sms_template_with_emoji(
     client_request,
@@ -1776,7 +1788,10 @@ def test_should_not_create_sms_template_with_emoji(
 
 
 @pytest.mark.parametrize(
-    "template_type, expected_error", (("sms", ("You cannot use 🍔 in text messages.")),)
+    ("template_type", "expected_error"),
+    [
+        ("sms", ("You cannot use 🍔 in text messages.")),
+    ],
 )
 def test_should_not_update_sms_template_with_emoji(
     mocker,
@@ -1815,7 +1830,12 @@ def test_should_not_update_sms_template_with_emoji(
     assert mock_update_service_template.called is False
 
 
-@pytest.mark.parametrize("template_type", ("sms",))
+@pytest.mark.parametrize(
+    "template_type",
+    [
+        "sms",
+    ],
+)
 def test_should_create_sms_template_without_downgrading_unicode_characters(
     client_request,
     service_one,
@@ -1944,8 +1964,8 @@ def test_set_template_sender(
 
 
 @pytest.mark.parametrize(
-    "template_type, prefix_sms, content, expected_message, expected_class",
-    (
+    ("template_type", "prefix_sms", "content", "expected_message", "expected_class"),
+    [
         (
             "sms",
             False,
@@ -2068,7 +2088,7 @@ def test_set_template_sender(
             "Will be charged as 1 text message (not including personalization)",
             None,
         ),
-    ),
+    ],
 )
 def test_content_count_json_endpoint(
     client_request,
@@ -2103,10 +2123,10 @@ def test_content_count_json_endpoint(
 
 @pytest.mark.parametrize(
     "template_type",
-    (
+    [
         "email",
         "banana",
-    ),
+    ],
 )
 def test_content_count_json_endpoint_for_unsupported_template_types(
     client_request,

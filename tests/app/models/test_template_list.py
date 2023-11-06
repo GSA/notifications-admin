@@ -12,8 +12,8 @@ VIS_PARENT_FOLDER_ID = "bbbb222b-2b22-2b22-222b-b222b22b2222"
 INV_CHILD_2_FOLDER_ID = "fafe723f-1d39-4a10-865f-e551e03d8886"
 
 
-@pytest.fixture
-def mock_get_hierarchy_of_folders(
+@pytest.fixture()
+def _mock_get_hierarchy_of_folders(
     mock_get_template_folders, active_user_with_permissions
 ):
     mock_get_template_folders.return_value = [
@@ -74,8 +74,8 @@ def mock_get_hierarchy_of_folders(
     ]
 
 
+@pytest.mark.usefixtures("_mock_get_hierarchy_of_folders")
 def test_template_list_yields_folders_visible_to_user(
-    mock_get_hierarchy_of_folders,
     mock_get_service_templates,
     service_one,
     active_user_with_permissions,
@@ -98,8 +98,8 @@ def test_template_list_yields_folders_visible_to_user(
     )
 
 
+@pytest.mark.usefixtures("_mock_get_hierarchy_of_folders")
 def test_template_list_yields_all_folders_without_user(
-    mock_get_hierarchy_of_folders,
     mock_get_service_templates,
     service_one,
 ):

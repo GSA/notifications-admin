@@ -7,7 +7,7 @@ from app.utils.user import user_has_permissions
 
 @pytest.mark.parametrize(
     "permissions",
-    (
+    [
         [
             # Route has one of the permissions which the user has
             "manage_service"
@@ -25,7 +25,7 @@ from app.utils.user import user_has_permissions
         [
             # Route has no specific permissions required
         ],
-    ),
+    ],
 )
 def test_permissions(
     client_request,
@@ -50,12 +50,12 @@ def test_permissions(
 
 @pytest.mark.parametrize(
     "permissions",
-    (
+    [
         [
             # Route has a permission which the user doesn’t have
             "send_messages"
         ],
-    ),
+    ],
 )
 def test_permissions_forbidden(
     client_request,

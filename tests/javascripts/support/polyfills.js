@@ -2,9 +2,9 @@
 
 let _location = {
   reload: jest.fn(),
-  hostname: "www.notifications.service.gov.uk",
+  hostname: "beta.notify.gov",
   assign: jest.fn(),
-  href: "https://www.notifications.service.gov.uk",
+  href: "https://beta.notify.gov",
 }
 
 // JSDOM provides a read-only window.location, which does not allow for

@@ -9,15 +9,17 @@ from tests.conftest import (
 )
 
 
+@pytest.mark.usefixtures("_mock_get_no_uploads")
 @pytest.mark.parametrize(
-    "extra_permissions, expected_empty_message",
-    (([], ("You have not uploaded any files recently.")),),
+    ("extra_permissions", "expected_empty_message"),
+    [
+        ([], ("You have not uploaded any files recently.")),
+    ],
 )
 def test_get_upload_hub_with_no_uploads(
     mocker,
     client_request,
     service_one,
-    mock_get_no_uploads,
     extra_permissions,
     expected_empty_message,
 ):
@@ -56,18 +58,18 @@ def test_get_upload_hub_page(
     )
 
 
+@pytest.mark.usefixtures("_mock_get_no_uploads")
 @pytest.mark.parametrize(
     "user",
-    (
+    [
         create_active_caseworking_user(),
         create_active_user_with_permissions(),
-    ),
+    ],
 )
 @freeze_time("2012-12-12 12:12")
 def test_uploads_page_shows_scheduled_jobs(
     mocker,
     client_request,
-    mock_get_no_uploads,
     mock_get_jobs,
     user,
 ):

@@ -142,10 +142,10 @@ def test_should_return_200_when_email_is_not_gov_uk(
 
 @pytest.mark.parametrize(
     "email_address",
-    (
+    [
         "notfound@example.gsa.gov",
         "example@lsquo.net",
-    ),
+    ],
 )
 def test_should_add_user_details_to_session(
     client_request,
@@ -215,7 +215,7 @@ def test_register_with_existing_email_sends_emails(
 
 
 @pytest.mark.parametrize(
-    "email_address, expected_value",
+    ("email_address", "expected_value"),
     [
         ("first.last@example.com", "First Last"),
         ("first.middle.last@example.com", "First Middle Last"),
@@ -281,13 +281,13 @@ def test_shows_hidden_email_address_on_registration_page_from_invite(
 
 @pytest.mark.parametrize(
     "extra_data",
-    (
+    [
         {},
         # The username field is present in the page but the POST request
         # should ignore it
         {"username": "invited@user.com"},
         {"username": "anythingelse@example.com"},
-    ),
+    ],
 )
 def test_register_from_invite(
     client_request,

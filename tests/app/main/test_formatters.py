@@ -16,8 +16,8 @@ from app.formatters import (
 
 
 @pytest.mark.parametrize(
-    "status, notification_type, expected",
-    (
+    ("status", "notification_type", "expected"),
+    [
         # Successful statuses aren’t linked
         ("created", "email", lambda: None),
         ("sending", "email", lambda: None),
@@ -53,7 +53,7 @@ from app.formatters import (
             "sms",
             partial(url_for, "main.message_status", _anchor="text-message-statuses"),
         ),
-    ),
+    ],
 )
 def test_format_notification_status_as_url(
     client_request,
@@ -65,7 +65,7 @@ def test_format_notification_status_as_url(
 
 
 @pytest.mark.parametrize(
-    "input_number, formatted_number",
+    ("input_number", "formatted_number"),
     [
         (0, "0p"),
         (0.01, "1p"),
@@ -84,7 +84,7 @@ def test_format_number_in_pounds_as_currency(input_number, formatted_number):
 
 
 @pytest.mark.parametrize(
-    "time, human_readable_datetime",
+    ("time", "human_readable_datetime"),
     [
         # incoming in UTC, outgoing in "human formatted" UTC
         ("2018-03-14 09:00", "14 March at 09:00 UTC"),
@@ -127,8 +127,8 @@ def test_format_datetime_relative(time, human_readable_datetime):
 
 
 @pytest.mark.parametrize(
-    "value, significant_figures, expected_result",
-    (
+    ("value", "significant_figures", "expected_result"),
+    [
         (0, 1, 0),
         (0, 2, 0),
         (12_345, 1, 10_000),
@@ -138,14 +138,14 @@ def test_format_datetime_relative(time, human_readable_datetime):
         (12_345.6789, 1, 10_000),
         (12_345.6789, 9, 12_345),
         (-12_345, 1, -10_000),
-    ),
+    ],
 )
 def test_round_to_significant_figures(value, significant_figures, expected_result):
     assert round_to_significant_figures(value, significant_figures) == expected_result
 
 
 @pytest.mark.parametrize(
-    "service_name, safe_email",
+    ("service_name", "safe_email"),
     [
         ("name with spaces", "name.with.spaces"),
         ("singleword", "singleword"),
