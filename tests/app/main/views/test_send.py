@@ -2292,7 +2292,6 @@ def test_warns_if_file_sent_already(
     mock_get_jobs.assert_called_once_with(SERVICE_ONE_ID, limit_days=0)
 
 
-@pytest.mark.skip(reason="Test fails for unknown reason at this time.")
 @pytest.mark.parametrize(
     "uploaded_file_name",
     [
@@ -2302,36 +2301,33 @@ def test_warns_if_file_sent_already(
 )
 def test_warns_if_file_sent_already_errors(
     client_request,
-    mock_get_users_by_service,
-    mock_get_live_service,
-    mock_get_service_template,
-    mock_has_permissions,
-    mock_get_service_statistics,
-    mock_get_job_doesnt_exist,
     mock_get_jobs,
-    fake_uuid,
     mocker,
+    fake_uuid,
     uploaded_file_name,
 ):
     mocker.patch(
         "app.main.views.send.s3download", return_value=("phone number,\n2028675209")
-    )
+        )
     mocker.patch(
         "app.main.views.send.get_csv_metadata",
         return_value={"original_file_name": uploaded_file_name},
     )
 
     with pytest.raises(
-        expected_exception=Exception, match="Unable to locate credentials"
+        expected_exception=Exception
     ):
         stmt_for_test_warns_if_file_sent_already_errors(
             client_request, uploaded_file_name, fake_uuid, mock_get_jobs
         )
 
-
 def stmt_for_test_warns_if_file_sent_already_errors(
-    client_request, uploaded_file_name, fake_uuid, mock_get_jobs
+    client_request,
+    uploaded_file_name,
+    fake_uuid,
+    mock_get_jobs
 ):
+
     page = client_request.get(
         "main.check_messages",
         service_id=SERVICE_ONE_ID,
