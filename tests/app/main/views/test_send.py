@@ -2301,33 +2301,43 @@ def test_warns_if_file_sent_already(
 )
 def test_warns_if_file_sent_already_errors(
     client_request,
+    mock_get_users_by_service,
+    mock_get_live_service,
+    mock_get_service_template,
+    mock_has_permissions,
+    mock_get_service_statistics,
+    mock_get_job_doesnt_exist,
     mock_get_jobs,
-    mocker,
     fake_uuid,
+    mocker,
     uploaded_file_name,
 ):
     mocker.patch(
         "app.main.views.send.s3download", return_value=("phone number,\n2028675209")
-        )
+    )
     mocker.patch(
         "app.main.views.send.get_csv_metadata",
         return_value={"original_file_name": uploaded_file_name},
     )
 
+    # The exception that actually gets reported is from
+    # botocore.errorfactory.NoSuchKey, but that cannot be referenced directly.
+    # You have to capture the botocore.exceptions.ClientError object.
+    # However, it is a bit more nuanced than that, and that alone won't match
+    # properly here with the pytest.raises wrapper.
+    # See https://stackoverflow.com/questions/42975609/how-to-capture-botocores-nosuchkey-exception
+    # for more information.
     with pytest.raises(
-        expected_exception=Exception
+        expected_exception=Exception, match="The specified key does not exist"
     ):
         stmt_for_test_warns_if_file_sent_already_errors(
             client_request, uploaded_file_name, fake_uuid, mock_get_jobs
         )
 
-def stmt_for_test_warns_if_file_sent_already_errors(
-    client_request,
-    uploaded_file_name,
-    fake_uuid,
-    mock_get_jobs
-):
 
+def stmt_for_test_warns_if_file_sent_already_errors(
+    client_request, uploaded_file_name, fake_uuid, mock_get_jobs
+):
     page = client_request.get(
         "main.check_messages",
         service_id=SERVICE_ONE_ID,
