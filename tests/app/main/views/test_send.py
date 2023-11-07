@@ -2312,13 +2312,13 @@ def test_warns_if_file_sent_already_errors(
     mocker,
     uploaded_file_name,
 ):
-    mocker.patch(
-        "app.main.views.send.s3download", return_value=("phone number,\n2028675209")
-    )
-    mocker.patch(
-        "app.main.views.send.get_csv_metadata",
-        return_value={"original_file_name": uploaded_file_name},
-    )
+    # mocker.patch(
+    #     "app.main.views.send.s3download", return_value=("phone number,\n2028675209")
+    # )
+    # mocker.patch(
+    #     "app.main.views.send.get_csv_metadata",
+    #     return_value={"original_file_name": uploaded_file_name},
+    # )
 
     # The exception that actually gets reported is from
     # botocore.errorfactory.NoSuchKey, but that cannot be referenced directly.
@@ -2331,13 +2331,21 @@ def test_warns_if_file_sent_already_errors(
         expected_exception=Exception, match="The specified key does not exist"
     ):
         stmt_for_test_warns_if_file_sent_already_errors(
-            client_request, uploaded_file_name, fake_uuid, mock_get_jobs
+            client_request, uploaded_file_name, fake_uuid, mock_get_jobs, mocker
         )
 
 
 def stmt_for_test_warns_if_file_sent_already_errors(
-    client_request, uploaded_file_name, fake_uuid, mock_get_jobs
+    client_request, uploaded_file_name, fake_uuid, mock_get_jobs, mocker
 ):
+    mocker.patch(
+        "app.main.views.send.s3download", return_value=("phone number,\n2028675209")
+    )
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": uploaded_file_name},
+    )
+
     page = client_request.get(
         "main.check_messages",
         service_id=SERVICE_ONE_ID,
