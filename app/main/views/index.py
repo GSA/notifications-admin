@@ -227,7 +227,7 @@ def terms():
     )
 
 
-@main.route("/features/using-notify")
+@main.route("/features/using_notify")
 @user_is_logged_in
 def using_notify():
     return (

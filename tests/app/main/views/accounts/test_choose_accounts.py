@@ -256,21 +256,23 @@ def test_choose_account_should_should_organizations_link_for_platform_admin(
     ] == expected_headings
 
 
-def test_choose_account_should_show_back_to_service_link(
-    client_request,
-    mock_get_orgs_and_services,
-    mock_get_organization,
-    mock_get_organization_services,
-):
-    resp = client_request.get("main.choose_account")
+# Moving the back to service link into the top navigation
 
-    service_navigation = resp.find(
-        "div", {"class": "navigation-service usa-breadcrumb"}
-    )
-    back_to_service_link = service_navigation.a
+# def test_choose_account_should_show_back_to_service_link(
+#     client_request,
+#     mock_get_orgs_and_services,
+#     mock_get_organization,
+#     mock_get_organization_services,
+# ):
+#     resp = client_request.get("main.choose_account")
 
-    assert back_to_service_link["href"] == url_for("main.show_accounts_or_dashboard")
-    assert back_to_service_link.text == "Back to service one"
+#     service_navigation = resp.find(
+#         "div", {"class": "navigation-service usa-breadcrumb"}
+#     )
+#     back_to_service_link = service_navigation.a
+
+#     assert back_to_service_link["href"] == url_for("main.show_accounts_or_dashboard")
+#     assert back_to_service_link.text == "Back to service one"
 
 
 def test_choose_account_should_not_show_back_to_service_link_if_no_service_in_session(
@@ -322,7 +324,7 @@ def test_choose_account_should_not_show_back_to_service_link_if_service_archived
 
     assert normalize_spaces(page.select_one("h1").text) == "Choose service"
     if active:
-        assert page.select_one(".navigation-service a") is not None
+        assert page.select_one(".navigation-service a") is None
     else:
         assert page.select_one(".navigation-service a") is None
 
@@ -361,7 +363,7 @@ def test_should_show_back_to_service_if_user_belongs_to_service(
 ):
     mock_get_service.return_value = service_one
     expected_page_text = (
-        "Test Service Switch service " "" "Dashboard " "Send messages " "Team members"
+        "Test Service Switch service " "Send messages " "Dashboard " "Team members"
     )  # TODO: set sidebar variables in common test module
 
     page = client_request.get(

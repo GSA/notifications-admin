@@ -471,7 +471,7 @@ def test_should_show_recent_templates_on_dashboard(
     headers = [
         header.text.strip() for header in page.find_all("h2") + page.find_all("h1")
     ]
-    assert "In the last seven days" in headers
+    assert "Messages sent" in headers
 
     table_rows = page.find_all("tbody")[0].find_all("tr")
 
@@ -1174,6 +1174,14 @@ def test_route_for_service_permissions(
     mock_get_inbound_sms_summary,
 ):
     with notify_admin.test_request_context():
+
+        def _get(mocker):
+            return {"count": 0}
+
+        mocker.patch(
+            "app.service_api_client.get_global_notification_count", side_effect=_get
+        )
+
         validate_route_permission(
             mocker,
             notify_admin,
@@ -1522,6 +1530,8 @@ def test_service_dashboard_shows_usage(
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
     assert normalize_spaces(page.select_one("[data-key=usage]").text) == (
+        "Daily Usage Remaining "
+        "40,000 "
         "$29.85 "
         "spent on text messages"
         # Disabled for pilot
@@ -1556,4 +1566,4 @@ def test_service_dashboard_shows_free_allowance(
 
     usage_text = normalize_spaces(page.select_one("[data-key=usage]").text)
     assert "spent on text messages" not in usage_text
-    assert "249,000 free text messages left" in usage_text
+    assert "Daily Usage Remaining -209,000 249,000" in usage_text
