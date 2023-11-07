@@ -2312,32 +2312,6 @@ def test_warns_if_file_sent_already_errors(
     mocker,
     uploaded_file_name,
 ):
-    # mocker.patch(
-    #     "app.main.views.send.s3download", return_value=("phone number,\n2028675209")
-    # )
-    # mocker.patch(
-    #     "app.main.views.send.get_csv_metadata",
-    #     return_value={"original_file_name": uploaded_file_name},
-    # )
-
-    # The exception that actually gets reported is from
-    # botocore.errorfactory.NoSuchKey, but that cannot be referenced directly.
-    # You have to capture the botocore.exceptions.ClientError object.
-    # However, it is a bit more nuanced than that, and that alone won't match
-    # properly here with the pytest.raises wrapper.
-    # See https://stackoverflow.com/questions/42975609/how-to-capture-botocores-nosuchkey-exception
-    # for more information.
-    with pytest.raises(
-        expected_exception=Exception, match="The specified key does not exist"
-    ):
-        stmt_for_test_warns_if_file_sent_already_errors(
-            client_request, uploaded_file_name, fake_uuid, mock_get_jobs, mocker
-        )
-
-
-def stmt_for_test_warns_if_file_sent_already_errors(
-    client_request, uploaded_file_name, fake_uuid, mock_get_jobs, mocker
-):
     mocker.patch(
         "app.main.views.send.s3download", return_value=("phone number,\n2028675209")
     )
@@ -2346,6 +2320,28 @@ def stmt_for_test_warns_if_file_sent_already_errors(
         return_value={"original_file_name": uploaded_file_name},
     )
 
+    # The exception that actually gets reported is from
+    # botocore.errorfactory.NoSuchKey, but that cannot be referenced directly.
+    # You have to capture the botocore.exceptions.ClientError object.
+    # However, it is a bit more nuanced than that, and that alone won't match
+    # properly here with the pytest.raises wrapper.
+    # See https://stackoverflow.com/questions/42975609/how-to-capture-botocores-nosuchkey-exception
+    # for more information.
+
+    # There can sometimes be another exception thrown if the environment isn't
+    # configured fully, hence the multiple messages in the match argumment.
+    with pytest.raises(
+        expected_exception=Exception,
+        match=r"The specified key does not exist|Unable to locate credentials",
+    ):
+        stmt_for_test_warns_if_file_sent_already_errors(
+            client_request, uploaded_file_name, fake_uuid, mock_get_jobs
+        )
+
+
+def stmt_for_test_warns_if_file_sent_already_errors(
+    client_request, uploaded_file_name, fake_uuid, mock_get_jobs
+):
     page = client_request.get(
         "main.check_messages",
         service_id=SERVICE_ONE_ID,
