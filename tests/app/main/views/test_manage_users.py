@@ -15,6 +15,7 @@ from tests.conftest import (
     create_active_user_manage_template_permissions,
     create_active_user_view_permissions,
     create_active_user_with_permissions,
+    create_platform_admin_user,
     normalize_spaces,
     sample_uuid,
 )
@@ -296,9 +297,11 @@ def test_service_with_no_email_auth_hides_auth_type_options(
     service_one,
     mock_get_users_by_service,
     mock_get_template_folders,
+    platform_admin_user,
 ):
     if service_has_email_auth:
         service_one["permissions"].append("email_auth")
+    client_request.login(platform_admin_user)
     page = client_request.get(endpoint, service_id=service_one["id"], **extra_args)
     assert (
         page.find("input", attrs={"name": "login_authentication"}) is None
@@ -326,7 +329,9 @@ def test_service_without_caseworking_doesnt_show_admin_vs_caseworker(
     endpoint,
     service_has_caseworking,
     extra_args,
+    platform_admin_user,
 ):
+    client_request.login(platform_admin_user)
     page = client_request.get(endpoint, service_id=SERVICE_ONE_ID, **extra_args)
     permission_checkboxes = page.select("input[type=checkbox]")
 
@@ -443,7 +448,9 @@ def test_should_show_page_for_one_user(
     endpoint,
     extra_args,
     expected_checkboxes,
+    platform_admin_user,
 ):
+    client_request.login(platform_admin_user)
     page = client_request.get(endpoint, service_id=SERVICE_ONE_ID, **extra_args)
     checkboxes = page.select("input[type=checkbox]")
 
@@ -461,8 +468,10 @@ def test_invite_user_allows_to_choose_auth(
     mock_get_users_by_service,
     mock_get_template_folders,
     service_one,
+    platform_admin_user,
 ):
     service_one["permissions"].append("email_auth")
+    client_request.login(platform_admin_user)
     page = client_request.get("main.invite_user", service_id=SERVICE_ONE_ID)
 
     radio_buttons = page.select("input[name=login_authentication]")
@@ -476,7 +485,9 @@ def test_invite_user_has_correct_email_field(
     client_request,
     mock_get_users_by_service,
     mock_get_template_folders,
+    platform_admin_user,
 ):
+    client_request.login(platform_admin_user)
     email_field = client_request.get(
         "main.invite_user", service_id=SERVICE_ONE_ID
     ).select_one("#email_address")
@@ -790,9 +801,9 @@ def test_edit_user_permissions_shows_authentication_for_email_auth_service(
 def test_should_show_page_for_inviting_user(
     client_request,
     mock_get_template_folders,
-    active_user_with_permissions,
+    platform_admin_user,
 ):
-    client_request.login(active_user_with_permissions)
+    client_request.login(platform_admin_user)
     page = client_request.get(
         "main.invite_user",
         service_id=SERVICE_ONE_ID,
@@ -829,15 +840,9 @@ def test_should_show_page_for_inviting_user_with_email_prefilled(
         # We have the user’s name in the H1 but don’t want it duplicated
         # in the page title
         _test_page_title=False,
+        _expected_status=403,
     )
-    assert normalize_spaces(page.select_one("title").text).startswith(
-        "Invite a team member"
-    )
-    assert normalize_spaces(page.select_one("h1").text) == ("Invite Service Two User")
-    # assert normalize_spaces(page.select_one('main .gov-uk').text) == (
-    #     'service-two-user@test.gsa.gov'
-    # )
-    assert not page.select("input#email_address") or page.select("input[type=email]")
+    assert "not allowed to see this page" in page.h1.string.strip()
 
 
 def test_should_show_page_if_prefilled_user_is_already_a_team_member(
@@ -847,8 +852,9 @@ def test_should_show_page_if_prefilled_user_is_already_a_team_member(
     fake_uuid,
     active_user_with_permissions,
     active_caseworking_user,
+    platform_admin_user,
 ):
-    client_request.login(active_user_with_permissions)
+    client_request.login(platform_admin_user)
     mocker.patch(
         "app.models.user.user_api_client.get_user",
         side_effect=[
@@ -878,14 +884,14 @@ def test_should_show_page_if_prefilled_user_is_already_invited(
     client_request,
     mock_get_template_folders,
     fake_uuid,
-    active_user_with_permissions,
     active_user_with_permission_to_other_service,
     mock_get_invites_for_service,
+    platform_admin_user,
 ):
     active_user_with_permission_to_other_service[
         "email_address"
     ] = "user_1@testnotify.gsa.gov"
-    client_request.login(active_user_with_permissions)
+    client_request.login(platform_admin_user)
     mocker.patch(
         "app.models.user.user_api_client.get_user",
         side_effect=[
@@ -966,8 +972,9 @@ def test_should_403_if_trying_to_prefill_email_address_for_user_from_other_organ
 
 
 def test_should_show_folder_permission_form_if_service_has_folder_permissions_enabled(
-    client_request, mocker, mock_get_template_folders, service_one
+    client_request, mocker, mock_get_template_folders, service_one, platform_admin_user
 ):
+    client_request.login(platform_admin_user)
     mock_get_template_folders.return_value = [
         {
             "id": "folder-id-1",
@@ -1005,7 +1012,7 @@ def test_should_show_folder_permission_form_if_service_has_folder_permissions_en
 )
 def test_invite_user(
     client_request,
-    active_user_with_permissions,
+    platform_admin_user,
     mocker,
     sample_invite,
     email_address,
@@ -1021,9 +1028,10 @@ def test_invite_user(
     )
     mocker.patch(
         "app.models.user.Users.client_method",
-        return_value=[active_user_with_permissions],
+        return_value=[platform_admin_user],
     )
     mocker.patch("app.invite_api_client.create_invite", return_value=sample_invite)
+    client_request.login(platform_admin_user)
     page = client_request.post(
         "main.invite_user",
         service_id=SERVICE_ONE_ID,
@@ -1064,7 +1072,7 @@ def test_invite_user(
 def test_invite_user_when_email_address_is_prefilled(
     client_request,
     service_one,
-    active_user_with_permissions,
+    platform_admin_user,
     active_user_with_permission_to_other_service,
     fake_uuid,
     mocker,
@@ -1074,7 +1082,7 @@ def test_invite_user_when_email_address_is_prefilled(
     mock_get_organization_by_domain,
 ):
     service_one["organization"] = ORGANISATION_ID
-    client_request.login(active_user_with_permissions)
+    client_request.login(platform_admin_user)
     mocker.patch(
         "app.models.user.user_api_client.get_user",
         side_effect=[
@@ -1095,7 +1103,7 @@ def test_invite_user_when_email_address_is_prefilled(
     )
 
     app.invite_api_client.create_invite.assert_called_once_with(
-        active_user_with_permissions["id"],
+        platform_admin_user["id"],
         SERVICE_ONE_ID,
         active_user_with_permission_to_other_service["email_address"],
         {"send_messages"},
@@ -1112,7 +1120,7 @@ def test_invite_user_when_email_address_is_prefilled(
 def test_invite_user_with_email_auth_service(
     client_request,
     service_one,
-    active_user_with_permissions,
+    platform_admin_user,
     sample_invite,
     email_address,
     gov_user,
@@ -1130,10 +1138,11 @@ def test_invite_user_with_email_auth_service(
     )
     mocker.patch(
         "app.models.user.Users.client_method",
-        return_value=[active_user_with_permissions],
+        return_value=[platform_admin_user],
     )
     mocker.patch("app.invite_api_client.create_invite", return_value=sample_invite)
 
+    client_request.login(platform_admin_user)
     page = client_request.post(
         "main.invite_user",
         service_id=SERVICE_ONE_ID,
@@ -1316,12 +1325,27 @@ def test_user_cant_invite_themselves(
             "permissions_field": ["send_messages", "manage_service", "manage_api_keys"],
         },
         _follow_redirects=True,
+        _expected_status=403,
+    )
+    assert "not allowed to see this page" in page.h1.string.strip()
+    assert not mock_create_invite.called
+
+
+def test_user_cant_invite_themselves_platform_admin(
+    client_request,
+    mocker,
+    mock_create_invite,
+    mock_get_template_folders,
+):
+    platform_admin = create_platform_admin_user()
+    client_request.login(platform_admin)
+    page = client_request.post(
+        "main.invite_user",
+        service_id=SERVICE_ONE_ID,
+        _follow_redirects=True,
         _expected_status=200,
     )
-    assert page.h1.string.strip() == "Invite a team member"
-    form_error = page.find("span", class_="usa-error-message").text.strip()
-    assert form_error == "Error: You cannot send an invitation to yourself"
-    assert not mock_create_invite.called
+    assert "Invite a team member" in page.h1.string.strip()
 
 
 def test_no_permission_manage_users_page(
