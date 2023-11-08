@@ -455,7 +455,6 @@ class InvitedUser(JSONModel):
         "created_at",
         "auth_type",
         "folder_permissions",
-        "expired",
     }
 
     def __init__(self, _dict):
@@ -472,7 +471,6 @@ class InvitedUser(JSONModel):
         permissions,
         auth_type,
         folder_permissions,
-        expired=False,
     ):
         return cls(
             invite_api_client.create_invite(
@@ -482,7 +480,6 @@ class InvitedUser(JSONModel):
                 permissions,
                 auth_type,
                 folder_permissions,
-                expired,
             )
         )
 
@@ -581,7 +578,6 @@ class InvitedUser(JSONModel):
             "created_at": str(self.created_at),
             "auth_type": self.auth_type,
             "folder_permissions": self.folder_permissions,
-            "expired": self.expired,
         }
         if permissions_as_string:
             data["permissions"] = ",".join(self.permissions)
