@@ -15,6 +15,7 @@ from tests.conftest import (
     create_active_user_manage_template_permissions,
     create_active_user_view_permissions,
     create_active_user_with_permissions,
+    create_platform_admin_user,
     normalize_spaces,
     sample_uuid,
 )
@@ -1328,6 +1329,23 @@ def test_user_cant_invite_themselves(
     )
     assert "not allowed to see this page" in page.h1.string.strip()
     assert not mock_create_invite.called
+
+
+def test_user_cant_invite_themselves_platform_admin(
+    client_request,
+    mocker,
+    mock_create_invite,
+    mock_get_template_folders,
+):
+    platform_admin = create_platform_admin_user()
+    client_request.login(platform_admin)
+    page = client_request.post(
+        "main.invite_user",
+        service_id=SERVICE_ONE_ID,
+        _follow_redirects=True,
+        _expected_status=200,
+    )
+    assert "Invite a team member" in page.h1.string.strip()
 
 
 def test_no_permission_manage_users_page(

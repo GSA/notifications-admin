@@ -4,7 +4,7 @@ import pytest
 from flask import url_for
 
 from app.models.user import User
-from tests.conftest import SERVICE_ONE_ID, normalize_spaces
+from tests.conftest import SERVICE_ONE_ID, create_platform_admin_user, normalize_spaces
 
 
 def test_render_sign_in_template_for_new_user(client_request):
@@ -75,6 +75,20 @@ def test_doesnt_redirect_to_sign_in_if_no_session_info(
     # This returns a 403 now
     with pytest.raises(AssertionError):
         client_request.get("main.add_service")
+
+
+def test_doesnt_redirect_to_sign_in_if_no_session_info_platform_admin(
+    client_request,
+    mock_get_organization_by_domain,
+):
+    platform_admin = create_platform_admin_user()
+    client_request.login(platform_admin)
+    platform_admin["current_session_id"] = str(uuid.UUID(int=1))
+
+    with client_request.session_transaction() as session:
+        session["current_session_id"] = None
+
+    client_request.get("main.add_service")
 
 
 @pytest.mark.parametrize(

@@ -3,8 +3,6 @@ from datetime import datetime
 from app.extensions import redis_client
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
 
-# from notifications_utils.clients.redis import daily_total_cache_key
-
 
 class ServiceAPIClient(NotifyAdminAPIClient):
     @cache.delete("user-{user_id}")
