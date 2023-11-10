@@ -28,6 +28,7 @@ from app.utils.login import is_safe_redirect_url
 # This is the logout url for manual use until we figure out how to do programmatically
 # https://idp.int.identitysandbox.gov/openid_connect/logout?client_id=urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:test_notify_gov&post_logout_redirect_uri=http://localhost:6012/sign-in
 
+
 def _get_access_token(code, state):
     client_id = os.getenv("LOGIN_DOT_GOV_CLIENT_ID")
     access_token_url = os.getenv("LOGIN_DOT_GOV_ACCESS_TOKEN_URL")
@@ -93,6 +94,10 @@ def sign_in():
     redirect_url = request.args.get("next")
 
     if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
+        current_app.logger.warning("E2E TESTS ARE ENABLED.")
+        current_app.logger.warning(
+            "If you are getting a 404 on signin, comment out E2E vars in .env file!"
+        )
         user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
         activate_user(user["id"])
         return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
