@@ -63,6 +63,7 @@ def generate_notifications_csv(**kwargs):
     from app import notification_api_client
     from app.s3_client.s3_csv_client import s3download
 
+    current_app.logger.info("\n\n\n\nENTER generate_notifications_csv")
     if "page" not in kwargs:
         kwargs["page"] = 1
 
@@ -76,7 +77,16 @@ def generate_notifications_csv(**kwargs):
         fieldnames = (
             ["Row number"]
             + original_column_headers
-            + ["Template", "Type", "Sent by", "Job", "Status", "Time"]
+            + [
+                "Template",
+                "Type",
+                "Sent by",
+                "Job",
+                "Carrier",
+                "Carrier Response",
+                "Status",
+                "Time",
+            ]
         )
     else:
         fieldnames = [
@@ -85,6 +95,8 @@ def generate_notifications_csv(**kwargs):
             "Type",
             "Sent by",
             "Job",
+            "Carrier",
+            "Carrier Response",
             "Status",
             "Time",
         ]
@@ -96,7 +108,7 @@ def generate_notifications_csv(**kwargs):
             **kwargs
         )
         for notification in notifications_resp["notifications"]:
-            current_app.logger.info(notification)
+            current_app.logger.info(f"\n\n{notification}")
             if kwargs.get("job_id"):
                 values = (
                     [
@@ -111,6 +123,8 @@ def generate_notifications_csv(**kwargs):
                         notification["template_type"],
                         notification["created_by_name"],
                         notification["job_name"],
+                        notification["carrier"],
+                        notification["provider_response"],
                         notification["status"],
                         notification["created_at"],
                     ]
@@ -122,6 +136,8 @@ def generate_notifications_csv(**kwargs):
                     notification["template_type"],
                     notification["created_by_name"] or "",
                     notification["job_name"] or "",
+                    notification["carrier"],
+                    notification["provider_response"],
                     notification["status"],
                     notification["created_at"],
                 ]

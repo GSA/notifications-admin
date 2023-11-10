@@ -1,6 +1,17 @@
 # Notify Sprint Goals Log
 
-## Sprint: V (10/30/23)
+## Sprint: W (11/8/23)
+(Sprint is at low capacity due to Thanksgiving week)
+
+|             | Goals        | Impact      | Milestone(s)    |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|--------------|
+| Engineering | Change timezones displays to [Eastern time](https://github.com/GSA/notifications-admin/issues/861), [create properties on org model](https://github.com/GSA/notifications-api/issues/331) to process agreement info  |  Better timezone familiarity, continuity between application orgs and agreements                            | Building Notify.gov |
+| UX          | Begin [re-thinking Notify IA](https://github.com/GSA/notifications-admin/issues/910), create a synthesis of partner feeback thusfar, wireframe a more [user-friendly dashboard](https://github.com/GSA/notifications-admin/issues/889), send [Notify logo](https://github.com/GSA/notifications-admin/issues/859) proposal to begin approvals, add UI consideration regarding [multi-lingual messages](https://github.com/GSA/notifications-admin/issues/901) | Improve ease of use, begin process of brand creation       | Obtain approval for logo/brand| 
+| Security    | Complete pre-requisite documentation, start project planning timelines and control group deadlines                                             | Aim to have package completed with enough time to allow for long assessment| Secure ATO |
+| Content    | Finalize cloud.gov pages IAA mod for content site | Enable an easy static website for future content | Building Notify.gov |
+| Ops    | Complete Beverly's onboarding with necessary access to cloud.gov, AWS, and other tools|  Add valuable dev resources to increase our capacity
+
+## Sprint: Velvety Black Tyrant (10/30/23)
 
 |             | Goals                                                                                                                              | Impact                                                                                                                                     |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
