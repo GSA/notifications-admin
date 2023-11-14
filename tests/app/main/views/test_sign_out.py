@@ -1,16 +1,17 @@
-from flask import url_for
-
 from tests.conftest import SERVICE_ONE_ID
 
 
 def test_render_sign_out_redirects_to_sign_in(client_request):
+    # TODO with the change to using login.gov, we no longer redirect directly to the sign in page.
+    # Instead we redirect to login.gov which redirects us to the sign in page.  However, the
+    # test for the expected redirect being "/" is buried in conftest and looks fragile.
+    # After we move to login.gov officially and get rid of other forms of signing it, it should
+    # be refactored.
     with client_request.session_transaction() as session:
         assert session
     client_request.get(
         "main.sign_out",
-        _expected_redirect=url_for(
-            "main.index",
-        ),
+        _expected_status=302,
     )
     with client_request.session_transaction() as session:
         assert not session
@@ -42,9 +43,6 @@ def test_sign_out_user(
     client_request.get(
         "main.sign_out",
         _expected_status=302,
-        _expected_redirect=url_for(
-            "main.index",
-        ),
     )
     with client_request.session_transaction() as session:
         assert session.get("user_id") is None
