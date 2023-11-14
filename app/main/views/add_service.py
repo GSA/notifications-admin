@@ -6,7 +6,7 @@ from app import service_api_client
 from app.formatters import email_safe
 from app.main import main
 from app.main.forms import CreateServiceForm
-from app.utils.user import user_is_gov_user, user_is_platform_admin
+from app.utils.user import user_is_gov_user, user_is_logged_in
 
 
 def _create_service(service_name, organization_type, email_from, form):
@@ -42,7 +42,7 @@ def _create_example_template(service_id):
 
 @main.route("/add-service", methods=["GET", "POST"])
 @user_is_gov_user
-@user_is_platform_admin
+@user_is_logged_in
 def add_service():
     default_organization_type = current_user.default_organization_type
     if default_organization_type is None:
