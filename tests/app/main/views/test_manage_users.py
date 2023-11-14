@@ -39,28 +39,12 @@ from tests.conftest import (
         ),
         (
             create_active_user_empty_permissions(),
-            (
-                "Test User With Empty Permissions (you) "
-                "Permissions "
-                "Cannot See dashboard "
-                "Cannot Send messages "
-                "Cannot Add and edit templates "
-                "Cannot Manage settings, team and usage "
-                "Cannot Manage API integration"
-            ),
+            ("Test User With Empty Permissions (you) " "Permissions"),
             False,
         ),
         (
             create_active_user_view_permissions(),
-            (
-                "Test User With Permissions (you) "
-                "Permissions "
-                "Can See dashboard "
-                "Cannot Send messages "
-                "Cannot Add and edit templates "
-                "Cannot Manage settings, team and usage "
-                "Cannot Manage API integration"
-            ),
+            ("Test User With Permissions (you) " "Permissions " "Can See dashboard"),
             False,
         ),
         (
@@ -69,10 +53,7 @@ from tests.conftest import (
                 "Test User With Permissions (you) "
                 "Permissions "
                 "Can See dashboard "
-                "Cannot Send messages "
-                "Can Add and edit templates "
-                "Cannot Manage settings, team and usage "
-                "Cannot Manage API integration"
+                "Can Add and edit templates"
             ),
             False,
         ),
@@ -112,15 +93,7 @@ def test_should_show_overview_page(
         normalize_spaces(page.select(".user-list-item")[0].text) == expected_self_text
     )
 
-    expected = (
-        "ZZZZZZZZ zzzzzzz@example.gsa.gov "
-        "Permissions "
-        "Can See dashboard "
-        "Cannot Send messages "
-        "Cannot Add and edit templates "
-        "Cannot Manage settings, team and usage "
-        "Cannot Manage API integration"
-    )
+    expected = "ZZZZZZZZ zzzzzzz@example.gsa.gov " "Permissions " "Can See dashboard"
 
     if add_details is True:
         expected = f"{expected} Change details for ZZZZZZZZ zzzzzzz@example.gsa.gov"
@@ -259,23 +232,11 @@ def test_should_show_caseworker_on_overview_page(
 
     assert normalize_spaces(page.select_one("h1").text) == "Team members"
     assert normalize_spaces(page.select(".user-list-item")[0].text) == (
-        "Test User With Permissions (you) "
-        "Permissions "
-        "Can See dashboard "
-        "Cannot Send messages "
-        "Cannot Add and edit templates "
-        "Cannot Manage settings, team and usage "
-        "Cannot Manage API integration"
+        "Test User With Permissions (you) " "Permissions " "Can See dashboard"
     )
     # [1:5] are invited users
     assert normalize_spaces(page.select(".user-list-item")[6].text) == (
-        "Test User zzzzzzz@example.gsa.gov "
-        "Permissions "
-        "Cannot See dashboard "
-        "Can Send messages "
-        "Cannot Add and edit templates "
-        "Cannot Manage settings, team and usage "
-        "Cannot Manage API integration"
+        "Test User zzzzzzz@example.gsa.gov " "Permissions " "Can Send messages"
     )
 
 
@@ -1240,7 +1201,6 @@ def test_cancel_invited_user_doesnt_work_if_user_not_invited_to_this_service(
                 "Permissions "
                 "Can See dashboard "
                 "Can Send messages "
-                "Cannot Add and edit templates "
                 "Can Manage settings, team and usage "
                 "Can Manage API integration "
                 "Cancel invitation for invited_user@test.gsa.gov"
@@ -1250,13 +1210,8 @@ def test_cancel_invited_user_doesnt_work_if_user_not_invited_to_this_service(
             "cancelled",
             (
                 "invited_user@test.gsa.gov (cancelled invite) "
-                "Permissions "
+                "Permissions"
                 # all permissions are greyed out
-                "Cannot See dashboard "
-                "Cannot Send messages "
-                "Cannot Add and edit templates "
-                "Cannot Manage settings, team and usage "
-                "Cannot Manage API integration"
             ),
         ),
     ],
