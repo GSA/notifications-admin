@@ -25,16 +25,12 @@ from app.models.user import InvitedUser, User
 from app.utils import hide_from_search_engines
 from app.utils.login import is_safe_redirect_url
 
-# This is the logout url for manual use until we figure out how to do programmatically
-# https://idp.int.identitysandbox.gov/openid_connect/logout?client_id=urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:test_notify_gov&post_logout_redirect_uri=http://localhost:6012/sign-in
 
 
 def _get_access_token(code, state):
     client_id = os.getenv("LOGIN_DOT_GOV_CLIENT_ID")
     access_token_url = os.getenv("LOGIN_DOT_GOV_ACCESS_TOKEN_URL")
-    pemfile = open("./private.pem", "r")
-    keystring = pemfile.read()
-    pemfile.close()
+    keystring = os.getenv("LOGIN_PEM")
     payload = {
         "iss": client_id,
         "sub": client_id,
@@ -76,7 +72,6 @@ def sign_in():
     state = request.args.get("state")
     login_gov_error = request.args.get("error")
     if code and state:
-        current_app.logger.info(f"found login.gov code and state {code} {state}")
         access_token = _get_access_token(code, state)
         user_email = _get_user_email(access_token)
         redirect_url = request.args.get("next")
