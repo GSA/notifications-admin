@@ -301,7 +301,10 @@ def init_app(application):
                 remaining_global_messages = global_limit - global_messages_count.get(
                     "count"
                 )
-        return {"daily_global_messages_remaining": remaining_global_messages}
+        return {
+            "daily_global_messages_remaining": remaining_global_messages,
+            "global_message_limit": global_limit
+        }
 
     @application.before_request
     def record_start_time():
