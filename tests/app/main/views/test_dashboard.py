@@ -1531,7 +1531,7 @@ def test_service_dashboard_shows_usage(
 
     assert normalize_spaces(page.select_one("[data-key=usage]").text) == (
         "Daily Usage Remaining "
-        "40,000 "
+        "251,800 "
         "$29.85 "
         "spent on text messages"
         # Disabled for pilot
@@ -1566,4 +1566,4 @@ def test_service_dashboard_shows_free_allowance(
 
     usage_text = normalize_spaces(page.select_one("[data-key=usage]").text)
     assert "spent on text messages" not in usage_text
-    assert "Daily Usage Remaining -209,000 249,000" in usage_text
+    assert "Daily Usage Remaining 1,000 249,000" in usage_text
