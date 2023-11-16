@@ -379,7 +379,7 @@ def test_view_inbox_updates(
     mock_get_partials.assert_called_once_with(SERVICE_ONE_ID)
 
 
-@freeze_time("2016-07-01 12:00")
+@freeze_time("2016-07-01 16:00")
 def test_download_inbox(
     client_request,
     mock_get_inbound_sms,
@@ -394,14 +394,14 @@ def test_download_inbox(
     )
     assert response.get_data(as_text=True) == (
         "Phone number,Message,Received\r\n"
-        "(202) 867-5300,message-1,2016-07-01 11:00 UTC\r\n"
-        "(202) 867-5300,message-2,2016-07-01 10:59 UTC\r\n"
-        "(202) 867-5300,message-3,2016-07-01 10:59 UTC\r\n"
-        "(202) 867-5302,message-4,2016-07-01 08:59 UTC\r\n"
-        "+33 1 12 34 56 78,message-5,2016-07-01 06:59 UTC\r\n"
-        "(202) 555-0104,message-6,2016-07-01 04:59 UTC\r\n"
-        "(202) 555-0104,message-7,2016-07-01 02:59 UTC\r\n"
-        "+682 12345,message-8,2016-07-01 02:59 UTC\r\n"
+        "(202) 867-5300,message-1,2016-07-01 11:00 US/Eastern\r\n"
+        "(202) 867-5300,message-2,2016-07-01 10:59 US/Eastern\r\n"
+        "(202) 867-5300,message-3,2016-07-01 10:59 US/Eastern\r\n"
+        "(202) 867-5302,message-4,2016-07-01 08:59 US/Eastern\r\n"
+        "+33 1 12 34 56 78,message-5,2016-07-01 06:59 US/Eastern\r\n"
+        "(202) 555-0104,message-6,2016-07-01 04:59 US/Eastern\r\n"
+        "(202) 555-0104,message-7,2016-07-01 02:59 US/Eastern\r\n"
+        "+682 12345,message-8,2016-07-01 02:59 US/Eastern\r\n"
     )
 
 
@@ -636,7 +636,7 @@ def test_monthly_has_equal_length_tables(
     assert page.select_one(".table-field-headings th").get("width") == "33%"
 
 
-@freeze_time("2016-01-01 1:09:00.061258")
+@freeze_time("2016-01-01 11:09:00.061258")
 def test_should_show_upcoming_jobs_on_dashboard(
     client_request,
     mock_get_service_templates,
@@ -659,7 +659,7 @@ def test_should_show_upcoming_jobs_on_dashboard(
     assert normalize_spaces(page.select_one("main h2").text) == ("In the next few days")
 
     assert normalize_spaces(page.select_one("a.banner-dashboard").text) == (
-        "2 files waiting to send " "- sending starts today at 11:09 UTC"
+        "2 files waiting to send " "- sending starts today at 06:09 US/Eastern"
     )
 
     assert page.select_one("a.banner-dashboard")["href"] == url_for(

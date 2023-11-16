@@ -3,9 +3,12 @@ from datetime import datetime
 import pytz
 from dateutil import parser
 
+from app.utils.csv import get_user_preferred_timezone
+
 
 def get_current_financial_year():
-    now = datetime.now(pytz.utc)
+    et = pytz.timezone(get_user_preferred_timezone())
+    now = datetime.now(et)
     current_month = int(now.strftime("%-m"))
     current_year = int(now.strftime("%Y"))
     return current_year if current_month > 9 else current_year - 1

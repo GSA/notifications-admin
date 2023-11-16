@@ -4,7 +4,11 @@ from io import StringIO
 
 import pytest
 
-from app.utils.csv import generate_notifications_csv, get_errors_for_csv
+from app.utils.csv import (
+    convert_report_date_to_preferred_timezone,
+    generate_notifications_csv,
+    get_errors_for_csv,
+)
 from tests.conftest import fake_uuid
 
 
@@ -87,14 +91,14 @@ def get_notifications_csv_mock(
             None,
             [
                 "Recipient,Template,Type,Sent by,Job,Carrier,Carrier Response,Status,Time\n",
-                "foo@bar.com,foo,sms,,,ATT Mobility,Did not like it,Delivered,1943-04-19 12:00:00\r\n",
+                "foo@bar.com,foo,sms,,,ATT Mobility,Did not like it,Delivered,1943-04-19 08:00:00 US/Eastern\r\n",
             ],
         ),
         (
             "Anne Example",
             [
                 "Recipient,Template,Type,Sent by,Job,Carrier,Carrier Response,Status,Time\n",
-                "foo@bar.com,foo,sms,Anne Example,,ATT Mobility,Did not like it,Delivered,1943-04-19 12:00:00\r\n",
+                "foo@bar.com,foo,sms,Anne Example,,ATT Mobility,Did not like it,Delivered,1943-04-19 08:00:00 US/Eastern\r\n",  # noqa
             ],
         ),
     ],
@@ -147,7 +151,7 @@ def test_generate_notifications_csv_without_job(
                 "ATT Mobility",
                 "Did not like it",
                 "Delivered",
-                "1943-04-19 12:00:00",
+                "1943-04-19 08:00:00 US/Eastern",
             ],
         ),
         (
@@ -183,7 +187,7 @@ def test_generate_notifications_csv_without_job(
                 "ATT Mobility",
                 "Did not like it",
                 "Delivered",
-                "1943-04-19 12:00:00",
+                "1943-04-19 08:00:00 US/Eastern",
             ],
         ),
         (
@@ -219,7 +223,7 @@ def test_generate_notifications_csv_without_job(
                 "ATT Mobility",
                 "Did not like it",
                 "Delivered",
-                "1943-04-19 12:00:00",
+                "1943-04-19 08:00:00 US/Eastern",
             ],
         ),
     ],
@@ -389,3 +393,9 @@ def test_get_errors_for_csv(
         )
         == expected_errors
     )
+
+
+def test_convert_report_date_to_preferred_timezone():
+    original = "2023-11-16 05:00:00"
+    altered = convert_report_date_to_preferred_timezone(original)
+    assert altered == "2023-11-16 00:00:00 US/Eastern"
