@@ -2,6 +2,7 @@ import datetime
 
 import pytz
 from flask import current_app
+from flask_login import current_user
 from notifications_utils.recipients import RecipientCSV
 
 from app.models.spreadsheet import Spreadsheet
@@ -60,10 +61,6 @@ def get_errors_for_csv(recipients, template_type):
             )
 
     return errors
-
-
-def get_user_preferred_timezone():
-    return "US/Eastern"
 
 
 def generate_notifications_csv(**kwargs):
@@ -162,6 +159,10 @@ def generate_notifications_csv(**kwargs):
 
 
 def convert_report_date_to_preferred_timezone(db_date_str_in_utc):
+    """
+    Report dates in the db are in UTC.  We need to convert them to the user's default timezone,
+    which defaults to "US/Eastern"
+    """
     date_arr = db_date_str_in_utc.split(" ")
     db_date_str_in_utc = f"{date_arr[0]}T{date_arr[1]}+00:00"
     utc_date_obj = datetime.datetime.fromisoformat(db_date_str_in_utc)
@@ -172,3 +173,10 @@ def convert_report_date_to_preferred_timezone(db_date_str_in_utc):
     preferred_tz_created_at = preferred_date_obj.strftime("%Y-%m-%d %H:%M:%S")
 
     return f"{preferred_tz_created_at} {get_user_preferred_timezone()}"
+
+
+def get_user_preferred_timezone():
+    if current_user and hasattr(current_user, "preferred_timezone"):
+        return current_user.preferred_timezone
+
+    return "US/Eastern"
