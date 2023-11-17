@@ -282,6 +282,20 @@ def test_set_sender_redirects_if_one_sms_sender(
         assert session["sender_id"] == "1234"
 
 
+@pytest.mark.parametrize(
+    ("sender_data"),
+    [
+        (create_multiple_sms_senders()),
+    ],
+)
+def test_usnotify_and_notifygov_removed_if_not_default_sender(sender_data):
+    from app.main.views.send import remove_notify_from_sender_options
+
+    sender_details = remove_notify_from_sender_options(sender_data)
+
+    assert len(sender_details) == 2
+
+
 def test_that_test_files_exist():
     assert len(test_spreadsheet_files) == 8
     assert len(test_non_spreadsheet_files) == 6

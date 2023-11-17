@@ -3475,7 +3475,16 @@ def create_multiple_sms_senders(service_id="abcd"):
         {
             "id": "9457",
             "service_id": service_id,
-            "sms_sender": "Example 3",
+            "sms_sender": "US Notify",
+            "is_default": False,
+            "created_at": datetime.utcnow(),
+            "inbound_number_id": None,
+            "updated_at": None,
+        },
+        {
+            "id": "9897",
+            "service_id": service_id,
+            "sms_sender": "Notify.gov",
             "is_default": False,
             "created_at": datetime.utcnow(),
             "inbound_number_id": None,

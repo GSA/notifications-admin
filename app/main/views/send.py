@@ -265,20 +265,19 @@ def set_sender(service_id, template_id):
 
 
 def remove_notify_from_sender_options(sender_details):
-    # Remove US Notify, soon to be (Notify.gov) from users list of sender
-    # options during message send flow if not default sender.
-    senders_to_remove = []
-    for sender in sender_details:
-        sms_sender_value = sender.get("sms_sender")
-        if sms_sender_value:
-            if (
-                sms_sender_value in ["Notify.gov", "US Notify"]
-                and not sender["is_default"]
-            ):
-                senders_to_remove.append(sender)
-    for sender in senders_to_remove:
-        if sender in sender_details:
-            sender_details.remove(sender)
+    # Remove US Notify/Notify.gov from users list of sender
+    # options during message send flow
+    sender_details = [
+        sender
+        for sender in sender_details
+        if sender.get("sms_sender") in ["Notify.gov", "US Notify"]
+        and sender["is_default"]
+        or sender.get("sms_sender") not in ["Notify.gov", "US Notify"]
+        and not sender["is_default"]
+        or sender.get("sms_sender") not in ["Notify.gov", "US Notify"]
+        and sender["is_default"]
+    ]
+
     return sender_details
 
 
