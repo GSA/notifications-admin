@@ -268,17 +268,25 @@ def remove_notify_from_sender_options(sender_details):
     # Remove US Notify/Notify.gov from users list of sender
     # options during message send flow
     sender_details = [
-        sender
-        for sender in sender_details
-        if sender.get("sms_sender") in ["Notify.gov", "US Notify"]
-        and sender["is_default"]
-        or sender.get("sms_sender") not in ["Notify.gov", "US Notify"]
-        and not sender["is_default"]
-        or sender.get("sms_sender") not in ["Notify.gov", "US Notify"]
-        and sender["is_default"]
+        sender for sender in sender_details if verify_sender_options(sender)
     ]
 
     return sender_details
+
+
+def verify_sender_options(sender):
+    if sender.get("sms_sender") in ["Notify.gov", "US Notify"] and sender["is_default"]:
+        return True
+    if (
+        sender.get("sms_sender") not in ["Notify.gov", "US Notify"]
+        and not sender["is_default"]
+    ):
+        return True
+    if (
+        sender.get("sms_sender") not in ["Notify.gov", "US Notify"]
+        and sender["is_default"]
+    ):
+        return True
 
 
 def get_sender_context(sender_details, template_type):
