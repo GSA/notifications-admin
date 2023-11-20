@@ -285,15 +285,30 @@ def test_set_sender_redirects_if_one_sms_sender(
 @pytest.mark.parametrize(
     ("sender_data"),
     [
-        (create_multiple_sms_senders()),
+        (create_multiple_sms_senders(isdefault1=True)),
     ],
 )
-def test_usnotify_and_notifygov_removed_if_not_default_sender(sender_data):
+def test_usnotify_and_notifygov_sms_sender_removal_not_default(sender_data, mocker):
     from app.main.views.send import remove_notify_from_sender_options
 
     sender_details = remove_notify_from_sender_options(sender_data)
 
     assert len(sender_details) == 2
+
+
+@pytest.mark.parametrize(
+    ("sender_data"),
+    [
+        (create_multiple_sms_senders(isdefault1=False, isdefault3=True)),
+        (create_multiple_sms_senders(isdefault1=False, isdefault4=True)),
+    ],
+)
+def test_usnotify_and_notifygov_sms_sender_removal_if_default(sender_data, mocker):
+    from app.main.views.send import remove_notify_from_sender_options
+
+    sender_details = remove_notify_from_sender_options(sender_data)
+
+    assert len(sender_details) == 3
 
 
 def test_that_test_files_exist():
