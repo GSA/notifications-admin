@@ -284,7 +284,7 @@ def init_app(application):
 
     @application.context_processor
     def _attach_current_global_daily_messages():
-        global global_limit
+        global_limit = 0
         remaining_global_messages = 0
         if current_app:
             if request.view_args:
