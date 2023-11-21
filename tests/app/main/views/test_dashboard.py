@@ -1517,6 +1517,7 @@ def test_breadcrumb_shows_if_service_is_suspended(
     ],
 )
 def test_service_dashboard_shows_usage(
+    mocker,
     client_request,
     service_one,
     mock_get_service_templates,
@@ -1526,18 +1527,22 @@ def test_service_dashboard_shows_usage(
     mock_get_free_sms_fragment_limit,
     permissions,
 ):
+    mocker.patch(
+        "app.service_api_client.get_global_notification_count",
+        return_value={
+            "count": 500,
+        },
+    )
+
     service_one["permissions"] = permissions
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
-    assert normalize_spaces(page.select_one("[data-key=usage]").text) == (
-        "Daily Usage Remaining "
-        "40,000 "
-        "$29.85 "
-        "spent on text messages"
-        # Disabled for pilot
-        # '0 '
-        # 'email disabled during SMS pilot'
-    )
+    table_rows = page.find_all("tbody")[0].find_all("tr")
+
+    assert len(table_rows) == 1
+
+    assert "500" in table_rows[0].find_all("td")[0].text
+    assert "9500" in table_rows[0].find_all("td")[1].text
 
 
 def test_service_dashboard_shows_free_allowance(
@@ -1566,4 +1571,4 @@ def test_service_dashboard_shows_free_allowance(
 
     usage_text = normalize_spaces(page.select_one("[data-key=usage]").text)
     assert "spent on text messages" not in usage_text
-    assert "Daily Usage Remaining -209,000 249,000" in usage_text
+    assert "Daily Usage Remaining 1,000 249,000" in usage_text

@@ -284,6 +284,7 @@ def init_app(application):
 
     @application.context_processor
     def _attach_current_global_daily_messages():
+        global_limit = 0
         remaining_global_messages = 0
         if current_app:
             if request.view_args:
@@ -301,7 +302,10 @@ def init_app(application):
                 remaining_global_messages = global_limit - global_messages_count.get(
                     "count"
                 )
-        return {"daily_global_messages_remaining": remaining_global_messages}
+        return {
+            "global_message_limit": global_limit,
+            "daily_global_messages_remaining": remaining_global_messages,
+        }
 
     @application.before_request
     def record_start_time():
