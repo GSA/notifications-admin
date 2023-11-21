@@ -74,24 +74,26 @@ def format_datetime_numeric(date):
 def format_date_numeric(date):
     date = parse_naive_dt(date)
 
-    et = pytz.timezone(get_user_preferred_timezone())
-    return date.replace(tzinfo=timezone.utc).astimezone(et).strftime("%Y-%m-%d")
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    return (
+        date.replace(tzinfo=timezone.utc).astimezone(preferred_tz).strftime("%Y-%m-%d")
+    )
 
 
 def format_time_24h(date):
     date = parse_naive_dt(date)
 
-    et = pytz.timezone(get_user_preferred_timezone())
-    return date.replace(tzinfo=timezone.utc).astimezone(et).strftime("%H:%M")
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    return date.replace(tzinfo=timezone.utc).astimezone(preferred_tz).strftime("%H:%M")
 
 
 def get_human_day(time, date_prefix=""):
     #  Add 1 minute to transform 00:00 into ‘midnight today’ instead of ‘midnight tomorrow’
     time = parse_naive_dt(time)
-    et = pytz.timezone(get_user_preferred_timezone())
-    time = time.replace(tzinfo=timezone.utc).astimezone(et)
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    time = time.replace(tzinfo=timezone.utc).astimezone(preferred_tz)
     date = (time - timedelta(minutes=1)).date()
-    now = datetime.now(et)
+    now = datetime.now(preferred_tz)
 
     if date == (now + timedelta(days=1)).date():
         return "tomorrow"
@@ -113,8 +115,12 @@ def get_human_day(time, date_prefix=""):
 
 def format_date(date):
     date = parse_naive_dt(date)
-    et = pytz.timezone(get_user_preferred_timezone())
-    return date.replace(tzinfo=timezone.utc).astimezone(et).strftime("%A %d %B %Y")
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    return (
+        date.replace(tzinfo=timezone.utc)
+        .astimezone(preferred_tz)
+        .strftime("%A %d %B %Y")
+    )
 
 
 def format_date_normal(date):
@@ -124,8 +130,10 @@ def format_date_normal(date):
 
 def format_date_short(date):
     date = parse_naive_dt(date)
-    et = pytz.timezone(get_user_preferred_timezone())
-    return _format_datetime_short(date.replace(tzinfo=timezone.utc).astimezone(et))
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    return _format_datetime_short(
+        date.replace(tzinfo=timezone.utc).astimezone(preferred_tz)
+    )
 
 
 def format_date_human(date):
@@ -142,8 +150,8 @@ def format_datetime_human(date, date_prefix=""):
 
 def format_day_of_week(date):
     date = parse_naive_dt(date)
-    et = pytz.timezone(get_user_preferred_timezone())
-    return date.replace(tzinfo=timezone.utc).astimezone(et).strftime("%A")
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    return date.replace(tzinfo=timezone.utc).astimezone(preferred_tz).strftime("%A")
 
 
 def _format_datetime_short(datetime):
