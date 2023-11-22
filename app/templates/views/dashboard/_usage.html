@@ -15,7 +15,7 @@
       </thead>
       <tbody>
         <tr>
-          <td>{{ big_number(40000 - sms_allowance_remaining, smaller=True) }}</td>
+          <td>{{ big_number(sms_sent, smaller=True) }}</td>
           <td>
             {% if sms_cost %}
             {{ big_number(
