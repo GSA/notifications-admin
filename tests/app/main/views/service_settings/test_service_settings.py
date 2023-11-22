@@ -1870,7 +1870,8 @@ def test_api_ids_dont_show_on_option_pages_with_a_single_sender(
             [
                 "Example (default and receives replies) Change Example ID: 1234",
                 "Example 2 Change Example 2 ID: 5678",
-                "Example 3 Change Example 3 ID: 9457",
+                "US Notify Change US Notify ID: 9457",
+                "Notify.gov Change Notify.gov ID: 9897",
             ],
         ),
     ],
