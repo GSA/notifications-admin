@@ -27,7 +27,7 @@ def sum_of_statistics(delivery_statistics):
 
 
 def add_rates_to(delivery_statistics):
-    et = pytz.timezone(get_user_preferred_timezone())
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
     return dict(
         emails_failure_rate=get_formatted_percentage(
             delivery_statistics["emails_failed"],
@@ -37,7 +37,7 @@ def add_rates_to(delivery_statistics):
             delivery_statistics["sms_failed"], delivery_statistics["sms_requested"]
         ),
         week_end_datetime=parser.parse(
-            delivery_statistics.get("week_end", str(datetime.now(et)))
+            delivery_statistics.get("week_end", str(datetime.now(preferred_tz)))
         ),
         **delivery_statistics
     )

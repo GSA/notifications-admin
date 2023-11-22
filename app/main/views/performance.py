@@ -13,10 +13,10 @@ from app.utils.csv import get_user_preferred_timezone
 
 @main.route("/performance")
 def performance():
-    et = pytz.timezone(get_user_preferred_timezone())
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
     stats = performance_dashboard_api_client.get_performance_dashboard_stats(
-        start_date=(datetime.now(et) - timedelta(days=7)).date(),
-        end_date=datetime.now(et).date(),
+        start_date=(datetime.now(preferred_tz) - timedelta(days=7)).date(),
+        end_date=datetime.now(preferred_tz).date(),
     )
     stats["organizations_using_notify"] = sorted(
         [
