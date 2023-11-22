@@ -69,12 +69,12 @@ from app.utils.user_permissions import all_ui_permissions, permission_options
 
 
 def get_time_value_and_label(future_time):
-    et = pytz.timezone(get_user_preferred_timezone())
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
     return (
-        future_time.astimezone(et).replace(tzinfo=None).isoformat(),
+        future_time.astimezone(preferred_tz).replace(tzinfo=None).isoformat(),
         "{} at {} {}".format(
-            get_human_day(future_time.astimezone(et)),
-            get_human_time(future_time.astimezone(et)),
+            get_human_day(future_time.astimezone(preferred_tz)),
+            get_human_time(future_time.astimezone(preferred_tz)),
             get_user_preferred_timezone(),
         ),
     )
@@ -89,24 +89,24 @@ def get_human_time(time):
 def get_human_day(time, prefix_today_with="T"):
     #  Add 1 hour to get ‘midnight today’ instead of ‘midnight tomorrow’
 
-    et = pytz.timezone(get_user_preferred_timezone())
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
     time = (time - timedelta(hours=1)).strftime("%A")
-    if time == datetime.now(et).strftime("%A"):
+    if time == datetime.now(preferred_tz).strftime("%A"):
         return "{}oday".format(prefix_today_with)
-    if time == (datetime.now(et) + timedelta(days=1)).strftime("%A"):
+    if time == (datetime.now(preferred_tz) + timedelta(days=1)).strftime("%A"):
         return "Tomorrow"
     return time
 
 
 def get_furthest_possible_scheduled_time():
     # We want local time to find date boundaries
-    et = pytz.timezone(get_user_preferred_timezone())
-    return (datetime.now(et) + timedelta(days=4)).replace(hour=0)
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    return (datetime.now(preferred_tz) + timedelta(days=4)).replace(hour=0)
 
 
 def get_next_hours_until(until):
-    et = pytz.timezone(get_user_preferred_timezone())
-    now = datetime.now(et)
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    now = datetime.now(preferred_tz)
     hours = int((until - now).total_seconds() / (60 * 60))
     return [
         (now + timedelta(hours=i)).replace(minute=0, second=0, microsecond=0)
@@ -115,8 +115,8 @@ def get_next_hours_until(until):
 
 
 def get_next_days_until(until):
-    et = pytz.timezone(get_user_preferred_timezone())
-    now = datetime.now(et)
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    now = datetime.now(preferred_tz)
     days = int((until - now).total_seconds() / (60 * 60 * 24))
     return [
         get_human_day((now + timedelta(days=i)), prefix_today_with="Later t")
