@@ -22,7 +22,7 @@
         
         <div class='grid-col-12'>
           <h2 class="heading-small margin-bottom-1">Daily messages across all services</h2>
-          <p class="margin-0">You have sent {{ 5000 - daily_global_messages_remaining }} of your 5000 daily messages allowance.</p>
+          <p class="margin-0">You have sent {{ global_message_limit - daily_global_messages_remaining }} of your {{ global_message_limit }} daily messages allowance.</p>
           <p class="margin-0"></p>You have {{ daily_global_messages_remaining }} messages remaining.</p>
           <h2 class='heading-small margin-bottom-1'>Text messages</h2>
           <div class="keyline-block">
