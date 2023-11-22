@@ -126,3 +126,6 @@ terraform.tfstate.backup
 
 # Playwright
 playwright/
+
+# Pyenv
+.python-version
