@@ -1,4 +1,4 @@
-# US Notify.gov Admin UI
+# Notify.gov Admin UI
 
 This is the Notify front-end for government users and admins. To see it in
 action, check out [the demo site](https://notify-demo.app.cloud.gov)
