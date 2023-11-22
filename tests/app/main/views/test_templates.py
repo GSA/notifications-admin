@@ -472,7 +472,7 @@ def test_caseworker_redirected_to_set_sender_for_one_off(
     )
 
 
-@freeze_time("2020-01-01 15:00")
+@freeze_time("2020-01-01 20:00")
 def test_caseworker_sees_template_page_if_template_is_deleted(
     client_request,
     mock_get_deleted_template,
@@ -497,7 +497,7 @@ def test_caseworker_sees_template_page_if_template_is_deleted(
     )
     assert (
         page.select("p.hint")[0].text.strip()
-        == "This template was deleted today at 15:00 UTC."
+        == "This template was deleted today at 15:00 US/Eastern."
     )
 
     mock_get_deleted_template.assert_called_with(SERVICE_ONE_ID, template_id, None)
@@ -1573,7 +1573,7 @@ def test_should_redirect_when_deleting_a_template(
     mock_delete_service_template.assert_called_with(SERVICE_ONE_ID, TEMPLATE_ONE_ID)
 
 
-@freeze_time("2016-01-01T15:00")
+@freeze_time("2016-01-01T20:00")
 def test_should_show_page_for_a_deleted_template(
     client_request,
     mock_get_template_folders,
@@ -1606,7 +1606,7 @@ def test_should_show_page_for_a_deleted_template(
     )
     assert (
         page.select("p.hint")[0].text.strip()
-        == "This template was deleted today at 15:00 UTC."
+        == "This template was deleted today at 15:00 US/Eastern."
     )
     assert "Delete this template" not in page.select_one("main").text
 

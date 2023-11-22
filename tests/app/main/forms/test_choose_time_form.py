@@ -10,25 +10,25 @@ def test_form_contains_next_24h(notify_admin):
 
     # Friday
     assert choices[0] == ("", "Now")
-    assert choices[1] == ("2016-01-01T12:00:00", "Today at noon UTC")
-    assert choices[13] == ("2016-01-02T00:00:00", "Today at midnight UTC")
+    assert choices[1] == ("2016-01-01T07:00:00", "Today at 7am US/Eastern")
+    assert choices[13] == ("2016-01-01T19:00:00", "Today at 7pm US/Eastern")
 
     # Saturday
-    assert choices[14] == ("2016-01-02T01:00:00", "Tomorrow at 1am UTC")
-    assert choices[37] == ("2016-01-03T00:00:00", "Tomorrow at midnight UTC")
+    assert choices[14] == ("2016-01-01T20:00:00", "Today at 8pm US/Eastern")
+    assert choices[37] == ("2016-01-02T19:00:00", "Tomorrow at 7pm US/Eastern")
 
     # Sunday
-    assert choices[38] == ("2016-01-03T01:00:00", "Sunday at 1am UTC")
+    assert choices[38] == ("2016-01-02T20:00:00", "Tomorrow at 8pm US/Eastern")
 
     # Monday
-    assert choices[62] == ("2016-01-04T01:00:00", "Monday at 1am UTC")
-    assert choices[80] == ("2016-01-04T19:00:00", "Monday at 7pm UTC")
-    assert choices[84] == ("2016-01-04T23:00:00", "Monday at 11pm UTC")
-    assert choices[85] == ("2016-01-05T00:00:00", "Monday at midnight UTC")
+    assert choices[62] == ("2016-01-03T20:00:00", "Sunday at 8pm US/Eastern")
+    assert choices[80] == ("2016-01-04T14:00:00", "Monday at 2pm US/Eastern")
+    assert choices[84] == ("2016-01-04T18:00:00", "Monday at 6pm US/Eastern")
+    assert choices[85] == ("2016-01-04T19:00:00", "Monday at 7pm US/Eastern")
 
     with pytest.raises(IndexError):
         assert choices[
-            12 + (3 * 24) + 2  # hours left in the day  # 3 days  # magic number
+            17 + (3 * 24) + 2  # hours left in the day  # 3 days  # magic number
         ]
 
 
