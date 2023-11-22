@@ -275,6 +275,8 @@ def remove_notify_from_sender_options(sender_details):
 
 
 def verify_sender_options(sender):
+    if sender.get("sms_sender") in ["Notify.gov", "US Notify"] and sender["is_default"]:
+        return True
     if sender.get("sms_sender") not in ["Notify.gov", "US Notify"]:
         return True
 

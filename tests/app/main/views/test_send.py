@@ -308,7 +308,7 @@ def test_usnotify_and_notifygov_sms_sender_removal_if_default(sender_data, mocke
 
     sender_details = remove_notify_from_sender_options(sender_data)
 
-    assert len(sender_details) == 2
+    assert len(sender_details) == 3
 
 
 def test_that_test_files_exist():
