@@ -11,30 +11,30 @@ from tests.conftest import SERVICE_ONE_ID, normalize_spaces
             {},
             [
                 (
-                    "12 December",
+                    "12 December 2012",
                     (
-                        "Test User 18:13 "
+                        "Test User 13:13 "
                         "Renamed this service from ‘Before lunch’ to ‘After lunch’ "
-                        "Test User 17:12 "
+                        "Test User 12:12 "
                         "Renamed this service from ‘Example service’ to ‘Before lunch’"
                     ),
                 ),
                 (
-                    "11 November",
-                    ("Test User 17:12 " "Revoked the ‘Bad key’ API key"),
+                    "11 November 2012",
+                    ("Test User 12:12 " "Revoked the ‘Bad key’ API key"),
                 ),
                 (
-                    "11 November 2011",
-                    ("Test User 16:11 " "Created an API key called ‘Bad key’"),
+                    "11 November",
+                    ("Test User 11:11 " "Created an API key called ‘Bad key’"),
                 ),
                 (
                     "10 October 2010",
                     (
-                        "Test User 15:10 "
+                        "Test User 11:10 "
                         "Created an API key called ‘Good key’ "
-                        "Test User 14:09 "
+                        "Test User 10:09 "
                         "Created an API key called ‘Key event returned in non-chronological order’ "
-                        "Test User 06:01 "
+                        "Test User 02:01 "
                         "Created this service and called it ‘Example service’"
                     ),
                 ),
@@ -44,19 +44,19 @@ from tests.conftest import SERVICE_ONE_ID, normalize_spaces
             {"selected": "api"},
             [
                 (
-                    "11 November",
-                    ("Test User 17:12 " "Revoked the ‘Bad key’ API key"),
+                    "11 November 2012",
+                    ("Test User 12:12 " "Revoked the ‘Bad key’ API key"),
                 ),
                 (
-                    "11 November 2011",
-                    ("Test User 16:11 " "Created an API key called ‘Bad key’"),
+                    "11 November",
+                    ("Test User 11:11 " "Created an API key called ‘Bad key’"),
                 ),
                 (
                     "10 October 2010",
                     (
-                        "Test User 15:10 "
+                        "Test User 11:10 "
                         "Created an API key called ‘Good key’ "
-                        "Test User 14:09 "
+                        "Test User 10:09 "
                         "Created an API key called ‘Key event returned in non-chronological order’"
                     ),
                 ),
@@ -66,18 +66,18 @@ from tests.conftest import SERVICE_ONE_ID, normalize_spaces
             {"selected": "service"},
             [
                 (
-                    "12 December",
+                    "12 December 2012",
                     (
-                        "Test User 18:13 "
+                        "Test User 13:13 "
                         "Renamed this service from ‘Before lunch’ to ‘After lunch’ "
-                        "Test User 17:12 "
+                        "Test User 12:12 "
                         "Renamed this service from ‘Example service’ to ‘Before lunch’"
                     ),
                 ),
                 (
                     "10 October 2010",
                     (
-                        "Test User 06:01 "
+                        "Test User 02:01 "
                         "Created this service and called it ‘Example service’"
                     ),
                 ),

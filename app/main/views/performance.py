@@ -8,13 +8,15 @@ from flask import render_template
 
 from app import performance_dashboard_api_client, status_api_client
 from app.main import main
+from app.utils.csv import get_user_preferred_timezone
 
 
 @main.route("/performance")
 def performance():
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
     stats = performance_dashboard_api_client.get_performance_dashboard_stats(
-        start_date=(datetime.now(pytz.utc) - timedelta(days=7)).date(),
-        end_date=datetime.now(pytz.utc).date(),
+        start_date=(datetime.now(preferred_tz) - timedelta(days=7)).date(),
+        end_date=datetime.now(preferred_tz).date(),
     )
     stats["organizations_using_notify"] = sorted(
         [
@@ -35,4 +37,5 @@ def performance():
     stats[
         "count_of_live_services_and_organizations"
     ] = status_api_client.get_count_of_live_services_and_organizations()
+
     return render_template("views/performance.html", **stats)

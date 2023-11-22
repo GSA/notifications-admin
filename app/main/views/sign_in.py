@@ -1,8 +1,13 @@
 import os
+import time
+import uuid
 
+import jwt
+import requests
 from flask import (
     Markup,
     abort,
+    current_app,
     flash,
     redirect,
     render_template,
@@ -21,22 +26,84 @@ from app.utils import hide_from_search_engines
 from app.utils.login import is_safe_redirect_url
 
 
+def _get_access_token(code, state):
+    client_id = os.getenv("LOGIN_DOT_GOV_CLIENT_ID")
+    access_token_url = os.getenv("LOGIN_DOT_GOV_ACCESS_TOKEN_URL")
+    keystring = os.getenv("LOGIN_PEM")
+    payload = {
+        "iss": client_id,
+        "sub": client_id,
+        "aud": access_token_url,
+        "jti": str(uuid.uuid4()),
+        # JWT expiration time (10 minute maximum)
+        "exp": int(time.time()) + (10 * 60),
+    }
+
+    token = jwt.encode(payload, keystring, algorithm="RS256")
+    base_url = f"{access_token_url}?"
+    cli_assert = f"client_assertion={token}"
+    cli_assert_type = "client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer"
+    code_param = f"code={code}"
+    url = f"{base_url}{cli_assert}&{cli_assert_type}&{code_param}&grant_type=authorization_code"
+    headers = {"Authorization": "Bearer %s" % token}
+    response = requests.post(url, headers=headers)
+    current_app.logger.info(f"GOT A RESPONSE {response.json()}")
+    access_token = response.json()["access_token"]
+    return access_token
+
+
+def _get_user_email(access_token):
+    headers = {"Authorization": "Bearer %s" % access_token}
+    user_info_url = os.getenv("LOGIN_DOT_GOV_USER_INFO_URL")
+    user_attributes = requests.get(
+        user_info_url,
+        headers=headers,
+    )
+    user_email = user_attributes.json()["email"]
+    return user_email
+
+
 @main.route("/sign-in", methods=(["GET", "POST"]))
 @hide_from_search_engines
 def sign_in():
+    # start login.gov
+    code = request.args.get("code")
+    state = request.args.get("state")
+    login_gov_error = request.args.get("error")
+    if code and state:
+        access_token = _get_access_token(code, state)
+        user_email = _get_user_email(access_token)
+        redirect_url = request.args.get("next")
+
+        # activate the user
+        user = user_api_client.get_user_by_email(user_email)
+        activate_user(user["id"])
+        return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
+
+    elif login_gov_error:
+        current_app.logger.error(f"login.gov error: {login_gov_error}")
+        raise Exception(f"Could not login with login.gov {login_gov_error}")
+    # end login.gov
+
     redirect_url = request.args.get("next")
 
     if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
+        current_app.logger.warning("E2E TESTS ARE ENABLED.")
+        current_app.logger.warning(
+            "If you are getting a 404 on signin, comment out E2E vars in .env file!"
+        )
         user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
         activate_user(user["id"])
         return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
 
+    current_app.logger.info(f"current user is {current_user}")
     if current_user and current_user.is_authenticated:
         if redirect_url and is_safe_redirect_url(redirect_url):
             return redirect(redirect_url)
         return redirect(url_for("main.show_accounts_or_dashboard"))
 
     form = LoginForm()
+    current_app.logger.info("Got the login form")
     password_reset_url = url_for(".forgot_password", next=request.args.get("next"))
 
     if form.validate_on_submit():
@@ -84,11 +151,14 @@ def sign_in():
         )
 
     other_device = current_user.logged_in_elsewhere()
+    notify_env = os.getenv("NOTIFY_ENVIRONMENT")
+    current_app.logger.info("should render the sign in template")
     return render_template(
         "views/signin.html",
         form=form,
         again=bool(redirect_url),
         other_device=other_device,
+        notify_env_is_dev=bool(notify_env == "development"),
         password_reset_url=password_reset_url,
     )
 
