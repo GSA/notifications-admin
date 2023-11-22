@@ -316,6 +316,22 @@ This will run the local development web server and make the admin site
 available at http://localhost:6012; remember to make sure that the Notify.gov
 API is running as well!
 
+## Git Hooks
+
+We're using [`pre-commit`](https://pre-commit.com/) to manage hooks in order to
+automate common tasks or easily-missed cleanup. It's installed as part of
+`make bootstrap` and is limited to this project's virtualenv.
+
+To run the hooks in advance of a `git` operation, use
+`poetry run pre-commit run`. For running across the whole codebase (useful after
+adding a new hook), use `poetry run pre-commit run --all-files`.
+
+The configuration is stored in `.pre-commit-config.yaml`. In that config, there
+are links to the repos from which the hooks are pulled, so hop through there if
+ou want a detailed description of what each one is doing.
+
+We do not maintain any hooks in this repository.
+
 ## Python Dependency Management
 
 We're using [`Poetry`](https://python-poetry.org/) for managing our Python
