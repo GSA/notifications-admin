@@ -12,9 +12,11 @@ from app.main import main
 
 
 def _sign_out_at_login_dot_gov():
-    base_url = "https://idp.int.identitysandbox.gov/openid_connect/logout?"
+    base_url = os.getenv("LOGIN_DOT_GOV_BASE_LOGOUT_URL")
     client_id = f"client_id={os.getenv('LOGIN_DOT_GOV_CLIENT_ID')}"
-    post_logout_redirect_uri = "post_logout_redirect_uri=http://localhost:6012/sign-out"
+    post_logout_redirect_uri = (
+        f"post_logout_redirect_uri={os.getenv('LOGIN_DOT_GOV_SIGNOUT_REDIRECT')}"
+    )
 
     url = f"{base_url}{client_id}&{post_logout_redirect_uri}"
     current_app.logger.info(f"url={url}")
