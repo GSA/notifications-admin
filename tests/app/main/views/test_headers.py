@@ -17,7 +17,8 @@ def test_owasp_useful_headers_set(
     assert search(r"form-action 'self';", csp)
     assert search(
         r"script-src 'self' static\.example\.com 'unsafe-eval' https:\/\/js-agent\.new"
-        r"relic\.com https:\/\/gov-bam\.nr-data\.net 'nonce-.*';",
+        r"relic\.com https:\/\/gov-bam\.nr-data\.net https:\/\/www\.googletagmanager\."
+        r"com 'nonce-.*';",
         csp,
     )
     assert search(r"connect-src 'self' https:\/\/gov-bam.nr-data\.net;", csp)

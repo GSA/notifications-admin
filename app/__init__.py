@@ -150,6 +150,7 @@ def _csp(config):
             "'unsafe-eval'",
             "https://js-agent.newrelic.com",
             "https://gov-bam.nr-data.net",
+            "https://www.googletagmanager.com",
         ],
         "connect-src": ["'self'", "https://gov-bam.nr-data.net"],
         "style-src": ["'self'", asset_domain],

@@ -503,8 +503,6 @@ def delete_template_folder(service_id, template_folder_id):
 )
 @user_has_permissions("manage_templates")
 def add_service_template(service_id, template_type, template_folder_id=None):
-
-    print("ENTER ADD_SERVICE_TEMPLATE")
     if template_type not in current_service.available_template_types:
         return redirect(
             url_for(
@@ -569,7 +567,6 @@ def abort_403_if_not_admin_user():
 )
 @user_has_permissions("manage_templates")
 def edit_service_template(service_id, template_id):
-    print("ENTER EDIT_SERVICE_TEMPLATE")
     template = current_service.get_template_with_user_permission_or_403(
         template_id, current_user
     )
@@ -670,7 +667,6 @@ def count_content_length(service_id, template_type):
             current_service,
         )
     )
-    print(f"ERROR AND MESSAGE {error} {message}")
 
     return jsonify(
         {
@@ -683,17 +679,21 @@ def count_content_length(service_id, template_type):
     )
 
 
+def _is_latin1(s):
+    return bool(s.encode(encoding="latin-1", errors="strict"))
+
+
 def _get_content_count_error_and_message_for_template(template):
     if template.template_type == "sms":
+        s1 = " Use of characters outside the iso-latin-1 character set may increase "
+        s2 = "the message fragment count, resulting in additional charges, and these non iso-latin-1 "
+        s3 = "characters may not display properly on older phones."
 
-        islatin1 = lambda s: bool(s.encode(encoding="latin-1", errors="strict"))
         warning = ""
         try:
-            islatin1(template.content)
+            _is_latin1(template.content)
         except UnicodeEncodeError:
-            warning = " Use of characters outside the iso-latin-1 character set will result in additional characters and may not display properly on older phones."
-
-
+            warning = f"{s1}{s2}{s3}"
 
         if template.is_message_too_long():
             return True, (
