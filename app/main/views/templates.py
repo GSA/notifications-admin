@@ -2,6 +2,7 @@ from functools import partial
 
 from flask import abort, flash, jsonify, redirect, render_template, request, url_for
 from flask_login import current_user
+from markupsafe import Markup
 from notifications_python_client.errors import HTTPError
 from notifications_utils import SMS_CHAR_COUNT_LIMIT
 
@@ -684,10 +685,11 @@ def _is_latin1(s):
 
 
 def _get_content_count_error_and_message_for_template(template):
+    url = "https://en.wikipedia.org/wiki/ISO/IEC_8859-1"
     if template.template_type == "sms":
-        s1 = " Use of characters outside the iso-latin-1 character set may increase "
-        s2 = "the message fragment count, resulting in additional charges, and these non iso-latin-1 "
-        s3 = "characters may not display properly on older phones."
+        s1 = f"<html><body>Use of characters outside the <a href='{url}'>IEC_8859-1</a> character set may increase "
+        s2 = "the message fragment count, resulting in additional charges, and these IEC_8859-1 "
+        s3 = "characters may not display properly on some older mobile devices.</body></html>"
 
         warning = ""
         try:
@@ -703,11 +705,16 @@ def _get_content_count_error_and_message_for_template(template):
             )
         if template.placeholders:
             return False, (
-                f"Will be charged as {message_count(template.fragment_count, template.template_type)} "
-                f"(not including personalization).  {warning}"
+                Markup(
+                    f"Will be charged as {message_count(template.fragment_count, template.template_type)} "
+                    f"(not including personalization).  {warning}"
+                )
             )
         return False, (
-            f"Will be charged as {message_count(template.fragment_count, template.template_type)}.  {warning} "
+            # Markup marks html contents safe so that they render properly.  Don't use it if there is user input.
+            Markup(
+                f"Will be charged as {message_count(template.fragment_count, template.template_type)}.  {warning} "
+            )
         )
 
 
