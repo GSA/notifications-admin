@@ -956,9 +956,9 @@ class OnOffField(GovukRadiosField):
         ]
         super().__init__(
             label,
+            *args,
             choices=choices,
             thing=f"{choices[0][1].lower()} or {choices[1][1].lower()}",
-            *args,
             **kwargs,
         )
 
