@@ -93,7 +93,7 @@
           )
           }}
         {% endcall %}
-        
+
         {% if current_user.platform_admin %}
           {% call settings_row(if_has_permission='sms') %}
             {{ text_field('Send international text messages') }}
@@ -107,7 +107,7 @@
             }}
           {% endcall %}
         {% endif %}
-        
+
         <!-- {% call settings_row(if_has_permission='sms') %}
                   {{ text_field('Receive text messages') }}
                   {{ boolean_field('inbound_sms' in current_service.permissions) }}
@@ -219,7 +219,7 @@
       <p>
         You can send up to
         {{ "{:,}".format(current_service.message_limit) }} messages
-        per day.
+        per year.
       </p>
       <p>
         Problems or comments?
