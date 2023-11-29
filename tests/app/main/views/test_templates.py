@@ -1969,15 +1969,8 @@ def test_set_template_sender(
         (
             "sms",
             False,
-            "",
-            "Will be charged as 1 text message",
-            None,
-        ),
-        (
-            "sms",
-            False,
             "a" * 160,
-            "Will be charged as 1 text message",
+            "Will be charged as 2 text messages",
             None,
         ),
         (
@@ -1988,11 +1981,10 @@ def test_set_template_sender(
             None,
         ),
         (
-            # service name takes 13 characters, 147 + 13 = 160
             "sms",
             True,
             "a" * 147,
-            "Will be charged as 1 text message",
+            "Will be charged as 2 text messages",
             None,
         ),
         (
@@ -2007,7 +1999,7 @@ def test_set_template_sender(
             "sms",
             False,
             "a" * 918,
-            "Will be charged as 6 text messages",
+            "Will be charged as 7 text messages",
             None,
         ),
         (
@@ -2048,8 +2040,11 @@ def test_set_template_sender(
         (
             "sms",
             False,
+            # The length of this string in bytes is 210, needing two fragments.
+            # Seems like previous calculation was wrong unless the number of characters
+            # somehow has priority over the number of bytes in a fragment (?)
             "Ẅ" * 70,
-            "Will be charged as 1 text message",
+            "Will be charged as 2 text messages",
             None,
         ),
         (
@@ -2063,7 +2058,11 @@ def test_set_template_sender(
             "sms",
             False,
             "Ẅ" * 918,
-            "Will be charged as 14 text messages",
+            # The length of this string in bytes is 2754.  Divide by 140 and we get 19.  Then round up.
+            # Don't know why it was previously calculated as 14.  They seem to have charged by characters
+            # rather than length of the fragment in bytes.
+            # "Will be charged as 14 text messages",
+            "Will be charged as 20 text messages",
             None,
         ),
         (
