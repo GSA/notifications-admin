@@ -34,6 +34,7 @@ def sign_out():
     if current_user.is_authenticated:
         # TODO This doesn't work yet, due to problems above.
         current_user.sign_out()
-
-        return redirect(os.getenv("LOGIN_DOT_GOV_LOGOUT_URL"))
+        login_dot_gov_logout_url = os.getenv("LOGIN_DOT_GOV_LOGOUT_URL")
+        if login_dot_gov_logout_url:
+            return redirect(login_dot_gov_logout_url)
     return redirect(url_for("main.index"))
