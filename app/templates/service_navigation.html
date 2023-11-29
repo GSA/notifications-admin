@@ -7,7 +7,7 @@
   </div>
 {% endmacro %}
 
-<div class="navigation-service margin-top-2 display-flex flex-align-end flex-justify border-bottom padding-bottom-1">
+<div class="navigation-service margin-top-5 display-flex flex-align-end flex-justify border-bottom padding-bottom-1">
   {% if current_service.organization_id %}
     {% if current_user.platform_admin or
       (current_user.belongs_to_organization(current_service.organization_id) and current_service.live) %}

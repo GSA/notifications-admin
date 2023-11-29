@@ -1,4 +1,8 @@
+import datetime
+
+import pytz
 from flask import current_app
+from flask_login import current_user
 from notifications_utils.recipients import RecipientCSV
 
 from app.models.spreadsheet import Spreadsheet
@@ -63,6 +67,7 @@ def generate_notifications_csv(**kwargs):
     from app import notification_api_client
     from app.s3_client.s3_csv_client import s3download
 
+    current_app.logger.info("\n\n\n\nENTER generate_notifications_csv")
     if "page" not in kwargs:
         kwargs["page"] = 1
 
@@ -76,7 +81,16 @@ def generate_notifications_csv(**kwargs):
         fieldnames = (
             ["Row number"]
             + original_column_headers
-            + ["Template", "Type", "Sent by", "Job", "Status", "Time"]
+            + [
+                "Template",
+                "Type",
+                "Sent by",
+                "Job",
+                "Carrier",
+                "Carrier Response",
+                "Status",
+                "Time",
+            ]
         )
     else:
         fieldnames = [
@@ -85,6 +99,8 @@ def generate_notifications_csv(**kwargs):
             "Type",
             "Sent by",
             "Job",
+            "Carrier",
+            "Carrier Response",
             "Status",
             "Time",
         ]
@@ -96,7 +112,11 @@ def generate_notifications_csv(**kwargs):
             **kwargs
         )
         for notification in notifications_resp["notifications"]:
-            current_app.logger.info(notification)
+            preferred_tz_created_at = convert_report_date_to_preferred_timezone(
+                notification["created_at"]
+            )
+
+            current_app.logger.info(f"\n\n{notification}")
             if kwargs.get("job_id"):
                 values = (
                     [
@@ -111,8 +131,10 @@ def generate_notifications_csv(**kwargs):
                         notification["template_type"],
                         notification["created_by_name"],
                         notification["job_name"],
+                        notification["carrier"],
+                        notification["provider_response"],
                         notification["status"],
-                        notification["created_at"],
+                        preferred_tz_created_at,
                     ]
                 )
             else:
@@ -122,8 +144,10 @@ def generate_notifications_csv(**kwargs):
                     notification["template_type"],
                     notification["created_by_name"] or "",
                     notification["job_name"] or "",
+                    notification["carrier"],
+                    notification["provider_response"],
                     notification["status"],
-                    notification["created_at"],
+                    preferred_tz_created_at,
                 ]
             yield Spreadsheet.from_rows([map(str, values)]).as_csv_data
 
@@ -132,3 +156,27 @@ def generate_notifications_csv(**kwargs):
         else:
             return
     raise Exception("Should never reach here")
+
+
+def convert_report_date_to_preferred_timezone(db_date_str_in_utc):
+    """
+    Report dates in the db are in UTC.  We need to convert them to the user's default timezone,
+    which defaults to "US/Eastern"
+    """
+    date_arr = db_date_str_in_utc.split(" ")
+    db_date_str_in_utc = f"{date_arr[0]}T{date_arr[1]}+00:00"
+    utc_date_obj = datetime.datetime.fromisoformat(db_date_str_in_utc)
+
+    utc_date_obj = utc_date_obj.astimezone(pytz.utc)
+    preferred_timezone = pytz.timezone(get_user_preferred_timezone())
+    preferred_date_obj = utc_date_obj.astimezone(preferred_timezone)
+    preferred_tz_created_at = preferred_date_obj.strftime("%Y-%m-%d %H:%M:%S")
+
+    return f"{preferred_tz_created_at} {get_user_preferred_timezone()}"
+
+
+def get_user_preferred_timezone():
+    if current_user and hasattr(current_user, "preferred_timezone"):
+        return current_user.preferred_timezone
+
+    return "US/Eastern"

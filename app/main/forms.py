@@ -64,15 +64,18 @@ from app.main.validators import (
 from app.models.feedback import PROBLEM_TICKET_TYPE, QUESTION_TICKET_TYPE
 from app.models.organization import Organization
 from app.utils import branding, merge_jsonlike
+from app.utils.csv import get_user_preferred_timezone
 from app.utils.user_permissions import all_ui_permissions, permission_options
 
 
 def get_time_value_and_label(future_time):
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
     return (
-        future_time.astimezone(pytz.utc).replace(tzinfo=None).isoformat(),
-        "{} at {} UTC".format(
-            get_human_day(future_time.astimezone(pytz.utc)),
-            get_human_time(future_time.astimezone(pytz.utc)),
+        future_time.astimezone(preferred_tz).replace(tzinfo=None).isoformat(),
+        "{} at {} {}".format(
+            get_human_day(future_time.astimezone(preferred_tz)),
+            get_human_time(future_time.astimezone(preferred_tz)),
+            get_user_preferred_timezone(),
         ),
     )
 
@@ -85,21 +88,25 @@ def get_human_time(time):
 
 def get_human_day(time, prefix_today_with="T"):
     #  Add 1 hour to get ‘midnight today’ instead of ‘midnight tomorrow’
+
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
     time = (time - timedelta(hours=1)).strftime("%A")
-    if time == datetime.now(pytz.utc).strftime("%A"):
+    if time == datetime.now(preferred_tz).strftime("%A"):
         return "{}oday".format(prefix_today_with)
-    if time == (datetime.now(pytz.utc) + timedelta(days=1)).strftime("%A"):
+    if time == (datetime.now(preferred_tz) + timedelta(days=1)).strftime("%A"):
         return "Tomorrow"
     return time
 
 
 def get_furthest_possible_scheduled_time():
     # We want local time to find date boundaries
-    return (datetime.now(pytz.utc) + timedelta(days=4)).replace(hour=0)
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    return (datetime.now(preferred_tz) + timedelta(days=4)).replace(hour=0)
 
 
 def get_next_hours_until(until):
-    now = datetime.now(pytz.utc)
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    now = datetime.now(preferred_tz)
     hours = int((until - now).total_seconds() / (60 * 60))
     return [
         (now + timedelta(hours=i)).replace(minute=0, second=0, microsecond=0)
@@ -108,7 +115,8 @@ def get_next_hours_until(until):
 
 
 def get_next_days_until(until):
-    now = datetime.now(pytz.utc)
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    now = datetime.now(preferred_tz)
     days = int((until - now).total_seconds() / (60 * 60 * 24))
     return [
         get_human_day((now + timedelta(days=i)), prefix_today_with="Later t")
@@ -948,9 +956,9 @@ class OnOffField(GovukRadiosField):
         ]
         super().__init__(
             label,
+            *args,
             choices=choices,
             thing=f"{choices[0][1].lower()} or {choices[1][1].lower()}",
-            *args,
             **kwargs,
         )
 

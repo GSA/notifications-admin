@@ -41,8 +41,8 @@ def _create_example_template(service_id):
 
 
 @main.route("/add-service", methods=["GET", "POST"])
-@user_is_logged_in
 @user_is_gov_user
+@user_is_logged_in
 def add_service():
     default_organization_type = current_user.default_organization_type
     if default_organization_type is None:

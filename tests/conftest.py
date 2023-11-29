@@ -2423,8 +2423,15 @@ def _os_environ():
         os.environ[k] = v
 
 
-@pytest.fixture  # noqa (C901 too complex)
+@pytest.fixture()  # noqa (C901 too complex)
 def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too complex)
+    def _get(mocker):
+        return {"count": 0}
+
+    mocker.patch(
+        "app.service_api_client.get_global_notification_count", side_effect=_get
+    )
+
     class ClientRequest:
         @staticmethod
         @contextmanager
@@ -3445,13 +3452,19 @@ def create_sms_sender(
     }
 
 
-def create_multiple_sms_senders(service_id="abcd"):
+def create_multiple_sms_senders(
+    service_id="abcd",
+    isdefault1=True,
+    isdefault2=False,
+    isdefault3=False,
+    isdefault4=False,
+):
     return [
         {
             "id": "1234",
             "service_id": service_id,
             "sms_sender": "Example",
-            "is_default": True,
+            "is_default": isdefault1,
             "created_at": datetime.utcnow(),
             "inbound_number_id": "1234",
             "updated_at": None,
@@ -3460,7 +3473,7 @@ def create_multiple_sms_senders(service_id="abcd"):
             "id": "5678",
             "service_id": service_id,
             "sms_sender": "Example 2",
-            "is_default": False,
+            "is_default": isdefault2,
             "created_at": datetime.utcnow(),
             "inbound_number_id": None,
             "updated_at": None,
@@ -3468,8 +3481,17 @@ def create_multiple_sms_senders(service_id="abcd"):
         {
             "id": "9457",
             "service_id": service_id,
-            "sms_sender": "Example 3",
-            "is_default": False,
+            "sms_sender": "US Notify",
+            "is_default": isdefault3,
+            "created_at": datetime.utcnow(),
+            "inbound_number_id": None,
+            "updated_at": None,
+        },
+        {
+            "id": "9897",
+            "service_id": service_id,
+            "sms_sender": "Notify.gov",
+            "is_default": isdefault4,
             "created_at": datetime.utcnow(),
             "inbound_number_id": None,
             "updated_at": None,

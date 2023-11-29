@@ -70,7 +70,7 @@ def test_get_user_phone_number_raises_if_both_api_requests_fail(mocker):
         (False, "Hello Jo"),
     ],
 )
-@freeze_time("2012-01-01 00:00:00")
+@freeze_time("2012-01-01 05:00:00")
 def test_view_conversation(
     client_request,
     mocker,
@@ -113,55 +113,55 @@ def test_view_conversation(
         [
             (
                 "message-8",
-                "yesterday at 14:59 UTC",
+                "yesterday at 14:59 US/Eastern",
             ),
             (
                 "message-7",
-                "yesterday at 14:59 UTC",
+                "yesterday at 14:59 US/Eastern",
             ),
             (
                 "message-6",
-                "yesterday at 16:59 UTC",
+                "yesterday at 16:59 US/Eastern",
             ),
             (
                 "message-5",
-                "yesterday at 18:59 UTC",
+                "yesterday at 18:59 US/Eastern",
             ),
             (
                 "message-4",
-                "yesterday at 20:59 UTC",
+                "yesterday at 20:59 US/Eastern",
             ),
             (
                 "message-3",
-                "yesterday at 22:59 UTC",
+                "yesterday at 22:59 US/Eastern",
             ),
             (
                 "message-2",
-                "yesterday at 22:59 UTC",
+                "yesterday at 22:59 US/Eastern",
             ),
             (
                 "message-1",
-                "yesterday at 23:00 UTC",
+                "yesterday at 23:00 US/Eastern",
             ),
             (
                 expected_outbound_content,
-                "yesterday at 00:00 UTC",
+                "yesterday at 00:00 US/Eastern",
             ),
             (
                 expected_outbound_content,
-                "yesterday at 00:00 UTC",
+                "yesterday at 00:00 US/Eastern",
             ),
             (
                 expected_outbound_content,
-                "yesterday at 00:00 UTC",
+                "yesterday at 00:00 US/Eastern",
             ),
             (
                 expected_outbound_content,
-                "yesterday at 00:00 UTC",
+                "yesterday at 00:00 US/Eastern",
             ),
             (
                 expected_outbound_content,
-                "yesterday at 00:00 UTC",
+                "yesterday at 00:00 US/Eastern",
             ),
         ]
     ):

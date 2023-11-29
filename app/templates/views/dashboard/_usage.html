@@ -2,22 +2,34 @@
 
 <div class='grid-row grid-gap ajax-block-container'>
   <div class='grid-col-12'>
-    <div class="keyline-block">
-      {% if sms_cost %}
-        {{ big_number(
-          sms_cost,
-          'spent on text messages',
-          currency="$",
-          smaller=True
-        ) }}
-      {% else %}
-        {{ big_number(sms_allowance_remaining, 'free text messages left', smaller=True) }}
-      {% endif %}
-    </div>
+
+    <table class="usa-table usa-table--borderless margin-top-1 margin-bottom-5">
+      <caption class="usa-sr-only">
+        Daily
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Usage</th>
+          <th scope="col">Remaining</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ big_number(sms_sent, smaller=True) }}</td>
+          <td>
+            {% if sms_cost %}
+            {{ big_number(
+              sms_cost,
+              'spent on text messages',
+              currency="$",
+              smaller=True
+            ) }}
+            {% else %}
+              {{ big_number(sms_allowance_remaining, smaller=True) }}
+            {% endif %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  <!-- <div class='grid-col-6 pilot-disabled'>
-    <div class="keyline-block">
-      {{ big_number("0", 'email disabled during SMS pilot', smaller=True) }}
-    </div>
-  </div> -->
 </div>

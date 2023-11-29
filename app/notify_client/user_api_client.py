@@ -39,6 +39,7 @@ class UserApiClient(NotifyAdminAPIClient):
         return self.get("/user/{}".format(user_id))
 
     def get_user_by_email(self, email_address):
+        current_app.logger.info(f"Going to get user by email {email_address}")
         user_data = self.post("/user/email", data={"email": email_address})
         return user_data["data"]
 

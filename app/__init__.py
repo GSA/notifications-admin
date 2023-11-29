@@ -150,6 +150,7 @@ def _csp(config):
             "'unsafe-eval'",
             "https://js-agent.newrelic.com",
             "https://gov-bam.nr-data.net",
+            "https://www.googletagmanager.com",
         ],
         "connect-src": ["'self'", "https://gov-bam.nr-data.net"],
         "style-src": ["'self'", asset_domain],
@@ -284,13 +285,28 @@ def init_app(application):
 
     @application.context_processor
     def _attach_current_global_daily_messages():
+        global_limit = 0
         remaining_global_messages = 0
-
         if current_app:
-            global_limit = current_app.config["GLOBAL_SERVICE_MESSAGE_LIMIT"]
-            global_messages_count = service_api_client.get_global_notification_count()
-            remaining_global_messages = global_limit - global_messages_count
-        return {"daily_global_messages_remaining": remaining_global_messages}
+            if request.view_args:
+                service_id = request.view_args.get(
+                    "service_id", session.get("service_id")
+                )
+            else:
+                service_id = session.get("service_id")
+
+            if service_id:
+                global_limit = current_app.config["GLOBAL_SERVICE_MESSAGE_LIMIT"]
+                global_messages_count = (
+                    service_api_client.get_global_notification_count(service_id)
+                )
+                remaining_global_messages = global_limit - global_messages_count.get(
+                    "count"
+                )
+        return {
+            "global_message_limit": global_limit,
+            "daily_global_messages_remaining": remaining_global_messages,
+        }
 
     @application.before_request
     def record_start_time():

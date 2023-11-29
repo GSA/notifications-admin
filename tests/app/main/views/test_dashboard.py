@@ -379,7 +379,7 @@ def test_view_inbox_updates(
     mock_get_partials.assert_called_once_with(SERVICE_ONE_ID)
 
 
-@freeze_time("2016-07-01 12:00")
+@freeze_time("2016-07-01 16:00")
 def test_download_inbox(
     client_request,
     mock_get_inbound_sms,
@@ -394,14 +394,14 @@ def test_download_inbox(
     )
     assert response.get_data(as_text=True) == (
         "Phone number,Message,Received\r\n"
-        "(202) 867-5300,message-1,2016-07-01 11:00 UTC\r\n"
-        "(202) 867-5300,message-2,2016-07-01 10:59 UTC\r\n"
-        "(202) 867-5300,message-3,2016-07-01 10:59 UTC\r\n"
-        "(202) 867-5302,message-4,2016-07-01 08:59 UTC\r\n"
-        "+33 1 12 34 56 78,message-5,2016-07-01 06:59 UTC\r\n"
-        "(202) 555-0104,message-6,2016-07-01 04:59 UTC\r\n"
-        "(202) 555-0104,message-7,2016-07-01 02:59 UTC\r\n"
-        "+682 12345,message-8,2016-07-01 02:59 UTC\r\n"
+        "(202) 867-5300,message-1,2016-07-01 11:00 US/Eastern\r\n"
+        "(202) 867-5300,message-2,2016-07-01 10:59 US/Eastern\r\n"
+        "(202) 867-5300,message-3,2016-07-01 10:59 US/Eastern\r\n"
+        "(202) 867-5302,message-4,2016-07-01 08:59 US/Eastern\r\n"
+        "+33 1 12 34 56 78,message-5,2016-07-01 06:59 US/Eastern\r\n"
+        "(202) 555-0104,message-6,2016-07-01 04:59 US/Eastern\r\n"
+        "(202) 555-0104,message-7,2016-07-01 02:59 US/Eastern\r\n"
+        "+682 12345,message-8,2016-07-01 02:59 US/Eastern\r\n"
     )
 
 
@@ -471,7 +471,7 @@ def test_should_show_recent_templates_on_dashboard(
     headers = [
         header.text.strip() for header in page.find_all("h2") + page.find_all("h1")
     ]
-    assert "In the last seven days" in headers
+    assert "Messages sent" in headers
 
     table_rows = page.find_all("tbody")[0].find_all("tr")
 
@@ -636,7 +636,7 @@ def test_monthly_has_equal_length_tables(
     assert page.select_one(".table-field-headings th").get("width") == "33%"
 
 
-@freeze_time("2016-01-01 1:09:00.061258")
+@freeze_time("2016-01-01 11:09:00.061258")
 def test_should_show_upcoming_jobs_on_dashboard(
     client_request,
     mock_get_service_templates,
@@ -659,7 +659,7 @@ def test_should_show_upcoming_jobs_on_dashboard(
     assert normalize_spaces(page.select_one("main h2").text) == ("In the next few days")
 
     assert normalize_spaces(page.select_one("a.banner-dashboard").text) == (
-        "2 files waiting to send " "- sending starts today at 11:09 UTC"
+        "2 files waiting to send " "- sending starts today at 06:09 US/Eastern"
     )
 
     assert page.select_one("a.banner-dashboard")["href"] == url_for(
@@ -1174,6 +1174,14 @@ def test_route_for_service_permissions(
     mock_get_inbound_sms_summary,
 ):
     with notify_admin.test_request_context():
+
+        def _get(mocker):
+            return {"count": 0}
+
+        mocker.patch(
+            "app.service_api_client.get_global_notification_count", side_effect=_get
+        )
+
         validate_route_permission(
             mocker,
             notify_admin,
@@ -1509,6 +1517,7 @@ def test_breadcrumb_shows_if_service_is_suspended(
     ],
 )
 def test_service_dashboard_shows_usage(
+    mocker,
     client_request,
     service_one,
     mock_get_service_templates,
@@ -1518,16 +1527,22 @@ def test_service_dashboard_shows_usage(
     mock_get_free_sms_fragment_limit,
     permissions,
 ):
+    mocker.patch(
+        "app.service_api_client.get_global_notification_count",
+        return_value={
+            "count": 500,
+        },
+    )
+
     service_one["permissions"] = permissions
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
-    assert normalize_spaces(page.select_one("[data-key=usage]").text) == (
-        "$29.85 "
-        "spent on text messages"
-        # Disabled for pilot
-        # '0 '
-        # 'email disabled during SMS pilot'
-    )
+    table_rows = page.find_all("tbody")[0].find_all("tr")
+
+    assert len(table_rows) == 1
+
+    assert "500" in table_rows[0].find_all("td")[0].text
+    assert "9500" in table_rows[0].find_all("td")[1].text
 
 
 def test_service_dashboard_shows_free_allowance(
@@ -1556,4 +1571,4 @@ def test_service_dashboard_shows_free_allowance(
 
     usage_text = normalize_spaces(page.select_one("[data-key=usage]").text)
     assert "spent on text messages" not in usage_text
-    assert "249,000 free text messages left" in usage_text
+    assert "Daily Usage Remaining 1,000 249,000" in usage_text

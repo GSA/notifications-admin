@@ -134,8 +134,7 @@ def test_does_not_delete_non_temp_email_file(client_request, mocker):
         "app.s3_client.s3_logo_client.delete_s3_object"
     )
 
-    with pytest.raises(ValueError) as error:  # noqa: PT011  # Requires more research.
+    with pytest.raises(ValueError, match="Not a temp file: logo.png"):
         delete_email_temp_file(filename)
 
     assert mocked_delete_s3_object.called is False
-    assert str(error.value) == "Not a temp file: {}".format(filename)

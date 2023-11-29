@@ -90,7 +90,7 @@ def test_should_show_page_for_one_job(
 
     assert page.h1.text.strip() == "thisisatest.csv"
     assert " ".join(page.find("tbody").find("tr").text.split()) == (
-        "2021234567 template content Delivered 1 January at 11:10 UTC"
+        "2021234567 template content Delivered 1 January at 06:10 US/Eastern"
     )
     assert page.find("div", {"data-key": "notifications"})["data-resource"] == url_for(
         "main.view_job_updates",
@@ -109,7 +109,7 @@ def test_should_show_page_for_one_job(
     assert page.find("span", {"id": "time-left"}).text == "Data available for 7 days"
 
     assert normalize_spaces(page.select_one("tbody tr").text) == normalize_spaces(
-        "2021234567 " "template content " "Delivered 1 January at 11:10 UTC"
+        "2021234567 " "template content " "Delivered 1 January at 06:10 US/Eastern"
     )
     assert page.select_one("tbody tr a")["href"] == url_for(
         "main.view_notification",
@@ -238,7 +238,8 @@ def test_should_show_job_with_sending_limit_exceeded_status(
     )
 
     assert normalize_spaces(page.select("main p")[1].text) == (
-        "Notify cannot send these messages because you have reached a limit. You can only send 1,000 messages per day and 250,000 messages in total."  # noqa
+        "Notify cannot send these messages because you have reached a limit. "
+        "You can only send 1,000 messages per day and 250,000 messages in total."
     )
     assert normalize_spaces(page.select("main p")[2].text) == (
         "Upload this spreadsheet again tomorrow or contact the Notify.gov team to raise the limit."
@@ -333,7 +334,7 @@ def test_should_show_old_job(
     ]
 
 
-@freeze_time("2016-01-01T05:00:00.061258")
+@freeze_time("2016-01-01T06:00:00.061258")
 def test_should_show_scheduled_job(
     client_request,
     mock_get_service_template,
@@ -349,7 +350,7 @@ def test_should_show_scheduled_job(
     )
 
     assert normalize_spaces(page.select("main p")[1].text) == (
-        "Sending Two week reminder tomorrow at 05:00 UTC"
+        "Sending Two week reminder today at 00:00 US/Eastern"
     )
     assert page.select("main p a")[0]["href"] == url_for(
         "main.view_template_version",
@@ -422,8 +423,8 @@ def test_should_show_updates_for_one_job_as_json(
     assert "2021234567" in content["notifications"]
     assert "Status" in content["notifications"]
     assert "Delivered" in content["notifications"]
-    assert "05:01" in content["notifications"]
-    assert "Sent by Test User on 1 January at 05:00" in content["status"]
+    assert "00:01" in content["notifications"]
+    assert "Sent by Test User on 1 January at 00:00" in content["status"]
 
 
 @freeze_time("2016-01-01 05:00:00.000001")
@@ -464,8 +465,8 @@ def test_should_show_updates_for_scheduled_job_as_json(
     assert "2021234567" in content["notifications"]
     assert "Status" in content["notifications"]
     assert "Delivered" in content["notifications"]
-    assert "05:01" in content["notifications"]
-    assert "Sent by Test User on 1 June at 20:00" in content["status"]
+    assert "00:01" in content["notifications"]
+    assert "Sent by Test User on 1 June at 16:00" in content["status"]
 
 
 @pytest.mark.parametrize(

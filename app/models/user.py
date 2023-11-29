@@ -47,12 +47,14 @@ class User(JSONModel, UserMixin):
         "password_changed_at",
         "permissions",
         "state",
+        "preferred_timezone",
     }
 
     def __init__(self, _dict):
         super().__init__(_dict)
         self.permissions = _dict.get("permissions", {})
         self._platform_admin = _dict["platform_admin"]
+        self.preferred_timezone = "US/Eastern"
 
     @classmethod
     def from_id(cls, user_id):

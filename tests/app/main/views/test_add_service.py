@@ -31,7 +31,9 @@ def test_get_should_render_add_service_template(
     client_request,
     mocker,
     org_json,
+    platform_admin_user,
 ):
+    client_request.login(platform_admin_user)
     mocker.patch(
         "app.organizations_client.get_organization_by_domain",
         return_value=org_json,
@@ -42,9 +44,9 @@ def test_get_should_render_add_service_template(
 
 
 def test_get_should_not_render_radios_if_org_type_known(
-    client_request,
-    mocker,
+    client_request, mocker, platform_admin_user
 ):
+    client_request.login(platform_admin_user)
     mocker.patch(
         "app.organizations_client.get_organization_by_domain",
         return_value=organization_json(organization_type="central"),
@@ -56,9 +58,9 @@ def test_get_should_not_render_radios_if_org_type_known(
 
 
 def test_show_different_page_if_user_org_type_is_local(
-    client_request,
-    mocker,
+    client_request, mocker, platform_admin_user
 ):
+    client_request.login(platform_admin_user)
     mocker.patch(
         "app.organizations_client.get_organization_by_domain",
         return_value=organization_json(organization_type="local"),
@@ -101,9 +103,10 @@ def test_should_add_service_and_redirect_to_tour_when_no_services(
     posted,
     persisted,
     sms_limit,
+    platform_admin_user,
 ):
     api_user_active["email_address"] = email_address
-    client_request.login(api_user_active)
+    client_request.login(platform_admin_user)
     mocker.patch(
         "app.organizations_client.get_organization_by_domain",
         return_value=organization_json(organization_type=inherited),
@@ -151,7 +154,9 @@ def test_add_service_has_to_choose_org_type(
     mock_get_services_with_no_services,
     api_user_active,
     mock_get_all_email_branding,
+    platform_admin_user,
 ):
+    client_request.login(platform_admin_user)
     mocker.patch(
         "app.organizations_client.get_organization_by_domain",
         return_value=None,
@@ -223,7 +228,9 @@ def test_should_add_service_and_redirect_to_dashboard_when_existing_service(
     organization_type,
     free_allowance,
     mock_get_all_email_branding,
+    platform_admin_user,
 ):
+    client_request.login(platform_admin_user)
     client_request.post(
         "main.add_service",
         _data={
@@ -252,7 +259,9 @@ def test_add_service_fails_if_service_name_fails_validation(
     mock_get_organization_by_domain,
     name,
     error_message,
+    platform_admin_user,
 ):
+    client_request.login(platform_admin_user)
     page = client_request.post(
         "main.add_service",
         _data={"name": name},
@@ -263,9 +272,7 @@ def test_add_service_fails_if_service_name_fails_validation(
 
 @freeze_time("2021-01-01")
 def test_should_return_form_errors_with_duplicate_service_name_regardless_of_case(
-    client_request,
-    mock_get_organization_by_domain,
-    mocker,
+    client_request, mock_get_organization_by_domain, mocker, platform_admin_user
 ):
     def _create(**_kwargs):
         json_mock = mocker.Mock(
@@ -276,7 +283,7 @@ def test_should_return_form_errors_with_duplicate_service_name_regardless_of_cas
         raise http_error
 
     mocker.patch("app.service_api_client.create_service", side_effect=_create)
-
+    client_request.login(platform_admin_user)
     page = client_request.post(
         "main.add_service",
         _data={

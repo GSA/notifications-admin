@@ -1,6 +1,39 @@
 # Notify Sprint Goals Log
 
-## Sprint: T (9/28/23)
+## Sprint: W (11/8/23)
+(Sprint is at low capacity due to Thanksgiving week)
+
+|             | Goals        | Impact      | Milestone(s)    |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|--------------|
+| Engineering | Change timezones displays to [Eastern time](https://github.com/GSA/notifications-admin/issues/861), [create properties on org model](https://github.com/GSA/notifications-api/issues/331) to process agreement info  |  Better timezone familiarity, continuity between application orgs and agreements                            | Building Notify.gov |
+| UX          | Begin [re-thinking Notify IA](https://github.com/GSA/notifications-admin/issues/910), create a synthesis of partner feeback thusfar, wireframe a more [user-friendly dashboard](https://github.com/GSA/notifications-admin/issues/889), send [Notify logo](https://github.com/GSA/notifications-admin/issues/859) proposal to begin approvals, add UI consideration regarding [multi-lingual messages](https://github.com/GSA/notifications-admin/issues/901) | Improve ease of use, begin process of brand creation       | Obtain approval for logo/brand| 
+| Security    | Complete pre-requisite documentation, start project planning timelines and control group deadlines                                             | Aim to have package completed with enough time to allow for long assessment| Secure ATO |
+| Content    | Finalize cloud.gov pages IAA mod for content site | Enable an easy static website for future content | Building Notify.gov |
+| Ops    | Complete Beverly's onboarding with necessary access to cloud.gov, AWS, and other tools|  Add valuable dev resources to increase our capacity
+
+## Sprint: Velvety Black Tyrant (10/30/23)
+
+|             | Goals                                                                                                                              | Impact                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| Engineering | Continue login.gov [sandbox implementation](https://github.com/GSA/notifications-admin/issues/338), catch up deploys that lag from last week's dependency audit failures, change timezones displays to [Eastern time](https://github.com/GSA/notifications-admin/issues/861), Persist [individal send reports](https://github.com/GSA/notifications-admin/issues/855) somwehere in the app|  Stronger auth security, streamlined UX, better timezone familiarity                            |
+| UX          | Continue making common-sense [UI/UX changes](https://github.com/GSA/notifications-admin/issues/828), review and finalize proposal for [Notify logo](https://github.com/GSA/notifications-admin/issues/859) & begin approvals chain | Improve ease of use, begin process of brand creation       |
+| Security    | Complete pre-requisite documentation, start project planning timelines and control group deadlines                                             | Aim to have package completed with enough time to allow for long assessment|
+| Content    | Finalize cloud.gov pages IAA mod for content site | Enable an easy static website for future content |
+| Ops    | Onboard Beverly, get access to tools for them once possible |  Add valuable dev resources to increase our capacity
+
+
+## Sprint: Upupa Marginata (10/12/23)
+
+|             | Goals                                                                                                                              | Impact                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| Engineering | Shift the quota count from `service` to `org`, complete [notify.gov redirect](https://github.com/GSA/notifications-api/issues/515), continue login.gov [sandbox implementation](https://github.com/GSA/notifications-admin/issues/338), meet with AWS to gain answers on opt-out capabilities|  Stronger auth security, streamlined UX, operational efficiency                             |
+| UX          | Make common-sense [UI/UX changes](https://github.com/GSA/notifications-admin/issues/828), Complete proposal for [Notify logo](https://github.com/GSA/notifications-admin/issues/859), switch application to Eastern timezone displays  | Improve ease of use, begin process of brand creation       |
+| Security    | Complete pre-requisite documentation, start project planning timelines and control group deadlines                                             | Aim to have package completed with enough time to allow for long assessment|
+| Content    | Work on cloud.gov pages IAA mod for content site | Enable an easy static website for future content |
+| Ops    | Onboard new back-end dev, get access to tools for them once possible |  Add valuable dev resources to increase our capacity
+
+
+## Sprint: Toucan (9/28/23)
 
 |             | Goals                                                                                                                              | Impact                                                                                                                                     |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|

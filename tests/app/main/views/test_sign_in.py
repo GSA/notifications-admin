@@ -72,6 +72,9 @@ def test_doesnt_redirect_to_sign_in_if_no_session_info(
     with client_request.session_transaction() as session:
         session["current_session_id"] = None
 
+    with client_request.session_transaction() as session:
+        session["current_session_id"] = None
+
     client_request.get("main.add_service")
 
 
