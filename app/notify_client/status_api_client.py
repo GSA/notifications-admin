@@ -3,7 +3,7 @@ from app.notify_client import NotifyAdminAPIClient, cache
 
 class StatusApiClient(NotifyAdminAPIClient):
     def get_status(self, *params):
-        return self.get(url="/_status", *params)
+        return self.get(*params, url="/_status")
 
     @cache.set("live-service-and-organization-counts", ttl_in_seconds=3600)
     def get_count_of_live_services_and_organizations(self):
