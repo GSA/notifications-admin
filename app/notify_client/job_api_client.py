@@ -109,7 +109,7 @@ class JobApiClient(NotifyAdminAPIClient):
         # make a datetime object in the user's preferred timezone
 
         if scheduled_for:
-            scheduled_for = self.convert_user_time_to_utc(scheduled_for)
+            scheduled_for = JobApiClient.convert_user_time_to_utc(scheduled_for)
             data.update({"scheduled_for": scheduled_for})
 
         data = _attach_current_user(data)
