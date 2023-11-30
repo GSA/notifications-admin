@@ -1,5 +1,9 @@
+import datetime
+from zoneinfo import ZoneInfo
+
 from app.extensions import redis_client
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
+from app.utils.csv import get_user_preferred_timezone
 
 
 class JobApiClient(NotifyAdminAPIClient):
@@ -86,10 +90,26 @@ class JobApiClient(NotifyAdminAPIClient):
     def has_jobs(self, service_id):
         return bool(self.get_jobs(service_id)["data"])
 
+    @classmethod
+    def convert_user_time_to_utc(cls, scheduled_for):
+        user_preferred_tz = get_user_preferred_timezone()
+
+        user_date = datetime.datetime.fromisoformat(scheduled_for)
+        scheduled_for = (
+            user_date.replace(tzinfo=ZoneInfo(user_preferred_tz))
+            .astimezone(ZoneInfo("UTC"))
+            .strftime("%Y-%m-%dT%H:%M:%S")
+        )
+
+        return scheduled_for
+
     def create_job(self, job_id, service_id, scheduled_for=None):
         data = {"id": job_id}
 
+        # make a datetime object in the user's preferred timezone
+
         if scheduled_for:
+            scheduled_for = self.convert_user_time_to_utc(scheduled_for)
             data.update({"scheduled_for": scheduled_for})
 
         data = _attach_current_user(data)
