@@ -22,9 +22,3 @@ def is_less_than_days_ago(date_from_db, number_of_days):
 
 def parse_naive_dt(dt):
     return parser.parse(dt, ignoretz=True)
-
-
-def hilite(message):
-    ansi_green = "\033[32m"
-    ansi_reset = "\033[0m"
-    return f"{ansi_green}{message}{ansi_reset}"

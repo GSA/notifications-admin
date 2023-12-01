@@ -117,6 +117,14 @@ def hide_from_search_engines(f):
     return decorated_function
 
 
+# Function used for debugging.
+# Do print(hilite(message)) while debugging, then remove your print statements
+def hilite(message):
+    ansi_green = "\033[32m"
+    ansi_reset = "\033[0m"
+    return f"{ansi_green}{message}{ansi_reset}"
+
+
 # Function to merge two dict or lists with a JSON-like structure into one.
 # JSON-like means they can contain all types JSON can: all the main primitives
 # plus nested lists or dictionaries.
