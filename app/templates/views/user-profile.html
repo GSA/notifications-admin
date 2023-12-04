@@ -63,7 +63,7 @@
           )
         }}
       {% endcall %}
-
+      IS IT HERE???? {{ current_user.preferred_timezone }}
       {% call row() %}
         {{ text_field('Preferred Timezone') }}
         {{ optional_text_field(current_user.preferred_timezone) }}

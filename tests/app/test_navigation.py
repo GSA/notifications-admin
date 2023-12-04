@@ -253,6 +253,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "user_profile_mobile_number_delete",
             "user_profile_name",
             "user_profile_password",
+            "user_profile_preferred_timezone",
             "using_notify",
             "verify",
             "verify_email",
