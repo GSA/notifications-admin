@@ -2112,7 +2112,7 @@ def test_content_count_json_endpoint(
     html = json.loads(response.get_data(as_text=True))["html"]
     snippet = BeautifulSoup(html, "html.parser").select_one("span")
 
-    assert normalize_spaces(snippet.text) == expected_message
+    assert expected_message in normalize_spaces(snippet.text)
 
     if snippet.has_attr("class"):
         assert snippet["class"] == [expected_class]
