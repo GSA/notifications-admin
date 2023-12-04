@@ -331,3 +331,22 @@ def cancel_invited_user(service_id, invited_user_id):
 
     flash(f"Invitation cancelled for {invited_user.email_address}", "default_with_tick")
     return redirect(url_for("main.manage_users", service_id=service_id))
+
+
+@main.route(
+    "/services/<uuid:service_id>/resend-invite/<uuid:invited_user_id>",
+    methods=["GET"],
+)
+@user_has_permissions("manage_service")
+def resend_invite(service_id, invited_user_id):
+    current_service.resend_invite(invited_user_id)
+
+    invited_user = InvitedUser.by_id_and_service_id(service_id, invited_user_id)
+    create_cancel_user_invite_to_service_event(
+        email_address=invited_user.email_address,
+        canceled_by_id=current_user.id,
+        service_id=service_id,
+    )
+
+    flash(f"Invitation cancelled for {invited_user.email_address}", "default_with_tick")
+    return redirect(url_for("main.manage_users", service_id=service_id))
