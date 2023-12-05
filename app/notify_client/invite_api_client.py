@@ -65,6 +65,11 @@ class InviteApiClient(NotifyAdminAPIClient):
             url=f"/service/{service_id}/invite/{invited_user_id}", data=data
         )
 
+    def resend_invite(self, service_id, invited_user_id):
+        self.post(
+            url=f"/service/{service_id}/invite/{invited_user_id}/resend", data={}
+        )
+
     @cache.delete("service-{service_id}")
     @cache.delete("user-{invited_user_id}")
     def accept_invite(self, service_id, invited_user_id):
