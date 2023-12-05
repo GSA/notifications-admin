@@ -54,7 +54,6 @@ class User(JSONModel, UserMixin):
         super().__init__(_dict)
         self.permissions = _dict.get("permissions", {})
         self._platform_admin = _dict["platform_admin"]
-        self.preferred_timezone = "US/Eastern"
 
     @classmethod
     def from_id(cls, user_id):
@@ -366,6 +365,7 @@ class User(JSONModel, UserMixin):
             "permissions": [x for x in self._permissions],
             "organizations": self.organization_ids,
             "current_session_id": self.current_session_id,
+            "preferred_timezone": self.preferred_timezone,
         }
         if hasattr(self, "_password"):
             dct["password"] = self._password

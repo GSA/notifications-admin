@@ -157,6 +157,7 @@ class HeaderNavigation(Navigation):
             "user_profile_mobile_number_delete",
             "user_profile_name",
             "user_profile_password",
+            "user_profile_preferred_timezone",
             "user_profile_disable_platform_admin_view",
         },
         "platform-admin": {
