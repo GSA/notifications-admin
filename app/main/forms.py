@@ -1279,6 +1279,23 @@ class ChangeNameForm(StripWhitespaceForm):
     new_name = GovukTextInputField("Your name")
 
 
+class ChangePreferredTimezoneForm(StripWhitespaceForm):
+    def __init__(self, *args, **kwargs):
+        super(ChangePreferredTimezoneForm, self).__init__(*args, **kwargs)
+        self.new_preferred_timezone.choices = [
+            ("US/Eastern", "US/Eastern"),
+            ("US/Central", "US/Central"),
+            ("US/Mountain", "US/Mountain"),
+            ("US/Pacific", "US/Pacific"),
+            ("US/Hawaii", "US/Hawaii"),
+        ]
+
+    new_preferred_timezone = GovukRadiosField(
+        "What timezone would you like to use?",
+        default="US/Eastern",
+    )
+
+
 class ChangeEmailForm(StripWhitespaceForm):
     def __init__(self, validate_email_func, *args, **kwargs):
         self.validate_email_func = validate_email_func

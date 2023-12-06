@@ -24,6 +24,7 @@ from app.main.forms import (
     ChangeMobileNumberForm,
     ChangeNameForm,
     ChangePasswordForm,
+    ChangePreferredTimezoneForm,
     ConfirmPasswordForm,
     ServiceOnOffSettingForm,
     TwoFactorForm,
@@ -58,6 +59,22 @@ def user_profile_name():
 
     return render_template(
         "views/user-profile/change.html", thing="name", form_field=form.new_name
+    )
+
+
+@main.route("/user-profile/preferred_timezone", methods=["GET", "POST"])
+@user_is_logged_in
+def user_profile_preferred_timezone():
+    form = ChangePreferredTimezoneForm(new_name=current_user.preferred_timezone)
+
+    if form.validate_on_submit():
+        current_user.update(preferred_timezone=form.new_preferred_timezone.data)
+        current_user.preferred_timezone = form.new_preferred_timezone.data
+        return redirect(url_for(".user_profile"))
+    return render_template(
+        "views/user-profile/change.html",
+        thing="preferred timezone",
+        form_field=form.new_preferred_timezone,
     )
 
 
