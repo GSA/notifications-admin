@@ -1196,7 +1196,7 @@ class AdminServiceSMSAllowanceForm(StripWhitespaceForm):
 
 class AdminServiceMessageLimitForm(StripWhitespaceForm):
     message_limit = GovukIntegerField(
-        "Number of messages the service is allowed to send each day",
+        "Max number of messages the service has per send",
         validators=[DataRequired(message="Cannot be empty")],
     )
 
