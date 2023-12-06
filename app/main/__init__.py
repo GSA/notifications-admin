@@ -26,7 +26,6 @@ from app.main.views import (  # noqa isort:skip
     performance,
     platform_admin,
     pricing,
-    providers,
     register,
     security_policy,
     send,
