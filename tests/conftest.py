@@ -1893,6 +1893,13 @@ def sample_invite(mocker, service_one):
 
 
 @pytest.fixture()
+def expired_invite(service_one, sample_invite):
+    expired_invite = {k: v for k, v in sample_invite.items()}
+    expired_invite["status"] = "expired"
+    expired_invite["created_at"] -= timedelta(days=3)
+    return expired_invite
+
+@pytest.fixture()
 def mock_create_invite(mocker, sample_invite):
     def _create_invite(
         from_user, service_id, email_address, permissions, folder_permissions

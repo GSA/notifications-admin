@@ -1157,6 +1157,21 @@ def test_invite_user_with_email_auth_service(
     )
 
 
+def test_resend_expired_invitation(client_request, expired_invite, mocker):
+    mock_resend = mocker.patch("app.invite_api_client.resend_invite")
+    mocker.patch("app.invite_api_client.get_invited_user_for_service")
+    page = client_request.get(
+        "main.resend_invite",
+        service_id=SERVICE_ONE_ID,
+        invited_user_id=expired_invite["id"],
+        _follow_redirects=True,
+    )
+    assert normalize_spaces(page.h1.text) == "Team members"
+    assert mock_resend.called
+    assert SERVICE_ONE_ID in mock_resend.call_args
+    assert expired_invite["id"] in mock_resend.call_args
+
+
 def test_cancel_invited_user_cancels_user_invitations(
     client_request,
     mock_get_invites_for_service,
