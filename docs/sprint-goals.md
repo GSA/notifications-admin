@@ -1,6 +1,18 @@
 # Notify Sprint Goals Log
 
-## Sprint: W (11/8/23)
+
+## Sprint: Y (12/6/23)
+(Sprint X was canceled due to Thanksgiving)
+
+|             | Goals        | Impact      | Milestone(s)    |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|--------------|
+| Engineering | Spend time [identifying](https://github.com/GSA/notifications-api/issues/656), [fixing](https://github.com/GSA/notifications-api/issues/645), and [displaying](https://github.com/GSA/notifications-admin/issues/964) various applicable message part limits, devise ways to [create better access to reports](https://github.com/GSA/notifications-admin/issues/855), implement Login.gov on staging environment | Better track annual and smart-retention limits, continuity between application orgs and agreements                            | Building Notify.gov |
+| UX          |  [Re-think Notify IA](https://github.com/GSA/notifications-admin/issues/910), start implementing dashboard changes, obtain requested user feedback on [Notify logo](https://github.com/GSA/notifications-admin/issues/859) proposal | Improve ease of use, begin process of brand creation       | Obbtain approval for logo/brand| 
+| Security    | Complete [CP family  of controls](https://github.com/GSA/us-notify-compliance/issues/42), Draft [config management plan](https://github.com/GSA/us-notify-compliance/issues/35)                                            | Aim to have package completed with enough time to allow for long assessment| Secure ATO |
+| Content    | Make content (and MOUs) [more clear about limits](https://github.com/GSA/notifications-admin/issues/963), test making [editing content easier](https://github.com/GSA/notifications-admin/issues/976) with existing templates | Improve clarity of message parts for users, streamline content editing for the team| Building Notify.gov |
+| Ops    | |  
+
+## Sprint: Wallcreeper (11/8/23)
 (Sprint is at low capacity due to Thanksgiving week)
 
 |             | Goals        | Impact      | Milestone(s)    |
