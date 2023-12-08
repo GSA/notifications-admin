@@ -165,7 +165,6 @@ class HeaderNavigation(Navigation):
             "change_user_auth",
             "clear_cache",
             "create_email_branding",
-            "edit_sms_provider_ratio",
             "email_branding",
             "find_services_by_name",
             "find_users_by_email",
@@ -186,8 +185,6 @@ class HeaderNavigation(Navigation):
             "trial_services",
             "update_email_branding",
             "user_information",
-            "view_provider",
-            "view_providers",
         },
         "sign-in": {
             "revalidate_email_sent",
