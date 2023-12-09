@@ -1899,6 +1899,7 @@ def expired_invite(service_one, sample_invite):
     expired_invite["created_at"] -= timedelta(days=3)
     return expired_invite
 
+
 @pytest.fixture()
 def mock_create_invite(mocker, sample_invite):
     def _create_invite(

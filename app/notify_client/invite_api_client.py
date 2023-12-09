@@ -61,9 +61,7 @@ class InviteApiClient(NotifyAdminAPIClient):
     def cancel_invited_user(self, service_id, invited_user_id):
         data = {"status": "cancelled"}
         data = _attach_current_user(data)
-        self.post(
-            url=f"/service/{service_id}/invite/{invited_user_id}", data=data
-        )
+        self.post(url=f"/service/{service_id}/invite/{invited_user_id}", data=data)
 
     def resend_invite(self, service_id, invited_user_id):
         self.post(url=f"/service/{service_id}/invite/{invited_user_id}/resend", data={})
@@ -72,9 +70,7 @@ class InviteApiClient(NotifyAdminAPIClient):
     @cache.delete("user-{invited_user_id}")
     def accept_invite(self, service_id, invited_user_id):
         data = {"status": "accepted"}
-        self.post(
-            url=f"/service/{service_id}/invite/{invited_user_id}", data=data
-        )
+        self.post(url=f"/service/{service_id}/invite/{invited_user_id}", data=data)
 
 
 invite_api_client = InviteApiClient()
