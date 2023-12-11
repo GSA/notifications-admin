@@ -762,9 +762,9 @@ def test_edit_user_permissions_shows_authentication_for_email_auth_service(
 def test_should_show_page_for_inviting_user(
     client_request,
     mock_get_template_folders,
-    platform_admin_user,
+    active_user_with_permissions,
 ):
-    client_request.login(platform_admin_user)
+    client_request.login(active_user_with_permissions)
     page = client_request.get(
         "main.invite_user",
         service_id=SERVICE_ONE_ID,
@@ -772,6 +772,21 @@ def test_should_show_page_for_inviting_user(
 
     assert "Invite a team member" in page.find("h1").text.strip()
     assert not page.find("div", class_="checkboxes-nested")
+
+
+def test_should_not_show_page_for_inviting_user_without_permissions(
+    client_request,
+    mock_get_template_folders,
+    active_user_empty_permissions
+):
+    client_request.login(active_user_empty_permissions)
+    page = client_request.get(
+        "main.invite_user",
+        service_id=SERVICE_ONE_ID,
+        _expected_status=403
+    )
+
+    assert "not allowed to see this page" in page.h1.string.strip()
 
 
 def test_should_show_page_for_inviting_user_with_email_prefilled(
@@ -815,10 +830,9 @@ def test_should_show_page_if_prefilled_user_is_already_a_team_member(
     mock_get_template_folders,
     fake_uuid,
     active_user_with_permissions,
-    active_caseworking_user,
-    platform_admin_user,
+    active_caseworking_user
 ):
-    client_request.login(platform_admin_user)
+    client_request.login(active_user_with_permissions)
     mocker.patch(
         "app.models.user.user_api_client.get_user",
         side_effect=[
