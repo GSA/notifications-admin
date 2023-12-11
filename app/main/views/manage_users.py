@@ -21,7 +21,7 @@ from app.main.forms import (
     SearchUsersForm,
 )
 from app.models.user import InvitedUser, User
-from app.utils.user import is_gov_user, user_has_permissions, user_is_platform_admin
+from app.utils.user import is_gov_user, user_has_permissions
 from app.utils.user_permissions import permission_options
 
 
@@ -42,7 +42,7 @@ def manage_users(service_id):
 @main.route(
     "/services/<uuid:service_id>/users/invite/<uuid:user_id>", methods=["GET", "POST"]
 )
-@user_is_platform_admin
+@user_has_permissions("manage_service")
 def invite_user(service_id, user_id=None):
     form_class = InviteUserForm
     form = form_class(

@@ -800,10 +800,13 @@ def test_should_show_page_for_inviting_user_with_email_prefilled(
         user_id=fake_uuid,
         # We have the user’s name in the H1 but don’t want it duplicated
         # in the page title
-        _test_page_title=False,
-        _expected_status=403,
+        _test_page_title=False
     )
-    assert "not allowed to see this page" in page.h1.string.strip()
+    assert normalize_spaces(page.select_one("title").text).startswith(
+        "Invite a team member"
+    )
+    assert normalize_spaces(page.select_one("h1").text) == ("Invite Service Two User")
+    assert not page.select("input#email_address") or page.select("input[type=email]")
 
 
 def test_should_show_page_if_prefilled_user_is_already_a_team_member(
@@ -1280,9 +1283,11 @@ def test_user_cant_invite_themselves(
             "permissions_field": ["send_messages", "manage_service", "manage_api_keys"],
         },
         _follow_redirects=True,
-        _expected_status=403,
+        _expected_status=200,
     )
-    assert "not allowed to see this page" in page.h1.string.strip()
+    assert page.h1.string.strip() == "Invite a team member"
+    form_error = page.find("span", class_="usa-error-message").text.strip()
+    assert form_error == "Error: You cannot send an invitation to yourself"
     assert not mock_create_invite.called
 
 
