@@ -3,6 +3,8 @@
 {% from "components/show-more.html" import show_more %}
 {% from "components/table.html" import list_table, field, right_aligned_field_heading, hidden_field_heading %}
 {% from "components/ajax-block.html" import ajax_block %}
+{% from "components/big-number.html" import big_number %}
+{% from "components/pill.html" import pill %}
 
 {% block service_page_title %}
   Dashboard
@@ -12,12 +14,48 @@
 
   <div class="dashboard margin-bottom-8">
 
+    <div>
+      <canvas id="myChart"></canvas>
+    </div>
+
     <h1 class="usa-sr-only">Dashboard</h1>
     {% if current_user.has_permissions('manage_templates') and not current_service.all_templates %}
       {% include 'views/dashboard/write-first-messages.html' %}
     {% endif %}
 
-    {{ ajax_block(partials, updates_url, 'upcoming') }}
+    <h2 class="font-body-xl margin-0">
+      SMS Activity
+    </h2>
+    <h3>Total 1000</h3>
+    <div class="chart-container">
+      <div class="bar" id="delivered"></div>
+      <div class="bar" id="pending"></div>
+      <div class="bar" id="failed"></div>
+    </div>
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: green;"></div>
+        <div class="legend-label">Delivered</div>
+        <div class="legend-value" id="delivered-value"></div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: yellow;"></div>
+        <div class="legend-label">Pending</div>
+        <div class="legend-value" id="pending-value"></div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: red;"></div>
+        <div class="legend-label">Failed</div>
+        <div class="legend-value" id="failed-value"></div>
+      </div>
+    </div>
+
+    {{ pill(years, selected_year, big_number_args={'smallest': True}) }}
+
+    Test:
+    You have sent
+    {{ big_number(sms_sent, 'messages of your', smaller=True) }}
+    {{ big_number(sms_free_allowance, 'free messages allowance.', smaller=True) }}
 
     <h2 class="font-body-xl margin-0">
       Messages sent
@@ -46,9 +84,8 @@
       <tbody>
         <tr>
           <td>{{ global_message_limit - daily_global_messages_remaining }}</td>
-          <td>
-            {{ daily_global_messages_remaining }}
-          </td>
+          <td>{{ daily_global_messages_remaining }}</td>
+          <td>{{ current_service.message_limit }}</td>
         </tr>
       </tbody>
     </table>

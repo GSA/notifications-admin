@@ -1,0 +1,42 @@
+@use "uswds-core" as *;
+
+.chart-container {
+  display: flex;
+  height: 100px;
+}
+
+.bar {
+  height: 30px;
+  transition: width 0.5s ease;
+  &#delivered {
+    background-color: green;
+  }
+  &#pending {
+    background-color: yellow;
+  }
+  &#failed {
+    background-color: red;
+  }
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin: 0 15px;
+  }
+
+  .legend-color {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+
+  .legend-label {
+    margin-right: 5px;
+  }
+}
