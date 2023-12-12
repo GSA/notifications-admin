@@ -775,15 +775,11 @@ def test_should_show_page_for_inviting_user(
 
 
 def test_should_not_show_page_for_inviting_user_without_permissions(
-    client_request,
-    mock_get_template_folders,
-    active_user_empty_permissions
+    client_request, mock_get_template_folders, active_user_empty_permissions
 ):
     client_request.login(active_user_empty_permissions)
     page = client_request.get(
-        "main.invite_user",
-        service_id=SERVICE_ONE_ID,
-        _expected_status=403
+        "main.invite_user", service_id=SERVICE_ONE_ID, _expected_status=403
     )
 
     assert "not allowed to see this page" in page.h1.string.strip()
@@ -815,7 +811,7 @@ def test_should_show_page_for_inviting_user_with_email_prefilled(
         user_id=fake_uuid,
         # We have the user’s name in the H1 but don’t want it duplicated
         # in the page title
-        _test_page_title=False
+        _test_page_title=False,
     )
     assert normalize_spaces(page.select_one("title").text).startswith(
         "Invite a team member"
@@ -830,7 +826,7 @@ def test_should_show_page_if_prefilled_user_is_already_a_team_member(
     mock_get_template_folders,
     fake_uuid,
     active_user_with_permissions,
-    active_caseworking_user
+    active_caseworking_user,
 ):
     client_request.login(active_user_with_permissions)
     mocker.patch(
