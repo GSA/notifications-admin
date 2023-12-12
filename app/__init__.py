@@ -150,6 +150,8 @@ def _csp(config):
             "https://js-agent.newrelic.com",
             "https://gov-bam.nr-data.net",
             "https://www.googletagmanager.com",
+            "https://www.google-analytics.com",
+            "https://dap.digitalgov.gov",
         ],
         "connect-src": ["'self'", "https://gov-bam.nr-data.net"],
         "style-src": ["'self'", asset_domain],

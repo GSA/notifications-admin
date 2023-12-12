@@ -18,7 +18,9 @@ def test_owasp_useful_headers_set(
     assert search(
         r"script-src 'self' static\.example\.com 'unsafe-eval' https:\/\/js-agent\.new"
         r"relic\.com https:\/\/gov-bam\.nr-data\.net https:\/\/www\.googletagmanager\."
-        r"com 'nonce-.*';",
+        r"com https:\/\/www\.google-analytics\."
+        r"com https:\/\/dap\.digitalgov\."
+        r"gov 'nonce-.*';",
         csp,
     )
     assert search(r"connect-src 'self' https:\/\/gov-bam.nr-data\.net;", csp)
