@@ -1896,7 +1896,7 @@ def sample_invite(mocker, service_one):
 def expired_invite(service_one, sample_invite):
     expired_invite = {k: v for k, v in sample_invite.items()}
     expired_invite["status"] = "expired"
-    expired_invite["created_at"] -= timedelta(days=3)
+    expired_invite["created_at"] = str(datetime.utcnow() - timedelta(days=3))
     return expired_invite
 
 
