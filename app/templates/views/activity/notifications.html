@@ -1,6 +1,6 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/previous-next-navigation.html" import previous_next_navigation %}
-{% from "components/table.html" import list_table, field, text_field, link_field, right_aligned_field_heading, hidden_field_heading, row_heading, notification_status_field %}
+{% from "components/table.html" import list_table, field, text_field, link_field, right_aligned_field_heading, hidden_field_heading, row_heading, notification_status_field, notification_carrier_field, notification_carrier_message_field %}
 
 <div class="ajax-block-container" id='pill-selected-item'>
 
@@ -12,17 +12,19 @@
       caption="Recent activity",
       caption_visible=False,
       empty_message='No messages found &thinsp;(messages are kept for {} days)'.format(limit_days)|safe,
-      field_headings=['Recipient', 'Status'],
+      field_headings=['Recipient', 'Status', 'Carrier', 'Carrier Response'],
       field_headings_visible=False
     ) %}
       {% call row_heading() %}
         <a class="usa-link file-list-filename" href="{{ single_notification_url(notification_id=item.id) }}">{{ item.to.splitlines()|join(', ') if item.to else '' }}</a>
-        <p class="file-list-hint">
+        <p class="file-list-hint width-card">
           {{ item.preview_of_content }}
         </p>
       {% endcall %}
 
       {{ notification_status_field(item) }}
+      {{ notification_carrier_field(item) }}
+      {{ notification_carrier_message_field(item)}}
 
     {% endcall %}
   {% if notifications %}

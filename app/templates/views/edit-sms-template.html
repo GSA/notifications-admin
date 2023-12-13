@@ -50,7 +50,7 @@
         </div>
         <div class="grid-row">
           <div class="grid-col-12">
-            <div class="template-content-count">
+            <div class="template-content-count" bg-color="red">
               <div data-module="update-status" data-target="template_content"
                 data-updates-url="{{ url_for('.count_content_length', service_id=current_service.id, template_type='sms') }}"
                 aria-live="polite">
@@ -69,7 +69,7 @@
               </p>
           </div>
         </div>
-      
+
         <div class="tablet:grid-col-9 mobile-lg:grid-col-12">
           <h2 id="help" class="font-body-xl margin-top-2">How to customize your message</h2>
           <div class="usa-accordion usa-accordion--bordered usa-accordion--multiselectable maxw-mobile-lg" data-allow-multiple>

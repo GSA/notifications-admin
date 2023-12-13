@@ -105,7 +105,6 @@ from app.notify_client.performance_dashboard_api_client import (
     performance_dashboard_api_client,
 )
 from app.notify_client.platform_stats_api_client import platform_stats_api_client
-from app.notify_client.provider_client import provider_client
 from app.notify_client.service_api_client import service_api_client
 from app.notify_client.status_api_client import status_api_client
 from app.notify_client.template_folder_api_client import template_folder_api_client
@@ -151,8 +150,14 @@ def _csp(config):
             "https://js-agent.newrelic.com",
             "https://gov-bam.nr-data.net",
             "https://www.googletagmanager.com",
+            "https://www.google-analytics.com",
+            "https://dap.digitalgov.gov",
         ],
-        "connect-src": ["'self'", "https://gov-bam.nr-data.net"],
+        "connect-src": [
+            "'self'",
+            "https://gov-bam.nr-data.net",
+            "https://www.google-analytics.com",
+        ],
         "style-src": ["'self'", asset_domain],
         "img-src": ["'self'", asset_domain, logo_domain],
     }
@@ -191,7 +196,6 @@ def create_app(application):
         organizations_client,
         performance_dashboard_api_client,
         platform_stats_api_client,
-        provider_client,
         service_api_client,
         status_api_client,
         template_folder_api_client,

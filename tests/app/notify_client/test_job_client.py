@@ -32,16 +32,24 @@ def test_client_creates_job_data_correctly(mocker, fake_uuid):
     )
 
 
+def test_convert_user_time_to_utc():
+    original_time = "2023-12-01T12:00:00"
+    utc_time = JobApiClient.convert_user_time_to_utc(original_time)
+    assert utc_time == "2023-12-01T17:00:00"
+
+
 def test_client_schedules_job(mocker, fake_uuid):
     mocker.patch("app.notify_client.current_user", id="1")
 
     mock_post = mocker.patch("app.notify_client.job_api_client.JobApiClient.post")
 
-    when = "2016-08-25T13:04:21.767198"
+    # The default timezone is US/Easter which is off by 4 hours in the summer from UTC
+    when_in_utc = "2016-08-25T17:04:21"
+    when = "2016-08-25T13:04:21"
 
     JobApiClient().create_job(fake_uuid, 1, scheduled_for=when)
 
-    assert mock_post.call_args[1]["data"]["scheduled_for"] == when
+    assert mock_post.call_args[1]["data"]["scheduled_for"] == when_in_utc
 
 
 def test_client_gets_job_by_service_and_job(mocker):

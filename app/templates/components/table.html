@@ -69,7 +69,7 @@
     'table-field-right-aligned' if align == 'right' else
     'table-field-center-aligned' if align == 'center' else
     'table-field-left-aligned'
-    %}    
+    %}
     {% set border = '' if border else 'table-field-noborder' %}
     {% set wrap = 'table-field-wrap-text' if wrap else '' %}
 
@@ -169,7 +169,7 @@
       {% if notification.status|format_notification_status_as_url(notification.notification_type) %}
         </a>
       {% endif %}
-      <p class="status-hint margin-0 width-card-lg">
+      <p class="status-hint margin-0 width-card ">
         {{ notification.status|format_notification_status_as_time(
           notification.created_at|format_datetime_short,
           (notification.updated_at or notification.created_at)|format_datetime_short
@@ -180,6 +180,42 @@
   {% endif %}
 {% endmacro %}
 
+{% macro notification_carrier_field(notification) %}
+
+  <!-- {% set displayed_on_single_line = notification.status in ['created', 'pending', 'sending', 'delivered', 'accepted', 'received'] %} -->
+
+  {% if not notification %}
+    {% call field(align='right') %}{% endcall %}
+  {% else %}
+    <!-- {% set status = notification.status|format_notification_status_as_field_status(notification.notification_type) %} -->
+    {% call field(
+      align='right'
+    ) %}
+      <p class="status-hint margin-0 width-card">
+        {{ notification.carrier}}
+        </p>
+      {% if displayed_on_single_line %}</span>{% endif %}
+    {% endcall %}
+  {% endif %}
+{% endmacro %}
+
+{% macro notification_carrier_message_field(notification) %}
+
+  {% if not notification %}
+    {% call field(align='right') %}{% endcall %}
+    {% else %}
+    <!-- {% set status = notification.status|format_notification_status_as_field_status(notification.notification_type) %} -->
+    {% call field(
+      status=status,
+      align='right'
+    ) %}
+      <p class="status-hint margin-0 width-card">
+        {{notification.provider_response}}
+        </p>
+      {% if displayed_on_single_line %}</span>{% endif %}
+    {% endcall %}
+  {% endif %}
+{% endmacro %}
 
 {% macro spark_bar_field(
   count,
@@ -189,7 +225,7 @@
   {% call field(align='right') %}
     <span {% if id %}id="{{ id }}"{% endif %} class="spark-bar">
       <span class="spark-bar-bar">
-        {{ '{:,.0f}'.format(count) }} 
+        {{ '{:,.0f}'.format(count) }}
           <!-- {% if count == 1 -%}
             message sent
           {% else -%}

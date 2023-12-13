@@ -1196,7 +1196,7 @@ class AdminServiceSMSAllowanceForm(StripWhitespaceForm):
 
 class AdminServiceMessageLimitForm(StripWhitespaceForm):
     message_limit = GovukIntegerField(
-        "Number of messages the service is allowed to send each day",
+        "Max number of messages the service has per send",
         validators=[DataRequired(message="Cannot be empty")],
     )
 
@@ -1277,6 +1277,23 @@ class CsvUploadForm(StripWhitespaceForm):
 
 class ChangeNameForm(StripWhitespaceForm):
     new_name = GovukTextInputField("Your name")
+
+
+class ChangePreferredTimezoneForm(StripWhitespaceForm):
+    def __init__(self, *args, **kwargs):
+        super(ChangePreferredTimezoneForm, self).__init__(*args, **kwargs)
+        self.new_preferred_timezone.choices = [
+            ("US/Eastern", "US/Eastern"),
+            ("US/Central", "US/Central"),
+            ("US/Mountain", "US/Mountain"),
+            ("US/Pacific", "US/Pacific"),
+            ("US/Hawaii", "US/Hawaii"),
+        ]
+
+    new_preferred_timezone = GovukRadiosField(
+        "What timezone would you like to use?",
+        default="US/Eastern",
+    )
 
 
 class ChangeEmailForm(StripWhitespaceForm):
@@ -1421,52 +1438,6 @@ class EstimateUsageForm(StripWhitespaceForm):
             return False
 
         return super().validate(*args, **kwargs)
-
-
-class AdminProviderRatioForm(Form):
-    def __init__(self, providers):
-        self._providers = providers
-
-        # hack: https://github.com/wtforms/wtforms/issues/736
-        self._unbound_fields = [
-            (
-                provider["identifier"],
-                GovukIntegerField(
-                    f"{provider['display_name']} (%)",
-                    validators=[
-                        validators.NumberRange(
-                            min=0, max=100, message="Must be between 0 and 100"
-                        )
-                    ],
-                    param_extensions={
-                        "classes": "width-8",
-                    },
-                ),
-            )
-            for provider in providers
-        ]
-
-        super().__init__(
-            data={
-                provider["identifier"]: provider["priority"] for provider in providers
-            }
-        )
-
-    def validate(self, extra_validators=None):
-        if not super().validate(extra_validators):
-            return False
-
-        total = sum(
-            getattr(self, provider["identifier"]).data for provider in self._providers
-        )
-
-        if total == 100:
-            return True
-
-        for provider in self._providers:
-            getattr(self, provider["identifier"]).errors += ["Must add up to 100%"]
-
-        return False
 
 
 class ServiceContactDetailsForm(StripWhitespaceForm):

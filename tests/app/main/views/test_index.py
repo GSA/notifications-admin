@@ -15,7 +15,7 @@ def test_non_logged_in_user_can_see_homepage(
     client_request.logout()
     page = client_request.get("main.index", _test_page_title=False)
 
-    assert page.h1.text.strip() == ("Send text messages to your participants")
+    assert page.h1.text.strip() == ("Reach people where they are with government-powered text messages")
 
     assert page.select_one("a.usa-button.usa-button--big")["href"] == url_for(
         "main.sign_in",

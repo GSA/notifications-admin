@@ -1056,7 +1056,6 @@ def test_menu_send_messages(
 
     assert url_for("main.service_settings", service_id=service_one["id"]) not in page
     # assert url_for('main.api_keys', service_id=service_one['id']) not in page
-    assert url_for("main.view_providers") not in page
 
 
 def test_menu_manage_service(
