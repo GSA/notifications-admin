@@ -38,7 +38,7 @@
   "devDependencies": {
     "@babel/core": "7.19.6",
     "@babel/preset-env": "7.19.4",
-    "@uswds/compile": "^1.0.0",
+    "@uswds/compile": "^1.1.0",
     "better-npm-audit": "^3.7.3",
     "gulp": "4.0.2",
     "gulp-add-src": "1.0.0",
