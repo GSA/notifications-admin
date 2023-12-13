@@ -153,7 +153,11 @@ def _csp(config):
             "https://www.google-analytics.com",
             "https://dap.digitalgov.gov",
         ],
-        "connect-src": ["'self'", "https://gov-bam.nr-data.net"],
+        "connect-src": [
+            "'self'",
+            "https://gov-bam.nr-data.net",
+            "https://www.google-analytics.com",
+        ],
         "style-src": ["'self'", asset_domain],
         "img-src": ["'self'", asset_domain, logo_domain],
     }

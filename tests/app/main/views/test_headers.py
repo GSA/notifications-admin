@@ -23,6 +23,10 @@ def test_owasp_useful_headers_set(
         r"gov 'nonce-.*';",
         csp,
     )
-    assert search(r"connect-src 'self' https:\/\/gov-bam.nr-data\.net;", csp)
+    assert search(
+        r"connect-src 'self' https:\/\/gov-bam.nr-data\.net https:\/\/www\.google-analytics\."
+        r"com;",
+        csp,
+    )
     assert search(r"style-src 'self' static\.example\.com 'nonce-.*';", csp)
     assert search(r"img-src 'self' static\.example\.com static-logos\.test\.com", csp)
