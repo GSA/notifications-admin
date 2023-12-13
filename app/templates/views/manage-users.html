@@ -9,9 +9,19 @@
 
 {% block maincolumn_content %}
 
-  <h1 class="font-body-lg">
-    Team members
-  </h1>
+  <div class="display-flex flex-justify flex-align-center">
+    <h1 class="font-body-xl margin-0">
+      Team members
+    </h1>
+    {% if current_user.has_permissions('manage_service') %}
+      {{ usaButton({
+      "element": "a",
+      "text": "Invite a team member",
+      "href": url_for('.invite_user', service_id=current_service.id),
+      "classes": "usa-button--outline"
+      }) }}
+    {% endif %}
+  </div>
 
   {% if show_search_box %}
     <div data-module="autofocus">
@@ -83,16 +93,5 @@
       </div>
     {% endfor %}
   </div>
-
-  {% if current_user.has_permissions('manage_service') %}
-    <div class="js-stick-at-bottom-when-scrolling">
-      {{ usaButton({
-        "element": "a",
-        "text": "Invite a team member",
-        "href": url_for('.invite_user', service_id=current_service.id),
-        "classes": "usa-button"
-      }) }}
-    </div>
-  {% endif %}
 
 {% endblock %}
