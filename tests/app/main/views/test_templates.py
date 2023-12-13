@@ -632,7 +632,7 @@ def test_should_show_sms_template_with_downgraded_unicode_characters(
     fake_uuid,
 ):
     msg = "here:\tare some “fancy quotes” and zero\u200Bwidth\u200Bspaces"
-    rendered_msg = 'here: are some "fancy quotes" and zerowidthspaces'
+    rendered_msg = 'here: are some “fancy quotes” and zerowidthspaces'
 
     mocker.patch(
         "app.service_api_client.get_service_template",
