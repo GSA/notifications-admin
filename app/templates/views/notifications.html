@@ -18,7 +18,7 @@
 {% block maincolumn_content %}
 
   {{ page_header(page_title) }}
-  
+
   {{ ajax_block(
     partials,
     url_for('.get_notifications_as_json', service_id=current_service.id, message_type=message_type, status=status),
@@ -51,8 +51,8 @@
     <button class="usa-button" type="submit">
       <span class="usa-search__submit-text">Search </span><img src="/assets/img/usa-icons-bg/search--white.svg"
         class="usa-search__submit-icon" alt="Search" />
-    </button> 
-  
+    </button>
+
   {% endcall %}
 
 
@@ -69,11 +69,6 @@
       <a href="{{ download_link }}" download="download" class="usa-link">Download this report (<abbr title="Comma separated values">CSV</abbr>)</a>
       &emsp;
       Data available for {{ partials.service_data_retention_days }} days
-    </p>
-    <p class="font-body-sm">
-      <a href="https://en.wikipedia.org/wiki/Time_in_the_United_States#United_States_and_regional_time_zones">View timezone chart</a>
-      &emsp;
-      For help with understanding and converting UTC times
     </p>
   {% endif %}
 
