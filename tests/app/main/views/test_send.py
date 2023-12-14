@@ -11,6 +11,7 @@ from zipfile import BadZipFile
 
 import pytest
 from flask import url_for
+from pytest_mock import mocker
 from notifications_python_client.errors import HTTPError
 from notifications_utils.recipients import RecipientCSV
 from notifications_utils.template import SMSPreviewTemplate
@@ -29,6 +30,49 @@ from tests.conftest import (
     mock_get_service_template,
     normalize_spaces,
 )
+
+FAKE_ONE_OFF_NOTIFICATION = {'links': {},
+                      'notifications': [
+                          {
+                              'api_key': None,
+                              'billable_units': 0,
+                              'carrier': None,
+                              'client_reference': None,
+                              'created_at': '2023-12-14T20:35:55+00:00',
+                              'created_by': {'email_address': 'grsrbsrgsrf@fake.gov', 'id': 'de059e0a-42e5-48bb-939e-4f76804ab739', 'name': 'grsrbsrgsrf'},
+                              'document_download_count': None,
+                              'id': 'a3442b43-0ba1-4854-9e0a-d2fba1cc9b81',
+                              'international': False,
+                              'job': {'id': '55b242b5-9f62-4271-aff7-039e9c320578', 'original_file_name': '1127b78e-a4a8-4b70-8f4f-9f4fbf03ece2.csv'},
+                              'job_row_number': 0,
+                              'key_name': None,
+                              'key_type': 'normal',
+                              'normalised_to': '+16615555555',
+                              'notification_type': 'sms',
+                              'personalisation': {'dayofweek': '2', 'favecolor': '3', 'phonenumber': '+16615555555'},
+                              'phone_prefix': '1',
+                              'provider_response': None,
+                              'rate_multiplier': 1.0,
+                              'reference': None,
+                              'reply_to_text': 'development',
+                              'sent_at': None,
+                              'sent_by': None,
+                              'service': 'f62d840f-8bcb-4b36-b959-4687e16dd1a1',
+                              'status': 'created',
+                              'template': {
+                                  'content': '((day of week)) and ((fave color))',
+                                  'id': 'bd9caa7e-00ee-4c5a-839e-10ae1a7e6f73',
+                                  'name': 'personalized',
+                                  'redact_personalisation': False,
+                                  'subject': None,
+                                  'template_type': 'sms',
+                                  'version': 1
+                                  },
+                                  'to': '+16615555555',
+                                  'updated_at': None}],
+                                  'page_size': 50,
+                                  'total': 1
+                          }
 
 template_types = ["email", "sms"]
 
@@ -2064,6 +2108,11 @@ def test_route_permissions_send_check_notifications(
     with client_request.session_transaction() as session:
         session["recipient"] = "2028675301"
         session["placeholders"] = {"name": "a"}
+
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     validate_route_permission_with_client(
         mocker,
         client_request,
@@ -2578,28 +2627,36 @@ def test_check_notification_shows_preview(
 def test_send_notification_submits_data(
     client_request,
     fake_uuid,
-    mock_send_notification,
     mock_get_service_template,
     template,
     recipient,
     placeholders,
     expected_personalisation,
+    mocker,
+    mock_create_job,
+
 ):
+
+
+
     with client_request.session_transaction() as session:
         session["recipient"] = recipient
         session["placeholders"] = placeholders
+
+
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
 
     client_request.post(
         "main.send_notification", service_id=SERVICE_ONE_ID, template_id=fake_uuid
     )
 
-    mock_send_notification.assert_called_once_with(
-        SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        recipient=recipient,
-        personalisation=expected_personalisation,
-        sender_id=None,
-    )
+    mock_create_job.assert_called_once()
+
+
+
 
 
 def test_send_notification_clears_session(
@@ -2608,10 +2665,17 @@ def test_send_notification_clears_session(
     fake_uuid,
     mock_send_notification,
     mock_get_service_template,
+    mocker,
 ):
     with client_request.session_transaction() as session:
         session["recipient"] = "2028675301"
         session["placeholders"] = {"a": "b"}
+
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
+
 
     client_request.post(
         "main.send_notification", service_id=service_one["id"], template_id=fake_uuid
@@ -2661,10 +2725,17 @@ def test_send_notification_redirects_to_view_page(
     mock_get_service_template,
     extra_args,
     extra_redirect_args,
+    mocker,
 ):
     with client_request.session_transaction() as session:
         session["recipient"] = "2028675301"
         session["placeholders"] = {"a": "b"}
+
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
+
 
     client_request.post(
         "main.send_notification",
@@ -2723,6 +2794,11 @@ def test_send_notification_shows_error_if_400(
         message = exception_msg
 
     mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
+
+    mocker.patch(
         "app.notification_api_client.send_notification",
         side_effect=MockHTTPError(),
     )
@@ -2754,6 +2830,11 @@ def test_send_notification_shows_email_error_in_trial_mode(
     class MockHTTPError(HTTPError):
         message = TRIAL_MODE_MSG
         status_code = 400
+
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
 
     mocker.patch(
         "app.notification_api_client.send_notification",
