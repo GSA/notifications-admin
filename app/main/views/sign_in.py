@@ -180,7 +180,7 @@ def sign_in():
         form=form,
         again=bool(redirect_url),
         other_device=other_device,
-        notify_env_is_dev_or_staging=bool(notify_env in ["development", "staging"]),
+        login_gov_enabled=bool(notify_env in ["development", "staging"]),
         password_reset_url=password_reset_url,
     )
 
