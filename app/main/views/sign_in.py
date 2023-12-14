@@ -174,6 +174,8 @@ def sign_in():
     current_app.logger.info(
         f"LOGIN_DOT_GOV_SIGNOUT_REDIRECT={os.getenv('LOGIN_DOT_GOV_SIGNOUT_REDIRECT')}"
     )
+    LOGIN_DOT_GOV_INITIAL_SIGNIN_URL = os.getenv('LOGIN_DOT_GOV_INITIAL_SIGNIN_URL')
+    current_app.logger.info(f"LOGIN_DOT_GOV_INITIAL_SIGNIN_URL={LOGIN_DOT_GOV_INITIAL_SIGNIN_URL}")
 
     return render_template(
         "views/signin.html",
