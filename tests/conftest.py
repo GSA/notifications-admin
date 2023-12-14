@@ -1068,6 +1068,11 @@ def active_user_with_permissions(fake_uuid):
 
 
 @pytest.fixture()
+def active_user_empty_permissions(fake_uuid):
+    return create_active_user_empty_permissions()
+
+
+@pytest.fixture()
 def active_user_with_permission_to_two_services(fake_uuid):
     permissions = [
         "send_texts",

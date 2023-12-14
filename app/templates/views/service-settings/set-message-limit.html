@@ -5,7 +5,7 @@
 {% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block service_page_title %}
-  Daily message limit
+  Message batch limit
 {% endblock %}
 
 {% block backLink %}
@@ -15,7 +15,7 @@
 {% block maincolumn_content %}
 
   {% call form_wrapper() %}
-    {{ page_header('Daily message limit') }}
+    {{ page_header('Message batch limit') }}
     {{ form.message_limit }}
     {{ page_footer('Save') }}
   {% endcall %}
