@@ -3,6 +3,7 @@ from zoneinfo import ZoneInfo
 
 from app.extensions import redis_client
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
+from app.utils import hilite
 from app.utils.csv import get_user_preferred_timezone
 
 
@@ -103,17 +104,29 @@ class JobApiClient(NotifyAdminAPIClient):
 
         return scheduled_for
 
-    def create_job(self, job_id, service_id, scheduled_for=None):
-        data = {"id": job_id}
-
+    def create_job(self, job_id, service_id, scheduled_for=None, template_id=None, valid="True", original_file_name=None, notification_count=None):
+        print(hilite("ENTER CREATE_JOB!"))
+        data = {"id": job_id, "valid": valid}
+        print(hilite(f"CREATE JOB initial data {data}"))
         # make a datetime object in the user's preferred timezone
 
         if scheduled_for:
             scheduled_for = JobApiClient.convert_user_time_to_utc(scheduled_for)
             data.update({"scheduled_for": scheduled_for})
 
+        if template_id:
+            data.update({"template_id": template_id})
+
+        if notification_count:
+            data.update({"notification_count": notification_count})
+
+        if original_file_name:
+            data.update({"original_file_name": original_file_name})
+
         data = _attach_current_user(data)
+        print(hilite(f"api client data attaches is {data}"))
         job = self.post(url="/service/{}/job".format(service_id), data=data)
+
 
         redis_client.set(
             "has_jobs-{}".format(service_id),
