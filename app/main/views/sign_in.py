@@ -174,8 +174,8 @@ def sign_in():
     current_app.logger.info(
         f"LOGIN_DOT_GOV_SIGNOUT_REDIRECT={os.getenv('LOGIN_DOT_GOV_SIGNOUT_REDIRECT')}"
     )
-    LOGIN_DOT_GOV_INITIAL_SIGNIN_URL = os.getenv('LOGIN_DOT_GOV_INITIAL_SIGNIN_URL')
-    current_app.logger.info(f"LOGIN_DOT_GOV_INITIAL_SIGNIN_URL={LOGIN_DOT_GOV_INITIAL_SIGNIN_URL}")
+    initial_signin_url = os.getenv('LOGIN_DOT_GOV_INITIAL_SIGNIN_URL')
+    current_app.logger.info(f"LOGIN_DOT_GOV_INITIAL_SIGNIN_URL={initial_signin_url}")
 
     return render_template(
         "views/signin.html",
@@ -184,6 +184,7 @@ def sign_in():
         other_device=other_device,
         login_gov_enabled=bool(notify_env in ["development", "staging"]),
         password_reset_url=password_reset_url,
+        initial_signin_url=initial_signin_url,
     )
 
 
