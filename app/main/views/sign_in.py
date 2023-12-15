@@ -22,7 +22,7 @@ from app.main import main
 from app.main.forms import LoginForm
 from app.main.views.verify import activate_user
 from app.models.user import InvitedUser, User
-from app.utils import hide_from_search_engines
+from app.utils import hide_from_search_engines, hilite
 from app.utils.login import is_safe_redirect_url
 
 
@@ -30,6 +30,7 @@ def _get_access_token(code, state):
     client_id = os.getenv("LOGIN_DOT_GOV_CLIENT_ID")
     access_token_url = os.getenv("LOGIN_DOT_GOV_ACCESS_TOKEN_URL")
     keystring = os.getenv("LOGIN_PEM")
+    print(hilite(f"LOGIN_PEM:  START{keystring}FINISH"))
     payload = {
         "iss": client_id,
         "sub": client_id,
