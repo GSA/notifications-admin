@@ -1,7 +1,7 @@
 import itertools
-from string import ascii_uppercase
 import time
 import uuid
+from string import ascii_uppercase
 from zipfile import BadZipFile
 
 from flask import (
@@ -44,12 +44,7 @@ from app.s3_client.s3_csv_client import (
     s3upload,
     set_metadata_on_csv_upload,
 )
-from app.utils import (
-    PermanentRedirect,
-    hilite,
-    should_skip_template_page,
-    unicode_truncate,
-)
+from app.utils import PermanentRedirect, should_skip_template_page, unicode_truncate
 from app.utils.csv import Spreadsheet, get_errors_for_csv
 from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
@@ -335,9 +330,6 @@ def get_sender_details(service_id, template_type):
 @main.route("/services/<uuid:service_id>/send/<uuid:template_id>/one-off")
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def send_one_off(service_id, template_id):
-    print(
-        hilite(f"ENTER send_one_off service_id {service_id} template_id {template_id}")
-    )
     session["recipient"] = None
     session["placeholders"] = {}
 
@@ -382,11 +374,6 @@ def get_notification_check_endpoint(service_id, template):
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def send_one_off_step(service_id, template_id, step_index):
-    print(
-        hilite(
-            f"ENTER send_one_off_step service_id {service_id} template_id {template_id} step_index {step_index}"
-        )
-    )
     if {"recipient", "placeholders"} - set(session.keys()):
         return redirect(
             url_for(
@@ -721,7 +708,6 @@ def get_back_link(service_id, template, step_index, placeholders=None):
 
 
 def get_skip_link(step_index, template):
-    print(hilite(f"ENTER get_skip_link step_index {step_index}"))
     if (
         request.endpoint == "main.send_one_off_step"
         and step_index == 0
@@ -745,11 +731,6 @@ def get_skip_link(step_index, template):
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def send_one_off_to_myself(service_id, template_id):
-    print(
-        hilite(
-            f"ENTER send_one_off_to_myself service_id {service_id} template_id {template_id}"
-        )
-    )
     db_template = current_service.get_template_with_user_permission_or_403(
         template_id, current_user
     )
@@ -856,13 +837,7 @@ def get_template_error_dict(exception):
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def send_notification(service_id, template_id):
-    print(
-        hilite(
-            f"ENTER send_notification service_id {service_id} template_id {template_id}"
-        )
-    )
     recipient = get_recipient()
-    print(hilite(f"recipient {recipient}"))
     if not recipient:
         return redirect(
             url_for(
@@ -871,12 +846,6 @@ def send_notification(service_id, template_id):
                 template_id=template_id,
             )
         )
-
-    db_template = current_service.get_template_with_user_permission_or_403(
-        template_id, current_user
-    )
-
-    print(hilite(f"SESSION PLACEHOLDERS = {session['placeholders']}"))
 
     keys = []
     values = []
@@ -891,18 +860,12 @@ def send_notification(service_id, template_id):
     filename = f"{uuid.uuid4()}.csv"
     my_data = {"file_name": filename, "template_id": template_id, "data": data}
     upload_id = s3upload(service_id, my_data)
-    print(hilite(f"MY UPLOAD ID {upload_id}"))
-    print(hilite("HERE IT IS:"))
-    print(hilite(s3download(service_id, upload_id)))
-    # column_headings = get_spreadsheet_column_headings_from_template(template)
-    # print(hilite(f"COLUMN HEADINGS {column_headings}"))
     form = CsvUploadForm()
     form.file.data = my_data
     form.file.name = filename
-    print(hilite(f"FORM data {form.file.data} name = {form.file.name} "))
-    response = ""
+    job = None
     try:
-        job_api_client.create_job(
+        job = job_api_client.create_job(
             upload_id,
             service_id,
             scheduled_for="",
@@ -912,28 +875,66 @@ def send_notification(service_id, template_id):
             valid="True",
         )
     except Exception as e:
-        print(hilite(f"WHAT IS THE ERROR {e}"))
+        current_app.logger.error(e)
 
-    session.pop('recipient')
-    session.pop('placeholders')
+    session.pop("recipient")
+    session.pop("placeholders")
 
-    print(hilite(f"try to get notifications for job_id = {upload_id} and service_id {service_id}"))
+    # We have to wait for the job to run and create the notification in the database
+    time.sleep(0.1)
+    notis = notification_api_client.get_notifications_for_service(
+        service_id, job_id=upload_id, include_one_off=True
+    )
+    attempts = 0
+    while notis["total"] == 0 and attempts < 5:
+        notis = notification_api_client.get_notifications_for_service(
+            service_id, job_id=upload_id, include_one_off=True
+        )
+        time.sleep(0.1)
+        attempts = attempts + 1
 
-    time.sleep(0.2)
-    notis = notification_api_client.get_notifications_for_service(service_id, job_id=upload_id, include_one_off=True)
-    print(f"HERE ARE INITIAL NOTIS {notis}")
-    while notis['total'] == 0:
-        print(hilite('retry notis'))
-        notis = notification_api_client.get_notifications_for_service(service_id, job_id=upload_id, include_one_off=True)
-        time.sleep(0.2)
+    # TODO need some UI magic so the error message is displayed properly
+    # and we don't just barf an exception
+    if notis["total"] == 0 and attempts == 5:
+        # raise Exception(
+        #    "Could not send notification. Please check that you can send to that phone number"
+        # )
 
-    print(hilite(f"HERE ARE THE NOTIS {notis}"))
+        db_template = current_service.get_template_with_user_permission_or_403(
+            template_id, current_user
+        )
 
+        return render_template(
+            "views/notifications/notification.html",
+            finished=True,
+            notification_status="failed",
+            error_message="This is bogus",
+            uploaded_file_name="Report",
+            template=db_template,
+            job=job,
+            # updates_url=url_for(
+            #    ".view_notification_updates",
+            #    service_id=service_id,
+            #    notification_id=notification["id"],
+            #    status=request.args.get("status"),
+            #    help=get_help_argument(),
+            # ),
+            # partials=get_single_notification_partials(notification),
+            # created_by=notification.get("created_by"),
+            created_at="2023-12-15 00:00:00",
+            # updated_at=notification["updated_at"],
+            # help=get_help_argument(),
+            # notification_id=notification["id"],
+            # can_receive_inbound=(current_service.has_permission("inbound_sms")),
+            # sent_with_test_key=(notification.get("key_type") == KEY_TYPE_TEST),
+            # back_link=back_link,
+        )
 
     return redirect(
         url_for(
             ".view_notification",
             service_id=service_id,
+            from_job=upload_id,
             notification_id=notis["notifications"][0]["id"],
             # used to show the final step of the tour (help=3) or not show
             # a back link on a just sent one off notification (help=0)
@@ -972,82 +973,4 @@ def get_recipient():
 
     return session["recipient"] or InsensitiveDict(session["placeholders"]).get(
         "address line 1"
-    )
-
-
-def send_messages_one_off_jobs(service_id, template_id):
-    notification_count = service_api_client.get_notification_count(service_id)
-    remaining_messages = current_service.message_limit - notification_count
-
-    db_template = current_service.get_template_with_user_permission_or_403(
-        template_id, current_user
-    )
-
-    email_reply_to = None
-    sms_sender = None
-
-    if db_template["template_type"] == "email":
-        email_reply_to = get_email_reply_to_address_from_session()
-    elif db_template["template_type"] == "sms":
-        sms_sender = get_sms_sender_from_session()
-
-    if db_template["template_type"] not in current_service.available_template_types:
-        return redirect(
-            url_for(
-                ".action_blocked",
-                service_id=service_id,
-                notification_type=db_template["template_type"],
-                return_to="view_template",
-                template_id=template_id,
-            )
-        )
-
-    template = get_template(
-        db_template,
-        current_service,
-        show_recipient=True,
-        email_reply_to=email_reply_to,
-        sms_sender=sms_sender,
-    )
-
-    filename = f"{uuid.uuid4()}.csv"
-    my_data = {
-        "file_name": filename,
-        "template_id": template.id,
-        "data": "phone number\r\n16617550763\r\n16617550763\r\n16617550763\r\n16617550763\r\n16617550763",
-    }
-    upload_id = s3upload(service_id, my_data)
-    print(hilite(f"MY UPLOAD ID {upload_id}"))
-    print(hilite("HERE IT IS:"))
-    print(hilite(s3download(service_id, upload_id)))
-    column_headings = get_spreadsheet_column_headings_from_template(template)
-    print(hilite(f"COLUMN HEADINGS {column_headings}"))
-    form = CsvUploadForm()
-    form.file.data = my_data
-    form.file.name = filename
-    print(hilite(f"FORM data {form.file.data} name = {form.file.name} "))
-    response = ""
-    try:
-        job_api_client.create_job(
-            upload_id,
-            service_id,
-            scheduled_for="",
-            template_id=template_id,
-            original_file_name=filename,
-            notification_count=5,
-        )
-    except Exception as e:
-        print(hilite(f"WHAT IS THE ERROR {e}"))
-
-    session.pop("sender_id", None)
-
-    # return redirect(
-    #    url_for(
-    #        "main.service_dashboard",
-    #        service_id=service_id,
-    #    )
-    # )
-
-    raise PermanentRedirect(
-        url_for("main.send_messages", service_id=service_id, template_id=template_id)
     )
