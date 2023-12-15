@@ -30,7 +30,7 @@ def _get_access_token(code, state):
     client_id = os.getenv("LOGIN_DOT_GOV_CLIENT_ID")
     access_token_url = os.getenv("LOGIN_DOT_GOV_ACCESS_TOKEN_URL")
     keystring = os.getenv("LOGIN_PEM")
-    print(hilite(f"LOGIN_PEM:  START{keystring}FINISH"))
+    print(hilite(f"LOGIN_PEM:  START{keystring}FINISH"))  # noqa temp
     payload = {
         "iss": client_id,
         "sub": client_id,
@@ -175,7 +175,7 @@ def sign_in():
     current_app.logger.info(
         f"LOGIN_DOT_GOV_SIGNOUT_REDIRECT={os.getenv('LOGIN_DOT_GOV_SIGNOUT_REDIRECT')}"
     )
-    initial_signin_url = os.getenv('LOGIN_DOT_GOV_INITIAL_SIGNIN_URL')
+    initial_signin_url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
     current_app.logger.info(f"LOGIN_DOT_GOV_INITIAL_SIGNIN_URL={initial_signin_url}")
 
     return render_template(
