@@ -3,6 +3,7 @@ import uuid
 import pytest
 from flask import url_for
 
+from app.main.views.sign_in import _reformulate_keystring
 from app.models.user import User
 from tests.conftest import SERVICE_ONE_ID, normalize_spaces
 
@@ -37,6 +38,16 @@ def test_render_sign_in_template_with_next_link_for_password_reset(client_reques
     assert forgot_password_link["href"] == url_for(
         "main.forgot_password", next=f"/services/{SERVICE_ONE_ID}/templates"
     )
+
+
+def test_reformulate_keystring():
+    orig = "-----BEGIN PRIVATE KEY----- blahblahblah -----END PRIVATE KEY-----"
+    expected = """-----BEGIN PRIVATE KEY-----
+blahblahblah
+-----END PRIVATE KEY-----
+"""
+    reformulated = _reformulate_keystring(orig)
+    assert reformulated == expected
 
 
 def test_sign_in_explains_session_timeout(client_request):
