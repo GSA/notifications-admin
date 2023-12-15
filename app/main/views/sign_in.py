@@ -26,7 +26,7 @@ from app.utils import hide_from_search_engines
 from app.utils.login import is_safe_redirect_url
 
 
-def _reformulate_keystring(orig):
+def _reformat_keystring(orig):
     new_keystring = orig.replace("-----BEGIN PRIVATE KEY-----", "")
     new_keystring = new_keystring.replace("-----END PRIVATE KEY-----", "")
     new_keystring = new_keystring.strip()
@@ -42,7 +42,7 @@ def _get_access_token(code, state):
     access_token_url = os.getenv("LOGIN_DOT_GOV_ACCESS_TOKEN_URL")
     keystring = os.getenv("LOGIN_PEM")
     if " " in keystring:
-        keystring = _reformulate_keystring(keystring)
+        keystring = _reformat_keystring(keystring)
 
     payload = {
         "iss": client_id,

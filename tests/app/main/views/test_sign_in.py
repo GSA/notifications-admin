@@ -3,7 +3,7 @@ import uuid
 import pytest
 from flask import url_for
 
-from app.main.views.sign_in import _reformulate_keystring
+from app.main.views.sign_in import _reformat_keystring
 from app.models.user import User
 from tests.conftest import SERVICE_ONE_ID, normalize_spaces
 
@@ -40,14 +40,14 @@ def test_render_sign_in_template_with_next_link_for_password_reset(client_reques
     )
 
 
-def test_reformulate_keystring():
+def test_reformat_keystring():
     orig = "-----BEGIN PRIVATE KEY----- blahblahblah -----END PRIVATE KEY-----"
     expected = """-----BEGIN PRIVATE KEY-----
 blahblahblah
 -----END PRIVATE KEY-----
 """
-    reformulated = _reformulate_keystring(orig)
-    assert reformulated == expected
+    reformatted = _reformat_keystring(orig)
+    assert reformatted == expected
 
 
 def test_sign_in_explains_session_timeout(client_request):
