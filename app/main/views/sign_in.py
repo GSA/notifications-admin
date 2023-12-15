@@ -26,10 +26,24 @@ from app.utils import hide_from_search_engines
 from app.utils.login import is_safe_redirect_url
 
 
+def _reformat_keystring(orig):
+    new_keystring = orig.replace("-----BEGIN PRIVATE KEY-----", "")
+    new_keystring = new_keystring.replace("-----END PRIVATE KEY-----", "")
+    new_keystring = new_keystring.strip()
+    new_keystring = "\n".join(
+        ["-----BEGIN PRIVATE KEY-----", new_keystring, "-----END PRIVATE KEY-----"]
+    )
+    new_keystring = f"{new_keystring}\n"
+    return new_keystring
+
+
 def _get_access_token(code, state):
     client_id = os.getenv("LOGIN_DOT_GOV_CLIENT_ID")
     access_token_url = os.getenv("LOGIN_DOT_GOV_ACCESS_TOKEN_URL")
     keystring = os.getenv("LOGIN_PEM")
+    if " " in keystring:
+        keystring = _reformat_keystring(keystring)
+
     payload = {
         "iss": client_id,
         "sub": client_id,
@@ -174,7 +188,7 @@ def sign_in():
     current_app.logger.info(
         f"LOGIN_DOT_GOV_SIGNOUT_REDIRECT={os.getenv('LOGIN_DOT_GOV_SIGNOUT_REDIRECT')}"
     )
-    initial_signin_url = os.getenv('LOGIN_DOT_GOV_INITIAL_SIGNIN_URL')
+    initial_signin_url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
     current_app.logger.info(f"LOGIN_DOT_GOV_INITIAL_SIGNIN_URL={initial_signin_url}")
 
     return render_template(
