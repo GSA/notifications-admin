@@ -34,11 +34,17 @@
       <div class="grid-col-6">
         <span class="big-number-dark bottom-gutter-2-3">
           <span class="big-number-number">
+          {% if noti_type.black_box.number is number %}
             {{ "{:,}".format(noti_type.black_box.number) }}
+          {% else %}
+            {{ noti_type.black_box.number }}
+          {% endif %}
           </span>
+          {% if noti_type.black_box.number|message_count_label(noti_type.black_box.notification_type) %}
           <span class="big-number-label">
             {{ noti_type.black_box.number|message_count_label(noti_type.black_box.notification_type) }}
           </span>
+          {% endif %}
         </span>
 
         {% for item in noti_type.other_data %}
