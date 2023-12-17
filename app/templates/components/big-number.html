@@ -57,19 +57,3 @@
     {% endif %}
   </span>
 {% endmacro %}
-
-
-{% macro big_number_simple(number, label) %}
-  <span class="big-number-dark bottom-gutter-2-3">
-    <span class="big-number-number">
-      {% if number is number %}
-        {{ "{:,}".format(number) }}
-      {% else %}
-        {{ number }}
-      {% endif %}
-    </span>
-    {% if label %}
-      <span class="big-number-label">{{ label }}</span>
-    {% endif %}
-  </span>
-{% endmacro %}
