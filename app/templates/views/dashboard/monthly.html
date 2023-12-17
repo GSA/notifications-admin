@@ -1,5 +1,4 @@
 {% from "components/page-header.html" import page_header %}
-{% from "components/big-number.html" import big_number %}
 {% from "components/pill.html" import pill %}
 {% from "components/table.html" import list_table, field, hidden_field_heading, right_aligned_field_heading, row_heading %}
 
@@ -44,11 +43,16 @@
             (month.email_counts, 'email'),
           ] %}
             {% call field(align='left') %}
-              {{ big_number(
-                counts.requested,
-                counts.requested|message_count_label(template_type, suffix=''),
-                smallest=True,
-              ) }}
+              <span class="big-number-smallest">
+                <span class="big-number-number">
+                  {% if counts.requested is number %}
+                    {{ "{:,}".format(counts.requested) }}
+                  {% else %}
+                    {{ counts.requested }}
+                  {% endif %}
+                </span>
+                <span class="big-number-label">{{ counts.requested|message_count_label(template_type, suffix='') }}</span>
+              </span>
               {% if counts.requested %}
                 <span class="{{ 'failure-highlight' if counts.show_warning else '' }}">
                   {{ "{:,}".format(counts.failed) }} failed
