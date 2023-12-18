@@ -6,53 +6,38 @@
       {% for label, query_param, url, count in counts %}
         {% if query_param == 'pending' %}
           <div class="grid-col-3">
-            {% if link %}
-              <a class="usa-link display-flex" href="{{ link }}">
-            {% endif %}
-              <span class="big-number-smaller">
-                <span class="big-number-number">
-                  {% if count is number %}
-                    {% if currency %}
-                      {{ "{}{:,.2f}".format(currency, count) }}
-                    {% else %}
-                      {{ "{:,}".format(count) }}
-                    {% endif %}
+            <span class="big-number-smaller">
+              <span class="big-number-number">
+                {% if count is number %}
+                  {% if currency %}
+                    {{ "{}{:,.2f}".format(currency, count) }}
                   {% else %}
-                    {{ count }}
+                    {{ "{:,}".format(count) }}
                   {% endif %}
-                </span>
-                {% if label %}
-                  <span class="big-number-label">{{ query_param }}</span>
+                {% else %}
+                  {{ count }}
                 {% endif %}
               </span>
-            {% if link %}
-              </a>
-            {% endif %}
+              <span class="big-number-label">{{ query_param }}</span>
+            </span>
           </div>
         {% else %}
           <div class="grid-col-3">
-            {% if link %}
-              <a class="usa-link display-flex" href="{{ link }}">
-            {% endif %}
-                <span class="big-number-smaller">
-                  <span class="big-number-number">
-                    {% if count is number %}
-                      {% if currency %}
-                        {{ "{}{:,.2f}".format(currency, count) }}
-                      {% else %}
-                        {{ "{:,}".format(count) }}
-                      {% endif %}
-                    {% else %}
-                      {{ count }}
-                    {% endif %}
-                  </span>
-                  {% if label %}
-                    <span class="big-number-label">{{ label }}</span>
+            <span class="big-number-smaller">
+              <span class="big-number-number">
+                {% if count is number %}
+                  {% if currency %}
+                    {{ "{}{:,.2f}".format(currency, count) }}
+                  {% else %}
+                    {{ "{:,}".format(count) }}
                   {% endif %}
-                </span>
-            {% if link %}
-              </a>
-            {% endif %}
+                {% else %}
+                  {{ count }}
+                {% endif %}
+              </span>
+              <span class="big-number-label">{{ label }}</span>
+            </span>
+          </div>
         {% endif %}
       {% endfor %}
     </div>
