@@ -26,10 +26,24 @@ from app.utils import hide_from_search_engines
 from app.utils.login import is_safe_redirect_url
 
 
+def _reformat_keystring(orig):
+    new_keystring = orig.replace("-----BEGIN PRIVATE KEY-----", "")
+    new_keystring = new_keystring.replace("-----END PRIVATE KEY-----", "")
+    new_keystring = new_keystring.strip()
+    new_keystring = "\n".join(
+        ["-----BEGIN PRIVATE KEY-----", new_keystring, "-----END PRIVATE KEY-----"]
+    )
+    new_keystring = f"{new_keystring}\n"
+    return new_keystring
+
+
 def _get_access_token(code, state):
     client_id = os.getenv("LOGIN_DOT_GOV_CLIENT_ID")
     access_token_url = os.getenv("LOGIN_DOT_GOV_ACCESS_TOKEN_URL")
     keystring = os.getenv("LOGIN_PEM")
+    if " " in keystring:
+        keystring = _reformat_keystring(keystring)
+
     payload = {
         "iss": client_id,
         "sub": client_id,
@@ -38,13 +52,14 @@ def _get_access_token(code, state):
         # JWT expiration time (10 minute maximum)
         "exp": int(time.time()) + (10 * 60),
     }
-
+    current_app.logger.warning(f"Here is the raw payload {payload}")
     token = jwt.encode(payload, keystring, algorithm="RS256")
     base_url = f"{access_token_url}?"
     cli_assert = f"client_assertion={token}"
     cli_assert_type = "client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer"
     code_param = f"code={code}"
     url = f"{base_url}{cli_assert}&{cli_assert_type}&{code_param}&grant_type=authorization_code"
+    current_app.logger.info(f"This is the url we use to get the access token:  {url}")
     headers = {"Authorization": "Bearer %s" % token}
     response = requests.post(url, headers=headers)
     current_app.logger.info(f"GOT A RESPONSE {response.json()}")
@@ -153,13 +168,38 @@ def sign_in():
     other_device = current_user.logged_in_elsewhere()
     notify_env = os.getenv("NOTIFY_ENVIRONMENT")
     current_app.logger.info("should render the sign in template")
+
+    # TODO REMOVE THIS INFO ONCE STAGING WORKS WITH LOGIN DOT GOV
+    current_app.logger.info(f"NOTIFY ENV = {notify_env}")
+    current_app.logger.info(
+        f"LOGIN_DOT_GOV_CLIENT_ID={os.getenv('LOGIN_DOT_GOV_CLIENT_ID')}"
+    )
+    current_app.logger.info(
+        f"LOGIN_DOT_GOV_USER_INFO_URL={os.getenv('LOGIN_DOT_GOV_USER_INFO_URL')}"
+    )
+    current_app.logger.info(
+        f"LOGIN_DOT_GOV_ACCESS_TOKEN_URL={os.getenv('LOGIN_DOT_GOV_ACCESS_TOKEN_URL')}"
+    )
+    current_app.logger.info(
+        f"LOGIN_DOT_GOV_LOGOUT_URL={os.getenv('LOGIN_DOT_GOV_LOGOUT_URL')}"
+    )
+    current_app.logger.info(
+        f"LOGIN_DOT_GOV_BASE_LOGOUT_URL={os.getenv('LOGIN_DOT_GOV_BASE_LOGOUT_URL')}"
+    )
+    current_app.logger.info(
+        f"LOGIN_DOT_GOV_SIGNOUT_REDIRECT={os.getenv('LOGIN_DOT_GOV_SIGNOUT_REDIRECT')}"
+    )
+    initial_signin_url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
+    current_app.logger.info(f"LOGIN_DOT_GOV_INITIAL_SIGNIN_URL={initial_signin_url}")
+
     return render_template(
         "views/signin.html",
         form=form,
         again=bool(redirect_url),
         other_device=other_device,
-        notify_env_is_dev=bool(notify_env == "development"),
+        login_gov_enabled=bool(notify_env in ["development", "staging"]),
         password_reset_url=password_reset_url,
+        initial_signin_url=initial_signin_url,
     )
 
 
