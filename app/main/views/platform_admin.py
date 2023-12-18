@@ -597,13 +597,6 @@ def clear_cache():
                 ],
             ),
             (
-                "email_branding",
-                [
-                    "email_branding",
-                    "email_branding-????????-????-????-????-????????????",
-                ],
-            ),
-            (
                 "organization",
                 [
                     "organizations",

@@ -1,18 +1,8 @@
-from flask import (
-    abort,
-    current_app,
-    make_response,
-    redirect,
-    render_template,
-    request,
-    url_for,
-)
+from flask import abort, redirect, render_template, request, url_for
 from flask_login import current_user
-from notifications_utils.template import HTMLEmailTemplate
 
-from app import email_branding_client, status_api_client
+from app import status_api_client
 from app.main import main
-from app.main.forms import FieldWithNoneOption
 from app.main.views.pricing import CURRENT_SMS_RATE
 from app.main.views.sub_navigation_dictionaries import features_nav, using_notify_nav
 from app.utils.user import user_is_logged_in
@@ -63,105 +53,6 @@ def design_content():
     )
 
 
-@main.route("/_email")
-@user_is_logged_in
-def email_template():
-    branding_type = "govuk"
-    branding_style = request.args.get("branding_style", None)
-
-    if branding_style == FieldWithNoneOption.NONE_OPTION_VALUE:
-        branding_style = None
-
-    if branding_style is not None:
-        email_branding = email_branding_client.get_email_branding(branding_style)[
-            "email_branding"
-        ]
-        branding_type = email_branding["brand_type"]
-
-    if branding_type == "govuk":
-        brand_text = None
-        brand_colour = None
-        brand_logo = None
-        govuk_banner = True
-        brand_banner = False
-        brand_name = None
-    else:
-        colour = email_branding["colour"]
-        brand_text = email_branding["text"]
-        brand_colour = colour
-        brand_logo = (
-            f"https://{current_app.config['LOGO_CDN_DOMAIN']}/{email_branding['logo']}"
-            if email_branding["logo"]
-            else None
-        )
-        govuk_banner = branding_type in ["govuk", "both"]
-        brand_banner = branding_type == "org_banner"
-        brand_name = email_branding["name"]
-
-    template = {
-        "template_type": "email",
-        "subject": "Email branding preview",
-        "content": (
-            "Lorem Ipsum is simply dummy text of the printing and typesetting "
-            "industry.\n\nLorem Ipsum has been the industry’s standard dummy "
-            "text ever since the 1500s, when an unknown printer took a galley "
-            "of type and scrambled it to make a type specimen book. "
-            "\n\n"
-            "# History"
-            "\n\n"
-            "It has "
-            "survived not only"
-            "\n\n"
-            "* five centuries"
-            "\n"
-            "* but also the leap into electronic typesetting"
-            "\n\n"
-            "It was "
-            "popularised in the 1960s with the release of Letraset sheets "
-            "containing Lorem Ipsum passages, and more recently with desktop "
-            "publishing software like Aldus PageMaker including versions of "
-            "Lorem Ipsum."
-            "\n\n"
-            "^ It is a long established fact that a reader will be distracted "
-            "by the readable content of a page when looking at its layout."
-            "\n\n"
-            "The point of using Lorem Ipsum is that it has a more-or-less "
-            "normal distribution of letters, as opposed to using ‘Content "
-            "here, content here’, making it look like readable English."
-            "\n\n\n"
-            "1. One"
-            "\n"
-            "2. Two"
-            "\n"
-            "10. Three"
-            "\n\n"
-            "This is an example of an email sent using Notify.gov."
-            "\n\n"
-            "https://www.notifications.service.gov.uk"
-        ),
-    }
-
-    if not bool(request.args):
-        resp = make_response(str(HTMLEmailTemplate(template)))
-    else:
-        resp = make_response(
-            str(
-                HTMLEmailTemplate(
-                    template,
-                    govuk_banner=govuk_banner,
-                    brand_text=brand_text,
-                    brand_colour=brand_colour,
-                    brand_logo=brand_logo,
-                    brand_banner=brand_banner,
-                    brand_name=brand_name,
-                )
-            )
-        )
-
-    resp.headers["X-Frame-Options"] = "SAMEORIGIN"
-    return resp
-
-
 @main.route("/documentation")
 @user_is_logged_in
 def documentation():
@@ -194,14 +85,6 @@ def features():
 @user_is_logged_in
 def roadmap():
     return render_template("views/roadmap.html", navigation_links=features_nav())
-
-
-@main.route("/features/email")
-@user_is_logged_in
-def features_email():
-    return render_template(
-        "views/features/emails.html", navigation_links=features_nav()
-    )
 
 
 @main.route("/features/sms")
@@ -284,15 +167,6 @@ def trial_mode_new():
 def guidance_index():
     return render_template(
         "views/guidance/index.html",
-        navigation_links=using_notify_nav(),
-    )
-
-
-@main.route("/using-notify/guidance/branding-and-customisation")
-@user_is_logged_in
-def branding_and_customisation():
-    return render_template(
-        "views/guidance/branding-and-customisation.html",
         navigation_links=using_notify_nav(),
     )
 

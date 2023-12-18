@@ -12,7 +12,6 @@ from tests.conftest import sample_uuid
         ("active", False, True, ("Unsuspended this service")),
         ("active", True, False, ("Deleted this service")),
         ("contact_link", "x", "y", ("Set the contact details for this service to ‘y’")),
-        ("email_branding", "foo", "bar", ("Updated this service’s email branding")),
         (
             "inbound_api",
             "foo",

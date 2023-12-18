@@ -6,12 +6,7 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user
 from notifications_python_client.errors import HTTPError
 
-from app import (
-    current_organization,
-    email_branding_client,
-    org_invite_api_client,
-    organizations_client,
-)
+from app import current_organization, org_invite_api_client, organizations_client
 from app.main import main
 from app.main.forms import (
     AdminBillingDetailsForm,
@@ -19,8 +14,6 @@ from app.main.forms import (
     AdminNotesForm,
     AdminOrganizationDomainsForm,
     AdminOrganizationGoLiveNotesForm,
-    AdminPreviewBrandingForm,
-    AdminSetEmailBrandingForm,
     InviteOrgUserForm,
     OrganizationOrganizationTypeForm,
     RenameOrganizationForm,
@@ -31,7 +24,6 @@ from app.main.views.dashboard import (
     get_tuples_of_financial_years,
     requested_and_current_financial_year,
 )
-from app.main.views.service_settings import get_branding_as_value_and_label
 from app.models.organization import AllOrganizations, Organization
 from app.models.user import InvitedOrgUser, User
 from app.utils.csv import Spreadsheet
@@ -280,58 +272,6 @@ def edit_organization_type(org_id):
     return render_template(
         "views/organizations/organization/settings/edit-type.html",
         form=form,
-    )
-
-
-@main.route(
-    "/organizations/<uuid:org_id>/settings/set-email-branding", methods=["GET", "POST"]
-)
-@user_is_platform_admin
-def edit_organization_email_branding(org_id):
-    email_branding = email_branding_client.get_all_email_branding()
-
-    form = AdminSetEmailBrandingForm(
-        all_branding_options=get_branding_as_value_and_label(email_branding),
-        current_branding=current_organization.email_branding_id,
-    )
-
-    if form.validate_on_submit():
-        return redirect(
-            url_for(
-                ".organization_preview_email_branding",
-                org_id=org_id,
-                branding_style=form.branding_style.data,
-            )
-        )
-
-    return render_template(
-        "views/organizations/organization/settings/set-email-branding.html",
-        form=form,
-        search_form=SearchByNameForm(),
-    )
-
-
-@main.route(
-    "/organizations/<uuid:org_id>/settings/preview-email-branding",
-    methods=["GET", "POST"],
-)
-@user_is_platform_admin
-def organization_preview_email_branding(org_id):
-    branding_style = request.args.get("branding_style", None)
-
-    form = AdminPreviewBrandingForm(branding_style=branding_style)
-
-    if form.validate_on_submit():
-        current_organization.update(
-            email_branding_id=form.branding_style.data,
-            delete_services_cache=True,
-        )
-        return redirect(url_for(".organization_settings", org_id=org_id))
-
-    return render_template(
-        "views/organizations/organization/settings/preview-email-branding.html",
-        form=form,
-        action=url_for("main.organization_preview_email_branding", org_id=org_id),
     )
 
 

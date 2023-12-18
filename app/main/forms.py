@@ -63,7 +63,7 @@ from app.main.validators import (
 )
 from app.models.feedback import PROBLEM_TICKET_TYPE, QUESTION_TICKET_TYPE
 from app.models.organization import Organization
-from app.utils import branding, merge_jsonlike
+from app.utils import merge_jsonlike
 from app.utils.csv import get_user_preferred_timezone
 from app.utils.user_permissions import all_ui_permissions, permission_options
 
@@ -1543,65 +1543,6 @@ class ServiceSwitchChannelForm(ServiceOnOffSettingForm):
         super().__init__(name, *args, **kwargs)
 
 
-class AdminSetEmailBrandingForm(StripWhitespaceForm):
-    branding_style = GovukRadiosFieldWithNoneOption(
-        "Branding style",
-        param_extensions={"fieldset": {"legend": {"classes": "usa-sr-only"}}},
-        thing="a branding style",
-    )
-
-    DEFAULT = (FieldWithNoneOption.NONE_OPTION_VALUE, "GOV.UK")
-
-    def __init__(self, all_branding_options, current_branding):
-        super().__init__(branding_style=current_branding)
-
-        self.branding_style.choices = sorted(
-            all_branding_options + [self.DEFAULT],
-            key=lambda branding: (
-                branding[0] != current_branding,
-                branding[0] is not self.DEFAULT[0],
-                branding[1].lower(),
-            ),
-        )
-
-
-class AdminPreviewBrandingForm(StripWhitespaceForm):
-    branding_style = HiddenFieldWithNoneOption("branding_style")
-
-
-class AdminEditEmailBrandingForm(StripWhitespaceForm):
-    name = GovukTextInputField("Name of brand")
-    text = GovukTextInputField("Text")
-    colour = GovukTextInputField(
-        "Colour",
-        validators=[
-            Regexp(
-                regex="^$|^#(?:[0-9a-fA-F]{3}){1,2}$",
-                message="Must be a valid color hex code (starting with #)",
-            )
-        ],
-        param_extensions={
-            "attributes": {"data-module": "colour-preview"},
-        },
-    )
-    file = FileField_wtf(
-        "Upload a PNG logo", validators=[FileAllowed(["png"], "PNG Images only!")]
-    )
-    brand_type = GovukRadiosField(
-        "Brand type",
-        choices=[
-            ("both", "GOV.UK and branding"),
-            ("org", "Branding only"),
-            ("org_banner", "Branding banner"),
-        ],
-    )
-
-    def validate_name(self, name):
-        op = request.form.get("operation")
-        if op == "email-branding-details" and not self.name.data:
-            raise ValidationError("This field is required")
-
-
 class SVGFileUpload(StripWhitespaceForm):
     file = FileField_wtf(
         "Upload an SVG logo",
@@ -1813,42 +1754,6 @@ class AdminSetOrganizationForm(StripWhitespaceForm):
 
     organizations = GovukRadiosField(
         "Select an organization", validators=[DataRequired()]
-    )
-
-
-class ChooseBrandingForm(StripWhitespaceForm):
-    FALLBACK_OPTION_VALUE = "something_else"
-    FALLBACK_OPTION = (FALLBACK_OPTION_VALUE, "Something else")
-
-    @property
-    def something_else_is_only_option(self):
-        return self.options.choices == (self.FALLBACK_OPTION,)
-
-
-class ChooseEmailBrandingForm(ChooseBrandingForm):
-    options = RadioField("Choose your new email branding")
-
-    def __init__(self, service):
-        super().__init__()
-
-        self.options.choices = tuple(
-            list(branding.get_email_choices(service)) + [self.FALLBACK_OPTION]
-        )
-
-
-class SomethingElseBrandingForm(StripWhitespaceForm):
-    something_else = GovukTextareaField(
-        "Describe the branding you want",
-        validators=[DataRequired("Cannot be empty")],
-        param_extensions={
-            "label": {
-                "isPageHeading": True,
-                "classes": "font-body-xl",
-            },
-            "hint": {
-                "text": "Include links to your brand guidelines or examples of how to use your branding."
-            },
-        },
     )
 
 
