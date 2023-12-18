@@ -2128,6 +2128,8 @@ def test_route_permissions_send_check_notifications(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
     )
+
+    mocker.patch("app.s3_client.s3_csv_client.s3upload")
     validate_route_permission_with_client(
         mocker,
         client_request,
@@ -2659,6 +2661,8 @@ def test_send_notification_submits_data(
         return_value=FAKE_ONE_OFF_NOTIFICATION,
     )
 
+    mocker.patch("app.s3_client.s3_csv_client.s3upload")
+
     mocker.patch("app.main.views.send.check_messages", return_value="")
 
     client_request.post(
@@ -2686,6 +2690,8 @@ def test_send_notification_clears_session(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
     )
+
+    mocker.patch("app.s3_client.s3_csv_client.s3upload")
 
     client_request.post(
         "main.send_notification", service_id=service_one["id"], template_id=fake_uuid
@@ -2748,6 +2754,8 @@ def test_send_notification_redirects_to_view_page(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
     )
+
+    mocker.patch("app.s3_client.s3_csv_client.s3upload")
 
     client_request.post(
         "main.send_notification",
@@ -2853,6 +2861,8 @@ def test_send_notification_shows_email_error_in_trial_mode(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
     )
+
+    mocker.patch("app.s3_client.s3_csv_client.s3upload")
 
     mocker.patch(
         "app.notification_api_client.send_notification",
