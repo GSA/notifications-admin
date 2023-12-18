@@ -4,16 +4,7 @@ import uuid
 from string import ascii_uppercase
 from zipfile import BadZipFile
 
-from flask import (
-    abort,
-    current_app,
-    flash,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
+from flask import abort, flash, redirect, render_template, request, session, url_for
 from flask_login import current_user
 from notifications_python_client.errors import HTTPError
 from notifications_utils import SMS_CHAR_COUNT_LIMIT
@@ -497,7 +488,6 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
     remaining_messages = current_service.message_limit - notification_count
 
     contents = s3download(service_id, upload_id)
-
     db_template = current_service.get_template_with_user_permission_or_403(
         template_id, current_user
     )
@@ -857,25 +847,25 @@ def send_notification(service_id, template_id):
     vals = ",".join(values)
     data = f"{data}\r\n{vals}"
 
-    filename = f"{uuid.uuid4()}.csv"
-    my_data = {"file_name": filename, "template_id": template_id, "data": data}
+    filename = f"one-off:{current_user.name}:{uuid.uuid4()}.csv"
+    my_data = {"filename": filename, "template_id": template_id, "data": data}
     upload_id = s3upload(service_id, my_data)
     form = CsvUploadForm()
     form.file.data = my_data
     form.file.name = filename
-    job = None
-    try:
-        job = job_api_client.create_job(
-            upload_id,
-            service_id,
-            scheduled_for="",
-            template_id=template_id,
-            original_file_name=filename,
-            notification_count=1,
-            valid="True",
-        )
-    except Exception as e:
-        current_app.logger.error(e)
+
+    check_message_output = check_messages(service_id, template_id, upload_id, 2)
+    if "You cannot send to" in check_message_output:
+        return check_messages(service_id, template_id, upload_id, 2)
+    job_api_client.create_job(
+        upload_id,
+        service_id,
+        scheduled_for="",
+        template_id=template_id,
+        original_file_name=filename,
+        notification_count=1,
+        valid="True",
+    )
 
     session.pop("recipient")
     session.pop("placeholders")
@@ -892,42 +882,31 @@ def send_notification(service_id, template_id):
         )
         time.sleep(0.1)
         attempts = attempts + 1
-
-    # TODO need some UI magic so the error message is displayed properly
-    # and we don't just barf an exception
+    # TODO we are replacing the original 'one-off send' functionality with a job that
+    # we create on the fly.  The purpose for this is to ultimately remove the phone numbers
+    # from the db.  However, by running a job we no longer get error messages we used to get.
+    # If the user is in trial mode and trying to send to a phone number they are not allowed
+    # to send to, right now they will see that their job started and the only way they will
+    # know something went wrong, is to sit and watch the status sit as pending for 3 hours
+    # and ultimately switch to failed with no reason why.
+    #
+    # In future, we should block the user from sending to phone numbers they aren't allowed
+    # to send to.
+    # the way to do that would be to make this available to the front end:
+    #
+    # <api>/service/utils/service_allowed_to_send_to
+    #
+    # After that the UI should be making this call as part of the phone number validation
+    # A user in trial mode should not be able to 'send message' to a phone number they are not
+    # allowed to send to
     if notis["total"] == 0 and attempts == 5:
-        # raise Exception(
-        #    "Could not send notification. Please check that you can send to that phone number"
-        # )
-
-        db_template = current_service.get_template_with_user_permission_or_403(
-            template_id, current_user
-        )
-
-        return render_template(
-            "views/notifications/notification.html",
-            finished=True,
-            notification_status="failed",
-            error_message="This is bogus",
-            uploaded_file_name="Report",
-            template=db_template,
-            job=job,
-            # updates_url=url_for(
-            #    ".view_notification_updates",
-            #    service_id=service_id,
-            #    notification_id=notification["id"],
-            #    status=request.args.get("status"),
-            #    help=get_help_argument(),
-            # ),
-            # partials=get_single_notification_partials(notification),
-            # created_by=notification.get("created_by"),
-            created_at="2023-12-15 00:00:00",
-            # updated_at=notification["updated_at"],
-            # help=get_help_argument(),
-            # notification_id=notification["id"],
-            # can_receive_inbound=(current_service.has_permission("inbound_sms")),
-            # sent_with_test_key=(notification.get("key_type") == KEY_TYPE_TEST),
-            # back_link=back_link,
+        # This shows the job we auto-generated for the user
+        return redirect(
+            url_for(
+                "main.view_job",
+                service_id=service_id,
+                job_id=upload_id,
+            )
         )
 
     return redirect(

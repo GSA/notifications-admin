@@ -2117,11 +2117,13 @@ def test_route_permissions_send_check_notifications(
     route,
     response_code,
     method,
+    mock_create_job,
 ):
     with client_request.session_transaction() as session:
         session["recipient"] = "2028675301"
         session["placeholders"] = {"name": "a"}
 
+    mocker.patch("app.main.views.send.check_messages")
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -2657,6 +2659,8 @@ def test_send_notification_submits_data(
         return_value=FAKE_ONE_OFF_NOTIFICATION,
     )
 
+    mocker.patch("app.main.views.send.check_messages", return_value="")
+
     client_request.post(
         "main.send_notification", service_id=SERVICE_ONE_ID, template_id=fake_uuid
     )
@@ -2671,11 +2675,13 @@ def test_send_notification_clears_session(
     mock_send_notification,
     mock_get_service_template,
     mocker,
+    mock_create_job,
 ):
     with client_request.session_transaction() as session:
         session["recipient"] = "2028675301"
         session["placeholders"] = {"a": "b"}
 
+    mocker.patch("app.main.views.send.check_messages")
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -2730,10 +2736,13 @@ def test_send_notification_redirects_to_view_page(
     extra_args,
     extra_redirect_args,
     mocker,
+    mock_create_job,
 ):
     with client_request.session_transaction() as session:
         session["recipient"] = "2028675301"
         session["placeholders"] = {"a": "b"}
+
+    mocker.patch("app.main.views.send.check_messages")
 
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
@@ -2783,6 +2792,7 @@ def test_send_notification_shows_error_if_400(
     fake_uuid,
     mocker,
     mock_get_service_template_with_placeholders,
+    mock_create_job,
     exception_msg,
     expected_h1,
     expected_err_details,
@@ -2791,9 +2801,15 @@ def test_send_notification_shows_error_if_400(
         message = exception_msg
 
     mocker.patch(
+        "app.main.views.send.check_messages",
+    )
+
+    mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
     )
+
+    mocker.patch("app.s3_client.s3_csv_client.s3upload")
 
     mocker.patch(
         "app.notification_api_client.send_notification",
@@ -2810,7 +2826,7 @@ def test_send_notification_shows_error_if_400(
         "main.send_notification",
         service_id=service_one["id"],
         template_id=fake_uuid,
-        # _expected_status=200,
+        _expected_status=302,
     )
 
     # assert normalize_spaces(page.select(".banner-dangerous h1")[0].text) == expected_h1
@@ -2826,11 +2842,13 @@ def test_send_notification_shows_email_error_in_trial_mode(
     fake_uuid,
     mocker,
     mock_get_service_email_template,
+    mock_create_job,
 ):
     class MockHTTPError(HTTPError):
         message = TRIAL_MODE_MSG
         status_code = 400
 
+    mocker.patch("app.main.views.send.check_messages")
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
