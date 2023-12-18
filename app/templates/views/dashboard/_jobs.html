@@ -63,22 +63,12 @@
             {% if link %}
               <a class="usa-link display-flex" href="{{ link }}">
             {% endif %}
-                <span class="big-number-smallest">
-                  <span class="big-number-number">
-                    {% if item.notifications_sending is number %}
-                      {% if currency %}
-                        {{ "{}{:,.2f}".format(currency, item.notifications_sending) }}
-                      {% else %}
-                        {{ "{:,}".format(item.notifications_sending) }}
-                      {% endif %}
-                    {% else %}
-                      {{ item.notifications_sending }}
-                    {% endif %}
-                  </span>
-                  {% if item.notifications_sending %}
-                    <span class="big-number-label">{{ item.notifications_sending }}</span>
-                  {% endif %}
+              <span class="big-number-smallest">
+                <span class="big-number-number">
+                  {{ "{:,}".format(item.notifications_sending) }}
                 </span>
+                <span class="big-number-label">pending</span>
+              </span>
             {% if link %}
               </a>
             {% endif %}
