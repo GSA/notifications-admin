@@ -1,42 +1,67 @@
 @use "uswds-core" as *;
 
+$delivered: color('blue-50v');
+$pending: color('green-cool-40v');
+$failed: color('orange-30v');
+
 .chart-container {
   display: flex;
-  height: 100px;
+  height: units(10);
+  &.usage {
+    height: units(5);
+  }
 }
 
 .bar {
-  height: 30px;
-  transition: width 0.5s ease;
-  &#delivered {
-    background-color: green;
+  &.delivered, &.usage {
+    background-color: $delivered;
+    margin-right: 1px;
   }
-  &#pending {
-    background-color: yellow;
+  &.pending{
+    background-color: $pending;
+    margin-right: 1px;
   }
-  &#failed {
-    background-color: red;
+  &.failed, &.remaining {
+    background-color: $failed;
   }
 }
 
 .legend {
   display: flex;
-  justify-content: center;
-  margin-top: 10px;
-
+  margin: units(1) 0;
   .legend-item {
     display: flex;
     align-items: center;
-    margin: 0 15px;
+    margin-right: units(2);
   }
-
   .legend-color {
-    width: 20px;
-    height: 20px;
-    margin-right: 5px;
+    width: units(3);
+    height: units(3);
+    margin-right: units(1);
+    background-color: $delivered;
+    &.pending {
+      background-color: $pending;
+    }
+    &.failed, &.remaining {
+      background-color: $failed;
+    }
   }
-
   .legend-label {
     margin-right: 5px;
   }
 }
+
+
+ .progress-bar {
+      width: 300px;
+      height: 20px;
+      background-color: #eee;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar-inner {
+      height: 100%;
+      background-color: #007bff;
+      border-radius: inherit;
+    }

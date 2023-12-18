@@ -14,10 +14,6 @@
 
   <div class="dashboard margin-bottom-8">
 
-    <div>
-      <canvas id="myChart"></canvas>
-    </div>
-
     <h1 class="usa-sr-only">Dashboard</h1>
     {% if current_user.has_permissions('manage_templates') and not current_service.all_templates %}
       {% include 'views/dashboard/write-first-messages.html' %}
@@ -26,36 +22,66 @@
     <h2 class="font-body-xl margin-0">
       SMS Activity
     </h2>
-    <h3>Total 1000</h3>
+    <h3 id="total-value" class="margin-y-1"></h3>
     <div class="chart-container">
-      <div class="bar" id="delivered"></div>
-      <div class="bar" id="pending"></div>
-      <div class="bar" id="failed"></div>
+      <div class="bar delivered" id="delivered-bar"></div>
+      <div class="bar pending" id="pending-bar"></div>
+      <div class="bar failed" id="failed-bar"></div>
     </div>
     <div class="legend">
       <div class="legend-item">
-        <div class="legend-color" style="background-color: green;"></div>
-        <div class="legend-label">Delivered</div>
+        <div class="legend-color delivered"></div>
         <div class="legend-value" id="delivered-value"></div>
       </div>
       <div class="legend-item">
-        <div class="legend-color" style="background-color: yellow;"></div>
-        <div class="legend-label">Pending</div>
+        <div class="legend-color pending"></div>
         <div class="legend-value" id="pending-value"></div>
       </div>
       <div class="legend-item">
-        <div class="legend-color" style="background-color: red;"></div>
-        <div class="legend-label">Failed</div>
+        <div class="legend-color failed"></div>
         <div class="legend-value" id="failed-value"></div>
       </div>
     </div>
 
-    {{ pill(years, selected_year, big_number_args={'smallest': True}) }}
+    <h2 class="font-body-xl margin-top-4 margin-bottom-1">Usage</h2>
+    <h3 class="margin-y-0">Daily</h3>
+    <p class="margin-top-0 margin-bottom-1">Across all services</p>
 
-    Test:
-    You have sent
-    {{ big_number(sms_sent, 'messages of your', smaller=True) }}
-    {{ big_number(sms_free_allowance, 'free messages allowance.', smaller=True) }}
+    <h3 id="total-daily-usage" class="margin-0"></h3>
+    <div class="chart-container usage">
+      <div class="bar usage" id="dailyUsage-bar"></div>
+      <div class="bar remaining" id="dailyUsageRemaining-bar"></div>
+    </div>
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-color daily-usage"></div>
+        <div class="legend-label">Daily usage</div>
+        <div class="legend-value" id="daily-usage-value"></div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color remaining"></div>
+        <div class="legend-label">Remaining messages today</div>
+        <div class="legend-value" id="daily-remaining-value"></div>
+      </div>
+    </div>
+
+    <h3 id="total-yearly-usage" class="margin-bottom-0">This year</h3>
+    <div class="chart-container usage">
+      <div class="bar usage" id="yearlyUsage-bar"></div>
+      <div class="bar remaining" id="yearlyUsageRemaining-bar"></div>
+    </div>
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-color usage"></div>
+        <div class="legend-label">Yearly usage</div>
+        <div class="legend-value" id="yearly-usage-value"></div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color remaining"></div>
+        <div class="legend-label">Remaining yearly messages</div>
+        <div class="legend-value" id="yearly-remaining-value"></div>
+      </div>
+    </div>
 
     <h2 class="font-body-xl margin-0">
       Messages sent
@@ -68,9 +94,6 @@
 
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
 
-    <h2 class="margin-top-4 margin-bottom-1">Usage</h2>
-    <h3 class="margin-bottom-0">Daily</h3>
-    <p class="margin-0">Across all services</p>
     <table class="usa-table usa-table--borderless margin-top-1 margin-bottom-5">
       <caption class="usa-sr-only">
         Daily
@@ -85,7 +108,6 @@
         <tr>
           <td>{{ global_message_limit - daily_global_messages_remaining }}</td>
           <td>{{ daily_global_messages_remaining }}</td>
-          <td>{{ current_service.message_limit }}</td>
         </tr>
       </tbody>
     </table>
