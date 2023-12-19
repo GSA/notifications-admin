@@ -143,6 +143,7 @@ td.table-empty-message {
       border: 1px solid color('gray-cool-10');
       padding: units(2);
       .tick-cross-list-permissions {
+         margin: units(1) 0;
          padding-left: units(2);
       }
       .hint {
