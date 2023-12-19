@@ -857,6 +857,7 @@ def send_notification(service_id, template_id):
     check_message_output = check_messages(service_id, template_id, upload_id, 2)
     if "You cannot send to" in check_message_output:
         return check_messages(service_id, template_id, upload_id, 2)
+
     job_api_client.create_job(
         upload_id,
         service_id,

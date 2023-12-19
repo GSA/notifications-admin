@@ -10,7 +10,12 @@ Error
 {% endblock %}
 
 {% block backLink %}
-{{ usaBackLink({ "href": back_link }) }}
+<!--hide back link for one-off sends because the user never created a csv file-->
+{% if recipients.__len__() == 1 and not recipients.allowed_to_send_to and not recipients.missing_column_headers %}
+    <!--do nothing-->
+{% else  %}
+    {{ usaBackLink({ "href": back_link }) }}
+{% endif %}
 {% endblock %}
 
 {% block maincolumn_content %}
@@ -130,7 +135,10 @@ Error
   {% endcall %}
 </div>
 
-
+<!--hide the upload button and back to top link for one off sends-->
+{% if recipients.__len__() == 1 and not recipients.allowed_to_send_to and not recipients.missing_column_headers %}
+    <!-- do nothing -->
+{% else %}
 <div class="js-stick-at-top-when-scrolling">
   <div class="form-group">
     {% if not request.args.from_test %}
@@ -144,6 +152,7 @@ Error
   </div>
   <a href="#content" class="usa-link back-to-top-link">Back to top</a>
 </div>
+{% endif %}
 
 {% if not request.args.from_test %}
 
