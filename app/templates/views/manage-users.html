@@ -9,10 +9,10 @@
 
 {% block maincolumn_content %}
 
-  <div class="display-flex flex-justify flex-align-center">
-    <h1 class="font-body-xl margin-0">
-      Team members
-    </h1>
+  <div class="button-flex-header">
+      <h1 class="font-body-xl margin-0">
+        Team members
+      </h1>
     {% if current_user.has_permissions('manage_service') %}
       {{ usaButton({
       "element": "a",
@@ -41,7 +41,7 @@
           {%- elif user.status == 'cancelled' -%}
             <span class="live-search-relevant">{{ user.email_address }}</span><span class="hint">(cancelled invite)</span>
           {%- elif user.id == current_user.id -%}
-            <span class="live-search-relevant">(you)</span>
+            <span class="live-search-relevant"></span><span class="hint">(you)</span>
           {% else %}
             <span class="live-search-relevant">{{ user.email_address }}</span>
           {% endif %}
