@@ -61,7 +61,6 @@ from app.main.validators import (
     ValidEmail,
     ValidGovEmail,
 )
-from app.models.feedback import PROBLEM_TICKET_TYPE, QUESTION_TICKET_TYPE
 from app.models.organization import Organization
 from app.utils import merge_jsonlike
 from app.utils.csv import get_user_preferred_timezone
@@ -1319,49 +1318,6 @@ class CreateKeyForm(StripWhitespaceForm):
             raise ValidationError("A key with this name already exists")
 
 
-class SupportType(StripWhitespaceForm):
-    support_type = GovukRadiosField(
-        "How can we help you?",
-        choices=[
-            (PROBLEM_TICKET_TYPE, "Report a problem"),
-            (QUESTION_TICKET_TYPE, "Ask a question or give feedback"),
-        ],
-    )
-
-
-class SupportRedirect(StripWhitespaceForm):
-    who = GovukRadiosField(
-        "What do you need help with?",
-        choices=[
-            (
-                "public-sector",
-                "I work in the public sector and need to send emails or text messages",
-            ),
-            ("public", "I’m a member of the public with a question for the government"),
-        ],
-        param_extensions={"fieldset": {"legend": {"classes": "usa-sr-only"}}},
-    )
-
-
-class FeedbackOrProblem(StripWhitespaceForm):
-    name = GovukTextInputField("Name (optional)")
-    email_address = email_address(label="Email address", gov_user=False, required=True)
-    feedback = TextAreaField(
-        "Your message", validators=[DataRequired(message="Cannot be empty")]
-    )
-
-
-class Triage(StripWhitespaceForm):
-    severe = GovukRadiosField(
-        "Is it an emergency?",
-        choices=[
-            ("yes", "Yes"),
-            ("no", "No"),
-        ],
-        thing="yes or no",
-    )
-
-
 class EstimateUsageForm(StripWhitespaceForm):
     volume_email = ForgivingIntegerField(
         "How many emails do you expect to send in the next year?",
@@ -1903,13 +1859,6 @@ class AdminClearCacheForm(StripWhitespaceForm):
     def validate_model_type(self, field):
         if not field.data:
             raise ValidationError("Select at least one option")
-
-
-class AdminOrganizationGoLiveNotesForm(StripWhitespaceForm):
-    request_to_go_live_notes = TextAreaField(
-        "Go live notes",
-        filters=[lambda x: x or None],
-    )
 
 
 class ChangeSecurityKeyNameForm(StripWhitespaceForm):

@@ -10,7 +10,6 @@ def test_anonymous_user(notify_admin):
     assert AnonymousUser().default_organization.name is None
     assert AnonymousUser().default_organization.domains == []
     assert AnonymousUser().default_organization.organization_type is None
-    assert AnonymousUser().default_organization.request_to_go_live_notes is None
 
 
 def test_user(notify_admin):

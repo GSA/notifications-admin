@@ -25,7 +25,6 @@ class Organization(JSONModel, SortByNameMixin):
         "active",
         "organization_type",
         "domains",
-        "request_to_go_live_notes",
         "count_of_live_services",
         "billing_contact_email_addresses",
         "billing_contact_names",
@@ -71,7 +70,6 @@ class Organization(JSONModel, SortByNameMixin):
             self.name = None
             self.domains = []
             self.organization_type = None
-            self.request_to_go_live_notes = None
 
     @property
     def organization_type_label(self):
