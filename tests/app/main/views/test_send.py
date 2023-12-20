@@ -2823,7 +2823,6 @@ def test_send_notification_shows_error_if_400(
         session["recipient"] = "2028675301"
         session["placeholders"] = {"name": "a" * 900}
 
-
     # This now redirects to the jobs results page
     page = client_request.post(
         "main.send_notification",
