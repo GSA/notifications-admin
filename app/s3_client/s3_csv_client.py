@@ -9,6 +9,7 @@ from app.s3_client import (
     get_s3_object,
     set_s3_metadata,
 )
+from app.utils.redis_util import add_row_data_to_redis
 
 FILE_LOCATION_STRUCTURE = "service-{}-notify/{}.csv"
 
@@ -40,6 +41,7 @@ def s3upload(service_id, filedata):
         access_key=access_key,
         secret_key=secret_key,
     )
+    add_row_data_to_redis(filedata["data"], upload_id)
     return upload_id
 
 
