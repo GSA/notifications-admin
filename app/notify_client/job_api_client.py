@@ -119,16 +119,16 @@ class JobApiClient(NotifyAdminAPIClient):
 
         if scheduled_for:
             scheduled_for = JobApiClient.convert_user_time_to_utc(scheduled_for)
-            data.update({"scheduled_for": scheduled_for})
+            data["scheduled_for"] = scheduled_for
 
         if template_id:
-            data.update({"template_id": template_id})
+            data["template_id"] = template_id
         if original_file_name:
-            data.update({"original_file_name": original_file_name})
+            data["original_file_name"] = original_file_name
         if notification_count:
-            data.update({"notification_count": notification_count})
+            data["notification_count"] = notification_count
         if valid:
-            data.update({"valid": valid})
+            data["valid"] = valid
 
         data = _attach_current_user(data)
         job = self.post(url="/service/{}/job".format(service_id), data=data)

@@ -847,7 +847,7 @@ def send_notification(service_id, template_id):
     vals = ",".join(values)
     data = f"{data}\r\n{vals}"
 
-    filename = f"one-off:{current_user.name}:{uuid.uuid4()}.csv"
+    filename = f"one-off-{current_user.name}-{uuid.uuid4()}.csv"
     my_data = {"filename": filename, "template_id": template_id, "data": data}
     upload_id = s3upload(service_id, my_data)
     form = CsvUploadForm()
@@ -873,34 +873,18 @@ def send_notification(service_id, template_id):
 
     # We have to wait for the job to run and create the notification in the database
     time.sleep(0.1)
-    notis = notification_api_client.get_notifications_for_service(
+    notifications = notification_api_client.get_notifications_for_service(
         service_id, job_id=upload_id, include_one_off=True
     )
     attempts = 0
-    while notis["total"] == 0 and attempts < 5:
-        notis = notification_api_client.get_notifications_for_service(
+    while notifications["total"] == 0 and attempts < 5:
+        notifications = notification_api_client.get_notifications_for_service(
             service_id, job_id=upload_id, include_one_off=True
         )
         time.sleep(0.1)
         attempts = attempts + 1
-    # TODO we are replacing the original 'one-off send' functionality with a job that
-    # we create on the fly.  The purpose for this is to ultimately remove the phone numbers
-    # from the db.  However, by running a job we no longer get error messages we used to get.
-    # If the user is in trial mode and trying to send to a phone number they are not allowed
-    # to send to, right now they will see that their job started and the only way they will
-    # know something went wrong, is to sit and watch the status sit as pending for 3 hours
-    # and ultimately switch to failed with no reason why.
-    #
-    # In future, we should block the user from sending to phone numbers they aren't allowed
-    # to send to.
-    # the way to do that would be to make this available to the front end:
-    #
-    # <api>/service/utils/service_allowed_to_send_to
-    #
-    # After that the UI should be making this call as part of the phone number validation
-    # A user in trial mode should not be able to 'send message' to a phone number they are not
-    # allowed to send to
-    if notis["total"] == 0 and attempts == 5:
+
+    if notifications["total"] == 0 and attempts == 5:
         # This shows the job we auto-generated for the user
         return redirect(
             url_for(
@@ -915,7 +899,7 @@ def send_notification(service_id, template_id):
             ".view_notification",
             service_id=service_id,
             from_job=upload_id,
-            notification_id=notis["notifications"][0]["id"],
+            notification_id=notifications["notifications"][0]["id"],
             # used to show the final step of the tour (help=3) or not show
             # a back link on a just sent one off notification (help=0)
             help=request.args.get("help"),

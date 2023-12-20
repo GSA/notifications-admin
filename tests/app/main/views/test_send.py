@@ -2823,9 +2823,8 @@ def test_send_notification_shows_error_if_400(
         session["recipient"] = "2028675301"
         session["placeholders"] = {"name": "a" * 900}
 
-    # TODO This part of the test is commented out due to notify-api-679 which is
-    # replacing one-off sends with jobs.  The new workflow is not embedded error messages into
-    # the page properly when the user specifies an invalid phone number
+
+    # This now redirects to the jobs results page
     page = client_request.post(
         "main.send_notification",
         service_id=service_one["id"],
@@ -2833,11 +2832,6 @@ def test_send_notification_shows_error_if_400(
         _expected_status=302,
     )
 
-    # assert normalize_spaces(page.select(".banner-dangerous h1")[0].text) == expected_h1
-    # assert (
-    #    normalize_spaces(page.select(".banner-dangerous p")[0].text)
-    #    == expected_err_details
-    # )
     assert not page.find("input[type=submit]")
 
 
@@ -2867,23 +2861,13 @@ def test_send_notification_shows_email_error_in_trial_mode(
         session["recipient"] = "test@example.com"
         session["placeholders"] = {"date": "foo", "thing": "bar"}
 
-    # TODO This part of the test is commented out due to notify-api-679 which is
-    # replacing one-off sends with jobs.  The new workflow is not embedded error messages into
-    # the page properly when the user specifies an invalid phone number
-    # page = client_request.post(
+    # Calling this means we successful ran a job so we will be redirect to the jobs page
     client_request.post(
         "main.send_notification",
         service_id=SERVICE_ONE_ID,
         template_id=fake_uuid,
-        # _expected_status=302,
+        _expected_status=302,
     )
-
-    # assert normalize_spaces(page.select(".banner-dangerous h1")[0].text) == (
-    #    "You cannot send to this email address"
-    # )
-    # assert normalize_spaces(page.select(".banner-dangerous p")[0].text) == (
-    #    "In trial mode you can only send to yourself and members of your team"
-    # )
 
 
 @pytest.mark.parametrize(
