@@ -1,7 +1,6 @@
 from datetime import datetime
 from functools import partial
 from unittest.mock import ANY, Mock, PropertyMock, call
-from urllib.parse import parse_qs, urlparse
 from uuid import uuid4
 
 import pytest
@@ -83,7 +82,6 @@ def _mock_get_service_settings_page_common(
                 "Rate limit 3,000 per minute Change rate limit",
                 "Message batch limit 1,000 per send Change message batch limit",
                 "Free text message allowance 250,000 per year Change free text message allowance",
-                "Email branding GOV.UK Change email branding (admin view)",
                 "Custom data retention Email – 7 days Change data retention",
                 "Receive inbound SMS Off Change your settings for Receive inbound SMS",
                 "Email authentication Off Change your settings for Email authentication",
@@ -256,13 +254,11 @@ def test_should_show_overview_for_service_with_more_things_set(
     service_one,
     single_reply_to_email_address,
     single_sms_sender,
-    mock_get_email_branding,
     permissions,
     expected_rows,
 ):
     client_request.login(active_user_with_permissions)
     service_one["permissions"] = permissions
-    service_one["email_branding"] = uuid4()
     page = client_request.get("main.service_settings", service_id=service_one["id"])
     for index, row in enumerate(expected_rows):
         assert row == " ".join(page.find_all("tr")[index + 1].text.split())
@@ -2823,247 +2819,6 @@ def test_does_not_show_research_mode_indicator(
     assert not element
 
 
-@pytest.mark.parametrize(
-    ("current_branding", "expected_values", "expected_labels"),
-    [
-        (
-            None,
-            [
-                "__NONE__",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-            ],
-            ["GOV.UK", "org 1", "org 2", "org 3", "org 4", "org 5"],
-        ),
-        (
-            "5",
-            [
-                "5",
-                "__NONE__",
-                "1",
-                "2",
-                "3",
-                "4",
-            ],
-            [
-                "org 5",
-                "GOV.UK",
-                "org 1",
-                "org 2",
-                "org 3",
-                "org 4",
-            ],
-        ),
-    ],
-)
-@pytest.mark.parametrize(
-    ("endpoint", "extra_args"),
-    [
-        (
-            "main.service_set_email_branding",
-            {"service_id": SERVICE_ONE_ID},
-        ),
-        (
-            "main.edit_organization_email_branding",
-            {"org_id": ORGANISATION_ID},
-        ),
-    ],
-)
-def test_should_show_branding_styles(
-    mocker,
-    client_request,
-    platform_admin_user,
-    service_one,
-    mock_get_all_email_branding,
-    current_branding,
-    expected_values,
-    expected_labels,
-    endpoint,
-    extra_args,
-):
-    service_one["email_branding"] = current_branding
-    mocker.patch(
-        "app.organizations_client.get_organization",
-        side_effect=lambda org_id: organization_json(
-            org_id,
-            "Org 1",
-            email_branding_id=current_branding,
-        ),
-    )
-
-    client_request.login(platform_admin_user)
-    page = client_request.get(endpoint, **extra_args)
-
-    branding_style_choices = page.find_all("input", attrs={"name": "branding_style"})
-
-    radio_labels = [
-        page.find("label", attrs={"for": branding_style_choices[idx]["id"]})
-        .get_text()
-        .strip()
-        for idx, element in enumerate(branding_style_choices)
-    ]
-
-    assert len(branding_style_choices) == 6
-
-    for index, expected_value in enumerate(expected_values):
-        assert branding_style_choices[index]["value"] == expected_value
-
-    # radios should be in alphabetical order, based on their labels
-    assert radio_labels == expected_labels
-
-    assert "checked" in branding_style_choices[0].attrs
-    assert "checked" not in branding_style_choices[1].attrs
-    assert "checked" not in branding_style_choices[2].attrs
-    assert "checked" not in branding_style_choices[3].attrs
-    assert "checked" not in branding_style_choices[4].attrs
-    assert "checked" not in branding_style_choices[5].attrs
-
-    app.email_branding_client.get_all_email_branding.assert_called_once_with()
-    app.service_api_client.get_service.assert_called_once_with(service_one["id"])
-
-
-@pytest.mark.parametrize(
-    ("endpoint", "extra_args", "expected_redirect"),
-    [
-        (
-            "main.service_set_email_branding",
-            {"service_id": SERVICE_ONE_ID},
-            "main.service_preview_email_branding",
-        ),
-        (
-            "main.edit_organization_email_branding",
-            {"org_id": ORGANISATION_ID},
-            "main.organization_preview_email_branding",
-        ),
-    ],
-)
-def test_should_send_branding_and_organizations_to_preview(
-    client_request,
-    platform_admin_user,
-    service_one,
-    mock_get_organization,
-    mock_get_all_email_branding,
-    mock_update_service,
-    endpoint,
-    extra_args,
-    expected_redirect,
-):
-    client_request.login(platform_admin_user)
-    client_request.post(
-        endpoint,
-        _data={"branding_type": "org", "branding_style": "1"},
-        _expected_status=302,
-        _expected_location=url_for(expected_redirect, branding_style="1", **extra_args),
-        **extra_args,
-    )
-
-    mock_get_all_email_branding.assert_called_once_with()
-
-
-@pytest.mark.parametrize(
-    ("endpoint", "extra_args"),
-    [
-        (
-            "main.service_preview_email_branding",
-            {"service_id": SERVICE_ONE_ID},
-        ),
-        (
-            "main.organization_preview_email_branding",
-            {"org_id": ORGANISATION_ID},
-        ),
-    ],
-)
-def test_should_preview_email_branding(
-    client_request,
-    platform_admin_user,
-    mock_get_organization,
-    endpoint,
-    extra_args,
-):
-    client_request.login(platform_admin_user)
-    page = client_request.get(
-        endpoint, branding_type="org", branding_style="1", **extra_args
-    )
-
-    iframe = page.find("iframe", attrs={"class": "branding-preview"})
-    iframeURLComponents = urlparse(iframe["src"])
-    iframeQString = parse_qs(iframeURLComponents.query)
-
-    assert page.find("input", attrs={"id": "branding_style"})["value"] == "1"
-    assert iframeURLComponents.path == "/_email"
-    assert iframeQString["branding_style"] == ["1"]
-
-
-@pytest.mark.parametrize(
-    ("posted_value", "submitted_value"),
-    [
-        ("1", "1"),
-        ("__NONE__", None),
-        pytest.param("None", None, marks=pytest.mark.xfail(raises=AssertionError)),
-    ],
-)
-@pytest.mark.parametrize(
-    ("endpoint", "extra_args", "expected_redirect"),
-    [
-        (
-            "main.service_preview_email_branding",
-            {"service_id": SERVICE_ONE_ID},
-            "main.service_settings",
-        ),
-        (
-            "main.organization_preview_email_branding",
-            {"org_id": ORGANISATION_ID},
-            "main.organization_settings",
-        ),
-    ],
-)
-def test_should_set_branding_and_organizations(
-    client_request,
-    platform_admin_user,
-    service_one,
-    mock_get_organization,
-    mock_get_organization_services,
-    mock_update_service,
-    mock_update_organization,
-    posted_value,
-    submitted_value,
-    endpoint,
-    extra_args,
-    expected_redirect,
-):
-    client_request.login(platform_admin_user)
-    client_request.post(
-        endpoint,
-        _data={"branding_style": posted_value},
-        _expected_status=302,
-        _expected_redirect=url_for(expected_redirect, **extra_args),
-        **extra_args,
-    )
-
-    if endpoint == "main.service_preview_email_branding":
-        mock_update_service.assert_called_once_with(
-            SERVICE_ONE_ID,
-            email_branding=submitted_value,
-        )
-        assert mock_update_organization.called is False
-    elif endpoint == "main.organization_preview_email_branding":
-        mock_update_organization.assert_called_once_with(
-            ORGANISATION_ID,
-            email_branding_id=submitted_value,
-            cached_service_ids=[
-                "12345",
-                "67890",
-                "596364a0-858e-42c8-9062-a8fe822260eb",
-            ],
-        )
-        assert mock_update_service.called is False
-    else:
-        raise Exception
-
-
 @pytest.mark.parametrize("method", ["get", "post"])
 @pytest.mark.parametrize(
     "endpoint",
@@ -4168,33 +3923,6 @@ def test_update_service_organization_does_not_update_if_same_value(
         _data={"organizations": org_id},
     )
     assert mock_update_service_organization.called is False
-
-
-@pytest.mark.skip(reason="Email currently deactivated")
-@pytest.mark.parametrize(
-    ("single_branding_option", "expected_href"),
-    [
-        (
-            True,
-            f"/services/{SERVICE_ONE_ID}/service-settings/email-branding/something-else",
-        ),
-    ],
-)
-def test_service_settings_links_to_branding_request_page_for_emails(
-    service_one,
-    client_request,
-    no_reply_to_email_addresses,
-    single_sms_sender,
-    single_branding_option,
-    expected_href,
-):
-    if single_branding_option:
-        # should only have a "something else" option
-        # so we go straight to that form
-        service_one["organization_type"] = "other"
-
-    page = client_request.get(".service_settings", service_id=SERVICE_ONE_ID)
-    assert len(page.find_all("a", attrs={"href": expected_href})) == 1
 
 
 def test_show_service_data_retention(

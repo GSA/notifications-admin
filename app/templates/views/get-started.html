@@ -34,10 +34,10 @@
   <li class="usa-process-list__item padding-bottom-4">
     <h2 class="usa-process-list__heading line-height-sans-3">Set up your service</h2>
     {% if not current_user.is_authenticated or not current_service %}
-    <p>Review your settings to add message branding and sender information.</p>
+    <p>Review your settings to add message customization and sender information.</p>
     <p>Add team members and check their permissions.</p>
     {% else %}
-    <p>Review your <a class="usa-link" href="{{ url_for('.service_settings', service_id=current_service.id) }}">settings</a> to add message branding and sender information.</p>
+    <p>Review your <a class="usa-link" href="{{ url_for('.service_settings', service_id=current_service.id) }}">settings</a> to add message customization and sender information.</p>
     <p>Add <a class="usa-link" href="{{ url_for('.manage_users', service_id=current_service.id) }}">team members</a> and check their permissions.</p>
     {% endif %}
   </li>

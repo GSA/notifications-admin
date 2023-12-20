@@ -931,7 +931,6 @@ def test_organization_settings_for_platform_admin(
         "Request to go live notes None Change go live notes for the organization",
         "Billing details None Change billing details for the organization",
         "Notes None Change the notes for the organization",
-        "Default email branding GOV.UK Change default email branding for the organization",
         "Known email domains None Change known email domains for the organization",
     ]
 

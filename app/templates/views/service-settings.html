@@ -162,23 +162,6 @@
           }}
         {% endcall %}
 
-        {% if email_branding_options.something_else_is_only_option %}
-          {% set email_request_url = url_for('.email_branding_something_else', service_id=current_service.id) %}
-        {% else %}
-          {% set email_request_url = url_for('.email_branding_request', service_id=current_service.id) %}
-        {% endif %}
-
-        {% call settings_row(if_has_permission='email') %}
-          {{ text_field('Email branding') }}
-          {{ text_field(current_service.email_branding_name) }}
-          {{ edit_field(
-            'Change',
-            email_request_url,
-            permissions=['manage_service'],
-            suffix='email branding',
-          )}}
-        {% endcall %}
-
         {% call settings_row(if_has_permission='email') %}
           {{ text_field('Send files by email') }}
           {{ optional_text_field(current_service.contact_link, default="Not set up", truncate=true) }}
@@ -302,11 +285,6 @@
             {{ text_field('Free text message allowance')}}
             {{ text_field('{:,} per year'.format(current_service.free_sms_fragment_limit)) }}
             {{ edit_field('Change', url_for('.set_free_sms_allowance', service_id=current_service.id), suffix='free text message allowance') }}
-          {% endcall %}
-          {% call row() %}
-            {{ text_field('Email branding' )}}
-            {{ text_field(current_service.email_branding_name) }}
-            {{ edit_field('Change', url_for('.service_set_email_branding', service_id=current_service.id), suffix='email branding (admin view)') }}
           {% endcall %}
           {% call row() %}
             {{ text_field('Custom data retention')}}

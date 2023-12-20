@@ -8903,14 +8903,6 @@ only screen and (min-resolution: 2dppx) {
     padding-bottom: 75%
 }
 
-.branding-preview {
-    width: 100%;
-    box-sizing: border-box;
-    border: solid 1px #bfc1c3;
-    min-height: 200px;
-    margin-bottom: 30px
-}
-
 #logo-img {
     background-color: #f8f8f8;
     background-image: linear-gradient(45deg, #dee0e2 25%, transparent 25%), linear-gradient(-45deg, #dee0e2 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #dee0e2 75%), linear-gradient(-45deg, transparent 75%, #dee0e2 75%);
@@ -9442,56 +9434,6 @@ only screen and (min-resolution: 2dppx) {
 
 .template-container {
     position: relative
-}
-
-.edit-template-link-letter-contact,
-.edit-template-link-letter-address,
-.edit-template-link-letter-body,
-.edit-template-link-letter-branding,
-.edit-template-link {
-    font-family: "nta", Arial, sans-serif;
-    font-weight: 400;
-    text-transform: none;
-    font-size: 16px;
-    line-height: 1.25;
-    position: absolute;
-    background: #005ea5;
-    color: #fff;
-    padding: 10px 15px;
-    z-index: 10000
-}
-
-@media (min-width: 641px) {
-
-    .edit-template-link-letter-contact,
-    .edit-template-link-letter-address,
-    .edit-template-link-letter-body,
-    .edit-template-link-letter-branding,
-    .edit-template-link {
-        font-size: 19px;
-        line-height: 1.31579
-    }
-}
-
-.edit-template-link-letter-contact:link,
-.edit-template-link-letter-address:link,
-.edit-template-link-letter-body:link,
-.edit-template-link-letter-branding:link,
-.edit-template-link-letter-contact:visited,
-.edit-template-link-letter-address:visited,
-.edit-template-link-letter-body:visited,
-.edit-template-link-letter-branding:visited,
-.edit-template-link:link,
-.edit-template-link:visited {
-    color: #fff
-}
-
-.edit-template-link-letter-contact:hover,
-.edit-template-link-letter-address:hover,
-.edit-template-link-letter-body:hover,
-.edit-template-link-letter-branding:hover,
-.edit-template-link:hover {
-    color: #d5e8f3
 }
 
 .notification-status {
