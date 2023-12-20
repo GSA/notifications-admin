@@ -1,12 +1,5 @@
 window.GOVUK.Frontend.initAll();
 
-var consentData = window.GOVUK.getConsentCookie();
-window.GOVUK.Modules.CookieBanner.clearOldCookies(consentData);
-
-if (window.GOVUK.hasConsentFor('analytics', consentData)) {
-  window.GOVUK.initAnalytics();
-}
-
 $(() => $("time.timeago").timeago());
 
 var showHideContent = new GOVUK.ShowHideContent();
