@@ -27,6 +27,8 @@ class Service(JSONModel, SortByNameMixin):
         "contact_link",
         "count_as_live",
         "email_from",
+        "go_live_at",
+        "go_live_user",
         "id",
         "inbound_api",
         "message_limit",
