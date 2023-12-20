@@ -1,8 +1,18 @@
 # Notify Sprint Goals Log
 
 
-## Sprint: Y (12/6/23)
-(Sprint X was canceled due to Thanksgiving)
+## Sprint: Z (12/21/23)
+
+|             | Goals        | Impact      | Milestone(s)    |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|--------------|
+| Engineering | Spend time [identifying](https://github.com/GSA/notifications-api/issues/656), [fixing](https://github.com/GSA/notifications-api/issues/645), and [displaying](https://github.com/GSA/notifications-admin/issues/964) various applicable message part limits, devise ways to [create better access to reports](https://github.com/GSA/notifications-admin/issues/855), implement Login.gov on staging environment, advance epic to [remove phone numbers from db](https://github.com/GSA/notifications-api/issues/667) | Better track annual and smart-retention limits, install required auth, make reports easier to find, expand message send volume for partners                            | Building Notify.gov |
+| UX          |  [Re-think Notify IA](https://github.com/GSA/notifications-admin/issues/910), start implementing dashboard changes, improve [team member section](https://github.com/GSA/notifications-admin/issues/1031)| Improve UX      | Building Notify.gov| 
+| Security    | Complete necessary control families                                        | Aim to have package completed with enough time to allow for long assessment| Secure ATO |
+| Content    | Make content [more clear about limits](https://github.com/GSA/notifications-admin/issues/963), test making [editing content easier](https://github.com/GSA/notifications-admin/issues/976) with existing templates | Improve clarity of message parts for users, streamline content editing for the team| Building Notify.gov |
+| Ops    | |  
+
+## Sprint: Xingu Scale-Backed Antbird (12/6/23)
+(Sprint X was canceled due to Thanksgiving, so this is X & Y)
 
 |             | Goals        | Impact      | Milestone(s)    |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|--------------|
