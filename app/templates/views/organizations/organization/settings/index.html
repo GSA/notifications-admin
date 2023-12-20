@@ -34,16 +34,6 @@
           )
         }}
       {% endcall %}
-      {% call row() %}
-        {{ text_field('Request to go live notes') }}
-        {{ optional_text_field(current_org.request_to_go_live_notes, default='None') }}
-        {{ edit_field(
-            'Change',
-            url_for('.edit_organization_go_live_notes', org_id=current_org.id),
-            suffix='go live notes for the organization'
-          )
-        }}
-      {% endcall %}
 
       {% call row() %}
         {{ text_field('Billing details')}}

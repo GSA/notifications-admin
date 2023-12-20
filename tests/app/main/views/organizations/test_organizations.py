@@ -928,7 +928,6 @@ def test_organization_settings_for_platform_admin(
         "Label Value Action",
         "Name Test organization Change organization name",
         "Sector Federal government Change sector for the organization",
-        "Request to go live notes None Change go live notes for the organization",
         "Billing details None Change billing details for the organization",
         "Notes None Change the notes for the organization",
         "Known email domains None Change known email domains for the organization",
@@ -1343,48 +1342,6 @@ def test_update_organization_with_non_unique_name(
     assert (
         "This organization name is already in use"
         in page.select_one(".usa-error-message").text
-    )
-
-
-def test_get_edit_organization_go_live_notes_page(
-    client_request,
-    platform_admin_user,
-    mock_get_organization,
-    organization_one,
-):
-    client_request.login(platform_admin_user)
-    page = client_request.get(
-        ".edit_organization_go_live_notes",
-        org_id=organization_one["id"],
-    )
-    assert page.find("textarea", id="request_to_go_live_notes")
-
-
-@pytest.mark.parametrize(
-    ("input_note", "saved_note"),
-    [("Needs permission", "Needs permission"), ("  ", None)],
-)
-def test_post_edit_organization_go_live_notes_updates_go_live_notes(
-    client_request,
-    platform_admin_user,
-    mock_get_organization,
-    mock_update_organization,
-    organization_one,
-    input_note,
-    saved_note,
-):
-    client_request.login(platform_admin_user)
-    client_request.post(
-        ".edit_organization_go_live_notes",
-        org_id=organization_one["id"],
-        _data={"request_to_go_live_notes": input_note},
-        _expected_redirect=url_for(
-            ".organization_settings",
-            org_id=organization_one["id"],
-        ),
-    )
-    mock_update_organization.assert_called_once_with(
-        organization_one["id"], request_to_go_live_notes=saved_note
     )
 
 

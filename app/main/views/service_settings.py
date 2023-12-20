@@ -13,7 +13,6 @@ from flask import (
 )
 from flask_login import current_user
 from notifications_python_client.errors import HTTPError
-from notifications_utils.clients.zendesk.zendesk_client import NotifySupportTicket
 
 from app import (
     billing_api_client,
@@ -28,7 +27,6 @@ from app.event_handlers import (
     create_resume_service_event,
     create_suspend_service_event,
 )
-from app.extensions import zendesk_client
 from app.formatters import email_safe
 from app.main import main
 from app.main.forms import (
@@ -41,7 +39,6 @@ from app.main.forms import (
     AdminServiceRateLimitForm,
     AdminServiceSMSAllowanceForm,
     AdminSetOrganizationForm,
-    EstimateUsageForm,
     RenameServiceForm,
     SearchByNameForm,
     ServiceContactDetailsForm,
@@ -54,11 +51,7 @@ from app.main.forms import (
 )
 from app.utils import DELIVERED_STATUSES, FAILURE_STATUSES, SENDING_STATUSES
 from app.utils.time import parse_naive_dt
-from app.utils.user import (
-    user_has_permissions,
-    user_is_gov_user,
-    user_is_platform_admin,
-)
+from app.utils.user import user_has_permissions, user_is_platform_admin
 
 PLATFORM_ADMIN_SERVICE_PERMISSIONS = OrderedDict(
     [
@@ -118,81 +111,6 @@ def service_name_change(service_id):
         "views/service-settings/name.html",
         form=form,
     )
-
-
-@main.route(
-    "/services/<uuid:service_id>/service-settings/request-to-go-live/estimate-usage",
-    methods=["GET", "POST"],
-)
-@user_has_permissions("manage_service")
-def estimate_usage(service_id):
-    form = EstimateUsageForm(
-        volume_email=current_service.volume_email,
-        volume_sms=current_service.volume_sms,
-        consent_to_research={
-            True: "yes",
-            False: "no",
-        }.get(current_service.consent_to_research),
-    )
-
-    if form.validate_on_submit():
-        current_service.update(
-            volume_email=form.volume_email.data,
-            volume_sms=form.volume_sms.data,
-            consent_to_research=(form.consent_to_research.data == "yes"),
-        )
-        return redirect(
-            url_for(
-                "main.request_to_go_live",
-                service_id=service_id,
-            )
-        )
-
-    return render_template(
-        "views/service-settings/estimate-usage.html",
-        form=form,
-    )
-
-
-@main.route(
-    "/services/<uuid:service_id>/service-settings/request-to-go-live", methods=["GET"]
-)
-@user_has_permissions("manage_service")
-def request_to_go_live(service_id):
-    if current_service.live:
-        return render_template("views/service-settings/service-already-live.html")
-
-    return render_template("views/service-settings/request-to-go-live.html")
-
-
-@main.route(
-    "/services/<uuid:service_id>/service-settings/request-to-go-live", methods=["POST"]
-)
-@user_has_permissions("manage_service")
-@user_is_gov_user
-def submit_request_to_go_live(service_id):
-    ticket_message = render_template("support-tickets/go-live-request.txt") + "\n"
-
-    ticket = NotifySupportTicket(
-        subject=f"Request to go live - {current_service.name}",
-        message=ticket_message,
-        ticket_type=NotifySupportTicket.TYPE_QUESTION,
-        user_name=current_user.name,
-        user_email=current_user.email_address,
-        requester_sees_message_content=False,
-        org_id=current_service.organization_id,
-        org_type=current_service.organization_type,
-        service_id=current_service.id,
-    )
-    zendesk_client.send_ticket_to_zendesk(ticket)
-
-    current_service.update(go_live_user=current_user.id)
-
-    flash(
-        "Thanks for your request to go live. We’ll get back to you within one working day.",
-        "default",
-    )
-    return redirect(url_for(".service_settings", service_id=service_id))
 
 
 @main.route(

@@ -27,8 +27,6 @@ class Service(JSONModel, SortByNameMixin):
         "contact_link",
         "count_as_live",
         "email_from",
-        "go_live_at",
-        "go_live_user",
         "id",
         "inbound_api",
         "message_limit",
@@ -369,22 +367,6 @@ class Service(JSONModel, SortByNameMixin):
                 ),
             )
         )
-
-    @property
-    def go_live_checklist_completed(self):
-        return all(
-            (
-                bool(self.volumes),
-                self.has_team_members,
-                self.has_templates,
-                not self.needs_to_add_email_reply_to_address,
-                not self.needs_to_change_sms_sender,
-            )
-        )
-
-    @property
-    def go_live_checklist_completed_as_yes_no(self):
-        return "Yes" if self.go_live_checklist_completed else "No"
 
     @cached_property
     def free_sms_fragment_limit(self):

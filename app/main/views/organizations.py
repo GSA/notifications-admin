@@ -13,7 +13,6 @@ from app.main.forms import (
     AdminNewOrganizationForm,
     AdminNotesForm,
     AdminOrganizationDomainsForm,
-    AdminOrganizationGoLiveNotesForm,
     InviteOrgUserForm,
     OrganizationOrganizationTypeForm,
     RenameOrganizationForm,
@@ -309,28 +308,6 @@ def edit_organization_domains(org_id):
 
     return render_template(
         "views/organizations/organization/settings/edit-domains.html",
-        form=form,
-    )
-
-
-@main.route(
-    "/organizations/<uuid:org_id>/settings/edit-go-live-notes", methods=["GET", "POST"]
-)
-@user_is_platform_admin
-def edit_organization_go_live_notes(org_id):
-    form = AdminOrganizationGoLiveNotesForm()
-
-    if form.validate_on_submit():
-        organizations_client.update_organization(
-            org_id, request_to_go_live_notes=form.request_to_go_live_notes.data
-        )
-        return redirect(url_for(".organization_settings", org_id=org_id))
-
-    org = organizations_client.get_organization(org_id)
-    form.request_to_go_live_notes.data = org["request_to_go_live_notes"]
-
-    return render_template(
-        "views/organizations/organization/settings/edit-go-live-notes.html",
         form=form,
     )
 

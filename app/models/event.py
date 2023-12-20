@@ -113,9 +113,6 @@ class ServiceEvent(Event):
     def format_service_callback_api(self):
         return "Updated the callback for delivery receipts"
 
-    def format_go_live_user(self):
-        return "Requested for this service to go live"
-
 
 class APIKeyEvent(Event):
     relevant = True

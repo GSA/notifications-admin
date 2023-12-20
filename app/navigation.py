@@ -38,12 +38,7 @@ class Navigation:
 class HeaderNavigation(Navigation):
     mapping = {
         "support": {
-            "bat_phone",
-            "feedback",
             "support",
-            "support_public",
-            "thanks",
-            "triage",
         },
         "features": {
             "features",
@@ -101,9 +96,7 @@ class HeaderNavigation(Navigation):
             "manage_users",
             "remove_user_from_service",
             "usage",
-            "estimate_usage",
             "link_service_to_organization",
-            "request_to_go_live",
             "service_add_email_reply_to",
             "service_add_sms_sender",
             "service_confirm_delete_email_reply_to",
@@ -127,7 +120,6 @@ class HeaderNavigation(Navigation):
             "set_free_sms_allowance",
             "set_message_limit",
             "set_rate_limit",
-            "submit_request_to_go_live",
         },
         "pricing": {
             "how_to_pay",
@@ -245,9 +237,7 @@ class MainNavigation(Navigation):
             "usage",
         },
         "settings": {
-            "estimate_usage",
             "link_service_to_organization",
-            "request_to_go_live",
             "service_add_email_reply_to",
             "service_add_sms_sender",
             "service_confirm_delete_email_reply_to",
@@ -271,7 +261,6 @@ class MainNavigation(Navigation):
             "set_free_sms_allowance",
             "set_message_limit",
             "set_rate_limit",
-            "submit_request_to_go_live",
         },
         "api-integration": {
             "api_callbacks",
@@ -316,7 +305,6 @@ class OrgNavigation(Navigation):
         "settings": {
             "edit_organization_billing_details",
             "edit_organization_domains",
-            "edit_organization_go_live_notes",
             "edit_organization_name",
             "edit_organization_notes",
             "edit_organization_type",
