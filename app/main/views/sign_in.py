@@ -26,10 +26,24 @@ from app.utils import hide_from_search_engines
 from app.utils.login import is_safe_redirect_url
 
 
+def _reformat_keystring(orig):
+    new_keystring = orig.replace("-----BEGIN PRIVATE KEY-----", "")
+    new_keystring = new_keystring.replace("-----END PRIVATE KEY-----", "")
+    new_keystring = new_keystring.strip()
+    new_keystring = "\n".join(
+        ["-----BEGIN PRIVATE KEY-----", new_keystring, "-----END PRIVATE KEY-----"]
+    )
+    new_keystring = f"{new_keystring}\n"
+    return new_keystring
+
+
 def _get_access_token(code, state):
     client_id = os.getenv("LOGIN_DOT_GOV_CLIENT_ID")
     access_token_url = os.getenv("LOGIN_DOT_GOV_ACCESS_TOKEN_URL")
     keystring = os.getenv("LOGIN_PEM")
+    if " " in keystring:
+        keystring = _reformat_keystring(keystring)
+
     payload = {
         "iss": client_id,
         "sub": client_id,
@@ -38,13 +52,14 @@ def _get_access_token(code, state):
         # JWT expiration time (10 minute maximum)
         "exp": int(time.time()) + (10 * 60),
     }
-
+    current_app.logger.warning(f"Here is the raw payload {payload}")
     token = jwt.encode(payload, keystring, algorithm="RS256")
     base_url = f"{access_token_url}?"
     cli_assert = f"client_assertion={token}"
     cli_assert_type = "client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer"
     code_param = f"code={code}"
     url = f"{base_url}{cli_assert}&{cli_assert_type}&{code_param}&grant_type=authorization_code"
+    current_app.logger.info(f"This is the url we use to get the access token:  {url}")
     headers = {"Authorization": "Bearer %s" % token}
     response = requests.post(url, headers=headers)
     current_app.logger.info(f"GOT A RESPONSE {response.json()}")
