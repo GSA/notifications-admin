@@ -1,3 +1,4 @@
+import app.s3_client.s3_csv_client as s3_csv_client
 from app.extensions import RedisClient as redis_client
 
 
@@ -51,3 +52,11 @@ def get_csv_row(job_id, row_number):
         row_dict[column] = row_list[index]
         index = index + 1
     return row_dict
+
+
+def refresh_job(service_id, job_id):
+    # In the event we make a call to fetch a phone number or csv row data
+    # and it is not there because the data has been purged from redis,
+    # we can refresh it making this call
+    data = s3_csv_client.s3download(service_id, job_id)
+    add_row_data_to_redis(data, job_id)
