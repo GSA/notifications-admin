@@ -9,7 +9,7 @@
 | UX          |  [Re-think Notify IA](https://github.com/GSA/notifications-admin/issues/910), start implementing dashboard changes, improve [team member section](https://github.com/GSA/notifications-admin/issues/1031)| Improve UX      | Building Notify.gov| 
 | Security    | Complete necessary control families                                        | Aim to have package completed with enough time to allow for long assessment| Secure ATO |
 | Content    | Make content [more clear about limits](https://github.com/GSA/notifications-admin/issues/963), test making [editing content easier](https://github.com/GSA/notifications-admin/issues/976) with existing templates | Improve clarity of message parts for users, streamline content editing for the team| Building Notify.gov |
-| Ops    | Assist in Tech to Gov process |  
+| Ops    | Assist in Tech to Gov process |  |
 
 ## Sprint: Xingu Scale-Backed Antbird (12/6/23)
 (Sprint X was canceled due to Thanksgiving, so this is X & Y)
