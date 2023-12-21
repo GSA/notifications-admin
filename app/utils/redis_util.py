@@ -18,11 +18,36 @@ def add_row_data_to_redis(data, job_id):
         phone_index = phone_index + 1
 
     rows.pop(0)
-    row_count = 0
+    row_number = 0
     for row in rows:
         row_list = row.split(",")
-        redis_client.set(f"job_{job_id}_row_{row_count}", row)
+        redis_client.set(f"job_{job_id}_row_{row_number}", row)
         redis_client.set(
-            f"job_{job_id}_row_{row_count}_phone_number", row_list[phone_index]
+            f"job_{job_id}_row_{row_number}_phone_number", row_list[phone_index]
         )
-        row_count = row_count + 1
+        row_number = row_number + 1
+
+
+def get_phone_number(job_id, row_number):
+    # convenience method because 99.99% of the time the phone number is all we want
+    return redis_client.get(f"job_{job_id}_row_{row_number}_phone_number")
+
+
+def get_csv_column_headers(job_id):
+    return redis_client.get(f"job_{job_id}_column_headers")
+
+
+def get_csv_row(job_id, row_number):
+    # In the event we need to return all csv data for a given row
+    # we try to return it in a useful form where we know what the data represents
+    # ie {"phone number": "15555555555", "address": "1600 Pennsylvania Avenue"} etc.
+    column_headers = get_csv_column_headers(job_id)
+    row = redis_client.get(f"job_{job_id}_row_{row_number}")
+    columns = column_headers.split(",")
+    row_list = row.split(",")
+    row_dict = {}
+    index = 0
+    for column in columns:
+        row_dict[column] = row_list[index]
+        index = index + 1
+    return row_dict
