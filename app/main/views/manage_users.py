@@ -9,6 +9,7 @@ from app.event_handlers import (
     create_invite_user_to_service_event,
     create_mobile_number_change_event,
     create_remove_user_from_service_event,
+    create_resend_user_invite_to_service_event,
 )
 from app.formatters import redact_mobile_number
 from app.main import main
@@ -330,4 +331,23 @@ def cancel_invited_user(service_id, invited_user_id):
     )
 
     flash(f"Invitation cancelled for {invited_user.email_address}", "default_with_tick")
+    return redirect(url_for("main.manage_users", service_id=service_id))
+
+
+@main.route(
+    "/services/<uuid:service_id>/resend-invite/<uuid:invited_user_id>",
+    methods=["GET"],
+)
+@user_has_permissions("manage_service")
+def resend_invite(service_id, invited_user_id):
+    current_service.resend_invite(invited_user_id)
+
+    invited_user = InvitedUser.by_id_and_service_id(service_id, invited_user_id)
+    create_resend_user_invite_to_service_event(
+        email_address=invited_user.email_address,
+        resent_by_id=current_user.id,
+        service_id=service_id,
+    )
+
+    flash(f"Invitation resent for {invited_user.email_address}", "default_with_tick")
     return redirect(url_for("main.manage_users", service_id=service_id))

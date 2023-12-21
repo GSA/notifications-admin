@@ -1893,6 +1893,30 @@ def sample_invite(mocker, service_one):
 
 
 @pytest.fixture()
+def expired_invite(service_one):
+    id_ = USER_ONE_ID
+    from_user = service_one["users"][0]
+    email_address = "invited_user@test.gsa.gov"
+    service_id = service_one["id"]
+    permissions = "view_activity,send_emails,send_texts,manage_settings,manage_users,manage_api_keys"
+    created_at = str(datetime.utcnow() - timedelta(days=3))
+    auth_type = "sms_auth"
+    folder_permissions = []
+
+    return invite_json(
+        id_,
+        from_user,
+        service_id,
+        email_address,
+        permissions,
+        created_at,
+        "expired",
+        auth_type,
+        folder_permissions,
+    )
+
+
+@pytest.fixture()
 def mock_create_invite(mocker, sample_invite):
     def _create_invite(
         from_user, service_id, email_address, permissions, folder_permissions

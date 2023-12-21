@@ -36,6 +36,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "callbacks",
             "cancel_invited_org_user",
             "cancel_invited_user",
+            "resend_invite",
             "cancel_job",
             "change_user_auth",
             "check_and_resend_text_code",

@@ -190,6 +190,15 @@ class Service(JSONModel, SortByNameMixin):
             invited_user_id=str(invited_user_id),
         )
 
+    def resend_invite(self, invited_user_id):
+        if str(invited_user_id) not in {user.id for user in self.invited_users}:
+            abort(404)
+
+        return invite_api_client.resend_invite(
+            service_id=self.id,
+            invited_user_id=str(invited_user_id),
+        )
+
     def get_team_member(self, user_id):
         if str(user_id) not in {user.id for user in self.active_users}:
             abort(404)
