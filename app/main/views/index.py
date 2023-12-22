@@ -4,11 +4,16 @@ from flask import (
     make_response,
     redirect,
     render_template,
+    render_template_string,
     request,
-    url_for,
+    url_for
 )
 from flask_login import current_user
+from flask.helpers import get_root_path
 from notifications_utils.template import HTMLEmailTemplate
+
+import markdown
+import os
 
 from app import email_branding_client, status_api_client
 from app.main import main
@@ -16,6 +21,19 @@ from app.main.forms import FieldWithNoneOption
 from app.main.views.pricing import CURRENT_SMS_RATE
 from app.main.views.sub_navigation_dictionaries import features_nav, using_notify_nav
 from app.utils.user import user_is_logged_in
+
+#Should find a better home
+def get_md(mdf):
+    APP_ROOT = get_root_path('notifications-admin')
+    file = 'app/content/' + mdf + '.md'
+    md_file = os.path.join(APP_ROOT, file)
+    with open(md_file) as f:
+         content_text = f.read()
+
+    md_render = markdown.markdown(content_text)
+    jn_render = render_template_string(md_render)
+
+    return jn_render
 
 
 @main.route("/")
@@ -256,7 +274,7 @@ def get_started_old():
 def get_started():
     return render_template(
         "views/get-started.html",
-        navigation_links=using_notify_nav(),
+        navigation_links=using_notify_nav(), content=get_md('get-started')
     )
 
 
@@ -322,6 +340,7 @@ def send_files_by_email():
         "views/guidance/send-files-by-email.html",
         navigation_links=using_notify_nav(),
     )
+
 
 
 # --- Redirects --- #
