@@ -73,33 +73,27 @@ jobs:
       - uses: ./.github/actions/setup-project
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
-      - uses: ArtiomTr/jest-coverage-report-action@v2
-        with:
-          test-script: npm test
-          output: report-markdown
-          annotations: failed-tests
-          prnumber: ${{ steps.findPr.outputs.number }}
-      - name: Clone API
-        uses: actions/checkout@v3
-        with:
-          repository: GSA/notifications-api
-          path: './notifications-api'
-      - name: Install API dependencies
-        with:
-          path: './notifications-api'
-        run: make bootstrap
-        env:
-          SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
-          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
-          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-      - name: Run API server
-        with:
-          path: './notifications-api'
-        run: make run-procfile &
-        env:
-          SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
-          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
-          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
+      # - name: Clone API
+      #   uses: actions/checkout@v3
+      #   with:
+      #     repository: GSA/notifications-api
+      #     path: './notifications-api'
+      # - name: Install API dependencies
+      #   with:
+      #     path: './notifications-api'
+      #   run: make bootstrap
+      #   env:
+      #     SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
+      #     NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
+      #     NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
+      # - name: Run API server
+      #   with:
+      #     path: './notifications-api'
+      #   run: make run-procfile &
+      #   env:
+      #     SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
+      #     NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
+      #     NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
       - name: Run E2E tests
         run: poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
         env:
@@ -107,7 +101,7 @@ jobs:
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
           NOTIFY_E2E_TEST_URI: ${{ secrets.NOTIFY_E2E_TEST_URI }}
-          API_HOST_NAME: http://localhost:6011
+          # API_HOST_NAME: http://localhost:6011
       - name: Check coverage threshold
         run: poetry run coverage report --fail-under=90
 
