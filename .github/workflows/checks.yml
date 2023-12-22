@@ -95,13 +95,16 @@ jobs:
           SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
+      - name: Run Admin server
+        run: make run-flask &
       - name: Run E2E tests
         run: poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
         env:
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-          NOTIFY_E2E_TEST_URI: ${{ secrets.NOTIFY_E2E_TEST_URI }}
+          # Run the E2E tests against the code found in this PR.
+          NOTIFY_E2E_TEST_URI: http://localhost:6012
 
   validate-new-relic-config:
     runs-on: ubuntu-latest
