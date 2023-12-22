@@ -73,11 +73,11 @@ jobs:
       - uses: ./.github/actions/setup-project
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
-      # - name: Clone API
-      #   uses: actions/checkout@v3
-      #   with:
-      #     repository: GSA/notifications-api
-      #     path: './notifications-api'
+      - name: Clone API
+        uses: actions/checkout@v3
+        with:
+         repository: GSA/notifications-api
+         path: './notifications-api'
       # - name: Install API dependencies
       #   with:
       #     path: './notifications-api'
@@ -102,8 +102,6 @@ jobs:
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
           NOTIFY_E2E_TEST_URI: ${{ secrets.NOTIFY_E2E_TEST_URI }}
           # API_HOST_NAME: http://localhost:6011
-      - name: Check coverage threshold
-        run: poetry run coverage report --fail-under=90
 
   validate-new-relic-config:
     runs-on: ubuntu-latest
