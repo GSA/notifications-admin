@@ -1,7 +1,4 @@
-{% from "components/big-number.html" import big_number %}
-{% from "components/big-number.html" import big_number %}
 {% from "components/table.html" import list_table, field, right_aligned_field_heading, row_heading, spark_bar_field %}
-{% from "components/show-more.html" import show_more %}
 
 <div class="ajax-block-container">
   {% if template_statistics|length > 1 %}
@@ -27,11 +24,10 @@
 
         {{ spark_bar_field(item.count, most_used_template_count, id=item.template_id) }}
       {% endcall %}
-      {{ show_more(
-        url_for('.template_usage', service_id=current_service.id),
-        'See templates used by month',
-        with_border=False
-      ) }}
+      <a
+        href="{{ url_for('.template_usage', service_id=current_service.id) }}"
+        class="usa-link show-more-no-border"
+      ><span>See templates used by month</span></a>
     </div>
   {% endif %}
 </div>

@@ -1,5 +1,4 @@
 {% from "components/table.html" import list_table, field, right_aligned_field_heading, row_heading %}
-{% from "components/big-number.html" import big_number -%}
 
 <div class='dashboard-table ajax-block-container'>
   {% call(item, row_number) list_table(
@@ -36,28 +35,78 @@
     {% endcall %}
     {% call field() %}
       {% if item.scheduled %}
-        {{ big_number(
-          item.notification_count,
-          smallest=True,
-          label=item.notification_count|message_count_label(
-            item.template_type,
-            suffix='waiting to send'
-          )
-        ) }}
+        {% if link %}
+          <a class="usa-link display-flex" href="{{ link }}">
+        {% endif %}
+            <span class="big-number-smallest">
+              <span class="big-number-number">
+                {% if item.notification_count is number %}
+                  {% if currency %}
+                    {{ "{}{:,.2f}".format(currency, item.notification_count) }}
+                  {% else %}
+                    {{ "{:,}".format(item.notification_count) }}
+                  {% endif %}
+                {% else %}
+                  {{ item.notification_count }}
+                {% endif %}
+              </span>
+              {% if item.notification_count %}
+                <span class="big-number-label">{{ item.notification_count|message_count_label(item.template_type,suffix='waiting to send') }}</span>
+              {% endif %}
+            </span>
+        {% if link %}
+          </a>
+        {% endif %}
       {% else %}
         <div class="grid-row">
           <div class="grid-col-4">
-            {{ big_number(
-              item.notifications_sending,
-              smallest=True,
-              label='pending',
-            ) }}
+            {% if link %}
+              <a class="usa-link display-flex" href="{{ link }}">
+            {% endif %}
+              <span class="big-number-smallest">
+                <span class="big-number-number">
+                  {{ "{:,}".format(item.notifications_sending) }}
+                </span>
+                <span class="big-number-label">pending</span>
+              </span>
+            {% if link %}
+              </a>
+            {% endif %}
           </div>
           <div class="grid-col-4">
-        {{ big_number(item.notifications_delivered, smallest=True, label='delivered') }}
+          <span class="big-number-smallest">
+            <span class="big-number-number">
+              {% if item.notifications_delivered is number %}
+                {{ "{:,}".format(item.notifications_delivered) }}
+              {% else %}
+                {{ item.notifications_delivered }}
+              {% endif %}
+            </span>
+            <span class="big-number-label">delivered</span>
+          </span>
       </div>
       <div class="grid-col-4">
-        {{ big_number(item.notifications_failed, smallest=True, label='failed') }}
+        {% if link %}
+          <a class="usa-link display-flex" href="{{ link }}">
+        {% endif %}
+            <span class="big-number-smallest">
+              <span class="big-number-number">
+                {% if item.notifications_failed is number %}
+                  {% if currency %}
+                    {{ "{}{:,.2f}".format(currency, item.notifications_failed) }}
+                  {% else %}
+                    {{ "{:,}".format(item.notifications_failed) }}
+                  {% endif %}
+                {% else %}
+                  {{ item.notifications_failed }}
+                {% endif %}
+              </span>
+              <span class="big-number-label">failed</span>
+            </span>
+        {% if link %}
+          </a>
+        {% endif %}
+
       </div></div>
 
       {% endif %}

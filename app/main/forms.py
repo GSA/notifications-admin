@@ -61,9 +61,8 @@ from app.main.validators import (
     ValidEmail,
     ValidGovEmail,
 )
-from app.models.feedback import PROBLEM_TICKET_TYPE, QUESTION_TICKET_TYPE
 from app.models.organization import Organization
-from app.utils import branding, merge_jsonlike
+from app.utils import merge_jsonlike
 from app.utils.csv import get_user_preferred_timezone
 from app.utils.user_permissions import all_ui_permissions, permission_options
 
@@ -815,49 +814,6 @@ class GovukCheckboxField(BooleanField):
         )
 
 
-class GovukTextareaField(TextAreaField):
-    def __init__(self, label="", validators=None, param_extensions=None, **kwargs):
-        super(TextAreaField, self).__init__(label, validators, **kwargs)
-        self.param_extensions = param_extensions
-
-    # self.__call__ renders the HTML for the field by:
-    # 1. delegating to self.meta.render_field which
-    # 2. calls field.widget
-    # this bypasses that by making self.widget a method with the same interface as widget.__call__
-    def widget(self, field, param_extensions=None, **kwargs):
-        # error messages
-        error_message = None
-        if field.errors:
-            error_message = {"text": field.errors[0]}
-
-        params = {
-            "name": field.name,
-            "id": field.id,
-            "rows": 8,
-            "label": {
-                "text": field.label.text,
-                "classes": None,
-                "isPageHeading": False,
-            },
-            "hint": {"text": None},
-            "errorMessage": error_message,
-        }
-
-        # extend default params with any sent in during instantiation
-        if self.param_extensions:
-            merge_jsonlike(params, self.param_extensions)
-
-        # add any sent in though use in templates
-        if param_extensions:
-            merge_jsonlike(params, param_extensions)
-
-        return Markup(
-            render_template(
-                "components/components/textarea/template.njk", params=params
-            )
-        )
-
-
 # based on work done by @richardjpope: https://github.com/richardjpope/recourse/blob/master/recourse/forms.py#L6
 class GovukCheckboxesField(SelectMultipleField):
     render_as_list = False
@@ -1362,49 +1318,6 @@ class CreateKeyForm(StripWhitespaceForm):
             raise ValidationError("A key with this name already exists")
 
 
-class SupportType(StripWhitespaceForm):
-    support_type = GovukRadiosField(
-        "How can we help you?",
-        choices=[
-            (PROBLEM_TICKET_TYPE, "Report a problem"),
-            (QUESTION_TICKET_TYPE, "Ask a question or give feedback"),
-        ],
-    )
-
-
-class SupportRedirect(StripWhitespaceForm):
-    who = GovukRadiosField(
-        "What do you need help with?",
-        choices=[
-            (
-                "public-sector",
-                "I work in the public sector and need to send emails or text messages",
-            ),
-            ("public", "I’m a member of the public with a question for the government"),
-        ],
-        param_extensions={"fieldset": {"legend": {"classes": "usa-sr-only"}}},
-    )
-
-
-class FeedbackOrProblem(StripWhitespaceForm):
-    name = GovukTextInputField("Name (optional)")
-    email_address = email_address(label="Email address", gov_user=False, required=True)
-    feedback = TextAreaField(
-        "Your message", validators=[DataRequired(message="Cannot be empty")]
-    )
-
-
-class Triage(StripWhitespaceForm):
-    severe = GovukRadiosField(
-        "Is it an emergency?",
-        choices=[
-            ("yes", "Yes"),
-            ("no", "No"),
-        ],
-        thing="yes or no",
-    )
-
-
 class EstimateUsageForm(StripWhitespaceForm):
     volume_email = ForgivingIntegerField(
         "How many emails do you expect to send in the next year?",
@@ -1541,65 +1454,6 @@ class ServiceSwitchChannelForm(ServiceOnOffSettingForm):
         )
 
         super().__init__(name, *args, **kwargs)
-
-
-class AdminSetEmailBrandingForm(StripWhitespaceForm):
-    branding_style = GovukRadiosFieldWithNoneOption(
-        "Branding style",
-        param_extensions={"fieldset": {"legend": {"classes": "usa-sr-only"}}},
-        thing="a branding style",
-    )
-
-    DEFAULT = (FieldWithNoneOption.NONE_OPTION_VALUE, "GOV.UK")
-
-    def __init__(self, all_branding_options, current_branding):
-        super().__init__(branding_style=current_branding)
-
-        self.branding_style.choices = sorted(
-            all_branding_options + [self.DEFAULT],
-            key=lambda branding: (
-                branding[0] != current_branding,
-                branding[0] is not self.DEFAULT[0],
-                branding[1].lower(),
-            ),
-        )
-
-
-class AdminPreviewBrandingForm(StripWhitespaceForm):
-    branding_style = HiddenFieldWithNoneOption("branding_style")
-
-
-class AdminEditEmailBrandingForm(StripWhitespaceForm):
-    name = GovukTextInputField("Name of brand")
-    text = GovukTextInputField("Text")
-    colour = GovukTextInputField(
-        "Colour",
-        validators=[
-            Regexp(
-                regex="^$|^#(?:[0-9a-fA-F]{3}){1,2}$",
-                message="Must be a valid color hex code (starting with #)",
-            )
-        ],
-        param_extensions={
-            "attributes": {"data-module": "colour-preview"},
-        },
-    )
-    file = FileField_wtf(
-        "Upload a PNG logo", validators=[FileAllowed(["png"], "PNG Images only!")]
-    )
-    brand_type = GovukRadiosField(
-        "Brand type",
-        choices=[
-            ("both", "GOV.UK and branding"),
-            ("org", "Branding only"),
-            ("org_banner", "Branding banner"),
-        ],
-    )
-
-    def validate_name(self, name):
-        op = request.form.get("operation")
-        if op == "email-branding-details" and not self.name.data:
-            raise ValidationError("This field is required")
 
 
 class SVGFileUpload(StripWhitespaceForm):
@@ -1816,42 +1670,6 @@ class AdminSetOrganizationForm(StripWhitespaceForm):
     )
 
 
-class ChooseBrandingForm(StripWhitespaceForm):
-    FALLBACK_OPTION_VALUE = "something_else"
-    FALLBACK_OPTION = (FALLBACK_OPTION_VALUE, "Something else")
-
-    @property
-    def something_else_is_only_option(self):
-        return self.options.choices == (self.FALLBACK_OPTION,)
-
-
-class ChooseEmailBrandingForm(ChooseBrandingForm):
-    options = RadioField("Choose your new email branding")
-
-    def __init__(self, service):
-        super().__init__()
-
-        self.options.choices = tuple(
-            list(branding.get_email_choices(service)) + [self.FALLBACK_OPTION]
-        )
-
-
-class SomethingElseBrandingForm(StripWhitespaceForm):
-    something_else = GovukTextareaField(
-        "Describe the branding you want",
-        validators=[DataRequired("Cannot be empty")],
-        param_extensions={
-            "label": {
-                "isPageHeading": True,
-                "classes": "font-body-xl",
-            },
-            "hint": {
-                "text": "Include links to your brand guidelines or examples of how to use your branding."
-            },
-        },
-    )
-
-
 class AdminServiceAddDataRetentionForm(StripWhitespaceForm):
     notification_type = GovukRadiosField(
         "What notification type?",
@@ -2041,13 +1859,6 @@ class AdminClearCacheForm(StripWhitespaceForm):
     def validate_model_type(self, field):
         if not field.data:
             raise ValidationError("Select at least one option")
-
-
-class AdminOrganizationGoLiveNotesForm(StripWhitespaceForm):
-    request_to_go_live_notes = TextAreaField(
-        "Go live notes",
-        filters=[lambda x: x or None],
-    )
 
 
 class ChangeSecurityKeyNameForm(StripWhitespaceForm):

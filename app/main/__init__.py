@@ -9,7 +9,6 @@ from app.main.views import (  # noqa isort:skip
     code_not_received,
     conversation,
     dashboard,
-    email_branding,
     feedback,
     find_services,
     find_users,

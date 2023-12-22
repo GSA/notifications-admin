@@ -5,10 +5,6 @@ def features_nav():
             "link": "main.features",
             "sub_navigation_items": [
                 # {
-                #     "name": "Emails",
-                #     "link": "main.features_email",
-                # },
-                # {
                 #     "name": "Text messages",
                 #     "link": "main.features_sms",
                 # },
@@ -54,10 +50,6 @@ def using_notify_nav():
             #     {
             #         "name": "Formatting",
             #         "link": "main.edit_and_format_messages",
-            #     },
-            #     {
-            #       "name": "Branding",
-            #        "link": "main.branding_and_customisation",
             #     },
             #     {
             #        "name": "Send files by email",

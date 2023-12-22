@@ -1,4 +1,3 @@
-{% from "components/big-number.html" import big_number %}
 {% from "components/pill.html" import pill %}
 
 <div class="ajax-block-container">
@@ -6,11 +5,40 @@
     <div class="grid-row ">
       {% for label, query_param, url, count in counts %}
         {% if query_param == 'pending' %}
-            <div class="grid-col-3">{{ big_number(count, query_param, smaller=True) }}</div>
+          <div class="grid-col-3">
+            <span class="big-number-smaller">
+              <span class="big-number-number">
+                {% if count is number %}
+                  {% if currency %}
+                    {{ "{}{:,.2f}".format(currency, count) }}
+                  {% else %}
+                    {{ "{:,}".format(count) }}
+                  {% endif %}
+                {% else %}
+                  {{ count }}
+                {% endif %}
+              </span>
+              <span class="big-number-label">{{ query_param }}</span>
+            </span>
+          </div>
         {% else %}
-          <div class="grid-col-3">{{ big_number(count, label, smaller=True) }}</div>
+          <div class="grid-col-3">
+            <span class="big-number-smaller">
+              <span class="big-number-number">
+                {% if count is number %}
+                  {% if currency %}
+                    {{ "{}{:,.2f}".format(currency, count) }}
+                  {% else %}
+                    {{ "{:,}".format(count) }}
+                  {% endif %}
+                {% else %}
+                  {{ count }}
+                {% endif %}
+              </span>
+              <span class="big-number-label">{{ label }}</span>
+            </span>
+          </div>
         {% endif %}
-
       {% endfor %}
     </div>
   {% else %}

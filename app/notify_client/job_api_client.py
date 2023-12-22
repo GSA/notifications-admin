@@ -103,14 +103,32 @@ class JobApiClient(NotifyAdminAPIClient):
 
         return scheduled_for
 
-    def create_job(self, job_id, service_id, scheduled_for=None):
+    def create_job(
+        self,
+        job_id,
+        service_id,
+        scheduled_for=None,
+        template_id=None,
+        original_file_name=None,
+        notification_count=None,
+        valid=None,
+    ):
         data = {"id": job_id}
 
         # make a datetime object in the user's preferred timezone
 
         if scheduled_for:
             scheduled_for = JobApiClient.convert_user_time_to_utc(scheduled_for)
-            data.update({"scheduled_for": scheduled_for})
+            data["scheduled_for"] = scheduled_for
+
+        if template_id:
+            data["template_id"] = template_id
+        if original_file_name:
+            data["original_file_name"] = original_file_name
+        if notification_count:
+            data["notification_count"] = notification_count
+        if valid:
+            data["valid"] = valid
 
         data = _attach_current_user(data)
         job = self.post(url="/service/{}/job".format(service_id), data=data)
