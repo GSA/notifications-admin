@@ -78,14 +78,14 @@ jobs:
         with:
          repository: GSA/notifications-api
          path: './notifications-api'
-      # - name: Install API dependencies
-      #   with:
-      #     path: './notifications-api'
-      #   run: make bootstrap
-      #   env:
-      #     SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
-      #     NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
-      #     NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
+      - name: Install API dependencies
+        with:
+          path: './notifications-api'
+        run: make bootstrap
+        env:
+          SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
+          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
+          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
       # - name: Run API server
       #   with:
       #     path: './notifications-api'
