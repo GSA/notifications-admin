@@ -5,18 +5,18 @@ from flask import (
     redirect,
     render_template,
     request,
-    url_for
+    url_for,
 )
 from flask_login import current_user
 from notifications_utils.template import HTMLEmailTemplate
 
 from app import email_branding_client, status_api_client
+from app.formatters import convert_markdown_template
 from app.main import main
 from app.main.forms import FieldWithNoneOption
 from app.main.views.pricing import CURRENT_SMS_RATE
 from app.main.views.sub_navigation_dictionaries import features_nav, using_notify_nav
 from app.utils.user import user_is_logged_in
-from app.formatters import convert_markdown_template
 
 
 @main.route("/")

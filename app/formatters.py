@@ -1,3 +1,4 @@
+import os
 import re
 import unicodedata
 import urllib
@@ -6,13 +7,12 @@ from functools import partial
 from math import floor, log10
 from numbers import Number
 
-import markdown
-import os
 import ago
 import dateutil
 import humanize
+import markdown
 import pytz
-from flask import Markup, url_for, render_template_string
+from flask import Markup, render_template_string, url_for
 from flask.helpers import get_root_path
 from notifications_utils.field import Field
 from notifications_utils.formatters import make_quotes_smart
