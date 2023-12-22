@@ -6,11 +6,14 @@ from functools import partial
 from math import floor, log10
 from numbers import Number
 
+import markdown
+import os
 import ago
 import dateutil
 import humanize
 import pytz
-from flask import Markup, url_for
+from flask import Markup, url_for, render_template_string
+from flask.helpers import get_root_path
 from notifications_utils.field import Field
 from notifications_utils.formatters import make_quotes_smart
 from notifications_utils.formatters import nl2br as utils_nl2br
@@ -20,6 +23,18 @@ from notifications_utils.take import Take
 from app.utils.csv import get_user_preferred_timezone
 from app.utils.time import parse_naive_dt
 
+
+def convert_markdown_template(mdf):
+    APP_ROOT = get_root_path('notifications-admin')
+    file = 'app/content/' + mdf + '.md'
+    md_file = os.path.join(APP_ROOT, file)
+    with open(md_file) as f:
+         content_text = f.read()
+
+    md_render = markdown.markdown(content_text)
+    jn_render = render_template_string(md_render)
+
+    return jn_render
 
 def convert_to_boolean(value):
     if isinstance(value, str):
