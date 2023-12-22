@@ -29,12 +29,13 @@ def convert_markdown_template(mdf):
     file = 'app/content/' + mdf + '.md'
     md_file = os.path.join(APP_ROOT, file)
     with open(md_file) as f:
-         content_text = f.read()
+        content_text = f.read()
 
     md_render = markdown.markdown(content_text)
     jn_render = render_template_string(md_render)
 
     return jn_render
+
 
 def convert_to_boolean(value):
     if isinstance(value, str):

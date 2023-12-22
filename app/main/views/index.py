@@ -18,6 +18,7 @@ from app.main.views.sub_navigation_dictionaries import features_nav, using_notif
 from app.utils.user import user_is_logged_in
 from app.formatters import convert_markdown_template
 
+
 @main.route("/")
 def index():
     if current_user and current_user.is_authenticated:
@@ -323,7 +324,6 @@ def send_files_by_email():
         "views/guidance/send-files-by-email.html",
         navigation_links=using_notify_nav(),
     )
-
 
 
 # --- Redirects --- #
