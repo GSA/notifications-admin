@@ -1,8 +1,9 @@
 from datetime import datetime
 from functools import partial
 
+
 import pytest
-from flask import url_for
+from flask import url_for, Flask
 from freezegun import freeze_time
 
 from app.formatters import (
@@ -12,6 +13,13 @@ from app.formatters import (
     format_notification_status_as_url,
     format_number_in_pounds_as_currency,
     round_to_significant_figures,
+    convert_markdown_template
+)
+
+from tests.conftest import (
+    fake_markdown_file,
+    fake_jinja_template,
+    notify_admin
 )
 
 
@@ -166,3 +174,15 @@ def test_email_safe_return_dot_separated_email_domain(service_name, safe_email):
 def test_format_delta():
     naive_now_utc = datetime.utcnow().isoformat()
     assert format_delta(naive_now_utc) == "just now"
+
+@pytest.mark.usefixtures("fake_jinja_template")
+def test_jinja_format(fake_jinja_template):
+    app = Flask("app")
+    with app.app_context():
+        assert convert_markdown_template(fake_jinja_template, test=True) == "<p>True</p>"
+
+@pytest.mark.usefixtures("fake_markdown_file")
+def test_markdown_format(fake_markdown_file):
+    app = Flask("app")
+    with app.app_context():
+        assert convert_markdown_template(fake_markdown_file, test=True) == "<h1>Test</h1>"

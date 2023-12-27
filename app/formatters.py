@@ -24,12 +24,15 @@ from app.utils.csv import get_user_preferred_timezone
 from app.utils.time import parse_naive_dt
 
 
-def convert_markdown_template(mdf):
-    APP_ROOT = get_root_path('notifications-admin')
-    file = 'app/content/' + mdf + '.md'
-    md_file = os.path.join(APP_ROOT, file)
-    with open(md_file) as f:
-        content_text = f.read()
+def convert_markdown_template(mdf, test=False):
+    if not test:
+        APP_ROOT = get_root_path('notifications-admin')
+        file = 'app/content/' + mdf + '.md'
+        md_file = os.path.join(APP_ROOT, file)
+        with open(md_file) as f:
+            content_text = f.read()
+    else:
+        content_text = mdf
 
     md_render = markdown.markdown(content_text)
     jn_render = render_template_string(md_render)
