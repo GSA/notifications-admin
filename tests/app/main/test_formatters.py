@@ -16,12 +16,6 @@ from app.formatters import (
     convert_markdown_template
 )
 
-from tests.conftest import (
-    fake_markdown_file,
-    fake_jinja_template,
-    notify_admin
-)
-
 
 @pytest.mark.parametrize(
     ("status", "notification_type", "expected"),

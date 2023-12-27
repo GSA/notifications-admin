@@ -3595,10 +3595,12 @@ def end_to_end_authenticated_context(browser):
 
     return context
 
+
 @pytest.fixture()
 def fake_markdown_file():
     input = "#Test"
     return input
+
 
 @pytest.fixture()
 def fake_jinja_template():
