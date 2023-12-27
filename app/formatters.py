@@ -25,6 +25,9 @@ from app.utils.time import parse_naive_dt
 
 
 def convert_markdown_template(mdf, test=False):
+
+    content_text = ""
+
     if not test:
         APP_ROOT = get_root_path('notifications-admin')
         file = 'app/content/' + mdf + '.md'
