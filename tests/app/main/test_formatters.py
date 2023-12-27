@@ -1,19 +1,18 @@
 from datetime import datetime
 from functools import partial
 
-
 import pytest
-from flask import url_for, Flask
+from flask import Flask, url_for
 from freezegun import freeze_time
 
 from app.formatters import (
+    convert_markdown_template,
     email_safe,
     format_datetime_relative,
     format_delta,
     format_notification_status_as_url,
     format_number_in_pounds_as_currency,
     round_to_significant_figures,
-    convert_markdown_template
 )
 
 
