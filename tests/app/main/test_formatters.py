@@ -169,11 +169,13 @@ def test_format_delta():
     naive_now_utc = datetime.utcnow().isoformat()
     assert format_delta(naive_now_utc) == "just now"
 
+
 @pytest.mark.usefixtures("fake_jinja_template")
 def test_jinja_format(fake_jinja_template):
     app = Flask("app")
     with app.app_context():
         assert convert_markdown_template(fake_jinja_template, test=True) == "<p>True</p>"
+
 
 @pytest.mark.usefixtures("fake_markdown_file")
 def test_markdown_format(fake_markdown_file):
