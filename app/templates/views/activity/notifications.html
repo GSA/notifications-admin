@@ -3,7 +3,42 @@
 {% from "components/table.html" import list_table, field, text_field, link_field, right_aligned_field_heading, hidden_field_heading, row_heading, notification_status_field, notification_carrier_field, notification_carrier_message_field %}
 
 <div class="ajax-block-container" id='pill-selected-item'>
+  <!-- Batched Job Table -->
+  {% if notifications %}
+    <div class='dashboard-table'>
+  {% endif %}
+    {% call(item, row_number) list_table(
+      notifications,
+      caption="Batched Jobs",
+      caption_visible=False,
+      border_visible=True,
+      empty_message='No batched job messages found &thinsp;(messages are kept for {} days)'.format(limit_days)|safe,
+      field_headings=['Batched Job', 'Download (CSV) Report'],
+      field_headings_visible=False
+    ) %}
+      {% if item.job.original_file_name %}
+        {% call row_heading() %}
+        <a class="usa-link" href="/services/{{ item.service }}/jobs/{{ item.job.id }}">{{ item.job.original_file_name|replace('.csv', '') if item.job.id else '' }}</a>
+        {% endcall %}
+      {% call row_heading() %}
+        <a class="usa-link file-list-filename" href="/services/{{ item.service }}/jobs/{{ item.job.id }}.csv">{{ "Download Report" if item.job.original_file_name else '' }}</a>
+        <span>- available for {{ limit_days }} days</span>
+      {% endcall %}
+      {% endif %}
+    {% endcall %}
+  {% if notifications %}
+    </div>
+  {% endif %}
 
+  {% if show_pagination %}
+    {{ previous_next_navigation(prev_page, next_page) }}
+  {% elif next_page %}
+    <p class="table-show-more-link">
+      Only showing the first 50 messages
+    </p>
+  {% endif %}
+
+  <!-- Dashboard Table -->
   {% if notifications %}
     <div class='dashboard-table'>
   {% endif %}
