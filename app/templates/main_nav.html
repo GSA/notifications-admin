@@ -17,9 +17,9 @@
     {% if current_user.has_permissions('manage_service', allow_org_user=True) %}
       <li class="usa-sidenav__item"><a class="{{ main_navigation.is_selected('usage') }}" href="{{ url_for('.usage', service_id=current_service.id) }}">Usage</a></li>
     {% endif %}
-    {% if current_user.has_permissions('manage_api_keys', 'manage_service') %}
+    <!-- {% if current_user.has_permissions('manage_api_keys', 'manage_service') %}
       <li class="usa-sidenav__item"><a class="{{ main_navigation.is_selected('settings') }}" href="{{ url_for('.service_settings', service_id=current_service.id) }}">Settings</a></li>
-    {% endif %}
+    {% endif %} -->
     {% if current_user.has_permissions('manage_api_keys') %}
       <!-- <li><a class="usa-link{{ main_navigation.is_selected('api-integration') }}" href="{{ url_for('.api_integration', service_id=current_service.id) }}">API integration</a></li> -->
     {% endif %}

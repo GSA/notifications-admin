@@ -76,18 +76,18 @@
           {% endif %}
         {% endfor %}
       </ul>
-      <div class="usa-nav__secondary">
+      <div class="usa-nav__secondary margin-bottom-2">
         <ul class="usa-nav__secondary-links">
           {% for item in params.secondaryNavigation %}
             {% if item.href and item.text %}
-            <li class="usa-nav__secondary-item{{ ' is-current' if item.active }}">
-              <a class="usa-nav__link {{ ' usa-current' if item.active }}" href="{{ item.href }}" {% for attribute, value
-                in item.attributes %} {{attribute}}="{{value}}" {% endfor %}>
-                <span>{{ item.text }}</span>
-              </a>
-            </li>
-            {% endif %}
-          {% endfor %}
+              <li class="usa-nav__secondary-item{{ ' is-current' if item.active }}">
+                <a class="usa-nav__link {{ ' usa-current' if item.active }}" href="{{ item.href }}" {% for attribute, value in
+                  item.attributes %} {{attribute}}="{{value}}" {% endfor %}>
+                  <span>{{ item.text }}</span>
+                </a>
+              </li>
+          {% endif %}
+        {% endfor %}
           <!-- <li class="usa-nav__secondary-item">
             <a href="javascript:void(0)">
               Sign in

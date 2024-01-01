@@ -59,23 +59,29 @@
           "active": header_navigation.is_selected('features')
         },
         {
-          "href": url_for('main.user_profile'),
-          "text": current_user.name,
-          "active": header_navigation.is_selected('user-profile')
-        },
-        {
           "href": url_for('main.platform_admin_splash_page'),
           "text": "Platform admin",
           "active": header_navigation.is_selected('platform-admin')
         },
         {
-          "href": url_for('main.sign_out'),
-          "text": "Sign out"
-        },
-        {
           "href": url_for('main.support'),
           "text": "Contact us",
           "active": header_navigation.is_selected('support')
+        }
+      ] %}
+      {% set secondaryNavigation = [
+        {
+          "href": url_for('main.user_profile'),
+          "text": current_user.name,
+          "active": header_navigation.is_selected('user-profile')
+        },
+        {
+          "href": url_for('.service_settings', service_id=current_service.id),
+          "text": "Settings"
+        },
+        {
+          "href": url_for('main.sign_out'),
+          "text": "Sign out"
         }
       ] %}
     {% else %}
@@ -104,10 +110,17 @@
           "href": url_for('main.user_profile'),
           "text": "User profile",
           "active": header_navigation.is_selected('user-profile')
+        }
+      ] %}
+      {% set secondaryNavigation = [
+        {
+        "href": url_for('main.user_profile'),
+        "text": current_user.name,
+        "active": header_navigation.is_selected('user-profile')
         },
         {
-          "href": url_for('main.sign_out'),
-          "text": "Sign out"
+        "href": url_for('main.sign_out'),
+        "text": "Sign out"
         }
       ] %}
     {% endif %}
@@ -142,6 +155,7 @@
     "productName": "Notify",
     "navigation": navigation,
     "navigationClasses": "govuk-header__navigation--end",
+    "secondaryNavigation": secondaryNavigation,
     "assetsPath": asset_path + "images"
   }) }}
 {% endblock %}
@@ -236,7 +250,7 @@
             <span class="usa-sr-only">Please choose to extend your session or sign out. Your session will expire in 5 minutes or less.</span>
           </h2>
           <div class="usa-prose">
-            <p>You have been inactive for too long. 
+            <p>You have been inactive for too long.
               Your session will expire in <span id="timeLeft" role="timer"></span>.
             </p>
           </div>
@@ -273,5 +287,3 @@
   <!--<![endif]-->
 
 {% endblock %}
-
-
