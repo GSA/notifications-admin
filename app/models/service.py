@@ -190,6 +190,15 @@ class Service(JSONModel, SortByNameMixin):
             invited_user_id=str(invited_user_id),
         )
 
+    def resend_invite(self, invited_user_id):
+        if str(invited_user_id) not in {user.id for user in self.invited_users}:
+            abort(404)
+
+        return invite_api_client.resend_invite(
+            service_id=self.id,
+            invited_user_id=str(invited_user_id),
+        )
+
     def get_team_member(self, user_id):
         if str(user_id) not in {user.id for user in self.active_users}:
             abort(404)
@@ -369,22 +378,6 @@ class Service(JSONModel, SortByNameMixin):
                 ),
             )
         )
-
-    @property
-    def go_live_checklist_completed(self):
-        return all(
-            (
-                bool(self.volumes),
-                self.has_team_members,
-                self.has_templates,
-                not self.needs_to_add_email_reply_to_address,
-                not self.needs_to_change_sms_sender,
-            )
-        )
-
-    @property
-    def go_live_checklist_completed_as_yes_no(self):
-        return "Yes" if self.go_live_checklist_completed else "No"
 
     @cached_property
     def free_sms_fragment_limit(self):

@@ -1396,7 +1396,15 @@ def mock_check_verify_code_code_expired(mocker):
 
 @pytest.fixture()
 def mock_create_job(mocker, api_user_active):
-    def _create(job_id, service_id, scheduled_for=None):
+    def _create(
+        job_id,
+        service_id,
+        scheduled_for=None,
+        template_id=None,
+        original_file_name=None,
+        notification_count=None,
+        valid=None,
+    ):
         return job_json(
             service_id,
             api_user_active,
@@ -1887,6 +1895,30 @@ def sample_invite(mocker, service_one):
         permissions,
         created_at,
         "pending",
+        auth_type,
+        folder_permissions,
+    )
+
+
+@pytest.fixture()
+def expired_invite(service_one):
+    id_ = USER_ONE_ID
+    from_user = service_one["users"][0]
+    email_address = "invited_user@test.gsa.gov"
+    service_id = service_one["id"]
+    permissions = "view_activity,send_emails,send_texts,manage_settings,manage_users,manage_api_keys"
+    created_at = str(datetime.utcnow() - timedelta(days=3))
+    auth_type = "sms_auth"
+    folder_permissions = []
+
+    return invite_json(
+        id_,
+        from_user,
+        service_id,
+        email_address,
+        permissions,
+        created_at,
+        "expired",
         auth_type,
         folder_permissions,
     )

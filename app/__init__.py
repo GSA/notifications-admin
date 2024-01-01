@@ -110,11 +110,7 @@ from app.notify_client.template_folder_api_client import template_folder_api_cli
 from app.notify_client.template_statistics_api_client import template_statistics_client
 from app.notify_client.upload_api_client import upload_api_client
 from app.notify_client.user_api_client import user_api_client
-from app.url_converters import (
-    SimpleDateTypeConverter,
-    TemplateTypeConverter,
-    TicketTypeConverter,
-)
+from app.url_converters import SimpleDateTypeConverter, TemplateTypeConverter
 
 login_manager = LoginManager()
 csrf = CSRFProtect()
@@ -326,7 +322,6 @@ def init_app(application):
 
     application.url_map.converters["uuid"].to_python = lambda self, value: value
     application.url_map.converters["template_type"] = TemplateTypeConverter
-    application.url_map.converters["ticket_type"] = TicketTypeConverter
     application.url_map.converters["simple_date"] = SimpleDateTypeConverter
 
 
