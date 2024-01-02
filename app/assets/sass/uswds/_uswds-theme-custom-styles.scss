@@ -166,6 +166,10 @@ td.table-empty-message {
    box-shadow: none;
 }
 
+.template-list-item-hidden-by-default {
+   display: none
+}
+
 .folder-heading a.folder-heading-folder,
 .template-list-folder {
    background: url(../img/material-icons/folder.svg) no-repeat;
@@ -504,4 +508,8 @@ details form {
   font-size: units(2);
   padding-left: 5px;
   letter-spacing: 0.04em;
+}
+
+.edit-textbox-error-mt {
+   margin-top: 1.5rem;
 }

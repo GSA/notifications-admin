@@ -757,7 +757,6 @@ def test_clear_cache_shows_form(
         "user",
         "service",
         "template",
-        "email_branding",
         "organization",
     }
 

@@ -40,6 +40,8 @@
             <span class="live-search-relevant">{{ user.email_address }}</span><span class="hint">(invited)</span>
           {%- elif user.status == 'cancelled' -%}
             <span class="live-search-relevant">{{ user.email_address }}</span><span class="hint">(cancelled invite)</span>
+          {%- elif user.status == 'expired' -%}
+            <span class="live-search-relevant">{{ user.email_address }}</span><span class="hint">(expired invite)</span>
           {%- elif user.id == current_user.id -%}
             <span class="live-search-relevant"></span><span class="hint">(you)</span>
           {% else %}
@@ -59,7 +61,6 @@
         {% if current_service.all_template_folders %}
           <p class="usa-body tick-cross-list-hint">
             {% set folder_count = user.template_folders_for_service(current_service) | length %}
-
             {% if folder_count == 0 %}
               Cannot see any folders
             {% elif folder_count != current_service.all_template_folders | length %}
@@ -75,15 +76,21 @@
             {{ user.auth_type | format_auth_type(with_indefinite_article=True) }}
           </p>
         {% endif %}
-        <div>
-          {% if current_user.has_permissions('manage_service') %}
-            {% if user.status == 'pending' %}
-              <a class="user-list-edit-link usa-link" href="{{ url_for('.cancel_invited_user', service_id=current_service.id, invited_user_id=user.id)}}">Cancel invitation<span class="usa-sr-only"> for {{ user.email_address }}</span></a>
-            {% elif user.is_editable_by(current_user) %}
-              <a class="user-list-edit-link usa-link" href="{{ url_for('.edit_user_permissions', service_id=current_service.id, user_id=user.id)}}">Change details<span class="usa-sr-only"> for {{ user.name }} {{ user.email_address }}</span></a>
+        {% if current_service.has_permission('email_auth') %}
+          <p class="usa-body tick-cross-list-hint">
+            Signs in with
+            {{ user.auth_type | format_auth_type(with_indefinite_article=True) }}
+          </p>
+          {% endif %}
+            {% if current_user.has_permissions('manage_service') %}
+              {% if user.status == 'pending' %}
+                <a class="user-list-edit-link usa-link" href="{{ url_for('.cancel_invited_user', service_id=current_service.id, invited_user_id=user.id)}}">Cancel invitation<span class="usa-sr-only"> for {{ user.email_address }}</span></a>
+              {% elif user.status == 'expired' %}
+                <a class="user-list-edit-link usa-link" href="{{ url_for('.resend_invite', service_id=current_service.id, invited_user_id=user.id)}}">Resend invite<span class="usa-sr-only"> for {{ user.email_address }}</span></a>
+              {% elif user.is_editable_by(current_user) %}
+                <a class="user-list-edit-link usa-link" href="{{ url_for('.edit_user_permissions', service_id=current_service.id, user_id=user.id)}}">Change details<span class="usa-sr-only"> for {{ user.name }} {{ user.email_address }}</span></a>
             {% endif %}
           {% endif %}
-        </div>
       </div>
     {% endfor %}
   </div>

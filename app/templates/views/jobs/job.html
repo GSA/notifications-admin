@@ -1,6 +1,5 @@
 {% extends "withnav_template.html" %}
 {% from "components/banner.html" import banner %}
-{% from "components/ajax-block.html" import ajax_block %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/components/back-link/macro.njk" import usaBackLink %}
@@ -13,9 +12,44 @@
 
     {{ page_header(job.original_file_name) }}
 
-    {{ ajax_block(partials, updates_url, 'status', finished=job.processing_finished) }}
-    {{ ajax_block(partials, updates_url, 'counts', finished=job.processing_finished) }}
-    {{ ajax_block(partials, updates_url, 'notifications', finished=job.processing_finished) }}
+    {% if not job.processing_finished %}
+      <div
+        data-module="update-content"
+        data-resource="{{ updates_url }}"
+        data-key="status"
+        data-form=""
+      >
+    {% endif %}
+      {{ partials['status']|safe }}
+    {% if not job.processing_finished %}
+      </div>
+    {% endif %}
+
+    {% if not finished %}
+      <div
+        data-module="update-content"
+        data-resource="{{ updates_url }}"
+        data-key="counts"
+        data-form=""
+      >
+    {% endif %}
+      {{ partials['counts']|safe }}
+    {% if not finished %}
+      </div>
+    {% endif %}
+
+    {% if not job.processing_finished %}
+      <div
+        data-module="update-content"
+        data-resource="{{ updates_url }}"
+        data-key="notifications"
+        data-form=""
+      >
+    {% endif %}
+      {{ partials['notifications']|safe }}
+    {% if not job.processing_finished %}
+      </div>
+    {% endif %}
 
     <div> </div>
 

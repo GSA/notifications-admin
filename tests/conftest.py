@@ -1396,7 +1396,15 @@ def mock_check_verify_code_code_expired(mocker):
 
 @pytest.fixture()
 def mock_create_job(mocker, api_user_active):
-    def _create(job_id, service_id, scheduled_for=None):
+    def _create(
+        job_id,
+        service_id,
+        scheduled_for=None,
+        template_id=None,
+        original_file_name=None,
+        notification_count=None,
+        valid=None,
+    ):
         return job_json(
             service_id,
             api_user_active,
@@ -1893,6 +1901,30 @@ def sample_invite(mocker, service_one):
 
 
 @pytest.fixture()
+def expired_invite(service_one):
+    id_ = USER_ONE_ID
+    from_user = service_one["users"][0]
+    email_address = "invited_user@test.gsa.gov"
+    service_id = service_one["id"]
+    permissions = "view_activity,send_emails,send_texts,manage_settings,manage_users,manage_api_keys"
+    created_at = str(datetime.utcnow() - timedelta(days=3))
+    auth_type = "sms_auth"
+    folder_permissions = []
+
+    return invite_json(
+        id_,
+        from_user,
+        service_id,
+        email_address,
+        permissions,
+        created_at,
+        "expired",
+        auth_type,
+        folder_permissions,
+    )
+
+
+@pytest.fixture()
 def mock_create_invite(mocker, sample_invite):
     def _create_invite(
         from_user, service_id, email_address, permissions, folder_permissions
@@ -2182,152 +2214,6 @@ def mock_send_already_registered_email(mocker):
     return mocker.patch("app.user_api_client.send_already_registered_email")
 
 
-def create_email_brandings(
-    number_of_brandings, non_standard_values=None, shuffle=False
-):
-    brandings = [
-        {
-            "id": str(idx),
-            "name": "org {}".format(idx),
-            "text": "org {}".format(idx),
-            "colour": None,
-            "logo": "logo{}.png".format(idx),
-            "brand_type": "org",
-        }
-        for idx in range(1, number_of_brandings + 1)
-    ]
-
-    for idx, row in enumerate(non_standard_values or {}):
-        brandings[row["idx"]].update(non_standard_values[idx])
-
-    if shuffle:
-        brandings.insert(3, brandings.pop(4))
-
-    return brandings
-
-
-@pytest.fixture()
-def mock_get_all_email_branding(mocker):
-    def _get_all_email_branding(sort_key=None):
-        non_standard_values = [
-            {"idx": 1, "colour": "red"},
-            {"idx": 2, "colour": "orange"},
-            {"idx": 3, "text": None},
-            {"idx": 4, "colour": "blue"},
-        ]
-        shuffle = sort_key is None
-        return create_email_brandings(
-            5, non_standard_values=non_standard_values, shuffle=shuffle
-        )
-
-    return mocker.patch(
-        "app.notify_client.email_branding_client.email_branding_client.get_all_email_branding",
-        side_effect=_get_all_email_branding,
-    )
-
-
-@pytest.fixture()
-def mock_no_email_branding(mocker):
-    def _get_email_branding():
-        return []
-
-    return mocker.patch(
-        "app.email_branding_client.get_all_email_branding",
-        side_effect=_get_email_branding,
-    )
-
-
-def create_email_branding(id, non_standard_values=None):
-    branding = {
-        "logo": "example.png",
-        "name": "Organization name",
-        "text": "Organization text",
-        "id": id,
-        "colour": "#f00",
-        "brand_type": "org",
-    }
-
-    if non_standard_values:
-        branding.update(non_standard_values)
-
-    return {"email_branding": branding}
-
-
-@pytest.fixture()
-def mock_get_email_branding(mocker, fake_uuid):
-    def _get_email_branding(id):
-        return create_email_branding(fake_uuid)
-
-    return mocker.patch(
-        "app.email_branding_client.get_email_branding", side_effect=_get_email_branding
-    )
-
-
-@pytest.fixture()
-def mock_get_email_branding_with_govuk_brand_type(mocker, fake_uuid):
-    def _get_email_branding(id):
-        return create_email_branding(fake_uuid, {"brand_type": "govuk"})
-
-    return mocker.patch(
-        "app.email_branding_client.get_email_branding", side_effect=_get_email_branding
-    )
-
-
-@pytest.fixture()
-def mock_get_email_branding_with_both_brand_type(mocker, fake_uuid):
-    def _get_email_branding(id):
-        return create_email_branding(fake_uuid, {"brand_type": "both"})
-
-    return mocker.patch(
-        "app.email_branding_client.get_email_branding", side_effect=_get_email_branding
-    )
-
-
-@pytest.fixture()
-def mock_get_email_branding_with_org_banner_brand_type(mocker, fake_uuid):
-    def _get_email_branding(id):
-        return create_email_branding(fake_uuid, {"brand_type": "org_banner"})
-
-    return mocker.patch(
-        "app.email_branding_client.get_email_branding", side_effect=_get_email_branding
-    )
-
-
-@pytest.fixture()
-def mock_get_email_branding_without_brand_text(mocker, fake_uuid):
-    def _get_email_branding_without_brand_text(id):
-        return create_email_branding(
-            fake_uuid, {"text": "", "brand_type": "org_banner"}
-        )
-
-    return mocker.patch(
-        "app.email_branding_client.get_email_branding",
-        side_effect=_get_email_branding_without_brand_text,
-    )
-
-
-@pytest.fixture()
-def mock_create_email_branding(mocker):
-    def _create_email_branding(logo, name, text, colour, brand_type):
-        return
-
-    return mocker.patch(
-        "app.email_branding_client.create_email_branding",
-        side_effect=_create_email_branding,
-    )
-
-
-@pytest.fixture()
-def mock_update_email_branding(mocker):
-    def _update_email_branding(branding_id, logo, name, text, colour, brand_type):
-        return
-
-    return mocker.patch(
-        "app.email_branding_client.update_email_branding",
-        side_effect=_update_email_branding,
-    )
-
-
 @pytest.fixture()
 def mock_get_guest_list(mocker):
     def _get_guest_list(service_id):
@@ -2435,6 +2321,10 @@ def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too com
 
     mocker.patch(
         "app.service_api_client.get_global_notification_count", side_effect=_get
+    )
+
+    mocker.patch(
+        "app.billing_api_client.create_or_update_free_sms_fragment_limit", autospec=True
     )
 
     class ClientRequest:

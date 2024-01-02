@@ -3,7 +3,6 @@ from collections import OrderedDict
 from werkzeug.utils import cached_property
 
 from app.models import JSONModel, ModelList, SerialisedModelCollection, SortByNameMixin
-from app.notify_client.email_branding_client import email_branding_client
 from app.notify_client.organizations_api_client import organizations_client
 
 
@@ -25,9 +24,7 @@ class Organization(JSONModel, SortByNameMixin):
         "name",
         "active",
         "organization_type",
-        "email_branding_id",
         "domains",
-        "request_to_go_live_notes",
         "count_of_live_services",
         "billing_contact_email_addresses",
         "billing_contact_names",
@@ -73,8 +70,6 @@ class Organization(JSONModel, SortByNameMixin):
             self.name = None
             self.domains = []
             self.organization_type = None
-            self.request_to_go_live_notes = None
-            self.email_branding_id = None
 
     @property
     def organization_type_label(self):
@@ -127,19 +122,6 @@ class Organization(JSONModel, SortByNameMixin):
             self.invited_users + self.active_users,
             key=lambda user: user.email_address.lower(),
         )
-
-    @cached_property
-    def email_branding(self):
-        if self.email_branding_id:
-            return email_branding_client.get_email_branding(self.email_branding_id)[
-                "email_branding"
-            ]
-
-    @property
-    def email_branding_name(self):
-        if self.email_branding_id:
-            return self.email_branding["name"]
-        return "GOV.UK"
 
     def update(self, delete_services_cache=False, **kwargs):
         response = organizations_client.update_organization(

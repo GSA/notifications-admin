@@ -13,12 +13,10 @@ from flask import (
 )
 from flask_login import current_user
 from notifications_python_client.errors import HTTPError
-from notifications_utils.clients.zendesk.zendesk_client import NotifySupportTicket
 
 from app import (
     billing_api_client,
     current_service,
-    email_branding_client,
     inbound_number_client,
     notification_api_client,
     organizations_client,
@@ -29,23 +27,18 @@ from app.event_handlers import (
     create_resume_service_event,
     create_suspend_service_event,
 )
-from app.extensions import zendesk_client
 from app.formatters import email_safe
 from app.main import main
 from app.main.forms import (
     AdminBillingDetailsForm,
     AdminNotesForm,
-    AdminPreviewBrandingForm,
     AdminServiceAddDataRetentionForm,
     AdminServiceEditDataRetentionForm,
     AdminServiceInboundNumberForm,
     AdminServiceMessageLimitForm,
     AdminServiceRateLimitForm,
     AdminServiceSMSAllowanceForm,
-    AdminSetEmailBrandingForm,
     AdminSetOrganizationForm,
-    ChooseEmailBrandingForm,
-    EstimateUsageForm,
     RenameServiceForm,
     SearchByNameForm,
     ServiceContactDetailsForm,
@@ -55,16 +48,10 @@ from app.main.forms import (
     ServiceSmsSenderForm,
     ServiceSwitchChannelForm,
     SMSPrefixForm,
-    SomethingElseBrandingForm,
 )
 from app.utils import DELIVERED_STATUSES, FAILURE_STATUSES, SENDING_STATUSES
-from app.utils.branding import get_email_choices as get_email_branding_choices
 from app.utils.time import parse_naive_dt
-from app.utils.user import (
-    user_has_permissions,
-    user_is_gov_user,
-    user_is_platform_admin,
-)
+from app.utils.user import user_has_permissions, user_is_platform_admin
 
 PLATFORM_ADMIN_SERVICE_PERMISSIONS = OrderedDict(
     [
@@ -87,7 +74,6 @@ def service_settings(service_id):
     return render_template(
         "views/service-settings.html",
         service_permissions=PLATFORM_ADMIN_SERVICE_PERMISSIONS,
-        email_branding_options=ChooseEmailBrandingForm(current_service),
     )
 
 
@@ -128,81 +114,6 @@ def service_name_change(service_id):
 
 
 @main.route(
-    "/services/<uuid:service_id>/service-settings/request-to-go-live/estimate-usage",
-    methods=["GET", "POST"],
-)
-@user_has_permissions("manage_service")
-def estimate_usage(service_id):
-    form = EstimateUsageForm(
-        volume_email=current_service.volume_email,
-        volume_sms=current_service.volume_sms,
-        consent_to_research={
-            True: "yes",
-            False: "no",
-        }.get(current_service.consent_to_research),
-    )
-
-    if form.validate_on_submit():
-        current_service.update(
-            volume_email=form.volume_email.data,
-            volume_sms=form.volume_sms.data,
-            consent_to_research=(form.consent_to_research.data == "yes"),
-        )
-        return redirect(
-            url_for(
-                "main.request_to_go_live",
-                service_id=service_id,
-            )
-        )
-
-    return render_template(
-        "views/service-settings/estimate-usage.html",
-        form=form,
-    )
-
-
-@main.route(
-    "/services/<uuid:service_id>/service-settings/request-to-go-live", methods=["GET"]
-)
-@user_has_permissions("manage_service")
-def request_to_go_live(service_id):
-    if current_service.live:
-        return render_template("views/service-settings/service-already-live.html")
-
-    return render_template("views/service-settings/request-to-go-live.html")
-
-
-@main.route(
-    "/services/<uuid:service_id>/service-settings/request-to-go-live", methods=["POST"]
-)
-@user_has_permissions("manage_service")
-@user_is_gov_user
-def submit_request_to_go_live(service_id):
-    ticket_message = render_template("support-tickets/go-live-request.txt") + "\n"
-
-    ticket = NotifySupportTicket(
-        subject=f"Request to go live - {current_service.name}",
-        message=ticket_message,
-        ticket_type=NotifySupportTicket.TYPE_QUESTION,
-        user_name=current_user.name,
-        user_email=current_user.email_address,
-        requester_sees_message_content=False,
-        org_id=current_service.organization_id,
-        org_type=current_service.organization_type,
-        service_id=current_service.id,
-    )
-    zendesk_client.send_ticket_to_zendesk(ticket)
-
-    current_service.update(go_live_user=current_user.id)
-
-    flash(
-        "Thanks for your request to go live. We’ll get back to you within one working day.",
-        "default",
-    )
-    return redirect(url_for(".service_settings", service_id=service_id))
-
-
-@main.route(
     "/services/<uuid:service_id>/service-settings/switch-live", methods=["GET", "POST"]
 )
 @user_is_platform_admin
@@ -213,6 +124,14 @@ def service_switch_live(service_id):
 
     if form.validate_on_submit():
         current_service.update_status(live=form.enabled.data)
+        if form.enabled.data is True:
+            billing_api_client.create_or_update_free_sms_fragment_limit(
+                service_id, 250000
+            )
+        else:
+            billing_api_client.create_or_update_free_sms_fragment_limit(
+                service_id, 40000
+            )
         return redirect(url_for(".service_settings", service_id=service_id))
 
     return render_template(
@@ -877,57 +796,6 @@ def set_rate_limit(service_id):
 
 
 @main.route(
-    "/services/<uuid:service_id>/service-settings/set-email-branding",
-    methods=["GET", "POST"],
-)
-@user_is_platform_admin
-def service_set_email_branding(service_id):
-    email_branding = email_branding_client.get_all_email_branding()
-
-    form = AdminSetEmailBrandingForm(
-        all_branding_options=get_branding_as_value_and_label(email_branding),
-        current_branding=current_service.email_branding_id,
-    )
-
-    if form.validate_on_submit():
-        return redirect(
-            url_for(
-                ".service_preview_email_branding",
-                service_id=service_id,
-                branding_style=form.branding_style.data,
-            )
-        )
-
-    return render_template(
-        "views/service-settings/set-email-branding.html",
-        form=form,
-        search_form=SearchByNameForm(),
-    )
-
-
-@main.route(
-    "/services/<uuid:service_id>/service-settings/preview-email-branding",
-    methods=["GET", "POST"],
-)
-@user_is_platform_admin
-def service_preview_email_branding(service_id):
-    branding_style = request.args.get("branding_style", None)
-
-    form = AdminPreviewBrandingForm(branding_style=branding_style)
-
-    if form.validate_on_submit():
-        current_service.update(email_branding=form.branding_style.data)
-        return redirect(url_for(".service_settings", service_id=service_id))
-
-    return render_template(
-        "views/service-settings/preview-email-branding.html",
-        form=form,
-        service_id=service_id,
-        action=url_for("main.service_preview_email_branding", service_id=service_id),
-    )
-
-
-@main.route(
     "/services/<uuid:service_id>/service-settings/link-service-to-organization",
     methods=["GET", "POST"],
 )
@@ -954,145 +822,6 @@ def link_service_to_organization(service_id):
         has_organizations=all_organizations,
         form=form,
         search_form=SearchByNameForm(),
-    )
-
-
-def create_email_branding_zendesk_ticket(form_option_selected, detail=None):
-    form = ChooseEmailBrandingForm(current_service)
-
-    ticket_message = render_template(
-        "support-tickets/branding-request.txt",
-        current_branding=current_service.email_branding_name,
-        branding_requested=dict(form.options.choices)[form_option_selected],
-        detail=detail,
-    )
-    ticket = NotifySupportTicket(
-        subject=f"Email branding request - {current_service.name}",
-        message=ticket_message,
-        ticket_type=NotifySupportTicket.TYPE_QUESTION,
-        user_name=current_user.name,
-        user_email=current_user.email_address,
-        org_id=current_service.organization_id,
-        org_type=current_service.organization_type,
-        service_id=current_service.id,
-    )
-    zendesk_client.send_ticket_to_zendesk(ticket)
-
-
-@main.route(
-    "/services/<uuid:service_id>/service-settings/email-branding",
-    methods=["GET", "POST"],
-)
-@user_has_permissions("manage_service")
-def email_branding_request(service_id):
-    form = ChooseEmailBrandingForm(current_service)
-    branding_name = current_service.email_branding_name
-    if form.validate_on_submit():
-        return redirect(
-            url_for(
-                f".email_branding_{form.options.data}",
-                service_id=current_service.id,
-            )
-        )
-
-    return render_template(
-        "views/service-settings/branding/email-branding-options.html",
-        form=form,
-        branding_name=branding_name,
-    )
-
-
-def check_email_branding_allowed_for_service(branding):
-    allowed_branding_for_service = dict(get_email_branding_choices(current_service))
-
-    if branding not in allowed_branding_for_service:
-        abort(404)
-
-
-@main.route(
-    "/services/<uuid:service_id>/service-settings/email-branding/govuk",
-    methods=["GET", "POST"],
-)
-@user_has_permissions("manage_service")
-def email_branding_govuk(service_id):
-    check_email_branding_allowed_for_service("govuk")
-
-    if request.method == "POST":
-        current_service.update(email_branding=None)
-
-        flash("You’ve updated your email branding", "default")
-        return redirect(url_for(".service_settings", service_id=current_service.id))
-
-    return render_template("views/service-settings/branding/email-branding-govuk.html")
-
-
-@main.route(
-    "/services/<uuid:service_id>/service-settings/email-branding/govuk-and-org",
-    methods=["GET", "POST"],
-)
-@user_has_permissions("manage_service")
-def email_branding_govuk_and_org(service_id):
-    check_email_branding_allowed_for_service("govuk_and_org")
-
-    if request.method == "POST":
-        create_email_branding_zendesk_ticket("govuk_and_org")
-
-        flash(
-            "Thanks for your branding request. We’ll get back to you within one working day.",
-            "default",
-        )
-        return redirect(url_for(".service_settings", service_id=current_service.id))
-
-    return render_template(
-        "views/service-settings/branding/email-branding-govuk-org.html"
-    )
-
-
-@main.route(
-    "/services/<uuid:service_id>/service-settings/email-branding/organization",
-    methods=["GET", "POST"],
-)
-@user_has_permissions("manage_service")
-def email_branding_organization(service_id):
-    check_email_branding_allowed_for_service("organization")
-
-    if request.method == "POST":
-        create_email_branding_zendesk_ticket("organization")
-
-        flash(
-            "Thanks for your branding request. We’ll get back to you within one working day.",
-            "default",
-        )
-        return redirect(url_for(".service_settings", service_id=current_service.id))
-
-    return render_template(
-        "views/service-settings/branding/email-branding-organization.html"
-    )
-
-
-@main.route(
-    "/services/<uuid:service_id>/service-settings/email-branding/something-else",
-    methods=["GET", "POST"],
-)
-@user_has_permissions("manage_service")
-def email_branding_something_else(service_id):
-    form = SomethingElseBrandingForm()
-
-    if form.validate_on_submit():
-        create_email_branding_zendesk_ticket(
-            "something_else", detail=form.something_else.data
-        )
-
-        flash(
-            "Thanks for your branding request. We’ll get back to you within one working day.",
-            "default",
-        )
-        return redirect(url_for(".service_settings", service_id=current_service.id))
-
-    return render_template(
-        "views/service-settings/branding/email-branding-something-else.html",
-        form=form,
-        branding_options=ChooseEmailBrandingForm(current_service),
     )
 
 
@@ -1182,10 +911,6 @@ def edit_service_billing_details(service_id):
         "views/service-settings/edit-service-billing-details.html",
         form=form,
     )
-
-
-def get_branding_as_value_and_label(email_branding):
-    return [(branding["id"], branding["name"]) for branding in email_branding]
 
 
 def convert_dictionary_to_wtforms_choices_format(dictionary, value, label):

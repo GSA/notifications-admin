@@ -8,7 +8,6 @@ from app.models.organization import Organization
 from app.models.user import InvitedUsers, User, Users
 from app.notify_client.api_key_api_client import api_key_api_client
 from app.notify_client.billing_api_client import billing_api_client
-from app.notify_client.email_branding_client import email_branding_client
 from app.notify_client.inbound_number_client import inbound_number_client
 from app.notify_client.invite_api_client import invite_api_client
 from app.notify_client.job_api_client import job_api_client
@@ -187,6 +186,15 @@ class Service(JSONModel, SortByNameMixin):
             abort(404)
 
         return invite_api_client.cancel_invited_user(
+            service_id=self.id,
+            invited_user_id=str(invited_user_id),
+        )
+
+    def resend_invite(self, invited_user_id):
+        if str(invited_user_id) not in {user.id for user in self.invited_users}:
+            abort(404)
+
+        return invite_api_client.resend_invite(
             service_id=self.id,
             invited_user_id=str(invited_user_id),
         )
@@ -371,22 +379,6 @@ class Service(JSONModel, SortByNameMixin):
             )
         )
 
-    @property
-    def go_live_checklist_completed(self):
-        return all(
-            (
-                bool(self.volumes),
-                self.has_team_members,
-                self.has_templates,
-                not self.needs_to_add_email_reply_to_address,
-                not self.needs_to_change_sms_sender,
-            )
-        )
-
-    @property
-    def go_live_checklist_completed_as_yes_no(self):
-        return "Yes" if self.go_live_checklist_completed else "No"
-
     @cached_property
     def free_sms_fragment_limit(self):
         return billing_api_client.get_free_sms_fragment_limit_for_year(self.id) or 0
@@ -407,31 +399,6 @@ class Service(JSONModel, SortByNameMixin):
             ),
             {},
         ).get("days_of_retention", current_app.config["ACTIVITY_STATS_LIMIT_DAYS"])
-
-    @property
-    def email_branding_id(self):
-        return self._dict["email_branding"]
-
-    @cached_property
-    def email_branding(self):
-        if self.email_branding_id:
-            return email_branding_client.get_email_branding(self.email_branding_id)[
-                "email_branding"
-            ]
-        return None
-
-    @cached_property
-    def email_branding_name(self):
-        if self.email_branding is None:
-            return "GOV.UK"
-        return self.email_branding["name"]
-
-    @property
-    def needs_to_change_email_branding(self):
-        return (
-            self.email_branding_id is None
-            and self.organization_type != Organization.TYPE_CENTRAL
-        )
 
     @cached_property
     def organization(self):

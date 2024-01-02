@@ -1157,6 +1157,35 @@ def test_invite_user_with_email_auth_service(
     )
 
 
+def test_resend_expired_invitation(
+    client_request,
+    mock_get_invites_for_service,
+    expired_invite,
+    active_user_with_permissions,
+    mock_get_users_by_service,
+    mock_get_template_folders,
+    mocker,
+):
+    mock_resend = mocker.patch("app.invite_api_client.resend_invite")
+    mocker.patch(
+        "app.invite_api_client.get_invited_user_for_service",
+        return_value=expired_invite,
+    )
+    page = client_request.get(
+        "main.resend_invite",
+        service_id=SERVICE_ONE_ID,
+        invited_user_id=expired_invite["id"],
+        _follow_redirects=True,
+    )
+    assert normalize_spaces(page.h1.text) == "Team members"
+    assert mock_resend.called
+    called_args = set(mock_resend.call_args.args) | set(
+        mock_resend.call_args.kwargs.values()
+    )
+    assert SERVICE_ONE_ID in called_args
+    assert expired_invite["id"] in called_args
+
+
 def test_cancel_invited_user_cancels_user_invitations(
     client_request,
     mock_get_invites_for_service,
@@ -1168,7 +1197,8 @@ def test_cancel_invited_user_cancels_user_invitations(
 ):
     mock_cancel = mocker.patch("app.invite_api_client.cancel_invited_user")
     mocker.patch(
-        "app.invite_api_client.get_invited_user_for_service", return_value=sample_invite
+        "app.invite_api_client.get_invited_user_for_service",
+        return_value=sample_invite,
     )
 
     page = client_request.get(
