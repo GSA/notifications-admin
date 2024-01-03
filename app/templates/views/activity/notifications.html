@@ -5,7 +5,7 @@
 <div class="ajax-block-container" id='pill-selected-item'>
   <!-- Batched Job Table -->
   {% if notifications %}
-    <div class='dashboard-table'>
+    <div class='job-table'>
   {% endif %}
     {% call(item, row_number) list_table(
       notifications,
@@ -13,15 +13,21 @@
       caption_visible=False,
       border_visible=True,
       empty_message='No batched job messages found &thinsp;(messages are kept for {} days)'.format(limit_days)|safe,
-      field_headings=['Batched Job', 'Download (CSV) Report'],
+      field_headings=['Template Name','Date/Time', 'Download (CSV) Report'],
       field_headings_visible=False
     ) %}
       {% if item.job.original_file_name %}
         {% call row_heading() %}
-        <a class="usa-link" href="/services/{{ item.service }}/jobs/{{ item.job.id }}">{{ item.job.original_file_name|replace('.csv', '') if item.job.id else '' }}</a>
+        <a class="usa-link file-list-filename" href="/services/{{ item.service }}/jobs/{{ item.job.id  }}">{{ item.job.original_file_name|replace('.csv', '') if item.job.id else '' }}</a>
         {% endcall %}
-      {% call row_heading() %}
-        <a class="usa-link file-list-filename" href="/services/{{ item.service }}/jobs/{{ item.job.id }}.csv">{{ "Download Report" if item.job.original_file_name else '' }}</a>
+        {% call row_heading() %}
+        {{ item.status|format_notification_status_as_time(
+          item.created_at|format_datetime_short,
+          (item.updated_at or item.created_at)|format_datetime_short
+        ) }}
+        {% endcall %}
+       {% call row_heading() %}
+        <a class="usa-link file-list-filename" href="/services/{{ item.service }}/jobs/{{ item.job.id }}.csv">{{ "Download" if item.job.original_file_name else '' }}</a>
         <span>- available for {{ limit_days }} days</span>
       {% endcall %}
       {% endif %}

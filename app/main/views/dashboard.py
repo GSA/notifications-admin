@@ -13,6 +13,8 @@ from app import (
     current_service,
     service_api_client,
     template_statistics_client,
+    format_datetime_short,
+    notification_api_client,
 )
 from app.formatters import format_date_numeric, format_datetime_numeric
 from app.main import main
@@ -27,6 +29,8 @@ from app.utils.csv import Spreadsheet
 from app.utils.pagination import generate_next_dict, generate_previous_dict
 from app.utils.time import get_current_financial_year
 from app.utils.user import user_has_permissions
+from app.main.views.jobs import get_notifications
+from pprint import pprint
 
 
 @main.route("/services/<uuid:service_id>/dashboard")
@@ -49,6 +53,7 @@ def service_dashboard(service_id):
         "views/dashboard/dashboard.html",
         updates_url=url_for(".service_dashboard_updates", service_id=service_id),
         partials=get_dashboard_partials(service_id),
+        batched=get_notifications(service_id, message_type=None),
     )
 
 
