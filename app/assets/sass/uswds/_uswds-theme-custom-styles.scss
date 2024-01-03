@@ -39,6 +39,9 @@ i.e.
    .usa-nav__secondary {
       .usa-nav__link {
         padding: 0;
+        &.usa-current {
+          text-decoration: underline;
+        }
       }
    }
 }
@@ -240,7 +243,7 @@ td.table-empty-message {
 }
 
 .navigation-service.usa-breadcrumb {
-   -bottom: 0;
+   bottom: 0;
 }
 
 // Dashboard
