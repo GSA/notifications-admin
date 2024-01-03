@@ -42,7 +42,7 @@
     {% if not current_user.is_authenticated or not current_service %}
     <p>When you’re ready to send messages to people outside your team, go to the <b class="bold">Settings</b> page and select <b class="bold">Request to go live</b>. We’ll approve your request within one working day.</p>
     {% else %}
-    <p>You should <a class="usa-link" href="{{ url_for('.request_to_go_live', service_id=current_service.id) }}">request to go live</a> when you’re ready to send messages to people outside your team. We’ll approve your request within one working day.</p>
+    <p>You should <a class="usa-link" href="{{ url_for('.support') }}">request to go live</a> when you’re ready to send messages to people outside your team. We’ll approve your request within one working day.</p>
     {% endif %}
     <!-- <p>Check <a class="usa-link" href="{{ url_for('main.how_to_pay') }}">how to pay</a> if you’re planning to exceed the <a class="usa-link" href="{{ url_for('.pricing', _anchor='text-messages') }}">free text message allowance</a>.</p> -->
   </li>
