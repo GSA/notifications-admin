@@ -6,8 +6,8 @@ from flask import Flask, url_for
 from freezegun import freeze_time
 
 from app.formatters import (
-    convert_markdown_template,
     apply_html_class,
+    convert_markdown_template,
     email_safe,
     format_datetime_relative,
     format_delta,
