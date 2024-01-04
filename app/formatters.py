@@ -60,7 +60,6 @@ def convert_markdown_template(mdf, test=False):
     jn_render = render_template_string(content_text)
     md_render = markdown.markdown(jn_render)
 
-
     return md_render
 
 
