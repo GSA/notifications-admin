@@ -24,7 +24,6 @@ def _bypass_sign_in(end_to_end_context):
 
 
 def test_add_new_service_workflow(end_to_end_context):
-    # page = end_to_end_context.new_page()
     page = _bypass_sign_in(end_to_end_context)
     page.goto(f"{E2E_TEST_URI}/")
 
