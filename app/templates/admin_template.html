@@ -117,18 +117,27 @@
           "active": header_navigation.is_selected('user-profile')
         }
       ] %}
-      {% set secondaryNavigation = [
-        {
-          "href": url_for('.service_settings', service_id=current_service.id),
-          "text": "Settings",
-          "active": secondary_navigation.is_selected('settings')
-        },
-        {
-          "href": url_for('main.sign_out'),
-          "text": "Sign out"
-        }
-      ] %}
-    {% endif %}
+      {% if current_service %}
+        {% set secondaryNavigation = [
+          {
+            "href": url_for('main.service_settings', service_id=current_service.id),
+            "text": "Settings",
+            "active": secondary_navigation.is_selected('settings')
+          },
+          {
+            "href": url_for('main.sign_out'),
+            "text": "Sign out"
+          }
+        ] %}
+        {% else %}
+          {% set secondaryNavigation = [
+            {
+            "href": url_for('main.sign_out'),
+            "text": "Sign out"
+            }
+          ] %}
+        {% endif %}
+      {% endif %}
   {% else %}
   <!-- Add navigation back after pilot -->
     {# {% set navigation = [

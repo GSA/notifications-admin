@@ -5,11 +5,11 @@
   <ul class="usa-sidenav">
     {# {% if current_user.has_permissions() %} #}
     <li class="usa-sidenav__item"><a class="{{ main_navigation.is_selected('settings') }}"
-      href="{{ url_for('.service_settings', service_id=current_service.id) }}">General</a></li>
+      href="{{ url_for('main.service_settings', service_id=current_service.id) }}">General</a></li>
     <li class="usa-sidenav__item"><a class="{{ main_navigation.is_selected('user-profile') }}"
       href="{{ url_for('main.user_profile', service_id=current_service.id) }}">User profile</a></li>
     <li class="usa-sidenav__item"><a class="{{ main_navigation.is_selected('team-members') }}"
-        href="{{ url_for('.manage_users', service_id=current_service.id) }}">Team members</a></li>
+        href="{{ url_for('main.manage_users', service_id=current_service.id) }}">Team members</a></li>
     {# {% endif %} #}
   </ul>
 </nav>
