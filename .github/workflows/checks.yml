@@ -15,7 +15,8 @@ env:
   NODE_VERSION: 16.15.1
   AWS_US_TOLL_FREE_NUMBER: "+18556438890"
   ADMIN_BASE_URL: http://localhost:6012
-  API_HOST_NAME: http://localhost:6011
+  #API_HOST_NAME: http://localhost:6011
+  API_HOST_NAME: https://notify-api-staging.app.cloud.gov
 
 jobs:
   build:
@@ -56,67 +57,67 @@ jobs:
       pull-requests: write
       contents: write
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_USER: user
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: test_notification_api
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          # Maps tcp port 5432 on service container to the host
-          - 5432:5432
-      redis:
-        image: redis
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          # Maps tcp port 6379 on service container to the host
-          - 6379:6379
+    # services:
+    #   postgres:
+    #     image: postgres
+    #     env:
+    #       POSTGRES_USER: user
+    #       POSTGRES_PASSWORD: password
+    #       POSTGRES_DB: test_notification_api
+    #     options: >-
+    #       --health-cmd pg_isready
+    #       --health-interval 10s
+    #       --health-timeout 5s
+    #       --health-retries 5
+    #     ports:
+    #       # Maps tcp port 5432 on service container to the host
+    #       - 5432:5432
+    #   redis:
+    #     image: redis
+    #     options: >-
+    #       --health-cmd "redis-cli ping"
+    #       --health-interval 10s
+    #       --health-timeout 5s
+    #       --health-retries 5
+    #     ports:
+    #       # Maps tcp port 6379 on service container to the host
+    #       - 6379:6379
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-project
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
-      - name: Clone API
-        uses: actions/checkout@v3
-        with:
-         repository: GSA/notifications-api
-         path: 'notifications-api'
-      - name: Install API dependencies
-        working-directory: 'notifications-api'
-        run: make bootstrap
-        env:
-          DATABASE_URL: postgresql://user:password@localhost:5432/test_notification_api
-          SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
-          REDIS_URL: redis://localhost:6379
-          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
-          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-          NOTIFY_ENVIRONMENT: development
-      - name: Run API server
-        working-directory: 'notifications-api'
-        run: make run-procfile &
-        env:
-          DATABASE_URL: postgresql://user:password@localhost:5432/test_notification_api
-          SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
-          REDIS_URL: redis://localhost:6379
-          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
-          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-          NOTIFY_ENVIRONMENT: development
+      # - name: Clone API
+      #   uses: actions/checkout@v3
+      #   with:
+      #    repository: GSA/notifications-api
+      #    path: 'notifications-api'
+      # - name: Install API dependencies
+      #   working-directory: 'notifications-api'
+      #   run: make bootstrap
+      #   env:
+      #     DATABASE_URL: postgresql://user:password@localhost:5432/test_notification_api
+      #     SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
+      #     REDIS_URL: redis://localhost:6379
+      #     NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
+      #     NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
+      #     NOTIFY_ENVIRONMENT: development
+      # - name: Run API server
+      #   working-directory: 'notifications-api'
+      #   run: make run-procfile &
+      #   env:
+      #     DATABASE_URL: postgresql://user:password@localhost:5432/test_notification_api
+      #     SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
+      #     REDIS_URL: redis://localhost:6379
+      #     NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
+      #     NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
+      #     NOTIFY_ENVIRONMENT: development
       - name: Run Admin server
         run: make run-flask &
       - name: Run E2E tests
-        run: poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
+        # run: poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
         # Debugging for now to troubleshoot a connectivity issue to the local servers
-        # run: curl --request GET --url "http://localhost:6012"
+        run: curl --request GET --url "http://localhost:6012"
         env:
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
