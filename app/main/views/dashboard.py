@@ -16,7 +16,7 @@ from app import (
     format_datetime_short,
     notification_api_client,
 )
-from app.formatters import format_date_numeric, format_datetime_numeric
+from app.formatters import format_date_numeric, format_datetime_numeric, get_time_left
 from app.main import main
 from app.statistics_utils import get_formatted_percentage
 from app.utils import (
@@ -42,6 +42,7 @@ def old_service_dashboard(service_id):
 @main.route("/services/<uuid:service_id>")
 @user_has_permissions()
 def service_dashboard(service_id):
+    download_availability = []
     if session.get("invited_user_id"):
         session.pop("invited_user_id", None)
         session["service_id"] = service_id
@@ -49,11 +50,25 @@ def service_dashboard(service_id):
     if not current_user.has_permissions("view_activity"):
         return redirect(url_for("main.choose_template", service_id=service_id))
 
+    notifications=get_notifications(service_id, message_type=None)['batched_data']
+
+    for notification in notifications:
+        message_type = notification.get('template_type')
+        job_id = notification.get('job', {}).get('id')
+        original_file_name = notification.get('job', {}).get('original_file_name')
+        service_data_retention_days = current_service.get_days_of_retention(
+            message_type
+        )
+        created_at = notification.get('created_at')
+        if job_id and original_file_name:
+            time_left_value = get_time_left(created_at, service_data_retention_days=service_data_retention_days)
+            download_availability.append({'job_id': job_id, 'time_left': time_left_value})
     return render_template(
         "views/dashboard/dashboard.html",
         updates_url=url_for(".service_dashboard_updates", service_id=service_id),
         partials=get_dashboard_partials(service_id),
-        batched=get_notifications(service_id, message_type=None),
+        notifications=notifications,
+        download_availability=download_availability,
     )
 
 

@@ -30,11 +30,11 @@
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
 
     <h2 class="margin-top-4 margin-bottom-1">Batched Jobs</h2>
-    {% if batched %}
+    {% if notifications %}
     <div class='job-table'>
     {% endif %}
       {% call(item, row_number) list_table(
-        batched['batched_data'],
+        notifications,
         caption="Batched Jobs",
         caption_visible=False,
         border_visible=True,
@@ -42,7 +42,7 @@
         field_headings=['Template Name','Date/Time', 'Download (CSV) Report'],
         field_headings_visible=False
       ) %}
-        {% if item.job.original_file_name %}
+        {% if item.job.original_file_name and item.job.id %}
           {% call row_heading() %}
             <a class="usa-link file-list-filename" href="/services/{{ item.service }}/jobs/{{ item.job.id  }}">{{ item.job.original_file_name|replace('.csv', '') if item.job.id else '' }}</a>
           {% endcall %}
@@ -54,7 +54,10 @@
           {% endcall %}
           {% call row_heading() %}
             <a class="usa-link file-list-filename" href="/services/{{ item.service }}/jobs/{{ item.job.id }}.csv">{{ "Download" if item.job.original_file_name else '' }}</a>
-            <span>- available for {{ service_data_retention_days }} days</span>
+            {% set availability = download_availability|selectattr('job_id', 'equalto', item.job.id)|first %}
+            {% if availability %}
+                <span>- {{ availability.time_left }}</span>
+            {% endif %}
           {% endcall %}
         {% endif %}
       {% endcall %}
