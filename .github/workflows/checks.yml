@@ -114,9 +114,9 @@ jobs:
       - name: Run Admin server
         run: make run-flask &
       - name: Run E2E tests
-        # run: poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
+        run: poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
         # Debugging for now to troubleshoot a connectivity issue to the local servers
-        run: curl --request GET --url "http://localhost:6012"
+        # run: curl --request GET --url "http://localhost:6012"
         env:
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
