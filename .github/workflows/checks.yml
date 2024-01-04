@@ -125,7 +125,7 @@ jobs:
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
           # Run the E2E tests against the code found in this PR.
-          NOTIFY_E2E_TEST_URI: http://localhost:6012/
+          NOTIFY_E2E_TEST_URI: http://localhost:6012
 
   validate-new-relic-config:
     runs-on: ubuntu-latest

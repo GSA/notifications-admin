@@ -36,6 +36,8 @@ from . import (
 
 load_dotenv()
 
+E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
+
 
 class ElementNotFound(Exception):
     pass
@@ -529,7 +531,7 @@ def mock_update_service(mocker):
                     "sms_sender",
                     "permissions",
                 ]
-            }
+            },
         )
         return {"data": service}
 
@@ -2353,7 +2355,7 @@ def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too com
             _test_page_title=True,
             _test_for_elements_without_class=True,
             _optional_args="",
-            **endpoint_kwargs
+            **endpoint_kwargs,
         ):
             return ClientRequest.get_url(
                 url_for(endpoint, **(endpoint_kwargs or {})) + _optional_args,
@@ -2372,7 +2374,7 @@ def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too com
             _expected_redirect=None,
             _test_page_title=True,
             _test_for_elements_without_class=True,
-            **endpoint_kwargs
+            **endpoint_kwargs,
         ):
             resp = logged_in_client.get(
                 url,
@@ -2414,7 +2416,7 @@ def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too com
             _follow_redirects=False,
             _expected_redirect=None,
             _content_type=None,
-            **endpoint_kwargs
+            **endpoint_kwargs,
         ):
             return ClientRequest.post_url(
                 url_for(endpoint, **(endpoint_kwargs or {})),
@@ -2473,7 +2475,7 @@ def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too com
             _expected_status=302,
             _optional_args="",
             _content_type=None,
-            **endpoint_kwargs
+            **endpoint_kwargs,
         ):
             return ClientRequest.post_response_from_url(
                 url_for(endpoint, **(endpoint_kwargs or {})) + _optional_args,
@@ -3523,7 +3525,7 @@ def login_for_end_to_end_testing(browser):
     # Open a new page and go to the staging site.
     context = browser.new_context()
     page = context.new_page()
-    page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
+    page.goto(f"{E2E_TEST_URI}/")
 
     sign_in_button = page.get_by_role("link", name="Sign in")
 
