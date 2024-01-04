@@ -16,6 +16,7 @@ from app import (
 )
 from app.formatters import format_date_numeric, format_datetime_numeric, get_time_left
 from app.main import main
+from app.main.views.jobs import get_notifications
 from app.statistics_utils import get_formatted_percentage
 from app.utils import (
     DELIVERED_STATUSES,
@@ -27,7 +28,6 @@ from app.utils.csv import Spreadsheet
 from app.utils.pagination import generate_next_dict, generate_previous_dict
 from app.utils.time import get_current_financial_year
 from app.utils.user import user_has_permissions
-from app.main.views.jobs import get_notifications
 
 
 @main.route("/services/<uuid:service_id>/dashboard")
