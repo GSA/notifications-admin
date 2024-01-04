@@ -3606,3 +3606,9 @@ def fake_markdown_file():
 def fake_jinja_template():
     input = "{% if True %}True{% endif %}"
     return input
+
+
+@pytest.fixture()
+def fake_soup_template():
+    input = "<h1>Test</h1>"
+    return input

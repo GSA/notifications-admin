@@ -12,6 +12,7 @@ import dateutil
 import humanize
 import markdown
 import pytz
+from bs4 import BeautifulSoup
 from flask import Markup, render_template_string, url_for
 from flask.helpers import get_root_path
 from notifications_utils.field import Field
@@ -22,6 +23,25 @@ from notifications_utils.take import Take
 
 from app.utils.csv import get_user_preferred_timezone
 from app.utils.time import parse_naive_dt
+
+
+def apply_html_class(tags, html_file):
+
+    new_html = html_file
+
+    for tag in tags:
+
+        element = tag[0]
+        class_name = tag[1]
+
+        soup = BeautifulSoup(new_html, 'html.parser')
+
+        for xtag in soup.find_all(element):
+            xtag['class'] = class_name
+
+        new_html = str(soup)
+
+    return new_html
 
 
 def convert_markdown_template(mdf, test=False):
@@ -37,10 +57,11 @@ def convert_markdown_template(mdf, test=False):
     else:
         content_text = mdf
 
-    md_render = markdown.markdown(content_text)
-    jn_render = render_template_string(md_render)
+    jn_render = render_template_string(content_text)
+    md_render = markdown.markdown(jn_render)
 
-    return jn_render
+
+    return md_render
 
 
 def convert_to_boolean(value):

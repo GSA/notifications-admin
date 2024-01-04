@@ -2,7 +2,7 @@ from flask import abort, redirect, render_template, request, url_for
 from flask_login import current_user
 
 from app import status_api_client
-from app.formatters import convert_markdown_template
+from app.formatters import apply_html_class, convert_markdown_template
 from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
 from app.main.views.sub_navigation_dictionaries import features_nav, using_notify_nav
@@ -138,10 +138,16 @@ def get_started_old():
 @main.route("/using-notify/get-started")
 @user_is_logged_in
 def get_started():
+    markdown = convert_markdown_template('get-started')
+    html_style = apply_html_class([['ol', 'usa-process-list'],
+                                   ['li', 'usa-process-list__item padding-bottom-4 margin-top-2'],
+                                   ['h2', 'usa-process-list__heading line-height-sans-3']],
+                                  markdown)
+
     return render_template(
         "views/get-started.html",
         navigation_links=using_notify_nav(),
-        content=convert_markdown_template('get-started')
+        content=html_style
     )
 
 
