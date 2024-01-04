@@ -116,6 +116,9 @@ jobs:
         run: make run-flask &
         env:
           NOTIFY_ENVIRONMENT: development
+          NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
+          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
+          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
       - name: Run E2E tests
         run: poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
         # Debugging for now to troubleshoot a connectivity issue to the local servers

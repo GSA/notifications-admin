@@ -28,11 +28,6 @@ def test_add_new_service_workflow(end_to_end_context):
     page = _bypass_sign_in(end_to_end_context)
     page.goto(f"{E2E_TEST_URI}/")
 
-    # sign_in_button = page.get_by_role("link", name="Sign in")
-    #
-    # Test trying to sign in. Because we are loading the email and password
-    # sign_in_button.click()
-    #
     # Wait for the next page to fully load.
     page.wait_for_load_state("domcontentloaded")
 
