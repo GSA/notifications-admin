@@ -114,6 +114,8 @@ jobs:
       #     NOTIFY_ENVIRONMENT: development
       - name: Run Admin server
         run: make run-flask &
+        env:
+          NOTIFY_ENVIRONMENT: development
       - name: Run E2E tests
         # run: poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
         # Debugging for now to troubleshoot a connectivity issue to the local servers
