@@ -62,7 +62,7 @@ jobs:
         env:
           POSTGRES_USER: user
           POSTGRES_PASSWORD: password
-          POSTGRES_DB: test_notification_api
+          POSTGRES_DB: notification_api
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -85,16 +85,16 @@ jobs:
         working-directory: 'notifications-api'
         run: make bootstrap
         env:
-          DATABASE_URL: postgresql://user:password@localhost:5432/test_notification_api
-          SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
+          DATABASE_URL: postgresql://user:password@localhost:5432/notification_api
+          SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/notification_api
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
       - name: Run API server
         working-directory: 'notifications-api'
         run: make run-flask &
         env:
-          DATABASE_URL: postgresql://user:password@localhost:5432/test_notification_api
-          SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
+          DATABASE_URL: postgresql://user:password@localhost:5432/notification_api
+          SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/notification_api
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
       - name: Run Admin server
