@@ -47,7 +47,7 @@ def service_dashboard(service_id):
     if not current_user.has_permissions("view_activity"):
         return redirect(url_for("main.choose_template", service_id=service_id))
 
-    notifications=get_notifications(service_id, message_type=None)['notifications_data']
+    notifications = get_notifications(service_id, message_type=None)['notifications_data']
 
     for notification in notifications:
         message_type = notification.get('template_type')

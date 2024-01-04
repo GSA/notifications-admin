@@ -47,7 +47,7 @@
             <a class="usa-link file-list-filename" href="/services/{{ item.service }}/jobs/{{ item.job.id  }}">{{ item.job.original_file_name|replace('.csv', '') if item.job.id else '' }}</a>
           {% endcall %}
           {% call row_heading() %}
-            {{ item.status|format_notification_status_as_time (
+            {{ item.status|format_notification_status_as_time(
               item.created_at|format_datetime_short,
               (item.updated_at or item.created_at)|format_datetime_short)
             }}
