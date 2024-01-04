@@ -235,7 +235,7 @@ def get_notifications(service_id, message_type, status_override=None):  # noqa
 
     return {
         "service_data_retention_days": service_data_retention_days,
-        'batched_data': notifications['notifications'],
+        'notifications_data': notifications['notifications'],
         "counts": render_template(
             "views/activity/counts.html",
             status=request.args.get("status"),
