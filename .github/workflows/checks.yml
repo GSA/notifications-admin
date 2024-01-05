@@ -115,10 +115,10 @@ jobs:
         run: make run-flask &
         env:
           ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
-          ADMIN_CLIENT_USERNAME: ${{ secrets.ADMIN_CLIENT_USERNAME }}
+          ADMIN_CLIENT_USERNAME: notify-admin
           DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          NOTIFY_ENVIRONMENT: development
+          NOTIFY_ENVIRONMENT: staging
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
