@@ -116,6 +116,8 @@ jobs:
         env:
           ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
           ADMIN_CLIENT_USERNAME: ${{ secrets.ADMIN_CLIENT_USERNAME }}
+          DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
           NOTIFY_ENVIRONMENT: development
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
