@@ -2323,6 +2323,10 @@ def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too com
         "app.service_api_client.get_global_notification_count", side_effect=_get
     )
 
+    mocker.patch(
+        "app.billing_api_client.create_or_update_free_sms_fragment_limit", autospec=True
+    )
+
     class ClientRequest:
         @staticmethod
         @contextmanager

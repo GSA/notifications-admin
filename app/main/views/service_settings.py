@@ -124,6 +124,14 @@ def service_switch_live(service_id):
 
     if form.validate_on_submit():
         current_service.update_status(live=form.enabled.data)
+        if form.enabled.data is True:
+            billing_api_client.create_or_update_free_sms_fragment_limit(
+                service_id, 250000
+            )
+        else:
+            billing_api_client.create_or_update_free_sms_fragment_limit(
+                service_id, 40000
+            )
         return redirect(url_for(".service_settings", service_id=service_id))
 
     return render_template(
