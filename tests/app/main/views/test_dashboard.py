@@ -1020,6 +1020,20 @@ def _test_dashboard_menu(client_request, mocker, usr, service, permissions):
     return client_request.get("main.service_dashboard", service_id=service["id"])
 
 
+def _test_settings_menu(client_request, mocker, usr, service, permissions):
+    usr["permissions"][str(service["id"])] = permissions
+    usr["services"] = [service["id"]]
+    mocker.patch("app.user_api_client.check_verify_code", return_value=(True, ""))
+    mocker.patch(
+        "app.service_api_client.get_services", return_value={"data": [service]}
+    )
+    mocker.patch("app.user_api_client.get_user", return_value=usr)
+    mocker.patch("app.user_api_client.get_user_by_email", return_value=usr)
+    mocker.patch("app.service_api_client.get_service", return_value={"data": service})
+    client_request.login(usr)
+    return client_request.get("main.service_dashboard", service_id=service["id"])
+
+
 def test_menu_send_messages(
     client_request,
     mocker,
@@ -1051,11 +1065,8 @@ def test_menu_send_messages(
         )
         in page
     )
-    # assert url_for('main.uploads', service_id=service_one['id']) in page
     assert url_for("main.manage_users", service_id=service_one["id"]) not in page
-
     assert url_for("main.service_settings", service_id=service_one["id"]) in page
-    # assert url_for('main.api_keys', service_id=service_one['id']) not in page
 
 
 def test_menu_manage_service(
@@ -1086,10 +1097,39 @@ def test_menu_manage_service(
         )
         in page
     )
-    # assert url_for("main.manage_users", service_id=service_one["id"]) in page
-    assert url_for("main.service_settings", service_id=service_one["id"]) in page
+    assert url_for(".service_dashboard", service_id=service_one["id"]) in page
+    assert url_for(".choose_template", service_id=service_one["id"]) in page
 
-    # assert url_for('main.api_keys', service_id=service_one['id']) not in page
+
+def test_menu_main_settings(
+    client_request,
+    mocker,
+    api_user_active,
+    service_one,
+    mock_get_service_templates,
+    mock_has_no_jobs,
+    mock_get_template_statistics,
+    mock_get_service_statistics,
+    mock_get_annual_usage_for_service,
+    mock_get_inbound_sms_summary,
+    mock_get_free_sms_fragment_limit,
+):
+    page = _test_settings_menu(
+        client_request,
+        mocker,
+        api_user_active,
+        service_one,
+        ["view_activity", "user_profile", "manage_users", "manage_settings"],
+    )
+    page = str(page)
+    assert (
+        url_for(
+            "main.service_settings",
+            service_id=service_one["id"],
+        )
+        in page
+    )
+    assert url_for("main.service_settings", service_id=service_one["id"]) in page
 
 
 def test_menu_manage_api_keys(

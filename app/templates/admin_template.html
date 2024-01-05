@@ -72,7 +72,7 @@
       {% if current_service %}
         {% set secondaryNavigation = [
           {
-            "href": url_for('.service_settings', service_id=current_service.id),
+            "href": url_for('main.service_settings', service_id=current_service.id),
             "text": "Settings",
             "active": secondary_navigation.is_selected('settings')
           },
