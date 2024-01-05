@@ -11,12 +11,13 @@ from werkzeug.utils import redirect
 from app import (
     billing_api_client,
     current_service,
+    job_api_client,
+    notification_api_client,
     service_api_client,
     template_statistics_client,
 )
 from app.formatters import format_date_numeric, format_datetime_numeric, get_time_left
 from app.main import main
-from app.main.views.jobs import get_notifications
 from app.statistics_utils import get_formatted_percentage
 from app.utils import (
     DELIVERED_STATUSES,
@@ -29,7 +30,6 @@ from app.utils.pagination import generate_next_dict, generate_previous_dict
 from app.utils.time import get_current_financial_year
 from app.utils.user import user_has_permissions
 
-
 @main.route("/services/<uuid:service_id>/dashboard")
 @user_has_permissions("view_activity", "send_messages")
 def old_service_dashboard(service_id):
@@ -39,7 +39,6 @@ def old_service_dashboard(service_id):
 @main.route("/services/<uuid:service_id>")
 @user_has_permissions()
 def service_dashboard(service_id):
-    download_availability = []
     if session.get("invited_user_id"):
         session.pop("invited_user_id", None)
         session["service_id"] = service_id
@@ -47,26 +46,38 @@ def service_dashboard(service_id):
     if not current_user.has_permissions("view_activity"):
         return redirect(url_for("main.choose_template", service_id=service_id))
 
-    notifications = get_notifications(service_id, message_type=None)['notifications_data']
+    download_availability = []
 
-    for notification in notifications:
-        message_type = notification.get('template_type')
-        job_id = notification.get('job', {}).get('id')
-        original_file_name = notification.get('job', {}).get('original_file_name')
-        service_data_retention_days = current_service.get_days_of_retention(
-            message_type
-        )
-        created_at = notification.get('created_at')
-        if job_id and original_file_name:
-            time_left_value = get_time_left(created_at, service_data_retention_days=service_data_retention_days)
-            download_availability.append({'job_id': job_id, 'time_left': time_left_value})
+    notifications = notification_api_client.get_notifications_for_service(
+        service_id=service_id,
+    )['notifications']
+
+    notificaton_job_ids = [notification['job']['id'] for notification in notifications if 'job' in notification]
+
+    jobs = []
+
+    for notificaton_job_id in notificaton_job_ids:
+        job_data = job_api_client.get_job(service_id, notificaton_job_id)["data"]
+        jobs.append(job_data)
+
+    service_data_retention_days = None
+
+    download_availability = []
+    for job in jobs:
+        message_type = job.get('template_type')
+        if message_type is not None:
+            service_data_retention_days = current_service.get_days_of_retention(message_type)
+        time_left = get_time_left(job['created_at'], service_data_retention_days=service_data_retention_days)
+        download_availability.append({"job_id": job['id'], "time_left": time_left})
+
     return render_template(
         "views/dashboard/dashboard.html",
         updates_url=url_for(".service_dashboard_updates", service_id=service_id),
         partials=get_dashboard_partials(service_id),
         notifications=notifications,
         download_availability=download_availability,
-    )
+        service_data_retention_days=service_data_retention_days
+     )
 
 
 @main.route("/services/<uuid:service_id>/dashboard.json")

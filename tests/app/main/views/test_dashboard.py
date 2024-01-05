@@ -1536,13 +1536,17 @@ def test_service_dashboard_shows_usage(
     service_one["permissions"] = permissions
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
-    table_rows = page.find_all("tbody")[0].find_all("tr")
+    usage_table = page.find("table", class_="usage-table")
+
+    # Check if the "Usage" table exists
+    assert usage_table is not None
+
+    table_rows = usage_table.find_all("tbody")[0].find_all("tr")
 
     assert len(table_rows) == 1
 
     assert "500" in table_rows[0].find_all("td")[0].text
     assert "9500" in table_rows[0].find_all("td")[1].text
-
 
 def test_service_dashboard_shows_free_allowance(
     mocker,

@@ -38,7 +38,7 @@
         caption="Batched Jobs",
         caption_visible=False,
         border_visible=True,
-        empty_message='No batched job messages found &thinsp;(messages are kept for {} days)'.format(limit_days)|safe,
+        empty_message='No batched job messages found &thinsp;(messages are kept for {} days)'.format(service_data_retention_days)|safe,
         field_headings=['Template Name','Date/Time', 'Download (CSV) Report'],
         field_headings_visible=False
       ) %}
@@ -61,7 +61,7 @@
           {% endcall %}
         {% endif %}
       {% endcall %}
-    {% if batched %}
+    {% if notifications %}
       </div>
     {% endif %}
 
