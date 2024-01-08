@@ -1239,11 +1239,15 @@ class ChangePreferredTimezoneForm(StripWhitespaceForm):
     def __init__(self, *args, **kwargs):
         super(ChangePreferredTimezoneForm, self).__init__(*args, **kwargs)
         self.new_preferred_timezone.choices = [
+            ("US/Atlantic", "US/Atlantic")
             ("US/Eastern", "US/Eastern"),
             ("US/Central", "US/Central"),
             ("US/Mountain", "US/Mountain"),
             ("US/Pacific", "US/Pacific"),
-            ("US/Hawaii", "US/Hawaii"),
+            ("US/Alaska", "US/Alaska")
+            ("US/Hawaii-Aleutian", "US/Hawaii-Aleutian"),
+            ("US/American Samoa", "US/American Samoa"),
+            ("US/Chamorro", "US/Chamorro")
         ]
 
     new_preferred_timezone = GovukRadiosField(
