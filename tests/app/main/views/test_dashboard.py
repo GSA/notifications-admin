@@ -1773,6 +1773,7 @@ def test_service_dashboard_shows_usage(
     assert "500" in table_rows[0].find_all("td")[0].text
     assert "9500" in table_rows[0].find_all("td")[1].text
 
+
 def test_service_dashboard_shows_free_allowance(
     mocker,
     client_request,
