@@ -323,8 +323,7 @@ def test_should_show_old_job(
     assert not page.select(".pill")
     assert not page.select("p.hint")
     assert not page.select("a[download]")
-    assert (
-        page.select_one("tbody").text.strip() == expected_message)
+    assert page.select_one("tbody").text.strip() == expected_message
     assert [
         normalize_spaces(column.text) for column in page.select("main .grid-col-3")
     ] == [
