@@ -1235,15 +1235,20 @@ class ChangeNameForm(StripWhitespaceForm):
     new_name = GovukTextInputField("Your name")
 
 
+# https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 class ChangePreferredTimezoneForm(StripWhitespaceForm):
     def __init__(self, *args, **kwargs):
         super(ChangePreferredTimezoneForm, self).__init__(*args, **kwargs)
         self.new_preferred_timezone.choices = [
+            ("America/Puerto_Rico", "America/Puerto_Rico"),
             ("US/Eastern", "US/Eastern"),
             ("US/Central", "US/Central"),
             ("US/Mountain", "US/Mountain"),
             ("US/Pacific", "US/Pacific"),
+            ("US/Alaska", "US/Alaska"),
             ("US/Hawaii", "US/Hawaii"),
+            ("US/Aleutian", "US/Aleutian"),
+            ("US/Samoa", "US/Samoa"),
         ]
 
     new_preferred_timezone = GovukRadiosField(
