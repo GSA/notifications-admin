@@ -15,7 +15,6 @@ env:
   NODE_VERSION: 16.15.1
   AWS_US_TOLL_FREE_NUMBER: "+18556438890"
   ADMIN_BASE_URL: http://localhost:6012
-  API_HOST_NAME: https://notify-api-staging.app.cloud.gov
 
 jobs:
   build:
@@ -114,10 +113,11 @@ jobs:
       - name: Run Admin server
         run: make run-flask &
         env:
-          ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
-          ADMIN_CLIENT_USERNAME: notify-admin
+          API_HOST_NAME: https://notify-api-staging.app.cloud.gov
           DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
+          ADMIN_CLIENT_USERNAME: notify-admin
           NOTIFY_ENVIRONMENT: staging
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
