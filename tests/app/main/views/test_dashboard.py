@@ -1807,3 +1807,32 @@ def test_service_dashboard_shows_free_allowance(
     usage_text = normalize_spaces(page.select_one("[data-key=usage]").text)
     assert "spent on text messages" not in usage_text
     assert "Daily Usage Remaining 1,000 249,000" in usage_text
+
+
+def test_service_dashboard_shows_batched_jobs(
+    mocker,
+    client_request,
+    service_one,
+    mock_get_service_templates,
+    mock_get_template_statistics,
+    mock_has_no_jobs,
+    mock_get_annual_usage_for_service,
+    mock_get_free_sms_fragment_limit,
+ ):
+
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
+
+    page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
+
+    job_table = page.find("div", class_="job-table")
+
+    # Check if the "Job" table exists
+    assert job_table is not None
+
+    table_rows = job_table.find_all("tbody")[0].find_all("tr")
+
+    assert len(table_rows) == 1
