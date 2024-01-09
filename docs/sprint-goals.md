@@ -1,7 +1,18 @@
 # Notify Sprint Goals Log
 
+## Sprint: A (1/3/24)
+2024 Sprints will be named after mythical creatures
 
-## Sprint: Z (12/21/23)
+|             | Goals        | Impact      | Milestone(s)    |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|--------------|
+| Engineering | Continue [identifying](https://github.com/GSA/notifications-api/issues/656), [fixing](https://github.com/GSA/notifications-api/issues/645), and [displaying](https://github.com/GSA/notifications-admin/issues/964) various applicable message part limits, devise ways to [create better access to reports](https://github.com/GSA/notifications-admin/issues/855), implement Login.gov on staging environment, advance epic to [remove phone numbers from db](https://github.com/GSA/notifications-api/issues/667) | Better track annual and smart-retention limits, install required auth, make reports easier to find, expand message send volume for partners                            | Building Notify.gov |
+| UX          | Spin up weekly [redesign syncs](https://github.com/GSA/notifications-admin/issues/1061), identify necessary dashboard metrics to visualize, improve [team member section](https://github.com/GSA/notifications-admin/issues/1031)| Improve UX      | Building Notify.gov| 
+| Security    | Complete necessary control families                                        | Aim to have package completed with enough time to allow for long assessment| Secure ATO |
+| Content    | Finish making [editing content easier](https://github.com/GSA/notifications-admin/issues/976) with existing templates, finalize decision on terminology regarding [batch/campaign/job](https://github.com/GSA/notifications-admin/issues/1060), make content [more clear about limits](https://github.com/GSA/notifications-admin/issues/963), make content clearer by [adding `parts` where necessary](https://github.com/GSA/notifications-admin/issues/963) | Improve clarity of message parts for users, streamline content editing for the team| Building Notify.gov |
+| Ops    | Assist in Tech to Gov process |  |
+
+## Sprint: Zoe's Imperial Pigeon (12/21/23)
+Sprint velocity was very low due to holiday OOO
 
 |             | Goals        | Impact      | Milestone(s)    |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|--------------|
