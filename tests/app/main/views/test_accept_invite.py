@@ -14,108 +14,6 @@ from tests.conftest import (
     normalize_spaces,
 )
 
-FAKE_ONE_OFF_NOTIFICATION = {
-    "links": {},
-    "notifications": [
-        {
-            "api_key": None,
-            "billable_units": 0,
-            "carrier": None,
-            "client_reference": None,
-            "created_at": "2023-12-14T20:35:55+00:00",
-            "created_by": {
-                "email_address": "grsrbsrgsrf@fake.gov",
-                "id": "de059e0a-42e5-48bb-939e-4f76804ab739",
-                "name": "grsrbsrgsrf",
-            },
-            "document_download_count": None,
-            "id": "a3442b43-0ba1-4854-9e0a-d2fba1cc9b81",
-            "international": False,
-            "job": {
-                "id": "55b242b5-9f62-4271-aff7-039e9c320578",
-                "original_file_name": "1127b78e-a4a8-4b70-8f4f-9f4fbf03ece2.csv",
-            },
-            "job_row_number": 0,
-            "key_name": None,
-            "key_type": "normal",
-            "normalised_to": "+16615555555",
-            "notification_type": "sms",
-            "personalisation": {
-                "dayofweek": "2",
-                "favecolor": "3",
-                "phonenumber": "+16615555555",
-            },
-            "phone_prefix": "1",
-            "provider_response": None,
-            "rate_multiplier": 1.0,
-            "reference": None,
-            "reply_to_text": "development",
-            "sent_at": None,
-            "sent_by": None,
-            "service": "f62d840f-8bcb-4b36-b959-4687e16dd1a1",
-            "status": "created",
-            "template": {
-                "content": "((day of week)) and ((fave color))",
-                "id": "bd9caa7e-00ee-4c5a-839e-10ae1a7e6f73",
-                "name": "personalized",
-                "redact_personalisation": False,
-                "subject": None,
-                "template_type": "sms",
-                "version": 1,
-            },
-            "to": "+16615555555",
-            "updated_at": None,
-        }
-    ],
-    "page_size": 50,
-    "total": 1,
-}
-
-MOCK_ONE_OFF_JOB = {
-    "data": {
-        "api_key": "mocked_api_key",
-        "billable_units": 1,
-        "carrier": "mocked_carrier",
-        "client_reference": "mocked_client_reference",
-        "created_at": "2024-01-04T20:43:52+00:00",
-        "created_by": {
-            "email_address": "mocked_email@example.com",
-            "id": "mocked_user_id",
-            "name": "mocked_user",
-        },
-        "document_download_count": None,
-        "id": "mocked_notification_id",
-        "international": False,
-        "job": {"id": "mocked_job_id", "original_file_name": "mocked_file.txt"},
-        "job_row_number": 0,
-        "key_name": "mocked_key_name",
-        "key_type": "normal",
-        "normalised_to": "+12133166548",
-        "notification_type": "sms",
-        "personalisation": {"phonenumber": "+12133166548"},
-        "phone_prefix": "1",
-        "provider_response": "mocked_provider_response",
-        "rate_multiplier": 1.0,
-        "reference": "mocked_reference",
-        "reply_to_text": "mocked_reply_text",
-        "sent_at": "2024-01-04T20:43:53+00:00",
-        "sent_by": "mocked_sender",
-        "service": "mocked_service_id",
-        "status": "sending",
-        "template": {
-            "content": "((day of week)) and ((fave color))",
-            "id": "bd9caa7e-00ee-4c5a-839e-10ae1a7e6f73",
-            "name": "personalized",
-            "redact_personalisation": False,
-            "subject": None,
-            "template_type": "sms",
-            "version": 1,
-        },
-        "to": "+12133166548",
-        "updated_at": "2024-01-04T20:43:53+00:00",
-    }
-}
-
 
 @pytest.fixture()
 def _mock_no_users_for_service(mocker):
@@ -309,11 +207,6 @@ def test_accepting_invite_removes_invite_from_session(
     sample_invite["email_address"] = user["email_address"]
 
     client_request.login(user)
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
     page = client_request.get(
         "main.accept_invite",
         token="thisisnotarealtoken",
