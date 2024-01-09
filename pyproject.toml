@@ -8,6 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
 ago = "~=0.0.95"
+beautifulsoup4 = "^4.12.2"
 blinker = "~=1.7"
 exceptiongroup = "==1.2.0"
 flask = "~=2.3"
@@ -41,7 +42,6 @@ markdown = "^3.5.1"
 
 [tool.poetry.group.dev.dependencies]
 bandit = "*"
-beautifulsoup4 = "^4.12.2"
 black = "^23.12.1"
 coverage = "*"
 freezegun = "^1.4.0"
