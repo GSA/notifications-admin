@@ -618,11 +618,6 @@ def test_new_invited_user_verifies_and_added_to_service(
         token="thisisnotarealtoken",
         _expected_redirect=url_for("main.register_from_invite"),
     )
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
 
     # get redirected to register from invite
     data = {
