@@ -309,7 +309,11 @@ def test_accepting_invite_removes_invite_from_session(
     sample_invite["email_address"] = user["email_address"]
 
     client_request.login(user)
-
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = client_request.get(
         "main.accept_invite",
         token="thisisnotarealtoken",
