@@ -1,4 +1,4 @@
-{% extends "withnav_template.html" %}
+{% extends "settings_template.html" %}
 {% from "components/tick-cross.html" import tick_cross %}
 {% from "components/live-search.html" import live_search %}
 {% from "components/components/button/macro.njk" import usaButton %}
@@ -10,9 +10,9 @@
 {% block maincolumn_content %}
 
   <div class="button-flex-header">
-      <h1 class="font-body-xl margin-0">
-        Team members
-      </h1>
+    <h1 class="font-body-2xl margin-0">
+      Team members
+    </h1>
     {% if current_user.has_permissions('manage_service') %}
       {{ usaButton({
       "element": "a",

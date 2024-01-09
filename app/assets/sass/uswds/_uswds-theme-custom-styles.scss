@@ -22,16 +22,26 @@ i.e.
 
 @use "uswds-core" as *;
 
-.usa-header--extended .usa-logo {
-   font-family: family("sans");
-   margin: units(4) 0;
-   @include at-media-max('mobile-lg') {
-      margin: units(4) 0 units(4) units(2);
+.usa-header--extended {
+   .usa-logo {
+      font-family: family("sans");
+      margin: units(4) 0;
+      @include at-media-max('mobile-lg') {
+         margin: units(4) 0 units(4) units(2);
+      }
+      img {
+         @include at-media($theme-header-min-width) {
+            width: 80px;
+            height: 70px;
+         }
+      }
    }
-   img {
-      @include at-media($theme-header-min-width) {
-         width: 80px;
-         height: 70px;
+   .usa-nav__secondary {
+      .usa-nav__link {
+        padding: 0;
+        &.usa-current {
+          text-decoration: underline;
+        }
       }
    }
 }
@@ -44,14 +54,11 @@ i.e.
    &> .usa-nav__primary-item > a {
       font-size: size("body", 4);
    }
-   &> .usa-nav__primary-item:last-child {
-      margin-left: auto;
-      @include u-margin-right(-4);
-   }
+   // &> .usa-nav__primary-item:last-child {
+   //    margin-left: auto;
+   //    @include u-margin-right(-4);
+   // }
 }
-
-.usa-nav__primary
-
 
 h1 {
    font-weight: bold !important;
@@ -270,7 +277,7 @@ td.table-empty-message {
 }
 
 .navigation-service.usa-breadcrumb {
-   -bottom: 0;
+   bottom: 0;
 }
 
 // Dashboard
