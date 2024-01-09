@@ -3598,3 +3598,21 @@ def end_to_end_authenticated_context(browser):
     context = browser.new_context(storage_state=auth_state_path)
 
     return context
+
+
+@pytest.fixture()
+def fake_markdown_file():
+    input = "#Test"
+    return input
+
+
+@pytest.fixture()
+def fake_jinja_template():
+    input = "{% if True %}True{% endif %}"
+    return input
+
+
+@pytest.fixture()
+def fake_soup_template():
+    input = "<h1>Test</h1>"
+    return input

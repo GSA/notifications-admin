@@ -39,6 +39,7 @@ from app.asset_fingerprinter import asset_fingerprinter
 from app.config import configs
 from app.extensions import redis_client, zendesk_client
 from app.formatters import (
+    convert_markdown_template,
     convert_to_boolean,
     format_auth_type,
     format_billions,
@@ -582,6 +583,7 @@ def add_template_filters(application):
         format_mobile_network,
         format_yes_no,
         square_metres_to_square_miles,
+        convert_markdown_template
     ]:
         application.add_template_filter(fn)
 
