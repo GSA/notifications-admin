@@ -138,16 +138,20 @@ def get_started_old():
 @main.route("/using-notify/get-started")
 @user_is_logged_in
 def get_started():
-    markdown = convert_markdown_template('get-started')
-    html_style = apply_html_class([['ol', 'usa-process-list'],
-                                   ['li', 'usa-process-list__item padding-bottom-4 margin-top-2'],
-                                   ['h2', 'usa-process-list__heading line-height-sans-3']],
-                                  markdown)
+    markdown = convert_markdown_template("get-started")
+    html_style = apply_html_class(
+        [
+            ["ol", "usa-process-list"],
+            ["li", "usa-process-list__item padding-bottom-4 margin-top-2"],
+            ["h2", "usa-process-list__heading line-height-sans-3"],
+        ],
+        markdown,
+    )
 
     return render_template(
         "views/get-started.html",
         navigation_links=using_notify_nav(),
-        content=html_style
+        content=html_style,
     )
 
 
