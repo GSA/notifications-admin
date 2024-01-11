@@ -585,7 +585,7 @@ def add_template_filters(application):
         format_mobile_network,
         format_yes_no,
         square_metres_to_square_miles,
-        convert_markdown_template
+        convert_markdown_template,
     ]:
         application.add_template_filter(fn)
 
