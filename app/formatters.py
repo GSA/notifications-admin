@@ -26,18 +26,16 @@ from app.utils.time import parse_naive_dt
 
 
 def apply_html_class(tags, html_file):
-
     new_html = html_file
 
     for tag in tags:
-
         element = tag[0]
         class_name = tag[1]
 
-        soup = BeautifulSoup(new_html, 'html.parser')
+        soup = BeautifulSoup(new_html, "html.parser")
 
         for xtag in soup.find_all(element):
-            xtag['class'] = class_name
+            xtag["class"] = class_name
 
         new_html = str(soup)
 
@@ -45,12 +43,11 @@ def apply_html_class(tags, html_file):
 
 
 def convert_markdown_template(mdf, test=False):
-
     content_text = ""
 
     if not test:
-        APP_ROOT = get_root_path('notifications-admin')
-        file = 'app/content/' + mdf + '.md'
+        APP_ROOT = get_root_path("notifications-admin")
+        file = "app/content/" + mdf + ".md"
         md_file = os.path.join(APP_ROOT, file)
         with open(md_file) as f:
             content_text = f.read()

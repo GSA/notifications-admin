@@ -1,0 +1,78 @@
+name: "User Story Template"
+
+about: "Use this template for creating user stories."
+
+title: "User Story: [Brief description of the user story]"
+
+labels:
+  - "Type: User Story"
+
+body:
+  - type: markdown
+    attributes:
+      value: '**User Story:**'
+  - type: textarea
+    id: userType
+    attributes:
+      label: "As a [type of user],"
+      description: "Describe the type of user involved in this story."
+    validations:
+      required: true
+  - type: textarea
+    id: actionFeature
+    attributes:
+      label: "I want [an action or feature],"
+      description: "Describe the desired action or feature from the user's perspective."
+    validations:
+      required: true
+  - type: textarea
+    id: benefitValue
+    attributes:
+      label: "So that [benefit or value]."
+      description: "Describe the benefit or value the user expects from the action or feature."
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: '**Acceptance Criteria:**'
+  - type: textarea
+    id: acceptanceCriteria
+    attributes:
+      label: "Detailed condition or criteria that must be met for the user story to be considered complete."
+      description: "List the acceptance criteria for the user story."
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: '**Tasks:**'
+  - type: textarea
+    id: tasks
+    attributes:
+      label: "List of specific tasks or sub-tasks that need to be done to implement the user story."
+      description: "Outline the tasks necessary to implement the user story."
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: '**Dependencies:**'
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: "List any dependencies that need to be resolved before starting or completing this user story."
+      description: "Specify any dependencies related to the user story."
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: '**Notes:**'
+  - type: textarea
+    id: notes
+    attributes:
+      label: "Any additional information or context that might be useful for the team."
+      description: "Provide any extra notes or context for the user story."
+    validations:
+      required: false
