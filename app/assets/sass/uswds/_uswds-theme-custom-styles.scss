@@ -22,16 +22,26 @@ i.e.
 
 @use "uswds-core" as *;
 
-.usa-header--extended .usa-logo {
-   font-family: family("sans");
-   margin: units(4) 0;
-   @include at-media-max('mobile-lg') {
-      margin: units(4) 0 units(4) units(2);
+.usa-header--extended {
+   .usa-logo {
+      font-family: family("sans");
+      margin: units(4) 0;
+      @include at-media-max('mobile-lg') {
+         margin: units(4) 0 units(4) units(2);
+      }
+      img {
+         @include at-media($theme-header-min-width) {
+            width: 80px;
+            height: 70px;
+         }
+      }
    }
-   img {
-      @include at-media($theme-header-min-width) {
-         width: 80px;
-         height: 70px;
+   .usa-nav__secondary {
+      .usa-nav__link {
+        padding: 0;
+        &.usa-current {
+          text-decoration: underline;
+        }
       }
    }
 }
@@ -44,14 +54,11 @@ i.e.
    &> .usa-nav__primary-item > a {
       font-size: size("body", 4);
    }
-   &> .usa-nav__primary-item:last-child {
-      margin-left: auto;
-      @include u-margin-right(-4);
-   }
+   // &> .usa-nav__primary-item:last-child {
+   //    margin-left: auto;
+   //    @include u-margin-right(-4);
+   // }
 }
-
-.usa-nav__primary
-
 
 h1 {
    font-weight: bold !important;
@@ -114,10 +121,44 @@ td.table-empty-message {
    text-decoration: none !important;
 }
 
+.button-flex-header {
+   flex-direction: column;
+   align-items: flex-start;
+   @include at-media(desktop) {
+      flex-direction: row;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+   }
+}
+
 .user-list-edit-link:active:before,
 .user-list-edit-link:focus:before {
    box-shadow: none;
    border: 0;
+}
+
+.user-list {
+   display: inline-flex;
+   flex-wrap: wrap;
+   gap: units(2);
+   .user-list-item {
+      @include at-media(desktop) {
+         flex: 1 1 calc(50% - units(2));
+      }
+      flex: 1 1 calc(100% - units(2));
+      border: 1px solid color('gray-cool-10');
+      padding: units(2);
+      .tick-cross-list-permissions {
+         margin: units(1) 0;
+         padding-left: units(2);
+      }
+      .hint {
+         display: block;
+         font-size: size("body", "sm");
+         font-weight: normal;
+      }
+   }
 }
 
 .template-list-item-without-ancestors .template-list-folder:active,
@@ -236,7 +277,7 @@ td.table-empty-message {
 }
 
 .navigation-service.usa-breadcrumb {
-   -bottom: 0;
+   bottom: 0;
 }
 
 // Dashboard

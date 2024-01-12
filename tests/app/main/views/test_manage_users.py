@@ -27,7 +27,7 @@ from tests.conftest import (
         (
             create_active_user_with_permissions(),
             (
-                "Test User (you) "
+                "Test User(you) "
                 "Permissions "
                 "Can See dashboard "
                 "Can Send messages "
@@ -39,18 +39,18 @@ from tests.conftest import (
         ),
         (
             create_active_user_empty_permissions(),
-            ("Test User With Empty Permissions (you) " "Permissions"),
+            ("Test User With Empty Permissions(you) " "Permissions"),
             False,
         ),
         (
             create_active_user_view_permissions(),
-            ("Test User With Permissions (you) " "Permissions " "Can See dashboard"),
+            ("Test User With Permissions(you) " "Permissions " "Can See dashboard"),
             False,
         ),
         (
             create_active_user_manage_template_permissions(),
             (
-                "Test User With Permissions (you) "
+                "Test User With Permissions(you) "
                 "Permissions "
                 "Can See dashboard "
                 "Can Add and edit templates"
@@ -232,7 +232,7 @@ def test_should_show_caseworker_on_overview_page(
 
     assert normalize_spaces(page.select_one("h1").text) == "Team members"
     assert normalize_spaces(page.select(".user-list-item")[0].text) == (
-        "Test User With Permissions (you) " "Permissions " "Can See dashboard"
+        "Test User With Permissions(you) " "Permissions " "Can See dashboard"
     )
     # [1:5] are invited users
     assert normalize_spaces(page.select(".user-list-item")[6].text) == (
@@ -1240,7 +1240,7 @@ def test_cancel_invited_user_doesnt_work_if_user_not_invited_to_this_service(
         (
             "pending",
             (
-                "invited_user@test.gsa.gov (invited) "
+                "invited_user@test.gsa.gov(invited) "
                 "Permissions "
                 "Can See dashboard "
                 "Can Send messages "
@@ -1252,7 +1252,7 @@ def test_cancel_invited_user_doesnt_work_if_user_not_invited_to_this_service(
         (
             "cancelled",
             (
-                "invited_user@test.gsa.gov (cancelled invite) "
+                "invited_user@test.gsa.gov(cancelled invite) "
                 "Permissions"
                 # all permissions are greyed out
             ),
@@ -1413,10 +1413,7 @@ def test_manage_user_page_shows_how_many_folders_user_can_view(
     user_div = page.select_one(
         "h2[title='notify@digital.cabinet-office.gov.uk']"
     ).parent
-    assert (
-        user_div.select_one(".tick-cross-list-hint:last-child").text.strip()
-        == expected_message
-    )
+    assert user_div.select_one(".tick-cross-list-hint").text.strip() == expected_message
 
 
 def test_manage_user_page_doesnt_show_folder_hint_if_service_has_no_folders(
