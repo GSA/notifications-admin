@@ -1283,6 +1283,11 @@ def test_menu_main_settings(
     mock_get_inbound_sms_summary,
     mock_get_free_sms_fragment_limit,
 ):
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = _test_settings_menu(
         client_request,
         mocker,
@@ -1858,8 +1863,7 @@ def test_service_dashboard_shows_batched_jobs(
     mock_has_no_jobs,
     mock_get_annual_usage_for_service,
     mock_get_free_sms_fragment_limit,
- ):
-
+):
     mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
