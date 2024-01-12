@@ -11,10 +11,12 @@ from werkzeug.utils import redirect
 from app import (
     billing_api_client,
     current_service,
+    job_api_client,
+    notification_api_client,
     service_api_client,
     template_statistics_client,
 )
-from app.formatters import format_date_numeric, format_datetime_numeric
+from app.formatters import format_date_numeric, format_datetime_numeric, get_time_left
 from app.main import main
 from app.statistics_utils import get_formatted_percentage
 from app.utils import (
@@ -45,10 +47,55 @@ def service_dashboard(service_id):
     if not current_user.has_permissions("view_activity"):
         return redirect(url_for("main.choose_template", service_id=service_id))
 
+    download_availability = []
+
+    notifications = notification_api_client.get_notifications_for_service(
+        service_id=service_id,
+    )["notifications"]
+
+    notificaton_job_ids = [
+        notification["job"]["id"]
+        for notification in notifications
+        if "job" in notification
+    ]
+
+    jobs = []
+
+    for notificaton_job_id in notificaton_job_ids:
+        job_data = job_api_client.get_job(service_id, notificaton_job_id)["data"]
+        if job_data:
+            jobs.append(job_data)
+
+    service_data_retention_days = 7
+    download_availability = []
+    for job in jobs:
+        message_type = job.get("template_type")
+        if message_type is not None:
+            service_data_retention_days = current_service.get_days_of_retention(
+                message_type
+            )
+        time_left = get_time_left(job["created_at"])
+        download_link = (
+            url_for(
+                ".view_job_csv",
+                service_id=current_service.id,
+                job_id=job["id"],
+            ),
+        )
+        download_availability.append(
+            {
+                "job_id": job["id"],
+                "time_left": time_left,
+                "download_link": download_link,
+            }
+        )
     return render_template(
         "views/dashboard/dashboard.html",
         updates_url=url_for(".service_dashboard_updates", service_id=service_id),
         partials=get_dashboard_partials(service_id),
+        notifications=notifications,
+        download_availability=download_availability,
+        service_data_retention_days=service_data_retention_days,
     )
 
 

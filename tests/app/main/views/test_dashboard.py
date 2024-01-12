@@ -28,6 +28,108 @@ from tests.conftest import (
     normalize_spaces,
 )
 
+FAKE_ONE_OFF_NOTIFICATION = {
+    "links": {},
+    "notifications": [
+        {
+            "api_key": None,
+            "billable_units": 0,
+            "carrier": None,
+            "client_reference": None,
+            "created_at": "2023-12-14T20:35:55+00:00",
+            "created_by": {
+                "email_address": "grsrbsrgsrf@fake.gov",
+                "id": "de059e0a-42e5-48bb-939e-4f76804ab739",
+                "name": "grsrbsrgsrf",
+            },
+            "document_download_count": None,
+            "id": "a3442b43-0ba1-4854-9e0a-d2fba1cc9b81",
+            "international": False,
+            "job": {
+                "id": "55b242b5-9f62-4271-aff7-039e9c320578",
+                "original_file_name": "1127b78e-a4a8-4b70-8f4f-9f4fbf03ece2.csv",
+            },
+            "job_row_number": 0,
+            "key_name": None,
+            "key_type": "normal",
+            "normalised_to": "+16615555555",
+            "notification_type": "sms",
+            "personalisation": {
+                "dayofweek": "2",
+                "favecolor": "3",
+                "phonenumber": "+16615555555",
+            },
+            "phone_prefix": "1",
+            "provider_response": None,
+            "rate_multiplier": 1.0,
+            "reference": None,
+            "reply_to_text": "development",
+            "sent_at": None,
+            "sent_by": None,
+            "service": "f62d840f-8bcb-4b36-b959-4687e16dd1a1",
+            "status": "created",
+            "template": {
+                "content": "((day of week)) and ((fave color))",
+                "id": "bd9caa7e-00ee-4c5a-839e-10ae1a7e6f73",
+                "name": "personalized",
+                "redact_personalisation": False,
+                "subject": None,
+                "template_type": "sms",
+                "version": 1,
+            },
+            "to": "+16615555555",
+            "updated_at": None,
+        }
+    ],
+    "page_size": 50,
+    "total": 1,
+}
+
+MOCK_ONE_OFF_JOB = {
+    "data": {
+        "api_key": "mocked_api_key",
+        "billable_units": 1,
+        "carrier": "mocked_carrier",
+        "client_reference": "mocked_client_reference",
+        "created_at": "2024-01-04T20:43:52+00:00",
+        "created_by": {
+            "email_address": "mocked_email@example.com",
+            "id": "mocked_user_id",
+            "name": "mocked_user",
+        },
+        "document_download_count": None,
+        "id": "mocked_notification_id",
+        "international": False,
+        "job": {"id": "mocked_job_id", "original_file_name": "mocked_file.txt"},
+        "job_row_number": 0,
+        "key_name": "mocked_key_name",
+        "key_type": "normal",
+        "normalised_to": "+12133166548",
+        "notification_type": "sms",
+        "personalisation": {"phonenumber": "+12133166548"},
+        "phone_prefix": "1",
+        "provider_response": "mocked_provider_response",
+        "rate_multiplier": 1.0,
+        "reference": "mocked_reference",
+        "reply_to_text": "mocked_reply_text",
+        "sent_at": "2024-01-04T20:43:53+00:00",
+        "sent_by": "mocked_sender",
+        "service": "mocked_service_id",
+        "status": "sending",
+        "template": {
+            "content": "((day of week)) and ((fave color))",
+            "id": "bd9caa7e-00ee-4c5a-839e-10ae1a7e6f73",
+            "name": "personalized",
+            "redact_personalisation": False,
+            "subject": None,
+            "template_type": "sms",
+            "version": 1,
+        },
+        "to": "+12133166548",
+        "updated_at": "2024-01-04T20:43:53+00:00",
+    }
+}
+
 stub_template_stats = [
     {
         "template_type": "sms",
@@ -116,7 +218,11 @@ def test_get_started(
         "app.template_statistics_client.get_template_statistics_for_service",
         return_value=copy.deepcopy(stub_template_stats),
     )
-
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -142,6 +248,11 @@ def test_get_started_is_hidden_once_templates_exist(
         "app.template_statistics_client.get_template_statistics_for_service",
         return_value=copy.deepcopy(stub_template_stats),
     )
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -164,7 +275,11 @@ def test_inbound_messages_not_visible_to_service_without_permissions(
     mock_get_inbound_sms_summary,
 ):
     service_one["permissions"] = []
-
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -188,6 +303,11 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_messages(
     mock_get_inbound_sms_summary,
 ):
     service_one["permissions"] = ["inbound_sms"]
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -215,6 +335,11 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_no_messages(
     mock_get_inbound_sms_summary_with_no_messages,
 ):
     service_one["permissions"] = ["inbound_sms"]
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -460,7 +585,11 @@ def test_should_show_recent_templates_on_dashboard(
         "app.template_statistics_client.get_template_statistics_for_service",
         return_value=copy.deepcopy(stub_template_stats),
     )
-
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -513,7 +642,11 @@ def test_should_not_show_recent_templates_on_dashboard_if_only_one_template_used
         "app.template_statistics_client.get_template_statistics_for_service",
         return_value=stats,
     )
-
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
     main = page.select_one("main").text
 
@@ -638,6 +771,7 @@ def test_monthly_has_equal_length_tables(
 
 @freeze_time("2016-01-01 11:09:00.061258")
 def test_should_show_upcoming_jobs_on_dashboard(
+    mocker,
     client_request,
     mock_get_service_templates,
     mock_get_template_statistics,
@@ -648,6 +782,11 @@ def test_should_show_upcoming_jobs_on_dashboard(
     mock_get_free_sms_fragment_limit,
     mock_get_inbound_sms_summary,
 ):
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -685,6 +824,11 @@ def test_should_not_show_upcoming_jobs_on_dashboard_if_count_is_0(
             "soonest_scheduled_for": None,
         },
     )
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -706,6 +850,11 @@ def test_should_not_show_upcoming_jobs_on_dashboard_if_service_has_no_jobs(
     mock_get_free_sms_fragment_limit,
     mock_get_inbound_sms_summary,
 ):
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -755,7 +904,11 @@ def test_correct_font_size_for_big_numbers(
     service_one["permissions"] = permissions
 
     mocker.patch("app.main.views.dashboard.get_dashboard_totals", return_value=totals)
-
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=service_one["id"],
@@ -773,6 +926,7 @@ def test_correct_font_size_for_big_numbers(
 
 
 def test_should_not_show_jobs_on_dashboard_for_users_with_uploads_page(
+    mocker,
     client_request,
     service_one,
     mock_get_service_templates,
@@ -784,6 +938,11 @@ def test_should_not_show_jobs_on_dashboard_for_users_with_uploads_page(
     mock_get_free_sms_fragment_limit,
     mock_get_inbound_sms_summary,
 ):
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -1050,6 +1209,11 @@ def test_menu_send_messages(
 ):
     service_one["permissions"] = ["email", "sms"]
 
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = _test_dashboard_menu(
         client_request,
         mocker,
@@ -1082,6 +1246,11 @@ def test_menu_manage_service(
     mock_get_inbound_sms_summary,
     mock_get_free_sms_fragment_limit,
 ):
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = _test_dashboard_menu(
         client_request,
         mocker,
@@ -1114,6 +1283,11 @@ def test_menu_main_settings(
     mock_get_inbound_sms_summary,
     mock_get_free_sms_fragment_limit,
 ):
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = _test_settings_menu(
         client_request,
         mocker,
@@ -1145,6 +1319,11 @@ def test_menu_manage_api_keys(
     mock_get_inbound_sms_summary,
     mock_get_free_sms_fragment_limit,
 ):
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = _test_dashboard_menu(
         client_request,
         mocker,
@@ -1180,6 +1359,11 @@ def test_menu_all_services_for_platform_admin_user(
     mock_get_inbound_sms_summary,
     mock_get_free_sms_fragment_limit,
 ):
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = _test_dashboard_menu(
         client_request, mocker, platform_admin_user, service_one, []
     )
@@ -1220,7 +1404,11 @@ def test_route_for_service_permissions(
         mocker.patch(
             "app.service_api_client.get_global_notification_count", side_effect=_get
         )
-
+        mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+        mocker.patch(
+            "app.notification_api_client.get_notifications_for_service",
+            return_value=FAKE_ONE_OFF_NOTIFICATION,
+        )
         validate_route_permission(
             mocker,
             notify_admin,
@@ -1271,6 +1459,11 @@ def test_service_dashboard_updates_gets_dashboard_totals(
             "email": {"requested": 123, "delivered": 0, "failed": 0},
             "sms": {"requested": 456, "delivered": 0, "failed": 0},
         },
+    )
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
     )
 
     page = client_request.get(
@@ -1385,6 +1578,7 @@ def test_get_tuples_of_financial_years_defaults_to_2015():
 
 
 def test_org_breadcrumbs_do_not_show_if_service_has_no_org(
+    mocker,
     client_request,
     mock_get_template_statistics,
     mock_get_service_templates_when_no_templates_exist,
@@ -1392,6 +1586,11 @@ def test_org_breadcrumbs_do_not_show_if_service_has_no_org(
     mock_get_annual_usage_for_service,
     mock_get_free_sms_fragment_limit,
 ):
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
     assert not page.select(".navigation-organization-link")
@@ -1454,6 +1653,11 @@ def test_org_breadcrumbs_show_if_user_is_a_member_of_the_services_org(
             id_=ORGANISATION_ID,
         ),
     )
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
     assert page.select_one(".navigation-organization-link")["href"] == url_for(
@@ -1484,6 +1688,13 @@ def test_org_breadcrumbs_do_not_show_if_user_is_a_member_of_the_services_org_but
         "app.service_api_client.get_service", return_value={"data": service_one_json}
     )
     mocker.patch("app.models.service.Organization")
+
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
@@ -1516,6 +1727,13 @@ def test_org_breadcrumbs_show_if_user_is_platform_admin(
         ),
     )
 
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
+
     client_request.login(platform_admin_user, service_one_json)
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
@@ -1543,6 +1761,13 @@ def test_breadcrumb_shows_if_service_is_suspended(
 
     mocker.patch(
         "app.service_api_client.get_service", return_value={"data": service_one_json}
+    )
+
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
     )
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
@@ -1572,11 +1797,21 @@ def test_service_dashboard_shows_usage(
             "count": 500,
         },
     )
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
 
     service_one["permissions"] = permissions
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
-    table_rows = page.find_all("tbody")[0].find_all("tr")
+    usage_table = page.find("table", class_="usage-table")
+
+    # Check if the "Usage" table exists
+    assert usage_table is not None
+
+    table_rows = usage_table.find_all("tbody")[0].find_all("tr")
 
     assert len(table_rows) == 1
 
@@ -1605,9 +1840,43 @@ def test_service_dashboard_shows_free_allowance(
             }
         ],
     )
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
     usage_text = normalize_spaces(page.select_one("[data-key=usage]").text)
     assert "spent on text messages" not in usage_text
     assert "Daily Usage Remaining 1,000 249,000" in usage_text
+
+
+def test_service_dashboard_shows_batched_jobs(
+    mocker,
+    client_request,
+    service_one,
+    mock_get_service_templates,
+    mock_get_template_statistics,
+    mock_has_no_jobs,
+    mock_get_annual_usage_for_service,
+    mock_get_free_sms_fragment_limit,
+):
+    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
+
+    page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
+
+    job_table = page.find("div", class_="job-table")
+
+    # Check if the "Job" table exists
+    assert job_table is not None
+
+    table_rows = job_table.find_all("tbody")[0].find_all("tr")
+
+    assert len(table_rows) == 1
