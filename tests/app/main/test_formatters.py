@@ -174,16 +174,23 @@ def test_format_delta():
 def test_jinja_format(fake_jinja_template):
     app = Flask("app")
     with app.app_context():
-        assert convert_markdown_template(fake_jinja_template, test=True) == "<p>True</p>"
+        assert (
+            convert_markdown_template(fake_jinja_template, test=True) == "<p>True</p>"
+        )
 
 
 @pytest.mark.usefixtures("fake_markdown_file")
 def test_markdown_format(fake_markdown_file):
     app = Flask("app")
     with app.app_context():
-        assert convert_markdown_template(fake_markdown_file, test=True) == "<h1>Test</h1>"
+        assert (
+            convert_markdown_template(fake_markdown_file, test=True) == "<h1>Test</h1>"
+        )
 
 
 @pytest.mark.usefixtures("fake_soup_template")
 def test_soup_format(fake_soup_template):
-    assert apply_html_class([['h1', 'testClass']], fake_soup_template) == '<h1 class="testClass">Test</h1>'
+    assert (
+        apply_html_class([["h1", "testClass"]], fake_soup_template)
+        == '<h1 class="testClass">Test</h1>'
+    )
