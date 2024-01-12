@@ -66,7 +66,7 @@ def service_dashboard(service_id):
         if job_data:
             jobs.append(job_data)
 
-    service_data_retention_days = None
+    service_data_retention_days = 7
     download_availability = []
     for job in jobs:
         message_type = job.get("template_type")

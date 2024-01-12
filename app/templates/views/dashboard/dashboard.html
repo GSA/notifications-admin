@@ -30,9 +30,8 @@
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
 
     <h2 class="margin-top-4 margin-bottom-1">Batched Jobs</h2>
-    {% if notifications %}
+
     <div class='job-table'>
-    {% endif %}
       {% call(item, row_number) list_table(
         notifications,
         caption="Batched Jobs",
@@ -63,9 +62,8 @@
           {% endcall %}
         {% endif %}
       {% endcall %}
-    {% if notifications %}
-      </div>
-    {% endif %}
+    </div>
+
 
     {% if show_pagination %}
       {{ previous_next_navigation(prev_page, next_page) }}
