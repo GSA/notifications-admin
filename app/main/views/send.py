@@ -780,6 +780,8 @@ def _check_notification(service_id, template_id, exception=None):
 
     back_link = get_back_link(service_id, template, len(placeholders), placeholders)
 
+    choose_time_form = ChooseTimeForm()
+
     if (not session.get("recipient")) or not all_placeholders_in_session(
         template.placeholders
     ):
@@ -791,6 +793,7 @@ def _check_notification(service_id, template_id, exception=None):
     return dict(
         template=template,
         back_link=back_link,
+        choose_time_form=choose_time_form,
         **(get_template_error_dict(exception) if exception else {}),
     )
 
@@ -861,7 +864,7 @@ def send_notification(service_id, template_id):
     job_api_client.create_job(
         upload_id,
         service_id,
-        scheduled_for="",
+        scheduled_for=request.form.get("scheduled_for", ""),
         template_id=template_id,
         original_file_name=filename,
         notification_count=1,
