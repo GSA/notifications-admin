@@ -30,6 +30,7 @@ def _reformat_keystring(orig):
     new_keystring = orig.replace("-----BEGIN PRIVATE KEY-----", "")
     new_keystring = new_keystring.replace("-----END PRIVATE KEY-----", "")
     new_keystring = new_keystring.strip()
+    new_keystring = new_keystring.replace(" ", "\n")
     new_keystring = "\n".join(
         ["-----BEGIN PRIVATE KEY-----", new_keystring, "-----END PRIVATE KEY-----"]
     )
