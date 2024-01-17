@@ -2323,6 +2323,10 @@ def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too com
         "app.service_api_client.get_global_notification_count", side_effect=_get
     )
 
+    mocker.patch(
+        "app.billing_api_client.create_or_update_free_sms_fragment_limit", autospec=True
+    )
+
     class ClientRequest:
         @staticmethod
         @contextmanager
@@ -3594,3 +3598,21 @@ def end_to_end_authenticated_context(browser):
     context = browser.new_context(storage_state=auth_state_path)
 
     return context
+
+
+@pytest.fixture()
+def fake_markdown_file():
+    input = "#Test"
+    return input
+
+
+@pytest.fixture()
+def fake_jinja_template():
+    input = "{% if True %}True{% endif %}"
+    return input
+
+
+@pytest.fixture()
+def fake_soup_template():
+    input = "<h1>Test</h1>"
+    return input

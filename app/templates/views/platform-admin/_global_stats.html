@@ -13,7 +13,7 @@
       {% if link %}
         </a>
       {% endif %}
-      <span class="big-number-status{% if (global_stats.email.failure_rate|float > 3) is sameas true %} big-number-status--failing{% endif %}">
+      <span class="big-number-status{% if (global_stats.email.failure_rate|float > 0) is sameas true %} big-number-status--failing{% endif %}">
         {% if global_stats.email.failed %}
           {% if failure_link %}
             <a class="usa-link" href="{{ failure_link }}">
@@ -44,7 +44,7 @@
       {% if link %}
         </a>
       {% endif %}
-      <span class="big-number-status{% if (global_stats.sms.failure_rate|float > 3) is sameas true %} big-number-status--failing{% endif %}">
+      <span class="big-number-status{% if (global_stats.sms.failure_rate|float > 0) is sameas true %} big-number-status--failing{% endif %}">
         {% if global_stats.sms.failed %}
           {% if failure_link %}
             <a class="usa-link" href="{{ failure_link }}">

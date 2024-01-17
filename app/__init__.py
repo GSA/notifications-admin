@@ -39,6 +39,7 @@ from app.asset_fingerprinter import asset_fingerprinter
 from app.config import configs
 from app.extensions import redis_client, zendesk_client
 from app.formatters import (
+    convert_markdown_template,
     convert_to_boolean,
     format_auth_type,
     format_billions,
@@ -88,6 +89,7 @@ from app.navigation import (
     HeaderNavigation,
     MainNavigation,
     OrgNavigation,
+    SecondaryNavigation,
 )
 from app.notify_client import InviteTokenError
 from app.notify_client.api_key_api_client import api_key_api_client
@@ -128,6 +130,7 @@ navigation = {
     "main_navigation": MainNavigation(),
     "header_navigation": HeaderNavigation(),
     "org_navigation": OrgNavigation(),
+    "secondary_navigation": SecondaryNavigation(),
 }
 
 
@@ -582,6 +585,7 @@ def add_template_filters(application):
         format_mobile_network,
         format_yes_no,
         square_metres_to_square_miles,
+        convert_markdown_template,
     ]:
         application.add_template_filter(fn)
 
