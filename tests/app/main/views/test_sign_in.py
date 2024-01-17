@@ -41,9 +41,11 @@ def test_render_sign_in_template_with_next_link_for_password_reset(client_reques
 
 
 def test_reformat_keystring():
-    orig = "-----BEGIN PRIVATE KEY----- blahblahblah -----END PRIVATE KEY-----"
+    orig = "-----BEGIN PRIVATE KEY----- blah blah blah -----END PRIVATE KEY-----"
     expected = """-----BEGIN PRIVATE KEY-----
-blahblahblah
+blah
+blah
+blah
 -----END PRIVATE KEY-----
 """
     reformatted = _reformat_keystring(orig)
