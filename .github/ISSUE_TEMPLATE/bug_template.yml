@@ -37,7 +37,8 @@ body:
         - demo
         - production
     validations:
-      required: true- type: textarea
+      required: true
+  - type: textarea
     id: page
     attributes:
       label: What pages did this appear on?
