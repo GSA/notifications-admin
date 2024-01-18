@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Please use this form to file new bugs!
+        Please use this form to file new bugs! Add screenshots to the comments of this initial form.
   - type: input
     id: contact
     attributes:
@@ -49,7 +49,3 @@ body:
       description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
       render: shell
       required: false
- - type: markdown
-    attributes:
-      value: |
-        Please add screenshots to the comments of this initial issue.
