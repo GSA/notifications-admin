@@ -349,9 +349,10 @@ def test_should_show_scheduled_job(
         job_id=fake_uuid,
     )
 
-    assert normalize_spaces(page.select("main p")[1].text) == (
+    assert normalize_spaces(page.select("main div p")[1].text) == (
         "Sending Two week reminder today at 00:00 US/Eastern"
     )
+
     assert page.select("main p a")[0]["href"] == url_for(
         "main.view_template_version",
         service_id=SERVICE_ONE_ID,
@@ -481,3 +482,22 @@ def test_should_show_updates_for_scheduled_job_as_json(
 @freeze_time("2016-01-10 12:00:00.000000")
 def test_time_left(job_created_at, expected_message):
     assert get_time_left(job_created_at) == expected_message
+
+
+def test_should_show_message_note(
+    client_request,
+    mock_get_service_template,
+    mock_get_scheduled_job,
+    mock_get_service_data_retention,
+    mock_get_notifications,
+    fake_uuid,
+):
+    page = client_request.get(
+        "main.view_job",
+        service_id=SERVICE_ONE_ID,
+        job_id=fake_uuid,
+    )
+
+    assert normalize_spaces(page.select_one("main p.notification-status").text) == (
+        "Messages will remain in pending state until carrier status is received, typically 5 minutes."
+    )

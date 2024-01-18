@@ -38,6 +38,9 @@
       </div>
     {% endif %}
 
+    <p class="notification-status">
+      Messages will remain in pending state until carrier status is received, typically 5 minutes.
+    </p>
     {% if not job.processing_finished %}
       <div
         data-module="update-content"
