@@ -1,8 +1,12 @@
-name: Bug Report
-description: File a bug report
-title: "[Bug]: "
-labels: ["bug"]
+name: "Bug Report"
+description: "Use this template to file a bug report"
+title: "Bug: [Brief description of the bug]"
+
+labels:
+  - "Type: Bug"
+
 assignees:
+
 body:
   - type: markdown
     attributes:
@@ -25,7 +29,7 @@ body:
       value: "A bug happened!"
     validations:
       required: true
-- type: textarea
+  - type: textarea
     id: page
     attributes:
       label: What pages did this appear on?
