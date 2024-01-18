@@ -5,8 +5,6 @@ title: "Bug: [Brief description of the bug]"
 labels:
   - "Type: Bug"
 
-assignees:
-
 body:
   - type: markdown
     attributes:
