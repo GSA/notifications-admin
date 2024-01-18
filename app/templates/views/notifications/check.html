@@ -54,6 +54,16 @@
       )}}" class='page-footer'>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       {% if not error %}
+        {% if choose_time_form %}
+          {{ choose_time_form.scheduled_for(param_extensions={
+            'formGroup': {'classes': 'bottom-gutter-2-3'},
+            'attributes': {
+              'data-module': 'radio-select',
+              'data-categories': choose_time_form.scheduled_for.categories|join(','),
+              'data-show-now-as-default': 'true'
+            }
+          }) }}
+        {% endif %}
         {% set button_text %}Send 1 {{ 1|message_count_label(template.template_type, suffix='') }}{% endset %}
         {{ usaButton({ "text": button_text }) }}
       {% endif %}
