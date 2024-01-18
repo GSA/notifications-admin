@@ -1,13 +1,15 @@
 name: Bug Report
 description: File a bug report
 title: "[Bug]: "
+
 labels: ["bug"]
-assignees:
+
 body:
   - type: markdown
     attributes:
       value: |
         Please use this form to file new bugs! Add screenshots to the comments of this initial form.
+        
   - type: input
     id: contact
     attributes:
@@ -16,6 +18,7 @@ body:
       placeholder: ex. email@example.com
     validations:
       required: false
+      
   - type: textarea
     id: what-happened
     attributes:
@@ -25,6 +28,7 @@ body:
       value: "A bug happened!"
     validations:
       required: true
+      
 - type: textarea
     id: page
     attributes:
@@ -32,6 +36,7 @@ body:
       description: please include URLs of where you saw the bug
     validations:
       required: true
+      
   - type: dropdown
     id: browsers
     attributes:
@@ -42,6 +47,7 @@ body:
         - Chrome
         - Safari
         - Microsoft Edge
+        
   - type: textarea
     id: logs
     attributes:
