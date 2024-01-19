@@ -65,7 +65,6 @@ def service_dashboard(service_id):
         job_data = job_api_client.get_job(service_id, notificaton_job_id)["data"]
         if job_data:
             jobs.append(job_data)
-
     service_data_retention_days = 7
     download_availability = []
     for job in jobs:
@@ -82,11 +81,13 @@ def service_dashboard(service_id):
                 job_id=job["id"],
             ),
         )
+
         download_availability.append(
             {
                 "job_id": job["id"],
                 "time_left": time_left,
                 "download_link": download_link,
+                "notification_count": job["notification_count"],
             }
         )
     return render_template(
