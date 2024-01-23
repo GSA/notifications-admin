@@ -30,7 +30,6 @@
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
 
     <h2 class="margin-top-4 margin-bottom-1">Recent Batches</h2>
-
     <div class='job-table'>
       {% call(item, row_number) list_table(
         notifications,
@@ -38,10 +37,9 @@
         caption_visible=False,
         border_visible=True,
         empty_message='No batched job messages found &thinsp;(messages are kept for {} days)'.format(service_data_retention_days)|safe,
-        field_headings=['File Name','Template','Time Sent', 'Sender', '# of Recipeints'],
+        field_headings=['File Name','Template','Time Sent', 'Sender', '# of Recipeints', "Report"],
         field_headings_visible=False
       ) %}
-        {{ download_availability }}
         {% if item.job.original_file_name and item.job.id and item.template %}
           {% call row_heading() %}
             <a class="usa-link file-list-filename" href="/services/{{ item.service }}/jobs/{{ item.job.id }}">{{ item.job.original_file_name if item.job.id else '' }}</a>
@@ -58,11 +56,19 @@
           {% call row_heading() %}
             {{ item.created_by.name }}
           {% endcall %}
+          {% set availability = jobs|selectattr('job_id', 'equalto', item.job.id)|first %}
           {% call row_heading() %}
-            {% set availability = download_availability|selectattr('job_id', 'equalto', item.job.id)|first %}
-              {% if availability %}
-                {{ availability.notification_count}}
-              {% endif %}
+            {% if availability %}
+              {{ availability.notification_count}}
+            {% endif %}
+          {% endcall %}
+          {% call row_heading() %}
+            {% if availability and availability.time_left != "Data no longer available" %}
+              <a class="usa-link file-list-filename" href="{{ availability.download_link[0] }}">{{ "Download" if item.job.original_file_name else '' }}</a>
+              <span class="usa-hint">{{ availability.time_left }}</span>
+            {% elif availability %}
+              <span>{{ availability.time_left }}</span>
+            {% endif %}
           {% endcall %}
         {% endif %}
       {% endcall %}

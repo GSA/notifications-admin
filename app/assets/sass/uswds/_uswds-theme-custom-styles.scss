@@ -377,6 +377,15 @@ td.table-empty-message {
    }
 }
 
+.job-table {
+   .usa-table {
+      thead th {
+         background-color: #d9e8f6;
+         color: #1b1b1b;
+      }
+   }
+}
+
 #template-list {
    max-height: 500px;
    overflow-y: auto;
