@@ -48,10 +48,10 @@
             {{ item.template.name }}
           {% endcall %}
           {% call row_heading() %}
-            {{ item.status|format_notification_status_as_time(
-              item.created_at|format_datetime_short,
-              (item.updated_at or item.created_at)|format_datetime_short)
-            }}
+          {{ item.status|format_notification_status_as_time(
+            item.created_at|format_datetime_short_america,
+            (item.updated_at or item.created_at)|format_datetime_short_america
+          ) }}
           {% endcall %}
           {% call row_heading() %}
             {{ item.created_by.name }}

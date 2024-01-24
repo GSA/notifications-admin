@@ -54,22 +54,21 @@ def service_dashboard(service_id):
     job_response = job_api_client.get_jobs(service_id)
 
     service_data_retention_days = 7
-    jobs = []
-    for job in job_response['data']:
-        job_info = {
-                "job_id": job["id"],
-                "time_left": get_time_left(job["created_at"]),
-                "download_link": url_for(".view_job_csv", service_id=current_service.id, job_id=job["id"]),
-                "notification_count": job["notification_count"],
+    jobs = [
+        {
+            "job_id": job["id"],
+            "time_left": get_time_left(job["created_at"]),
+            "download_link": url_for(".view_job_csv", service_id=current_service.id, job_id=job["id"]),
+            "notification_count": job["notification_count"],
         }
-        jobs.append(job_info)
+        for job in job_response.get('data', [])
+    ]
     return render_template(
         "views/dashboard/dashboard.html",
         updates_url=url_for(".service_dashboard_updates", service_id=service_id),
         partials=get_dashboard_partials(service_id),
         notifications=notifications,
         jobs=jobs,
-        job_response = job_response,
         service_data_retention_days=service_data_retention_days,
     )
 
