@@ -21,7 +21,7 @@ from app.utils import (
     parse_filter_args,
     set_status_filters,
 )
-from app.utils.csv import generate_notifications_csv
+from app.utils.csv import generate_notifications_csv, get_user_preferred_timezone
 from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
 
@@ -142,6 +142,7 @@ def download_notifications_csv(service_id):
         filter_args.get("message_type")[0]
     )
     file_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
+    file_time = f"{file_time} {get_user_preferred_timezone()}"
 
     return Response(
         stream_with_context(
