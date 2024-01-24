@@ -37,7 +37,7 @@
         caption_visible=False,
         border_visible=True,
         empty_message='No batched job messages found &thinsp;(messages are kept for {} days)'.format(service_data_retention_days)|safe,
-        field_headings=['File Name','Template','Time Sent', 'Sender', '# of Recipeints', "Report"],
+        field_headings=['File Name','Template','Time Sent', 'Sender', '# of Recipients', "Report"],
         field_headings_visible=False
       ) %}
         {% if item.job.original_file_name and item.job.id and item.template %}
@@ -48,10 +48,8 @@
             {{ item.template.name }}
           {% endcall %}
           {% call row_heading() %}
-          {{ item.status|format_notification_status_as_time(
-            item.created_at|format_datetime_short_america,
-            (item.updated_at or item.created_at)|format_datetime_short_america
-          ) }}
+          {{ (item.updated_at or item.created_at)|  format_datetime_short_america
+          }}
           {% endcall %}
           {% call row_heading() %}
             {{ item.created_by.name }}
