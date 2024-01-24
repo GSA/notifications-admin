@@ -11,12 +11,7 @@ from flask import (
     url_for,
 )
 
-from app import (
-    current_service,
-    format_date_numeric,
-    job_api_client,
-    notification_api_client,
-)
+from app import current_service, job_api_client, notification_api_client
 from app.main import main
 from app.notify_client.api_key_api_client import KEY_TYPE_TEST
 from app.utils import (
@@ -26,7 +21,7 @@ from app.utils import (
     parse_filter_args,
     set_status_filters,
 )
-from app.utils.csv import generate_notifications_csv
+from app.utils.csv import generate_notifications_csv, get_user_preferred_timezone
 from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
 
@@ -146,6 +141,9 @@ def download_notifications_csv(service_id):
     service_data_retention_days = current_service.get_days_of_retention(
         filter_args.get("message_type")[0]
     )
+    file_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
+    file_time = f"{file_time} {get_user_preferred_timezone()}"
+
     return Response(
         stream_with_context(
             generate_notifications_csv(
@@ -162,7 +160,7 @@ def download_notifications_csv(service_id):
         mimetype="text/csv",
         headers={
             "Content-Disposition": 'inline; filename="{} - {} - {} report.csv"'.format(
-                format_date_numeric(datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")),
+                file_time,
                 filter_args["message_type"][0],
                 current_service.name,
             )
