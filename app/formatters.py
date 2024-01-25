@@ -97,20 +97,28 @@ def format_datetime_short(date):
         format_date_short(date), format_time_24h(date), get_user_preferred_timezone()
     )
 
+
 def format_datetime_short_america(date):
-    return "{} at {} {}".format(
-        format_date_normal_america(date), format_time_12h(date),get_user_preferred_timezone()
+    return "{} at {}".format(
+        format_date_numeric_america(date), format_time_12h(date)
     )
 
-def format_date_normal_america(date):
+
+def format_date_numeric_america(date):
     date = parse_naive_dt(date)
-    return date.strftime("%B %d, %Y").lstrip("0")
+
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    return (
+        date.replace(tzinfo=timezone.utc).astimezone(preferred_tz).strftime("%m-%d-%Y")
+    )
+
 
 def format_time_12h(date):
     date = parse_naive_dt(date)
 
     preferred_tz = pytz.timezone(get_user_preferred_timezone())
     return date.replace(tzinfo=timezone.utc).astimezone(preferred_tz).strftime("%I:%M %p")
+
 
 def format_datetime_relative(date):
     return "{} at {} {}".format(

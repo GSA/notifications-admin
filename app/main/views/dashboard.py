@@ -29,7 +29,7 @@ from app.utils.csv import Spreadsheet
 from app.utils.pagination import generate_next_dict, generate_previous_dict
 from app.utils.time import get_current_financial_year
 from app.utils.user import user_has_permissions
-from pprint import pprint
+
 
 @main.route("/services/<uuid:service_id>/dashboard")
 @user_has_permissions("view_activity", "send_messages")
@@ -58,8 +58,10 @@ def service_dashboard(service_id):
         {
             "job_id": job["id"],
             "time_left": get_time_left(job["created_at"]),
-            "download_link": url_for(".view_job_csv", service_id=current_service.id, job_id=job["id"]),
+            # "download_link": url_for(".view_job_csv", service_id=current_service.id, job_id=job["id"]),
             "notification_count": job["notification_count"],
+            "created_by": job["created_by"],
+            "download_link": url_for(".view_job_csv", service_id=current_service.id, job_id=job["id"])
         }
         for job in job_response.get('data', [])
     ]
@@ -69,6 +71,7 @@ def service_dashboard(service_id):
         partials=get_dashboard_partials(service_id),
         notifications=notifications,
         jobs=jobs,
+        job_response=job_response['data'],
         service_data_retention_days=service_data_retention_days,
     )
 
