@@ -97,7 +97,7 @@ jobs:
           REDIS_URL: redis://localhost:6379
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-          NOTIFY_ENVIRONMENT: staging
+          NOTIFY_ENVIRONMENT: development
       - name: Run API server
         working-directory: 'notifications-api'
         run: make run-procfile &
@@ -107,7 +107,7 @@ jobs:
           REDIS_URL: redis://localhost:6379
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-          NOTIFY_ENVIRONMENT: staging
+          NOTIFY_ENVIRONMENT: development
       - name: Run Admin server
         run: make run-flask &
         env:
