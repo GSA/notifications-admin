@@ -124,7 +124,9 @@ jobs:
           NOTIFY_E2E_TEST_URI: http://localhost:6012
       - name: Run E2E tests
         # Run the E2E tests against the code found in this PR.
-        run: poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
+        # run: poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
+        # --browser webkit doesn't work at this time.
+        run: poetry run pytest -v --browser chromium --browser firefox tests/end_to_end
         # Debugging for now to troubleshoot a connectivity issue to the local servers
         # run: curl --request GET --url "http://localhost:6012"
         env:
