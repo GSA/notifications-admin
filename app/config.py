@@ -169,6 +169,14 @@ class E2ETest(Staging):
     TESTING = True
     WTF_CSRF_ENABLED = False
 
+    # buckets - mirror staging
+    CSV_UPLOAD_BUCKET = cloud_config.s3_credentials(
+        "notify-api-csv-upload-bucket-staging"
+    )
+    LOGO_UPLOAD_BUCKET = cloud_config.s3_credentials(
+        "notify-admin-logo-upload-bucket-staging"
+    )
+
 
 class Demo(Staging):
     HEADER_COLOUR = "#6F72AF"  # $mauve

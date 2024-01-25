@@ -7,8 +7,6 @@ permissions:
 
 env:
   NOTIFY_ENVIRONMENT: test
-  NEW_RELIC_CONFIG_FILE: newrelic.ini
-  NEW_RELIC_ENVIRONMENT: test
   FLASK_APP: application.py
   WERKZEUG_DEBUG_PIN: off
   REDIS_ENABLED: 0
@@ -119,8 +117,6 @@ jobs:
           ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
           ADMIN_CLIENT_USERNAME: notify-admin
           NOTIFY_ENVIRONMENT: e2etest
-          NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
-          NR_BROWSER_KEY: ${{ secrets.NR_BROWSER_KEY }}
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
@@ -131,10 +127,6 @@ jobs:
         # Debugging for now to troubleshoot a connectivity issue to the local servers
         # run: curl --request GET --url "http://localhost:6012"
         env:
-          DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
-          ADMIN_CLIENT_USERNAME: notify-admin
           NOTIFY_ENVIRONMENT: e2etest
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
@@ -149,6 +141,7 @@ jobs:
       - uses: ./.github/actions/setup-project
       - name: Validate NewRelic config
         env:
+          NEW_RELIC_CONFIG_FILE: newrelic.ini
           NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
           # Need to set a NEW_RELIC_ENVIRONMENT with monitor_mode: true
           NEW_RELIC_ENVIRONMENT: staging
