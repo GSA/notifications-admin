@@ -15,7 +15,7 @@ def _bypass_sign_in(end_to_end_context):
 
     sign_in_button = page.get_by_role("link", name="Sign in")
 
-    # Test trying to sign in. Because we are loading the email and password
+    # Sign in to the site - E2E test accounts are set to flow through.
     sign_in_button.click()
 
     # Wait for the next page to fully load.

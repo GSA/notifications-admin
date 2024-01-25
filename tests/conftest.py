@@ -3593,7 +3593,7 @@ def end_to_end_context(browser):
 def end_to_end_authenticated_context(browser):
     # Create and load a previously authenticated context for Playwright E2E
     # tests.
-    login_for_end_to_end_testing(browser)
+    # login_for_end_to_end_testing(browser)
 
     auth_state_path = os.path.join(
         os.getenv("NOTIFY_E2E_AUTH_STATE_PATH"), "state.json"
