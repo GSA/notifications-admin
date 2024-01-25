@@ -159,6 +159,7 @@ class E2ETest(Staging):
     """
 
     # Borrowed from development environment
+    DEBUG = True
     SESSION_COOKIE_SECURE = False
     SESSION_PROTECTION = None
     HTTP_PROTOCOL = "http"
