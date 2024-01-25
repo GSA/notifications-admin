@@ -448,6 +448,12 @@ def message_count_noun(count, template_type):
         else:
             return "text messages"
 
+    if template_type == "parts":
+        if count == 1:
+            return "text message part"
+        else:
+            return "text message parts"
+
     elif template_type == "email":
         if count == 1:
             return "email"
