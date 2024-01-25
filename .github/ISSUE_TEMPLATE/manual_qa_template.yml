@@ -4,9 +4,9 @@ title: "QA for prod push: Admin #[insert PR number], API #[insert PR number], Ut
 
 body:
 - type: checkboxes
-  id: Logging in
+  id: Logging_in
   attributes:
-    description: Log In
+    label: Log In
     options:
       - label: notify-staging.app.cloud.gov resolves
       - label: Clicking sign in takes you to login page
