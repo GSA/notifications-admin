@@ -118,7 +118,7 @@ jobs:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
           ADMIN_CLIENT_USERNAME: notify-admin
-          NOTIFY_ENVIRONMENT: staging
+          NOTIFY_ENVIRONMENT: e2etest
           NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
           NR_BROWSER_KEY: ${{ secrets.NR_BROWSER_KEY }}
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
