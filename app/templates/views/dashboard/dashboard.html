@@ -57,7 +57,7 @@
         <tbody>
           {% for notification in notifications %}
             {% if notification %}
-              <tr class="table-row">
+              <tr class="table-row" id="{{ notification.job.id }}">
                 <th class="table-field">
                   {{ notification.job.original_file_name if notification.job.original_file_name else 'Manually entered number'}}
                   <br>

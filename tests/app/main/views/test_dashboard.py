@@ -130,6 +130,37 @@ MOCK_ONE_OFF_JOB = {
     }
 }
 
+MOCK_JOBS = {
+    "data": [{
+        "archived": False,
+        "created_at": "2024-01-04T20:43:52+00:00",
+        "created_by": {
+            "id": "mocked_user_id",
+            "name": "mocked_user",
+        },
+        "id": "mocked_notification_id",
+        "job_status": 'finished',
+        "notification_count": 1,
+        "original_file_name": 'mocked_file.csv',
+        'processing_finished': '2024-01-25T23:02:25+00:00',
+        'processing_started': '2024-01-25T23:02:24+00:00',
+        'scheduled_for': None,
+        'service': '21b3ee3d-1cb0-4666-bfa0-9c5ac26d3fe3',
+        'service_name': {
+            'name': "Mock Texting Service"
+        },
+        'statistics': [{
+            'count': 1,
+            'status': 'sending'
+        }],
+        'template': '6a456418-498c-4c86-b0cd-9403c14a216c',
+        'template_name': 'Mock Template Name',
+        'template_type': 'sms',
+        'template_version': 3,
+        'updated_at': '2024-01-25T23:02:25+00:00',
+    }]
+}
+
 stub_template_stats = [
     {
         "template_type": "sms",
@@ -218,7 +249,7 @@ def test_get_started(
         "app.template_statistics_client.get_template_statistics_for_service",
         return_value=copy.deepcopy(stub_template_stats),
     )
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -248,7 +279,7 @@ def test_get_started_is_hidden_once_templates_exist(
         "app.template_statistics_client.get_template_statistics_for_service",
         return_value=copy.deepcopy(stub_template_stats),
     )
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -275,7 +306,7 @@ def test_inbound_messages_not_visible_to_service_without_permissions(
     mock_get_inbound_sms_summary,
 ):
     service_one["permissions"] = []
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -303,7 +334,7 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_messages(
     mock_get_inbound_sms_summary,
 ):
     service_one["permissions"] = ["inbound_sms"]
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -335,7 +366,7 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_no_messages(
     mock_get_inbound_sms_summary_with_no_messages,
 ):
     service_one["permissions"] = ["inbound_sms"]
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -585,7 +616,7 @@ def test_should_show_recent_templates_on_dashboard(
         "app.template_statistics_client.get_template_statistics_for_service",
         return_value=copy.deepcopy(stub_template_stats),
     )
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -642,7 +673,7 @@ def test_should_not_show_recent_templates_on_dashboard_if_only_one_template_used
         "app.template_statistics_client.get_template_statistics_for_service",
         return_value=stats,
     )
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -782,7 +813,7 @@ def test_should_show_upcoming_jobs_on_dashboard(
     mock_get_free_sms_fragment_limit,
     mock_get_inbound_sms_summary,
 ):
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -824,7 +855,7 @@ def test_should_not_show_upcoming_jobs_on_dashboard_if_count_is_0(
             "soonest_scheduled_for": None,
         },
     )
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -850,7 +881,7 @@ def test_should_not_show_upcoming_jobs_on_dashboard_if_service_has_no_jobs(
     mock_get_free_sms_fragment_limit,
     mock_get_inbound_sms_summary,
 ):
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -904,7 +935,7 @@ def test_correct_font_size_for_big_numbers(
     service_one["permissions"] = permissions
 
     mocker.patch("app.main.views.dashboard.get_dashboard_totals", return_value=totals)
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -938,7 +969,7 @@ def test_should_not_show_jobs_on_dashboard_for_users_with_uploads_page(
     mock_get_free_sms_fragment_limit,
     mock_get_inbound_sms_summary,
 ):
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -1209,7 +1240,7 @@ def test_menu_send_messages(
 ):
     service_one["permissions"] = ["email", "sms"]
 
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -1246,7 +1277,7 @@ def test_menu_manage_service(
     mock_get_inbound_sms_summary,
     mock_get_free_sms_fragment_limit,
 ):
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -1283,7 +1314,7 @@ def test_menu_main_settings(
     mock_get_inbound_sms_summary,
     mock_get_free_sms_fragment_limit,
 ):
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -1319,7 +1350,7 @@ def test_menu_manage_api_keys(
     mock_get_inbound_sms_summary,
     mock_get_free_sms_fragment_limit,
 ):
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -1359,7 +1390,7 @@ def test_menu_all_services_for_platform_admin_user(
     mock_get_inbound_sms_summary,
     mock_get_free_sms_fragment_limit,
 ):
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -1404,7 +1435,7 @@ def test_route_for_service_permissions(
         mocker.patch(
             "app.service_api_client.get_global_notification_count", side_effect=_get
         )
-        mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+        mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
         mocker.patch(
             "app.notification_api_client.get_notifications_for_service",
             return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -1460,7 +1491,7 @@ def test_service_dashboard_updates_gets_dashboard_totals(
             "sms": {"requested": 456, "delivered": 0, "failed": 0},
         },
     )
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -1586,7 +1617,7 @@ def test_org_breadcrumbs_do_not_show_if_service_has_no_org(
     mock_get_annual_usage_for_service,
     mock_get_free_sms_fragment_limit,
 ):
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -1653,7 +1684,7 @@ def test_org_breadcrumbs_show_if_user_is_a_member_of_the_services_org(
             id_=ORGANISATION_ID,
         ),
     )
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -1689,7 +1720,7 @@ def test_org_breadcrumbs_do_not_show_if_user_is_a_member_of_the_services_org_but
     )
     mocker.patch("app.models.service.Organization")
 
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
 
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
@@ -1727,7 +1758,7 @@ def test_org_breadcrumbs_show_if_user_is_platform_admin(
         ),
     )
 
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
 
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
@@ -1763,7 +1794,7 @@ def test_breadcrumb_shows_if_service_is_suspended(
         "app.service_api_client.get_service", return_value={"data": service_one_json}
     )
 
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
 
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
@@ -1797,7 +1828,7 @@ def test_service_dashboard_shows_usage(
             "count": 500,
         },
     )
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -1840,7 +1871,7 @@ def test_service_dashboard_shows_free_allowance(
             }
         ],
     )
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
 
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
@@ -1864,7 +1895,7 @@ def test_service_dashboard_shows_batched_jobs(
     mock_get_annual_usage_for_service,
     mock_get_free_sms_fragment_limit,
 ):
-    mocker.patch("app.job_api_client.get_job", return_value=MOCK_ONE_OFF_JOB)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,

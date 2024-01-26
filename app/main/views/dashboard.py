@@ -58,11 +58,13 @@ def service_dashboard(service_id):
         {
             "job_id": job["id"],
             "time_left": get_time_left(job["created_at"]),
-            "download_link": url_for(".view_job_csv", service_id=current_service.id, job_id=job["id"]),
+            "download_link": url_for(
+                ".view_job_csv", service_id=current_service.id, job_id=job["id"]
+            ),
             "notification_count": job["notification_count"],
             "created_by": job["created_by"],
         }
-        for job in job_response.get('data', [])
+        for job in job_response["data"]
     ]
     return render_template(
         "views/dashboard/dashboard.html",
