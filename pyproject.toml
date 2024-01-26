@@ -42,7 +42,7 @@ markdown = "^3.5.2"
 
 [tool.poetry.group.dev.dependencies]
 bandit = "*"
-black = "^23.12.1"
+black = "^24.1.0"
 coverage = "*"
 freezegun = "^1.4.0"
 flake8 = "^6.1.0"
