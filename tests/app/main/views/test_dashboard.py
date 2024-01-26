@@ -334,7 +334,6 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_messages(
     mock_get_inbound_sms_summary,
 ):
     service_one["permissions"] = ["inbound_sms"]
-    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -343,7 +342,8 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_messages(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
     )
-    mock_get_jobs.assert_called_once_with(SERVICE_ONE_ID)
+    mock_get_jobs.assert_called_with(SERVICE_ONE_ID)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     banner = page.select("a.banner-dashboard")[1]
     assert (
         normalize_spaces(banner.text)
@@ -366,7 +366,6 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_no_messages(
     mock_get_inbound_sms_summary_with_no_messages,
 ):
     service_one["permissions"] = ["inbound_sms"]
-    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -375,7 +374,8 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_no_messages(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
     )
-    mock_get_jobs.assert_called_once_with(SERVICE_ONE_ID)
+    mock_get_jobs.assert_called_with(SERVICE_ONE_ID)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     banner = page.select("a.banner-dashboard")[1]
     assert normalize_spaces(banner.text) == "0 text messages received"
     assert banner["href"] == url_for("main.inbox", service_id=SERVICE_ONE_ID)
@@ -813,7 +813,6 @@ def test_should_show_upcoming_jobs_on_dashboard(
     mock_get_free_sms_fragment_limit,
     mock_get_inbound_sms_summary,
 ):
-    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -823,7 +822,8 @@ def test_should_show_upcoming_jobs_on_dashboard(
         service_id=SERVICE_ONE_ID,
     )
 
-    mock_get_jobs.assert_called_once_with(SERVICE_ONE_ID)
+    mock_get_jobs.assert_called_with(SERVICE_ONE_ID)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mock_get_scheduled_job_stats.assert_called_once_with(SERVICE_ONE_ID)
 
     assert normalize_spaces(page.select_one("main h2").text) == ("In the next few days")
@@ -969,7 +969,6 @@ def test_should_not_show_jobs_on_dashboard_for_users_with_uploads_page(
     mock_get_free_sms_fragment_limit,
     mock_get_inbound_sms_summary,
 ):
-    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
@@ -978,7 +977,8 @@ def test_should_not_show_jobs_on_dashboard_for_users_with_uploads_page(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
     )
-    mock_get_jobs.assert_called_once_with(SERVICE_ONE_ID)
+    mock_get_jobs.assert_called_with(SERVICE_ONE_ID)
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     for filename in {
         "export 1/1/2016.xls",
         "all email addresses.xlsx",
