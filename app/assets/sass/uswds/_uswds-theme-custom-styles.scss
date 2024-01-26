@@ -377,6 +377,32 @@ td.table-empty-message {
    }
 }
 
+.job-table {
+   .usa-table {
+      thead th.file-name {
+         width: 25%;
+      }
+      thead th.template {
+         width: 20%;
+      }
+      thead th.time-sent {
+         width: 30%;
+      }
+      thead th.sender {
+         width: 15%;
+      }
+      thead th.\#-of-recipients {
+         width: 5%;
+      }
+      thead th.report {
+         width: 5%;
+      }
+      th {
+         padding: 0.5rem 0.5rem;
+      }
+   }
+}
+
 #template-list {
    max-height: 500px;
    overflow-y: auto;
