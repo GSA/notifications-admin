@@ -29,50 +29,68 @@
 
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
 
-    <h2 class="margin-top-4 margin-bottom-1">Batched Jobs</h2>
-
+    <h2 class="margin-top-4 margin-bottom-1">Recent Batches</h2>
     <div class='job-table'>
-      {% call(item, row_number) list_table(
-        notifications,
-        caption="Batched Jobs",
-        caption_visible=False,
-        border_visible=True,
-        empty_message='No batched job messages found &thinsp;(messages are kept for {} days)'.format(service_data_retention_days)|safe,
-        field_headings=['Template Name','Date/Time', 'Download (CSV) Report'],
-        field_headings_visible=False
-      ) %}
-        {% if item.job.original_file_name and item.job.id %}
-          {% call row_heading() %}
-            <a class="usa-link file-list-filename" href="/services/{{ item.service }}/jobs/{{ item.job.id }}">{{ item.job.original_file_name|replace('.csv', '') if item.job.id else '' }}</a>
-          {% endcall %}
-          {% call row_heading() %}
-            {{ item.status|format_notification_status_as_time(
-              item.created_at|format_datetime_short,
-              (item.updated_at or item.created_at)|format_datetime_short)
-            }}
-          {% endcall %}
-          {% call row_heading() %}
-            {% set availability = download_availability|selectattr('job_id', 'equalto', item.job.id)|first %}
-              {% if availability and availability.time_left != "Data no longer available" %}
-                <a class="usa-link file-list-filename" href="{{ availability.download_link[0] }}">{{ "Download" if item.job.original_file_name else '' }}</a>
-                <span>- {{ availability.time_left }}</span>
-              {% elif availability %}
-                <span>{{ availability.time_left }}</span>
-              {% endif %}
-          {% endcall %}
-        {% endif %}
-      {% endcall %}
+      <table class="usa-table usa-table--borderless width-full">
+        <thead class="table-field-headings">
+          <tr>
+            <th scope="col" class="table-field-heading-first file-name">
+              <span>File name</span>
+            </th>
+            <th scope="col" class="table-field-heading template">
+              <span>Template</span>
+            </th>
+            <th scope="col" class="table-field-heading time-sent">
+              <span>Time sent</span>
+            </th>
+            <th scope="col" class="table-field-heading sender">
+              <span>Sender</span>
+            </th>
+            <th scope="col" class="table-field-heading #-of-recipients">
+              <span># of Recipients</span>
+            </th>
+            <th scope="col" class="table-field-heading report">
+              <span>Report</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for notification in notifications[:5] %}
+            {% if notification %}
+              <tr class="table-row" id="{{ notification.job.id }}">
+                <th class="table-field">
+                  {{ notification.job.original_file_name if notification.job.original_file_name else 'Manually entered number'}}
+                  <br>
+                  <a class="usa-link file-list-filename" href="/services/{{ notification.service }}/jobs/{{ notification.job.id }}">View Batch</a>
+                </th>
+                <th class="table-field">
+                  {{ notification.template.name }}
+                </th>
+                <th class="table-field">
+                  {{ (notification.updated_at or notification.created_at)| format_datetime_short_america }}
+                </th>
+                <th class="table-field">
+                  {{ notification.created_by.name }}
+                </th>
+                {% set job_available = jobs|selectattr('job_id', 'equalto', notification.job.id)|first %}
+                <th class="table-field">
+                  {{ job_available.notification_count if job_available else ''}}
+                </th>
+                <th class="table-field">
+                  {% if job_available and job_available.time_left != "Data no longer available" %}
+                    <a class="usa-link file-list-filename" href="{{ job_available.download_link }}">
+                      {{ "Download" if job_available.job_id else '' }}</a>
+                    <span class="usa-hint">{{ job_available.time_left }}</span>
+                  {% elif job_available %}
+                    <span>{{ job_available.time_left }}</span>
+                  {% endif %}
+                </th>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-
-
-    {% if show_pagination %}
-      {{ previous_next_navigation(prev_page, next_page) }}
-    {% elif next_page %}
-      <p class="table-show-more-link">
-        Only showing the first 50 messages
-      </p>
-    {% endif %}
-
 
     <h2 class="margin-top-4 margin-bottom-1">Usage</h2>
     <h3 class="margin-bottom-0">Daily</h3>
