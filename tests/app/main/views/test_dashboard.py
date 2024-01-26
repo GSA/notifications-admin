@@ -992,8 +992,8 @@ def test_usage_page(
 
     sms_column = normalize_spaces(annual_usage[0].text)
     assert (
-        "You have sent 251,800 messages of your 250,000 free messages allowance. You have 0 messages remaining."
-        in sms_column
+        "You have sent 251,800 text message parts of your 250,000 free message parts allowance."
+        " You have 0 message parts remaining." in sms_column
     )
     assert "$29.85 spent" not in sms_column
     assert "1,500 at 1.65 pence" not in sms_column
@@ -1029,8 +1029,8 @@ def test_usage_page_no_sms_spend(
     annual_usage = page.find_all("div", {"class": "keyline-block"})
     sms_column = normalize_spaces(annual_usage[0].text)
     assert (
-        "You have sent 1,000 messages of your 250,000 free messages allowance. You have 249,000 messages remaining."
-        in sms_column
+        "You have sent 1,000 text message parts of your 250,000 free message parts allowance."
+        " You have 249,000 message parts remaining." in sms_column
     )
     assert "$0.00 spent" not in sms_column
     assert "pence per message" not in sms_column
@@ -1106,7 +1106,7 @@ def test_usage_page_with_0_free_allowance(
     sms_column = normalize_spaces(annual_usage[0].text)
 
     assert (
-        "You have sent 251,800 messages of your 0 free messages allowance. You have"
+        "You have sent 251,800 text message parts of your 0 free message parts allowance. You have"
         in sms_column
     )
     assert "free allowance remaining" not in sms_column

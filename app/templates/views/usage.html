@@ -19,25 +19,25 @@
     </div>
     <div id='pill-selected-item'>
       <div class='grid-row'>
-        
+
         <div class='grid-col-12'>
           <h2 class="heading-small margin-bottom-1">Daily messages across all services</h2>
           <p class="margin-0">You have sent {{ global_message_limit - daily_global_messages_remaining }} of your {{ global_message_limit }} daily messages allowance.</p>
           <p class="margin-0"></p>You have {{ daily_global_messages_remaining }} messages remaining.</p>
-          <h2 class='heading-small margin-bottom-1'>Text messages</h2>
+          <h2 class='heading-small margin-bottom-1'>Text message parts</h2>
           <div class="keyline-block">
             You have sent
-            {{ big_number(sms_sent, 'messages of your', smaller=True) }}
-            {{ big_number(sms_free_allowance, 'free messages allowance.', smaller=True) }}
+            {{ big_number(sms_sent, 'text message parts of your', smaller=True) }}
+            {{ big_number(sms_free_allowance, 'free message parts allowance.', smaller=True) }}
             <br />
             You have
             {% if sms_free_allowance > 0 %}
-              {{ big_number(sms_allowance_remaining, 'messages remaining.', smaller=True) }}
+              {{ big_number(sms_allowance_remaining, 'message parts remaining.', smaller=True) }}
             {% endif %}
             {# {% for row in sms_breakdown %}
               {% if row.charged_units > 0 %}
                 {{ big_number(
-                  row.charged_units,
+                row.charged_units,
                   'at {:.2f} pence per message'.format(row.rate * 100),
                   smaller=True
                 ) }}
@@ -90,7 +90,7 @@
               {{ item.month }}
             {% endcall %}
             {% for counts, template_type in [
-              (item.sms_counts.0, 'sms'),
+              (item.sms_counts.0, 'parts'),
             ] %}
               {% call field(align='left') %}
                 {{ big_number(
@@ -126,7 +126,7 @@
               {% endif %}
               </ul>
             {% endcall %}
-            
+
           {% endcall %}
         </div>
       {% endif %}
@@ -140,7 +140,7 @@
       </div>
       <div class="grid-col-8">
         <p class="align-with-heading-copy">
-          What counts as 1 text message?<br />
+          What counts as 1 text message part?<br />
           See <a class="usa-link" href="{{ url_for('.pricing') }}">pricing</a>.
         </p>
       </div>
