@@ -85,80 +85,32 @@ FAKE_ONE_OFF_NOTIFICATION = {
     "total": 1,
 }
 
-MOCK_ONE_OFF_JOB = {
-    "data": {
-        "api_key": "mocked_api_key",
-        "billable_units": 1,
-        "carrier": "mocked_carrier",
-        "client_reference": "mocked_client_reference",
-        "created_at": "2024-01-04T20:43:52+00:00",
-        "created_by": {
-            "email_address": "mocked_email@example.com",
-            "id": "mocked_user_id",
-            "name": "mocked_user",
-        },
-        "document_download_count": None,
-        "id": "mocked_notification_id",
-        "international": False,
-        "job": {"id": "mocked_job_id", "original_file_name": "mocked_file.txt"},
-        "job_row_number": 0,
-        "key_name": "mocked_key_name",
-        "key_type": "normal",
-        "normalised_to": "+12133166548",
-        "notification_type": "sms",
-        "personalisation": {"phonenumber": "+12133166548"},
-        "phone_prefix": "1",
-        "provider_response": "mocked_provider_response",
-        "rate_multiplier": 1.0,
-        "reference": "mocked_reference",
-        "reply_to_text": "mocked_reply_text",
-        "sent_at": "2024-01-04T20:43:53+00:00",
-        "sent_by": "mocked_sender",
-        "service": "mocked_service_id",
-        "status": "sending",
-        "template": {
-            "content": "((day of week)) and ((fave color))",
-            "id": "bd9caa7e-00ee-4c5a-839e-10ae1a7e6f73",
-            "name": "personalized",
-            "redact_personalisation": False,
-            "subject": None,
-            "template_type": "sms",
-            "version": 1,
-        },
-        "to": "+12133166548",
-        "updated_at": "2024-01-04T20:43:53+00:00",
-    }
-}
-
 MOCK_JOBS = {
-    "data": [{
-        "archived": False,
-        "created_at": "2024-01-04T20:43:52+00:00",
-        "created_by": {
-            "id": "mocked_user_id",
-            "name": "mocked_user",
-        },
-        "id": "mocked_notification_id",
-        "job_status": 'finished',
-        "notification_count": 1,
-        "original_file_name": 'mocked_file.csv',
-        'processing_finished': '2024-01-25T23:02:25+00:00',
-        'processing_started': '2024-01-25T23:02:24+00:00',
-        'scheduled_for': None,
-        'service': '21b3ee3d-1cb0-4666-bfa0-9c5ac26d3fe3',
-        'service_name': {
-            'name': "Mock Texting Service"
-        },
-        'statistics': [{
-            'count': 1,
-            'status': 'sending'
-        }],
-        'template': '6a456418-498c-4c86-b0cd-9403c14a216c',
-        'template_name': 'Mock Template Name',
-        'template_type': 'sms',
-        'template_version': 3,
-        'updated_at': '2024-01-25T23:02:25+00:00',
-    }]
+    "data": [
+        {
+            "archived": False,
+            "created_at": "2024-01-04T20:43:52+00:00",
+            "created_by": {
+                "id": "mocked_user_id",
+                "name": "mocked_user",
+            },
+            "id": "mocked_notification_id",
+            "job_status": "finished",
+            "notification_count": 1,
+            "original_file_name": "mocked_file.csv",
+            "processing_finished": "2024-01-25T23:02:25+00:00",
+            "processing_started": "2024-01-25T23:02:24+00:00",
+            "scheduled_for": None,
+            "service": "21b3ee3d-1cb0-4666-bfa0-9c5ac26d3fe3",
+            "service_name": {"name": "Mock Texting Service"},
+            "statistics": [{"count": 1, "status": "sending"}],
+            "template": "6a456418-498c-4c86-b0cd-9403c14a216c",
+            "template_name": "Mock Template Name",
+            "template_type": "sms",
+            "template_version": 3,
+            "updated_at": "2024-01-25T23:02:25+00:00",
+        }
+    ]
 }
 
 stub_template_stats = [
