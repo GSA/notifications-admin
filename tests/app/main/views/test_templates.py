@@ -1955,7 +1955,7 @@ def test_set_template_sender(
             "sms",
             False,
             "a" * 160,
-            "Will be charged as 2 text messages",
+            "Will be charged as 1 text message",
             None,
         ),
         (
@@ -1969,7 +1969,7 @@ def test_set_template_sender(
             "sms",
             True,
             "a" * 147,
-            "Will be charged as 2 text messages",
+            "Will be charged as 1 text message",
             None,
         ),
         (
@@ -1984,7 +1984,7 @@ def test_set_template_sender(
             "sms",
             False,
             "a" * 918,
-            "Will be charged as 7 text messages",
+            "Will be charged as 6 text messages",
             None,
         ),
         (
@@ -2025,11 +2025,8 @@ def test_set_template_sender(
         (
             "sms",
             False,
-            # The length of this string in bytes is 210, needing two fragments.
-            # Seems like previous calculation was wrong unless the number of characters
-            # somehow has priority over the number of bytes in a fragment (?)
             "Ẅ" * 70,
-            "Will be charged as 2 text messages",
+            "Will be charged as 1 text message. Use of characters outside the IEC_8859-1 character set may increase the message fragment count, resulting in additional charges, and these IEC_8859-1 characters may not display properly on some older mobile devices.",  # noqa E501
             None,
         ),
         (
@@ -2043,11 +2040,7 @@ def test_set_template_sender(
             "sms",
             False,
             "Ẅ" * 918,
-            # The length of this string in bytes is 2754.  Divide by 140 and we get 19.  Then round up.
-            # Don't know why it was previously calculated as 14.  They seem to have charged by characters
-            # rather than length of the fragment in bytes.
-            # "Will be charged as 14 text messages",
-            "Will be charged as 20 text messages",
+            "Will be charged as 14 text messages",
             None,
         ),
         (
