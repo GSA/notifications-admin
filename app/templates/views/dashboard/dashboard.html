@@ -67,7 +67,7 @@
                   {{ notification.template.name }}
                 </th>
                 <th class="table-field">
-                  {{ (notification.updated_at or notification.created_at)| format_datetime_short_america }}
+                  {{ notification.created_at | format_datetime_short_america }}
                 </th>
                 <th class="table-field">
                   {{ notification.created_by.name }}
