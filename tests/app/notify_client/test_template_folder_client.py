@@ -2,7 +2,6 @@ import uuid
 from unittest.mock import call
 
 import pytest
-from orderedset import OrderedSet
 
 from app.notify_client.template_folder_api_client import TemplateFolderAPIClient
 
@@ -62,8 +61,8 @@ def test_move_templates_and_folders(mocker):
     TemplateFolderAPIClient().move_to_folder(
         some_service_id,
         some_folder_id,
-        template_ids=OrderedSet(("a", "b", "c")),
-        folder_ids=OrderedSet(("1", "2", "3")),
+        template_ids=["a", "b", "c"],
+        folder_ids=["1", "2", "3"],
     )
 
     mock_api_post.assert_called_once_with(
@@ -94,8 +93,8 @@ def test_move_templates_and_folders_to_root(mocker):
     TemplateFolderAPIClient().move_to_folder(
         some_service_id,
         None,
-        template_ids=OrderedSet(("a", "b", "c")),
-        folder_ids=OrderedSet(("1", "2", "3")),
+        template_ids=["a", "b", "c"],
+        folder_ids=["1", "2", "3"],
     )
 
     mock_api_post.assert_called_once_with(

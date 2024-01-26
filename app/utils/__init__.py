@@ -4,7 +4,6 @@ from itertools import chain
 from flask import abort, g, make_response, request
 from flask_login import current_user
 from notifications_utils.field import Field
-from orderedset._orderedset import OrderedSet
 from werkzeug.datastructures import MultiDict
 from werkzeug.routing import RequestRedirect
 
@@ -58,16 +57,17 @@ def parse_filter_args(filter_dict):
 
 def set_status_filters(filter_args):
     status_filters = filter_args.get("status", [])
-    return list(
-        OrderedSet(
-            chain(
-                (status_filters or REQUESTED_STATUSES),
-                DELIVERED_STATUSES if "delivered" in status_filters else [],
-                SENDING_STATUSES if "sending" in status_filters else [],
-                FAILURE_STATUSES if "failed" in status_filters else [],
-            )
-        )
+    raw_list = chain(
+        (status_filters or REQUESTED_STATUSES),
+        DELIVERED_STATUSES if "delivered" in status_filters else [],
+        SENDING_STATUSES if "sending" in status_filters else [],
+        FAILURE_STATUSES if "failed" in status_filters else [],
     )
+    clean_list = []
+    for item in raw_list:
+        if item not in clean_list:
+            clean_list.append(item)
+    return clean_list
 
 
 def unicode_truncate(s, length):
