@@ -11,115 +11,235 @@
 
   <h1 class="font-body-2xl margin-bottom-3">Guidance</h1>
 
-  <p>This guidance is for teams using Notify.gov to send text messages.</p>
-
-  <p>It explains how to:</p>
+  <p>Notify allows you easily to create templates for messages for your recipients. You can customize messages to encourage
+  your recipient to manage their benefits and increase follow through.</p>
+  <p>Below we explain how to:</p>
 
   <ul class="list list-bullet">
-    <li><a class="usa-link" href="#editandformat">edit and format messages</a></li>
-    <li><a class="usa-link" href="#customization">add customization</a></li>
-   <!-- <li><a class="usa-link" href="{{ url_for('.send_files_by_email') }}">send files by email</a></li> -->
+    <li><a class="usa-link" href="#format-content">Format your content</a></li>
+    <li><a class="usa-link" href="#add-links">Add links</a></li>
+    <li><a class="usa-link" href="#personalize-content">Personalize your content</a></li>
+    <li><a class="usa-link" href="#conditional-content">Add conditional content</a></li>
+    <li><a class="usa-link" href="#indentify-program">Identify your program</a></li>
+    <li><a class="usa-link" href="#prepare-data">Prepare your data</a></li>
+    <li><a class="usa-link" href="#prevent-fraud">Prevent fraud</a></li>
   </ul>
 
-  <h2 class="font-body-lg" id="#formatting">Edit and format messages</h2>
+  {# Format content #}
+  <h2 class="padding-top-1" id="format-content">Format your content</h2>
+  <p>Effective texts will help your message recipients take the steps needed to secure and keep the benefits and services
+  they depend on. To craft an effective text:</p>
 
-  <p>This section explains how to:</p>
   <ul class="list list-bullet">
-    <li><a class="usa-link" href="#formatting">format your content</a></li>
-    <li><a class="usa-link" href="#links">add links</a></li>
-    <li><a class="usa-link" href="#personalised-content">personalize your content</a></li>
-    <li><a class="usa-link" href="#optional-content">add optional content</a></li>
+    <li>Choose your messages thoughtfully. Text messages are best to remind/nudge someone to take a specific action or
+    communicate information at a particular time rather than pushing out broad or overly general information.</li>
+    <li>Clearly state the issue and expected response. Tell your recipient what you expect from them.</li>
+    <li>Say only one important thing per message.</li>
+    <li>Frame the message to encourage action and explain the consequences of not completing the desired action.</li>
   </ul>
 
-  <h3 class="font-body-lg" id="formatting">Format your content</h3>
-
-  <p>You can see a list of formatting instructions on the edit template page:</p>
-
-  <ol class="list list-number">
-    <li>Go to the {{ service_link(current_service, 'main.choose_template', 'templates') }} page.</li>
-    <li>Add a new template or choose an existing template and select <b class="bold">Edit</b>.</li>
+  <h3>To create and format your message</h3>
+  <ol class="list">
+    <li>All messages start from a template</li>
+    <li>Click “Send Messages”. You’ll see existing templates.</li>
+    <li>Add a new template or choose an existing template and select Edit.</li>
   </ol>
 
-  <h3 class="font-body-lg" id="links">Add links</h3>
-
-  <p>When composing a text message, write URLs in full and Notify will convert them into links for you.
-  </p>
-
-  <p>You cannot convert text into a link.
-    <!-- Research shows that people like to check a URL looks genuine before clicking the link in an email. This is hard to do if the URL is hidden behind clickable link text.-->
-  </p>
-
-  <p>We do not recommend using a third-party link shortening service because:</p>
+  {# Add links #}
+  <h2 class="padding-top-1" id="add-links">Add links</h2>
+  <p>When composing a text message, links to websites or online applications can help your recipient respond quickly.</p>
 
   <ul class="list list-bullet">
-    <li>your users cannot see where the link will take them</li>
-    <li>your link might stop working if there’s a service outage</li>
-    <li>you can no longer control where the redirect goes</li>
+    <li>Write URLs in full and Notify will convert them into links for you. Note that you cannot hyperlink text in Notify
+    messages.</li>
+    <li>For link click tracking, you can consider adding campaign parameters to URLs.</li>
+    <li>All links should point to a government domain.</li>
+    <li>Link directly to where your recipient needs to take action, not to more information.</li>
   </ul>
 
-  <h3 class="font-body-lg" id="personalised-content">Personalize your content</h3>
-
-  <p>To personalize the content of your messages, add a placeholder to the template.</p>
-
-  <p>Placeholders are filled in with details, like a name or reference number, each time you send a
-    message.</p>
-
-  <p>To add a placeholder to the template:</p>
-
-  <ol class="list list-number">
-    <li>Go to the {{ service_link(current_service, 'main.choose_template', 'templates') }} page.</li>
-    <li>Add a new template or choose an existing template and select <b class="bold">Edit</b>.</li>
-    <li>Add a placeholder using double brackets. For example: Hello ((first&nbsp;name)), your reference is
-      ((ref&nbsp;number)).</li>
-    <li>Select <b class="bold">Save</b>.</li>
-  </ol>
-
-  <p>When you send a message you can either:</p>
-
+  <h3>About link-shortening services</h3>
+  <p>We do not recommend using a third-party link-shortening service because:</p>
   <ul class="list list-bullet">
-    <li>manually fill in the placeholders yourself</li>
-    <li>upload a list of personal details and let Notify do it for you</li>
+    <li>Your recipient cannot see where the link will take them, which could make them suspect the link is spam/scam.</li>
+    <li>Your link might stop working if there’s a service outage.</li>
+    <li>You can no longer control where the redirect goes.</li>
   </ul>
 
-  <p>If you upload a list, the column names need to match the placeholders in your template.</p>
-
-  <h3 class="font-body-lg" id="optional-content">Add optional content</h3>
-
-  <p>To add optional content to your messages:</p>
-
-  <ol class="list list-number">
-    <li>Go to the {{ service_link(current_service, 'main.choose_template', 'templates') }} page.</li>
-    <li>Add a new template or choose an existing template and select <b class="bold">Edit</b>.</li>
-    <li>Use double brackets and ?? to define optional content. For example, if you only want to show something to people
-      who are under 18: ((under18??Please get your application signed by a parent or guardian.))</li>
-    <li>Select <b class="bold">Save</b>.</li>
-  </ol>
-
-  <p>For each person you send this message to, specify ‘yes’ or ‘no’ to show or hide this content. You
-    can either:</p>
-
+  {# Personalize content #}
+  <h2 class="padding-top-1" id="personalize-content">Personalize your content</h2>
+  <p>Personalizing your content can increase response rates and help the recipient know the text is legitimate.</p>
   <ul class="list list-bullet">
-    <li>do this yourself</li>
-    <li>upload a list of personal details and let Notify do it for you</li>
+    <li>Including a person’s first name increases response rates.</li>
+    <li>Specific details such as time and location of an appointment or where suspected fraud use occurred encourages action.</li>
   </ul>
 
-  <p>If you upload a list, the column names need to match the optional content in your template.</p>
-
-  <h2 class="font-body-lg" id="customization">Message customization</h2>
-
-  <h3 class="font-body-lg">Change the text message sender</h3>
-
-  <p>The text message sender tells your users who the message is from.</p>
-
-  <p>To change the text message sender from the default of ‘Notify.gov’:</p>
-
-  <ol class="list list-number">
-    <li>Go to the <b class="bold">Text message settings</b> section of the {{
-      service_link(current_service, 'main.service_settings', 'settings') }} page.</li>
-    <li>Select <b class="bold">Manage</b> on the <b class="bold">Text message
-        senders</b> row.</li>
-    <li>Select <b class="bold">Change</b> or <b class="bold">Add text message
-        sender</b>.</li>
+  <h3>To personalize your content</h3>
+  <ol class="list">
+    <li>Add a placeholder to your content by placing two brackets around the personalized elements.</li>
+    <li>You can manually enter the personalized content or you can upload a spreadsheet with the details and let Notify do the
+    work for you. See <a href="#prepare-data">data preparation</a>.</li>
   </ol>
+
+  <h4>Example</h4>
+  <p>To personalize with the recipient's first name and include a reference number:</p>
+  <p class="padding-2 bg-base-lightest">State WIC: Hello ((first name)), your reference is ((ref number)). Please provide this number when you call 123-123-1234 to make an appointment.</p>
+
+  {# Add conditional content #}
+  <h2 class="padding-top-1" id="conditional-content">Add conditional content</h2>
+  <p>Conditional (or optional) content appears only when a recipient meets certain criteria. This feature allows you to make
+  all or part of the message contingent upon specific criteria associated with the recipient.</p>
+
+  <h3>To add conditional content</h3>
+  <ol class="list">
+    <li>Use two brackets and ?? to define the conditional content.</li>
+    <li>You can manually enter the conditional content or you can upload a spreadsheet with the personal details and let Notify
+    do the work for you. See <a href="#prepare-data">data preparation</a>.</li>
+  </ol>
+
+  <h4>Examples</h4>
+  <ol class="list">
+    <li>If you only want to show something to people who are under 18:
+      </br>
+      <p class="padding-2 bg-base-lightest">State SNAP: Renewal applications are due by March 15. ((under18??Please get your application signed by a parent or
+      guardian.))</p>
+    </li>
+    <li>
+      If you want to make people who are homebound aware of the option of virtual visits (but not other message recipients):
+      </br>
+      <p class="padding-2 bg-base-lightest">State Medicaid: Please call 123-123-1234 to schedule an appointment. ((homebound??Virtual visits are available.))</p>
+    </li>
+    <li>
+      If you want to send a messages in different languages to different recipients:
+      </br>
+      <p class="padding-2 bg-base-lightest">((English??We’ve identified unauthorized use on your EBT account. Call the phone number on the back of your card to
+      cancel or go to your local CSO for immediate replacement.))((Spanish??Hemos identificado un uso no autorizado en su
+      cuenta EBT. Llame al número de teléfono que aparece en el reverso de su tarjeta para cancelarla o diríjase a su CSO
+      local para que se la sustituyan inmediatamente.))</p>
+    </li>
+  </ol>
+
+
+  {# Identify your program #}
+  <h2 class="padding-top-1" id="identify-program">Identify your program</h2>
+  <p>You can help your recipients identify your texts as legitimate by customizing your messages to clearly state who they
+  are from. Consider using the program or benefit name that is most familiar to your recipients.</p>
+
+  <h3>To customize your program name</h3>
+  <p>To change the text message sender from the default service name:</p>
+  <ol class="list">
+    <li>Go to the <a href="{{ url_for('main.service_settings', service_id=current_service.id) }}">Settings page</a></li>
+    <li>Select “Start text messages with service name.”</li>
+    <li>Change the service name to a familiar program or benefit.</li>
+  </ol>
+
+  {# Prepare your data #}
+  <h2 class="padding-top-1" id="prepare-data">Prepare your data</h2>
+  <p>The easiest and most efficient way to personalize your content is by uploading a spreadsheet. Notify can accommodate
+  many file formats and structures.</p>
+
+  <h3>File format</h3>
+  <p>Notify can accept files in the following formats: CSV, TSV, ODS, and Microsoft Excel.</p>
+
+  <h3>File structure</h3>
+  <ul class="list">
+    <li>The phone number must be in the first column (Column A) and must be labeled <strong>Phone number</strong>.</li>
+    <li>Each column must have a unique name.</li>
+    <li>If you are using Excel, you must either disable the”auto-date/time format” for time and date columns or convert the file
+    to a CSV prior to loading. (If you do not, Excel will display date/time data in a confusing format.)</li>
+  </ul>
+
+  <h3>Formatting personalized content</h3>
+  <p>If you are sending a message with personalized content, such as the first name of the recipient or the appointment time
+  and location, the names of the column headings have to match the indicator included in the message template.</p>
+  <p>For example, if the personalized content is the first name of the recipient, and we are using the spreadsheet below, the
+  indicator in the message needs to be ((First name)), not ((firstname)) or ((name)).</p>
+
+  <h3>Formatting conditional content</h3>
+  <p>If you are sending messages with conditional content, such as content based on the recipient’s preferred language or
+  location, the flag to receive the content needs to be captured in its own column with a Yes or No (Y/N) flag.</p>
+
+  <h3>Example</h3>
+  <table class="usa-table">
+    <caption class="usa-sr-only">
+      Example
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Phone number</th>
+        <th scope="col">First name</th>
+        <th scope="col">Last name</th>
+        <th scope="col">Spanish</th>
+        <th scope="col">English</th>
+        <th scope="col">Date</th>
+        <th scope="col">Time</th>
+        <th scope="col">Location</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>123-456-7890</td>
+        <td>Lulu</td>
+        <td>Praether</td>
+        <td>N</td>
+        <td>Y</td>
+        <td>November 2, 2023</td>
+        <td>3:25</td>
+        <td>123 Ford Rd.</td>
+      </tr>
+      <tr>
+        <td>234-567-8901</td>
+        <td>Sela</td>
+        <td>Appel</td>
+        <td>Y</td>
+        <td>N</td>
+        <td>November 2, 2023</td>
+        <td>4:00</td>
+        <td>123 Ford Rd.</td>
+      </tr>
+      <tr>
+        <td>123-456-7890</td>
+        <td>Dexter</td>
+        <td>Moseley</td>
+        <td>N</td>
+        <td>Y</td>
+        <td>November 2, 2023</td>
+        <td>2:00</td>
+        <td>123 Ford Rd.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  {# Preventing fraud #}
+  <h2 class="padding-top-1" id="prevent-fraud">Preventing fraud</h2>
+  <p>Texting fraud is ever prevalent and while we can’t eliminate the risk, we can reduce the chances that recipients will
+  fall victim to fraud.</p>
+  <ol class="list">
+    <li>Never send unnecessary or protected private information.</li>
+    <li>Remind your recipients that text messaging is not a secure means of communication and they should not send you private
+    information via text.</li>
+    <li>Only include links to websites and online applications that are secure.</li>
+    <li>Send an introductory text letting recipients know you will be texting them and to save the number in their phone.</li>
+    <li>Include an auto-response with the name of your organization and a contact phone number.</li>
+  </ol>
+
+  <h3>Examples</h3>
+  <ol class="list">
+    <li>Introductory text:
+      </br>
+      <p class="padding-2 bg-base-lightest">State Transit Dept: We're piloting a new way to get important reminders to our staff. Save this number to your phone,
+      you'll receive updates from us here.</p>
+    </li>
+    <li>Auto-response text:
+      </br>
+      <p class="padding-2 bg-base-lightest">State Agency: This number is unmonitored. To contact us, call us at 123-123-1234. We will never ask for personal details
+      in a text. If you have questions about how to protect your privacy, see statename.gov/privacy.</p>
+    </li>
+  </ol>
+
+
+
+
+
+
 
 {% endblock %}
