@@ -55,7 +55,6 @@
           </tr>
         </thead>
         <tbody>
-          {{ notifications}}
           {% for notification in notifications[:5] %}
             {% if notification %}
               <tr class="table-row" id="{{ notification.job.id }}">
