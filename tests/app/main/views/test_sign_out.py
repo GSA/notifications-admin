@@ -85,6 +85,7 @@ MOCK_JOBS = {
     ]
 }
 
+
 def test_render_sign_out_redirects_to_sign_in(client_request):
     # TODO with the change to using login.gov, we no longer redirect directly to the sign in page.
     # Instead we redirect to login.gov which redirects us to the sign in page.  However, the

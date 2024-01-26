@@ -99,6 +99,7 @@ MOCK_JOBS = {
     ]
 }
 
+
 @pytest.fixture()
 def _mock_no_users_for_service(mocker):
     mocker.patch("app.models.user.Users.client_method", return_value=[])
