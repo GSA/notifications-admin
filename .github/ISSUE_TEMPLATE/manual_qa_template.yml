@@ -1,0 +1,82 @@
+name: "QA Checklist"
+description: "Use this template to manually QA for prod push"
+title: "QA for prod push: Admin #[insert PR number], API #[insert PR number], Utils #[insert PR number]"
+
+body:
+- type: checkboxes
+  id: Logging_in
+  attributes:
+    label: Log In
+    options:
+      - label: notify-staging.app.cloud.gov resolves
+      - label: Clicking sign in takes you to login page
+      - label: 2FA code is sent promptly
+      - label: 2FA code input screen appears as expected
+      - label: After code is entered, you are brought to the “choose service” screen
+      - label: Choosing a service brings you to the dashboard for that service
+
+- type: checkboxes
+  id: send_template
+  attributes:
+    label: Create a template and send
+    options:
+      - label: Clicking “Send messages” brings you to templates page
+      - label: When “Create a template” button is clicked, the option to create new or copy existing template appears
+      - label: Uploading a csv is quick and automatically directs you to the preview/send page
+      - label: Formatting looks clean and in place
+      - label: Message dashboard populates and shows “pending” until call is made to AWS for delivery receipt
+
+
+- type: checkboxes
+  id: send__copied_template
+  attributes:
+    label: Send a message from copied template
+    options:
+      - label: When “Create a template” button is clicked, the option to create new or copy existing template appears
+      - label: Clicking “copy an existing template” allows you to choose from pre-existing template
+      - label: After editing, the new template saves and you prepare to send
+
+
+- type: checkboxes
+  id: send__existing_template
+  attributes:
+    label: Send a message from existing template
+    options:
+      - label: Clicking on existing template brings you to preview screen with `prepare to send` button
+      - label: All else above persists as true (formatting, send, dashboard, etc)
+
+- type: checkboxes
+  id: download_report
+  attributes:
+    label: Download the csv delivery report
+    options:
+      - label: Clicking on the csv download directly after a message send downloads a report that contains the data we expect
+      - label: The batch report appears on the main dashboard batch table with accurate information
+      - label: Clicking on the csv download link from the main dashboard downloads a report that contains the data we expect
+
+- type: checkboxes
+  id: invite_member
+  attributes:
+    label: Invite a team member
+    options:
+      - label: Clicking on “Team” in settings  brings you to team member screen
+      - label: Clicking “Invite a team member” brings you to email and permissions screen
+      - label: Clicking invite team member sends an invite and shows confirmation
+      - label: Invite email provides live link that works to register new team member
+
+- type: checkboxes
+  id: delete_member
+  attributes:
+    label: Delete a team member
+    options:
+      - label: From team member screen, clicking “Change Details” on a specific profile brings you to that person’s profile
+      - label: Clicking on “Remove this team member” prompts a confirmation
+      - label: Clicking the confirmation removes the team member
+    
+- type: checkboxes
+  id: sign_out
+  attributes:
+    label: Sign Out
+    options:
+      - label: Hitting “Sign Out” takes you back to the homepage and logs you out 
+

@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from flask import url_for
 from freezegun import freeze_time
 
-from tests.conftest import SERVICE_ONE_ID, normalize_spaces, sample_uuid
+from tests.conftest import SERVICE_ONE_ID, normalize_spaces
 
 
 def test_non_logged_in_user_can_see_homepage(
@@ -15,7 +15,9 @@ def test_non_logged_in_user_can_see_homepage(
     client_request.logout()
     page = client_request.get("main.index", _test_page_title=False)
 
-    assert page.h1.text.strip() == ("Reach people where they are with government-powered text messages")
+    assert page.h1.text.strip() == (
+        "Reach people where they are with government-powered text messages"
+    )
 
     assert page.select_one("a.usa-button.usa-button--big")["href"] == url_for(
         "main.sign_in",
@@ -63,14 +65,6 @@ def test_robots(client_request):
     ("endpoint", "kwargs"),
     [
         ("sign_in", {}),
-        ("support", {}),
-        ("support_public", {}),
-        ("triage", {}),
-        ("feedback", {"ticket_type": "ask-question-give-feedback"}),
-        ("feedback", {"ticket_type": "general"}),
-        ("feedback", {"ticket_type": "report-problem"}),
-        ("bat_phone", {}),
-        ("thanks", {}),
         ("register", {}),
         pytest.param("index", {}, marks=pytest.mark.xfail(raises=AssertionError)),
     ],
@@ -102,12 +96,10 @@ def test_hiding_pages_from_search_engines(
         "documentation",
         "security",
         "message_status",
-        "features_email",
         "features_sms",
         "how_to_pay",
         "get_started",
         "guidance_index",
-        "branding_and_customisation",
         "create_and_send_messages",
         "edit_and_format_messages",
         "send_files_by_email",
@@ -261,36 +253,6 @@ def test_css_is_served_from_correct_path(client_request):
 #     logo_svg_fallback = page.select_one('.usa-flag-logo')
 
 #     assert logo_svg_fallback['src'].startswith('https://static.example.com/images/us-notify-color.png')
-
-
-@pytest.mark.parametrize(
-    ("extra_args", "email_branding_retrieved"),
-    [
-        (
-            {},
-            False,
-        ),
-        (
-            {"branding_style": "__NONE__"},
-            False,
-        ),
-        (
-            {"branding_style": sample_uuid()},
-            True,
-        ),
-    ],
-)
-def test_email_branding_preview(
-    client_request,
-    mock_get_email_branding,
-    extra_args,
-    email_branding_retrieved,
-):
-    page = client_request.get(
-        "main.email_template", _test_page_title=False, **extra_args
-    )
-    assert page.title.text == "Email branding preview"
-    assert mock_get_email_branding.called is email_branding_retrieved
 
 
 @pytest.mark.parametrize(

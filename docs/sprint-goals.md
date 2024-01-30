@@ -1,8 +1,40 @@
 # Notify Sprint Goals Log
 
+## Sprint: B (1/18/24)
+2024 Sprints will be named after mythical creatures
 
-## Sprint: Y (12/6/23)
-(Sprint X was canceled due to Thanksgiving)
+|             | Goals        | Impact      | Milestone(s)    |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|--------------|
+| Engineering | Get `staging` stable and bugs fixed in order to do a prod push, finalize Login.gov implementation, complete epic to [remove phone numbers from db](https://github.com/GSA/notifications-api/issues/667), [calculate pre-send message parts](https://github.com/GSA/notifications-admin/issues/1027) to add to confirmation page, finish [E2E testing implementation](https://github.com/GSA/notifications-admin/issues/677), set up [opt-out lists by phone number](https://github.com/GSA/notifications-api/issues/312) | Install required auth, expand message send volume for partners, allow users to see how many parts a send will cost, improve app stability, partition opt-outs so that they aren't across the system                            | Building Notify.gov |
+| UX          | [Tackle `Usage and Performance` epic](https://github.com/GSA/notifications-admin/issues/1108) as highest priority group of user stories, break out UX work into more user-stories and correlating epics, prioritize epic/story order, improve [pre-send confirmation page](https://github.com/GSA/notifications-admin/issues/815)| Improve UX      | Building Notify.gov| 
+| Security    | Complete necessary control families                                        | Aim to have package completed with enough time to allow for long assessment| Secure ATO |
+| Content    | Get [refreshed content for `Using Notify` pages](https://github.com/GSA/notifications-admin/issues/449) in place, make content [more clear about limits](https://github.com/GSA/notifications-admin/issues/963), make content clearer by [adding `parts` where necessary](https://github.com/GSA/notifications-admin/issues/963) | Improve clarity of message parts for users, bring existing content into current state| Building Notify.gov |
+| Ops    | Assist in Tech to Gov process, plan gap coverage for Tim's departure 2/9 |  
+
+## Sprint: Akhlut (1/3/24)
+2024 Sprints will be named after mythical creatures
+
+|             | Goals        | Impact      | Milestone(s)    |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|--------------|
+| Engineering | Continue [identifying](https://github.com/GSA/notifications-api/issues/656), [fixing](https://github.com/GSA/notifications-api/issues/645), and [displaying](https://github.com/GSA/notifications-admin/issues/964) various applicable message part limits, devise ways to [create better access to reports](https://github.com/GSA/notifications-admin/issues/855), implement Login.gov on staging environment, advance epic to [remove phone numbers from db](https://github.com/GSA/notifications-api/issues/667) | Better track annual and smart-retention limits, install required auth, make reports easier to find, expand message send volume for partners                            | Building Notify.gov |
+| UX          | Spin up weekly [redesign syncs](https://github.com/GSA/notifications-admin/issues/1061), identify necessary dashboard metrics to visualize, improve [team member section](https://github.com/GSA/notifications-admin/issues/1031)| Improve UX      | Building Notify.gov| 
+| Security    | Complete necessary control families                                        | Aim to have package completed with enough time to allow for long assessment| Secure ATO |
+| Content    | Finish making [editing content easier](https://github.com/GSA/notifications-admin/issues/976) with existing templates, finalize decision on terminology regarding [batch/campaign/job](https://github.com/GSA/notifications-admin/issues/1060), make content [more clear about limits](https://github.com/GSA/notifications-admin/issues/963), make content clearer by [adding `parts` where necessary](https://github.com/GSA/notifications-admin/issues/963) | Improve clarity of message parts for users, streamline content editing for the team| Building Notify.gov |
+| Ops    | Assist in Tech to Gov process |  |
+
+## Sprint: Zoe's Imperial Pigeon (12/21/23)
+Sprint velocity was very low due to holiday OOO
+
+|             | Goals        | Impact      | Milestone(s)    |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|--------------|
+| Engineering | Spend time [identifying](https://github.com/GSA/notifications-api/issues/656), [fixing](https://github.com/GSA/notifications-api/issues/645), and [displaying](https://github.com/GSA/notifications-admin/issues/964) various applicable message part limits, devise ways to [create better access to reports](https://github.com/GSA/notifications-admin/issues/855), implement Login.gov on staging environment, advance epic to [remove phone numbers from db](https://github.com/GSA/notifications-api/issues/667) | Better track annual and smart-retention limits, install required auth, make reports easier to find, expand message send volume for partners                            | Building Notify.gov |
+| UX          |  [Re-think Notify IA](https://github.com/GSA/notifications-admin/issues/910), start implementing dashboard changes, improve [team member section](https://github.com/GSA/notifications-admin/issues/1031)| Improve UX      | Building Notify.gov| 
+| Security    | Complete necessary control families                                        | Aim to have package completed with enough time to allow for long assessment| Secure ATO |
+| Content    | Make content [more clear about limits](https://github.com/GSA/notifications-admin/issues/963), make content clearer by [adding `parts` where necessary](https://github.com/GSA/notifications-admin/issues/963), test making [editing content easier](https://github.com/GSA/notifications-admin/issues/976) with existing templates | Improve clarity of message parts for users, streamline content editing for the team| Building Notify.gov |
+| Ops    | Assist in Tech to Gov process |  |
+
+## Sprint: Xingu Scale-Backed Antbird (12/6/23)
+(Sprint X was canceled due to Thanksgiving, so this is X & Y)
 
 |             | Goals        | Impact      | Milestone(s)    |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|--------------|

@@ -1,24 +1,64 @@
-{% from "components/big-number.html" import big_number_with_status %}
-
 <div class="grid-row bottom-gutter">
   <div class="grid-col-6">
-    {{ big_number_with_status(
-      global_stats.email.delivered + global_stats.email.failed,
-      global_stats.email.delivered|message_count_label('email'),
-      global_stats.email.failed,
-      global_stats.email.failure_rate,
-      global_stats.email.failure_rate|float > 3,
-      smaller=True
-    ) }}
+    <span class="big-number-with-status">
+      {% if link %}
+        <a class="usa-link display-flex" href="{{ link }}">
+      {% endif %}
+        <span class="big-number-smaller">
+          <span class="big-number-number">
+            {{ "{:,}".format(global_stats.email.delivered + global_stats.email.failed) }}
+          </span>
+          <span class="big-number-label">{{ global_stats.email.delivered|message_count_label('email') }}</span>
+        </span>
+      {% if link %}
+        </a>
+      {% endif %}
+      <span class="big-number-status{% if (global_stats.email.failure_rate|float > 0) is sameas true %} big-number-status--failing{% endif %}">
+        {% if global_stats.email.failed %}
+          {% if failure_link %}
+            <a class="usa-link" href="{{ failure_link }}">
+              {{ "{:,}".format(global_stats.email.failed) }}
+              failed – {{ global_stats.email.failure_rate }}%
+            </a>
+          {% else %}
+            {{ "{:,}".format(global_stats.email.failed) }}
+            failed – {{ global_stats.email.failure_rate }}%
+          {% endif %}
+        {% else %}
+          No failures
+        {% endif %}
+      </span>
+    </span>
   </div>
   <div class="grid-col-6">
-    {{ big_number_with_status(
-      global_stats.sms.delivered + global_stats.sms.failed,
-      global_stats.sms.delivered|message_count_label('sms'),
-      global_stats.sms.failed,
-      global_stats.sms.failure_rate,
-      global_stats.sms.failure_rate|float > 3,
-      smaller=True
-    ) }}
+    <span class="big-number-with-status">
+      {% if link %}
+        <a class="usa-link display-flex" href="{{ link }}">
+      {% endif %}
+          <span class="big-number-smaller">
+            <span class="big-number-number">
+              {{ "{:,}".format( global_stats.sms.delivered + global_stats.sms.failed ) }}
+            </span>
+            <span class="big-number-label">{{ global_stats.sms.delivered|message_count_label('sms') }}</span>
+          </span>
+      {% if link %}
+        </a>
+      {% endif %}
+      <span class="big-number-status{% if (global_stats.sms.failure_rate|float > 0) is sameas true %} big-number-status--failing{% endif %}">
+        {% if global_stats.sms.failed %}
+          {% if failure_link %}
+            <a class="usa-link" href="{{ failure_link }}">
+              {{ "{:,}".format(global_stats.sms.failed) }}
+              failed – {{ global_stats.sms.failure_rate }}%
+            </a>
+          {% else %}
+            {{ "{:,}".format(global_stats.sms.failed) }}
+            failed – {{ global_stats.sms.failure_rate }}%
+          {% endif %}
+        {% else %}
+          No failures
+        {% endif %}
+      </span>
+    </span>
   </div>
 </div>

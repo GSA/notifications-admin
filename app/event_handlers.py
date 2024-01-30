@@ -24,6 +24,7 @@ EVENT_SCHEMAS = {
         "service_id",
         "ui_permissions",
     },
+    "resend_user_invite_to_service": {"email_address", "resent_by_id", "service_id"},
     "cancel_user_invite_to_service": {"email_address", "canceled_by_id", "service_id"},
     "set_user_permissions": {
         "user_id",
@@ -61,6 +62,10 @@ def create_invite_user_to_service_event(**kwargs):
 
 def create_cancel_user_invite_to_service_event(**kwargs):
     _send_event("cancel_user_invite_to_service", **kwargs)
+
+
+def create_resend_user_invite_to_service_event(**kwargs):
+    _send_event("resend_user_invite_to_service", **kwargs)
 
 
 def create_add_user_to_service_event(**kwargs):

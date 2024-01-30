@@ -1,17 +1,10 @@
 import itertools
+import time
+import uuid
 from string import ascii_uppercase
 from zipfile import BadZipFile
 
-from flask import (
-    abort,
-    current_app,
-    flash,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
+from flask import abort, flash, redirect, render_template, request, session, url_for
 from flask_login import current_user
 from notifications_python_client.errors import HTTPError
 from notifications_utils import SMS_CHAR_COUNT_LIMIT
@@ -495,7 +488,6 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
     remaining_messages = current_service.message_limit - notification_count
 
     contents = s3download(service_id, upload_id)
-
     db_template = current_service.get_template_with_user_permission_or_403(
         template_id, current_user
     )
@@ -788,6 +780,8 @@ def _check_notification(service_id, template_id, exception=None):
 
     back_link = get_back_link(service_id, template, len(placeholders), placeholders)
 
+    choose_time_form = ChooseTimeForm()
+
     if (not session.get("recipient")) or not all_placeholders_in_session(
         template.placeholders
     ):
@@ -799,6 +793,7 @@ def _check_notification(service_id, template_id, exception=None):
     return dict(
         template=template,
         back_link=back_link,
+        choose_time_form=choose_time_form,
         **(get_template_error_dict(exception) if exception else {}),
     )
 
@@ -836,7 +831,6 @@ def get_template_error_dict(exception):
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def send_notification(service_id, template_id):
     recipient = get_recipient()
-
     if not recipient:
         return redirect(
             url_for(
@@ -846,38 +840,69 @@ def send_notification(service_id, template_id):
             )
         )
 
-    db_template = current_service.get_template_with_user_permission_or_403(
-        template_id, current_user
+    keys = []
+    values = []
+    for k, v in session["placeholders"].items():
+        keys.append(k)
+        values.append(v)
+
+    data = ",".join(keys)
+    vals = ",".join(values)
+    data = f"{data}\r\n{vals}"
+
+    filename = f"one-off-{current_user.name}-{uuid.uuid4()}.csv"
+    my_data = {"filename": filename, "template_id": template_id, "data": data}
+    upload_id = s3upload(service_id, my_data)
+    form = CsvUploadForm()
+    form.file.data = my_data
+    form.file.name = filename
+
+    check_message_output = check_messages(service_id, template_id, upload_id, 2)
+    if "You cannot send to" in check_message_output:
+        return check_messages(service_id, template_id, upload_id, 2)
+
+    job_api_client.create_job(
+        upload_id,
+        service_id,
+        scheduled_for=request.form.get("scheduled_for", ""),
+        template_id=template_id,
+        original_file_name=filename,
+        notification_count=1,
+        valid="True",
     )
 
-    try:
-        noti = notification_api_client.send_notification(
-            service_id,
-            template_id=db_template["id"],
-            recipient=recipient,
-            personalisation=session["placeholders"],
-            sender_id=session.get("sender_id", None),
+    session.pop("recipient")
+    session.pop("placeholders")
+
+    # We have to wait for the job to run and create the notification in the database
+    time.sleep(0.1)
+    notifications = notification_api_client.get_notifications_for_service(
+        service_id, job_id=upload_id, include_one_off=True
+    )
+    attempts = 0
+    while notifications["total"] == 0 and attempts < 5:
+        notifications = notification_api_client.get_notifications_for_service(
+            service_id, job_id=upload_id, include_one_off=True
         )
-    except HTTPError as exception:
-        current_app.logger.error(
-            'Service {} could not send notification: "{}"'.format(
-                current_service.id, exception.message
+        time.sleep(0.1)
+        attempts = attempts + 1
+
+    if notifications["total"] == 0 and attempts == 5:
+        # This shows the job we auto-generated for the user
+        return redirect(
+            url_for(
+                "main.view_job",
+                service_id=service_id,
+                job_id=upload_id,
             )
         )
-        return render_template(
-            "views/notifications/check.html",
-            **_check_notification(service_id, template_id, exception),
-        )
-
-    session.pop("placeholders")
-    session.pop("recipient")
-    session.pop("sender_id", None)
 
     return redirect(
         url_for(
             ".view_notification",
             service_id=service_id,
-            notification_id=noti["id"],
+            from_job=upload_id,
+            notification_id=notifications["notifications"][0]["id"],
             # used to show the final step of the tour (help=3) or not show
             # a back link on a just sent one off notification (help=0)
             help=request.args.get("help"),

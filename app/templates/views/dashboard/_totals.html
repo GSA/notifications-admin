@@ -1,18 +1,32 @@
-{% from "components/big-number.html" import big_number_with_status %}
-
 <div class="ajax-block-container">
   <div class="grid-row grid-gap">
     <div id="total-sms" class="grid-col-12">
-      {{ big_number_with_status(
-        statistics['sms']['requested'],
-        statistics['sms']['requested']|message_count_label('sms', suffix='sent'),
-        statistics['sms']['failed'],
-        statistics['sms']['failed_percentage'],
-        statistics['sms']['show_warning'],
-        failure_link=url_for(".view_notifications", service_id=service_id, message_type='sms', status='failed'),
-        link=url_for(".view_notifications", service_id=service_id, message_type='sms', status='sending,delivered,failed'),
-        smaller=True,
-        ) }}
+      <span class="big-number-with-status">
+        <a class="usa-link display-flex" href="{{ url_for('.view_notifications', service_id=service_id, message_type='sms', status='sending,delivered,failed') }}">
+          <span class="big-number-smaller">
+            <span class="big-number-number">
+              {% if statistics['sms']['requested'] is number %}
+                {{ "{:,}".format(statistics['sms']['requested']) }}
+              {% else %}
+                {{ statistics['sms']['requested'] }}
+              {% endif %}
+            </span>
+            <span class="big-number-label">{{ statistics['sms']['requested']|message_count_label('sms', suffix='sent') }}</span>
+          </span>
+        </a>
+        {% if show_failures %}
+          <span class="big-number-status{% if statistics['sms']['show_warning'] is sameas true %} big-number-status--failing{% endif %}">
+            {% if statistics['sms']['failed'] %}
+              <a class="usa-link" href="{{ url_for('.view_notifications', service_id=service_id, message_type='sms', status='failed') }}">
+                {{ "{:,}".format(statistics['sms']['failed']) }}
+                failed – {{ statistics['sms']['failed_percentage'] }}%
+              </a>
+            {% else %}
+              No failures
+            {% endif %}
+          </span>
+        {% endif %}
+      </span>
       </div>
       <!-- <div id="total-email" class="grid-col-6">
         <span class="big-number-with-status pilot-disabled">

@@ -39,6 +39,7 @@ from app.asset_fingerprinter import asset_fingerprinter
 from app.config import configs
 from app.extensions import redis_client, zendesk_client
 from app.formatters import (
+    convert_markdown_template,
     convert_to_boolean,
     format_auth_type,
     format_billions,
@@ -53,6 +54,7 @@ from app.formatters import (
     format_datetime_normal,
     format_datetime_relative,
     format_datetime_short,
+    format_datetime_short_america,
     format_day_of_week,
     format_delta,
     format_delta_days,
@@ -88,12 +90,12 @@ from app.navigation import (
     HeaderNavigation,
     MainNavigation,
     OrgNavigation,
+    SecondaryNavigation,
 )
 from app.notify_client import InviteTokenError
 from app.notify_client.api_key_api_client import api_key_api_client
 from app.notify_client.billing_api_client import billing_api_client
 from app.notify_client.complaint_api_client import complaint_api_client
-from app.notify_client.email_branding_client import email_branding_client
 from app.notify_client.events_api_client import events_api_client
 from app.notify_client.inbound_number_client import inbound_number_client
 from app.notify_client.invite_api_client import invite_api_client
@@ -111,11 +113,7 @@ from app.notify_client.template_folder_api_client import template_folder_api_cli
 from app.notify_client.template_statistics_api_client import template_statistics_client
 from app.notify_client.upload_api_client import upload_api_client
 from app.notify_client.user_api_client import user_api_client
-from app.url_converters import (
-    SimpleDateTypeConverter,
-    TemplateTypeConverter,
-    TicketTypeConverter,
-)
+from app.url_converters import SimpleDateTypeConverter, TemplateTypeConverter
 
 login_manager = LoginManager()
 csrf = CSRFProtect()
@@ -133,6 +131,7 @@ navigation = {
     "main_navigation": MainNavigation(),
     "header_navigation": HeaderNavigation(),
     "org_navigation": OrgNavigation(),
+    "secondary_navigation": SecondaryNavigation(),
 }
 
 
@@ -186,7 +185,6 @@ def create_app(application):
         api_key_api_client,
         billing_api_client,
         complaint_api_client,
-        email_branding_client,
         events_api_client,
         inbound_number_client,
         invite_api_client,
@@ -328,7 +326,6 @@ def init_app(application):
 
     application.url_map.converters["uuid"].to_python = lambda self, value: value
     application.url_map.converters["template_type"] = TemplateTypeConverter
-    application.url_map.converters["ticket_type"] = TicketTypeConverter
     application.url_map.converters["simple_date"] = SimpleDateTypeConverter
 
 
@@ -552,6 +549,7 @@ def add_template_filters(application):
         format_datetime_24h,
         format_datetime_normal,
         format_datetime_short,
+        format_datetime_short_america,
         valid_phone_number,
         linkable_name,
         format_date,
@@ -589,6 +587,7 @@ def add_template_filters(application):
         format_mobile_network,
         format_yes_no,
         square_metres_to_square_miles,
+        convert_markdown_template,
     ]:
         application.add_template_filter(fn)
 

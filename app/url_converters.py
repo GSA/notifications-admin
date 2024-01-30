@@ -1,19 +1,10 @@
 from werkzeug.routing import BaseConverter
 
-from app.models.feedback import (
-    GENERAL_TICKET_TYPE,
-    PROBLEM_TICKET_TYPE,
-    QUESTION_TICKET_TYPE,
-)
 from app.models.service import Service
 
 
 class TemplateTypeConverter(BaseConverter):
     regex = "(?:{})".format("|".join(Service.TEMPLATE_TYPES))
-
-
-class TicketTypeConverter(BaseConverter):
-    regex = f"(?:{PROBLEM_TICKET_TYPE}|{QUESTION_TICKET_TYPE}|{GENERAL_TICKET_TYPE})"
 
 
 class SimpleDateTypeConverter(BaseConverter):

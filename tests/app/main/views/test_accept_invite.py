@@ -14,6 +14,91 @@ from tests.conftest import (
     normalize_spaces,
 )
 
+FAKE_ONE_OFF_NOTIFICATION = {
+    "links": {},
+    "notifications": [
+        {
+            "api_key": None,
+            "billable_units": 0,
+            "carrier": None,
+            "client_reference": None,
+            "created_at": "2023-12-14T20:35:55+00:00",
+            "created_by": {
+                "email_address": "grsrbsrgsrf@fake.gov",
+                "id": "de059e0a-42e5-48bb-939e-4f76804ab739",
+                "name": "grsrbsrgsrf",
+            },
+            "document_download_count": None,
+            "id": "a3442b43-0ba1-4854-9e0a-d2fba1cc9b81",
+            "international": False,
+            "job": {
+                "id": "55b242b5-9f62-4271-aff7-039e9c320578",
+                "original_file_name": "1127b78e-a4a8-4b70-8f4f-9f4fbf03ece2.csv",
+            },
+            "job_row_number": 0,
+            "key_name": None,
+            "key_type": "normal",
+            "normalised_to": "+16615555555",
+            "notification_type": "sms",
+            "personalisation": {
+                "dayofweek": "2",
+                "favecolor": "3",
+                "phonenumber": "+16615555555",
+            },
+            "phone_prefix": "1",
+            "provider_response": None,
+            "rate_multiplier": 1.0,
+            "reference": None,
+            "reply_to_text": "development",
+            "sent_at": None,
+            "sent_by": None,
+            "service": "f62d840f-8bcb-4b36-b959-4687e16dd1a1",
+            "status": "created",
+            "template": {
+                "content": "((day of week)) and ((fave color))",
+                "id": "bd9caa7e-00ee-4c5a-839e-10ae1a7e6f73",
+                "name": "personalized",
+                "redact_personalisation": False,
+                "subject": None,
+                "template_type": "sms",
+                "version": 1,
+            },
+            "to": "+16615555555",
+            "updated_at": None,
+        }
+    ],
+    "page_size": 50,
+    "total": 1,
+}
+
+MOCK_JOBS = {
+    "data": [
+        {
+            "archived": False,
+            "created_at": "2024-01-04T20:43:52+00:00",
+            "created_by": {
+                "id": "mocked_user_id",
+                "name": "mocked_user",
+            },
+            "id": "mocked_notification_id",
+            "job_status": "finished",
+            "notification_count": 1,
+            "original_file_name": "mocked_file.csv",
+            "processing_finished": "2024-01-25T23:02:25+00:00",
+            "processing_started": "2024-01-25T23:02:24+00:00",
+            "scheduled_for": None,
+            "service": "21b3ee3d-1cb0-4666-bfa0-9c5ac26d3fe3",
+            "service_name": {"name": "Mock Texting Service"},
+            "statistics": [{"count": 1, "status": "sending"}],
+            "template": "6a456418-498c-4c86-b0cd-9403c14a216c",
+            "template_name": "Mock Template Name",
+            "template_type": "sms",
+            "template_version": 3,
+            "updated_at": "2024-01-25T23:02:25+00:00",
+        }
+    ]
+}
+
 
 @pytest.fixture()
 def _mock_no_users_for_service(mocker):
@@ -207,7 +292,11 @@ def test_accepting_invite_removes_invite_from_session(
     sample_invite["email_address"] = user["email_address"]
 
     client_request.login(user)
-
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
+    )
     page = client_request.get(
         "main.accept_invite",
         token="thisisnotarealtoken",
@@ -618,6 +707,11 @@ def test_new_invited_user_verifies_and_added_to_service(
         "main.accept_invite",
         token="thisisnotarealtoken",
         _expected_redirect=url_for("main.register_from_invite"),
+    )
+    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=FAKE_ONE_OFF_NOTIFICATION,
     )
 
     # get redirected to register from invite

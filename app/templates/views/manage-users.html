@@ -1,4 +1,4 @@
-{% extends "withnav_template.html" %}
+{% extends "settings_template.html" %}
 {% from "components/tick-cross.html" import tick_cross %}
 {% from "components/live-search.html" import live_search %}
 {% from "components/components/button/macro.njk" import usaButton %}
@@ -9,8 +9,8 @@
 
 {% block maincolumn_content %}
 
-  <div class="display-flex flex-justify flex-align-center">
-    <h1 class="font-body-xl margin-0">
+  <div class="button-flex-header">
+    <h1 class="font-body-2xl margin-0">
       Team members
     </h1>
     {% if current_user.has_permissions('manage_service') %}
@@ -32,64 +32,65 @@
   <div class="user-list">
     {% for user in users %}
       <div class="user-list-item">
-        <div class="grid-row">
-          <div class="grid-col-9">
-            <h2 class="user-list-item-heading" title="{{ user.email_address }}">
-              {%- if user.name -%}
-              <span class="heading-small live-search-relevant">{{ user.name }}</span>&ensp;
-              {%- endif -%}
-              <span class="hint">
-              {%- if user.status == 'pending' -%}
-                <span class="live-search-relevant">{{ user.email_address }}</span> (invited)
-              {%- elif user.status == 'cancelled' -%}
-                <span class="live-search-relevant">{{ user.email_address }}</span> (cancelled invite)
-              {%- elif user.id == current_user.id -%}
-                <span class="live-search-relevant">(you)</span>
-              {% else %}
-                <span class="live-search-relevant">{{ user.email_address }}</span>
-              {% endif %}
-              </span>
-            </h2>
-            <h3 class="margin-bottom-05">Permissions</h3>
-            <ul class="tick-cross-list-permissions">
-              {% for permission, label in permissions %}
-                {{ tick_cross(
-                  user.has_permission_for_service(current_service.id, permission),
-                  label
-                ) }}
-              {% endfor %}
-            </ul>
-            {# only show if the service has folders #}
-            {% if current_service.all_template_folders %}
-              <p class="usa-body tick-cross-list-hint">
-                {% set folder_count = user.template_folders_for_service(current_service) | length %}
-
-                {% if folder_count == 0 %}
-                  Cannot see any folders
-                {% elif folder_count != current_service.all_template_folders | length %}
-                  Can see {{ folder_count }} folder{% if folder_count > 1 %}s{% endif %}
-                {% else %}
-                  Can see all folders
-                {% endif%}
-              </p>
+        <h2 class="user-list-item-heading font-body-lg margin-top-0" title="{{ user.email_address }}">
+          {%- if user.name -%}
+          <span class="heading-small live-search-relevant">{{ user.name }}</span>
+          {%- endif -%}
+          {%- if user.status == 'pending' -%}
+            <span class="live-search-relevant">{{ user.email_address }}</span><span class="hint">(invited)</span>
+          {%- elif user.status == 'cancelled' -%}
+            <span class="live-search-relevant">{{ user.email_address }}</span><span class="hint">(cancelled invite)</span>
+          {%- elif user.status == 'expired' -%}
+            <span class="live-search-relevant">{{ user.email_address }}</span><span class="hint">(expired invite)</span>
+          {%- elif user.id == current_user.id -%}
+            <span class="live-search-relevant"></span><span class="hint">(you)</span>
+          {% else %}
+            <span class="live-search-relevant">{{ user.email_address }}</span>
+          {% endif %}
+        </h2>
+        <h3 class="margin-bottom-0">Permissions</h3>
+        <ul class="tick-cross-list-permissions">
+          {% for permission, label in permissions %}
+            {{ tick_cross(
+              user.has_permission_for_service(current_service.id, permission),
+              label
+            ) }}
+          {% endfor %}
+        </ul>
+        {# only show if the service has folders #}
+        {% if current_service.all_template_folders %}
+          <p class="usa-body tick-cross-list-hint">
+            {% set folder_count = user.template_folders_for_service(current_service) | length %}
+            {% if folder_count == 0 %}
+              Cannot see any folders
+            {% elif folder_count != current_service.all_template_folders | length %}
+              Can see {{ folder_count }} folder{% if folder_count > 1 %}s{% endif %}
+            {% else %}
+              Can see all folders
+            {% endif%}
+          </p>
+        {% endif %}
+        {% if current_service.has_permission('email_auth') %}
+          <p class="usa-body tick-cross-list-hint">
+            Signs in with
+            {{ user.auth_type | format_auth_type(with_indefinite_article=True) }}
+          </p>
+        {% endif %}
+        {% if current_service.has_permission('email_auth') %}
+          <p class="usa-body tick-cross-list-hint">
+            Signs in with
+            {{ user.auth_type | format_auth_type(with_indefinite_article=True) }}
+          </p>
+          {% endif %}
+            {% if current_user.has_permissions('manage_service') %}
+              {% if user.status == 'pending' %}
+                <a class="user-list-edit-link usa-link" href="{{ url_for('.cancel_invited_user', service_id=current_service.id, invited_user_id=user.id)}}">Cancel invitation<span class="usa-sr-only"> for {{ user.email_address }}</span></a>
+              {% elif user.status == 'expired' %}
+                <a class="user-list-edit-link usa-link" href="{{ url_for('.resend_invite', service_id=current_service.id, invited_user_id=user.id)}}">Resend invite<span class="usa-sr-only"> for {{ user.email_address }}</span></a>
+              {% elif user.is_editable_by(current_user) %}
+                <a class="user-list-edit-link usa-link" href="{{ url_for('.edit_user_permissions', service_id=current_service.id, user_id=user.id)}}">Change details<span class="usa-sr-only"> for {{ user.name }} {{ user.email_address }}</span></a>
             {% endif %}
-            {% if current_service.has_permission('email_auth') %}
-              <p class="usa-body tick-cross-list-hint">
-                Signs in with
-                {{ user.auth_type | format_auth_type(with_indefinite_article=True) }}
-              </p>
-            {% endif %}
-            </div>
-            <div class="grid-col-3">
-              {% if current_user.has_permissions('manage_service') %}
-                {% if user.status == 'pending' %}
-                  <a class="user-list-edit-link usa-link" href="{{ url_for('.cancel_invited_user', service_id=current_service.id, invited_user_id=user.id)}}">Cancel invitation<span class="usa-sr-only"> for {{ user.email_address }}</span></a>
-                {% elif user.is_editable_by(current_user) %}
-                  <a class="user-list-edit-link usa-link" href="{{ url_for('.edit_user_permissions', service_id=current_service.id, user_id=user.id)}}">Change details<span class="usa-sr-only"> for {{ user.name }} {{ user.email_address }}</span></a>
-                {% endif %}
-              {% endif %}
-            </div>
-          </div>
+          {% endif %}
       </div>
     {% endfor %}
   </div>

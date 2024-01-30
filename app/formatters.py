@@ -1,3 +1,4 @@
+import os
 import re
 import unicodedata
 import urllib
@@ -9,8 +10,11 @@ from numbers import Number
 import ago
 import dateutil
 import humanize
+import markdown
 import pytz
-from flask import Markup, url_for
+from bs4 import BeautifulSoup
+from flask import Markup, render_template_string, url_for
+from flask.helpers import get_root_path
 from notifications_utils.field import Field
 from notifications_utils.formatters import make_quotes_smart
 from notifications_utils.formatters import nl2br as utils_nl2br
@@ -19,6 +23,41 @@ from notifications_utils.take import Take
 
 from app.utils.csv import get_user_preferred_timezone
 from app.utils.time import parse_naive_dt
+
+
+def apply_html_class(tags, html_file):
+    new_html = html_file
+
+    for tag in tags:
+        element = tag[0]
+        class_name = tag[1]
+
+        soup = BeautifulSoup(new_html, "html.parser")
+
+        for xtag in soup.find_all(element):
+            xtag["class"] = class_name
+
+        new_html = str(soup)
+
+    return new_html
+
+
+def convert_markdown_template(mdf, test=False):
+    content_text = ""
+
+    if not test:
+        APP_ROOT = get_root_path("notifications-admin")
+        file = "app/content/" + mdf + ".md"
+        md_file = os.path.join(APP_ROOT, file)
+        with open(md_file) as f:
+            content_text = f.read()
+    else:
+        content_text = mdf
+
+    jn_render = render_template_string(content_text)
+    md_render = markdown.markdown(jn_render)
+
+    return md_render
 
 
 def convert_to_boolean(value):
@@ -56,6 +95,28 @@ def format_datetime_normal(date):
 def format_datetime_short(date):
     return "{} at {} {}".format(
         format_date_short(date), format_time_24h(date), get_user_preferred_timezone()
+    )
+
+
+def format_datetime_short_america(date):
+    return "{} at {}".format(format_date_numeric_america(date), format_time_12h(date))
+
+
+def format_date_numeric_america(date):
+    date = parse_naive_dt(date)
+
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    return (
+        date.replace(tzinfo=timezone.utc).astimezone(preferred_tz).strftime("%m-%d-%Y")
+    )
+
+
+def format_time_12h(date):
+    date = parse_naive_dt(date)
+
+    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    return (
+        date.replace(tzinfo=timezone.utc).astimezone(preferred_tz).strftime("%I:%M %p")
     )
 
 
@@ -408,6 +469,12 @@ def message_count_noun(count, template_type):
             return "text message"
         else:
             return "text messages"
+
+    if template_type == "parts":
+        if count == 1:
+            return "text message part"
+        else:
+            return "text message parts"
 
     elif template_type == "email":
         if count == 1:

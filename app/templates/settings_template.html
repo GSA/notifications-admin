@@ -1,0 +1,34 @@
+{% extends "admin_template.html" %}
+
+{% block per_page_title %}
+  {% block service_page_title %}{% endblock %} – {{ current_service.name }}
+{% endblock %}
+
+{% block main %}
+  <div class="grid-container">
+    <div class="grid-row margin-top-5">
+      {% if help %}
+        <div class="grid-col-3">
+      {% else %}
+        <div class="grid-col-3">
+      {% endif %}
+          {% include "settings_nav.html" %}
+        </div>
+      {% if help %}
+        <div class="grid-col-8">
+      {% else %}
+        <div class="grid-col-9 padding-left-4">
+      {% endif %}
+        {% block beforeContent %}
+          {% block backLink %}{% endblock %}
+        {% endblock %}
+        <main id="main-content" role="main" class="usa-prose site-prose margin-bottom-10">
+        {% block content %}
+          {% include 'flash_messages.html' %}
+          {% block maincolumn_content %}{% endblock %}
+        {% endblock %}
+        </main>
+      </div>
+    </div>
+  </div>
+{% endblock %}

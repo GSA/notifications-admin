@@ -31,13 +31,12 @@ EXCLUDED_ENDPOINTS = tuple(
             "api_keys",
             "archive_service",
             "archive_user",
-            "bat_phone",
             "begin_tour",
             "billing_details",
-            "branding_and_customisation",
             "callbacks",
             "cancel_invited_org_user",
             "cancel_invited_user",
+            "resend_invite",
             "cancel_job",
             "change_user_auth",
             "check_and_resend_text_code",
@@ -61,7 +60,6 @@ EXCLUDED_ENDPOINTS = tuple(
             "count_content_length",
             "create_and_send_messages",
             "create_api_key",
-            "create_email_branding",
             "data_retention",
             "delete_service_template",
             "delete_template_folder",
@@ -75,8 +73,6 @@ EXCLUDED_ENDPOINTS = tuple(
             "edit_data_retention",
             "edit_organization_billing_details",
             "edit_organization_domains",
-            "edit_organization_email_branding",
-            "edit_organization_go_live_notes",
             "edit_organization_name",
             "edit_organization_notes",
             "edit_organization_type",
@@ -87,20 +83,10 @@ EXCLUDED_ENDPOINTS = tuple(
             "edit_user_email",
             "edit_user_mobile_number",
             "edit_user_permissions",
-            "email_branding",
-            "email_branding_govuk",
-            "email_branding_govuk_and_org",
-            "email_branding_organization",
-            "email_branding_request",
-            "email_branding_something_else",
             "email_not_received",
-            "email_template",
             "error",
-            "estimate_usage",
             "features",
-            "features_email",
             "features_sms",
-            "feedback",
             "find_services_by_name",
             "find_users_by_email",
             "forgot_password",
@@ -146,7 +132,6 @@ EXCLUDED_ENDPOINTS = tuple(
             "old_using_notify",
             "organization_billing",
             "organization_dashboard",
-            "organization_preview_email_branding",
             "organization_settings",
             "organization_trial_mode_services",
             "organizations",
@@ -165,7 +150,6 @@ EXCLUDED_ENDPOINTS = tuple(
             "registration_continue",
             "remove_user_from_organization",
             "remove_user_from_service",
-            "request_to_go_live",
             "resend_email_link",
             "resend_email_verification",
             "resume_service",
@@ -193,10 +177,8 @@ EXCLUDED_ENDPOINTS = tuple(
             "service_edit_sms_sender",
             "service_email_reply_to",
             "service_name_change",
-            "service_preview_email_branding",
             "service_set_auth_type",
             "service_set_channel",
-            "service_set_email_branding",
             "service_set_inbound_number",
             "service_set_inbound_sms",
             "service_set_international_sms",
@@ -219,16 +201,12 @@ EXCLUDED_ENDPOINTS = tuple(
             "sign_in",
             "sign_out",
             "start_job",
-            "submit_request_to_go_live",
             "support",
-            "support_public",
             "suspend_service",
             "template_history",
             "template_usage",
             "terms",
-            "thanks",
             "tour_step",
-            "triage",
             "trial_mode",
             "trial_mode_new",
             "trial_services",
@@ -236,7 +214,6 @@ EXCLUDED_ENDPOINTS = tuple(
             "two_factor_email",
             "two_factor_email_interstitial",
             "two_factor_email_sent",
-            "update_email_branding",
             "uploads",
             "usage",
             "user_information",
@@ -423,9 +400,9 @@ def test_navigation_urls(
     assert [a["href"] for a in page.select(".nav a")] == [
         "/services/{}/templates".format(SERVICE_ONE_ID),
         "/services/{}".format(SERVICE_ONE_ID),
-        "/services/{}/users".format(SERVICE_ONE_ID),
         "/services/{}/usage".format(SERVICE_ONE_ID),
-        "/services/{}/service-settings".format(SERVICE_ONE_ID),
+        # "/services/{}/users".format(SERVICE_ONE_ID),
+        # "/services/{}/service-settings".format(SERVICE_ONE_ID),
         # '/services/{}/api'.format(SERVICE_ONE_ID),
     ]
 
@@ -441,7 +418,7 @@ def test_caseworkers_get_caseworking_navigation(
     client_request.login(active_caseworking_user)
     page = client_request.get("main.choose_template", service_id=SERVICE_ONE_ID)
     assert normalize_spaces(page.select_one("header + .grid-container nav").text) == (
-        "Send messages Sent messages Team members"
+        "Send messages Sent messages"
     )
 
 
@@ -456,5 +433,5 @@ def test_caseworkers_see_jobs_nav_if_jobs_exist(
     client_request.login(active_caseworking_user)
     page = client_request.get("main.choose_template", service_id=SERVICE_ONE_ID)
     assert normalize_spaces(page.select_one("header + .grid-container nav").text) == (
-        "Send messages Sent messages Team members"
+        "Send messages Sent messages"
     )

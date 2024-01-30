@@ -82,7 +82,6 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             "contact_link",
             "created_by",
             "count_as_live",
-            "email_branding",
             "email_from",
             "free_sms_fragment_limit",
             "go_live_at",

@@ -1,7 +1,6 @@
 {% extends "withnav_template.html" %}
 
-{% from "components/show-more.html" import show_more %}
-{% from "components/table.html" import list_table, field, right_aligned_field_heading, hidden_field_heading %}
+{% from "components/table.html" import list_table, field, text_field, link_field, right_aligned_field_heading, hidden_field_heading, row_heading, notification_status_field, notification_carrier_field, notification_carrier_message_field %}
 {% from "components/ajax-block.html" import ajax_block %}
 
 {% block service_page_title %}
@@ -30,10 +29,73 @@
 
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
 
+    <h2 class="margin-top-4 margin-bottom-1">Recent Batches</h2>
+    <div class='job-table'>
+      <table class="usa-table usa-table--borderless width-full">
+        <thead class="table-field-headings">
+          <tr>
+            <th scope="col" class="table-field-heading-first file-name">
+              <span>File name</span>
+            </th>
+            <th scope="col" class="table-field-heading template">
+              <span>Template</span>
+            </th>
+            <th scope="col" class="table-field-heading time-sent">
+              <span>Time sent</span>
+            </th>
+            <th scope="col" class="table-field-heading sender">
+              <span>Sender</span>
+            </th>
+            <th scope="col" class="table-field-heading #-of-recipients">
+              <span># of Recipients</span>
+            </th>
+            <th scope="col" class="table-field-heading report">
+              <span>Report</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for notification in notifications[:5] %}
+            {% if notification %}
+              <tr class="table-row" id="{{ notification.job.id }}">
+                <th class="table-field">
+                  {{ notification.job.original_file_name if notification.job.original_file_name else 'Manually entered number'}}
+                  <br>
+                  <a class="usa-link file-list-filename" href="/services/{{ notification.service }}/jobs/{{ notification.job.id }}">View Batch</a>
+                </th>
+                <th class="table-field">
+                  {{ notification.template.name }}
+                </th>
+                <th class="table-field">
+                  {{ notification.created_at | format_datetime_short_america }}
+                </th>
+                <th class="table-field">
+                  {{ notification.created_by.name }}
+                </th>
+                {% set job_available = jobs|selectattr('job_id', 'equalto', notification.job.id)|first %}
+                <th class="table-field">
+                  {{ job_available.notification_count if job_available else ''}}
+                </th>
+                <th class="table-field">
+                  {% if job_available and job_available.time_left != "Data no longer available" %}
+                    <a class="usa-link file-list-filename" href="{{ job_available.download_link }}">
+                      {{ "Download" if job_available.job_id else '' }}</a>
+                    <span class="usa-hint">{{ job_available.time_left }}</span>
+                  {% elif job_available %}
+                    <span>{{ job_available.time_left }}</span>
+                  {% endif %}
+                </th>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
     <h2 class="margin-top-4 margin-bottom-1">Usage</h2>
     <h3 class="margin-bottom-0">Daily</h3>
     <p class="margin-0">Across all services</p>
-    <table class="usa-table usa-table--borderless margin-top-1 margin-bottom-5">
+    <table class="usage-table usa-table usa-table--borderless margin-top-1 margin-bottom-5">
       <caption class="usa-sr-only">
         Daily
       </caption>
@@ -56,10 +118,10 @@
     {% if current_user.has_permissions('manage_service') %}
       <h3 class='margin-bottom-0' id="current-year"></h3>
       {{ ajax_block(partials, updates_url, 'usage') }}
-      {{ show_more(
-        url_for(".usage", service_id=current_service['id']),
-        'See all usage'
-      ) }}
+      <a
+        href="{{ url_for('.usage', service_id=current_service['id']) }}"
+        class="usa-link show-more"
+      ><span>See all usage</span></a>
     {% endif %}
   </div>
 

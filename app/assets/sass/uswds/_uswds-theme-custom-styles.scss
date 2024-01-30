@@ -22,16 +22,26 @@ i.e.
 
 @use "uswds-core" as *;
 
-.usa-header--extended .usa-logo {
-   font-family: family("sans");
-   margin: units(4) 0;
-   @include at-media-max('mobile-lg') {
-      margin: units(4) 0 units(4) units(2);
+.usa-header--extended {
+   .usa-logo {
+      font-family: family("sans");
+      margin: units(4) 0;
+      @include at-media-max('mobile-lg') {
+         margin: units(4) 0 units(4) units(2);
+      }
+      img {
+         @include at-media($theme-header-min-width) {
+            width: 80px;
+            height: 70px;
+         }
+      }
    }
-   img {
-      @include at-media($theme-header-min-width) {
-         width: 80px;
-         height: 70px;
+   .usa-nav__secondary {
+      .usa-nav__link {
+        padding: 0;
+        &.usa-current {
+          text-decoration: underline;
+        }
       }
    }
 }
@@ -44,14 +54,11 @@ i.e.
    &> .usa-nav__primary-item > a {
       font-size: size("body", 4);
    }
-   &> .usa-nav__primary-item:last-child {
-      margin-left: auto; 
-      @include u-margin-right(-4);
-   }
+   // &> .usa-nav__primary-item:last-child {
+   //    margin-left: auto;
+   //    @include u-margin-right(-4);
+   // }
 }
-
-.usa-nav__primary 
-
 
 h1 {
    font-weight: bold !important;
@@ -114,10 +121,46 @@ td.table-empty-message {
    text-decoration: none !important;
 }
 
+.button-flex-header {
+   flex-direction: column;
+   align-items: flex-start;
+   margin-bottom: units(2);
+   @include at-media(desktop) {
+      flex-direction: row;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+   }
+}
+
 .user-list-edit-link:active:before,
 .user-list-edit-link:focus:before {
    box-shadow: none;
    border: 0;
+}
+
+.user-list {
+   display: inline-flex;
+   flex-wrap: wrap;
+   gap: units(4);
+   .user-list-item {
+      @include at-media(desktop) {
+         flex: 1 1 calc(50% - units(2));
+         flex-grow: 0;
+      }
+      flex: 1 1 calc(100% - units(2));
+      border: 1px solid color('gray-cool-10');
+      padding: units(2);
+      .tick-cross-list-permissions {
+         margin: units(1) 0;
+         padding-left: units(2);
+      }
+      .hint {
+         display: block;
+         font-size: size("body", "sm");
+         font-weight: normal;
+      }
+   }
 }
 
 .template-list-item-without-ancestors .template-list-folder:active,
@@ -132,11 +175,15 @@ td.table-empty-message {
    box-shadow: none;
 }
 
+.template-list-item-hidden-by-default {
+   display: none
+}
+
 .folder-heading a.folder-heading-folder,
 .template-list-folder {
    background: url(../img/material-icons/folder.svg) no-repeat;
    padding-left: units(4);
-   display: inline-block; 
+   display: inline-block;
    background-position: 0;
 }
 
@@ -166,7 +213,7 @@ td.table-empty-message {
 .template-list-template {
    background: url(../img/material-icons/description.svg) no-repeat;
    padding-left: units(4);
-   display: inline-flex; 
+   display: inline-flex;
 }
 
 .js-enabled .live-search {
@@ -214,7 +261,7 @@ td.table-empty-message {
 }
 
 .usa-hero {
-   background-image: none; 
+   background-image: none;
 }
 
 .usa-prose {
@@ -232,7 +279,7 @@ td.table-empty-message {
 }
 
 .navigation-service.usa-breadcrumb {
-   -bottom: 0; 
+   bottom: 0;
 }
 
 // Dashboard
@@ -246,13 +293,13 @@ td.table-empty-message {
          text-decoration: none;
          &:hover{
             background: color("blue-warm-70v");
-         } 
+         }
       }
       span {
-         color: white; 
+         color: white;
       }
       .big-number-smaller {
-         display: flex; 
+         display: flex;
          flex-direction: column;
          .big-number-number {
                font-size: units(5);
@@ -264,15 +311,15 @@ td.table-empty-message {
       }
       .big-number-status {
          background: color("green-cool-40v");
-         display: flex; 
+         display: flex;
          padding: units(1) units(2);
          &--failing {
-            padding: 0; 
+            padding: 0;
             a.usa-link {
                color: white;
                background: color("red-warm-50v");
                padding: units(1) units(2);
-               margin: 0; 
+               margin: 0;
                width: 100%;
                &:hover {
                   background: color("red-warm-60v");
@@ -282,12 +329,12 @@ td.table-empty-message {
       }
    }
    .usa-table {
-      width: 100%; 
+      width: 100%;
       caption {
-         margin-bottom: 0; 
+         margin-bottom: 0;
       }
       .table-field-center-aligned  {
-         text-align: center; 
+         text-align: center;
       }
       .template-statistics-table-template-name {
          padding-left: units(4);
@@ -300,33 +347,59 @@ td.table-empty-message {
 
 .dashboard-table {
    table {
-      width: 100%; 
+      width: 100%;
    }
    .file-list-filename {
       font-weight: bold;
    }
    .file-list-hint {
-      margin: 0; 
+      margin: 0;
    }
    .table-field, .table-field-right-aligned {
-      width: 50%; 
+      width: 50%;
    }
    &.usage-table {
       .table-field, .table-field-left-aligned, .table-field-right-aligned {
-         width: auto; 
+         width: auto;
       }
    }
 }
 
 .usage-table {
    ul {
-      list-style: none; 
-      padding: 0; 
-      margin: 0; 
+      list-style: none;
+      padding: 0;
+      margin: 0;
    }
    .big-number-smallest {
-      display: flex; 
+      display: flex;
       flex-direction: column;
+   }
+}
+
+.job-table {
+   .usa-table {
+      thead th.file-name {
+         width: 25%;
+      }
+      thead th.template {
+         width: 20%;
+      }
+      thead th.time-sent {
+         width: 30%;
+      }
+      thead th.sender {
+         width: 15%;
+      }
+      thead th.\#-of-recipients {
+         width: 5%;
+      }
+      thead th.report {
+         width: 5%;
+      }
+      th {
+         padding: 0.5rem 0.5rem;
+      }
    }
 }
 
@@ -336,27 +409,27 @@ td.table-empty-message {
    padding: units(1) 0 units(1) units(1);
    margin: units(2) 0 units(5);
    ul {
-      padding: 0; 
-      margin: 0; 
-      list-style: none; 
-   } 
+      padding: 0;
+      margin: 0;
+      list-style: none;
+   }
 }
 
 // Tabs
 
 .tabs {
    .pill {
-      display: flex; 
+      display: flex;
       list-style: none;
-      padding: 0; 
+      padding: 0;
       .pill-item__container {
          border: 1px solid color("gray-cool-10");
-         flex: 1; 
-         display: flex; 
-         flex-direction: column; 
-         text-align: center; 
+         flex: 1;
+         display: flex;
+         flex-direction: column;
+         text-align: center;
          font-size: units(2);
-         a { 
+         a {
             padding: units(4);
             .big-number-smaller {
                font-size: units(5);
@@ -367,7 +440,7 @@ td.table-empty-message {
             }
             &:not(.pill-item--selected):hover {
                background: color("blue-warm-70v");
-            }  
+            }
             &.pill-item--selected:hover {
                color: color("blue-60v");
             }
@@ -379,12 +452,12 @@ td.table-empty-message {
 // Etc
 
 .email-brand, .browse-list {
-   padding: 0; 
-   margin: 0; 
-   list-style: none; 
+   padding: 0;
+   margin: 0;
+   list-style: none;
    margin-bottom: units(2);
    li {
-      padding: 8px 0; 
+      padding: 8px 0;
    }
 }
 
@@ -392,7 +465,7 @@ details form {
    box-sizing:border-box;
 }
 
-// Textbox highlight 
+// Textbox highlight
 
 .textbox-highlight {
 
@@ -440,7 +513,7 @@ details form {
     .placeholder,
     .placeholder-conditional {
          background-color: #fff;
-         position: relative; 
+         position: relative;
          &:after {
             content: "";
             background-color: color("yellow-20v");
@@ -449,9 +522,9 @@ details form {
             position: absolute;
             top: 0;
             left: 5px;
-            right: 6px; 
+            right: 6px;
             height: 100%;
-            border-radius: 7px; 
+            border-radius: 7px;
          }
     }
 
@@ -470,4 +543,8 @@ details form {
   font-size: units(2);
   padding-left: 5px;
   letter-spacing: 0.04em;
+}
+
+.edit-textbox-error-mt {
+   margin-top: 1.5rem;
 }

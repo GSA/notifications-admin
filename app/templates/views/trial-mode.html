@@ -7,37 +7,33 @@
 {% block content_column_content %}
 
   <h1 class="font-body-2xl margin-bottom-3">Trial mode</h1>
-
   <p>When you add a new service it will start in trial mode. This lets you try out Notify.gov, with a few restrictions.</p>
-  <p>While your service is in trial mode you can only:</p>
-    <ul class="list list-bullet">
-     <li>send 50 text messages per day</li>
-      <li>send messages to yourself and other people in your team</li>
-   </ul>
 
-    {% if current_service and current_service.trial_mode %}
-  <p>
-    To remove these restrictions, you can <a class="usa-link" href="{{ url_for('.request_to_go_live', service_id=current_service.id) }}">request to go live</a>.</p>
-    {% else %}
-  <p>
-    To remove these restrictions:
-  </p>
-  <ol class="list list-number">
-    <li><a class="usa-link" href="{{ url_for('.sign_in') }}">Sign in to Notify</a>.</li>
-    <li>Go to the <b class="bold">Settings</b> page.</li>
-    <li>Select <b class="bold">Request to go live</b>.</li>
-  </ol>
-    {% endif %}
- <p>
-    When we receive your request we’ll get back to you within one working day.
-  </p>
-  <h2 class="font-body-lg" id="before-you-request-to-go-live">Before you request to go live</h2>
-  <p>You must:</p>
+  <h2 class="font-body-lg">Limits while in trial mode</h2>
+  <p>While your service is in trial mode you can only:</p>
   <ul class="list list-bullet">
-    <li>add examples of the messages you want to send</li>
-    <li>update your settings so you’re ready to send and receive messages</li>
-    <li>accept our terms of use</li>
+    <li>send 50 text message parts per day</li>
+    <li>send messages to yourself and other people in your team</li>
   </ul>
-  
+  <p>Each text message is made up of one or more parts.</p>
+  <ul class="list list-bullet">
+    <li>Generally, 160 characters is one part (and one text message).</li>
+    <li>A text message of 160-306 characters is two parts.</li>
+  </ul>
+  <p>For more information on how message parts are calculated, see
+  <a href="/using-notify/pricing">Pricing</a>.</p>
+
+  <h2 class="font-body-lg">Before going Live</h2>
+  <p>Before you request to make your service live so you can send messages to clients:</p>
+  <ul class="list list-bullet">
+    <li>Add examples of the messages you want to send into Notify.</li>
+    <li>Update your settings so you’re ready to send and receive messages.</li>
+    <li>Review your Terms of Use in the Memorandum of Understanding.</li>
+  </ul>
+
+  <h3 class="font-body-lg">Going Live</h3>
+
+  <p>To remove the restrictions of Trial Mode and begin sending messages to clients complete the <a href="https://airtable.com/appe4n7jYOALPLcyU/shrIPWnLTw9U1fclL">Live Campaign Form</a>.</p>
+  <p>We'll get back to you within one working day. </p>
 
 {% endblock %}
