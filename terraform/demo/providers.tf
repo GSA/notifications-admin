@@ -12,7 +12,6 @@ terraform {
     key     = "admin.tfstate.demo"
     encrypt = "true"
     region  = "us-gov-west-1"
-    profile = "notify-terraform-backend"
   }
 }
 
