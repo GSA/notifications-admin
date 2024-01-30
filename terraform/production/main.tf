@@ -7,7 +7,7 @@ locals {
 }
 
 module "redis" {
-  source = "github.com/18f/terraform-cloudgov//redis?ref=v0.2.0"
+  source = "github.com/18f/terraform-cloudgov//redis?ref=v0.7.1"
 
   cf_org_name      = local.cf_org_name
   cf_space_name    = local.cf_space_name
@@ -17,7 +17,7 @@ module "redis" {
 }
 
 module "logo_upload_bucket" {
-  source = "github.com/18f/terraform-cloudgov//s3?ref=v0.2.0"
+  source = "github.com/18f/terraform-cloudgov//s3?ref=v0.7.1"
 
   cf_org_name      = local.cf_org_name
   cf_space_name    = local.cf_space_name
@@ -50,7 +50,7 @@ module "api_network_route" {
 #       https://cloud.gov/docs/services/external-domain-service/#how-to-create-an-instance-of-this-service
 ###########################################################################
 module "domain" {
-  source = "github.com/18f/terraform-cloudgov//domain?ref=v0.5.2"
+  source = "github.com/18f/terraform-cloudgov//domain?ref=v0.7.1"
 
   cf_org_name      = local.cf_org_name
   cf_space_name    = local.cf_space_name
