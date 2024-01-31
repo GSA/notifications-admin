@@ -172,7 +172,7 @@
       <p class="status-hint margin-0 width-card ">
         {{ notification.status|format_notification_status_as_time(
           notification.created_at|format_datetime_short,
-          (notification.updated_at or notification.created_at)|format_datetime_short
+          (notification.sent_at or notification.created_at)|format_datetime_short
         ) }}
         </p>
       {% if displayed_on_single_line %}</span>{% endif %}
