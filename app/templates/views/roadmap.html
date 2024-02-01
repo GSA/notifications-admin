@@ -22,18 +22,22 @@
   <p>This roadmap is only a guide. It does not cover everything we do, and some things may change.</p>
   <p>You can <a class="usa-link" href="{{url_for('.support')}}">contact us</a> if you have any questions about the roadmap or suggestions for new features.</p>
 
-  <h2 class="font-body-lg" id="things-we-are-working-on">What we’re working on</h2>
+  <h2 id="things-we-are-working-on">What we’re working on</h2>
 
-<h3 class="font-body-lg" id="now">Now</h3>
+  <h3 id="now">Now</h3>
 
   <p>We are investigating the Notify concept, building on the notifications tool pioneered by the UK.</p>
   <p>To do this, we are convening a pilot with a small set of partners.</p>
   <p>Goals during this stage:</p>
 
   <ul class="list list-bullet">
-    <li>Achieve compliance to begin piloting, such as ATO and privacy standards</li>
-    <li>Demonstrate that a government-run notifications tool provides a unique value</li>
-    <li>Gather data from the pilot to improve the product</li>
+    <li>Achieve compliance to begin piloting, such as ATO and privacy standards.
+      <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+        use xlink:href="/assets/img/sprite.svg#check"></use>
+      </svg>
+    </li>
+    <li>Demonstrate that a government-run notifications tool provides a unique value.</li>
+    <li>Gather data from the pilot to improve the product.</li>
   </ul>
 
   <p>Features prioritized during this stage:</p>
@@ -46,53 +50,38 @@
     <li>Message send/failure analytics</li>
   </ul>
 
-  <h3 class="font-body-lg" id="next">Next</h3>
+  <h3id="next">Next</h3>
 
   <p>If the pilot is successful, we hope to recruit additional high-impact partners to improve outcomes for low-income individuals and families.</p>
 
   <p>Goals during this stage:</p>
 
   <ul class="list list-bullet">
-    <li>Complement Notify with practical guidance and support services</li>
-    <li>Iterate on existing features and implement new features based on what we've learned so far</li>
-    <li>Hone our measurement approaches to better quantify impact</li>
+    <li>Complement Notify with practical guidance and support services.</li>
+    <li>Iterate on existing features and implement new features based on what we've learned so far.</li>
+    <li>Hone our measurement approaches to better quantify impact.</li>
   </ul>
 
   <p>Features prioritized during this stage:</p>
 
-  <ul class="list list-bullet">
+  <ul class="list">
     <li>SMS sending via API integration</li>
-    <li>Single-level decision two-way messaging (e.g. reply “YES” if, or “NO” if…)</li>
     <li>Self-service account creation</li>
     <li>Application status page</li>
-    <li>Scheduled send option</li>
+    <li>Improved scheduled send option</li>
   </ul>
 
-  <h3 class="font-body-lg" id="later">Later</h3>
+  <h3 id="later">Later</h3>
 
   <p>In the future, we may decide to expand beyond SMS, or to offer the service government-wide.</p>
 
   <p>Features to be considered during this stage:</p>
 
-  <ul class="list list-bullet">
+  <ul class="list">
 
-    <li>Email sending via UI and API</li>
-    <li>Multiple-level decision two-way messaging (greater than one layer decision-tree)</li>
-    <li>Open-text reply two-way messaging (rather than reply yes or no, 1 or 2, etc.)</li>
+    <li>Two-way messaging</li>
     <li>Multilingual interface and content library options</li>
     <li>Recurring scheduled send (such as “Send each Monday for 3 weeks”)</li>
-
   </ul>
-
-  <!-- <h2 class="font-body-lg" id="things-we-have-done">Things we’ve done</h2>
-
-  <p>Recently we have:</p>
-
-  <ul class="list list-bullet">
-
-    <li></li>
-    <li></li>
-    
-  </ul> -->
 
 {% endblock %}

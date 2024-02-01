@@ -15,22 +15,52 @@
     <li>manage risks around information</li>
   </ul>
 
-  <h2 class="font-body-lg" id="data">Data</h2>
-  <p>On Notify, data is encrypted:</p>
-  <ul class="list list-bullet">
-    <li>when it passes through the service</li>
-    <li>when it’s stored on the service</li>
-  </ul>
-  <p>Any recipient data you upload is only held for seven days.</p>
-  <!-- <p>If you <a class="usa-link" href="/features/email#send-files">send a file by email</a>, the file will be available for the recipient to download for 18 months.</p> -->
+  <h2 id="infrastructure">Infrastructure</h2>
 
-  <h2 class="font-body-lg" id="technical-security">Technical security</h2>
-  <!-- <p>Other technical security controls on Notify include:</p>
-  <ul class="list list-bullet">
-    <li>compliance with National Cyber Security Centre (NCSC) Cloud Security Principles</li>
-    <li>protective monitoring to record activity, and raise alerts about any suspicious activity</li>
-    <li>using JSON Web Tokens, to avoid sending API keys when your service talks to Notify</li>
-  </ul> -->
+  <p>Notify.gov is comprised of two applications both running on <a href="https://www.cloud.gov">cloud.gov</a>:</p>
+  <ul class="list">
+    <li>Admin, a Flask website running on the python_buildpack which hosts agency user-facing UI</li>
+    <li>API, a Flask application running on the python_buildpack hosting the Notify API</li>
+  </ul>
+
+  <p>Notify.gov utilizes several cloud.gov-provided services through Amazon Web Services (AWS):</p>
+  <ul class="list">
+    <li>AWS S3 buckets for temporary file storage</li>
+    <li>AWS Elasticache (Redis) for caching data and enqueueing background tasks</li>
+    <li>AWS RDS (PostgreSQL) for system data storage</li>
+  </ul>
+
+  <p>Notify.gov also provisions and uses two AWS services via a <a href="https://github.com/GSA/datagov-ssb">supplemental service broker</a>:</p>
+  <ul class="list">
+    <li><a href="https://aws.amazon.com/sns/">AWS SNS</a> for sending SMS messages</li>
+    <li><a href="https://aws.amazon.com/ses/">AWS SES</a> for sending email messages (note: email function is currently unavailable to users for pilot)</li>
+  </ul>
+
+  <h2 id="current-security-review">Current security review</h2>
+  <p>Currently, Notify.gov operates under a GSA <a href="https://www.gsa.gov/system/files/Lightweight-Security-Authorization-Process-%28LATO%29%20%5BCIO-IT-Security-14-68-Rev-7%5D%2009-17-2021docx%20%281%29.pdf">Lightweight Authority to Operate (LATO)</a>. This federal security authorization
+  process leverages security controls provided by National Institute of Standards and Technology (NIST). The process is
+  focused on operational security from both a functional and assurance perspective.</p>
+  <p>We are pursuing a full Authority to Operate (ATO)</p>
+
+  <h2 id="data">Data</h2>
+  <p>To send a message, agencies upload a spreadsheet of phone numbers and other necessary data from their existing data
+  management system. On Notify.gov, data is encrypted when it passes through the service and when it’s stored on the
+  service.</p>
+  <p>Notify.gov is not a system of record and as a result does not have a SORN. Agencies are responsible for managing their
+  data outside of Notify.gov.</p>
+  <ul class="list">
+    <li>Notify stores data within the cloud.gov-managed PostgreSQL database and <a href="https://cloud.gov/docs/services/s3/#encryption">S3 buckets</a>. The entire database is <a href="https://cloud.gov/docs/services/relational-database/#encryption">encrypted at
+    the disk level</a>.</li>
+    <li>Additionally, data is encrypted at the field level when it is stored in the database, using OpenSSL 3.0.8 via the Python
+    cryptography library. The implementation is available <a href="https://github.com/GSA/notifications-utils/blob/main/notifications_utils/clients/encryption/encryption_client.py">on GitHub</a>.</li>
+  </ul>
+
+  <h2 id="data-retention">Data retention</h2>
+  <p>Any recipient data uploaded is only held for seven days; all personally identifiable information (PII) is deleted for
+  successful messages, so data is retained only for unsuccessful messages.
+  </p>
+
+  <h2 id="technical-security">Technical security</h2>
 
   <h3 class="font-body-lg">Protect sensitive information</h3>
   <p>Some messages include sensitive information like security codes or password reset links.</p>
@@ -45,6 +75,23 @@
     <li>a text message code that Notify sends to your phone</li>
   </ul>
   <p>If signing in with a text message is a problem for your team, <a class="usa-link" href="{{ url_for('main.support') }}">contact us</a> to find out about using an email link instead.</p>
+
+  <img src="{{ asset_url('images/product/security-review-message.png') }}"
+    alt="Screenshot of a teat message in review with the link to 'hide personalization after sending' circled.">
+
+  <h4>How to hide PII after sending a message</h4>
+
+  <h3>User permissions and signing in</h3>
+  <p>You can set different user permissions in Notify. This lets you control who in your team has access to certain parts of
+  the service.</p>
+
+  <h3>Multi-factor authentication (MFA)</h3>
+  <p>Notify.gov uses <a href="https://login.gov/">Login.gov</a> to authenticate users.</p>
+  <ul class="list">
+    <li>Your email address and password</li>
+    <li>A code from an authenticator app or sent by Login.gov in the form of a text message</li>
+  </ul>
+  <p>If signing in with a text message is a problem for your team, <a href="https://beta.notify.gov/support">contact us</a> to find out about using an email link instead.</p>
 
   <!-- <h2 class="font-body-lg" id="information-risk-management">Information risk management</h2>
   <p>Our approach to information risk management follows NCSC guidance. It assesses:</p>
