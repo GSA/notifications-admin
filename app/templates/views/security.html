@@ -65,9 +65,9 @@
   <h3 class="font-body-lg">Protect sensitive information</h3>
   <p>Some messages include sensitive information like security codes or password reset links.</p>
   <p>If you’re sending a message with sensitive information, you can choose to hide those details on the Notify dashboard once the message has been sent. This means that only the message recipient will be able to see that information.</p>
+  <img src="{{ asset_url('images/product/security-review-message.png') }}"
+  alt="Screenshot of a teat message in review with the link to 'hide personalization after sending' circled.">
 
-  <h2 class="font-body-lg" id="user-permissions-signing-in">User permissions and signing in</h2>
-  <p>You can set different user permissions in Notify. This lets you control who in your team has access to certain parts of the service.</p>
   <h3 class="font-body-lg">Two-factor authentication</h3>
   <p>To sign in to Notify, you’ll need to enter:</p>
   <ul class="list list-bullet">
@@ -75,11 +75,6 @@
     <li>a text message code that Notify sends to your phone</li>
   </ul>
   <p>If signing in with a text message is a problem for your team, <a class="usa-link" href="{{ url_for('main.support') }}">contact us</a> to find out about using an email link instead.</p>
-
-  <img src="{{ asset_url('images/product/security-review-message.png') }}"
-    alt="Screenshot of a teat message in review with the link to 'hide personalization after sending' circled.">
-
-  <h4>How to hide PII after sending a message</h4>
 
   <h3>User permissions and signing in</h3>
   <p>You can set different user permissions in Notify. This lets you control who in your team has access to certain parts of
@@ -92,33 +87,5 @@
     <li>A code from an authenticator app or sent by Login.gov in the form of a text message</li>
   </ul>
   <p>If signing in with a text message is a problem for your team, <a href="https://beta.notify.gov/support">contact us</a> to find out about using an email link instead.</p>
-
-  <!-- <h2 class="font-body-lg" id="information-risk-management">Information risk management</h2>
-  <p>Our approach to information risk management follows NCSC guidance. It assesses:</p>
-  <ul class="list list-bullet">
-    <li>how Notify is built</li>
-    <li>the infrastructure Notify is built upon</li>
-    <li>support for the Notify service</li>
-  </ul>
-  <p>This approach also applies to the service providers Notify uses to send messages.</p> -->
-
-  <!-- <h2 class="font-body-lg" id="how-we-manage-risk">How we manage risks on Notify</h2>
-  <p>Things we do to manage risks on Notify include:</p>
-  <ul class="list list-bullet">
-    <li>formal risk assessments based on <a class="usa-link" href="http://www.iso.org/iso/catalogue_detail?csnumber=56742">ISO 27005:2011</a> and National Cyber Security Centre guidance</li>
-    <li><a class="usa-link" href="https://www.ncsc.gov.uk/information/check-penetration-testing">CHECK</a>-based testing, both annually and when any major changes are made to Notify</li>
-    <li>residual risk statement preparation and active management of the risk treatment plan</li>
-    <li>regular updates to the Privacy Impact Assessment</li>
-    <li>security impact assessments</li>
-  </ul> -->
-
-  <!-- <h2 class="font-body-lg" id="cabinet-office-approval">Cabinet Office approval</h2>
-  <p>Notify has been assessed and approved by the Cabinet Office Senior Information Risk Officer (SIRO). The SIRO checks this approval once a year.</p>
-  <p>Notify also has approval from the Office of the Government’s SIRO to host data within the EEA.</p>
-
-  <h2 class="font-body-lg" id="classifications-and-security-vetting">Classifications and security vetting</h2>
-  <p>You can use Notify to send messages classified as ‘OFFICIAL’ or ‘OFFICIAL-SENSITIVE’ under the <a class="usa-link" href="https://www.gov.uk/government/publications/government-security-classifications">Government Security Classifications</a> policy.</p>
-  <p>Notify does not process data classified as ‘SECRET’ or ‘TOP SECRET’.</p>
-  <p>The Notify team has Security Check (SC) level clearance from <a class="usa-link" href="https://www.gov.uk/government/organizations/united-kingdom-security-vetting">United Kingdom Security Vetting</a> (UKSV).</p> -->
 
 {% endblock %}
