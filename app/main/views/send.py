@@ -13,6 +13,7 @@ from notifications_utils.recipients import RecipientCSV, first_column_headings
 from notifications_utils.sanitise_text import SanitiseASCII
 from xlrd.biffh import XLRDError
 from xlrd.xldate import XLDateError
+from pprint import pprint
 
 from app import (
     current_service,
@@ -563,6 +564,7 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
         sent_previously=job_api_client.has_sent_previously(
             service_id, template.id, db_template["version"], original_file_name
         ),
+        template_id=template_id
     )
 
 
@@ -606,17 +608,18 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
         metadata_kwargs["sender_id"] = session["sender_id"]
 
     set_metadata_on_csv_upload(service_id, upload_id, **metadata_kwargs)
-
+    session['scheduled_for']=request.form.get("scheduled_for", "")
     return render_template("views/check/ok.html", **data)
 
 
 @main.route("/services/<uuid:service_id>/start-job/<uuid:upload_id>", methods=["POST"])
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def start_job(service_id, upload_id):
+    scheduled_for = session.pop('scheduled_for', None)
     job_api_client.create_job(
         upload_id,
         service_id,
-        scheduled_for=request.form.get("scheduled_for", ""),
+        scheduled_for=scheduled_for,
     )
 
     session.pop("sender_id", None)
@@ -628,6 +631,54 @@ def start_job(service_id, upload_id):
             service_id=service_id,
         )
     )
+
+
+@main.route(
+    "/services/<uuid:service_id>/<uuid:template_id>/check/<uuid:upload_id>/preview",
+    methods=["POST"],
+)
+@main.route(
+    "/services/<uuid:service_id>/<uuid:template_id>/check/<uuid:upload_id>/row-<int:row_index>/preview",
+    methods=["POST"],
+)
+@main.route("/services/<uuid:service_id>/preview-job/<uuid:upload_id>", methods=["POST"])
+@user_has_permissions("send_messages", restrict_admin_usage=True)
+def preview_job(service_id, template_id, upload_id, row_index=2):
+    # Store form data in session temporarily
+    session['scheduled_for'] = request.form.get('scheduled_for', 'Not specified')
+    # session.pop("sender_id", None)
+    data = _check_messages(service_id, template_id, upload_id, row_index)
+    data["allowed_file_extensions"] = Spreadsheet.ALLOWED_FILE_EXTENSIONS
+
+    if (
+        data["recipients"].too_many_rows
+        or not data["count_of_recipients"]
+        or not data["recipients"].has_recipient_columns
+        or data["recipients"].duplicate_recipient_column_headers
+        or data["recipients"].missing_column_headers
+        or data["sent_previously"]
+    ):
+        return render_template("views/check/column-errors.html", **data)
+
+    if data["row_errors"]:
+        return render_template("views/check/row-errors.html", **data)
+
+    if data["errors"]:
+        return render_template("views/check/column-errors.html", **data)
+
+    metadata_kwargs = {
+        "notification_count": data["count_of_recipients"],
+        "template_id": template_id,
+        "valid": True,
+        "original_file_name": data.get("original_file_name", ""),
+    }
+
+    if session.get("sender_id"):
+        metadata_kwargs["sender_id"] = session["sender_id"]
+
+    set_metadata_on_csv_upload(service_id, upload_id, **metadata_kwargs)
+
+    return render_template('views/check/preview.html', data=session['scheduled_for'], **data)
 
 
 def fields_to_fill_in(template, prefill_current_user=False):
