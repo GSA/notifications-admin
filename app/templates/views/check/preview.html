@@ -21,6 +21,10 @@
 
   {{ page_header('Send messages') }}
   <h2 id="{{ file_contents_header_id }}">Message</h2>
+  {% if data %}
+    <p>Time: {{data | format_datetime_short_america}}</p>
+  {% endif %}
+  <p class="sms-message-sender">File: {{metadata_kwargs.original_file_name}}</p>
   {{ template|string }}
   <div class="bottom-gutter-3-2">
     <form method="post" enctype="multipart/form-data" action="{{url_for('main.start_job', service_id=current_service.id, upload_id=upload_id)}}" class='page-footer'>

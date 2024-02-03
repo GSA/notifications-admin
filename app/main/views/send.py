@@ -637,11 +637,6 @@ def start_job(service_id, upload_id):
     "/services/<uuid:service_id>/<uuid:template_id>/check/<uuid:upload_id>/preview",
     methods=["POST"],
 )
-@main.route(
-    "/services/<uuid:service_id>/<uuid:template_id>/check/<uuid:upload_id>/row-<int:row_index>/preview",
-    methods=["POST"],
-)
-@main.route("/services/<uuid:service_id>/preview-job/<uuid:upload_id>", methods=["POST"])
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def preview_job(service_id, template_id, upload_id, row_index=2):
     # Store form data in session temporarily
@@ -678,7 +673,7 @@ def preview_job(service_id, template_id, upload_id, row_index=2):
 
     set_metadata_on_csv_upload(service_id, upload_id, **metadata_kwargs)
 
-    return render_template('views/check/preview.html', data=session['scheduled_for'], **data)
+    return render_template('views/check/preview.html', data=session['scheduled_for'], **data, metadata_kwargs=metadata_kwargs)
 
 
 def fields_to_fill_in(template, prefill_current_user=False):
