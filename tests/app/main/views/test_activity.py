@@ -160,8 +160,8 @@ def test_can_show_notifications(
     assert normalize_spaces(
         first_row.select_one(".table-field-right-aligned .align-with-message-body").text
     ) in [
-        "Delivered 1 January at 02:01 US/Eastern",
-        "Delivered 1 January at 01:01 US/Eastern",
+        "Delivered 1 January at 02:00 US/Eastern",
+        "Delivered 1 January at 01:00 US/Eastern",
     ]
 
     assert page_title in page.h1.text.strip()
@@ -661,31 +661,31 @@ def test_redacts_templates_that_should_be_redacted(
         (
             "email",
             "temporary-failure",
-            "Inbox not accepting messages right now 27 September at 08:31 US/Eastern",
+            "Inbox not accepting messages right now 27 September at 08:30 US/Eastern",
             False,
         ),
         (
             "email",
             "permanent-failure",
-            "Email address does not exist 27 September at 08:31 US/Eastern",
+            "Email address does not exist 27 September at 08:30 US/Eastern",
             False,
         ),
-        ("email", "delivered", "Delivered 27 September at 08:31 US/Eastern", True),
+        ("email", "delivered", "Delivered 27 September at 08:30 US/Eastern", True),
         ("sms", "created", "Sending since 27 September at 08:30 US/Eastern", True),
         ("sms", "sending", "Sending since 27 September at 08:30 US/Eastern", True),
         (
             "sms",
             "temporary-failure",
-            "Phone not accepting messages right now 27 September at 08:31 US/Eastern",
+            "Phone not accepting messages right now 27 September at 08:30 US/Eastern",
             False,
         ),
         (
             "sms",
             "permanent-failure",
-            "Not delivered 27 September at 08:31 US/Eastern",
+            "Not delivered 27 September at 08:30 US/Eastern",
             False,
         ),
-        ("sms", "delivered", "Delivered 27 September at 08:31 US/Eastern", True),
+        ("sms", "delivered", "Delivered 27 September at 08:30 US/Eastern", True),
     ],
 )
 def test_sending_status_hint_displays_correctly_on_notifications_page(
