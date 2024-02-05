@@ -46,9 +46,6 @@ def _get_notifications_csv(
             "notifications": [
                 {
                     "row_number": row_number + i,
-                    "to": recipient,
-                    "recipient": recipient,
-                    "client_reference": "ref 1234",
                     "template_name": template_name,
                     "template_type": template_type,
                     "template": {"name": template_name, "template_type": template_type},
@@ -60,6 +57,9 @@ def _get_notifications_csv(
                     "updated_at": None,
                     "created_by_name": created_by_name,
                     "created_by_email_address": created_by_email_address,
+                    "to": recipient,
+                    "recipient": recipient,
+                    "client_reference": "ref 1234",
                 }
                 for i in range(rows)
             ],
@@ -130,8 +130,6 @@ def test_generate_notifications_csv_without_job(
             2028675309
         """,
             [
-                "Row number",
-                "phone_number",
                 "Template",
                 "Type",
                 "Sent by",
@@ -140,10 +138,9 @@ def test_generate_notifications_csv_without_job(
                 "Carrier Response",
                 "Status",
                 "Time",
+                "phone_number",
             ],
             [
-                "1",
-                "2028675309",
                 "foo",
                 "sms",
                 "Fake Person",
@@ -152,6 +149,7 @@ def test_generate_notifications_csv_without_job(
                 "Did not like it",
                 "Delivered",
                 "1943-04-19 08:00:00 AM US/Eastern",
+                "2028675309",
             ],
         ),
         (
@@ -160,11 +158,6 @@ def test_generate_notifications_csv_without_job(
             2028675309,  🐜,🐝,🦀
         """,
             [
-                "Row number",
-                "phone_number",
-                "a",
-                "b",
-                "c",
                 "Template",
                 "Type",
                 "Sent by",
@@ -173,13 +166,12 @@ def test_generate_notifications_csv_without_job(
                 "Carrier Response",
                 "Status",
                 "Time",
+                "phone_number",
+                "a",
+                "b",
+                "c",
             ],
             [
-                "1",
-                "2028675309",
-                "🐜",
-                "🐝",
-                "🦀",
                 "foo",
                 "sms",
                 "Fake Person",
@@ -188,6 +180,10 @@ def test_generate_notifications_csv_without_job(
                 "Did not like it",
                 "Delivered",
                 "1943-04-19 08:00:00 AM US/Eastern",
+                "2028675309",
+                "🐜",
+                "🐝",
+                "🦀",
             ],
         ),
         (
@@ -196,11 +192,6 @@ def test_generate_notifications_csv_without_job(
             "2028675309","🐜,🐜","🐝,🐝","🦀"
         """,
             [
-                "Row number",
-                "phone_number",
-                "a",
-                "b",
-                "c",
                 "Template",
                 "Type",
                 "Sent by",
@@ -209,13 +200,12 @@ def test_generate_notifications_csv_without_job(
                 "Carrier Response",
                 "Status",
                 "Time",
+                "phone_number",
+                "a",
+                "b",
+                "c",
             ],
             [
-                "1",
-                "2028675309",
-                "🐜,🐜",
-                "🐝,🐝",
-                "🦀",
                 "foo",
                 "sms",
                 "Fake Person",
@@ -224,6 +214,10 @@ def test_generate_notifications_csv_without_job(
                 "Did not like it",
                 "Delivered",
                 "1943-04-19 08:00:00 AM US/Eastern",
+                "2028675309",
+                "🐜,🐜",
+                "🐝,🐝",
+                "🦀",
             ],
         ),
     ],

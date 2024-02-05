@@ -78,21 +78,21 @@ def generate_notifications_csv(**kwargs):
             template=get_sample_template(kwargs["template_type"]),
         )
         original_column_headers = original_upload.column_headers
-        fieldnames = (
-            ["Row number"]
-            + original_column_headers
-            + [
-                "Template",
-                "Type",
-                "Sent by",
-                "Job",
-                "Carrier",
-                "Carrier Response",
-                "Status",
-                "Time",
-            ]
-        )
+        fieldnames = [
+            "Template",
+            "Type",
+            "Sent by",
+            "Job",
+            "Carrier",
+            "Carrier Response",
+            "Status",
+            "Time",
+        ]
+        for header in original_column_headers:
+            fieldnames.append(header)
+
     else:
+        # TODO This is deprecated because everything should be a job now, is it ever invoked?
         fieldnames = [
             "Recipient",
             "Template",
@@ -104,6 +104,7 @@ def generate_notifications_csv(**kwargs):
             "Status",
             "Time",
         ]
+        current_app.logger.warning("Invoking deprecated report format")
 
     yield ",".join(fieldnames) + "\n"
 
@@ -118,26 +119,23 @@ def generate_notifications_csv(**kwargs):
 
             current_app.logger.info(f"\n\n{notification}")
             if kwargs.get("job_id"):
-                values = (
-                    [
-                        notification["row_number"],
-                    ]
-                    + [
+                values = [
+                    notification["template_name"],
+                    notification["template_type"],
+                    notification["created_by_name"],
+                    notification["job_name"],
+                    notification["carrier"],
+                    notification["provider_response"],
+                    notification["status"],
+                    preferred_tz_created_at,
+                ]
+                for header in original_column_headers:
+                    values.append(
                         original_upload[notification["row_number"] - 1].get(header).data
-                        for header in original_column_headers
-                    ]
-                    + [
-                        notification["template_name"],
-                        notification["template_type"],
-                        notification["created_by_name"],
-                        notification["job_name"],
-                        notification["carrier"],
-                        notification["provider_response"],
-                        notification["status"],
-                        preferred_tz_created_at,
-                    ]
-                )
+                    )
+
             else:
+                # TODO This is deprecated, should not be invoked.  See above
                 values = [
                     notification["recipient"],
                     notification["template_name"],
