@@ -44,61 +44,64 @@
 
 <!-- usa header -->
 <header class="usa-header usa-header--extended">
-  <div class="usa-navbar">
-    <div class="usa-logo display-flex flex-align-center" id="-logo">
-      {# <div class="logo-img display-flex">
-        <span class="usa-sr-only">US Notify Logo</span>
-        <image src="{{ params.assetsPath | default('/static/images') }}/us-notify-color.png" alt="US Notify logo" xlink:href=""
-          class="usa-flag-logo margin-right-1" width="40" height="35"></image>
-      </div> #}
-      <em class="logo-text usa-logo__text">
-        <a href="/" title="notify.gov">notify.gov</a>
-      </em>
-    </div>
-    {% if current_user.is_authenticated %}
-      <button type="button" class="usa-menu-btn">Menu</button>
-    {% endif %}
-  </div>
-  <nav aria-label="Primary navigation" class="usa-nav">
-    <div class="usa-nav__inner">
-      <button type="button" class="usa-nav__close">
-        <img src="/static/images/usa-icons/close.svg" role="img" alt="Close" />
-      </button>
-      <ul class="usa-nav__primary usa-accordion margin-right-1">
-        {% for item in params.navigation %}
-          {% if item.href and item.text %}
-          <li class="usa-nav__primary-item{{ ' is-current' if item.active }}">
-            <a class="usa-nav__link {{ ' usa-current' if item.active }}" href="{{ item.href }}" {% for attribute, value in
-              item.attributes %} {{attribute}}="{{value}}" {% endfor %}>
-              <span>{{ item.text }}</span>
-            </a>
-          </li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-      <div class="usa-nav__secondary margin-bottom-2">
-        <ul class="usa-nav__secondary-links">
-          {% for item in params.secondaryNavigation %}
-            {% if item.href and item.text %}
-              <li class="usa-nav__secondary-item{{ ' is-current' if item.active }}">
-                <a class="usa-nav__link {{ ' usa-current' if item.active }}" href="{{ item.href }}" {% for attribute, value in
-                  item.attributes %} {{attribute}}="{{value}}" {% endfor %}>
-                  <span>{{ item.text }}</span>
-                </a>
-              </li>
-          {% endif %}
-        {% endfor %}
-        </ul>
-        <!-- <section aria-label="Search component">
-          <form class="usa-search usa-search--small margin-bottom-2" role="search">
-            <label class="usa-sr-only" for="search-field">Search</label>
-            <input class="usa-input" id="search-field" type="search" name="search" />
-            <button class="usa-button" type="submit">
-              <img src="/static/images/usa-icons-bg/search--white.svg" class="usa-search__submit-icon" alt="Search" />
-            </button>
-          </form>
-        </section> -->
+  <div class="usa-nav-container">
+    <div class="usa-navbar">
+      <div class="usa-logo display-flex flex-align-center flex-justify" id="-logo">
+        {# <div class="logo-img display-flex">
+          <span class="usa-sr-only">US Notify Logo</span>
+          <image src="{{ params.assetsPath | default('/static/images') }}/us-notify-color.png" alt="US Notify logo" xlink:href=""
+            class="usa-flag-logo margin-right-1" width="40" height="35"></image>
+        </div> #}
+        <em class="logo-text usa-logo__text">
+          <a href="/" title="notify.gov">notify.gov</a>
+        </em>
+        <button type="button" class="usa-menu-btn">Menu</button>
       </div>
-    </div>
-  </nav>
+      {% if current_user.is_authenticated %}
+        <button type="button" class="usa-menu-btn">Menu</button>
+      {% endif %}
+   </div>
+    <nav aria-label="Primary navigation" class="usa-nav">
+      <div class="usa-nav__inner">
+        <button type="button" class="usa-nav__close">
+          <img src="/static/images/usa-icons/close.svg" role="img" alt="Close" />
+        </button>
+        <ul class="usa-nav__primary usa-accordion margin-right-1">
+          {% for item in params.navigation %}
+            {% if item.href and item.text %}
+            <li class="usa-nav__primary-item{{ ' is-current' if item.active }}">
+              <a class="usa-nav__link {{ ' usa-current' if item.active }}" href="{{ item.href }}" {% for attribute, value in
+                item.attributes %} {{attribute}}="{{value}}" {% endfor %}>
+                <span>{{ item.text }}</span>
+              </a>
+            </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+        <div class="usa-nav__secondary margin-bottom-2">
+          <ul class="usa-nav__secondary-links">
+            {% for item in params.secondaryNavigation %}
+              {% if item.href and item.text %}
+                <li class="usa-nav__secondary-item{{ ' is-current' if item.active }}">
+                  <a class="usa-nav__link {{ ' usa-current' if item.active }}" href="{{ item.href }}" {% for attribute, value in
+                    item.attributes %} {{attribute}}="{{value}}" {% endfor %}>
+                    <span>{{ item.text }}</span>
+                  </a>
+                </li>
+            {% endif %}
+          {% endfor %}
+          </ul>
+          <!-- <section aria-label="Search component">
+            <form class="usa-search usa-search--small margin-bottom-2" role="search">
+              <label class="usa-sr-only" for="search-field">Search</label>
+              <input class="usa-input" id="search-field" type="search" name="search" />
+              <button class="usa-button" type="submit">
+                <img src="/static/images/usa-icons-bg/search--white.svg" class="usa-search__submit-icon" alt="Search" />
+              </button>
+            </form>
+          </section> -->
+        </div>
+      </div>
+    </nav>
+  </div>
 </header>
