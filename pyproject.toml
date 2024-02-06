@@ -17,7 +17,6 @@ flask-login = "^0.6"
 flask-talisman = "*"
 flask-wtf = "^1.2"
 govuk-bank-holidays = "==0.13"
-govuk-frontend-jinja = {git = "https://github.com/alphagov/govuk-frontend-jinja.git", tag = "v0.5.8-alpha"}
 gunicorn = {version = "==21.2.0", extras = ["eventlet"]}
 humanize = "~=4.9"
 itsdangerous = "~=2.1"
