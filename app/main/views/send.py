@@ -953,14 +953,20 @@ def send_notification(service_id, template_id):
         service_id, job_id=upload_id, include_one_off=True
     )
     attempts = 0
-    while notifications["total"] == 0 and attempts < 5:
+
+    # The response can come back in different forms of incompleteness
+    while (
+        notifications["total"] == 0
+        and notifications["notifications"] == []
+        and attempts < 50
+    ):
         notifications = notification_api_client.get_notifications_for_service(
             service_id, job_id=upload_id, include_one_off=True
         )
         time.sleep(0.1)
         attempts = attempts + 1
 
-    if notifications["total"] == 0 and attempts == 5:
+    if notifications["total"] == 0 and attempts == 50:
         # This shows the job we auto-generated for the user
         return redirect(
             url_for(
