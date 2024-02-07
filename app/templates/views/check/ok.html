@@ -41,50 +41,11 @@
       <h3 id="{{ file_contents_header_id }}">{{ original_file_name }}</h3>
       {% endif %}
       {% set button_text %}
-        Preview send
-        <!-- {{ count_of_recipients|message_count(template.template_type) }} -->
+        Preview
       {% endset %}
       {{ usaButton({ "text": button_text }) }}
 
     </form>
   </div>
 
-  <!-- <div class="fullscreen-content" data-module="fullscreen-table">
-    {% call(item, row_number) list_table(
-      recipients.displayed_rows,
-      caption=original_file_name,
-      caption_visible=False,
-      field_headings=[
-        '<span class="usa-sr-only">Row in file</span><span aria-hidden="true">1</span>'|safe
-      ] + recipients.column_headers
-    ) %}
-      {% call index_field() %}
-        <span>
-          {% if (item.index + 2) == preview_row %}
-            {{ item.index + 2 }}
-          {% else %}
-            <a class="usa-link" href="{{ url_for('.check_messages', service_id=current_service.id, template_id=template.id, upload_id=upload_id, row_index=(item.index + 2), original_file_name=original_file_name) }}">{{ item.index + 2 }}</a>
-          {% endif %}
-        </span>
-      {% endcall %}
-      {% for column in recipients.column_headers %}
-        {% if item[column].ignore %}
-          {{ text_field(item[column].data or '', status='default') }}
-        {% else %}
-          {{ text_field(item[column].data or '') }}
-        {% endif %}
-      {% endfor %}
-      {% if item[None].data %}
-        {% for column in item[None].data %}
-          {{ text_field(column, status='default') }}
-        {% endfor %}
-      {% endif %}
-    {% endcall %}
-  </div> -->
-
-  <!-- {% if count_of_displayed_recipients < count_of_recipients %}
-    <p class="table-show-more-link">
-      Only showing the first {{ count_of_displayed_recipients }} rows
-    </p>
-  {% endif %} -->
 {% endblock %}

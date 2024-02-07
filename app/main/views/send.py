@@ -527,10 +527,16 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
         back_link = url_for(
             "main.send_one_off", service_id=service_id, template_id=template.id
         )
+        back_link_from_preview = url_for(
+            "main.send_one_off", service_id=service_id, template_id=template.id
+        )
         choose_time_form = None
     else:
         back_link = url_for(
             "main.send_messages", service_id=service_id, template_id=template.id
+        )
+        back_link_from_preview = url_for(
+            "main.check_messages", service_id=service_id, template_id=template.id, upload_id=upload_id
         )
         choose_time_form = ChooseTimeForm()
 
@@ -559,6 +565,7 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
         remaining_messages=remaining_messages,
         choose_time_form=choose_time_form,
         back_link=back_link,
+        back_link_from_preview=back_link_from_preview,
         first_recipient_column=recipients.recipient_column_headers[0],
         preview_row=preview_row,
         sent_previously=job_api_client.has_sent_previously(
@@ -612,6 +619,34 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
     return render_template("views/check/ok.html", **data)
 
 
+@main.route(
+    "/services/<uuid:service_id>/<uuid:template_id>/check/<uuid:upload_id>/preview",
+    methods=["POST"],
+)
+@user_has_permissions("send_messages", restrict_admin_usage=True)
+def preview_job(service_id, template_id, upload_id, row_index=2):
+    session['scheduled_for'] = request.form.get('scheduled_for', 'Not specified')
+    data = _check_messages(service_id, template_id, upload_id, row_index)
+    data["allowed_file_extensions"] = Spreadsheet.ALLOWED_FILE_EXTENSIONS
+    if (
+        data["recipients"].too_many_rows
+        or not data["count_of_recipients"]
+        or not data["recipients"].has_recipient_columns
+        or data["recipients"].duplicate_recipient_column_headers
+        or data["recipients"].missing_column_headers
+        or data["sent_previously"]
+    ):
+        return render_template("views/check/column-errors.html", **data)
+
+    if data["row_errors"]:
+        return render_template("views/check/row-errors.html", **data)
+
+    if data["errors"]:
+        return render_template("views/check/column-errors.html", **data)
+
+    return render_template('views/check/preview.html', scheduled_for=session['scheduled_for'], **data,
+)
+
 @main.route("/services/<uuid:service_id>/start-job/<uuid:upload_id>", methods=["POST"])
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def start_job(service_id, upload_id):
@@ -631,49 +666,6 @@ def start_job(service_id, upload_id):
             service_id=service_id,
         )
     )
-
-
-@main.route(
-    "/services/<uuid:service_id>/<uuid:template_id>/check/<uuid:upload_id>/preview",
-    methods=["POST"],
-)
-@user_has_permissions("send_messages", restrict_admin_usage=True)
-def preview_job(service_id, template_id, upload_id, row_index=2):
-    # Store form data in session temporarily
-    session['scheduled_for'] = request.form.get('scheduled_for', 'Not specified')
-    # session.pop("sender_id", None)
-    data = _check_messages(service_id, template_id, upload_id, row_index)
-    data["allowed_file_extensions"] = Spreadsheet.ALLOWED_FILE_EXTENSIONS
-
-    if (
-        data["recipients"].too_many_rows
-        or not data["count_of_recipients"]
-        or not data["recipients"].has_recipient_columns
-        or data["recipients"].duplicate_recipient_column_headers
-        or data["recipients"].missing_column_headers
-        or data["sent_previously"]
-    ):
-        return render_template("views/check/column-errors.html", **data)
-
-    if data["row_errors"]:
-        return render_template("views/check/row-errors.html", **data)
-
-    if data["errors"]:
-        return render_template("views/check/column-errors.html", **data)
-
-    metadata_kwargs = {
-        "notification_count": data["count_of_recipients"],
-        "template_id": template_id,
-        "valid": True,
-        "original_file_name": data.get("original_file_name", ""),
-    }
-
-    if session.get("sender_id"):
-        metadata_kwargs["sender_id"] = session["sender_id"]
-
-    set_metadata_on_csv_upload(service_id, upload_id, **metadata_kwargs)
-
-    return render_template('views/check/preview.html', data=session['scheduled_for'], **data, metadata_kwargs=metadata_kwargs)
 
 
 def fields_to_fill_in(template, prefill_current_user=False):
@@ -721,7 +713,15 @@ def get_send_test_page_title(template_type, entering_recipient, name=None):
     return "Personalize this message"
 
 
-def get_back_link(service_id, template, step_index, placeholders=None):
+def get_back_link(service_id, template, step_index, placeholders=None, preview=False,):
+    if preview:
+        return url_for(
+            "main.check_notification",
+            service_id=service_id,
+            template_id=template.id,
+        )
+
+
     if step_index == 0:
         if should_skip_template_page(template._template):
             return url_for(
@@ -826,6 +826,8 @@ def _check_notification(service_id, template_id, exception=None):
 
     back_link = get_back_link(service_id, template, len(placeholders), placeholders)
 
+    back_link_from_preview = get_back_link(service_id, template, len(placeholders), placeholders, preview=True)
+
     choose_time_form = ChooseTimeForm()
 
     if (not session.get("recipient")) or not all_placeholders_in_session(
@@ -839,6 +841,7 @@ def _check_notification(service_id, template_id, exception=None):
     return dict(
         template=template,
         back_link=back_link,
+        back_link_from_preview=back_link_from_preview,
         choose_time_form=choose_time_form,
         **(get_template_error_dict(exception) if exception else {}),
     )
@@ -869,6 +872,29 @@ def get_template_error_dict(exception):
         "original_file_name": False,
     }
 
+@main.route(
+    "/services/<uuid:service_id>/template/<uuid:template_id>/notification/check/preview",
+    methods=["POST"],
+)
+@user_has_permissions("send_messages", restrict_admin_usage=True)
+def preview_notification(service_id, template_id):
+    recipient = get_recipient()
+    if not recipient:
+        return redirect(
+            url_for(
+                ".send_one_off",
+                service_id=service_id,
+                template_id=template_id,
+            )
+        )
+
+    session['scheduled_for'] = request.form.get('scheduled_for', 'Not specified')
+
+    return render_template(
+        "views/notifications/preview.html",
+        **_check_notification(service_id, template_id), data=session['scheduled_for']
+    )
+
 
 @main.route(
     "/services/<uuid:service_id>/template/<uuid:template_id>/notification/check",
@@ -876,6 +902,7 @@ def get_template_error_dict(exception):
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def send_notification(service_id, template_id):
+    scheduled_for = session.pop('scheduled_for', None)
     recipient = get_recipient()
     if not recipient:
         return redirect(
@@ -910,7 +937,7 @@ def send_notification(service_id, template_id):
     job_api_client.create_job(
         upload_id,
         service_id,
-        scheduled_for=request.form.get("scheduled_for", ""),
+        scheduled_for=scheduled_for,
         template_id=template_id,
         original_file_name=filename,
         notification_count=1,

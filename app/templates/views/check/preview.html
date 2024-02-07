@@ -14,35 +14,23 @@
 
 
 {% block backLink %}
-  {{ usaBackLink({ "href": back_link }) }}
+  {{ usaBackLink({ "href": back_link_from_preview }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
 
-  {{ page_header('Send messages') }}
+  {{ page_header('Preview') }}
   <h2 id="{{ file_contents_header_id }}">Message</h2>
-  {% if data %}
-    <p>Time: {{data | format_datetime_short_america}}</p>
+  {% if scheduled_for %}
+    <p class="sms-message-sender">Time: {{scheduled_for}}</p>
   {% endif %}
-  <p class="sms-message-sender">File: {{metadata_kwargs.original_file_name}}</p>
+  <p class="sms-message-sender">File: {{original_file_name}}</p>
   {{ template|string }}
   <div class="bottom-gutter-3-2">
     <form method="post" enctype="multipart/form-data" action="{{url_for('main.start_job', service_id=current_service.id, upload_id=upload_id)}}" class='page-footer'>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-      <!-- {% if choose_time_form %}
-        {{ choose_time_form.scheduled_for(param_extensions={
-          'formGroup': {'classes': 'bottom-gutter-2-3'},
-          'attributes': {
-            'data-module': 'radio-select',
-            'data-categories': choose_time_form.scheduled_for.categories|join(','),
-            'data-show-now-as-default': 'true'
-          }
-        }) }}
-      {% endif %} -->
       {% if not request.args.from_test %}
-
       <h2 class="font-body-lg">Preview list</h2>
-
       <ul class="usa-icon-list">
         <li class="usa-icon-list__item">
           <div class="usa-icon-list__icon" >
@@ -53,8 +41,6 @@
           </div>
         </li>
       </ul>
-
-
       <div>
         {% call(item, row_number) list_table(
           recipients.displayed_rows,
@@ -76,25 +62,15 @@
           {% endif %}
         {% endcall %}
       </div>
-
       {% endif %}
-      <p>The service be charged 10 message parts for a total of 20 messages when this batch it sent
-        There are 480 of 500 messages remaining in your service</p>
+      <!-- <p>The service be charged 10 message parts for a total of 20 messages when this batch it sent
+        There are 480 of 500 messages remaining in your service</p> -->
       <h3>Does everything look good?</h3>
       {% set button_text %}
         Send
-        <!-- {{ count_of_recipients|message_count(template.template_type) }} -->
       {% endset %}
       {{ usaButton({ "text": button_text }) }}
 
     </form>
   </div>
-
-
-
-  <!-- {% if count_of_displayed_recipients < count_of_recipients %}
-    <p class="table-show-more-link">
-      Only showing the first {{ count_of_displayed_recipients }} rows
-    </p>
-  {% endif %} -->
 {% endblock %}

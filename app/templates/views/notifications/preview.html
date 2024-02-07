@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block backLink %}
-  {{ usaBackLink({ "href": back_link }) }}
+  {{ usaBackLink({ "href": back_link_from_preview }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
@@ -40,31 +40,22 @@
       {% endcall %}
     </div>
   {% else %}
-    {{ page_header('Select delivery time') }}
+    {{ page_header('Preview of ‘{}’'.format(template.name)) }}
   {% endif %}
 
   {{ template|string }}
 
   <div class="js-stick-at-bottom-when-scrolling">
     <form method="post" enctype="multipart/form-data" action="{{url_for(
-        'main.preview_notification',
+        'main.send_notification',
         service_id=current_service.id,
-        template_id=template.id
+        template_id=template.id,
+        help='3' if help else 0
       )}}" class='page-footer'>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       {% if not error %}
-        {% if choose_time_form %}
-          {{ choose_time_form.scheduled_for(param_extensions={
-            'formGroup': {'classes': 'bottom-gutter-2-3'},
-            'attributes': {
-              'data-module': 'radio-select',
-              'data-categories': choose_time_form.scheduled_for.categories|join(','),
-              'data-show-now-as-default': 'true'
-            }
-          }) }}
-        {% endif %}
         {% set button_text %}
-        Preview
+        Send
         {% endset %}
         {{ usaButton({ "text": button_text }) }}
       {% endif %}
