@@ -21,7 +21,6 @@ from flask_login import LoginManager, current_user
 from flask_talisman import Talisman
 from flask_wtf import CSRFProtect
 from flask_wtf.csrf import CSRFError
-from govuk_frontend_jinja.flask_ext import init_govuk_frontend
 from itsdangerous import BadSignature
 from notifications_python_client.errors import HTTPError
 from notifications_utils import logging, request_helper
@@ -114,6 +113,7 @@ from app.notify_client.template_statistics_api_client import template_statistics
 from app.notify_client.upload_api_client import upload_api_client
 from app.notify_client.user_api_client import user_api_client
 from app.url_converters import SimpleDateTypeConverter, TemplateTypeConverter
+from app.utils.govuk_frontend_jinja.flask_ext import init_govuk_frontend
 
 login_manager = LoginManager()
 csrf = CSRFProtect()
