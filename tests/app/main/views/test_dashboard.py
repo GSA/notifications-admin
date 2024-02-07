@@ -1386,7 +1386,9 @@ def test_route_for_service_permissions(
     mock_has_no_jobs,
     mock_get_template_statistics,
     mock_get_service_statistics,
+    mock_get_monthly_usage_for_service,
     mock_get_annual_usage_for_service,
+    mock_create_or_update_free_sms_fragment_limit,
     mock_get_free_sms_fragment_limit,
     mock_get_inbound_sms_summary,
 ):

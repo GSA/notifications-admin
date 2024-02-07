@@ -2327,6 +2327,8 @@ def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too com
         "app.billing_api_client.create_or_update_free_sms_fragment_limit", autospec=True
     )
 
+    mocker.patch("app.billing_api_client.get_monthly_usage_for_service", autospec=True)
+
     class ClientRequest:
         @staticmethod
         @contextmanager

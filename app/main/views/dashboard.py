@@ -322,6 +322,14 @@ def get_dashboard_partials(service_id):
     free_sms_allowance = billing_api_client.get_free_sms_fragment_limit_for_year(
         current_service.id,
     )
+    # These 2 calls will update the dashboard sms allowance count while in trial mode.
+    billing_api_client.get_monthly_usage_for_service(
+        service_id, get_current_financial_year()
+    )
+    billing_api_client.create_or_update_free_sms_fragment_limit(
+        service_id, free_sms_fragment_limit=free_sms_allowance
+    )
+
     yearly_usage = billing_api_client.get_annual_usage_for_service(
         service_id,
         get_current_financial_year(),
