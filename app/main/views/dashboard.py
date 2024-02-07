@@ -123,11 +123,17 @@ def template_usage(service_id):
         months=months,
         stats=stats,
         most_used_template_count=max(
-            max(
-                (template["requested_count"] for template in month["templates_used"]),
-                default=0,
-            )
-            for month in months
+            (
+                max(
+                    (
+                        template["requested_count"]
+                        for template in month["templates_used"]
+                    ),
+                    default=0,
+                )
+                for month in months
+            ),
+            default=0,
         ),
         years=get_tuples_of_financial_years(
             partial(url_for, ".template_usage", service_id=service_id),
@@ -144,31 +150,16 @@ def usage(service_id):
     year, current_financial_year = requested_and_current_financial_year(request)
 
     free_sms_allowance = billing_api_client.get_free_sms_fragment_limit_for_year(
-        service_id, year
+        service_id
     )
+
     units = billing_api_client.get_monthly_usage_for_service(service_id, year)
+
     yearly_usage = billing_api_client.get_annual_usage_for_service(service_id, year)
 
     more_stats = format_monthly_stats_to_list(
         service_api_client.get_monthly_notification_stats(service_id, year)["data"]
     )
-    if year == current_financial_year:
-        # This includes Oct, Nov, Dec
-        # but we don't need next year's data yet
-        more_stats = [
-            month
-            for month in more_stats
-            if month["name"] in ["October", "November", "December"]
-        ]
-    elif year == (current_financial_year + 1):
-        # This is all the other months
-        # and we need last year's data
-        more_stats = [
-            month
-            for month in more_stats
-            if month["name"] not in ["October", "November", "December"]
-        ]
-
     return render_template(
         "views/usage.html",
         months=list(get_monthly_usage_breakdown(year, units, more_stats)),
@@ -330,7 +321,6 @@ def get_dashboard_partials(service_id):
     dashboard_totals = (get_dashboard_totals(stats),)
     free_sms_allowance = billing_api_client.get_free_sms_fragment_limit_for_year(
         current_service.id,
-        get_current_financial_year(),
     )
     yearly_usage = billing_api_client.get_annual_usage_for_service(
         service_id,
@@ -422,13 +412,7 @@ def aggregate_status_types(counts_dict):
 
 
 def get_months_for_financial_year(year, time_format="%B"):
-    return [
-        month.strftime(time_format)
-        for month in (
-            get_months_for_year(10, 13, year) + get_months_for_year(1, 10, year + 1)
-        )
-        if month < datetime.now()
-    ]
+    return [month.strftime(time_format) for month in (get_months_for_year(1, 13, year))]
 
 
 def get_months_for_year(start, end, year):

@@ -666,12 +666,12 @@ def test_should_show_redirect_from_template_history(
     )
 
 
-@freeze_time("2017-01-01 12:00")  # 4 months into 2016 financial year
+@freeze_time("2017-1-1 12:00")  # Switching to calendar year
 @pytest.mark.parametrize(
     "extra_args",
     [
         {},
-        {"year": "2016"},
+        {"year": "2017"},
     ],
 )
 def test_should_show_monthly_breakdown_of_template_usage(
@@ -683,7 +683,7 @@ def test_should_show_monthly_breakdown_of_template_usage(
         "main.template_usage", service_id=SERVICE_ONE_ID, **extra_args
     )
 
-    mock_get_monthly_template_usage.assert_called_once_with(SERVICE_ONE_ID, 2016)
+    mock_get_monthly_template_usage.assert_called_once_with(SERVICE_ONE_ID, 2017)
 
     table_rows = page.select("tbody tr")
 
@@ -691,9 +691,21 @@ def test_should_show_monthly_breakdown_of_template_usage(
         "My first template " "Text message template " "2"
     )
 
-    assert len(table_rows) == len(["October"])
+    assert len(table_rows) == len(["January"])
     assert len(page.select(".table-no-data")) == len(
-        ["November", "December", "January"]
+        [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+        ]
     )
 
 
@@ -736,9 +748,9 @@ def test_stats_pages_show_last_3_years(
     )
 
     assert normalize_spaces(page.select_one(".pill").text) == (
+        "2015 to 2016 fiscal year "
         "2014 to 2015 fiscal year "
-        "2013 to 2014 fiscal year "
-        "2012 to 2013 fiscal year"
+        "2013 to 2014 fiscal year"
     )
 
 
@@ -953,18 +965,18 @@ def test_usage_page(
         service_id=SERVICE_ONE_ID,
     )
 
-    mock_get_monthly_usage_for_service.assert_called_once_with(SERVICE_ONE_ID, 2011)
-    mock_get_annual_usage_for_service.assert_called_once_with(SERVICE_ONE_ID, 2011)
-    mock_get_free_sms_fragment_limit.assert_called_with(SERVICE_ONE_ID, 2011)
+    mock_get_monthly_usage_for_service.assert_called_once_with(SERVICE_ONE_ID, 2012)
+    mock_get_annual_usage_for_service.assert_called_once_with(SERVICE_ONE_ID, 2012)
+    mock_get_free_sms_fragment_limit.assert_called_with(SERVICE_ONE_ID)
 
     nav = page.find("ul", {"class": "pill"})
     unselected_nav_links = nav.select("a:not(.pill-item--selected)")
     assert (
         normalize_spaces(nav.find("a", {"aria-current": "page"}).text)
-        == "2011 to 2012 fiscal year"
+        == "2012 to 2013 fiscal year"
     )
-    assert normalize_spaces(unselected_nav_links[0].text) == "2010 to 2011 fiscal year"
-    assert normalize_spaces(unselected_nav_links[1].text) == "2009 to 2010 fiscal year"
+    assert normalize_spaces(unselected_nav_links[0].text) == "2011 to 2012 fiscal year"
+    assert normalize_spaces(unselected_nav_links[1].text) == "2010 to 2011 fiscal year"
 
     annual_usage = page.find_all("div", {"class": "keyline-block"})
 
@@ -1031,8 +1043,7 @@ def test_usage_page_monthly_breakdown(
     page = client_request.get("main.usage", service_id=SERVICE_ONE_ID)
     monthly_breakdown = normalize_spaces(page.find("table").text)
 
-    assert "October" in monthly_breakdown
-    assert "249,860 free text messages" in monthly_breakdown
+    assert "January" in monthly_breakdown
 
     assert "February" in monthly_breakdown
     assert "$16.40" in monthly_breakdown
@@ -1048,8 +1059,8 @@ def test_usage_page_monthly_breakdown(
 @pytest.mark.parametrize(
     ("now", "expected_number_of_months"),
     [
-        (freeze_time("2017-03-31 11:09:00.061258"), 6),
-        (freeze_time("2017-01-01 11:09:00.061258"), 4),
+        (freeze_time("2017-03-31 11:09:00.061258"), 12),
+        (freeze_time("2017-01-01 11:09:00.061258"), 12),
     ],
 )
 def test_usage_page_monthly_breakdown_shows_months_so_far(
@@ -1109,7 +1120,7 @@ def test_usage_page_with_year_argument(
     )
     mock_get_monthly_usage_for_service.assert_called_once_with(SERVICE_ONE_ID, 2000)
     mock_get_annual_usage_for_service.assert_called_once_with(SERVICE_ONE_ID, 2000)
-    mock_get_free_sms_fragment_limit.assert_called_with(SERVICE_ONE_ID, 2000)
+    mock_get_free_sms_fragment_limit.assert_called_with(SERVICE_ONE_ID)
     mock_get_monthly_notification_stats.assert_called_with(SERVICE_ONE_ID, 2000)
 
 
@@ -1144,7 +1155,7 @@ def test_future_usage_page(
     mock_get_annual_usage_for_service_in_future.assert_called_once_with(
         SERVICE_ONE_ID, 2014
     )
-    mock_get_free_sms_fragment_limit.assert_called_with(SERVICE_ONE_ID, 2014)
+    mock_get_free_sms_fragment_limit.assert_called_with(SERVICE_ONE_ID)
     mock_get_monthly_notification_stats.assert_called_with(SERVICE_ONE_ID, 2014)
 
 

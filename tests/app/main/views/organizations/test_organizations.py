@@ -388,7 +388,7 @@ def test_organization_services_shows_live_services_and_usage(
 
     client_request.login(active_user_with_permissions)
     page = client_request.get(".organization_dashboard", org_id=ORGANISATION_ID)
-    mock.assert_called_once_with(ORGANISATION_ID, 2019)
+    mock.assert_called_once_with(ORGANISATION_ID, 2020)
 
     services = page.select("main h3")
     usage_rows = page.select("main .grid-col-6")
@@ -459,9 +459,9 @@ def test_organization_services_shows_live_services_and_usage_with_count_of_1(
 @pytest.mark.parametrize(
     ("financial_year", "expected_selected"),
     [
-        (2017, "2017 to 2018 fiscal year"),
         (2018, "2018 to 2019 fiscal year"),
         (2019, "2019 to 2020 fiscal year"),
+        (2020, "2020 to 2021 fiscal year"),
     ],
 )
 def test_organization_services_filters_by_financial_year(
@@ -483,9 +483,9 @@ def test_organization_services_filters_by_financial_year(
     )
     mock.assert_called_once_with(ORGANISATION_ID, financial_year)
     assert normalize_spaces(page.select_one(".pill").text) == (
+        "2020 to 2021 fiscal year "
         "2019 to 2020 fiscal year "
-        "2018 to 2019 fiscal year "
-        "2017 to 2018 fiscal year"
+        "2018 to 2019 fiscal year"
     )
     assert normalize_spaces(page.select_one(".pill-item--selected").text) == (
         expected_selected
@@ -610,7 +610,7 @@ def test_organization_services_links_to_downloadable_report(
     assert link_to_report.attrs["href"] == url_for(
         ".download_organization_usage_report",
         org_id=ORGANISATION_ID,
-        selected_year=2021,
+        selected_year=2022,
     )
 
 
