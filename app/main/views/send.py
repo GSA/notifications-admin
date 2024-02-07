@@ -13,7 +13,6 @@ from notifications_utils.recipients import RecipientCSV, first_column_headings
 from notifications_utils.sanitise_text import SanitiseASCII
 from xlrd.biffh import XLRDError
 from xlrd.xldate import XLDateError
-from pprint import pprint
 
 from app import (
     current_service,
