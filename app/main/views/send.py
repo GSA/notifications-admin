@@ -614,7 +614,7 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
         metadata_kwargs["sender_id"] = session["sender_id"]
 
     set_metadata_on_csv_upload(service_id, upload_id, **metadata_kwargs)
-    session['scheduled_for']=request.form.get("scheduled_for", "")
+    session['scheduled_for'] = request.form.get("scheduled_for", "")
     return render_template("views/check/ok.html", **data)
 
 
@@ -644,7 +644,8 @@ def preview_job(service_id, template_id, upload_id, row_index=2):
         return render_template("views/check/column-errors.html", **data)
 
     return render_template('views/check/preview.html', scheduled_for=session['scheduled_for'], **data,
-)
+    )
+
 
 @main.route("/services/<uuid:service_id>/start-job/<uuid:upload_id>", methods=["POST"])
 @user_has_permissions("send_messages", restrict_admin_usage=True)
@@ -719,7 +720,6 @@ def get_back_link(service_id, template, step_index, placeholders=None, preview=F
             service_id=service_id,
             template_id=template.id,
         )
-
 
     if step_index == 0:
         if should_skip_template_page(template._template):
@@ -870,6 +870,7 @@ def get_template_error_dict(exception):
         # used to trigger CSV specific err msg content, so not needed for single notification errors.
         "original_file_name": False,
     }
+
 
 @main.route(
     "/services/<uuid:service_id>/template/<uuid:template_id>/notification/check/preview",

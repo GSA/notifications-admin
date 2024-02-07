@@ -53,6 +53,8 @@
         help='3' if help else 0
       )}}" class='page-footer'>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <p>This message will be delivered to <b>400 phone numbers</b> and will use a total of <b>800</b> message parts, leaving Washington DSHS with <b>249,200</b> message parts remaining.</p>
+      <h3>Does everything look good?</h3>
       {% if not error %}
         {% set button_text %}
         Send
