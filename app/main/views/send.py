@@ -643,8 +643,7 @@ def preview_job(service_id, template_id, upload_id, row_index=2):
     if data["errors"]:
         return render_template("views/check/column-errors.html", **data)
 
-    return render_template('views/check/preview.html', scheduled_for=session['scheduled_for'], **data,
-    )
+    return render_template('views/check/preview.html', scheduled_for=session['scheduled_for'], **data)
 
 
 @main.route("/services/<uuid:service_id>/start-job/<uuid:upload_id>", methods=["POST"])
