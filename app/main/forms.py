@@ -1239,22 +1239,27 @@ class ChangeNameForm(StripWhitespaceForm):
 class ChangePreferredTimezoneForm(StripWhitespaceForm):
     def __init__(self, *args, **kwargs):
         super(ChangePreferredTimezoneForm, self).__init__(*args, **kwargs)
-        self.new_preferred_timezone.choices = [
-            ("America/Puerto_Rico", "America/Puerto_Rico"),
-            ("US/Eastern", "US/Eastern"),
-            ("US/Central", "US/Central"),
-            ("US/Mountain", "US/Mountain"),
-            ("US/Pacific", "US/Pacific"),
-            ("US/Alaska", "US/Alaska"),
-            ("US/Hawaii", "US/Hawaii"),
-            ("US/Aleutian", "US/Aleutian"),
-            ("US/Samoa", "US/Samoa"),
-        ]
 
-    new_preferred_timezone = GovukRadiosField(
-        "What timezone would you like to use?",
-        default="US/Eastern",
-    )
+        # Get the current preferred timezone from the form data
+        current_timezone = kwargs.get('obj', None).new_preferred_timezone if 'obj' in kwargs else "US/Eastern"
+
+        # Set the choices
+        self.new_preferred_timezone = GovukRadiosField(
+            label="What timezone would you like to use?",
+            choices=[
+                ("America/Puerto_Rico", "America/Puerto_Rico"),
+                ("US/Eastern", "US/Eastern"),
+                ("US/Central", "US/Central"),
+                ("US/Mountain", "US/Mountain"),
+                ("US/Pacific", "US/Pacific"),
+                ("US/Alaska", "US/Alaska"),
+                ("US/Hawaii", "US/Hawaii"),
+                ("US/Aleutian", "US/Aleutian"),
+                ("US/Samoa", "US/Samoa"),
+            ],
+            default=current_timezone
+        )
+
 
 
 class ChangeEmailForm(StripWhitespaceForm):
