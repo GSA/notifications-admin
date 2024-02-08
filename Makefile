@@ -39,6 +39,12 @@ run-flask-bare:  ## Run flask without invoking poetry so we can override ENV var
 npm-audit:  ## Check for vulnerabilities in NPM packages
 	source $(NVMSH) && npm run audit
 
+.PHONY: run-dependency-check
+run-dependency-check:
+	echo "*** Shows unused dependencies (maybe, doublecheck)"
+	poetry run deptry .
+
+
 .PHONY: help
 help:
 	@cat $(MAKEFILE_LIST) | grep -E '^[a-zA-Z_-]+:.*?## .*$$' | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
