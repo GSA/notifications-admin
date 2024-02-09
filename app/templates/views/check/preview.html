@@ -1,6 +1,6 @@
 {% extends "withnav_template.html" %}
 {% from "components/banner.html" import banner_wrapper %}
-{% from "components/table.html" import list_table, field, text_field, index_field, hidden_field_heading %}
+{% from "components/table.html" import list_table, field, text_field, hidden_field_heading %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/components/button/macro.njk" import usaButton %}
 {% from "components/components/skip-link/macro.njk" import usaSkipLink %}
@@ -22,9 +22,9 @@
   {{ page_header('Preview') }}
   <h2 id="{{ file_contents_header_id }}">Message</h2>
   {% if scheduled_for %}
-    <p class="sms-message-sender">Time: {{scheduled_for}}</p>
+    <p class="sms-message-scheduler">Time: {{scheduled_for}}</p>
   {% endif %}
-  <p class="sms-message-sender">File: {{original_file_name}}</p>
+  <p class="sms-message-file-name">File: {{original_file_name}}</p>
   {{ template|string }}
   <div class="bottom-gutter-3-2">
     <form method="post" enctype="multipart/form-data" action="{{url_for('main.start_job', service_id=current_service.id, upload_id=upload_id)}}" class='page-footer'>

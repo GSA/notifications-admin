@@ -5,7 +5,7 @@
 {% from "components/components/button/macro.njk" import usaButton %}
 
 {% block service_page_title %}
-  {{ "Error" if error else "Preview of ‘{}’".format(template.name) }}
+  {{ "Error" if error else "Select delivery time" }}
 {% endblock %}
 
 {% block backLink %}
@@ -46,12 +46,11 @@
   {{ template|string }}
 
   <div class="js-stick-at-bottom-when-scrolling">
-    <form method="post" enctype="multipart/form-data" action="{{url_for(
+    <form method="get" enctype="multipart/form-data" action="{{url_for(
         'main.preview_notification',
         service_id=current_service.id,
         template_id=template.id
       )}}" class='page-footer'>
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       {% if not error %}
         {% if choose_time_form %}
           {{ choose_time_form.scheduled_for(param_extensions={

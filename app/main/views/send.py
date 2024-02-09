@@ -535,7 +535,10 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
             "main.send_messages", service_id=service_id, template_id=template.id
         )
         back_link_from_preview = url_for(
-            "main.check_messages", service_id=service_id, template_id=template.id, upload_id=upload_id
+            "main.check_messages",
+            service_id=service_id,
+            template_id=template.id,
+            upload_id=upload_id,
         )
         choose_time_form = ChooseTimeForm()
 
@@ -570,7 +573,7 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
         sent_previously=job_api_client.has_sent_previously(
             service_id, template.id, db_template["version"], original_file_name
         ),
-        template_id=template_id
+        template_id=template_id,
     )
 
 
@@ -614,17 +617,20 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
         metadata_kwargs["sender_id"] = session["sender_id"]
 
     set_metadata_on_csv_upload(service_id, upload_id, **metadata_kwargs)
-    session['scheduled_for'] = request.form.get("scheduled_for", "")
     return render_template("views/check/ok.html", **data)
 
 
 @main.route(
     "/services/<uuid:service_id>/<uuid:template_id>/check/<uuid:upload_id>/preview",
-    methods=["POST"],
+    methods=["GET"],
+)
+@main.route(
+    "/services/<uuid:service_id>/<uuid:template_id>/check/<uuid:upload_id>/preview/row-<int:row_index>",
+    methods=["GET"],
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def preview_job(service_id, template_id, upload_id, row_index=2):
-    session['scheduled_for'] = request.form.get('scheduled_for', 'Not specified')
+    session["scheduled_for"] = request.args.get("scheduled_for", "")
     data = _check_messages(service_id, template_id, upload_id, row_index)
     data["allowed_file_extensions"] = Spreadsheet.ALLOWED_FILE_EXTENSIONS
     if (
@@ -643,13 +649,15 @@ def preview_job(service_id, template_id, upload_id, row_index=2):
     if data["errors"]:
         return render_template("views/check/column-errors.html", **data)
 
-    return render_template('views/check/preview.html', scheduled_for=session['scheduled_for'], **data)
+    return render_template(
+        "views/check/preview.html", scheduled_for=session["scheduled_for"], **data
+    )
 
 
 @main.route("/services/<uuid:service_id>/start-job/<uuid:upload_id>", methods=["POST"])
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def start_job(service_id, upload_id):
-    scheduled_for = session.pop('scheduled_for', None)
+    scheduled_for = session.pop("scheduled_for", None)
     job_api_client.create_job(
         upload_id,
         service_id,
@@ -712,7 +720,13 @@ def get_send_test_page_title(template_type, entering_recipient, name=None):
     return "Personalize this message"
 
 
-def get_back_link(service_id, template, step_index, placeholders=None, preview=False,):
+def get_back_link(
+    service_id,
+    template,
+    step_index,
+    placeholders=None,
+    preview=False,
+):
     if preview:
         return url_for(
             "main.check_notification",
@@ -824,7 +838,9 @@ def _check_notification(service_id, template_id, exception=None):
 
     back_link = get_back_link(service_id, template, len(placeholders), placeholders)
 
-    back_link_from_preview = get_back_link(service_id, template, len(placeholders), placeholders, preview=True)
+    back_link_from_preview = get_back_link(
+        service_id, template, len(placeholders), placeholders, preview=True
+    )
 
     choose_time_form = ChooseTimeForm()
 
@@ -873,7 +889,7 @@ def get_template_error_dict(exception):
 
 @main.route(
     "/services/<uuid:service_id>/template/<uuid:template_id>/notification/check/preview",
-    methods=["POST"],
+    methods=["GET"],
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def preview_notification(service_id, template_id):
@@ -887,11 +903,12 @@ def preview_notification(service_id, template_id):
             )
         )
 
-    session['scheduled_for'] = request.form.get('scheduled_for', 'Not specified')
+    session["scheduled_for"] = request.args.get("scheduled_for", "")
 
     return render_template(
         "views/notifications/preview.html",
-        **_check_notification(service_id, template_id), data=session['scheduled_for']
+        **_check_notification(service_id, template_id),
+        scheduled_for=session["scheduled_for"],
     )
 
 
@@ -901,7 +918,7 @@ def preview_notification(service_id, template_id):
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def send_notification(service_id, template_id):
-    scheduled_for = session.pop('scheduled_for', None)
+    scheduled_for = session.pop("scheduled_for", "")
     recipient = get_recipient()
     if not recipient:
         return redirect(
