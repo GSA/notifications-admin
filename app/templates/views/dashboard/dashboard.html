@@ -28,7 +28,6 @@
     {{ ajax_block(partials, updates_url, 'totals') }}
 
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
-
     <h2 class="margin-top-4 margin-bottom-1">Recent Batches</h2>
     <div class='job-table'>
       <table class="usa-table usa-table--borderless width-full">
@@ -55,37 +54,37 @@
           </tr>
         </thead>
         <tbody>
-          {% for notification in notifications[:5] %}
-            {% if notification %}
-              <tr class="table-row" id="{{ notification.job.id }}">
-                <th class="table-field">
-                  {{ notification.job.original_file_name if notification.job.original_file_name else 'Manually entered number'}}
-                  <br>
-                  <a class="usa-link file-list-filename" href="/services/{{ notification.service }}/jobs/{{ notification.job.id }}">View Batch</a>
-                </th>
-                <th class="table-field">
-                  {{ notification.template.name }}
-                </th>
-                <th class="table-field">
-                  {{ notification.created_at | format_datetime_short_america }}
-                </th>
-                <th class="table-field">
-                  {{ notification.created_by.name }}
-                </th>
-                {% set job_available = jobs|selectattr('job_id', 'equalto', notification.job.id)|first %}
-                <th class="table-field">
-                  {{ job_available.notification_count if job_available else ''}}
-                </th>
-                <th class="table-field">
-                  {% if job_available and job_available.time_left != "Data no longer available" %}
-                    <a class="usa-link file-list-filename" href="{{ job_available.download_link }}">
-                      {{ "Download" if job_available.job_id else '' }}</a>
-                    <span class="usa-hint">{{ job_available.time_left }}</span>
-                  {% elif job_available %}
-                    <span>{{ job_available.time_left }}</span>
-                  {% endif %}
-                </th>
-              </tr>
+          {% for job in job_and_notifications[:5] %}
+            {% if job.job_id and job.notifications %}
+              {% for notification in job.notifications %}
+                <tr class="table-row" id="{{ job.job_id }}">
+                  <th class="table-field">
+                    {{ notification.job.original_file_name if notification.job.original_file_name else 'Manually entered number'}}
+                    <br>
+                    <a class="usa-link file-list-filename" href="{{ job.view_job_link }}">View Batch</a>
+                  </th>
+                  <th class="table-field">
+                    {{ notification.template.name }}
+                  </th>
+                  <th class="table-field">
+                    {{ notification.created_at | format_datetime_short_america }}
+                  </th>
+                  <th class="table-field">
+                    {{ notification.created_by.name }}
+                  </th>
+                  <th class="table-field">
+                    {{ job.notification_count}}
+                  </th>
+                  <th class="table-field">
+                    {% if notification and job.time_left != "Data no longer available" %}
+                      <a class="usa-link file-list-filename" href="{{ job.download_link }}">Download</a>
+                      <span class="usa-hint">{{ job.time_left }}</span>
+                    {% elif job %}
+                      <span>{{ job.time_left }}</span>
+                    {% endif %}
+                  </th>
+                </tr>
+              {% endfor %}
             {% endif %}
           {% endfor %}
         </tbody>

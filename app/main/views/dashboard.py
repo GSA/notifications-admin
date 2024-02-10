@@ -29,6 +29,7 @@ from app.utils.csv import Spreadsheet
 from app.utils.pagination import generate_next_dict, generate_previous_dict
 from app.utils.time import get_current_financial_year
 from app.utils.user import user_has_permissions
+from collections import defaultdict
 
 
 @main.route("/services/<uuid:service_id>/dashboard")
@@ -47,22 +48,31 @@ def service_dashboard(service_id):
     if not current_user.has_permissions("view_activity"):
         return redirect(url_for("main.choose_template", service_id=service_id))
 
-    notifications = notification_api_client.get_notifications_for_service(
+    notifications_response = notification_api_client.get_notifications_for_service(
         service_id=service_id,
     )["notifications"]
-
     job_response = job_api_client.get_jobs(service_id)
-
     service_data_retention_days = 7
-    jobs = [
+
+    aggregate_notifications_by_job = defaultdict(list)
+    for notification in notifications_response:
+        job_id = notification.get("job", {}).get("id")
+        if job_id:
+            aggregate_notifications_by_job[job_id].append(notification)
+
+    job_and_notifications = [
         {
             "job_id": job["id"],
             "time_left": get_time_left(job["created_at"]),
             "download_link": url_for(
                 ".view_job_csv", service_id=current_service.id, job_id=job["id"]
             ),
+            "view_job_link": url_for(
+                ".view_job", service_id=current_service.id, job_id=job["id"]
+            ),
             "notification_count": job["notification_count"],
             "created_by": job["created_by"],
+            "notifications": aggregate_notifications_by_job.get(job["id"], []),
         }
         for job in job_response["data"]
     ]
@@ -70,8 +80,7 @@ def service_dashboard(service_id):
         "views/dashboard/dashboard.html",
         updates_url=url_for(".service_dashboard_updates", service_id=service_id),
         partials=get_dashboard_partials(service_id),
-        notifications=notifications,
-        jobs=jobs,
+        job_and_notifications=job_and_notifications,
         service_data_retention_days=service_data_retention_days,
     )
 
