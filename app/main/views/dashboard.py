@@ -32,7 +32,6 @@ from app.utils.time import get_current_financial_year
 from app.utils.user import user_has_permissions
 
 
-
 @main.route("/services/<uuid:service_id>/dashboard")
 @user_has_permissions("view_activity", "send_messages")
 def old_service_dashboard(service_id):
