@@ -1,4 +1,5 @@
 import calendar
+from collections import defaultdict
 from datetime import datetime
 from functools import partial
 from itertools import groupby
@@ -29,7 +30,7 @@ from app.utils.csv import Spreadsheet
 from app.utils.pagination import generate_next_dict, generate_previous_dict
 from app.utils.time import get_current_financial_year
 from app.utils.user import user_has_permissions
-from collections import defaultdict
+
 
 
 @main.route("/services/<uuid:service_id>/dashboard")
