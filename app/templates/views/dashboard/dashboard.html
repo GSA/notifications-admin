@@ -29,8 +29,8 @@
 
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
     <h2 class="margin-top-4 margin-bottom-1">Recent Batches</h2>
-    <div class='job-table'>
-      <table class="usa-table usa-table--borderless width-full">
+    <div>
+      <table class="usa-table usa-table--borderless job-table">
         <thead class="table-field-headings">
           <tr>
             <th scope="col" class="table-field-heading-first file-name">
@@ -54,39 +54,44 @@
           </tr>
         </thead>
         <tbody>
-          {% for job in job_and_notifications[:5] %}
-            {% if job.job_id and job.notifications %}
-              {% for notification in job.notifications %}
+          {% if job_and_notifications %}
+            {% for job in job_and_notifications %}
+              {% if job.job_id and job.notifications %}
+                {% set notification = job.notifications[0] %}
                 <tr class="table-row" id="{{ job.job_id }}">
-                  <th class="table-field">
+                  <td class="table-field">
                     {{ notification.job.original_file_name if notification.job.original_file_name else 'Manually entered number'}}
                     <br>
                     <a class="usa-link file-list-filename" href="{{ job.view_job_link }}">View Batch</a>
-                  </th>
-                  <th class="table-field">
+                  </td>
+                  <td class="table-field">
                     {{ notification.template.name }}
-                  </th>
-                  <th class="table-field">
-                    {{ notification.created_at | format_datetime_short_america }}
-                  </th>
-                  <th class="table-field">
+                  </td>
+                  <td class="table-field">
+                    {{ job.created_at | format_datetime_short_america }}
+                  </td>
+                  <td class="table-field">
                     {{ notification.created_by.name }}
-                  </th>
-                  <th class="table-field">
+                  </td>
+                  <td class="table-field">
                     {{ job.notification_count}}
-                  </th>
-                  <th class="table-field">
+                  </td>
+                  <td class="table-field">
                     {% if notification and job.time_left != "Data no longer available" %}
                       <a class="usa-link file-list-filename" href="{{ job.download_link }}">Download</a>
                       <span class="usa-hint">{{ job.time_left }}</span>
                     {% elif job %}
                       <span>{{ job.time_left }}</span>
                     {% endif %}
-                  </th>
+                  </td>
                 </tr>
-              {% endfor %}
-            {% endif %}
-          {% endfor %}
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            <tr class="table-row">
+              <td class="table-empty-message" colspan="10">No batched job messages found &thinsp;(messages are kept for {{ service_data_retention_days }} days).</td>
+            </tr>
+        {% endif %}
         </tbody>
       </table>
     </div>

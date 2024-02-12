@@ -48,10 +48,8 @@ def service_dashboard(service_id):
     if not current_user.has_permissions("view_activity"):
         return redirect(url_for("main.choose_template", service_id=service_id))
 
-    notifications_response = notification_api_client.get_notifications_for_service(
-        service_id=service_id,
-    )["notifications"]
-    job_response = job_api_client.get_jobs(service_id)
+    job_response = job_api_client.get_jobs(service_id)["data"]
+    notifications_response = notification_api_client.get_notifications_for_service(service_id)["notifications"]
     service_data_retention_days = 7
 
     aggregate_notifications_by_job = defaultdict(list)
@@ -70,11 +68,12 @@ def service_dashboard(service_id):
             "view_job_link": url_for(
                 ".view_job", service_id=current_service.id, job_id=job["id"]
             ),
+            "created_at": job["created_at"],
             "notification_count": job["notification_count"],
             "created_by": job["created_by"],
             "notifications": aggregate_notifications_by_job.get(job["id"], []),
         }
-        for job in job_response["data"]
+        for job in job_response
     ]
     return render_template(
         "views/dashboard/dashboard.html",
