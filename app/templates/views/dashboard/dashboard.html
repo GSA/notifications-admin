@@ -33,22 +33,22 @@
       <table class="usa-table usa-table--borderless job-table">
         <thead class="table-field-headings">
           <tr>
-            <th scope="col" class="table-field-heading-first file-name">
+            <th scope="col" class="table-field-heading-first">
               <span>File name</span>
             </th>
-            <th scope="col" class="table-field-heading template">
+            <th scope="col" class="table-field-heading">
               <span>Template</span>
             </th>
-            <th scope="col" class="table-field-heading time-sent">
+            <th scope="col" class="table-field-heading">
               <span>Time sent</span>
             </th>
-            <th scope="col" class="table-field-heading sender">
+            <th scope="col" class="table-field-heading">
               <span>Sender</span>
             </th>
-            <th scope="col" class="table-field-heading #-of-recipients">
+            <th scope="col" class="table-field-heading">
               <span># of Recipients</span>
             </th>
-            <th scope="col" class="table-field-heading report">
+            <th scope="col" class="table-field-heading">
               <span>Report</span>
             </th>
           </tr>
@@ -59,24 +59,24 @@
               {% if job.job_id and job.notifications %}
                 {% set notification = job.notifications[0] %}
                 <tr class="table-row" id="{{ job.job_id }}">
-                  <td class="table-field">
+                  <td class="table-field file-name">
                     {{ notification.job.original_file_name if notification.job.original_file_name else 'Manually entered number'}}
                     <br>
                     <a class="usa-link file-list-filename" href="{{ job.view_job_link }}">View Batch</a>
                   </td>
-                  <td class="table-field">
+                  <td class="table-field template">
                     {{ notification.template.name }}
                   </td>
-                  <td class="table-field">
+                  <td class="table-field time-sent">
                     {{ job.created_at | format_datetime_short_america }}
                   </td>
-                  <td class="table-field">
+                  <td class="table-field sender">
                     {{ notification.created_by.name }}
                   </td>
-                  <td class="table-field">
+                  <td class="table-field count-of-recipients">
                     {{ job.notification_count}}
                   </td>
-                  <td class="table-field">
+                  <td class="table-field report">
                     {% if notification and job.time_left != "Data no longer available" %}
                       <a class="usa-link file-list-filename" href="{{ job.download_link }}">Download</a>
                       <span class="usa-hint">{{ job.time_left }}</span>
