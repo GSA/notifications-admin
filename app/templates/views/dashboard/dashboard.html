@@ -55,7 +55,7 @@
         </thead>
         <tbody>
           {% if job_and_notifications %}
-            {% for job in job_and_notifications %}
+            {% for job in job_and_notifications[:5] %}
               {% if job.job_id and job.notifications %}
                 {% set notification = job.notifications[0] %}
                 <tr class="table-row" id="{{ job.job_id }}">
