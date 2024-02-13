@@ -971,7 +971,7 @@ def test_upload_valid_csv_shows_preview_and_table(
     )
 
     assert page.h1.text.strip() == "Preview"
-    assert page.select("h2")[1].text.strip() == "Preview list"
+    assert page.select("h2")[1].text.strip() == "Recipients list"
     assert page.h2.text.strip() == "Message"
     assert page.select_one(".sms-message-recipient").text.strip() == expected_recipient
     assert page.select_one(".sms-message-wrapper").text.strip() == expected_message
@@ -2628,7 +2628,7 @@ def test_preview_notification_shows_preview(
     #     assert page.h1.text.strip() == when
     # else:
     #     assert page.h1.text.strip() == "Now"
-    assert page.h1.text.strip() == "Preview of ‘Two week reminder’"
+    assert page.h1.text.strip() == "Preview"
     assert (page.find_all("a", {"class": "usa-back-link"})[0]["href"]) == url_for(
         "main.check_notification",
         service_id=service_one["id"],
