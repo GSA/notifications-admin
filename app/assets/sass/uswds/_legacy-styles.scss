@@ -48,8 +48,8 @@
   }
 }
 
-.sms-message-sender, .sms-message-file-name, .sms-message-scheduler {
-  margin: units(1) 0 0;
+.sms-message-sender, .sms-message-file-name, .sms-message-scheduler, .sms-message-template {
+  margin: units(1) 0 units(1);
 }
 
 .sms-message-recipient {

@@ -40,9 +40,13 @@
       {% endcall %}
     </div>
   {% else %}
-    {{ page_header('Preview of ‘{}’'.format(template.name)) }}
+    {{ page_header('Preview') }}
   {% endif %}
+  <h2 id="{{ file_contents_header_id }}">Message</h2>
 
+  <p class="sms-message-scheduler">Scheduled:
+    {{ scheduled_for if scheduled_for else 'Now'}}</p>
+  <p class="sms-message-template">Template: {{template.name}}</p>
   {{ template|string }}
 
   <div class="js-stick-at-bottom-when-scrolling">
@@ -53,11 +57,11 @@
         help='3' if help else 0
       )}}" class='page-footer'>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-      <p>Placeholder: This message will be delivered to <b>400 phone numbers</b> and will use a total of <b>800</b> message parts, leaving Washington DSHS with <b>249,200</b> message parts remaining.</p>
+      <p>Placeholder: This message will be delivered to <b>400 phone numbers</b> and will use a total of <b>800 message parts</b>, leaving Washington DSHS with <b>249,200 message parts remaining</b>.</p>
       <h3>Does everything look good?</h3>
       {% if not error %}
         {% set button_text %}
-        Send
+          {{ "Scheduled" if scheduled_for else 'Send'}}
         {% endset %}
         {{ usaButton({ "text": button_text }) }}
       {% endif %}

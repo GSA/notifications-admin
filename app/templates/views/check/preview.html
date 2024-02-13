@@ -21,16 +21,16 @@
 
   {{ page_header('Preview') }}
   <h2 id="{{ file_contents_header_id }}">Message</h2>
-  {% if scheduled_for %}
-    <p class="sms-message-scheduler">Time: {{scheduled_for}}</p>
-  {% endif %}
+    <p class="sms-message-scheduler">Scheduled:
+    {{ scheduled_for if scheduled_for else 'Now'}}</p>
   <p class="sms-message-file-name">File: {{original_file_name}}</p>
+  <p class="sms-message-template">Template: {{template.name}}</p>
   {{ template|string }}
   <div class="bottom-gutter-3-2">
     <form method="post" enctype="multipart/form-data" action="{{url_for('main.start_job', service_id=current_service.id, upload_id=upload_id)}}" class='page-footer'>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       {% if not request.args.from_test %}
-      <h2 class="font-body-lg">Preview list</h2>
+      <h2 class="font-body-lg">Recipients list</h2>
       <ul class="usa-icon-list">
         <li class="usa-icon-list__item">
           <div class="usa-icon-list__icon" >
@@ -41,11 +41,11 @@
           </div>
         </li>
       </ul>
-      <div>
+      <div class="usa-table-container--scrollable" tabindex="0">
         {% call(item, row_number) list_table(
           recipients.displayed_rows,
-          caption=original_file_name,
-          caption_visible=False,
+          caption="Note: Only the first 5 rows are dislayed here.",
+          caption_visible=True,
           field_headings=recipients.column_headers
         ) %}
           {% for column in recipients.column_headers %}
@@ -63,10 +63,10 @@
         {% endcall %}
       </div>
       {% endif %}
-      <p>Placeholder: This message will be delivered to <b>400 phone numbers</b> and will use a total of <b>800</b> message parts, leaving Washington DSHS with <b>249,200</b> message parts remaining.</p>
+      <p>Placeholder: This message will be delivered to <b>400 phone numbers</b> and will use a total of <b>800 message parts</b>, leaving Washington DSHS with <b>249,200 message parts remaining</b>.</p>
       <h3>Does everything look good?</h3>
       {% set button_text %}
-        Send
+        {{ "Scheduled" if scheduled_for else 'Send'}}
       {% endset %}
       {{ usaButton({ "text": button_text }) }}
 

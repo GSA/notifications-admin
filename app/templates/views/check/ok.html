@@ -34,10 +34,6 @@
         }) }}
       {% endif %}
 
-      {% if not request.args.from_test %}
-      <h2 class="font-body-lg">Send list</h2>
-      <h3 id="{{ file_contents_header_id }}">{{ original_file_name }}</h3>
-      {% endif %}
       {% set button_text %}
         Preview
       {% endset %}
