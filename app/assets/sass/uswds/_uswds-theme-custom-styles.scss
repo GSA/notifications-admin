@@ -140,15 +140,17 @@ td.table-empty-message {
 }
 
 .user-list {
-   display: inline-flex;
+   display: flex;
    flex-wrap: wrap;
-   gap: units(4);
+   justify-content: space-between;
+   padding: 1rem;
    .user-list-item {
       @include at-media(desktop) {
-         flex: 1 1 calc(50% - units(2));
-         flex-grow: 0;
+         width: calc(50% - units(1));
+         margin-bottom: 1rem;
+         box-sizing: border-box;
       }
-      flex: 1 1 calc(100% - units(2));
+      // flex: 1 1 calc(100% - units(2));
       border: 1px solid color('gray-cool-10');
       padding: units(2);
       .tick-cross-list-permissions {
