@@ -98,6 +98,12 @@ def format_datetime_short(date):
     )
 
 
+def format_datetime_short_12h(date):
+    return "{} at {} {}".format(
+        format_date_short(date), format_time_12h(date), get_user_preferred_timezone()
+    )
+
+
 def format_datetime_short_america(date):
     return "{} at {}".format(format_date_numeric_america(date), format_time_12h(date))
 

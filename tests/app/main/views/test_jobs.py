@@ -237,11 +237,11 @@ def test_should_show_job_with_sending_limit_exceeded_status(
         job_id=fake_uuid,
     )
 
-    assert normalize_spaces(page.select("main p")[1].text) == (
+    assert normalize_spaces(page.select("main p")[2].text) == (
         "Notify cannot send these messages because you have reached a limit. "
         "You can only send 1,000 messages per day and 250,000 messages in total."
     )
-    assert normalize_spaces(page.select("main p")[2].text) == (
+    assert normalize_spaces(page.select("main p")[3].text) == (
         "Upload this spreadsheet again tomorrow or contact the Notify.gov team to raise the limit."
     )
 
@@ -350,7 +350,7 @@ def test_should_show_scheduled_job(
     )
 
     assert normalize_spaces(page.select("main div p")[1].text) == (
-        "Sending Two week reminder today at 00:00 US/Eastern"
+        "Was scheduled on 2 January at 12:00 AM US/Eastern by Test User"
     )
 
     assert page.select("main p a")[0]["href"] == url_for(
@@ -425,7 +425,9 @@ def test_should_show_updates_for_one_job_as_json(
     assert "Status" in content["notifications"]
     assert "Delivered" in content["notifications"]
     assert "00:00" in content["notifications"]
-    assert "Sent by Test User on 1 January at 00:00" in content["status"]
+    assert (
+        "Was sent on 1 January at 12:00 AM US/Eastern by Test User" in content["status"]
+    )
 
 
 @freeze_time("2016-01-01 05:00:00.000001")
@@ -467,7 +469,9 @@ def test_should_show_updates_for_scheduled_job_as_json(
     assert "Status" in content["notifications"]
     assert "Delivered" in content["notifications"]
     assert "00:00" in content["notifications"]
-    assert "Sent by Test User on 1 June at 16:00" in content["status"]
+    assert (
+        "Was sent on 1 January at 12:00 AM US/Eastern by Test User" in content["status"]
+    )
 
 
 @pytest.mark.parametrize(

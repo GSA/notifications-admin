@@ -226,22 +226,30 @@ def test_notification_status_shows_expected_back_link(
     [
         (
             "2012-01-01 06:01",
-            ("‘sample template’ was sent by Test User today at 01:01 US/Eastern"),
+            (
+                "‘sample template’ sample template - service one Was sent on 1 January at 01:01 AM US/Eastern "
+                "by Test User"
+            ),
         ),
         (
             "2012-01-02 06:01",
-            ("‘sample template’ was sent by Test User yesterday at 01:01 US/Eastern"),
+            (
+                "‘sample template’ sample template - service one Was sent on 1 January at 01:01 AM US/Eastern "
+                "by Test User"
+            ),
         ),
         (
             "2012-01-03 06:01",
             (
-                "‘sample template’ was sent by Test User on 1 January at 01:01 US/Eastern"
+                "‘sample template’ sample template - service one Was sent on 1 January at 01:01 AM US/Eastern "
+                "by Test User"
             ),
         ),
         (
             "2013-01-03 06:01",
             (
-                "‘sample template’ was sent by Test User on 1 January 2012 at 01:01 US/Eastern"
+                "‘sample template’ sample template - service one Was sent on 1 January at 01:01 AM US/Eastern "
+                "by Test User"
             ),
         ),
     ],
