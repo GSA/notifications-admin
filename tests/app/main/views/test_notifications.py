@@ -227,29 +227,25 @@ def test_notification_status_shows_expected_back_link(
         (
             "2012-01-01 06:01",
             (
-                "‘sample template’ sample template - service one Was sent on 1 January at 01:01 AM US/Eastern "
-                "by Test User"
+                "Was sent on 1 January at 01:01 AM US/Eastern by Test User"
             ),
         ),
         (
             "2012-01-02 06:01",
             (
-                "‘sample template’ sample template - service one Was sent on 1 January at 01:01 AM US/Eastern "
-                "by Test User"
+                "Was sent on 1 January at 01:01 AM US/Eastern by Test User"
             ),
         ),
         (
             "2012-01-03 06:01",
             (
-                "‘sample template’ sample template - service one Was sent on 1 January at 01:01 AM US/Eastern "
-                "by Test User"
+                "Was sent on 1 January at 01:01 AM US/Eastern by Test User"
             ),
         ),
         (
             "2013-01-03 06:01",
             (
-                "‘sample template’ sample template - service one Was sent on 1 January at 01:01 AM US/Eastern "
-                "by Test User"
+                "Was sent on 1 January at 01:01 AM US/Eastern by Test User"
             ),
         ),
     ],
@@ -275,10 +271,8 @@ def test_notification_page_doesnt_link_to_template_in_tour(
             notification_id=fake_uuid,
             help=3,
         )
-
-    assert normalize_spaces(page.select("main p:nth-of-type(1)")[0].text) == (
-        expected_message
-    )
+    p_text = normalize_spaces(page.select_one(".usa-alert__text").text)
+    assert p_text == normalize_spaces(expected_message)
     assert len(page.select("main p:nth-of-type(1) a")) == 0
 
 
