@@ -1253,7 +1253,6 @@ class ChangePreferredTimezoneForm(StripWhitespaceForm):
 
     new_preferred_timezone = GovukRadiosField(
         "What timezone would you like to use?",
-        default="US/Eastern",
     )
 
 
