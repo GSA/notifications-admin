@@ -80,9 +80,8 @@ def generate_notifications_csv(**kwargs):
         original_column_headers = original_upload.column_headers
         fieldnames = [
             "Template",
-            "Type",
             "Sent by",
-            "Job",
+            "Batch File",
             "Carrier Response",
             "Status",
             "Time",
@@ -95,9 +94,8 @@ def generate_notifications_csv(**kwargs):
         fieldnames = [
             "Recipient",
             "Template",
-            "Type",
             "Sent by",
-            "Job",
+            "Batch File",
             "Carrier Response",
             "Status",
             "Time",
@@ -119,7 +117,6 @@ def generate_notifications_csv(**kwargs):
             if kwargs.get("job_id"):
                 values = [
                     notification["template_name"],
-                    notification["template_type"],
                     notification["created_by_name"],
                     notification["job_name"],
                     notification["provider_response"],
@@ -136,7 +133,6 @@ def generate_notifications_csv(**kwargs):
                 values = [
                     notification["recipient"],
                     notification["template_name"],
-                    notification["template_type"],
                     notification["created_by_name"] or "",
                     notification["job_name"] or "",
                     notification["provider_response"],

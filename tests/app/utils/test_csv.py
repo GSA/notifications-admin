@@ -88,15 +88,15 @@ def get_notifications_csv_mock(
         (
             None,
             [
-                "Recipient,Template,Type,Sent by,Job,Carrier Response,Status,Time\n",
-                "foo@bar.com,foo,sms,,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern\r\n",
+                "Recipient,Template,Sent by,Batch File,Carrier Response,Status,Time\n",
+                "foo@bar.com,foo,,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern\r\n",
             ],
         ),
         (
             "Anne Example",
             [
-                "Recipient,Template,Type,Sent by,Job,Carrier Response,Status,Time\n",
-                "foo@bar.com,foo,sms,Anne Example,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern\r\n",  # noqa
+                "Recipient,Template,Sent by,Batch File,Carrier Response,Status,Time\n",
+                "foo@bar.com,foo,Anne Example,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern\r\n",  # noqa
             ],
         ),
     ],
@@ -129,9 +129,8 @@ def test_generate_notifications_csv_without_job(
         """,
             [
                 "Template",
-                "Type",
                 "Sent by",
-                "Job",
+                "Batch File",
                 "Carrier Response",
                 "Status",
                 "Time",
@@ -139,7 +138,6 @@ def test_generate_notifications_csv_without_job(
             ],
             [
                 "foo",
-                "sms",
                 "Fake Person",
                 "bar.csv",
                 "Did not like it",
@@ -155,9 +153,8 @@ def test_generate_notifications_csv_without_job(
         """,
             [
                 "Template",
-                "Type",
                 "Sent by",
-                "Job",
+                "Batch File",
                 "Carrier Response",
                 "Status",
                 "Time",
@@ -168,7 +165,6 @@ def test_generate_notifications_csv_without_job(
             ],
             [
                 "foo",
-                "sms",
                 "Fake Person",
                 "bar.csv",
                 "Did not like it",
@@ -187,9 +183,8 @@ def test_generate_notifications_csv_without_job(
         """,
             [
                 "Template",
-                "Type",
                 "Sent by",
-                "Job",
+                "Batch File",
                 "Carrier Response",
                 "Status",
                 "Time",
@@ -200,7 +195,6 @@ def test_generate_notifications_csv_without_job(
             ],
             [
                 "foo",
-                "sms",
                 "Fake Person",
                 "bar.csv",
                 "Did not like it",
