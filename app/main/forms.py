@@ -70,7 +70,7 @@ from app.utils.user_permissions import all_ui_permissions, permission_options
 def get_time_value_and_label(future_time):
     preferred_tz = pytz.timezone(get_user_preferred_timezone())
     return (
-        future_time.astimezone(preferred_tz).replace(tzinfo=None).isoformat(),
+        future_time.astimezone(preferred_tz).isoformat(),
         "{} at {} {}".format(
             get_human_day(future_time.astimezone(preferred_tz)),
             get_human_time(future_time.astimezone(preferred_tz)),
