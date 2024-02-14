@@ -908,26 +908,22 @@ def test_upload_valid_csv_redirects_to_check_page(
     (
         "extra_args",
         "expected_link_in_first_row",
-        "expected_recipient",
         "expected_message",
     ),
     [
         (
             {},
             None,
-            "To: 2028675301",
             "Test Service: A, Template <em>content</em> with & entity",
         ),
         (
             {"row_index": 2},
             None,
-            "To: 2028675301",
             "Test Service: A, Template <em>content</em> with & entity",
         ),
         (
             {"row_index": 4},
             True,
-            "To: 2028675303",
             "Test Service: C, Template <em>content</em> with & entity",
         ),
     ],
@@ -946,7 +942,6 @@ def test_upload_valid_csv_shows_preview_and_table(
     fake_uuid,
     extra_args,
     expected_link_in_first_row,
-    expected_recipient,
     expected_message,
 ):
     with client_request.session_transaction() as session:
@@ -973,7 +968,6 @@ def test_upload_valid_csv_shows_preview_and_table(
     assert page.h1.text.strip() == "Preview"
     assert page.select("h2")[1].text.strip() == "Recipients list"
     assert page.h2.text.strip() == "Message"
-    assert page.select_one(".sms-message-recipient").text.strip() == expected_recipient
     assert page.select_one(".sms-message-wrapper").text.strip() == expected_message
     assert not page.select_one(".table-field-index")
 
@@ -2895,7 +2889,6 @@ def test_send_notification_shows_email_error_in_trial_mode(
 @pytest.mark.parametrize(
     ("endpoint", "extra_args"),
     [
-        ("main.check_messages", {"template_id": uuid4(), "upload_id": uuid4()}),
         ("main.send_one_off_step", {"template_id": uuid4(), "step_index": 0}),
     ],
 )

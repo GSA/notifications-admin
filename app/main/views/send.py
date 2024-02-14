@@ -502,7 +502,7 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
     template = get_template(
         db_template,
         current_service,
-        show_recipient=True,
+        show_recipient=False,
         email_reply_to=email_reply_to,
         sms_sender=sms_sender,
     )
