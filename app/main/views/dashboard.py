@@ -54,7 +54,7 @@ def service_dashboard(service_id):
 
     aggregate_notifications_by_job = defaultdict(list)
     for notification in notifications_response:
-        job_id = notification.get("job", {}).get("id")
+        job_id = notification.get("job", {}).get("id", None)
         if job_id:
             aggregate_notifications_by_job[job_id].append(notification)
 
