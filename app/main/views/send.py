@@ -39,7 +39,7 @@ from app.utils import PermanentRedirect, should_skip_template_page, unicode_trun
 from app.utils.csv import Spreadsheet, get_errors_for_csv
 from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
-from pprint import pprint
+
 
 def get_example_csv_fields(column_headers, use_example_as_example, submitted_fields):
     if use_example_as_example:
@@ -915,7 +915,6 @@ def preview_notification(service_id, template_id):
     session["scheduled_for"] = request.args.get("scheduled_for", "")
     data = _check_notification(service_id, template_id)
     db_template = data.get('db_template', None)
-
     simplifed_template = get_template(
         db_template,
         current_service,
