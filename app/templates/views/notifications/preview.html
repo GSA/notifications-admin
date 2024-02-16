@@ -5,7 +5,7 @@
 {% from "components/components/button/macro.njk" import usaButton %}
 
 {% block service_page_title %}
-  {{ "Error" if error else "Preview of ‘{}’".format(template.name) }}
+  {{ "Error" if error else "Preview" }}
 {% endblock %}
 
 {% block backLink %}
@@ -42,12 +42,15 @@
   {% else %}
     {{ page_header('Preview') }}
   {% endif %}
-  <h2 id="{{ file_contents_header_id }}">Message</h2>
+  <div>
+    <p class="sms-message-scheduler">Scheduled: {{ scheduled_for if scheduled_for else 'Now'}}</p>
+    <p class="sms-message-template">Template: {{template.name}}</p>
+    <p class="sms-message-sender" >From: {{ template.sender }}</p>
+    <p class="sms-message-sender" >To: {{ recipient }}</p>
+  </div>
 
-  <p class="sms-message-scheduler">Scheduled:
-    {{ scheduled_for if scheduled_for else 'Now'}}</p>
-  <p class="sms-message-template">Template: {{template.name}}</p>
-  {{ template|string }}
+  <h2 id="{{ file_contents_header_id }}">Message</h2>
+  <div class="preview-message"> {{ simplifed_template|string }}</div>
 
   <div class="js-stick-at-bottom-when-scrolling">
     <form method="post" enctype="multipart/form-data" action="{{url_for(
@@ -61,7 +64,7 @@
       <h3>Does everything look good?</h3>
       {% if not error %}
         {% set button_text %}
-          {{ "Scheduled" if scheduled_for else 'Send'}}
+          {{ "Schedule" if scheduled_for else 'Send'}}
         {% endset %}
         {{ usaButton({ "text": button_text }) }}
       {% endif %}

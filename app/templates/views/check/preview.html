@@ -20,12 +20,15 @@
 {% block maincolumn_content %}
 
   {{ page_header('Preview') }}
+  <div>
+    <p class="sms-message-scheduler">Scheduled: {{ scheduled_for if scheduled_for else 'Now'}}</p>
+    <p class="sms-message-file-name">File: {{original_file_name}}</p>
+    <p class="sms-message-template">Template: {{template.name}}</p>
+    <p class="sms-message-sender" >From: {{ template.sender }}</p>
+  </div>
+
   <h2 id="{{ file_contents_header_id }}">Message</h2>
-    <p class="sms-message-scheduler">Scheduled:
-    {{ scheduled_for if scheduled_for else 'Now'}}</p>
-  <p class="sms-message-file-name">File: {{original_file_name}}</p>
-  <p class="sms-message-template">Template: {{template.name}}</p>
-  {{ template|string }}
+  <div class="preview-message"> {{ simplifed_template|string }}</div>
   <div class="bottom-gutter-3-2">
     <form method="post" enctype="multipart/form-data" action="{{url_for('main.start_job', service_id=current_service.id, upload_id=upload_id)}}" class='page-footer'>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
@@ -63,10 +66,10 @@
         {% endcall %}
       </div>
       {% endif %}
-      <p>Placeholder: This message will be delivered to <b>400 phone numbers</b> and will use a total of <b>800 message parts</b>, leaving Washington DSHS with <b>249,200 message parts remaining</b>.</p>
+      <!-- <p>Placeholder: This message will be delivered to <b>400 phone numbers</b> and will use a total of <b>800 message parts</b>, leaving Washington DSHS with <b>249,200 message parts remaining</b>.</p> -->
       <h3>Does everything look good?</h3>
       {% set button_text %}
-        {{ "Scheduled" if scheduled_for else 'Send'}}
+        {{ "Schedule" if scheduled_for else 'Send'}}
       {% endset %}
       {{ usaButton({ "text": button_text }) }}
 

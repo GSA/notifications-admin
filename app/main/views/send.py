@@ -39,7 +39,7 @@ from app.utils import PermanentRedirect, should_skip_template_page, unicode_trun
 from app.utils.csv import Spreadsheet, get_errors_for_csv
 from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
-
+from pprint import pprint
 
 def get_example_csv_fields(column_headers, use_example_as_example, submitted_fields):
     if use_example_as_example:
@@ -574,6 +574,7 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
             service_id, template.id, db_template["version"], original_file_name
         ),
         template_id=template_id,
+        db_template=db_template
     )
 
 
@@ -617,6 +618,7 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
         metadata_kwargs["sender_id"] = session["sender_id"]
 
     set_metadata_on_csv_upload(service_id, upload_id, **metadata_kwargs)
+
     return render_template("views/check/ok.html", **data)
 
 
@@ -649,8 +651,14 @@ def preview_job(service_id, template_id, upload_id, row_index=2):
     if data["errors"]:
         return render_template("views/check/column-errors.html", **data)
 
+    simplifed_template = get_template(
+        data.get('db_template', {}),
+        current_service,
+    )
+
     return render_template(
-        "views/check/preview.html", scheduled_for=session["scheduled_for"], **data
+        "views/check/preview.html", scheduled_for=session["scheduled_for"], **data,
+        simplifed_template=simplifed_template
     )
 
 
@@ -857,6 +865,7 @@ def _check_notification(service_id, template_id, exception=None):
         back_link=back_link,
         back_link_from_preview=back_link_from_preview,
         choose_time_form=choose_time_form,
+        db_template=db_template,
         **(get_template_error_dict(exception) if exception else {}),
     )
 
@@ -904,11 +913,20 @@ def preview_notification(service_id, template_id):
         )
 
     session["scheduled_for"] = request.args.get("scheduled_for", "")
+    data = _check_notification(service_id, template_id)
+    db_template = data.get('db_template', None)
+
+    simplifed_template = get_template(
+        db_template,
+        current_service,
+    )
 
     return render_template(
         "views/notifications/preview.html",
-        **_check_notification(service_id, template_id),
+        **data,
         scheduled_for=session["scheduled_for"],
+        simplifed_template=simplifed_template,
+        recipient=recipient,
     )
 
 
