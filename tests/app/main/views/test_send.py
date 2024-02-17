@@ -1876,9 +1876,8 @@ def test_upload_csvfile_with_valid_phone_shows_all_numbers(
     )
 
     assert "Select delivery time" in page.text
-    # assert "202 867 0749" in page.text
-    # assert "202 867 0750" not in page.text
-    # assert "Only showing the first 50 rows" in page.text
+    assert "202 867 0749" not in page.text
+    assert "202 867 0750" not in page.text
 
     mock_get_notification_count.assert_called_with(service_one["id"])
 
@@ -2611,24 +2610,17 @@ def test_preview_notification_shows_preview(
         session["recipient"] = "2028675301"
         session["placeholders"] = {}
 
-    # with client_request.session_transaction() as session:
-    #     session["scheduled_for"] = when
 
     page = client_request.get(
         "main.preview_notification", service_id=service_one["id"], template_id=fake_uuid
     )
 
-    # if when:
-    #     assert page.h1.text.strip() == when
-    # else:
-    #     assert page.h1.text.strip() == "Now"
     assert page.h1.text.strip() == "Preview"
     assert (page.find_all("a", {"class": "usa-back-link"})[0]["href"]) == url_for(
         "main.check_notification",
         service_id=service_one["id"],
         template_id=fake_uuid,
     )
-
     # assert tour not visible
     assert not page.select(".banner-tour")
 

@@ -870,7 +870,6 @@ def _check_notification(service_id, template_id, exception=None):
         back_link=back_link,
         back_link_from_preview=back_link_from_preview,
         choose_time_form=choose_time_form,
-        db_template=db_template,
         **(get_template_error_dict(exception) if exception else {}),
         simplifed_template=simplifed_template
     )
