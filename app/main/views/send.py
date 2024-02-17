@@ -506,9 +506,14 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
         email_reply_to=email_reply_to,
         sms_sender=sms_sender,
     )
+    simplifed_template = get_template(
+        db_template,
+        current_service,
+        show_recipient=False,
+    )
     recipients = RecipientCSV(
         contents,
-        template=template,
+        template=template or simplifed_template,
         max_initial_rows_shown=50,
         max_errors_shown=50,
         guestlist=itertools.chain.from_iterable(
@@ -547,6 +552,7 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
 
     if preview_row < len(recipients) + 2:
         template.values = recipients[preview_row - 2].recipient_and_personalisation
+        simplifed_template.values = recipients[preview_row - 2].recipient_and_personalisation
     elif preview_row > 2:
         abort(404)
 
@@ -574,7 +580,7 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
             service_id, template.id, db_template["version"], original_file_name
         ),
         template_id=template_id,
-        db_template=db_template
+        simplifed_template=simplifed_template,
     )
 
 
@@ -651,14 +657,10 @@ def preview_job(service_id, template_id, upload_id, row_index=2):
     if data["errors"]:
         return render_template("views/check/column-errors.html", **data)
 
-    simplifed_template = get_template(
-        data.get('db_template', {}),
-        current_service,
-    )
-
     return render_template(
-        "views/check/preview.html", scheduled_for=session["scheduled_for"], **data,
-        simplifed_template=simplifed_template
+        "views/check/preview.html",
+        scheduled_for=session["scheduled_for"],
+        **data,
     )
 
 
@@ -841,7 +843,10 @@ def _check_notification(service_id, template_id, exception=None):
         email_reply_to=email_reply_to,
         sms_sender=sms_sender,
     )
-
+    simplifed_template = get_template(
+        db_template,
+        current_service,
+    )
     placeholders = fields_to_fill_in(template)
 
     back_link = get_back_link(service_id, template, len(placeholders), placeholders)
@@ -867,6 +872,7 @@ def _check_notification(service_id, template_id, exception=None):
         choose_time_form=choose_time_form,
         db_template=db_template,
         **(get_template_error_dict(exception) if exception else {}),
+        simplifed_template=simplifed_template
     )
 
 
@@ -913,18 +919,11 @@ def preview_notification(service_id, template_id):
         )
 
     session["scheduled_for"] = request.args.get("scheduled_for", "")
-    data = _check_notification(service_id, template_id)
-    db_template = data.get('db_template', None)
-    simplifed_template = get_template(
-        db_template,
-        current_service,
-    )
 
     return render_template(
         "views/notifications/preview.html",
-        **data,
+        **_check_notification(service_id, template_id),
         scheduled_for=session["scheduled_for"],
-        simplifed_template=simplifed_template,
         recipient=recipient,
     )
 

@@ -29,50 +29,49 @@
 
   <h2 id="{{ file_contents_header_id }}">Message</h2>
   <div class="preview-message"> {{ simplifed_template|string }}</div>
-  <div class="bottom-gutter-3-2">
-    <form method="post" enctype="multipart/form-data" action="{{url_for('main.start_job', service_id=current_service.id, upload_id=upload_id)}}" class='page-footer'>
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-      {% if not request.args.from_test %}
-      <h2 class="font-body-lg">Recipients list</h2>
-      <ul class="usa-icon-list">
-        <li class="usa-icon-list__item">
-          <div class="usa-icon-list__icon" >
-            <img src="{{ url_for('static', filename='img/material-icons/description.svg') }}" alt="Description Icon">
-          </div>
-          <div class="usa-icon-list__content">
-            <h3 id="{{ file_contents_header_id }}">{{ original_file_name }}</h3>
-          </div>
-        </li>
-      </ul>
-      <div class="usa-table-container--scrollable" tabindex="0">
-        {% call(item, row_number) list_table(
-          recipients.displayed_rows,
-          caption="Note: Only the first 5 rows are displayed here.",
-          caption_visible=True,
-          field_headings=recipients.column_headers
-        ) %}
-          {% for column in recipients.column_headers %}
-            {% if item[column].ignore %}
-              {{ text_field(item[column].data or '', status='default') }}
-            {% else %}
-              {{ text_field(item[column].data or '') }}
-            {% endif %}
-          {% endfor %}
-          {% if item[None].data %}
-            {% for column in item[None].data %}
-              {{ text_field(column, status='default') }}
-            {% endfor %}
-          {% endif %}
-        {% endcall %}
-      </div>
-      {% endif %}
-      <!-- <p>Placeholder: This message will be delivered to <b>400 phone numbers</b> and will use a total of <b>800 message parts</b>, leaving Washington DSHS with <b>249,200 message parts remaining</b>.</p> -->
-      <h3>Does everything look good?</h3>
-      {% set button_text %}
-        {{ "Schedule" if scheduled_for else 'Send'}}
-      {% endset %}
-      {{ usaButton({ "text": button_text }) }}
-
-    </form>
+  {% if not request.args.from_test %}
+  <h2>Recipients list</h2>
+  <div>
+    <ul class="usa-icon-list">
+      <li class="usa-icon-list__item">
+        <img src="{{ url_for('static', filename='img/material-icons/description.svg') }}" alt="Description Icon">
+        <div class="usa-icon-list__content">
+          <h3>{{ original_file_name }}</h3>
+        </div>
+      </li>
+    </ul>
   </div>
+  <div class="usa-table-container--scrollable" tabindex="0">
+    {% call(item, row_number) list_table(
+      recipients.displayed_rows,
+      caption="Note: Only the first 5 rows are displayed here.",
+      caption_visible=True,
+      field_headings=recipients.column_headers
+    ) %}
+      {% for column in recipients.column_headers %}
+        {% if item[column].ignore %}
+          {{ text_field(item[column].data or '', status='default') }}
+        {% else %}
+          {{ text_field(item[column].data or '') }}
+        {% endif %}
+      {% endfor %}
+      {% if item[None].data %}
+        {% for column in item[None].data %}
+          {{ text_field(column, status='default') }}
+        {% endfor %}
+      {% endif %}
+    {% endcall %}
+  </div>
+  {% endif %}
+  <!-- <div class="bottom-gutter-3-2">
+    <p>Placeholder: This message will be delivered to <b>400 phone numbers</b> and will use a total of <b>800 message parts</b>, leaving Washington DSHS with <b>249,200 message parts remaining</b>.</p>
+  </div> -->
+  <form method="post" enctype="multipart/form-data" action="{{url_for('main.start_job', service_id=current_service.id, upload_id=upload_id)}}" class='page-footer'>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <h3>Does everything look good?</h3>
+    {% set button_text %}
+      {{ "Schedule" if scheduled_for else 'Send'}}
+    {% endset %}
+    {{ usaButton({ "text": button_text }) }}
+  </form>
 {% endblock %}
