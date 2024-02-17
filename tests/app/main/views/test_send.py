@@ -2610,11 +2610,9 @@ def test_preview_notification_shows_preview(
         session["recipient"] = "2028675301"
         session["placeholders"] = {}
 
-
     page = client_request.get(
         "main.preview_notification", service_id=service_one["id"], template_id=fake_uuid
     )
-
     assert page.h1.text.strip() == "Preview"
     assert (page.find_all("a", {"class": "usa-back-link"})[0]["href"]) == url_for(
         "main.check_notification",
