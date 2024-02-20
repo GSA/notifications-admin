@@ -40,7 +40,7 @@ FAKE_ONE_OFF_NOTIFICATION = {
             "created_by": {
                 "email_address": "grsrbsrgsrf@fake.gov",
                 "id": "de059e0a-42e5-48bb-939e-4f76804ab739",
-                "name": "grsrbsrgsrf",
+                "name": "mocked_user",
             },
             "document_download_count": None,
             "id": "a3442b43-0ba1-4854-9e0a-d2fba1cc9b81",
@@ -71,7 +71,7 @@ FAKE_ONE_OFF_NOTIFICATION = {
             "template": {
                 "content": "((day of week)) and ((fave color))",
                 "id": "bd9caa7e-00ee-4c5a-839e-10ae1a7e6f73",
-                "name": "personalized",
+                "name": "Template Testing",
                 "redact_personalisation": False,
                 "subject": None,
                 "template_type": "sms",
@@ -94,7 +94,7 @@ MOCK_JOBS = {
                 "id": "mocked_user_id",
                 "name": "mocked_user",
             },
-            "id": "mocked_notification_id",
+            "id": "55b242b5-9f62-4271-aff7-039e9c320578",
             "job_status": "finished",
             "notification_count": 1,
             "original_file_name": "mocked_file.csv",
@@ -112,6 +112,19 @@ MOCK_JOBS = {
         }
     ]
 }
+
+MOCK_JOBS_AND_NOTIFICATIONS = [
+    {
+        "created_at": MOCK_JOBS["data"][0]["created_at"],
+        "created_by": MOCK_JOBS["data"][0]["created_by"],
+        "download_link": "/services/21b3ee3d-1cb0-4666-bfa0-9c5ac26d3fe3/jobs/463b5ecb-4e32-43e5-aa90-0234d19fceaa.csv",
+        "job_id": "55b242b5-9f62-4271-aff7-039e9c320578",
+        "notification_count": MOCK_JOBS["data"][0]["notification_count"],
+        "notifications": FAKE_ONE_OFF_NOTIFICATION["notifications"],
+        "time_left": "Data available for 7 days",
+        "view_job_link": "/services/21b3ee3d-1cb0-4666-bfa0-9c5ac26d3fe3/jobs/463b5ecb-4e32-43e5-aa90-0234d19fceaa"
+    },
+]
 
 stub_template_stats = [
     {
@@ -1855,11 +1868,11 @@ def test_service_dashboard_shows_batched_jobs(
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
-    job_table = page.find("div", class_="job-table")
+    job_table_body = page.find("table", class_="job-table")
 
-    # Check if the "Job" table exists
-    assert job_table is not None
+    rows = job_table_body.find_all("tbody")[0].find_all("tr")
 
-    table_rows = job_table.find_all("tbody")[0].find_all("tr")
+    # # Check if the "Job" table exists
+    assert job_table_body is not None
 
-    assert len(table_rows) == 1
+    assert len(rows) == 1
