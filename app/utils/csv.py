@@ -79,6 +79,7 @@ def generate_notifications_csv(**kwargs):
         )
         original_column_headers = original_upload.column_headers
         fieldnames = [
+            "Recipient",
             "Template",
             "Sent by",
             "Batch File",
@@ -87,7 +88,8 @@ def generate_notifications_csv(**kwargs):
             "Time",
         ]
         for header in original_column_headers:
-            fieldnames.append(header)
+            if header.lower() != "phone number":
+                fieldnames.append(header)
 
     else:
         # TODO This is deprecated because everything should be a job now, is it ever invoked?
@@ -113,9 +115,9 @@ def generate_notifications_csv(**kwargs):
                 notification["created_at"]
             )
 
-            current_app.logger.info(f"\n\n{notification}")
             if kwargs.get("job_id"):
                 values = [
+                    notification["recipient"],
                     notification["template_name"],
                     notification["created_by_name"],
                     notification["job_name"],
@@ -124,12 +126,14 @@ def generate_notifications_csv(**kwargs):
                     preferred_tz_created_at,
                 ]
                 for header in original_column_headers:
-                    values.append(
-                        original_upload[notification["row_number"] - 1].get(header).data
-                    )
+                    if header.lower() != "phone number":
+                        values.append(
+                            original_upload[notification["row_number"] - 1]
+                            .get(header)
+                            .data
+                        )
 
             else:
-                # TODO This is deprecated, should not be invoked.  See above
                 values = [
                     notification["recipient"],
                     notification["template_name"],
