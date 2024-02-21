@@ -71,6 +71,7 @@ def generate_notifications_csv(**kwargs):
     if "page" not in kwargs:
         kwargs["page"] = 1
 
+    # This generates the "batch" csv report
     if kwargs.get("job_id"):
         original_file_contents = s3download(kwargs["service_id"], kwargs["job_id"])
         original_upload = RecipientCSV(
@@ -79,7 +80,7 @@ def generate_notifications_csv(**kwargs):
         )
         original_column_headers = original_upload.column_headers
         fieldnames = [
-            "Recipient",
+            "Phone Number",
             "Template",
             "Sent by",
             "Batch File",
@@ -92,9 +93,9 @@ def generate_notifications_csv(**kwargs):
                 fieldnames.append(header)
 
     else:
-        # TODO This is deprecated because everything should be a job now, is it ever invoked?
+        # This generates the "full" csv report
         fieldnames = [
-            "Recipient",
+            "Phone Number",
             "Template",
             "Sent by",
             "Batch File",
@@ -102,7 +103,6 @@ def generate_notifications_csv(**kwargs):
             "Status",
             "Time",
         ]
-        current_app.logger.warning("Invoking deprecated report format")
 
     yield ",".join(fieldnames) + "\n"
 

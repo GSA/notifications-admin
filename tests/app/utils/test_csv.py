@@ -88,14 +88,14 @@ def get_notifications_csv_mock(
         (
             None,
             [
-                "Recipient,Template,Sent by,Batch File,Carrier Response,Status,Time\n",
+                "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time\n",
                 "8005555555,foo,,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern\r\n",
             ],
         ),
         (
             "Anne Example",
             [
-                "Recipient,Template,Sent by,Batch File,Carrier Response,Status,Time\n",
+                "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time\n",
                 "8005555555,foo,Anne Example,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern\r\n",  # noqa
             ],
         ),
@@ -128,7 +128,7 @@ def test_generate_notifications_csv_without_job(
             8005555555
         """,
             [
-                "Recipient",
+                "Phone Number",
                 "Template",
                 "Sent by",
                 "Batch File",
@@ -152,7 +152,7 @@ def test_generate_notifications_csv_without_job(
             8005555555,  🐜,🐝,🦀
         """,
             [
-                "Recipient",
+                "Phone Number",
                 "Template",
                 "Sent by",
                 "Batch File",
@@ -182,7 +182,7 @@ def test_generate_notifications_csv_without_job(
             "8005555555","🐜,🐜","🐝,🐝","🦀"
         """,
             [
-                "Recipient",
+                "Phone Number",
                 "Template",
                 "Sent by",
                 "Batch File",
