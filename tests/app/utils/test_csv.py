@@ -14,7 +14,7 @@ from tests.conftest import fake_uuid
 
 def _get_notifications_csv(
     row_number=1,
-    recipient="2028675309",
+    recipient="8005555555",
     template_name="foo",
     template_type="sms",
     job_name="bar.csv",
@@ -89,14 +89,14 @@ def get_notifications_csv_mock(
             None,
             [
                 "Recipient,Template,Sent by,Batch File,Carrier Response,Status,Time\n",
-                "2028675309,foo,,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern\r\n",
+                "8005555555,foo,,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern\r\n",
             ],
         ),
         (
             "Anne Example",
             [
                 "Recipient,Template,Sent by,Batch File,Carrier Response,Status,Time\n",
-                "2028675309,foo,Anne Example,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern\r\n",  # noqa
+                "8005555555,foo,Anne Example,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern\r\n",  # noqa
             ],
         ),
     ],
@@ -125,7 +125,7 @@ def test_generate_notifications_csv_without_job(
         (
             """
             phone number
-            2028675309
+            8005555555
         """,
             [
                 "Recipient",
@@ -137,7 +137,7 @@ def test_generate_notifications_csv_without_job(
                 "Time",
             ],
             [
-                "2028675309",
+                "8005555555",
                 "foo",
                 "Fake Person",
                 "bar.csv",
@@ -149,7 +149,7 @@ def test_generate_notifications_csv_without_job(
         (
             """
             phone number, a, b, c
-            2028675309,  🐜,🐝,🦀
+            8005555555,  🐜,🐝,🦀
         """,
             [
                 "Recipient",
@@ -164,7 +164,7 @@ def test_generate_notifications_csv_without_job(
                 "c",
             ],
             [
-                "2028675309",
+                "8005555555",
                 "foo",
                 "Fake Person",
                 "bar.csv",
@@ -179,7 +179,7 @@ def test_generate_notifications_csv_without_job(
         (
             """
             "phone number", "a", "b", "c"
-            "2028675309","🐜,🐜","🐝,🐝","🦀"
+            "8005555555","🐜,🐜","🐝,🐝","🦀"
         """,
             [
                 "Recipient",
@@ -194,7 +194,7 @@ def test_generate_notifications_csv_without_job(
                 "c",
             ],
             [
-                "2028675309",
+                "8005555555",
                 "foo",
                 "Fake Person",
                 "bar.csv",
