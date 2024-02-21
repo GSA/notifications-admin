@@ -1729,7 +1729,7 @@ werkzeug = "^3.0.1"
 type = "git"
 url = "https://github.com/GSA/notifications-utils.git"
 reference = "HEAD"
-resolved_reference = "a48171e865eb83cf29c75751be7369f396cbe3e2"
+resolved_reference = "70ee61cd0f87113d2bd838b197dbe38cc09678f3"
 
 [[package]]
 name = "numpy"
