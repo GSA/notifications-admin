@@ -49,7 +49,9 @@ def service_dashboard(service_id):
         return redirect(url_for("main.choose_template", service_id=service_id))
 
     job_response = job_api_client.get_jobs(service_id)["data"]
-    notifications_response = notification_api_client.get_notifications_for_service(service_id)["notifications"]
+    notifications_response = notification_api_client.get_notifications_for_service(
+        service_id
+    )["notifications"]
     service_data_retention_days = 7
 
     aggregate_notifications_by_job = defaultdict(list)
