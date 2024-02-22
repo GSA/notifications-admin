@@ -10,6 +10,7 @@ from flask import (
     redirect,
     render_template,
     request,
+    session,
     stream_with_context,
     url_for,
 )
@@ -369,6 +370,9 @@ def get_job_partials(job):
         job.template_type
     )
 
+    session['came_from_preview_page'] = 'check' in request.referrer
+    came_from_preview_page_url = session.get('came_from_preview_page', False)
+
     return {
         "counts": counts,
         "notifications": render_template(
@@ -392,6 +396,7 @@ def get_job_partials(job):
         "status": render_template(
             "partials/jobs/status.html",
             job=job,
+            came_from_preview_page_url=came_from_preview_page_url
         ),
     }
 

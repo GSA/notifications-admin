@@ -1,34 +1,49 @@
 <div class="ajax-block-container">
   <p class='bottom-gutter'>
-    {% if job.scheduled_for %}
-      {% if job.processing_started %}
-      <div class="usa-alert usa-alert--success">
-        <div class="usa-alert__body">
-          <h4 class="usa-alert__heading">{{ job.template_name }} - {{ current_service.name }}</h4>
-          <p class="usa-alert__text">
-            Was sent on {{ job.created_at|format_datetime_short_12h }} by {{ job.created_by.name }}
-          </p>
+    {% set display_message_status %}
+      {% if job.template.content %}
+        <h2 class="sms-message-header">Message</h2>
+        <div class="sms-message-wrapper">{{ current_service.name }}: {{job.template.content}}</div>
+      {% endif %}
+      {% if job.original_file_name %}
+        <h2>Recipients list</h2>
+        <div>
+          <ul class="usa-icon-list">
+            <li class="usa-icon-list__item">
+              <img src="{{ url_for('static', filename='img/material-icons/description.svg') }}" alt="Description Icon">
+              <div class="usa-icon-list__content">
+                <h3>{{ job.original_file_name }}</h3>
+              </div>
+            </li>
+          </ul>
         </div>
-      </div>
-      {% else %}
+      {% endif %}
+      <h2>SMS Status</h2>
+    {% endset %}
+    {% if job.scheduled_for %}
+      {% if came_from_preview_page_url %}
         <div class="usa-alert usa-alert--info">
           <div class="usa-alert__body">
-            <h4 class="usa-alert__heading">{{ job.template_name }} - {{ current_service.name }}</h4>
+            <h4 class="usa-alert__heading">Your text has been scheduled</h4>
             <p class="usa-alert__text">
-              Was scheduled on {{ job.scheduled_for|format_datetime_short_12h }} by {{ job.created_by.name }}
+              {{ job.template_name }} - {{ current_service.name }} was scheduled on {{ job.scheduled_for|format_datetime_short_12h }} by {{ job.created_by.name }}
             </p>
           </div>
         </div>
+        {{display_message_status}}
       {% endif %}
-   {% else %}
-      <div class="usa-alert usa-alert--success">
-        <div class="usa-alert__body">
-          <h4 class="usa-alert__heading">{{ job.template_name }} - {{ current_service.name }}</h4>
-          <p class="usa-alert__text">
-            Was sent on {{ job.created_at|format_datetime_short_12h }} by {{ job.created_by.name }}
-          </p>
+    {% else %}
+      {% if came_from_preview_page_url %}
+        <div class="usa-alert usa-alert--success">
+          <div class="usa-alert__body">
+            <h4 class="usa-alert__heading">Your text has been sent</h4>
+            <p class="usa-alert__text">
+              {{ job.template_name }} - {{ current_service.name }} was sent on {{ job.created_at|format_datetime_short_12h }} by {{ job.created_by.name }}
+            </p>
+          </div>
         </div>
-      </div>
+        {{display_message_status}}
+      {% endif %}
     {% endif %}
   </p>
   {% if job.status == 'sending limits exceeded'%}

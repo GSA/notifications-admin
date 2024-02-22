@@ -5,26 +5,13 @@
 {% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% block service_page_title %}
-  {{ job.original_file_name }}
+  {{ "Message status" }}
 {% endblock %}
 
 {% block maincolumn_content %}
 
-    {{ page_header(job.original_file_name) }}
-
-    {% if not job.processing_finished %}
-      <div
-        data-module="update-content"
-        data-resource="{{ updates_url }}"
-        data-key="status"
-        data-form=""
-      >
-    {% endif %}
-      {{ partials['status']|safe }}
-    {% if not job.processing_finished %}
-      </div>
-    {% endif %}
-
+    {{ page_header("Message status") }}
+    {{ partials['status']|safe }}
     {% if not finished %}
       <div
         data-module="update-content"

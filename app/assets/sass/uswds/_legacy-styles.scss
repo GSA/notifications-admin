@@ -62,6 +62,10 @@
   margin: -20px units(1) 20px units(1);
 }
 
+h2.sms-message-header {
+  margin-bottom: 0.5rem;
+}
+
 .sms-message-status-outbound {
   text-align: right;
 }
@@ -131,7 +135,7 @@
   &-label,
   &-button-label {
     font-weight: bold;
-    font-size: 19px; 
+    font-size: 19px;
     display: block;
     margin: 0 0 10px 0;
   }

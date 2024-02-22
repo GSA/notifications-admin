@@ -99,8 +99,9 @@ def format_datetime_short(date):
 
 
 def format_datetime_short_12h(date):
+    # example: February 20, 2024 at 07:00 PM US/Eastern
     return "{} at {} {}".format(
-        format_date_short(date), format_time_12h(date), get_user_preferred_timezone()
+        format_date_normal(date), format_time_12h(date), get_user_preferred_timezone()
     )
 
 
@@ -192,7 +193,7 @@ def format_date(date):
 
 def format_date_normal(date):
     date = parse_naive_dt(date)
-    return date.strftime("%d %B %Y").lstrip("0")
+    return date.strftime("%B %d, %Y").lstrip("0")
 
 
 def format_date_short(date):
