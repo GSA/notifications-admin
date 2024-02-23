@@ -68,7 +68,6 @@ def login_for_end_to_end_testing(browser):
     context.storage_state(path=auth_state_path)
 
 
-
 @pytest.fixture(scope="session")
 def end_to_end_authenticated_context(browser):
     # Create and load a previously authenticated context for Playwright E2E

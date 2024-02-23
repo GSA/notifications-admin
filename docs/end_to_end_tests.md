@@ -110,28 +110,21 @@ Inside the `tests/end_to_end` folder you'll see a `conftest.py` file,
 which is similar to the one found in the root `tests` folder but is
 specific to the E2E tests.
 
-There a few fixtures defined in here, but the three most important at
-this time are these:
+There a few fixtures defined in here, but the two most important at this
+time are these:
 
 - `end_to_end_context`:  A Playwright context object needed to interact
   with a browser instance.
 - `authenticated_page`:  A Playwright page object that has gone through
   the sign in process the E2E user is authenticated.
-- `unauthenticated_page`:  A Playwright page object that has only loaded
-  the home page; no authentication done.
 
 In short, if you're starting a test from scratch and testing pages that
 do not require authentication, you'll start with the
-`unauthenticated_page` fixture and work from there.
+`end_to_end_context` fixture and work from there.
 
 Any test that requires you to be authenticated, you'll start with the
 `authenticated_page` object as that'll have taken care of getting
 everything set for you and logged into the site with the E2E test user.
-
-The `end_to_end_context` fixture is there more for the two page than for
-direct use, but there may be instances where it's easier to get data
-or manipulate tests in ways that are better done with the context object
-instead of working back from the page object.
 
 
 ### Creating a new test file
@@ -153,7 +146,7 @@ much easier.
 
 ### Using the fixtures
 
-To use the `authenticated_page` or `unauthenticated_page` fixtures, you
+To use the `authenticated_page` or `end_to_end_context` fixtures, you
 start by defining a test function and then passing in the fixture you
 need as a positional argument.  This works the same as the other
 functions defined to create a test for pytest.
@@ -161,12 +154,17 @@ functions defined to create a test for pytest.
 For example, the test for the landing page starts with this:
 
 ```python
-def test_landing_page(unauthenticated_page):
-    page = unauthenticated_page
+def test_landing_page(end_to_end_context):
+    # Open a new page and go to the site.
+    page = end_to_end_context.browser.new_page()
+    page.goto(f"{E2E_TEST_URI}/")
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
     ...
 ```
 
-Note the passing in of the `unauthenticated_page` fixture - there is no
+Note the passing in of the `end_to_end_context` fixture - there is no
 need to import this or anything, just pass it into the function.  pytest
 takes care of everything else for you.
 
@@ -187,7 +185,8 @@ Again, it's helpful to assign the fixture to a `page` variable for easy
 reference throughout the test.
 
 Lastly, if you need want access to the Playwright context object that is
-used behind the page fixtures, you can reference it directly as well:
+used behind the page fixtures, you can reference it directly as well
+using the `end_to_end_context` fixture:
 
 ```python
 def test_add_new_service_workflow(authenticated_page, end_to_end_context):
