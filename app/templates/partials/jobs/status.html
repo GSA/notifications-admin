@@ -1,27 +1,28 @@
+{% set display_message_status %}
+{% if job.template.content %}
+  <h2 class="sms-message-header">Message</h2>
+  <div class="sms-message-wrapper">{{ current_service.name }}: {{job.template.content}}</div>
+{% endif %}
+{% if job.original_file_name %}
+  <h2 class="recipient-list">Recipient list</h2>
+  <div>
+    <ul class="usa-icon-list">
+      <li class="usa-icon-list__item">
+        <img src="{{ url_for('static', filename='img/material-icons/description.svg') }}" alt="Description Icon">
+        <div class="usa-icon-list__content">
+          <h3>{{ job.original_file_name }}</h3>
+        </div>
+      </li>
+    </ul>
+  </div>
+{% endif %}
+<h2>SMS Status</h2>
+{% endset %}
+
 <div class="ajax-block-container">
   <p class='bottom-gutter'>
-    {% set display_message_status %}
-      {% if job.template.content %}
-        <h2 class="sms-message-header">Message</h2>
-        <div class="sms-message-wrapper">{{ current_service.name }}: {{job.template.content}}</div>
-      {% endif %}
-      {% if job.original_file_name %}
-        <h2>Recipients list</h2>
-        <div>
-          <ul class="usa-icon-list">
-            <li class="usa-icon-list__item">
-              <img src="{{ url_for('static', filename='img/material-icons/description.svg') }}" alt="Description Icon">
-              <div class="usa-icon-list__content">
-                <h3>{{ job.original_file_name }}</h3>
-              </div>
-            </li>
-          </ul>
-        </div>
-      {% endif %}
-      <h2>SMS Status</h2>
-    {% endset %}
-    {% if job.scheduled_for %}
-      {% if came_from_preview_page_url %}
+    {% if job.still_processing or arrived_from_preview_page_url %}
+      {% if job.scheduled_for %}
         <div class="usa-alert usa-alert--info">
           <div class="usa-alert__body">
             <h4 class="usa-alert__heading">Your text has been scheduled</h4>
@@ -31,9 +32,7 @@
           </div>
         </div>
         {{display_message_status}}
-      {% endif %}
-    {% else %}
-      {% if came_from_preview_page_url %}
+      {% else %}
         <div class="usa-alert usa-alert--success">
           <div class="usa-alert__body">
             <h4 class="usa-alert__heading">Your text has been sent</h4>
