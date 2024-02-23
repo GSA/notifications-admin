@@ -14,6 +14,7 @@ from tests.conftest import (
     normalize_spaces,
 )
 
+
 def test_old_jobs_hub_redirects(
     client_request,
 ):
