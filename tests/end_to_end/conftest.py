@@ -89,17 +89,30 @@ def end_to_end_authenticated_context(browser):
 
 
 @pytest.fixture(scope="session")
-def authenticated_page(end_to_end_context):
-    # Open a new page and go to the staging site.
+def unauthenticated_page(end_to_end_context):
     page = end_to_end_context.new_page()
-
     page.goto(f"{E2E_TEST_URI}/")
 
-    sign_in_button = page.get_by_role("link", name="Sign in")
+    # Wait for the next page to fully load.
+    page.wait_for_load_state("domcontentloaded")
+
+    return page
+
+
+@pytest.fixture(scope="session")
+def authenticated_page(end_to_end_context):
+    # Open a new page and go to the site.
+    page = end_to_end_context.new_page()
+    page.goto(f"{E2E_TEST_URI}/")
+
+    # Wait for the next page to fully load.
+    page.wait_for_load_state("domcontentloaded")
 
     # Sign in to the site - E2E test accounts are set to flow through.
+    sign_in_button = page.get_by_role("link", name="Sign in")
     sign_in_button.click()
 
     # Wait for the next page to fully load.
     page.wait_for_load_state("domcontentloaded")
+
     return page

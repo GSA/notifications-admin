@@ -9,10 +9,6 @@ E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 def test_add_new_service_workflow(authenticated_page, end_to_end_context):
     page = authenticated_page
-    page.goto(f"{E2E_TEST_URI}/")
-
-    # Wait for the next page to fully load.
-    page.wait_for_load_state("domcontentloaded")
 
     # Prepare for adding a new service later in the test.
     current_date_time = datetime.datetime.now()
