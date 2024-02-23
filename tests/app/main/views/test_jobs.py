@@ -13,7 +13,6 @@ from tests.conftest import (
     create_active_user_with_permissions,
     normalize_spaces,
 )
-from pprint import pprint
 
 def test_old_jobs_hub_redirects(
     client_request,
@@ -417,7 +416,6 @@ def test_should_show_updates_for_one_job_as_json(
     )
 
     content = json.loads(response.get_data(as_text=True))
-    pprint(content)
     assert "pending" in content["counts"]
     assert "delivered" in content["counts"]
     assert "failed" in content["counts"]
