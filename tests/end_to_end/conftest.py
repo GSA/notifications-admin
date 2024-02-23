@@ -68,11 +68,6 @@ def login_for_end_to_end_testing(browser):
     context.storage_state(path=auth_state_path)
 
 
-@pytest.fixture(scope="session")
-def end_to_end_context(browser):
-    context = browser.new_context()
-    return context
-
 
 @pytest.fixture(scope="session")
 def end_to_end_authenticated_context(browser):
@@ -89,9 +84,9 @@ def end_to_end_authenticated_context(browser):
 
 
 @pytest.fixture(scope="session")
-def unauthenticated_page(end_to_end_context):
-    page = end_to_end_context.new_page()
-    return page
+def end_to_end_context(browser):
+    context = browser.new_context()
+    return context
 
 
 @pytest.fixture(scope="session")

@@ -6,9 +6,9 @@ from playwright.sync_api import expect
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 
-def test_landing_page(unauthenticated_page):
-    # Open a new page and go to the staging site.
-    page = unauthenticated_page
+def test_landing_page(end_to_end_context):
+    # Open a new page and go to the site.
+    page = end_to_end_context.browser.new_page()
     page.goto(f"{E2E_TEST_URI}/")
 
     # Check to make sure that we've arrived at the next page.
