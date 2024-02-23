@@ -7,8 +7,8 @@ from playwright.sync_api import expect
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 
-def test_add_new_service_workflow(bypass_sign_in, end_to_end_context):
-    page = bypass_sign_in(end_to_end_context)
+def test_add_new_service_workflow(authenticated_page, end_to_end_context):
+    page = authenticated_page
     page.goto(f"{E2E_TEST_URI}/")
 
     # Wait for the next page to fully load.

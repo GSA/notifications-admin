@@ -89,7 +89,7 @@ def end_to_end_authenticated_context(browser):
 
 
 @pytest.fixture(scope="session")
-def bypass_sign_in(end_to_end_context):
+def authenticated_page(end_to_end_context):
     # Open a new page and go to the staging site.
     page = end_to_end_context.new_page()
 
