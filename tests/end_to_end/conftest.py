@@ -91,11 +91,6 @@ def end_to_end_authenticated_context(browser):
 @pytest.fixture(scope="session")
 def unauthenticated_page(end_to_end_context):
     page = end_to_end_context.new_page()
-    page.goto(f"{E2E_TEST_URI}/")
-
-    # Wait for the next page to fully load.
-    page.wait_for_load_state("domcontentloaded")
-
     return page
 
 
