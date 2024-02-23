@@ -140,15 +140,17 @@ td.table-empty-message {
 }
 
 .user-list {
-   display: inline-flex;
+   display: flex;
    flex-wrap: wrap;
-   gap: units(4);
+   justify-content: space-between;
+   padding: 1rem;
    .user-list-item {
       @include at-media(desktop) {
-         flex: 1 1 calc(50% - units(2));
-         flex-grow: 0;
+         width: calc(50% - units(1));
+         margin-bottom: 1rem;
+         box-sizing: border-box;
       }
-      flex: 1 1 calc(100% - units(2));
+      // flex: 1 1 calc(100% - units(2));
       border: 1px solid color('gray-cool-10');
       padding: units(2);
       .tick-cross-list-permissions {
@@ -354,6 +356,7 @@ td.table-empty-message {
    }
    .file-list-hint {
       margin: 0;
+      word-break: break-word;
    }
    .table-field, .table-field-right-aligned {
       width: 50%;
@@ -378,28 +381,29 @@ td.table-empty-message {
 }
 
 .job-table {
-   .usa-table {
-      thead th.file-name {
-         width: 25%;
-      }
-      thead th.template {
-         width: 20%;
-      }
-      thead th.time-sent {
-         width: 30%;
-      }
-      thead th.sender {
-         width: 15%;
-      }
-      thead th.\#-of-recipients {
-         width: 5%;
-      }
-      thead th.report {
-         width: 5%;
-      }
-      th {
-         padding: 0.5rem 0.5rem;
-      }
+   width: 100%;
+   border-collapse: collapse;
+   td.file-name {
+      width: 25%;
+      overflow-wrap: anywhere;
+   }
+   td.template {
+      width: 20%;
+   }
+   td.time-sent {
+      width: 20%;
+   }
+   td.sender {
+      width: 15%;
+   }
+   td.count-of-recipients {
+      width: 5%;
+   }
+   td.report {
+      width: 5%;
+   }
+   th {
+      padding: 0.5rem 0.5rem;
    }
 }
 

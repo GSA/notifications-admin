@@ -2319,6 +2319,8 @@ def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too com
     def _get(mocker):
         return {"count": 0}
 
+    mocker.patch("app.service_api_client.get_service_statistics")
+
     mocker.patch(
         "app.service_api_client.get_global_notification_count", side_effect=_get
     )
