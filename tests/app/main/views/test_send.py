@@ -2056,7 +2056,7 @@ def test_create_job_should_call_api(
         _expected_status=200,
     )
 
-    assert original_file_name in page.text
+    assert "Message status" in page.text
 
     mock_create_job.assert_called_with(
         job_id,

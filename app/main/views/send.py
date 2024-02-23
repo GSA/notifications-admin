@@ -52,12 +52,14 @@ def get_example_csv_fields(column_headers, use_example_as_example, submitted_fie
 
 def get_example_csv_rows(template, use_example_as_example=True, submitted_fields=False):
     return {
-        "email": ["test@example.com"]
-        if use_example_as_example
-        else [current_user.email_address],
-        "sms": ["12223334444"]
-        if use_example_as_example
-        else [current_user.mobile_number],
+        "email": (
+            ["test@example.com"]
+            if use_example_as_example
+            else [current_user.email_address]
+        ),
+        "sms": (
+            ["12223334444"] if use_example_as_example else [current_user.mobile_number]
+        ),
     }[template.template_type] + get_example_csv_fields(
         (
             placeholder
@@ -511,12 +513,14 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
         template=template,
         max_initial_rows_shown=50,
         max_errors_shown=50,
-        guestlist=itertools.chain.from_iterable(
-            [user.name, user.mobile_number, user.email_address]
-            for user in Users(service_id)
-        )
-        if current_service.trial_mode
-        else None,
+        guestlist=(
+            itertools.chain.from_iterable(
+                [user.name, user.mobile_number, user.email_address]
+                for user in Users(service_id)
+            )
+            if current_service.trial_mode
+            else None
+        ),
         remaining_messages=remaining_messages,
         allow_international_sms=current_service.has_permission("international_sms"),
     )
@@ -905,13 +909,9 @@ def send_notification(service_id, template_id):
 
     return redirect(
         url_for(
-            ".view_notification",
+            ".view_job",
             service_id=service_id,
-            from_job=upload_id,
-            notification_id=notifications["notifications"][0]["id"],
-            # used to show the final step of the tour (help=3) or not show
-            # a back link on a just sent one off notification (help=0)
-            help=request.args.get("help"),
+            job_id=upload_id,
         )
     )
 
