@@ -13,7 +13,7 @@
 {% block maincolumn_content %}
 
 <div class="grid-row">
-  <div class="tablet:grid-col-12">
+  <div class="tablet:grid-col-5">
 
     {% if again %}
       <h1 class="font-body-2xl margin-bottom-3">You need to sign in again</h1>
@@ -29,9 +29,9 @@
     {% else %}
       <h1 class="font-body-2xl margin-bottom-3">Sign in</h1>
       {% if login_gov_enabled %}
-        <a class="usa-link" href="{{ initial_signin_url }}">Sign in with Login.gov</a>
-      </p>
-      <h4 class="margin-bottom-3">Or:</h4>
+      <p>You can access your account by signing in with one of the options below:</p>
+      <a class="usa-link usa-button usa-button--outline" href="{{ initial_signin_url }}">Sign in with Login.gov</a>
+      <p class="margin-y-3"><strong>Or:</strong></p>
       {% endif %}
     {% endif %}
 
@@ -40,6 +40,19 @@
       {{ form.password(param_extensions={"autocomplete": "current-password"}) }}
       {{ page_footer("Continue", secondary_link=password_reset_url, secondary_link_text="Forgot your password?") }}
     {% endcall %}
+  </div>
+  <div class="tablet:grid-col-6 grid-offset-1 margin-top-2 padding-y-2 padding-x-4 bg-base-lightest">
+    <h2 class="font-body-lg">Notify.gov is changing the Sign in experience to Login.gov on March x, 2024</h2>
+    <p>Why are we doing this?</p>
+    <ul class="usa-list">
+      <li><strong>One single source for signing in:</strong> You can use login.gov for other sign in forms within the government</li>
+      <li><strong>Security:</strong> It's really secure and trustworthy</li>
+      <li><strong>Fast and easy:</strong> It's fast and easy</li>
+    </ul>
+    <div class="border-bottom border-base-lighter margin-y-4"></div>
+    <h3>Don't have a login.gov account?</h3>
+    <p>If you don't have an account already, sign up here:</p>
+    <a class="usa-link usa-button" href="{{ create_login_account_url }}">Create Login.gov account</a>
   </div>
 </div>
 
