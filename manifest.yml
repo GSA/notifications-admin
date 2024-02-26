@@ -47,6 +47,8 @@ applications:
       REQUESTS_CA_BUNDLE: "/etc/ssl/certs/ca-certificates.crt"
       NEW_RELIC_CA_BUNDLE_PATH: "/etc/ssl/certs/ca-certificates.crt"
 
+      COMMIT_HASH: ((COMMIT_HASH))
+
       # login.gov variables
 
       LOGIN_PEM: ((LOGIN_PEM))

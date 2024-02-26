@@ -905,9 +905,11 @@ def create_service_templates(service_id, number_of_templates=4):
                 "{}_template_{}".format(template_type, template_number),
                 template_type,
                 "{} template {} content".format(template_type, template_number),
-                subject="{} template {} subject".format(template_type, template_number)
-                if template_type == "email"
-                else None,
+                subject=(
+                    "{} template {} subject".format(template_type, template_number)
+                    if template_type == "email"
+                    else None
+                ),
             )
         )
 
@@ -1102,9 +1104,9 @@ def active_user_with_permission_to_other_service(
     active_user_with_permission_to_two_services["permissions"].pop(SERVICE_ONE_ID)
     active_user_with_permission_to_two_services["services"].pop(0)
     active_user_with_permission_to_two_services["name"] = "Service Two User"
-    active_user_with_permission_to_two_services[
-        "email_address"
-    ] = "service-two-user@test.gsa.gov"
+    active_user_with_permission_to_two_services["email_address"] = (
+        "service-two-user@test.gsa.gov"
+    )
     return active_user_with_permission_to_two_services
 
 

@@ -179,7 +179,9 @@
   {% if current_service and current_service.research_mode %}
     {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="usa-link">Technology Transformation Services</a><span id="research-mode" class="research-mode">research mode</span>' %}
   {% else %}
-    {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="usa-link">Technology Transformation Services</a>' %}
+    {% set commit_hash = ", Latest version: " + config['COMMIT_HASH'] %}
+    {% set long_link = '<a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="usa-link">Technology Transformation Services</a>' %}
+    {% set meta_suffix = "Built by the " + long_link + commit_hash %}
   {% endif %}
 
   {{ usaFooter({
@@ -244,7 +246,7 @@
           {
             "href": url_for('main.support'),
             "text": "Contact us"
-          },
+          }
         ]
       },
     ],
