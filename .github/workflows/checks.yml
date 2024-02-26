@@ -7,12 +7,12 @@ permissions:
 
 env:
   NOTIFY_ENVIRONMENT: test
-  NEW_RELIC_CONFIG_FILE: newrelic.ini
-  NEW_RELIC_ENVIRONMENT: test
   FLASK_APP: application.py
   WERKZEUG_DEBUG_PIN: off
   REDIS_ENABLED: 0
   NODE_VERSION: 16.15.1
+  AWS_US_TOLL_FREE_NUMBER: "+18556438890"
+  ADMIN_BASE_URL: http://localhost:6012
 
 jobs:
   build:
@@ -44,29 +44,97 @@ jobs:
         run: npm test
       - name: Run py tests with coverage
         run: poetry run coverage run --omit=*/notifications_utils/* -m pytest --maxfail=10 --ignore=tests/end_to_end tests/
-      # - name: Run E2E tests
-      #   run: poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
-      #   env:
-      #     NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
-      #     NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
-      #     NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-      #     NOTIFY_E2E_TEST_URI: ${{ secrets.NOTIFY_E2E_TEST_URI }}
       - name: Check coverage threshold
         run: poetry run coverage report --fail-under=90
-      # - name: Health check
-      #   run: |
-      #     response=$(curl -url ${{secrets.NOTIFY_E2E_TEST_URI}}_status)
-      #     if grep -q "ok" <<< "$response"; then
-      #       echo "Health check passed"
-      #     else
-      #       echo "Health check failed"
-      #       exit 1
-      #     fi
-      #   env:
-      #     NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
-      #     NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
-      #     NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-      #     NOTIFY_E2E_TEST_URI: ${{ secrets.NOTIFY_E2E_TEST_URI }}
+
+  end-to-end-tests:
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: write
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: test_notification_api
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 6379 on service container to the host
+          - 6379:6379
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-project
+      - uses: jwalton/gh-find-current-pr@v1
+        id: findPr
+      - name: Clone API
+        uses: actions/checkout@v3
+        with:
+         repository: GSA/notifications-api
+         path: 'notifications-api'
+      - name: Install API dependencies
+        working-directory: 'notifications-api'
+        run: make bootstrap
+        env:
+          DATABASE_URL: postgresql://user:password@localhost:5432/test_notification_api
+          SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
+          REDIS_URL: redis://localhost:6379
+          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
+          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
+          NOTIFY_ENVIRONMENT: development
+      - name: Run API server
+        working-directory: 'notifications-api'
+        run: make run-procfile &
+        env:
+          DATABASE_URL: postgresql://user:password@localhost:5432/test_notification_api
+          SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
+          REDIS_URL: redis://localhost:6379
+          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
+          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
+          NOTIFY_ENVIRONMENT: development
+      - name: Run Admin server
+        run: make run-flask &
+        env:
+          # API_HOST_NAME: https://notify-api-staging.app.cloud.gov
+          API_HOST_NAME: http://localhost:6011
+          DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
+          ADMIN_CLIENT_USERNAME: notify-admin
+          NOTIFY_ENVIRONMENT: e2etest
+          NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
+          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
+          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
+          NOTIFY_E2E_TEST_URI: http://localhost:6012
+      - name: Run E2E tests
+        # Run the E2E tests against the code found in this PR.
+        # run: poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
+        # --browser webkit doesn't work at this time.
+        run: make e2e-test
+        # Debugging for now to troubleshoot a connectivity issue to the local servers
+        # run: curl --request GET --url "http://localhost:6012"
+        env:
+          NOTIFY_ENVIRONMENT: e2etest
+          NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
+          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
+          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
+          NOTIFY_E2E_TEST_URI: http://localhost:6012
 
   validate-new-relic-config:
     runs-on: ubuntu-latest
@@ -76,6 +144,7 @@ jobs:
       - uses: ./.github/actions/setup-project
       - name: Validate NewRelic config
         env:
+          NEW_RELIC_CONFIG_FILE: newrelic.ini
           NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
           # Need to set a NEW_RELIC_ENVIRONMENT with monitor_mode: true
           NEW_RELIC_ENVIRONMENT: staging

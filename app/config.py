@@ -82,8 +82,7 @@ class Config(object):
         "IBAN": "GB33BUKB20201555555555",
         "swift": "ABCDEF12",
         "notify_billing_email_addresses": [
-            "generic@digital.cabinet-office.gov.uk",
-            "first.last@digital.cabinet-office.gov.uk",
+            "tts-benefits-studio@gsa.gov",
         ],
     }
 
@@ -153,6 +152,34 @@ class Staging(Production):
     HEADER_COLOUR = "#00ff00"  # $green
 
 
+class E2ETest(Staging):
+    """
+    An environment config that is intended to operate as if it were in the
+    staging environment but with the configuration of the development and test
+    environments so the E2E tests work.
+    """
+
+    # Borrowed from development environment
+    DEBUG = True
+    SESSION_COOKIE_SECURE = False
+    SESSION_PROTECTION = None
+    HTTP_PROTOCOL = "http"
+    ASSET_DOMAIN = ""
+    ASSET_PATH = "/static/"
+
+    # Borrowed from test environment
+    TESTING = True
+    WTF_CSRF_ENABLED = False
+
+    # buckets - mirror staging
+    CSV_UPLOAD_BUCKET = cloud_config.s3_credentials(
+        "notify-api-csv-upload-bucket-staging"
+    )
+    LOGO_UPLOAD_BUCKET = cloud_config.s3_credentials(
+        "notify-admin-logo-upload-bucket-staging"
+    )
+
+
 class Demo(Staging):
     HEADER_COLOUR = "#6F72AF"  # $mauve
 
@@ -174,6 +201,7 @@ class Scanning(Production):
 configs = {
     "development": Development,
     "test": Test,
+    "e2etest": E2ETest,
     "scanning": Scanning,
     "staging": Staging,
     "demo": Demo,
