@@ -36,7 +36,7 @@ class Config(object):
     NR_BROWSER_KEY = getenv("NR_BROWSER_KEY")
     settings = newrelic.agent.global_settings()
     NR_MONITOR_ON = settings and settings.monitor_mode
-    COMMIT_HASH = getenv("COMMIT_HASH")
+    COMMIT_HASH = getenv("COMMIT_HASH", "Unknown")
 
     TEMPLATE_PREVIEW_API_HOST = getenv(
         "TEMPLATE_PREVIEW_API_HOST", "http://localhost:9999"
