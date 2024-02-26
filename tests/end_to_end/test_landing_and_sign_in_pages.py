@@ -3,11 +3,13 @@ import re
 
 from playwright.sync_api import expect
 
+E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
+
 
 def test_landing_page(end_to_end_context):
     # Open a new page and go to the staging site.
     page = end_to_end_context.browser.new_page()
-    page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
+    page.goto(f"{E2E_TEST_URI}/")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
@@ -17,7 +19,8 @@ def test_landing_page(end_to_end_context):
 
     # Retrieve some prominent elements on the page for testing.
     main_header = page.get_by_role(
-        "heading", name="Send text messages to your participants"
+        "heading",
+        name="Reach people where they are with government-powered text messages",
     )
     sign_in_button = page.get_by_role("link", name="Sign in")
     benefits_studio_email = page.get_by_role("link", name="tts-benefits-studio@gsa.gov")
@@ -51,7 +54,7 @@ def test_landing_page(end_to_end_context):
 # def test_sign_in_and_mfa_pages(end_to_end_context):
 #     # Open a new page and go to the staging site.
 #     page = end_to_end_context.new_page()
-#     page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
+#     page.goto(f"{E2E_TEST_URI}/")
 #     print(f"test_sign_in_and_mfa_pages initial {page}")
 #
 #     sign_in_button = page.get_by_role("link", name="Sign in")
