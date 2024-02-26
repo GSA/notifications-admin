@@ -198,7 +198,7 @@ def sign_in():
         form=form,
         again=bool(redirect_url),
         other_device=other_device,
-        login_gov_enabled=True,
+        login_gov_enabled=bool(notify_env in ["development", "staging", "demo"]),
         password_reset_url=password_reset_url,
         initial_signin_url=initial_signin_url,
     )
