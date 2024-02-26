@@ -23,6 +23,7 @@ def test_render_sign_in_template_for_new_user(client_request):
     # assert page.select('main a')[0]['href'] == url_for('main.register')
     # TODO:  Fix this test to be less brittle! If the Login.gov link is enabled,
     #        then these indices need to be 1 instead of 0.
+    #        Currently it's not enabled for the test or production environments.
     assert page.select("main a")[0].text == "Forgot your password?"
     assert page.select("main a")[0]["href"] == url_for("main.forgot_password")
     assert "Sign in again" not in normalize_spaces(page.text)
