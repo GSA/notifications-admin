@@ -22,7 +22,7 @@ humanize = "~=4.9"
 itsdangerous = "~=2.1"
 jinja2 = "~=3.1"
 newrelic = "*"
-notifications-python-client = "==8.2.0"
+notifications-python-client = "==9.0.0"
 notifications-utils = {git = "https://github.com/GSA/notifications-utils.git"}
 pyexcel = "==0.7.0"
 pyexcel-io = "==0.6.6"
@@ -41,10 +41,10 @@ markdown = "^3.5.2"
 
 [tool.poetry.group.dev.dependencies]
 bandit = "*"
-black = "^23.12.1"
+black = "^24.2.0"
 coverage = "*"
 freezegun = "^1.4.0"
-flake8 = "^6.1.0"
+flake8 = "^7.0.0"
 flake8-bugbear = "^24.1.17"
 flake8-print = "^5.0.0"
 flake8-pytest-style = "^1.7.2"
@@ -60,7 +60,7 @@ pytest-playwright = "^0.4.3"
 pytest-xdist = "^3.5.0"
 radon = "^6.0.1"
 requests-mock = "^1.11.0"
-vulture = "^2.10"
+vulture = "^2.11"
 
 
 [build-system]

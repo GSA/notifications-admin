@@ -381,6 +381,10 @@ def load_service_before_request():
                 request_ctx.service = Service(
                     service_api_client.get_service(service_id)["data"]
                 )
+                stats = service_api_client.get_service_statistics(
+                    service_id, limit_days=7
+                )
+                request_ctx.service.stats = stats
             except HTTPError as exc:
                 # if service id isn't real, then 404 rather than 500ing later because we expect service to be set
                 if exc.status_code == 404:
