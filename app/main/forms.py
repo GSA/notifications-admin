@@ -1781,12 +1781,16 @@ class TemplateAndFoldersSelectionForm(Form):
                 None,
                 [
                     # ('email', 'Email') if 'email' in available_template_types else None,
-                    ("sms", "Start with a blank template")
-                    if "sms" in available_template_types
-                    else None,
-                    ("copy-existing", "Copy an existing template")
-                    if allow_adding_copy_of_template
-                    else None,
+                    (
+                        ("sms", "Start with a blank template")
+                        if "sms" in available_template_types
+                        else None
+                    ),
+                    (
+                        ("copy-existing", "Copy an existing template")
+                        if allow_adding_copy_of_template
+                        else None
+                    ),
                 ],
             )
         )
