@@ -416,8 +416,11 @@ td.table-empty-message {
       width: 5%;
    }
    th {
-      padding: 0.5rem 0.5rem;
+      padding: 0.5rem 1rem
    }
+   td {
+      padding: 0.5rem 1rem
+  }
 }
 
 #template-list {
