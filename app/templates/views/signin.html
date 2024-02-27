@@ -13,8 +13,16 @@
 {% block maincolumn_content %}
 
 <div class="grid-row">
+  <div id="countdown-container" class="usa-alert usa-alert--slim usa-alert--warning width-full margin-bottom-4">
+    <div class="usa-alert__body">
+      <p class="usa-alert__text">
+        You have <span id="countdown"></span> left to use login.gov to sign in
+      </p>
+    </div>
+  </div>
+</div>
+<div class="grid-row margin-bottom-4">
   <div class="tablet:grid-col-5">
-
     {% if again %}
       <h1 class="font-body-2xl margin-bottom-3">You need to sign in again</h1>
       {% if other_device %}
