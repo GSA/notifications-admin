@@ -55,12 +55,11 @@
         <em class="logo-text usa-logo__text">
           <a href="/" title="notify.gov">notify.gov</a>
         </em>
-        <button type="button" class="usa-menu-btn">Menu</button>
+        {% if params.navigation %}
+          <button type="button" class="usa-menu-btn">Menu</button>
+        {% endif %}
       </div>
-      {% if current_user.is_authenticated %}
-        <button type="button" class="usa-menu-btn">Menu</button>
-      {% endif %}
-   </div>
+    </div>
     <nav aria-label="Primary navigation" class="usa-nav">
       <div class="usa-nav__inner">
         <button type="button" class="usa-nav__close">
