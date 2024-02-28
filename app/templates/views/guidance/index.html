@@ -41,7 +41,7 @@
   <h3>To create and format your message</h3>
   <ol class="list">
     <li>All messages start from a template</li>
-    <li>Click “<a href={{ url_for('.choose_template', service_id=current_service.id) }}>Send Messages</a>”. You’ll see existing templates.</li>
+    <li>Click “<a href={{ url_for('.choose_template', service_id=current_service.id) }}>Send Messages</a>”. You'll see existing templates.</li>
     <li>Add a new template or choose an existing template and select Edit.</li>
   </ol>
 
@@ -69,7 +69,7 @@
   <h2 class="padding-top-1" id="personalize-content">Personalize your content</h2>
   <p>Personalizing your content can increase response rates and help the recipient know the text is legitimate.</p>
   <ul class="list list-bullet">
-    <li>Including a person’s first name increases response rates.</li>
+    <li>Including a person's first name increases response rates.</li>
     <li>Specific details such as time and location of an appointment or where suspected fraud use occurred encourages action.</li>
   </ul>
 
@@ -83,6 +83,9 @@
   <h4>Example</h4>
   <p>To personalize with the recipient's first name and include a reference number:</p>
   <p class="padding-2 bg-base-lightest">State WIC: Hello ((first name)), your reference is ((ref number)). Please provide this number when you call 123-123-1234 to make an appointment.</p>
+
+  <p>Note that variations in the length of personalized content can impact the length of specific messages, and may affect
+  the number of parts used.</p>
 
   {# Add conditional content #}
   <h2 class="padding-top-1" id="conditional-content">Add conditional content</h2>
