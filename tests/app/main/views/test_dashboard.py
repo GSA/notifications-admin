@@ -122,7 +122,7 @@ MOCK_JOBS_AND_NOTIFICATIONS = [
         "notification_count": MOCK_JOBS["data"][0]["notification_count"],
         "notifications": FAKE_ONE_OFF_NOTIFICATION["notifications"],
         "time_left": "Data available for 7 days",
-        "view_job_link": "/services/21b3ee3d-1cb0-4666-bfa0-9c5ac26d3fe3/jobs/463b5ecb-4e32-43e5-aa90-0234d19fceaa"
+        "view_job_link": "/services/21b3ee3d-1cb0-4666-bfa0-9c5ac26d3fe3/jobs/463b5ecb-4e32-43e5-aa90-0234d19fceaa",
     },
 ]
 
