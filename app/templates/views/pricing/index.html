@@ -15,7 +15,7 @@ Pricing
 
 {{ content_metadata(
 data={
-"Last updated": "January 25, 2024"
+"Last updated": "February 5, 2024"
 }
 ) }}
 
@@ -30,7 +30,8 @@ more parts towards the allowance if you:</p>
 </ul>
 
 <h3 class="font-body-lg" id="long-text-messages">Long text messages</h3>
-<p>If a text message is longer than 160 characters (including spaces), it counts as more than one message part.</p>
+<p>If a text message is longer than 160 characters (including spaces and service name), it counts as more than one message
+part.</p>
 
 <div class="bottom-gutter-3-2">
   {% call mapping_table(
@@ -54,6 +55,13 @@ more parts towards the allowance if you:</p>
   {% endfor %}
   {% endcall %}
 </div>
+
+<h3 class="font-body-lg" id="Personalization">Personalization</h3>
+<p>Personalization can change the length of messages. For example, if you are personalizing with a first name, Fred is
+significantly shorter than Alexander. When you are evaluating how long a message is, you need to consider variations in
+message length based on personalization.</p>
+<p>Before you send messages, Notify will let you know how many messages you are sending, the number of parts you are using,
+and the number of parts you’ll have left.</p>
 
 <h3 class="font-body-lg" id="symbols">Signs and symbols</h3>
 
@@ -157,10 +165,5 @@ more parts towards the allowance if you:</p>
   {% endfor %}
   {% endcall %}
 </div>
-
-<h3 class="font-body-lg" id="international-numbers">Trial mode</h3>
-<p>When a new service is added, it will start in <a href="/using-notify/trial-mode">trial mode</a>. Moving a service out of trial mode is subject to approval by
-the Notify.gov team. Additional unique services may be added, although moving each service out of trial mode is subject
-to approval by the Notify.gov team.</p>
 
 {% endblock %}
