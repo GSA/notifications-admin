@@ -122,16 +122,18 @@ def edit_user_permissions(service_id, user_id):
     form = form_class.from_user(
         user,
         service_id,
-        folder_permissions=None
-        if user.platform_admin
-        else [
-            f["id"]
-            for f in current_service.all_template_folders
-            if user.has_template_folder_permission(f)
-        ],
-        all_template_folders=None
-        if user.platform_admin
-        else current_service.all_template_folders,
+        folder_permissions=(
+            None
+            if user.platform_admin
+            else [
+                f["id"]
+                for f in current_service.all_template_folders
+                if user.has_template_folder_permission(f)
+            ]
+        ),
+        all_template_folders=(
+            None if user.platform_admin else current_service.all_template_folders
+        ),
     )
 
     if form.validate_on_submit():
