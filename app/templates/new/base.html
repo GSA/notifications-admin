@@ -1,6 +1,6 @@
-{% from "./components/skip-link/macro.njk" import usaSkipLink -%}
-{% from "./components/header/macro.njk" import usaHeader -%}
-{% from "./components/footer/macro.njk" import usaFooter -%}
+{% from "../components/components/skip-link/macro.njk" import usaSkipLink -%}
+{% from "../components/components/header/macro.njk" import usaHeader -%}
+{% from "../components/components/footer/macro.njk" import usaFooter -%}
 {# specify absolute url for the static assets folder e.g. http://wwww.domain.com/assets #}
 {%- set assetUrl = assetUrl | default(assetPath) -%}
 <!DOCTYPE html>
