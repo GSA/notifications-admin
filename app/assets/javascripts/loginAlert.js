@@ -12,7 +12,7 @@
     const days = Math.floor(difference / (1000 * 60 * 60 * 24));
 
     // Visibility logic
-    if (days < 0) {
+    if (days < 0 || days > 10) {
       // Hide if more than 10 days away OR if already past the date
       document.getElementById("countdown-container").style.display = "none";
     } else {

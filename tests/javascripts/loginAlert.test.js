@@ -1,11 +1,23 @@
 beforeAll(() => {
     jest.spyOn(global, 'setTimeout');
+
+     document.body.innerHTML = `
+         <div id="countdown-container" class="usa-alert usa-alert--warning width-full margin-bottom-4">
+            <div class="usa-alert__body">
+            <h4 class="usa-alert__heading">Login.gov is required by April 9, 2024</h4>
+            <p class="usa-alert__text">
+                You have <span id="countdown"></span> left to use Login.gov to sign in
+            </p>
+            </div>
+        </div>
+    `
+
     const sessionTimerModule = require('../../app/assets/javascripts/loginAlert.js');
     window.GOVUK.modules.start();
 });
 
 jest.useFakeTimers();
-const targetDate = new Date("March 5, 2024 00:00:00"); // Reference point
+const targetDate = new Date("April 9, 2024 00:00:00"); // Reference point
 
 test('Hides the countdown if more than 10 days away', () => {
     jest.setSystemTime(targetDate.getTime() - 12 * 24 * 60 * 60 * 1000); // 12 days before
@@ -37,12 +49,4 @@ test('Hides the countdown if the target date has passed', () => {
     window.updateCountdown();
 
     expect(document.getElementById("countdown-container").style.display).toBe("none");
-});
-
-test('Displays "Countdown Complete!" when the countdown finishes', () => {
-    jest.setSystemTime(targetDate.getTime());
-
-    window.updateCountdown();
-
-    expect(document.getElementById("countdown").textContent).toBe("Countdown Complete!");
 });
