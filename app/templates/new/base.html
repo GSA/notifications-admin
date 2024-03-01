@@ -1,7 +1,7 @@
-{% from "components/banner.html" import banner %}
-{% from "./components/components/skip-link/macro.njk" import usaSkipLink -%}
-{% from "./components/components/header/macro.njk" import usaHeader -%}
-{% from "./components/components/footer/macro.njk" import usaFooter -%}
+{% from "../components/banner.html" import banner %}
+{% from "../components/components/skip-link/macro.njk" import usaSkipLink -%}
+{% from "../components/components/header/macro.njk" import usaHeader -%}
+{% from "../components/components/footer/macro.njk" import usaFooter -%}
 
 
 <!DOCTYPE html>
@@ -59,16 +59,15 @@
       <!-- End Google Tag Manager (noscript) -->
       {% endblock %}
     {% endblock %}
-    <div>block skipLink
+
     {% block skipLink %}
       {{ usaSkipLink({
         "href": '#main-content',
         "text": 'Skip to main content'
       }) }}
     {% endblock %}
-    </div>
 
-    <div>block header
+    <!-- \\#region header -->
     {% block header %}
       {% if current_user.is_authenticated %}
         {% if current_user.platform_admin %}
@@ -203,9 +202,9 @@
         "assetsPath": asset_path + "images"
       }) }}
     {% endblock %}
-    </div>
+    <!-- \\#endregion -->
 
-    <div>block main
+    <!-- \\#region block main -->
     {% block main %}
     <div class="grid-container">
       {% block beforeContent %}
@@ -240,9 +239,9 @@
       </main>
     </div>
     {% endblock %}
-    </div>
+    <!-- \\#endregion -->
 
-    <div>block footer
+    <!-- \\#region block footer -->
     {% block footer %}
 
       {% if current_service and current_service.research_mode %}
@@ -359,7 +358,7 @@
       {% endif %}
 
     {% endblock %}
-    </div>
+    <!-- \\#endregion -->
 
     {% block bodyEnd %}
       {% block extra_javascripts %}

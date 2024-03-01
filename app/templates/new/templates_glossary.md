@@ -6,7 +6,7 @@ This document serves as a glossary for the templates directory structure of the 
 ## Directory Structure
 
 - `/templates`
-  - `base.html`: The main base template from which all other templates inherit. This template is a combination of the old admin_template and main_template.html
+  - `base.html`: The main base template from which all other templates inherit. This template is a combination of `main_template`, `admin_template`, `settings_template`, and `content_template`.
   - **/layouts**: Contains base templates and shared layouts used across the site. Simply put, it defines the overall structure or skeleton of the application (less frequently revised).
     - `withnav_template.html`: A variation of the base layout that includes a sidebar.
     - `/error`: Templates for handling HTTP errors
@@ -20,8 +20,8 @@ This document serves as a glossary for the templates directory structure of the 
 - Use **inheritance** (`{% extends %}`) to build on base layouts.
 - Employ **components** (`{% include %}`) for reusable UI elements to keep the code DRY and facilitate easier updates.
 
-### Notes
-- Macro json files are just guides on how to structure a dict. It's not actually being used as data being passed to components
+### Observation Notes
+- The macro-options.json files in the header and footer component act as structural guides. They aren't directly used as data passed to the usaFooter function/macro. Instead, these files outline the expected properties and provide a description of their purpose. The `usaFooter` macro component is currently only invoked in the `admin_template`, which will eventually serve as the `base.html` template. This will simplify the approach when we change the footer macros to componenets by eliminating the need to dynamically pass this data from the base.html template.
 
 
 
