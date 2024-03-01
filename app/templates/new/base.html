@@ -1,65 +1,373 @@
-{% from "../components/components/skip-link/macro.njk" import usaSkipLink -%}
-{% from "../components/components/header/macro.njk" import usaHeader -%}
-{% from "../components/components/footer/macro.njk" import usaFooter -%}
-{# specify absolute url for the static assets folder e.g. http://wwww.domain.com/assets #}
-{%- set assetUrl = assetUrl | default(assetPath) -%}
+{% from "components/banner.html" import banner %}
+{% from "./components/components/skip-link/macro.njk" import usaSkipLink -%}
+{% from "./components/components/header/macro.njk" import usaHeader -%}
+{% from "./components/components/footer/macro.njk" import usaFooter -%}
+
+
 <!DOCTYPE html>
 <html lang="{{ htmlLang | default('en') }}" class="{{ htmlClasses }}">
   <head>
     <meta charset="utf-8" />
-    <title>{% block pageTitle %}Notify.gov{% endblock %}</title>
+    <title>
+      {% block pageTitle %}
+        {% block per_page_title %} {% endblock %}Notify.gov
+        <!-- on templates that were using content_template.html, we might need to use the {{ content_page_title }} variable for the per_page_title -->
+      {% endblock %}
+    </title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="f0f0f0" />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="1b1b1b" />
     {% if config['NR_MONITOR_ON'] %}
       {% include "partials/newrelic.html" -%}
     {% endif %}
-
     {# Ensure that older IE versions always render with the correct rendering engine #}
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
     {% block headIcons %}
-      <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="{{ assetPath | default('/assets') }}/images/favicon.ico" type="image/x-icon" />
-      <link rel="mask-icon" href="{{ assetPath | default('/assets') }}/images/usa-mask-icon.svg" color="{{ themeColor | default('#F0F0F0') }}">
-      <link rel="apple-touch-icon" sizes="180x180" href="{{ assetPath | default('/assets') }}/images/apple-touch-icon.png">
-      <link rel="apple-touch-icon" href="{{ assetPath | default('/assets') }}/images/apple-touch-icon.png">
+      <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="{{ asset_url('images/favicon.ico') }}" type="image/x-icon" />
+      <link rel="mask-icon" href="{{ asset_url('images/usa-mask-icon.svg') }}" color="{{ themeColor | default('#F0F0F0') }}">
+      <link rel="apple-touch-icon" sizes="180x180" href="{{ asset_url('images/apple-touch-icon.png') }}">
+      <link rel="apple-touch-icon" href="{{ asset_url('images/apple-touch-icon.png') }}">
     {% endblock %}
 
-    {% block head %}{% endblock %}
-    {# The default og:image is added below head so that scrapers see any custom metatags first, and this is just a fallback #}
-    {% block meta %}
-      <meta property="og:site_name" content="Notify.gov">
-      <meta property="og:image" content="{{ asset_url('images/usa-opengraph-image.png') }}">
+    {% block head %}
+      <link rel="stylesheet" media="screen" href="{{ asset_url('css/styles.css') }}" />
+      {% block extra_stylesheets %}
+      {% endblock %}
+      {% if g.hide_from_search_engines %}
+        <meta name="robots" content="noindex" />
+      {% endif %}
+      <meta name="google-site-verification" content="niWnSqImOWz6mVQTYqNb5tFK8HaKSB4b3ED4Z9gtUQ0" />
+      {# The default og:image is added below head so that scrapers see any custom metatags first, and this is just a fallback #}
+      {% block meta_format_detection %}
+        <meta name="format-detection" content="telephone=no">
+      {% endblock %}
+      {% block meta %}
+        <meta property="og:site_name" content="Notify.gov">
+        <meta property="og:image" content="{{ asset_url('images/usa-opengraph-image.png') }}">
+      {% endblock %}
+      <script type="text/javascript" src="{{ asset_url('js/gtm_head.js') }}"></script>
     {% endblock %}
   </head>
+
   <body class="usa-template__body {{ bodyClasses }}">
     <script nonce="{{ csp_nonce() }}">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
-    {% block bodyStart %}{% endblock %}
-
+    {% block bodyStart %}
+      {% block extra_javascripts_before_body %}
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WX5NGWF"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+      {% endblock %}
+    {% endblock %}
+    <div>block skipLink
     {% block skipLink %}
       {{ usaSkipLink({
         "href": '#main-content',
         "text": 'Skip to main content'
       }) }}
     {% endblock %}
+    </div>
 
+    <div>block header
     {% block header %}
-      {{ usaHeader({}) }}
-    {% endblock %}
+      {% if current_user.is_authenticated %}
+        {% if current_user.platform_admin %}
+          {% set navigation = [
+            {
+              "href": url_for("main.show_accounts_or_dashboard"),
+              "text": "Current service",
+              "active": header_navigation.is_selected('accounts-or-dashboard')
+            },
+            {
+              "href": url_for('main.get_started'),
+              "text": "Using Notify",
+              "active": header_navigation.is_selected('using_notify')
+            },
+            {
+              "href": url_for('main.features'),
+              "text": "Features",
+              "active": header_navigation.is_selected('features')
+            },
+            {
+              "href": url_for('main.platform_admin_splash_page'),
+              "text": "Platform admin",
+              "active": header_navigation.is_selected('platform-admin')
+            },
+            {
+              "href": url_for('main.support'),
+              "text": "Contact us",
+              "active": header_navigation.is_selected('support')
+            }
+          ] %}
+          {% if current_service %}
+            {% set secondaryNavigation = [
+              {
+                "href": url_for('main.service_settings', service_id=current_service.id),
+                "text": "Settings",
+                "active": secondary_navigation.is_selected('settings')
+              },
+              {
+                "href": url_for('main.sign_out'),
+                "text": "Sign out"
+              }
+          ] %}
+          {% else %}
+            {% set secondaryNavigation = [
+              {
+                "href": url_for('main.sign_out'),
+                "text": "Sign out"
+              }
+            ] %}
+          {% endif %}
+        {% else %}
+          {% set navigation = [
+            {
+              "href": url_for("main.show_accounts_or_dashboard"),
+              "text": "Current service",
+              "active": header_navigation.is_selected('accounts-or-dashboard')
+            },
+            {
+              "href": url_for('main.get_started'),
+              "text": "Using Notify",
+              "active": header_navigation.is_selected('using_notify')
+            },
+            {
+              "href": url_for('main.features'),
+              "text": "Features",
+              "active": header_navigation.is_selected('features')
+            },
+            {
+              "href": url_for('main.support'),
+              "text": "Contact us",
+              "active": header_navigation.is_selected('support')
+            },
+            {
+              "href": url_for('main.user_profile'),
+              "text": "User profile",
+              "active": header_navigation.is_selected('user-profile')
+            }
+          ] %}
+          {% if current_service %}
+            {% set secondaryNavigation = [
+              {
+                "href": url_for('main.service_settings', service_id=current_service.id),
+                "text": "Settings",
+                "active": secondary_navigation.is_selected('settings')
+              },
+              {
+                "href": url_for('main.sign_out'),
+                "text": "Sign out"
+              }
+            ] %}
+            {% else %}
+              {% set secondaryNavigation = [
+                {
+                "href": url_for('main.sign_out'),
+                "text": "Sign out"
+                }
+              ] %}
+            {% endif %}
+          {% endif %}
+      {% else %}
+      <!-- Add navigation back after pilot -->
+        {# {% set navigation = [
+          {
+            "href": url_for('main.get_started'),
+            "text": "Using Notify",
+            "active": header_navigation.is_selected('using_notify')
+          },
+          {
+            "href": url_for('main.features'),
+            "text": "Features",
+            "active": header_navigation.is_selected('features')
+          },
+          {
+            "href": url_for('main.support'),
+            "text": "Contact us",
+            "active": header_navigation.is_selected('support')
+          },
+          {
+            "href": url_for('main.sign_in'),
+            "text": "Sign in",
+            "active": header_navigation.is_selected('sign-in')
+          }
+        ] %} #}
+      {% endif %}
 
+      {{ usaHeader({
+        "homepageUrl": url_for('main.show_accounts_or_dashboard'),
+        "productName": "Notify",
+        "navigation": navigation,
+        "navigationClasses": "govuk-header__navigation--end",
+        "secondaryNavigation": secondaryNavigation,
+        "assetsPath": asset_path + "images"
+      }) }}
+    {% endblock %}
+    </div>
+
+    <div>block main
     {% block main %}
-      <div class="grid-container">
-        {% block beforeContent %}{% endblock %}
-        <main class="{{ mainClasses }}" id="main-content" role="main">
-          {% block content %}{% endblock %}
-        </main>
-      </div>
+    <div class="grid-container">
+      {% block beforeContent %}
+        {% block backLink %}{% endblock %}
+      {% endblock %}
+      {% block mainClasses %}
+      <!-- notes set mainClasses = "margin-top-5 padding-bottom-5" where withoutnav_template was used and maybe templates that are using content_template -->
+      <main class="{{ mainClasses }}" id="main-content" role="main">
+      {% endblock %}
+        {% block content %}
+          {% block flash_messages %}
+            <!-- flash_message.html was from the withoutnav_template and is only included on child templates that was using withoutnav_template. Now, we can add in flash_message blocks and include 'flash_messages.html' to child templates that was using withoutnav_template. This will help to eliminate the use of a whole other parent template. -->
+          {% endblock %}
+          {% block maincolumn_content %}
+            {% block fromContentTemplatetwoColumnGrid %}
+              <div class="grid-row">
+                {% if navigation_links %}
+                  <div class="tablet:grid-col-2">
+                    {{ sub_navigation(navigation_links) }}
+                  </div>
+                  <div class="tablet:grid-col-10 padding-left-4 usa-prose site-prose">
+                {% else %}
+                  <div class="tablet:grid-col-10">
+                {% endif %}
+                {% block content_column_content %}{% endblock %}
+                </div>
+              </div>
+              <!-- content_column_content block is from the content_template.html. We do not need this template. We can consolidate and move it to the base.html template. We can call on this block where child templates were using the content_template.html  -->
+            {% endblock %}
+          {% endblock %}
+        {% endblock %}
+      </main>
+    </div>
     {% endblock %}
+    </div>
 
+    <div>block footer
     {% block footer %}
-      {{ usaFooter({}) }}
-    {% endblock %}
 
-    {% block bodyEnd %}{% endblock %}
+      {% if current_service and current_service.research_mode %}
+        {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="usa-link">Technology Transformation Services</a><span id="research-mode" class="research-mode">research mode</span>' %}
+      {% else %}
+        {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="usa-link">Technology Transformation Services</a>' %}
+      {% endif %}
+
+      {{ usaFooter({
+        "classes": "js-footer",
+        "navigation": [
+          {
+            "title": "About Notify",
+            "columns": 1,
+            "items": [
+              {
+                "href": url_for("main.features"),
+                "text": "Features"
+              },
+              {
+                "href": url_for("main.roadmap"),
+                "text": "Roadmap"
+              },
+              {
+                "href": url_for("main.security"),
+                "text": "Security"
+              },
+              {
+                "href": url_for("main.terms"),
+                "text": "Terms of use"
+              },
+            ]
+          },
+          {
+            "title": "Using Notify",
+            "columns": 1,
+            "items": [
+              {
+                "href": url_for("main.get_started"),
+                "text": "Get started"
+              },
+              {
+                "href": url_for("main.pricing"),
+                "text": "Pricing"
+              },
+              {
+                "href": url_for("main.trial_mode_new"),
+                "text": "Trial mode"
+              },
+              {
+                "href": url_for("main.message_status"),
+                "text": "Delivery status"
+              },
+              {
+                "href": url_for("main.guidance_index"),
+                "text": "Guidance"
+              },
+              {
+                "href": url_for("main.documentation"),
+                "text": "API documentation"
+              }
+            ]
+          },
+          {
+            "title": "Support",
+            "columns": 1,
+            "items": [
+              {
+                "href": url_for('main.support'),
+                "text": "Contact us"
+              },
+            ]
+          },
+        ],
+        "meta": {
+          "items": meta_items,
+          "html": meta_suffix
+        }
+      }) }}
+
+      {% if current_user.is_authenticated %}
+        {% block sessionUserWarning %}
+        <dialog class="usa-modal" id="sessionTimer" aria-labelledby="sessionTimerHeading" aria-describedby="timerWarning">
+          <div class="usa-modal__content">
+            <div class="usa-modal__main">
+              <h2 class="usa-modal__heading" id="sessionTimerHeading">
+                Your session will end soon.
+                <span class="usa-sr-only">Please choose to extend your session or sign out. Your session will expire in 5 minutes or less.</span>
+              </h2>
+              <div class="usa-prose">
+                <p>You have been inactive for too long.
+                  Your session will expire in <span id="timeLeft" role="timer"></span>.
+                </p>
+              </div>
+              <div class="usa-modal__footer">
+                <ul class="usa-button-group">
+                  <li class="usa-button-group__item">
+                    <button type="button" class="usa-button" id="extendSessionTimer" data-close-modal>
+                      Extend Session
+                    </button>
+                  </li>
+                  <li class="usa-button-group__item">
+                    <button type="button" class="usa-button usa-button--unstyled padding-105 text-center" id="logOutTimer"
+                      data-close-modal>
+                      Sign out
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </dialog>
+        {% endblock %}
+      {% endif %}
+
+    {% endblock %}
+    </div>
+
+    {% block bodyEnd %}
+      {% block extra_javascripts %}
+      {% endblock %}
+      <!--[if gt IE 8]><!-->
+      <script type="text/javascript" src="{{ asset_url('javascripts/all.js') }}"></script>
+      <script type="text/javascript" src="{{ asset_url('js/uswds.min.js') }}"></script>
+      <!--<![endif]-->
+    {% endblock %}
   </body>
 </html>
