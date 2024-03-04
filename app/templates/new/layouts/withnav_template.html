@@ -9,7 +9,7 @@
     {% block serviceNavigation %}
       {% include "service_navigation.html" %}
     {% endblock %}
-    <!-- when it comes to setting_template and withnav_template, this service_navigation.html is only used in withnav_template and in settings_template, it was not used. That is one out of the two differences between settings template and withnav template. on child templates that extends settings_template, include the block serviceNavigation but leave it empty. Only pages settings_template.html is used: manage-users.html, service-settings.html, and user-profile.html  -->
+    <!-- The withnav_template can be used to replace the settings_template. when it comes to setting_template and withnav_template, this service_navigation.html is only used in withnav_template and in settings_template, it was not used. That is one out of the two differences between settings template and withnav template. Child templates that extends settings_template, include the block serviceNavigation but leave it empty. Within the app, the only pages settings_template.html is used: manage-users.html, service-settings.html, and user-profile.html  -->
     <div class="grid-row margin-top-5">
       {% if help %}
         <div class="grid-col-3">
