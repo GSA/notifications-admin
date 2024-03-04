@@ -90,7 +90,7 @@ def test_should_show_page_for_one_job(
 
     assert page.h1.text.strip() == "Message status"
     assert " ".join(page.find("tbody").find("tr").text.split()) == (
-        "2021234567 template content Delivered 1 January at 06:09 US/Eastern"
+        "2021234567 template content Delivered 01-01-2016 at 06:09 AM"
     )
     assert page.find("div", {"data-key": "notifications"})["data-resource"] == url_for(
         "main.view_job_updates",
@@ -109,7 +109,7 @@ def test_should_show_page_for_one_job(
     assert page.find("span", {"id": "time-left"}).text == "Data available for 7 days"
 
     assert normalize_spaces(page.select_one("tbody tr").text) == normalize_spaces(
-        "2021234567 " "template content " "Delivered 1 January at 06:09 US/Eastern"
+        "2021234567 " "template content " "Delivered 01-01-2016 at 06:09 AM"
     )
     assert page.select_one("tbody tr a")["href"] == url_for(
         "main.view_notification",
