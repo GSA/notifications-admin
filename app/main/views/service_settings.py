@@ -477,9 +477,11 @@ def service_edit_email_reply_to(service_id, reply_to_email_id):
                 current_service.id,
                 reply_to_email_id=reply_to_email_id,
                 email_address=form.email_address.data,
-                is_default=True
-                if reply_to_email_address["is_default"]
-                else form.is_default.data,
+                is_default=(
+                    True
+                    if reply_to_email_address["is_default"]
+                    else form.is_default.data
+                ),
             )
             return redirect(url_for(".service_email_reply_to", service_id=service_id))
         try:
@@ -499,9 +501,11 @@ def service_edit_email_reply_to(service_id, reply_to_email_id):
                 ".service_verify_reply_to_address",
                 service_id=service_id,
                 notification_id=notification_id,
-                is_default=True
-                if reply_to_email_address["is_default"]
-                else form.is_default.data,
+                is_default=(
+                    True
+                    if reply_to_email_address["is_default"]
+                    else form.is_default.data
+                ),
                 replace=reply_to_email_id,
             )
         )
@@ -702,9 +706,11 @@ def service_edit_sms_sender(service_id, sms_sender_id):
         service_api_client.update_sms_sender(
             current_service.id,
             sms_sender_id=sms_sender_id,
-            sms_sender=sms_sender["sms_sender"]
-            if is_inbound_number
-            else form.sms_sender.data.replace("\r", ""),
+            sms_sender=(
+                sms_sender["sms_sender"]
+                if is_inbound_number
+                else form.sms_sender.data.replace("\r", "")
+            ),
             is_default=True if sms_sender["is_default"] else form.is_default.data,
         )
         return redirect(url_for(".service_sms_senders", service_id=service_id))
