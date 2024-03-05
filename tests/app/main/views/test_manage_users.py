@@ -862,9 +862,9 @@ def test_should_show_page_if_prefilled_user_is_already_invited(
     mock_get_invites_for_service,
     platform_admin_user,
 ):
-    active_user_with_permission_to_other_service[
-        "email_address"
-    ] = "user_1@testnotify.gsa.gov"
+    active_user_with_permission_to_other_service["email_address"] = (
+        "user_1@testnotify.gsa.gov"
+    )
     client_request.login(platform_admin_user)
     mocker.patch(
         "app.models.user.user_api_client.get_user",
