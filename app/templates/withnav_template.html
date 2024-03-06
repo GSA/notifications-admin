@@ -9,16 +9,16 @@
     {% include "service_navigation.html" %}
     <div class="grid-row margin-top-5">
       {% if help %}
-        <div class="grid-col-3">
+        <div class="tablet:grid-col-3">
       {% else %}
-        <div class="grid-col-3">
+        <div class="tablet:grid-col-3">
       {% endif %}
           {% include "main_nav.html" %}
         </div>
       {% if help %}
         <div class="grid-col-8">
       {% else %}
-        <div class="grid-col-9 padding-left-4">
+        <div class="tablet:grid-col-9 tablet:padding-left-4">
       {% endif %}
         {% block beforeContent %}
           {% block backLink %}{% endblock %}

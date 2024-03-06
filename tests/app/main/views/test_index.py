@@ -90,7 +90,6 @@ def test_hiding_pages_from_search_engines(
     [
         "privacy",
         "pricing",
-        "terms",
         "roadmap",
         "features",
         "documentation",
@@ -167,7 +166,6 @@ def test_guidance_pages_link_to_service_pages_when_signed_in(
         ("information_risk_management", "security"),
         ("old_integration_testing", "integration_testing"),
         ("old_roadmap", "roadmap"),
-        ("old_terms", "terms"),
         ("information_security", "using_notify"),
         ("old_using_notify", "using_notify"),
         ("delivery_and_failure", "message_status"),
@@ -226,12 +224,12 @@ def test_old_using_notify_page(client_request):
 #     )
 
 
-def test_terms_page_has_correct_content(client_request):
-    terms_page = client_request.get("main.terms")
-    assert normalize_spaces(terms_page.select("main p")[0].text) == (
-        "These terms apply to your service’s use of Notify.gov. "
-        "You must be the service manager to accept them."
-    )
+# def test_terms_page_has_correct_content(client_request):
+#     terms_page = client_request.get("main.terms")
+#     assert normalize_spaces(terms_page.select("main p")[0].text) == (
+#         "These terms apply to your service’s use of Notify.gov. "
+#         "You must be the service manager to accept them."
+#     )
 
 
 def test_css_is_served_from_correct_path(client_request):

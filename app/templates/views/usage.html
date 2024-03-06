@@ -73,6 +73,7 @@
       </div> #}
 
       {% if months %}
+      <div class="table-wrapper">
         <div class="dashboard-table usage-table body-copy-table margin-top-4">
           {% call(item, row_index) list_table(
             months,
@@ -129,6 +130,7 @@
 
           {% endcall %}
         </div>
+      </div>
       {% endif %}
     </div>
 
