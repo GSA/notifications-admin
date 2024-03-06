@@ -175,7 +175,7 @@
 {% endblock %}
 
 {% block footer %}
-
+  <!-- lines 179 - 251 can all be deleted and replaced with {% include "new/components/footer/footer.html" %} -->
   {% if current_service and current_service.research_mode %}
     {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="usa-link">Technology Transformation Services</a><span id="research-mode" class="research-mode">research mode</span>' %}
   {% else %}
@@ -249,7 +249,7 @@
       "html": meta_suffix
     }
   }) }}
-
+  <!-- {% include "new/components/footer/footer.html" %} -->
   {% if current_user.is_authenticated %}
     {% block sessionUserWarning %}
     <dialog class="usa-modal" id="sessionTimer" aria-labelledby="sessionTimerHeading" aria-describedby="timerWarning">
