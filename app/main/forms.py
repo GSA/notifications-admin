@@ -1226,7 +1226,11 @@ class CsvUploadForm(StripWhitespaceForm):
         validators=[
             DataRequired(message="Please pick a file"),
             CsvFileValidator(),
-            FileSize(max_size=10e6, message="File must be smaller than 10Mb"),  # 10Mb
+            FileSize(
+                max_size=10e6,
+                message="File must be smaller than 10Mb.  If you are trying to upload an Excel file, \
+                please export the contents in the CSV format and then try again.",
+            ),  # 10Mb
         ],
     )
 

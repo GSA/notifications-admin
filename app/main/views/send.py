@@ -6,6 +6,7 @@ from zipfile import BadZipFile
 
 from flask import abort, flash, redirect, render_template, request, session, url_for
 from flask_login import current_user
+from markupsafe import Markup
 from notifications_python_client.errors import HTTPError
 from notifications_utils import SMS_CHAR_COUNT_LIMIT
 from notifications_utils.insensitive_dict import InsensitiveDict
@@ -151,8 +152,11 @@ def send_messages(service_id, template_id):
         # just show the first error, as we don't expect the form to have more
         # than one, since it only has one field
         first_field_errors = list(form.errors.values())[0]
-        flash(first_field_errors[0])
-
+        error_message = '<span class="usa-error-message">'
+        error_message = f"{error_message}{first_field_errors[0]}"
+        error_message = f"{error_message}</span>"
+        error_message = Markup(error_message)
+        flash(error_message)
     column_headings = get_spreadsheet_column_headings_from_template(template)
 
     return render_template(
