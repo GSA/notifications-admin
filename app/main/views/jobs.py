@@ -280,10 +280,7 @@ def get_status_filters(service, message_type, statistics):
     if stats.get("failure") is not None:
         stats["failed"] = stats["failure"]
 
-    if stats.get("pending") is None:
-        stats["pending"] = 0
-    if stats.get("sending") is None:
-        stats["sending"] = 0
+    stats["pending"] = stats["requested"] - stats["delivered"] - stats["failed"]
 
     filters = [
         # key, label, option
