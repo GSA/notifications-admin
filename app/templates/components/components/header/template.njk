@@ -47,14 +47,13 @@
   <div class="usa-nav-container">
     <div class="usa-navbar">
       <div class="usa-logo display-flex flex-align-center flex-justify" id="-logo">
-        {# <div class="logo-img display-flex">
-          <span class="usa-sr-only">US Notify Logo</span>
-          <image src="{{ params.assetsPath | default('/static/images') }}/us-notify-color.png" alt="US Notify logo" xlink:href=""
-            class="usa-flag-logo margin-right-1" width="40" height="35"></image>
-        </div> #}
-        <em class="logo-text usa-logo__text">
-          <a href="/" title="Notify.gov">Notify.gov</a>
-        </em>
+        <div class="logo-img display-flex">
+          <a href="/">
+            <span class="usa-sr-only">Notify.gov logo</span>
+            <image src="{{ params.assetsPath | default('/static/images') }}/notify-logo.svg" alt="Notify.gov logo" xlink:href=""
+              class="usa-flag-logo margin-right-1"></image>
+          </a>
+        </div>
         {% if params.navigation %}
           <button type="button" class="usa-menu-btn">Menu</button>
         {% endif %}
@@ -77,7 +76,7 @@
             {% endif %}
           {% endfor %}
         </ul>
-        <div class="usa-nav__secondary margin-bottom-2">
+        <div class="usa-nav__secondary margin-bottom-5">
           <ul class="usa-nav__secondary-links">
             {% for item in params.secondaryNavigation %}
               {% if item.href and item.text %}
