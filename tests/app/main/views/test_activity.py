@@ -531,12 +531,13 @@ def test_time_left(job_created_at, expected_message):
     assert get_time_left(job_created_at) == expected_message
 
 
-STATISTICS = {"sms": {"requested": 6, "failed": 2, "delivered": 1, "pending": 3}}
+STATISTICS = {"sms": {"requested": 6, "failed": 2, "delivered": 1}}
 
 
 def test_get_status_filters_calculates_stats(client_request):
     ret = get_status_filters(Service({"id": "foo"}), "sms", STATISTICS)
 
+    # TODO WHY DO WE THINK THE PENDING COUNT SHOULD BE 3?  HOW DID THIS WORK BEFORE?
     assert {label: count for label, _option, _link, count in ret} == {
         "total": 6,
         "pending": 3,
