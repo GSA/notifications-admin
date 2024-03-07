@@ -269,19 +269,23 @@ def get_notifications(service_id, message_type, status_override=None):  # noqa
 
 
 def get_status_filters(service, message_type, statistics):
+    print(f"incoming statistics {statistics} and message_type {message_type}")
     if message_type is None:
         stats = {
             key: sum(statistics[message_type][key] for message_type in {"email", "sms"})
-            for key in {"requested", "delivered", "failed"}
+            for key in {"requested", "delivered", "failure"}
         }
     else:
         stats = statistics[message_type]
-    stats["sending"] = stats["requested"] - stats["delivered"] - stats["failed"]
+
+    print(f"STATS = {stats}")
+    stats["failed"] = stats["failure"]
+    stats
 
     filters = [
         # key, label, option
         ("requested", "total", "sending,delivered,failed"),
-        ("sending", "pending", "pending"),
+        ("pending", "pending", "pending"),
         ("delivered", "delivered", "delivered"),
         ("failed", "failed", "failed"),
     ]
@@ -296,7 +300,7 @@ def get_status_filters(service, message_type, statistics):
                 message_type=message_type,
                 status=option,
             ),
-            stats[key],
+            stats.get(key),
         )
         for key, label, option in filters
     ]
