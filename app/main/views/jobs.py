@@ -272,7 +272,7 @@ def get_status_filters(service, message_type, statistics):
     if message_type is None:
         stats = {
             key: sum(statistics[message_type][key] for message_type in {"email", "sms"})
-            for key in {"requested", "delivered", "failure"}
+            for key in {"requested", "delivered", "failed"}
         }
     else:
         stats = statistics[message_type]
