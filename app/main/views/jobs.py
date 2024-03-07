@@ -276,12 +276,16 @@ def get_status_filters(service, message_type, statistics):
         }
     else:
         stats = statistics[message_type]
-    stats["sending"] = stats["requested"] - stats["delivered"] - stats["failed"]
+
+    if stats.get("failure") is not None:
+        stats["failed"] = stats["failure"]
+
+    stats["pending"] = stats["requested"] - stats["delivered"] - stats["failed"]
 
     filters = [
         # key, label, option
         ("requested", "total", "sending,delivered,failed"),
-        ("sending", "pending", "pending"),
+        ("pending", "pending", "pending"),
         ("delivered", "delivered", "delivered"),
         ("failed", "failed", "failed"),
     ]
@@ -296,7 +300,7 @@ def get_status_filters(service, message_type, statistics):
                 message_type=message_type,
                 status=option,
             ),
-            stats[key],
+            stats.get(key),
         )
         for key, label, option in filters
     ]
