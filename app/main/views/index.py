@@ -102,15 +102,6 @@ def security():
     return render_template("views/security.html", navigation_links=features_nav())
 
 
-@main.route("/features/terms", endpoint="terms")
-@user_is_logged_in
-def terms():
-    return render_template(
-        "views/terms-of-use.html",
-        navigation_links=features_nav(),
-    )
-
-
 @main.route("/features/using_notify")
 @user_is_logged_in
 def using_notify():
@@ -214,7 +205,6 @@ def send_files_by_email():
 
 
 @main.route("/roadmap", endpoint="old_roadmap")
-@main.route("/terms", endpoint="old_terms")
 @main.route("/information-security", endpoint="information_security")
 @main.route("/using_notify", endpoint="old_using_notify")
 @main.route("/information-risk-management", endpoint="information_risk_management")
@@ -222,7 +212,6 @@ def send_files_by_email():
 def old_page_redirects():
     redirects = {
         "main.old_roadmap": "main.roadmap",
-        "main.old_terms": "main.terms",
         "main.information_security": "main.using_notify",
         "main.old_using_notify": "main.using_notify",
         "main.information_risk_management": "main.security",

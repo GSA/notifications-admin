@@ -71,6 +71,7 @@ def generate_notifications_csv(**kwargs):
     if "page" not in kwargs:
         kwargs["page"] = 1
 
+    # This generates the "batch" csv report
     if kwargs.get("job_id"):
         original_file_contents = s3download(kwargs["service_id"], kwargs["job_id"])
         original_upload = RecipientCSV(
@@ -78,28 +79,26 @@ def generate_notifications_csv(**kwargs):
             template=get_sample_template(kwargs["template_type"]),
         )
         original_column_headers = original_upload.column_headers
-        fieldnames = (
-            ["Row number"]
-            + original_column_headers
-            + [
-                "Template",
-                "Type",
-                "Sent by",
-                "Job",
-                "Carrier",
-                "Carrier Response",
-                "Status",
-                "Time",
-            ]
-        )
-    else:
         fieldnames = [
-            "Recipient",
+            "Phone Number",
             "Template",
-            "Type",
             "Sent by",
-            "Job",
-            "Carrier",
+            "Batch File",
+            "Carrier Response",
+            "Status",
+            "Time",
+        ]
+        for header in original_column_headers:
+            if header.lower() != "phone number":
+                fieldnames.append(header)
+
+    else:
+        # This generates the "full" csv report
+        fieldnames = [
+            "Phone Number",
+            "Template",
+            "Sent by",
+            "Batch File",
             "Carrier Response",
             "Status",
             "Time",
@@ -116,35 +115,30 @@ def generate_notifications_csv(**kwargs):
                 notification["created_at"]
             )
 
-            current_app.logger.info(f"\n\n{notification}")
             if kwargs.get("job_id"):
-                values = (
-                    [
-                        notification["row_number"],
-                    ]
-                    + [
-                        original_upload[notification["row_number"] - 1].get(header).data
-                        for header in original_column_headers
-                    ]
-                    + [
-                        notification["template_name"],
-                        notification["template_type"],
-                        notification["created_by_name"],
-                        notification["job_name"],
-                        notification["carrier"],
-                        notification["provider_response"],
-                        notification["status"],
-                        preferred_tz_created_at,
-                    ]
-                )
+                values = [
+                    notification["recipient"],
+                    notification["template_name"],
+                    notification["created_by_name"],
+                    notification["job_name"],
+                    notification["provider_response"],
+                    notification["status"],
+                    preferred_tz_created_at,
+                ]
+                for header in original_column_headers:
+                    if header.lower() != "phone number":
+                        values.append(
+                            original_upload[notification["row_number"] - 1]
+                            .get(header)
+                            .data
+                        )
+
             else:
                 values = [
                     notification["recipient"],
                     notification["template_name"],
-                    notification["template_type"],
                     notification["created_by_name"] or "",
                     notification["job_name"] or "",
-                    notification["carrier"],
                     notification["provider_response"],
                     notification["status"],
                     preferred_tz_created_at,

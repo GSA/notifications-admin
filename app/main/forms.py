@@ -70,7 +70,7 @@ from app.utils.user_permissions import all_ui_permissions, permission_options
 def get_time_value_and_label(future_time):
     preferred_tz = pytz.timezone(get_user_preferred_timezone())
     return (
-        future_time.astimezone(preferred_tz).replace(tzinfo=None).isoformat(),
+        future_time.astimezone(preferred_tz).isoformat(),
         "{} at {} {}".format(
             get_human_day(future_time.astimezone(preferred_tz)),
             get_human_time(future_time.astimezone(preferred_tz)),
@@ -1253,7 +1253,6 @@ class ChangePreferredTimezoneForm(StripWhitespaceForm):
 
     new_preferred_timezone = GovukRadiosField(
         "What timezone would you like to use?",
-        default="US/Eastern",
     )
 
 
@@ -1782,12 +1781,16 @@ class TemplateAndFoldersSelectionForm(Form):
                 None,
                 [
                     # ('email', 'Email') if 'email' in available_template_types else None,
-                    ("sms", "Start with a blank template")
-                    if "sms" in available_template_types
-                    else None,
-                    ("copy-existing", "Copy an existing template")
-                    if allow_adding_copy_of_template
-                    else None,
+                    (
+                        ("sms", "Start with a blank template")
+                        if "sms" in available_template_types
+                        else None
+                    ),
+                    (
+                        ("copy-existing", "Copy an existing template")
+                        if allow_adding_copy_of_template
+                        else None
+                    ),
                 ],
             )
         )

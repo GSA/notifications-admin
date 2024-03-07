@@ -1,7 +1,6 @@
 import copy
 import json
 import os
-import re
 from contextlib import contextmanager
 from datetime import date, datetime, timedelta
 from unittest.mock import Mock, PropertyMock
@@ -529,7 +528,7 @@ def mock_update_service(mocker):
                     "sms_sender",
                     "permissions",
                 ]
-            }
+            },
         )
         return {"data": service}
 
@@ -905,9 +904,11 @@ def create_service_templates(service_id, number_of_templates=4):
                 "{}_template_{}".format(template_type, template_number),
                 template_type,
                 "{} template {} content".format(template_type, template_number),
-                subject="{} template {} subject".format(template_type, template_number)
-                if template_type == "email"
-                else None,
+                subject=(
+                    "{} template {} subject".format(template_type, template_number)
+                    if template_type == "email"
+                    else None
+                ),
             )
         )
 
@@ -1102,9 +1103,9 @@ def active_user_with_permission_to_other_service(
     active_user_with_permission_to_two_services["permissions"].pop(SERVICE_ONE_ID)
     active_user_with_permission_to_two_services["services"].pop(0)
     active_user_with_permission_to_two_services["name"] = "Service Two User"
-    active_user_with_permission_to_two_services[
-        "email_address"
-    ] = "service-two-user@test.gsa.gov"
+    active_user_with_permission_to_two_services["email_address"] = (
+        "service-two-user@test.gsa.gov"
+    )
     return active_user_with_permission_to_two_services
 
 
@@ -2319,6 +2320,8 @@ def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too com
     def _get(mocker):
         return {"count": 0}
 
+    mocker.patch("app.service_api_client.get_service_statistics")
+
     mocker.patch(
         "app.service_api_client.get_global_notification_count", side_effect=_get
     )
@@ -2351,7 +2354,7 @@ def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too com
             _test_page_title=True,
             _test_for_elements_without_class=True,
             _optional_args="",
-            **endpoint_kwargs
+            **endpoint_kwargs,
         ):
             return ClientRequest.get_url(
                 url_for(endpoint, **(endpoint_kwargs or {})) + _optional_args,
@@ -2370,7 +2373,7 @@ def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too com
             _expected_redirect=None,
             _test_page_title=True,
             _test_for_elements_without_class=True,
-            **endpoint_kwargs
+            **endpoint_kwargs,
         ):
             resp = logged_in_client.get(
                 url,
@@ -2412,7 +2415,7 @@ def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too com
             _follow_redirects=False,
             _expected_redirect=None,
             _content_type=None,
-            **endpoint_kwargs
+            **endpoint_kwargs,
         ):
             return ClientRequest.post_url(
                 url_for(endpoint, **(endpoint_kwargs or {})),
@@ -2471,7 +2474,7 @@ def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too com
             _expected_status=302,
             _optional_args="",
             _content_type=None,
-            **endpoint_kwargs
+            **endpoint_kwargs,
         ):
             return ClientRequest.post_response_from_url(
                 url_for(endpoint, **(endpoint_kwargs or {})) + _optional_args,
@@ -3515,89 +3518,6 @@ def mock_get_invited_org_user_by_id(mocker, sample_org_invite):
         "app.org_invite_api_client.get_invited_user",
         side_effect=_get,
     )
-
-
-def login_for_end_to_end_testing(browser):
-    # Open a new page and go to the staging site.
-    context = browser.new_context()
-    page = context.new_page()
-    page.goto(os.getenv("NOTIFY_E2E_TEST_URI"))
-
-    sign_in_button = page.get_by_role("link", name="Sign in")
-
-    # Test trying to sign in.
-    sign_in_button.click()
-
-    # Wait for the next page to fully load.
-    page.wait_for_load_state("domcontentloaded")
-
-    # Check for the sign in form elements.
-    # NOTE:  Playwright cannot find input elements by role and recommends using
-    #        get_by_label() instead; however, hidden form elements do not have
-    #        labels associated with them, hence the XPath!
-    # See https://playwright.dev/python/docs/api/class-page#page-get-by-label
-    # and https://playwright.dev/python/docs/locators#locate-by-css-or-xpath
-    # for more information.
-    email_address_input = page.get_by_label("Email address")
-    password_input = page.get_by_label("Password")
-    continue_button = page.get_by_role("button", name=re.compile("Continue"))
-
-    # Sign in to the site.
-    email_address_input.fill(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
-    password_input.fill(os.getenv("NOTIFY_E2E_TEST_PASSWORD"))
-    continue_button.click()
-
-    # Wait for the next page to fully load.
-    page.wait_for_load_state("domcontentloaded")
-
-    # Check for the sign in form elements.
-    # NOTE:  Playwright cannot find input elements by role and recommends using
-    #        get_by_label() instead; however, hidden form elements do not have
-    #        labels associated with them, hence the XPath!
-    # See https://playwright.dev/python/docs/api/class-page#page-get-by-label
-    # and https://playwright.dev/python/docs/locators#locate-by-css-or-xpath
-    # for more information.
-    # mfa_input = page.get_by_label('Text message code')
-    # continue_button = page.get_by_role('button', name=re.compile('Continue'))
-
-    # # Enter MFA code and continue.
-    # TODO: Revisit this at a later point in time.
-    # totp = pyotp.TOTP(
-    #     os.getenv('MFA_TOTP_SECRET'),
-    #     digits=int(os.getenv('MFA_TOTP_LENGTH'))
-    # )
-
-    # mfa_input.fill(totp.now())
-    # continue_button.click()
-
-    # page.wait_for_load_state('domcontentloaded')
-
-    # # Save storage state into the file.
-    # auth_state_path = os.path.join(
-    #     os.getenv('NOTIFY_E2E_AUTH_STATE_PATH'),
-    #     'state.json'
-    # )
-    # context.storage_state(path=auth_state_path)
-
-
-@pytest.fixture(scope="session")
-def end_to_end_context(browser):
-    context = browser.new_context()
-    return context
-
-
-@pytest.fixture(scope="session")
-def end_to_end_authenticated_context(browser):
-    # Create and load a previously authenticated context for Playwright E2E
-    # tests.
-    login_for_end_to_end_testing(browser)
-
-    auth_state_path = os.path.join(
-        os.getenv("NOTIFY_E2E_AUTH_STATE_PATH"), "state.json"
-    )
-    context = browser.new_context(storage_state=auth_state_path)
-
-    return context
 
 
 @pytest.fixture()
