@@ -531,7 +531,7 @@ def test_time_left(job_created_at, expected_message):
     assert get_time_left(job_created_at) == expected_message
 
 
-STATISTICS = {"sms": {"requested": 6, "failed": 2, "delivered": 1}}
+STATISTICS = {"sms": {"requested": 6, "failed": 2, "delivered": 1, "pending": 3}}
 
 
 def test_get_status_filters_calculates_stats(client_request):
