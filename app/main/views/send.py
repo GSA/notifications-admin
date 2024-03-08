@@ -912,6 +912,11 @@ def send_notification(service_id, template_id):
             ".view_job",
             service_id=service_id,
             job_id=upload_id,
+            from_job=upload_id,
+            notification_id=notifications["notifications"][0]["id"],
+            # used to show the final step of the tour (help=3) or not show
+            # a back link on a just sent one off notification (help=0)
+            help=request.args.get("help"),
         )
     )
 
