@@ -20,9 +20,10 @@
 
     {% block headIcons %}
       <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="{{ assetPath | default('/assets') }}/images/favicon.ico" type="image/x-icon" />
-      <link rel="mask-icon" href="{{ assetPath | default('/assets') }}/images/usa-mask-icon.svg" color="{{ themeColor | default('#F0F0F0') }}">
+      <link rel="mask-icon" href="{{ assetPath | default('/assets') }}/images/notify-bell.svg" color="{{ themeColor | default('#F0F0F0') }}">
       <link rel="apple-touch-icon" sizes="180x180" href="{{ assetPath | default('/assets') }}/images/apple-touch-icon.png">
       <link rel="apple-touch-icon" href="{{ assetPath | default('/assets') }}/images/apple-touch-icon.png">
+      <link href="{{ assetPath | default('/assets') }}/images/notify-dark-favicon.png" rel="icon" media="(prefers-color-scheme: dark)">
     {% endblock %}
 
     {% block head %}{% endblock %}
