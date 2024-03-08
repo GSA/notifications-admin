@@ -634,32 +634,16 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
 
 @main.route(
     "/services/<uuid:service_id>/<uuid:template_id>/check/<uuid:upload_id>/preview",
-    methods=["GET"],
+    methods=["POST"],
 )
 @main.route(
     "/services/<uuid:service_id>/<uuid:template_id>/check/<uuid:upload_id>/preview/row-<int:row_index>",
-    methods=["GET"],
+    methods=["POST"],
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def preview_job(service_id, template_id, upload_id, row_index=2):
-    session["scheduled_for"] = request.args.get("scheduled_for", "")
+    session["scheduled_for"] = request.form.get("scheduled_for", "")
     data = _check_messages(service_id, template_id, upload_id, row_index)
-    data["allowed_file_extensions"] = Spreadsheet.ALLOWED_FILE_EXTENSIONS
-    if (
-        data["recipients"].too_many_rows
-        or not data["count_of_recipients"]
-        or not data["recipients"].has_recipient_columns
-        or data["recipients"].duplicate_recipient_column_headers
-        or data["recipients"].missing_column_headers
-        or data["sent_previously"]
-    ):
-        return render_template("views/check/column-errors.html", **data)
-
-    if data["row_errors"]:
-        return render_template("views/check/row-errors.html", **data)
-
-    if data["errors"]:
-        return render_template("views/check/column-errors.html", **data)
 
     return render_template(
         "views/check/preview.html",
@@ -907,7 +891,7 @@ def get_template_error_dict(exception):
 
 @main.route(
     "/services/<uuid:service_id>/template/<uuid:template_id>/notification/check/preview",
-    methods=["GET"],
+    methods=["POST"],
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def preview_notification(service_id, template_id):
@@ -921,7 +905,7 @@ def preview_notification(service_id, template_id):
             )
         )
 
-    session["scheduled_for"] = request.args.get("scheduled_for", "")
+    session["scheduled_for"] = request.form.get("scheduled_for", "")
 
     return render_template(
         "views/notifications/preview.html",
