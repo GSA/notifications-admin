@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block per_page_title %}
+  {% block service_page_title %}{% endblock %} – {{ current_service.name }}
+{% endblock %}
+
+{% block main %}
+  <div class="grid-container">
+    {% block serviceNavigation %}
+      {% include "service_navigation.html" %}
+    {% endblock %}
+    <!-- The withnav_template can be used to replace the settings_template. when it comes to setting_template and withnav_template, this service_navigation.html is only used in withnav_template and in settings_template, it was not used. That is one out of the two differences between settings template and withnav template. Child templates that extends settings_template, include the block serviceNavigation but leave it empty. Within the app, the only pages settings_template.html is used: manage-users.html, service-settings.html, and user-profile.html  -->
+    <div class="grid-row margin-top-5">
+      {% if help %}
+        <div class="grid-col-3">
+      {% else %}
+        <div class="grid-col-3">
+      {% endif %}
+        {% block sideNavigation %}
+          {% include "main_nav.html" %}
+          <!-- include settings_nav.html for child templates that used settings_template -->
+        {% endblock %}
+        </div>
+      {% if help %}
+        <div class="grid-col-8">
+      {% else %}
+        <div class="grid-col-9 padding-left-4">
+      {% endif %}
+        {% block beforeContent %}
+          {% block backLink %}{% endblock %}
+        {% endblock %}
+        <main id="main-content" role="main" class="usa-prose site-prose margin-bottom-10">
+        {% block content %}
+          {% include 'flash_messages.html' %}
+          {% block maincolumn_content %}{% endblock %}
+        {% endblock %}
+        </main>
+      </div>
+    </div>
+  </div>
+{% endblock %}
