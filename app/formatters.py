@@ -98,7 +98,7 @@ def format_datetime_short(date):
     )
 
 
-def format_datetime_short_12h(date):
+def format_datetime_text(date):
     # example: February 20, 2024 at 07:00 PM US/Eastern
     return "{} at {} {}".format(
         format_date_normal(date), format_time_12h(date), get_user_preferred_timezone()

@@ -27,7 +27,7 @@
           <div class="usa-alert__body">
             <h4 class="usa-alert__heading">Your text has been scheduled</h4>
             <p class="usa-alert__text">
-              {{ job.template_name }} - {{ current_service.name }} was scheduled on {{ job.scheduled_for|format_datetime_short_12h }} by {{ job.created_by.name }}
+              {{ job.template_name }} - {{ current_service.name }} was scheduled on {{ job.scheduled_for|format_datetime_text }} by {{ job.created_by.name }}
             </p>
           </div>
         </div>
@@ -37,7 +37,7 @@
           <div class="usa-alert__body">
             <h4 class="usa-alert__heading">Your text has been sent</h4>
             <p class="usa-alert__text">
-              {{ job.template_name }} - {{ current_service.name }} was sent on {{ job.created_at|format_datetime_short_12h }} by {{ job.created_by.name }}
+              {{ job.template_name }} - {{ current_service.name }} was sent on {{ job.created_at|format_datetime_text }} by {{ job.created_by.name }}
             </p>
           </div>
         </div>
