@@ -6,7 +6,7 @@ authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.12"
+python = "^3.12.2"
 ago = "~=0.0.95"
 beautifulsoup4 = "^4.12.3"
 blinker = "~=1.7"
@@ -23,7 +23,7 @@ itsdangerous = "~=2.1"
 jinja2 = "~=3.1"
 newrelic = "*"
 notifications-python-client = "==9.0.0"
-notifications-utils = {git = "https://github.com/GSA/notifications-utils.git"}
+notifications-utils = {git = "https://github.com/GSA/notifications-utils.git", rev="c45507d"}
 pyexcel = "==0.7.0"
 pyexcel-io = "==0.6.6"
 pyexcel-ods3 = "==0.6.1"

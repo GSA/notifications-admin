@@ -2306,10 +2306,10 @@ def test_resume_service_after_confirm(
         ),
     )
 
-    assert mock_api.called_once_with(
+    mock_api.assert_called_once_with(
         "/service/{}/resume".format(SERVICE_ONE_ID), data=None
     )
-    assert mock_event.called_once_with(
+    mock_event.assert_called_once_with(
         service_id=SERVICE_ONE_ID, resumed_by_id=user["id"]
     )
 
