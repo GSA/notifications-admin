@@ -31,14 +31,17 @@ iframe:focus, [href]:focus, [tabindex]:focus, [contentEditable=true]:focus {
 .usa-header--extended {
    .usa-logo {
       font-family: family("sans");
-      margin: units(2) 0 units(1);
+      margin: units(3) 0;
       @include at-media-max('desktop') {
          margin: units(4) 0 units(4) units(2);
       }
-      img {
-         height: 35px;
-          @include at-media('desktop') {
-            height: 60px;
+      a {
+         display: flex;
+          img {
+            height: 35px;
+            @include at-media('desktop') {
+               height: 60px;
+            }
          }
       }
    }
