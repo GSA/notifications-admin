@@ -18,10 +18,6 @@ def features_nav():
             "name": "Security",
             "link": "main.security",
         },
-        {
-            "name": "Terms of use",
-            "link": "main.terms",
-        },
     ]
 
 
