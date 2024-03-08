@@ -64,7 +64,7 @@
   </div>
   {% endif %}
   <!-- <div class="bottom-gutter-3-2">
-    <p>Placeholder: This message will be delivered to <b>400 phone numbers</b> and will use a total of <b>800 message parts</b>, leaving Washington DSHS with <b>249,200 message parts remaining</b>.</p>
+    <p>This is a placeholder: This message will be delivered to <b>400 phone numbers</b> and will use a total of <b>800 message parts</b>, leaving Washington DSHS with <b>249,200 message parts remaining</b>.</p>
   </div> -->
   <form method="post" enctype="multipart/form-data" action="{{url_for('main.start_job', service_id=current_service.id, upload_id=upload_id)}}" class='page-footer'>
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />

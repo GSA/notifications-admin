@@ -2607,7 +2607,7 @@ def test_preview_notification_shows_preview(
     when,
 ):
     with client_request.session_transaction() as session:
-        session["recipient"] = "2028675301"
+        session["recipient"] = "555-555-5555"
         session["placeholders"] = {}
 
     page = client_request.get(
