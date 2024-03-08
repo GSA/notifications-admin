@@ -47,10 +47,10 @@ iframe:focus, [href]:focus, [tabindex]:focus, [contentEditable=true]:focus {
    }
    .usa-nav__secondary {
       .usa-nav__link {
-        padding: 0;
-        &.usa-current {
-          text-decoration: underline;
-        }
+         padding: 0;
+         &.usa-current {
+            text-decoration: underline;
+         }
       }
       @include at-media-max('desktop') {
          padding: 0 units(2);
@@ -71,12 +71,10 @@ iframe:focus, [href]:focus, [tabindex]:focus, [contentEditable=true]:focus {
 
 .usa-nav__primary {
    &> .usa-nav__primary-item > a {
-      font-size: size("body", 4);
+      font-size: size("body", 5);
+      font-weight: 400;
+      cursor: pointer;
    }
-   // &> .usa-nav__primary-item:last-child {
-   //    margin-left: auto;
-   //    @include u-margin-right(-4);
-   // }
 }
 
 h1 {
