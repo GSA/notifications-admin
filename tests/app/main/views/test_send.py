@@ -957,12 +957,13 @@ def test_upload_valid_csv_shows_preview_and_table(
     """,
     )
 
-    page = client_request.get(
+    page = client_request.post(
         "main.preview_job",
         service_id=SERVICE_ONE_ID,
         template_id=fake_uuid,
         upload_id=fake_uuid,
         **extra_args,
+        _expected_status=200,
     )
 
     assert page.h1.text.strip() == "Preview"
@@ -2610,8 +2611,9 @@ def test_preview_notification_shows_preview(
         session["recipient"] = "15555555555"
         session["placeholders"] = {}
 
-    page = client_request.get(
-        "main.preview_notification", service_id=service_one["id"], template_id=fake_uuid
+    page = client_request.post(
+        "main.preview_notification", service_id=service_one["id"], template_id=fake_uuid,
+        _expected_status=200
     )
     assert page.h1.text.strip() == "Preview"
     assert (page.find_all("a", {"class": "usa-back-link"})[0]["href"]) == url_for(
