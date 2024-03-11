@@ -23,7 +23,7 @@ def test_find_users_by_email_displays_users_found(
     mocker.patch(
         "app.user_api_client.find_users_by_full_or_partial_email",
         return_value={"data": [user_json()]},
-        # autospec=True,
+        # autospec=True, # not need with 3.12
     )
     document = client_request.post(
         "main.find_users_by_email",
@@ -57,7 +57,7 @@ def test_find_users_by_email_displays_multiple_users(
         return_value={
             "data": [user_json(name="Apple Jack"), user_json(name="Apple Bloom")]
         },
-        # autospec=True,
+        # autospec=True, # not need with 3.12
     )
     document = client_request.post(
         "main.find_users_by_email", _data={"search": "apple"}, _expected_status=200
@@ -80,7 +80,7 @@ def test_find_users_by_email_displays_message_if_no_users_found(
     mocker.patch(
         "app.user_api_client.find_users_by_full_or_partial_email",
         return_value={"data": []},
-        # autospec=True,
+        # autospec=True, # not need with 3.12
     )
     document = client_request.post(
         "main.find_users_by_email",
@@ -125,7 +125,7 @@ def test_user_information_page_shows_information_about_user(
         side_effect=[
             user_json(name="Apple Bloom", services=[user_service_one, user_service_two])
         ],
-        # autospec=True,
+        # autospec=True, # not need with 3.12
     )
 
     mocker.patch(
@@ -141,7 +141,7 @@ def test_user_information_page_shows_information_about_user(
                 {"id": user_service_two, "name": "Nature Therapy", "restricted": False},
             ],
         },
-        # autospec=True,
+        # autospec=True, # not need with 3.12
     )
     page = client_request.get("main.user_information", user_id=fake_uuid)
 
@@ -184,7 +184,7 @@ def test_user_information_page_shows_change_auth_type_link(
                 id_=api_user_active["id"], name="Apple Bloom", auth_type="sms_auth"
             )
         ],
-        # autospec=True,
+        # autospec=True, # not need with 3.12
     )
 
     page = client_request.get("main.user_information", user_id=api_user_active["id"])
@@ -209,7 +209,7 @@ def test_change_user_auth_preselects_current_auth_type(
                 auth_type=current_auth_type,
             )
         ],
-        # autospec=True,
+        # autospec=True, # not need with 3.12
     )
 
     checked_radios = client_request.get(
@@ -231,7 +231,7 @@ def test_change_user_auth(client_request, platform_admin_user, api_user_active, 
                 id_=api_user_active["id"], name="Apple Bloom", auth_type="sms_auth"
             )
         ],
-        # autospec=True,
+        # autospec=True, # not need with 3.12
     )
 
     mock_update = mocker.patch("app.user_api_client.update_user_attribute")
@@ -261,13 +261,13 @@ def test_user_information_page_displays_if_there_are_failed_login_attempts(
     mocker.patch(
         "app.user_api_client.get_user",
         side_effect=[user_json(name="Apple Bloom", failed_login_count=2)],
-        # autospec=True,
+        # autospec=True, # not need with 3.12
     )
 
     mocker.patch(
         "app.user_api_client.get_organizations_and_services_for_user",
         return_value={"organizations": [], "services": []},
-        # autospec=True,
+        # autospec=True, # not need with 3.12
     )
     page = client_request.get("main.user_information", user_id=fake_uuid)
 
@@ -302,7 +302,7 @@ def test_user_information_page_does_not_show_archive_link_for_inactive_users(
     mocker.patch(
         "app.user_api_client.get_user",
         side_effect=[platform_admin_user, inactive_user],
-        # autospec=True,
+        # autospec=True, # not need with 3.12
     )
 
     page = client_request.get("main.user_information", user_id=inactive_user_id)
