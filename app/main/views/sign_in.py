@@ -53,22 +53,19 @@ def _get_access_token(code, state):
         # JWT expiration time (10 minute maximum)
         "exp": int(time.time()) + (10 * 60),
     }
-    current_app.logger.warning(f"Here is the raw payload {payload}")
     token = jwt.encode(payload, keystring, algorithm="RS256")
     base_url = f"{access_token_url}?"
     cli_assert = f"client_assertion={token}"
     cli_assert_type = "client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer"
     code_param = f"code={code}"
     url = f"{base_url}{cli_assert}&{cli_assert_type}&{code_param}&grant_type=authorization_code"
-    current_app.logger.info(f"This is the url we use to get the access token:  {url}")
     headers = {"Authorization": "Bearer %s" % token}
     response = requests.post(url, headers=headers)
-    current_app.logger.info(f"GOT A RESPONSE {response.json()}")
     access_token = response.json()["access_token"]
     return access_token
 
 
-def _get_user_email(access_token):
+def _get_user_email_and_uuid(access_token):
     headers = {"Authorization": "Bearer %s" % access_token}
     user_info_url = os.getenv("LOGIN_DOT_GOV_USER_INFO_URL")
     user_attributes = requests.get(
@@ -76,7 +73,8 @@ def _get_user_email(access_token):
         headers=headers,
     )
     user_email = user_attributes.json()["email"]
-    return user_email
+    user_uuid = user_attributes.json()["sub"]
+    return user_email, user_uuid
 
 
 @main.route("/sign-in", methods=(["GET", "POST"]))
@@ -88,11 +86,11 @@ def sign_in():
     login_gov_error = request.args.get("error")
     if code and state:
         access_token = _get_access_token(code, state)
-        user_email = _get_user_email(access_token)
+        user_email, user_uuid = _get_user_email_and_uuid(access_token)
         redirect_url = request.args.get("next")
 
         # activate the user
-        user = user_api_client.get_user_by_email(user_email)
+        user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
         activate_user(user["id"])
         return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
 
