@@ -544,10 +544,9 @@ def test_should_200_for_check_tour_notification(
 
     # post to send_notification keeps help argument
     assert page.form.attrs["action"] == url_for(
-        "main.send_notification",
+        "main.preview_notification",
         service_id=SERVICE_ONE_ID,
         template_id=fake_uuid,
-        help="3",
     )
 
 

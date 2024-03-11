@@ -48,13 +48,13 @@
   }
 }
 
-.sms-message-sender {
-  margin: units(1) 0 0;
+.sms-message-sender, .sms-message-file-name, .sms-message-scheduler, .sms-message-template, .sms-message-sender {
+  margin:0.25rem 0 0;
 }
 
 .sms-message-recipient {
   color: color('gray-cool-90');
-  margin: 0 0 units(1);
+  margin: units(1) 0 units(1);
 }
 
 .sms-message-status {
@@ -131,7 +131,7 @@
   &-label,
   &-button-label {
     font-weight: bold;
-    font-size: 19px; 
+    font-size: 19px;
     display: block;
     margin: 0 0 10px 0;
   }

@@ -5,11 +5,11 @@
 {% from "components/components/button/macro.njk" import usaButton %}
 
 {% block service_page_title %}
-  {{ "Error" if error else "Select delivery time" }}
+  {{ "Error" if error else "Preview" }}
 {% endblock %}
 
 {% block backLink %}
-  {{ usaBackLink({ "href": back_link }) }}
+  {{ usaBackLink({ "href": back_link_from_preview }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
@@ -40,31 +40,31 @@
       {% endcall %}
     </div>
   {% else %}
-    {{ page_header('Select delivery time') }}
+    {{ page_header('Preview') }}
   {% endif %}
+  <div>
+    <p class="sms-message-scheduler">Scheduled: {{ scheduled_for if scheduled_for else 'Now'}}</p>
+    <p class="sms-message-template">Template: {{template.name}}</p>
+    <p class="sms-message-sender" >From: {{ template.sender }}</p>
+    <p class="sms-message-sender" >To: {{ recipient }}</p>
+  </div>
 
-  {{ template|string }}
+  <h2 id="{{ file_contents_header_id }}">Message</h2>
+  <div class="preview-message"> {{ simplifed_template|string }}</div>
 
   <div class="js-stick-at-bottom-when-scrolling">
     <form method="post" enctype="multipart/form-data" action="{{url_for(
-        'main.preview_notification',
+        'main.send_notification',
         service_id=current_service.id,
-        template_id=template.id
+        template_id=template.id,
+        help='3' if help else 0
       )}}" class='page-footer'>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <!-- <p>Placeholder: This message will be delivered to <b>400 phone numbers</b> and will use a total of <b>800 message parts</b>, leaving Washington DSHS with <b>249,200 message parts remaining</b>.</p> -->
+      <h3>Does everything look good?</h3>
       {% if not error %}
-        {% if choose_time_form %}
-          {{ choose_time_form.scheduled_for(param_extensions={
-            'formGroup': {'classes': 'bottom-gutter-2-3'},
-            'attributes': {
-              'data-module': 'radio-select',
-              'data-categories': choose_time_form.scheduled_for.categories|join(','),
-              'data-show-now-as-default': 'true'
-            }
-          }) }}
-        {% endif %}
         {% set button_text %}
-        Preview
+          {{ "Schedule" if scheduled_for else 'Send'}}
         {% endset %}
         {{ usaButton({ "text": button_text }) }}
       {% endif %}

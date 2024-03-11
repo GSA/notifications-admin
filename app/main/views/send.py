@@ -504,13 +504,18 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
     template = get_template(
         db_template,
         current_service,
-        show_recipient=True,
+        show_recipient=False,
         email_reply_to=email_reply_to,
         sms_sender=sms_sender,
     )
+    simplifed_template = get_template(
+        db_template,
+        current_service,
+        show_recipient=False,
+    )
     recipients = RecipientCSV(
         contents,
-        template=template,
+        template=template or simplifed_template,
         max_initial_rows_shown=50,
         max_errors_shown=50,
         guestlist=(
@@ -530,10 +535,19 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
         back_link = url_for(
             "main.send_one_off", service_id=service_id, template_id=template.id
         )
+        back_link_from_preview = url_for(
+            "main.send_one_off", service_id=service_id, template_id=template.id
+        )
         choose_time_form = None
     else:
         back_link = url_for(
             "main.send_messages", service_id=service_id, template_id=template.id
+        )
+        back_link_from_preview = url_for(
+            "main.check_messages",
+            service_id=service_id,
+            template_id=template.id,
+            upload_id=upload_id,
         )
         choose_time_form = ChooseTimeForm()
 
@@ -542,6 +556,7 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
 
     if preview_row < len(recipients) + 2:
         template.values = recipients[preview_row - 2].recipient_and_personalisation
+        simplifed_template.values = recipients[preview_row - 2].recipient_and_personalisation
     elif preview_row > 2:
         abort(404)
 
@@ -562,11 +577,14 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
         remaining_messages=remaining_messages,
         choose_time_form=choose_time_form,
         back_link=back_link,
+        back_link_from_preview=back_link_from_preview,
         first_recipient_column=recipients.recipient_column_headers[0],
         preview_row=preview_row,
         sent_previously=job_api_client.has_sent_previously(
             service_id, template.id, db_template["version"], original_file_name
         ),
+        template_id=template_id,
+        simplifed_template=simplifed_template,
     )
 
 
@@ -614,13 +632,34 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
     return render_template("views/check/ok.html", **data)
 
 
+@main.route(
+    "/services/<uuid:service_id>/<uuid:template_id>/check/<uuid:upload_id>/preview",
+    methods=["POST"],
+)
+@main.route(
+    "/services/<uuid:service_id>/<uuid:template_id>/check/<uuid:upload_id>/preview/row-<int:row_index>",
+    methods=["POST"],
+)
+@user_has_permissions("send_messages", restrict_admin_usage=True)
+def preview_job(service_id, template_id, upload_id, row_index=2):
+    session["scheduled_for"] = request.form.get("scheduled_for", "")
+    data = _check_messages(service_id, template_id, upload_id, row_index)
+
+    return render_template(
+        "views/check/preview.html",
+        scheduled_for=session["scheduled_for"],
+        **data,
+    )
+
+
 @main.route("/services/<uuid:service_id>/start-job/<uuid:upload_id>", methods=["POST"])
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def start_job(service_id, upload_id):
+    scheduled_for = session.pop("scheduled_for", None)
     job_api_client.create_job(
         upload_id,
         service_id,
-        scheduled_for=request.form.get("scheduled_for", ""),
+        scheduled_for=scheduled_for,
     )
 
     session.pop("sender_id", None)
@@ -679,7 +718,20 @@ def get_send_test_page_title(template_type, entering_recipient, name=None):
     return "Personalize this message"
 
 
-def get_back_link(service_id, template, step_index, placeholders=None):
+def get_back_link(
+    service_id,
+    template,
+    step_index,
+    placeholders=None,
+    preview=False,
+):
+    if preview:
+        return url_for(
+            "main.check_notification",
+            service_id=service_id,
+            template_id=template.id,
+        )
+
     if step_index == 0:
         if should_skip_template_page(template._template):
             return url_for(
@@ -779,10 +831,17 @@ def _check_notification(service_id, template_id, exception=None):
         email_reply_to=email_reply_to,
         sms_sender=sms_sender,
     )
-
+    simplifed_template = get_template(
+        db_template,
+        current_service,
+    )
     placeholders = fields_to_fill_in(template)
 
     back_link = get_back_link(service_id, template, len(placeholders), placeholders)
+
+    back_link_from_preview = get_back_link(
+        service_id, template, len(placeholders), placeholders, preview=True
+    )
 
     choose_time_form = ChooseTimeForm()
 
@@ -797,8 +856,10 @@ def _check_notification(service_id, template_id, exception=None):
     return dict(
         template=template,
         back_link=back_link,
+        back_link_from_preview=back_link_from_preview,
         choose_time_form=choose_time_form,
         **(get_template_error_dict(exception) if exception else {}),
+        simplifed_template=simplifed_template
     )
 
 
@@ -829,11 +890,38 @@ def get_template_error_dict(exception):
 
 
 @main.route(
+    "/services/<uuid:service_id>/template/<uuid:template_id>/notification/check/preview",
+    methods=["POST"],
+)
+@user_has_permissions("send_messages", restrict_admin_usage=True)
+def preview_notification(service_id, template_id):
+    recipient = get_recipient()
+    if not recipient:
+        return redirect(
+            url_for(
+                ".send_one_off",
+                service_id=service_id,
+                template_id=template_id,
+            )
+        )
+
+    session["scheduled_for"] = request.form.get("scheduled_for", "")
+
+    return render_template(
+        "views/notifications/preview.html",
+        **_check_notification(service_id, template_id),
+        scheduled_for=session["scheduled_for"],
+        recipient=recipient,
+    )
+
+
+@main.route(
     "/services/<uuid:service_id>/template/<uuid:template_id>/notification/check",
     methods=["POST"],
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def send_notification(service_id, template_id):
+    scheduled_for = session.pop("scheduled_for", "")
     recipient = get_recipient()
     if not recipient:
         return redirect(
@@ -868,7 +956,7 @@ def send_notification(service_id, template_id):
     job_api_client.create_job(
         upload_id,
         service_id,
-        scheduled_for=request.form.get("scheduled_for", ""),
+        scheduled_for=scheduled_for,
         template_id=template_id,
         original_file_name=filename,
         notification_count=1,
