@@ -1,0 +1,42 @@
+<head>
+    <meta charset="utf-8" />
+    <title>{% block pageTitle %}Notify.gov{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Reach people where they are with a text message platform built just for government">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="f0f0f0" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="1b1b1b" />
+    {% if config['NR_MONITOR_ON'] %}
+        {% include "partials/newrelic.html" -%}
+    {% endif %}
+
+    {# Ensure that older IE versions always render with the correct rendering engine #}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    {% block headIcons %}
+    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="{{ assetPath | default('/assets') }}/images/favicon.ico" type="image/x-icon" />
+    <link rel="mask-icon" href="{{ assetPath | default('/assets') }}/images/usa-mask-icon.svg" color="{{ themeColor | default('#F0F0F0') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ assetPath | default('/assets') }}/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" href="{{ assetPath | default('/assets') }}/images/apple-touch-icon.png">
+    <link href="{{ assetPath | default('/assets') }}/images/notify-dark-favicon.png" rel="icon" media="(prefers-color-scheme: dark)">
+    {% endblock %}
+
+    <link rel="stylesheet" media="screen" href="{{ asset_url('css/styles.css') }}" />
+    {% block extra_stylesheets %}{% endblock %}
+
+    {% block meta_format_detection %}
+    <meta name="format-detection" content="telephone=no">
+    {% endblock %}
+    {% block og_image %}
+    <meta property="og:title" content="Notify.gov">
+    <meta property="og:description" content="Reach people where they are with a text message platform built just for government">
+    <meta property="og:image" content="/static/images/notify-og-image.png">
+    {% endblock %}
+    {# google #}
+    <script type="text/javascript" src="{{ asset_url('js/gtm_head.js') }}"></script>
+    <meta name="google-site-verification" content="niWnSqImOWz6mVQTYqNb5tFK8HaKSB4b3ED4Z9gtUQ0" />
+    {% if g.hide_from_search_engines %}
+    <meta name="robots" content="noindex" />
+    {% endif %}
+
+    {% block head %}{% endblock %}
+</head>
