@@ -391,7 +391,7 @@ def test_conversation_reply_redirects_with_phone_number_from_notification(
     )
 
     for element, expected_text in [
-        ("h1", "Preview of ‘Two week reminder’"),
+        ("h1", "Select delivery time"),
         (".sms-message-recipient", "To: 2021234567"),
         (
             ".sms-message-wrapper",

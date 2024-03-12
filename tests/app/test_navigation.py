@@ -139,6 +139,8 @@ EXCLUDED_ENDPOINTS = tuple(
             "platform_admin_list_complaints",
             "platform_admin_reports",
             "platform_admin_splash_page",
+            "preview_job",
+            "preview_notification",
             "pricing",
             "privacy",
             "received_text_messages_callback",

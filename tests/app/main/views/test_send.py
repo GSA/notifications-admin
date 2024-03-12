@@ -908,26 +908,22 @@ def test_upload_valid_csv_redirects_to_check_page(
     (
         "extra_args",
         "expected_link_in_first_row",
-        "expected_recipient",
         "expected_message",
     ),
     [
         (
             {},
             None,
-            "To: 2028675301",
             "Test Service: A, Template <em>content</em> with & entity",
         ),
         (
             {"row_index": 2},
             None,
-            "To: 2028675301",
             "Test Service: A, Template <em>content</em> with & entity",
         ),
         (
             {"row_index": 4},
             True,
-            "To: 2028675303",
             "Test Service: C, Template <em>content</em> with & entity",
         ),
     ],
@@ -946,7 +942,6 @@ def test_upload_valid_csv_shows_preview_and_table(
     fake_uuid,
     extra_args,
     expected_link_in_first_row,
-    expected_recipient,
     expected_message,
 ):
     with client_request.session_transaction() as session:
@@ -962,40 +957,20 @@ def test_upload_valid_csv_shows_preview_and_table(
     """,
     )
 
-    page = client_request.get(
-        "main.check_messages",
+    page = client_request.post(
+        "main.preview_job",
         service_id=SERVICE_ONE_ID,
         template_id=fake_uuid,
         upload_id=fake_uuid,
         **extra_args,
+        _expected_status=200,
     )
 
-    mock_s3_set_metadata.assert_called_once_with(
-        SERVICE_ONE_ID,
-        fake_uuid,
-        notification_count=3,
-        template_id=fake_uuid,
-        valid=True,
-        original_file_name="example.csv",
-    )
-
-    assert page.h1.text.strip() == "Preview of Two week reminder"
-    assert page.select_one(".sms-message-recipient").text.strip() == expected_recipient
+    assert page.h1.text.strip() == "Preview"
+    assert page.select("h2")[1].text.strip() == "Recipients list"
+    assert page.h2.text.strip() == "Message"
     assert page.select_one(".sms-message-wrapper").text.strip() == expected_message
-
-    assert page.select_one(".table-field-index").text.strip() == "2"
-
-    if expected_link_in_first_row:
-        assert page.select_one(".table-field-index a")["href"] == url_for(
-            "main.check_messages",
-            service_id=SERVICE_ONE_ID,
-            template_id=fake_uuid,
-            upload_id=fake_uuid,
-            row_index=2,
-            original_file_name="example.csv",
-        )
-    else:
-        assert not page.select_one(".table-field-index").select_one("a")
+    assert not page.select_one(".table-field-index")
 
     for row_index, row in enumerate(
         [
@@ -1043,7 +1018,7 @@ def test_upload_valid_csv_shows_preview_and_table(
         for index, cell in enumerate(row):
             row = page.select("table tbody tr")[row_index]
             assert "id" not in row
-            assert normalize_spaces(str(row.select("td")[index + 1])) == cell
+            assert normalize_spaces(str(row.select("td")[index])) == cell
 
 
 def test_show_all_columns_if_there_are_duplicate_recipient_columns(
@@ -1674,7 +1649,7 @@ def test_send_one_off_email_to_self_without_placeholders_redirects_to_check_page
         _follow_redirects=True,
     )
 
-    assert page.select("h1")[0].text.strip() == "Preview of ‘Two week reminder’"
+    assert page.select("h1")[0].text.strip() == "Select delivery time"
 
 
 @pytest.mark.parametrize(
@@ -1901,10 +1876,9 @@ def test_upload_csvfile_with_valid_phone_shows_all_numbers(
         original_file_name="example.csv",
     )
 
-    assert "202 867 0701" in page.text
-    assert "202 867 0749" in page.text
+    assert "Select delivery time" in page.text
+    assert "202 867 0749" not in page.text
     assert "202 867 0750" not in page.text
-    assert "Only showing the first 50 rows" in page.text
 
     mock_get_notification_count.assert_called_with(service_one["id"])
 
@@ -1988,7 +1962,7 @@ def test_test_message_can_only_be_sent_now(
     assert 'name="scheduled_for"' not in content
 
 
-def test_send_button_is_correctly_labelled(
+def test_preview_button_is_correctly_labelled(
     client_request,
     mocker,
     mock_get_live_service,
@@ -2013,9 +1987,7 @@ def test_send_button_is_correctly_labelled(
         template_id=fake_uuid,
     )
 
-    assert normalize_spaces(page.select_one("main [type=submit]").text) == (
-        "Send 1,000 text messages"
-    )
+    assert normalize_spaces(page.select_one("main [type=submit]").text) == ("Preview")
 
 
 @pytest.mark.parametrize("when", ["", "2016-08-25T13:04:21.767198"])
@@ -2043,6 +2015,8 @@ def test_create_job_should_call_api(
                 "valid": True,
             }
         }
+    with client_request.session_transaction() as session:
+        session["scheduled_for"] = when
 
     page = client_request.post(
         "main.start_job",
@@ -2593,7 +2567,7 @@ def test_check_notification_redirects_if_session_not_populated(
     )
 
 
-def test_check_notification_shows_preview(
+def test_check_notification_shows_scheduler(
     client_request, service_one, fake_uuid, mock_get_service_template
 ):
     with client_request.session_transaction() as session:
@@ -2604,7 +2578,7 @@ def test_check_notification_shows_preview(
         "main.check_notification", service_id=service_one["id"], template_id=fake_uuid
     )
 
-    assert page.h1.text.strip() == "Preview of ‘Two week reminder’"
+    assert page.h1.text.strip() == "Select delivery time"
     assert (page.find_all("a", {"class": "usa-back-link"})[0]["href"]) == url_for(
         "main.send_one_off_step",
         service_id=service_one["id"],
@@ -2612,6 +2586,41 @@ def test_check_notification_shows_preview(
         step_index=0,
     )
 
+    # assert tour not visible
+    assert not page.select(".banner-tour")
+
+    # post to send_notification with help=0 to ensure no back link is then shown
+    assert page.form.attrs["action"] == url_for(
+        "main.preview_notification",
+        service_id=service_one["id"],
+        template_id=fake_uuid,
+    )
+
+    assert normalize_spaces(page.select_one("main [type=submit]").text) == ("Preview")
+
+
+@pytest.mark.parametrize("when", ["", "2016-08-25T13:04:21.767198"])
+def test_preview_notification_shows_preview(
+    client_request,
+    service_one,
+    fake_uuid,
+    mock_get_service_template,
+    when,
+):
+    with client_request.session_transaction() as session:
+        session["recipient"] = "15555555555"
+        session["placeholders"] = {}
+
+    page = client_request.post(
+        "main.preview_notification", service_id=service_one["id"], template_id=fake_uuid,
+        _expected_status=200
+    )
+    assert page.h1.text.strip() == "Preview"
+    assert (page.find_all("a", {"class": "usa-back-link"})[0]["href"]) == url_for(
+        "main.check_notification",
+        service_id=service_one["id"],
+        template_id=fake_uuid,
+    )
     # assert tour not visible
     assert not page.select(".banner-tour")
 
@@ -2872,7 +2881,6 @@ def test_send_notification_shows_email_error_in_trial_mode(
 @pytest.mark.parametrize(
     ("endpoint", "extra_args"),
     [
-        ("main.check_messages", {"template_id": uuid4(), "upload_id": uuid4()}),
         ("main.send_one_off_step", {"template_id": uuid4(), "step_index": 0}),
     ],
 )
