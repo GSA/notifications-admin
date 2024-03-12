@@ -1,7 +1,7 @@
 (function (window) {
 
 // Set the target date (10 days before March 15th, 2024)
-  const targetDate = new Date("April 9, 2024 00:00:00").getTime();
+  const targetDate = new Date("April 16, 2024 00:00:00").getTime();
 
  // Function to update the countdown display
   function updateCountdown() {
