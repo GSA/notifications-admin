@@ -1,7 +1,7 @@
 {% if help %}
   {% include 'partials/tour.html' %}
 {% else %}
-<nav class="nav">
+<nav class="nav margin-bottom-4">
   <a class="usa-button margin-top-1 margin-bottom-5 width-full"
     href="{{ url_for('.choose_template', service_id=current_service.id) }}">Send messages</a>
   <ul class="usa-sidenav">

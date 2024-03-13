@@ -76,6 +76,7 @@ def service_dashboard(service_id):
             "notifications": aggregate_notifications_by_job.get(job["id"], []),
         }
         for job in job_response
+        if aggregate_notifications_by_job.get(job["id"], [])
     ]
     return render_template(
         "views/dashboard/dashboard.html",

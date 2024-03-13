@@ -41,7 +41,7 @@
   <h3>To create and format your message</h3>
   <ol class="list">
     <li>All messages start from a template</li>
-    <li>Click “Send Messages”. You’ll see existing templates.</li>
+    <li>Click “<a href={{ url_for('.choose_template', service_id=current_service.id) }}>Send Messages</a>”. You’ll see existing templates.</li>
     <li>Add a new template or choose an existing template and select Edit.</li>
   </ol>
 
@@ -120,7 +120,7 @@
 
 
   {# Identify your program #}
-  <h2 class="padding-top-1" id="identify-program">Identify your program</h2>
+  <h2 class="padding-top-1" id="indentify-program">Identify your program</h2>
   <p>You can help your recipients identify your texts as legitimate by customizing your messages to clearly state who they
   are from. Consider using the program or benefit name that is most familiar to your recipients.</p>
 

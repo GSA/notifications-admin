@@ -26,7 +26,7 @@ i.e.
    .usa-logo {
       font-family: family("sans");
       margin: units(4) 0;
-      @include at-media-max('mobile-lg') {
+      @include at-media-max('desktop') {
          margin: units(4) 0 units(4) units(2);
       }
       img {
@@ -43,6 +43,16 @@ i.e.
           text-decoration: underline;
         }
       }
+      @include at-media-max('desktop') {
+         padding: 0 units(2);
+         ul li {
+            padding-bottom: units(1);
+         }
+      }
+   }
+   .usa-nav-container {
+      max-width: 100%;
+      padding: 0;
    }
 }
 
@@ -345,6 +355,9 @@ td.table-empty-message {
          background-image: url(../img/material-icons/description.svg);
       }
    }
+   .table-wrapper {
+      overflow-x: scroll;
+   }
 }
 
 .dashboard-table {
@@ -403,8 +416,11 @@ td.table-empty-message {
       width: 5%;
    }
    th {
-      padding: 0.5rem 0.5rem;
+      padding: 0.5rem 1rem
    }
+   td {
+      padding: 0.5rem 1rem
+  }
 }
 
 #template-list {

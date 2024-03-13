@@ -14,24 +14,26 @@
 
 {% block maincolumn_content %}
   {{ page_header('Callbacks') }}
-  <div class="bottom-gutter-3-2 dashboard-table body-copy-table">
-		{% call mapping_table(
-	    caption='General',
-	    field_headings=['Label', 'Value', 'Action'],
-	    field_headings_visible=False,
-	    caption_visible=False
-	  ) %}
-	    {% call row() %}
-	      {{ text_field('Delivery receipts') }}
-	      {{ optional_text_field(delivery_status_callback, truncate=true) }}
-	      {{ edit_field('Change', url_for('.delivery_status_callback', service_id=current_service.id)) }}
-	    {% endcall %}
+	<div class="table-wrapper">
+		<div class="bottom-gutter-3-2 dashboard-table body-copy-table">
+				{% call mapping_table(
+				caption='General',
+				field_headings=['Label', 'Value', 'Action'],
+				field_headings_visible=False,
+				caption_visible=False
+			) %}
+				{% call row() %}
+				{{ text_field('Delivery receipts') }}
+				{{ optional_text_field(delivery_status_callback, truncate=true) }}
+				{{ edit_field('Change', url_for('.delivery_status_callback', service_id=current_service.id)) }}
+				{% endcall %}
 
-	    {% call row() %}
-	      {{ text_field('Received text messages') }}
-          {{ optional_text_field(received_text_messages_callback, truncate=true) }}
-	   	  {{ edit_field('Change', url_for('.received_text_messages_callback', service_id=current_service.id)) }}
-	    {% endcall %}
-	  {% endcall %}
+				{% call row() %}
+				{{ text_field('Received text messages') }}
+				{{ optional_text_field(received_text_messages_callback, truncate=true) }}
+				{{ edit_field('Change', url_for('.received_text_messages_callback', service_id=current_service.id)) }}
+				{% endcall %}
+			{% endcall %}
+		</div>
 	</div>
 {% endblock %}
