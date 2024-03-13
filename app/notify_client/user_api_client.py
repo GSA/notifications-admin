@@ -44,6 +44,16 @@ class UserApiClient(NotifyAdminAPIClient):
         user_data = self.post("/user/email", data={"email": email_address})
         return user_data["data"]
 
+    def get_user_by_uuid_or_email(self, user_uuid, email_address):
+
+        user_data = self.post(
+            "/user/get-login-gov-user",
+            data={"login_uuid": user_uuid, "email": email_address},
+        )
+        if user_data is None:
+            raise Exception("User not found")
+        return user_data["data"]
+
     def get_user_by_email_or_none(self, email_address):
         try:
             return self.get_user_by_email(email_address)

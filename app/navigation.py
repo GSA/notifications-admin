@@ -45,7 +45,6 @@ class HeaderNavigation(Navigation):
             "features_sms",
             "roadmap",
             "security",
-            "terms",
         },
         "using_notify": {
             "get_started",

@@ -160,8 +160,8 @@ def test_can_show_notifications(
     assert normalize_spaces(
         first_row.select_one(".table-field-right-aligned .align-with-message-body").text
     ) in [
-        "Delivered 1 January at 02:00 US/Eastern",
-        "Delivered 1 January at 01:00 US/Eastern",
+        "Delivered 01-01-2020 at 01:00 AM",
+        "Delivered 01-01-2020 at 01:00 AM",
     ]
 
     assert page_title in page.h1.text.strip()
@@ -656,36 +656,36 @@ def test_redacts_templates_that_should_be_redacted(
 @pytest.mark.parametrize(
     ("message_type", "status", "expected_hint_status", "single_line"),
     [
-        ("email", "created", "Sending since 27 September at 08:30 US/Eastern", True),
-        ("email", "sending", "Sending since 27 September at 08:30 US/Eastern", True),
+        ("email", "created", "Sending since 09-27-2017 at 08:30 AM", True),
+        ("email", "sending", "Sending since 09-27-2017 at 08:30 AM", True),
         (
             "email",
             "temporary-failure",
-            "Inbox not accepting messages right now 27 September at 08:30 US/Eastern",
+            "Inbox not accepting messages right now 09-27-2017 at 08:30 AM",
             False,
         ),
         (
             "email",
             "permanent-failure",
-            "Email address does not exist 27 September at 08:30 US/Eastern",
+            "Email address does not exist 09-27-2017 at 08:30 AM",
             False,
         ),
-        ("email", "delivered", "Delivered 27 September at 08:30 US/Eastern", True),
-        ("sms", "created", "Sending since 27 September at 08:30 US/Eastern", True),
-        ("sms", "sending", "Sending since 27 September at 08:30 US/Eastern", True),
+        ("email", "delivered", "Delivered 09-27-2017 at 08:30 AM", True),
+        ("sms", "created", "Sending since 09-27-2017 at 08:30 AM", True),
+        ("sms", "sending", "Sending since 09-27-2017 at 08:30 AM", True),
         (
             "sms",
             "temporary-failure",
-            "Phone not accepting messages right now 27 September at 08:30 US/Eastern",
+            "Phone not accepting messages right now 09-27-2017 at 08:30 AM",
             False,
         ),
         (
             "sms",
             "permanent-failure",
-            "Not delivered 27 September at 08:30 US/Eastern",
+            "Not delivered 09-27-2017 at 08:30 AM",
             False,
         ),
-        ("sms", "delivered", "Delivered 27 September at 08:30 US/Eastern", True),
+        ("sms", "delivered", "Delivered 09-27-2017 at 08:30 AM", True),
     ],
 )
 def test_sending_status_hint_displays_correctly_on_notifications_page(

@@ -168,12 +168,14 @@ def api_callbacks(service_id):
 
     return render_template(
         "views/api/callbacks.html",
-        received_text_messages_callback=received_text_messages_callback["url"]
-        if received_text_messages_callback
-        else None,
-        delivery_status_callback=delivery_status_callback["url"]
-        if delivery_status_callback
-        else None,
+        received_text_messages_callback=(
+            received_text_messages_callback["url"]
+            if received_text_messages_callback
+            else None
+        ),
+        delivery_status_callback=(
+            delivery_status_callback["url"] if delivery_status_callback else None
+        ),
     )
 
 
@@ -262,9 +264,11 @@ def received_text_messages_callback(service_id):
 
     received_text_messages_callback = get_received_text_messages_callback()
     form = CallbackForm(
-        url=received_text_messages_callback.get("url")
-        if received_text_messages_callback
-        else "",
+        url=(
+            received_text_messages_callback.get("url")
+            if received_text_messages_callback
+            else ""
+        ),
         bearer_token=dummy_bearer_token if received_text_messages_callback else "",
     )
 

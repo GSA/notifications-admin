@@ -1,3 +1,5 @@
+![notify-logo](https://github.com/GSA/notifications-admin/assets/4156602/31b74039-4d87-4f89-a35e-71e9f3152342)
+
 # Notify.gov Admin UI
 
 This is the Notify front-end for government users and admins. To see it in
