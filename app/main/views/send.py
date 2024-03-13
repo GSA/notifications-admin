@@ -560,7 +560,9 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
 
     if preview_row < len(recipients) + 2:
         template.values = recipients[preview_row - 2].recipient_and_personalisation
-        simplifed_template.values = recipients[preview_row - 2].recipient_and_personalisation
+        simplifed_template.values = recipients[
+            preview_row - 2
+        ].recipient_and_personalisation
     elif preview_row > 2:
         abort(404)
 
@@ -863,7 +865,7 @@ def _check_notification(service_id, template_id, exception=None):
         back_link_from_preview=back_link_from_preview,
         choose_time_form=choose_time_form,
         **(get_template_error_dict(exception) if exception else {}),
-        simplifed_template=simplifed_template
+        simplifed_template=simplifed_template,
     )
 
 
