@@ -2307,7 +2307,7 @@ def test_resume_service_after_confirm(
     )
 
     mock_api.assert_called_once_with(
-        "/service/{}/resume".format(SERVICE_ONE_ID), data=None
+        f"/service/{SERVICE_ONE_ID}/resume", data=None
     )
     mock_event.assert_called_once_with(
         service_id=SERVICE_ONE_ID, resumed_by_id=user["id"]
