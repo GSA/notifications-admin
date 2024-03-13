@@ -81,6 +81,13 @@ h1 {
    font-weight: bold !important;
 }
 
+.usa-section--dark h1 {
+   color: color('blue-30v');
+   @include at-media-max('desktop') {
+      font-size: size("body", 12);
+   }
+}
+
 p,
 .list li {
    font-family: family("sans");
