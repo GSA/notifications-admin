@@ -42,25 +42,6 @@
     </ul>
   </div>
   <div class="usa-table-container--scrollable" tabindex="0">
-    <!-- {% call(item, row_number) list_table(
-      recipients.displayed_rows,
-      caption="Note: Only the first 5 rows are displayed here.",
-      caption_visible=True,
-      field_headings=recipients.column_headers
-    ) %}
-      {% for column in recipients.column_headers %}
-        {% if item[column].ignore %}
-          {{ text_field(item[column].data or '', status='default') }}
-        {% else %}
-          {{ text_field(item[column].data or '') }}
-        {% endif %}
-      {% endfor %}
-      {% if item[None].data %}
-        {% for column in item[None].data %}
-          {{ text_field(column, status='default') }}
-        {% endfor %}
-      {% endif %}
-    {% endcall %} -->
     <table class="usa-table usa-table--borderless width-full">
       <caption class="font-body-lg table-heading">
         Note: Only the first 5 rows are displayed here.
@@ -79,22 +60,29 @@
         <tr class="table-row">
           {% for column in recipients.column_headers %}
             <td class="table-field-left-aligned">
-              <div class="">
-                {% if item[column].ignore %}
-                  {{ item[column].data or '' }}
+              <div>
+                {% set column_data = item[column].data or '' %}
+                {% if column_data is iterable and column_data is not string %}
+                  <ul>
+                    {% for data_item in column_data %}
+                      {% if data_item is not none %}
+                        <li>{{ data_item }}</li>
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
                 {% else %}
-                  {{ item[column].data or '' }}
+                  {{ column_data }}
                 {% endif %}
               </div>
             </td>
           {% endfor %}
           {% if item[None].data %}
             {% for column in item[None].data %}
-            <td class="table-field-left-aligned">
-              <div class="">
-                {{ column }}
-              </div>
-            </td>
+              <td class="table-field-left-aligned">
+                <div class="">
+                  {{ column }}
+                </div>
+              </td>
             {% endfor %}
           {% endif %}
         </tr>
