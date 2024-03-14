@@ -54,6 +54,7 @@ jobs:
           ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
           NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
           NR_BROWSER_KEY: ${{ secrets.NR_BROWSER_KEY }}
+          COMMIT_HASH: $(git rev-parse --short "$GITHUB_SHA")
           LOGIN_PEM: ${{ secrets.LOGIN_PEM }}
           LOGIN_DOT_GOV_CLIENT_ID: "urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:notify-gov"
           LOGIN_DOT_GOV_USER_INFO_URL: "https://secure.login.gov/api/openid_connect/userinfo"
