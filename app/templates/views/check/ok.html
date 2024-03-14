@@ -1,6 +1,5 @@
 {% extends "withnav_template.html" %}
 {% from "components/banner.html" import banner_wrapper %}
-{% from "components/table.html" import list_table, field, text_field, index_field, hidden_field_heading %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/components/button/macro.njk" import usaButton %}
 {% from "components/components/skip-link/macro.njk" import usaSkipLink %}
@@ -9,7 +8,7 @@
 {% set file_contents_header_id = 'file-preview' %}
 
 {% block service_page_title %}
-  {{ "Preview of {}".format(template.name) }}
+  {{ "Select delivery time" }}
 {% endblock %}
 
 
@@ -19,11 +18,11 @@
 
 {% block maincolumn_content %}
 
-  {{ page_header('Preview of {}'.format(template.name)) }}
+  {{ page_header('Select delivery time') }}
 
   {{ template|string }}
   <div class="bottom-gutter-3-2">
-    <form method="post" enctype="multipart/form-data" action="{{url_for('main.start_job', service_id=current_service.id, upload_id=upload_id)}}" class='page-footer'>
+    <form method="post" enctype="multipart/form-data" action="{{url_for('main.preview_job', service_id=current_service.id, template_id=template_id, upload_id=upload_id)}}" class='page-footer'>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       {% if choose_time_form %}
         {{ choose_time_form.scheduled_for(param_extensions={
@@ -37,55 +36,11 @@
       {% endif %}
 
       {% set button_text %}
-        Send {{ count_of_recipients|message_count(template.template_type) }}
+        Preview
       {% endset %}
       {{ usaButton({ "text": button_text }) }}
 
     </form>
   </div>
 
-  {% if not request.args.from_test %}
-
-    <h2 class="font-body-lg" id="{{ file_contents_header_id }}">{{ original_file_name }}</h2>
-
-    <div class="fullscreen-content" data-module="fullscreen-table">
-      {% call(item, row_number) list_table(
-        recipients.displayed_rows,
-        caption=original_file_name,
-        caption_visible=False,
-        field_headings=[
-          '<span class="usa-sr-only">Row in file</span><span aria-hidden="true">1</span>'|safe
-        ] + recipients.column_headers
-      ) %}
-        {% call index_field() %}
-          <span>
-            {% if (item.index + 2) == preview_row %}
-              {{ item.index + 2 }}
-            {% else %}
-              <a class="usa-link" href="{{ url_for('.check_messages', service_id=current_service.id, template_id=template.id, upload_id=upload_id, row_index=(item.index + 2), original_file_name=original_file_name) }}">{{ item.index + 2 }}</a>
-            {% endif %}
-          </span>
-        {% endcall %}
-        {% for column in recipients.column_headers %}
-          {% if item[column].ignore %}
-            {{ text_field(item[column].data or '', status='default') }}
-          {% else %}
-            {{ text_field(item[column].data or '') }}
-          {% endif %}
-        {% endfor %}
-        {% if item[None].data %}
-          {% for column in item[None].data %}
-            {{ text_field(column, status='default') }}
-          {% endfor %}
-        {% endif %}
-      {% endcall %}
-    </div>
-
-  {% endif %}
-
-  {% if count_of_displayed_recipients < count_of_recipients %}
-    <p class="table-show-more-link">
-      Only showing the first {{ count_of_displayed_recipients }} rows
-    </p>
-  {% endif %}
 {% endblock %}
