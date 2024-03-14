@@ -524,7 +524,9 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
         for user in Users(service_id):
             allow_list.extend([user.name, user.mobile_number, user.email_address])
         # Failed sms number
-        allow_list.extend(["simulated user (fail)", "+14254147167", "simulated@simulated.gov"])
+        allow_list.extend(
+            ["simulated user (fail)", "+14254147167", "simulated@simulated.gov"]
+        )
         # Success sms number
         allow_list.extend(
             ["simulated user (success)", "+14254147755", "simulatedtwo@simulated.gov"]
