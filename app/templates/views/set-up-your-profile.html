@@ -1,0 +1,78 @@
+{% extends "withoutnav_template.html" %}
+{% from "components/page-footer.html" import page_footer %}
+{% from "components/form.html" import form_wrapper %}
+{% from "components/components/select/macro.njk" import usaSelect -%}
+
+{% block per_page_title %}
+Set up your profile
+{% endblock %}
+
+{% block maincolumn_content %}
+
+<div class="grid-row">
+  <div class="grid-col-8">
+    <h1 class="font-body-2xl margin-bottom-3">Set up your profile</h1>
+    {% call form_wrapper(autocomplete=True) %}
+    {{ form.name(param_extensions={}) }}
+    <div class="extra-tracking">
+      {{ form.mobile_number(param_extensions={
+      "hint": {"text": "We'll send you a security code by text message"},
+      }) }}
+    </div>
+    {{ usaSelect({
+      "id": "time-zone",
+      "name": "time-zone",
+      "label": "Time zone",
+      "errorMessage": "Oh no!",
+      "items": [
+        {
+          "value": "",
+          "disabled": true,
+          "text": "- Select -"
+        },
+        {
+          "value": "America/Puerto_Rico",
+          "text": "America/Puerto_Rico"
+        },
+        {
+          "value": "US/Eastern",
+          "text": "US/Eastern"
+        },
+        {
+          "value": "US/Central",
+          "text": "US/Central"
+        },
+        {
+          "value": "US/Mountain",
+          "text": "US/Mountain"
+        },
+        {
+          "value": "US/Pacific",
+          "text": "US/Pacific"
+        },
+        {
+          "value": "US/Alaska",
+          "text": "US/Alaska"
+        },
+        {
+          "value": "US/Hawaii",
+          "text": "US/Hawaii"
+        },
+        {
+          "value": "US/Aleutian",
+          "text": "US/Aleutian"
+        },
+        {
+          "value": "US/Samoa",
+          "text": "US/Samoa"
+        },
+      ]
+      })
+      }}
+      {{form.auth_type}}
+      {{ page_footer("Save") }}
+    {% endcall %}
+  </div>
+</div>
+
+{% endblock %}
