@@ -49,3 +49,8 @@ def test_merge_jsonlike_merges_jsonlike_objects_correctly(
 ):
     merge_jsonlike(source_object, destination_object)
     assert source_object == expected_result
+
+def test_commit_hash():
+    # Assert that we have trimmed the default (unknown) commit hash to seven characters
+    # The real commit hash is supplied at deploy time.
+    assert current_app.config["COMMIT_HASH"] == "-------"
