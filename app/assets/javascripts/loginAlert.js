@@ -10,7 +10,7 @@
   function updateCountdown() {
 
     if (countdownContainer) {
-       const now = new Date().getTime();
+      const now = new Date().getTime();
       const difference = targetDate - now;
 
       // Time calculations for days only
