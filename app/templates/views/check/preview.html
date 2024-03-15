@@ -57,35 +57,37 @@
       </thead>
       <tbody>
         {% for item in recipients.displayed_rows %}
-        <tr class="table-row">
-          {% for column in recipients.column_headers %}
-            <td class="table-field-left-aligned">
-              <div>
-                {% set column_data = item[column].data or '' %}
-                {% if column_data is iterable and column_data is not string %}
-                  <ul>
-                    {% for data_item in column_data %}
-                      {% if data_item is not none %}
-                        <li>{{ data_item }}</li>
-                      {% endif %}
-                    {% endfor %}
-                  </ul>
-                {% else %}
-                  {{ column_data }}
-                {% endif %}
-              </div>
-            </td>
-          {% endfor %}
-          {% if item[None].data %}
-            {% for column in item[None].data %}
-              <td class="table-field-left-aligned">
-                <div class="">
-                  {{ column }}
-                </div>
-              </td>
-            {% endfor %}
+          {% if loop.index <= 5 %}
+            <tr class="table-row">
+              {% for column in recipients.column_headers %}
+                <td class="table-field-left-aligned">
+                  <div>
+                    {% set column_data = item[column].data or '' %}
+                    {% if column_data is iterable and column_data is not string %}
+                      <ul>
+                        {% for data_item in column_data %}
+                          {% if data_item is not none %}
+                            <li>{{ data_item }}</li>
+                          {% endif %}
+                        {% endfor %}
+                      </ul>
+                    {% else %}
+                      {{ column_data }}
+                    {% endif %}
+                  </div>
+                </td>
+              {% endfor %}
+              {% if item[None].data %}
+                {% for column in item[None].data %}
+                  <td class="table-field-left-aligned">
+                    <div class="">
+                      {{ column }}
+                    </div>
+                  </td>
+                {% endfor %}
+              {% endif %}
+            </tr>
           {% endif %}
-        </tr>
         {% endfor %}
       </tbody>
     </table>
