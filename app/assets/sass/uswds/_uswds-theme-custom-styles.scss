@@ -312,18 +312,15 @@ td.table-empty-message {
 
 .dashboard {
    .big-number-with-status {
-      a {
-         background: color("blue-60v");
-         padding: units(2);
-         margin-bottom: units(1);
-         text-decoration: none;
-         &:hover{
-            background: color("blue-warm-70v");
-         }
-      }
-      span {
-         color: white;
-      }
+      // a {
+      //    background: color("blue-60v");
+      //    padding: units(2);
+      //    margin-bottom: units(1);
+      //    text-decoration: none;
+      //    &:hover{
+      //       background: color("blue-warm-70v");
+      //    }
+      // }
       .big-number-smaller {
          display: flex;
          flex-direction: column;
