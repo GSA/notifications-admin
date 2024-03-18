@@ -87,16 +87,15 @@ def format_time(date):
 
 
 def format_datetime_normal(date):
+    # example: February 20, 2024 at 07:00 PM US/Eastern, used for datetimes that's not within tables
     return "{} at {} {}".format(
-        format_date_normal(date), format_time_24h(date), get_user_preferred_timezone()
+        format_date_normal(date), format_time_12h(date), get_user_preferred_timezone()
     )
 
 
-def format_datetime_short(date):
-    # example:  03-18-2024 at 04:53 PM
-    return "{} at {}".format(
-        format_date_numeric(date), format_time_12h(date)
-    )
+def format_datetime_table(date):
+    # example:  03-18-2024 at 04:53 PM, intended for datetimes in tables
+    return "{} at {}".format(format_date_numeric(date), format_time_12h(date))
 
 
 def format_time_12h(date):
@@ -174,7 +173,7 @@ def format_date(date):
 
 def format_date_normal(date):
     date = parse_naive_dt(date)
-    return date.strftime("%d %B %Y").lstrip("0")
+    return date.strftime("%B %d, %Y").lstrip("0")
 
 
 def format_date_short(date):
