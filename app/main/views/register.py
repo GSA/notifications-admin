@@ -120,4 +120,13 @@ def _do_registration(form, send_sms=True, send_email=True, organization_id=None)
 def registration_continue():
     if not session.get("user_details"):
         return redirect(url_for(".show_accounts_or_dashboard"))
-    return render_template("views/registration-continue.html")
+
+@main.route("/set-up-your-profile")
+@hide_from_search_engines
+def set_up_your_profile():
+
+    form = RegisterUserForm()
+    if form.validate_on_submit():
+        _do_registration(form, send_sms=False, send_email=False)
+
+    return render_template("views/set-up-your-profile.html", form=form)
