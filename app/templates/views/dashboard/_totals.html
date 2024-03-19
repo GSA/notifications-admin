@@ -17,30 +17,9 @@
         <a class="usa-button usa-button--outline" href="{{ url_for('.view_notifications', service_id=service_id, message_type='sms', status='sending,delivered,failed') }}">
          Details
         </a>
-        {% if show_failures %}
-          <span class="big-number-status{% if statistics['sms']['show_warning'] is sameas true %} big-number-status--failing{% endif %}">
-            {% if statistics['sms']['failed'] %}
-              <a class="usa-link" href="{{ url_for('.view_notifications', service_id=service_id, message_type='sms', status='failed') }}">
-                {{ "{:,}".format(statistics['sms']['failed']) }}
-                failed – {{ statistics['sms']['failed_percentage'] }}%
-              </a>
-            {% else %}
-              No failures
-            {% endif %}
-          </span>
-        {% endif %}
+        {# Removing the failures area for now, as the user can click on the above link to see all the details.
+        In the future state of the dashboard, the all statuses will be more apparent with data visualizations #}
       </span>
       </div>
-      <!-- <div id="total-email" class="grid-col-6">
-        <span class="big-number-with-status pilot-disabled">
-          <a class="usa-link display-block margin-bottom-1">
-            <span class="big-number-smaller">
-              <span class="big-number-number">0</span>
-              <span class="big-number-label">emails sent</span>
-            </span>
-          </a>
-          <span class="big-number-status">No failures</span>
-        </span>
-      </div> -->
     </div>
 </div>
