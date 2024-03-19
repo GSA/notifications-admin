@@ -185,12 +185,12 @@ session to make the changes take effect.
 Now we're ready to install the Python version we need with `pyenv`, like so:
 
 ```sh
-pyenv install 3.9
+pyenv install 3.12
 ```
 
-This will install the latest version of Python 3.9.
+This will install the latest version of Python 3.12.
 
-_NOTE: This project currently runs on Python 3.9.x._
+_NOTE: This project currently runs on Python 3.12.x._
 
 #### [API Step] Python Dependency Installation
 
@@ -242,16 +242,16 @@ git clone git@github.com:GSA/notifications-admin.git
 
 Now go into the project directory (`notifications-admin` by default), create a
 virtual environment, and set the local Python version to point to the virtual
-environment (assumes version Python `3.9.18` is what is installed on your
+environment (assumes version Python `3.12.2` is what is installed on your
 machine):
 
 ```sh
 cd notifications-admin
-pyenv virtualenv 3.9.18 notify-admin
+pyenv virtualenv 3.12.2 notify-admin
 pyenv local notify-admin
 ```
 
-_If you're not sure which version of Python was installed with `pyenv`, you can check by running `pyenv versions` and it'll list everything available currently._
+_If you're not sure which version of Python was installed with `pyenv`, you can check by running `pyenv versions` and it'll list everything available currently.You should see the virtual environment name in terminal as 'notify-admin'._
 
 Now [log into cloud.gov](https://cloud.gov/docs/getting-started/setup/#set-up-the-command-line)
 in the command line by using this command:
@@ -273,6 +273,30 @@ cd terraform/development
 In addition to some infrastructure setup, this will also create a local `.env`
 file for you in the project's root directory, which will include a handful of
 project-specific environment variables.
+
+### Switching to different environment
+
+Once all of pre-requisites for the project are installed and to switch to newer environment with newer python version follow the below steps to create new virtual environment.
+
+First install the newer Python version we need with `pyenv`, (say the planned upgrade to 3.15) like so :
+
+```sh
+pyenv install 3.15
+```
+
+Now go into the project directory (`notifications-api` by default), create a
+virtual environment, and set the local Python version to point to the virtual
+environment (assumes version Python `3.15.2` is what is installed on your
+machine):
+
+```sh
+cd notifications-api
+pyenv virtualenv 3.15.2 notify-admin-upgrade
+pyenv local notify-admin-upgrade
+```
+
+_If you're not sure which version of Python was installed with `pyenv`, you can check by running `pyenv versions` and it'll list everything available currently.you can deactivate the current environment by running `source deactivate` or `deactivate`.Close the terminal and reopen a new terminal should see the newer virtual environment name in terminal as 'notify-admin-upgrade'. you can the get python version ,executable, and other details for this environment by running `poetry env info`._
+
 
 #### Updating the .env file for E2E tests
 
