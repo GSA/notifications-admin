@@ -605,6 +605,14 @@ class RegisterUserForm(StripWhitespaceForm):
     auth_type = HiddenField("auth_type", default="sms_auth")
 
 
+class SetupUserProfileForm(StripWhitespaceForm):
+    name = GovukTextInputField(
+        "Full name", validators=[DataRequired(message="Cannot be empty")]
+    )
+    mobile_number = international_phone_number()
+
+
+
 class RegisterUserFromInviteForm(RegisterUserForm):
     def __init__(self, invited_user):
         super().__init__(

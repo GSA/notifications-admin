@@ -1,6 +1,9 @@
 from datetime import datetime, timedelta
+import uuid
 
-from flask import abort, redirect, render_template, session, url_for
+from flask import abort, current_app, redirect, render_template, request, session, url_for
+from app.main.views import sign_in
+from app import user_api_client
 from flask_login import current_user
 
 from app.main import main
@@ -8,6 +11,7 @@ from app.main.forms import (
     RegisterUserForm,
     RegisterUserFromInviteForm,
     RegisterUserFromOrgInviteForm,
+    SetupUserProfileForm,
 )
 from app.main.views.verify import activate_user
 from app.models.user import InvitedOrgUser, InvitedUser, User
@@ -120,13 +124,46 @@ def _do_registration(form, send_sms=True, send_email=True, organization_id=None)
 def registration_continue():
     if not session.get("user_details"):
         return redirect(url_for(".show_accounts_or_dashboard"))
+    else:
+        raise Exception("Unexpected routing in registration_continue")
 
-@main.route("/set-up-your-profile")
+
+@main.route("/set-up-your-profile",  methods=["GET", "POST"])
 @hide_from_search_engines
 def set_up_your_profile():
+    print("ENTER set_up_your_profile")
 
-    form = RegisterUserForm()
+
+
+    form = SetupUserProfileForm()
     if form.validate_on_submit():
-        _do_registration(form, send_sms=False, send_email=False)
+        print("VALIDATING FORM")
 
+        # start login.gov
+        code = request.args.get("code")
+        state = request.args.get("state")
+        login_gov_error = request.args.get("error")
+        if code and state:
+            access_token = sign_in._get_access_token(code, state)
+            user_email, user_uuid = sign_in._get_user_email_and_uuid(access_token)
+            redirect_url = request.args.get("next")
+
+
+
+        elif login_gov_error:
+            current_app.logger.error(f"login.gov error: {login_gov_error}")
+            raise Exception(f"Could not login with login.gov {login_gov_error}")
+        # end login.gov
+
+        user = User.register(
+            name=form.name.data,
+            email_address=user_email,
+            mobile_number=form.mobile_number.data,
+            password=str(uuid.uuid4()),
+            auth_type="sms_auth",
+        )
+        # activate the user
+        user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
+        activate_user(user["id"])
+        return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
     return render_template("views/set-up-your-profile.html", form=form)

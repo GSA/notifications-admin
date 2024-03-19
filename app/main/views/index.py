@@ -1,3 +1,4 @@
+import os
 from flask import abort, redirect, render_template, request, url_for
 from flask_login import current_user
 
@@ -7,6 +8,8 @@ from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
 from app.main.views.sub_navigation_dictionaries import features_nav, using_notify_nav
 from app.utils.user import user_is_logged_in
+
+login_dot_gov_url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
 
 
 @main.route("/")
@@ -18,6 +21,7 @@ def index():
         "views/signedout.html",
         sms_rate=CURRENT_SMS_RATE,
         counts=status_api_client.get_count_of_live_services_and_organizations(),
+        login_dot_gov_url=login_dot_gov_url,
     )
 
 
