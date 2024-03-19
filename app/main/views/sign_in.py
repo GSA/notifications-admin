@@ -61,7 +61,6 @@ def _get_access_token(code, state):
     url = f"{base_url}{cli_assert}&{cli_assert_type}&{code_param}&grant_type=authorization_code"
     headers = {"Authorization": "Bearer %s" % token}
     response = requests.post(url, headers=headers)
-    print(f"RESPONSE FROM LOGIN DOT GOV {response.json()}")
     access_token = response.json()["access_token"]
     return access_token
 

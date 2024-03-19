@@ -612,7 +612,6 @@ class SetupUserProfileForm(StripWhitespaceForm):
     mobile_number = international_phone_number()
 
 
-
 class RegisterUserFromInviteForm(RegisterUserForm):
     def __init__(self, invited_user):
         super().__init__(

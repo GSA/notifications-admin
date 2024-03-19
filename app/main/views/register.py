@@ -1,11 +1,18 @@
-from datetime import datetime, timedelta
 import uuid
+from datetime import datetime, timedelta
 
-from flask import abort, current_app, redirect, render_template, request, session, url_for
-from app.main.views import sign_in
-from app import user_api_client
+from flask import (
+    abort,
+    current_app,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from flask_login import current_user
 
+from app import user_api_client
 from app.main import main
 from app.main.forms import (
     RegisterUserForm,
@@ -13,6 +20,7 @@ from app.main.forms import (
     RegisterUserFromOrgInviteForm,
     SetupUserProfileForm,
 )
+from app.main.views import sign_in
 from app.main.views.verify import activate_user
 from app.models.user import InvitedOrgUser, InvitedUser, User
 from app.utils import hide_from_search_engines
@@ -128,16 +136,12 @@ def registration_continue():
         raise Exception("Unexpected routing in registration_continue")
 
 
-@main.route("/set-up-your-profile",  methods=["GET", "POST"])
+@main.route("/set-up-your-profile", methods=["GET", "POST"])
 @hide_from_search_engines
 def set_up_your_profile():
-    print("ENTER set_up_your_profile")
-
-
 
     form = SetupUserProfileForm()
     if form.validate_on_submit():
-        print("VALIDATING FORM")
 
         # start login.gov
         code = request.args.get("code")
@@ -147,8 +151,6 @@ def set_up_your_profile():
             access_token = sign_in._get_access_token(code, state)
             user_email, user_uuid = sign_in._get_user_email_and_uuid(access_token)
             redirect_url = request.args.get("next")
-
-
 
         elif login_gov_error:
             current_app.logger.error(f"login.gov error: {login_gov_error}")
