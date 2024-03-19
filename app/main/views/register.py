@@ -168,7 +168,6 @@ def set_up_your_profile():
             auth_type="sms_auth",
         )
 
-
         # activate the user
         user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
         activate_user(user["id"])
