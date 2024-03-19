@@ -610,6 +610,8 @@ class SetupUserProfileForm(StripWhitespaceForm):
         "Full name", validators=[DataRequired(message="Cannot be empty")]
     )
     mobile_number = international_phone_number()
+    # TODO This should be replaced with a select widget when one is available.
+    preferred_timezone = HiddenField("preferred_timezone", default="US/Eastern")
 
 
 class RegisterUserFromInviteForm(RegisterUserForm):

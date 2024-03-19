@@ -141,8 +141,8 @@ def registration_continue():
 def set_up_your_profile():
 
     form = SetupUserProfileForm()
-    if form.validate_on_submit():
 
+    if form.validate_on_submit():
         # start login.gov
         code = request.args.get("code")
         state = request.args.get("state")
@@ -157,13 +157,7 @@ def set_up_your_profile():
             raise Exception(f"Could not login with login.gov {login_gov_error}")
         # end login.gov
 
-        user = User.register(
-            name=form.name.data,
-            email_address=user_email,
-            mobile_number=form.mobile_number.data,
-            password=str(uuid.uuid4()),
-            auth_type="sms_auth",
-        )
+
         # activate the user
         user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
         activate_user(user["id"])
