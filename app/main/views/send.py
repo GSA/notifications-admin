@@ -1,4 +1,3 @@
-import itertools
 import time
 import uuid
 from string import ascii_uppercase
@@ -6,6 +5,7 @@ from zipfile import BadZipFile
 
 from flask import abort, flash, redirect, render_template, request, session, url_for
 from flask_login import current_user
+from markupsafe import Markup
 from notifications_python_client.errors import HTTPError
 from notifications_utils import SMS_CHAR_COUNT_LIMIT
 from notifications_utils.insensitive_dict import InsensitiveDict
@@ -151,8 +151,11 @@ def send_messages(service_id, template_id):
         # just show the first error, as we don't expect the form to have more
         # than one, since it only has one field
         first_field_errors = list(form.errors.values())[0]
-        flash(first_field_errors[0])
-
+        error_message = '<span class="usa-error-message">'
+        error_message = f"{error_message}{first_field_errors[0]}"
+        error_message = f"{error_message}</span>"
+        error_message = Markup(error_message)
+        flash(error_message)
     column_headings = get_spreadsheet_column_headings_from_template(template)
 
     return render_template(
@@ -513,19 +516,29 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
         current_service,
         show_recipient=False,
     )
+
+    allow_list = []
+    if current_service.trial_mode:
+        # Adding the simulated numbers to allow list
+        # so they can be sent in trial mode
+        for user in Users(service_id):
+            allow_list.extend([user.name, user.mobile_number, user.email_address])
+        # Failed sms number
+        allow_list.extend(
+            ["simulated user (fail)", "+14254147167", "simulated@simulated.gov"]
+        )
+        # Success sms number
+        allow_list.extend(
+            ["simulated user (success)", "+14254147755", "simulatedtwo@simulated.gov"]
+        )
+    else:
+        allow_list = None
     recipients = RecipientCSV(
         contents,
         template=template or simplifed_template,
         max_initial_rows_shown=50,
         max_errors_shown=50,
-        guestlist=(
-            itertools.chain.from_iterable(
-                [user.name, user.mobile_number, user.email_address]
-                for user in Users(service_id)
-            )
-            if current_service.trial_mode
-            else None
-        ),
+        guestlist=allow_list,
         remaining_messages=remaining_messages,
         allow_international_sms=current_service.has_permission("international_sms"),
     )
@@ -556,7 +569,9 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
 
     if preview_row < len(recipients) + 2:
         template.values = recipients[preview_row - 2].recipient_and_personalisation
-        simplifed_template.values = recipients[preview_row - 2].recipient_and_personalisation
+        simplifed_template.values = recipients[
+            preview_row - 2
+        ].recipient_and_personalisation
     elif preview_row > 2:
         abort(404)
 
@@ -859,7 +874,7 @@ def _check_notification(service_id, template_id, exception=None):
         back_link_from_preview=back_link_from_preview,
         choose_time_form=choose_time_form,
         **(get_template_error_dict(exception) if exception else {}),
-        simplifed_template=simplifed_template
+        simplifed_template=simplifed_template,
     )
 
 
