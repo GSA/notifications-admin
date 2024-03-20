@@ -168,26 +168,33 @@ td.table-empty-message {
    flex-wrap: wrap;
    justify-content: space-between;
    padding: 1rem;
-   .user-list-item {
-      @include at-media(desktop) {
-         width: calc(50% - units(1));
-         margin-bottom: 1rem;
-         box-sizing: border-box;
-      }
-      // flex: 1 1 calc(100% - units(2));
-      border: 1px solid color('gray-cool-10');
-      padding: units(2);
-      .tick-cross-list-permissions {
-         margin: units(1) 0;
-         padding-left: units(2);
-      }
-      .hint {
-         display: block;
-         font-size: size("body", "sm");
-         font-weight: normal;
-      }
+ }
+
+ .user-list-item {
+   @include at-media(desktop) {
+     width: calc(50% - units(1));
+     margin-bottom: 1rem;
+     box-sizing: border-box;
    }
-}
+   .user-list-item-heading .live-search-relevant {
+      display: block;
+      word-wrap: break-word;
+    }
+
+   border: 1px solid color('gray-cool-10');
+   padding: units(2);
+
+   .tick-cross-list-permissions {
+     margin: units(1) 0;
+     padding-left: units(2);
+   }
+
+   .hint {
+     display: block;
+     font-size: size("body", "sm");
+     font-weight: normal;
+   }
+ }
 
 .template-list-item-without-ancestors .template-list-folder:active,
 .template-list-item-without-ancestors .template-list-folder:active::before,
