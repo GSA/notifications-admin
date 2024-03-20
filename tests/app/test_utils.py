@@ -1,5 +1,7 @@
 import pytest
+from flask import Flask
 
+from app import create_app
 from app.utils import merge_jsonlike
 
 
@@ -49,3 +51,13 @@ def test_merge_jsonlike_merges_jsonlike_objects_correctly(
 ):
     merge_jsonlike(source_object, destination_object)
     assert source_object == expected_result
+
+
+def test_commit_hash():
+    # Assert that we have trimmed the default (unknown) commit hash to seven characters
+    # The real commit hash is supplied at deploy time.
+    app = Flask("app")
+    create_app(app)
+
+    with app.app_context() as current_app:
+        assert current_app.app.config["COMMIT_HASH"] == "-------"

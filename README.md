@@ -251,7 +251,7 @@ pyenv virtualenv 3.12.2 notify-admin
 pyenv local notify-admin
 ```
 
-_If you're not sure which version of Python was installed with `pyenv`, you can check by running `pyenv versions` and it'll list everything available currently.You should see the virtual environment name in terminal as 'notify-admin'._
+_If you're not sure which version of Python was installed with `pyenv`, you can check by running `pyenv versions` and it'll list everything available currently._
 
 Now [log into cloud.gov](https://cloud.gov/docs/getting-started/setup/#set-up-the-command-line)
 in the command line by using this command:
@@ -276,26 +276,27 @@ project-specific environment variables.
 
 ### Switching to different environment
 
-Once all of pre-requisites for the project are installed and to switch to newer environment with newer python version follow the below steps to create new virtual environment.
+Once all of pre-requisites for the project are installed and for first time setup or if you're upgrading an existing project to newer environment with newer python version follow below steps to create new virtual environment.
 
-First install the newer Python version we need with `pyenv`, (say the planned upgrade to 3.15) like so :
+First install the newer Python version we need with `pyenv`, (say the planned upgrade to 3.12) like so :
 
 ```sh
-pyenv install 3.15
+pyenv install 3.12
 ```
 
-Now go into the project directory (`notifications-api` by default), create a
+Now go into the project directory (`notifications-admin` by default), create a
 virtual environment, and set the local Python version to point to the virtual
-environment (assumes version Python `3.15.2` is what is installed on your
+environment (assumes version Python `3.12.2` is what is installed on your
 machine):
 
 ```sh
-cd notifications-api
-pyenv virtualenv 3.15.2 notify-admin-upgrade
+cd notifications-admin
+pyenv virtualenv 3.12.2 notify-admin-upgrade
 pyenv local notify-admin-upgrade
 ```
 
-_If you're not sure which version of Python was installed with `pyenv`, you can check by running `pyenv versions` and it'll list everything available currently.you can deactivate the current environment by running `source deactivate` or `deactivate`.Close the terminal and reopen a new terminal should see the newer virtual environment name in terminal as 'notify-admin-upgrade'. you can the get python version ,executable, and other details for this environment by running `poetry env info`._
+_If you're not sure which version of Python was installed with `pyenv`, you can check by running `pyenv versions` and it'll list everything available currently.You can deactivate the current environment by running `source deactivate` or `deactivate`.Close the shell session and reopen a new shell session should show the newer virtual environment._
+_You can get version,executable, and other details for any environment by running `poetry env info`._
 
 
 #### Updating the .env file for E2E tests
