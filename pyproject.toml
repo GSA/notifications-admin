@@ -23,7 +23,7 @@ itsdangerous = "~=2.1"
 jinja2 = "~=3.1"
 newrelic = "*"
 notifications-python-client = "==9.0.0"
-notifications-utils = {git = "https://github.com/GSA/notifications-utils.git", rev="341886d"}
+notifications-utils = {git = "https://github.com/GSA/notifications-utils.git"}
 pyexcel = "==0.7.0"
 pyexcel-io = "==0.6.6"
 pyexcel-ods3 = "==0.6.1"
