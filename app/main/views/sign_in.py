@@ -165,7 +165,6 @@ def sign_in():
         )
 
     other_device = current_user.logged_in_elsewhere()
-    notify_env = os.getenv("NOTIFY_ENVIRONMENT")
 
     initial_signin_url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
 
@@ -174,7 +173,7 @@ def sign_in():
         form=form,
         again=bool(redirect_url),
         other_device=other_device,
-        login_gov_enabled=bool(notify_env in ["development", "staging", "demo"]),
+        login_gov_enabled=True,
         password_reset_url=password_reset_url,
         initial_signin_url=initial_signin_url,
     )
