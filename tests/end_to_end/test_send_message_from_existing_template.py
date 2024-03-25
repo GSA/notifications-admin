@@ -163,7 +163,7 @@ def handle_no_existing_template_case(page):
 
     print(f"PAGE!!! {page}")
 
-    dashboard_button = page.get_by_text("Dashboard")
+    dashboard_button = page.get_by_role("button", name="Dashboard")
     expect(dashboard_button).to_be_visible()
     dashboard_button.click()
 
