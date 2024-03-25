@@ -193,7 +193,7 @@ def handle_no_existing_template_case(page):
 
 
 def handle_existing_template_case(page):
-    existing_template_link = page.get_by_text("Existing text message template")
+    existing_template_link = page.get_by_text("Example text message template")
     expect(existing_template_link).to_be_visible()
     existing_template_link.click()
     print("GOT TO EXISTING TEMPLATE")
