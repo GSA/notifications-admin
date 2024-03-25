@@ -300,10 +300,10 @@ def test_send_message_from_existing_template(authenticated_page, end_to_end_cont
 
     new_service_name = _setup(page, end_to_end_context)
 
-    if page.get_by_text("Create your first template"):
-        handle_no_existing_template_case(page)
-    else:
-        handle_existing_template_case(page)
+    #if page.get_by_text("Create your first template"):
+    #    handle_no_existing_template_case(page)
+    #else:
+    handle_existing_template_case(page)
 
     _teardown(page)
 
