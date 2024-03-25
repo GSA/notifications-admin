@@ -161,7 +161,7 @@ def handle_no_existing_template_case(page):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
-    print(f"PAGE!!! {page}")
+    print(f"PAGE!!! {page.content}")
 
     dashboard_button = page.get_by_role("button", name="Dashboard")
     expect(dashboard_button).to_be_visible()
