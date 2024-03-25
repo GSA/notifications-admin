@@ -132,6 +132,7 @@ def handle_no_existing_template_case(page):
     use_this_template_button = page.get_by_text("Use this template")
     expect(use_this_template_button).to_be_visible()
     use_this_template_button.click()
+    print("DID USE THIS TEMPLATE")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
@@ -139,6 +140,7 @@ def handle_no_existing_template_case(page):
     use_my_phone_number_link = page.get_by_text("Use my phone number")
     expect(use_my_phone_number_link).to_be_visible()
     use_my_phone_number_link.click()
+    print("DID USE MY PHONE NUBMER")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
@@ -146,6 +148,7 @@ def handle_no_existing_template_case(page):
     preview_button = page.get_by_text("Preview")
     expect(preview_button).to_be_visible()
     preview_button.click()
+    print("DID PREVIEW")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
@@ -153,9 +156,12 @@ def handle_no_existing_template_case(page):
     send_button = page.get_by_role("button", name="Send")
     expect(send_button).to_be_visible()
     send_button.click()
+    print("DID SEND")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+
+    print(f"PAGE!!! {page}")
 
     dashboard_button = page.get_by_text("Dashboard")
     expect(dashboard_button).to_be_visible()
