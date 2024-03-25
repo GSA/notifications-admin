@@ -78,14 +78,7 @@ def _setup(page, end_to_end_context):
     return new_service_name
 
 
-def test_add_new_service_workflow(authenticated_page, end_to_end_context):
-    page = authenticated_page
-
-    new_service_name = _setup(page, end_to_end_context)
-
-    print(page)
-
-
+def handle_no_existing_template_case(page):
     create_template_button = page.get_by_text("Create your first template")
     expect(create_template_button).to_be_visible()
     create_template_button.click()
@@ -136,14 +129,12 @@ def test_add_new_service_workflow(authenticated_page, end_to_end_context):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
-
     use_this_template_button = page.get_by_text("Use this template")
     expect(use_this_template_button).to_be_visible()
     use_this_template_button.click()
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
-
 
     use_my_phone_number_link = page.get_by_text("Use my phone number")
     expect(use_my_phone_number_link).to_be_visible()
@@ -152,14 +143,12 @@ def test_add_new_service_workflow(authenticated_page, end_to_end_context):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
-
     preview_button = page.get_by_text("Preview")
     expect(preview_button).to_be_visible()
     preview_button.click()
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
-
 
     send_button = page.get_by_role("button", name="Send")
     expect(send_button).to_be_visible()
@@ -168,7 +157,6 @@ def test_add_new_service_workflow(authenticated_page, end_to_end_context):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
-
     dashboard_button = page.get_by_text("Dashboard")
     expect(dashboard_button).to_be_visible()
     dashboard_button.click()
@@ -176,13 +164,12 @@ def test_add_new_service_workflow(authenticated_page, end_to_end_context):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
-
     download_link = page.get_by_text("Download")
     expect(download_link).to_be_visible()
 
     # Start waiting for the download
     with page.expect_download() as download_info:
-    # Perform the action that initiates download
+        # Perform the action that initiates download
         download_link.click()
     download = download_info.value
     # Wait for the download process to complete and save the downloaded file somewhere
@@ -196,10 +183,127 @@ def test_add_new_service_workflow(authenticated_page, end_to_end_context):
     # to shortcircuit the sending process.  Our phone number validator will insta-fail the
     # message and it won't be sent, but the report will still be generated, which is all
     # we care about here.
-    assert "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time" in content
+    assert (
+        "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time"
+        in content
+    )
     assert "12025555555" in content
     assert "one-off-e2e_test_user" in content
     os.remove("download_test_file")
+
+
+def handle_existing_template_case(page):
+    existing_template_link = page.get_by_text("Existing text message template")
+    expect(existing_template_link).to_be_visible()
+    existing_template_link.click()
+    print("GOT TO EXISTING TEMPLATE")
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    use_this_template_button = page.get_by_role("button", name="Use this template")
+    expect(use_this_template_button).to_be_visible()
+    use_this_template_button.click()
+    print("GOT TO USE THIS TEMPLATE")
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    use_my_phone_number_link = page.get_by_text("Use my phone number")
+    expect(use_my_phone_number_link).to_be_visible()
+    use_my_phone_number_link.click()
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    day_of_week_input = page.get_by_text("day of week")
+    expect(day_of_week_input).to_be_visible()
+    day_of_week_input.fill("Monday")
+    print("GOT DAY OF WEEK INPUT")
+
+    continue_button = page.get_by_role("button", name="Continue")
+
+    # continue_button = page.get_by_text("Continue")
+    expect(continue_button).to_be_visible()
+    continue_button.click()
+    print("GOT TO CONTINUE")
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    color_input = page.get_by_text("color")
+    expect(day_of_week_input).to_be_visible()
+    day_of_week_input.fill("Green")
+    print("GOT COLOR INPUT")
+
+    continue_button = page.get_by_role("button", name="Continue")
+
+    # continue_button = page.get_by_text("Continue")
+    expect(continue_button).to_be_visible()
+    continue_button.click()
+    print("GOT TO CONTINUE")
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    preview_button = page.get_by_text("Preview")
+    expect(preview_button).to_be_visible()
+    preview_button.click()
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    send_button = page.get_by_role("button", name="Send")
+    expect(send_button).to_be_visible()
+    send_button.click()
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    dashboard_button = page.get_by_text("Dashboard")
+    expect(dashboard_button).to_be_visible()
+    dashboard_button.click()
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    download_link = page.get_by_text("Download")
+    expect(download_link).to_be_visible()
+
+    # Start waiting for the download
+    with page.expect_download() as download_info:
+        # Perform the action that initiates download
+        download_link.click()
+    download = download_info.value
+    # Wait for the download process to complete and save the downloaded file somewhere
+    download.save_as("download_test_file")
+    f = open("download_test_file", "r")
+
+    content = f.read()
+    f.close()
+    # We don't want to wait 5 minutes to get a response from AWS about the message we sent
+    # So we are using this invalid phone number the e2e_test_user signed up with (12025555555)
+    # to shortcircuit the sending process.  Our phone number validator will insta-fail the
+    # message and it won't be sent, but the report will still be generated, which is all
+    # we care about here.
+    assert (
+        "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time"
+        in content
+    )
+    assert "12025555555" in content
+    assert "one-off-e2e_test_user" in content
+    os.remove("download_test_file")
+
+
+def test_send_message_from_existing_template(authenticated_page, end_to_end_context):
+    page = authenticated_page
+
+    new_service_name = _setup(page, end_to_end_context)
+
+    if page.get_by_text("Create your first template"):
+        handle_no_existing_template_case(page)
+    else:
+        handle_existing_template_case(page)
 
     _teardown(page)
 
