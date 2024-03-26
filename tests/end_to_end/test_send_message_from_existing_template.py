@@ -344,7 +344,9 @@ def test_send_message_from_existing_template(authenticated_page, end_to_end_cont
     new_service_name = _setup(page, end_to_end_context)
 
     print(page.content())
-    if page.get_by_text("Create your first template"):
+    x = page.get_by_text("Create your first template")
+    print(f"X = {x.count()}")
+    if page.get_by_text("Create your first template").count() > 0:
         handle_no_existing_template_case(page)
     else:
         handle_existing_template_case(page)
