@@ -6,7 +6,7 @@ from unittest.mock import call
 import pytest
 from flask import url_for
 
-from app.formatters import format_datetime_short
+from app.formatters import format_datetime_table
 from tests import sample_uuid, validate_route_permission
 from tests.conftest import SERVICE_ONE_ID, normalize_spaces
 
@@ -123,7 +123,7 @@ def test_should_show_api_keys_page(
     assert rows[0] == "API keys Action"
     assert (
         rows[1]
-        == f"another key name Revoked {format_datetime_short(date.fromtimestamp(0).isoformat())}"
+        == f"another key name Revoked {format_datetime_table(date.fromtimestamp(0).isoformat())}"
     )
     assert rows[2] == "some key name Revoke some key name"
 

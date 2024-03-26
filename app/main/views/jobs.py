@@ -18,7 +18,7 @@ from notifications_utils.template import EmailPreviewTemplate, SMSBodyPreviewTem
 
 from app import (
     current_service,
-    format_datetime_short,
+    format_datetime_table,
     notification_api_client,
     service_api_client,
 )
@@ -93,7 +93,7 @@ def view_job_csv(service_id, job_id):
         mimetype="text/csv",
         headers={
             "Content-Disposition": 'inline; filename="{} - {}.csv"'.format(
-                job.template["name"], format_datetime_short(job.created_at)
+                job.template["name"], format_datetime_table(job.created_at)
             )
         },
     )
