@@ -212,7 +212,6 @@ def handle_existing_template_case(page):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
-
     continue_button = page.get_by_role("button", name="Continue")
 
     # continue_button = page.get_by_text("Continue")
@@ -309,7 +308,7 @@ def handle_existing_template_case(page):
 def test_send_message_from_existing_template(authenticated_page, end_to_end_context):
     page = authenticated_page
 
-    new_service_name = _setup(page, end_to_end_context)
+    _setup(page, end_to_end_context)
 
     if page.get_by_text("Create your first template").count() > 0:
         handle_no_existing_template_case(page)
