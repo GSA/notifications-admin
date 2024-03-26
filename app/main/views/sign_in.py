@@ -165,31 +165,8 @@ def sign_in():
         )
 
     other_device = current_user.logged_in_elsewhere()
-    notify_env = os.getenv("NOTIFY_ENVIRONMENT")
-    current_app.logger.info("should render the sign in template")
 
-    # TODO REMOVE THIS INFO ONCE STAGING WORKS WITH LOGIN DOT GOV
-    current_app.logger.info(f"NOTIFY ENV = {notify_env}")
-    current_app.logger.info(
-        f"LOGIN_DOT_GOV_CLIENT_ID={os.getenv('LOGIN_DOT_GOV_CLIENT_ID')}"
-    )
-    current_app.logger.info(
-        f"LOGIN_DOT_GOV_USER_INFO_URL={os.getenv('LOGIN_DOT_GOV_USER_INFO_URL')}"
-    )
-    current_app.logger.info(
-        f"LOGIN_DOT_GOV_ACCESS_TOKEN_URL={os.getenv('LOGIN_DOT_GOV_ACCESS_TOKEN_URL')}"
-    )
-    current_app.logger.info(
-        f"LOGIN_DOT_GOV_LOGOUT_URL={os.getenv('LOGIN_DOT_GOV_LOGOUT_URL')}"
-    )
-    current_app.logger.info(
-        f"LOGIN_DOT_GOV_BASE_LOGOUT_URL={os.getenv('LOGIN_DOT_GOV_BASE_LOGOUT_URL')}"
-    )
-    current_app.logger.info(
-        f"LOGIN_DOT_GOV_SIGNOUT_REDIRECT={os.getenv('LOGIN_DOT_GOV_SIGNOUT_REDIRECT')}"
-    )
     initial_signin_url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
-    current_app.logger.info(f"LOGIN_DOT_GOV_INITIAL_SIGNIN_URL={initial_signin_url}")
 
     return render_template(
         "views/signin.html",
