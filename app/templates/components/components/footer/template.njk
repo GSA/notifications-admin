@@ -4,38 +4,6 @@
   </div> #}
   <div class="usa-footer__primary-section">
     <div class="grid-container">
-      <div class="grid-row">
-        <div class="grid-col">
-          {# {% if params.navigation %}
-          <nav class="usa-footer__nav" aria-label="Footer navigation,,">
-            <div class="grid-row grid-gap-2">
-              {% for nav in params.navigation %}
-              <div class="mobile-lg:grid-col-6 desktop:grid-col-4">
-                <section class="
-                    usa-footer__primary-content
-                    usa-footer__primary-content--collapsible
-                  ">
-                  <h4 class="usa-footer__primary-link">{{ nav.title }}</h4>
-                  <ul class="usa-list usa-list--unstyled">
-                    {% for item in nav.items %}
-                      {% if item.href and item.text %}
-                      <li class="usa-footer__secondary-link">
-                        <a href="{{ item.href }}" {% for attribute, value in item.attributes %}
-                          {{attribute}}="{{value}}" {% endfor %}>
-                          {{ item.text }}
-                        </a>
-                      </li>
-                      {% endif %}
-                    {% endfor %}
-                  </ul>
-                </section>
-              </div>
-              {% endfor %}
-            </div>
-          </nav>
-          {% endif %} #}
-        </div>
-      </div>
       <div class="padding-y-1">
           {% if params.meta %}
           <h2 class="usa-sr-only">{{ params.meta.visuallyHiddenTitle | default("Support links") }}</h2>
