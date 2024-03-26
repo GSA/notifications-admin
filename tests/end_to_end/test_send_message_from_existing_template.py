@@ -79,6 +79,8 @@ def _setup(page, end_to_end_context):
 
 
 def handle_no_existing_template_case(page):
+    print(f"ENTER HANDLE_NO_EXISTING_TEMPLATE_CASE")
+    print(page.content())
     create_template_button = page.get_by_text("Create your first template")
     expect(create_template_button).to_be_visible()
     create_template_button.click()
@@ -303,6 +305,8 @@ def handle_existing_template_case(page):
 
 def test_send_message_from_existing_template(authenticated_page, end_to_end_context):
     page = authenticated_page
+    print(f"START OF TEST")
+    print(page.content())
 
     new_service_name = _setup(page, end_to_end_context)
 
