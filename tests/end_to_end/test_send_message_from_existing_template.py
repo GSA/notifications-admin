@@ -254,7 +254,9 @@ def handle_existing_template_case(page):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
-    day_of_week_input = page.get_by_text("day of week")
+
+    day_of_week_input = page.locator('xpath=//input[@name="day of week"]')
+    # day_of_week_input = page.get_by_text("day of week")
     expect(day_of_week_input).to_be_visible()
     day_of_week_input.fill("Monday")
     print("GOT DAY OF WEEK INPUT")
