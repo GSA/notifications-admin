@@ -79,12 +79,19 @@ def _setup(page, end_to_end_context):
 
 
 def handle_no_existing_template_case(page):
-    print(f"ENTER HANDLE_NO_EXISTING_TEMPLATE_CASE")
+    """
+    This is the test path for local development.  Developers have their own
+    databases and typically they have service or two already created, which
+    means they won't see the "Example text message template" which is done
+    as an introduction.  Instead they will see "Create your first template".
+    Note that this test goes all the way through sending and downloading the
+    report and verifying the phone number, etc. in the report.  This is because
+    developer systems are fully connected to AWS.
+    """
 
     create_template_button = page.get_by_text("Create your first template")
     expect(create_template_button).to_be_visible()
     create_template_button.click()
-    print("GOT TO CREATE TEMPLATE")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
@@ -92,7 +99,6 @@ def handle_no_existing_template_case(page):
     new_template_button = page.get_by_text("New template")
     expect(new_template_button).to_be_visible()
     new_template_button.click()
-    print("GOT TO NEW TEMPLATE")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
@@ -100,14 +106,12 @@ def handle_no_existing_template_case(page):
     start_with_a_blank_template_radio = page.get_by_text("Start with a blank template")
     expect(start_with_a_blank_template_radio).to_be_visible()
     start_with_a_blank_template_radio.click()
-    print("GOT TO START WITH A BLANK TEMPLATE")
 
     continue_button = page.get_by_role("button", name="Continue")
 
     # continue_button = page.get_by_text("Continue")
     expect(continue_button).to_be_visible()
     continue_button.click()
-    print("GOT TO CONTINUE")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
@@ -116,17 +120,14 @@ def handle_no_existing_template_case(page):
     expect(template_name_input).to_be_visible()
     template_name = str(uuid.uuid4())
     template_name_input.fill(template_name)
-    print("GOT TEMPLATE NAME INPUT")
     message_input = page.get_by_role("textbox", name="Message")
     expect(message_input).to_be_visible()
     message = "Test message"
     message_input.fill(message)
-    print("FILLED OUT NEW TEMPLATE")
 
     save_button = page.get_by_text("Save")
     expect(save_button).to_be_visible()
     save_button.click()
-    print("SAVED NEW TEMPLATE")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
@@ -134,7 +135,6 @@ def handle_no_existing_template_case(page):
     use_this_template_button = page.get_by_text("Use this template")
     expect(use_this_template_button).to_be_visible()
     use_this_template_button.click()
-    print("DID USE THIS TEMPLATE")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
@@ -142,7 +142,6 @@ def handle_no_existing_template_case(page):
     use_my_phone_number_link = page.get_by_text("Use my phone number")
     expect(use_my_phone_number_link).to_be_visible()
     use_my_phone_number_link.click()
-    print("DID USE MY PHONE NUBMER")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
@@ -150,7 +149,6 @@ def handle_no_existing_template_case(page):
     preview_button = page.get_by_text("Preview")
     expect(preview_button).to_be_visible()
     preview_button.click()
-    print("DID PREVIEW")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
@@ -158,12 +156,9 @@ def handle_no_existing_template_case(page):
     send_button = page.get_by_role("button", name="Send")
     expect(send_button).to_be_visible()
     send_button.click()
-    print("DID SEND")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
-
-
 
     dashboard_button = page.get_by_text("Dashboard")
     expect(dashboard_button).to_be_visible()
@@ -201,30 +196,21 @@ def handle_no_existing_template_case(page):
 
 
 def handle_existing_template_case(page):
+    """
+    This is the test path used in the Github action.  Right now the e2e tests
+    are not connected to AWS, so we can't actually send messages.  Hence, the
+    test stops when it verifies that the 'Send' button exists on the page.  In
+    the future we would like to change the way e2e tests run so they run against
+    staging, in which case either the code in this method can be uncommented,
+    or perhaps this path will be unnecessary (because staging is not completely clean)
+    and we will just use the same path as for local development.
+    """
     existing_template_link = page.get_by_text("Example text message template")
     expect(existing_template_link).to_be_visible()
     existing_template_link.click()
-    print("GOT TO EXISTING TEMPLATE")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
-
-
-
-    # use_this_template_button = page.get_by_text("Use this template")
-    # expect(use_this_template_button).to_be_visible()
-    # use_this_template_button.click()
-    # print("GOT TO USE THIS TEMPLATE")
-
-    # Check to make sure that we've arrived at the next page.
-    # page.wait_for_load_state("domcontentloaded")
-
-    # use_my_phone_number_link = page.get_by_text("Use my phone number")
-    # expect(use_my_phone_number_link).to_be_visible()
-    # use_my_phone_number_link.click()
-
-    # Check to make sure that we've arrived at the next page.
-    # page.wait_for_load_state("domcontentloaded")
 
 
     continue_button = page.get_by_role("button", name="Continue")
@@ -232,20 +218,15 @@ def handle_existing_template_case(page):
     # continue_button = page.get_by_text("Continue")
     expect(continue_button).to_be_visible()
     continue_button.click()
-    print("GOT TO CONTINUE")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
-
-
-
 
     continue_button = page.get_by_role("button", name="Continue")
 
     # continue_button = page.get_by_text("Continue")
     expect(continue_button).to_be_visible()
     continue_button.click()
-    print("GOT TO CONTINUE")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
@@ -255,14 +236,12 @@ def handle_existing_template_case(page):
     day_of_week_input = page.get_by_role("textbox", name="day of week")
     expect(day_of_week_input).to_be_visible()
     day_of_week_input.fill("Monday")
-    print("GOT DAY OF WEEK INPUT")
 
     continue_button = page.get_by_role("button", name="Continue")
 
     # continue_button = page.get_by_text("Continue")
     expect(continue_button).to_be_visible()
     continue_button.click()
-    print("GOT TO CONTINUE")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
@@ -270,18 +249,13 @@ def handle_existing_template_case(page):
     color_input = page.get_by_role("textbox", name="color")
     expect(color_input).to_be_visible()
     color_input.fill("Green")
-    print("GOT COLOR INPUT")
-
 
     # continue_button = page.get_by_text("Continue")
     expect(continue_button).to_be_visible()
     continue_button.click()
-    print("GOT TO CONTINUE")
-
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
-
 
     preview_button = page.get_by_text("Preview")
     expect(preview_button).to_be_visible()
@@ -290,16 +264,12 @@ def handle_existing_template_case(page):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
-
     send_button = page.get_by_role("button", name="Send")
     expect(send_button).to_be_visible()
     # send_button.click()
 
     # Check to make sure that we've arrived at the next page.
     # page.wait_for_load_state("domcontentloaded")
-
-
-
 
     # dashboard_button = page.get_by_text("Dashboard")
     # expect(dashboard_button).to_be_visible()
@@ -313,39 +283,34 @@ def handle_existing_template_case(page):
 
     # Start waiting for the download
     # with page.expect_download() as download_info:
-        # Perform the action that initiates download
+    # Perform the action that initiates download
     #    download_link.click()
-    #download = download_info.value
+    # download = download_info.value
     # Wait for the download process to complete and save the downloaded file somewhere
-    #download.save_as("download_test_file")
-    #f = open("download_test_file", "r")
+    # download.save_as("download_test_file")
+    # f = open("download_test_file", "r")
 
-    #content = f.read()
-    #f.close()
+    # content = f.read()
+    # f.close()
     # We don't want to wait 5 minutes to get a response from AWS about the message we sent
     # So we are using this invalid phone number the e2e_test_user signed up with (12025555555)
     # to shortcircuit the sending process.  Our phone number validator will insta-fail the
     # message and it won't be sent, but the report will still be generated, which is all
     # we care about here.
-    #assert (
+    # assert (
     #    "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time"
     #    in content
-    #)
-    #assert "12025555555" in content
-    #assert "one-off-e2e_test_user" in content
-    #os.remove("download_test_file")
+    # )
+    # assert "12025555555" in content
+    # assert "one-off-e2e_test_user" in content
+    # os.remove("download_test_file")
 
 
 def test_send_message_from_existing_template(authenticated_page, end_to_end_context):
     page = authenticated_page
-    print(f"START OF TEST")
-
 
     new_service_name = _setup(page, end_to_end_context)
 
-    print(page.content())
-    x = page.get_by_text("Create your first template")
-    print(f"X = {x.count()}")
     if page.get_by_text("Create your first template").count() > 0:
         handle_no_existing_template_case(page)
     else:
