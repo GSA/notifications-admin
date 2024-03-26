@@ -320,15 +320,14 @@ def test_should_show_old_job(
         service_id=SERVICE_ONE_ID,
         job_id=fake_uuid,
     )
-    assert not page.select(".pill")
     assert not page.select("p.hint")
     assert not page.select("a[download]")
     assert page.select_one("tbody").text.strip() == expected_message
     assert [
-        normalize_spaces(column.text) for column in page.select("main .grid-col-3")
+        normalize_spaces(column.text) for column in page.select("main .pill .pill-item")
     ] == [
         "1 total text messages",
-        "1 pending",
+        "1 pending text message",
         "0 delivered text messages",
         "0 failed text messages",
     ]
