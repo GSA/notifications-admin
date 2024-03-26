@@ -166,6 +166,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "send_one_off",
             "send_one_off_step",
             "send_one_off_to_myself",
+            "set_up_your_profile",
             "service_add_email_reply_to",
             "service_add_sms_sender",
             "service_confirm_delete_email_reply_to",
