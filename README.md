@@ -185,12 +185,12 @@ session to make the changes take effect.
 Now we're ready to install the Python version we need with `pyenv`, like so:
 
 ```sh
-pyenv install 3.9
+pyenv install 3.12
 ```
 
-This will install the latest version of Python 3.9.
+This will install the latest version of Python 3.12.
 
-_NOTE: This project currently runs on Python 3.9.x._
+_NOTE: This project currently runs on Python 3.12.x._
 
 #### [API Step] Python Dependency Installation
 
@@ -234,7 +234,7 @@ Once all of pre-requisites for the project are installed and you have a
 cloud.gov account, you can now set up the admin project and get things running
 locally!
 
-First, clone the respository in the directory of your choosing on your machine:
+First, clone the repository in the directory of your choosing on your machine:
 
 ```sh
 git clone git@github.com:GSA/notifications-admin.git
@@ -242,12 +242,12 @@ git clone git@github.com:GSA/notifications-admin.git
 
 Now go into the project directory (`notifications-admin` by default), create a
 virtual environment, and set the local Python version to point to the virtual
-environment (assumes version Python `3.9.18` is what is installed on your
+environment (assumes version Python `3.12.2` is what is installed on your
 machine):
 
 ```sh
 cd notifications-admin
-pyenv virtualenv 3.9.18 notify-admin
+pyenv virtualenv 3.12.2 notify-admin
 pyenv local notify-admin
 ```
 
@@ -273,6 +273,39 @@ cd terraform/development
 In addition to some infrastructure setup, this will also create a local `.env`
 file for you in the project's root directory, which will include a handful of
 project-specific environment variables.
+
+#### Upgrading Python in existing projects
+
+If you're upgrading an existing project to a newer version of Python, you can
+follow these steps to get yourself up-to-date.
+
+First, use `pyenv` to install the newer version of Python you'd like to use;
+we'll use `3.12` in our example here since we recently upgraded to this version:
+
+```sh
+pyenv install 3.12
+```
+
+Next, delete the virtual environment you previously had set up.  If you followed
+the instructions above with the first-time set up, you can do this with `pyenv`:
+
+```sh
+pyenv virtualenv-delete notify-admin
+```
+
+Now, make sure you are in your project directory and recreate the same virtual
+environment with the newer version of Python you just installed:
+
+```sh
+cd notifications-admin
+pyenv virtualenv 3.12.2 notify-admin
+pyenv local notify-admin
+```
+
+At this point, proceed with the rest of the instructions here in the README and
+you'll be set with an upgraded version of Python.
+
+_If you're not sure about the details of your current virtual environment, you can run `poetry env info` to get more information. If you've been using `pyenv` for everything, you can also see all available virtual environments with `pyenv virtualenvs`._
 
 #### Updating the .env file for E2E tests
 
@@ -364,52 +397,6 @@ changes are working, please be sure to commit both the `pyproject.toml` and
 `poetry.lock` files.
 
 ### Keeping the notification-utils Dependency Up-to-Date
-
-The `notifications-utils` dependency references the other repository we have at
-https://github.com/GSA/notifications-utils - this dependency requires a bit of
-extra legwork to ensure it stays up-to-date.
-
-Whenever a PR is merged in the `notifications-utils` repository, we need to make
-sure the changes are pulled in here and committed to this repository as well.
-You can do this by going through these steps:
-
-- Make sure your local `main` branch is up-to-date
-- Create a new branch to work in
-- Run `make update-utils`
-- Commit the updated `poetry.lock` file and push the changes
-- Make a new PR with the change
-- Have the PR get reviewed and merged
-
-### Python dependency management
-
-We're using [`Poetry`](https://python-poetry.org/) for managing our Python
-dependencies and local virtual environments.  When it comes to managing the
-Python dependencies, there are a couple of things to bear in mind.
-
-For situations where you manually manipulate the `pyproject.toml` file, you
-should use the `make py-lock` command to sync the `poetry.lock` file.  This will
-ensure that you don't inadvertently bring in other transitive dependency updates
-that have not been fully tested with the project yet.
-
-If you're just trying to update a dependency to a newer (or the latest) version,
-you should let Poetry take care of that for you by running the following:
-
-```sh
-poetry update <dependency> [<dependency>...]
-```
-
-You can specify more than one dependency together.  With this command, Poetry
-will do the following for you:
-
-- Find the latest compatible version(s) of the specified dependency/dependencies
-- Install the new versions
-- Update and sync the `poetry.lock` file
-
-In either situation, once you are finished and have verified the dependency
-changes are working, please be sure to commit both the `pyproject.toml` and
-`poetry.lock` files.
-
-### Keeping the notification-utils dependency up-to-date
 
 The `notifications-utils` dependency references the other repository we have at
 https://github.com/GSA/notifications-utils - this dependency requires a bit of

@@ -30,6 +30,7 @@ def test_logged_in_user_redirects_to_account(
     )
 
 
+@pytest.mark.skip("Deprecated due to change to login-dot-gov-only registration")
 @pytest.mark.parametrize(
     "phone_number_to_register_with",
     [
@@ -75,14 +76,14 @@ def test_register_creates_new_user_and_redirects_to_continue_page(
         == "An email has been sent to notfound@example.gsa.gov."
     )
 
-    mock_send_verify_email.assert_called_with(ANY, user_data["email_address"])
-    mock_register_user.assert_called_with(
-        user_data["name"],
-        user_data["email_address"],
-        user_data["mobile_number"],
-        user_data["password"],
-        user_data["auth_type"],
-    )
+    # mock_send_verify_email.assert_called_with(ANY, user_data["email_address"])
+    # mock_register_user.assert_called_with(
+    #    user_data["name"],
+    #    user_data["email_address"],
+    #    user_data["mobile_number"],
+    #    user_data["password"],
+    #    user_data["auth_type"],
+    # )
 
 
 def test_register_continue_handles_missing_session_sensibly(

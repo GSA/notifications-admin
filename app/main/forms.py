@@ -605,6 +605,15 @@ class RegisterUserForm(StripWhitespaceForm):
     auth_type = HiddenField("auth_type", default="sms_auth")
 
 
+class SetupUserProfileForm(StripWhitespaceForm):
+    name = GovukTextInputField(
+        "Full name", validators=[DataRequired(message="Cannot be empty")]
+    )
+    mobile_number = international_phone_number()
+    # TODO This should be replaced with a select widget when one is available.
+    preferred_timezone = HiddenField("preferred_timezone", default="US/Eastern")
+
+
 class RegisterUserFromInviteForm(RegisterUserForm):
     def __init__(self, invited_user):
         super().__init__(

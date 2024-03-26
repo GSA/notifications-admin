@@ -20,6 +20,7 @@ from flask_login import current_user
 from app import login_manager, user_api_client
 from app.main import main
 from app.main.forms import LoginForm
+from app.main.views.index import error
 from app.main.views.verify import activate_user
 from app.models.user import InvitedUser, User
 from app.utils import hide_from_search_engines
@@ -77,9 +78,7 @@ def _get_user_email_and_uuid(access_token):
     return user_email, user_uuid
 
 
-@main.route("/sign-in", methods=(["GET", "POST"]))
-@hide_from_search_engines
-def sign_in():
+def _do_login_dot_gov():
     # start login.gov
     code = request.args.get("code")
     state = request.args.get("state")
@@ -90,8 +89,13 @@ def sign_in():
         redirect_url = request.args.get("next")
 
         # activate the user
-        user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
-        activate_user(user["id"])
+        try:
+            user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
+            activate_user(user["id"])
+        except BaseException as be:  # noqa B036
+            current_app.logger.error(be)
+            error(401)
+
         return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
 
     elif login_gov_error:
@@ -99,6 +103,11 @@ def sign_in():
         raise Exception(f"Could not login with login.gov {login_gov_error}")
     # end login.gov
 
+
+@main.route("/sign-in", methods=(["GET", "POST"]))
+@hide_from_search_engines
+def sign_in():
+    _do_login_dot_gov()
     redirect_url = request.args.get("next")
 
     if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
@@ -165,38 +174,15 @@ def sign_in():
         )
 
     other_device = current_user.logged_in_elsewhere()
-    notify_env = os.getenv("NOTIFY_ENVIRONMENT")
-    current_app.logger.info("should render the sign in template")
 
-    # TODO REMOVE THIS INFO ONCE STAGING WORKS WITH LOGIN DOT GOV
-    current_app.logger.info(f"NOTIFY ENV = {notify_env}")
-    current_app.logger.info(
-        f"LOGIN_DOT_GOV_CLIENT_ID={os.getenv('LOGIN_DOT_GOV_CLIENT_ID')}"
-    )
-    current_app.logger.info(
-        f"LOGIN_DOT_GOV_USER_INFO_URL={os.getenv('LOGIN_DOT_GOV_USER_INFO_URL')}"
-    )
-    current_app.logger.info(
-        f"LOGIN_DOT_GOV_ACCESS_TOKEN_URL={os.getenv('LOGIN_DOT_GOV_ACCESS_TOKEN_URL')}"
-    )
-    current_app.logger.info(
-        f"LOGIN_DOT_GOV_LOGOUT_URL={os.getenv('LOGIN_DOT_GOV_LOGOUT_URL')}"
-    )
-    current_app.logger.info(
-        f"LOGIN_DOT_GOV_BASE_LOGOUT_URL={os.getenv('LOGIN_DOT_GOV_BASE_LOGOUT_URL')}"
-    )
-    current_app.logger.info(
-        f"LOGIN_DOT_GOV_SIGNOUT_REDIRECT={os.getenv('LOGIN_DOT_GOV_SIGNOUT_REDIRECT')}"
-    )
     initial_signin_url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
-    current_app.logger.info(f"LOGIN_DOT_GOV_INITIAL_SIGNIN_URL={initial_signin_url}")
 
     return render_template(
         "views/signin.html",
         form=form,
         again=bool(redirect_url),
         other_device=other_device,
-        login_gov_enabled=bool(notify_env in ["development", "staging", "demo"]),
+        login_gov_enabled=True,
         password_reset_url=password_reset_url,
         initial_signin_url=initial_signin_url,
     )

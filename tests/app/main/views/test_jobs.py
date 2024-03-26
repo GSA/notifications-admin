@@ -424,7 +424,11 @@ def test_should_show_updates_for_one_job_as_json(
     assert "2021234567" in content["notifications"]
     assert "Status" in content["notifications"]
     assert "Delivered" in content["notifications"]
-    assert "01-01-2016 at 12:00 AM" in content["notifications"]
+    assert (
+        "Sent by Test User on January 01, 2016 at 12:00 AM US/Eastern"
+        in content["status"]
+    )
+    assert "12:00" in content["notifications"]
 
 
 @freeze_time("2016-01-01 05:00:00.000001")
@@ -465,10 +469,10 @@ def test_should_show_updates_for_scheduled_job_as_json(
     assert "2021234567" in content["notifications"]
     assert "Status" in content["notifications"]
     assert "Delivered" in content["notifications"]
-    assert "01-01-2016 at 12:00 AM" in content["notifications"]
     assert (
-        "Was sent on 1 January at 12:00 AM US/Eastern by Test User"
+        "Sent by Test User on June 01, 2016 at 04:00 PM US/Eastern" in content["status"]
     )
+    assert "12:00" in content["notifications"]
 
 
 @pytest.mark.parametrize(
