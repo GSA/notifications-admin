@@ -290,8 +290,6 @@ def handle_existing_template_case(page):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
-    print(page.content())
-
 
     send_button = page.get_by_role("button", name="Send")
     expect(send_button).to_be_visible()
@@ -299,6 +297,10 @@ def handle_existing_template_case(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+
+
+    print(page.content())
+
 
     dashboard_button = page.get_by_text("Dashboard")
     expect(dashboard_button).to_be_visible()
