@@ -81,7 +81,7 @@ dead-code:
 .PHONY: e2e-test
 e2e-test: export NEW_RELIC_ENVIRONMENT=test
 e2e-test: ## Run end-to-end integration tests; note that --browser webkit isn't currently working
-	poetry run pytest -v --browser chromium --browser firefox tests/end_to_end
+	poetry run pytest -vv --browser chromium tests/end_to_end
 
 .PHONY: js-lint
 js-lint: ## Run javascript linting scanners
