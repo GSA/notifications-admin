@@ -34,8 +34,8 @@ def performance():
     stats["average_percentage_under_10_seconds"] = mean(
         [row["percentage_under_10_seconds"] for row in stats["processing_time"]] or [0]
     )
-    stats[
-        "count_of_live_services_and_organizations"
-    ] = status_api_client.get_count_of_live_services_and_organizations()
+    stats["count_of_live_services_and_organizations"] = (
+        status_api_client.get_count_of_live_services_and_organizations()
+    )
 
     return render_template("views/performance.html", **stats)

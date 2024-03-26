@@ -1,0 +1,15 @@
+{% set describedBy = params.describedBy if params.describedBy else "" %}
+<div class="usa-form-group">
+  <label class="usa-label" for="{{ params.name }}">{{params.label}}</label>
+  {% if params.hint %}
+    <div class="usa-hint" id="{{ params.describedBy }}">{{ params.hint }}</div>
+  {% endif %}
+  <select class="usa-select {%- if params.classes %} {{ params.classes }}{% endif %}" id="{{ params.id }}" name="{{ params.name }}"
+  {%- if params.value %} value="{{ params.value}}"{% endif %}
+  {%- if describedBy %} aria-describedby="{{ describedBy }}"{% endif %}
+  {%- for attribute, value in params.attributes %} {{ attribute }}="{{ value }}"{% endfor -%}>
+  {% for item in params.items %}
+    <option value="{{ item.value }}" {%- if item.disabled == true %} selected disabled {% endif %}>{{ item.text }}</option>
+  {% endfor %}
+  </select>
+</div>

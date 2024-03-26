@@ -5,6 +5,7 @@
 <div class="ajax-block-container" id='pill-selected-item'>
 
   {% if notifications %}
+  <div class="table-wrapper">
     <div class='dashboard-table'>
   {% endif %}
     {% call(item, row_number) list_table(
@@ -29,6 +30,7 @@
     {% endcall %}
   {% if notifications %}
     </div>
+  </div>
   {% endif %}
 
   {% if show_pagination %}

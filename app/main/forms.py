@@ -70,7 +70,7 @@ from app.utils.user_permissions import all_ui_permissions, permission_options
 def get_time_value_and_label(future_time):
     preferred_tz = pytz.timezone(get_user_preferred_timezone())
     return (
-        future_time.astimezone(preferred_tz).replace(tzinfo=None).isoformat(),
+        future_time.astimezone(preferred_tz).isoformat(),
         "{} at {} {}".format(
             get_human_day(future_time.astimezone(preferred_tz)),
             get_human_time(future_time.astimezone(preferred_tz)),
@@ -603,6 +603,15 @@ class RegisterUserForm(StripWhitespaceForm):
     password = password()
     # always register as sms type
     auth_type = HiddenField("auth_type", default="sms_auth")
+
+
+class SetupUserProfileForm(StripWhitespaceForm):
+    name = GovukTextInputField(
+        "Full name", validators=[DataRequired(message="Cannot be empty")]
+    )
+    mobile_number = international_phone_number()
+    # TODO This should be replaced with a select widget when one is available.
+    preferred_timezone = HiddenField("preferred_timezone", default="US/Eastern")
 
 
 class RegisterUserFromInviteForm(RegisterUserForm):
@@ -1226,7 +1235,11 @@ class CsvUploadForm(StripWhitespaceForm):
         validators=[
             DataRequired(message="Please pick a file"),
             CsvFileValidator(),
-            FileSize(max_size=10e6, message="File must be smaller than 10Mb"),  # 10Mb
+            FileSize(
+                max_size=10e6,
+                message="File must be smaller than 10Mb.  If you are trying to upload an Excel file, \
+                please export the contents in the CSV format and then try again.",
+            ),  # 10Mb
         ],
     )
 
@@ -1253,7 +1266,6 @@ class ChangePreferredTimezoneForm(StripWhitespaceForm):
 
     new_preferred_timezone = GovukRadiosField(
         "What timezone would you like to use?",
-        default="US/Eastern",
     )
 
 
@@ -1782,12 +1794,16 @@ class TemplateAndFoldersSelectionForm(Form):
                 None,
                 [
                     # ('email', 'Email') if 'email' in available_template_types else None,
-                    ("sms", "Start with a blank template")
-                    if "sms" in available_template_types
-                    else None,
-                    ("copy-existing", "Copy an existing template")
-                    if allow_adding_copy_of_template
-                    else None,
+                    (
+                        ("sms", "Start with a blank template")
+                        if "sms" in available_template_types
+                        else None
+                    ),
+                    (
+                        ("copy-existing", "Copy an existing template")
+                        if allow_adding_copy_of_template
+                        else None
+                    ),
                 ],
             )
         )

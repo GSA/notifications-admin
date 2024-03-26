@@ -14,11 +14,10 @@ from tests.conftest import fake_uuid
 
 def _get_notifications_csv(
     row_number=1,
-    recipient="foo@bar.com",
+    recipient="8005555555",
     template_name="foo",
     template_type="sms",
     job_name="bar.csv",
-    carrier="ATT Mobility",
     provider_response="Did not like it",
     status="Delivered",
     created_at="1943-04-19 12:00:00",
@@ -46,20 +45,19 @@ def _get_notifications_csv(
             "notifications": [
                 {
                     "row_number": row_number + i,
-                    "to": recipient,
-                    "recipient": recipient,
-                    "client_reference": "ref 1234",
                     "template_name": template_name,
                     "template_type": template_type,
                     "template": {"name": template_name, "template_type": template_type},
                     "job_name": job_name,
-                    "carrier": carrier,
                     "provider_response": provider_response,
                     "status": status,
                     "created_at": created_at,
                     "updated_at": None,
                     "created_by_name": created_by_name,
                     "created_by_email_address": created_by_email_address,
+                    "to": recipient,
+                    "recipient": recipient,
+                    "client_reference": "ref 1234",
                 }
                 for i in range(rows)
             ],
@@ -90,15 +88,15 @@ def get_notifications_csv_mock(
         (
             None,
             [
-                "Recipient,Template,Type,Sent by,Job,Carrier,Carrier Response,Status,Time\n",
-                "foo@bar.com,foo,sms,,,ATT Mobility,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern\r\n",
+                "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time\n",
+                "8005555555,foo,,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern\r\n",
             ],
         ),
         (
             "Anne Example",
             [
-                "Recipient,Template,Type,Sent by,Job,Carrier,Carrier Response,Status,Time\n",
-                "foo@bar.com,foo,sms,Anne Example,,ATT Mobility,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern\r\n",  # noqa
+                "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time\n",
+                "8005555555,foo,Anne Example,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern\r\n",  # noqa
             ],
         ),
     ],
@@ -126,29 +124,23 @@ def test_generate_notifications_csv_without_job(
     [
         (
             """
-            phone_number
-            2028675309
+            phone number
+            8005555555
         """,
             [
-                "Row number",
-                "phone_number",
+                "Phone Number",
                 "Template",
-                "Type",
                 "Sent by",
-                "Job",
-                "Carrier",
+                "Batch File",
                 "Carrier Response",
                 "Status",
                 "Time",
             ],
             [
-                "1",
-                "2028675309",
+                "8005555555",
                 "foo",
-                "sms",
                 "Fake Person",
                 "bar.csv",
-                "ATT Mobility",
                 "Did not like it",
                 "Delivered",
                 "1943-04-19 08:00:00 AM US/Eastern",
@@ -156,74 +148,62 @@ def test_generate_notifications_csv_without_job(
         ),
         (
             """
-            phone_number, a, b, c
-            2028675309,  🐜,🐝,🦀
+            phone number, a, b, c
+            8005555555,  🐜,🐝,🦀
         """,
             [
-                "Row number",
-                "phone_number",
-                "a",
-                "b",
-                "c",
+                "Phone Number",
                 "Template",
-                "Type",
                 "Sent by",
-                "Job",
-                "Carrier",
+                "Batch File",
                 "Carrier Response",
                 "Status",
                 "Time",
+                "a",
+                "b",
+                "c",
             ],
             [
-                "1",
-                "2028675309",
+                "8005555555",
+                "foo",
+                "Fake Person",
+                "bar.csv",
+                "Did not like it",
+                "Delivered",
+                "1943-04-19 08:00:00 AM US/Eastern",
                 "🐜",
                 "🐝",
                 "🦀",
-                "foo",
-                "sms",
-                "Fake Person",
-                "bar.csv",
-                "ATT Mobility",
-                "Did not like it",
-                "Delivered",
-                "1943-04-19 08:00:00 AM US/Eastern",
             ],
         ),
         (
             """
-            "phone_number", "a", "b", "c"
-            "2028675309","🐜,🐜","🐝,🐝","🦀"
+            "phone number", "a", "b", "c"
+            "8005555555","🐜,🐜","🐝,🐝","🦀"
         """,
             [
-                "Row number",
-                "phone_number",
-                "a",
-                "b",
-                "c",
+                "Phone Number",
                 "Template",
-                "Type",
                 "Sent by",
-                "Job",
-                "Carrier",
+                "Batch File",
                 "Carrier Response",
                 "Status",
                 "Time",
+                "a",
+                "b",
+                "c",
             ],
             [
-                "1",
-                "2028675309",
-                "🐜,🐜",
-                "🐝,🐝",
-                "🦀",
+                "8005555555",
                 "foo",
-                "sms",
                 "Fake Person",
                 "bar.csv",
-                "ATT Mobility",
                 "Did not like it",
                 "Delivered",
                 "1943-04-19 08:00:00 AM US/Eastern",
+                "🐜,🐜",
+                "🐝,🐝",
+                "🦀",
             ],
         ),
     ],

@@ -1,3 +1,5 @@
+import os
+
 from flask import abort, redirect, render_template, request, url_for
 from flask_login import current_user
 
@@ -7,6 +9,8 @@ from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
 from app.main.views.sub_navigation_dictionaries import features_nav, using_notify_nav
 from app.utils.user import user_is_logged_in
+
+login_dot_gov_url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
 
 
 @main.route("/")
@@ -18,6 +22,7 @@ def index():
         "views/signedout.html",
         sms_rate=CURRENT_SMS_RATE,
         counts=status_api_client.get_count_of_live_services_and_organizations(),
+        login_dot_gov_url=login_dot_gov_url,
     )
 
 
@@ -100,15 +105,6 @@ def features_sms():
 @user_is_logged_in
 def security():
     return render_template("views/security.html", navigation_links=features_nav())
-
-
-@main.route("/features/terms", endpoint="terms")
-@user_is_logged_in
-def terms():
-    return render_template(
-        "views/terms-of-use.html",
-        navigation_links=features_nav(),
-    )
 
 
 @main.route("/features/using_notify")
@@ -214,7 +210,6 @@ def send_files_by_email():
 
 
 @main.route("/roadmap", endpoint="old_roadmap")
-@main.route("/terms", endpoint="old_terms")
 @main.route("/information-security", endpoint="information_security")
 @main.route("/using_notify", endpoint="old_using_notify")
 @main.route("/information-risk-management", endpoint="information_risk_management")
@@ -222,7 +217,6 @@ def send_files_by_email():
 def old_page_redirects():
     redirects = {
         "main.old_roadmap": "main.roadmap",
-        "main.old_terms": "main.terms",
         "main.information_security": "main.using_notify",
         "main.old_using_notify": "main.using_notify",
         "main.information_risk_management": "main.security",

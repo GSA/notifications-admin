@@ -31,9 +31,11 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
         "name": name,
         "id": folder_id or str(uuid.uuid4()),
         "parent_id": parent,
-        "users_with_permission": users_with_permission
-        if users_with_permission is not None
-        else [sample_uuid()],
+        "users_with_permission": (
+            users_with_permission
+            if users_with_permission is not None
+            else [sample_uuid()]
+        ),
     }
 
 

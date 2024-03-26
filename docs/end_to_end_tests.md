@@ -106,6 +106,104 @@ All of the E2E tests are found in the `tests/end_to_end` folder and are
 written as `pytest` scripts using
 [Playwright's Python Framework](https://playwright.dev/python/docs/writing-tests).
 
+Inside the `tests/end_to_end` folder you'll see a `conftest.py` file,
+which is similar to the one found in the root `tests` folder but is
+specific to the E2E tests.
+
+There a few fixtures defined in here, but the two most important at this
+time are these:
+
+- `end_to_end_context`:  A Playwright context object needed to interact
+  with a browser instance.
+- `authenticated_page`:  A Playwright page object that has gone through
+  the sign in process the E2E user is authenticated.
+
+In short, if you're starting a test from scratch and testing pages that
+do not require authentication, you'll start with the
+`end_to_end_context` fixture and work from there.
+
+Any test that requires you to be authenticated, you'll start with the
+`authenticated_page` object as that'll have taken care of getting
+everything set for you and logged into the site with the E2E test user.
+
+
+### Creating a new test file
+
+If you want to create a new test file to help organize tests (a great
+idea!), it will be handy to import the Playwright `expect` and set the
+base URL/URI for yourself, like this:
+
+```python
+from playwright.sync_api import expect
+
+E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
+```
+
+By importing Playwright's `expect` object for tests and setting
+something like `E2E_TEST_URI` for yourself, it will make writing tests
+much easier.
+
+
+### Using the fixtures
+
+To use the `authenticated_page` or `end_to_end_context` fixtures, you
+start by defining a test function and then passing in the fixture you
+need as a positional argument.  This works the same as the other
+functions defined to create a test for pytest.
+
+For example, the test for the landing page starts with this:
+
+```python
+def test_landing_page(end_to_end_context):
+    # Open a new page and go to the site.
+    page = end_to_end_context.browser.new_page()
+    page.goto(f"{E2E_TEST_URI}/")
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+    ...
+```
+
+Note the passing in of the `end_to_end_context` fixture - there is no
+need to import this or anything, just pass it into the function.  pytest
+takes care of everything else for you.
+
+The second line that defines a `page` variable is a convenience, since
+you'll be referencing the page object a lot.  This is recommended to
+help keep tests readable while keeping fixture names descriptive.
+
+If you need to test an authenticate page, such as the accounts page,
+use the `authenticated_page` fixture instead, like so:
+
+```python
+def test_add_new_service_workflow(authenticated_page):
+    page = authenticated_page
+    ...
+```
+
+Again, it's helpful to assign the fixture to a `page` variable for easy
+reference throughout the test.
+
+Lastly, if you need want access to the Playwright context object that is
+used behind the page fixtures, you can reference it directly as well
+using the `end_to_end_context` fixture:
+
+```python
+def test_add_new_service_workflow(authenticated_page, end_to_end_context):
+    page = authenticated_page
+
+    # Prepare for adding a new service later in the test.
+    current_date_time = datetime.datetime.now()
+    new_service_name = "E2E Federal Test Service {now} - {browser_type}".format(
+        now=current_date_time.strftime("%m/%d/%Y %H:%M:%S"),
+        browser_type=end_to_end_context.browser.browser_type.name,
+    )
+    ...
+```
+
+In this example, I've used the context to get to the browser object
+itself to get the name of the browser for test data.
+
 
 ## Maintaining E2E Tests with GitHub
 

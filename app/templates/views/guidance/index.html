@@ -41,7 +41,7 @@
   <h3>To create and format your message</h3>
   <ol class="list">
     <li>All messages start from a template</li>
-    <li>Click “Send Messages”. You’ll see existing templates.</li>
+    <li>Click "<a href={{ url_for('.choose_template', service_id=current_service.id) }}>Send Messages</a>". You'll see existing templates.</li>
     <li>Add a new template or choose an existing template and select Edit.</li>
   </ol>
 
@@ -69,7 +69,7 @@
   <h2 class="padding-top-1" id="personalize-content">Personalize your content</h2>
   <p>Personalizing your content can increase response rates and help the recipient know the text is legitimate.</p>
   <ul class="list list-bullet">
-    <li>Including a person’s first name increases response rates.</li>
+    <li>Including a person's first name increases response rates.</li>
     <li>Specific details such as time and location of an appointment or where suspected fraud use occurred encourages action.</li>
   </ul>
 
@@ -82,7 +82,10 @@
 
   <h4>Example</h4>
   <p>To personalize with the recipient's first name and include a reference number:</p>
-  <p class="padding-2 bg-base-lightest">State WIC: Hello ((first name)), your reference is ((ref number)). Please provide this number when you call 123-123-1234 to make an appointment.</p>
+  <p class="padding-2 bg-base-lightest">State WIC: Hello ((first name)), your reference is ((ref number)). Please provide this number when you call 555-123-1234 to make an appointment.</p>
+
+  <p>Note that variations in the length of personalized content can impact the length of specific messages, and may affect
+  the number of parts used.</p>
 
   {# Add conditional content #}
   <h2 class="padding-top-1" id="conditional-content">Add conditional content</h2>
@@ -106,7 +109,7 @@
     <li>
       If you want to make people who are homebound aware of the option of virtual visits (but not other message recipients):
       </br>
-      <p class="padding-2 bg-base-lightest">State Medicaid: Please call 123-123-1234 to schedule an appointment. ((homebound??Virtual visits are available.))</p>
+      <p class="padding-2 bg-base-lightest">State Medicaid: Please call 555-123-1234 to schedule an appointment. ((homebound??Virtual visits are available.))</p>
     </li>
     <li>
       If you want to send a messages in different languages to different recipients:
@@ -120,7 +123,7 @@
 
 
   {# Identify your program #}
-  <h2 class="padding-top-1" id="identify-program">Identify your program</h2>
+  <h2 class="padding-top-1" id="indentify-program">Identify your program</h2>
   <p>You can help your recipients identify your texts as legitimate by customizing your messages to clearly state who they
   are from. Consider using the program or benefit name that is most familiar to your recipients.</p>
 
@@ -231,7 +234,7 @@
     </li>
     <li>Auto-response text:
       </br>
-      <p class="padding-2 bg-base-lightest">State Agency: This number is unmonitored. To contact us, call us at 123-123-1234. We will never ask for personal details
+      <p class="padding-2 bg-base-lightest">State Agency: This number is unmonitored. To contact us, call us at 555-123-1234. We will never ask for personal details
       in a text. If you have questions about how to protect your privacy, see statename.gov/privacy.</p>
     </li>
   </ol>

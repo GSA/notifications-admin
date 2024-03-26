@@ -325,6 +325,7 @@ def test_route_permissions(
         def _get(mocker):
             return {"count": 0}
 
+        mocker.patch("app.service_api_client.get_service_statistics")
         mocker.patch(
             "app.service_api_client.get_global_notification_count", side_effect=_get
         )
@@ -357,6 +358,8 @@ def test_route_invalid_permissions(
 
         def _get(mocker):
             return {"count": 0}
+
+        mocker.patch("app.service_api_client.get_service_statistics")
 
         mocker.patch(
             "app.service_api_client.get_global_notification_count", side_effect=_get
