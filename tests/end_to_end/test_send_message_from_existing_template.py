@@ -80,7 +80,7 @@ def _setup(page, end_to_end_context):
 
 def handle_no_existing_template_case(page):
     print(f"ENTER HANDLE_NO_EXISTING_TEMPLATE_CASE")
-    print(page.content())
+
     create_template_button = page.get_by_text("Create your first template")
     expect(create_template_button).to_be_visible()
     create_template_button.click()
@@ -163,7 +163,7 @@ def handle_no_existing_template_case(page):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
-    print(f"PAGE!!! {page.content()}")
+
 
     dashboard_button = page.get_by_role("button", name="Dashboard")
     expect(dashboard_button).to_be_visible()
@@ -239,10 +239,6 @@ def handle_existing_template_case(page):
 
 
 
-    #color_input = page.get_by_text("color")
-    #expect(day_of_week_input).to_be_visible()
-    #day_of_week_input.fill("Green")
-    #print("GOT COLOR INPUT")
 
     continue_button = page.get_by_role("button", name="Continue")
 
@@ -253,7 +249,6 @@ def handle_existing_template_case(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
-    print(page.content())
 
     # day_of_week_input = page.locator('xpath=//input[@name="day of week"]')
     # day_of_week_input = page.get_by_text("day of week")
@@ -272,7 +267,21 @@ def handle_existing_template_case(page):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
-    print(page.content())
+    color_input = page.get_by_text("color")
+    expect(day_of_week_input).to_be_visible()
+    day_of_week_input.fill("Green")
+    print("GOT COLOR INPUT")
+
+
+    # continue_button = page.get_by_text("Continue")
+    expect(continue_button).to_be_visible()
+    continue_button.click()
+    print("GOT TO CONTINUE")
+
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
 
     preview_button = page.get_by_text("Preview")
     expect(preview_button).to_be_visible()
@@ -280,6 +289,9 @@ def handle_existing_template_case(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+
+    print(page.content())
+
 
     send_button = page.get_by_role("button", name="Send")
     expect(send_button).to_be_visible()
@@ -329,7 +341,7 @@ def test_send_message_from_existing_template(authenticated_page, end_to_end_cont
 
 
     new_service_name = _setup(page, end_to_end_context)
-    #print(page.content())
+
 
     # if page.get_by_text("Create your first template"):
     #    handle_no_existing_template_case(page)
