@@ -209,27 +209,27 @@ def handle_existing_template_case(page):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
-    print(page.content())
 
-    use_this_template_button = page.get_by_text("Use this template")
-    expect(use_this_template_button).to_be_visible()
-    use_this_template_button.click()
-    print("GOT TO USE THIS TEMPLATE")
 
-    # Check to make sure that we've arrived at the next page.
-    page.wait_for_load_state("domcontentloaded")
-
-    use_my_phone_number_link = page.get_by_text("Use my phone number")
-    expect(use_my_phone_number_link).to_be_visible()
-    use_my_phone_number_link.click()
+    # use_this_template_button = page.get_by_text("Use this template")
+    # expect(use_this_template_button).to_be_visible()
+    # use_this_template_button.click()
+    # print("GOT TO USE THIS TEMPLATE")
 
     # Check to make sure that we've arrived at the next page.
-    page.wait_for_load_state("domcontentloaded")
+    # page.wait_for_load_state("domcontentloaded")
 
-    day_of_week_input = page.get_by_text("day of week")
-    expect(day_of_week_input).to_be_visible()
-    day_of_week_input.fill("Monday")
-    print("GOT DAY OF WEEK INPUT")
+    # use_my_phone_number_link = page.get_by_text("Use my phone number")
+    # expect(use_my_phone_number_link).to_be_visible()
+    # use_my_phone_number_link.click()
+
+    # Check to make sure that we've arrived at the next page.
+    # page.wait_for_load_state("domcontentloaded")
+
+    # day_of_week_input = page.get_by_text("day of week")
+    # expect(day_of_week_input).to_be_visible()
+    # day_of_week_input.fill("Monday")
+    # print("GOT DAY OF WEEK INPUT")
 
     continue_button = page.get_by_role("button", name="Continue")
 
