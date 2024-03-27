@@ -80,6 +80,7 @@ def _setup(page, end_to_end_context):
 
 def create_new_template(page):
 
+    print(page.content())
     create_template_button = page.get_by_text("Create your first template")
     expect(create_template_button).to_be_visible()
     create_template_button.click()
