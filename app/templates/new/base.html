@@ -1,6 +1,5 @@
 {% from "../components/banner.html" import banner %}
 {% from "../components/components/skip-link/macro.njk" import usaSkipLink -%}
-{% from "../components/components/header/macro.njk" import usaHeader -%}
 {% from "../components/components/footer/macro.njk" import usaFooter -%}
 
 
@@ -25,13 +24,13 @@
       }) }}
     {% endblock %}
 
-    <!-- #region header -->
+    {# region header #}
     {% block header %}
       {% if current_user.is_authenticated %}
-        {% include "new/components/header.html" %}
+        {% include 'new/components/usa_banner.html' %}
+        {% include 'new/components/header.html' %}
       {% endif %}
     {% endblock %}
-    <!-- #endregion -->
 
     <!-- \\#region block main -->
     {% block main %}
