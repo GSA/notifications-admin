@@ -511,18 +511,18 @@ def test_download_inbox(
     )
     assert response.headers["Content-Type"] == ("text/csv; " "charset=utf-8")
     assert response.headers["Content-Disposition"] == (
-        "inline; " 'filename="Received text messages 2016-07-01.csv"'
+        "inline; " 'filename="Received text messages 07-01-2016.csv"'
     )
     assert response.get_data(as_text=True) == (
         "Phone number,Message,Received\r\n"
-        "(202) 867-5300,message-1,2016-07-01 11:00 US/Eastern\r\n"
-        "(202) 867-5300,message-2,2016-07-01 10:59 US/Eastern\r\n"
-        "(202) 867-5300,message-3,2016-07-01 10:59 US/Eastern\r\n"
-        "(202) 867-5302,message-4,2016-07-01 08:59 US/Eastern\r\n"
-        "+33 1 12 34 56 78,message-5,2016-07-01 06:59 US/Eastern\r\n"
-        "(202) 555-0104,message-6,2016-07-01 04:59 US/Eastern\r\n"
-        "(202) 555-0104,message-7,2016-07-01 02:59 US/Eastern\r\n"
-        "+682 12345,message-8,2016-07-01 02:59 US/Eastern\r\n"
+        "(202) 867-5300,message-1,07-01-2016 11:00 US/Eastern\r\n"
+        "(202) 867-5300,message-2,07-01-2016 10:59 US/Eastern\r\n"
+        "(202) 867-5300,message-3,07-01-2016 10:59 US/Eastern\r\n"
+        "(202) 867-5302,message-4,07-01-2016 08:59 US/Eastern\r\n"
+        "+33 1 12 34 56 78,message-5,07-01-2016 06:59 US/Eastern\r\n"
+        "(202) 555-0104,message-6,07-01-2016 04:59 US/Eastern\r\n"
+        "(202) 555-0104,message-7,07-01-2016 02:59 US/Eastern\r\n"
+        "+682 12345,message-8,07-01-2016 02:59 US/Eastern\r\n"
     )
 
 
