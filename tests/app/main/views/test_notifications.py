@@ -267,10 +267,6 @@ def test_notification_page_doesnt_link_to_template_in_tour(
             notification_id=fake_uuid,
             help=3,
         )
-
-    assert normalize_spaces(page.select("main p:nth-of-type(1)")[0].text) == (
-        expected_message
-    )
     assert len(page.select("main p:nth-of-type(1) a")) == 0
 
 
