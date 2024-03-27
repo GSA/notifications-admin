@@ -151,6 +151,9 @@ def create_new_template(page):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
+    # We are not going to send the message for this test, we just want to confirm
+    # that the template has been created and we are now seeing the message from the
+    # template in the preview.
     assert "Test message for e2e test" in page.content()
 
 
