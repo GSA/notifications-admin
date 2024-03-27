@@ -80,7 +80,14 @@ def _setup(page, end_to_end_context):
 
 def create_new_template(page):
 
+    current_service_link = page.get_by_text("Current service")
+    expect(current_service_link).to_be_visible()
+    current_service_link.click()
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
     print(page.content())
+
     create_template_button = page.get_by_text("Create your first template")
     expect(create_template_button).to_be_visible()
     create_template_button.click()
