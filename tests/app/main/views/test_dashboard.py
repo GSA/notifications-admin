@@ -655,7 +655,7 @@ def test_should_not_show_recent_templates_on_dashboard_if_only_one_template_used
     expected_count = stats[0]["count"]
     assert expected_count == 50
     assert normalize_spaces(page.select_one("#total-sms .big-number-smaller").text) == (
-        "{} text messages sent".format(expected_count)
+        "{} text messages sent in the last seven days".format(expected_count)
     )
 
 
