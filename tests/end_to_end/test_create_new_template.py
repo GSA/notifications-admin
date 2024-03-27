@@ -88,7 +88,7 @@ def create_new_template(page):
     page.wait_for_load_state("domcontentloaded")
     print(page.content())
 
-    send_messages_button = page.get_by_text("Send messages")
+    send_messages_button = page.get_by_role("button", name="Send messages")
     expect(send_messages_button).to_be_visible()
     send_messages_button.click()
 
