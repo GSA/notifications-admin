@@ -87,15 +87,12 @@ def create_new_template(page):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
-
     send_messages_button = page.get_by_role("link", name="Send messages")
     # expect(send_messages_button).to_be_visible()
     send_messages_button.click()
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
-    print(page.content())
-
 
     create_template_button = page.get_by_role("button", name="New template")
     expect(create_template_button).to_be_visible()
@@ -123,7 +120,7 @@ def create_new_template(page):
     template_name_input.fill(template_name)
     message_input = page.get_by_role("textbox", name="Message")
     expect(message_input).to_be_visible()
-    message = "Test message"
+    message = "Test message for e2e test"
     message_input.fill(message)
 
     save_button = page.get_by_text("Save")
@@ -153,9 +150,8 @@ def create_new_template(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
-    print(page.content())
 
-
+    assert "Test message for e2e test" in page.content()
 
 
 def test_create_new_template(authenticated_page, end_to_end_context):
@@ -164,7 +160,6 @@ def test_create_new_template(authenticated_page, end_to_end_context):
     _setup(page, end_to_end_context)
 
     create_new_template(page)
-
 
     _teardown(page)
 
