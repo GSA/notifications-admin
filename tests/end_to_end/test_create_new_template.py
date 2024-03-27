@@ -88,6 +88,15 @@ def create_new_template(page):
     page.wait_for_load_state("domcontentloaded")
     print(page.content())
 
+    send_messages_button = page.get_by_text("Send messages")
+    expect(send_messages_button).to_be_visible()
+    send_messages_button.click()
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+
+
     create_template_button = page.get_by_text("Create your first template")
     expect(create_template_button).to_be_visible()
     create_template_button.click()
