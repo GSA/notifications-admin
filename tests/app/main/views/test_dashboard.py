@@ -679,7 +679,7 @@ def test_should_show_redirect_from_template_history(
     )
 
 
-@freeze_time("2017-1-1 12:00")  # Switching to calendar year
+@freeze_time("2017-01-01 12:00")
 @pytest.mark.parametrize(
     "extra_args",
     [
@@ -705,6 +705,7 @@ def test_should_show_monthly_breakdown_of_template_usage(
     )
 
     assert len(table_rows) == len(["January"])
+    # October is the only month with data, thus it's not in the list.
     assert len(page.select(".table-no-data")) == len(
         [
             "January",
@@ -716,8 +717,8 @@ def test_should_show_monthly_breakdown_of_template_usage(
             "July",
             "August",
             "September",
-            "October",
             "November",
+            "December",
         ]
     )
 
