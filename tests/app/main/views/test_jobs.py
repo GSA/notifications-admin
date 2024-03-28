@@ -88,7 +88,7 @@ def test_should_show_page_for_one_job(
         status=status_argument,
     )
 
-    assert page.h1.text.strip() == "thisisatest.csv"
+    assert page.h1.text.strip() == "Message status"
     assert " ".join(page.find("tbody").find("tr").text.split()) == (
         "2021234567 template content Delivered 01-01-2016 at 06:09 AM"
     )
@@ -237,11 +237,11 @@ def test_should_show_job_with_sending_limit_exceeded_status(
         job_id=fake_uuid,
     )
 
-    assert normalize_spaces(page.select("main p")[1].text) == (
+    assert normalize_spaces(page.select("main p")[2].text) == (
         "Notify cannot send these messages because you have reached a limit. "
         "You can only send 1,000 messages per day and 250,000 messages in total."
     )
-    assert normalize_spaces(page.select("main p")[2].text) == (
+    assert normalize_spaces(page.select("main p")[3].text) == (
         "Upload this spreadsheet again tomorrow or contact the Notify.gov team to raise the limit."
     )
 
@@ -350,7 +350,7 @@ def test_should_show_scheduled_job(
     )
 
     assert normalize_spaces(page.select("main div p")[1].text) == (
-        "Sending Two week reminder today at 00:00 US/Eastern"
+        "Example template - service one was scheduled on January 02, 2016 at 12:00 AM US/Eastern by Test User"
     )
 
     assert page.select("main p a")[0]["href"] == url_for(
@@ -424,8 +424,7 @@ def test_should_show_updates_for_one_job_as_json(
     assert "2021234567" in content["notifications"]
     assert "Status" in content["notifications"]
     assert "Delivered" in content["notifications"]
-    assert "Sent by Test User on 01-01-2016 at 12:00 AM" in content["status"]
-    assert "12:00" in content["notifications"]
+    assert "01-01-2016 at 12:00 AM" in content["notifications"]
 
 
 @freeze_time("2016-01-01 05:00:00.000001")
@@ -466,8 +465,7 @@ def test_should_show_updates_for_scheduled_job_as_json(
     assert "2021234567" in content["notifications"]
     assert "Status" in content["notifications"]
     assert "Delivered" in content["notifications"]
-    assert "Sent by Test User on 06-01-2016 at 04:00 PM" in content["status"]
-    assert "12:00" in content["notifications"]
+    assert "01-01-2016 at 12:00 AM" in content["notifications"]
 
 
 @pytest.mark.parametrize(

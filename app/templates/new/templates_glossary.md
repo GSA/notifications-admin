@@ -11,6 +11,7 @@ This document serves as a glossary for the templates directory structure of the 
     - `withnav_template.html`: A variation of the base layout that includes a sidebar.
     - `org_template.html`: A variaton of the withnav_template
   - **/components**: Houses reusable UI components that can be included in multiple templates and can be tailored with different content or links depending on the context.(more frequently revised or customized)
+    - `head.html`: Template for the site's <head>, included in `base.html`.
     - `header.html`: Template for the site's header, included in `base.html`.
     - `footer.html`: Template for the site's footer, included in `base.html`.
   - **/views** (or **/pages**): Individual page templates that use the base layouts, components, and partials to present content.

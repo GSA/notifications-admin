@@ -10,6 +10,7 @@ from flask import (
     redirect,
     render_template,
     request,
+    session,
     stream_with_context,
     url_for,
 )
@@ -18,7 +19,7 @@ from notifications_utils.template import EmailPreviewTemplate, SMSBodyPreviewTem
 
 from app import (
     current_service,
-    format_datetime_short,
+    format_datetime_table,
     notification_api_client,
     service_api_client,
 )
@@ -93,7 +94,7 @@ def view_job_csv(service_id, job_id):
         mimetype="text/csv",
         headers={
             "Content-Disposition": 'inline; filename="{} - {}.csv"'.format(
-                job.template["name"], format_datetime_short(job.created_at)
+                job.template["name"], format_datetime_table(job.created_at)
             )
         },
     )
@@ -373,6 +374,13 @@ def get_job_partials(job):
         job.template_type
     )
 
+    if request.referrer is not None:
+        session["arrived_from_preview_page"] = "check" in request.referrer
+    else:
+        session["arrived_from_preview_page"] = False
+
+    arrived_from_preview_page_url = session.get("arrived_from_preview_page", False)
+
     return {
         "counts": counts,
         "notifications": render_template(
@@ -396,6 +404,7 @@ def get_job_partials(job):
         "status": render_template(
             "partials/jobs/status.html",
             job=job,
+            arrived_from_preview_page_url=arrived_from_preview_page_url,
         ),
     }
 
