@@ -68,7 +68,7 @@ def activate_user(user_id):
     user = User.from_id(user_id)
 
     # This is the login.gov path
-    login_gov_invite_data = redis_client.raw_get(f"service-invite-{user.email_address}")
+    login_gov_invite_data = redis_client.get(f"service-invite-{user.email_address}")
     if login_gov_invite_data:
         login_gov_invite_data = json.loads(login_gov_invite_data.decode("utf8"))
     current_app.logger.info(hilite(f"LOGIN_GOV_INVITE_DATA {login_gov_invite_data}"))
@@ -101,7 +101,7 @@ def activate_user(user_id):
     invited_org_user = InvitedOrgUser.from_session()
     if invited_org_user:
         user_api_client.add_user_to_organization(invited_org_user.organization, user_id)
-    elif redis_client.raw_get(f"organization-invite-{user.email_address}"):
+    elif redis_client.get(f"organization-invite-{user.email_address}"):
         organization_id = redis_client.raw_get(
             f"organization-invite-{user.email_address}"
         )
