@@ -21,9 +21,6 @@
       <div class='grid-row'>
 
         <div class='grid-col-12'>
-          <h2 class="heading-small margin-bottom-1">Daily messages across all services</h2>
-          <p class="margin-0">You have sent {{ global_message_limit - daily_global_messages_remaining }} of your {{ global_message_limit }} daily messages allowance.</p>
-          <p class="margin-0"></p>You have {{ daily_global_messages_remaining }} messages remaining.</p>
           <h2 class='heading-small margin-bottom-1'>Text message parts</h2>
           <div class="keyline-block">
             You have sent
@@ -82,8 +79,8 @@
             empty_message='',
             field_headings=[
               'By month',
-              hidden_field_heading('Text messages'),
-              hidden_field_heading('Cost'),
+              'Text message parts',
+              'Total message allowance',
             ],
             field_headings_visible=True
           ) %}
@@ -109,14 +106,9 @@
               {% endcall %}
             {% endfor %}
             {% call field(align='left') %}
-              {{ big_number(
-                item.sms_cost,
-                currency="$",
-                smallest=True
-              ) }}
               <ul>
               {% if item.sms_free_allowance_used %}
-                <li class="tabular-numbers">{{ item.sms_free_allowance_used|format_thousands }} free {{ item.sms_free_count|message_count_label('sms', suffix='') }}</li>
+                <li class="tabular-numbers">{{ item.sms_free_allowance_used|format_thousands }} total {{ item.sms_free_count|message_count_label('parts', suffix='') }}</li>
               {% endif %}
               {% for sms in item.sms_breakdown %}
                   <li class="tabular-numbers">{{ sms.charged_units|message_count('sms') }} at

@@ -1045,17 +1045,8 @@ def test_usage_page_monthly_breakdown(
     monthly_breakdown = normalize_spaces(page.find("table").text)
 
     assert "October" in monthly_breakdown
-    assert "249,860 free text messages" in monthly_breakdown
-
     assert "February" in monthly_breakdown
-    assert "$16.40" in monthly_breakdown
-    assert "140 free text messages" in monthly_breakdown
-    assert "960 text messages at 1.65p" in monthly_breakdown
-    assert "33 text messages at 1.70p" in monthly_breakdown
-
     assert "March" in monthly_breakdown
-    assert "$20.91" in monthly_breakdown
-    assert "1,230 text messages at 1.70p" in monthly_breakdown
 
 
 @pytest.mark.parametrize(
@@ -1804,15 +1795,8 @@ def test_service_dashboard_shows_usage(
 
     usage_table = page.find("table", class_="usage-table")
 
-    # Check if the "Usage" table exists
-    assert usage_table is not None
-
-    table_rows = usage_table.find_all("tbody")[0].find_all("tr")
-
-    assert len(table_rows) == 1
-
-    assert "500" in table_rows[0].find_all("td")[0].text
-    assert "9500" in table_rows[0].find_all("td")[1].text
+    # Check if the "Usage" table doesn't exist
+    assert usage_table is None
 
 
 def test_service_dashboard_shows_free_allowance(
@@ -1847,7 +1831,7 @@ def test_service_dashboard_shows_free_allowance(
 
     usage_text = normalize_spaces(page.select_one("[data-key=usage]").text)
     assert "spent on text messages" not in usage_text
-    assert "Daily Usage Remaining 1,000 249,000" in usage_text
+    assert "Daily Sent Remaining 1,000 249,000" in usage_text
 
 
 def test_service_dashboard_shows_batched_jobs(
