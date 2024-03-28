@@ -14,7 +14,7 @@
   {% if show_redaction_message %}
 
     <div class="bottom-gutter">
-      {% call banner_wrapper(type='dangerous', subhead='Are you sure you want to hide personalization after sending?') %}
+      {% call banner_wrapper(type='dangerous', subhead='Are you sure you want to hide all personalized and conditional content after sending for increased privacy protection?') %}
         <ul class="list list-bullet">
           <li>
             You will not be able to see personalized content in Notify for this template
@@ -56,18 +56,31 @@
           {{ template._template.updated_at|format_delta }}
         </time>
       </h2>
-      <a class="usa-link margin-right-3" href="{{ url_for('.view_template_versions', service_id=current_service.id, template_id=template.id) }}">See previous versions</a>
-    {% endif %}
-    {% if current_user.has_permissions('manage_templates') and user_has_template_permission %}
-      {% if not template._template.archived %}
-          <a class="usa-link margin-right-3" href="{{ url_for('.delete_service_template', service_id=current_service.id, template_id=template.id) }}">Delete this template</a>
-      {% endif %}
-      {% if not template._template.redact_personalisation %}
-          <a class="usa-link" href="{{ url_for('.confirm_redact_template', service_id=current_service.id, template_id=template.id) }}">Hide personalization after sending</a>
-      {% else %}
+      <h3 class="margin-bottom-0">More actions</h3>
+      <ul class="usa-list usa-list--unstyled">
+        <li>
+          <a class="usa-link margin-right-3"
+          href="{{ url_for('.view_template_versions', service_id=current_service.id, template_id=template.id) }}">See previous
+          versions</a>
+        </li>
+        {% endif %}
+        {% if current_user.has_permissions('manage_templates') and user_has_template_permission %}
+        {% if not template._template.archived %}
+        <li>
+          <a class="usa-link margin-right-3"
+          href="{{ url_for('.delete_service_template', service_id=current_service.id, template_id=template.id) }}">Delete this
+          template</a>
+        </li>
+        {% endif %}
+        {% if not template._template.redact_personalisation %}
+        <li>
+          <a class="usa-link" href="{{ url_for('.confirm_redact_template', service_id=current_service.id, template_id=template.id) }}">Hide all personalized and conditional content after sending</a> for increased privacy protection
+        </li>
+        {% else %}
         <p class="hint">Personalization is hidden after sending</p>
       {% endif %}
     {% endif %}
+    </ul>
   </div>
 
   <!--<div class="">
