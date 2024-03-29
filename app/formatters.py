@@ -22,7 +22,7 @@ from notifications_utils.recipients import InvalidPhoneError, validate_phone_num
 from notifications_utils.take import Take
 
 from app.utils.csv import get_user_preferred_timezone
-from app.utils.time import parse_naive_dt, parse_dt
+from app.utils.time import parse_dt, parse_naive_dt
 
 
 def apply_html_class(tags, html_file):
