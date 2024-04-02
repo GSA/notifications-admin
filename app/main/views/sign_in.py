@@ -181,7 +181,7 @@ def sign_in():
         current_app.config["SECRET_KEY"],
         current_app.config["DANGEROUS_SALT"],
     )
-    url = os.environ["LOGIN_DOT_GOV_INITIAL_SIGNIN_URL"]
+    url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
     # handle unit tests
     if url is not None:
         url = url.replace("NONCE", token)
