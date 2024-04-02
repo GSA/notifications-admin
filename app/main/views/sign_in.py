@@ -182,8 +182,10 @@ def sign_in():
         current_app.config["DANGEROUS_SALT"],
     )
     url = os.environ["LOGIN_DOT_GOV_INITIAL_SIGNIN_URL"]
-    url = url.replace("NONCE", token)
-    url = url.replace("STATE", token)
+    # handle unit tests
+    if url is not None:
+        url = url.replace("NONCE", token)
+        url = url.replace("STATE", token)
 
     return render_template(
         "views/signin.html",
