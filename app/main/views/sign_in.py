@@ -16,6 +16,7 @@ from flask import (
     url_for,
 )
 from flask_login import current_user
+from notifications_utils.url_safe_token import generate_token
 
 from app import login_manager, user_api_client
 from app.main import main
@@ -175,7 +176,14 @@ def sign_in():
 
     other_device = current_user.logged_in_elsewhere()
 
-    initial_signin_url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
+    token = generate_token(
+        str(request.remote_addr),
+        current_app.config["SECRET_KEY"],
+        current_app.config["DANGEROUS_SALT"],
+    )
+    url = os.environ["LOGIN_DOT_GOV_INITIAL_SIGNIN_URL"]
+    url = url.replace("NONCE", token)
+    url = url.replace("STATE", token)
 
     return render_template(
         "views/signin.html",
@@ -184,7 +192,7 @@ def sign_in():
         other_device=other_device,
         login_gov_enabled=True,
         password_reset_url=password_reset_url,
-        initial_signin_url=initial_signin_url,
+        initial_signin_url=url,
     )
 
 
