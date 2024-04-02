@@ -595,3 +595,9 @@ details form {
 #countdown-container {
    display: none; // Hide the countdown timer
 }
+
+.placeholder, .placeholder-conditional {
+   background-color: #face00;
+   border: 1px solid #face00;
+   border-radius: 7px;
+}
