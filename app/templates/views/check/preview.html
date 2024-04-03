@@ -21,7 +21,7 @@
 
   {{ page_header('Preview') }}
   <div>
-    <p class="sms-message-scheduler">Scheduled: {{ scheduled_for if scheduled_for else 'Now'}}</p>
+    <p class="sms-message-scheduler">Scheduled: {{ scheduled_for |format_datetime_normal if scheduled_for else 'Now'}}</p>
     <p class="sms-message-file-name">File: {{original_file_name}}</p>
     <p class="sms-message-template">Template: {{template.name}}</p>
     <p class="sms-message-sender" >From: {{ template.sender }}</p>
