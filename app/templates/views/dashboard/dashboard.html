@@ -95,36 +95,16 @@
       </table>
     </div>
 
-    <h2 class="margin-top-4 margin-bottom-1">Usage</h2>
-    <h3 class="margin-bottom-0">Daily</h3>
-    <p class="margin-0">Across all services</p>
-    <table class="usage-table usa-table usa-table--borderless margin-top-1 margin-bottom-5">
-      <caption class="usa-sr-only">
-        Daily
-      </caption>
-      <thead>
-        <tr>
-          <th scope="col">Usage</th>
-          <th scope="col">Remaining</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{{ global_message_limit - daily_global_messages_remaining }}</td>
-          <td>
-            {{ daily_global_messages_remaining }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
+    <h2 class="margin-top-4 margin-bottom-1">Message count</h2>
     {% if current_user.has_permissions('manage_service') %}
       <h3 class='margin-bottom-0' id="current-year"></h3>
       {{ ajax_block(partials, updates_url, 'usage') }}
-      <a
-        href="{{ url_for('.usage', service_id=current_service['id']) }}"
-        class="usa-link show-more"
-      ><span>See all usage</span></a>
+      <p class="margin-top-0">During the pilot period, each service has an allowance of 250,000 message parts. Once this allowance is met, the
+      application will stop delivering messages. There's no monthly charge, no setup fee, and no procurement cost.</p>
+      <p class="align-with-heading-copy">
+        What counts as 1 text message part?<br />
+        See <a class="usa-link" href="{{ url_for('.pricing') }}">pricing</a>.
+      </p>
     {% endif %}
   </div>
 

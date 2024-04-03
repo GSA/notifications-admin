@@ -14,7 +14,7 @@
       <li class="usa-sidenav__item"><a class="{{ casework_navigation.is_selected('sent-messages') }}" href="{{ url_for('.view_notifications', service_id=current_service.id, status='sending,delivered,failed') }}">Sent messages</a></li>
     {% endif %}
     {% if current_user.has_permissions('manage_service', allow_org_user=True) %}
-      <li class="usa-sidenav__item"><a class="{{ main_navigation.is_selected('usage') }}" href="{{ url_for('.usage', service_id=current_service.id) }}">Usage</a></li>
+      {# <li class="usa-sidenav__item"><a class="{{ main_navigation.is_selected('usage') }}" href="{{ url_for('.usage', service_id=current_service.id) }}">Usage</a></li> #}
     {% endif %}
     <!-- {% if current_user.has_permissions('manage_api_keys', 'manage_service') %}
       <li class="usa-sidenav__item"><a class="{{ main_navigation.is_selected('settings') }}" href="{{ url_for('.service_settings', service_id=current_service.id) }}">Settings</a></li>

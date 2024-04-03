@@ -401,7 +401,7 @@ def test_navigation_urls(
     assert [a["href"] for a in page.select(".nav a")] == [
         "/services/{}/templates".format(SERVICE_ONE_ID),
         "/services/{}".format(SERVICE_ONE_ID),
-        "/services/{}/usage".format(SERVICE_ONE_ID),
+        # "/services/{}/usage".format(SERVICE_ONE_ID),
         # "/services/{}/users".format(SERVICE_ONE_ID),
         # "/services/{}/service-settings".format(SERVICE_ONE_ID),
         # '/services/{}/api'.format(SERVICE_ONE_ID),
