@@ -1012,8 +1012,9 @@ def send_notification(service_id, template_id):
 
     return redirect(
         url_for(
-            ".view_notification",
+            ".view_job",
             service_id=service_id,
+            job_id=upload_id,
             from_job=upload_id,
             notification_id=notifications["notifications"][0]["id"],
             # used to show the final step of the tour (help=3) or not show
