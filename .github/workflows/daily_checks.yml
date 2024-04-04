@@ -22,7 +22,7 @@ jobs:
   dependency-audits:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: ./.github/actions/setup-project
     - name: Create requirements.txt
       run: poetry export --without-hashes --format=requirements.txt > requirements.txt
@@ -35,7 +35,7 @@ jobs:
   static-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-project
       - name: Run scan
         run: poetry run bandit -r app/ --confidence-level medium
@@ -43,7 +43,7 @@ jobs:
   dynamic-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-project
       - name: Run server
         run: make run-flask &
