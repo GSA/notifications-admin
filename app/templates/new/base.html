@@ -1,11 +1,10 @@
 {% from "../components/banner.html" import banner %}
 {% from "../components/components/skip-link/macro.njk" import usaSkipLink -%}
-{% from "../components/components/footer/macro.njk" import usaFooter -%}
 
 
 <!DOCTYPE html>
 <html lang="{{ htmlLang | default('en') }}" class="{{ htmlClasses }}">
-  {% include "new/components/head/head.html" %}
+  {% include "new/components/head.html" %}
   <body class="usa-template__body {{ bodyClasses }}">
     <script nonce="{{ csp_nonce() }}">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     {% block bodyStart %}
@@ -24,7 +23,6 @@
       }) }}
     {% endblock %}
 
-    {# region header #}
     {% block header %}
       {% if current_user.is_authenticated %}
         {% include 'new/components/usa_banner.html' %}
@@ -32,7 +30,6 @@
       {% endif %}
     {% endblock %}
 
-    <!-- \\#region block main -->
     {% block main %}
     <div class="grid-container">
       {% block beforeContent %}
@@ -67,88 +64,18 @@
       </main>
     </div>
     {% endblock %}
-    <!-- \\#endregion -->
 
-    <!-- \\#region block footer -->
     {% block footer %}
 
       {% if current_service and current_service.research_mode %}
         {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="usa-link">Technology Transformation Services</a><span id="research-mode" class="research-mode">research mode</span>' %}
       {% else %}
-        {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="usa-link">Technology Transformation Services</a>' %}
+        {% set commit_hash = ", Latest version: " + config['COMMIT_HASH'] %}
+        {% set long_link = '<a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="usa-link">Technology Transformation Services</a>' %}
+        {% set meta_suffix = "Built by the " + long_link + commit_hash %}
       {% endif %}
 
-      {{ usaFooter({
-        "classes": "js-footer",
-        "navigation": [
-          {
-            "title": "About Notify",
-            "columns": 1,
-            "items": [
-              {
-                "href": url_for("main.features"),
-                "text": "Features"
-              },
-              {
-                "href": url_for("main.roadmap"),
-                "text": "Roadmap"
-              },
-              {
-                "href": url_for("main.security"),
-                "text": "Security"
-              },
-              {
-                "href": url_for("main.terms"),
-                "text": "Terms of use"
-              },
-            ]
-          },
-          {
-            "title": "Using Notify",
-            "columns": 1,
-            "items": [
-              {
-                "href": url_for("main.get_started"),
-                "text": "Get started"
-              },
-              {
-                "href": url_for("main.pricing"),
-                "text": "Pricing"
-              },
-              {
-                "href": url_for("main.trial_mode_new"),
-                "text": "Trial mode"
-              },
-              {
-                "href": url_for("main.message_status"),
-                "text": "Delivery status"
-              },
-              {
-                "href": url_for("main.guidance_index"),
-                "text": "Guidance"
-              },
-              {
-                "href": url_for("main.documentation"),
-                "text": "API documentation"
-              }
-            ]
-          },
-          {
-            "title": "Support",
-            "columns": 1,
-            "items": [
-              {
-                "href": url_for('main.support'),
-                "text": "Contact us"
-              },
-            ]
-          },
-        ],
-        "meta": {
-          "items": meta_items,
-          "html": meta_suffix
-        }
-      }) }}
+      {% include "new/components/footer.html" %}
 
       {% if current_user.is_authenticated %}
         {% block sessionUserWarning %}
@@ -186,7 +113,6 @@
       {% endif %}
 
     {% endblock %}
-    <!-- \\#endregion -->
 
     {% block bodyEnd %}
       {% block extra_javascripts %}
