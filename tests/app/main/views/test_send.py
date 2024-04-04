@@ -975,11 +975,11 @@ def test_upload_valid_csv_shows_preview_and_table(
     for row_index, row in enumerate(
         [
             (
-                '<td class="table-field-left-aligned"> <div class=""> 2028675301 </div> </td>',
-                '<td class="table-field-left-aligned"> <div class=""> A </div> </td>',
+                '<td class="table-field-left-aligned"> <div> 2028675301 </div> </td>',
+                '<td class="table-field-left-aligned"> <div> A </div> </td>',
                 (
                     '<td class="table-field-left-aligned"> '
-                    '<div class="table-field-status-default"> '
+                    '<div> '
                     "<ul> "
                     "<li>foo</li> <li>foo</li> <li>foo</li> "
                     "</ul> "
@@ -988,11 +988,11 @@ def test_upload_valid_csv_shows_preview_and_table(
                 ),
             ),
             (
-                '<td class="table-field-left-aligned"> <div class=""> 2028675302 </div> </td>',
-                '<td class="table-field-left-aligned"> <div class=""> B </div> </td>',
+                '<td class="table-field-left-aligned"> <div> 2028675302 </div> </td>',
+                '<td class="table-field-left-aligned"> <div> B </div> </td>',
                 (
                     '<td class="table-field-left-aligned"> '
-                    '<div class="table-field-status-default"> '
+                    '<div> '
                     "<ul> "
                     "<li>foo</li> <li>foo</li> <li>foo</li> "
                     "</ul> "
@@ -1001,11 +1001,11 @@ def test_upload_valid_csv_shows_preview_and_table(
                 ),
             ),
             (
-                '<td class="table-field-left-aligned"> <div class=""> 2028675303 </div> </td>',
-                '<td class="table-field-left-aligned"> <div class=""> C </div> </td>',
+                '<td class="table-field-left-aligned"> <div> 2028675303 </div> </td>',
+                '<td class="table-field-left-aligned"> <div> C </div> </td>',
                 (
                     '<td class="table-field-left-aligned"> '
-                    '<div class="table-field-status-default"> '
+                    '<div> '
                     "<ul> "
                     "<li>foo</li> <li>foo</li> "
                     "</ul> "
@@ -2030,7 +2030,7 @@ def test_create_job_should_call_api(
         _expected_status=200,
     )
 
-    assert original_file_name in page.text
+    assert "Message status" in page.text
 
     mock_create_job.assert_called_with(
         job_id,

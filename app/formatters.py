@@ -22,7 +22,7 @@ from notifications_utils.recipients import InvalidPhoneError, validate_phone_num
 from notifications_utils.take import Take
 
 from app.utils.csv import get_user_preferred_timezone
-from app.utils.time import parse_naive_dt
+from app.utils.time import parse_dt, parse_naive_dt
 
 
 def apply_html_class(tags, html_file):
@@ -87,37 +87,22 @@ def format_time(date):
 
 
 def format_datetime_normal(date):
+    # example: February 20, 2024 at 07:00 PM US/Eastern, used for datetimes that's not within tables
     return "{} at {} {}".format(
-        format_date_normal(date), format_time_24h(date), get_user_preferred_timezone()
+        format_date_normal(date), format_time_12h(date), get_user_preferred_timezone()
     )
 
 
-def format_datetime_short(date):
-    return "{} at {} {}".format(
-        format_date_short(date), format_time_24h(date), get_user_preferred_timezone()
-    )
-
-
-def format_datetime_short_america(date):
-    return "{} at {}".format(format_date_numeric_america(date), format_time_12h(date))
-
-
-def format_date_numeric_america(date):
-    date = parse_naive_dt(date)
-
-    preferred_tz = pytz.timezone(get_user_preferred_timezone())
-    return (
-        date.replace(tzinfo=timezone.utc).astimezone(preferred_tz).strftime("%m-%d-%Y")
-    )
+def format_datetime_table(date):
+    # example:  03-18-2024 at 04:53 PM, intended for datetimes in tables
+    return "{} at {}".format(format_date_numeric(date), format_time_12h(date))
 
 
 def format_time_12h(date):
-    date = parse_naive_dt(date)
+    date = parse_dt(date)
 
     preferred_tz = pytz.timezone(get_user_preferred_timezone())
-    return (
-        date.replace(tzinfo=timezone.utc).astimezone(preferred_tz).strftime("%I:%M %p")
-    )
+    return date.astimezone(preferred_tz).strftime("%I:%M %p")
 
 
 def format_datetime_relative(date):
@@ -137,7 +122,7 @@ def format_date_numeric(date):
 
     preferred_tz = pytz.timezone(get_user_preferred_timezone())
     return (
-        date.replace(tzinfo=timezone.utc).astimezone(preferred_tz).strftime("%Y-%m-%d")
+        date.replace(tzinfo=timezone.utc).astimezone(preferred_tz).strftime("%m-%d-%Y")
     )
 
 
@@ -186,7 +171,7 @@ def format_date(date):
 
 def format_date_normal(date):
     date = parse_naive_dt(date)
-    return date.strftime("%d %B %Y").lstrip("0")
+    return date.strftime("%B %d, %Y").lstrip("0")
 
 
 def format_date_short(date):

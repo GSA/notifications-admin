@@ -166,6 +166,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "send_one_off",
             "send_one_off_step",
             "send_one_off_to_myself",
+            "set_up_your_profile",
             "service_add_email_reply_to",
             "service_add_sms_sender",
             "service_confirm_delete_email_reply_to",
@@ -400,7 +401,7 @@ def test_navigation_urls(
     assert [a["href"] for a in page.select(".nav a")] == [
         "/services/{}/templates".format(SERVICE_ONE_ID),
         "/services/{}".format(SERVICE_ONE_ID),
-        "/services/{}/usage".format(SERVICE_ONE_ID),
+        # "/services/{}/usage".format(SERVICE_ONE_ID),
         # "/services/{}/users".format(SERVICE_ONE_ID),
         # "/services/{}/service-settings".format(SERVICE_ONE_ID),
         # '/services/{}/api'.format(SERVICE_ONE_ID),

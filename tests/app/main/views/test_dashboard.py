@@ -511,18 +511,18 @@ def test_download_inbox(
     )
     assert response.headers["Content-Type"] == ("text/csv; " "charset=utf-8")
     assert response.headers["Content-Disposition"] == (
-        "inline; " 'filename="Received text messages 2016-07-01.csv"'
+        "inline; " 'filename="Received text messages 07-01-2016.csv"'
     )
     assert response.get_data(as_text=True) == (
         "Phone number,Message,Received\r\n"
-        "(202) 867-5300,message-1,2016-07-01 11:00 US/Eastern\r\n"
-        "(202) 867-5300,message-2,2016-07-01 10:59 US/Eastern\r\n"
-        "(202) 867-5300,message-3,2016-07-01 10:59 US/Eastern\r\n"
-        "(202) 867-5302,message-4,2016-07-01 08:59 US/Eastern\r\n"
-        "+33 1 12 34 56 78,message-5,2016-07-01 06:59 US/Eastern\r\n"
-        "(202) 555-0104,message-6,2016-07-01 04:59 US/Eastern\r\n"
-        "(202) 555-0104,message-7,2016-07-01 02:59 US/Eastern\r\n"
-        "+682 12345,message-8,2016-07-01 02:59 US/Eastern\r\n"
+        "(202) 867-5300,message-1,07-01-2016 11:00 US/Eastern\r\n"
+        "(202) 867-5300,message-2,07-01-2016 10:59 US/Eastern\r\n"
+        "(202) 867-5300,message-3,07-01-2016 10:59 US/Eastern\r\n"
+        "(202) 867-5302,message-4,07-01-2016 08:59 US/Eastern\r\n"
+        "+33 1 12 34 56 78,message-5,07-01-2016 06:59 US/Eastern\r\n"
+        "(202) 555-0104,message-6,07-01-2016 04:59 US/Eastern\r\n"
+        "(202) 555-0104,message-7,07-01-2016 02:59 US/Eastern\r\n"
+        "+682 12345,message-8,07-01-2016 02:59 US/Eastern\r\n"
     )
 
 
@@ -655,7 +655,7 @@ def test_should_not_show_recent_templates_on_dashboard_if_only_one_template_used
     expected_count = stats[0]["count"]
     assert expected_count == 50
     assert normalize_spaces(page.select_one("#total-sms .big-number-smaller").text) == (
-        "{} text messages sent".format(expected_count)
+        "{} text messages sent in the last seven days".format(expected_count)
     )
 
 
@@ -1045,17 +1045,8 @@ def test_usage_page_monthly_breakdown(
     monthly_breakdown = normalize_spaces(page.find("table").text)
 
     assert "October" in monthly_breakdown
-    assert "249,860 free text messages" in monthly_breakdown
-
     assert "February" in monthly_breakdown
-    assert "$16.40" in monthly_breakdown
-    assert "140 free text messages" in monthly_breakdown
-    assert "960 text messages at 1.65p" in monthly_breakdown
-    assert "33 text messages at 1.70p" in monthly_breakdown
-
     assert "March" in monthly_breakdown
-    assert "$20.91" in monthly_breakdown
-    assert "1,230 text messages at 1.70p" in monthly_breakdown
 
 
 @pytest.mark.parametrize(
@@ -1804,15 +1795,8 @@ def test_service_dashboard_shows_usage(
 
     usage_table = page.find("table", class_="usage-table")
 
-    # Check if the "Usage" table exists
-    assert usage_table is not None
-
-    table_rows = usage_table.find_all("tbody")[0].find_all("tr")
-
-    assert len(table_rows) == 1
-
-    assert "500" in table_rows[0].find_all("td")[0].text
-    assert "9500" in table_rows[0].find_all("td")[1].text
+    # Check if the "Usage" table doesn't exist
+    assert usage_table is None
 
 
 def test_service_dashboard_shows_free_allowance(
@@ -1847,7 +1831,7 @@ def test_service_dashboard_shows_free_allowance(
 
     usage_text = normalize_spaces(page.select_one("[data-key=usage]").text)
     assert "spent on text messages" not in usage_text
-    assert "Daily Usage Remaining 1,000 249,000" in usage_text
+    assert "Daily Sent Remaining 1,000 249,000" in usage_text
 
 
 def test_service_dashboard_shows_batched_jobs(

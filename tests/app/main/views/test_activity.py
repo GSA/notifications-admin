@@ -40,7 +40,7 @@ from tests.conftest import (
             {"message_type": "sms"},
             "/sms.json",
             7,
-            "Text messages",
+            "Text message",
         ),
         (
             create_active_caseworking_user(),

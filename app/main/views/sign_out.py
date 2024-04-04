@@ -6,10 +6,6 @@ from flask_login import current_user
 
 from app.main import main
 
-# ask login.gov if we really need manual logout and what's up with one hour sessions
-# ask login.gov how they recommend approaching dev environment
-# ask Tim Donaworth the same for #2
-
 
 def _sign_out_at_login_dot_gov():
     base_url = os.getenv("LOGIN_DOT_GOV_BASE_LOGOUT_URL")

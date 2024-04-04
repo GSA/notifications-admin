@@ -1,13 +1,48 @@
+{% set display_message_status %}
+{% if job.template.content %}
+  <h2 class="sms-message-header">Message</h2>
+  <div class="sms-message-wrapper">{{ current_service.name }}: {{job.template.content}}</div>
+{% endif %}
+{% if job.original_file_name %}
+  <h2 class="recipient-list">Recipient list</h2>
+  <div>
+    <ul class="usa-icon-list">
+      <li class="usa-icon-list__item">
+        <img src="{{ url_for('static', filename='img/material-icons/description.svg') }}" alt="Description Icon">
+        <div class="usa-icon-list__content">
+          <h3>{{ job.original_file_name }}</h3>
+        </div>
+      </li>
+    </ul>
+  </div>
+{% endif %}
+<h2>Delivery Status</h2>
+{% endset %}
+
 <div class="ajax-block-container">
   <p class='bottom-gutter'>
-    {% if job.scheduled_for %}
-      {% if job.processing_started %}
-        Sent by {{ job.created_by.name }} on {{ job.processing_started|format_datetime_short_america }}
+    {% if job.still_processing or arrived_from_preview_page_url %}
+      {% if job.scheduled_for %}
+        <div class="usa-alert usa-alert--info">
+          <div class="usa-alert__body">
+            <h4 class="usa-alert__heading">Your text has been scheduled</h4>
+            <p class="usa-alert__text">
+              {{ job.template_name }} - {{ current_service.name }} was scheduled on {{ job.scheduled_for|format_datetime_normal }} by {{ job.created_by.name }}
+            </p>
+          </div>
+        </div>
+        {{display_message_status}}
       {% else %}
-        Uploaded by {{ job.created_by.name }} on {{ job.created_at|format_datetime_short_america }}
+        <div class="usa-alert usa-alert--success">
+          <div class="usa-alert__body">
+            <h4 class="usa-alert__heading">Your text has been sent</h4>
+            <p class="usa-alert__text">
+              {{ job.template_name }} - {{ current_service.name }} was sent on {{ job.created_at|format_datetime_normal }} by {{ job.created_by.name }}
+            </p>
+          </div>
+        </div>
+        {{display_message_status}}
       {% endif %}
-   {% else %}
-      Sent by {{ job.created_by.name }} on {{ job.created_at|format_datetime_short_america }}
     {% endif %}
   </p>
   {% if job.status == 'sending limits exceeded'%}
