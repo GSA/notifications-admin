@@ -1,6 +1,5 @@
 {% from "../components/banner.html" import banner %}
 {% from "../components/components/skip-link/macro.njk" import usaSkipLink -%}
-{% from "../components/components/footer/macro.njk" import usaFooter -%}
 
 
 <!DOCTYPE html>
@@ -24,7 +23,6 @@
       }) }}
     {% endblock %}
 
-    {# region header #}
     {% block header %}
       {% if current_user.is_authenticated %}
         {% include 'new/components/usa_banner.html' %}
@@ -32,7 +30,6 @@
       {% endif %}
     {% endblock %}
 
-    <!-- \\#region block main -->
     {% block main %}
     <div class="grid-container">
       {% block beforeContent %}
@@ -67,9 +64,7 @@
       </main>
     </div>
     {% endblock %}
-    <!-- \\#endregion -->
 
-    <!-- \\#region block footer -->
     {% block footer %}
 
       {% if current_service and current_service.research_mode %}
@@ -118,7 +113,6 @@
       {% endif %}
 
     {% endblock %}
-    <!-- \\#endregion -->
 
     {% block bodyEnd %}
       {% block extra_javascripts %}
