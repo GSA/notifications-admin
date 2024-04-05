@@ -34,7 +34,6 @@ from app.utils.pagination import (
     generate_previous_dict,
     get_page_from_request,
 )
-from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
 
 
@@ -382,20 +381,6 @@ def get_job_partials(job):
 
     arrived_from_preview_page_url = session.get("arrived_from_preview_page", False)
 
-    template_id = job.template.get('id')
-
-    db_template = current_service.get_template_with_user_permission_or_403(
-        template_id, current_user
-    )
-    if db_template["template_type"] not in ("sms", "email"):
-        abort(404)
-
-    template = get_template(
-        db_template,
-        current_service,
-        redact_missing_personalisation=True,
-    )
-
     return {
         "counts": counts,
         "notifications": render_template(
@@ -420,7 +405,6 @@ def get_job_partials(job):
             "partials/jobs/status.html",
             job=job,
             arrived_from_preview_page_url=arrived_from_preview_page_url,
-            template=template,
         ),
     }
 
