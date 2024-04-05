@@ -11,9 +11,9 @@ from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from flask import Flask, url_for
 from notifications_python_client.errors import HTTPError
-from notifications_utils.url_safe_token import generate_token
 
 from app import create_app
+from notifications_utils.url_safe_token import generate_token
 
 from . import (
     TestClient,

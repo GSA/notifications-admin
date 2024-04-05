@@ -12,11 +12,11 @@ from zipfile import BadZipFile
 import pytest
 from flask import url_for
 from notifications_python_client.errors import HTTPError
-from notifications_utils.recipients import RecipientCSV
-from notifications_utils.template import SMSPreviewTemplate
 from xlrd.biffh import XLRDError
 from xlrd.xldate import XLDateAmbiguous, XLDateError, XLDateNegative, XLDateTooLarge
 
+from notifications_utils.recipients import RecipientCSV
+from notifications_utils.template import SMSPreviewTemplate
 from tests import validate_route_permission, validate_route_permission_with_client
 from tests.conftest import (
     SERVICE_ONE_ID,
@@ -979,7 +979,7 @@ def test_upload_valid_csv_shows_preview_and_table(
                 '<td class="table-field-left-aligned"> <div> A </div> </td>',
                 (
                     '<td class="table-field-left-aligned"> '
-                    '<div> '
+                    "<div> "
                     "<ul> "
                     "<li>foo</li> <li>foo</li> <li>foo</li> "
                     "</ul> "
@@ -992,7 +992,7 @@ def test_upload_valid_csv_shows_preview_and_table(
                 '<td class="table-field-left-aligned"> <div> B </div> </td>',
                 (
                     '<td class="table-field-left-aligned"> '
-                    '<div> '
+                    "<div> "
                     "<ul> "
                     "<li>foo</li> <li>foo</li> <li>foo</li> "
                     "</ul> "
@@ -1005,7 +1005,7 @@ def test_upload_valid_csv_shows_preview_and_table(
                 '<td class="table-field-left-aligned"> <div> C </div> </td>',
                 (
                     '<td class="table-field-left-aligned"> '
-                    '<div> '
+                    "<div> "
                     "<ul> "
                     "<li>foo</li> <li>foo</li> "
                     "</ul> "

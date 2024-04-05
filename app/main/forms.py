@@ -10,9 +10,6 @@ from flask_wtf import FlaskForm as Form
 from flask_wtf.file import FileAllowed
 from flask_wtf.file import FileField as FileField_wtf
 from flask_wtf.file import FileSize
-from notifications_utils.formatters import strip_all_whitespace
-from notifications_utils.insensitive_dict import InsensitiveDict
-from notifications_utils.recipients import InvalidPhoneError, validate_phone_number
 from werkzeug.utils import cached_property
 from wtforms import (
     BooleanField,
@@ -65,6 +62,9 @@ from app.models.organization import Organization
 from app.utils import merge_jsonlike
 from app.utils.csv import get_user_preferred_timezone
 from app.utils.user_permissions import all_ui_permissions, permission_options
+from notifications_utils.formatters import strip_all_whitespace
+from notifications_utils.insensitive_dict import InsensitiveDict
+from notifications_utils.recipients import InvalidPhoneError, validate_phone_number
 
 
 def get_time_value_and_label(future_time):

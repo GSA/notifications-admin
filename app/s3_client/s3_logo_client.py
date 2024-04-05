@@ -2,9 +2,9 @@ import uuid
 
 from boto3 import Session
 from flask import current_app
-from notifications_utils.s3 import s3upload as utils_s3upload
 
 from app.s3_client import get_s3_object
+from notifications_utils.s3 import s3upload as utils_s3upload
 
 TEMP_TAG = "temp-{user_id}_"
 EMAIL_LOGO_LOCATION_STRUCTURE = "{temp}{unique_id}-{filename}"

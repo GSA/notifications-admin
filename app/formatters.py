@@ -15,14 +15,14 @@ import pytz
 from bs4 import BeautifulSoup
 from flask import Markup, render_template_string, url_for
 from flask.helpers import get_root_path
+
+from app.utils.csv import get_user_preferred_timezone
+from app.utils.time import parse_dt, parse_naive_dt
 from notifications_utils.field import Field
 from notifications_utils.formatters import make_quotes_smart
 from notifications_utils.formatters import nl2br as utils_nl2br
 from notifications_utils.recipients import InvalidPhoneError, validate_phone_number
 from notifications_utils.take import Take
-
-from app.utils.csv import get_user_preferred_timezone
-from app.utils.time import parse_dt, parse_naive_dt
 
 
 def apply_html_class(tags, html_file):
