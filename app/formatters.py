@@ -13,8 +13,9 @@ import humanize
 import markdown
 import pytz
 from bs4 import BeautifulSoup
-from flask import Markup, render_template_string, url_for
+from flask import render_template_string, url_for
 from flask.helpers import get_root_path
+from markupsafe import Markup
 from notifications_utils.field import Field
 from notifications_utils.formatters import make_quotes_smart
 from notifications_utils.formatters import nl2br as utils_nl2br

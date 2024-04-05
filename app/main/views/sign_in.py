@@ -5,7 +5,6 @@ import uuid
 import jwt
 import requests
 from flask import (
-    Markup,
     abort,
     current_app,
     flash,
@@ -16,6 +15,7 @@ from flask import (
     url_for,
 )
 from flask_login import current_user
+from markupsafe import Markup
 from notifications_utils.url_safe_token import generate_token
 
 from app import login_manager, user_api_client
