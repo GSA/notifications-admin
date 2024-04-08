@@ -16,7 +16,12 @@
   <div class="grid-row">
     <div class="grid-col-10">
       {{ page_header('Sign-in method') }}
-      {% if 'email_auth' in current_service.permissions %}
+
+      {% if login_gov_enabled %}
+        <p>Your username, password, and multi-factor authentication options are handled by Login.gov.</p>
+        <p>To make changes, head to <a href="https://login.gov/">Login.gov</a> and sign-in with your credentials.</p>
+        <p>Any changes made to your Login.gov account will automatically be synced with Notify.gov.</p>
+      {% elif 'email_auth' in current_service.permissions and not login_gov_enabled %}
         <p class="heading-small bottom-gutter-2-3">
           Email link or text message code
         </p>
