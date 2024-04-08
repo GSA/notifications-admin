@@ -28,7 +28,7 @@
   </div>
 
   <h2 id="{{ file_contents_header_id }}">Message</h2>
-  <div class="preview-message"> {{ simplifed_template|string }}</div>
+  <div class="preview-message"> {{ template|string }}</div>
   {% if not request.args.from_test %}
   <h2>Recipients list</h2>
   <div>
