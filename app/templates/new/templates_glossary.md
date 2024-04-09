@@ -30,9 +30,9 @@ This document serves as a glossary for the templates directory structure of the 
 - withoutnav_template.html Delete
 - main_template.html Delete
 - settings_templates.html `withnav_template` can be used to replace `settings_template`.
-- settings_nav.html (move to /new/navigation directory)
-- main_nav.html (move to /new/navigation directory)
-- service_navigation.html (move to /new/navigation directory)
+- settings_nav.html (move to /components/ directory)
+- main_nav.html (move to /components/ directory)
+- service_navigation.html (move to /components/ directory)
 - org_template, could be under it's own directory called /layout/organization
-- org_nav.html (move to /new/navigation directory)
+- org_nav.html (move to /components/ directory)
 - content_template.html Delete
