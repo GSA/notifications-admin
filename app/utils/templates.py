@@ -17,7 +17,7 @@ def get_template(
     redact_missing_personalisation=False,
     email_reply_to=None,
     sms_sender=None,
-    force_hide_sender=False
+    force_hide_sender=False,
 ):
     if "email" == template["template_type"]:
         return EmailPreviewTemplate(
