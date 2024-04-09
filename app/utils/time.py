@@ -22,8 +22,3 @@ def is_less_than_days_ago(date_from_db, number_of_days):
 
 def parse_naive_dt(dt):
     return parser.parse(dt, ignoretz=True)
-
-
-def parse_dt(dt):
-    # Parse datetime without ignoring the timezone
-    return parser.parse(dt)

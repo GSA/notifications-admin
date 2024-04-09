@@ -979,7 +979,7 @@ def test_upload_valid_csv_shows_preview_and_table(
                 '<td class="table-field-left-aligned"> <div> A </div> </td>',
                 (
                     '<td class="table-field-left-aligned"> '
-                    '<div> '
+                    "<div> "
                     "<ul> "
                     "<li>foo</li> <li>foo</li> <li>foo</li> "
                     "</ul> "
@@ -992,7 +992,7 @@ def test_upload_valid_csv_shows_preview_and_table(
                 '<td class="table-field-left-aligned"> <div> B </div> </td>',
                 (
                     '<td class="table-field-left-aligned"> '
-                    '<div> '
+                    "<div> "
                     "<ul> "
                     "<li>foo</li> <li>foo</li> <li>foo</li> "
                     "</ul> "
@@ -1005,7 +1005,7 @@ def test_upload_valid_csv_shows_preview_and_table(
                 '<td class="table-field-left-aligned"> <div> C </div> </td>',
                 (
                     '<td class="table-field-left-aligned"> '
-                    '<div> '
+                    "<div> "
                     "<ul> "
                     "<li>foo</li> <li>foo</li> "
                     "</ul> "
