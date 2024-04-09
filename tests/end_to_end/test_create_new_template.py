@@ -8,12 +8,12 @@ from playwright.sync_api import expect
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 
-def _setup(page, end_to_end_context):
+def _setup(page):
     # Prepare for adding a new service later in the test.
     current_date_time = datetime.datetime.now()
     new_service_name = "E2E Federal Test Service {now} - {browser_type}".format(
         now=current_date_time.strftime("%m/%d/%Y %H:%M:%S"),
-        browser_type=end_to_end_context.browser.browser_type.name,
+        browser_type=page.context.browser.browser_type.name,
     )
 
     page.goto(f"{E2E_TEST_URI}/accounts")
@@ -157,10 +157,10 @@ def create_new_template(page):
     assert "Test message for e2e test" in page.content()
 
 
-def test_create_new_template(authenticated_page, end_to_end_context):
+def test_create_new_template(authenticated_page):
     page = authenticated_page
 
-    _setup(page, end_to_end_context)
+    _setup(page)
 
     create_new_template(page)
 
