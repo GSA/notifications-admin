@@ -38,11 +38,6 @@ class Config(object):
     NR_MONITOR_ON = settings and settings.monitor_mode
     COMMIT_HASH = getenv("COMMIT_HASH", "--------")[0:7]
 
-    TEMPLATE_PREVIEW_API_HOST = getenv(
-        "TEMPLATE_PREVIEW_API_HOST", "http://localhost:9999"
-    )
-    TEMPLATE_PREVIEW_API_KEY = getenv("TEMPLATE_PREVIEW_API_KEY", "my-secret-key")
-
     GOVERNMENT_EMAIL_DOMAIN_NAMES = ["gov"]
 
     # Logging

@@ -133,7 +133,6 @@ def test_service_navigation_for_org_user(
             (
                 "Send messages",
                 "Sent messages",
-                "Usage",
             ),
             200,
         ),

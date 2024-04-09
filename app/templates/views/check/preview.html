@@ -21,14 +21,14 @@
 
   {{ page_header('Preview') }}
   <div>
-    <p class="sms-message-scheduler">Scheduled: {{ scheduled_for if scheduled_for else 'Now'}}</p>
+    <p class="sms-message-scheduler">Scheduled: {{ scheduled_for |format_datetime_normal if scheduled_for else 'Now'}}</p>
     <p class="sms-message-file-name">File: {{original_file_name}}</p>
     <p class="sms-message-template">Template: {{template.name}}</p>
     <p class="sms-message-sender" >From: {{ template.sender }}</p>
   </div>
 
   <h2 id="{{ file_contents_header_id }}">Message</h2>
-  <div class="preview-message"> {{ simplifed_template|string }}</div>
+  <div class="preview-message"> {{ template|string }}</div>
   {% if not request.args.from_test %}
   <h2>Recipients list</h2>
   <div>
@@ -42,25 +42,55 @@
     </ul>
   </div>
   <div class="usa-table-container--scrollable" tabindex="0">
-    {% call(item, row_number) list_table(
-      recipients.displayed_rows,
-      caption="Note: Only the first 5 rows are displayed here.",
-      caption_visible=True,
-      field_headings=recipients.column_headers
-    ) %}
-      {% for column in recipients.column_headers %}
-        {% if item[column].ignore %}
-          {{ text_field(item[column].data or '', status='default') }}
-        {% else %}
-          {{ text_field(item[column].data or '') }}
-        {% endif %}
-      {% endfor %}
-      {% if item[None].data %}
-        {% for column in item[None].data %}
-          {{ text_field(column, status='default') }}
+    <table class="usa-table usa-table--borderless width-full">
+      <caption class="font-body-lg table-heading">
+        Note: Only the first 5 rows are displayed here.
+      </caption>
+      <thead class="table-field-headings-visible">
+        <tr>
+          {% for header in recipients.column_headers %}
+          <th scope="col" class="table-field-heading-first">
+            {{ header }}
+          </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in recipients.displayed_rows %}
+          {% if loop.index <= 5 %}
+            <tr class="table-row">
+              {% for column in recipients.column_headers %}
+                <td class="table-field-left-aligned">
+                  <div>
+                    {% set column_data = item[column].data or '' %}
+                    {% if column_data is iterable and column_data is not string %}
+                      <ul>
+                        {% for data_item in column_data %}
+                          {% if data_item is not none %}
+                            <li>{{ data_item }}</li>
+                          {% endif %}
+                        {% endfor %}
+                      </ul>
+                    {% else %}
+                      {{ column_data }}
+                    {% endif %}
+                  </div>
+                </td>
+              {% endfor %}
+              {% if item[None].data %}
+                {% for column in item[None].data %}
+                  <td class="table-field-left-aligned">
+                    <div class="">
+                      {{ column }}
+                    </div>
+                  </td>
+                {% endfor %}
+              {% endif %}
+            </tr>
+          {% endif %}
         {% endfor %}
-      {% endif %}
-    {% endcall %}
+      </tbody>
+    </table>
   </div>
   {% endif %}
   <!-- <div class="bottom-gutter-3-2">

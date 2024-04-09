@@ -22,7 +22,7 @@ from notifications_utils.recipients import InvalidPhoneError, validate_phone_num
 from notifications_utils.take import Take
 
 from app.utils.csv import get_user_preferred_timezone
-from app.utils.time import parse_naive_dt
+from app.utils.time import parse_dt, parse_naive_dt
 
 
 def apply_html_class(tags, html_file):
@@ -99,12 +99,10 @@ def format_datetime_table(date):
 
 
 def format_time_12h(date):
-    date = parse_naive_dt(date)
+    date = parse_dt(date)
 
     preferred_tz = pytz.timezone(get_user_preferred_timezone())
-    return (
-        date.replace(tzinfo=timezone.utc).astimezone(preferred_tz).strftime("%I:%M %p")
-    )
+    return date.astimezone(preferred_tz).strftime("%I:%M %p")
 
 
 def format_datetime_relative(date):

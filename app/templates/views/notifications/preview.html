@@ -43,14 +43,14 @@
     {{ page_header('Preview') }}
   {% endif %}
   <div>
-    <p class="sms-message-scheduler">Scheduled: {{ scheduled_for if scheduled_for else 'Now'}}</p>
+    <p class="sms-message-scheduler">Scheduled: {{ scheduled_for |format_datetime_normal if scheduled_for else 'Now'}}</p>
     <p class="sms-message-template">Template: {{template.name}}</p>
     <p class="sms-message-sender" >From: {{ template.sender }}</p>
     <p class="sms-message-sender" >To: {{ recipient }}</p>
   </div>
 
   <h2 id="{{ file_contents_header_id }}">Message</h2>
-  <div class="preview-message"> {{ simplifed_template|string }}</div>
+  <div class="preview-message"> {{ template|string }}</div>
 
   <div class="js-stick-at-bottom-when-scrolling">
     <form method="post" enctype="multipart/form-data" action="{{url_for(
