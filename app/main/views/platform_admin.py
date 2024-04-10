@@ -662,7 +662,21 @@ def create_global_stats(services):
         "email": {"delivered": 0, "failed": 0, "requested": 0},
         "sms": {"delivered": 0, "failed": 0, "requested": 0},
     }
+    # Issue #1323. The back end is now sending 'failure' instead of
+    # 'failed'.  Adjust it here, but keep it flexible in case
+    # the backend reverts to 'failed'.
     for service in services:
+        if service["statistics"]["sms"].get("failure") is not None:
+            service["statistics"]["sms"]["failed"] = service["statistics"]["sms"][
+                "failure"
+            ]
+        if service["statistics"]["email"].get("failure") is not None:
+            service["statistics"]["email"]["failed"] = service["statistics"]["email"][
+                "failure"
+            ]
+
+    for service in services:
+
         for msg_type, status in itertools.product(
             ("sms", "email"), ("delivered", "failed", "requested")
         ):
