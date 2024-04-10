@@ -470,7 +470,7 @@ def send_one_off_step(service_id, template_id, step_index):
     )
 
 
-def _check_messages(service_id, template_id, upload_id, preview_row):
+def _check_messages(service_id, template_id, upload_id, preview_row, **kwargs):
     try:
         # The happy path is that the job doesn’t already exist, so the
         # API will return a 404 and the client will raise HTTPError.
@@ -510,11 +510,7 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
         show_recipient=False,
         email_reply_to=email_reply_to,
         sms_sender=sms_sender,
-    )
-    simplifed_template = get_template(
-        db_template,
-        current_service,
-        show_recipient=False,
+        **kwargs,
     )
 
     allow_list = []
@@ -535,7 +531,7 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
         allow_list = None
     recipients = RecipientCSV(
         contents,
-        template=template or simplifed_template,
+        template=template,
         max_initial_rows_shown=50,
         max_errors_shown=50,
         guestlist=allow_list,
@@ -569,9 +565,6 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
 
     if preview_row < len(recipients) + 2:
         template.values = recipients[preview_row - 2].recipient_and_personalisation
-        simplifed_template.values = recipients[
-            preview_row - 2
-        ].recipient_and_personalisation
     elif preview_row > 2:
         abort(404)
 
@@ -599,7 +592,6 @@ def _check_messages(service_id, template_id, upload_id, preview_row):
             service_id, template.id, db_template["version"], original_file_name
         ),
         template_id=template_id,
-        simplifed_template=simplifed_template,
     )
 
 
@@ -658,7 +650,9 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def preview_job(service_id, template_id, upload_id, row_index=2):
     session["scheduled_for"] = request.form.get("scheduled_for", "")
-    data = _check_messages(service_id, template_id, upload_id, row_index)
+    data = _check_messages(
+        service_id, template_id, upload_id, row_index, force_hide_sender=True
+    )
 
     return render_template(
         "views/check/preview.html",
@@ -825,11 +819,11 @@ def send_one_off_to_myself(service_id, template_id):
 def check_notification(service_id, template_id):
     return render_template(
         "views/notifications/check.html",
-        **_check_notification(service_id, template_id),
+        **_check_notification(service_id, template_id, show_recipient=True),
     )
 
 
-def _check_notification(service_id, template_id, exception=None):
+def _check_notification(service_id, template_id, exception=None, **kwargs):
     db_template = current_service.get_template_with_user_permission_or_403(
         template_id, current_user
     )
@@ -842,13 +836,9 @@ def _check_notification(service_id, template_id, exception=None):
     template = get_template(
         db_template,
         current_service,
-        show_recipient=True,
         email_reply_to=email_reply_to,
         sms_sender=sms_sender,
-    )
-    simplifed_template = get_template(
-        db_template,
-        current_service,
+        **kwargs,
     )
     placeholders = fields_to_fill_in(template)
 
@@ -874,7 +864,6 @@ def _check_notification(service_id, template_id, exception=None):
         back_link_from_preview=back_link_from_preview,
         choose_time_form=choose_time_form,
         **(get_template_error_dict(exception) if exception else {}),
-        simplifed_template=simplifed_template,
     )
 
 
@@ -924,7 +913,9 @@ def preview_notification(service_id, template_id):
 
     return render_template(
         "views/notifications/preview.html",
-        **_check_notification(service_id, template_id),
+        **_check_notification(
+            service_id, template_id, show_recipient=False, force_hide_sender=True
+        ),
         scheduled_for=session["scheduled_for"],
         recipient=recipient,
     )

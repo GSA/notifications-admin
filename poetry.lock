@@ -171,41 +171,41 @@ files = [
 
 [[package]]
 name = "boto3"
-version = "1.29.6"
+version = "1.34.79"
 description = "The AWS SDK for Python"
 optional = false
-python-versions = ">= 3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "boto3-1.29.6-py3-none-any.whl", hash = "sha256:f4d19e01d176c3a5a05e4af733185ff1891b08a3c38d4a439800fa132aa6e9be"},
-    {file = "boto3-1.29.6.tar.gz", hash = "sha256:d1d0d979a70bf9b0b13ae3b017f8523708ad953f62d16f39a602d67ee9b25554"},
+    {file = "boto3-1.34.79-py3-none-any.whl", hash = "sha256:265b0b4865e8c07e27abb32a31d2bd9129bb009b1d89ca0783776ec084886123"},
+    {file = "boto3-1.34.79.tar.gz", hash = "sha256:139dd2d94eaa0e3213ff37ba7cf4cb2e3823269178fe8f3e33c965f680a9ddde"},
 ]
 
 [package.dependencies]
-botocore = ">=1.32.6,<1.33.0"
+botocore = ">=1.34.79,<1.35.0"
 jmespath = ">=0.7.1,<2.0.0"
-s3transfer = ">=0.7.0,<0.8.0"
+s3transfer = ">=0.10.0,<0.11.0"
 
 [package.extras]
 crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.32.7"
+version = "1.34.79"
 description = "Low-level, data-driven core of boto 3."
 optional = false
-python-versions = ">= 3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "botocore-1.32.7-py3-none-any.whl", hash = "sha256:58b33d02cafa23461c8a9d211b30e8cded992380a84de409379fd02811fa3e11"},
-    {file = "botocore-1.32.7.tar.gz", hash = "sha256:c6795c731b04c8e3635588c44cfd1a4462fc5987859195522c96812cf3eceff9"},
+    {file = "botocore-1.34.79-py3-none-any.whl", hash = "sha256:a42a014d3dbaa9ef123810592af69f9e55b456c5be3ac9efc037325685519e83"},
+    {file = "botocore-1.34.79.tar.gz", hash = "sha256:6b59b0f7de219d383a2a633f6718c2600642ebcb707749dc6c67a6a436474b7a"},
 ]
 
 [package.dependencies]
 jmespath = ">=0.7.1,<2.0.0"
 python-dateutil = ">=2.1,<3.0.0"
-urllib3 = {version = ">=1.25.4,<2.1", markers = "python_version >= \"3.10\""}
+urllib3 = {version = ">=1.25.4,<2.2.0 || >2.2.0,<3", markers = "python_version >= \"3.10\""}
 
 [package.extras]
-crt = ["awscrt (==0.19.17)"]
+crt = ["awscrt (==0.19.19)"]
 
 [[package]]
 name = "cachecontrol"
@@ -925,13 +925,13 @@ files = [
 
 [[package]]
 name = "govuk-bank-holidays"
-version = "0.13"
+version = "0.14"
 description = "Tool to load UK bank holidays from GOV.UK"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "govuk-bank-holidays-0.13.tar.gz", hash = "sha256:ffb6ac050701cb850fd2f08eb9c7c91753090f00525e69cebec4f869f6f0de41"},
-    {file = "govuk_bank_holidays-0.13-py3-none-any.whl", hash = "sha256:2b91901be492235c4160a64d56d4d1945f6ca7f11c1ea4277395981866c35bef"},
+    {file = "govuk-bank-holidays-0.14.tar.gz", hash = "sha256:ce85102423b72908957d25981f616494729686515d5d66c09a1d35a354ce20a6"},
+    {file = "govuk_bank_holidays-0.14-py3-none-any.whl", hash = "sha256:da485c4a40c6c874c925916e492e3f20b807cffba7eed5f07fb69327aef6b10b"},
 ]
 
 [package.dependencies]
@@ -1602,7 +1602,7 @@ requests = ">=2.0.0"
 
 [[package]]
 name = "notifications-utils"
-version = "0.4.0"
+version = "0.4.5"
 description = ""
 optional = false
 python-versions = "^3.12.2"
@@ -1613,8 +1613,8 @@ develop = false
 async-timeout = "^4.0.2"
 bleach = "^6.1.0"
 blinker = "^1.6.2"
-boto3 = "^1.28.66"
-botocore = "^1.31.66"
+boto3 = "^1.34.77"
+botocore = "^1.34.79"
 cachetools = "^5.3.0"
 certifi = "^2024.2.2"
 cffi = "^1.16.0"
@@ -1624,7 +1624,7 @@ cryptography = "^42.0.4"
 flask = "^2.3.2"
 flask-redis = "^0.4.0"
 geojson = "^3.0.1"
-govuk-bank-holidays = "^0.13"
+govuk-bank-holidays = "^0.14"
 idna = "^3.6"
 itsdangerous = "^2.1.2"
 jinja2 = "^3.1.3"
@@ -1633,16 +1633,16 @@ markupsafe = "^2.1.5"
 mistune = "==0.8.4"
 numpy = "^1.24.2"
 ordered-set = "^4.1.0"
-phonenumbers = "^8.13.32"
+phonenumbers = "^8.13.34"
 pycparser = "^2.21"
 python-dateutil = "^2.8.2"
 python-json-logger = "^2.0.7"
-pytz = "^2023.3"
+pytz = "^2024.1"
 pyyaml = "^6.0"
 redis = "^5.0.3"
 regex = "^2023.12.25"
 requests = "^2.31.0"
-s3transfer = "^0.7.0"
+s3transfer = "^0.10.1"
 shapely = "^2.0.1"
 six = "^1.16.0"
 smartypants = "^2.0.1"
@@ -1654,7 +1654,7 @@ werkzeug = "^3.0.1"
 type = "git"
 url = "https://github.com/GSA/notifications-utils.git"
 reference = "HEAD"
-resolved_reference = "4cf526bc1fd9532507936c174418dbd3be52c925"
+resolved_reference = "7d1d2e9bb3791316231e97433c71da6a70c4d2ab"
 
 [[package]]
 name = "numpy"
@@ -1781,13 +1781,13 @@ files = [
 
 [[package]]
 name = "phonenumbers"
-version = "8.13.33"
+version = "8.13.34"
 description = "Python version of Google's common library for parsing, formatting, storing and validating international phone numbers."
 optional = false
 python-versions = "*"
 files = [
-    {file = "phonenumbers-8.13.33-py2.py3-none-any.whl", hash = "sha256:f2d653268ece55a4f3752d9cda4be6f7465f298e6d028d522aedda13cf057201"},
-    {file = "phonenumbers-8.13.33.tar.gz", hash = "sha256:991f2619f0593b36b674c345af47944ec4bae526b353cf53d707e662087be63b"},
+    {file = "phonenumbers-8.13.34-py2.py3-none-any.whl", hash = "sha256:bc0bb5d3bab29e28549194f6bf57cb3ca03c3dd84238af12674fe24031631bda"},
+    {file = "phonenumbers-8.13.34.tar.gz", hash = "sha256:7c2676be07b7d0f74411e275e0660380a0ec3ee0d359f070d719424bd2c5f62e"},
 ]
 
 [[package]]
@@ -2348,13 +2348,13 @@ unidecode = ["Unidecode (>=1.1.1)"]
 
 [[package]]
 name = "pytz"
-version = "2023.4"
+version = "2024.1"
 description = "World timezone definitions, modern and historical"
 optional = false
 python-versions = "*"
 files = [
-    {file = "pytz-2023.4-py2.py3-none-any.whl", hash = "sha256:f90ef520d95e7c46951105338d918664ebfd6f1d995bd7d153127ce90efafa6a"},
-    {file = "pytz-2023.4.tar.gz", hash = "sha256:31d4583c4ed539cd037956140d695e42c033a19e984bfce9964a3f7d59bc2b40"},
+    {file = "pytz-2024.1-py2.py3-none-any.whl", hash = "sha256:328171f4e3623139da4983451950b28e95ac706e13f3f2630a879749e7a8b319"},
+    {file = "pytz-2024.1.tar.gz", hash = "sha256:2a29735ea9c18baf14b448846bde5a48030ed267578472d8955cd0e7443a9812"},
 ]
 
 [[package]]
@@ -2624,20 +2624,20 @@ diagram = ["matplotlib (>=3.0.0)", "pydot (>=1.3.0)", "tqdm (>=v4.31.0)"]
 
 [[package]]
 name = "s3transfer"
-version = "0.7.0"
+version = "0.10.1"
 description = "An Amazon S3 Transfer Manager"
 optional = false
-python-versions = ">= 3.7"
+python-versions = ">= 3.8"
 files = [
-    {file = "s3transfer-0.7.0-py3-none-any.whl", hash = "sha256:10d6923c6359175f264811ef4bf6161a3156ce8e350e705396a7557d6293c33a"},
-    {file = "s3transfer-0.7.0.tar.gz", hash = "sha256:fd3889a66f5fe17299fe75b82eae6cf722554edca744ca5d5fe308b104883d2e"},
+    {file = "s3transfer-0.10.1-py3-none-any.whl", hash = "sha256:ceb252b11bcf87080fb7850a224fb6e05c8a776bab8f2b64b7f25b969464839d"},
+    {file = "s3transfer-0.10.1.tar.gz", hash = "sha256:5683916b4c724f799e600f41dd9e10a9ff19871bf87623cc8f491cb4f5fa0a19"},
 ]
 
 [package.dependencies]
-botocore = ">=1.12.36,<2.0a.0"
+botocore = ">=1.33.2,<2.0a.0"
 
 [package.extras]
-crt = ["botocore[crt] (>=1.20.29,<2.0a.0)"]
+crt = ["botocore[crt] (>=1.33.2,<2.0a.0)"]
 
 [[package]]
 name = "setuptools"
@@ -2935,4 +2935,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12.2"
-content-hash = "fb81af6421e07a1640bd784f2e1934237a064b30705a0c02e6f06415493e05ff"
+content-hash = "55d894a50ac58f68283ea1428a7c721e54bdb1d78839756d57a1dd705c728c09"
