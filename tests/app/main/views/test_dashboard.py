@@ -354,10 +354,9 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_no_messages(
             "(202) 867-5300 message-2 1 hour ago",
             "(202) 867-5300 message-3 1 hour ago",
             "(202) 867-5302 message-4 3 hours ago",
-            "+33 1 12 34 56 78 message-5 5 hours ago",
+            "+33(0)1 12345678 message-5 5 hours ago",
             "(202) 555-0104 message-6 7 hours ago",
             "(202) 555-0104 message-7 9 hours ago",
-            "+682 12345 message-8 9 hours ago",
         ]
     ),
 )
@@ -519,10 +518,10 @@ def test_download_inbox(
         "(202) 867-5300,message-2,07-01-2016 10:59 US/Eastern\r\n"
         "(202) 867-5300,message-3,07-01-2016 10:59 US/Eastern\r\n"
         "(202) 867-5302,message-4,07-01-2016 08:59 US/Eastern\r\n"
-        "+33 1 12 34 56 78,message-5,07-01-2016 06:59 US/Eastern\r\n"
+        "+33(0)1 12345678,message-5,07-01-2016 06:59 US/Eastern\r\n"
         "(202) 555-0104,message-6,07-01-2016 04:59 US/Eastern\r\n"
         "(202) 555-0104,message-7,07-01-2016 02:59 US/Eastern\r\n"
-        "+682 12345,message-8,07-01-2016 02:59 US/Eastern\r\n"
+        "+68212345,message-8,07-01-2016 02:59 US/Eastern\r\n"
     )
 
 
