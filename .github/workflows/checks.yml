@@ -111,8 +111,8 @@ jobs:
       - name: Run Admin server
         run: make run-flask &
         env:
-          # API_HOST_NAME: https://notify-api-staging.app.cloud.gov
-          API_HOST_NAME: http://localhost:6011
+          API_HOST_NAME: https://notify-api-staging.app.cloud.gov
+          # API_HOST_NAME: http://localhost:6011
           DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
