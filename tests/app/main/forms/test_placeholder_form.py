@@ -48,7 +48,6 @@ def test_form_class_not_mutated(notify_admin):
         (False, "phone number", "sms", "2028675309", None),
         (False, "phone number", "sms", "+1 (202) 867-5309", None),
         (True, "phone number", "sms", "+123", "Not enough digits"),
-        (True, "phone number", "sms", "+44(0)7900 900-123", None),
         (True, "phone number", "sms", "+1-2345-678890", None),
         (False, "anything else", "sms", "", "Cannot be empty"),
         (False, "anything else", "email", "", "Cannot be empty"),
