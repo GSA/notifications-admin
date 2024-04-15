@@ -160,7 +160,6 @@ def create_new_template(page):
 def test_create_new_template(authenticated_page):
     page = authenticated_page
 
-    assert page.content() == "foo"
 
     _setup(page)
 
