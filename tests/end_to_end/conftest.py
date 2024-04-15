@@ -63,8 +63,12 @@ def login_for_end_to_end_testing(browser):
 
     # Save storage state into the file.
     auth_state_path = os.path.join(
-        os.getenv("NOTIFY_E2E_AUTH_STATE_PATH"), "state.json"
+        os.getenv("NOTIFY_E2E_AUTH_STATE_PATH"), "state.jso"
     )
+    if os.path.is_file(auth_state_path):
+        print("AUTH STATE PATH EXISTS")
+    else:
+        raise Exception("COULDNT FIND THE AUTH STATE PATH")
     context.storage_state(path=auth_state_path)
 
 
@@ -107,5 +111,6 @@ def authenticated_page(end_to_end_context):
 
     # Wait for the next page to fully load.
     page.wait_for_load_state("domcontentloaded")
+    print(page.content())
 
     return page
