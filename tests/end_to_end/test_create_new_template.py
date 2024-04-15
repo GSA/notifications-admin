@@ -160,6 +160,19 @@ def create_new_template(page):
 def test_create_new_template(authenticated_page):
     page = authenticated_page
 
+    filename = "state.json"
+    # Search in <search_path>
+    search_path = "/"
+    found_state_json = False
+    for root, dirs, files in os.walk(search_path):
+        if filename in files:
+            file_path = os.path.join(root, filename)
+            if os.path.is_file(file_path):
+                found_state_json = True
+                assert found_state_json is True
+                assert file_path == 'foo'
+
+
     auth_state_path = os.path.join(
         os.getenv("NOTIFY_E2E_AUTH_STATE_PATH"), "state.json"
     )
