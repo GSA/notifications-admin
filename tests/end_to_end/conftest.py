@@ -63,7 +63,7 @@ def login_for_end_to_end_testing(browser):
 
     # Save storage state into the file.
     auth_state_path = os.path.join(
-        os.getenv("NOTIFY_E2E_AUTH_STATE_PATH"), "state.jso"
+        os.getenv("NOTIFY_E2E_AUTH_STATE_PATH"), "state.json"
     )
     context.storage_state(path=auth_state_path)
 
