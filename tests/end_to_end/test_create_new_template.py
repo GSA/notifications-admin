@@ -164,10 +164,11 @@ def test_create_new_template(authenticated_page):
     # Search in <search_path>
     search_path = "/"
     found_state_json = False
+    wrong_paths = ['/var/lib/snapd/state.json']
     for root, dirs, files in os.walk(search_path):
         if filename in files:
             file_path = os.path.join(root, filename)
-            if os.path.isfile(file_path):
+            if os.path.isfile(file_path) and file_path not in wrong_paths:
                 found_state_json = True
                 assert found_state_json is True
                 assert file_path == 'foo'
