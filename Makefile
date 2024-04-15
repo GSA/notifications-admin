@@ -17,6 +17,7 @@ NVMSH := $(shell [ -f "$(HOME)/.nvm/nvm.sh" ] && echo "$(HOME)/.nvm/nvm.sh" || e
 bootstrap: generate-version-file ## Set up everything to run the app
 	poetry self update
 	poetry self add poetry-dotenv-plugin
+	poetry lock --no-update
 	poetry install --sync --no-root
 	poetry run playwright install --with-deps
 	poetry run pre-commit install
@@ -81,7 +82,7 @@ dead-code:
 .PHONY: e2e-test
 e2e-test: export NEW_RELIC_ENVIRONMENT=test
 e2e-test: ## Run end-to-end integration tests; note that --browser webkit isn't currently working
-	poetry run pytest -v --browser chromium --browser firefox tests/end_to_end
+	poetry run pytest -vv --browser chromium  --browser firefox tests/end_to_end
 
 .PHONY: js-lint
 js-lint: ## Run javascript linting scanners

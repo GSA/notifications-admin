@@ -1868,7 +1868,8 @@ def test_should_show_message_before_redacting_template(
     )
 
     assert (
-        "Are you sure you want to hide personalization after sending?"
+        "Are you sure you want to hide all personalized and conditional"
+        " content after sending for increased privacy protection?"
     ) in page.select(".banner-dangerous")[0].text
 
     form = page.select(".banner-dangerous form")[0]

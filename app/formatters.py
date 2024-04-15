@@ -93,6 +93,22 @@ def format_datetime_normal(date):
     )
 
 
+def format_datetime_scheduled_notification(date):
+    # e.g. April 09, 2024 at 04:00 PM US/Eastern.
+    # Everything except scheduled notifications, the time is always "now".
+    # Scheduled notifications are the exception to the rule.
+    # Here we are formating and displaying the datetime without converting datetime to a different timezone.
+
+    datetime_obj = parse_naive_dt(date)
+
+    format_time_without_tz = datetime_obj.replace(tzinfo=timezone.utc).strftime(
+        "%I:%M %p"
+    )
+    return "{} at {} {}".format(
+        format_date_normal(date), format_time_without_tz, get_user_preferred_timezone()
+    )
+
+
 def format_datetime_table(date):
     # example:  03-18-2024 at 04:53 PM, intended for datetimes in tables
     return "{} at {}".format(format_date_numeric(date), format_time_12h(date))

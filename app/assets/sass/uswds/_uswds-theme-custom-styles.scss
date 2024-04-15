@@ -319,27 +319,15 @@ td.table-empty-message {
 
 .dashboard {
    .big-number-with-status {
-      a {
-         background: color("blue-60v");
-         padding: units(2);
-         margin-bottom: units(1);
-         text-decoration: none;
-         &:hover{
-            background: color("blue-warm-70v");
-         }
-      }
-      span {
-         color: white;
-      }
       .big-number-smaller {
          display: flex;
          flex-direction: column;
          .big-number-number {
                font-size: units(5);
-               line-height: units(6);
+               line-height: units(5);
          }
          .big-number-label {
-               font-size: units(3);
+               font-size: units(2.5);
          }
       }
       .big-number-status {
@@ -594,4 +582,10 @@ details form {
 
 #countdown-container {
    display: none; // Hide the countdown timer
+}
+
+.placeholder, .placeholder-conditional {
+   background-color: #face00;
+   border: 1px solid #face00;
+   border-radius: 7px;
 }

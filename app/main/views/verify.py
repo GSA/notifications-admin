@@ -99,7 +99,9 @@ def activate_user(user_id):
     if invited_org_user:
         user_api_client.add_user_to_organization(invited_org_user.organization, user_id)
     elif redis_client.get(f"organization-invite-{user.email_address}"):
-        organization_id = redis_client.get(f"organization-invite-{user.email_address}")
+        organization_id = redis_client.raw_get(
+            f"organization-invite-{user.email_address}"
+        )
         user_api_client.add_user_to_organization(
             organization_id.decode("utf8"), user_id
         )
