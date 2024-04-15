@@ -160,6 +160,10 @@ def create_new_template(page):
 def test_create_new_template(authenticated_page):
     page = authenticated_page
 
+    auth_state_path = os.path.join(
+        os.getenv("NOTIFY_E2E_AUTH_STATE_PATH"), "state.json"
+    )
+    assert os.path.is_file(auth_state_path)
 
     _setup(page)
 

@@ -77,7 +77,6 @@ def end_to_end_authenticated_context(browser):
     auth_state_path = os.path.join(
         os.getenv("NOTIFY_E2E_AUTH_STATE_PATH"), "state.json"
     )
-    assert os.path.is_file(auth_state_path)
 
     context = browser.new_context(storage_state=auth_state_path)
 
