@@ -222,8 +222,7 @@ def test_if_existing_user_accepts_twice_they_redirect_to_sign_in(
     ) == (
         "You need to sign in again",
         # TODO:  Improve this given Login.gov configuration.
-        # "We signed you out because you have not used Notify for a while.",
-        "You have  left to use Login.gov to sign in",
+        "We signed you out because you have not used Notify for a while.",
     )
     # We don’t let people update `email_access_validated_at` using an
     # already-accepted invite
@@ -338,8 +337,7 @@ def test_existing_user_of_service_get_redirected_to_signin(
     ) == (
         "You need to sign in again",
         # TODO:  Improve this given Login.gov configuration.
-        # "We signed you out because you have not used Notify for a while.",
-        "You have  left to use Login.gov to sign in",
+        "We signed you out because you have not used Notify for a while.",
     )
     assert mock_accept_invite.call_count == 1
 
@@ -429,8 +427,7 @@ def test_existing_signed_out_user_accept_invite_redirects_to_sign_in(
     ) == (
         "You need to sign in again",
         # TODO:  Improve this given Login.gov configuration.
-        # "We signed you out because you have not used Notify for a while.",
-        "You have  left to use Login.gov to sign in",
+        "We signed you out because you have not used Notify for a while.",
     )
 
 
