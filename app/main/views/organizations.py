@@ -25,6 +25,7 @@ from app.main.views.dashboard import (
 )
 from app.models.organization import AllOrganizations, Organization
 from app.models.user import InvitedOrgUser, User
+from app.utils.navigation_dictionaries import using_organization_nav
 from app.utils.csv import Spreadsheet
 from app.utils.user import user_has_permissions, user_is_platform_admin
 
@@ -84,6 +85,7 @@ def organization_dashboard(org_id):
         download_link=url_for(
             ".download_organization_usage_report", org_id=org_id, selected_year=year
         ),
+        org_navigation_links=using_organization_nav(),
     )
 
 
@@ -145,6 +147,7 @@ def organization_trial_mode_services(org_id):
     return render_template(
         "views/organizations/organization/trial-mode-services.html",
         search_form=SearchByNameForm(),
+        org_navigation_links=using_organization_nav(),
     )
 
 
@@ -156,6 +159,7 @@ def manage_org_users(org_id):
         users=current_organization.team_members,
         show_search_box=(len(current_organization.team_members) > 7),
         form=SearchUsersForm(),
+        org_navigation_links=using_organization_nav(),
     )
 
 
@@ -174,7 +178,8 @@ def invite_org_user(org_id):
         return redirect(url_for(".manage_org_users", org_id=org_id))
 
     return render_template(
-        "views/organizations/organization/users/invite-org-user.html", form=form
+        "views/organizations/organization/users/invite-org-user.html", form=form,
+        org_navigation_links=using_organization_nav(),
     )
 
 
@@ -228,6 +233,7 @@ def cancel_invited_org_user(org_id, invited_user_id):
 def organization_settings(org_id):
     return render_template(
         "views/organizations/organization/settings/index.html",
+        org_navigation_links=using_organization_nav(),
     )
 
 
@@ -251,6 +257,7 @@ def edit_organization_name(org_id):
     return render_template(
         "views/organizations/organization/settings/edit-name.html",
         form=form,
+        org_navigation_links=using_organization_nav(),
     )
 
 
@@ -271,6 +278,7 @@ def edit_organization_type(org_id):
     return render_template(
         "views/organizations/organization/settings/edit-type.html",
         form=form,
+        org_navigation_links=using_organization_nav(),
     )
 
 
@@ -309,6 +317,7 @@ def edit_organization_domains(org_id):
     return render_template(
         "views/organizations/organization/settings/edit-domains.html",
         form=form,
+        org_navigation_links=using_organization_nav(),
     )
 
 
@@ -327,6 +336,7 @@ def edit_organization_notes(org_id):
     return render_template(
         "views/organizations/organization/settings/edit-organization-notes.html",
         form=form,
+        org_navigation_links=using_organization_nav(),
     )
 
 
@@ -357,10 +367,11 @@ def edit_organization_billing_details(org_id):
     return render_template(
         "views/organizations/organization/settings/edit-organization-billing-details.html",
         form=form,
+        org_navigation_links=using_organization_nav(),
     )
 
 
 @main.route("/organizations/<uuid:org_id>/billing")
 @user_is_platform_admin
 def organization_billing(org_id):
-    return render_template("views/organizations/organization/billing.html")
+    return render_template("views/organizations/organization/billing.html",org_navigation_links=using_organization_nav(),)

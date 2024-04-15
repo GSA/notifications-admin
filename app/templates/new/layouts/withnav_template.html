@@ -15,16 +15,22 @@
 
       The file service_navigation.html is included only in withnav_template. It's not used in settings_template. That is one out of the two differences between settings template and withnav template. As a result, when other templates extend settings_template, they include the serviceNavigation block but keep it empty. The settings_template.html is specifically used for these pages in the app: manage-users.html, service-settings.html, and user-profile.html.
 
-      In addition, for templates that previously extended org_template.html, there's an addition of the orgNavBreadcrumb block.
+      In addition, for templates that previously extended org_template.html, there's an addition of the orgNavBreadcrumb block. serviceNavigation should be empty on templates that previously extended org_template
       {% block orgNavBreadcrumb %}
         {% include "/new/components/org_nav_breadcrumb.html" %}
       {% endblock %}
     #}
-    {% block orgNavBreadcrumb %}{% endblock %}
+    {% if current_org.name %}
+      {% block orgNavBreadcrumb %}{% include "/new/components/org_nav_breadcrumb.html" %}{% endblock %}
+    {% endif %}
     <div class="grid-row margin-top-5">
       <div class="grid-col-3">
         {% block sideNavigation %}
-          {% include "/new/components/main_nav.html" %}
+          {% if org_navigation_links %}
+            {% include "/new/components/org_nav.html" %}
+          {% else %}
+            {% include "/new/components/main_nav.html" %}
+          {% endif %}
           {#
           Include settings_nav.html for child templates that previously extended settings_template.
 

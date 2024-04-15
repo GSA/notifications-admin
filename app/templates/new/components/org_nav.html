@@ -1,11 +1,34 @@
-<nav class="navigation">
+<!-- <nav class="navigation">
   <ul>
     <li><a class="usa-link{{ org_navigation.is_selected('dashboard') }}" href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}">Usage</a></li>
     <li><a class="usa-link{{ org_navigation.is_selected('team-members') }}" href="{{ url_for('.manage_org_users', org_id=current_org.id) }}">Team members</a></li>
-    {% if current_user.platform_admin %}
+{% if current_user.platform_admin %}
+
     <li><a class="usa-link{{ org_navigation.is_selected('settings') }}" href="{{ url_for('.organization_settings', org_id=current_org.id) }}">Settings</a></li>
     <li><a class="usa-link{{ org_navigation.is_selected('trial-services') }}" href="{{ url_for('.organization_trial_mode_services', org_id=current_org.id) }}">Trial mode services</a></li>
     <li><a class="usa-link{{ org_navigation.is_selected('billing') }}" href="{{ url_for('.organization_billing', org_id=current_org.id) }}">Billing</a></li>
-    {% endif %}
+     {% endif %}
   </ul>
-</nav>
+</nav> -->
+
+
+{% if org_navigation_links %}
+  <nav aria-label="Side navigation,">
+    <ul class="usa-sidenav" itemtype="http://schema.org/ItemList">
+      {% for item in org_navigation_links %}
+        {% if not item['requires_permission'] or current_user.platform_admin %}
+        <li class="usa-sidenav__item" href="{{ url_for(item['link'], org_id=current_org.id) }}"
+        itemprop="itemListElement"
+        itemscope
+        itemtype="http://schema.org/ListItem"
+        >
+          <a class="{% if request.endpoint == item['link'] %}usa-current{% endif %}" href="{{ url_for(item['link'], org_id=current_org.id) }}" itemprop="item">
+            <span itemprop="name">{{item['name']}}</span>
+          </a>
+        </li>
+        {% endif %}
+
+      {% endfor %}
+    </ul>
+  </nav>
+{% endif %}
