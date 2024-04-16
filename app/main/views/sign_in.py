@@ -226,7 +226,6 @@ def sign_in():
         form=form,
         again=bool(redirect_url),
         other_device=other_device,
-        login_gov_enabled=True,
         password_reset_url=password_reset_url,
         initial_signin_url=url,
     )
