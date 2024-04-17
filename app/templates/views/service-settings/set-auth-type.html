@@ -16,33 +16,9 @@
   <div class="grid-row">
     <div class="grid-col-10">
       {{ page_header('Sign-in method') }}
-
-      {% if login_gov_enabled %}
-        <p>Your username, password, and multi-factor authentication options are handled by Login.gov.</p>
-        <p>To make changes, head to <a href="https://login.gov/">Login.gov</a> and sign-in with your credentials.</p>
-        <p>Any changes made to your Login.gov account will automatically be synced with Notify.gov.</p>
-      {% elif 'email_auth' in current_service.permissions and not login_gov_enabled %}
-        <p class="heading-small bottom-gutter-2-3">
-          Email link or text message code
-        </p>
-        <p>
-          Your team members can sign in with either a text message code
-          or an email link.
-        </p>
-        <p>
-          You can <a class="usa-link" href="{{ url_for('.manage_users', service_id=current_service.id) }}">set the sign-in method for individual team members</a>.
-        </p>
-      {% else %}
-        <p class="heading-small bottom-gutter-2-3">
-          Text message code
-        </p>
-        <p>
-          Your team members sign in with a text message code.
-        </p>
-        <p>
-          <a class="usa-link" href="{{ url_for('.support') }}">Contact us</a> if signing in with a text message is a problem for your team.
-        </p>
-      {% endif %}
+      <p>Your username, password, and multi-factor authentication options are handled by Login.gov.</p>
+      <p>To make changes, head to <a href="https://login.gov/">Login.gov</a> and sign-in with your credentials.</p>
+      <p>Any changes made to your Login.gov account will automatically be synced with Notify.gov.</p>
     </div>
   </div>
 
