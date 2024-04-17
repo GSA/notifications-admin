@@ -92,14 +92,14 @@ def end_to_end_context(browser):
 def authenticated_page(end_to_end_context):
     # Open a new page and go to the site.
     page = end_to_end_context.new_page()
-    page.goto(f"{E2E_TEST_URI}/")
+    page.goto(f"{E2E_TEST_URI}/accounts")
 
     # Wait for the next page to fully load.
     page.wait_for_load_state("domcontentloaded")
 
     # Sign in to the site - E2E test accounts are set to flow through.
-    sign_in_button = page.get_by_role("link", name="Sign in")
-    sign_in_button.click()
+    # sign_in_button = page.get_by_role("link", name="Sign in")
+    # sign_in_button.click()
 
     # Wait for the next page to fully load.
     page.wait_for_load_state("domcontentloaded")
