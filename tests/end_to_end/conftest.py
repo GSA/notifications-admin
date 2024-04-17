@@ -84,7 +84,6 @@ def end_to_end_authenticated_context(browser):
 
 @pytest.fixture()
 def end_to_end_context(browser):
-    os.environ['FLASK_DEBUG'] = 'True'
     context = browser.new_context()
     return context
 
