@@ -6,7 +6,7 @@ from playwright.sync_api import expect
 
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
-def test_invite_team_member_to_service(authenticated_page):
+def _setup(page):
     page = authenticated_page
 
     # Prepare for adding a new service later in the test.
@@ -74,6 +74,14 @@ def test_invite_team_member_to_service(authenticated_page):
     expect(service_heading).to_be_visible()
     expect(page).to_have_title(re.compile(new_service_name))
 
+    return new_service_name
+
+
+def test_invite_team_member_to_service(authenticated_page):
+    page = authenticated_page
+
+    _setup(page)
+
     page.click("text='Settings'")
 
     # Check to make sure that we've arrived at the next page.
@@ -116,11 +124,11 @@ def test_invite_team_member_to_service(authenticated_page):
 
 
 
-    # permission_box_activity = page.get_by_role("checkbox").nth(0)
-    # expect(permission_box_activity).to_be_visible()
-    # # permission_box_activity.set_checked(True)
+    permission_box_activity = page.get_by_role("checkbox", name="See dashboard")
+    expect(permission_box_activity).to_be_visible()
+    expect(permission_box_activity).to_be_editable()
     # permission_box_activity.check()
-    # expect(permission_box_activity).is_checked()
+
 
     # Put checkboxes into checked state.
     # permission_box_activity = page.get_by_role("checkbox", name="view_activity")
@@ -141,3 +149,34 @@ def test_invite_team_member_to_service(authenticated_page):
     # Check for send invitation email button
     send_invite_email_button = page.get_by_role("button", name="Send invitation email")
     expect(send_invite_email_button).to_be_visible()
+    # send_invite_email_button.click()
+
+    # Check to make sure that we've arrived at the next page.
+    # page.wait_for_load_state("domcontentloaded")
+
+    # Check for text verifying invite sent.
+    # invite_sent_text = page.get_by_text("e2esupertestuser@gsa.gov")
+    # expect(invite_sent_text).to_be_visible()
+
+    _teardown(page)
+
+
+def _teardown(page):
+    page.click("text='Settings'")
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    page.click("text='Delete this service'")
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    page.click("text='Yes, delete'")
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    # Check to make sure that we've arrived at the next page.
+    # Check the page title exists and matches what we expect.
+    expect(page).to_have_title(re.compile("Choose service"))
