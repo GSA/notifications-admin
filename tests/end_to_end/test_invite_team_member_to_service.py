@@ -1,3 +1,4 @@
+from asyncio import sleep
 import datetime
 import os
 import re
@@ -7,7 +8,7 @@ from playwright.sync_api import expect
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 def _setup(page):
-    page = authenticated_page
+
 
     # Prepare for adding a new service later in the test.
     current_date_time = datetime.datetime.now()
@@ -124,27 +125,21 @@ def test_invite_team_member_to_service(authenticated_page):
 
 
 
-    permission_box_activity = page.get_by_role("checkbox", name="See dashboard")
-    expect(permission_box_activity).to_be_visible()
-    expect(permission_box_activity).to_be_editable()
-    # permission_box_activity.check()
+    #permission_box_activity = page.get_by_role("checkbox", name="See dashboard")
+    #expect(permission_box_activity).to_be_visible()
+    #expect(permission_box_activity).to_be_editable()
 
 
     # Put checkboxes into checked state.
-    # permission_box_activity = page.get_by_role("checkbox", name="view_activity")
-    # permission_box_activity.set_checked(True)
+    checkbox_list = ['See dashboard', 'Add and edit templates', 'Manage settings, team and usage', 'Manage API integration']
 
-    # permission_box_messages = page.get_by_role("checkbox", name="send_messages")
-    # permission_box_messages.set_checked(True)
+    for checkbox in checkbox_list:
+        page.check(f"text={checkbox}", force=True)
 
-    # permission_box_templates = page.get_by_role("checkbox", name="manage_templates")
-    # permission_box_templates.set_checked(True)
+        permission_box_activity = page.get_by_role("checkbox", name=checkbox)
+        expect(permission_box_activity).to_be_checked()
 
-    # permission_box_service = page.get_by_role("checkbox", name="manage_service")
-    # permission_box_service.set_checked(True)
 
-    # permission_box_api_keys = page.get_by_role("checkbox", name="manage_api_keys")
-    # permission_box_api_keys.set_checked(True)
 
     # Check for send invitation email button
     send_invite_email_button = page.get_by_role("button", name="Send invitation email")
