@@ -650,7 +650,7 @@ def service_set_channel(service_id, channel):
 def service_set_auth_type(service_id):
     return render_template(
         "views/service-settings/set-auth-type.html",
-        login_gov_enabled=False,
+        login_gov_enabled=True,
     )
 
 
