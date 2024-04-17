@@ -160,9 +160,7 @@ def create_new_template(page):
 def test_create_new_template(authenticated_page):
     page = authenticated_page
 
-    os.environ['FLASK_DEBUG'] = 'True'
     _setup(page)
-    os.environ['FLASK_DEBUG'] = 'False'
 
     create_new_template(page)
 
