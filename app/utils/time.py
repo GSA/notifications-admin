@@ -11,7 +11,7 @@ def get_current_financial_year():
     now = datetime.now(preferred_tz)
     current_month = int(now.strftime("%-m"))
     current_year = int(now.strftime("%Y"))
-    return current_year if current_month > 9 else current_year - 1
+    return current_year if current_month < 10 else current_year + 1
 
 
 def is_less_than_days_ago(date_from_db, number_of_days):
@@ -22,8 +22,3 @@ def is_less_than_days_ago(date_from_db, number_of_days):
 
 def parse_naive_dt(dt):
     return parser.parse(dt, ignoretz=True)
-
-
-def parse_dt(dt):
-    # Parse datetime without ignoring the timezone
-    return parser.parse(dt)

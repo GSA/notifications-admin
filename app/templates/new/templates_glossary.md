@@ -14,6 +14,10 @@ This document serves as a glossary for the templates directory structure of the 
     - `head.html`: Template for the site's <head>, included in `base.html`.
     - `header.html`: Template for the site's header, included in `base.html`.
     - `footer.html`: Template for the site's footer, included in `base.html`.
+    - `settings_navigation.html`: The settings navigation used in `withnav_template.html` that previously extended `settings_template.html`.
+    - `org_nav.html`: The organization's navigation used solely in `org_template.html`.
+    - `main_nav.html`: The main navigation used in `withnav_template.html`
+    - `service_navigation.html`: The service navigation used in `withnav_template.html`. In withnav_template.html, the `serviceNavigation` block will be left empty in any child templates that previously extended `settings_template.html`.
   - **/views** (or **/pages**): Individual page templates that use the base layouts, components, and partials to present content.
 
 ### Best Practices
@@ -30,9 +34,9 @@ This document serves as a glossary for the templates directory structure of the 
 - withoutnav_template.html Delete
 - main_template.html Delete
 - settings_templates.html `withnav_template` can be used to replace `settings_template`.
-- settings_nav.html (move to /new/navigation directory)
-- main_nav.html (move to /new/navigation directory)
-- service_navigation.html (move to /new/navigation directory)
+- settings_nav.html (move to /components/ directory)
+- main_nav.html (move to /components/ directory)
+- service_navigation.html (move to /components/ directory)
 - org_template, could be under it's own directory called /layout/organization
-- org_nav.html (move to /new/navigation directory)
+- org_nav.html (move to /components/ directory)
 - content_template.html Delete

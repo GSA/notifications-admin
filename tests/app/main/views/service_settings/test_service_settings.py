@@ -2545,11 +2545,19 @@ def test_send_files_by_email_contact_details_does_not_update_invalid_contact_det
 @pytest.mark.parametrize(
     ("endpoint", "permissions", "expected_p"),
     [
-        ("main.service_set_auth_type", [], ("Text message code")),
+        (
+            "main.service_set_auth_type",
+            [],
+            (
+                "Your username, password, and multi-factor authentication options are handled by Login.gov."
+            ),
+        ),
         (
             "main.service_set_auth_type",
             ["email_auth"],
-            ("Email link or text message code"),
+            (
+                "Your username, password, and multi-factor authentication options are handled by Login.gov."
+            ),
         ),
     ],
 )

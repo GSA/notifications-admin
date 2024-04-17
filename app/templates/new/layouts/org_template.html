@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "/new/base.html" %}
 
 {% block per_page_title %}
   {% block org_page_title %}{% endblock %} – {{ current_org.name }}
@@ -17,7 +17,7 @@
     </div>
     <div class="grid-row">
       <div class="grid-col-3">
-        {% include "org_nav.html" %}
+        {% include "/new/components/org_nav.html" %}
       </div>
       <div class="grid-col-9">
         {% block beforeContent %}

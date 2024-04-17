@@ -650,7 +650,9 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def preview_job(service_id, template_id, upload_id, row_index=2):
     session["scheduled_for"] = request.form.get("scheduled_for", "")
-    data = _check_messages(service_id, template_id, upload_id, row_index, force_hide_sender=True)
+    data = _check_messages(
+        service_id, template_id, upload_id, row_index, force_hide_sender=True
+    )
 
     return render_template(
         "views/check/preview.html",
@@ -911,7 +913,9 @@ def preview_notification(service_id, template_id):
 
     return render_template(
         "views/notifications/preview.html",
-        **_check_notification(service_id, template_id, show_recipient=False, force_hide_sender=True),
+        **_check_notification(
+            service_id, template_id, show_recipient=False, force_hide_sender=True
+        ),
         scheduled_for=session["scheduled_for"],
         recipient=recipient,
     )

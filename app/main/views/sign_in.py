@@ -6,6 +6,7 @@ import jwt
 import requests
 from flask import (
     Markup,
+    Response,
     abort,
     current_app,
     flash,
@@ -26,6 +27,7 @@ from app.main.views.verify import activate_user
 from app.models.user import InvitedUser, User
 from app.utils import hide_from_search_engines
 from app.utils.login import is_safe_redirect_url
+from app.utils.time import is_less_than_days_ago
 
 
 def _reformat_keystring(orig):
@@ -63,6 +65,10 @@ def _get_access_token(code, state):
     url = f"{base_url}{cli_assert}&{cli_assert_type}&{code_param}&grant_type=authorization_code"
     headers = {"Authorization": "Bearer %s" % token}
     response = requests.post(url, headers=headers)
+    if response.json().get("access_token") is None:
+        # Capture the response json here so it hopefully shows up in error reports
+        current_app.logger.error(f"Error when getting access token {response.json()}")
+        raise KeyError(f"'access_token' {response.json()}")
     access_token = response.json()["access_token"]
     return access_token
 
@@ -84,31 +90,59 @@ def _do_login_dot_gov():
     code = request.args.get("code")
     state = request.args.get("state")
     login_gov_error = request.args.get("error")
-    if code and state:
-        access_token = _get_access_token(code, state)
-        user_email, user_uuid = _get_user_email_and_uuid(access_token)
-        redirect_url = request.args.get("next")
+
+    if login_gov_error:
+        current_app.logger.error(f"login.gov error: {login_gov_error}")
+        raise Exception(f"Could not login with login.gov {login_gov_error}")
+    elif code and state:
 
         # activate the user
         try:
+            access_token = _get_access_token(code, state)
+            user_email, user_uuid = _get_user_email_and_uuid(access_token)
+            redirect_url = request.args.get("next")
             user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
-            activate_user(user["id"])
+
+            # Check if the email needs to be revalidated
+            is_fresh_email = is_less_than_days_ago(
+                user["email_access_validated_at"], 90
+            )
+            if not is_fresh_email:
+                return verify_email(user, redirect_url)
+
+            usr = User.from_email_address(user["email_address"])
+            activate_user(usr.id)
         except BaseException as be:  # noqa B036
             current_app.logger.error(be)
             error(401)
-
         return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
 
-    elif login_gov_error:
-        current_app.logger.error(f"login.gov error: {login_gov_error}")
-        raise Exception(f"Could not login with login.gov {login_gov_error}")
     # end login.gov
+
+
+def verify_email(user, redirect_url):
+    user_api_client.send_verify_code(user["id"], "email", None, redirect_url)
+    title = "Email resent" if request.args.get("email_resent") else "Check your email"
+    redirect_url = request.args.get("next")
+    return render_template(
+        "views/re-validate-email-sent.html", title=title, redirect_url=redirect_url
+    )
 
 
 @main.route("/sign-in", methods=(["GET", "POST"]))
 @hide_from_search_engines
 def sign_in():
-    _do_login_dot_gov()
+    # If we have to revalidated the email, send the message
+    # via email and redirect to the "verify your email page"
+    # and don't proceed further with login
+    email_verify_template = _do_login_dot_gov()
+    if (
+        email_verify_template
+        and not isinstance(email_verify_template, Response)
+        and "Check your email" in email_verify_template
+    ):
+        return email_verify_template
+
     redirect_url = request.args.get("next")
 
     if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
@@ -192,7 +226,6 @@ def sign_in():
         form=form,
         again=bool(redirect_url),
         other_device=other_device,
-        login_gov_enabled=True,
         password_reset_url=password_reset_url,
         initial_signin_url=url,
     )
