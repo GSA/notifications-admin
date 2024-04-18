@@ -20,9 +20,8 @@ bootstrap: generate-version-file ## Set up everything to run the app
 	poetry lock --no-update
 	poetry install --sync --no-root
 	poetry run pre-commit install
-	npm install @playwright/test
-	npx playwright install
-	npx playwright install-deps
+	poetry run playwright install
+	poetry run playwright install-deps
 	source $(NVMSH) --no-use && nvm install && npm ci --no-audit
 	source $(NVMSH) && npm run build
 

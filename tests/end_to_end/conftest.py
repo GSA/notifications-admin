@@ -95,7 +95,7 @@ def authenticated_page(end_to_end_context):
     page.goto(f"{E2E_TEST_URI}/sign-in")
 
     # Wait for the next page to fully load.
-    #page.wait_for_load_state("domcontentloaded")
+    # page.wait_for_load_state("domcontentloaded")
 
     # Sign in to the site - E2E test accounts are set to flow through.
     # sign_in_button = page.get_by_role("link", name="Sign in")
@@ -103,5 +103,4 @@ def authenticated_page(end_to_end_context):
 
     # Wait for the next page to fully load.
     page.wait_for_load_state("domcontentloaded")
-    print(f"AUTHENTICATED PAGE= {page.content()}")
     return page
