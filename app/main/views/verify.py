@@ -70,6 +70,14 @@ def activate_user(user_id):
     login_gov_invite_data = redis_client.get(f"service-invite-{user.email_address}")
     if login_gov_invite_data:
         login_gov_invite_data = json.loads(login_gov_invite_data.decode("utf8"))
+        service_id = login_gov_invite_data["service_id"]
+        user_id = user_id
+        permissions = login_gov_invite_data["permissions"]
+        folder_permissions = login_gov_invite_data["folder_permissions"]
+        # Actually call the back end and add the user to the service
+        user_api_client.add_user_to_service(
+            service_id, user_id, permissions, folder_permissions
+        )
 
     # This is the deprecated path for organization invites where we get id from session
     session["current_session_id"] = user.current_session_id
