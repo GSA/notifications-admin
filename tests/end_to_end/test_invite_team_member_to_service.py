@@ -123,15 +123,15 @@ def test_invite_team_member_to_service(authenticated_page):
             page.get_by_label(permission)
         ).to_be_visible
 
-
-
-    #permission_box_activity = page.get_by_role("checkbox", name="See dashboard")
-    #expect(permission_box_activity).to_be_visible()
-    #expect(permission_box_activity).to_be_editable()
-
-
+    # There is an issue with checking the send messages box due to possible duplicate
+    # "Send messages" appearing on the page.
     # Put checkboxes into checked state.
-    checkbox_list = ['See dashboard', 'Add and edit templates', 'Manage settings, team and usage', 'Manage API integration']
+    checkbox_list = [
+        'See dashboard',
+        'Add and edit templates',
+        'Manage settings, team and usage',
+        'Manage API integration',
+        ]
 
     for checkbox in checkbox_list:
         page.check(f"text={checkbox}", force=True)
@@ -140,18 +140,16 @@ def test_invite_team_member_to_service(authenticated_page):
         expect(permission_box_activity).to_be_checked()
 
 
-
     # Check for send invitation email button
-    send_invite_email_button = page.get_by_role("button", name="Send invitation email")
+    send_invite_email_button = page.get_by_role("button", name=re.compile("Send invitation email"))
     expect(send_invite_email_button).to_be_visible()
-    # send_invite_email_button.click()
+    send_invite_email_button.click()
 
     # Check to make sure that we've arrived at the next page.
-    # page.wait_for_load_state("domcontentloaded")
+    page.wait_for_load_state("domcontentloaded")
 
-    # Check for text verifying invite sent.
-    # invite_sent_text = page.get_by_text("e2esupertestuser@gsa.gov")
-    # expect(invite_sent_text).to_be_visible()
+    # Check invite sent text appears on page.
+    assert "Invite sent to e2esupertestuser@gsa.gov" in page.content()
 
     _teardown(page)
 
