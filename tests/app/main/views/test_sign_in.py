@@ -14,7 +14,9 @@ def test_render_sign_in_template_for_new_user(client_request):
     assert normalize_spaces(page.select_one("h1").text) == "Sign in"
     assert (
         page.select("main p")[0].text
-        == "Access your Notify.gov account by signing in with Login.gov:"
+        # TODO: Restore once we resolve the Login.gov account permission issue.
+        # == "Access your Notify.gov account by signing in with Login.gov:"
+        == "You can access your account by signing in with one of the options below:"
     )
     # TODO:  Fix this test to be less brittle! If the Login.gov link is enabled,
     #        then these indices need to be 1 instead of 0.
