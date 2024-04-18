@@ -12,38 +12,19 @@ def test_render_sign_in_template_for_new_user(client_request):
     client_request.logout()
     page = client_request.get("main.sign_in")
     assert normalize_spaces(page.select_one("h1").text) == "Sign in"
-    assert normalize_spaces(page.select("label")[0].text) == "Email address"
-    assert page.select_one("#email_address").get("value") is None
-    assert page.select_one("#email_address")["autocomplete"] == "email"
-    assert normalize_spaces(page.select("label")[1].text) == "Password"
-    assert page.select_one("#password").get("value") is None
-    assert page.select_one("#password")["autocomplete"] == "current-password"
-    # Removing for the pilot
-    # assert page.select('main a')[0].text == 'create one now'
-    # assert page.select('main a')[0]['href'] == url_for('main.register')
+    assert (
+        page.select("main p")[0].text
+        == "Access your Notify.gov account by signing in with Login.gov:"
+    )
     # TODO:  Fix this test to be less brittle! If the Login.gov link is enabled,
     #        then these indices need to be 1 instead of 0.
     #        Currently it's not enabled for the test or production environments.
-    assert page.select("main a")[1].text == "Forgot your password?"
-    assert page.select("main a")[1]["href"] == url_for("main.forgot_password")
+    assert page.select("main a")[0].text == "Sign in with Login.gov"
+    assert page.select("main a")[1].text == "Create Login.gov account"
 
     # TODO:  We'll have to adjust this depending on whether Login.gov is
     #        enabled or not; fix this in the future.
     assert "Sign in again" not in normalize_spaces(page.text)
-
-
-def test_render_sign_in_template_with_next_link_for_password_reset(client_request):
-    client_request.logout()
-    page = client_request.get(
-        "main.sign_in",
-        _optional_args=f"?next=/services/{SERVICE_ONE_ID}/templates",
-        _test_page_title=False,
-    )
-    forgot_password_link = page.find("a", class_="usa-link")
-    assert forgot_password_link.text == "Forgot your password?"
-    assert forgot_password_link["href"] == url_for(
-        "main.forgot_password", next=f"/services/{SERVICE_ONE_ID}/templates"
-    )
 
 
 def test_reformat_keystring():
