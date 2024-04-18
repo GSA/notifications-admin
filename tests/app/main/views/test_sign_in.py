@@ -134,7 +134,7 @@ def test_logged_in_user_doesnt_do_evil_redirect(client_request):
     )
 
 
-@pytest.mark.parametrize(
+""" @pytest.mark.parametrize(
     "redirect_url",
     [
         None,
@@ -171,8 +171,8 @@ def test_process_sms_auth_sign_in_return_2fa_template(
     )
     mock_verify_password.assert_called_with(api_user_active["id"], password)
     mock_get_user_by_email.assert_called_with("valid@example.gsa.gov")
-
-
+ """
+"""
 @pytest.mark.parametrize(
     "redirect_url",
     [
@@ -352,4 +352,4 @@ def test_when_signing_in_as_invited_user_you_cannot_accept_an_invite_for_another
     assert (
         page.select_one(".banner-dangerous").text.strip()
         == "You cannot accept an invite for another person."
-    )
+    ) """

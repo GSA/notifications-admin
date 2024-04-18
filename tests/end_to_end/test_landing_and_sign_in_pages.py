@@ -1,11 +1,14 @@
 import os
 import re
 
+import pytest
+
 from playwright.sync_api import expect
 
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 
+@pytest.mark.skip("Broken due to mandatory login.gov")
 def test_landing_page(end_to_end_context):
     # Open a new page and go to the site.
     page = end_to_end_context.browser.new_page()

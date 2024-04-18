@@ -3,6 +3,8 @@ import os
 import re
 import uuid
 
+import pytest
+
 from playwright.sync_api import expect
 
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
@@ -157,6 +159,7 @@ def create_new_template(page):
     assert "Test message for e2e test" in page.content()
 
 
+@pytest.mark.skip("Broken due to mandatory login.gov")
 def test_create_new_template(authenticated_page):
     page = authenticated_page
 

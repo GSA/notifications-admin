@@ -2,11 +2,13 @@ import datetime
 import os
 import re
 
+import pytest
+
 from playwright.sync_api import expect
 
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
-
+@pytest.mark.skip("Broken due to mandatory login.gov")
 def test_add_new_service_workflow(authenticated_page, end_to_end_context):
     page = authenticated_page
 

@@ -4,27 +4,15 @@ import uuid
 
 import jwt
 import requests
-from flask import (
-    Markup,
-    Response,
-    abort,
-    current_app,
-    flash,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
+from flask import Response, current_app, redirect, render_template, request, url_for
 from flask_login import current_user
 from notifications_utils.url_safe_token import generate_token
 
 from app import login_manager, user_api_client
 from app.main import main
-from app.main.forms import LoginForm
 from app.main.views.index import error
 from app.main.views.verify import activate_user
-from app.models.user import InvitedUser, User
+from app.models.user import User
 from app.utils import hide_from_search_engines
 from app.utils.login import is_safe_redirect_url
 from app.utils.time import is_less_than_days_ago
@@ -154,59 +142,10 @@ def sign_in():
         activate_user(user["id"])
         return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
 
-    current_app.logger.info(f"current user is {current_user}")
     if current_user and current_user.is_authenticated:
         if redirect_url and is_safe_redirect_url(redirect_url):
             return redirect(redirect_url)
         return redirect(url_for("main.show_accounts_or_dashboard"))
-
-    form = LoginForm()
-    current_app.logger.info("Got the login form")
-    password_reset_url = url_for(".forgot_password", next=request.args.get("next"))
-
-    if form.validate_on_submit():
-        user = User.from_email_address_and_password_or_none(
-            form.email_address.data, form.password.data
-        )
-
-        if user:
-            # add user to session to mark us as in the process of signing the user in
-            session["user_details"] = {"email": user.email_address, "id": user.id}
-
-            if user.state == "pending":
-                return redirect(
-                    url_for("main.resend_email_verification", next=redirect_url)
-                )
-
-            if user.is_active:
-                if session.get("invited_user_id"):
-                    invited_user = InvitedUser.from_session()
-                    if user.email_address.lower() != invited_user.email_address.lower():
-                        flash("You cannot accept an invite for another person.")
-                        session.pop("invited_user_id", None)
-                        abort(403)
-                    else:
-                        invited_user.accept_invite()
-
-                user.send_login_code()
-
-                if user.sms_auth:
-                    return redirect(url_for(".two_factor_sms", next=redirect_url))
-
-                if user.email_auth:
-                    return redirect(
-                        url_for(".two_factor_email_sent", next=redirect_url)
-                    )
-
-        # Vague error message for login in case of user not known, locked, inactive or password not verified
-        flash(
-            Markup(
-                (
-                    f"The email address or password you entered is incorrect."
-                    f"&ensp;<a href={password_reset_url} class='usa-link'>Forgot your password?</a>"
-                )
-            )
-        )
 
     other_device = current_user.logged_in_elsewhere()
 
@@ -215,6 +154,7 @@ def sign_in():
         current_app.config["SECRET_KEY"],
         current_app.config["DANGEROUS_SALT"],
     )
+
     url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
     # handle unit tests
     if url is not None:
@@ -223,10 +163,9 @@ def sign_in():
 
     return render_template(
         "views/signin.html",
-        form=form,
+        form=None,
         again=bool(redirect_url),
         other_device=other_device,
-        password_reset_url=password_reset_url,
         initial_signin_url=url,
     )
 
