@@ -28,8 +28,14 @@
       <a class="usa-link usa-button" href="{{ initial_signin_url }}">Sign in with Login.gov</a>
     {% else %}
       <h1 class="font-body-2xl margin-bottom-3">Sign in</h1>
-      <p>Access your Notify.gov account by signing in with Login.gov:</p>
+      <p>You can access your account by signing in with one of the options below:</p>
       <a class="usa-link usa-button" href="{{ initial_signin_url }}">Sign in with Login.gov</a>
+      <p class="margin-y-3"><strong>Or:</strong></p>
+      {% call form_wrapper(autocomplete=True) %}
+        {{ form.email_address(param_extensions={"autocomplete": "email"}) }}
+        {{ form.password(param_extensions={"autocomplete": "current-password"}) }}
+        {{ page_footer("Continue", secondary_link=password_reset_url, secondary_link_text="Forgot your password?") }}
+      {% endcall %}
     {% endif %}
   </div>
     <div class="tablet:grid-col-6 tablet:grid-offset-1 margin-top-2 padding-y-2 padding-x-4 bg-base-lightest">
