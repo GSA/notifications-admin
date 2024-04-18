@@ -8,14 +8,17 @@
 {% block main %}
   <div class="grid-container">
     {% block serviceNavigation %}
-      {% include "new/components/service_navigation.html" %}
+      {% if current_org.name %}
+      {% else %}
+          {% include "new/components/service_navigation.html" %}
+      {% endif %}
     {% endblock %}
     {#
       The withnav_template can serve as a replacement for both settings_template and org_template.html.
 
       The file service_navigation.html is included only in withnav_template. It's not used in settings_template. That is one out of the two differences between settings template and withnav template. As a result, when other templates extend settings_template, they include the serviceNavigation block but keep it empty. The settings_template.html is specifically used for these pages in the app: manage-users.html, service-settings.html, and user-profile.html.
 
-      In addition, for templates that previously extended org_template.html, there's an addition of the orgNavBreadcrumb block. serviceNavigation should be empty on templates that previously extended org_template
+      In addition, serviceNavigation should be empty on templates that previously extended org_template. For templates that previously extended org_template.html, there's an addition of the orgNavBreadcrumb block.
       {% block orgNavBreadcrumb %}
         {% include "/new/components/org_nav_breadcrumb.html" %}
       {% endblock %}
@@ -24,7 +27,7 @@
       {% block orgNavBreadcrumb %}{% include "/new/components/org_nav_breadcrumb.html" %}{% endblock %}
     {% endif %}
     <div class="grid-row margin-top-5">
-      <div class="grid-col-3">
+      <div class="tablet:grid-col-3">
         {% block sideNavigation %}
           {% if org_navigation_links %}
             {% include "/new/components/org_nav.html" %}
@@ -38,7 +41,7 @@
           #}
         {% endblock %}
       </div>
-      <div class="grid-col-9 padding-left-4">
+      <div class="tablet:grid-col-9 tablet:padding-left-4">
         {% block beforeContent %}
           {% block backLink %}{% endblock %}
         {% endblock %}
