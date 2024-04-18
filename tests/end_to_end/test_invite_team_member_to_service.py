@@ -148,8 +148,29 @@ def test_invite_team_member_to_service(authenticated_page):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
-    # Check invite sent text appears on page.
-    assert "Invite sent to e2esupertestuser@gsa.gov" in page.content()
+    page.click("text='Settings'")
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    # Check to make sure team members link is on left nav.
+    team_members_link = page.get_by_text("Team members")
+    expect(team_members_link).to_be_visible()
+    team_members_link.click()
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    # Check for invite a team member button
+    invite_team_member_button = page.get_by_role("button", name="Invite a team member")
+    expect(invite_team_member_button).to_be_visible()
+    invite_team_member_button.click()
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
+    # Check invite appears on page.
+    assert "e2esupertestuser@gsa.gov" in page.content()
 
     _teardown(page)
 
