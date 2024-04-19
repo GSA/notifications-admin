@@ -76,7 +76,6 @@ def activate_user(user_id):
         # but that will be the normal sign in use case
         login_gov_invite_data = None
     if login_gov_invite_data:
-        # Not clear why we have to call json.loads twice, but we do
         login_gov_invite_data = json.loads(login_gov_invite_data)
         service_id = login_gov_invite_data["service_id"]
         user_id = user_id
