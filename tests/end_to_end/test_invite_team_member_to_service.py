@@ -6,6 +6,7 @@ from playwright.sync_api import expect
 
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
+
 def _setup(page):
     # Prepare for adding a new service later in the test.
     current_date_time = datetime.datetime.now()
@@ -135,7 +136,6 @@ def test_invite_team_member_to_service(authenticated_page):
 
         permission_box_activity = page.get_by_role("checkbox", name=checkbox)
         expect(permission_box_activity).to_be_checked()
-
 
     # Check for send invitation email button
     send_invite_email_button = page.get_by_role("button", name=re.compile("Send invitation email"))
