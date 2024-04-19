@@ -96,7 +96,7 @@ def activate_user(user_id):
                 f"ADDING USER TO SERVICE service_id {service_id} user_id {user_id} permissions {permissions}"
             )
         )
-        orgs_and_services = user_api_client.get_organisations_and_services_for_user(
+        orgs_and_services = user_api_client.get_organizations_and_services_for_user(
             user_id
         )
         print(hilite(f"ORGS AND SERVICES FOR USER {orgs_and_services}"))  # noqa
