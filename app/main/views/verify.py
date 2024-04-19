@@ -78,7 +78,6 @@ def activate_user(user_id):
     if login_gov_invite_data:
         # Not clear why we have to call json.loads twice, but we do
         login_gov_invite_data = json.loads(login_gov_invite_data)
-        login_gov_invite_data = json.loads(login_gov_invite_data)
         service_id = login_gov_invite_data["service_id"]
         user_id = user_id
         permissions = login_gov_invite_data["permissions"]
