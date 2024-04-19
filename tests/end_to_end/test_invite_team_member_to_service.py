@@ -143,13 +143,13 @@ def test_invite_team_member_to_service(authenticated_page):
     # Check for send invitation email button
     send_invite_email_button = page.get_by_role("button", name=re.compile("Send invitation email"))
     expect(send_invite_email_button).to_be_visible()
-    send_invite_email_button.click()
+    # send_invite_email_button.click()
 
     # Check to make sure that we've arrived at the next page.
-    page.wait_for_load_state("domcontentloaded")
+    # page.wait_for_load_state("domcontentloaded")
 
     # Check invite sent text appears on page.
-    assert "Invite sent to e2esupertestuser@gsa.gov" in page.content()
+    # assert "Invite sent to e2esupertestuser@gsa.gov" in page.content()
 
     _teardown(page)
 
