@@ -1,15 +1,12 @@
 import datetime
 import os
 import re
-from asyncio import sleep
 
 from playwright.sync_api import expect
 
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 def _setup(page):
-
-
     # Prepare for adding a new service later in the test.
     current_date_time = datetime.datetime.now()
     new_service_name = "E2E Federal Test Service {now} - {browser_type}".format(
@@ -144,10 +141,8 @@ def test_invite_team_member_to_service(authenticated_page):
     send_invite_email_button = page.get_by_role("button", name=re.compile("Send invitation email"))
     expect(send_invite_email_button).to_be_visible()
     # send_invite_email_button.click()
-
     # Check to make sure that we've arrived at the next page.
     # page.wait_for_load_state("domcontentloaded")
-
     # Check invite sent text appears on page.
     # assert "Invite sent to e2esupertestuser@gsa.gov" in page.content()
 
