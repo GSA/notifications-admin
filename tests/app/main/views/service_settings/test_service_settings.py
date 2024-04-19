@@ -52,7 +52,6 @@ def _mock_get_service_settings_page_common(
             [
                 "",
                 "Service name Test Service Change service name",
-                "Sign-in method Text message code Change sign-in method",
                 "Send text messages On Change your settings for sending text messages",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",
@@ -63,7 +62,6 @@ def _mock_get_service_settings_page_common(
             [
                 "",
                 "Service name Test Service Change service name",
-                "Sign-in method Text message code Change sign-in method",
                 "Send text messages On Change your settings for sending text messages",
                 "Text message senders (Only visible to Platform Admins) GOVUK Manage text message senders",
                 "Start text messages with service name On Change your settings "
@@ -192,7 +190,6 @@ def test_send_files_by_email_row_on_settings_page(
             ["email", "sms", "international_sms"],
             [
                 "Service name service one Change service name",
-                "Sign-in method Text message code Change sign-in method",
                 "Send text messages On Change your settings for sending text messages",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",
@@ -202,7 +199,6 @@ def test_send_files_by_email_row_on_settings_page(
             ["email", "sms", "email_auth"],
             [
                 "Service name service one Change service name",
-                "Sign-in method Email link or text message code Change sign-in method",
                 "Send text messages On Change your settings for sending text messages",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",

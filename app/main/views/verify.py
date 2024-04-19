@@ -9,6 +9,8 @@ from app.extensions import redis_client
 from app.main import main
 from app.main.forms import TwoFactorForm
 from app.models.user import InvitedOrgUser, InvitedUser, User
+from app.notify_client import service_api_client
+from app.utils import hilite
 from app.utils.login import redirect_to_sign_in
 
 
@@ -68,8 +70,43 @@ def activate_user(user_id):
 
     # This is the login.gov path
     login_gov_invite_data = redis_client.get(f"service-invite-{user.email_address}")
+    # TODO REMOVE THIS DEBUG
+    print(  # noqa
+        hilite(
+            f"DATA FROM REDIS WITH USER EMAIL {user.email_address}?  DATA: {login_gov_invite_data}"
+        )
+    )
+    # END DEBUG
     if login_gov_invite_data:
         login_gov_invite_data = json.loads(login_gov_invite_data.decode("utf8"))
+        service_id = login_gov_invite_data["service_id"]
+        user_id = user_id
+        permissions = login_gov_invite_data["permissions"]
+        folder_permissions = login_gov_invite_data["folder_permissions"]
+        # TODO REMOVE THIS DEBUG
+        print(hilite(f"CALLING BACK END WITH {login_gov_invite_data}"))  # noqa
+        # END DEBUG
+        # Actually call the back end and add the user to the service
+        user_api_client.add_user_to_service(
+            service_id, user_id, permissions, folder_permissions
+        )
+        # TODO REMOVE THIS DEBUG
+        print(  # noqa
+            hilite(
+                f"ADDING USER TO SERVICE service_id {service_id} user_id {user_id} permissions {permissions}"
+            )
+        )
+        orgs_and_services = user_api_client.get_organizations_and_services_for_user(
+            user_id
+        )
+        print(hilite(f"ORGS AND SERVICES FOR USER {orgs_and_services}"))  # noqa
+        service_added = service_api_client.get_service(service_id)
+        print(  # noqa
+            hilite(
+                f"USER {user.name} SHOULD HAVE BEEN ADDED TO SERVICE {service_added.name}"
+            )
+        )
+        # END DEBUG
 
     # This is the deprecated path for organization invites where we get id from session
     session["current_session_id"] = user.current_session_id
