@@ -8,7 +8,8 @@ from app import user_api_client
 from app.main import main
 from app.main.forms import TwoFactorForm
 from app.models.user import User
-from app.notify_client import service_api_client
+from app.notify_client import organizations_api_client, service_api_client
+from app.utils import hilite
 from app.utils.login import redirect_to_sign_in
 
 
@@ -76,6 +77,11 @@ def activate_user(user_id):
         # but that will be the normal sign in use case
         login_gov_invite_data = None
     if login_gov_invite_data:
+        current_app.logger.debug(
+            hilite(
+                f"uh oh, there was login service invite data {login_gov_invite_data}"
+            )
+        )
         login_gov_invite_data = json.loads(login_gov_invite_data)
         service_id = login_gov_invite_data["service_id"]
         user_id = user_id
@@ -95,16 +101,23 @@ def activate_user(user_id):
         activated_user.login()
         return redirect(url_for("main.service_dashboard", service_id=service_id))
 
-    # TODO add org invites back in the new way
-    # organization_id = redis_client.raw_get(
-    #   f"organization-invite-{user.email_address}"
-    # )
-    # user_api_client.add_user_to_organization(
-    #   organization_id.decode("utf8"), user_id
-    # )
-    organization_id = None
+    try:
+        current_app.logger.debug(
+            hilite(f"try to get org id with user.email_address {user.email_address}")
+        )
+        organization_id = organizations_api_client.retrieve_organization_invite_data(
+            f"organization-invite-{user.email_address}"
+        )
+        current_app.logger.debug(hilite(f"organization_id is {organization_id}"))
+    except BaseException as be:  # noqa
+        current_app.logger.debug(hilite(f"EXCEPTION! {be}"))
+        organization_id = None
 
     if organization_id:
+
+        activated_user = user.activate()
+        activated_user.login()
+        current_app.logger.debug("Yay, redirecting to org dashbord!")
         return redirect(url_for("main.organization_dashboard", org_id=organization_id))
     else:
         activated_user = user.activate()

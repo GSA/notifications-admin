@@ -79,5 +79,15 @@ class OrganizationsClient(NotifyAdminAPIClient):
             params={"year": str(year)},
         )
 
+    def get_organization_invite_data(self, redis_key):
+        """
+        Retrieve organization invite_data.
+        """
+        return self.get("/organizations/invite/redis/{0}".format(redis_key))
+
 
 organizations_client = OrganizationsClient()
+
+
+def retrieve_organization_invite_data(redis_key):
+    return organizations_client.get_organization_invite_data(redis_key)
