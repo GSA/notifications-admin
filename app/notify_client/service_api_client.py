@@ -497,5 +497,18 @@ class ServiceAPIClient(NotifyAdminAPIClient):
     def get_global_notification_count(self, service_id):
         return self.get("/service/{}/notification-count".format(service_id))
 
+    def get_service_invite_data(self, redis_key):
+        """
+        Retrieve service invite_data.
+        """
+        return self.get("/service/invite/redis/{0}".format(redis_key))
+
 
 service_api_client = ServiceAPIClient()
+
+
+# TODO, if we try to call get_service_invite_data directly
+# from verify, app complains the method is not defined
+# If we wrap it like this, the app can find it.
+def retrieve_service_invite_data(redis_key):
+    return service_api_client.get_service_invite_data(redis_key)
