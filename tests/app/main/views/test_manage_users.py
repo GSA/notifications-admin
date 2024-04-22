@@ -1249,14 +1249,15 @@ def test_cancel_invited_user_doesnt_work_if_user_not_invited_to_this_service(
                 "Cancel invitation for invited_user@test.gsa.gov"
             ),
         ),
-        (
-            "cancelled",
-            (
-                "invited_user@test.gsa.gov(cancelled invite) "
-                "Permissions"
-                # all permissions are greyed out
-            ),
-        ),
+        # Test case removed due to the removal of canceled users from the dashboard
+        # (
+        #     "cancelled",
+        #     (
+        #         "invited_user@test.gsa.gov(cancelled invite) "
+        #         "Permissions"
+        #         # all permissions are greyed out
+        #     ),
+        # ),
     ],
 )
 def test_manage_users_shows_invited_user(
