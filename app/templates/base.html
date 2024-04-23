@@ -1,10 +1,16 @@
-{% from "../components/banner.html" import banner %}
-{% from "../components/components/skip-link/macro.njk" import usaSkipLink -%}
-
+{% from "components/components/skip-link/macro.njk" import usaSkipLink -%}
+{% from "components/sub-navigation.html" import sub_navigation %}
 
 <!DOCTYPE html>
 <html lang="{{ htmlLang | default('en') }}" class="{{ htmlClasses }}">
-  {% include "new/components/head.html" %}
+  <head>
+    <title>
+      {% block pageTitle %}
+        {% block per_page_title %}{% endblock %} – Notify.gov
+      {% endblock %}
+    </title>
+    {% include "new/components/head.html" %}
+  </head>
   <body class="usa-template__body {{ bodyClasses }}">
     <script nonce="{{ csp_nonce() }}">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     {% block bodyStart %}
@@ -23,31 +29,32 @@
       }) }}
     {% endblock %}
 
+
     {% block header %}
-      {% if current_user.is_authenticated %}
-        {% include 'new/components/usa_banner.html' %}
-        {% include 'new/components/header.html' %}
-      {% endif %}
+      {% include 'new/components/usa_banner.html' %}
+      {% include 'new/components/header.html' %}
     {% endblock %}
 
     {% block main %}
     <div class="grid-container">
+      {#  lines 34-39 were previously from withoutnav_template.html #}
       {% block beforeContent %}
         {% block backLink %}{% endblock %}
       {% endblock %}
       {% block mainClasses %}
-      <!-- notes set mainClasses = "margin-top-5 padding-bottom-5" where withoutnav_template was used and maybe templates that are using content_template -->
+      {% set mainClasses = "margin-top-5 padding-bottom-5" %}
       <main class="{{ mainClasses }}" id="main-content" role="main">
       {% endblock %}
         {% block content %}
           {% block flash_messages %}
-            <!-- flash_message.html was from the withoutnav_template and is only included on child templates that was using withoutnav_template. Now, we can add in flash_message blocks and include 'flash_messages.html' to child templates that was using withoutnav_template. This will help to eliminate the use of a whole other parent template. -->
+            {% include 'flash_messages.html' %}
+            {# flash_message.html was previously only included in child templates that were using withoutnav_template. Now, we can add flash_message blocks and include flash_messages.html in child templates that were using withoutnav_template. This will help eliminate the need for an entirely separate parent template. #}
           {% endblock %}
           {% block maincolumn_content %}
-            {% block fromContentTemplatetwoColumnGrid %}
+            {#  lines 48-59 were previously from content_template.html #}
               <div class="grid-row">
                 {% if navigation_links %}
-                  <div class="tablet:grid-col-2">
+                  <div class="tablet:grid-col-2 margin-bottom-4">
                     {{ sub_navigation(navigation_links) }}
                   </div>
                   <div class="tablet:grid-col-10 padding-left-4 usa-prose site-prose">
@@ -57,8 +64,6 @@
                 {% block content_column_content %}{% endblock %}
                 </div>
               </div>
-              <!-- content_column_content block is from the content_template.html. We do not need this template. We can consolidate and move it to the base.html template. We can call on this block where child templates were using the content_template.html  -->
-            {% endblock %}
           {% endblock %}
         {% endblock %}
       </main>
