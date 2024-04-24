@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 
 {% block per_page_title %}
-  {% block service_page_title %}{% endblock %}{% if current_service.name %} – {{ current_service.name }}{% endif %}
-  {% block org_page_title %}{% endblock %}{% if current_org.name %} – {{ current_org.name }}{% endif %}
+  {% if current_org.name %}
+    {% block org_page_title %}{% endblock %} – {{ current_org.name }}
+  {% else %}
+    {% block service_page_title %}{% endblock %} – {{ current_service.name }}
+  {% endif %}
 {% endblock %}
 
 {% block main %}
