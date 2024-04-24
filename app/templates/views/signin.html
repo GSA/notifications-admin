@@ -12,18 +12,6 @@
 
 {% block maincolumn_content %}
 
-{% if login_gov_enabled %}
-<div class="grid-row">
-  <div id="countdown-container" class="usa-alert usa-alert--warning width-full margin-bottom-4">
-    <div class="usa-alert__body">
-      <h4 class="usa-alert__heading">Login.gov is required by April 16, 2024</h4>
-      <p class="usa-alert__text">
-        You have <span id="countdown"></span> left to use Login.gov to sign in
-      </p>
-    </div>
-  </div>
-</div>
-{% endif %}
 <div class="grid-row margin-bottom-4">
   <div class="tablet:grid-col-5">
     {% if again %}
@@ -37,24 +25,15 @@
           We signed you out because you have not used Notify for a while.
         </p>
       {% endif %}
+      <a class="usa-link usa-button" href="{{ initial_signin_url }}">Sign in with Login.gov</a>
     {% else %}
       <h1 class="font-body-2xl margin-bottom-3">Sign in</h1>
-      {% if login_gov_enabled %}
-      <p>You can access your account by signing in with one of the options below:</p>
-      <a class="usa-link usa-button usa-button--outline" href="{{ initial_signin_url }}">Sign in with Login.gov</a>
-      <p class="margin-y-3"><strong>Or:</strong></p>
-      {% endif %}
+      <p>Access your Notify.gov account by signing in with Login.gov:</p>
+      <a class="usa-link usa-button" href="{{ initial_signin_url }}">Sign in with Login.gov</a>
     {% endif %}
-
-    {% call form_wrapper(autocomplete=True) %}
-      {{ form.email_address(param_extensions={"autocomplete": "email"}) }}
-      {{ form.password(param_extensions={"autocomplete": "current-password"}) }}
-      {{ page_footer("Continue", secondary_link=password_reset_url, secondary_link_text="Forgot your password?") }}
-    {% endcall %}
   </div>
-  {% if login_gov_enabled %}
     <div class="tablet:grid-col-6 tablet:grid-offset-1 margin-top-2 padding-y-2 padding-x-4 bg-base-lightest">
-      <h2 class="font-body-lg">Notify.gov is changing the sign-in experience to Login.gov effective<br>April 16, 2024</h2>
+      <h2 class="font-body-lg">Effective April 16, 2024 Notify.gov requires you sign-in through Login.gov</h2>
       <p>Why are we doing this?</p>
       <ul class="usa-list">
         <li><strong>Enhanced security:</strong> Login.gov is really secure and trustworthy</li>
@@ -64,12 +43,11 @@
       <p>What do I need to do?</p>
       <ul class="usa-list">
         <li>If you have a Login.gov account, start using it to sign in to Notify today.</li>
-        <li>If you don’t have a Login.gov account, you must create one by April 16, 2024 to continue to access Notify.</li>
+        <li>If you don’t have a Login.gov account, you must create one to continue to access Notify.</li>
       </ul>
       <div class="border-bottom border-base-lighter margin-y-4"></div>
-      <a class="usa-link usa-button margin-bottom-3" href="{{ initial_signin_url }}">Create Login.gov account</a>
+      <a class="usa-link usa-button usa-button--outline margin-bottom-3" href="{{ initial_signin_url }}">Create Login.gov account</a>
     </div>
   </div>
-{% endif %}
 
 {% endblock %}

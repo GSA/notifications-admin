@@ -5,10 +5,10 @@ from itsdangerous import SignatureExpired
 from notifications_utils.url_safe_token import check_token
 
 from app import user_api_client
-from app.extensions import redis_client
 from app.main import main
 from app.main.forms import TwoFactorForm
-from app.models.user import InvitedOrgUser, InvitedUser, User
+from app.models.user import User
+from app.notify_client import service_api_client
 from app.utils.login import redirect_to_sign_in
 
 
@@ -67,48 +67,49 @@ def activate_user(user_id):
     user = User.from_id(user_id)
 
     # This is the login.gov path
-    login_gov_invite_data = redis_client.get(f"service-invite-{user.email_address}")
+    try:
+        login_gov_invite_data = service_api_client.retrieve_service_invite_data(
+            f"service-invite-{user.email_address}"
+        )
+    except BaseException:  # noqa
+        # We will hit an exception if we can't find invite data,
+        # but that will be the normal sign in use case
+        login_gov_invite_data = None
     if login_gov_invite_data:
-        login_gov_invite_data = json.loads(login_gov_invite_data.decode("utf8"))
-
-    # This is the deprecated path for organization invites where we get id from session
-    session["current_session_id"] = user.current_session_id
-    organization_id = session.get("organization_id")
-
-    activated_user = user.activate()
-    activated_user.login()
-
-    # TODO when login.gov is mandatory, get rid of the if clause, it is deprecated.
-    invited_user = InvitedUser.from_session()
-    if invited_user:
-        service_id = _add_invited_user_to_service(invited_user)
-        return redirect(url_for("main.service_dashboard", service_id=service_id))
-    elif login_gov_invite_data:
+        login_gov_invite_data = json.loads(login_gov_invite_data)
         service_id = login_gov_invite_data["service_id"]
+        user_id = user_id
+        permissions = login_gov_invite_data["permissions"]
+        folder_permissions = login_gov_invite_data["folder_permissions"]
 
-        user.add_to_service(
-            service_id,
-            login_gov_invite_data["permissions"],
-            login_gov_invite_data["folder_permissions"],
-            login_gov_invite_data["from_user_id"],
-        )
+        # Actually call the back end and add the user to the service
+        try:
+            user_api_client.add_user_to_service(
+                service_id, user_id, permissions, folder_permissions
+            )
+        except BaseException as be:  # noqa
+            # TODO if the user is already part of service we should ignore
+            current_app.logger.warning(f"Exception adding user to service {be}")
+
+        activated_user = user.activate()
+        activated_user.login()
         return redirect(url_for("main.service_dashboard", service_id=service_id))
 
-    # TODO when login.gov is mandatory, git rid of the if clause, it is deprecated.
-    invited_org_user = InvitedOrgUser.from_session()
-    if invited_org_user:
-        user_api_client.add_user_to_organization(invited_org_user.organization, user_id)
-    elif redis_client.get(f"organization-invite-{user.email_address}"):
-        organization_id = redis_client.raw_get(
-            f"organization-invite-{user.email_address}"
-        )
-        user_api_client.add_user_to_organization(
-            organization_id.decode("utf8"), user_id
-        )
+    # TODO add org invites back in the new way
+    # organization_id = redis_client.raw_get(
+    #   f"organization-invite-{user.email_address}"
+    # )
+    # user_api_client.add_user_to_organization(
+    #   organization_id.decode("utf8"), user_id
+    # )
+    organization_id = None
 
     if organization_id:
         return redirect(url_for("main.organization_dashboard", org_id=organization_id))
     else:
+        activated_user = user.activate()
+        activated_user.login()
+
         return redirect(url_for("main.add_service", first="first"))
 
 
