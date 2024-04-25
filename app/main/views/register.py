@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from flask import (
     abort,
     current_app,
+    flash,
     redirect,
     render_template,
     request,
@@ -160,7 +161,7 @@ def set_up_your_profile():
             invited_service = Service.from_id(invite_data["service_id"])
             invited_user_id = invite_data["invited_user_id"]
             invited_user = InvitedUser.by_id(invited_user_id)
-            
+
             if user_email.lower() != invited_user.email_address.lower():
                 flash("You cannot accept an invite for another person.")
                 session.pop("invited_user_id", None)
