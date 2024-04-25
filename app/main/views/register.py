@@ -1,9 +1,12 @@
+import base64
+import json
 import uuid
 from datetime import datetime, timedelta
 
 from flask import (
     abort,
     current_app,
+    flash,
     redirect,
     render_template,
     request,
@@ -22,8 +25,9 @@ from app.main.forms import (
 )
 from app.main.views import sign_in
 from app.main.views.verify import activate_user
+from app.models.service import Service
 from app.models.user import InvitedOrgUser, InvitedUser, User
-from app.utils import hide_from_search_engines
+from app.utils import hide_from_search_engines, hilite
 
 
 @main.route("/register", methods=["GET", "POST"])
@@ -150,7 +154,26 @@ def set_up_your_profile():
         if code and state:
             access_token = sign_in._get_access_token(code, state)
             user_email, user_uuid = sign_in._get_user_email_and_uuid(access_token)
-            redirect_url = request.args.get("next")
+
+            invite_data = state.encode("utf8")
+            invite_data = base64.b64decode(invite_data)
+            invite_data = json.loads(invite_data)
+            invited_service = Service.from_id(invite_data["service_id"])
+            invited_user_id = invite_data["invited_user_id"]
+            invited_user = InvitedUser.by_id(invited_user_id)
+
+            if user_email.lower() != invited_user.email_address.lower():
+                flash("You cannot accept an invite for another person.")
+                session.pop("invited_user_id", None)
+                abort(403)
+            else:
+                invited_user.accept_invite()
+            current_app.logger.debug(
+                hilite(
+                    f"INVITED USER {invited_user.email_address} to service {invited_service.name}"
+                )
+            )
+            current_app.logger.debug(hilite("ACCEPTED INVITE"))
 
         elif login_gov_error:
             current_app.logger.error(f"login.gov error: {login_gov_error}")
@@ -174,5 +197,16 @@ def set_up_your_profile():
         # activate the user
         user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
         activate_user(user["id"])
-        return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
+        usr = User.from_id(user["id"])
+        usr.add_to_service(
+            invited_service.id,
+            invite_data["permissions"],
+            invite_data["folder_permissions"],
+            invite_data["from_user_id"],
+        )
+        current_app.logger.debug(
+            hilite(f"Added user {usr.email_address} to service {invited_service.name}")
+        )
+        return redirect(url_for("main.show_accounts_or_dashboard"))
+
     return render_template("views/set-up-your-profile.html", form=form)
