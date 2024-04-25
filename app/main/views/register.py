@@ -173,7 +173,6 @@ def set_up_your_profile():
                     f"INVITED USER {invited_user.email_address} to service {invited_service.name}"
                 )
             )
-            invited_user.accept_invite()
             current_app.logger.debug(hilite("ACCEPTED INVITE"))
 
         elif login_gov_error:
