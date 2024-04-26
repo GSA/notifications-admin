@@ -36,6 +36,7 @@ applications:
       API_HOST_NAME: https://notify-api-((env)).apps.internal:61443
 
       # Credentials variables
+
       ADMIN_CLIENT_SECRET: ((ADMIN_CLIENT_SECRET))
       ADMIN_CLIENT_USERNAME: ((ADMIN_CLIENT_USERNAME))
       DANGEROUS_SALT: ((DANGEROUS_SALT))
