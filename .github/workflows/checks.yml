@@ -130,7 +130,7 @@ jobs:
         # Debugging for now to troubleshoot a connectivity issue to the local servers
         # run: curl --request GET --url "http://localhost:6012"
         env:
-          API_HOST_NAME: https://notify-api-staging.app.cloud.gov/
+          E2E_API_HOST_NAME: https://notify-api-staging.app.cloud.gov/
           # API_HOST_NAME: http://localhost:6011
           E2E_DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
           E2E_SECRET_KEY: ${{ secrets.SECRET_KEY }}

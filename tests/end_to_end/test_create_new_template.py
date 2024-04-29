@@ -19,7 +19,8 @@ def _setup(page):
     print(f"E2E SECRET_KEY {os.getenv('SECRET_KEY')}")
     print(f"E2E ADMIN_CLIENT_SECRET {os.getenv('ADMIN_CLIENT_SECRET')}")
     print(f"E2E ADMIN_CLIENT_USERNAME {os.getenv('ADMIN_CLIENT_USERNAME')}")
-    print(f"{os.environ}")
+    print(f"E2E API_HOST_NAME {os.getenv('API_HOST_NAME')}")
+
 
 
     current_date_time = datetime.datetime.now()

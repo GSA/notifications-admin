@@ -94,6 +94,8 @@ def pytest_generate_tests(metafunc):
     os.environ['ADMIN_CLIENT_SECRET'] = os.getenv('E2E_ADMIN_CLIENT_SECRET')
     os.environ['ADMIN_CLIENT_USERNAME'] = os.getenv('E2E_ADMIN_CLIENT_USERNAME')
     os.environ['NOTIFY_ENVIRONMENT'] = os.getenv('E2E_NOTIFY_ENVIRONMENT')
+    os.environ['API_HOST_NAME'] = os.getenv('E2E_API_HOST_NAME')
+
 
 
 
