@@ -12,9 +12,15 @@ E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 def _setup(page):
     # Prepare for adding a new service later in the test.
-    current_app.logger.warning(f"ESE_TEST_URI={E2E_TEST_URI}")
-    current_app.logger.warning(f"NOTIFY_ENVIRONMENT={os.getenv('NOTIFY_ENVIRONMENT')}")
-    current_app.logger.warning(f"E2E EMAIL {os.getenv('NOTIFY_E2E_TEST_EMAIL')}")
+    print(f"ESE_TEST_URI={E2E_TEST_URI}")
+    print(f"NOTIFY_ENVIRONMENT={os.getenv('NOTIFY_ENVIRONMENT')}")
+    print(f"E2E EMAIL {os.getenv('NOTIFY_E2E_TEST_EMAIL')}")
+    print(f"E2E DANGEROUS SALT {os.getenv('DANGEROUS_SALT')}")
+    print(f"E2E SECRET_KEY {os.getenv('SECRET_KEY')}")
+    print(f"E2E ADMIN_CLIENT_SECRET {os.getenv('ADMIN_CLIENT_SECRET')}")
+    print(f"E2E ADMIN_CLIENT_USERNAME {os.getenv('ADMIN_CLIENT_USERNAME')}")
+
+
     current_date_time = datetime.datetime.now()
     new_service_name = "E2E Federal Test Service {now} - {browser_type}".format(
         now=current_date_time.strftime("%m/%d/%Y %H:%M:%S"),

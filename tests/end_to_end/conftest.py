@@ -88,6 +88,9 @@ def end_to_end_context(browser):
     context = browser.new_context()
     return context
 
+def pytest_generate_tests(metafunc):
+    os.environ['DANGEROUS_SALT'] = 'blahblahdiddiblah'
+
 
 @pytest.fixture()
 def authenticated_page(end_to_end_context):
