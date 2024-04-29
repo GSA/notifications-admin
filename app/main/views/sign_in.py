@@ -220,7 +220,6 @@ def sign_in():
     if url is not None:
         url = url.replace("NONCE", token)
         url = url.replace("STATE", token)
-
     return render_template(
         "views/signin.html",
         form=form,
