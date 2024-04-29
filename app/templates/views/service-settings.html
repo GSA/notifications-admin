@@ -31,22 +31,6 @@
         {% endcall %}
 
         {% call row() %}
-          {{ text_field('Sign-in method') }}
-          {{ text_field(
-            'Email link or text message code'
-            if 'email_auth' in current_service.permissions
-            else 'Text message code'
-          ) }}
-          {{ edit_field(
-              'Change',
-              url_for('.service_set_auth_type', service_id=current_service.id),
-              permissions=['manage_service'],
-              suffix='sign-in method',
-            )
-          }}
-        {% endcall %}
-
-        {% call row() %}
           {{ text_field('Send text messages') }}
           {{ boolean_field('sms' in current_service.permissions) }}
           {{ edit_field(

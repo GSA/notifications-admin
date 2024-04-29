@@ -36,17 +36,6 @@ applications:
       API_HOST_NAME: https://notify-api-((env)).apps.internal:61443
 
       # Credentials variables
-
-
-
-
-      # API_HOST_NAME: https://notify-api-staging.app.cloud.gov/
-      # NOTIFY_ENVIRONMENT: e2etest
-      NOTIFY_E2E_AUTH_STATE_PATH: (( NOTIFY_E2E_AUTH_STATE_PATH ))
-      NOTIFY_E2E_TEST_EMAIL: (( NOTIFY_E2E_TEST_EMAIL ))
-      NOTIFY_E2E_TEST_PASSWORD: (( NOTIFY_E2E_TEST_PASSWORD ))
-      NOTIFY_E2E_TEST_URI: (( NOTIFY_E2E_TEST_URI ))
-
       ADMIN_CLIENT_SECRET: ((ADMIN_CLIENT_SECRET))
       ADMIN_CLIENT_USERNAME: ((ADMIN_CLIENT_USERNAME))
       DANGEROUS_SALT: ((DANGEROUS_SALT))
