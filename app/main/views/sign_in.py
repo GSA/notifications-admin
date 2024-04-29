@@ -135,6 +135,7 @@ def sign_in():
     # If we have to revalidated the email, send the message
     # via email and redirect to the "verify your email page"
     # and don't proceed further with login
+    current_app.logger.warning("HIT SIGNIN!")
     email_verify_template = _do_login_dot_gov()
     if (
         email_verify_template
@@ -153,7 +154,7 @@ def sign_in():
         user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
         activate_user(user["id"])
         return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
-
+    current_app.logger.warning("FAILED TO BOUNCE OUT OF SIGN IN")
     current_app.logger.info(f"current user is {current_user}")
     if current_user and current_user.is_authenticated:
         if redirect_url and is_safe_redirect_url(redirect_url):

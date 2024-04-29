@@ -3,6 +3,8 @@ import os
 import re
 import uuid
 
+from flask import current_app
+
 from playwright.sync_api import expect
 
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
@@ -10,6 +12,9 @@ E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 def _setup(page):
     # Prepare for adding a new service later in the test.
+    current_app.logger.warning(f"ESE_TEST_URI={E2E_TEST_URI}")
+    current_app.logger.warning(f"NOTIFY_ENVIRONMENT={os.getenv('NOTIFY_ENVIRONMENT')}")
+    current_app.logger.warning(f"E2E EMAIL {os.getenv('NOTIFY_E2E_TEST_EMAIL')}")
     current_date_time = datetime.datetime.now()
     new_service_name = "E2E Federal Test Service {now} - {browser_type}".format(
         now=current_date_time.strftime("%m/%d/%Y %H:%M:%S"),
