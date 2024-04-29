@@ -132,11 +132,11 @@ jobs:
         env:
           API_HOST_NAME: https://notify-api-staging.app.cloud.gov/
           # API_HOST_NAME: http://localhost:6011
-          DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
-          ADMIN_CLIENT_USERNAME: notify-admin
-          NOTIFY_ENVIRONMENT: e2etest
+          E2E_DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
+          E2E_SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          E2E_ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
+          E2E_ADMIN_CLIENT_USERNAME: notify-admin
+          E2E_NOTIFY_ENVIRONMENT: e2etest
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
