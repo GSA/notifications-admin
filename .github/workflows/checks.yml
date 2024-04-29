@@ -83,21 +83,21 @@ jobs:
       - uses: ./.github/actions/setup-project
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
-      - name: Clone API
-        uses: actions/checkout@v4
-        with:
-         repository: GSA/notifications-api
-         path: 'notifications-api'
-      - name: Install API dependencies
-        working-directory: 'notifications-api'
-        run: make bootstrap
-        env:
-          DATABASE_URL: postgresql://user:password@localhost:5432/test_notification_api
-          SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
-          REDIS_URL: redis://localhost:6379
-          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
-          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-          NOTIFY_ENVIRONMENT: development
+      #- name: Clone API
+      #  uses: actions/checkout@v4
+      #  with:
+      #   repository: GSA/notifications-api
+      #   path: 'notifications-api'
+      # - name: Install API dependencies
+      #  working-directory: 'notifications-api'
+      #  run: make bootstrap
+      #  env:
+      #    DATABASE_URL: postgresql://user:password@localhost:5432/test_notification_api
+      #    SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
+      #    REDIS_URL: redis://localhost:6379
+      #    NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
+      #    NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
+      #    NOTIFY_ENVIRONMENT: development
       #- name: Run API server
         # working-directory: 'notifications-api'
         # run: make run-procfile &
@@ -117,7 +117,7 @@ jobs:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
           ADMIN_CLIENT_USERNAME: notify-admin
-          NOTIFY_ENVIRONMENT: e2etest
+          NOTIFY_ENVIRONMENT: development
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
