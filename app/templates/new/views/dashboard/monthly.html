@@ -1,0 +1,74 @@
+{% from "components/page-header.html" import page_header %}
+{% from "components/pill.html" import pill %}
+{% from "components/table.html" import list_table, field, hidden_field_heading, right_aligned_field_heading, row_heading %}
+
+{% extends "withnav_template.html" %}
+
+{% block service_page_title %}
+  Messages sent,
+  {{ selected_year }} to {{ selected_year + 1 }} financial year
+{% endblock %}
+
+{% block maincolumn_content %}
+
+  {{ page_header('Messages sent') }}
+  <div class="bottom-gutter">
+    {{ pill(
+      items=years,
+      current_value=selected_year,
+      big_number_args={'smallest': True},
+    ) }}
+  </div>
+  {% if months %}
+    <div class="body-copy-table" id='pill-selected-item'>
+      {% call(month, row_index) list_table(
+        months,
+        caption="Total spend",
+        caption_visible=False,
+        empty_message='',
+        field_headings=[
+          'Month',
+          'Text messages',
+          'Emails',
+        ],
+        field_headings_visible=False,
+        equal_length=True
+      ) %}
+        {% if not month.future %}
+          {% call row_heading() %}
+            {{ month.name }}
+          {% endcall %}
+          {% for counts, template_type in [
+            (month.sms_counts, 'sms'),
+            (month.email_counts, 'email'),
+          ] %}
+            {% call field(align='left') %}
+              <span class="big-number-smallest">
+                <span class="big-number-number">
+                  {% if counts.requested is number %}
+                    {{ "{:,}".format(counts.requested) }}
+                  {% else %}
+                    {{ counts.requested }}
+                  {% endif %}
+                </span>
+                <span class="big-number-label">{{ counts.requested|message_count_label(template_type, suffix='') }}</span>
+              </span>
+              {% if counts.requested %}
+                <span class="{{ 'failure-highlight' if counts.show_warning else '' }}">
+                  {{ "{:,}".format(counts.failed) }} failed
+                </span>
+              {% else %}
+                –
+              {% endif %}
+            {% endcall %}
+          {% endfor %}
+        {% endif %}
+      {% endcall %}
+    </div>
+  {% endif %}
+
+  <p class="align-with-heading-copy">
+    Federal fiscal year ends September 30.
+  </p>
+
+{% endblock %}

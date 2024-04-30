@@ -1,0 +1,37 @@
+<div class='grid-row grid-gap ajax-block-container'>
+  <div class='grid-col-12'>
+
+    <table class="usa-table usa-table--borderless margin-top-1 margin-bottom-5">
+      <caption class="usa-sr-only">
+        Daily
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Sent</th>
+          <th scope="col">Remaining</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="big-number-smaller big-number-number">{{ "{:,}".format(sms_sent) }}</span></td>
+          <td>
+            {% if sms_cost %}
+              <span class="big-number-smaller">
+                <span class="big-number-number">
+                    {{ "{}{:,.2f}".format('$', sms_cost) }}
+                </span>
+                <span class="big-number-label">'spent on text messages'</span>
+              </span>
+            {% else %}
+              <span class="big-number-smaller">
+                <span class="big-number-number">
+                  {{ "{:,}".format(sms_allowance_remaining) }}
+                </span>
+              </span>
+            {% endif %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
