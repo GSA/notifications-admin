@@ -77,6 +77,7 @@ def end_to_end_authenticated_context(browser):
     auth_state_path = os.path.join(
         os.getenv("NOTIFY_E2E_AUTH_STATE_PATH"), "state.json"
     )
+
     context = browser.new_context(storage_state=auth_state_path)
 
     return context
@@ -86,6 +87,17 @@ def end_to_end_authenticated_context(browser):
 def end_to_end_context(browser):
     context = browser.new_context()
     return context
+
+def pytest_generate_tests(metafunc):
+    os.environ['DANGEROUS_SALT'] = os.getenv('E2E_DANGEROUS_SALT')
+    os.environ['SECRET_KEY'] = os.getenv('E2E_SECRET_KEY')
+    os.environ['ADMIN_CLIENT_SECRET'] = os.getenv('E2E_ADMIN_CLIENT_SECRET')
+    os.environ['ADMIN_CLIENT_USERNAME'] = os.getenv('E2E_ADMIN_CLIENT_USERNAME')
+    os.environ['NOTIFY_ENVIRONMENT'] = os.getenv('E2E_NOTIFY_ENVIRONMENT')
+    os.environ['API_HOST_NAME'] = os.getenv('E2E_API_HOST_NAME')
+
+
+
 
 
 @pytest.fixture()

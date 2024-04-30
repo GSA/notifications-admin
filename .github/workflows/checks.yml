@@ -83,36 +83,36 @@ jobs:
       - uses: ./.github/actions/setup-project
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
-      - name: Clone API
-        uses: actions/checkout@v4
-        with:
-         repository: GSA/notifications-api
-         path: 'notifications-api'
-      - name: Install API dependencies
-        working-directory: 'notifications-api'
-        run: make bootstrap
-        env:
-          DATABASE_URL: postgresql://user:password@localhost:5432/test_notification_api
-          SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
-          REDIS_URL: redis://localhost:6379
-          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
-          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-          NOTIFY_ENVIRONMENT: development
-      - name: Run API server
-        working-directory: 'notifications-api'
-        run: make run-procfile &
-        env:
-          DATABASE_URL: postgresql://user:password@localhost:5432/test_notification_api
-          SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
-          REDIS_URL: redis://localhost:6379
-          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
-          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-          NOTIFY_ENVIRONMENT: development
+      #- name: Clone API
+      #  uses: actions/checkout@v4
+      #  with:
+      #   repository: GSA/notifications-api
+      #   path: 'notifications-api'
+      # - name: Install API dependencies
+      #  working-directory: 'notifications-api'
+      #  run: make bootstrap
+      #  env:
+      #    DATABASE_URL: postgresql://user:password@localhost:5432/test_notification_api
+      #    SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
+      #    REDIS_URL: redis://localhost:6379
+      #    NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
+      #    NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
+      #    NOTIFY_ENVIRONMENT: development
+      #- name: Run API server
+        # working-directory: 'notifications-api'
+        # run: make run-procfile &
+        # env:
+          # DATABASE_URL: postgresql://user:password@localhost:5432/test_notification_api
+          # SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
+          # REDIS_URL: redis://localhost:6379
+          # NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
+          # NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
+          # NOTIFY_ENVIRONMENT: development
       - name: Run Admin server
         run: make run-flask &
         env:
-          # API_HOST_NAME: https://notify-api-staging.app.cloud.gov
-          API_HOST_NAME: http://localhost:6011
+          API_HOST_NAME: https://notify-api-staging.app.cloud.gov/
+          # API_HOST_NAME: http://localhost:6011
           DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
@@ -121,7 +121,7 @@ jobs:
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-          NOTIFY_E2E_TEST_URI: http://localhost:6012
+          NOTIFY_E2E_TEST_URI: http://localhost:6012/
       - name: Run E2E tests
         # Run the E2E tests against the code found in this PR.
         # run: poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
@@ -130,11 +130,17 @@ jobs:
         # Debugging for now to troubleshoot a connectivity issue to the local servers
         # run: curl --request GET --url "http://localhost:6012"
         env:
-          NOTIFY_ENVIRONMENT: e2etest
+          E2E_API_HOST_NAME: https://notify-api-staging.app.cloud.gov/
+          # API_HOST_NAME: http://localhost:6011
+          E2E_DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
+          E2E_SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          E2E_ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
+          E2E_ADMIN_CLIENT_USERNAME: notify-admin
+          E2E_NOTIFY_ENVIRONMENT: e2etest
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-          NOTIFY_E2E_TEST_URI: http://localhost:6012
+          NOTIFY_E2E_TEST_URI: http://localhost:6012/
 
   validate-new-relic-config:
     runs-on: ubuntu-latest
