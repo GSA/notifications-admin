@@ -38,7 +38,6 @@
 
     {% block main %}
     <div class="grid-container">
-      {#  lines 34-39 were previously from withoutnav_template.html #}
       {% block beforeContent %}
         {% block backLink %}{% endblock %}
       {% endblock %}
@@ -49,10 +48,8 @@
         {% block content %}
           {% block flash_messages %}
             {% include 'flash_messages.html' %}
-            {# flash_message.html was previously only included in child templates: withoutnav_template, org_template, settings_template, withnav_template, _base_template.html. Place this block here or within the child templates will help eliminate the need for an entirely separate parent template. #}
           {% endblock %}
           {% block maincolumn_content %}
-            {#  lines 48-59 were previously from content_template.html #}
               <div class="grid-row">
                 {% if navigation_links %}
                   <div class="tablet:grid-col-2 margin-bottom-4">
