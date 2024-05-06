@@ -45,6 +45,8 @@ def register():
 
 
 @main.route("/register-from-invite", methods=["GET", "POST"])
+# TODO This is deprecated, we are now handling invites in the
+# login.gov workflow
 def register_from_invite():
     invited_user = InvitedUser.from_session()
     if not invited_user:
@@ -73,6 +75,8 @@ def register_from_invite():
 
 
 @main.route("/register-from-org-invite", methods=["GET", "POST"])
+# TODO This is deprecated, we are now handling invites in the
+# login.gov workflow
 def register_from_org_invite():
     invited_org_user = InvitedOrgUser.from_session()
     if not invited_org_user:
@@ -152,29 +156,7 @@ def set_up_your_profile():
         state = request.args.get("state")
         login_gov_error = request.args.get("error")
         if code and state:
-            access_token = sign_in._get_access_token(code, state)
-            user_email, user_uuid = sign_in._get_user_email_and_uuid(access_token)
-
-            invite_data = state.encode("utf8")
-            invite_data = base64.b64decode(invite_data)
-            invite_data = json.loads(invite_data)
-            invited_service = Service.from_id(invite_data["service_id"])
-            invited_user_id = invite_data["invited_user_id"]
-            invited_user = InvitedUser.by_id(invited_user_id)
-
-            if user_email.lower() != invited_user.email_address.lower():
-                flash("You cannot accept an invite for another person.")
-                session.pop("invited_user_id", None)
-                abort(403)
-            else:
-                invited_user.accept_invite()
-            current_app.logger.debug(
-                hilite(
-                    f"INVITED USER {invited_user.email_address} to service {invited_service.name}"
-                )
-            )
-            current_app.logger.debug(hilite("ACCEPTED INVITE"))
-
+            _handle_login_dot_gov_invite(code, state)
         elif login_gov_error:
             current_app.logger.error(f"login.gov error: {login_gov_error}")
             raise Exception(f"Could not login with login.gov {login_gov_error}")
@@ -210,3 +192,50 @@ def set_up_your_profile():
         return redirect(url_for("main.show_accounts_or_dashboard"))
 
     return render_template("views/set-up-your-profile.html", form=form)
+
+
+def get_invited_user_email_address(invited_user_id):
+    # InvitedUser is an unhashable type and hard to mock in tests
+    # so this convenience method is a workaround for that
+    invited_user = InvitedUser.by_id(invited_user_id)
+    return invited_user.email_address
+
+
+def invited_user_accept_invite(invited_user_id):
+    # InvitedUser is an unhashable type and hard to mock in tests
+    # so this convenience method is a workaround for that
+    invited_user = InvitedUser.by_id(invited_user_id)
+    invited_user.accept_invite()
+
+
+def _handle_login_dot_gov_invite(code, state):
+
+    access_token = sign_in._get_access_token(code, state)
+    print(f"access token {access_token}")
+    user_email, user_uuid = sign_in._get_user_email_and_uuid(access_token)
+    print(f"user_email {user_email} user_uuid {user_uuid}")
+    print(f"state = {state}")
+    invite_data = state.encode("utf8")
+    print(f"encoded invite data {invite_data}")
+    invite_data = base64.b64decode(invite_data)
+    print(f"decoded invite data = {invite_data}")
+    invite_data = json.loads(invite_data)
+    print(f"final invite data {invite_data}")
+    invited_service = Service.from_id(invite_data["service_id"])
+    print(f"invited service {invited_service}")
+    invited_user_id = invite_data["invited_user_id"]
+    invited_user_email_address = get_invited_user_email_address(invited_user_id)
+    print(f"invited_user_email_address = {invited_user_email_address}")
+    if user_email.lower() != invited_user_email_address.lower():
+        print(f"HITTING THE FLASH")
+        flash("You cannot accept an invite for another person.")
+        session.pop("invited_user_id", None)
+        abort(403)
+    else:
+        invited_user_accept_invite()
+        current_app.logger.debug(
+            hilite(
+                f"INVITED USER {invited_user_email_address} to service {invite_data['service_id']}"
+            )
+        )
+        current_app.logger.debug(hilite("ACCEPTED INVITE"))

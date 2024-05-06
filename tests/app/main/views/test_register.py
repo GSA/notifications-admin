@@ -1,9 +1,12 @@
+import base64
+import json
 from unittest.mock import ANY
 
 import pytest
 from flask import url_for
 
-from app.models.user import User
+from app.main.views.register import _handle_login_dot_gov_invite
+from app.models.user import InvitedUser, User
 from tests.conftest import normalize_spaces
 
 
@@ -313,7 +316,7 @@ def test_register_from_invite(
             service=sample_invite["service"],
             password="somreallyhardthingtoguess",
             auth_type="sms_auth",
-            **extra_data
+            **extra_data,
         ),
         _expected_redirect=url_for("main.verify"),
     )
@@ -532,3 +535,78 @@ def test_register_from_invite_form_doesnt_show_mobile_number_field_if_email_auth
         page.find("input", attrs={"name": "auth_type"}).attrs["value"] == "email_auth"
     )
     assert page.find("input", attrs={"name": "mobile_number"}) is None
+
+
+def test_handle_login_dot_gov_invite_bad_email(client_request, mocker):
+
+    mocker.patch(
+        "app.main.views.register.sign_in._get_access_token",
+        return_value="access token",
+    )
+
+    mocker.patch(
+        "app.main.views.register.sign_in._get_user_email_and_uuid",
+        return_value=["fake@fake.gov", "12345"],
+    )
+
+    mocker.patch(
+        "app.main.views.register.Service.from_id",
+        return_value={"service_from_id"},
+    )
+
+    mocker.patch(
+        "app.main.views.register.get_invited_user_email_address",
+        return_value="boo@fake.gov",
+    )
+
+    mock_flash = mocker.patch("app.main.views.register.flash")
+
+    mock_abort = mocker.patch("app.main.views.register.abort")
+
+    mocker.patch("app.main.views.register.invited_user_accept_invite")
+
+    invite_data = {"service_id": "service", "invited_user_id": "invited_user"}
+    invite_data = json.dumps(invite_data)
+    invite_data = invite_data.encode("utf8")
+    invite_data = base64.b64encode(invite_data)
+    invite_data = invite_data.decode("utf8")
+    print(f"sending this as state {invite_data}")
+    _handle_login_dot_gov_invite("code", invite_data)
+    mock_flash.assert_called_once_with(
+        "You cannot accept an invite for another person."
+    )
+    mock_abort.assert_called_once_with(403)
+
+
+def test_handle_login_dot_gov_invite_good_email(client_request, mocker):
+
+    mocker.patch(
+        "app.main.views.register.sign_in._get_access_token",
+        return_value="access token",
+    )
+
+    mocker.patch(
+        "app.main.views.register.sign_in._get_user_email_and_uuid",
+        return_value=["fake@fake.gov", "12345"],
+    )
+
+    mocker.patch(
+        "app.main.views.register.Service.from_id",
+        return_value={"service_from_id"},
+    )
+
+    mocker.patch(
+        "app.main.views.register.get_invited_user_email_address",
+        return_value="fake@fake.gov",
+    )
+
+    mock_accept = mocker.patch("app.main.views.register.invited_user_accept_invite")
+
+    invite_data = {"service_id": "service", "invited_user_id": "invited_user"}
+    invite_data = json.dumps(invite_data)
+    invite_data = invite_data.encode("utf8")
+    invite_data = base64.b64encode(invite_data)
+    invite_data = invite_data.decode("utf8")
+    print(f"sending this as state {invite_data}")
+    _handle_login_dot_gov_invite("code", invite_data)
+    mock_accept.assert_called_once()
