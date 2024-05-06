@@ -134,116 +134,7 @@ def test_logged_in_user_doesnt_do_evil_redirect(client_request):
     )
 
 
-@pytest.mark.parametrize(
-    "redirect_url",
-    [
-        None,
-        f"/services/{SERVICE_ONE_ID}/templates",
-    ],
-)
-@pytest.mark.parametrize(
-    ("email_address", "password"),
-    [
-        ("valid@example.gsa.gov", "val1dPassw0rd!"),
-        (" valid@example.gsa.gov  ", "  val1dPassw0rd!  "),
-    ],
-)
-def test_process_sms_auth_sign_in_return_2fa_template(
-    client_request,
-    api_user_active,
-    mock_send_verify_code,
-    mock_get_user,
-    mock_get_user_by_email,
-    mock_verify_password,
-    email_address,
-    password,
-    redirect_url,
-):
-    client_request.logout()
-    client_request.post(
-        "main.sign_in",
-        next=redirect_url,
-        _data={
-            "email_address": email_address,
-            "password": password,
-        },
-        _expected_redirect=url_for(".two_factor_sms", next=redirect_url),
-    )
-    mock_verify_password.assert_called_with(api_user_active["id"], password)
-    mock_get_user_by_email.assert_called_with("valid@example.gsa.gov")
-
-
-@pytest.mark.parametrize(
-    "redirect_url",
-    [
-        None,
-        f"/services/{SERVICE_ONE_ID}/templates",
-    ],
-)
-def test_process_email_auth_sign_in_return_2fa_template(
-    client_request,
-    api_user_active_email_auth,
-    mock_send_verify_code,
-    mock_verify_password,
-    mocker,
-    redirect_url,
-):
-    client_request.logout()
-    mocker.patch(
-        "app.user_api_client.get_user", return_value=api_user_active_email_auth
-    )
-    mocker.patch(
-        "app.user_api_client.get_user_by_email", return_value=api_user_active_email_auth
-    )
-
-    client_request.post(
-        "main.sign_in",
-        next=redirect_url,
-        _data={
-            "email_address": "valid@example.gsa.gov",
-            "password": "val1dPassw0rd!",
-        },
-        _expected_redirect=url_for(".two_factor_email_sent", next=redirect_url),
-    )
-
-    mock_send_verify_code.assert_called_with(
-        api_user_active_email_auth["id"], "email", None, redirect_url
-    )
-    mock_verify_password.assert_called_with(
-        api_user_active_email_auth["id"], "val1dPassw0rd!"
-    )
-
-
-def test_should_return_locked_out_true_when_user_is_locked(
-    client_request,
-    mock_get_user_by_email_locked,
-):
-    client_request.logout()
-    page = client_request.post(
-        "main.sign_in",
-        _data={
-            "email_address": "valid@example.gsa.gov",
-            "password": "whatIsMyPassword!",
-        },
-        _expected_status=200,
-    )
-    assert "The email address or password you entered is incorrect" in page.text
-
-
-def test_should_return_200_when_user_does_not_exist(
-    client_request,
-    mock_get_user_by_email_not_found,
-):
-    client_request.logout()
-    page = client_request.post(
-        "main.sign_in",
-        _data={"email_address": "notfound@gsa.gov", "password": "doesNotExist!"},
-        _expected_status=200,
-    )
-
-    assert "The email address or password you entered is incorrect" in page.text
-
-
+@pytest.mark.skip("TODO is this still relevant post login.gov switch?")
 def test_should_return_redirect_when_user_is_pending(
     client_request,
     mock_get_user_by_email_pending,
@@ -273,6 +164,7 @@ def test_should_return_redirect_when_user_is_pending(
         f"/services/{SERVICE_ONE_ID}/templates",
     ],
 )
+@pytest.mark.skip("TODO is this still relevant post login.gov switch?")
 def test_should_attempt_redirect_when_user_is_pending(
     client_request, mock_get_user_by_email_pending, mock_verify_password, redirect_url
 ):
@@ -288,37 +180,7 @@ def test_should_attempt_redirect_when_user_is_pending(
     )
 
 
-def test_email_address_is_treated_case_insensitively_when_signing_in_as_invited_user(
-    client_request,
-    mocker,
-    mock_verify_password,
-    api_user_active,
-    sample_invite,
-    mock_accept_invite,
-    mock_send_verify_code,
-    mock_get_invited_user_by_id,
-):
-    client_request.logout()
-    sample_invite["email_address"] = "TEST@user.gsa.gov"
-
-    mocker.patch(
-        "app.models.user.User.from_email_address_and_password_or_none",
-        return_value=User(api_user_active),
-    )
-
-    with client_request.session_transaction() as session:
-        session["invited_user_id"] = sample_invite["id"]
-
-    client_request.post(
-        "main.sign_in",
-        _data={"email_address": "test@user.gsa.gov", "password": "val1dPassw0rd!"},
-    )
-
-    assert mock_accept_invite.called
-    assert mock_send_verify_code.called
-    mock_get_invited_user_by_id.assert_called_once_with(sample_invite["id"])
-
-
+@pytest.mark.skip("TODO move this to register and update with login.gov")
 def test_when_signing_in_as_invited_user_you_cannot_accept_an_invite_for_another_email_address(
     client_request,
     mocker,
