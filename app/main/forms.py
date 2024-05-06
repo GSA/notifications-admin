@@ -4,12 +4,13 @@ from itertools import chain
 from numbers import Number
 
 import pytz
-from flask import Markup, render_template, request
+from flask import render_template, request
 from flask_login import current_user
 from flask_wtf import FlaskForm as Form
 from flask_wtf.file import FileAllowed
 from flask_wtf.file import FileField as FileField_wtf
 from flask_wtf.file import FileSize
+from markupsafe import Markup
 from notifications_utils.formatters import strip_all_whitespace
 from notifications_utils.insensitive_dict import InsensitiveDict
 from notifications_utils.recipients import InvalidPhoneError, validate_phone_number
