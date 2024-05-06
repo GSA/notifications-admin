@@ -5,8 +5,9 @@ from unittest.mock import ANY
 import pytest
 from flask import url_for
 
+from app.main.forms import RegisterUserForm
 from app.main.views.register import _handle_login_dot_gov_invite
-from app.models.user import InvitedUser, User
+from app.models.user import User
 from tests.conftest import normalize_spaces
 
 
@@ -550,11 +551,6 @@ def test_handle_login_dot_gov_invite_bad_email(client_request, mocker):
     )
 
     mocker.patch(
-        "app.main.views.register.Service.from_id",
-        return_value={"service_from_id"},
-    )
-
-    mocker.patch(
         "app.main.views.register.get_invited_user_email_address",
         return_value="boo@fake.gov",
     )
@@ -570,8 +566,7 @@ def test_handle_login_dot_gov_invite_bad_email(client_request, mocker):
     invite_data = invite_data.encode("utf8")
     invite_data = base64.b64encode(invite_data)
     invite_data = invite_data.decode("utf8")
-    print(f"sending this as state {invite_data}")
-    _handle_login_dot_gov_invite("code", invite_data)
+    _handle_login_dot_gov_invite("code", invite_data, RegisterUserForm())
     mock_flash.assert_called_once_with(
         "You cannot accept an invite for another person."
     )
@@ -591,22 +586,32 @@ def test_handle_login_dot_gov_invite_good_email(client_request, mocker):
     )
 
     mocker.patch(
-        "app.main.views.register.Service.from_id",
-        return_value={"service_from_id"},
-    )
-
-    mocker.patch(
         "app.main.views.register.get_invited_user_email_address",
         return_value="fake@fake.gov",
     )
 
+    mocker.patch(
+        "app.main.views.register.user_api_client.get_user_by_uuid_or_email",
+        return_value={"id": "abc"},
+    )
+
+    mock_user = mocker.patch(
+        "app.main.views.register.User.add_to_service",
+    )
+
     mock_accept = mocker.patch("app.main.views.register.invited_user_accept_invite")
 
-    invite_data = {"service_id": "service", "invited_user_id": "invited_user"}
+    invite_data = {
+        "service_id": "service",
+        "invited_user_id": "invited_user",
+        "permissions": ["manage_everything"],
+        "folder_permissions": [],
+        "from_user_id": "xyz",
+    }
     invite_data = json.dumps(invite_data)
     invite_data = invite_data.encode("utf8")
     invite_data = base64.b64encode(invite_data)
     invite_data = invite_data.decode("utf8")
-    print(f"sending this as state {invite_data}")
-    _handle_login_dot_gov_invite("code", invite_data)
+    _handle_login_dot_gov_invite("code", invite_data, RegisterUserForm())
     mock_accept.assert_called_once()
+    mock_user.assert_called_once_with("service", ["manage_everything"], [], "xyz")

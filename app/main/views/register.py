@@ -25,7 +25,6 @@ from app.main.forms import (
 )
 from app.main.views import sign_in
 from app.main.views.verify import activate_user
-from app.models.service import Service
 from app.models.user import InvitedOrgUser, InvitedUser, User
 from app.utils import hide_from_search_engines, hilite
 
@@ -156,40 +155,11 @@ def set_up_your_profile():
         state = request.args.get("state")
         login_gov_error = request.args.get("error")
         if code and state:
-            _handle_login_dot_gov_invite(code, state)
+            _handle_login_dot_gov_invite(code, state, form)
         elif login_gov_error:
             current_app.logger.error(f"login.gov error: {login_gov_error}")
             raise Exception(f"Could not login with login.gov {login_gov_error}")
         # end login.gov
-
-        # create the user
-        # TODO we have to provide something for password until that column goes away
-        # TODO ideally we would set the user's preferred timezone here as well
-
-        user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
-        if user is None:
-            user = User.register(
-                name=form.name.data,
-                email_address=user_email,
-                mobile_number=form.mobile_number.data,
-                password=str(uuid.uuid4()),
-                auth_type="sms_auth",
-            )
-
-        # activate the user
-        user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
-        activate_user(user["id"])
-        usr = User.from_id(user["id"])
-        usr.add_to_service(
-            invited_service.id,
-            invite_data["permissions"],
-            invite_data["folder_permissions"],
-            invite_data["from_user_id"],
-        )
-        current_app.logger.debug(
-            hilite(f"Added user {usr.email_address} to service {invited_service.name}")
-        )
-        return redirect(url_for("main.show_accounts_or_dashboard"))
 
     return render_template("views/set-up-your-profile.html", form=form)
 
@@ -208,26 +178,16 @@ def invited_user_accept_invite(invited_user_id):
     invited_user.accept_invite()
 
 
-def _handle_login_dot_gov_invite(code, state):
+def _handle_login_dot_gov_invite(code, state, form):
 
     access_token = sign_in._get_access_token(code, state)
-    print(f"access token {access_token}")
     user_email, user_uuid = sign_in._get_user_email_and_uuid(access_token)
-    print(f"user_email {user_email} user_uuid {user_uuid}")
-    print(f"state = {state}")
     invite_data = state.encode("utf8")
-    print(f"encoded invite data {invite_data}")
     invite_data = base64.b64decode(invite_data)
-    print(f"decoded invite data = {invite_data}")
     invite_data = json.loads(invite_data)
-    print(f"final invite data {invite_data}")
-    invited_service = Service.from_id(invite_data["service_id"])
-    print(f"invited service {invited_service}")
     invited_user_id = invite_data["invited_user_id"]
     invited_user_email_address = get_invited_user_email_address(invited_user_id)
-    print(f"invited_user_email_address = {invited_user_email_address}")
     if user_email.lower() != invited_user_email_address.lower():
-        print(f"HITTING THE FLASH")
         flash("You cannot accept an invite for another person.")
         session.pop("invited_user_id", None)
         abort(403)
@@ -239,3 +199,29 @@ def _handle_login_dot_gov_invite(code, state):
             )
         )
         current_app.logger.debug(hilite("ACCEPTED INVITE"))
+        user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
+        if user is None:
+            user = User.register(
+                name=form.name.data,
+                email_address=user_email,
+                mobile_number=form.mobile_number.data,
+                password=str(uuid.uuid4()),
+                auth_type="sms_auth",
+            )
+
+        # activate the user
+        user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
+        activate_user(user["id"])
+        usr = User.from_id(user["id"])
+        usr.add_to_service(
+            invite_data["service_id"],
+            invite_data["permissions"],
+            invite_data["folder_permissions"],
+            invite_data["from_user_id"],
+        )
+        current_app.logger.debug(
+            hilite(
+                f"Added user {usr.email_address} to service {invite_data['service_id']}"
+            )
+        )
+        return redirect(url_for("main.show_accounts_or_dashboard"))
