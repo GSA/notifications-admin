@@ -459,3 +459,30 @@ def test_handle_login_dot_gov_invite_good_email(client_request, mocker):
     _handle_login_dot_gov_invite("code", invite_data, RegisterUserForm())
     mock_accept.assert_called_once()
     mock_user.assert_called_once_with("service", ["manage_everything"], [], "xyz")
+
+
+# Taken from the API project in service_invite/rest.py
+def get_user_data_url_safe(data):
+    data = json.dumps(data)
+    data = base64.b64encode(data.encode("utf8"))
+    return data.decode("utf8")
+
+
+def get_decoded(state):
+    state = state.encode("utf8")
+    state = base64.b64decode(state)
+    state = json.loads(state)
+    return state
+
+
+# Test that we can successfully decode the invited user
+# data that is sent in the state param
+def test_decode_state():
+    invite_data = {
+        "from_user_id": "abc",
+        "service_id": "bcd",
+        "permissions": ["manage_everything"],
+        "folder_permissions": [],
+    }
+    state = get_user_data_url_safe(invite_data)
+    assert invite_data == get_decoded(state)

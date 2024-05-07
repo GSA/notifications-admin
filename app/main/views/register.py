@@ -125,7 +125,7 @@ def set_up_your_profile():
         state = request.args.get("state")
         login_gov_error = request.args.get("error")
         if code and state:
-            _handle_login_dot_gov_invite(code, state, form)
+            return _handle_login_dot_gov_invite(code, state, form)
         elif login_gov_error:
             current_app.logger.error(f"login.gov error: {login_gov_error}")
             raise Exception(f"Could not login with login.gov {login_gov_error}")
@@ -153,16 +153,20 @@ def debug_msg(msg):
 
 
 def _handle_login_dot_gov_invite(code, state, form):
-
+    debug_msg(f"enter _handle_login_dot_gov_invite with code {code} state {state}")
     access_token = sign_in._get_access_token(code, state)
     debug_msg("Got the access token for login.gov")
     user_email, user_uuid = sign_in._get_user_email_and_uuid(access_token)
     debug_msg(
         f"Got the user_email {user_email} and user_uuid {user_uuid} from login.gov"
     )
+    debug_msg(f"raw state {state}")
     invite_data = state.encode("utf8")
+    debug_msg(f"utf8 encoded state {invite_data}")
     invite_data = base64.b64decode(invite_data)
+    debug_msg(f"b64 decoded state {invite_data}")
     invite_data = json.loads(invite_data)
+    debug_msg(f"final state {invite_data}")
     invited_user_id = invite_data["invited_user_id"]
     invited_user_email_address = get_invited_user_email_address(invited_user_id)
     debug_msg(f"email address from the invite_date is {invited_user_email_address}")
@@ -172,7 +176,7 @@ def _handle_login_dot_gov_invite(code, state, form):
         session.pop("invited_user_id", None)
         abort(403)
     else:
-        invited_user_accept_invite()
+        invited_user_accept_invite(invited_user_id)
         debug_msg(
             f"invited user {invited_user_email_address} to service {invite_data['service_id']}"
         )
