@@ -17,9 +17,8 @@ from flask_login import current_user
 
 from app import user_api_client
 from app.main import main
-from app.main.forms import (
+from app.main.forms import (  # RegisterUserFromInviteForm,
     RegisterUserForm,
-    RegisterUserFromInviteForm,
     RegisterUserFromOrgInviteForm,
     SetupUserProfileForm,
 )
@@ -43,39 +42,10 @@ def register():
     return render_template("views/register.html", form=form)
 
 
-@main.route("/register-from-invite", methods=["GET", "POST"])
-# TODO This is deprecated, we are now handling invites in the
-# login.gov workflow
-def register_from_invite():
-    invited_user = InvitedUser.from_session()
-    if not invited_user:
-        abort(404)
-
-    form = RegisterUserFromInviteForm(invited_user)
-
-    if form.validate_on_submit():
-        if (
-            form.service.data != invited_user.service
-            or form.email_address.data != invited_user.email_address
-        ):
-            abort(400)
-        _do_registration(form, send_email=False, send_sms=invited_user.sms_auth)
-        invited_user.accept_invite()
-        if invited_user.sms_auth:
-            return redirect(url_for("main.verify"))
-        else:
-            # we've already proven this user has email because they clicked the invite link,
-            # so just activate them straight away
-            return activate_user(session["user_details"]["id"])
-
-    return render_template(
-        "views/register-from-invite.html", invited_user=invited_user, form=form
-    )
-
-
 @main.route("/register-from-org-invite", methods=["GET", "POST"])
 # TODO This is deprecated, we are now handling invites in the
-# login.gov workflow
+# login.gov workflow.  Leaving it here until we write the new
+# org registration.
 def register_from_org_invite():
     invited_org_user = InvitedOrgUser.from_session()
     if not invited_org_user:
@@ -178,27 +148,35 @@ def invited_user_accept_invite(invited_user_id):
     invited_user.accept_invite()
 
 
+def debug_msg(msg):
+    current_app.logger.debug(hilite(msg))
+
+
 def _handle_login_dot_gov_invite(code, state, form):
 
     access_token = sign_in._get_access_token(code, state)
+    debug_msg("Got the access token for login.gov")
     user_email, user_uuid = sign_in._get_user_email_and_uuid(access_token)
+    debug_msg(
+        f"Got the user_email {user_email} and user_uuid {user_uuid} from login.gov"
+    )
     invite_data = state.encode("utf8")
     invite_data = base64.b64decode(invite_data)
     invite_data = json.loads(invite_data)
     invited_user_id = invite_data["invited_user_id"]
     invited_user_email_address = get_invited_user_email_address(invited_user_id)
+    debug_msg(f"email address from the invite_date is {invited_user_email_address}")
     if user_email.lower() != invited_user_email_address.lower():
+        debug_msg("invited user email did not match expected email, abort(403)")
         flash("You cannot accept an invite for another person.")
         session.pop("invited_user_id", None)
         abort(403)
     else:
         invited_user_accept_invite()
-        current_app.logger.debug(
-            hilite(
-                f"INVITED USER {invited_user_email_address} to service {invite_data['service_id']}"
-            )
+        debug_msg(
+            f"invited user {invited_user_email_address} to service {invite_data['service_id']}"
         )
-        current_app.logger.debug(hilite("ACCEPTED INVITE"))
+        debug_msg("accepted invite")
         user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
         if user is None:
             user = User.register(
@@ -208,10 +186,12 @@ def _handle_login_dot_gov_invite(code, state, form):
                 password=str(uuid.uuid4()),
                 auth_type="sms_auth",
             )
+            debug_msg(f"registered user {form.name.data} with email {user_email}")
 
         # activate the user
         user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
         activate_user(user["id"])
+        debug_msg("activated user")
         usr = User.from_id(user["id"])
         usr.add_to_service(
             invite_data["service_id"],
@@ -219,9 +199,7 @@ def _handle_login_dot_gov_invite(code, state, form):
             invite_data["folder_permissions"],
             invite_data["from_user_id"],
         )
-        current_app.logger.debug(
-            hilite(
-                f"Added user {usr.email_address} to service {invite_data['service_id']}"
-            )
+        debug_msg(
+            f"Added user {usr.email_address} to service {invite_data['service_id']}"
         )
         return redirect(url_for("main.show_accounts_or_dashboard"))
