@@ -141,7 +141,9 @@ class User(JSONModel, UserMixin):
         )
 
     def logged_in_elsewhere(self):
-        return session.get("current_session_id") != self.current_session_id
+        # This check is deprecated due to the transition to using login.gov.
+        return False
+        # return session.get("current_session_id") != self.current_session_id
 
     def activate(self):
         if self.is_pending:

@@ -47,21 +47,6 @@ def test_sign_in_explains_session_timeout(client_request):
     )
 
 
-def test_sign_in_explains_other_browser(client_request, api_user_active, mocker):
-    api_user_active["current_session_id"] = str(uuid.UUID(int=1))
-    mocker.patch("app.user_api_client.get_user", return_value=api_user_active)
-
-    with client_request.session_transaction() as session:
-        session["current_session_id"] = str(uuid.UUID(int=2))
-
-    page = client_request.get("main.sign_in", next="/foo")
-
-    assert (
-        "We signed you out because you logged in to Notify on another device"
-        in page.text
-    )
-
-
 def test_doesnt_redirect_to_sign_in_if_no_session_info(
     client_request,
     api_user_active,
@@ -76,36 +61,6 @@ def test_doesnt_redirect_to_sign_in_if_no_session_info(
         session["current_session_id"] = None
 
     client_request.get("main.add_service")
-
-
-@pytest.mark.parametrize(
-    ("db_sess_id", "cookie_sess_id"),
-    [
-        (None, None),
-        (None, uuid.UUID(int=1)),  # BAD - cookie doesn't match db
-        (
-            uuid.UUID(int=1),
-            None,
-        ),  # BAD - has used other browsers before but this is a brand new browser with no cookie
-        (
-            uuid.UUID(int=1),
-            uuid.UUID(int=2),
-        ),  # BAD - this person has just signed in on a different browser
-    ],
-)
-def test_redirect_to_sign_in_if_logged_in_from_other_browser(
-    client_request, api_user_active, mocker, db_sess_id, cookie_sess_id
-):
-    api_user_active["current_session_id"] = db_sess_id
-    mocker.patch("app.user_api_client.get_user", return_value=api_user_active)
-    with client_request.session_transaction() as session:
-        session["current_session_id"] = str(cookie_sess_id)
-
-    client_request.get(
-        "main.choose_account",
-        _expected_status=302,
-        _expected_redirect=url_for("main.sign_in", next="/accounts"),
-    )
 
 
 def test_logged_in_user_redirects_to_account(client_request):
