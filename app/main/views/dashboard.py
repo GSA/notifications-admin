@@ -24,6 +24,7 @@ from app.utils import (
     DELIVERED_STATUSES,
     FAILURE_STATUSES,
     REQUESTED_STATUSES,
+    SENDING_STATUSES,
     service_has_permission,
 )
 from app.utils.csv import Spreadsheet
@@ -341,6 +342,9 @@ def get_dashboard_partials(service_id):
         service_id, free_sms_fragment_limit=free_sms_allowance
     )
 
+    monthly_stats = format_monthly_stats_to_list(
+        service_api_client.get_monthly_notification_stats(service_id, get_current_financial_year())["data"]
+    )
     yearly_usage = billing_api_client.get_annual_usage_for_service(
         service_id,
         get_current_financial_year(),
@@ -366,6 +370,7 @@ def get_dashboard_partials(service_id):
         ),
         "usage": render_template(
             "views/dashboard/_usage.html",
+            monthly_stats=monthly_stats,
             **get_annual_usage_breakdown(yearly_usage, free_sms_allowance),
         ),
     }
@@ -424,6 +429,8 @@ def aggregate_status_types(counts_dict):
             "{}_counts".format(message_type): {
                 "failed": sum(stats.get(status, 0) for status in FAILURE_STATUSES),
                 "requested": sum(stats.get(status, 0) for status in REQUESTED_STATUSES),
+                "delivered": sum(stats.get(status, 0) for status in DELIVERED_STATUSES),
+                "pending": sum(stats.get(status, 0) for status in SENDING_STATUSES),
             }
             for message_type, stats in counts_dict.items()
         }
