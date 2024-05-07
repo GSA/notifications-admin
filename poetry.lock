@@ -149,13 +149,13 @@ css = ["tinycss2 (>=1.1.0,<1.3)"]
 
 [[package]]
 name = "blinker"
-version = "1.8.1"
+version = "1.8.2"
 description = "Fast, simple object-to-object and broadcast signaling"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "blinker-1.8.1-py3-none-any.whl", hash = "sha256:5f1cdeff423b77c31b89de0565cd03e5275a03028f44b2b15f912632a58cced6"},
-    {file = "blinker-1.8.1.tar.gz", hash = "sha256:da44ec748222dcd0105ef975eed946da197d5bdf8bafb6aa92f5bc89da63fa25"},
+    {file = "blinker-1.8.2-py3-none-any.whl", hash = "sha256:1779309f71bf239144b9399d06ae925637cf6634cf6bd131104184531bf67c01"},
+    {file = "blinker-1.8.2.tar.gz", hash = "sha256:8f77b09d3bf7c795e969e9486f39c2c5e9c39d4ee07424be2bc594ece9642d83"},
 ]
 
 [[package]]
@@ -1895,18 +1895,18 @@ pip = "*"
 
 [[package]]
 name = "pip-audit"
-version = "2.7.2"
+version = "2.7.3"
 description = "A tool for scanning Python environments for known vulnerabilities"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pip_audit-2.7.2-py3-none-any.whl", hash = "sha256:49907430115baacb8bb7ffc1a2b689acfeac9d8534a43bffad3c73f8d8b32d52"},
-    {file = "pip_audit-2.7.2.tar.gz", hash = "sha256:a12905e42dd452f43a2dbf895606d59c35348deed27b8cbaff8516423576fdfb"},
+    {file = "pip_audit-2.7.3-py3-none-any.whl", hash = "sha256:46a11faee3323f76adf7987de8171daeb660e8f57d8088cc27fb1c1e5c7747b0"},
+    {file = "pip_audit-2.7.3.tar.gz", hash = "sha256:08891bbf179bffe478521f150818112bae998424f58bf9285c0078965aef38bc"},
 ]
 
 [package.dependencies]
 CacheControl = {version = ">=0.13.0", extras = ["filecache"]}
-cyclonedx-python-lib = ">=5,<7"
+cyclonedx-python-lib = ">=5,<8"
 html5lib = ">=1.1"
 packaging = ">=23.0.0"
 pip-api = ">=0.0.28"
@@ -1918,7 +1918,7 @@ toml = ">=0.10"
 [package.extras]
 dev = ["build", "bump (>=1.3.2)", "pip-audit[doc,lint,test]"]
 doc = ["pdoc"]
-lint = ["interrogate", "mypy", "ruff (<0.2.3)", "types-html5lib", "types-requests", "types-toml"]
+lint = ["interrogate", "mypy", "ruff (<0.4.3)", "setuptools", "types-html5lib", "types-requests", "types-toml"]
 test = ["coverage[toml] (>=7.0,!=7.3.3,<8.0)", "pretend", "pytest", "pytest-cov"]
 
 [[package]]
@@ -2334,13 +2334,13 @@ dev = ["pre-commit", "pytest-asyncio", "tox"]
 
 [[package]]
 name = "pytest-playwright"
-version = "0.4.4"
+version = "0.5.0"
 description = "A pytest wrapper with fixtures for Playwright to automate web browsers"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pytest-playwright-0.4.4.tar.gz", hash = "sha256:5488db4cc49028491c5130af0a2bb6b1d0b222a202217f6d14491d4c9aa67ff9"},
-    {file = "pytest_playwright-0.4.4-py3-none-any.whl", hash = "sha256:df306f3a60a8631a3cfde1b95a2ed5a89203a3408dfa1154de049ca7de87c90b"},
+    {file = "pytest-playwright-0.5.0.tar.gz", hash = "sha256:f9f5ae8ade2f773e6e2cd85ec6bfff2ab287f7943108b3956fe5971324151622"},
+    {file = "pytest_playwright-0.5.0-py3-none-any.whl", hash = "sha256:b382c870384419c025d66aea14518bab71fb9e79917d4808692cde70d8c5216a"},
 ]
 
 [package.dependencies]
@@ -3014,4 +3014,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12.2"
-content-hash = "a511e7d8f022826d71a6a1bb47cc7587d81c7ad331f3a6c26a8538b1390929e3"
+content-hash = "794a77ce83a38682d5a7def4212fe212cbec48573b4fdd1e2dad3c4669fa98ac"
