@@ -17,7 +17,7 @@ from flask_login import current_user
 
 from app import user_api_client
 from app.main import main
-from app.main.forms import (  # RegisterUserFromInviteForm,
+from app.main.forms import (
     RegisterUserForm,
     RegisterUserFromOrgInviteForm,
     SetupUserProfileForm,
