@@ -151,8 +151,6 @@ def sign_in():
             return redirect(redirect_url)
         return redirect(url_for("main.show_accounts_or_dashboard"))
 
-    other_device = current_user.logged_in_elsewhere()
-
     token = generate_token(
         str(request.remote_addr),
         current_app.config["SECRET_KEY"],
@@ -166,7 +164,6 @@ def sign_in():
     return render_template(
         "views/signin.html",
         again=bool(redirect_url),
-        other_device=other_device,
         initial_signin_url=url,
     )
 
