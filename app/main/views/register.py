@@ -116,8 +116,9 @@ def registration_continue():
 @main.route("/set-up-your-profile", methods=["GET", "POST"])
 @hide_from_search_engines
 def set_up_your_profile():
-
+    debug_msg(f"Enter set_up_your_profile with request.args {request.args}")
     form = SetupUserProfileForm()
+
 
     if form.validate_on_submit():
         # start login.gov
@@ -191,6 +192,10 @@ def _handle_login_dot_gov_invite(code, state, form):
                 auth_type="sms_auth",
             )
             debug_msg(f"registered user {form.name.data} with email {user_email}")
+        else:
+            User.update(mobile_number=form.mobile_number.data, name = form.name.data)
+            debug_msg(f"updated user {form.name.data}")
+
 
         # activate the user
         user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
