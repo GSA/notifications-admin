@@ -1,3 +1,4 @@
+import base64
 import copy
 import json
 import os
@@ -1899,6 +1900,25 @@ def sample_invite(mocker, service_one):
         auth_type,
         folder_permissions,
     )
+
+
+@pytest.fixture()
+def encoded_invite_data():
+    """
+    This mimics what API does when it encodes invite data in
+    service_invite/rest.py
+    """
+    invite_data = {
+        "service_id": "service",
+        "invited_user_id": "invited_user",
+        "permissions": ["manage_everything"],
+        "folder_permissions": [],
+        "from_user_id": "xyz",
+    }
+    invite_data = json.dumps(invite_data)
+    invite_data = invite_data.encode("utf8")
+    invite_data = base64.b64encode(invite_data)
+    return invite_data.decode("utf8")
 
 
 @pytest.fixture()

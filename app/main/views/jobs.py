@@ -3,7 +3,6 @@
 from functools import partial
 
 from flask import (
-    Markup,
     Response,
     abort,
     jsonify,
@@ -15,6 +14,7 @@ from flask import (
     url_for,
 )
 from flask_login import current_user
+from markupsafe import Markup
 from notifications_utils.template import EmailPreviewTemplate, SMSBodyPreviewTemplate
 
 from app import (
