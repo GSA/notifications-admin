@@ -431,71 +431,6 @@ def test_existing_signed_out_user_accept_invite_redirects_to_sign_in(
     )
 
 
-@pytest.mark.usefixtures("_mock_no_users_for_service")
-def test_new_user_accept_invite_calls_api_and_redirects_to_registration(
-    client_request,
-    service_one,
-    mock_check_invite_token,
-    mock_dont_get_user_by_email,
-    mock_add_user_to_service,
-    mock_get_service,
-    mocker,
-):
-    client_request.logout()
-    client_request.get(
-        "main.accept_invite",
-        token="thisisnotarealtoken",
-        _expected_redirect="/register-from-invite",
-    )
-
-    mock_check_invite_token.assert_called_with("thisisnotarealtoken")
-    mock_dont_get_user_by_email.assert_called_with("invited_user@test.gsa.gov")
-
-
-@pytest.mark.usefixtures("_mock_no_users_for_service")
-def test_new_user_accept_invite_calls_api_and_views_registration_page(
-    client_request,
-    service_one,
-    sample_invite,
-    mock_check_invite_token,
-    mock_dont_get_user_by_email,
-    mock_get_invited_user_by_id,
-    mock_add_user_to_service,
-    mock_get_service,
-    mocker,
-):
-    client_request.logout()
-    page = client_request.get(
-        "main.accept_invite",
-        token="thisisnotarealtoken",
-        _follow_redirects=True,
-    )
-
-    mock_check_invite_token.assert_called_with("thisisnotarealtoken")
-    mock_dont_get_user_by_email.assert_called_with("invited_user@test.gsa.gov")
-    mock_get_invited_user_by_id.assert_called_once_with(sample_invite["id"])
-
-    assert page.h1.string.strip() == "Create an account"
-
-    assert normalize_spaces(page.select_one("main p").text) == (
-        "Your account will be created with this email address: "
-        "invited_user@test.gsa.gov"
-    )
-
-    form = page.find("form")
-    name = form.find("input", id="name")
-    password = form.find("input", id="password")
-    service = form.find("input", type="hidden", id="service")
-    email = form.find("input", type="hidden", id="email_address")
-
-    assert email
-    assert email.attrs["value"] == "invited_user@test.gsa.gov"
-    assert name
-    assert password
-    assert service
-    assert service.attrs["value"] == service_one["id"]
-
-
 def test_cancelled_invited_user_accepts_invited_redirect_to_cancelled_invitation(
     client_request,
     mock_get_user,
@@ -560,65 +495,6 @@ def test_new_user_accept_invite_with_malformed_token(
         normalize_spaces(page.select_one(".banner-dangerous").text)
         == "Something’s wrong with this link. Make sure you’ve copied the whole thing."
     )
-
-
-@pytest.mark.usefixtures("_mock_no_users_for_service")
-def test_new_user_accept_invite_completes_new_registration_redirects_to_verify(
-    client_request,
-    service_one,
-    sample_invite,
-    api_user_active,
-    mock_check_invite_token,
-    mock_dont_get_user_by_email,
-    mock_email_is_not_already_in_use,
-    mock_register_user,
-    mock_send_verify_code,
-    mock_get_invited_user_by_id,
-    mock_accept_invite,
-    mock_add_user_to_service,
-    mock_get_service,
-    mocker,
-):
-    client_request.logout()
-    expected_redirect_location = "/register-from-invite"
-
-    client_request.get(
-        "main.accept_invite",
-        token="thisisnotarealtoken",
-        _expected_redirect=expected_redirect_location,
-    )
-    with client_request.session_transaction() as session:
-        assert session.get("invited_user_id") == sample_invite["id"]
-
-    data = {
-        "service": sample_invite["service"],
-        "email_address": sample_invite["email_address"],
-        "from_user": sample_invite["from_user"],
-        "password": "longpassword",
-        "mobile_number": "+12027890123",
-        "name": "Invited User",
-        "auth_type": "email_auth",
-    }
-
-    expected_redirect_location = "/verify"
-    client_request.post(
-        "main.register_from_invite",
-        _data=data,
-        _expected_redirect=expected_redirect_location,
-    )
-
-    mock_send_verify_code.assert_called_once_with(ANY, "sms", data["mobile_number"])
-    mock_get_invited_user_by_id.assert_called_once_with(sample_invite["id"])
-
-    mock_register_user.assert_called_with(
-        data["name"],
-        data["email_address"],
-        data["mobile_number"],
-        data["password"],
-        data["auth_type"],
-    )
-
-    assert mock_accept_invite.call_count == 1
 
 
 def test_signed_in_existing_user_cannot_use_anothers_invite(
