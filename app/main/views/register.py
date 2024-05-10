@@ -113,6 +113,41 @@ def registration_continue():
         raise Exception("Unexpected routing in registration_continue")
 
 
+def get_invite_data_from_redis(state):
+
+    invite_data = json.loads(redis_client.raw_get(f"invitedata-{state}"))
+    user_email = redis_client.raw_get(f"user_email-{state}").decode("utf8")
+    user_uuid = redis_client.raw_get(f"user_uuid-{state}").decode("utf8")
+    invited_user_email_address = redis_client.raw_get(
+        f"invited_user_email_address-{state}"
+    ).decode("utf8")
+    return invite_data, user_email, user_uuid, invited_user_email_address
+
+
+def put_invite_data_in_redis(
+    state, invite_data, user_email, user_uuid, invited_user_email_address
+):
+    ttl = 60 * 15  # 15 minutes
+
+    redis_client.raw_set(f"invitedata-{state}", json.dumps(invite_data), ex=ttl)
+    redis_client.raw_set(f"user_email-{state}", user_email, ex=ttl)
+    redis_client.raw_set(f"user_uuid-{state}", user_uuid, ex=ttl)
+    redis_client.raw_set(
+        f"invited_user_email_address-{state}",
+        invited_user_email_address,
+        ex=ttl,
+    )
+
+
+def check_invited_user_email_address_matches_expected(
+    user_email, invited_user_email_address
+):
+    if user_email.lower() != invited_user_email_address.lower():
+        debug_msg("invited user email did not match expected email, abort(403)")
+        flash("You cannot accept an invite for another person.")
+        abort(403)
+
+
 @main.route("/set-up-your-profile", methods=["GET", "POST"])
 @hide_from_search_engines
 def set_up_your_profile():
@@ -136,26 +171,18 @@ def set_up_your_profile():
         invited_user_id = invite_data["invited_user_id"]
         invited_user_email_address = get_invited_user_email_address(invited_user_id)
         debug_msg(f"email address from the invite_date is {invited_user_email_address}")
-        if user_email.lower() != invited_user_email_address.lower():
-            debug_msg("invited user email did not match expected email, abort(403)")
-            flash("You cannot accept an invite for another person.")
-            session.pop("invited_user_id", None)
-            abort(403)
-        else:
-            invited_user_accept_invite(invited_user_id)
-            debug_msg(
-                f"invited user {invited_user_email_address} to service {invite_data['service_id']}"
-            )
-            debug_msg("accepted invite")
+        check_invited_user_email_address_matches_expected(
+            user_email, invited_user_email_address
+        )
+
+        invited_user_accept_invite(invited_user_id)
+        debug_msg(
+            f"accepted invite user {invited_user_email_address} to service {invite_data['service_id']}"
+        )
         # We need to avoid taking a second trip through the login.gov code because we cannot pull the
         # access token twice.  So once we retrieve these values, let's park them in redis for 15 minutes
-        redis_client.raw_set(f"invitedata-{state}", json.dumps(invite_data), ex=60 * 15)
-        redis_client.raw_set(f"user_email-{state}", user_email, ex=60 * 15)
-        redis_client.raw_set(f"user_uuid-{state}", user_uuid, ex=60 * 15)
-        redis_client.raw_set(
-            f"invited_user_email_address-{state}",
-            invited_user_email_address,
-            ex=60 * 15,
+        put_invite_data_in_redis(
+            state, invite_data, user_email, user_uuid, invited_user_email_address
         )
 
     form = SetupUserProfileForm()
@@ -164,14 +191,11 @@ def set_up_your_profile():
         form.validate_on_submit()
         and redis_client.raw_get(f"invitedata-{state}") is not None
     ):
-        invite_data = json.loads(redis_client.raw_get(f"invitedata-{state}"))
-        user_email = redis_client.raw_get(f"user_email-{state}").decode("utf8")
-        user_uuid = redis_client.raw_get(f"user_uuid-{state}").decode("utf8")
+        invite_data, user_email, user_uuid, invited_user_email_address = (
+            get_invite_data_from_redis(state)
+        )
 
-        invited_user_email_address = redis_client.raw_get(
-            f"invited_user_email_address-{state}"
-        ).decode("utf8")
-
+        # create or update the user
         user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
         if user is None:
             user = User.register(
@@ -206,6 +230,9 @@ def set_up_your_profile():
         current_app.logger.error(f"login.gov error: {login_gov_error}")
         abort(403)
 
+    # we take two trips through this method, but should only hit this
+    # line on the first trip.  On the second trip, we should get redirected
+    # to the accounts page because we have successfully registered.
     return render_template("views/set-up-your-profile.html", form=form)
 
 
