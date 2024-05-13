@@ -401,6 +401,26 @@ def test_check_invited_user_email_address_doesnt_match_expected(mocker):
     mock_abort.assert_called_once_with(403)
 
 
+def test_check_user_email_address_fails_if_not_government_address(mocker):
+    mock_flash = mocker.patch("app.main.views.register.flash")
+    mock_abort = mocker.patch("app.main.views.register.abort")
+
+    check_invited_user_email_address_matches_expected(
+        "fake@fake.bogus", "Fake@Fake.BOGUS"
+    )
+    mock_flash.assert_called_once_with("You must use a government email address.")
+    mock_abort.assert_called_once_with(403)
+
+
+def test_check_user_email_address_succeeds_if_government_address(mocker):
+    mock_flash = mocker.patch("app.main.views.register.flash")
+    mock_abort = mocker.patch("app.main.views.register.abort")
+
+    check_invited_user_email_address_matches_expected("fake@fake.mil", "Fake@Fake.MIL")
+    mock_flash.assert_not_called()
+    mock_abort.assert_not_called()
+
+
 def decode_invite_data(state):
     state = state.encode("utf8")
     state = base64.b64decode(state)
