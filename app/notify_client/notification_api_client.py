@@ -37,11 +37,10 @@ class NotificationApiClient(NotifyAdminAPIClient):
         # we do not want in our logs, so we do a POST request instead of a GET
         method = self.post if to else self.get
         kwargs = {"data": params} if to else {"params": params}
-
         if job_id:
             return method(
                 url="/service/{}/job/{}/notifications".format(service_id, job_id),
-                **kwargs
+                **kwargs,
             )
         else:
             if limit_days is not None:
@@ -99,6 +98,9 @@ class NotificationApiClient(NotifyAdminAPIClient):
         return self.get(
             url="/service/{}/job/{}/notification_count".format(service_id, job_id)
         )["count"]
+
+    def get_total_notification_message_parts_by_job_id(self, job_id):
+        return self.get(url="/notifications/{}".format(job_id))
 
 
 notification_api_client = NotificationApiClient()

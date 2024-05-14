@@ -147,5 +147,10 @@ class JobApiClient(NotifyAdminAPIClient):
             url="/service/{}/job/{}/cancel".format(service_id, job_id), data={}
         )
 
+    def start_job(self, service_id, job_id):
+        return self.post(
+            url="/service/{}/job/{}/start-job".format(service_id, job_id), data={}
+        )
+
 
 job_api_client = JobApiClient()

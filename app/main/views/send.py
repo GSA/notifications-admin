@@ -653,17 +653,18 @@ def preview_job(service_id, template_id, upload_id, row_index=2):
     data = _check_messages(
         service_id, template_id, upload_id, row_index, force_hide_sender=True
     )
+    create_job(service_id, upload_id)
 
     return render_template(
         "views/check/preview.html",
-        scheduled_for=session["scheduled_for"],
+        scheduled_for=session.get("scheduled_for"),
         **data,
     )
 
 
-@main.route("/services/<uuid:service_id>/start-job/<uuid:upload_id>", methods=["POST"])
+@main.route("/services/<uuid:service_id>/create-job/<uuid:upload_id>", methods=["POST"])
 @user_has_permissions("send_messages", restrict_admin_usage=True)
-def start_job(service_id, upload_id):
+def create_job(service_id, upload_id):
     scheduled_for = session.pop("scheduled_for", None)
     job_api_client.create_job(
         upload_id,
@@ -671,8 +672,12 @@ def start_job(service_id, upload_id):
         scheduled_for=scheduled_for,
     )
 
-    session.pop("sender_id", None)
 
+@main.route("/services/<uuid:service_id>/start-job/<uuid:upload_id>", methods=["POST"])
+@user_has_permissions("send_messages", restrict_admin_usage=True)
+def start_job(service_id, upload_id):
+    job_api_client.start_job(service_id, upload_id)
+    session.pop("sender_id", None)
     return redirect(
         url_for(
             "main.view_job",
@@ -908,36 +913,7 @@ def preview_notification(service_id, template_id):
                 template_id=template_id,
             )
         )
-
-    session["scheduled_for"] = request.form.get("scheduled_for", "")
-
-    return render_template(
-        "views/notifications/preview.html",
-        **_check_notification(
-            service_id, template_id, show_recipient=False, force_hide_sender=True
-        ),
-        scheduled_for=session["scheduled_for"],
-        recipient=recipient,
-    )
-
-
-@main.route(
-    "/services/<uuid:service_id>/template/<uuid:template_id>/notification/check",
-    methods=["POST"],
-)
-@user_has_permissions("send_messages", restrict_admin_usage=True)
-def send_notification(service_id, template_id):
     scheduled_for = session.pop("scheduled_for", "")
-    recipient = get_recipient()
-    if not recipient:
-        return redirect(
-            url_for(
-                ".send_one_off",
-                service_id=service_id,
-                template_id=template_id,
-            )
-        )
-
     keys = []
     values = []
     for k, v in session["placeholders"].items():
@@ -968,10 +944,39 @@ def send_notification(service_id, template_id):
         notification_count=1,
         valid="True",
     )
+    session["recipient"] = recipient
+    session["upload_id"] = upload_id
+    session["scheduled_for"] = request.form.get("scheduled_for", "")
 
-    session.pop("recipient")
-    session.pop("placeholders")
+    return render_template(
+        "views/notifications/preview.html",
+        **_check_notification(
+            service_id, template_id, show_recipient=False, force_hide_sender=True
+        ),
+        upload_id=upload_id,
+        scheduled_for=session["scheduled_for"],
+        recipient=recipient,
+    )
 
+
+@main.route(
+    "/services/<uuid:service_id>/template/<uuid:template_id>/notification/check",
+    methods=["POST"],
+)
+@user_has_permissions("send_messages", restrict_admin_usage=True)
+def send_notification(service_id, template_id):
+    recipient = get_recipient()
+    if not recipient:
+        return redirect(
+            url_for(
+                ".send_one_off",
+                service_id=service_id,
+                template_id=template_id,
+            )
+        )
+
+    upload_id = session.pop("upload_id")
+    job_api_client.start_job(service_id, upload_id)
     # We have to wait for the job to run and create the notification in the database
     time.sleep(0.1)
     notifications = notification_api_client.get_notifications_for_service(
