@@ -4,8 +4,8 @@
     const data = {
         messageStats: {
             totalMessages: 1000,
-            delivered: 800,
-            pending: 100,
+            delivered: 820,
+            pending: 80,
             failed: 100
         },
         dailyUsage: {
@@ -31,9 +31,9 @@
 
     // Update total messages progress bar percentages
     const dailyUsage = data.dailyUsage;
-    const dailyUsageLimit = dailyUsage.dailyUsageLimit;
+    // const dailyUsageLimit = dailyUsage.dailyUsageLimit;
     const yearlyUsage = data.yearlyUsage;
-    const yearlyUsageLimit = yearlyUsage.yearlyUsageLimit;
+    // const yearlyUsageLimit = yearlyUsage.yearlyUsageLimit;
 
     function updateUsageBar(elementId, dailyUsage, dailyUsageLimit, yearlyUsage, yearlyUsageLimit) {
         // Ensure element exists
@@ -51,10 +51,10 @@
     }
 
     // Update usage bars
-    updateUsageBar("dailyUsage-bar", dailyUsage.dailyUsage, dailyUsageLimit);
-    updateUsageBar("dailyUsageRemaining-bar", dailyUsageLimit - dailyUsage.dailyUsage, dailyUsageLimit);
-    updateUsageBar("yearlyUsage-bar", yearlyUsage.yearlyUsage, yearlyUsageLimit);
-    updateUsageBar("yearlyUsageRemaining-bar", yearlyUsageLimit - yearlyUsage.yearlyUsage, yearlyUsageLimit);
+    // updateUsageBar("dailyUsage-bar", dailyUsage.dailyUsage, dailyUsageLimit);
+    // updateUsageBar("dailyUsageRemaining-bar", dailyUsageLimit - dailyUsage.dailyUsage, dailyUsageLimit);
+    // updateUsageBar("yearlyUsage-bar", yearlyUsage.yearlyUsage, yearlyUsageLimit);
+    // updateUsageBar("yearlyUsageRemaining-bar", yearlyUsageLimit - yearlyUsage.yearlyUsage, yearlyUsageLimit);
 
     // Update total messages legend values
     document.getElementById("total-value").innerText = `Total: ${messageStats.totalMessages} messages`;
@@ -63,9 +63,9 @@
     document.getElementById("failed-value").innerText = `Failed: ${messageStats.failed}`;
 
     // Update usage legend values
-    document.getElementById("daily-usage-value").innerText = `Daily usage: ${dailyUsage.dailyUsage}`;
-    document.getElementById("daily-remaining-value").innerText = `Remaining messages: ${dailyUsage.dailyUsageLimit - dailyUsage.dailyUsage}`;
-    document.getElementById("yearly-usage-value").innerText = `Yearly usage: ${yearlyUsage.yearlyUsage}`;
-    document.getElementById("yearly-remaining-value").innerText = `Remaining messages: ${yearlyUsage.yearlyUsageLimit - yearlyUsage.yearlyUsage}`;
+    // document.getElementById("daily-usage-value").innerText = `Daily usage: ${dailyUsage.dailyUsage}`;
+    // document.getElementById("daily-remaining-value").innerText = `Remaining messages: ${dailyUsage.dailyUsageLimit - dailyUsage.dailyUsage}`;
+    // document.getElementById("yearly-usage-value").innerText = `Yearly usage: ${yearlyUsage.yearlyUsage}`;
+    // document.getElementById("yearly-remaining-value").innerText = `Remaining messages: ${yearlyUsage.yearlyUsageLimit - yearlyUsage.yearlyUsage}`;
 
 })(window);

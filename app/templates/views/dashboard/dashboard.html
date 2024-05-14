@@ -18,6 +18,10 @@
 
     {{ ajax_block(partials, updates_url, 'upcoming') }}
 
+    <!-- <div>
+      <canvas id="myChart"></canvas>
+    </div> -->
+
     <h2 class="font-body-xl margin-0">
       SMS Activity
     </h2>
@@ -35,7 +39,7 @@
         </button>
         <div class="legend-value" id="delivered-value"></div>
       </div>
-      <div class="legend-item width-card">
+      <div class="legend-item">
         <button type="button" class="usa-button usa-tooltip legend-color pending" data-position="bottom"
           data-classes="width-full tablet:width-auto"
           title="Pending means that Notify has sent the message, but has not received the delivery status from the carrier. Messages remain in the Pending state until Notify has received the status, typically about five minutes.">
@@ -51,7 +55,7 @@
       </div>
     </div>
 
-    <h2 class="font-body-2xl line-height-sans-2 margin-0">
+    <h2 class="font-body-2xl line-height-sans-2 margin-bottom-0 margin-top-4">
       Messages sent
     </h2>
 
