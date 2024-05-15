@@ -56,6 +56,10 @@ const copy = {
   gtm: () => {
     return src(paths.src + 'js/gtm_head.js')
       .pipe(dest(paths.dist + 'js/'));
+  },
+  chart: () => {
+    return src(paths.src + 'js/chart.js')
+      .pipe(dest(paths.dist + 'js/'));
   }
 };
 
@@ -125,6 +129,7 @@ const javascripts = () => {
     paths.src + 'javascripts/date.js',
     paths.src + 'javascripts/loginAlert.js',
     paths.src + 'javascripts/main.js',
+    paths.src + 'javascripts/show.js',
   ])
     .pipe(plugins.prettyerror())
     .pipe(plugins.babel({
@@ -200,7 +205,8 @@ const defaultTask = parallel(
     ),
     uswds.compile,
     uswds.copyAssets,
-    copy.gtm
+    copy.gtm,
+    copy.chart
   )
 );
 
