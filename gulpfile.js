@@ -125,7 +125,7 @@ const javascripts = () => {
     paths.src + 'javascripts/date.js',
     paths.src + 'javascripts/loginAlert.js',
     paths.src + 'javascripts/main.js',
-    paths.src + 'javascripts/show.js',
+    paths.src + 'javascripts/chartDashboard.js',
   ])
     .pipe(plugins.prettyerror())
     .pipe(plugins.babel({
@@ -201,7 +201,7 @@ const defaultTask = parallel(
     ),
     uswds.compile,
     uswds.copyAssets,
-    copy.gtm,
+    copy.gtm
   )
 );
 
