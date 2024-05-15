@@ -25,6 +25,8 @@
   {% endblock %}
   <script type="text/javascript" src="{{ asset_url('js/gtm_head.js') }}"></script>
   <script type="text/javascript" src="{{ asset_url('js/chart.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/chart.umd.js') }}"></script>
+
 {% endblock %}
 
 {% block pageTitle %}
