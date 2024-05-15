@@ -4,8 +4,8 @@
     const data = {
         messageStats: {
             totalMessages: 1000,
-            delivered: 820,
-            pending: 80,
+            delivered: 520,
+            pending: 280,
             failed: 100
         },
         dailyUsage: {
