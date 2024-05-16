@@ -22,6 +22,13 @@
       Messages sent
     </h2>
 
+    <div id="chartContainer">
+      <h3 class="margin-bottom-1">2024 Total Message Allowance</h3>
+      <canvas id="myChart" height="100"></canvas>
+    </div>
+    <div id="message"></div>
+
+
     {{ ajax_block(partials, updates_url, 'inbox') }}
 
     {{ ajax_block(partials, updates_url, 'totals') }}
