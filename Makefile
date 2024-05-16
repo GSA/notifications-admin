@@ -19,8 +19,9 @@ bootstrap: generate-version-file ## Set up everything to run the app
 	poetry self add poetry-dotenv-plugin
 	poetry lock --no-update
 	poetry install --sync --no-root
-	poetry run playwright install --with-deps
 	poetry run pre-commit install
+	poetry run playwright install
+	poetry run playwright install-deps
 	source $(NVMSH) --no-use && nvm install && npm ci --no-audit
 	source $(NVMSH) && npm run build
 
@@ -82,7 +83,7 @@ dead-code:
 .PHONY: e2e-test
 e2e-test: export NEW_RELIC_ENVIRONMENT=test
 e2e-test: ## Run end-to-end integration tests; note that --browser webkit isn't currently working
-	poetry run pytest -vv --browser chromium  --browser firefox tests/end_to_end
+	poetry run pytest -vv --browser chromium  --browser webkit --browser firefox tests/end_to_end
 
 .PHONY: js-lint
 js-lint: ## Run javascript linting scanners
