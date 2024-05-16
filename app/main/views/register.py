@@ -244,9 +244,11 @@ def get_invited_user_email_address(invited_user_id):
 
 
 def invited_user_accept_invite(invited_user_id):
-    # InvitedUser is an unhashable type and hard to mock in tests
-    # so this convenience method is a workaround for that
     invited_user = InvitedUser.by_id(invited_user_id)
+    if invited_user.status == "expired":
+        current_app.logger.error("User invitation has expired")
+        flash("Your invitation has expired.")
+        abort(401)
     invited_user.accept_invite()
 
 
