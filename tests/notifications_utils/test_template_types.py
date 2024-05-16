@@ -1044,7 +1044,7 @@ def test_letter_preview_renderer_without_mocks(jinja_template):
 @freeze_time("2012-12-12 12:12:12")
 @mock.patch("notifications_utils.template.LetterImageTemplate.jinja_template.render")
 @pytest.mark.parametrize(
-    "page_count, expected_oversized, expected_page_numbers",
+    ("page_count, expected_oversized, expected_page_numbers"),
     [
         (
             1,
@@ -1581,7 +1581,7 @@ def test_sms_fragment_count_accounts_for_unicode_and_welsh_characters(
     ),
 )
 @pytest.mark.parametrize(
-    "msg, expected_sms_fragment_count",
+    ("msg", "expected_sms_fragment_count"),
     [
         # all extended GSM characters
         (
@@ -1647,7 +1647,7 @@ def test_sms_fragment_count_accounts_for_non_latin_characters(
     ],
 )
 @pytest.mark.parametrize(
-    "content, values, prefix, expected_result",
+    ("content", "values", "prefix", "expected_result"),
     [
         ("", {}, None, True),
         ("", {}, "GDS", True),
@@ -1676,7 +1676,7 @@ def test_is_message_empty_sms_templates(
     ],
 )
 @pytest.mark.parametrize(
-    "content, values, expected_result",
+    ("content", "values", "expected_result"),
     [
         ("", {}, True),
         ("((placeholder))", {"placeholder": ""}, True),
@@ -1696,14 +1696,14 @@ def test_is_message_empty_broadcast_templates(
 
 
 @pytest.mark.parametrize(
-    "template_class, template_type",
+    ("template_class", "template_type"),
     (
         (HTMLEmailTemplate, "email"),
         (LetterPrintTemplate, "letter"),
     ),
 )
 @pytest.mark.parametrize(
-    "content, values, expected_result",
+    ("content", "values", "expected_result"),
     [
         ("", {}, True),
         ("((placeholder))", {"placeholder": ""}, True),
@@ -1742,7 +1742,7 @@ def test_is_message_empty_email_and_letter_templates(
     ),
 )
 @pytest.mark.parametrize(
-    "content, values",
+    ("content", "values"),
     [
         ("Some content", {}),
         ("((placeholder)) some content", {"placeholder": ""}),
@@ -1781,7 +1781,7 @@ def test_is_message_empty_email_and_letter_templates_tries_not_to_count_chars(
 
 
 @pytest.mark.parametrize(
-    "template_class, template_type, extra_args, expected_field_calls",
+    ("template_class", "template_type", "extra_args", "expected_field_calls"),
     [
         (
             PlainTextEmailTemplate,
@@ -2054,7 +2054,7 @@ def test_templates_handle_html_and_redacting(
 
 
 @pytest.mark.parametrize(
-    "template_class, template_type, extra_args, expected_remove_whitespace_calls",
+    ("template_class", "template_type", "extra_args", "expected_remove_whitespace_calls"),
     [
         (
             PlainTextEmailTemplate,
@@ -2176,7 +2176,7 @@ def test_templates_remove_whitespace_before_punctuation(
 
 
 @pytest.mark.parametrize(
-    "template_class, template_type, extra_args, expected_calls",
+    ("template_class", "template_type", "extra_args", "expected_calls"),
     [
         (
             PlainTextEmailTemplate,
@@ -2302,7 +2302,7 @@ def test_smart_quotes_removed_from_long_template_in_under_a_second():
 
 
 @pytest.mark.parametrize(
-    "template_instance, expected_placeholders",
+    ("template_instance", "expected_placeholders"),
     [
         (
             SMSMessageTemplate(
@@ -2465,7 +2465,7 @@ def test_email_preview_shows_reply_to_address(extra_args):
 
 
 @pytest.mark.parametrize(
-    "template_values, expected_content",
+    ("template_values", "expected_content"),
     [
         ({}, "<span class='placeholder-no-brackets'>email address</span>"),
         ({"email address": "test@example.com"}, "test@example.com"),
@@ -2483,7 +2483,7 @@ def test_email_preview_shows_recipient_address(
 
 
 @pytest.mark.parametrize(
-    "address, expected",
+    ("address", "expected"),
     [
         (
             {
@@ -2585,7 +2585,7 @@ def test_email_preview_shows_recipient_address(
         ),
     ],
 )
-@pytest.mark.parametrize("template_class", (LetterPreviewTemplate, LetterPrintTemplate))
+@pytest.mark.parametrize("template_class", [LetterPreviewTemplate, LetterPrintTemplate])
 def test_letter_address_format(template_class, address, expected):
     template = BeautifulSoup(
         str(
@@ -2601,7 +2601,7 @@ def test_letter_address_format(template_class, address, expected):
 
 @freeze_time("2001-01-01 12:00:00.000000")
 @pytest.mark.parametrize(
-    "markdown, expected",
+    ("markdown", "expected"),
     [
         (
             (
@@ -2691,11 +2691,11 @@ def test_message_is_not_too_long_ignoring_prefix(template_class):
 
 
 @pytest.mark.parametrize(
-    "extra_characters, expected_too_long",
-    (
+    ("extra_characters", "expected_too_long"),
+    [
         ("cc", True),  # content length is 919 characters (more than limit of 918)
         ("c", False),  # content length is 918 characters (not more than limit of 918)
-    ),
+    ],
 )
 @pytest.mark.parametrize(
     "template_class",
@@ -2716,7 +2716,7 @@ def test_broadcast_message_too_long(
 
 
 @pytest.mark.parametrize(
-    "template_class, template_type, kwargs",
+    ("template_class", "template_type", "kwargs"),
     [
         (EmailPreviewTemplate, "email", {}),
         (HTMLEmailTemplate, "email", {}),
@@ -2736,7 +2736,7 @@ def test_message_too_long_limit_bigger_or_nonexistent_for_non_sms_templates(
 
 
 @pytest.mark.parametrize(
-    "template_class, template_type, kwargs",
+    ("template_class", "template_type", "kwargs"),
     [
         (EmailPreviewTemplate, "email", {}),
         (HTMLEmailTemplate, "email", {}),
@@ -2755,7 +2755,7 @@ def test_content_size_in_bytes_for_email_messages(
 
 
 @pytest.mark.parametrize(
-    "template_class, template_type, kwargs",
+    ("template_class", "template_type", "kwargs"),
     [
         (EmailPreviewTemplate, "email", {}),
         (HTMLEmailTemplate, "email", {}),
@@ -2774,7 +2774,7 @@ def test_message_too_long_for_a_too_big_email_message(
 
 
 @pytest.mark.parametrize(
-    "template_class, template_type, kwargs",
+    ("template_class", "template_type", "kwargs"),
     [
         (EmailPreviewTemplate, "email", {}),
         (HTMLEmailTemplate, "email", {}),
@@ -2792,7 +2792,7 @@ def test_message_too_long_for_an_email_message_within_limits(
 
 
 @pytest.mark.parametrize(
-    ("content," "expected_preview_markup,"),
+    ("content", "expected_preview_markup"),
     [
         (
             "a\n\n\nb",
@@ -2847,7 +2847,7 @@ def test_multiple_newlines_in_letters(
     ],
 )
 @pytest.mark.parametrize(
-    "template_class, template_type, extra_args",
+    ("template_class", "template_type", "extra_args"),
     [
         (PlainTextEmailTemplate, "email", {}),
         (HTMLEmailTemplate, "email", {}),
@@ -2886,7 +2886,7 @@ def test_whitespace_in_subject_placeholders(template_class):
 
 
 @pytest.mark.parametrize(
-    "template_class, expected_output",
+    ("template_class", "expected_output"),
     [
         (
             PlainTextEmailTemplate,
@@ -3041,8 +3041,8 @@ def test_plain_text_email_whitespace():
 
 
 @pytest.mark.parametrize(
-    "renderer, template_type, expected_content",
-    (
+    ("renderer", "template_type", "expected_content"),
+    [
         (
             PlainTextEmailTemplate,
             "email",
@@ -3071,7 +3071,7 @@ def test_plain_text_email_whitespace():
             "letter",
             ("<h2>Heading link: <strong>example.com</strong></h2>"),
         ),
-    ),
+    ],
 )
 def test_heading_only_template_renders(renderer, template_type, expected_content):
     assert expected_content in str(
@@ -3093,7 +3093,7 @@ def test_heading_only_template_renders(renderer, template_type, expected_content
     ],
 )
 @pytest.mark.parametrize(
-    "filename, expected_html_class",
+    ("filename", "expected_html_class"),
     [
         ("example.png", 'class="png"'),
         ("example.svg", 'class="svg"'),
@@ -3127,7 +3127,7 @@ def test_image_not_present_if_no_logo(template_class):
 
 @pytest.mark.parametrize(
     "content",
-    (
+    [
         (
             "The     quick brown fox.\n"
             "\n\n\n\n"
@@ -3140,11 +3140,11 @@ def test_image_not_present_if_no_logo(template_class):
             "          Jumps over the lazy dog   .  \n"
             "Single linebreak above. \n  \n \n"
         ),
-    ),
+    ],
 )
 @pytest.mark.parametrize(
-    "template_class, expected",
-    (
+    ("template_class", "expected"),
+    [
         (
             SMSBodyPreviewTemplate,
             (
@@ -3192,7 +3192,7 @@ def test_image_not_present_if_no_logo(template_class):
                 "</div>"
             ),
         ),
-    ),
+    ],
 )
 def test_text_messages_collapse_consecutive_whitespace(
     template_class,
@@ -3252,14 +3252,14 @@ def test_broadcast_message_from_event():
 
 @pytest.mark.parametrize(
     "template_class",
-    (
+    [
         BroadcastMessageTemplate,
         BroadcastPreviewTemplate,
-    ),
+    ],
 )
 @pytest.mark.parametrize(
-    "content, expected_non_gsm, expected_max, expected_too_long",
-    (
+    ("content", "expected_non_gsm", "expected_max", "expected_too_long"),
+    [
         (
             "a" * 1395,
             set(),
@@ -3304,7 +3304,7 @@ def test_broadcast_message_from_event():
             615,
             False,
         ),
-    ),
+    ],
 )
 def test_broadcast_message_content_count(
     content, expected_non_gsm, expected_max, expected_too_long, template_class
@@ -3322,10 +3322,12 @@ def test_broadcast_message_content_count(
 
 @pytest.mark.parametrize(
     "template_class",
-    (
-        BroadcastMessageTemplate,
-        BroadcastPreviewTemplate,
-    ),
+    [
+        (
+            BroadcastMessageTemplate,
+            BroadcastPreviewTemplate,
+        ),
+    ],
 )
 @pytest.mark.parametrize("content", ("^{}\\[~]|€"))
 def test_broadcast_message_double_counts_extended_gsm(
@@ -3344,10 +3346,12 @@ def test_broadcast_message_double_counts_extended_gsm(
 
 @pytest.mark.parametrize(
     "template_class",
-    (
-        BroadcastMessageTemplate,
-        BroadcastPreviewTemplate,
-    ),
+    [
+        (
+            BroadcastMessageTemplate,
+            BroadcastPreviewTemplate,
+        ),
+    ],
 )
 @pytest.mark.parametrize(
     "content", ("ÁÍÓÚẂÝ" "ËÏẄŸ" "ÂÊÎÔÛŴŶ" "ÀÈÌÒẀÙỲ" "áíóúẃý" "ëïẅÿ" "âêîôûŵŷ" "ẁỳ")
@@ -3368,10 +3372,12 @@ def test_broadcast_message_single_counts_diacritics_in_extended_gsm(
 
 @pytest.mark.parametrize(
     "template_class",
-    (
-        BroadcastMessageTemplate,
-        BroadcastPreviewTemplate,
-    ),
+    [
+        (
+            BroadcastMessageTemplate,
+            BroadcastPreviewTemplate,
+        ),
+    ],
 )
 @pytest.mark.parametrize("content", ("ÄÖÜ" "É" "äöü" "é" "àèìòù"))
 def test_broadcast_message_single_counts_diacritics_in_gsm(
