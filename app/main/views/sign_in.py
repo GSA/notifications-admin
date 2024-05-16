@@ -6,7 +6,6 @@ import jwt
 import requests
 from flask import Response, current_app, redirect, render_template, request, url_for
 from flask_login import current_user
-from notifications_utils.url_safe_token import generate_token
 
 from app import login_manager, user_api_client
 from app.main import main
@@ -16,6 +15,7 @@ from app.models.user import User
 from app.utils import hide_from_search_engines
 from app.utils.login import is_safe_redirect_url
 from app.utils.time import is_less_than_days_ago
+from notifications_utils.url_safe_token import generate_token
 
 
 def _reformat_keystring(orig):
