@@ -2,9 +2,9 @@ import json
 from os import getenv
 
 import newrelic.agent
-from notifications_utils import DAILY_MESSAGE_LIMIT
 
 from app.cloudfoundry_config import cloud_config
+from notifications_utils import DAILY_MESSAGE_LIMIT
 
 
 class Config(object):

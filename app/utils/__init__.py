@@ -3,10 +3,11 @@ from itertools import chain
 
 from flask import abort, g, make_response, request
 from flask_login import current_user
-from notifications_utils.field import Field
 from ordered_set import OrderedSet
 from werkzeug.datastructures import MultiDict
 from werkzeug.routing import RequestRedirect
+
+from notifications_utils.field import Field
 
 SENDING_STATUSES = ["created", "pending", "sending"]
 DELIVERED_STATUSES = ["delivered", "sent"]
