@@ -140,9 +140,6 @@ class User(JSONModel, UserMixin):
             set_by_id=set_by_id,
         )
 
-    def logged_in_elsewhere(self):
-        return session.get("current_session_id") != self.current_session_id
-
     def activate(self):
         if self.is_pending:
             user_data = user_api_client.activate_user(self.id)
@@ -196,7 +193,7 @@ class User(JSONModel, UserMixin):
 
     @property
     def is_authenticated(self):
-        return not self.logged_in_elsewhere() and super(User, self).is_authenticated
+        return super(User, self).is_authenticated
 
     @property
     def platform_admin(self):
@@ -674,10 +671,6 @@ class InvitedOrgUser(JSONModel):
 
 
 class AnonymousUser(AnonymousUserMixin):
-    # set the anonymous user so that if a new browser hits us we don't error http://stackoverflow.com/a/19275188
-
-    def logged_in_elsewhere(self):
-        return False
 
     @property
     def default_organization(self):
