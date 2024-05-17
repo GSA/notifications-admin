@@ -571,7 +571,7 @@ def test_autolink_urls_applies_correct_attributes(extra_kwargs, expected_html):
 
 
 @pytest.mark.parametrize(
-    "content", ("without link", "with link to https://example.com")
+    "content", ["without link", "with link to https://example.com"]
 )
 def test_autolink_urls_returns_markup(content):
     assert isinstance(autolink_urls(content), Markup)

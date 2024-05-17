@@ -1,4 +1,5 @@
 import urllib
+
 import pytest
 from itsdangerous import BadSignature, SignatureExpired
 

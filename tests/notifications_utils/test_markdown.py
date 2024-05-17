@@ -319,7 +319,6 @@ def test_ordered_list(markdown_function, expected):
         ("*one\n" "*two\n" "*three\n"),  # no space
         ("* one\n" "* two\n" "* three\n"),  # single space
         ("*  one\n" "*  two\n" "*  three\n"),  # two spaces
-        ("*  one\n" "*  two\n" "*  three\n"),  # tab
         ("- one\n" "- two\n" "- three\n"),  # dash as bullet
         pytest.param(
             ("+ one\n" "+ two\n" "+ three\n"),  # plus as bullet

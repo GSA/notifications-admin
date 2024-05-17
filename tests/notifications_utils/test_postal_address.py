@@ -716,7 +716,7 @@ def test_valid_with_international_parameter(address, international, expected_val
 
 @pytest.mark.parametrize(
     "address",
-    (
+    [
         """
         Too short, valid postcode
         SW1A 1AA
@@ -745,7 +745,7 @@ def test_valid_with_international_parameter(address, international, expected_val
         7
         Bhutan
     """,
-    ),
+    ],
 )
 def test_valid_last_line_too_short_too_long(address):
     postal_address = PostalAddress(address, allow_international_letters=True)

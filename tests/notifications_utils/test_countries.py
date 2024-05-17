@@ -34,7 +34,7 @@ def test_constants():
     assert Postage.UK == "united-kingdom"
 
 
-@pytest.mark.parametrize("synonym, canonical", ADDITIONAL_SYNONYMS)
+@pytest.mark.parametrize(("synonym", "canonical"), ADDITIONAL_SYNONYMS)
 def test_hand_crafted_synonyms_map_to_canonical_countries(synonym, canonical):
     exceptions_to_canonical_countries = [
         "Easter Island",
@@ -55,7 +55,7 @@ def test_hand_crafted_synonyms_map_to_canonical_countries(synonym, canonical):
     assert Country(synonym).canonical_name == canonical
 
 
-@pytest.mark.parametrize("welsh_name, canonical", WELSH_NAMES)
+@pytest.mark.parametrize(("welsh_name", "canonical"), WELSH_NAMES)
 def test_welsh_names_map_to_canonical_countries(welsh_name, canonical):
     assert Country(canonical).canonical_name == canonical
     assert Country(welsh_name).canonical_name == canonical

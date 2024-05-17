@@ -3350,7 +3350,7 @@ def test_broadcast_message_content_count(
         ),
     ],
 )
-@pytest.mark.parametrize("content", ("^{}\\[~]|€"))
+@pytest.mark.parametrize("content", ["^{}\\[~]|€"])
 def test_broadcast_message_double_counts_extended_gsm(
     content,
     template_class,
@@ -3375,7 +3375,7 @@ def test_broadcast_message_double_counts_extended_gsm(
     ],
 )
 @pytest.mark.parametrize(
-    "content", ("ÁÍÓÚẂÝ" "ËÏẄŸ" "ÂÊÎÔÛŴŶ" "ÀÈÌÒẀÙỲ" "áíóúẃý" "ëïẅÿ" "âêîôûŵŷ" "ẁỳ")
+    "content", ["ÁÍÓÚẂÝ" "ËÏẄŸ" "ÂÊÎÔÛŴŶ" "ÀÈÌÒẀÙỲ" "áíóúẃý" "ëïẅÿ" "âêîôûŵŷ" "ẁỳ"]
 )
 def test_broadcast_message_single_counts_diacritics_in_extended_gsm(
     content,
@@ -3394,10 +3394,8 @@ def test_broadcast_message_single_counts_diacritics_in_extended_gsm(
 @pytest.mark.parametrize(
     "template_class",
     [
-        (
-            BroadcastMessageTemplate,
-            BroadcastPreviewTemplate,
-        ),
+        BroadcastMessageTemplate,
+        BroadcastPreviewTemplate,
     ],
 )
 @pytest.mark.parametrize("content", ("ÄÖÜ" "É" "äöü" "é" "àèìòù"))

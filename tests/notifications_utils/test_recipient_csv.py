@@ -44,7 +44,7 @@ def _index_rows(rows):
 
 @pytest.mark.parametrize(
     ("template_type", "expected"),
-    (
+    [
         ("email", ["email address"]),
         ("sms", ["phone number"]),
         (
@@ -60,7 +60,7 @@ def _index_rows(rows):
                 "address line 7",
             ],
         ),
-    ),
+    ],
 )
 def test_recipient_column_headers(template_type, expected):
     recipients = RecipientCSV("", template=_sample_template(template_type))
@@ -275,7 +275,7 @@ def test_get_rows_only_iterates_over_file_once(mocker):
 
 
 @pytest.mark.parametrize(
-    ("file_contents", "template_type,expected"),
+    ("file_contents", "template_type", "expected"),
     [
         (
             """
@@ -1111,7 +1111,7 @@ def test_recipients_can_be_accessed_by_index(index, expected_row):
         assert recipients[index][key].data == value
 
 
-@pytest.mark.parametrize("international_sms", (True, False))
+@pytest.mark.parametrize("international_sms", [True, False])
 def test_multiple_sms_recipient_columns(international_sms):
     recipients = RecipientCSV(
         """

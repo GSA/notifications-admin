@@ -89,27 +89,27 @@ def test_should_raise_exception_if_raise_set_to_true(
 ):
     with pytest.raises(KeyError) as e:
         failing_redis_client.get("test", raise_exception=True)
-    assert str(e.value) == "get failed"
+    assert str(e.value) == "'get failed'"
 
     with pytest.raises(KeyError) as e:
         failing_redis_client.set("test", "test", raise_exception=True)
-    assert str(e.value) == "set failed"
+    assert str(e.value) == "'set failed'"
 
     with pytest.raises(KeyError) as e:
         failing_redis_client.incr("test", raise_exception=True)
-    assert str(e.value) == "incr failed"
+    assert str(e.value) == "'incr failed'"
 
     with pytest.raises(KeyError) as e:
         failing_redis_client.exceeded_rate_limit("test", 100, 200, raise_exception=True)
-    assert str(e.value) == "pipeline failed"
+    assert str(e.value) == "'pipeline failed'"
 
     with pytest.raises(KeyError) as e:
         failing_redis_client.delete("test", raise_exception=True)
-    assert str(e.value) == "delete failed"
+    assert str(e.value) == "'delete failed'"
 
     with pytest.raises(KeyError) as e:
         failing_redis_client.delete_by_pattern("pattern", raise_exception=True)
-    assert str(e.value) == "delete by pattern failed"
+    assert str(e.value) == "'delete by pattern failed'"
 
 
 def test_should_not_call_if_not_enabled(mocked_redis_client, delete_mock):
@@ -200,7 +200,7 @@ def test_delete_multi(mocked_redis_client):
 
 
 @pytest.mark.parametrize(
-    "input,output",
+    ("input", "output"),
     [
         (b"asdf", b"asdf"),
         ("asdf", "asdf"),
