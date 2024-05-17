@@ -74,8 +74,8 @@ def test_crowdsourced_test_data():
 
 
 @pytest.mark.parametrize(
-    "search, expected",
-    (
+    ("search", "expected"),
+    [
         ("u.s.a", "United States"),
         ("america", "United States"),
         ("United States America", "United States"),
@@ -120,7 +120,7 @@ def test_crowdsourced_test_data():
         ("Illes Balears", "Balearic Islands"),
         ("Corsica", "Corsica"),
         ("Corse", "Corsica"),
-    ),
+    ],
 )
 def test_hand_crafted_synonyms(search, expected):
     assert Country(search).canonical_name == expected
@@ -135,11 +135,11 @@ def test_auto_checking_for_country_starting_with_the():
 
 
 @pytest.mark.parametrize(
-    "search, expected_error_message",
-    (
+    ("search", "expected_error_message"),
+    [
         ("Qumran", "Not a known country or territory (Qumran)"),
         ("Kumrahn", "Not a known country or territory (Kumrahn)"),
-    ),
+    ],
 )
 def test_non_existant_countries(search, expected_error_message):
     with pytest.raises(KeyError) as error:
@@ -149,8 +149,8 @@ def test_non_existant_countries(search, expected_error_message):
 
 
 @pytest.mark.parametrize(
-    "search, expected",
-    (
+    ("search", "expected"),
+    [
         ("u.s.a", "rest-of-world"),
         ("Rep of Ireland", "europe"),
         ("deutschland", "europe"),
@@ -159,7 +159,7 @@ def test_non_existant_countries(search, expected_error_message):
         ("Guernsey", "united-kingdom"),
         ("isle-of-man", "united-kingdom"),
         ("ESPAÑA", "europe"),
-    ),
+    ],
 )
 def test_get_postage(search, expected):
     assert Country(search).postage_zone == expected
