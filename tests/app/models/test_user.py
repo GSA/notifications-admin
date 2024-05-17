@@ -6,7 +6,6 @@ from tests.conftest import SERVICE_ONE_ID, USER_ONE_ID
 
 def test_anonymous_user(notify_admin):
     assert AnonymousUser().is_authenticated is False
-    assert AnonymousUser().logged_in_elsewhere() is False
     assert AnonymousUser().default_organization.name is None
     assert AnonymousUser().default_organization.domains == []
     assert AnonymousUser().default_organization.organization_type is None
