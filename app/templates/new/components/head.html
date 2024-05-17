@@ -31,6 +31,7 @@
     <meta property="og:image" content="/static/images/notify-og-image.png">
     {# google #}
     <script type="text/javascript" src="{{ asset_url('js/gtm_head.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/chart.umd.js') }}"></script>
     <meta name="google-site-verification" content="niWnSqImOWz6mVQTYqNb5tFK8HaKSB4b3ED4Z9gtUQ0" />
     {% if g.hide_from_search_engines %}
     <meta name="robots" content="noindex" />
