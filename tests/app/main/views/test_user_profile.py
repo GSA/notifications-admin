@@ -3,8 +3,8 @@ import uuid
 
 import pytest
 from flask import url_for
-from notifications_utils.url_safe_token import generate_token
 
+from notifications_utils.url_safe_token import generate_token
 from tests.conftest import (
     create_api_user_active,
     create_user,
