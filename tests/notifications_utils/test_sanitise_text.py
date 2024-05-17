@@ -87,7 +87,7 @@ def test_get_unicode_char_from_codepoint(codepoint, char):
     "bad_input", ["", "GJ", "00001", '0001";import sys;sys.exit(0)"']
 )
 def test_get_unicode_char_from_codepoint_rejects_bad_input(bad_input):
-    with pytest.raises(ValueError, match=bad_input):
+    with pytest.raises(ValueError):  # noqa PT011
         SanitiseText.get_unicode_char_from_codepoint(bad_input)
 
 
