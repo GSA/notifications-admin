@@ -1,7 +1,6 @@
 import uuid
 
 from flask import current_app
-from notifications_utils.s3 import s3upload as utils_s3upload
 
 from app.s3_client import (
     get_s3_contents,
@@ -9,6 +8,7 @@ from app.s3_client import (
     get_s3_object,
     set_s3_metadata,
 )
+from notifications_utils.s3 import s3upload as utils_s3upload
 
 FILE_LOCATION_STRUCTURE = "service-{}-notify/{}.csv"
 

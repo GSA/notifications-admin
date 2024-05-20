@@ -9,7 +9,7 @@ applications:
     health-check-type: port
     health-check-invocation-timeout: 10
     routes:
-      - route: ((public_admin_route))
+      - route: ((cloud_dot_gov_route))
 
     services:
       - notify-admin-redis-((env))

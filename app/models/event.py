@@ -1,10 +1,9 @@
 from abc import ABC, abstractmethod
 
-from notifications_utils.formatters import formatted_list
-
 from app.formatters import format_thousands
 from app.models import ModelList
 from app.notify_client.service_api_client import service_api_client
+from notifications_utils.formatters import formatted_list
 
 
 class Event(ABC):
