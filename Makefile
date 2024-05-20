@@ -77,7 +77,7 @@ py-test: ## Run python unit tests
 
 .PHONY: dead-code
 dead-code:
-	poetry run vulture ./app --min-confidence=100
+	poetry run vulture ./app ./notifications_utils --min-confidence=60
 
 .PHONY: e2e-test
 e2e-test: export NEW_RELIC_ENVIRONMENT=test
