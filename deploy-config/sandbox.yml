@@ -2,6 +2,7 @@ env: sandbox
 instances: 1
 memory: 1G
 public_admin_route: notify-sandbox.app.cloud.gov
+cloud_dot_gov_route: notify-sandbox.app.cloud.gov
 redis_enabled: 1
 ADMIN_CLIENT_USERNAME: notify-admin
 ADMIN_CLIENT_SECRET: sandbox-notify-secret-key

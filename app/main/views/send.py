@@ -7,9 +7,6 @@ from flask import abort, flash, redirect, render_template, request, session, url
 from flask_login import current_user
 from markupsafe import Markup
 from notifications_python_client.errors import HTTPError
-from notifications_utils.insensitive_dict import InsensitiveDict
-from notifications_utils.recipients import RecipientCSV, first_column_headings
-from notifications_utils.sanitise_text import SanitiseASCII
 from xlrd.biffh import XLRDError
 from xlrd.xldate import XLDateError
 
@@ -39,6 +36,9 @@ from app.utils.csv import Spreadsheet, get_errors_for_csv
 from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
 from notifications_utils import SMS_CHAR_COUNT_LIMIT
+from notifications_utils.insensitive_dict import InsensitiveDict
+from notifications_utils.recipients import RecipientCSV, first_column_headings
+from notifications_utils.sanitise_text import SanitiseASCII
 
 
 def get_example_csv_fields(column_headers, use_example_as_example, submitted_fields):

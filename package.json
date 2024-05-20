@@ -24,6 +24,7 @@
   "dependencies": {
     "@uswds/uswds": "^3.4.1",
     "cbor-js": "0.1.0",
+    "chart.js": "^4.4.2",
     "govuk_frontend_toolkit": "8.1.0",
     "govuk-frontend": "2.13.0",
     "hogan": "1.0.2",

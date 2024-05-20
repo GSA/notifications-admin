@@ -3,7 +3,6 @@ import json
 from flask import current_app, redirect, render_template, request, session, url_for
 from flask_login import current_user
 from itsdangerous import SignatureExpired
-from notifications_utils.url_safe_token import check_token
 
 from app import user_api_client
 from app.main import main
@@ -15,6 +14,7 @@ from app.utils.login import (
     redirect_to_sign_in,
     redirect_when_logged_in,
 )
+from notifications_utils.url_safe_token import check_token
 
 
 @main.route("/two-factor-email-sent", methods=["GET"])

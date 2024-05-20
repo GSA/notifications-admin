@@ -15,7 +15,6 @@ from flask import (
 )
 from flask_login import current_user
 from markupsafe import Markup
-from notifications_utils.template import EmailPreviewTemplate, SMSBodyPreviewTemplate
 
 from app import (
     current_service,
@@ -35,6 +34,7 @@ from app.utils.pagination import (
     get_page_from_request,
 )
 from app.utils.user import user_has_permissions
+from notifications_utils.template import EmailPreviewTemplate, SMSBodyPreviewTemplate
 
 
 @main.route("/services/<uuid:service_id>/jobs")
