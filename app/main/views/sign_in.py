@@ -25,6 +25,7 @@ from app.models.user import User
 from app.utils import hide_from_search_engines
 from app.utils.login import is_safe_redirect_url
 from app.utils.time import is_less_than_days_ago
+from app.utils.user import is_gov_user
 
 
 def _reformat_keystring(orig):
@@ -97,7 +98,12 @@ def _do_login_dot_gov():
         try:
             access_token = _get_access_token(code, state)
             user_email, user_uuid = _get_user_email_and_uuid(access_token)
-            check_for_gov_email_address(user_email)
+            if not is_gov_user(user_email):
+                current_app.logger.error(
+                    "invited user has a non-government email address."
+                )
+                flash("You must use a government email address.")
+                abort(403)
             redirect_url = request.args.get("next")
             user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
 
@@ -181,22 +187,3 @@ def sign_in():
 @login_manager.unauthorized_handler
 def sign_in_again():
     return redirect(url_for("main.sign_in", next=request.path))
-
-
-def check_for_gov_email_address(user_email):
-    # We could try to check that it is a government email at the time the invite is
-    # sent, but due to the way login.gov allows multiple emails, it would not be effective.
-    # We track the login.gov user by their uuid, so if they have a login.gov account
-    # with a .gov email address and a .com email address, the .com address will work without
-    # having a check here.
-    if (
-        user_email.lower().endswith(".gov")
-        or user_email.lower().endswith(".mil")
-        or user_email.lower().endswith(".si.edu")
-    ):
-        # everything is good, proceed
-        pass
-    else:
-        current_app.logger.warning("invited user has a non-government email address.")
-        flash("You must use a government email address.")
-        abort(403)

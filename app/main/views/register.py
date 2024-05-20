@@ -26,6 +26,7 @@ from app.main.views import sign_in
 from app.main.views.verify import activate_user
 from app.models.user import InvitedOrgUser, InvitedUser, User
 from app.utils import hide_from_search_engines, hilite
+from app.utils.user import is_gov_user
 
 
 @main.route("/register", methods=["GET", "POST"])
@@ -146,23 +147,8 @@ def check_invited_user_email_address_matches_expected(
         debug_msg("invited user email did not match expected email, abort(403)")
         flash("You cannot accept an invite for another person.")
         abort(403)
-    check_for_gov_email_address(user_email)
 
-
-def check_for_gov_email_address(user_email):
-    # We could try to check that it is a government email at the time the invite is
-    # sent, but due to the way login.gov allows multiple emails, it would not be effective.
-    # We track the login.gov user by their uuid, so if they have a login.gov account
-    # with a .gov email address and a .com email address, the .com address will work without
-    # having a check here.
-    if (
-        user_email.lower().endswith(".gov")
-        or user_email.lower().endswith(".mil")
-        or user_email.lower().endswith(".si.edu")
-    ):
-        # everything is good, proceed
-        pass
-    else:
+    if not is_gov_user(user_email):
         debug_msg("invited user has a non-government email address.")
         flash("You must use a government email address.")
         abort(403)

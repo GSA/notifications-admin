@@ -2,9 +2,9 @@ import json
 from os import getenv
 
 import newrelic.agent
-from notifications_utils import DAILY_MESSAGE_LIMIT
 
 from app.cloudfoundry_config import cloud_config
+from notifications_utils import DAILY_MESSAGE_LIMIT
 
 
 class Config(object):
@@ -38,7 +38,7 @@ class Config(object):
     NR_MONITOR_ON = settings and settings.monitor_mode
     COMMIT_HASH = getenv("COMMIT_HASH", "--------")[0:7]
 
-    GOVERNMENT_EMAIL_DOMAIN_NAMES = ["gov"]
+    GOVERNMENT_EMAIL_DOMAIN_NAMES = ["gov", "mil", "is.edu"]
 
     # Logging
     NOTIFY_LOG_LEVEL = getenv("NOTIFY_LOG_LEVEL", "INFO")
