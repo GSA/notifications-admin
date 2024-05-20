@@ -60,6 +60,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "count_content_length",
             "create_and_send_messages",
             "create_api_key",
+            "create_job",
             "data_retention",
             "delete_service_template",
             "delete_template_folder",

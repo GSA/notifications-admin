@@ -100,7 +100,7 @@ class NotificationApiClient(NotifyAdminAPIClient):
         )["count"]
 
     def get_total_notification_message_parts_by_job_id(self, job_id):
-        return self.get(url="/notifications/{}".format(job_id))
+        return self.get(url="/notifications/{}/message_parts".format(job_id))
 
 
 notification_api_client = NotificationApiClient()

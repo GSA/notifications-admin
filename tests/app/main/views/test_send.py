@@ -937,6 +937,7 @@ def test_upload_valid_csv_shows_preview_and_table(
     mock_get_service_statistics,
     mock_get_job_doesnt_exist,
     mock_get_jobs,
+    mock_create_job,
     mock_s3_get_metadata,
     mock_s3_set_metadata,
     fake_uuid,
@@ -1993,7 +1994,7 @@ def test_preview_button_is_correctly_labelled(
 @pytest.mark.parametrize("when", ["", "2016-08-25T13:04:21.767198"])
 def test_create_job_should_call_api(
     client_request,
-    mock_create_job,
+    mock_start_job,
     mock_get_job,
     mock_get_notifications,
     mock_get_service_template,
@@ -2032,11 +2033,7 @@ def test_create_job_should_call_api(
 
     assert "Message status" in page.text
 
-    mock_create_job.assert_called_with(
-        job_id,
-        SERVICE_ONE_ID,
-        scheduled_for=when,
-    )
+    mock_start_job.assert_called_once()
 
 
 @pytest.mark.parametrize(
@@ -2092,11 +2089,13 @@ def test_route_permissions_send_check_notifications(
     response_code,
     method,
     mock_create_job,
+    mock_start_job,
     mock_s3_upload,
 ):
     with client_request.session_transaction() as session:
         session["recipient"] = "2028675301"
         session["placeholders"] = {"name": "a"}
+        session["upload_id"] = fake_uuid
 
     mocker.patch("app.main.views.send.check_messages")
     mocker.patch(
@@ -2606,17 +2605,22 @@ def test_preview_notification_shows_preview(
     fake_uuid,
     mock_get_service_template,
     when,
+    mocker,
+    mock_create_job,
 ):
     with client_request.session_transaction() as session:
         session["recipient"] = "15555555555"
         session["placeholders"] = {}
+        session["upload_id"] = fake_uuid
 
+    mocker.patch("app.main.views.send.check_messages", return_value="")
     page = client_request.post(
         "main.preview_notification",
         service_id=service_one["id"],
         template_id=fake_uuid,
         _expected_status=200,
     )
+
     assert page.h1.text.strip() == "Preview"
     assert (page.find_all("a", {"class": "usa-back-link"})[0]["href"]) == url_for(
         "main.check_notification",
@@ -2661,25 +2665,24 @@ def test_send_notification_submits_data(
     placeholders,
     expected_personalisation,
     mocker,
-    mock_create_job,
+    mock_start_job,
     mock_s3_upload,
 ):
     with client_request.session_transaction() as session:
         session["recipient"] = recipient
         session["placeholders"] = placeholders
+        session["upload_id"] = fake_uuid
 
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
         return_value=FAKE_ONE_OFF_NOTIFICATION,
     )
 
-    mocker.patch("app.main.views.send.check_messages", return_value="")
-
     client_request.post(
         "main.send_notification", service_id=SERVICE_ONE_ID, template_id=fake_uuid
     )
 
-    mock_create_job.assert_called_once()
+    mock_start_job.assert_called_once()
 
 
 def test_send_notification_clears_session(
@@ -2689,12 +2692,13 @@ def test_send_notification_clears_session(
     mock_send_notification,
     mock_get_service_template,
     mocker,
-    mock_create_job,
+    mock_start_job,
     mock_s3_upload,
 ):
     with client_request.session_transaction() as session:
         session["recipient"] = "2028675301"
         session["placeholders"] = {"a": "b"}
+        session["upload_id"] = fake_uuid
 
     mocker.patch("app.main.views.send.check_messages")
     mocker.patch(
@@ -2709,6 +2713,7 @@ def test_send_notification_clears_session(
     with client_request.session_transaction() as session:
         assert "recipient" not in session
         assert "placeholders" not in session
+        assert "upload_id" not in session
 
 
 @pytest.mark.parametrize(
@@ -2751,12 +2756,13 @@ def test_send_notification_redirects_to_view_page(
     extra_args,
     extra_redirect_args,
     mocker,
-    mock_create_job,
+    mock_start_job,
     mock_s3_upload,
 ):
     with client_request.session_transaction() as session:
         session["recipient"] = "2028675301"
         session["placeholders"] = {"a": "b"}
+        session["upload_id"] = fake_uuid
 
     mocker.patch("app.main.views.send.check_messages")
 
@@ -2808,7 +2814,7 @@ def test_send_notification_shows_error_if_400(
     fake_uuid,
     mocker,
     mock_get_service_template_with_placeholders,
-    mock_create_job,
+    mock_start_job,
     exception_msg,
     expected_h1,
     expected_err_details,
@@ -2833,6 +2839,7 @@ def test_send_notification_shows_error_if_400(
     with client_request.session_transaction() as session:
         session["recipient"] = "2028675301"
         session["placeholders"] = {"name": "a" * 900}
+        session["upload_id"] = fake_uuid
 
     # This now redirects to the jobs results page
     page = client_request.post(
@@ -2850,7 +2857,7 @@ def test_send_notification_shows_email_error_in_trial_mode(
     fake_uuid,
     mocker,
     mock_get_service_email_template,
-    mock_create_job,
+    mock_start_job,
     mock_s3_upload,
 ):
     class MockHTTPError(HTTPError):
@@ -2870,6 +2877,7 @@ def test_send_notification_shows_email_error_in_trial_mode(
     with client_request.session_transaction() as session:
         session["recipient"] = "test@example.com"
         session["placeholders"] = {"date": "foo", "thing": "bar"}
+        session["upload_id"] = fake_uuid
 
     # Calling this means we successful ran a job so we will be redirect to the jobs page
     client_request.post(

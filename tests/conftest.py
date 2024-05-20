@@ -1417,6 +1417,14 @@ def mock_create_job(mocker, api_user_active):
 
 
 @pytest.fixture()
+def mock_start_job(mocker, api_user_active):
+    def _start(service_id, fake_uuid):
+        return {}, 201
+
+    return mocker.patch("app.job_api_client.start_job", side_effect=_start)
+
+
+@pytest.fixture()
 def mock_get_job(mocker, api_user_active):
     def _get_job(service_id, job_id):
         return {"data": job_json(service_id, api_user_active, job_id=job_id)}

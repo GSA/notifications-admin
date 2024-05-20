@@ -1005,7 +1005,8 @@ def send_notification(service_id, template_id):
                 job_id=upload_id,
             )
         )
-
+    session.pop("recipient")
+    session.pop("placeholders")
     return redirect(
         url_for(
             ".view_job",
