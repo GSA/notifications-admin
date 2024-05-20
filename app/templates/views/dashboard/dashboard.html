@@ -22,6 +22,9 @@
       Messages sent
     </h2>
 
+    <input id="message" autocomplete="off"><button id="sendButton">Send</button>
+    <ul id="messages"></ul>
+
     {{ ajax_block(partials, updates_url, 'inbox') }}
 
     {{ ajax_block(partials, updates_url, 'totals') }}

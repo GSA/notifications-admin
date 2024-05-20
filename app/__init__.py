@@ -18,6 +18,7 @@ from flask import (
 )
 from flask.globals import request_ctx
 from flask_login import LoginManager, current_user
+from flask_socketio import SocketIO
 from flask_talisman import Talisman
 from flask_wtf import CSRFProtect
 from flask_wtf.csrf import CSRFError
@@ -118,6 +119,7 @@ from notifications_utils.recipients import format_phone_number_human_readable
 login_manager = LoginManager()
 csrf = CSRFProtect()
 talisman = Talisman()
+socketio = SocketIO()
 
 
 # The current service attached to the request stack.
@@ -175,6 +177,7 @@ def create_app(application):
 
     init_govuk_frontend(application)
     init_jinja(application)
+    socketio.init_app(application)
 
     for client in (
         csrf,

@@ -6,6 +6,7 @@ from itertools import groupby
 
 from flask import Response, abort, jsonify, render_template, request, session, url_for
 from flask_login import current_user
+from flask_socketio import send, emit
 from werkzeug.utils import redirect
 
 from app import (
@@ -15,6 +16,7 @@ from app import (
     notification_api_client,
     service_api_client,
     template_statistics_client,
+    socketio
 )
 from app.formatters import format_date_numeric, format_datetime_numeric, get_time_left
 from app.main import main
@@ -30,6 +32,16 @@ from app.utils.pagination import generate_next_dict, generate_previous_dict
 from app.utils.time import get_current_financial_year
 from app.utils.user import user_has_permissions
 from notifications_utils.recipients import format_phone_number_human_readable
+
+
+@socketio.on('message')
+def handle_message(msg):
+    print('''Message:
+
+
+
+          ''' + msg)
+    emit('message', msg, broadcast=True)
 
 
 @main.route("/services/<uuid:service_id>/dashboard")
