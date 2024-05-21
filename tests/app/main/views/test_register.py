@@ -148,7 +148,7 @@ def test_should_return_200_when_email_is_not_gov_uk(
     "email_address",
     [
         "notfound@example.gsa.gov",
-        "example@lsquo.is.edu",
+        "example@lsquo.si.edu",
     ],
 )
 def test_should_add_user_details_to_session(
