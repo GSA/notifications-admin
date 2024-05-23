@@ -19,7 +19,6 @@ UI's backend and is required for most things to function. Set that up first!
 Our other repositories are:
 
 - [notifications-admin](https://github.com/GSA/notifications-admin)
-- [notifications-utils](https://github.com/GSA/notifications-utils)
 - [us-notify-compliance](https://github.com/GSA/us-notify-compliance/)
 - [notify-python-demo](https://github.com/GSA/notify-python-demo)
 
@@ -351,6 +350,30 @@ This will run the local development web server and make the admin site
 available at http://localhost:6012; remember to make sure that the Notify.gov
 API is running as well!
 
+## Creating a 'First User' in the database
+
+After you have completed all setup steps, you will be unable to log in, because there
+will not be a user in the database to link to the login.gov account you are using.  So
+you will need to create that user in your database using the 'create-test-user' command.
+
+Open two terminals pointing to the api project and then run these commands in the
+respective terminals.
+
+(Server 1)
+env ALLOW_EXPIRED_API_TOKEN=1 make run-flask
+
+(Server 2)
+poetry run flask command create-admin-jwt | tail -n 1 | pbcopy
+poetry run flask command create-test-user --admin=True;
+
+Supply your name, email address, mobile number, and password when prompted. Make sure the email address
+is the same one you are using in login.gov and make sure your phone number is in the format 5555555555.
+
+If for any reason in the course of development it is necessary for your to delete your db
+via the `dropdb` command, you will need to repeat these steps when you recreate your db.
+
+
+
 ## Git Hooks
 
 We're using [`pre-commit`](https://pre-commit.com/) to manage hooks in order to
@@ -395,23 +418,6 @@ will do the following for you:
 In either situation, once you are finished and have verified the dependency
 changes are working, please be sure to commit both the `pyproject.toml` and
 `poetry.lock` files.
-
-### Keeping the notification-utils Dependency Up-to-Date
-
-The `notifications-utils` dependency references the other repository we have at
-https://github.com/GSA/notifications-utils - this dependency requires a bit of
-extra legwork to ensure it stays up-to-date.
-
-Whenever a PR is merged in the `notifications-utils` repository, we need to make
-sure the changes are pulled in here and committed to this repository as well.
-You can do this by going through these steps:
-
-- Make sure your local `main` branch is up-to-date
-- Create a new branch to work in
-- Run `make update-utils`
-- Commit the updated `poetry.lock` file and push the changes
-- Make a new PR with the change
-- Have the PR get reviewed and merged
 
 ## Known Installation Issues
 

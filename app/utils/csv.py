@@ -1,12 +1,11 @@
 import datetime
 
 import pytz
-from flask import current_app
 from flask_login import current_user
-from notifications_utils.recipients import RecipientCSV
 
 from app.models.spreadsheet import Spreadsheet
 from app.utils.templates import get_sample_template
+from notifications_utils.recipients import RecipientCSV
 
 
 def get_errors_for_csv(recipients, template_type):
@@ -67,7 +66,6 @@ def generate_notifications_csv(**kwargs):
     from app import notification_api_client
     from app.s3_client.s3_csv_client import s3download
 
-    current_app.logger.info("\n\n\n\nENTER generate_notifications_csv")
     if "page" not in kwargs:
         kwargs["page"] = 1
 

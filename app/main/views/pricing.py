@@ -1,11 +1,11 @@
 from flask import current_app, render_template
 from flask_login import current_user
-from notifications_utils.international_billing_rates import INTERNATIONAL_BILLING_RATES
 
 from app.main import main
 from app.main.forms import SearchByNameForm
 from app.main.views.sub_navigation_dictionaries import using_notify_nav
 from app.utils.user import user_is_logged_in
+from notifications_utils.international_billing_rates import INTERNATIONAL_BILLING_RATES
 
 CURRENT_SMS_RATE = "1.72"
 
