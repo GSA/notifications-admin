@@ -1,71 +1,71 @@
-(function (window) {
+// (function (window) {
 
-    // Dummy data (replace with API data)
-    const data = {
-        messageStats: {
-            totalMessages: 1000,
-            delivered: 520,
-            pending: 280,
-            failed: 100
-        },
-        dailyUsage: {
-            dailyUsage: 20,
-            dailyUsageLimit: 100
-        },
-        yearlyUsage: {
-            yearlyUsage: 2000,
-            yearlyUsageLimit: 250000
-        }
-    };
+//     // Dummy data (replace with API data)
+//     const data = {
+//         messageStats: {
+//             totalMessages: 1000,
+//             delivered: 520,
+//             pending: 280,
+//             failed: 100
+//         },
+//         dailyUsage: {
+//             dailyUsage: 20,
+//             dailyUsageLimit: 100
+//         },
+//         yearlyUsage: {
+//             yearlyUsage: 2000,
+//             yearlyUsageLimit: 250000
+//         }
+//     };
 
-     // Update total messages progress bar percentages
-    const messageStats = data.messageStats;
+//      // Update total messages progress bar percentages
+//     const messageStats = data.messageStats;
 
-    const messageBars = ["delivered", "pending", "failed"];
-        for (const bar of messageBars) {
-        const percentage = messageStats[bar] / messageStats.totalMessages * 100;
-        const elementId = `${bar}-bar`;
-        const element = document.getElementById(elementId);
-        element.style.width = `${parseFloat(percentage)}%`;
-    }
+//     const messageBars = ["delivered", "pending", "failed"];
+//         for (const bar of messageBars) {
+//         const percentage = messageStats[bar] / messageStats.totalMessages * 100;
+//         const elementId = `${bar}-bar`;
+//         const element = document.getElementById(elementId);
+//         element.style.width = `${parseFloat(percentage)}%`;
+//     }
 
-    // Update total messages progress bar percentages
-    const dailyUsage = data.dailyUsage;
-    // const dailyUsageLimit = dailyUsage.dailyUsageLimit;
-    const yearlyUsage = data.yearlyUsage;
-    // const yearlyUsageLimit = yearlyUsage.yearlyUsageLimit;
+//     // Update total messages progress bar percentages
+//     const dailyUsage = data.dailyUsage;
+//     // const dailyUsageLimit = dailyUsage.dailyUsageLimit;
+//     const yearlyUsage = data.yearlyUsage;
+//     // const yearlyUsageLimit = yearlyUsage.yearlyUsageLimit;
 
-    function updateUsageBar(elementId, dailyUsage, dailyUsageLimit, yearlyUsage, yearlyUsageLimit) {
-        // Ensure element exists
-        if (!elementId || !document.getElementById(elementId)) {
-            console.error(`Element with ID "${elementId}" not found`);
-            return;
-        }
+//     function updateUsageBar(elementId, dailyUsage, dailyUsageLimit, yearlyUsage, yearlyUsageLimit) {
+//         // Ensure element exists
+//         if (!elementId || !document.getElementById(elementId)) {
+//             console.error(`Element with ID "${elementId}" not found`);
+//             return;
+//         }
 
-        // Calculate percentage
-        const percentage = dailyUsage / dailyUsageLimit * 100;
+//         // Calculate percentage
+//         const percentage = dailyUsage / dailyUsageLimit * 100;
 
-        // Update bar width
-        const element = document.getElementById(elementId);
-        element.style.width = `${parseFloat(percentage)}%`;
-    }
+//         // Update bar width
+//         const element = document.getElementById(elementId);
+//         element.style.width = `${parseFloat(percentage)}%`;
+//     }
 
-    // Update usage bars
-    // updateUsageBar("dailyUsage-bar", dailyUsage.dailyUsage, dailyUsageLimit);
-    // updateUsageBar("dailyUsageRemaining-bar", dailyUsageLimit - dailyUsage.dailyUsage, dailyUsageLimit);
-    // updateUsageBar("yearlyUsage-bar", yearlyUsage.yearlyUsage, yearlyUsageLimit);
-    // updateUsageBar("yearlyUsageRemaining-bar", yearlyUsageLimit - yearlyUsage.yearlyUsage, yearlyUsageLimit);
+//     // Update usage bars
+//     // updateUsageBar("dailyUsage-bar", dailyUsage.dailyUsage, dailyUsageLimit);
+//     // updateUsageBar("dailyUsageRemaining-bar", dailyUsageLimit - dailyUsage.dailyUsage, dailyUsageLimit);
+//     // updateUsageBar("yearlyUsage-bar", yearlyUsage.yearlyUsage, yearlyUsageLimit);
+//     // updateUsageBar("yearlyUsageRemaining-bar", yearlyUsageLimit - yearlyUsage.yearlyUsage, yearlyUsageLimit);
 
-    // Update total messages legend values
-    document.getElementById("total-value").innerText = `Total: ${messageStats.totalMessages} messages`;
-    document.getElementById("delivered-value").innerText = `Delivered: ${messageStats.delivered}`;
-    document.getElementById("pending-value").innerText = `Pending: ${messageStats.pending}`;
-    document.getElementById("failed-value").innerText = `Failed: ${messageStats.failed}`;
+//     // Update total messages legend values
+//     document.getElementById("total-value").innerText = `Total: ${messageStats.totalMessages} messages`;
+//     document.getElementById("delivered-value").innerText = `Delivered: ${messageStats.delivered}`;
+//     document.getElementById("pending-value").innerText = `Pending: ${messageStats.pending}`;
+//     document.getElementById("failed-value").innerText = `Failed: ${messageStats.failed}`;
 
-    // Update usage legend values
-    // document.getElementById("daily-usage-value").innerText = `Daily usage: ${dailyUsage.dailyUsage}`;
-    // document.getElementById("daily-remaining-value").innerText = `Remaining messages: ${dailyUsage.dailyUsageLimit - dailyUsage.dailyUsage}`;
-    // document.getElementById("yearly-usage-value").innerText = `Yearly usage: ${yearlyUsage.yearlyUsage}`;
-    // document.getElementById("yearly-remaining-value").innerText = `Remaining messages: ${yearlyUsage.yearlyUsageLimit - yearlyUsage.yearlyUsage}`;
+//     // Update usage legend values
+//     // document.getElementById("daily-usage-value").innerText = `Daily usage: ${dailyUsage.dailyUsage}`;
+//     // document.getElementById("daily-remaining-value").innerText = `Remaining messages: ${dailyUsage.dailyUsageLimit - dailyUsage.dailyUsage}`;
+//     // document.getElementById("yearly-usage-value").innerText = `Yearly usage: ${yearlyUsage.yearlyUsage}`;
+//     // document.getElementById("yearly-remaining-value").innerText = `Remaining messages: ${yearlyUsage.yearlyUsageLimit - yearlyUsage.yearlyUsage}`;
 
-})(window);
+// })(window);

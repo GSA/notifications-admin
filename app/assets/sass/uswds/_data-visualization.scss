@@ -77,3 +77,37 @@ $failed: color('orange-30v');
   background-color: #007bff;
   border-radius: inherit;
 }
+
+
+// tabs
+
+.tab {
+  display: flex;
+  margin-bottom: units(2);
+}
+
+.tab button {
+    cursor: pointer;
+    border-radius: 0;
+    margin-right: units(-1px);
+    &:focus {
+      outline-width: 2px;
+    }
+    &.active, &:hover {
+      background-color: color("blue-60v");
+      color: #FFF;
+      box-shadow: none;
+    }
+}
+.tabcontent {
+    display: none;
+    padding: units(1);
+}
+.chart-subtitle {
+    text-align: left;
+    width: 100%;
+    font-size: size("body", 5);
+    font-weight: bold;
+    padding: units(1);
+    margin: 0;
+}

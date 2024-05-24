@@ -18,11 +18,35 @@
 
     {{ ajax_block(partials, updates_url, 'upcoming') }}
 
-    <h2 class="font-body-xl margin-0">Service Name Dashboard</h2>
+    <h2 class="font-body-xl margin-top-0">Service Name Dashboard</h2>
 
-    <canvas id="myChart" width="600" height="400"></canvas>
+    <div class="tab">
+      <button class="tablinks usa-button usa-button--outline margin-right-0 border-right-0" data-tab="Weekly">Weekly</button>
+      <button class="tablinks usa-button usa-button--outline margin-right-0" data-tab="Monthly">Monthly</button>
+      <button class="tablinks usa-button usa-button--outline" data-tab="Yearly">Yearly</button>
+    </div>
 
-    <h3 id="total-value" class="margin-y-1"></h3>
+    <div id="Weekly" class="tabcontent">
+      <div class="chart-subtitle">2024 Total Message Allowance - Weekly</div>
+      <canvas id="weeklyChart"></canvas>
+      <table id="weeklyTable" class="usa-sr-only"></table>
+    </div>
+
+    <div id="Monthly" class="tabcontent">
+      <div class="chart-subtitle">2024 Total Message Allowance - Monthly</div>
+      <canvas id="monthlyChart"></canvas>
+      <table id="monthlyTable" class="usa-sr-only"></table>
+    </div>
+
+    <div id="Yearly" class="tabcontent">
+      <div class="chart-subtitle">2024 Total Message Allowance - Yearly</div>
+      <canvas id="yearlyChart"></canvas>
+      <table id="yearlyTable" class="usa-sr-only"></table>
+    </div>
+
+    <div id="message"></div>
+
+    <!-- <h3 id="total-value" class="margin-y-1"></h3>
     <div class="chart-container">
       <div class="bar delivered" id="delivered-bar"></div>
       <div class="bar pending" id="pending-bar"></div>
@@ -50,7 +74,7 @@
         </button>
         <div class="legend-value" id="failed-value"></div>
       </div>
-    </div>
+    </div> -->
 
     <h2 class="font-body-2xl line-height-sans-2 margin-bottom-0 margin-top-4">
       Messages sent
