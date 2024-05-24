@@ -22,18 +22,18 @@
       Messages sent
     </h2>
 
-    <div id="chartContainer">
-      <h3 class="margin-bottom-1">2024 Total Message Allowance</h3>
-      <canvas id="myChart" height="100"></canvas>
-    </div>
-    <div id="message"></div>
-
-
     {{ ajax_block(partials, updates_url, 'inbox') }}
 
     {{ ajax_block(partials, updates_url, 'totals') }}
 
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
+    {% if current_user.has_permissions('manage_service') %}
+    <div id="chartContainer" data-sms-sent="{{ sms_sent }}" data-sms-allowance-remaining="{{ sms_allowance_remaining }}">
+      <h3 class="margin-bottom-1">2024 Total Message Allowance</h3>
+      <canvas id="myChart" height="100"></canvas>
+    </div>
+    <div id="message"></div>
+  {% endif %}
     <h2 class="margin-top-4 margin-bottom-1">Recent Batches</h2>
     <div class="table-wrapper">
       <table class="usa-table usa-table--borderless job-table">

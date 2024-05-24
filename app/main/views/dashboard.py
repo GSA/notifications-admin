@@ -78,12 +78,25 @@ def service_dashboard(service_id):
         for job in job_response
         if aggregate_notifications_by_job.get(job["id"], [])
     ]
+    yearly_usage = billing_api_client.get_annual_usage_for_service(
+        service_id,
+        get_current_financial_year(),
+    )
+    free_sms_allowance = billing_api_client.get_free_sms_fragment_limit_for_year(
+        current_service.id,
+    )
+    usage_data = get_annual_usage_breakdown(yearly_usage, free_sms_allowance)
+    sms_sent=usage_data['sms_sent'],
+    sms_allowance_remaining=usage_data['sms_allowance_remaining'],
+
     return render_template(
         "views/dashboard/dashboard.html",
         updates_url=url_for(".service_dashboard_updates", service_id=service_id),
         partials=get_dashboard_partials(service_id),
         job_and_notifications=job_and_notifications,
         service_data_retention_days=service_data_retention_days,
+        sms_sent=sms_sent[0],
+        sms_allowance_remaining=sms_allowance_remaining[0],
     )
 
 

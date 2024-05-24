@@ -5,9 +5,10 @@ document.addEventListener('DOMContentLoaded', function () {
     canvas.width = canvas.parentElement.clientWidth;
     canvas.height = 100;
 
-    var sentMessages = 80000;
-    var totalMessages = 250000;
-    var remainingMessages = totalMessages - sentMessages;
+    var chartContainer = document.getElementById('chartContainer');
+    var sms_sent = parseInt(chartContainer.getAttribute('data-sms-sent'));
+    var sms_remaining_messages = parseInt(chartContainer.getAttribute('data-sms-allowance-remaining'));
+    var totalMessages = sms_sent + sms_remaining_messages;
 
     var myChart = new Chart(ctx, {
         type: 'bar',
@@ -15,12 +16,12 @@ document.addEventListener('DOMContentLoaded', function () {
             labels: [''],
             datasets: [{
                 label: 'Messages Sent',
-                data: [sentMessages],
+                data: [sms_sent],
                 backgroundColor: '#0076d6',
             },
             {
                 label: 'Remaining',
-                data: [remainingMessages],
+                data: [sms_remaining_messages],
                 backgroundColor: '#fa9441',
             }]
         },
@@ -81,6 +82,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Update the message below the chart
-    document.getElementById('message').innerText = `${sentMessages.toLocaleString()} sent / ${remainingMessages.toLocaleString()} remaining`;
+    document.getElementById('message').innerText = `${sms_sent.toLocaleString()} sent / ${sms_remaining_messages.toLocaleString()} remaining`;
 
 });
