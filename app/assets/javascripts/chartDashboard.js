@@ -10,19 +10,27 @@ document.addEventListener('DOMContentLoaded', function () {
     var sms_remaining_messages = parseInt(chartContainer.getAttribute('data-sms-allowance-remaining'));
     var totalMessages = sms_sent + sms_remaining_messages;
 
+    // Set a minimum value for "Messages Sent" based on a percentage of the remaining messages
+    var minSentPercentage = 0.01; // Minimum width as a percentage of total messages (1% in this case)
+    var minSentValue = totalMessages * minSentPercentage;
+    var displaySent = Math.max(sms_sent, minSentValue);
+    var displayRemaining = totalMessages - displaySent;
+
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: [''],
             datasets: [{
                 label: 'Messages Sent',
-                data: [sms_sent],
+                data: [displaySent],
                 backgroundColor: '#0076d6',
+                actualValue: sms_sent // Store the actual value for tooltips
             },
             {
                 label: 'Remaining',
-                data: [sms_remaining_messages],
+                data: [displayRemaining],
                 backgroundColor: '#fa9441',
+                actualValue: sms_remaining_messages // Store the actual value for tooltips
             }]
         },
         options: {
@@ -62,7 +70,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 tooltip: {
                     callbacks: {
                         label: function(tooltipItem) {
-                            return tooltipItem.dataset.label + ': ' + tooltipItem.raw.toLocaleString();
+                            var dataset = tooltipItem.dataset;
+                            return dataset.label + ': ' + dataset.actualValue.toLocaleString();
                         }
                     }
                 },
@@ -71,11 +80,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             },
             responsive: true,
+            // maintainAspectRatio: false,
             layout: {
                 padding: {
-                    left: -10, // Adjust left padding to remove extra space
+                    left: 0, // Adjust left padding to remove extra space
                     top: 0,
-                    bottom: 0
+                    bottom: 0,
+                    right: 0
                 }
             }
         }
@@ -84,4 +95,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // Update the message below the chart
     document.getElementById('message').innerText = `${sms_sent.toLocaleString()} sent / ${sms_remaining_messages.toLocaleString()} remaining`;
 
+    // Ensure the chart resizes correctly on window resize
+    window.addEventListener('resize', function() {
+        canvas.width = canvas.parentElement.clientWidth;
+        myChart.resize();
+    });
 });
