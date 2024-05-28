@@ -38,6 +38,17 @@ def s3upload(
         region_name=region,
     )
     _s3 = session.resource("s3", config=AWS_CLIENT_CONFIG)
+    # This 'proves' that use of moto in the relevant tests in test_send.py
+    # mocks everything related to S3.  What you will see in the logs is:
+    # Exception: CREATED AT <MagicMock name='resource().Bucket().creation_date' id='4665562448'>
+    #
+    # raise Exception(f"CREATED AT {_s3.Bucket(bucket_name).creation_date}")
+    if os.getenv("NOTIFY_ENVIRONMENT") == "test":
+        teststr = str(_s3.Bucket(bucket_name).creation_date).lower()
+        if "magicmock" not in teststr:
+            raise Exception(
+                f"xxxxxtest not mocked, use @mock_aws creation date is {teststr}"
+            )
 
     key = _s3.Object(bucket_name, file_location)
 
