@@ -56,6 +56,10 @@ const copy = {
   gtm: () => {
     return src(paths.src + 'js/gtm_head.js')
       .pipe(dest(paths.dist + 'js/'));
+  },
+  chart: () => {
+    return src(paths.src + 'js/chart.umd.js')
+      .pipe(dest(paths.dist + 'js/'));
   }
 };
 
@@ -201,7 +205,8 @@ const defaultTask = parallel(
     ),
     uswds.compile,
     uswds.copyAssets,
-    copy.gtm
+    copy.gtm,
+    copy.chart
   )
 );
 

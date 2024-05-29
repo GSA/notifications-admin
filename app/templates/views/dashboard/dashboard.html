@@ -29,10 +29,12 @@
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
     {% if current_user.has_permissions('manage_service') %}
     <div id="chartContainer" data-sms-sent="{{ sms_sent }}" data-sms-allowance-remaining="{{ sms_allowance_remaining }}">
-      <h3 class="margin-bottom-1">2024 Total Message Allowance</h3>
-      <canvas id="myChart" height="100"></canvas>
+      <h3 class="margin-bottom-1" id="chartTitle">2024 Total Message Allowance</h3>
+      <div class="usa-sr-only" id="chartDesc">A bar chart showing the messages sent against the total message allowance for 2024 to date</div>
+      <canvas id="myChart" role="img" aria-labelledby="chartTitle chartDesc" height="100"></canvas>
     </div>
     <div id="message"></div>
+
   {% endif %}
     <h2 class="margin-top-4 margin-bottom-1">Recent Batches</h2>
     <div class="table-wrapper">

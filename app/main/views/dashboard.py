@@ -86,8 +86,8 @@ def service_dashboard(service_id):
         current_service.id,
     )
     usage_data = get_annual_usage_breakdown(yearly_usage, free_sms_allowance)
-    sms_sent=usage_data['sms_sent'],
-    sms_allowance_remaining=usage_data['sms_allowance_remaining'],
+    sms_sent = (usage_data["sms_sent"],)
+    sms_allowance_remaining = (usage_data["sms_allowance_remaining"],)
 
     return render_template(
         "views/dashboard/dashboard.html",
