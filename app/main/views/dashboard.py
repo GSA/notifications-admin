@@ -19,6 +19,7 @@ from app import (
 )
 from app.formatters import format_date_numeric, format_datetime_numeric, get_time_left
 from app.main import main
+from app.models.user import User
 from app.statistics_utils import get_formatted_percentage
 from app.utils import (
     DELIVERED_STATUSES,
@@ -324,6 +325,11 @@ def aggregate_notifications_stats(template_statistics):
 
 
 def get_dashboard_partials(service_id):
+    current_financial_year = get_current_financial_year()
+    current_month = get_current_month_for_financial_year(current_financial_year)
+    start_date = datetime.now().strftime('%Y-%m-%d')
+    days=7
+
     all_statistics = template_statistics_client.get_template_statistics_for_service(
         service_id, limit_days=7
     )
@@ -336,19 +342,30 @@ def get_dashboard_partials(service_id):
     )
     # These 2 calls will update the dashboard sms allowance count while in trial mode.
     billing_api_client.get_monthly_usage_for_service(
-        service_id, get_current_financial_year()
+        service_id, current_financial_year
     )
     billing_api_client.create_or_update_free_sms_fragment_limit(
         service_id, free_sms_fragment_limit=free_sms_allowance
     )
-
-    monthly_stats = format_monthly_stats_to_list(
-        service_api_client.get_monthly_notification_stats(service_id, get_current_financial_year())["data"]
-    )
     yearly_usage = billing_api_client.get_annual_usage_for_service(
         service_id,
-        get_current_financial_year(),
+        current_financial_year,
     )
+
+    #Previous 7 day stats
+    daily_stats = service_api_client.get_service_notification_statistics_by_day(service_id, start_date=start_date, days=days)
+
+    #Single month stats
+    single_month_notification_stats = service_api_client.get_single_month_notification_stats(service_id, year=current_financial_year, month=current_month)
+
+    #monthly stats by year
+    monthly_stats = format_monthly_stats_to_list(
+        service_api_client.get_monthly_notification_stats(service_id, current_financial_year)["data"]
+    )
+
+    # user=User.from_id(user_id),
+    # single_month_notification_stats = service_api_client.get_single_month_notification_stats_by_user(service_id, user, year=current_financial_year, month=current_month)
+
     return {
         "upcoming": render_template(
             "views/dashboard/_upcoming.html",
@@ -439,6 +456,11 @@ def aggregate_status_types(counts_dict):
 
 def get_months_for_financial_year(year, time_format="%B"):
     return [month.strftime(time_format) for month in (get_months_for_year(1, 13, year))]
+
+
+def get_current_month_for_financial_year(year):
+    current_month = datetime.now().month
+    return current_month
 
 
 def get_months_for_year(start, end, year):
