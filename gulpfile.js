@@ -131,6 +131,7 @@ const javascripts = () => {
     paths.src + 'javascripts/dataVisualization.js',
     paths.src + 'javascripts/dashboardVisualization.js',
     paths.src + 'javascripts/main.js',
+    paths.src + 'javascripts/chartDashboard.js',
   ])
     .pipe(plugins.prettyerror())
     .pipe(plugins.babel({

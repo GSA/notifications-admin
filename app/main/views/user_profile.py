@@ -11,7 +11,6 @@ from flask import (
     url_for,
 )
 from flask_login import current_user
-from notifications_utils.url_safe_token import check_token
 
 from app import user_api_client
 from app.event_handlers import (
@@ -31,6 +30,7 @@ from app.main.forms import (
 )
 from app.models.user import User
 from app.utils.user import user_is_gov_user, user_is_logged_in
+from notifications_utils.url_safe_token import check_token
 
 NEW_EMAIL = "new-email"
 NEW_MOBILE = "new-mob"

@@ -2,10 +2,10 @@ import datetime
 
 import pytz
 from flask_login import current_user
-from notifications_utils.recipients import RecipientCSV
 
 from app.models.spreadsheet import Spreadsheet
 from app.utils.templates import get_sample_template
+from notifications_utils.recipients import RecipientCSV
 
 
 def get_errors_for_csv(recipients, template_type):
