@@ -12,7 +12,6 @@ from zipfile import BadZipFile
 
 import pytest
 from flask import url_for
-from moto import mock_aws
 from notifications_python_client.errors import HTTPError
 from xlrd.biffh import XLRDError
 from xlrd.xldate import XLDateAmbiguous, XLDateError, XLDateNegative, XLDateTooLarge
@@ -432,7 +431,6 @@ def test_example_spreadsheet(
     list(zip(test_spreadsheet_files, repeat(True), repeat(302)))
     + list(zip(test_non_spreadsheet_files, repeat(False), repeat(200))),
 )
-@mock_aws
 def test_upload_files_in_different_formats(
     filename,
     acceptable_file,
@@ -477,7 +475,6 @@ def test_upload_files_in_different_formats(
         )
 
 
-@mock_aws
 def test_send_messages_sanitises_and_truncates_file_name_for_metadata(
     client_request,
     service_one,
@@ -588,7 +585,6 @@ def test_shows_error_if_parsing_exception(
     )
 
 
-@mock_aws
 def test_upload_csv_file_with_errors_shows_check_page_with_errors(
     client_request,
     service_one,
@@ -641,7 +637,6 @@ def test_upload_csv_file_with_errors_shows_check_page_with_errors(
     assert "Upload your file again" in page.text
 
 
-@mock_aws
 def test_upload_csv_file_with_empty_message_shows_check_page_with_errors(
     client_request,
     service_one,
@@ -700,7 +695,6 @@ def test_upload_csv_file_with_empty_message_shows_check_page_with_errors(
     assert page.select("tbody tr td")[1]["colspan"] == "2"
 
 
-@mock_aws
 def test_upload_csv_file_with_very_long_placeholder_shows_check_page_with_errors(
     client_request,
     service_one,
@@ -842,7 +836,6 @@ def test_upload_csv_file_with_very_long_placeholder_shows_check_page_with_errors
         ),
     ],
 )
-@mock_aws
 def test_upload_csv_file_with_missing_columns_shows_error(
     client_request,
     mocker,
@@ -924,7 +917,6 @@ def test_upload_csv_size_too_big(
     assert "File must be smaller than 10Mb" in page.text
 
 
-@mock_aws
 def test_upload_valid_csv_redirects_to_check_page(
     client_request,
     mock_get_service_template_with_placeholders,
@@ -1070,7 +1062,6 @@ def test_upload_valid_csv_shows_preview_and_table(
             assert normalize_spaces(str(row.select("td")[index])) == cell
 
 
-@mock_aws
 def test_show_all_columns_if_there_are_duplicate_recipient_columns(
     client_request,
     mocker,
@@ -1125,7 +1116,6 @@ def test_show_all_columns_if_there_are_duplicate_recipient_columns(
         (5, 404),
     ],
 )
-@mock_aws
 def test_404_for_previewing_a_row_out_of_range(
     client_request,
     mocker,
@@ -1579,7 +1569,6 @@ def test_send_one_off_redirects_to_end_if_step_out_of_bounds(
         create_active_caseworking_user(),
     ],
 )
-@mock_aws
 def test_send_one_off_redirects_to_start_if_you_skip_steps(
     client_request,
     service_one,
@@ -1682,7 +1671,6 @@ def test_send_one_off_sms_message_redirects(
         create_active_caseworking_user(),
     ],
 )
-@mock_aws
 def test_send_one_off_email_to_self_without_placeholders_redirects_to_check_page(
     client_request,
     mocker,
@@ -1887,7 +1875,6 @@ def test_download_example_csv(
     assert "text/csv" in response.headers["Content-Type"]
 
 
-@mock_aws
 def test_upload_csvfile_with_valid_phone_shows_all_numbers(
     client_request,
     mock_get_service_template,
