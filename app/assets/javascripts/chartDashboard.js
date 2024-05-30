@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    var canvas = document.getElementById('myChart');
+    var canvas = document.getElementById('totalMessageChart');
     var ctx = canvas.getContext('2d');
     // Set explicit dimensions for the canvas
     canvas.width = canvas.parentElement.clientWidth;
