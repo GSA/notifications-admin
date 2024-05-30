@@ -1,7 +1,7 @@
 import pytest
-from notifications_utils.template import Template
 
 from app.utils.templates import get_sample_template
+from notifications_utils.template import Template
 
 
 @pytest.mark.parametrize("template_type", ["sms", "email"])
