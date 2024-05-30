@@ -6,7 +6,7 @@ from itertools import groupby
 
 from flask import Response, abort, jsonify, render_template, request, session, url_for
 from flask_login import current_user
-from flask_socketio import send, emit
+from flask_socketio import SocketIO, emit
 from werkzeug.utils import redirect
 
 from app import (
@@ -34,14 +34,20 @@ from app.utils.user import user_has_permissions
 from notifications_utils.recipients import format_phone_number_human_readable
 
 
-@socketio.on('message')
-def handle_message(msg):
-    print('''Message:
+# @socketio.on('connect')
+# def handle_connect():
+#     print('Client connected')
 
 
+# @socketio.on('disconnect')
+# def handle_disconnect():
+#     print('Client disconnected')
 
-          ''' + msg)
-    emit('message', msg, broadcast=True)
+
+@socketio.on('fetch_jobs')
+def handle_fetch_jobs(service_id):
+    job_response = job_api_client.get_jobs(service_id)["data"]
+    emit('job_update', job_response)
 
 
 @main.route("/services/<uuid:service_id>/dashboard")
@@ -71,7 +77,6 @@ def service_dashboard(service_id):
         job_id = notification.get("job", {}).get("id", None)
         if job_id:
             aggregate_notifications_by_job[job_id].append(notification)
-
     job_and_notifications = [
         {
             "job_id": job["id"],

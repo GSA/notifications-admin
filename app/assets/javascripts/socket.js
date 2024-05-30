@@ -7,16 +7,14 @@
             console.log('Connected to the server');
         });
 
-        socket.on('message', function(msg) {
-            var li = document.createElement("li");
-            li.appendChild(document.createTextNode(msg));
-            document.getElementById("messages").appendChild(li);
+        // Listen for job updates from the server
+        socket.on('job_update', function(data) {
+            console.log('Received job update:', data);
         });
 
-        document.getElementById('sendButton').addEventListener('click', function() {
-            var message = document.getElementById("message").value;
-            socket.send(message);
-            document.getElementById("message").value = '';
+        document.getElementById('fetchJobsButton').addEventListener('click', function() {
+            const serviceId = 'b1226555-1f1a-472c-9086-043b0a69f4ec';  // Example service ID
+            socket.emit('fetch_jobs', serviceId);
         });
     });
 
