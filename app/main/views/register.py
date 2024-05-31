@@ -26,6 +26,7 @@ from app.main.views import sign_in
 from app.main.views.verify import activate_user
 from app.models.user import InvitedOrgUser, InvitedUser, User
 from app.utils import hide_from_search_engines, hilite
+from app.utils.user import is_gov_user
 
 
 @main.route("/register", methods=["GET", "POST"])
@@ -145,6 +146,11 @@ def check_invited_user_email_address_matches_expected(
     if user_email.lower() != invited_user_email_address.lower():
         debug_msg("invited user email did not match expected email, abort(403)")
         flash("You cannot accept an invite for another person.")
+        abort(403)
+
+    if not is_gov_user(user_email):
+        debug_msg("invited user has a non-government email address.")
+        flash("You must use a government email address.")
         abort(403)
 
 

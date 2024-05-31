@@ -4,7 +4,16 @@ import uuid
 
 import jwt
 import requests
-from flask import Response, current_app, redirect, render_template, request, url_for
+from flask import (
+    Response,
+    abort,
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 from flask_login import current_user
 
 from app import login_manager, user_api_client
@@ -15,6 +24,7 @@ from app.models.user import User
 from app.utils import hide_from_search_engines
 from app.utils.login import is_safe_redirect_url
 from app.utils.time import is_less_than_days_ago
+from app.utils.user import is_gov_user
 from notifications_utils.url_safe_token import generate_token
 
 
@@ -88,6 +98,12 @@ def _do_login_dot_gov():
         try:
             access_token = _get_access_token(code, state)
             user_email, user_uuid = _get_user_email_and_uuid(access_token)
+            if not is_gov_user(user_email):
+                current_app.logger.error(
+                    "invited user has a non-government email address."
+                )
+                flash("You must use a government email address.")
+                abort(403)
             redirect_url = request.args.get("next")
             user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
 
