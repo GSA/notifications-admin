@@ -28,6 +28,7 @@ def get_csv_upload(service_id, upload_id):
 
 
 def s3upload(service_id, filedata):
+
     upload_id = str(uuid.uuid4())
     bucket_name, file_location, access_key, secret_key, region = get_csv_location(
         service_id, upload_id

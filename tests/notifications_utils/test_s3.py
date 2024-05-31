@@ -2,6 +2,7 @@ from urllib.parse import parse_qs
 
 import botocore
 import pytest
+from moto import mock_aws
 
 from notifications_utils.s3 import S3ObjectNotFound, s3download, s3upload
 
@@ -12,6 +13,7 @@ location = "some_file_location"
 content_type = "binary/octet-stream"
 
 
+@mock_aws
 def test_s3upload_save_file_to_bucket(mocker):
     mocked = mocker.patch("notifications_utils.s3.Session.resource")
     s3upload(
