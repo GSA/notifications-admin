@@ -948,7 +948,9 @@ def send_notification(service_id, template_id):
     vals = ",".join(values)
     data = f"{data}\r\n{vals}"
 
-    filename = f"one-off-{current_user.name}-{uuid.uuid4()}.csv"
+    filename = (
+        f"one-off-{uuid.uuid4()}.csv"  # {current_user.name} removed from filename
+    )
     my_data = {"filename": filename, "template_id": template_id, "data": data}
     upload_id = s3upload(service_id, my_data)
     form = CsvUploadForm()
