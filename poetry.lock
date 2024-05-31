@@ -612,6 +612,25 @@ files = [
 ]
 
 [[package]]
+name = "detect-secrets"
+version = "1.5.0"
+description = "Tool for detecting secrets in the codebase"
+optional = false
+python-versions = "*"
+files = [
+    {file = "detect_secrets-1.5.0-py3-none-any.whl", hash = "sha256:e24e7b9b5a35048c313e983f76c4bd09dad89f045ff059e354f9943bf45aa060"},
+    {file = "detect_secrets-1.5.0.tar.gz", hash = "sha256:6bb46dcc553c10df51475641bb30fd69d25645cc12339e46c824c1e0c388898a"},
+]
+
+[package.dependencies]
+pyyaml = "*"
+requests = "*"
+
+[package.extras]
+gibberish = ["gibberish-detector"]
+word-list = ["pyahocorasick"]
+
+[[package]]
 name = "distlib"
 version = "0.3.8"
 description = "Distribution utilities"
@@ -1647,12 +1666,12 @@ files = [
 
 [[package]]
 name = "notifications-python-client"
-version = "9.0.0"
+version = "9.1.0"
 description = "Python API client for GOV.UK Notify."
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "notifications_python_client-9.0.0-py3-none-any.whl", hash = "sha256:664a5b5da2aa1a00efa8106bfa4855db04da95d79586e5edfb0411637d20d2d9"},
+    {file = "notifications_python_client-9.1.0-py3-none-any.whl", hash = "sha256:43b8f738dfa81ae3aa656d91e361dbc51316194f8b9a430706b03347fa7a01bc"},
 ]
 
 [package.dependencies]
@@ -2909,4 +2928,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12.2"
-content-hash = "17d4fa911a9aba6f956ef316583babd63f31a849372ae47a0a79e260295dad45"
+content-hash = "dbfc0e66e41f6da3845785157b95ef70193bc66c91b53fe0afb0eac0a1ea5490"
