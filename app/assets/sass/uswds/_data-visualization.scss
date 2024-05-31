@@ -1,0 +1,22 @@
+@use "uswds-core" as *;
+
+#chartContainer {
+   width: 100%;
+}
+
+#totalMessageChart {
+   width: 100%;
+   margin-left: units(-1);
+}
+
+#message {
+   text-align: left;
+   font-size: units(2);
+}
+
+.chart-title {
+   text-align: left;
+   width: 100%;
+   font-size: units(3);
+   font-weight: bold;
+}

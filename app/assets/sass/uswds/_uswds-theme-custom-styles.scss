@@ -589,26 +589,3 @@ details form {
    border: 1px solid #face00;
    border-radius: 7px;
 }
-
-// Data Viz
-
-#chartContainer {
-   width: 100%;
-}
-
-#myChart {
-   width: 100%;
-   margin-left: units(-1);
-}
-
-#message {
-   text-align: left;
-   font-size: units(2);
-}
-
-.chart-title {
-   text-align: left;
-   width: 100%;
-   font-size: units(3);
-   font-weight: bold;
-}
