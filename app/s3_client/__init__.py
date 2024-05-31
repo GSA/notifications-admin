@@ -40,7 +40,7 @@ def get_s3_object(
         teststr = str(s3.Bucket(bucket_name).creation_date).lower()
         if "magicmock" not in teststr:
             raise Exception(
-                f"Test is not mocked, use @mock_aws or the relevant mocker.patch to avoid accessing S3"
+                "Test is not mocked, use @mock_aws or the relevant mocker.patch to avoid accessing S3"
             )
     return obj
 
