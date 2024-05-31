@@ -47,7 +47,7 @@ def s3upload(
         teststr = str(_s3.Bucket(bucket_name).creation_date).lower()
         if "magicmock" not in teststr:
             raise Exception(
-                f"xxxxxtest not mocked, use @mock_aws creation date is {teststr}"
+                f"Test is not mocked, use @mock_aws or the relevant mocker.patch to avoid accessing S3"
             )
 
     key = _s3.Object(bucket_name, file_location)
@@ -102,7 +102,7 @@ def s3download(
             teststr = str(s3.Bucket(bucket_name).creation_date).lower()
             if "magicmock" not in teststr:
                 raise Exception(
-                    f"xxxxxtest not mocked, use @mock_aws creation date is {teststr}"
+                    f"Test is not mocked, use @mock_aws or the relevant mocker.patch to avoid accessing S3"
                 )
         return key.get()["Body"]
     except botocore.exceptions.ClientError as error:

@@ -1,31 +1,56 @@
 {% extends "base.html" %}
 
 {% block per_page_title %}
-  {% block service_page_title %}{% endblock %} – {{ current_service.name }}
+  {% if current_org.name %}
+    {% block org_page_title %}{% endblock %} – {{ current_org.name }}
+  {% else %}
+    {% block service_page_title %}{% endblock %} – {{ current_service.name }}
+  {% endif %}
 {% endblock %}
 
 {% block main %}
   <div class="grid-container">
-    {% include "service_navigation.html" %}
+    {% block serviceNavigation %}
+      {% if current_org.name %}
+      {% else %}
+          {% include "new/components/service_nav.html" %}
+      {% endif %}
+    {% endblock %}
+    {#
+      The withnav_template can serve as a replacement for both settings_template and org_template.html.
+
+      The file service_navigation.html is included only in withnav_template. It's not used in settings_template. That is one out of the two differences between settings template and withnav template. As a result, when other templates extend settings_template, they include the serviceNavigation block but keep it empty. The settings_template.html is specifically used for these pages in the app: manage-users.html, service-settings.html, and user-profile.html.
+
+      In addition, serviceNavigation should be empty on templates that previously extended org_template. For templates that previously extended org_template.html, there's an addition of the orgNavBreadcrumb block.
+      {% block orgNavBreadcrumb %}
+        {% include "/new/components/org_nav_breadcrumb.html" %}
+      {% endblock %}
+    #}
+    {% if current_org.name %}
+      {% block orgNavBreadcrumb %}{% include "/new/components/org_nav_breadcrumb.html" %}{% endblock %}
+    {% endif %}
     <div class="grid-row margin-top-5">
-      {% if help %}
-        <div class="tablet:grid-col-3">
-      {% else %}
-        <div class="tablet:grid-col-3">
-      {% endif %}
-          {% include "main_nav.html" %}
-        </div>
-      {% if help %}
-        <div class="grid-col-8">
-      {% else %}
-        <div class="tablet:grid-col-9 tablet:padding-left-4">
-      {% endif %}
+      <div class="tablet:grid-col-3">
+        {% block sideNavigation %}
+          {% if current_org.name %}
+            {% include "/new/components/org_nav.html" %}
+          {% else %}
+            {% include "/new/components/main_nav.html" %}
+          {% endif %}
+          {#
+          Include settings_nav.html for child templates that previously extended settings_template.
+
+          Include "org_nav.html" for child templates that previously extended org_template html
+          #}
+        {% endblock %}
+      </div>
+      <div class="tablet:grid-col-9 tablet:padding-left-4">
         {% block beforeContent %}
           {% block backLink %}{% endblock %}
         {% endblock %}
         <main id="main-content" role="main" class="usa-prose site-prose margin-bottom-10">
         {% block content %}
-          {% include 'flash_messages.html' %}
+          {% include 'new/components/flash_messages.html' %}
           {% block maincolumn_content %}{% endblock %}
         {% endblock %}
         </main>
