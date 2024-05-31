@@ -20,7 +20,6 @@ from app import (
 )
 from app.formatters import format_date_numeric, format_datetime_numeric, get_time_left
 from app.main import main
-from app.models.user import User
 from app.statistics_utils import get_formatted_percentage
 from app.utils import (
     DELIVERED_STATUSES,
@@ -36,20 +35,30 @@ from app.utils.user import user_has_permissions
 from notifications_utils.recipients import format_phone_number_human_readable
 
 
-# @socketio.on('connect')
-# def handle_connect():
-#     print('Client connected')
+@socketio.on('fetch_daily_stats')
+def handle_fetch_daily_stats(service_id):
+    if service_id:
+        date_range = get_stats_date_range()
+        daily_stats = service_api_client.get_service_notification_statistics_by_day(service_id, start_date=date_range['start_date'], days=date_range['days'])
+        emit('daily_stats_update', daily_stats)
+    else:
+        emit('error', {'error': 'No service_id provided'})
 
 
-# @socketio.on('disconnect')
-# def handle_disconnect():
-#     print('Client disconnected')
+@socketio.on('fetch_single_month_notification_stats')
+def handle_fetch_single_month_notification_stats(service_id):
+    date_range = get_stats_date_range()
+    single_month_notification_stats = service_api_client.get_single_month_notification_stats(service_id, year=date_range['current_financial_year'], month=date_range['current_month'])
+    emit('single_month_notification_stats_update', single_month_notification_stats)
 
 
-@socketio.on('fetch_jobs')
-def handle_fetch_jobs(service_id):
-    job_response = job_api_client.get_jobs(service_id)["data"]
-    emit('job_update', job_response)
+@socketio.on('fetch_monthly_stats_by_year')
+def handle_fetch_monthly_stats(service_id):
+    date_range = get_stats_date_range()
+    monthly_stats_by_year_stats = format_monthly_stats_to_list(
+        service_api_client.get_monthly_notification_stats(service_id, year=date_range['current_financial_year'])["data"]
+    )
+    emit('monthly_stats_by_year_update', monthly_stats_by_year_stats)
 
 
 @main.route("/services/<uuid:service_id>/dashboard")
@@ -103,6 +112,7 @@ def service_dashboard(service_id):
         partials=get_dashboard_partials(service_id),
         job_and_notifications=job_and_notifications,
         service_data_retention_days=service_data_retention_days,
+        service_id=service_id
     )
 
 
@@ -343,10 +353,6 @@ def aggregate_notifications_stats(template_statistics):
 
 def get_dashboard_partials(service_id):
     current_financial_year = get_current_financial_year()
-    current_month = get_current_month_for_financial_year(current_financial_year)
-    start_date = datetime.now().strftime('%Y-%m-%d')
-    days=7
-
     all_statistics = template_statistics_client.get_template_statistics_for_service(
         service_id, limit_days=7
     )
@@ -368,20 +374,9 @@ def get_dashboard_partials(service_id):
         service_id,
         current_financial_year,
     )
-
-    #Previous 7 day stats
-    daily_stats = service_api_client.get_service_notification_statistics_by_day(service_id, start_date=start_date, days=days)
-
-    #Single month stats
-    single_month_notification_stats = service_api_client.get_single_month_notification_stats(service_id, year=current_financial_year, month=current_month)
-
-    #monthly stats by year
     monthly_stats = format_monthly_stats_to_list(
         service_api_client.get_monthly_notification_stats(service_id, current_financial_year)["data"]
     )
-
-    # user=User.from_id(user_id),
-    # single_month_notification_stats = service_api_client.get_single_month_notification_stats_by_user(service_id, user, year=current_financial_year, month=current_month)
 
     return {
         "upcoming": render_template(
@@ -479,6 +474,17 @@ def get_current_month_for_financial_year(year):
     current_month = datetime.now().month
     return current_month
 
+def get_stats_date_range():
+    current_financial_year = get_current_financial_year()
+    current_month = get_current_month_for_financial_year(current_financial_year)
+    start_date = datetime.now().strftime('%Y-%m-%d')
+    days = 7
+    return {
+        "current_financial_year": current_financial_year,
+        "current_month": current_month,
+        "start_date": start_date,
+        "days": days,
+    }
 
 def get_months_for_year(start, end, year):
     return [datetime(year, month, 1) for month in range(start, end)]
