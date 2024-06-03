@@ -26,6 +26,7 @@ from app.main.views import sign_in
 from app.main.views.verify import activate_user
 from app.models.user import InvitedOrgUser, InvitedUser, User
 from app.utils import hide_from_search_engines, hilite
+from app.utils.user import is_gov_user
 
 
 @main.route("/register", methods=["GET", "POST"])
@@ -147,6 +148,11 @@ def check_invited_user_email_address_matches_expected(
         flash("You cannot accept an invite for another person.")
         abort(403)
 
+    if not is_gov_user(user_email):
+        debug_msg("invited user has a non-government email address.")
+        flash("You must use a government email address.")
+        abort(403)
+
 
 @main.route("/set-up-your-profile", methods=["GET", "POST"])
 @hide_from_search_engines
@@ -245,10 +251,21 @@ def get_invited_user_email_address(invited_user_id):
 
 def invited_user_accept_invite(invited_user_id):
     invited_user = InvitedUser.by_id(invited_user_id)
+
     if invited_user.status == "expired":
         current_app.logger.error("User invitation has expired")
-        flash("Your invitation has expired.")
+        flash(
+            "Your invitation has expired; please contact the person who invited you for additional help."
+        )
         abort(401)
+
+    if invited_user.status == "cancelled":
+        current_app.logger.error("User invitation has been cancelled")
+        flash(
+            "Your invitation is no longer valid; please contact the person who invited you for additional help."
+        )
+        abort(401)
+
     invited_user.accept_invite()
 
 
