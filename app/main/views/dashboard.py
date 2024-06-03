@@ -38,7 +38,11 @@ from notifications_utils.recipients import format_phone_number_human_readable
 def handle_fetch_daily_stats(service_id):
     if service_id:
         date_range = get_stats_date_range()
-        daily_stats = service_api_client.get_service_notification_statistics_by_day(service_id, start_date=date_range['start_date'], days=date_range['days'])
+        daily_stats = service_api_client.get_service_notification_statistics_by_day(
+            service_id,
+            start_date=date_range['start_date'],
+            days=date_range['days']
+        )
         emit('daily_stats_update', daily_stats)
     else:
         emit('error', {'error': 'No service_id provided'})
@@ -47,7 +51,11 @@ def handle_fetch_daily_stats(service_id):
 @socketio.on('fetch_single_month_notification_stats')
 def handle_fetch_single_month_notification_stats(service_id):
     date_range = get_stats_date_range()
-    single_month_notification_stats = service_api_client.get_single_month_notification_stats(service_id, year=date_range['current_financial_year'], month=date_range['current_month'])
+    single_month_notification_stats = service_api_client.get_single_month_notification_stats(
+        service_id,
+        year=date_range['current_financial_year'],
+        month=date_range['current_month']
+    )
     emit('single_month_notification_stats_update', single_month_notification_stats)
 
 
@@ -55,7 +63,9 @@ def handle_fetch_single_month_notification_stats(service_id):
 def handle_fetch_monthly_stats(service_id):
     date_range = get_stats_date_range()
     monthly_stats_by_year_stats = format_monthly_stats_to_list(
-        service_api_client.get_monthly_notification_stats(service_id, year=date_range['current_financial_year'])["data"]
+        service_api_client.get_monthly_notification_stats(
+            service_id,
+            year=date_range['current_financial_year'])["data"]
     )
     emit('monthly_stats_by_year_update', monthly_stats_by_year_stats)
 
@@ -471,6 +481,7 @@ def get_current_month_for_financial_year(year):
     current_month = datetime.now().month
     return current_month
 
+
 def get_stats_date_range():
     current_financial_year = get_current_financial_year()
     current_month = get_current_month_for_financial_year(current_financial_year)
@@ -482,6 +493,7 @@ def get_stats_date_range():
         "start_date": start_date,
         "days": days,
     }
+
 
 def get_months_for_year(start, end, year):
     return [datetime(year, month, 1) for month in range(start, end)]

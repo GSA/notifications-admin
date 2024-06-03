@@ -56,11 +56,6 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             "/service/{0}/notifications/month?year={1}&month={2}".format(service_id, year, month),
         )
 
-    # def get_single_month_notification_stats(self, service_id, user_id, year, month):
-    #     return self.get(
-    #         "/service/{0}/notifications/<uuid:user_id>/month?year={1}&month={2}".format(service_id, user_id, year, month),
-    #     )
-
     def get_services(self, params_dict=None):
         """
         Retrieve a list of services.
