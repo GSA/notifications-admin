@@ -251,10 +251,21 @@ def get_invited_user_email_address(invited_user_id):
 
 def invited_user_accept_invite(invited_user_id):
     invited_user = InvitedUser.by_id(invited_user_id)
+
     if invited_user.status == "expired":
         current_app.logger.error("User invitation has expired")
-        flash("Your invitation has expired.")
+        flash(
+            "Your invitation has expired; please contact the person who invited you for additional help."
+        )
         abort(401)
+
+    if invited_user.status == "cancelled":
+        current_app.logger.error("User invitation has been cancelled")
+        flash(
+            "Your invitation is no longer valid; please contact the person who invited you for additional help."
+        )
+        abort(401)
+
     invited_user.accept_invite()
 
 
