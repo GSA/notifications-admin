@@ -15,8 +15,8 @@ from app import (
     job_api_client,
     notification_api_client,
     service_api_client,
+    socketio,
     template_statistics_client,
-    socketio
 )
 from app.formatters import format_date_numeric, format_datetime_numeric, get_time_left
 from app.main import main
