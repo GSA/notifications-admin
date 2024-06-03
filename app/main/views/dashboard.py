@@ -34,40 +34,40 @@ from app.utils.user import user_has_permissions
 from notifications_utils.recipients import format_phone_number_human_readable
 
 
-@socketio.on('fetch_daily_stats')
+@socketio.on("fetch_daily_stats")
 def handle_fetch_daily_stats(service_id):
     if service_id:
         date_range = get_stats_date_range()
         daily_stats = service_api_client.get_service_notification_statistics_by_day(
-            service_id,
-            start_date=date_range['start_date'],
-            days=date_range['days']
+            service_id, start_date=date_range["start_date"], days=date_range["days"]
         )
-        emit('daily_stats_update', daily_stats)
+        emit("daily_stats_update", daily_stats)
     else:
-        emit('error', {'error': 'No service_id provided'})
+        emit("error", {"error": "No service_id provided"})
 
 
-@socketio.on('fetch_single_month_notification_stats')
+@socketio.on("fetch_single_month_notification_stats")
 def handle_fetch_single_month_notification_stats(service_id):
     date_range = get_stats_date_range()
-    single_month_notification_stats = service_api_client.get_single_month_notification_stats(
-        service_id,
-        year=date_range['current_financial_year'],
-        month=date_range['current_month']
+    single_month_notification_stats = (
+        service_api_client.get_single_month_notification_stats(
+            service_id,
+            year=date_range["current_financial_year"],
+            month=date_range["current_month"],
+        )
     )
-    emit('single_month_notification_stats_update', single_month_notification_stats)
+    emit("single_month_notification_stats_update", single_month_notification_stats)
 
 
-@socketio.on('fetch_monthly_stats_by_year')
+@socketio.on("fetch_monthly_stats_by_year")
 def handle_fetch_monthly_stats(service_id):
     date_range = get_stats_date_range()
     monthly_stats_by_year_stats = format_monthly_stats_to_list(
         service_api_client.get_monthly_notification_stats(
-            service_id,
-            year=date_range['current_financial_year'])["data"]
+            service_id, year=date_range["current_financial_year"]
+        )["data"]
     )
-    emit('monthly_stats_by_year_update', monthly_stats_by_year_stats)
+    emit("monthly_stats_by_year_update", monthly_stats_by_year_stats)
 
 
 @main.route("/services/<uuid:service_id>/dashboard")
@@ -122,7 +122,7 @@ def service_dashboard(service_id):
         partials=get_dashboard_partials(service_id),
         job_and_notifications=job_and_notifications,
         service_data_retention_days=service_data_retention_days,
-        service_id=service_id
+        service_id=service_id,
     )
 
 
@@ -362,7 +362,6 @@ def aggregate_notifications_stats(template_statistics):
 
 
 def get_dashboard_partials(service_id):
-    current_financial_year = get_current_financial_year()
     all_statistics = template_statistics_client.get_template_statistics_for_service(
         service_id, limit_days=7
     )
@@ -375,17 +374,15 @@ def get_dashboard_partials(service_id):
     )
     # These 2 calls will update the dashboard sms allowance count while in trial mode.
     billing_api_client.get_monthly_usage_for_service(
-        service_id, current_financial_year
+        service_id, get_current_financial_year()
     )
     billing_api_client.create_or_update_free_sms_fragment_limit(
         service_id, free_sms_fragment_limit=free_sms_allowance
     )
+
     yearly_usage = billing_api_client.get_annual_usage_for_service(
         service_id,
-        current_financial_year,
-    )
-    monthly_stats = format_monthly_stats_to_list(
-        service_api_client.get_monthly_notification_stats(service_id, current_financial_year)["data"]
+        get_current_financial_year(),
     )
     return {
         "upcoming": render_template(
@@ -408,7 +405,6 @@ def get_dashboard_partials(service_id):
         ),
         "usage": render_template(
             "views/dashboard/_usage.html",
-            monthly_stats=monthly_stats,
             **get_annual_usage_breakdown(yearly_usage, free_sms_allowance),
         ),
     }
@@ -485,7 +481,7 @@ def get_current_month_for_financial_year(year):
 def get_stats_date_range():
     current_financial_year = get_current_financial_year()
     current_month = get_current_month_for_financial_year(current_financial_year)
-    start_date = datetime.now().strftime('%Y-%m-%d')
+    start_date = datetime.now().strftime("%Y-%m-%d")
     days = 7
     return {
         "current_financial_year": current_financial_year,

@@ -43,9 +43,11 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             params={"limit_days": limit_days},
         )["data"]
 
-    def get_service_notification_statistics_by_day(self, service_id, start_date=None, days=None):
+    def get_service_notification_statistics_by_day(
+        self, service_id, start_date=None, days=None
+    ):
         if start_date is None:
-            start_date = datetime.now().strftime('%Y-%m-%d')
+            start_date = datetime.now().strftime("%Y-%m-%d")
 
         return self.get(
             "/service/{0}/statistics/{1}/{2}".format(service_id, start_date, days),
@@ -53,7 +55,9 @@ class ServiceAPIClient(NotifyAdminAPIClient):
 
     def get_single_month_notification_stats(self, service_id, year, month):
         return self.get(
-            "/service/{0}/notifications/month?year={1}&month={2}".format(service_id, year, month),
+            "/service/{0}/notifications/month?year={1}&month={2}".format(
+                service_id, year, month
+            ),
         )
 
     def get_services(self, params_dict=None):
