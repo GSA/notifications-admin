@@ -6,7 +6,7 @@ from itertools import groupby
 
 from flask import Response, abort, jsonify, render_template, request, session, url_for
 from flask_login import current_user
-from flask_socketio import SocketIO, emit
+from flask_socketio import emit
 from werkzeug.utils import redirect
 
 from app import (
