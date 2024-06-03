@@ -30,7 +30,7 @@ from werkzeug.local import LocalProxy
 from app import proxy_fix
 from app.asset_fingerprinter import asset_fingerprinter
 from app.config import configs
-from app.extensions import redis_client, zendesk_client
+from app.extensions import redis_client
 from app.formatters import (
     convert_markdown_template,
     convert_to_boolean,
@@ -202,7 +202,6 @@ def create_app(application):
         user_api_client,
         # External API clients
         redis_client,
-        zendesk_client,
     ):
         client.init_app(application)
 

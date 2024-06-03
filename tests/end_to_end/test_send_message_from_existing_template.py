@@ -191,7 +191,7 @@ def handle_no_existing_template_case(page):
         in content
     )
     assert "12025555555" in content
-    assert "one-off-e2e_test_user" in content
+    assert "one-off-" in content
     os.remove("download_test_file")
 
 

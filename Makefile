@@ -76,8 +76,9 @@ py-test: ## Run python unit tests
 	poetry run coverage html -d .coverage_cache
 
 .PHONY: dead-code
-dead-code:
-	poetry run vulture ./app --min-confidence=100
+dead-code: ## 60% is our aspirational goal, but currently breaks the build
+	poetry run vulture ./app ./notifications_utils --min-confidence=100
+
 
 .PHONY: e2e-test
 e2e-test: export NEW_RELIC_ENVIRONMENT=test
