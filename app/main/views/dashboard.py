@@ -25,7 +25,6 @@ from app.utils import (
     DELIVERED_STATUSES,
     FAILURE_STATUSES,
     REQUESTED_STATUSES,
-    SENDING_STATUSES,
     service_has_permission,
 )
 from app.utils.csv import Spreadsheet
@@ -88,6 +87,7 @@ def service_dashboard(service_id):
         job_id = notification.get("job", {}).get("id", None)
         if job_id:
             aggregate_notifications_by_job[job_id].append(notification)
+
     job_and_notifications = [
         {
             "job_id": job["id"],
@@ -377,7 +377,6 @@ def get_dashboard_partials(service_id):
     monthly_stats = format_monthly_stats_to_list(
         service_api_client.get_monthly_notification_stats(service_id, current_financial_year)["data"]
     )
-
     return {
         "upcoming": render_template(
             "views/dashboard/_upcoming.html",
@@ -458,8 +457,6 @@ def aggregate_status_types(counts_dict):
             "{}_counts".format(message_type): {
                 "failed": sum(stats.get(status, 0) for status in FAILURE_STATUSES),
                 "requested": sum(stats.get(status, 0) for status in REQUESTED_STATUSES),
-                "delivered": sum(stats.get(status, 0) for status in DELIVERED_STATUSES),
-                "pending": sum(stats.get(status, 0) for status in SENDING_STATUSES),
             }
             for message_type, stats in counts_dict.items()
         }
