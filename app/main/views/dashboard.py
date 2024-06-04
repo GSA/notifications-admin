@@ -46,30 +46,6 @@ def handle_fetch_daily_stats(service_id):
         emit("error", {"error": "No service_id provided"})
 
 
-@socketio.on("fetch_single_month_notification_stats")
-def handle_fetch_single_month_notification_stats(service_id):
-    date_range = get_stats_date_range()
-    single_month_notification_stats = (
-        service_api_client.get_single_month_notification_stats(
-            service_id,
-            year=date_range["current_financial_year"],
-            month=date_range["current_month"],
-        )
-    )
-    emit("single_month_notification_stats_update", single_month_notification_stats)
-
-
-@socketio.on("fetch_monthly_stats_by_year")
-def handle_fetch_monthly_stats(service_id):
-    date_range = get_stats_date_range()
-    monthly_stats_by_year_stats = format_monthly_stats_to_list(
-        service_api_client.get_monthly_notification_stats(
-            service_id, year=date_range["current_financial_year"]
-        )["data"]
-    )
-    emit("monthly_stats_by_year_update", monthly_stats_by_year_stats)
-
-
 @main.route("/services/<uuid:service_id>/dashboard")
 @user_has_permissions("view_activity", "send_messages")
 def old_service_dashboard(service_id):
