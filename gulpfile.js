@@ -97,7 +97,8 @@ const javascripts = () => {
       paths.npm + 'timeago/jquery.timeago.js',
       paths.npm + 'textarea-caret/index.js',
       paths.npm + 'cbor-js/cbor.js',
-      paths.npm + 'socket.io-client/dist/socket.io.min.js'
+      paths.npm + 'socket.io-client/dist/socket.io.min.js',
+      paths.npm + 'chart.js/dist/chart.umd.js'
     ]));
 
   // JS local to this application
