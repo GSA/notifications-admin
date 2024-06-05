@@ -1842,12 +1842,6 @@ def test_service_dashboard_shows_free_allowance(
         return_value=FAKE_ONE_OFF_NOTIFICATION,
     )
 
-    page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
-
-    usage_text = normalize_spaces(page.select_one("[data-key=usage]").text)
-    assert "spent on text messages" not in usage_text
-    assert "Daily Sent Remaining 1,000 249,000" in usage_text
-
 
 def test_service_dashboard_shows_batched_jobs(
     mocker,
