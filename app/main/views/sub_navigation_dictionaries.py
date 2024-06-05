@@ -32,7 +32,7 @@ def using_notify_nav():
             "link": "main.trial_mode_new",
         },
         {
-            "name": "Pricing",
+            "name": "Tracking usage",
             "link": "main.pricing",
         },
         {
