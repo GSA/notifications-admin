@@ -3,9 +3,11 @@ import json
 from datetime import datetime
 
 import pytest
-from flask import url_for
+from flask import Flask, url_for
+from flask_socketio import SocketIOTestClient
 from freezegun import freeze_time
 
+from app import create_app, socketio
 from app.main.views.dashboard import (
     aggregate_notifications_stats,
     aggregate_status_types,
@@ -23,6 +25,7 @@ from tests import (
 from tests.conftest import (
     ORGANISATION_ID,
     SERVICE_ONE_ID,
+    SERVICE_TWO_ID,
     create_active_caseworking_user,
     create_active_user_view_permissions,
     normalize_spaces,
@@ -1875,3 +1878,76 @@ def test_service_dashboard_shows_batched_jobs(
     assert job_table_body is not None
 
     assert len(rows) == 1
+
+
+@pytest.fixture()
+def app_with_socketio():
+    app = Flask("app")
+    create_app(app)
+    return app, socketio
+
+
+@pytest.mark.parametrize(
+    ("service_id", "date_range", "expected_call_args"),
+    [
+        (
+            SERVICE_ONE_ID,
+            {"start_date": "2024-01-01", "days": 7},
+            {"service_id": SERVICE_ONE_ID, "start_date": "2024-01-01", "days": 7}
+        ),
+        (
+            SERVICE_TWO_ID,
+            {"start_date": "2023-06-01", "days": 7},
+            {"service_id": SERVICE_TWO_ID, "start_date": "2023-06-01", "days": 7}
+        ),
+    ]
+)
+def test_fetch_daily_stats(
+    app_with_socketio, mocker,
+    service_id,
+    date_range,
+    expected_call_args
+):
+    app, socketio = app_with_socketio
+
+    mocker.patch(
+        "app.main.views.dashboard.get_stats_date_range",
+        return_value=date_range
+    )
+
+    mock_service_api = mocker.patch(
+        "app.service_api_client.get_service_notification_statistics_by_day",
+        return_value={
+            date_range["start_date"]: {
+                "email": {"delivered": 0, "failure": 0, "requested": 0},
+                "sms": {"delivered": 0, "failure": 1, "requested": 1}
+            },
+        }
+    )
+
+    client = SocketIOTestClient(app, socketio)
+    try:
+        connected = client.is_connected()
+        assert connected, "Client should be connected"
+
+        client.emit('fetch_daily_stats', service_id)
+
+        received = client.get_received()
+        assert received, "Should receive a response message"
+        assert received[0]['name'] == 'daily_stats_update'
+        assert received[0]['args'][0] == {
+            date_range["start_date"]: {
+                "email": {"delivered": 0, "failure": 0, "requested": 0},
+                "sms": {"delivered": 0, "failure": 1, "requested": 1}
+            },
+        }
+
+        mock_service_api.assert_called_once_with(
+            service_id,
+            start_date=expected_call_args["start_date"],
+            days=expected_call_args["days"]
+        )
+    finally:
+        client.disconnect()
+        disconnected = not client.is_connected()
+        assert disconnected, "Client should be disconnected"
