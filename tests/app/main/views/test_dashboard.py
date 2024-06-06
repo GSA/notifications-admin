@@ -17,7 +17,6 @@ from app.main.views.dashboard import (
     aggregate_template_usage,
     format_monthly_stats_to_list,
     get_dashboard_totals,
-    get_stats_date_range,
     get_tuples_of_financial_years,
 )
 from tests import (
