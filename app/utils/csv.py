@@ -1,10 +1,13 @@
 import datetime
 
 import pytz
+from flask import current_app, json
 from flask_login import current_user
 
 from app.models.spreadsheet import Spreadsheet
+from app.utils import hilite
 from app.utils.templates import get_sample_template
+from notifications_utils.logging import scrub
 from notifications_utils.recipients import RecipientCSV
 
 
@@ -71,7 +74,22 @@ def generate_notifications_csv(**kwargs):
 
     # This generates the "batch" csv report
     if kwargs.get("job_id"):
+        # The kwargs contain the job id, which is linked to the recipient's partial phone number in other debug
+        try:
+            current_app.logger.info(
+                hilite(f"Setting up report with kwargs {scrub(json.dumps(kwargs))}")
+            )
+        except TypeError:
+            pass
+
         original_file_contents = s3download(kwargs["service_id"], kwargs["job_id"])
+        # This will verify that the user actually did successfully upload a csv for a one-off.  Limit the size
+        # we display to 999 characters, because we don't want to show the contents for reports with thousands of rows.
+        current_app.logger.info(
+            hilite(
+                f"Original csv for job_id {kwargs['job_id']}: {scrub(original_file_contents[0:999])}"
+            )
+        )
         original_upload = RecipientCSV(
             original_file_contents,
             template=get_sample_template(kwargs["template_type"]),
