@@ -7,10 +7,7 @@ from flask import Flask, url_for
 from flask_socketio import SocketIOTestClient
 from freezegun import freeze_time
 
-from app import (
-    create_app,
-    socketio
-)
+from app import create_app, socketio
 from app.main.views.dashboard import (
     aggregate_notifications_stats,
     aggregate_status_types,
