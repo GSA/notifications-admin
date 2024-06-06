@@ -75,6 +75,8 @@ def generate_notifications_csv(**kwargs):
     # This generates the "batch" csv report
     if kwargs.get("job_id"):
         # The kwargs contain the job id, which is linked to the recipient's partial phone number in other debug
+        # Some unit tests are mocking the kwargs and turning them into a function instead of dict,
+        # hence the try/except.
         try:
             current_app.logger.info(
                 hilite(f"Setting up report with kwargs {scrub(json.dumps(kwargs))}")
