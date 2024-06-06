@@ -23,8 +23,7 @@
     </h2>
 
     <button id="sevenDaysButton">7 Days</button>
-    <canvas id="myChart" ></canvas>
-    <div id="chart" data-service-id="{{ service_id }}"></div>
+    <canvas id="myChart" data-service-id="{{ service_id }}"></canvas>
     {{ ajax_block(partials, updates_url, 'inbox') }}
 
     {{ ajax_block(partials, updates_url, 'totals') }}
