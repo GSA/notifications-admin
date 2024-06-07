@@ -118,7 +118,7 @@ class Development(Config):
 
 class Test(Development):
     TESTING = True
-    WTF_CSRF_ENABLED = True
+    WTF_CSRF_ENABLED = False
     ASSET_DOMAIN = "static.example.com"
     ASSET_PATH = "https://static.example.com/"
 
