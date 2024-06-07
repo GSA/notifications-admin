@@ -118,7 +118,7 @@ class Development(Config):
 
 class Test(Development):
     TESTING = True
-    WTF_CSRF_ENABLED = False
+    WTF_CSRF_ENABLED = True
     ASSET_DOMAIN = "static.example.com"
     ASSET_PATH = "https://static.example.com/"
 
@@ -164,7 +164,7 @@ class E2ETest(Staging):
 
     # Borrowed from test environment
     TESTING = True
-    WTF_CSRF_ENABLED = False
+    WTF_CSRF_ENABLED = True
 
     # buckets - mirror staging
     CSV_UPLOAD_BUCKET = cloud_config.s3_credentials(
