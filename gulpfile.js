@@ -100,7 +100,9 @@ const javascripts = () => {
       paths.npm + 'query-command-supported/dist/queryCommandSupported.min.js',
       paths.npm + 'timeago/jquery.timeago.js',
       paths.npm + 'textarea-caret/index.js',
-      paths.npm + 'cbor-js/cbor.js'
+      paths.npm + 'cbor-js/cbor.js',
+      paths.npm + 'socket.io-client/dist/socket.io.min.js',
+      paths.npm + 'chart.js/dist/chart.umd.js'
     ]));
 
   // JS local to this application
@@ -131,7 +133,7 @@ const javascripts = () => {
     paths.src + 'javascripts/dataVisualization.js',
     paths.src + 'javascripts/dashboardVisualization.js',
     paths.src + 'javascripts/main.js',
-    paths.src + 'javascripts/chartDashboard.js',
+    paths.src + 'javascripts/sampleChartDashboard.js',
   ])
     .pipe(plugins.prettyerror())
     .pipe(plugins.babel({
