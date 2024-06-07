@@ -233,6 +233,14 @@ def create_app(application):
     )
     logging.init_app(application)
 
+    import hashlib
+
+    for key in ("SECRET_KEY", "DANGEROUS_SALT"):
+        application.logger.info(
+            f"{key} Length: {len(application.config[key])}; "
+            f"SHA-1: {hashlib.sha1(application.config[key].encode('utf8'), usedforsecurity=False).hexdigest()}"
+        )
+
     login_manager.login_view = "main.sign_in"
     login_manager.login_message_category = "default"
     login_manager.session_protection = None
