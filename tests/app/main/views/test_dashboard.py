@@ -1893,26 +1893,22 @@ def app_with_socketio():
         (
             SERVICE_ONE_ID,
             {"start_date": "2024-01-01", "days": 7},
-            {"service_id": SERVICE_ONE_ID, "start_date": "2024-01-01", "days": 7}
+            {"service_id": SERVICE_ONE_ID, "start_date": "2024-01-01", "days": 7},
         ),
         (
             SERVICE_TWO_ID,
             {"start_date": "2023-06-01", "days": 7},
-            {"service_id": SERVICE_TWO_ID, "start_date": "2023-06-01", "days": 7}
+            {"service_id": SERVICE_TWO_ID, "start_date": "2023-06-01", "days": 7},
         ),
-    ]
+    ],
 )
 def test_fetch_daily_stats(
-    app_with_socketio, mocker,
-    service_id,
-    date_range,
-    expected_call_args
+    app_with_socketio, mocker, service_id, date_range, expected_call_args
 ):
     app, socketio = app_with_socketio
 
     mocker.patch(
-        "app.main.views.dashboard.get_stats_date_range",
-        return_value=date_range
+        "app.main.views.dashboard.get_stats_date_range", return_value=date_range
     )
 
     mock_service_api = mocker.patch(
@@ -1920,9 +1916,9 @@ def test_fetch_daily_stats(
         return_value={
             date_range["start_date"]: {
                 "email": {"delivered": 0, "failure": 0, "requested": 0},
-                "sms": {"delivered": 0, "failure": 1, "requested": 1}
+                "sms": {"delivered": 0, "failure": 1, "requested": 1},
             },
-        }
+        },
     )
 
     client = SocketIOTestClient(app, socketio)
@@ -1930,22 +1926,22 @@ def test_fetch_daily_stats(
         connected = client.is_connected()
         assert connected, "Client should be connected"
 
-        client.emit('fetch_daily_stats', service_id)
+        client.emit("fetch_daily_stats", service_id)
 
         received = client.get_received()
         assert received, "Should receive a response message"
-        assert received[0]['name'] == 'daily_stats_update'
-        assert received[0]['args'][0] == {
+        assert received[0]["name"] == "daily_stats_update"
+        assert received[0]["args"][0] == {
             date_range["start_date"]: {
                 "email": {"delivered": 0, "failure": 0, "requested": 0},
-                "sms": {"delivered": 0, "failure": 1, "requested": 1}
+                "sms": {"delivered": 0, "failure": 1, "requested": 1},
             },
         }
 
         mock_service_api.assert_called_once_with(
             service_id,
             start_date=expected_call_args["start_date"],
-            days=expected_call_args["days"]
+            days=expected_call_args["days"],
         )
     finally:
         client.disconnect()
