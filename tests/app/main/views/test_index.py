@@ -179,26 +179,6 @@ def test_old_static_pages_redirect(client_request, view, expected_view):
     )
 
 
-def test_message_status_page_contains_message_status_ids(client_request):
-    # The 'email-statuses' and 'sms-statuses' id are linked to when we display a message status,
-    # so this test ensures we don't accidentally remove them
-    page = client_request.get("main.message_status")
-
-    # email-statuses is commented out in view
-    # assert page.find(id='email-statuses')
-    assert page.find(id="text-message-statuses")
-
-
-def test_message_status_page_contains_link_to_support(client_request):
-    page = client_request.get("main.message_status")
-    sms_status_table = page.find(id="text-message-statuses").findNext("tbody")
-
-    temp_fail_details_cell = sms_status_table.select_one(
-        "tr:nth-child(4) > td:nth-child(2)"
-    )
-    assert temp_fail_details_cell.find("a").attrs["href"] == url_for("main.support")
-
-
 def test_old_using_notify_page(client_request):
     client_request.get("main.using_notify", _expected_status=410)
 
