@@ -49,3 +49,13 @@ def test_base_json_formatter_contains_service_id():
         == "message to log"
     )
     assert service_id_filter.filter(record).service_id == "no-service-id"
+
+
+def test_scrub():
+    result = logging.scrub(
+        "This is a message with 17775554324, and also 18884449323 and also 17775554324"
+    )
+    assert (
+        result
+        == "This is a message with 1XXXXX54324, and also 1XXXXX49323 and also 1XXXXX54324"
+    )
