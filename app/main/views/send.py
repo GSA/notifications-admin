@@ -51,7 +51,6 @@ from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
 from notifications_utils import SMS_CHAR_COUNT_LIMIT
 from notifications_utils.insensitive_dict import InsensitiveDict
-from notifications_utils.logging import scrub
 from notifications_utils.recipients import RecipientCSV, first_column_headings
 from notifications_utils.sanitise_text import SanitiseASCII
 
@@ -953,9 +952,7 @@ def send_notification(service_id, template_id):
             )
         )
 
-    current_app.logger.info(
-        hilite(scrub(f"Recipient for the one-off will be {recipient}"))
-    )
+    current_app.logger.info(hilite(f"Recipient for the one-off will be {recipient}"))
     keys = []
     values = []
     for k, v in session["placeholders"].items():
@@ -996,9 +993,7 @@ def send_notification(service_id, template_id):
     # about report generation.
     current_app.logger.info(
         hilite(
-            scrub(
-                f"Created job to send one-off, recipient is {recipient}, job_id is {upload_id}"
-            )
+            f"Created job to send one-off, recipient is {recipient}, job_id is {upload_id}"
         )
     )
 

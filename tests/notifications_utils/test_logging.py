@@ -51,11 +51,16 @@ def test_base_json_formatter_contains_service_id():
     assert service_id_filter.filter(record).service_id == "no-service-id"
 
 
-def test_scrub():
-    result = logging.scrub(
-        "This is a message with 17775554324, and also 18884449323 and also 17775554324"
+def test_pii_filter():
+    record = builtin_logging.LogRecord(
+        name="log thing",
+        level="info",
+        pathname="path",
+        lineno=123,
+        msg="phone1: 1555555555, phone2: 1555555554, email1: fake@fake.gov, email2: fake@fake2.fake.gov",
+        exc_info=None,
+        args=None,
     )
-    assert (
-        result
-        == "This is a message with 1XXXXX54324, and also 1XXXXX49323 and also 1XXXXX54324"
-    )
+    pii_filter = logging.PIIFilter()
+    clean_msg = "phone1: 1XXXXX55555, phone2: 1XXXXX55554, email1: XXXXXe@fake.gov, email2: XXXXX2.fake.gov"
+    assert pii_filter.filter(record).msg == clean_msg
