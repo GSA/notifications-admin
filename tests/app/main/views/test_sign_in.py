@@ -3,7 +3,6 @@ import uuid
 import pytest
 from flask import url_for
 
-from app.main.views.sign_in import _reformat_keystring
 from app.models.user import User
 from tests.conftest import SERVICE_ONE_ID, normalize_spaces
 
