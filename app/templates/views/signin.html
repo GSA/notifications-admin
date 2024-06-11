@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% from "components/page-footer.html" import page_footer %}
+{% from "components/form.html" import form_wrapper %}
+
+{% block per_page_title %}
+  {% if again %}
+    You need to sign in again
+  {% else %}
+    Sign in
+  {% endif %}
+{% endblock %}
+
+{% block maincolumn_content %}
+
+<div class="grid-row margin-bottom-4">
+  <div class="tablet:grid-col-5">
+    {% if again %}
+      <h1 class="font-body-2xl margin-bottom-3">You need to sign in again</h1>
+      {% if other_device %}
+        <p>
+          We signed you out because you logged in to Notify on another device.
+        </p>
+      {% else %}
+        <p>
+          We signed you out because you have not used Notify for a while.
+        </p>
+      {% endif %}
+      <a class="usa-link usa-button" href="{{ initial_signin_url }}">Sign in with Login.gov</a>
+    {% else %}
+      <h1 class="font-body-2xl margin-bottom-3">Sign in</h1>
+      <p>Access your Notify.gov account by signing in with Login.gov:</p>
+      <a class="usa-link usa-button" href="{{ initial_signin_url }}">Sign in with Login.gov</a>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
