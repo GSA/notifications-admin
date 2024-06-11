@@ -157,15 +157,14 @@ td.table-empty-message {
    }
 }
 
-.usa-button svg {
+.usa-button img {
    margin-left: .5rem;
    height: 1rem;
 }
 
-.login-button.login-button--primary, .login-button.login-button--primary:hover {
-   color: #112e51;
-   background-color: #fff;
-   border: 1px solid #767676;
+.login-button.login-button--primary,.login-button.login-button--primary:hover{
+   color:#112e51;background-color:#fff;
+   border:1px solid #767676;
    display: inline-flex;
    justify-content: center;
 }
