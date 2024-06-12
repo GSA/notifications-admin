@@ -1844,14 +1844,6 @@ def mock_get_users_by_service(mocker):
 
 
 @pytest.fixture()
-def mock_s3_upload(mocker):
-    def _upload(service_id, filedata):
-        return sample_uuid()
-
-    return mocker.patch("app.main.views.send.s3upload", side_effect=_upload)
-
-
-@pytest.fixture()
 def mock_s3_download(mocker):
     def _download(service_id, upload_id):
         return """
@@ -1861,21 +1853,6 @@ def mock_s3_download(mocker):
         """
 
     return mocker.patch("app.main.views.send.s3download", side_effect=_download)
-
-
-@pytest.fixture()
-def mock_s3_get_metadata(mocker):
-    def _get_metadata(service_id, upload_id):
-        return {"original_file_name": "example.csv"}
-
-    return mocker.patch(
-        "app.main.views.send.get_csv_metadata", side_effect=_get_metadata
-    )
-
-
-@pytest.fixture()
-def mock_s3_set_metadata(mocker):
-    return mocker.patch("app.main.views.send.set_metadata_on_csv_upload")
 
 
 @pytest.fixture()

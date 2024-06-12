@@ -6,6 +6,7 @@ from itertools import groupby
 
 from flask import Response, abort, jsonify, render_template, request, session, url_for
 from flask_login import current_user
+from flask_socketio import emit
 from werkzeug.utils import redirect
 
 from app import (
@@ -14,6 +15,7 @@ from app import (
     job_api_client,
     notification_api_client,
     service_api_client,
+    socketio,
     template_statistics_client,
 )
 from app.formatters import format_date_numeric, format_datetime_numeric, get_time_left
@@ -30,6 +32,18 @@ from app.utils.pagination import generate_next_dict, generate_previous_dict
 from app.utils.time import get_current_financial_year
 from app.utils.user import user_has_permissions
 from notifications_utils.recipients import format_phone_number_human_readable
+
+
+@socketio.on("fetch_daily_stats")
+def handle_fetch_daily_stats(service_id):
+    if service_id:
+        date_range = get_stats_date_range()
+        daily_stats = service_api_client.get_service_notification_statistics_by_day(
+            service_id, start_date=date_range["start_date"], days=date_range["days"]
+        )
+        emit("daily_stats_update", daily_stats)
+    else:
+        emit("error", {"error": "No service_id provided"})
 
 
 @main.route("/services/<uuid:service_id>/dashboard")
@@ -84,6 +98,7 @@ def service_dashboard(service_id):
         partials=get_dashboard_partials(service_id),
         job_and_notifications=job_and_notifications,
         service_data_retention_days=service_data_retention_days,
+        service_id=service_id,
     )
 
 
@@ -432,6 +447,24 @@ def aggregate_status_types(counts_dict):
 
 def get_months_for_financial_year(year, time_format="%B"):
     return [month.strftime(time_format) for month in (get_months_for_year(1, 13, year))]
+
+
+def get_current_month_for_financial_year(year):
+    current_month = datetime.now().month
+    return current_month
+
+
+def get_stats_date_range():
+    current_financial_year = get_current_financial_year()
+    current_month = get_current_month_for_financial_year(current_financial_year)
+    start_date = datetime.now().strftime("%Y-%m-%d")
+    days = 7
+    return {
+        "current_financial_year": current_financial_year,
+        "current_month": current_month,
+        "start_date": start_date,
+        "days": days,
+    }
 
 
 def get_months_for_year(start, end, year):

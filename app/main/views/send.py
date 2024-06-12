@@ -3,7 +3,16 @@ import uuid
 from string import ascii_uppercase
 from zipfile import BadZipFile
 
-from flask import abort, flash, redirect, render_template, request, session, url_for
+from flask import (
+    abort,
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from flask_login import current_user
 from markupsafe import Markup
 from notifications_python_client.errors import HTTPError
@@ -31,12 +40,18 @@ from app.s3_client.s3_csv_client import (
     s3upload,
     set_metadata_on_csv_upload,
 )
-from app.utils import PermanentRedirect, should_skip_template_page, unicode_truncate
+from app.utils import (
+    PermanentRedirect,
+    hilite,
+    should_skip_template_page,
+    unicode_truncate,
+)
 from app.utils.csv import Spreadsheet, get_errors_for_csv
 from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
 from notifications_utils import SMS_CHAR_COUNT_LIMIT
 from notifications_utils.insensitive_dict import InsensitiveDict
+from notifications_utils.logging import scrub
 from notifications_utils.recipients import RecipientCSV, first_column_headings
 from notifications_utils.sanitise_text import SanitiseASCII
 
@@ -938,6 +953,9 @@ def send_notification(service_id, template_id):
             )
         )
 
+    current_app.logger.info(
+        hilite(scrub(f"Recipient for the one-off will be {recipient}"))
+    )
     keys = []
     values = []
     for k, v in session["placeholders"].items():
@@ -969,6 +987,19 @@ def send_notification(service_id, template_id):
         original_file_name=filename,
         notification_count=1,
         valid="True",
+    )
+
+    # Here we are attempting to cleverly link the job id to the one-off recipient
+    # If we know the partial phone number of the recipient, we can search
+    # on that initially and find this, which will give us the job_id
+    # And once we know the job_id, we can search on that and it might tell us something
+    # about report generation.
+    current_app.logger.info(
+        hilite(
+            scrub(
+                f"Created job to send one-off, recipient is {recipient}, job_id is {upload_id}"
+            )
+        )
     )
 
     session.pop("recipient")
