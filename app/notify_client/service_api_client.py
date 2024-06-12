@@ -53,6 +53,16 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             "/service/{0}/statistics/{1}/{2}".format(service_id, start_date, days),
         )["data"]
 
+    def get_user_service_notification_statistics_by_day(
+        self, service_id, user_id, start_date=None, days=None
+    ):
+        if start_date is None:
+            start_date = datetime.now().strftime("%Y-%m-%d")
+
+        return self.get(
+            "/service/{0}/statistics/user/{1}/{2}/{3}".format(service_id, user_id, start_date, days),
+        )["data"]
+
     def get_services(self, params_dict=None):
         """
         Retrieve a list of services.
