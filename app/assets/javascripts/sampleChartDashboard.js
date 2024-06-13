@@ -20,6 +20,7 @@
                 ]
             },
             options: {
+                animation: false,
                 scales: {
                     y: {
                         beginAtZero: true
@@ -38,10 +39,12 @@
         socket.on('daily_stats_update', function(data) {
             var labels = [];
             var deliveredData = [];
+            var failedData = [];
 
             for (var date in data) {
                 labels.push(date);
                 deliveredData.push(data[date].sms.delivered);
+
             }
 
             myBarChart.data.labels = labels;
