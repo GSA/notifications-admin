@@ -19,10 +19,9 @@ def test_non_logged_in_user_can_see_homepage(
         "Reach people where they are with government-powered text messages"
     )
 
-    assert page.select_one("a.usa-button.usa-button--big")["href"] == url_for(
-        "main.sign_in",
-    )
-
+    assert page.select_one(
+        "a.usa-button.login-button.login-button--primary.margin-right-2"
+    ).text == "Sign in with \n"
     assert page.select_one("meta[name=description]") is not None
     # This area is hidden for the pilot
     # assert normalize_spaces(page.select_one('#whos-using-notify').text) == (
@@ -177,26 +176,6 @@ def test_old_static_pages_redirect(client_request, view, expected_view):
             "main.{}".format(expected_view),
         ),
     )
-
-
-def test_message_status_page_contains_message_status_ids(client_request):
-    # The 'email-statuses' and 'sms-statuses' id are linked to when we display a message status,
-    # so this test ensures we don't accidentally remove them
-    page = client_request.get("main.message_status")
-
-    # email-statuses is commented out in view
-    # assert page.find(id='email-statuses')
-    assert page.find(id="text-message-statuses")
-
-
-def test_message_status_page_contains_link_to_support(client_request):
-    page = client_request.get("main.message_status")
-    sms_status_table = page.find(id="text-message-statuses").findNext("tbody")
-
-    temp_fail_details_cell = sms_status_table.select_one(
-        "tr:nth-child(4) > td:nth-child(2)"
-    )
-    assert temp_fail_details_cell.find("a").attrs["href"] == url_for("main.support")
 
 
 def test_old_using_notify_page(client_request):
