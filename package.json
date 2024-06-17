@@ -21,9 +21,8 @@
   "author": "General Services Administration",
   "license": "CC0",
   "homepage": "https://github.com/GSA/notifications-admin#readme",
-
   "overrides": {
-      "graceful-fs": "^4.2.11"
+    "graceful-fs": "^4.2.11"
   },
   "dependencies": {
     "@uswds/uswds": "^3.4.1",
@@ -46,8 +45,8 @@
     "@babel/preset-env": "7.19.4",
     "@uswds/compile": "^1.1.0",
     "better-npm-audit": "^3.7.3",
-    "gulp": "^4.0.2",
-    "gulp-add-src": "^0.2.0",
+    "gulp": "^5.0.0",
+    "gulp-add-src": "^1.0.0",
     "gulp-babel": "8.0.0",
     "gulp-better-rollup": "4.0.1",
     "gulp-clean-css": "4.3.0",
