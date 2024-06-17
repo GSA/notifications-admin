@@ -9,27 +9,14 @@
     const FONT_WEIGHT = 'bold';
     const MAX_Y = 120;
 
-    let currentLabels = [];
-    let currentDeliveredData = [];
-    let currentFailedData = [];
-
-    // Function to format the date
-    function formatDate(dateStr) {
-        const date = new Date(dateStr);
-        const month = date.getMonth() + 1;
-        const day = date.getDate();
-        const year = date.getFullYear().toString().slice(-2);
-        return `${month}/${day}/${year}`;
-    }
-
     // Function to create a stacked bar chart with animation using D3.js
     function createChart(containerId, labels, deliveredData, failedData) {
-        currentLabels = labels;
-        currentDeliveredData = deliveredData;
-        currentFailedData = failedData;
-
         const container = d3.select(containerId);
         container.selectAll('*').remove(); // Clear any existing content
+
+        // Dynamically create tooltip element
+        const tooltip = container.append('div')
+            .attr('id', 'tooltip');
 
         const margin = { top: 60, right: 20, bottom: 40, left: 20 }; // Adjusted top margin for legend
         const width = container.node().getBoundingClientRect().width - margin.left - margin.right;
@@ -42,33 +29,36 @@
             .attr('transform', `translate(${margin.left},${margin.top})`);
 
         // Create legend
+        const legend = svg.append('g')
+            .attr('class', 'legend')
+            .attr('transform', `translate(${width - 200},-40)`); // Adjust the position of the legend
+
         const legendData = [
             { label: 'Delivered', color: COLORS.delivered },
             { label: 'Failed', color: COLORS.failed }
         ];
 
-        const legend = d3.select('.chart-legend').selectAll('.legend-item')
-            .data(legendData);
+        const legendItem = legend.selectAll('.legend-item')
+            .data(legendData)
+            .enter()
+            .append('g')
+            .attr('class', 'legend-item')
+            .attr('transform', (d, i) => `translate(${i * 100},0)`); // Adjust the spacing between legend items
 
-        const legendEnter = legend.enter().append('div')
-            .attr('class', 'legend-item');
-
-        legendEnter.append('rect')
+        legendItem.append('rect')
             .attr('width', 18)
             .attr('height', 18)
             .attr('fill', d => d.color);
 
-        legendEnter.append('text')
+        legendItem.append('text')
             .attr('x', 24)
             .attr('y', 9)
             .attr('dy', '0.35em')
             .style('text-anchor', 'start')
             .text(d => d.label);
 
-        legend.exit().remove();
-
         const x = d3.scaleBand()
-            .domain(labels.map(formatDate)) // Format the dates
+            .domain(labels)
             .range([0, width])
             .padding(0.1);
 
@@ -95,7 +85,7 @@
 
         // Data for stacking
         const stackData = labels.map((label, i) => ({
-            label: formatDate(label), // Format the dates
+            label: label,
             delivered: deliveredData[i],
             failed: failedData[i] || 0 // Ensure there's a value for failed, even if it's 0
         }));
@@ -113,9 +103,6 @@
             .domain(['delivered', 'failed'])
             .range([COLORS.delivered, COLORS.failed]);
 
-        // Create tooltip
-        const tooltip = d3.select('#tooltip');
-
         // Create bars with animation
         const barGroups = svg.selectAll('.bar-group')
             .data(series)
@@ -132,18 +119,18 @@
             .attr('y', height)
             .attr('height', 0)
             .attr('width', x.bandwidth())
-            .on('mouseover', function (event, d) {
+            .on('mouseover', function(event, d) {
                 const key = d3.select(this.parentNode).datum().key;
                 const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
                 tooltip.style('display', 'block')
                     .html(`${d.data.label}<br>${capitalizedKey}: ${d.data[key]}`);
             })
-            .on('mousemove', function (event) {
+            .on('mousemove', function(event) {
                 const containerPosition = container.node().getBoundingClientRect();
-                tooltip.style('left', `${event.clientX - containerPosition.left + 35}px`)
-                    .style('top', `${event.clientY - containerPosition.top + 135}px`);
+                tooltip.style('left', `${event.clientX - containerPosition.left + 10}px`)
+                    .style('top', `${event.clientY - containerPosition.top + 10}px`);
             })
-            .on('mouseout', function () {
+            .on('mouseout', function() {
                 tooltip.style('display', 'none');
             })
             .transition()
@@ -177,7 +164,7 @@
         labels.forEach((label, index) => {
             const row = document.createElement('tr');
             const cellDay = document.createElement('td');
-            cellDay.textContent = formatDate(label); // Format the dates
+            cellDay.textContent = label;
             row.appendChild(cellDay);
 
             const cellDelivered = document.createElement('td');
@@ -205,11 +192,11 @@
         var socket = io();
         var serviceId = ctx.getAttribute('data-service-id');
 
-        socket.on('connect', function () {
+        socket.on('connect', function() {
             socket.emit('fetch_daily_stats', serviceId);
         });
 
-        socket.on('daily_stats_update', function (data) {
+        socket.on('daily_stats_update', function(data) {
             var labels = [];
             var deliveredData = [];
             var failedData = [];
@@ -224,7 +211,7 @@
             createTable('weeklyTable', 'Weekly', labels, deliveredData, failedData);
         });
 
-        socket.on('error', function (data) {
+        socket.on('error', function(data) {
             console.log('Error:', data);
         });
     }
@@ -251,13 +238,7 @@
         }
     }
 
-    function updateChartSize() {
-        createChart('#weeklyChart', currentLabels, currentDeliveredData, currentFailedData);
-    }
-
-    window.addEventListener('resize', updateChartSize);
-
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         // Initialize weekly chart and table with service data by default
         fetchServiceData();
 

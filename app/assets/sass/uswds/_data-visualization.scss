@@ -107,24 +107,27 @@ $failed: color('orange-30v');
 //   padding: 10px; /* Replace units(1) with 10px */
 // }
 
-#chartsArea {
-  min-height: 400px;
-}
-
-.chart-subtitle {
-  text-align: left;
-  width: 100%;
-  font-size: size("body", 6);
-  font-weight: bold;
-  padding: 0 units(1);
-  margin: 0;
-}
-
 .chart {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.chart-subtitle {
+  font-size: size("body", 6);
+  font-weight: bold;
+  text-align: left;
+  width: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 .axis text {
@@ -147,6 +150,23 @@ $failed: color('orange-30v');
   position: relative;
 }
 
+.chart-legend {
+    display: flex;
+    align-items: center;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-right: units(2);
+}
+
+.legend-item rect {
+    width: units(2);
+    height: units(2);
+    margin-right: units(1);
+}
+
 #tooltip {
   position: absolute;
   display: none;
@@ -157,5 +177,6 @@ $failed: color('orange-30v');
   border-radius: units(1);
   pointer-events: none;
   z-index: 100;
-  font-size: size("body", 4);
+  font-size: size("body", 3);
+  line-height: 1.3;
 }
