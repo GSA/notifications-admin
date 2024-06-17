@@ -118,7 +118,7 @@ class Development(Config):
 
 class Test(Development):
     TESTING = True
-    WTF_CSRF_ENABLED = False  # If enabled, pytest breaks.
+    WTF_CSRF_ENABLED = False
     ASSET_DOMAIN = "static.example.com"
     ASSET_PATH = "https://static.example.com/"
 
@@ -146,9 +146,6 @@ class Production(Config):
 class Staging(Production):
     HEADER_COLOUR = "#00ff00"  # $green
 
-    # Attempting to enable CSRF in staging with the hopes that we can duplicate errors.
-    WTF_CSRF_ENABLED = True
-
 
 class E2ETest(Staging):
     """
@@ -167,8 +164,6 @@ class E2ETest(Staging):
 
     # Borrowed from test environment
     TESTING = True
-
-    # Disabling CSRF for e2e because things break (a11y & dynamic scan)
     WTF_CSRF_ENABLED = False
 
     # buckets - mirror staging
