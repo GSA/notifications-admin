@@ -4,8 +4,10 @@ from datetime import datetime
 
 import pytest
 from flask import Flask, url_for
-from flask_socketio import SocketIOTestClient
+from flask_socketio import SocketIO, SocketIOTestClient
 from freezegun import freeze_time
+from boto3 import Session
+import app
 
 from app import create_app, socketio
 from app.main.views.dashboard import (
@@ -15,6 +17,7 @@ from app.main.views.dashboard import (
     format_monthly_stats_to_list,
     get_dashboard_totals,
     get_tuples_of_financial_years,
+    handle_fetch_daily_stats
 )
 from tests import (
     organization_json,
@@ -1884,6 +1887,12 @@ def test_service_dashboard_shows_batched_jobs(
 def app_with_socketio():
     app = Flask("app")
     create_app(app)
+    socketio = SocketIO(app, manage_session=False)
+
+    @socketio.on("fetch_daily_stats")
+    def fetch_daily_stats_handler():
+        handle_fetch_daily_stats()
+
     return app, socketio
 
 
@@ -1893,26 +1902,26 @@ def app_with_socketio():
         (
             SERVICE_ONE_ID,
             {"start_date": "2024-01-01", "days": 7},
-            {"service_id": SERVICE_ONE_ID, "start_date": "2024-01-01", "days": 7}
+            {"service_id": SERVICE_ONE_ID, "start_date": "2024-01-01", "days": 7},
         ),
         (
-            SERVICE_TWO_ID,
+            SERVICE_ONE_ID,
             {"start_date": "2023-06-01", "days": 7},
             {"service_id": SERVICE_TWO_ID, "start_date": "2023-06-01", "days": 7}
         ),
-    ]
+    ],
 )
 def test_fetch_daily_stats(
-    app_with_socketio, mocker,
-    service_id,
+    app_with_socketio,
+    mocker, service_id,
     date_range,
-    expected_call_args
+    expected_call_args,
+    client_request,
 ):
     app, socketio = app_with_socketio
 
     mocker.patch(
-        "app.main.views.dashboard.get_stats_date_range",
-        return_value=date_range
+        "app.main.views.dashboard.get_stats_date_range", return_value=date_range
     )
 
     mock_service_api = mocker.patch(
@@ -1920,34 +1929,39 @@ def test_fetch_daily_stats(
         return_value={
             date_range["start_date"]: {
                 "email": {"delivered": 0, "failure": 0, "requested": 0},
-                "sms": {"delivered": 0, "failure": 1, "requested": 1}
+                "sms": {"delivered": 0, "failure": 1, "requested": 1},
             },
-        }
+        },
     )
 
     client = SocketIOTestClient(app, socketio)
-    try:
-        connected = client.is_connected()
-        assert connected, "Client should be connected"
 
-        client.emit('fetch_daily_stats', service_id)
+    with client_request.session_transaction() as session:
+        # service_id = session["service_id"]
+        try:
+            connected = client.is_connected()
+            assert connected, "Client should be connected"
 
-        received = client.get_received()
-        assert received, "Should receive a response message"
-        assert received[0]['name'] == 'daily_stats_update'
-        assert received[0]['args'][0] == {
-            date_range["start_date"]: {
-                "email": {"delivered": 0, "failure": 0, "requested": 0},
-                "sms": {"delivered": 0, "failure": 1, "requested": 1}
-            },
-        }
+            # service_id = session["service_id"]
+            client.emit('fetch_daily_stats')
+            received = client.get_received()
+            print(f"Received messages: {received}")
 
-        mock_service_api.assert_called_once_with(
-            service_id,
-            start_date=expected_call_args["start_date"],
-            days=expected_call_args["days"]
-        )
-    finally:
-        client.disconnect()
-        disconnected = not client.is_connected()
-        assert disconnected, "Client should be disconnected"
+            assert received, "Should receive a response message"
+            assert received[0]["name"] == "daily_stats_update"
+            assert received[0]["args"][0] == {
+                date_range["start_date"]: {
+                    "email": {"delivered": 0, "failure": 0, "requested": 0},
+                    "sms": {"delivered": 0, "failure": 1, "requested": 1},
+                },
+            }
+
+            mock_service_api.assert_called_once_with(
+                service_id,
+                start_date=expected_call_args["start_date"],
+                days=expected_call_args["days"],
+            )
+        finally:
+            client.disconnect()
+            disconnected = not client.is_connected()
+            assert disconnected, "Client should be disconnected"

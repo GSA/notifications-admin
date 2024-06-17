@@ -4,7 +4,7 @@ from datetime import datetime
 from functools import partial
 from itertools import groupby
 
-from flask import Response, abort, jsonify, render_template, request, session, url_for
+from flask import Response, abort, jsonify, render_template, request, session, url_for,Flask, g
 from flask_login import current_user
 from flask_socketio import emit
 from werkzeug.utils import redirect
@@ -32,11 +32,23 @@ from app.utils.pagination import generate_next_dict, generate_previous_dict
 from app.utils.time import get_current_financial_year
 from app.utils.user import user_has_permissions
 from notifications_utils.recipients import format_phone_number_human_readable
-
+from flask_socketio import SocketIO
+import app
 
 @socketio.on("fetch_daily_stats")
 def handle_fetch_daily_stats():
     service_id = session.get('service_id')
+    print('''
+
+
+
+
+
+
+          service_id ''',
+
+          service_id)
+
     if service_id:
         date_range = get_stats_date_range()
         daily_stats = service_api_client.get_service_notification_statistics_by_day(
@@ -49,12 +61,18 @@ def handle_fetch_daily_stats():
 
 @socketio.on("fetch_daily_stats_by_user")
 def handle_fetch_daily_stats_by_user():
-    service_id = session.get('service_id')
-    user_id = session.get('user_id')
+    service_id = session.get("service_id")
+    user_id = session.get("user_id")
+    # print(f"Service ID in handler: {service_id}")
     if service_id and user_id:
         date_range = get_stats_date_range()
-        daily_stats_by_user = service_api_client.get_user_service_notification_statistics_by_day(
-            service_id, user_id, start_date=date_range["start_date"], days=date_range["days"]
+        daily_stats_by_user = (
+            service_api_client.get_user_service_notification_statistics_by_day(
+                service_id,
+                user_id,
+                start_date=date_range["start_date"],
+                days=date_range["days"],
+            )
         )
         emit("daily_stats_by_user_update", daily_stats_by_user)
     else:

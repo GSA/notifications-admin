@@ -60,7 +60,9 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             start_date = datetime.now().strftime("%Y-%m-%d")
 
         return self.get(
-            "/service/{0}/statistics/user/{1}/{2}/{3}".format(service_id, user_id, start_date, days),
+            "/service/{0}/statistics/user/{1}/{2}/{3}".format(
+                service_id, user_id, start_date, days
+            ),
         )["data"]
 
     def get_services(self, params_dict=None):
