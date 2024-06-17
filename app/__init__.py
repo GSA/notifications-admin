@@ -243,7 +243,7 @@ def create_app(application):
         else:
             try:
                 data_len = len(value.strip())
-            except {TypeError, AttributeError}:
+            except (TypeError, AttributeError):
                 application.logger.error(f"Env Var {key} invalid type: {type(value)}")
             else:
                 application.logger.info(f"Env Var {key} Length: {data_len}")
