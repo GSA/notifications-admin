@@ -6,7 +6,6 @@ $failed: color('orange-30v');
 
 .chart-container {
   display: flex;
-  height: units(8);
   &.usage {
     height: units(4);
   }
@@ -58,7 +57,7 @@ $failed: color('orange-30v');
   line-height: 1;
   .usa-tooltip__body {
     width: units(mobile);
-    font-size: units(1);
+      font-size: size("body", 2);
     height: auto;
     white-space: wrap;
     line-height: units(1);
@@ -104,7 +103,7 @@ $failed: color('orange-30v');
 // .tabcontent {
 //   display: none;
 //   height: 400px;
-//   width: 100%;
+//   width: 100%;h
 //   padding: 10px; /* Replace units(1) with 10px */
 // }
 
@@ -115,9 +114,9 @@ $failed: color('orange-30v');
 .chart-subtitle {
   text-align: left;
   width: 100%;
-  font-size: units(2);
+  font-size: size("body", 6);
   font-weight: bold;
-  padding: 10px;
+  padding: 0 units(1);
   margin: 0;
 }
 
@@ -129,7 +128,7 @@ $failed: color('orange-30v');
 }
 
 .axis text {
-  font-size: size("body", 2);
+  font-size: size("body", 1);
 }
 
 .axis line,
@@ -145,16 +144,18 @@ $failed: color('orange-30v');
 
 .chart-container {
   width: 100%;
-  position: relative; /* Ensure it is relative for absolute positioning of tooltip */
+  position: relative;
 }
 
 #tooltip {
   position: absolute;
   display: none;
-  background: #fff;
+  background: color('ink');
+  color: #FFF;
   border: 1px solid #ccc;
-  padding: 5px;
+  padding: units(1);
+  border-radius: units(1);
   pointer-events: none;
-  font-size: size("body", 2);
-  z-index: 100; /* Ensure tooltip appears above other elements */
+  z-index: 100;
+  font-size: size("body", 4);
 }
