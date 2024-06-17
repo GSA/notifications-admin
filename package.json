@@ -28,7 +28,7 @@
     "govuk_frontend_toolkit": "8.1.0",
     "govuk-frontend": "2.13.0",
     "hogan": "1.0.2",
-    "jquery": "3.6.1",
+    "jquery": "3.7.1",
     "morphdom": "2.6.1",
     "python": "^0.0.4",
     "query-command-supported": "1.0.0",
