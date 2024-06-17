@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 import json
 from os import getenv
 
@@ -146,6 +147,9 @@ class Production(Config):
 class Staging(Production):
     HEADER_COLOUR = "#00ff00"  # $green
 
+    # Attempting to enable CSRF in staging with the hopes that we can duplicate errors.
+    WTF_CSRF_ENABLED = True
+
 
 class E2ETest(Staging):
     """
@@ -165,8 +169,8 @@ class E2ETest(Staging):
     # Borrowed from test environment
     TESTING = True
 
-    # Attempting to enable CSRF in staging with the hopes that we can duplicate errors.
-    WTF_CSRF_ENABLED = True
+    # Disabling CSRF for e2e because things break (a11y & dynamic scan)
+    WTF_CSRF_ENABLED = False
 
     # buckets - mirror staging
     CSV_UPLOAD_BUCKET = cloud_config.s3_credentials(
