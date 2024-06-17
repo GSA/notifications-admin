@@ -1,4 +1,3 @@
-from concurrent.futures import ThreadPoolExecutor
 import json
 from os import getenv
 
@@ -119,7 +118,7 @@ class Development(Config):
 
 class Test(Development):
     TESTING = True
-    WTF_CSRF_ENABLED = False # If enabled, pytest breaks.
+    WTF_CSRF_ENABLED = False  # If enabled, pytest breaks.
     ASSET_DOMAIN = "static.example.com"
     ASSET_PATH = "https://static.example.com/"
 
