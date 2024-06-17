@@ -952,7 +952,6 @@ def send_notification(service_id, template_id):
             )
         )
 
-    current_app.logger.info(hilite(f"Recipient for the one-off will be {recipient}"))
     keys = []
     values = []
     for k, v in session["placeholders"].items():
@@ -968,6 +967,12 @@ def send_notification(service_id, template_id):
     )
     my_data = {"filename": filename, "template_id": template_id, "data": data}
     upload_id = s3upload(service_id, my_data)
+
+    # To debug messages that the user reports have not been sent, we log
+    # the csv filename and the job id.  The user will give us the file name,
+    # so we can search on that to obtain the job id, which we can use elsewhere
+    # on the API side to find out what happens to the message.
+    current_app.logger.info(hilite(f"One-off file: {filename} job_id: {upload_id}"))
     form = CsvUploadForm()
     form.file.data = my_data
     form.file.name = filename
@@ -986,16 +991,6 @@ def send_notification(service_id, template_id):
         valid="True",
     )
 
-    # Here we are attempting to cleverly link the job id to the one-off recipient
-    # If we know the partial phone number of the recipient, we can search
-    # on that initially and find this, which will give us the job_id
-    # And once we know the job_id, we can search on that and it might tell us something
-    # about report generation.
-    current_app.logger.info(
-        hilite(
-            f"Created job to send one-off, recipient is {recipient}, job_id is {upload_id}"
-        )
-    )
 
     session.pop("recipient")
     session.pop("placeholders")
@@ -1028,7 +1023,8 @@ def send_notification(service_id, template_id):
                 job_id=upload_id,
             )
         )
-
+    total = notifications['total']
+    current_app.logger.info(hilite(f"job_id: {upload_id} has notifications: {total} and attempts: {attempts}"))
     return redirect(
         url_for(
             ".view_job",
