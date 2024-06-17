@@ -118,7 +118,7 @@ class Development(Config):
 
 class Test(Development):
     TESTING = True
-    WTF_CSRF_ENABLED = False
+    WTF_CSRF_ENABLED = False # If enabled, pytest breaks.
     ASSET_DOMAIN = "static.example.com"
     ASSET_PATH = "https://static.example.com/"
 
@@ -164,6 +164,8 @@ class E2ETest(Staging):
 
     # Borrowed from test environment
     TESTING = True
+
+    # Attempting to enable CSRF in staging with the hopes that we can duplicate errors.
     WTF_CSRF_ENABLED = True
 
     # buckets - mirror staging
