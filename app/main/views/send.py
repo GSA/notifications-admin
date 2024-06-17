@@ -991,7 +991,6 @@ def send_notification(service_id, template_id):
         valid="True",
     )
 
-
     session.pop("recipient")
     session.pop("placeholders")
 
@@ -1023,8 +1022,12 @@ def send_notification(service_id, template_id):
                 job_id=upload_id,
             )
         )
-    total = notifications['total']
-    current_app.logger.info(hilite(f"job_id: {upload_id} has notifications: {total} and attempts: {attempts}"))
+    total = notifications["total"]
+    current_app.logger.info(
+        hilite(
+            f"job_id: {upload_id} has notifications: {total} and attempts: {attempts}"
+        )
+    )
     return redirect(
         url_for(
             ".view_job",
