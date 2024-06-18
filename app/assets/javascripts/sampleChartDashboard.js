@@ -31,11 +31,11 @@
         var socket = io();
 
         socket.on('connect', function() {
-            socket.emit('fetch_daily_stats_by_user');
+            socket.emit('fetch_daily_stats');
             console.log('connected')
         });
 
-        socket.on('daily_stats_by_user_update', function(data) {
+        socket.on('daily_stats_update', function(data) {
             console.log('Data received:', data);
             var labels = [];
             var requestedData = [];
@@ -57,7 +57,7 @@
         var sevenDaysButton = document.getElementById('sevenDaysButton');
         if (sevenDaysButton) {
             sevenDaysButton.addEventListener('click', function() {
-                socket.emit('fetch_daily_stats_by_user');
+                socket.emit('fetch_daily_stats');
                 console.log('clicked')
             });
         }
