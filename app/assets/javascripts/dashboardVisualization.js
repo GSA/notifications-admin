@@ -190,6 +190,7 @@
 
         socket.on('connect', function() {
             socket.emit('fetch_daily_stats', serviceId);
+            // socket.emit('fetch_daily_stats_by_user', serviceId);
         });
 
         socket.on('daily_stats_update', function(data) {
