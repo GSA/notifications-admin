@@ -1,6 +1,6 @@
 import os
 
-from flask import abort, redirect, render_template, request, url_for
+from flask import abort, current_app, redirect, render_template, request, url_for
 from flask_login import current_user
 
 from app import status_api_client
@@ -9,20 +9,28 @@ from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
 from app.main.views.sub_navigation_dictionaries import features_nav, using_notify_nav
 from app.utils.user import user_is_logged_in
-
-login_dot_gov_url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
+from notifications_utils.url_safe_token import generate_token
 
 
 @main.route("/")
 def index():
     if current_user and current_user.is_authenticated:
         return redirect(url_for("main.choose_account"))
-
+    token = generate_token(
+        str(request.remote_addr),
+        current_app.config["SECRET_KEY"],
+        current_app.config["DANGEROUS_SALT"],
+    )
+    url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
+    # handle unit tests
+    if url is not None:
+        url = url.replace("NONCE", token)
+        url = url.replace("STATE", token)
     return render_template(
         "views/signedout.html",
         sms_rate=CURRENT_SMS_RATE,
         counts=status_api_client.get_count_of_live_services_and_organizations(),
-        login_dot_gov_url=login_dot_gov_url,
+        initial_signin_url=url,
     )
 
 

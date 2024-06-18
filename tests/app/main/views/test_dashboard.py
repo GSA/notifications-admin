@@ -1903,7 +1903,7 @@ def app_with_socketio():
         (
             SERVICE_TWO_ID,
             {"start_date": "2023-06-01", "days": 7},
-            {"service_id": SERVICE_TWO_ID, "start_date": "2023-06-01", "days": 7}
+            {"service_id": SERVICE_TWO_ID, "start_date": "2023-06-01", "days": 7},
         ),
     ],
 )

@@ -66,7 +66,7 @@ def activate_user(user_id):
     user = User.from_id(user_id)
 
     # TODO add org invites back in the new way
-    # organization_id = redis_client.raw_get(
+    # organization_id = redis_client.get(
     #   f"organization-invite-{user.email_address}"
     # )
     # user_api_client.add_user_to_organization(
