@@ -116,10 +116,10 @@ def registration_continue():
 
 def get_invite_data_from_redis(state):
 
-    invite_data = json.loads(redis_client.raw_get(f"invitedata-{state}"))
-    user_email = redis_client.raw_get(f"user_email-{state}").decode("utf8")
-    user_uuid = redis_client.raw_get(f"user_uuid-{state}").decode("utf8")
-    invited_user_email_address = redis_client.raw_get(
+    invite_data = json.loads(redis_client.get(f"invitedata-{state}"))
+    user_email = redis_client.get(f"user_email-{state}").decode("utf8")
+    user_uuid = redis_client.get(f"user_uuid-{state}").decode("utf8")
+    invited_user_email_address = redis_client.get(
         f"invited_user_email_address-{state}"
     ).decode("utf8")
     return invite_data, user_email, user_uuid, invited_user_email_address
@@ -163,7 +163,7 @@ def set_up_your_profile():
     state = request.args.get("state")
     login_gov_error = request.args.get("error")
 
-    if redis_client.raw_get(f"invitedata-{state}") is None:
+    if redis_client.get(f"invitedata-{state}") is None:
         access_token = sign_in._get_access_token(code, state)
         debug_msg("Got the access token for login.gov")
         user_email, user_uuid = sign_in._get_user_email_and_uuid(access_token)
@@ -195,7 +195,7 @@ def set_up_your_profile():
 
     if (
         form.validate_on_submit()
-        and redis_client.raw_get(f"invitedata-{state}") is not None
+        and redis_client.get(f"invitedata-{state}") is not None
     ):
         invite_data, user_email, user_uuid, invited_user_email_address = (
             get_invite_data_from_redis(state)
