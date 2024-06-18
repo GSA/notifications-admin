@@ -32,11 +32,10 @@
 
         socket.on('connect', function() {
             socket.emit('fetch_daily_stats');
-            console.log('connected')
         });
 
         socket.on('daily_stats_update', function(data) {
-            console.log('Data received:', data);
+            // console.log('Data received:', data);
             var labels = [];
             var requestedData = [];
 
@@ -51,14 +50,14 @@
         });
 
         socket.on('error', function(data) {
-            console.log('Error:', data);
+            // console.log('Error:', data);
         });
 
         var sevenDaysButton = document.getElementById('sevenDaysButton');
         if (sevenDaysButton) {
             sevenDaysButton.addEventListener('click', function() {
                 socket.emit('fetch_daily_stats');
-                console.log('clicked')
+                // console.log('clicked');
             });
         }
     }
