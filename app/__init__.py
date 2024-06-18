@@ -246,7 +246,10 @@ def create_app(application):
             except (TypeError, AttributeError):
                 application.logger.error(f"Env Var {key} invalid type: {type(value)}")
             else:
-                application.logger.info(f"Env Var {key} Length: {data_len}")
+                if data_len:
+                    application.logger.info(f"Env Var {key} is a non-zero length.")
+                else:
+                    application.logger.error(f"Env Var {key} is empty.")
 
     login_manager.login_view = "main.sign_in"
     login_manager.login_message_category = "default"
