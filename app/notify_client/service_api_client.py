@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from app.extensions import redis_client
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
@@ -57,7 +57,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         self, service_id, user_id, start_date=None, days=None
     ):
         if start_date is None:
-            start_date = datetime.now().strftime("%Y-%m-%d")
+            start_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
         return self.get(
             "/service/{0}/statistics/user/{1}/{2}/{3}".format(
