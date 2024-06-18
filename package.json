@@ -45,7 +45,7 @@
     "@babel/preset-env": "7.24.7",
     "@uswds/compile": "^1.1.0",
     "better-npm-audit": "^3.7.3",
-    "gulp": "^5.0.0",
+    "gulp": "^4.0.2",
     "gulp-add-src": "^1.0.0",
     "gulp-babel": "8.0.0",
     "gulp-better-rollup": "4.0.1",
