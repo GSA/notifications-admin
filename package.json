@@ -66,5 +66,8 @@
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-node-resolve": "5.2.0",
     "streamqueue": "1.1.2"
+  },
+  "optionalDependencies": {
+    "sass-embedded-linux-x64": "^1.77.5"
   }
 }
