@@ -14,10 +14,6 @@
         const container = d3.select(containerId);
         container.selectAll('*').remove(); // Clear any existing content
 
-        // Dynamically create tooltip element
-        const tooltip = container.append('div')
-            .attr('id', 'tooltip');
-
         const margin = { top: 60, right: 20, bottom: 40, left: 20 }; // Adjusted top margin for legend
         const width = container.node().getBoundingClientRect().width - margin.left - margin.right;
         const height = 400 - margin.top - margin.bottom;
@@ -29,32 +25,28 @@
             .attr('transform', `translate(${margin.left},${margin.top})`);
 
         // Create legend
-        const legend = svg.append('g')
-            .attr('class', 'legend')
-            .attr('transform', `translate(${width - 200},-40)`); // Adjust the position of the legend
+        const legendContainer = d3.select('.chart-legend');
+        legendContainer.selectAll('*').remove(); // Clear any existing legend
 
         const legendData = [
             { label: 'Delivered', color: COLORS.delivered },
             { label: 'Failed', color: COLORS.failed }
         ];
 
-        const legendItem = legend.selectAll('.legend-item')
+        const legendItem = legendContainer.selectAll('.legend-item')
             .data(legendData)
             .enter()
-            .append('g')
+            .append('div')
             .attr('class', 'legend-item')
-            .attr('transform', (d, i) => `translate(${i * 100},0)`); // Adjust the spacing between legend items
 
-        legendItem.append('rect')
-            .attr('width', 18)
-            .attr('height', 18)
-            .attr('fill', d => d.color);
+        legendItem.append('div')
+            .attr('class', 'legend-rect')
+            .style('background-color', d => d.color)
+            .style('display', 'inline-block')
+            .style('margin-right', '5px');
 
-        legendItem.append('text')
-            .attr('x', 24)
-            .attr('y', 9)
-            .attr('dy', '0.35em')
-            .style('text-anchor', 'start')
+        legendItem.append('span')
+            .attr('class', 'legend-label')
             .text(d => d.label);
 
         const x = d3.scaleBand()
@@ -103,6 +95,11 @@
             .domain(['delivered', 'failed'])
             .range([COLORS.delivered, COLORS.failed]);
 
+        // Create tooltip
+        const tooltip = d3.select('body').append('div')
+            .attr('id', 'tooltip')
+            .style('display', 'none');
+
         // Create bars with animation
         const barGroups = svg.selectAll('.bar-group')
             .data(series)
@@ -126,9 +123,8 @@
                     .html(`${d.data.label}<br>${capitalizedKey}: ${d.data[key]}`);
             })
             .on('mousemove', function(event) {
-                const containerPosition = container.node().getBoundingClientRect();
-                tooltip.style('left', `${event.clientX - containerPosition.left + 10}px`)
-                    .style('top', `${event.clientY - containerPosition.top + 10}px`);
+                tooltip.style('left', `${event.pageX + 10}px`)
+                    .style('top', `${event.pageY - 20}px`);
             })
             .on('mouseout', function() {
                 tooltip.style('display', 'none');
@@ -201,10 +197,14 @@
             var deliveredData = [];
             var failedData = [];
 
-            for (var date in data) {
-                labels.push(date);
-                deliveredData.push(data[date].sms.delivered);
-                failedData.push(data[date].sms.failed !== undefined ? data[date].sms.failed : 0);
+            for (var dateString in data) {
+                // Parse the date string (assuming format YYYY-MM-DD)
+                const dateParts = dateString.split('-');
+                const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`; // Format to MM/DD/YYYY
+
+                labels.push(formattedDate);
+                deliveredData.push(data[dateString].sms.delivered);
+                failedData.push(data[dateString].sms.failed !== undefined ? data[dateString].sms.failed : 0);
             }
 
             createChart('#weeklyChart', labels, deliveredData, failedData);
@@ -218,25 +218,46 @@
 
     // Function to handle dropdown change
     function handleDropdownChange(event) {
-        const selectedValue = event.target.value;
-        const subTitle = document.querySelector(`#chartsArea .chart-subtitle`);
-        const selectElement = document.getElementById('options');
-        const selectedText = selectElement.options[selectElement.selectedIndex].text;
+    const selectedValue = event.target.value;
+    const subTitle = document.querySelector(`#chartsArea .chart-subtitle`);
+    const selectElement = document.getElementById('options');
+    const selectedText = selectElement.options[selectElement.selectedIndex].text;
 
-        if (selectedValue === "individual") {
-            // Mock individual data
-            const labels = ["2024-06-06", "2024-06-07", "2024-06-08", "2024-06-09", "2024-06-10", "2024-06-11", "2024-06-12"];
-            const deliveredData = labels.map(() => Math.floor(Math.random() * 5) + 1); // Random between 1 and 5
-            const failedData = [0, 1, 0, 0, 1, 2, 1];
-            subTitle.textContent = selectedText + " - Last 7 Days";
-            createChart('#weeklyChart', labels, deliveredData, failedData);
-            createTable('weeklyTable', 'Weekly', labels, deliveredData, failedData);
+    if (selectedValue === "individual") {
+        // Get today's date
+        const today = new Date();
+
+        // Function to generate labels for the last 7 days (including today)
+        function getLabelsForLast7Days() {
+        const labels = [];
+        for (let i = 6; i >= 0; i--) {
+            const pastDate = new Date(today.getTime() - (i * 24 * 60 * 60 * 1000)); // Subtract i days from today
+            const day = pastDate.getDate();
+            const month = pastDate.getMonth() + 1; // Months are 0-indexed
+            labels.push(`${month}/${day}/${pastDate.getFullYear()}`);
+        }
+
+        return labels;
+        }
+
+        const labels = getLabelsForLast7Days();
+        const deliveredData = labels.map(() => Math.floor(Math.random() * 5) + 1); // Random between 1 and 5
+        const failedData = [0, 1, 0, 0, 1, 2, 1];
+        subTitle.textContent = selectedText + " - Last 7 Days";
+        createChart('#weeklyChart', labels, deliveredData, failedData);
+        createTable('weeklyTable', 'Weekly', labels, deliveredData, failedData);
         } else if (selectedValue === "service") {
             subTitle.textContent = selectedText + " - Last 7 Days";
             // Fetch and use real service data
             fetchServiceData();
         }
     }
+
+    // Resize chart on window resize
+    window.addEventListener('resize', function() {
+        const selectedValue = document.getElementById('options').value;
+        handleDropdownChange({ target: { value: selectedValue } });
+    });
 
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize weekly chart and table with service data by default

@@ -78,35 +78,6 @@ $failed: color('orange-30v');
   border-radius: inherit;
 }
 
-
-// tabs
-
-// .tab {
-//   display: flex;
-//   margin-bottom: 10px; /* Replace units(2) with 10px */
-// }
-
-// .tab button {
-//   cursor: pointer;
-//   border-radius: 0;
-//   margin-right: -1px; /* Replace units(-1px) with -1px */
-//   &:focus {
-//     outline-width: 2px;
-//   }
-//   &.active, &:hover {
-//     background-color: #0076d6; /* Assuming color("blue-60v") is #0076d6 */
-//     color: #FFF;
-//     box-shadow: none;
-//   }
-// }
-
-// .tabcontent {
-//   display: none;
-//   height: 400px;
-//   width: 100%;h
-//   padding: 10px; /* Replace units(1) with 10px */
-// }
-
 .chart {
   display: flex;
   justify-content: center;
@@ -118,7 +89,7 @@ $failed: color('orange-30v');
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  padding: units(1) units(1) 0;
 }
 
 .chart-subtitle {
@@ -159,12 +130,11 @@ $failed: color('orange-30v');
     display: flex;
     align-items: center;
     margin-right: units(2);
-}
-
-.legend-item rect {
-    width: units(2);
-    height: units(2);
-    margin-right: units(1);
+    .legend-rect {
+      width: units(2);
+      height: units(2);
+      margin-right: units(1);
+  }
 }
 
 #tooltip {
