@@ -9,7 +9,11 @@
 {% endblock %}
 
 {% block backLink %}
-  {{ usaBackLink({ "href": back_link_from_preview }) }}
+  {% if help %}
+    {{ usaBackLink({ "href": back_link }) }}
+  {% else %}
+    {{ usaBackLink({ "href": back_link_from_preview }) }}
+  {% endif %}
 {% endblock %}
 
 {% block maincolumn_content %}
@@ -40,16 +44,26 @@
       {% endcall %}
     </div>
   {% else %}
-    {{ page_header('Preview') }}
+    {% if not help %}
+      {{ page_header('Preview') }}
+    {% endif %}
   {% endif %}
-  <div>
-    <p class="sms-message-scheduler">Scheduled: {{ scheduled_for |format_datetime_scheduled_notification if scheduled_for else 'Now'}}</p>
-    <p class="sms-message-template">Template: {{template.name}}</p>
-    <p class="sms-message-sender" >From: {{ template.sender }}</p>
-    <p class="sms-message-sender" >To: {{ recipient }}</p>
-  </div>
+  {% if not help %}
+    <div>
+      <p class="sms-message-scheduler">Scheduled: {{ scheduled_for |format_datetime_scheduled_notification if scheduled_for else 'Now'}}</p>
+      <p class="sms-message-template">Template: {{template.name}}</p>
+      <p class="sms-message-sender" >From: {{ template.sender }}</p>
+      <p class="sms-message-sender" >To: {{ recipient }}</p>
+    </div>
+  {% endif %}
 
-  <h2 id="{{ file_contents_header_id }}">Message</h2>
+  {% if help %}
+    <h1 class="message-header">Example text message</h1>
+  {% else %}
+    <h2 class="message-header">Message</h2>
+  {% endif %}
+
+
   <div class="preview-message"> {{ template|string }}</div>
 
   <div class="js-stick-at-bottom-when-scrolling">

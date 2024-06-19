@@ -195,7 +195,7 @@ def check_tour_notification(service_id, template_id):
     )
 
     return render_template(
-        "views/notifications/check.html",
+        "views/notifications/preview.html",
         template=template,
         back_link=back_link,
         help="2",
