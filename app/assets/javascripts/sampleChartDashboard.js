@@ -12,7 +12,7 @@
                 labels: [],
                 datasets: [
                     {
-                        label: 'Requested',
+                        label: 'Delivered',
                         data: [],
                         backgroundColor: '#0076d6',
                         stack: 'Stack 0'
@@ -31,21 +31,21 @@
         var socket = io();
 
         socket.on('connect', function() {
-            socket.emit('fetch_daily_stats');
+            socket.emit('fetch_daily_stats_by_user');
         });
 
-        socket.on('daily_stats_update', function(data) {
+        socket.on('daily_stats_by_user_update', function(data) {
             // console.log('Data received:', data);
             var labels = [];
-            var requestedData = [];
+            var deliveredData = [];
 
             for (var date in data) {
                 labels.push(date);
-                requestedData.push(data[date].sms.requested);
+                deliveredData.push(data[date].sms.delivered);
             }
 
             myBarChart.data.labels = labels;
-            myBarChart.data.datasets[0].data = requestedData;
+            myBarChart.data.datasets[0].data = deliveredData;
             myBarChart.update();
         });
 
@@ -56,7 +56,7 @@
         var sevenDaysButton = document.getElementById('sevenDaysButton');
         if (sevenDaysButton) {
             sevenDaysButton.addEventListener('click', function() {
-                socket.emit('fetch_daily_stats');
+                socket.emit('fetch_daily_stats_by_user');
                 // console.log('clicked');
             });
         }
