@@ -179,21 +179,22 @@
         table.append(tbody);
     }
 
-    function fetchServiceData() {
+    function fetchData(type) {
         var ctx = document.getElementById('weeklyChart');
         if (!ctx) {
             return;
         }
 
         var socket = io();
-        var serviceId = ctx.getAttribute('data-service-id');
+        var eventType = type === 'service' ? 'fetch_daily_stats' : 'fetch_daily_stats_by_user';
 
         socket.on('connect', function() {
-            socket.emit('fetch_daily_stats', serviceId);
-            // socket.emit('fetch_daily_stats_by_user', serviceId);
+            socket.emit(eventType);
         });
 
         socket.on('daily_stats_update', function(data) {
+            console.log('Received data:', data);  // Log the received data
+
             var labels = [];
             var deliveredData = [];
             var failedData = [];
@@ -201,12 +202,16 @@
             for (var dateString in data) {
                 // Parse the date string (assuming format YYYY-MM-DD)
                 const dateParts = dateString.split('-');
-                const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`; // Format to MM/DD/YYYY
+                const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0].slice(2)}`; // Format to MM/DD/YY
 
                 labels.push(formattedDate);
                 deliveredData.push(data[dateString].sms.delivered);
                 failedData.push(data[dateString].sms.failed !== undefined ? data[dateString].sms.failed : 0);
             }
+
+            console.log('Formatted labels:', labels);  // Log the formatted labels
+            console.log('Delivered data:', deliveredData);  // Log the delivered data
+            console.log('Failed data:', failedData);  // Log the failed data
 
             createChart('#weeklyChart', labels, deliveredData, failedData);
             createTable('weeklyTable', 'Weekly', labels, deliveredData, failedData);
@@ -217,42 +222,29 @@
         });
     }
 
-    // Function to handle dropdown change
     function handleDropdownChange(event) {
-    const selectedValue = event.target.value;
-    const subTitle = document.querySelector(`#chartsArea .chart-subtitle`);
-    const selectElement = document.getElementById('options');
-    const selectedText = selectElement.options[selectElement.selectedIndex].text;
+        const selectedValue = event.target.value;
+        const subTitle = document.querySelector(`#chartsArea .chart-subtitle`);
+        const selectElement = document.getElementById('options');
+        const selectedText = selectElement.options[selectElement.selectedIndex].text;
 
-    if (selectedValue === "individual") {
-        // Get today's date
-        const today = new Date();
-
-        // Function to generate labels for the last 7 days (including today)
-        function getLabelsForLast7Days() {
-        const labels = [];
-        for (let i = 6; i >= 0; i--) {
-            const pastDate = new Date(today.getTime() - (i * 24 * 60 * 60 * 1000)); // Subtract i days from today
-            const day = pastDate.getDate();
-            const month = pastDate.getMonth() + 1; // Months are 0-indexed
-            labels.push(`${month}/${day}/${pastDate.getFullYear()}`);
-        }
-
-        return labels;
-        }
-
-        const labels = getLabelsForLast7Days();
-        const deliveredData = labels.map(() => Math.floor(Math.random() * 5) + 1); // Random between 1 and 5
-        const failedData = [0, 1, 0, 0, 1, 2, 1];
-        subTitle.textContent = selectedText + " - Last 7 Days";
-        createChart('#weeklyChart', labels, deliveredData, failedData);
-        createTable('weeklyTable', 'Weekly', labels, deliveredData, failedData);
+        if (selectedValue === "individual") {
+            subTitle.textContent = selectedText + " - Last 7 Days";
+            fetchData('individual');
         } else if (selectedValue === "service") {
             subTitle.textContent = selectedText + " - Last 7 Days";
-            // Fetch and use real service data
-            fetchServiceData();
+            fetchData('service');
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize weekly chart and table with service data by default
+        fetchData('service');
+
+        // Add event listener to the dropdown
+        const dropdown = document.getElementById('options');
+        dropdown.addEventListener('change', handleDropdownChange);
+    });
 
     // Resize chart on window resize
     window.addEventListener('resize', function() {
@@ -260,12 +252,4 @@
         handleDropdownChange({ target: { value: selectedValue } });
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize weekly chart and table with service data by default
-        fetchServiceData();
-
-        // Add event listener to the dropdown
-        const dropdown = document.getElementById('options');
-        dropdown.addEventListener('change', handleDropdownChange);
-    });
 })(window);
