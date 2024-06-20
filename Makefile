@@ -21,7 +21,8 @@ bootstrap: generate-version-file ## Set up everything to run the app
 	poetry install --sync --no-root
 	poetry run playwright install --with-deps
 	poetry run pre-commit install
-	source $(NVMSH) --no-use && nvm install && npm ci --no-audit
+	source $(NVMSH) --no-use && nvm install && npm install
+	source $(NVMSH) && npm ci --no-audit
 	source $(NVMSH) && npm run build
 
 .PHONY: watch-frontend
@@ -39,6 +40,10 @@ run-flask-bare:  ## Run flask without invoking poetry so we can override ENV var
 .PHONY: npm-audit
 npm-audit:  ## Check for vulnerabilities in NPM packages
 	source $(NVMSH) && npm run audit
+
+.PHONY: npm-audit-fix
+npm-audit-fix:  ## Fix vulnerabilities that do not require attentino (according to npm)
+	source $(NVMSH) && npm audit fix
 
 .PHONY: help
 help:
