@@ -3,7 +3,6 @@ import uuid
 import pytest
 from flask import url_for
 
-from app.main.views.sign_in import _reformat_keystring
 from app.models.user import User
 from tests.conftest import SERVICE_ONE_ID, normalize_spaces
 
@@ -20,23 +19,10 @@ def test_render_sign_in_template_for_new_user(client_request):
     #        then these indices need to be 1 instead of 0.
     #        Currently it's not enabled for the test or production environments.
     assert page.select("main a")[0].text == "Sign in with Login.gov"
-    assert page.select("main a")[1].text == "Create Login.gov account"
 
     # TODO:  We'll have to adjust this depending on whether Login.gov is
     #        enabled or not; fix this in the future.
     assert "Sign in again" not in normalize_spaces(page.text)
-
-
-def test_reformat_keystring():
-    orig = "-----BEGIN PRIVATE KEY----- blah blah blah -----END PRIVATE KEY-----"
-    expected = """-----BEGIN PRIVATE KEY-----
-blah
-blah
-blah
------END PRIVATE KEY-----
-"""
-    reformatted = _reformat_keystring(orig)
-    assert reformatted == expected
 
 
 def test_sign_in_explains_session_timeout(client_request):

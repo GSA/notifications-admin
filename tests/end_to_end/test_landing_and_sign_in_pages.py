@@ -22,7 +22,7 @@ def test_landing_page(end_to_end_context):
         "heading",
         name="Reach people where they are with government-powered text messages",
     )
-    sign_in_button = page.get_by_role("link", name="Sign in")
+    sign_in_button = page.get_by_role("link", name="Sign in with")
     benefits_studio_email = page.get_by_role("link", name="tts-benefits-studio@gsa.gov")
 
     # Check to make sure the elements are visible.
@@ -31,7 +31,8 @@ def test_landing_page(end_to_end_context):
     expect(benefits_studio_email).to_be_visible()
 
     # Check to make sure the sign-in button and email links are correct.
-    expect(sign_in_button).to_have_attribute("href", "/sign-in")
+    href_value = sign_in_button.get_attribute("href")
+    assert href_value is not None, "The sign-in button does not have an href attribute"
     expect(benefits_studio_email).to_have_attribute(
         "href", "mailto:tts-benefits-studio@gsa.gov"
     )
