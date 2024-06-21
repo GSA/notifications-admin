@@ -187,12 +187,15 @@
 
         var socket = io();
         var eventType = type === 'service' ? 'fetch_daily_stats' : 'fetch_daily_stats_by_user';
+        var socketConnect = type === 'service' ? 'daily_stats_update' : 'daily_stats_by_user_update';
 
-        socket.on('connect', function() {
+        socket.on('connect', function () {
+            const userId = ctx.getAttribute('data-service-id'); // Assuming user ID is the same as service ID
+            console.log(`User ID: ${userId}`);
             socket.emit(eventType);
         });
 
-        socket.on('daily_stats_update', function(data) {
+        socket.on(socketConnect, function(data) {
             console.log('Received data:', data);  // Log the received data
 
             var labels = [];
@@ -206,7 +209,7 @@
 
                 labels.push(formattedDate);
                 deliveredData.push(data[dateString].sms.delivered);
-                failedData.push(data[dateString].sms.failed !== undefined ? data[dateString].sms.failed : 0);
+                failedData.push(data[dateString].sms.failure !== undefined ? data[dateString].sms.failure : 0);
             }
 
             console.log('Formatted labels:', labels);  // Log the formatted labels
