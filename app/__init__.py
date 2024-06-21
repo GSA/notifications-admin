@@ -233,6 +233,24 @@ def create_app(application):
     )
     logging.init_app(application)
 
+    # Hopefully will help identify if there is a race condition causing the CSRF errors
+    # that we have occasionally seen in our environments.
+    for key in ("SECRET_KEY", "DANGEROUS_SALT"):
+        try:
+            value = application.config[key]
+        except KeyError:
+            application.logger.error(f"Env Var {key} doesn't exist.")
+        else:
+            try:
+                data_len = len(value.strip())
+            except (TypeError, AttributeError):
+                application.logger.error(f"Env Var {key} invalid type: {type(value)}")
+            else:
+                if data_len:
+                    application.logger.info(f"Env Var {key} is a non-zero length.")
+                else:
+                    application.logger.error(f"Env Var {key} is empty.")
+
     login_manager.login_view = "main.sign_in"
     login_manager.login_message_category = "default"
     login_manager.session_protection = None
