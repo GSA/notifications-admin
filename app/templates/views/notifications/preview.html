@@ -5,7 +5,13 @@
 {% from "components/components/button/macro.njk" import usaButton %}
 
 {% block service_page_title %}
-  {{ "Error" if error else "Preview" }}
+  {% if error %}
+    {{ "Error" }}
+  {% elif help %}
+    {{ "Example text message" }}
+  {% else %}
+    {{ "Preview" }}
+  {% endif %}
 {% endblock %}
 
 {% block backLink %}
@@ -44,10 +50,9 @@
       {% endcall %}
     </div>
   {% else %}
-    {% if not help %}
-      {{ page_header('Preview') }}
-    {% endif %}
+    {{ page_header("Example text message" if help else "Preview") }}
   {% endif %}
+
   {% if not help %}
     <div>
       <p class="sms-message-scheduler">Scheduled: {{ scheduled_for |format_datetime_scheduled_notification if scheduled_for else 'Now'}}</p>
@@ -57,9 +62,7 @@
     </div>
   {% endif %}
 
-  {% if help %}
-    <h1 class="message-header">Example text message</h1>
-  {% else %}
+  {% if not help %}
     <h2 class="message-header">Message</h2>
   {% endif %}
 

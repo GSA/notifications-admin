@@ -198,7 +198,7 @@ def check_tour_notification(service_id, template_id):
         "views/notifications/preview.html",
         template=template,
         back_link=back_link,
-        help="2",
+        help="3",
     )
 
 
