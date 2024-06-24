@@ -54,6 +54,7 @@ class Config(object):
     SEND_FILE_MAX_AGE_DEFAULT = 365 * 24 * 60 * 60  # 1 year
     REPLY_TO_EMAIL_ADDRESS_VALIDATION_TIMEOUT = 45
     ACTIVITY_STATS_LIMIT_DAYS = {
+        "today": 0,
         "one_day": 1,
         "three_day": 3,
         "five_day": 5,
