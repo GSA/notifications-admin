@@ -532,7 +532,6 @@ def test_should_200_for_check_tour_notification(
     )
     selected_hint = page.select(".banner-tour .grid-row")[2]
     selected_hint_text = normalize_spaces(selected_hint.select(".usa-body")[0].text)
-    print(selected_hint_text)
     assert "greyed-out-step" not in selected_hint["class"]
     assert selected_hint_text == "Notify delivers the message"
 
