@@ -587,19 +587,11 @@
     ],
     "tests/app/main/views/test_sign_in.py": [
       {
-        "type": "Private Key",
-        "filename": "tests/app/main/views/test_sign_in.py",
-        "hashed_secret": "1348b145fa1a555461c1b790a2f66614781091e9",
-        "is_verified": false,
-        "line_number": 31,
-        "is_secret": false
-      },
-      {
         "type": "Secret Keyword",
         "filename": "tests/app/main/views/test_sign_in.py",
         "hashed_secret": "8b8b69116ee882b5e987e330f55db81aba0636f9",
         "is_verified": false,
-        "line_number": 104,
+        "line_number": 90,
         "is_secret": false
       }
     ],
@@ -710,5 +702,5 @@
       }
     ]
   },
-  "generated_at": "2024-06-24T16:44:00Z"
+  "generated_at": "2024-06-11T22:26:18Z"
 }
