@@ -31,7 +31,7 @@ def test_landing_page(end_to_end_context):
     expect(benefits_studio_email).to_be_visible()
 
     # Check to make sure the sign-in button and email links are correct.
-    href_value = sign_in_button.get_attribute('href')
+    href_value = sign_in_button.get_attribute("href")
     assert href_value is not None, "The sign-in button does not have an href attribute"
     expect(benefits_studio_email).to_have_attribute(
         "href", "mailto:tts-benefits-studio@gsa.gov"
