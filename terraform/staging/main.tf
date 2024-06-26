@@ -6,6 +6,14 @@ locals {
   recursive_delete = true
 }
 
+resource "null_resource" "prevent_destroy" {
+
+  lifecycle {
+    prevent_destroy = false # destroying staging is allowed
+  }
+}
+
+
 module "redis" { # default v6.2; delete after v7.0 resource is bound
   source = "github.com/18f/terraform-cloudgov//redis?ref=v0.7.1"
 
