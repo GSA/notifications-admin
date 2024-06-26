@@ -3,7 +3,16 @@ import uuid
 from string import ascii_uppercase
 from zipfile import BadZipFile
 
-from flask import abort, flash, redirect, render_template, request, session, url_for
+from flask import (
+    abort,
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from flask_login import current_user
 from markupsafe import Markup
 from notifications_python_client.errors import HTTPError
@@ -31,7 +40,12 @@ from app.s3_client.s3_csv_client import (
     s3upload,
     set_metadata_on_csv_upload,
 )
-from app.utils import PermanentRedirect, should_skip_template_page, unicode_truncate
+from app.utils import (
+    PermanentRedirect,
+    hilite,
+    should_skip_template_page,
+    unicode_truncate,
+)
 from app.utils.csv import Spreadsheet, get_errors_for_csv
 from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
@@ -948,9 +962,17 @@ def send_notification(service_id, template_id):
     vals = ",".join(values)
     data = f"{data}\r\n{vals}"
 
-    filename = f"one-off-{current_user.name}-{uuid.uuid4()}.csv"
+    filename = (
+        f"one-off-{uuid.uuid4()}.csv"  # {current_user.name} removed from filename
+    )
     my_data = {"filename": filename, "template_id": template_id, "data": data}
     upload_id = s3upload(service_id, my_data)
+
+    # To debug messages that the user reports have not been sent, we log
+    # the csv filename and the job id.  The user will give us the file name,
+    # so we can search on that to obtain the job id, which we can use elsewhere
+    # on the API side to find out what happens to the message.
+    current_app.logger.info(hilite(f"One-off file: {filename} job_id: {upload_id}"))
     form = CsvUploadForm()
     form.file.data = my_data
     form.file.name = filename
@@ -1000,7 +1022,12 @@ def send_notification(service_id, template_id):
                 job_id=upload_id,
             )
         )
-
+    total = notifications["total"]
+    current_app.logger.info(
+        hilite(
+            f"job_id: {upload_id} has notifications: {total} and attempts: {attempts}"
+        )
+    )
     return redirect(
         url_for(
             ".view_job",

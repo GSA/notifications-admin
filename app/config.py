@@ -38,7 +38,7 @@ class Config(object):
     NR_MONITOR_ON = settings and settings.monitor_mode
     COMMIT_HASH = getenv("COMMIT_HASH", "--------")[0:7]
 
-    GOVERNMENT_EMAIL_DOMAIN_NAMES = ["gov"]
+    GOVERNMENT_EMAIL_DOMAIN_NAMES = ["gov", "mil", "si.edu"]
 
     # Logging
     NOTIFY_LOG_LEVEL = getenv("NOTIFY_LOG_LEVEL", "INFO")
@@ -53,7 +53,13 @@ class Config(object):
     PERMANENT_SESSION_LIFETIME = 1800  # 30 Minutes
     SEND_FILE_MAX_AGE_DEFAULT = 365 * 24 * 60 * 60  # 1 year
     REPLY_TO_EMAIL_ADDRESS_VALIDATION_TIMEOUT = 45
-    ACTIVITY_STATS_LIMIT_DAYS = 7
+    ACTIVITY_STATS_LIMIT_DAYS = {
+        "today": 0,
+        "one_day": 1,
+        "three_day": 3,
+        "five_day": 5,
+        "seven_day": 7,
+    }
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_NAME = "notify_admin_session"
     SESSION_COOKIE_SECURE = True

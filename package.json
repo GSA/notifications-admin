@@ -21,6 +21,9 @@
   "author": "General Services Administration",
   "license": "CC0",
   "homepage": "https://github.com/GSA/notifications-admin#readme",
+  "overrides": {
+    "graceful-fs": "^4.2.11"
+  },
   "dependencies": {
     "@uswds/uswds": "^3.4.1",
     "cbor-js": "0.1.0",
@@ -28,11 +31,12 @@
     "govuk_frontend_toolkit": "8.1.0",
     "govuk-frontend": "2.13.0",
     "hogan": "1.0.2",
-    "jquery": "3.6.1",
+    "jquery": "3.7.1",
     "morphdom": "2.6.1",
     "python": "^0.0.4",
     "query-command-supported": "1.0.0",
     "sass-embedded": "^1.69.5",
+    "socket.io-client": "^4.2.0",
     "textarea-caret": "3.1.0",
     "timeago": "1.6.7"
   },
@@ -41,8 +45,8 @@
     "@babel/preset-env": "7.19.4",
     "@uswds/compile": "^1.1.0",
     "better-npm-audit": "^3.7.3",
-    "gulp": "4.0.2",
-    "gulp-add-src": "1.0.0",
+    "gulp": "^4.0.2",
+    "gulp-add-src": "^1.0.0",
     "gulp-babel": "8.0.0",
     "gulp-better-rollup": "4.0.1",
     "gulp-clean-css": "4.3.0",

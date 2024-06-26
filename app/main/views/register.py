@@ -26,6 +26,7 @@ from app.main.views import sign_in
 from app.main.views.verify import activate_user
 from app.models.user import InvitedOrgUser, InvitedUser, User
 from app.utils import hide_from_search_engines, hilite
+from app.utils.user import is_gov_user
 
 
 @main.route("/register", methods=["GET", "POST"])
@@ -115,10 +116,10 @@ def registration_continue():
 
 def get_invite_data_from_redis(state):
 
-    invite_data = json.loads(redis_client.raw_get(f"invitedata-{state}"))
-    user_email = redis_client.raw_get(f"user_email-{state}").decode("utf8")
-    user_uuid = redis_client.raw_get(f"user_uuid-{state}").decode("utf8")
-    invited_user_email_address = redis_client.raw_get(
+    invite_data = json.loads(redis_client.get(f"invitedata-{state}"))
+    user_email = redis_client.get(f"user_email-{state}").decode("utf8")
+    user_uuid = redis_client.get(f"user_uuid-{state}").decode("utf8")
+    invited_user_email_address = redis_client.get(
         f"invited_user_email_address-{state}"
     ).decode("utf8")
     return invite_data, user_email, user_uuid, invited_user_email_address
@@ -129,10 +130,10 @@ def put_invite_data_in_redis(
 ):
     ttl = 60 * 15  # 15 minutes
 
-    redis_client.raw_set(f"invitedata-{state}", json.dumps(invite_data), ex=ttl)
-    redis_client.raw_set(f"user_email-{state}", user_email, ex=ttl)
-    redis_client.raw_set(f"user_uuid-{state}", user_uuid, ex=ttl)
-    redis_client.raw_set(
+    redis_client.set(f"invitedata-{state}", json.dumps(invite_data), ex=ttl)
+    redis_client.set(f"user_email-{state}", user_email, ex=ttl)
+    redis_client.set(f"user_uuid-{state}", user_uuid, ex=ttl)
+    redis_client.set(
         f"invited_user_email_address-{state}",
         invited_user_email_address,
         ex=ttl,
@@ -147,6 +148,11 @@ def check_invited_user_email_address_matches_expected(
         flash("You cannot accept an invite for another person.")
         abort(403)
 
+    if not is_gov_user(user_email):
+        debug_msg("invited user has a non-government email address.")
+        flash("You must use a government email address.")
+        abort(403)
+
 
 @main.route("/set-up-your-profile", methods=["GET", "POST"])
 @hide_from_search_engines
@@ -157,7 +163,7 @@ def set_up_your_profile():
     state = request.args.get("state")
     login_gov_error = request.args.get("error")
 
-    if redis_client.raw_get(f"invitedata-{state}") is None:
+    if redis_client.get(f"invitedata-{state}") is None:
         access_token = sign_in._get_access_token(code, state)
         debug_msg("Got the access token for login.gov")
         user_email, user_uuid = sign_in._get_user_email_and_uuid(access_token)
@@ -189,7 +195,7 @@ def set_up_your_profile():
 
     if (
         form.validate_on_submit()
-        and redis_client.raw_get(f"invitedata-{state}") is not None
+        and redis_client.get(f"invitedata-{state}") is not None
     ):
         invite_data, user_email, user_uuid, invited_user_email_address = (
             get_invite_data_from_redis(state)
@@ -245,10 +251,21 @@ def get_invited_user_email_address(invited_user_id):
 
 def invited_user_accept_invite(invited_user_id):
     invited_user = InvitedUser.by_id(invited_user_id)
+
     if invited_user.status == "expired":
         current_app.logger.error("User invitation has expired")
-        flash("Your invitation has expired.")
+        flash(
+            "Your invitation has expired; please contact the person who invited you for additional help."
+        )
         abort(401)
+
+    if invited_user.status == "cancelled":
+        current_app.logger.error("User invitation has been cancelled")
+        flash(
+            "Your invitation is no longer valid; please contact the person who invited you for additional help."
+        )
+        abort(401)
+
     invited_user.accept_invite()
 
 

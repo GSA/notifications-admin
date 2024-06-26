@@ -228,12 +228,18 @@ def test_can_show_notifications_if_data_retention_not_available(
                 url_for,
                 ".download_notifications_csv",
                 message_type=None,
+                number_of_days="seven_day",
             ),
         ),
         (
             create_active_user_with_permissions(),
             {"status": "failed"},
-            partial(url_for, ".download_notifications_csv", status="failed"),
+            partial(
+                url_for,
+                ".download_notifications_csv",
+                status="failed",
+                number_of_days="seven_day",
+            ),
         ),
         (
             create_active_user_with_permissions(),
@@ -242,15 +248,13 @@ def test_can_show_notifications_if_data_retention_not_available(
                 url_for,
                 ".download_notifications_csv",
                 message_type="sms",
+                number_of_days="seven_day",
             ),
         ),
         (
             create_active_user_view_permissions(),
             {},
-            partial(
-                url_for,
-                ".download_notifications_csv",
-            ),
+            partial(url_for, ".download_notifications_csv", number_of_days="seven_day"),
         ),
         (
             create_active_caseworking_user(),

@@ -18,6 +18,7 @@ from flask import (
 )
 from flask.globals import request_ctx
 from flask_login import LoginManager, current_user
+from flask_socketio import SocketIO
 from flask_talisman import Talisman
 from flask_wtf import CSRFProtect
 from flask_wtf.csrf import CSRFError
@@ -30,7 +31,7 @@ from werkzeug.local import LocalProxy
 from app import proxy_fix
 from app.asset_fingerprinter import asset_fingerprinter
 from app.config import configs
-from app.extensions import redis_client, zendesk_client
+from app.extensions import redis_client
 from app.formatters import (
     convert_markdown_template,
     convert_to_boolean,
@@ -118,6 +119,7 @@ from notifications_utils.recipients import format_phone_number_human_readable
 login_manager = LoginManager()
 csrf = CSRFProtect()
 talisman = Talisman()
+socketio = SocketIO()
 
 
 # The current service attached to the request stack.
@@ -175,6 +177,7 @@ def create_app(application):
 
     init_govuk_frontend(application)
     init_jinja(application)
+    socketio.init_app(application)
 
     for client in (
         csrf,
@@ -202,7 +205,6 @@ def create_app(application):
         user_api_client,
         # External API clients
         redis_client,
-        zendesk_client,
     ):
         client.init_app(application)
 
@@ -230,6 +232,24 @@ def create_app(application):
         force_https=(application.config["HTTP_PROTOCOL"] == "https"),
     )
     logging.init_app(application)
+
+    # Hopefully will help identify if there is a race condition causing the CSRF errors
+    # that we have occasionally seen in our environments.
+    for key in ("SECRET_KEY", "DANGEROUS_SALT"):
+        try:
+            value = application.config[key]
+        except KeyError:
+            application.logger.error(f"Env Var {key} doesn't exist.")
+        else:
+            try:
+                data_len = len(value.strip())
+            except (TypeError, AttributeError):
+                application.logger.error(f"Env Var {key} invalid type: {type(value)}")
+            else:
+                if data_len:
+                    application.logger.info(f"Env Var {key} is a non-zero length.")
+                else:
+                    application.logger.error(f"Env Var {key} is empty.")
 
     login_manager.login_view = "main.sign_in"
     login_manager.login_message_category = "default"

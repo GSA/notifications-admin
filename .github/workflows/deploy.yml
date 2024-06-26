@@ -23,7 +23,7 @@ jobs:
 
       - name: Check for changes to Terraform
         id: changed-terraform-files
-        uses: tj-actions/changed-files@v41.0.0
+        uses: tj-actions/changed-files@v44
         with:
           files: |
             terraform/staging
@@ -95,7 +95,7 @@ jobs:
 
       - name: Check for changes to egress config
         id: changed-egress-config
-        uses: tj-actions/changed-files@v41.0.0
+        uses: tj-actions/changed-files@v44
         with:
           files: |
             deploy-config/egress_proxy/notify-admin-staging.*.acl

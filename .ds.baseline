@@ -169,7 +169,7 @@
         "filename": "app/config.py",
         "hashed_secret": "577a4c667e4af8682ca431857214b3a920883efc",
         "is_verified": false,
-        "line_number": 111,
+        "line_number": 117,
         "is_secret": false
       }
     ],
@@ -423,7 +423,7 @@
         "filename": "app/templates/new/components/head.html",
         "hashed_secret": "ee5048791fc7ff45a1545e24f85bec3317371327",
         "is_verified": false,
-        "line_number": 35,
+        "line_number": 34,
         "is_secret": false
       }
     ],
@@ -587,19 +587,11 @@
     ],
     "tests/app/main/views/test_sign_in.py": [
       {
-        "type": "Private Key",
-        "filename": "tests/app/main/views/test_sign_in.py",
-        "hashed_secret": "1348b145fa1a555461c1b790a2f66614781091e9",
-        "is_verified": false,
-        "line_number": 31,
-        "is_secret": false
-      },
-      {
         "type": "Secret Keyword",
         "filename": "tests/app/main/views/test_sign_in.py",
         "hashed_secret": "8b8b69116ee882b5e987e330f55db81aba0636f9",
         "is_verified": false,
-        "line_number": 104,
+        "line_number": 90,
         "is_secret": false
       }
     ],
@@ -675,7 +667,7 @@
         "filename": "tests/conftest.py",
         "hashed_secret": "f8377c90fcfd699f0ddbdcb30c2c9183d2d933ea",
         "is_verified": false,
-        "line_number": 3289,
+        "line_number": 3266,
         "is_secret": false
       }
     ],
@@ -710,5 +702,5 @@
       }
     ]
   },
-  "generated_at": "2024-05-20T16:03:05Z"
+  "generated_at": "2024-06-11T22:26:18Z"
 }
