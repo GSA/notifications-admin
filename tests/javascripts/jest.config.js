@@ -9,7 +9,7 @@ module.exports = {
       statements: 90,
     }
   },
-  setupFiles: ['./support/setup.js'],
+  setupFiles: ['./support/setup.js', './support/jest.setup.js'],
   testEnvironment: 'jsdom',
   testEnvironmentOptions: {
     url: 'https://beta.notify.gov',
