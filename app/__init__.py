@@ -367,7 +367,7 @@ def make_session_permanent():
     """
     # session.permanent = True
 
-
+# SEEMS LIKE A GOOD IDEA TO HAVE THESE
 def add_security_headers(response):
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate'
     response.headers['Pragma'] = 'no-cache'

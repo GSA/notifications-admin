@@ -56,6 +56,7 @@ class Config(object):
     ACTIVITY_STATS_LIMIT_DAYS = 7
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_NAME = "notify_admin_session"
+    # SUGGESTED BEST PRACTICE
     SESSION_PROTECTION = 'strong'
     SESSION_COOKIE_SECURE = True
     # don't send back the cookie if it hasn't been modified by the request. this means that the expiry time won't be
