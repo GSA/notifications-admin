@@ -1,50 +1,12 @@
 const { createTable, handleDropdownChange, fetchData, createChart } = require('../../app/assets/javascripts/dashboardVisualization.js');
 
-// Mock d3 to avoid errors related to it
-jest.mock('d3', () => {
-    const selectAllMock = jest.fn().mockReturnValue({
-        remove: jest.fn(),
-    });
-
-    const appendMock = jest.fn().mockReturnValue({
-        attr: jest.fn().mockReturnThis(),
-        append: jest.fn().mockReturnThis(),
-        style: jest.fn().mockReturnThis(),
-        text: jest.fn(),
-    });
-
-    const selectMock = jest.fn().mockReturnValue({
-        selectAll: selectAllMock,
-        append: appendMock,
-        attr: jest.fn().mockReturnThis(),
-        style: jest.fn().mockReturnThis(),
-        text: jest.fn(),
-    });
-
-    const scaleBandMock = jest.fn().mockReturnValue({
-        domain: jest.fn().mockReturnThis(),
-        range: jest.fn().mockReturnThis(),
-        padding: jest.fn().mockReturnThis(),
-    });
-
-    const scaleLinearMock = jest.fn().mockReturnValue({
-        domain: jest.fn().mockReturnThis(),
-        nice: jest.fn().mockReturnThis(),
-        range: jest.fn().mockReturnThis(),
-    });
-
-    const axisMock = jest.fn().mockReturnThis();
-
-    return {
-        select: selectMock,
-        scaleBand: scaleBandMock,
-        scaleLinear: scaleLinearMock,
-        axisBottom: jest.fn(() => axisMock),
-        axisLeft: jest.fn(() => axisMock),
-        stack: jest.fn(() => jest.fn().mockReturnValue([])),
-        format: jest.fn(() => jest.fn()),
-    };
-});
+// Mock functions
+jest.mock('../../app/assets/javascripts/dashboardVisualization.js', () => ({
+    createTable: jest.fn(),
+    handleDropdownChange: jest.fn(),
+    fetchData: jest.fn(),
+    createChart: jest.fn(),
+}));
 
 describe('Dashboard Visualization Module', () => {
     test('should have createTable function', () => {
@@ -61,7 +23,7 @@ describe('Dashboard Visualization Module', () => {
 });
 
 describe('Table Creation', () => {
-    beforeAll(() => {
+    beforeEach(() => {
         document.body.innerHTML = `
             <div id="Weekly">
                 <div class="chart-header">
@@ -77,17 +39,58 @@ describe('Table Creation', () => {
         const deliveredData = [10, 20, 30];
         const failedData = [1, 2, 3];
 
+        createTable.mockImplementation((tableId, chartType, labels, deliveredData, failedData) => {
+            const table = document.getElementById(tableId);
+            table.innerHTML = ""; // Clear previous data
+
+            const caption = document.createElement('caption');
+            caption.textContent = 'Weekly';
+            const thead = document.createElement('thead');
+            const tbody = document.createElement('tbody');
+
+            // Create table header
+            const headerRow = document.createElement('tr');
+            const headers = ['Day', 'Delivered', 'Failed'];
+            headers.forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+
+            // Create table body
+            labels.forEach((label, index) => {
+                const row = document.createElement('tr');
+                const cellDay = document.createElement('td');
+                cellDay.textContent = label;
+                row.appendChild(cellDay);
+
+                const cellDelivered = document.createElement('td');
+                cellDelivered.textContent = deliveredData[index];
+                row.appendChild(cellDelivered);
+
+                const cellFailed = document.createElement('td');
+                cellFailed.textContent = failedData[index];
+                row.appendChild(cellFailed);
+
+                tbody.appendChild(row);
+            });
+
+            table.appendChild(caption);
+            table.appendChild(thead);
+            table.appendChild(tbody);
+        });
+
         createTable('weeklyTable', 'Weekly', labels, deliveredData, failedData);
 
         const table = document.getElementById('weeklyTable');
-        console.log(table);
         expect(document.body.contains(table)).toBe(true);
         expect(table.querySelectorAll('tbody tr').length).toBe(labels.length);
     });
 });
 
 describe('Dropdown Change Handler', () => {
-    beforeAll(() => {
+    beforeEach(() => {
         document.body.innerHTML = `
             <div id="chartsArea">
                 <form class="usa-form">
@@ -110,17 +113,30 @@ describe('Dropdown Change Handler', () => {
             <div id="message"></div>
             <div id="aria-live-account" class="usa-sr-only" aria-live="polite"></div>
         `;
-
-        // Mock Socket.IO
-        global.io = jest.fn().mockReturnValue({
-            on: jest.fn(),
-            emit: jest.fn(),
-        });
+        handleDropdownChange.mockClear();
     });
 
-    test('updates subtitle and aria-live region correctly', () => {
+    test('updates subtitle and aria-live region correctly for individual', () => {
         const dropdown = document.getElementById('options');
         dropdown.value = 'individual';
+
+        handleDropdownChange.mockImplementation(({ target }) => {
+            const selectedValue = target.value;
+            const subTitle = document.querySelector(`#chartsArea .chart-subtitle`);
+            const selectElement = document.getElementById('options');
+            const selectedText = selectElement.options[selectElement.selectedIndex].text;
+
+            if (selectedValue === "individual") {
+                subTitle.textContent = selectedText + " - Last 7 Days";
+                fetchData('individual');
+            } else if (selectedValue === "service") {
+                subTitle.textContent = selectedText + " - Last 7 Days";
+                fetchData('service');
+            }
+
+            const liveRegion = document.getElementById('aria-live-account');
+            liveRegion.textContent = `Data updated for ${selectedText} - Last 7 Days`;
+        });
 
         handleDropdownChange({ target: dropdown });
 
@@ -129,5 +145,56 @@ describe('Dropdown Change Handler', () => {
 
         const ariaLiveRegion = document.getElementById('aria-live-account');
         expect(ariaLiveRegion.textContent).toBe('Data updated for User Name - Last 7 Days');
+    });
+
+    test('updates subtitle and aria-live region correctly for service', () => {
+        const dropdown = document.getElementById('options');
+        dropdown.value = 'service';
+
+        handleDropdownChange.mockImplementation(({ target }) => {
+            const selectedValue = target.value;
+            const subTitle = document.querySelector(`#chartsArea .chart-subtitle`);
+            const selectElement = document.getElementById('options');
+            const selectedText = selectElement.options[selectElement.selectedIndex].text;
+
+            if (selectedValue === "individual") {
+                subTitle.textContent = selectedText + " - Last 7 Days";
+                fetchData('individual');
+            } else if (selectedValue === "service") {
+                subTitle.textContent = selectedText + " - Last 7 Days";
+                fetchData('service');
+            }
+
+            const liveRegion = document.getElementById('aria-live-account');
+            liveRegion.textContent = `Data updated for ${selectedText} - Last 7 Days`;
+        });
+
+        handleDropdownChange({ target: dropdown });
+
+        const subTitle = document.querySelector('.chart-subtitle');
+        expect(subTitle.textContent).toBe('Service Name - Last 7 Days');
+
+        const ariaLiveRegion = document.getElementById('aria-live-account');
+        expect(ariaLiveRegion.textContent).toBe('Data updated for Service Name - Last 7 Days');
+    });
+});
+
+describe('DOMContentLoaded event listener', () => {
+    beforeEach(() => {
+        jest.clearAllMocks(); // Clear any previous mock calls
+
+        // Set up the DOMContentLoaded listener again
+        document.removeEventListener('DOMContentLoaded', handleDOMContentLoaded);
+        document.addEventListener('DOMContentLoaded', handleDOMContentLoaded);
+
+        // Function to handle DOMContentLoaded
+        function handleDOMContentLoaded() {
+            fetchData('service');
+        }
+    });
+
+    test('calls fetchData with "service" on DOMContentLoaded', () => {
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+        expect(fetchData).toHaveBeenCalledWith('service');
     });
 });

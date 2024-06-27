@@ -36,7 +36,7 @@ from notifications_utils.recipients import format_phone_number_human_readable
 
 @socketio.on("fetch_daily_stats")
 def handle_fetch_daily_stats():
-    service_id = session.get('service_id')
+    service_id = session.get("service_id")
     if service_id:
         date_range = get_stats_date_range()
         daily_stats = service_api_client.get_service_notification_statistics_by_day(

@@ -212,10 +212,6 @@
             failedData.push(data[dateString].sms.failure !== undefined ? data[dateString].sms.failure : 0);
           }
 
-          console.log('Formatted labels:', labels);  // Log the formatted labels
-          console.log('Delivered data:', deliveredData);  // Log the delivered data
-          console.log('Failed data:', failedData);  // Log the failed data
-
           createChart('#weeklyChart', labels, deliveredData, failedData);
           createTable('weeklyTable', 'Weekly', labels, deliveredData, failedData);
         });
