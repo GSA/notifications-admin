@@ -12,7 +12,7 @@ applications:
       - route: ((cloud_dot_gov_route))
 
     services:
-      - notify-admin-redis-((env))
+      - notify-admin-redis-v70-((env))
       - notify-api-csv-upload-bucket-((env))
       - notify-admin-logo-upload-bucket-((env))
 
