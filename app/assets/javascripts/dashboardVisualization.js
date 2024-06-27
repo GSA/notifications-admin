@@ -37,7 +37,7 @@
             .data(legendData)
             .enter()
             .append('div')
-            .attr('class', 'legend-item')
+            .attr('class', 'legend-item');
 
         legendItem.append('div')
             .attr('class', 'legend-rect')
