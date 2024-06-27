@@ -21,8 +21,6 @@ def test_add_new_service_workflow(authenticated_page, end_to_end_context):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
-    print(page.url)
-    print(page.title())
 
     # Check to make sure that we've arrived at the next page.
     # Check the page title exists and matches what we expect.
