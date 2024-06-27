@@ -51,7 +51,6 @@ from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
 from notifications_utils import SMS_CHAR_COUNT_LIMIT
 from notifications_utils.insensitive_dict import InsensitiveDict
-from notifications_utils.logging import scrub
 from notifications_utils.recipients import RecipientCSV, first_column_headings
 from notifications_utils.sanitise_text import SanitiseASCII
 
@@ -953,9 +952,6 @@ def send_notification(service_id, template_id):
             )
         )
 
-    current_app.logger.info(
-        hilite(scrub(f"Recipient for the one-off will be {recipient}"))
-    )
     keys = []
     values = []
     for k, v in session["placeholders"].items():
@@ -971,6 +967,12 @@ def send_notification(service_id, template_id):
     )
     my_data = {"filename": filename, "template_id": template_id, "data": data}
     upload_id = s3upload(service_id, my_data)
+
+    # To debug messages that the user reports have not been sent, we log
+    # the csv filename and the job id.  The user will give us the file name,
+    # so we can search on that to obtain the job id, which we can use elsewhere
+    # on the API side to find out what happens to the message.
+    current_app.logger.info(hilite(f"One-off file: {filename} job_id: {upload_id}"))
     form = CsvUploadForm()
     form.file.data = my_data
     form.file.name = filename
@@ -987,19 +989,6 @@ def send_notification(service_id, template_id):
         original_file_name=filename,
         notification_count=1,
         valid="True",
-    )
-
-    # Here we are attempting to cleverly link the job id to the one-off recipient
-    # If we know the partial phone number of the recipient, we can search
-    # on that initially and find this, which will give us the job_id
-    # And once we know the job_id, we can search on that and it might tell us something
-    # about report generation.
-    current_app.logger.info(
-        hilite(
-            scrub(
-                f"Created job to send one-off, recipient is {recipient}, job_id is {upload_id}"
-            )
-        )
     )
 
     session.pop("recipient")
@@ -1033,14 +1022,17 @@ def send_notification(service_id, template_id):
                 job_id=upload_id,
             )
         )
-
+    total = notifications["total"]
+    current_app.logger.info(
+        hilite(
+            f"job_id: {upload_id} has notifications: {total} and attempts: {attempts}"
+        )
+    )
     return redirect(
         url_for(
             ".view_job",
             service_id=service_id,
             job_id=upload_id,
-            from_job=upload_id,
-            notification_id=notifications["notifications"][0]["id"],
             # used to show the final step of the tour (help=3) or not show
             # a back link on a just sent one off notification (help=0)
             help=request.args.get("help"),

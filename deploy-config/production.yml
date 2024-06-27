@@ -1,6 +1,6 @@
 env: production
 instances: 2
-memory: 1G
+memory: 2G
 public_admin_route: beta.notify.gov
 cloud_dot_gov_route: notify.app.cloud.gov
 redis_enabled: 1

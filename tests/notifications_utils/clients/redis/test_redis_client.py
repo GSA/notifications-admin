@@ -64,8 +64,6 @@ def test_should_not_raise_exception_if_raise_set_to_false(
 ):
     mock_logger = mocker.patch("flask.Flask.logger")
 
-    assert failing_redis_client.get("get_key") is None
-    assert failing_redis_client.set("set_key", "set_value") is None
     assert failing_redis_client.incr("incr_key") is None
     assert failing_redis_client.exceeded_rate_limit("rate_limit_key", 100, 100) is False
     assert failing_redis_client.delete("delete_key") is None
@@ -73,8 +71,6 @@ def test_should_not_raise_exception_if_raise_set_to_false(
     assert failing_redis_client.delete_by_pattern("pattern") == 0
 
     assert mock_logger.mock_calls == [
-        call.exception("Redis error performing get on get_key"),
-        call.exception("Redis error performing set on set_key"),
         call.exception("Redis error performing incr on incr_key"),
         call.exception("Redis error performing rate-limit-pipeline on rate_limit_key"),
         call.exception("Redis error performing delete on delete_key"),

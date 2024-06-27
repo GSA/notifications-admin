@@ -19,10 +19,12 @@ def test_non_logged_in_user_can_see_homepage(
         "Reach people where they are with government-powered text messages"
     )
 
-    assert page.select_one("a.usa-button.usa-button--big")["href"] == url_for(
-        "main.sign_in",
+    assert (
+        page.select_one(
+            "a.usa-button.login-button.login-button--primary.margin-right-2"
+        ).text
+        == "Sign in with \n"
     )
-
     assert page.select_one("meta[name=description]") is not None
     # This area is hidden for the pilot
     # assert normalize_spaces(page.select_one('#whos-using-notify').text) == (
