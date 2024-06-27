@@ -6,16 +6,6 @@ locals {
   recursive_delete = false
 }
 
-module "redis" { # default v6.2; delete after v7.0 resource is bound
-  source = "github.com/18f/terraform-cloudgov//redis?ref=v0.7.1"
-
-  cf_org_name      = local.cf_org_name
-  cf_space_name    = local.cf_space_name
-  name             = "${local.app_name}-redis-${local.env}"
-  recursive_delete = local.recursive_delete
-  redis_plan_name  = "redis-dev"
-}
-
 module "redis-v70" {
   source = "github.com/GSA-TTS/terraform-cloudgov//redis?ref=v1.0.0"
 
