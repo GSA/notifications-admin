@@ -182,7 +182,7 @@
     function fetchData(type) {
         var ctx = document.getElementById('weeklyChart');
         if (!ctx) {
-            return;
+          return;
         }
 
         var socket = io();
@@ -190,40 +190,40 @@
         var socketConnect = type === 'service' ? 'daily_stats_update' : 'daily_stats_by_user_update';
 
         socket.on('connect', function () {
-            const userId = ctx.getAttribute('data-service-id'); // Assuming user ID is the same as service ID
-            console.log(`User ID: ${userId}`);
-            socket.emit(eventType);
+          const userId = ctx.getAttribute('data-service-id'); // Assuming user ID is the same as service ID
+          console.log(`User ID: ${userId}`);
+          socket.emit(eventType);
         });
 
         socket.on(socketConnect, function(data) {
-            console.log('Received data:', data);  // Log the received data
+          console.log('Received data:', data);  // Log the received data
 
-            var labels = [];
-            var deliveredData = [];
-            var failedData = [];
+          var labels = [];
+          var deliveredData = [];
+          var failedData = [];
 
-            for (var dateString in data) {
-                // Parse the date string (assuming format YYYY-MM-DD)
-                const dateParts = dateString.split('-');
-                const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0].slice(2)}`; // Format to MM/DD/YY
+          for (var dateString in data) {
+            // Parse the date string (assuming format YYYY-MM-DD)
+            const dateParts = dateString.split('-');
+            const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0].slice(2)}`; // Format to MM/DD/YY
 
-                labels.push(formattedDate);
-                deliveredData.push(data[dateString].sms.delivered);
-                failedData.push(data[dateString].sms.failure !== undefined ? data[dateString].sms.failure : 0);
-            }
+            labels.push(formattedDate);
+            deliveredData.push(data[dateString].sms.delivered);
+            failedData.push(data[dateString].sms.failure !== undefined ? data[dateString].sms.failure : 0);
+          }
 
-            console.log('Formatted labels:', labels);  // Log the formatted labels
-            console.log('Delivered data:', deliveredData);  // Log the delivered data
-            console.log('Failed data:', failedData);  // Log the failed data
+          console.log('Formatted labels:', labels);  // Log the formatted labels
+          console.log('Delivered data:', deliveredData);  // Log the delivered data
+          console.log('Failed data:', failedData);  // Log the failed data
 
-            createChart('#weeklyChart', labels, deliveredData, failedData);
-            createTable('weeklyTable', 'Weekly', labels, deliveredData, failedData);
+          createChart('#weeklyChart', labels, deliveredData, failedData);
+          createTable('weeklyTable', 'Weekly', labels, deliveredData, failedData);
         });
 
         socket.on('error', function(data) {
-            console.log('Error:', data);
+          console.log('Error:', data);
         });
-    }
+      }
 
     function handleDropdownChange(event) {
         const selectedValue = event.target.value;
@@ -238,6 +238,11 @@
             subTitle.textContent = selectedText + " - Last 7 Days";
             fetchData('service');
         }
+
+        // Update ARIA live region
+        const liveRegion = document.getElementById('aria-live-account');
+        liveRegion.textContent = `Data updated for ${selectedText} - Last 7 Days`;
+
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -254,5 +259,7 @@
         const selectedValue = document.getElementById('options').value;
         handleDropdownChange({ target: { value: selectedValue } });
     });
+
+    module.exports = { createChart, createTable, handleDropdownChange, fetchData };
 
 })(window);
