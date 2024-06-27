@@ -22,9 +22,8 @@ i.e.
 
 @use "uswds-core" as *;
 
-iframe:focus, [href]:focus, [tabindex]:focus, [contentEditable=true]:focus {
-    outline: units(1px) dotted color('blue-40v');
-    outline: units(1px) auto color('blue-40v');
+iframe:focus, [href]:focus, [tabindex]:focus, [contentEditable=true]:focus, button:not([disabled]):focus {
+    outline: units(2px) solid color('blue-40v');
     outline-offset: 0.3rem;
 }
 

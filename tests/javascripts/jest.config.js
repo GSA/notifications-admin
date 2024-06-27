@@ -14,4 +14,10 @@ module.exports = {
   testEnvironmentOptions: {
     url: 'https://beta.notify.gov',
   },
+  transform: {
+    '^.+\\.js$': 'babel-jest',
+  },
+  transformIgnorePatterns: [
+    '/node_modules/'  // Add any other folders you want Jest to ignore
+  ],
 };

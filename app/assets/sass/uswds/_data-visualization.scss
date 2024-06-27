@@ -1,0 +1,152 @@
+@use "uswds-core" as *;
+
+$delivered: color('blue-50v');
+$pending: color('green-cool-40v');
+$failed: color('orange-30v');
+
+.chart-container {
+  display: flex;
+  &.usage {
+    height: units(4);
+  }
+}
+
+.bar {
+  border-radius: units(0.5);
+  &.delivered, &.usage {
+    background-color: $delivered;
+    margin-right: 1px;
+  }
+  &.pending{
+    background-color: $pending;
+    margin-right: 1px;
+  }
+  &.failed, &.remaining {
+    background-color: $failed;
+  }
+}
+
+.legend {
+  display: flex;
+  margin: units(1) 0;
+  .legend-item {
+    display: flex;
+    align-items: flex-start;
+    margin-right: units(2);
+  }
+  .legend-color {
+    width: units(3);
+    height: units(3);
+    margin-right: 0;
+    padding: 0;
+    border-radius: 2px;
+    background-color: $delivered;
+    &.pending {
+      background-color: $pending;
+    }
+    &.failed, &.remaining {
+      background-color: $failed;
+    }
+  }
+  .legend-value {
+    margin: 0 units(1);
+  }
+}
+
+.usa-tooltip {
+  line-height: 1;
+  .usa-tooltip__body {
+    width: units(mobile);
+      font-size: size("body", 2);
+    height: auto;
+    white-space: wrap;
+    line-height: units(1);
+  }
+}
+
+.progress-bar {
+  width: 300px;
+  height: 20px;
+  background-color: #eee;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.progress-bar-inner {
+  height: 100%;
+  background-color: #007bff;
+  border-radius: inherit;
+}
+
+.chart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: units(1) units(1) 0;
+}
+
+.chart-subtitle {
+  font-size: size("body", 6);
+  font-weight: bold;
+  text-align: left;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.axis text {
+  font-size: size("body", 1);
+}
+
+.axis line,
+.axis path {
+  shape-rendering: crispEdges;
+  stroke: #000;
+  fill: none;
+}
+
+.bar {
+  fill-opacity: 0.8;
+}
+
+.chart-container {
+  width: 100%;
+  position: relative;
+}
+
+.chart-legend {
+    display: flex;
+    align-items: center;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-right: units(2);
+    .legend-rect {
+      width: units(2);
+      height: units(2);
+      margin-right: units(1);
+  }
+}
+
+#tooltip {
+  position: absolute;
+  display: none;
+  background: color('ink');
+  color: #FFF;
+  border: 1px solid #ccc;
+  padding: units(1);
+  border-radius: units(1);
+  pointer-events: none;
+  z-index: 100;
+  font-size: size("body", 3);
+  line-height: 1.3;
+}
