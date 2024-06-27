@@ -6,14 +6,18 @@ locals {
   recursive_delete = false
 }
 
-module "redis" {
-  source = "github.com/18f/terraform-cloudgov//redis?ref=v0.7.1"
+module "redis-v70" {
+  source = "github.com/GSA-TTS/terraform-cloudgov//redis?ref=v1.0.0"
 
-  cf_org_name      = local.cf_org_name
-  cf_space_name    = local.cf_space_name
-  name             = "${local.app_name}-redis-${local.env}"
-  recursive_delete = local.recursive_delete
-  redis_plan_name  = "redis-dev"
+  cf_org_name     = local.cf_org_name
+  cf_space_name   = local.cf_space_name
+  name            = "${local.app_name}-redis-v70-${local.env}"
+  redis_plan_name = "redis-dev"
+  json_params = jsonencode(
+    {
+      "engineVersion" : "7.0",
+    }
+  )
 }
 
 module "logo_upload_bucket" {
