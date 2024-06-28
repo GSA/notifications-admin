@@ -365,9 +365,11 @@ def make_session_permanent():
     when you first log in/sign up/get invited/etc, but we do it just to be safe. For more reading, check here:
     https://stackoverflow.com/questions/34118093/flask-permanent-session-where-to-define-them
     """
+    # Commented out due to compliance issue #46
     # session.permanent = True
+    pass
 
-# SEEMS LIKE A GOOD IDEA TO HAVE THESE
+
 def add_security_headers(response):
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate'
     response.headers['Pragma'] = 'no-cache'
