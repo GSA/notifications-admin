@@ -280,6 +280,7 @@ def init_app(application):
     application.before_request(request_helper.check_proxy_header_before_request)
     application.before_request(make_session_permanent)
     application.after_request(save_service_or_org_after_request)
+    application.after_request(add_security_headers)
 
     start = len(asset_fingerprinter._filesystem_path)
     font_paths = [
@@ -364,7 +365,21 @@ def make_session_permanent():
     when you first log in/sign up/get invited/etc, but we do it just to be safe. For more reading, check here:
     https://stackoverflow.com/questions/34118093/flask-permanent-session-where-to-define-them
     """
-    session.permanent = True
+    # Commented out due to compliance issue #46
+    print(f"ENDPOINT IS {request.endpoint}")
+    if not request.endpoint == 'main.sign_out':
+        session.permanent = True
+    else:
+        print(f"SETTING SESSION PERMANENT TO FALSE")
+        session.permanent = False
+    # pass
+
+
+def add_security_headers(response):
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 
 def create_beta_url(url):
