@@ -366,15 +366,21 @@ def make_session_permanent():
     https://stackoverflow.com/questions/34118093/flask-permanent-session-where-to-define-them
     """
     # Commented out due to compliance issue #46
-    # session.permanent = True
-    pass
+    print(f"ENDPOINT IS {request.endpoint}")
+    if not request.endpoint == 'main.sign_out':
+        session.permanent = True
+    else:
+        print(f"SETTING SESSION PERMANENT TO FALSE")
+        session.permanent = False
+    # pass
 
 
 def add_security_headers(response):
-    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate'
-    response.headers['Pragma'] = 'no-cache'
-    response.headers['Expires'] = '0'
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
     return response
+
 
 def create_beta_url(url):
     url_created = urlparse(url)
