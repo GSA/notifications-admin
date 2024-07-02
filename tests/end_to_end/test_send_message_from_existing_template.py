@@ -256,6 +256,15 @@ def handle_existing_template_case(page):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
+    if "/tour" not in page.url:
+        # Only execute this part if the current page is not the /tour page
+        preview_button = page.get_by_text("Preview")
+        expect(preview_button).to_be_visible()
+        preview_button.click()
+
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+
     send_button = page.get_by_role("button", name="Send")
     expect(send_button).to_be_visible()
     # send_button.click()
