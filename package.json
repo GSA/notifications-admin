@@ -51,7 +51,6 @@
     "gulp-better-rollup": "4.0.1",
     "gulp-clean-css": "4.3.0",
     "gulp-concat": "2.6.1",
-    "gulp-css-url-adjuster": "0.2.3",
     "gulp-include": "2.4.1",
     "gulp-jshint": "2.1.0",
     "gulp-prettyerror": "2.0.0",
