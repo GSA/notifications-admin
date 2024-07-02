@@ -7,7 +7,6 @@ from flask_login import current_user
 from app.models.spreadsheet import Spreadsheet
 from app.utils import hilite
 from app.utils.templates import get_sample_template
-from notifications_utils.logging import scrub
 from notifications_utils.recipients import RecipientCSV
 
 
@@ -74,12 +73,11 @@ def generate_notifications_csv(**kwargs):
 
     # This generates the "batch" csv report
     if kwargs.get("job_id"):
-        # The kwargs contain the job id, which is linked to the recipient's partial phone number in other debug
         # Some unit tests are mocking the kwargs and turning them into a function instead of dict,
         # hence the try/except.
         try:
             current_app.logger.info(
-                hilite(f"Setting up report with kwargs {scrub(json.dumps(kwargs))}")
+                hilite(f"Setting up report with kwargs {json.dumps(kwargs)}")
             )
         except TypeError:
             pass
@@ -89,7 +87,7 @@ def generate_notifications_csv(**kwargs):
         # we display to 999 characters, because we don't want to show the contents for reports with thousands of rows.
         current_app.logger.info(
             hilite(
-                f"Original csv for job_id {kwargs['job_id']}: {scrub(original_file_contents[0:999])}"
+                f"Original csv for job_id {kwargs['job_id']}: {original_file_contents[0:999]}"
             )
         )
         original_upload = RecipientCSV(
