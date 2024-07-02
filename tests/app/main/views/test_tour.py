@@ -530,10 +530,10 @@ def test_should_200_for_check_tour_notification(
     assert normalize_spaces(page.select(".banner-tour .heading-medium")[0].text) == (
         "Try sending yourself this example"
     )
-    selected_hint = page.select(".banner-tour .grid-row")[1]
+    selected_hint = page.select(".banner-tour .grid-row")[2]
     selected_hint_text = normalize_spaces(selected_hint.select(".usa-body")[0].text)
     assert "greyed-out-step" not in selected_hint["class"]
-    assert selected_hint_text == "The template pulls in the data you provide"
+    assert selected_hint_text == "Notify delivers the message"
 
     assert normalize_spaces(page.select(".sms-message-recipient")[0].text) == (
         "To: 202-867-5303"
@@ -544,9 +544,10 @@ def test_should_200_for_check_tour_notification(
 
     # post to send_notification keeps help argument
     assert page.form.attrs["action"] == url_for(
-        "main.preview_notification",
+        "main.send_notification",
         service_id=SERVICE_ONE_ID,
         template_id=fake_uuid,
+        help=3,
     )
 
 
