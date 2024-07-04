@@ -17,7 +17,6 @@ plugins.addSrc = require('gulp-add-src');
 plugins.babel = require('gulp-babel');
 plugins.cleanCSS = require('gulp-clean-css');
 plugins.concat = require('gulp-concat');
-plugins.cssUrlAdjuster = require('gulp-css-url-adjuster');
 plugins.jshint = require('gulp-jshint');
 plugins.prettyerror = require('gulp-prettyerror');
 plugins.rollup = require('gulp-better-rollup')

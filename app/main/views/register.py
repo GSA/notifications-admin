@@ -130,10 +130,10 @@ def put_invite_data_in_redis(
 ):
     ttl = 60 * 15  # 15 minutes
 
-    redis_client.raw_set(f"invitedata-{state}", json.dumps(invite_data), ex=ttl)
-    redis_client.raw_set(f"user_email-{state}", user_email, ex=ttl)
-    redis_client.raw_set(f"user_uuid-{state}", user_uuid, ex=ttl)
-    redis_client.raw_set(
+    redis_client.set(f"invitedata-{state}", json.dumps(invite_data), ex=ttl)
+    redis_client.set(f"user_email-{state}", user_email, ex=ttl)
+    redis_client.set(f"user_uuid-{state}", user_uuid, ex=ttl)
+    redis_client.set(
         f"invited_user_email_address-{state}",
         invited_user_email_address,
         ex=ttl,
