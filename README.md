@@ -48,7 +48,7 @@ in front of them.
 
 This project is set up to work with
 [nvm (Node Version Manager)](https://github.com/nvm-sh/nvm#installing-and-updating)
-for managing and using Node.js (version 16.15.1) and the `npm` package manager.
+for managing and using Node.js (version 22.3.0) and the `npm` package manager.
 
 These instructions will walk you through how to set your machine up with all of
 the required tools for this project.

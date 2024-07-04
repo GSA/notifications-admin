@@ -972,7 +972,12 @@ def send_notification(service_id, template_id):
     # the csv filename and the job id.  The user will give us the file name,
     # so we can search on that to obtain the job id, which we can use elsewhere
     # on the API side to find out what happens to the message.
-    current_app.logger.info(hilite(f"One-off file: {filename} job_id: {upload_id}"))
+    current_app.logger.info(
+        hilite(
+            f"One-off file: {filename} job_id: {upload_id} s3 location: service-{service_id}-notify/{upload_id}.csv"
+        )
+    )
+
     form = CsvUploadForm()
     form.file.data = my_data
     form.file.name = filename

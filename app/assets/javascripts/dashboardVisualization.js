@@ -256,6 +256,12 @@
         handleDropdownChange({ target: { value: selectedValue } });
     });
 
-    module.exports = { createChart, createTable, handleDropdownChange, fetchData };
+    // Exporting the functions for browser environment
+    window.myModule = {
+        createChart: l,
+        createTable: r,
+        handleDropdownChange: t,
+        fetchData: n
+    };
 
 })(window);

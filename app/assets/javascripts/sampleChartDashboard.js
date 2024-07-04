@@ -30,13 +30,13 @@
         });
 
         var socket = io();
-        var serviceId = ctx.getAttribute('data-service-id');
 
         socket.on('connect', function() {
-            socket.emit('fetch_daily_stats', serviceId);
+            socket.emit('fetch_daily_stats_by_user');
         });
 
-        socket.on('daily_stats_update', function(data) {
+        socket.on('daily_stats_by_user_update', function(data) {
+            // console.log('Data received:', data);
             var labels = [];
             var deliveredData = [];
             var failedData = [];
@@ -53,13 +53,14 @@
         });
 
         socket.on('error', function(data) {
-            console.log('Error:', data);
+            // console.log('Error:', data);
         });
 
         var sevenDaysButton = document.getElementById('sevenDaysButton');
         if (sevenDaysButton) {
             sevenDaysButton.addEventListener('click', function() {
-                socket.emit('fetch_daily_stats', serviceId);
+                socket.emit('fetch_daily_stats_by_user');
+                // console.log('clicked');
             });
         }
     }
