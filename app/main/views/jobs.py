@@ -432,6 +432,7 @@ def get_job_partials(job):
             "partials/jobs/status.html",
             job=job,
             arrived_from_preview_page_url=arrived_from_preview_page_url,
+            notifications=notifications["notifications"]
         ),
     }
 
