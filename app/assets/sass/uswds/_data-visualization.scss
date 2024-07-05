@@ -6,7 +6,6 @@
 
 #totalMessageChart {
    width: 100%;
-   margin-left: units(-1);
 }
 
 #message {
@@ -19,4 +18,23 @@
    width: 100%;
    font-size: units(3);
    font-weight: bold;
+}
+
+.bar {
+   fill: #0076d6;
+}
+.bar-remaining {
+   fill: #fa9441;
+}
+.hidden {
+   display: none;
+}
+.tooltip {
+   position: absolute;
+   background: #f4f4f4;
+   padding: 5px;
+   border: 1px solid #d4d4d4;
+   border-radius: 3px;
+   pointer-events: none;
+   font-size: 12px;
 }

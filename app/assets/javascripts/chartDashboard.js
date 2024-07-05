@@ -1,15 +1,13 @@
 (function (window) {
-    var canvas = document.getElementById('totalMessageChart');
-    var ctx = canvas.getContext('2d');
-    // Set explicit dimensions for the canvas
-    canvas.width = canvas.parentElement.clientWidth;
-    canvas.height = 100;
-
     var chartContainer = document.getElementById('chartContainer');
     var chartTitle = document.getElementById('chartTitle').textContent;
-    var sms_sent = parseInt(chartContainer.getAttribute('data-sms-sent'));
-    var sms_remaining_messages = parseInt(chartContainer.getAttribute('data-sms-allowance-remaining'));
+    var sms_sent = 100;
+    var sms_remaining_messages = 249900;
     var totalMessages = sms_sent + sms_remaining_messages;
+
+    // Update the message below the chart
+    document.getElementById('message').innerText = `${sms_sent.toLocaleString()} sent / ${sms_remaining_messages.toLocaleString()} remaining`;
+    console.log('Message element textContent set to:', document.getElementById('message').innerText);
 
     // Set a minimum value for "Messages Sent" based on a percentage of the remaining messages
     var minSentPercentage = 0.01; // Minimum width as a percentage of total messages (1% in this case)
@@ -17,88 +15,65 @@
     var displaySent = Math.max(sms_sent, minSentValue);
     var displayRemaining = totalMessages - displaySent;
 
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: [''],
-            datasets: [{
-                label: 'Messages Sent',
-                data: [displaySent],
-                backgroundColor: '#0076d6',
-                actualValue: sms_sent // Store the actual value for tooltips
-            },
-            {
-                label: 'Remaining',
-                data: [displayRemaining],
-                backgroundColor: '#fa9441',
-                actualValue: sms_remaining_messages // Store the actual value for tooltips
-            }]
-        },
-        options: {
-            indexAxis: 'y',
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    stacked: true,
-                    max: totalMessages,
-                    grid: {
-                        display: false,
-                    },
-                    border: {
-                        display: false,
-                    },
-                    ticks: {
-                        display: false // Hide x-axis ticks
-                    }
-                },
-                y: {
-                    stacked: true,
-                    grid: {
-                        display: false,
-                    },
-                    border: {
-                        display: false,
-                    },
-                    ticks: {
-                        display: false // Hide y-axis ticks
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            var dataset = tooltipItem.dataset;
-                            return dataset.label + ': ' + dataset.actualValue.toLocaleString();
-                        }
-                    }
-                },
-                title: {
-                    display: false // Hide the Chart.js title and use custom title
-                }
-            },
-            responsive: true,
-            layout: {
-                padding: {
-                    left: 0, // Adjust left padding to remove extra space
-                    top: 0,
-                    bottom: 0,
-                    right: 0
-                }
-            }
-        }
-    });
+    var svg = d3.select("#totalMessageChart");
+    var width = chartContainer.clientWidth;
+    var height = 64;
+    svg.attr("width", width).attr("height", height);
 
-    // Update the message below the chart
-    document.getElementById('message').innerText = `${sms_sent.toLocaleString()} sent / ${sms_remaining_messages.toLocaleString()} remaining`;
+    var x = d3.scaleLinear()
+        .domain([0, totalMessages])
+        .range([0, width]);
+
+    var tooltip = d3.select(".tooltip");
+
+    var data = [
+        { label: 'Messages Sent', value: displaySent, actualValue: sms_sent, color: '#0076d6' },
+        { label: 'Remaining', value: displayRemaining, actualValue: sms_remaining_messages, color: '#fa9441' }
+    ];
+
+    var totalAnimationDuration = 1000; // Total animation duration in milliseconds
+    var sentPercentage = displaySent / totalMessages;
+    var remainingPercentage = displayRemaining / totalMessages;
+
+    var sentDuration = totalAnimationDuration * sentPercentage;
+    var remainingDuration = totalAnimationDuration * remainingPercentage;
+
+    var bars = svg.selectAll("rect")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("x", (d, i) => i === 0 ? 0 : x(data[0].value))
+        .attr("y", 0)
+        .attr("width", 0)  // Start with width 0 for animation
+        .attr("height", height)
+        .attr("fill", d => d.color)
+        .on("mousemove", function (event, d) {
+            tooltip.classed("hidden", false)
+                .style("left", event.pageX + "px")
+                .style("top", event.pageY - 28 + "px")
+                .html(d.label + ": " + d.actualValue.toLocaleString());
+        })
+        .on("mouseout", function () {
+            tooltip.classed("hidden", true);
+        });
+
+    // Animate "Messages Sent" first
+    bars.filter((d, i) => i === 0)
+        .transition()
+        .duration(sentDuration)  // Animation duration for "Messages Sent"
+        .attr("width", d => x(d.value))
+        .on("end", function() {
+            // Animate "Remaining" immediately after "Messages Sent"
+            bars.filter((d, i) => i === 1)
+                .transition()
+                .duration(remainingDuration)  // Animation duration for "Remaining"
+                .attr("width", d => x(d.value));
+        });
 
     // Create and populate the accessible table
     var tableContainer = document.getElementById('totalMessageTable');
     var table = document.createElement('table');
-    table.className = 'usa-sr-only';
+    table.className = 'usa-sr-only usa-table';
 
     var caption = document.createElement('caption');
     caption.textContent = chartTitle;
@@ -121,7 +96,7 @@
         { label: 'Remaining', value: sms_remaining_messages.toLocaleString() }
     ];
 
-    tableData.forEach(function(rowData) {
+    tableData.forEach(function (rowData) {
         var row = document.createElement('tr');
         var cellLabel = document.createElement('td');
         var cellValue = document.createElement('td');
@@ -136,8 +111,12 @@
     tableContainer.appendChild(table);
 
     // Ensure the chart resizes correctly on window resize
-    window.addEventListener('resize', function() {
-        canvas.width = canvas.parentElement.clientWidth;
-        myChart.resize();
+    window.addEventListener('resize', function () {
+        width = chartContainer.clientWidth;
+        x.range([0, width]);
+        svg.attr("width", width);
+        svg.selectAll("rect")
+            .attr("width", d => x(d.value))
+            .attr("x", (d, i) => i === 0 ? 0 : x(data[0].value));
     });
 })(window);

@@ -30,13 +30,23 @@
 
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
     {% if current_user.has_permissions('manage_service') %}
-    <div id="chartContainer" data-sms-sent="{{ sms_sent }}" data-sms-allowance-remaining="{{ sms_allowance_remaining }}">
+
+    <!-- <div id="chartContainer" data-sms-sent="{{ sms_sent }}" data-sms-allowance-remaining="{{ sms_allowance_remaining }}">
       <h2 class="margin-bottom-1" id="chartTitle">2024 Total message allowance</h2>
       <div class="usa-sr-only" id="chartDesc">A bar chart showing the messages sent against the total message allowance for 2024 to date</div>
       <canvas id="totalMessageChart" role="img" aria-labelledby="chartTitle chartDesc" height="100"></canvas>
       <div id="totalMessageTable"></div>
     </div>
-    <div id="message"></div>
+    <div id="message"></div> -->
+
+    <div id="chartContainer">
+      <h2 id="chartTitle">Total Messages</h2>
+      <svg id="totalMessageChart"></svg>
+      <div id="message"></div>
+    </div>
+    <div id="totalMessageTable"></div>
+    <div class="tooltip hidden"></div>
+
     <p class="align-with-heading-copy">
       What counts as 1 text message part?<br />
       See <a class="usa-link" href="{{ url_for('.pricing') }}">Tracking usage</a>.
