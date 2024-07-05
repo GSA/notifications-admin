@@ -48,7 +48,7 @@ from app.utils import (
 )
 from app.utils.csv import Spreadsheet, get_errors_for_csv
 from app.utils.templates import get_template
-from app.utils.user import user_has_permissions
+from app.utils.user import get_from_session, set_to_session, user_has_permissions
 from notifications_utils import SMS_CHAR_COUNT_LIMIT
 from notifications_utils.insensitive_dict import InsensitiveDict
 from notifications_utils.recipients import RecipientCSV, first_column_headings
@@ -211,7 +211,7 @@ def get_example_csv(service_id, template_id):
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def set_sender(service_id, template_id):
-    session["sender_id"] = None
+    set_to_session(current_user.current_session_id, "sender_id", None)
     redirect_to_one_off = redirect(
         url_for(".send_one_off", service_id=service_id, template_id=template_id)
     )
@@ -225,7 +225,7 @@ def set_sender(service_id, template_id):
     sender_details = remove_notify_from_sender_options(sender_details)
 
     if len(sender_details) == 1:
-        session["sender_id"] = sender_details[0]["id"]
+        set_to_session(current_user.current_session_id, "sender_id", sender_details[0]["id"])
 
     if len(sender_details) <= 1:
         return redirect_to_one_off
@@ -259,7 +259,7 @@ def set_sender(service_id, template_id):
         form.sender.param_extensions["items"].append(extensions)
 
     if form.validate_on_submit():
-        session["sender_id"] = form.sender.data
+        set_to_session(current_user.current_session_id, "sender_id", form.sender.data)
         return redirect(
             url_for(".send_one_off", service_id=service_id, template_id=template_id)
         )
@@ -340,8 +340,9 @@ def get_sender_details(service_id, template_type):
 @main.route("/services/<uuid:service_id>/send/<uuid:template_id>/one-off")
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def send_one_off(service_id, template_id):
-    session["recipient"] = None
-    session["placeholders"] = {}
+    set_to_session(current_user.current_session_id, "recipient", None)
+    set_to_session(current_user.current_session_id, "placeholders", None)
+
 
     db_template = current_service.get_template_with_user_permission_or_403(
         template_id, current_user
@@ -446,9 +447,11 @@ def send_one_off_step(service_id, template_id, step_index):
         # if it's the first input (phone/email), we store against `recipient` as well, for easier extraction.
         # Only if we're not on the test route, since that will already have the user's own number set
         if step_index == 0:
-            session["recipient"] = form.placeholder_value.data
+            set_to_session(current_user.current_session_id, "recipient", form.placeholder_value.data)
 
-        session["placeholders"][current_placeholder] = form.placeholder_value.data
+        placeholders = get_from_session(current_user.current_session_id, "placeholders")
+        placeholders[current_placeholder] = form.placeholder_value.data
+        set_to_session(current_user.current_session_id, "placeholders", placeholders)
 
         if all_placeholders_in_session(placeholders):
             return get_notification_check_endpoint(service_id, template)
@@ -471,7 +474,7 @@ def send_one_off_step(service_id, template_id, step_index):
         "views/send-test.html",
         page_title=get_send_test_page_title(
             template.template_type,
-            entering_recipient=not session["recipient"],
+            entering_recipient=not get_from_session(current_user.current_session_id, "recipient"),
             name=template.name,
         ),
         template=template,
@@ -645,8 +648,8 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
         "original_file_name": data.get("original_file_name", ""),
     }
 
-    if session.get("sender_id"):
-        metadata_kwargs["sender_id"] = session["sender_id"]
+    if get_from_session(current_user.current_session_id, "sender_id"):
+        metadata_kwargs["sender_id"] = get_from_session(current_user.current_session_id, "sender_id")
 
     set_metadata_on_csv_upload(service_id, upload_id, **metadata_kwargs)
 

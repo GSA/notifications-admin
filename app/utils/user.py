@@ -4,6 +4,7 @@ from flask import abort, current_app
 from flask_login import current_user, login_required
 
 from app import config
+from notifications_utils.clients.redis import redis_client
 
 user_is_logged_in = login_required
 
@@ -74,3 +75,10 @@ def _email_address_ends_with(email_address, known_domains):
 
 # def distinct_email_addresses(*args):
 #     return len(args) == len(set(map(normalise_email_address_aliases, args)))
+
+
+def get_from_session(session_id, key):
+    return redis_client.get(f"{session_id}-{key}")
+
+def set_to_session(session_id, key, value):
+    redis_client.set(f"{session_id}-{key}", value)

@@ -48,12 +48,12 @@ window.GOVUK.Modules.TimeoutPopup = window.GOVUK.Modules.TimeoutPopup || {};
     }
 
     function setSessionTimer() {
-        var timeTillSessionEnd = new Date().getTime() + (2 * 60 * 1000);
+        var timeTillSessionEnd = new Date().getTime() + (1 * 60 * 1000);
         intervalId = setInterval(checkTimer, 1000, timeTillSessionEnd);
     }
 
     if (document.getElementById("timeLeft") !== null) {
-        setTimeout(setSessionTimer, 5 * 60 * 1000);
+        setTimeout(setSessionTimer, 2 * 60 * 1000);
     }
 
     global.GOVUK.Modules.TimeoutPopup.checkTimer = checkTimer;
