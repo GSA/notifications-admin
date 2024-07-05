@@ -1,7 +1,8 @@
+import multiprocessing
 import os
 import sys
 import traceback
-import multiprocessing
+
 import gunicorn
 
 # Let gunicorn figure out the right number of workers
