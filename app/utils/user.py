@@ -4,7 +4,7 @@ from flask import abort, current_app
 from flask_login import current_user, login_required
 
 from app import config
-from notifications_utils.clients.redis import redis_client
+from app.extensions import redis_client
 
 user_is_logged_in = login_required
 
@@ -77,8 +77,32 @@ def _email_address_ends_with(email_address, known_domains):
 #     return len(args) == len(set(map(normalise_email_address_aliases, args)))
 
 
-def get_from_session(session_id, key):
-    return redis_client.get(f"{session_id}-{key}")
+def session_pop(key, altval=None):
+    return_val = get_from_session(key)
+    redis_client.delete(key)
+    if return_val is None and altval is not None:
+        return altval
+    return return_val
 
-def set_to_session(session_id, key, value):
-    redis_client.set(f"{session_id}-{key}", value)
+
+def session_clear():
+    key = current_user.current_session_id
+    for k in redis_client.keys(pattern=f"{key}*"):
+        if k.startswith(key):
+            session_pop(k)
+
+def check_session(key):
+    compound_key = f"{current_user.current_session_id}-{key}"
+    for k in redis_client.keys(pattern=f"{key}*"):
+        if k is compound_key:
+            return True
+    return False
+
+def get_from_session(key):
+    compound_key = f"{current_user.current_session_id}-{key}"
+    return redis_client.get(compound_key)
+
+
+def set_to_session(key, value):
+    compound_key = f"{current_user.current_session_id}-{key}"
+    redis_client.set(compound_key, value)

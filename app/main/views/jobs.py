@@ -9,7 +9,6 @@ from flask import (
     redirect,
     render_template,
     request,
-    session,
     stream_with_context,
     url_for,
 )
@@ -33,7 +32,7 @@ from app.utils.pagination import (
     generate_previous_dict,
     get_page_from_request,
 )
-from app.utils.user import user_has_permissions
+from app.utils.user import get_from_session, set_to_session, user_has_permissions
 from notifications_utils.template import EmailPreviewTemplate, SMSBodyPreviewTemplate
 
 
@@ -402,11 +401,13 @@ def get_job_partials(job):
     )
 
     if request.referrer is not None:
-        session["arrived_from_preview_page"] = "check" in request.referrer
+        set_to_session("arrived_from_preview_page", "check" in request.referrer)
     else:
-        session["arrived_from_preview_page"] = False
+        set_to_session("arrived_from_preview_page", False)
 
-    arrived_from_preview_page_url = session.get("arrived_from_preview_page", False)
+    arrived_from_preview_page_url = get_from_session("arrived_from_preview_page")
+    if not arrived_from_preview_page_url:
+        arrived_from_preview_page_url = False
 
     return {
         "counts": counts,

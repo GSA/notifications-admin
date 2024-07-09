@@ -3,16 +3,7 @@ import json
 import uuid
 from datetime import datetime, timedelta
 
-from flask import (
-    abort,
-    current_app,
-    flash,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
+from flask import abort, current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user
 
 from app import redis_client, user_api_client
@@ -26,7 +17,7 @@ from app.main.views import sign_in
 from app.main.views.verify import activate_user
 from app.models.user import InvitedOrgUser, InvitedUser, User
 from app.utils import hide_from_search_engines, hilite
-from app.utils.user import is_gov_user
+from app.utils.user import get_from_session, is_gov_user, set_to_session
 
 
 @main.route("/register", methods=["GET", "POST"])
@@ -84,8 +75,8 @@ def _do_registration(form, send_sms=True, send_email=True, organization_id=None)
     if user:
         if send_email:
             user.send_already_registered_email()
-        session["expiry_date"] = str(datetime.utcnow() + timedelta(hours=1))
-        session["user_details"] = {"email": user.email_address, "id": user.id}
+        set_to_session("expiry_date", str(datetime.utcnow() + timedelta(hours=1)))
+        set_to_session("user_details", {"email": user.email_address, "id": user.id})
     else:
         user = User.register(
             name=form.name.data,
@@ -100,15 +91,15 @@ def _do_registration(form, send_sms=True, send_email=True, organization_id=None)
 
         if send_sms:
             user.send_verify_code()
-        session["expiry_date"] = str(datetime.utcnow() + timedelta(hours=1))
-        session["user_details"] = {"email": user.email_address, "id": user.id}
+        set_to_session("expiry_date", str(datetime.utcnow() + timedelta(hours=1)))
+        set_to_session("user_details", {"email": user.email_address, "id": user.id})
     if organization_id:
-        session["organization_id"] = organization_id
+        set_to_session("organization_id", organization_id)
 
 
 @main.route("/registration-continue")
 def registration_continue():
-    if not session.get("user_details"):
+    if not get_from_session("user_details"):
         return redirect(url_for(".show_accounts_or_dashboard"))
     else:
         raise Exception("Unexpected routing in registration_continue")

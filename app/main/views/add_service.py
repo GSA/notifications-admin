@@ -1,4 +1,4 @@
-from flask import current_app, redirect, render_template, session, url_for
+from flask import current_app, redirect, render_template, url_for
 from flask_login import current_user
 from notifications_python_client.errors import HTTPError
 
@@ -6,7 +6,12 @@ from app import service_api_client
 from app.formatters import email_safe
 from app.main import main
 from app.main.forms import CreateServiceForm
-from app.utils.user import user_is_gov_user, user_is_logged_in
+from app.utils.user import (
+    get_from_session,
+    set_to_session,
+    user_is_gov_user,
+    user_is_logged_in,
+)
 
 
 def _create_service(service_name, organization_type, email_from, form):
@@ -16,10 +21,10 @@ def _create_service(service_name, organization_type, email_from, form):
             organization_type=organization_type,
             message_limit=current_app.config["DEFAULT_SERVICE_LIMIT"],
             restricted=True,
-            user_id=session["user_id"],
+            user_id=get_from_session("user_id"),
             email_from=email_from,
         )
-        session["service_id"] = service_id
+        set_to_session("service_id", service_id)
 
         return service_id, None
     except HTTPError as e:
@@ -67,7 +72,7 @@ def add_service():
         if (
             len(
                 service_api_client.get_active_services(
-                    {"user_id": session["user_id"]}
+                    {"user_id": get_from_session("user_id")}
                 ).get("data", [])
             )
             > 1

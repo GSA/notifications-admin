@@ -109,6 +109,7 @@ from app.notify_client.upload_api_client import upload_api_client
 from app.notify_client.user_api_client import user_api_client
 from app.url_converters import SimpleDateTypeConverter, TemplateTypeConverter
 from app.utils.govuk_frontend_jinja.flask_ext import init_govuk_frontend
+from app.utils.user import get_from_session, set_to_session
 from notifications_utils import logging, request_helper
 from notifications_utils.formatters import (
     formatted_list,
@@ -313,10 +314,10 @@ def init_app(application):
         if current_app:
             if request.view_args:
                 service_id = request.view_args.get(
-                    "service_id", session.get("service_id")
+                    "service_id", get_from_session("service_id")
                 )
             else:
-                service_id = session.get("service_id")
+                service_id = get_from_session("service_id")
 
             if service_id:
                 global_limit = current_app.config["GLOBAL_SERVICE_MESSAGE_LIMIT"]
@@ -367,12 +368,14 @@ def make_session_permanent():
     """
     # session.permanent = True
 
+
 # SEEMS LIKE A GOOD IDEA TO HAVE THESE
 def add_security_headers(response):
-    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate'
-    response.headers['Pragma'] = 'no-cache'
-    response.headers['Expires'] = '0'
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
     return response
+
 
 def create_beta_url(url):
     url_created = urlparse(url)
@@ -399,9 +402,11 @@ def load_service_before_request():
         request_ctx.service = None
 
         if request.view_args:
-            service_id = request.view_args.get("service_id", session.get("service_id"))
+            service_id = request.view_args.get(
+                "service_id", get_from_session("service_id")
+            )
         else:
-            service_id = session.get("service_id")
+            service_id = get_from_session("service_id")
 
         if service_id:
             try:
@@ -451,11 +456,11 @@ def save_service_or_org_after_request(response):
     )
     if response.status_code == 200:
         if service_id:
-            session["service_id"] = service_id
-            session["organization_id"] = None
+            set_to_session("service_id", service_id)
+            set_to_session("organization_id", None)
         elif organization_id:
-            session["service_id"] = None
-            session["organization_id"] = organization_id
+            set_to_session("service_id", None)
+            set_to_session("organization_id", organization_id)
     return response
 
 
@@ -532,7 +537,7 @@ def register_errorhandlers(application):  # noqa (C901 too complex)
 
         application.logger.warning(
             "csrf.invalid_token: Aborting request, user_id: {user_id}",
-            extra={"user_id": session["user_id"]},
+            extra={"user_id": get_from_session("user_id")},
         )
 
         return _error_response(400, error_page_template=500)

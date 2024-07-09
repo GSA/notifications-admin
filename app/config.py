@@ -63,7 +63,7 @@ class Config(object):
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_NAME = "notify_admin_session"
     # SUGGESTED BEST PRACTICE
-    SESSION_PROTECTION = 'strong'
+    SESSION_PROTECTION = "strong"
     SESSION_COOKIE_SECURE = True
     # don't send back the cookie if it hasn't been modified by the request. this means that the expiry time won't be
     # updated unless the session is changed - but it's generally refreshed by `save_service_or_org_after_request`

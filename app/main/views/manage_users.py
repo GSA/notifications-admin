@@ -22,7 +22,13 @@ from app.main.forms import (
     SearchUsersForm,
 )
 from app.models.user import InvitedUser, User
-from app.utils.user import is_gov_user, user_has_permissions
+from app.utils.user import (
+    get_from_session,
+    is_gov_user,
+    session_pop,
+    set_to_session,
+    user_has_permissions,
+)
 from app.utils.user_permissions import permission_options
 
 
@@ -197,7 +203,7 @@ def edit_user_email(service_id, user_id):
         return redirect(url_for(".manage_users", service_id=current_service.id))
 
     if form.validate_on_submit():
-        session[session_key] = form.email_address.data
+        set_to_session(session_key, form.email_address.data)
 
         return redirect(
             url_for(".confirm_edit_user_email", user_id=user.id, service_id=service_id)
@@ -220,7 +226,7 @@ def confirm_edit_user_email(service_id, user_id):
     user = current_service.get_team_member(user_id)
     session_key = "team_member_email_change-{}".format(user_id)
     if session_key in session:
-        new_email = session[session_key]
+        new_email = get_from_session(session_key)
     else:
         return redirect(
             url_for(".edit_user_email", service_id=service_id, user_id=user_id)
@@ -238,7 +244,7 @@ def confirm_edit_user_email(service_id, user_id):
                 new_email_address=new_email,
             )
         finally:
-            session.pop(session_key, None)
+            session_pop(session_key, None)
 
         return redirect(url_for(".manage_users", service_id=service_id))
     return render_template(
@@ -262,7 +268,7 @@ def edit_user_mobile_number(service_id, user_id):
     if form.mobile_number.data == user_mobile_number and request.method == "POST":
         return redirect(url_for(".manage_users", service_id=service_id))
     if form.validate_on_submit():
-        session["team_member_mobile_change"] = form.mobile_number.data
+        set_to_session("team_member_mobile_change", form.mobile_number.data)
 
         return redirect(
             url_for(
@@ -287,7 +293,7 @@ def edit_user_mobile_number(service_id, user_id):
 def confirm_edit_user_mobile_number(service_id, user_id):
     user = current_service.get_team_member(user_id)
     if "team_member_mobile_change" in session:
-        new_number = session["team_member_mobile_change"]
+        new_number = get_from_session("team_member_mobile_change")
     else:
         return redirect(
             url_for(".edit_user_mobile_number", service_id=service_id, user_id=user_id)
@@ -305,7 +311,7 @@ def confirm_edit_user_mobile_number(service_id, user_id):
                 new_mobile_number=new_number,
             )
         finally:
-            session.pop("team_member_mobile_change", None)
+            session_pop("team_member_mobile_change", None)
 
         return redirect(url_for(".manage_users", service_id=service_id))
 

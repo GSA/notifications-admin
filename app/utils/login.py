@@ -1,15 +1,16 @@
 from functools import wraps
 
-from flask import redirect, request, session, url_for
+from flask import redirect, request, url_for
 
 from app.models.user import User
 from app.utils.time import is_less_than_days_ago
+from app.utils.user import check_session, set_to_session
 
 
 def redirect_to_sign_in(f):
     @wraps(f)
     def wrapped(*args, **kwargs):
-        if "user_details" not in session:
+        if "user_details" not in check_session("user_details"):
             return redirect(url_for("main.sign_in"))
         else:
             return f(*args, **kwargs)
@@ -21,16 +22,13 @@ def log_in_user(user_id):
     try:
         user = User.from_id(user_id)
         # the user will have a new current_session_id set by the API - store it in the cookie for future requests
-        session["current_session_id"] = user.current_session_id
-        # Check if coming from new password page
-        if "password" in session.get("user_details", {}):
-            user.update_password(session["user_details"]["password"])
+        set_to_session("current_session_id", user.current_session_id)
         user.activate()
         user.login()
     finally:
         # get rid of anything in the session that we don't expect to have been set during register/sign in flow
-        session.pop("user_details", None)
-        session.pop("file_uploads", None)
+        set_to_session("user_details", None)
+        set_to_session("file_uploads", None)
 
     return redirect_when_logged_in(platform_admin=user.platform_admin)
 

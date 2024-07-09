@@ -1,15 +1,6 @@
 import json
 
-from flask import (
-    abort,
-    current_app,
-    flash,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
+from flask import abort, current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user
 
 from app import user_api_client
@@ -29,7 +20,14 @@ from app.main.forms import (
     TwoFactorForm,
 )
 from app.models.user import User
-from app.utils.user import user_is_gov_user, user_is_logged_in
+from app.utils.user import (
+    check_session,
+    get_from_session,
+    session_pop,
+    set_to_session,
+    user_is_gov_user,
+    user_is_logged_in,
+)
 from notifications_utils.url_safe_token import check_token
 
 NEW_EMAIL = "new-email"
@@ -87,7 +85,7 @@ def user_profile_email():
     )
 
     if form.validate_on_submit():
-        session[NEW_EMAIL] = form.email_address.data
+        set_to_session(NEW_EMAIL, form.email_address.data)
         return redirect(url_for(".user_profile_email_authenticate"))
     return render_template(
         "views/user-profile/change.html",
@@ -105,21 +103,21 @@ def user_profile_email_authenticate():
 
     form = ConfirmPasswordForm(_check_password)
 
-    if NEW_EMAIL not in session:
+    if NEW_EMAIL not in check_session(NEW_EMAIL):
         return redirect("main.user_profile_email")
 
     if form.validate_on_submit():
         user_api_client.send_change_email_verification(
-            current_user.id, session[NEW_EMAIL]
+            current_user.id, get_from_session(NEW_EMAIL)
         )
         create_email_change_event(
             user_id=current_user.id,
             updated_by_id=current_user.id,
             original_email_address=current_user.email_address,
-            new_email_address=session[NEW_EMAIL],
+            new_email_address=get_from_session(NEW_EMAIL),
         )
         return render_template(
-            "views/change-email-continue.html", new_email=session[NEW_EMAIL]
+            "views/change-email-continue.html", new_email=get_from_session(NEW_EMAIL)
         )
 
     return render_template(
@@ -142,7 +140,7 @@ def user_profile_email_confirm(token):
     token_data = json.loads(token_data)
     user = User.from_id(token_data["user_id"])
     user.update(email_address=token_data["email"])
-    session.pop(NEW_EMAIL, None)
+    session_pop(NEW_EMAIL, None)
 
     return redirect(url_for(".user_profile"))
 
@@ -159,7 +157,7 @@ def user_profile_mobile_number():
     form = ChangeMobileNumberForm(mobile_number=current_user.mobile_number)
 
     if form.validate_on_submit():
-        session[NEW_MOBILE] = form.mobile_number.data
+        set_to_session(NEW_MOBILE, form.mobile_number.data)
         return redirect(url_for(".user_profile_mobile_number_authenticate"))
 
     if request.endpoint == "main.user_profile_confirm_delete_mobile_number":
@@ -195,17 +193,18 @@ def user_profile_mobile_number_authenticate():
 
     form = ConfirmPasswordForm(_check_password)
 
-    if NEW_MOBILE not in session:
+    if NEW_MOBILE not in check_session(NEW_MOBILE):
         return redirect(url_for(".user_profile_mobile_number"))
 
     if form.validate_on_submit():
-        session[NEW_MOBILE_PASSWORD_CONFIRMED] = True
-        current_user.send_verify_code(to=session[NEW_MOBILE])
+
+        set_to_session(NEW_MOBILE_PASSWORD_CONFIRMED, True)
+        current_user.send_verify_code(to=get_from_session(NEW_MOBILE))
         create_mobile_number_change_event(
             user_id=current_user.id,
             updated_by_id=current_user.id,
             original_mobile_number=current_user.mobile_number,
-            new_mobile_number=session[NEW_MOBILE],
+            new_mobile_number=get_from_session(NEW_MOBILE),
         )
         return redirect(url_for(".user_profile_mobile_number_confirm"))
 
@@ -224,16 +223,19 @@ def user_profile_mobile_number_confirm():
     def _check_code(cde):
         return user_api_client.check_verify_code(current_user.id, cde, "sms")
 
-    if NEW_MOBILE_PASSWORD_CONFIRMED not in session:
+    if NEW_MOBILE_PASSWORD_CONFIRMED not in check_session(
+        NEW_MOBILE_PASSWORD_CONFIRMED
+    ):
         return redirect(url_for(".user_profile_mobile_number"))
 
     form = TwoFactorForm(_check_code)
 
     if form.validate_on_submit():
         current_user.refresh_session_id()
-        mobile_number = session[NEW_MOBILE]
-        del session[NEW_MOBILE]
-        del session[NEW_MOBILE_PASSWORD_CONFIRMED]
+        mobile_number = get_from_session(NEW_MOBILE)
+        set_to_session(NEW_MOBILE, None)
+        set_to_session(NEW_MOBILE_PASSWORD_CONFIRMED, None)
+
         current_user.update(mobile_number=mobile_number)
         return redirect(url_for(".user_profile"))
 
@@ -265,14 +267,14 @@ def user_profile_password():
 @main.route("/user-profile/disable-platform-admin-view", methods=["GET", "POST"])
 @user_is_logged_in
 def user_profile_disable_platform_admin_view():
-    if not current_user.platform_admin and not session.get(
+    if not current_user.platform_admin and not get_from_session(
         "disable_platform_admin_view"
     ):
         abort(403)
 
     form = ServiceOnOffSettingForm(
         name="Use platform admin view",
-        enabled=not session.get("disable_platform_admin_view"),
+        enabled=not get_from_session("disable_platform_admin_view"),
         truthy="Yes",
         falsey="No",
     )
@@ -282,7 +284,7 @@ def user_profile_disable_platform_admin_view():
     }
 
     if form.validate_on_submit():
-        session["disable_platform_admin_view"] = not form.enabled.data
+        set_to_session("disable_platform_admin_view", not form.enabled.data)
         return redirect(url_for(".user_profile"))
 
     return render_template(

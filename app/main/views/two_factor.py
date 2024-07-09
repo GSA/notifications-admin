@@ -1,6 +1,6 @@
 import json
 
-from flask import current_app, redirect, render_template, request, session, url_for
+from flask import current_app, redirect, render_template, request, url_for
 from flask_login import current_user
 from itsdangerous import SignatureExpired
 
@@ -14,6 +14,7 @@ from app.utils.login import (
     redirect_to_sign_in,
     redirect_when_logged_in,
 )
+from app.utils.user import get_from_session
 from notifications_utils.url_safe_token import check_token
 
 
@@ -69,7 +70,7 @@ def two_factor_email(token):
 @main.route("/two-factor-sms", methods=["GET", "POST"])
 @redirect_to_sign_in
 def two_factor_sms():
-    user_id = session["user_details"]["id"]
+    user_id = get_from_session("user_details")["id"]
     user = User.from_id(user_id)
 
     def _check_code(code):

@@ -1,6 +1,6 @@
 import json
 
-from flask import abort, current_app, flash, redirect, render_template, session, url_for
+from flask import abort, current_app, flash, redirect, render_template, url_for
 from itsdangerous import SignatureExpired
 
 from app import user_api_client
@@ -8,13 +8,14 @@ from app.main import main
 from app.main.forms import TwoFactorForm
 from app.models.user import User
 from app.utils.login import redirect_to_sign_in
+from app.utils.user import get_from_session, session_pop, set_to_session
 from notifications_utils.url_safe_token import check_token
 
 
 @main.route("/verify", methods=["GET", "POST"])
 @redirect_to_sign_in
 def verify():
-    user_id = session["user_details"]["id"]
+    user_id = get_from_session("user_details")["id"]
 
     def _check_code(code):
         return user_api_client.check_verify_code(user_id, code, "sms")
@@ -22,7 +23,7 @@ def verify():
     form = TwoFactorForm(_check_code)
 
     if form.validate_on_submit():
-        session.pop("user_details", None)
+        session_pop("user_details", None)
         return activate_user(user_id)
 
     return render_template("views/two-factor-sms.html", form=form)
@@ -54,11 +55,11 @@ def verify_email(token):
         return redirect(url_for("main.sign_in"))
 
     if user.email_auth:
-        session.pop("user_details", None)
+        session_pop("user_details", None)
         return activate_user(user.id)
 
     user.send_verify_code()
-    session["user_details"] = {"email": user.email_address, "id": user.id}
+    set_to_session("user_details", {"email": user.email_address, "id": user.id})
     return redirect(url_for("main.verify"))
 
 

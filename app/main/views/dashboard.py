@@ -4,7 +4,7 @@ from datetime import datetime
 from functools import partial
 from itertools import groupby
 
-from flask import Response, abort, jsonify, render_template, request, session, url_for
+from flask import Response, abort, jsonify, render_template, request, url_for
 from flask_login import current_user
 from flask_socketio import emit
 from werkzeug.utils import redirect
@@ -30,7 +30,7 @@ from app.utils import (
 from app.utils.csv import Spreadsheet
 from app.utils.pagination import generate_next_dict, generate_previous_dict
 from app.utils.time import get_current_financial_year
-from app.utils.user import user_has_permissions
+from app.utils.user import get_from_session, set_to_session, user_has_permissions
 from notifications_utils.recipients import format_phone_number_human_readable
 
 
@@ -55,9 +55,9 @@ def old_service_dashboard(service_id):
 @main.route("/services/<uuid:service_id>")
 @user_has_permissions()
 def service_dashboard(service_id):
-    if session.get("invited_user_id"):
-        session.pop("invited_user_id", None)
-        session["service_id"] = service_id
+    if get_from_session("invited_user_id"):
+        set_to_session("invited_user_id", None)
+        set_to_session("service_id", service_id)
 
     if not current_user.has_permissions("view_activity"):
         return redirect(url_for("main.choose_template", service_id=service_id))

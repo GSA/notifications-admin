@@ -16,7 +16,7 @@ from app.notify_client.invite_api_client import invite_api_client
 from app.notify_client.org_invite_api_client import org_invite_api_client
 from app.notify_client.user_api_client import user_api_client
 from app.utils.time import parse_naive_dt
-from app.utils.user import is_gov_user
+from app.utils.user import get_from_session, is_gov_user, set_to_session
 from app.utils.user_permissions import (
     all_ui_permissions,
     translate_permissions_from_db_to_ui,
@@ -149,7 +149,7 @@ class User(JSONModel, UserMixin):
 
     def login(self):
         login_user(self)
-        session["user_id"] = self.id
+        set_to_session("user_id", self.id)
 
     def send_login_code(self):
         if self.email_auth:
@@ -200,8 +200,8 @@ class User(JSONModel, UserMixin):
         current_app.logger.warn(
             f"Checking User {self.id} for platform admin: {self._platform_admin}"
         )
-        return self._platform_admin and not session.get(
-            "disable_platform_admin_view", False
+        return self._platform_admin and not get_from_session(
+            "disable_platform_admin_view"
         )
 
     def has_permissions(
@@ -403,7 +403,7 @@ class User(JSONModel, UserMixin):
         self.current_session_id = user_api_client.get_user(self.id).get(
             "current_session_id"
         )
-        session["current_session_id"] = self.current_session_id
+        set_to_session("current_session_id", self.current_session_id)
 
     def add_to_service(
         self, service_id, permissions, folder_permissions, invited_by_id
@@ -531,7 +531,7 @@ class InvitedUser(JSONModel):
 
     @classmethod
     def from_session(cls):
-        invited_user_id = session.get("invited_user_id")
+        invited_user_id = get_from_session("invited_user_id")
         return cls.by_id(invited_user_id) if invited_user_id else None
 
     def has_permissions(self, *permissions):
@@ -628,7 +628,7 @@ class InvitedOrgUser(JSONModel):
 
     @classmethod
     def from_session(cls):
-        invited_org_user_id = session.get("invited_org_user_id")
+        invited_org_user_id = get_from_session("invited_org_user_id")
         return cls.by_id(invited_org_user_id) if invited_org_user_id else None
 
     @classmethod

@@ -48,7 +48,12 @@ from app.utils import (
 )
 from app.utils.csv import Spreadsheet, get_errors_for_csv
 from app.utils.templates import get_template
-from app.utils.user import get_from_session, set_to_session, user_has_permissions
+from app.utils.user import (
+    get_from_session,
+    session_pop,
+    set_to_session,
+    user_has_permissions,
+)
 from notifications_utils import SMS_CHAR_COUNT_LIMIT
 from notifications_utils.insensitive_dict import InsensitiveDict
 from notifications_utils.recipients import RecipientCSV, first_column_headings
@@ -211,7 +216,7 @@ def get_example_csv(service_id, template_id):
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def set_sender(service_id, template_id):
-    set_to_session(current_user.current_session_id, "sender_id", None)
+    set_to_session("sender_id", None)
     redirect_to_one_off = redirect(
         url_for(".send_one_off", service_id=service_id, template_id=template_id)
     )
@@ -225,7 +230,7 @@ def set_sender(service_id, template_id):
     sender_details = remove_notify_from_sender_options(sender_details)
 
     if len(sender_details) == 1:
-        set_to_session(current_user.current_session_id, "sender_id", sender_details[0]["id"])
+        set_to_session("sender_id", sender_details[0]["id"])
 
     if len(sender_details) <= 1:
         return redirect_to_one_off
@@ -259,7 +264,7 @@ def set_sender(service_id, template_id):
         form.sender.param_extensions["items"].append(extensions)
 
     if form.validate_on_submit():
-        set_to_session(current_user.current_session_id, "sender_id", form.sender.data)
+        set_to_session("sender_id", form.sender.data)
         return redirect(
             url_for(".send_one_off", service_id=service_id, template_id=template_id)
         )
@@ -340,9 +345,8 @@ def get_sender_details(service_id, template_type):
 @main.route("/services/<uuid:service_id>/send/<uuid:template_id>/one-off")
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def send_one_off(service_id, template_id):
-    set_to_session(current_user.current_session_id, "recipient", None)
-    set_to_session(current_user.current_session_id, "placeholders", None)
-
+    set_to_session("recipient", None)
+    set_to_session("placeholders", None)
 
     db_template = current_service.get_template_with_user_permission_or_403(
         template_id, current_user
@@ -447,11 +451,11 @@ def send_one_off_step(service_id, template_id, step_index):
         # if it's the first input (phone/email), we store against `recipient` as well, for easier extraction.
         # Only if we're not on the test route, since that will already have the user's own number set
         if step_index == 0:
-            set_to_session(current_user.current_session_id, "recipient", form.placeholder_value.data)
+            set_to_session("recipient", form.placeholder_value.data)
 
-        placeholders = get_from_session(current_user.current_session_id, "placeholders")
+        placeholders = get_from_session("placeholders")
         placeholders[current_placeholder] = form.placeholder_value.data
-        set_to_session(current_user.current_session_id, "placeholders", placeholders)
+        set_to_session("placeholders", placeholders)
 
         if all_placeholders_in_session(placeholders):
             return get_notification_check_endpoint(service_id, template)
@@ -474,7 +478,7 @@ def send_one_off_step(service_id, template_id, step_index):
         "views/send-test.html",
         page_title=get_send_test_page_title(
             template.template_type,
-            entering_recipient=not get_from_session(current_user.current_session_id, "recipient"),
+            entering_recipient=not get_from_session("recipient"),
             name=template.name,
         ),
         template=template,
@@ -648,8 +652,8 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
         "original_file_name": data.get("original_file_name", ""),
     }
 
-    if get_from_session(current_user.current_session_id, "sender_id"):
-        metadata_kwargs["sender_id"] = get_from_session(current_user.current_session_id, "sender_id")
+    if get_from_session("sender_id"):
+        metadata_kwargs["sender_id"] = get_from_session("sender_id")
 
     set_metadata_on_csv_upload(service_id, upload_id, **metadata_kwargs)
 
@@ -666,14 +670,14 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def preview_job(service_id, template_id, upload_id, row_index=2):
-    session["scheduled_for"] = request.form.get("scheduled_for", "")
+    set_to_session("scheduled_for", request.form.get("scheduled_for", ""))
     data = _check_messages(
         service_id, template_id, upload_id, row_index, force_hide_sender=True
     )
 
     return render_template(
         "views/check/preview.html",
-        scheduled_for=session["scheduled_for"],
+        scheduled_for=get_from_session("scheduled_for"),
         **data,
     )
 
@@ -681,14 +685,14 @@ def preview_job(service_id, template_id, upload_id, row_index=2):
 @main.route("/services/<uuid:service_id>/start-job/<uuid:upload_id>", methods=["POST"])
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def start_job(service_id, upload_id):
-    scheduled_for = session.pop("scheduled_for", None)
+    scheduled_for = session_pop("scheduled_for")
     job_api_client.create_job(
         upload_id,
         service_id,
         scheduled_for=scheduled_for,
     )
 
-    session.pop("sender_id", None)
+    session_pop("sender_id")
 
     return redirect(
         url_for(
@@ -706,26 +710,38 @@ def fields_to_fill_in(template, prefill_current_user=False):
         )
 
     if template.template_type == "sms":
-        session["recipient"] = current_user.mobile_number
-        session["placeholders"]["phone number"] = current_user.mobile_number
+        set_to_session("recipient", current_user.mobile_number)
+        placeholders = get_from_session("placeholders")
+        if placeholders is None:
+            placeholders = {}
+        placeholders["phone number"] = current_user.mobile_number
+        set_to_session("placeholders", placeholders)
     else:
-        session["recipient"] = current_user.email_address
-        session["placeholders"]["email address"] = current_user.email_address
+
+        set_to_session("recipient", current_user.email_address)
+        placeholders = get_from_session("placeholders")
+        if placeholders is None:
+            placeholders = {}
+        placeholders["email address"] = current_user.email_address
+        set_to_session("placeholders", placeholders)
 
     return list(template.placeholders)
 
 
 def get_normalised_placeholders_from_session():
-    return InsensitiveDict(session.get("placeholders", {}))
+    placeholders = {}
+    if get_from_session("placeholders") is not None:
+        placeholders = get_from_session("placeholders")
+    return InsensitiveDict(placeholders)
 
 
 def get_recipient_and_placeholders_from_session(template_type):
     placeholders = get_normalised_placeholders_from_session()
 
     if template_type == "sms":
-        placeholders["phone_number"] = session["recipient"]
+        placeholders["phone_number"] = get_from_session("recipient")
     else:
-        placeholders["email_address"] = session["recipient"]
+        placeholders["email_address"] = get_from_session("recipient")
 
     return placeholders
 
@@ -867,7 +883,7 @@ def _check_notification(service_id, template_id, exception=None, **kwargs):
 
     choose_time_form = ChooseTimeForm()
 
-    if (not session.get("recipient")) or not all_placeholders_in_session(
+    if (not get_from_session("recipient")) or not all_placeholders_in_session(
         template.placeholders
     ):
         raise PermanentRedirect(back_link)
@@ -926,14 +942,14 @@ def preview_notification(service_id, template_id):
             )
         )
 
-    session["scheduled_for"] = request.form.get("scheduled_for", "")
+    set_to_session("scheduled_for", request.form.get("scheduled_for", ""))
 
     return render_template(
         "views/notifications/preview.html",
         **_check_notification(
             service_id, template_id, show_recipient=False, force_hide_sender=True
         ),
-        scheduled_for=session["scheduled_for"],
+        scheduled_for=get_from_session("scheduled_for"),
         recipient=recipient,
     )
 
@@ -944,7 +960,8 @@ def preview_notification(service_id, template_id):
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def send_notification(service_id, template_id):
-    scheduled_for = session.pop("scheduled_for", "")
+    scheduled_for = session_pop("scheduled_for", "")
+
     recipient = get_recipient()
     if not recipient:
         return redirect(
@@ -957,7 +974,7 @@ def send_notification(service_id, template_id):
 
     keys = []
     values = []
-    for k, v in session["placeholders"].items():
+    for k, v in get_from_session("placeholders").items():
         keys.append(k)
         values.append(v)
 
@@ -994,8 +1011,8 @@ def send_notification(service_id, template_id):
         valid="True",
     )
 
-    session.pop("recipient")
-    session.pop("placeholders")
+    session_pop("recipient")
+    session_pop("placeholders")
 
     # We have to wait for the job to run and create the notification in the database
     time.sleep(0.1)
@@ -1044,15 +1061,17 @@ def send_notification(service_id, template_id):
 
 
 def get_email_reply_to_address_from_session():
-    if session.get("sender_id"):
-        return current_service.get_email_reply_to_address(session["sender_id"])[
-            "email_address"
-        ]
+    if get_from_session("sender_id"):
+        return current_service.get_email_reply_to_address(
+            get_from_session("sender_id")
+        )["email_address"]
 
 
 def get_sms_sender_from_session():
-    if session.get("sender_id"):
-        return current_service.get_sms_sender(session["sender_id"])["sms_sender"]
+    if get_from_session("sender_id"):
+        return current_service.get_sms_sender(get_from_session("sender_id"))[
+            "sms_sender"
+        ]
 
 
 def get_spreadsheet_column_headings_from_template(template):
@@ -1068,9 +1087,16 @@ def get_spreadsheet_column_headings_from_template(template):
 
 
 def get_recipient():
-    if {"recipient", "placeholders"} - set(session.keys()):
+    # TODO this is not quite the same as what's commented out
+    if (
+        get_from_session("recipient") is None
+        and get_from_session("placeholders") is None
+    ):
         return None
 
-    return session["recipient"] or InsensitiveDict(session["placeholders"]).get(
-        "address line 1"
-    )
+    # if {"recipient", "placeholders"} - set(session.keys()):
+    #    return None
+
+    return get_from_session("recipient") or InsensitiveDict(
+        get_from_session("placeholders")
+    ).get("address line 1")

@@ -1,20 +1,13 @@
 import json
 
-from flask import (
-    current_app,
-    flash,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
+from flask import current_app, flash, redirect, render_template, request, url_for
 from itsdangerous import SignatureExpired
 
 from app.main import main
 from app.main.forms import NewPasswordForm
 from app.models.user import User
 from app.utils.login import log_in_user
+from app.utils.user import set_to_session
 from notifications_utils.url_safe_token import check_token
 
 
@@ -46,11 +39,14 @@ def new_password(token):
 
     if form.validate_on_submit():
         user.reset_failed_login_count()
-        session["user_details"] = {
-            "id": user.id,
-            "email": user.email_address,
-            "password": form.new_password.data,
-        }
+        set_to_session(
+            "user_details",
+            {
+                "id": user.id,
+                "email": user.email_address,
+                "password": form.new_password.data,
+            },
+        )
         if user.email_auth:
             # they've just clicked an email link, so have done an email auth journey anyway. Just log them in.
             return log_in_user(user.id)

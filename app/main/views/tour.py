@@ -10,7 +10,7 @@ from app.main.views.send import (
     get_recipient_and_placeholders_from_session,
 )
 from app.utils.templates import get_template
-from app.utils.user import user_has_permissions
+from app.utils.user import get_from_session, set_to_session, user_has_permissions
 
 
 @main.route("/services/<uuid:service_id>/tour/<uuid:template_id>")
@@ -31,7 +31,7 @@ def begin_tour(service_id, template_id):
 
     template.values = {"phone_number": current_user.mobile_number}
 
-    session["placeholders"] = {}
+    set_to_session("placeholders", {})
 
     return render_template(
         "views/templates/start-tour.html",
@@ -101,7 +101,9 @@ def tour_step(service_id, template_id, step_index):
     )
 
     if form.validate_on_submit():
-        session["placeholders"][current_placeholder] = form.placeholder_value.data
+        placeholders = get_from_session("placeholders")
+        placeholders[current_placeholder] = form.placeholder_value.data
+        set_to_session("placeholders", placeholders)
 
         if all_placeholders_in_session(placeholders):
             return redirect(

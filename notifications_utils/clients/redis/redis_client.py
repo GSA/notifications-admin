@@ -45,6 +45,14 @@ class RedisClient:
 
             self.register_scripts()
 
+    def scan_iter(self, match=None, count=None, _type=None, **kwargs):
+        if self.active:
+            return self.redis_store.scan_iter(match, count, _type, **kwargs)
+
+    def keys(self, pattern='*', **kwargs):
+        if self.active:
+            return self.redis_store.keys(pattern, **kwargs)
+
     def register_scripts(self):
         # delete keys matching a pattern supplied as a parameter. Does so in batches of 5000 to prevent unpack from
         # exceeding lua's stack limit, and also to prevent errors if no keys match the pattern.

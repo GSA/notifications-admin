@@ -1,4 +1,4 @@
-from flask import abort, flash, redirect, render_template, session, url_for
+from flask import abort, flash, redirect, render_template, url_for
 from flask_login import current_user
 from markupsafe import Markup
 
@@ -6,6 +6,7 @@ from app.main import main
 from app.models.organization import Organization
 from app.models.service import Service
 from app.models.user import InvitedOrgUser, InvitedUser, OrganizationUsers, User, Users
+from app.utils.user import session_pop, set_to_session
 
 
 @main.route("/invitation/<token>")
@@ -39,13 +40,13 @@ def accept_invite(token):
             service_name=service.name,
         )
     if invited_user.status == "accepted":
-        session.pop("invited_user_id", None)
+        session_pop("invited_user_id", None)
         service = Service.from_id(invited_user.service)
         return redirect(
             url_for("main.service_dashboard", service_id=invited_user.service)
         )
 
-    session["invited_user_id"] = invited_user.id
+    set_to_session("invited_user_id", invited_user.id)
 
     existing_user = User.from_email_address_or_none(invited_user.email_address)
 
@@ -115,12 +116,12 @@ def accept_org_invite(token):
         )
 
     if invited_org_user.status == "accepted":
-        session.pop("invited_org_user_id", None)
+        session_pop("invited_org_user_id", None)
         return redirect(
             url_for("main.organization_dashboard", org_id=invited_org_user.organization)
         )
 
-    session["invited_org_user_id"] = invited_org_user.id
+    set_to_session("invited_org_user_id", invited_org_user.id)
 
     existing_user = User.from_email_address_or_none(invited_org_user.email_address)
     organization_users = OrganizationUsers(invited_org_user.organization)

@@ -1,16 +1,17 @@
-from flask import redirect, render_template, request, session, url_for
+from flask import redirect, render_template, request, url_for
 
 from app import user_api_client
 from app.main import main
 from app.main.forms import TextNotReceivedForm
 from app.models.user import User
 from app.utils.login import redirect_to_sign_in
+from app.utils.user import get_from_session, session_pop
 
 
 @main.route("/resend-email-verification")
 @redirect_to_sign_in
 def resend_email_verification():
-    user = User.from_email_address(session["user_details"]["email"])
+    user = User.from_email_address(get_from_session("user_details")["email"])
     user.send_verify_email()
     return render_template(
         "views/resend-email-verification.html", email=user.email_address
@@ -20,7 +21,7 @@ def resend_email_verification():
 @main.route("/text-not-received", methods=["GET", "POST"])
 @redirect_to_sign_in
 def check_and_resend_text_code():
-    user = User.from_email_address(session["user_details"]["email"])
+    user = User.from_email_address(get_from_session("user_details")["email"])
     redirect_url = request.args.get("next")
 
     if user.state == "active":
@@ -41,7 +42,7 @@ def check_and_resend_text_code():
 @main.route("/send-new-code", methods=["GET"])
 @redirect_to_sign_in
 def check_and_resend_verification_code():
-    user = User.from_email_address(session["user_details"]["email"])
+    user = User.from_email_address(get_from_session("user_details")["email"])
     user.send_verify_code()
     redirect_url = request.args.get("next")
     if user.state == "pending":
@@ -60,6 +61,8 @@ def email_not_received():
 @main.route("/send-new-email-token", methods=["GET"])
 @redirect_to_sign_in
 def resend_email_link():
-    user_api_client.send_verify_code(session["user_details"]["id"], "email", None)
-    session.pop("user_details")
+    user_api_client.send_verify_code(
+        get_from_session("user_details")["id"], "email", None
+    )
+    session_pop("user_details")
     return redirect(url_for("main.two_factor_email_sent", email_resent=True))

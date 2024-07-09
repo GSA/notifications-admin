@@ -1,4 +1,4 @@
-from flask import jsonify, redirect, render_template, session, url_for
+from flask import jsonify, redirect, render_template, url_for
 from flask_login import current_user
 from notifications_python_client.errors import HTTPError
 
@@ -6,7 +6,7 @@ from app import current_service, notification_api_client, service_api_client
 from app.main import main
 from app.main.forms import SearchByNameForm
 from app.models.template_list import TemplateList
-from app.utils.user import user_has_permissions
+from app.utils.user import get_from_session, set_to_session, user_has_permissions
 from notifications_utils.recipients import format_phone_number_human_readable
 from notifications_utils.template import SMSPreviewTemplate
 
@@ -75,8 +75,8 @@ def conversation_reply_with_template(
     notification_id,
     template_id,
 ):
-    session["recipient"] = get_user_number(service_id, notification_id)
-    session["placeholders"] = {"phone number": session["recipient"]}
+    set_to_session("recipient", get_user_number(service_id, notification_id))
+    set_to_session("placeholders", {"phone number": get_from_session("recipient")})
 
     return redirect(
         url_for(

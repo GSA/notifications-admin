@@ -1,11 +1,11 @@
-from flask import redirect, render_template, session, url_for
+from flask import redirect, render_template, url_for
 from flask_login import current_user
 
 from app import status_api_client
 from app.main import main
 from app.models.organization import AllOrganizations
 from app.utils import PermanentRedirect
-from app.utils.user import user_is_logged_in
+from app.utils.user import get_from_session, user_is_logged_in
 
 
 @main.route("/services")
@@ -42,13 +42,13 @@ def show_accounts_or_dashboard():
     if not current_user.is_authenticated:
         return redirect(url_for(".index"))
 
-    service_id = session.get("service_id")
+    service_id = get_from_session("service_id")
     if service_id and (
         current_user.belongs_to_service(service_id) or current_user.platform_admin
     ):
         return redirect(url_for(".service_dashboard", service_id=service_id))
 
-    organization_id = session.get("organization_id")
+    organization_id = get_from_session("organization_id")
     if organization_id and (
         current_user.belongs_to_organization(organization_id)
         or current_user.platform_admin
