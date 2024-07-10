@@ -37,7 +37,7 @@
           <div class="usa-alert__body">
             <h4 class="usa-alert__heading">Your text has been sent</h4>
             <p class="usa-alert__text">
-              {{ job.template_name }} - {{ current_service.name }} was sent on {{ job.created_at|format_datetime_normal }} by {{ job.created_by.name }}
+              {{ job.template_name }} - {{ current_service.name }} was sent on {{ job.processing_started|format_datetime_normal }} by {{ job.created_by.name }}
             </p>
           </div>
         </div>
