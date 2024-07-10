@@ -41,7 +41,7 @@
               <span>Template</span>
             </th>
             <th scope="col" class="table-field-heading">
-              <span>Time sent</span>
+              <span>Job status</span>
             </th>
             <th scope="col" class="table-field-heading">
               <span>Sender</span>
@@ -69,7 +69,7 @@
                     {{ notification.template.name }}
                   </td>
                   <td class="table-field time-sent">
-                    {{ notification.created_at|format_datetime_table }}
+                    {{ job.processing_finished|format_datetime_table }}
                   </td>
                   <td class="table-field sender">
                     {{ notification.created_by.name }}
