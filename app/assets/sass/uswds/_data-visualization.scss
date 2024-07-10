@@ -31,10 +31,14 @@
 }
 .tooltip {
    position: absolute;
-   background: #f4f4f4;
-   padding: 5px;
-   border: 1px solid #d4d4d4;
-   border-radius: 3px;
+   display: none;
+   background: color('ink');
+   color: #FFF;
+   border: 1px solid #ccc;
+   padding: units(1);
+   border-radius: units(1);
    pointer-events: none;
-   font-size: 12px;
-}
+   z-index: 100;
+   font-size: size("body", 3);
+   line-height: 1.3;
+ }

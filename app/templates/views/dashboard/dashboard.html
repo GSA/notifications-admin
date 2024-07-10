@@ -9,7 +9,7 @@
 
 {% block maincolumn_content %}
 
-  <div class="dashboard margin-bottom-8">
+  <div class="dashboard margin-bottom-2">
 
     <h1 class="usa-sr-only">Dashboard</h1>
     {% if current_user.has_permissions('manage_templates') and not current_service.all_templates %}
@@ -22,40 +22,29 @@
       Messages sent
     </h2>
 
-    <!-- <button id="sevenDaysButton">7 Days</button>
-    <canvas id="myChart"></canvas> -->
     {{ ajax_block(partials, updates_url, 'inbox') }}
 
     {{ ajax_block(partials, updates_url, 'totals') }}
 
-    {{ ajax_block(partials, updates_url, 'template-statistics') }}
-    {% if current_user.has_permissions('manage_service') %}
-
-    <!-- <div id="chartContainer" data-sms-sent="{{ sms_sent }}" data-sms-allowance-remaining="{{ sms_allowance_remaining }}">
-      <h2 class="margin-bottom-1" id="chartTitle">2024 Total message allowance</h2>
-      <div class="usa-sr-only" id="chartDesc">A bar chart showing the messages sent against the total message allowance for 2024 to date</div>
-      <canvas id="totalMessageChart" role="img" aria-labelledby="chartTitle chartDesc" height="100"></canvas>
-      <div id="totalMessageTable"></div>
-    </div>
-    <div id="message"></div> -->
-
-    <div id="chartContainer">
-      <h2 id="chartTitle">Total Messages</h2>
+    <div id="chartContainer" data-sms-sent="{{ sms_sent }}" data-sms-allowance-remaining="{{ sms_allowance_remaining }}">
+      <h2 id="chartTitle" class="margin-top-3 margin-bottom-1">Total Messages</h2>
       <svg id="totalMessageChart"></svg>
       <div id="message"></div>
     </div>
-    <div id="totalMessageTable"></div>
-    <div class="tooltip hidden"></div>
-
-    <p class="align-with-heading-copy">
+    <div id="totalMessageTable" class="margin-0"></div>
+    <p class="align-with-heading-copy margin-bottom-4">
       What counts as 1 text message part?<br />
       See <a class="usa-link" href="{{ url_for('.pricing') }}">Tracking usage</a>.
     </p>
 
+    <h2>Recent templates</h2>
+    {{ ajax_block(partials, updates_url, 'template-statistics') }}
+    {% if current_user.has_permissions('manage_service') %}
+
   {% endif %}
-    <h2 class="margin-top-4 margin-bottom-1">Recent Batches</h2>
+    <h2 class="margin-top-4">Recent Batches</h2>
     <div class="table-wrapper">
-      <table class="usa-table usa-table--borderless job-table">
+      <table class="usa-table usa-table--borderless job-table margin-top-0">
         <thead class="table-field-headings">
           <tr>
             <th scope="col" class="table-field-heading-first">

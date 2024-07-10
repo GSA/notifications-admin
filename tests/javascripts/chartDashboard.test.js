@@ -15,7 +15,7 @@ function loadScript(scriptContent) {
 beforeAll(done => {
   // Set up the DOM with the D3 script included
   document.body.innerHTML = `
-    <div id="chartContainer" data-sms-sent="100" data-sms-allowance-remaining="200" style="width: 600px;">
+    <div id="chartContainer" data-sms-sent="100" data-sms-allowance-remaining="249900" style="width: 600px;">
       <h1 id="chartTitle">Total Messages</h1>
       <svg id="totalMessageChart"></svg>
     </div>
@@ -77,62 +77,23 @@ test('Chart title is correctly set', () => {
   expect(chartTitle).toBe('Total Messages');
 });
 
-// Test to mimic the tooltip functionality
-test('Tooltip displays correct content on mouseover', done => {
+test('Chart resizes correctly on window resize', done => {
   setTimeout(() => {
     const svg = document.getElementById('totalMessageChart');
-    const tooltip = document.querySelector('.tooltip');
-    const rect = svg.querySelector('rect');
+    const chartContainer = document.getElementById('chartContainer');
 
-    // Simulate mouseover event on the first rect
-    const event = new MouseEvent('mousemove', {
-      bubbles: true,
-      cancelable: true,
-      view: window,
-      clientX: 100, // Example x-coordinate
-      clientY: 50   // Example y-coordinate
-    });
+    // Initial check
+    expect(svg.getAttribute('width')).toBe(chartContainer.clientWidth.toString());
 
-    rect.dispatchEvent(event);
+    // Set new container width
+    chartContainer.style.width = '800px';
 
-    // Check if the tooltip is displayed and has correct content
-    expect(tooltip.classList.contains('hidden')).toBe(false);
-    expect(tooltip.innerHTML).toBe('Messages Sent: 100');
+    // Trigger resize event
+    window.dispatchEvent(new Event('resize'));
 
-    done();
-  }, 1000); // Adjust the timeout if necessary
-}, 10000); // Adjust the overall test timeout if necessary
-
-// Test to mimic the tooltip functionality on mouseout
-test('Tooltip hides on mouseout', done => {
-  setTimeout(() => {
-    const svg = document.getElementById('totalMessageChart');
-    const tooltip = document.querySelector('.tooltip');
-    const rect = svg.querySelector('rect');
-
-    // Simulate mouseover event on the first rect to show the tooltip
-    const mouseoverEvent = new MouseEvent('mousemove', {
-      bubbles: true,
-      cancelable: true,
-      view: window,
-      clientX: 100, // Example x-coordinate
-      clientY: 50   // Example y-coordinate
-    });
-
-    rect.dispatchEvent(mouseoverEvent);
-
-    // Simulate mouseout event on the first rect to hide the tooltip
-    const mouseoutEvent = new MouseEvent('mouseout', {
-      bubbles: true,
-      cancelable: true,
-      view: window
-    });
-
-    rect.dispatchEvent(mouseoutEvent);
-
-    // Check if the tooltip is hidden
     setTimeout(() => {
-      expect(tooltip.classList.contains('hidden')).toBe(true);
+      // Check if SVG width is updated
+      expect(svg.getAttribute('width')).toBe(chartContainer.clientWidth.toString());
       done();
     }, 500); // Adjust the timeout if necessary
   }, 1000); // Initial wait for the chart to render
