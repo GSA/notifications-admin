@@ -1,4 +1,5 @@
 import os
+
 from flask import abort, has_request_context, request
 from flask_login import current_user
 from notifications_python_client import __version__
