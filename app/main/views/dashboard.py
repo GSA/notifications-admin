@@ -120,7 +120,6 @@ def service_dashboard(service_id):
         partials=get_dashboard_partials(service_id),
         job_and_notifications=job_and_notifications,
         service_data_retention_days=service_data_retention_days,
-        job_response=job_response
     )
 
 
