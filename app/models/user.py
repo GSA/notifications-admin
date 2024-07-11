@@ -147,6 +147,13 @@ class User(JSONModel, UserMixin):
         else:
             return self
 
+    def deactivate(self):
+        if self.is_active:
+            user_data = user_api_client.deactivate_user(self.id)
+            return self.__class__(user_data["data"])
+        else:
+            return self
+
     def login(self):
         login_user(self)
         session["user_id"] = self.id

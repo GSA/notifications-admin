@@ -217,6 +217,10 @@ class UserApiClient(NotifyAdminAPIClient):
     def activate_user(self, user_id):
         return self.post("/user/{}/activate".format(user_id), data=None)
 
+    @cache.delete("user-{user_id}")
+    def deactivate_user(self, user_id):
+        return self.post("/user/{}/deactivate".format(user_id), data=None)
+
     def send_change_email_verification(self, user_id, new_email):
         endpoint = "/user/{}/change-email-verification".format(user_id)
         data = {"email": new_email}

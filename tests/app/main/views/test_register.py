@@ -10,9 +10,9 @@ from app.models.user import User
 from tests.conftest import normalize_spaces
 
 
-def test_render_register_returns_template_with_form(
-    client_request,
-):
+def test_render_register_returns_template_with_form(client_request, mocker):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     page = client_request.get_url("/register")
 
@@ -58,7 +58,10 @@ def test_register_creates_new_user_and_redirects_to_continue_page(
     mock_login,
     phone_number_to_register_with,
     password,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     user_data = {
         "name": "Some One Valid",
@@ -89,9 +92,9 @@ def test_register_creates_new_user_and_redirects_to_continue_page(
     # )
 
 
-def test_register_continue_handles_missing_session_sensibly(
-    client_request,
-):
+def test_register_continue_handles_missing_session_sensibly(client_request, mocker):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     # session is not set
     client_request.get(
@@ -105,7 +108,10 @@ def test_process_register_returns_200_when_mobile_number_is_invalid(
     mock_send_verify_code,
     mock_get_user_by_email_not_found,
     mock_login,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     page = client_request.post(
         "main.register",
@@ -113,7 +119,7 @@ def test_process_register_returns_200_when_mobile_number_is_invalid(
             "name": "Bad Mobile",
             "email_address": "bad_mobile@example.gsa.gov",
             "mobile_number": "not good",
-            "password": "validPassword!",
+            "password": "validPassword!",  # noqa
         },
         _expected_status=200,
     )
@@ -122,9 +128,10 @@ def test_process_register_returns_200_when_mobile_number_is_invalid(
 
 
 def test_should_return_200_when_email_is_not_gov_uk(
-    client_request,
-    mock_get_organizations,
+    client_request, mock_get_organizations, mocker
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     page = client_request.post(
         "main.register",
@@ -163,6 +170,8 @@ def test_should_add_user_details_to_session(
     mock_login,
     email_address,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     client_request.post(
         "main.register",
@@ -178,10 +187,10 @@ def test_should_add_user_details_to_session(
 
 
 def test_should_return_200_if_password_is_on_list_of_commonly_used_passwords(
-    client_request,
-    mock_get_user_by_email,
-    mock_login,
+    client_request, mock_get_user_by_email, mock_login, mocker
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     page = client_request.post(
         "main.register",
@@ -189,7 +198,7 @@ def test_should_return_200_if_password_is_on_list_of_commonly_used_passwords(
             "name": "Bad Mobile",
             "email_address": "bad_mobile@example.gsa.gov",
             "mobile_number": "+12021234123",
-            "password": "password",
+            "password": "password",  # noqa
         },
         _expected_status=200,
     )
@@ -202,7 +211,10 @@ def test_register_with_existing_email_sends_emails(
     api_user_active,
     mock_get_user_by_email,
     mock_send_already_registered_email,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     user_data = {
         "name": "Already Hasaccount",
@@ -244,6 +256,8 @@ def test_register_from_email_auth_invite(
         "app.main.views.verify.service_api_client.retrieve_service_invite_data",
         return_value={},
     )
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     mock_login_user = mocker.patch("app.models.user.login_user")
     sample_invite["auth_type"] = "email_auth"
@@ -257,7 +271,7 @@ def test_register_from_email_auth_invite(
         "name": "invited user",
         "email_address": sample_invite["email_address"],
         "mobile_number": "2028675301",
-        "password": "FSLKAJHFNvdzxgfyst",
+        "password": "FSLKAJHFNvdzxgfyst",  # noqa
         "service": sample_invite["service"],
         "auth_type": "email_auth",
     }
@@ -331,6 +345,8 @@ def test_can_register_email_auth_without_phone_number(
         "app.main.views.verify.service_api_client.retrieve_service_invite_data",
         return_value={},
     )
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     sample_invite["auth_type"] = "email_auth"
     with client_request.session_transaction() as session:
@@ -364,7 +380,10 @@ def test_cannot_register_with_sms_auth_and_missing_mobile_number(
     mock_send_verify_code,
     mock_get_user_by_email_not_found,
     mock_login,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     page = client_request.post(
         "main.register",

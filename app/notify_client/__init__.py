@@ -54,16 +54,23 @@ class NotifyAdminAPIClient(BaseAPIClient):
         ):
             abort(403)
 
+    def check_inactive_user(self):
+        if not current_user or not current_user.is_active:
+            abort(403)
+
     def post(self, *args, **kwargs):
         self.check_inactive_service()
+        self.check_inactive_user()
         return super().post(*args, **kwargs)
 
     def put(self, *args, **kwargs):
         self.check_inactive_service()
+        self.check_inactive_user()
         return super().put(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         self.check_inactive_service()
+        self.check_inactive_user()
         return super().delete(*args, **kwargs)
 
 
