@@ -653,20 +653,24 @@ def test_should_not_show_recent_templates_on_dashboard_if_only_one_template_used
 
     mock_template_stats.assert_called_once_with(SERVICE_ONE_ID, limit_days=7)
 
-    assert stats[0]["template_name"] == "one", f"Expected template_name to be 'one', but got {stats[0]['template_name']}"
+    assert (
+        stats[0]["template_name"] == "one"
+    ), f"Expected template_name to be 'one', but got {stats[0]['template_name']}"
 
     # Debugging: print the main content to understand where "one" is appearing
     print(f"Main content: {main}")
 
     # Check that "one" is not in the main content
-    assert stats[0]["template_name"] in main, f"Expected 'one' to not be in main, but it was found in: {main}"
+    assert (
+        stats[0]["template_name"] in main
+    ), f"Expected 'one' to not be in main, but it was found in: {main}"
 
     # count appears as total, but not per template
     expected_count = stats[0]["count"]
     assert expected_count == 50, f"Expected count to be 50, but got {expected_count}"
     assert normalize_spaces(page.select_one("#total-sms .big-number-smaller").text) == (
         "{} text messages sent in the last seven days".format(expected_count)
-)
+    )
 
 
 @freeze_time("2016-07-01 12:00")  # 4 months into 2016 financial year

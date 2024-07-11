@@ -26,14 +26,9 @@
       Messages sent
     </h2>
 
-    <!-- <button id="sevenDaysButton">7 Days</button>
-    <canvas id="myChart"></canvas> -->
-
     {{ ajax_block(partials, updates_url, 'inbox') }}
 
     {{ ajax_block(partials, updates_url, 'totals') }}
-
-    {{ ajax_block(partials, updates_url, 'template-statistics') }}
 
     <h2 class="line-height-sans-2 margin-bottom-0 margin-top-4">
       Activity snapshot
@@ -59,9 +54,9 @@
     <div id="message"></div>
     <div id="aria-live-account" class="usa-sr-only" aria-live="polite"></div>
 
-    <h2 class="margin-top-4 margin-bottom-1">Recent Batches</h2>
+    <h2 class="margin-top-4">Recent Batches</h2>
     <div class="table-wrapper">
-      <table class="usa-table usa-table--borderless job-table">
+      <table class="usa-table job-table margin-top-0">
         <thead class="table-field-headings">
           <tr>
             <th scope="col" class="table-field-heading-first">
@@ -89,7 +84,7 @@
             {% for job in job_and_notifications[:5] %}
               {% if job.job_id and job.notifications %}
                 {% set notification = job.notifications[0] %}
-                <tr class="table-row" id="{{ job.job_id }}">
+                <tr id="{{ job.job_id }}">
                   <td class="table-field file-name">
                     {{ notification.job.original_file_name[:12] if notification.job.original_file_name else 'Manually entered number'}}
                     <br>
@@ -127,17 +122,7 @@
       </table>
     </div>
 
-    <h2 class="margin-top-4 margin-bottom-1">Message count</h2>
-    {% if current_user.has_permissions('manage_service') %}
-      <h3 class='margin-bottom-0' id="current-year"></h3>
-      {{ ajax_block(partials, updates_url, 'usage') }}
-      <p class="margin-top-0">During the pilot period, each service has an allowance of 250,000 message parts. Once this allowance is met, the
-      application will stop delivering messages. There's no monthly charge, no setup fee, and no procurement cost.</p>
-      <p class="align-with-heading-copy">
-        What counts as 1 text message part?<br />
-        See <a class="usa-link" href="{{ url_for('.pricing') }}">pricing</a>.
-      </p>
-    {% endif %}
-  </div>
+    <h2>Recent templates</h2>
+    {{ ajax_block(partials, updates_url, 'template-statistics') }}
 
 {% endblock %}

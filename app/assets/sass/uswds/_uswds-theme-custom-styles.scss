@@ -276,6 +276,12 @@ td.table-empty-message {
    display: block;
 }
 
+.usa-table {
+   th {
+      border-bottom: 0 !important;
+   }
+}
+
 .js-stick-at-bottom-when-scrolling {
    display: flex;
    align-items: flex-end;
@@ -376,7 +382,7 @@ td.table-empty-message {
       }
    }
    .table-wrapper {
-      overflow-x: scroll;
+      overflow-x: auto;
    }
 }
 
