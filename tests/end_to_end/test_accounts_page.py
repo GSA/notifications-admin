@@ -10,6 +10,7 @@ E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 def test_add_new_service_workflow(authenticated_page, end_to_end_context):
     page = authenticated_page
 
+
     # Prepare for adding a new service later in the test.
     current_date_time = datetime.datetime.now()
     new_service_name = "E2E Federal Test Service {now} - {browser_type}".format(

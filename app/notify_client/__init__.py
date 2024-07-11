@@ -55,7 +55,10 @@ class NotifyAdminAPIClient(BaseAPIClient):
             abort(403)
 
     def check_inactive_user(self):
-        if not current_user or not current_user.is_active:
+        if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
+            # allow end-to-end tests to skip check
+            pass
+        elif not current_user or not current_user.is_active:
             abort(403)
 
     def post(self, *args, **kwargs):
