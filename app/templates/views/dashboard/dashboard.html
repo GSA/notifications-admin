@@ -69,7 +69,7 @@
                     {{ notification.template.name }}
                   </td>
                   <td class="table-field time-sent">
-                    {{ job.processing_finished|format_datetime_table }}
+                    {{ (job.processing_finished or job.processing_started)|format_datetime_table }}
                   </td>
                   <td class="table-field sender">
                     {{ notification.created_by.name }}

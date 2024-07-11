@@ -106,6 +106,7 @@ def service_dashboard(service_id):
             ),
             "created_at": job["created_at"],
             "processing_finished": job["processing_finished"],
+            "processing_started": job["processing_started"],
             "notification_count": job["notification_count"],
             "created_by": job["created_by"],
             "notifications": aggregate_notifications_by_job.get(job["id"], []),
@@ -119,6 +120,7 @@ def service_dashboard(service_id):
         partials=get_dashboard_partials(service_id),
         job_and_notifications=job_and_notifications,
         service_data_retention_days=service_data_retention_days,
+        job_response=job_response
     )
 
 
