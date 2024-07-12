@@ -56,16 +56,24 @@ class NotifyAdminAPIClient(BaseAPIClient):
         ):
             abort(403)
 
-    def check_inactive_user(self):
+    def check_inactive_user(self, *args):
+        still_signing_in = False
+        for arg in args:
+            arg = str(arg)
+            if "get-login-gov-user" in arg or "user/email" in arg or "/activate" in arg:
+                still_signing_in = True
         if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
             # allow end-to-end tests to skip check
+            pass
+        elif still_signing_in is True:
+            # we are not full signed in yet
             pass
         elif not current_user or not current_user.is_active:
             abort(403)
 
     def post(self, *args, **kwargs):
         self.check_inactive_service()
-        self.check_inactive_user()
+        self.check_inactive_user(args)
         return super().post(*args, **kwargs)
 
     def put(self, *args, **kwargs):
