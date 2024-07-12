@@ -7,7 +7,9 @@ from app.models.user import User
 from tests.conftest import SERVICE_ONE_ID, normalize_spaces
 
 
-def test_render_sign_in_template_for_new_user(client_request):
+def test_render_sign_in_template_for_new_user(client_request, mocker):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     page = client_request.get("main.sign_in")
     assert normalize_spaces(page.select_one("h1").text) == "Sign in"
@@ -25,7 +27,9 @@ def test_render_sign_in_template_for_new_user(client_request):
     assert "Sign in again" not in normalize_spaces(page.text)
 
 
-def test_sign_in_explains_session_timeout(client_request):
+def test_sign_in_explains_session_timeout(client_request, mocker):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     page = client_request.get("main.sign_in", next="/foo")
     assert (
@@ -81,7 +85,10 @@ def test_should_return_redirect_when_user_is_pending(
     mock_get_user_by_email_pending,
     api_user_pending,
     mock_verify_password,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     client_request.post(
         "main.sign_in",
@@ -107,8 +114,14 @@ def test_should_return_redirect_when_user_is_pending(
 )
 @pytest.mark.skip("TODO is this still relevant post login.gov switch?")
 def test_should_attempt_redirect_when_user_is_pending(
-    client_request, mock_get_user_by_email_pending, mock_verify_password, redirect_url
+    client_request,
+    mock_get_user_by_email_pending,
+    mock_verify_password,
+    redirect_url,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     client_request.post(
         "main.sign_in",
@@ -132,6 +145,8 @@ def test_when_signing_in_as_invited_user_you_cannot_accept_an_invite_for_another
     mock_send_verify_code,
     mock_get_invited_user_by_id,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     sample_invite["email_address"] = "some_other_user@user.gsa.gov"
 
     mocker.patch(

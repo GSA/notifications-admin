@@ -27,7 +27,9 @@ from tests.conftest import SERVICE_ONE_ID, SERVICE_TWO_ID, normalize_spaces
         "main.trial_services",
     ],
 )
-def test_should_redirect_if_not_logged_in(client_request, endpoint):
+def test_should_redirect_if_not_logged_in(client_request, endpoint, mocker):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     client_request.get(
         endpoint,
