@@ -25,14 +25,10 @@ def _sign_out_at_login_dot_gov():
 
 @main.route("/sign-out", methods=(["GET", "POST"]))
 def sign_out():
-    # An AnonymousUser does not have an id
 
     if current_user.is_authenticated:
-        # TODO This doesn't work yet, due to problems above.
         current_user.deactivate()
-
         session.clear()
-
         current_user.sign_out()
 
         session.permanent = False
