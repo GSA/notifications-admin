@@ -60,7 +60,12 @@ class NotifyAdminAPIClient(BaseAPIClient):
         still_signing_in = False
         for arg in args:
             arg = str(arg)
-            if "get-login-gov-user" in arg or "user/email" in arg or "/activate" or "/email-code" in arg:
+            if (
+                "get-login-gov-user" in arg
+                or "user/email" in arg
+                or "/activate" in arg
+                or "/email-code" in arg
+            ):
                 still_signing_in = True
         # TODO:  Update this once E2E tests are managed by a feature flag or some other main config option.
         if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
