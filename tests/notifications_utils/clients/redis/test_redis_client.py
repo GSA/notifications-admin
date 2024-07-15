@@ -8,17 +8,17 @@ from freezegun import freeze_time
 from notifications_utils.clients.redis.redis_client import RedisClient, prepare_value
 
 
-@pytest.fixture()
+@pytest.fixture
 def mocked_redis_pipeline():
     return Mock()
 
 
-@pytest.fixture()
+@pytest.fixture
 def delete_mock():
     return Mock(return_value=4)
 
 
-@pytest.fixture()
+@pytest.fixture
 def mocked_redis_client(app, mocked_redis_pipeline, delete_mock, mocker):
     app.config["REDIS_ENABLED"] = True
 
@@ -46,7 +46,7 @@ def mocked_redis_client(app, mocked_redis_pipeline, delete_mock, mocker):
     return redis_client
 
 
-@pytest.fixture()
+@pytest.fixture
 def failing_redis_client(mocked_redis_client, delete_mock):
     # nota bene: using KeyError because flake8 thinks Exception
     # and BaseException are too broad

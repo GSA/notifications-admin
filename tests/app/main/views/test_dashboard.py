@@ -1882,7 +1882,7 @@ def test_service_dashboard_shows_batched_jobs(
     assert len(rows) == 1
 
 
-@pytest.fixture()
+@pytest.fixture
 def app_with_socketio():
     app = Flask("app")
     create_app(app)
