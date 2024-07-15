@@ -204,6 +204,8 @@ def test_verify_email_redirects_to_sign_in_if_user_active(
     mock_send_verify_code,
     mock_check_verify_code,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     token_data = {"user_id": api_user_active["id"], "secret_code": 12345}
     mocker.patch(

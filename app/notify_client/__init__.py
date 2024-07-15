@@ -1,3 +1,5 @@
+import os
+
 from flask import abort, has_request_context, request
 from flask_login import current_user
 from notifications_python_client import __version__
@@ -54,16 +56,40 @@ class NotifyAdminAPIClient(BaseAPIClient):
         ):
             abort(403)
 
+    def check_inactive_user(self, *args):
+        still_signing_in = False
+        for arg in args:
+            arg = str(arg)
+            if (
+                "get-login-gov-user" in arg
+                or "user/email" in arg
+                or "/activate" in arg
+                or "/email-code" in arg
+            ):
+                still_signing_in = True
+        # TODO:  Update this once E2E tests are managed by a feature flag or some other main config option.
+        if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
+            # allow end-to-end tests to skip check
+            pass
+        elif still_signing_in is True:
+            # we are not full signed in yet
+            pass
+        elif not current_user or not current_user.is_active:
+            abort(403)
+
     def post(self, *args, **kwargs):
         self.check_inactive_service()
+        self.check_inactive_user(args)
         return super().post(*args, **kwargs)
 
     def put(self, *args, **kwargs):
         self.check_inactive_service()
+        self.check_inactive_user()
         return super().put(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         self.check_inactive_service()
+        self.check_inactive_user()
         return super().delete(*args, **kwargs)
 
 

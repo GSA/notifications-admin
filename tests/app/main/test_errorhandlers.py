@@ -68,6 +68,7 @@ def test_csrf_redirects_to_sign_in_page_if_not_signed_in(client_request, mocker)
     csrf_err = CSRFError("400 Bad Request: The CSRF tokens do not match.")
     mocker.patch("app.main.views.index.render_template", side_effect=csrf_err)
 
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     client_request.get_url(
         "/privacy",

@@ -94,7 +94,9 @@ def test_restrict_admin_usage(
         index()
 
 
-def test_no_user_returns_redirect_to_sign_in(client_request):
+def test_no_user_returns_redirect_to_sign_in(client_request, mocker):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     @user_has_permissions()

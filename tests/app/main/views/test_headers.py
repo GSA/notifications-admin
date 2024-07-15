@@ -6,6 +6,8 @@ def test_owasp_useful_headers_set(
     mocker,
     mock_get_service_and_organization_counts,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     response = client_request.get_response(".index")
 
