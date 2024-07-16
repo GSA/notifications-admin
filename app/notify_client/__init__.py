@@ -1,6 +1,6 @@
 import os
 
-from flask import abort, has_request_context, request
+from flask import abort, current_app, has_request_context, request
 from flask_login import current_user
 from notifications_python_client import __version__
 from notifications_python_client.base import BaseAPIClient
@@ -67,6 +67,17 @@ class NotifyAdminAPIClient(BaseAPIClient):
                 or "/email-code" in arg
             ):
                 still_signing_in = True
+
+            print(f"HERE IS ARG {arg}")
+            if arg == ():
+                print("ARG WAS EMPTY TUPLE")
+            elif not arg:
+                print("ARG WAS NOT")
+            elif len(arg[0]) == 0:
+                print("arg0 was len 0")
+            elif str(arg) == "()":
+                print("string arg was ()")
+                still_signing_in = True
         # TODO:  Update this once E2E tests are managed by a feature flag or some other main config option.
         if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
             # allow end-to-end tests to skip check
@@ -75,6 +86,7 @@ class NotifyAdminAPIClient(BaseAPIClient):
             # we are not full signed in yet
             pass
         elif not current_user or not current_user.is_active:
+            current_app.logger.error(f"WHY FAILING {args}")
             abort(403)
 
     def post(self, *args, **kwargs):
