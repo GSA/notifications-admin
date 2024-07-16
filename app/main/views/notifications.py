@@ -137,9 +137,9 @@ def get_all_personalisation_from_notification(notification):
 def download_notifications_csv(service_id):
     filter_args = parse_filter_args(request.args)
     filter_args["status"] = set_status_filters(filter_args)
-
+    number_of_days = request.args["number_of_days"]
     service_data_retention_days = current_service.get_days_of_retention(
-        filter_args.get("message_type")[0]
+        filter_args.get("message_type")[0], number_of_days
     )
     file_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
     file_time = f"{file_time} {get_user_preferred_timezone()}"

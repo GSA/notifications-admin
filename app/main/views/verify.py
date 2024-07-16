@@ -79,5 +79,4 @@ def activate_user(user_id):
     else:
         activated_user = user.activate()
         activated_user.login()
-
         return redirect(url_for("main.add_service", first="first"))

@@ -143,11 +143,40 @@ def view_notifications(service_id, message_type=None):
             True: ["reference"],
             False: [],
         }.get(bool(current_service.api_keys)),
-        download_link=url_for(
+        download_link_one_day=url_for(
             ".download_notifications_csv",
             service_id=current_service.id,
             message_type=message_type,
             status=request.args.get("status"),
+            number_of_days="one_day",
+        ),
+        download_link_today=url_for(
+            ".download_notifications_csv",
+            service_id=current_service.id,
+            message_type=message_type,
+            status=request.args.get("status"),
+            number_of_days="today",
+        ),
+        download_link_three_day=url_for(
+            ".download_notifications_csv",
+            service_id=current_service.id,
+            message_type=message_type,
+            status=request.args.get("status"),
+            number_of_days="three_day",
+        ),
+        download_link_five_day=url_for(
+            ".download_notifications_csv",
+            service_id=current_service.id,
+            message_type=message_type,
+            status=request.args.get("status"),
+            number_of_days="five_day",
+        ),
+        download_link_seven_day=url_for(
+            ".download_notifications_csv",
+            service_id=current_service.id,
+            message_type=message_type,
+            status=request.args.get("status"),
+            number_of_days="seven_day",
         ),
     )
 
@@ -183,10 +212,9 @@ def get_notifications(service_id, message_type, status_override=None):  # noqa
     filter_args["status"] = set_status_filters(filter_args)
     service_data_retention_days = None
     search_term = request.form.get("to", "")
-
     if message_type is not None:
         service_data_retention_days = current_service.get_days_of_retention(
-            message_type
+            message_type, number_of_days="seven_day"
         )
 
     if request.path.endswith("csv") and current_user.has_permissions("view_activity"):
@@ -212,7 +240,6 @@ def get_notifications(service_id, message_type, status_override=None):  # noqa
     )
     url_args = {"message_type": message_type, "status": request.args.get("status")}
     prev_page = None
-
     if "links" in notifications and notifications["links"].get("prev", None):
         prev_page = generate_previous_dict(
             "main.view_notifications", service_id, page, url_args=url_args
@@ -233,7 +260,6 @@ def get_notifications(service_id, message_type, status_override=None):  # noqa
         )
     else:
         download_link = None
-
     return {
         "service_data_retention_days": service_data_retention_days,
         "counts": render_template(
@@ -286,7 +312,7 @@ def get_status_filters(service, message_type, statistics):
     filters = [
         # key, label, option
         ("requested", "total", "sending,delivered,failed"),
-        ("pending", "pending", "pending"),
+        ("pending", "pending", "sending,pending"),
         ("delivered", "delivered", "delivered"),
         ("failed", "failed", "failed"),
     ]
@@ -362,6 +388,7 @@ def get_job_partials(job):
     filter_args = parse_filter_args(request.args)
     filter_args["status"] = set_status_filters(filter_args)
     notifications = job.get_notifications(status=filter_args["status"])
+    number_of_days = "seven_day"
     counts = render_template(
         "partials/count.html",
         counts=_get_job_counts(job),
@@ -371,7 +398,7 @@ def get_job_partials(job):
         ),
     )
     service_data_retention_days = current_service.get_days_of_retention(
-        job.template_type
+        job.template_type, number_of_days
     )
 
     if request.referrer is not None:

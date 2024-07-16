@@ -169,7 +169,7 @@
         "filename": "app/config.py",
         "hashed_secret": "577a4c667e4af8682ca431857214b3a920883efc",
         "is_verified": false,
-        "line_number": 111,
+        "line_number": 117,
         "is_secret": false
       }
     ],
@@ -527,7 +527,7 @@
         "filename": "tests/app/main/views/organizations/test_organization_invites.py",
         "hashed_secret": "bdbb156d25d02fd7792865824201dda1c60f4473",
         "is_verified": false,
-        "line_number": 265,
+        "line_number": 274,
         "is_secret": false
       },
       {
@@ -535,7 +535,7 @@
         "filename": "tests/app/main/views/organizations/test_organization_invites.py",
         "hashed_secret": "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8",
         "is_verified": false,
-        "line_number": 273,
+        "line_number": 282,
         "is_secret": false
       }
     ],
@@ -545,7 +545,7 @@
         "filename": "tests/app/main/views/test_accept_invite.py",
         "hashed_secret": "07f0a6c13923fc3b5f0c57ffa2d29b715eb80d71",
         "is_verified": false,
-        "line_number": 607,
+        "line_number": 626,
         "is_secret": false
       }
     ],
@@ -565,7 +565,7 @@
         "filename": "tests/app/main/views/test_register.py",
         "hashed_secret": "bdbb156d25d02fd7792865824201dda1c60f4473",
         "is_verified": false,
-        "line_number": 116,
+        "line_number": 122,
         "is_secret": false
       },
       {
@@ -573,7 +573,7 @@
         "filename": "tests/app/main/views/test_register.py",
         "hashed_secret": "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8",
         "is_verified": false,
-        "line_number": 192,
+        "line_number": 201,
         "is_secret": false
       },
       {
@@ -581,7 +581,7 @@
         "filename": "tests/app/main/views/test_register.py",
         "hashed_secret": "bb5b7caa27d005d38039e3797c3ddb9bcd22c3c8",
         "is_verified": false,
-        "line_number": 260,
+        "line_number": 274,
         "is_secret": false
       }
     ],
@@ -591,7 +591,7 @@
         "filename": "tests/app/main/views/test_sign_in.py",
         "hashed_secret": "8b8b69116ee882b5e987e330f55db81aba0636f9",
         "is_verified": false,
-        "line_number": 90,
+        "line_number": 97,
         "is_secret": false
       }
     ],
@@ -601,7 +601,7 @@
         "filename": "tests/app/main/views/test_two_factor.py",
         "hashed_secret": "dc66ad927c29e31c6c374231f57a4684b0687bfe",
         "is_verified": false,
-        "line_number": 267,
+        "line_number": 290,
         "is_secret": false
       }
     ],
@@ -702,5 +702,5 @@
       }
     ]
   },
-  "generated_at": "2024-06-11T22:26:18Z"
+  "generated_at": "2024-07-11T16:37:23Z"
 }
