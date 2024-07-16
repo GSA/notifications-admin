@@ -67,6 +67,10 @@ class NotifyAdminAPIClient(BaseAPIClient):
                 or "/email-code" in arg
             ):
                 still_signing_in = True
+
+            # This seems to be a weird edge case that happens intermittently with invites
+            if str(arg) == "()":
+                still_signing_in = True
         # TODO:  Update this once E2E tests are managed by a feature flag or some other main config option.
         if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
             # allow end-to-end tests to skip check
