@@ -68,15 +68,7 @@ class NotifyAdminAPIClient(BaseAPIClient):
             ):
                 still_signing_in = True
 
-            print(f"HERE IS ARG {arg}")
-            if arg == ():
-                print("ARG WAS EMPTY TUPLE")
-            elif not arg:
-                print("ARG WAS NOT")
-            elif len(arg[0]) == 0:
-                print("arg0 was len 0")
-            elif str(arg) == "()":
-                print("string arg was ()")
+            if str(arg) == "()":
                 still_signing_in = True
         # TODO:  Update this once E2E tests are managed by a feature flag or some other main config option.
         if os.getenv("NOTIFY_E2E_TEST_EMAIL"):

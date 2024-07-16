@@ -24,11 +24,15 @@ from app.utils.user_permissions import (
 
 
 def _get_service_id_from_view_args():
-    return str(request.view_args.get("service_id", "")) or None
+    if request and request.view_args:
+        return str(request.view_args.get("service_id", ""))
+    return None
 
 
 def _get_org_id_from_view_args():
-    return str(request.view_args.get("org_id", "")) or None
+    if request and request.view_args:
+        return str(request.view_args.get("org_id", ""))
+    return None
 
 
 class User(JSONModel, UserMixin):
@@ -228,7 +232,7 @@ class User(JSONModel, UserMixin):
             # we shouldn't have any pages that require permissions, but don't specify a service or organization.
             # use @user_is_platform_admin for platform admin only pages
             # raise NotImplementedError
-            print(f"VIEW ARGS ARE {request.view_args}")
+            current_app.logger.warn(f"VIEW ARGS ARE {request.view_args}")
             pass
 
         log_msg = f"has_permissions user: {self.id} service: {service_id}"
