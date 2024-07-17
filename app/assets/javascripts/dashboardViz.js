@@ -1,6 +1,6 @@
 (function (window) {
 
-    if (document.getElementById('chartsArea')) {
+    if (document.getElementById('activityChartContainer')) {
 
         const COLORS = {
             delivered: '#0076d6',
@@ -101,7 +101,7 @@
             // Create tooltip
             const tooltip = d3.select('body').append('div')
                 .attr('id', 'tooltip')
-                .style('display', 'none');
+                .style('display', 'none')
 
             // Create bars with animation
             const barGroups = svg.selectAll('.bar-group')
@@ -185,7 +185,7 @@
         function fetchData(type) {
             var ctx = document.getElementById('weeklyChart');
             if (!ctx) {
-            return;
+                return;
             }
 
             var socket = io();
@@ -193,39 +193,39 @@
             var socketConnect = type === 'service' ? 'daily_stats_update' : 'daily_stats_by_user_update';
 
             socket.on('connect', function () {
-            const userId = ctx.getAttribute('data-service-id'); // Assuming user ID is the same as service ID
-            socket.emit(eventType);
+                const userId = ctx.getAttribute('data-service-id'); // Assuming user ID is the same as service ID
+                socket.emit(eventType);
             });
 
             socket.on(socketConnect, function(data) {
-            console.log('Received data:', data);  // Log the received data
+                console.log('Received data:', data);  // Log the received data
 
-            var labels = [];
-            var deliveredData = [];
-            var failedData = [2, 1, 0, 2, 0, 1, 0];
+                var labels = [];
+                var deliveredData = [];
+                var failedData = [2, 1, 0, 2, 0, 1, 0];
 
-            for (var dateString in data) {
-                // Parse the date string (assuming format YYYY-MM-DD)
-                const dateParts = dateString.split('-');
-                const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0].slice(2)}`; // Format to MM/DD/YY
+                for (var dateString in data) {
+                    // Parse the date string (assuming format YYYY-MM-DD)
+                    const dateParts = dateString.split('-');
+                    const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0].slice(2)}`; // Format to MM/DD/YY
 
-                labels.push(formattedDate);
-                deliveredData.push(data[dateString].sms.delivered);
-                // failedData.push(data[dateString].sms.failure == [0, 1, 0, 2, 0]);
-            }
+                    labels.push(formattedDate);
+                    deliveredData.push(data[dateString].sms.delivered);
+                    // failedData.push(data[dateString].sms.failure == [0, 1, 0, 2, 0]);
+                }
 
-            createChart('#weeklyChart', labels, deliveredData, failedData);
-            createTable('weeklyTable', 'Weekly', labels, deliveredData, failedData);
+                createChart('#weeklyChart', labels, deliveredData, failedData);
+                createTable('#weeklyTable', 'activityChart', labels, deliveredData, failedData);
             });
 
             socket.on('error', function(data) {
-            console.log('Error:', data);
+                console.log('Error:', data);
             });
         }
 
         function handleDropdownChange(event) {
             const selectedValue = event.target.value;
-            const subTitle = document.querySelector(`#chartsArea .chart-subtitle`);
+            const subTitle = document.querySelector(`#activityChartContainer .chart-subtitle`);
             const selectElement = document.getElementById('options');
             const selectedText = selectElement.options[selectElement.selectedIndex].text;
 
@@ -240,11 +240,10 @@
             // Update ARIA live region
             const liveRegion = document.getElementById('aria-live-account');
             liveRegion.textContent = `Data updated for ${selectedText} - Last 7 Days`;
-
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize weekly chart and table with service data by default
+            // Initialize activityChart chart and table with service data by default
             fetchData('service');
 
             // Add event listener to the dropdown
@@ -257,13 +256,145 @@
             const selectedValue = document.getElementById('options').value;
             handleDropdownChange({ target: { value: selectedValue } });
         });
-
-        // // Exporting the functions for browser environment
-        // window.myModule = {
-        //     createChart: l,
-        //     createTable: r,
-        //     handleDropdownChange: t,
-        //     fetchData: n
-        // };
     }
+
+    // Function to create a bar chart for total messages
+    function createTotalMessagesChart() {
+        var chartContainer = document.getElementById('totalMessageChartContainer');
+        if (!chartContainer) return;
+
+        var chartTitle = document.getElementById('chartTitle').textContent;
+
+        // Access data attributes from the HTML
+        var sms_sent = parseInt(chartContainer.getAttribute('data-sms-sent'));
+        var sms_remaining_messages = parseInt(chartContainer.getAttribute('data-sms-allowance-remaining'));
+        var totalMessages = sms_sent + sms_remaining_messages;
+
+        // Update the message below the chart
+        document.getElementById('message').innerText = `${sms_sent.toLocaleString()} sent / ${sms_remaining_messages.toLocaleString()} remaining`;
+
+        // Calculate minimum width for "Messages Sent" as 1% of the total chart width
+        var minSentPercentage = 0.01; // Minimum width as a percentage of total messages (1% in this case)
+        var minSentValue = totalMessages * minSentPercentage;
+        var displaySent = Math.max(sms_sent, minSentValue);
+        var displayRemaining = totalMessages - displaySent;
+
+        var svg = d3.select("#totalMessageChart");
+        var width = chartContainer.clientWidth;
+        var height = 64;
+        svg.attr("width", width).attr("height", height);
+
+        var x = d3.scaleLinear()
+            .domain([0, totalMessages])
+            .range([0, width]);
+
+        // Create tooltip dynamically
+        var tooltip = d3.select("body").append("div")
+            .attr("id", "tooltip");
+
+        // Create the initial bars
+        var sentBar = svg.append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("height", height)
+            .attr("fill", '#0076d6')
+            .attr("width", 0) // Start with width 0 for animation
+            .on('mouseover', function(event) {
+                tooltip.style('display', 'block')
+                    .html(`Messages Sent: ${sms_sent.toLocaleString()}`);
+            })
+            .on('mousemove', function(event) {
+                tooltip.style('left', `${event.pageX + 10}px`)
+                    .style('top', `${event.pageY - 20}px`);
+            })
+            .on('mouseout', function() {
+                tooltip.style('display', 'none');
+            });
+
+        var remainingBar = svg.append("rect")
+            .attr("x", 0) // Initially set to 0, will be updated during animation
+            .attr("y", 0)
+            .attr("height", height)
+            .attr("fill", '#fa9441')
+            .attr("width", 0) // Start with width 0 for animation
+            .on('mouseover', function(event) {
+                tooltip.style('display', 'block')
+                    .html(`Remaining: ${sms_remaining_messages.toLocaleString()}`);
+            })
+            .on('mousemove', function(event) {
+                tooltip.style('left', `${event.pageX + 10}px`)
+                    .style('top', `${event.pageY - 20}px`);
+            })
+            .on('mouseout', function() {
+                tooltip.style('display', 'none');
+            });
+
+        // Animate the bars together as a single cohesive line
+        svg.transition()
+            .duration(1000)  // Total animation duration
+            .attr("width", width)
+            .tween("resize", function() {
+                var interpolator = d3.interpolate(0, width);
+                return function(t) {
+                    var newWidth = interpolator(t);
+                    var sentWidth = x(displaySent) / width * newWidth;
+                    var remainingWidth = x(displayRemaining) / width * newWidth;
+                    sentBar.attr("width", sentWidth);
+                    remainingBar.attr("x", sentWidth).attr("width", remainingWidth);
+                };
+            });
+
+        // Create and populate the accessible table
+        var tableContainer = document.getElementById('totalMessageTable');
+        var table = document.createElement('table');
+        table.className = 'usa-sr-only usa-table';
+
+        var caption = document.createElement('caption');
+        caption.textContent = chartTitle;
+        table.appendChild(caption);
+
+        var thead = document.createElement('thead'); // Ensure thead is created
+        var theadRow = document.createElement('tr');
+        var thMessagesSent = document.createElement('th');
+        thMessagesSent.textContent = 'Messages Sent'; // First column header
+        var thRemaining = document.createElement('th');
+        thRemaining.textContent = 'Remaining'; // Second column header
+        theadRow.appendChild(thMessagesSent);
+        theadRow.appendChild(thRemaining);
+        thead.appendChild(theadRow); // Append theadRow to the thead
+        table.appendChild(thead);
+
+        var tbody = document.createElement('tbody');
+        var tbodyRow = document.createElement('tr');
+
+        var tdMessagesSent = document.createElement('td');
+        tdMessagesSent.textContent = sms_sent.toLocaleString(); // Value for Messages Sent
+        var tdRemaining = document.createElement('td');
+        tdRemaining.textContent = sms_remaining_messages.toLocaleString(); // Value for Remaining
+
+        tbodyRow.appendChild(tdMessagesSent);
+        tbodyRow.appendChild(tdRemaining);
+        tbody.appendChild(tbodyRow);
+
+        table.appendChild(tbody);
+        tableContainer.appendChild(table);
+
+        table.appendChild(tbody);
+        tableContainer.appendChild(table);
+
+        // Ensure the chart resizes correctly on window resize
+        window.addEventListener('resize', function () {
+            width = chartContainer.clientWidth;
+            x.range([0, width]);
+            svg.attr("width", width);
+            sentBar.attr("width", x(displaySent));
+            remainingBar.attr("x", x(displaySent)).attr("width", x(displayRemaining));
+        });
+    }
+
+    // Initialize total messages chart if the container exists
+    document.addEventListener('DOMContentLoaded', function() {
+        createTotalMessagesChart();
+    });
+
 })(window);
