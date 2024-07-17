@@ -6,6 +6,13 @@ locals {
   recursive_delete = false
 }
 
+resource "null_resource" "prevent_destroy" {
+
+  lifecycle {
+    prevent_destroy = true # never destroy demo
+  }
+}
+
 module "redis-v70" {
   source = "github.com/GSA-TTS/terraform-cloudgov//redis?ref=v1.0.0"
 

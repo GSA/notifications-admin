@@ -6,6 +6,13 @@ locals {
   recursive_delete = true
 }
 
+resource "null_resource" "prevent_destroy" {
+
+  lifecycle {
+    prevent_destroy = false # destroying sandbox is allowed
+  }
+}
+
 module "redis-v70" {
   source = "github.com/GSA-TTS/terraform-cloudgov//redis?ref=v1.0.0"
 

@@ -13,7 +13,6 @@ resource "null_resource" "prevent_destroy" {
   }
 }
 
-
 module "redis-v70" {
   source = "github.com/GSA-TTS/terraform-cloudgov//redis?ref=v1.0.0"
 
