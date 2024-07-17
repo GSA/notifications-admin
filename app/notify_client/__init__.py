@@ -65,6 +65,7 @@ class NotifyAdminAPIClient(BaseAPIClient):
                 or "user/email" in arg
                 or "/activate" in arg
                 or "/email-code" in arg
+                or "/verify/code" in arg
             ):
                 still_signing_in = True
 
