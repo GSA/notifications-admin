@@ -1,6 +1,6 @@
 import os
 
-from flask import abort, has_request_context, request
+from flask import abort, current_app, has_request_context, request
 from flask_login import current_user
 from notifications_python_client import __version__
 from notifications_python_client.base import BaseAPIClient
@@ -79,6 +79,7 @@ class NotifyAdminAPIClient(BaseAPIClient):
             # we are not full signed in yet
             pass
         elif not current_user or not current_user.is_active:
+            current_app.logger.error(f"Unauthorized URL #notify-compliance-46 {args}")
             abort(403)
 
     def post(self, *args, **kwargs):
