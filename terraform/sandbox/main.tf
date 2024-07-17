@@ -3,7 +3,6 @@ locals {
   cf_space_name    = "notify-sandbox"
   env              = "sandbox"
   app_name         = "notify-admin"
-  recursive_delete = true
 }
 
 resource "null_resource" "prevent_destroy" {
@@ -28,11 +27,10 @@ module "redis-v70" {
 }
 
 module "logo_upload_bucket" {
-  source = "github.com/18f/terraform-cloudgov//s3?ref=v0.7.1"
+  source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v1.0.0"
 
   cf_org_name      = local.cf_org_name
   cf_space_name    = local.cf_space_name
-  recursive_delete = local.recursive_delete
   name             = "${local.app_name}-logo-upload-bucket-${local.env}"
 }
 
