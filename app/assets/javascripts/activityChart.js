@@ -12,7 +12,7 @@
         const FONT_WEIGHT = 'bold';
         const MAX_Y = 120;
 
-        function createChart(containerId, labels, deliveredData, failedData) {
+        const createChart = function(containerId, labels, deliveredData, failedData) {
             const container = d3.select(containerId);
             container.selectAll('*').remove(); // Clear any existing content
 
@@ -136,7 +136,7 @@
     }
 
     // Function to create an accessible table
-    function createTable(tableId, chartType, labels, deliveredData, failedData) {
+    const createTable = function(tableId, chartType, labels, deliveredData, failedData) {
         const table = document.getElementById(tableId);
         table.innerHTML = ""; // Clear previous data
 
@@ -179,7 +179,7 @@
         table.append(tbody);
     }
 
-    function fetchData(type) {
+    const fetchData = function(type) {
         var ctx = document.getElementById('weeklyChart');
         if (!ctx) {
             return;
@@ -220,7 +220,7 @@
         });
     }
 
-    function handleDropdownChange(event) {
+    const handleDropdownChange = function(event) {
         const selectedValue = event.target.value;
         const subTitle = document.querySelector(`#activityChartContainer .chart-subtitle`);
         const selectElement = document.getElementById('options');
