@@ -361,7 +361,7 @@
                 }
 
                 createChart('#weeklyChart', labels, deliveredData, failedData);
-                createTable('#weeklyTable', 'activityChart', labels, deliveredData, failedData);
+                createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
             });
 
             socket.on('error', function(data) {
@@ -544,10 +544,10 @@
     });
 
     // Export functions for testing
-    window.createTotalMessagesChart = createTotalMessagesChart;
-    window.handleDropdownChange = handleDropdownChange;
-    window.fetchData = fetchData;
-    window.createChart = createChart;
-    window.createTable = createTable;
+    // window.createTotalMessagesChart = createTotalMessagesChart;
+    // window.handleDropdownChange = handleDropdownChange;
+    // window.fetchData = fetchData;
+    // window.createChart = createChart;
+    // window.createTable = createTable;
 
 })(window);

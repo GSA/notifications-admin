@@ -129,8 +129,10 @@ const javascripts = () => {
     paths.src + 'javascripts/timeoutPopup.js',
     paths.src + 'javascripts/date.js',
     paths.src + 'javascripts/loginAlert.js',
-    paths.src + 'javascripts/dataVisualization.js',
-    paths.src + 'javascripts/dashboardVisualization.js',
+    // paths.src + 'javascripts/dataVisualization.js',
+    // paths.src + 'javascripts/dashboardVisualization.js',
+    paths.src + 'javascripts/totalMessagesChart.js',
+    paths.src + 'javascripts/activityChart.js',
     paths.src + 'javascripts/main.js',
   ])
     .pipe(plugins.prettyerror())
