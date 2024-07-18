@@ -133,7 +133,7 @@
             .duration(1000)
             .attr('y', d => y(d[1]))
             .attr('height', d => y(d[0]) - y(d[1]));
-    }
+    };
 
     // Function to create an accessible table
     const createTable = function(tableId, chartType, labels, deliveredData, failedData) {
@@ -177,7 +177,7 @@
         table.appendChild(caption);
         table.appendChild(thead);
         table.append(tbody);
-    }
+    };
 
     const fetchData = function(type) {
         var ctx = document.getElementById('weeklyChart');
@@ -218,7 +218,7 @@
         socket.on('error', function(data) {
             console.log('Error:', data);
         });
-    }
+    };
 
     const handleDropdownChange = function(event) {
         const selectedValue = event.target.value;
@@ -235,9 +235,9 @@
         }
 
         // Update ARIA live region
-            const liveRegion = document.getElementById('aria-live-account');
+        const liveRegion = document.getElementById('aria-live-account');
             liveRegion.textContent = `Data updated for ${selectedText} - Last 7 Days`;
-        }
+        };
 
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize activityChart chart and table with service data by default
