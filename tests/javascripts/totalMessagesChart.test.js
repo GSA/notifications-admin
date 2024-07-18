@@ -35,7 +35,7 @@ beforeAll(done => {
   // Wait a bit to ensure the script is executed
   setTimeout(() => {
     // Require the actual JavaScript file you are testing
-    require('../../app/assets/javascripts/totalmessagesChart.js');
+    require('../../app/assets/javascripts/totalMessagesChart.js');
 
     // Call the function to create the chart
     window.createTotalMessagesChart();
