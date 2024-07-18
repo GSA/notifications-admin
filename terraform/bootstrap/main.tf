@@ -13,4 +13,8 @@ module "s3" {
 resource "cloudfoundry_service_key" "bucket_creds" {
   name             = "${local.s3_service_name}-access"
   service_instance = module.s3.bucket_id
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
