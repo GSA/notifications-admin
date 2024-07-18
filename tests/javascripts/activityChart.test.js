@@ -100,7 +100,6 @@ test('SVG element is correctly set up', () => {
   window.createChart('#weeklyChart', ['07/01/24', '07/02/24', '07/03/24', '07/04/24', '07/05/24', '07/06/24', '07/07/24'], [50, 60, 70, 80, 90, 100, 110], [5, 2, 1, 0, 3, 4, 2]);
 
   const svg = document.getElementById('weeklyChart').querySelector('svg');
-  console.log('SVG element:', svg);
   expect(svg).not.toBeNull();
   expect(svg.getAttribute('width')).toBe('0');
   expect(svg.getAttribute('height')).toBe('400');
@@ -116,14 +115,10 @@ test('Check HTML content after chart creation', () => {
   const container = document.getElementById('weeklyChart');
   container.style.width = '600px'; // Force a specific width
   const containerWidth = container.clientWidth;
-  console.log(`Container width before chart creation: ${containerWidth}`);
   expect(containerWidth).toBeGreaterThan(0);
 
   // Call the function to create the chart
   window.createChart('#weeklyChart', labels, deliveredData, failedData);
-
-  // Log the HTML content of the container element
-  console.log(container.innerHTML);
 
   // Optionally, you can add assertions to check for specific elements
   expect(container.querySelector('svg')).not.toBeNull();
