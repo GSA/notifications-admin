@@ -55,8 +55,7 @@
                 .domain(labels)
                 .range([0, width])
                 .padding(0.1);
-
-            // Adjust the y-axis domain to add some space above the tallest bar
+                            // Adjust the y-axis domain to add some space above the tallest bar
             const maxY = d3.max(deliveredData.map((d, i) => d + (failedData[i] || 0)));
             const y = d3.scaleLinear()
                 .domain([0, maxY + 2]) // Add 2 units of space at the top
@@ -74,8 +73,6 @@
                 .tickFormat(d3.format('d')); // Ensure whole numbers on the y-axis
 
             svg.append('g')
-                .attr('class', 'y axis')
-                svg.append('g')
                 .attr('class', 'y axis')
                 .call(yAxis);
 
@@ -98,147 +95,146 @@
             const color = d3.scaleOrdinal()
                 .domain(['delivered', 'failed'])
                 .range([COLORS.delivered, COLORS.failed]);
-
-            // Create tooltip
+                            // Create tooltip
             const tooltip = d3.select('body').append('div')
-                .attr('id', 'tooltip')
-                .style('display', 'none');
+            .attr('id', 'tooltip')
+            .style('display', 'none');
 
-            // Create bars with animation
-            const barGroups = svg.selectAll('.bar-group')
-                .data(series)
-                .enter()
-                .append('g')
-                .attr('class', 'bar-group')
-                .attr('fill', d => color(d.key));
+        // Create bars with animation
+        const barGroups = svg.selectAll('.bar-group')
+            .data(series)
+            .enter()
+            .append('g')
+            .attr('class', 'bar-group')
+            .attr('fill', d => color(d.key));
 
-            barGroups.selectAll('rect')
-                .data(d => d)
-                .enter()
-                .append('rect')
-                .attr('x', d => x(d.data.label))
-                .attr('y', height)
-                .attr('height', 0)
-                .attr('width', x.bandwidth())
-                .on('mouseover', function(event, d) {
-                    const key = d3.select(this.parentNode).datum().key;
-                    const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
-                    tooltip.style('display', 'block')
-                        .html(`${d.data.label}<br>${capitalizedKey}: ${d.data[key]}`);
-                })
-                .on('mousemove', function(event) {
-                    tooltip.style('left', `${event.pageX + 10}px`)
-                        .style('top', `${event.pageY - 20}px`);
-                })
-                .on('mouseout', function() {
-                    tooltip.style('display', 'none');
-                })
-                .transition()
-                .duration(1000)
-                .attr('y', d => y(d[1]))
-                .attr('height', d => y(d[0]) - y(d[1]));
+        barGroups.selectAll('rect')
+            .data(d => d)
+            .enter()
+            .append('rect')
+            .attr('x', d => x(d.data.label))
+            .attr('y', height)
+            .attr('height', 0)
+            .attr('width', x.bandwidth())
+            .on('mouseover', function(event, d) {
+                const key = d3.select(this.parentNode).datum().key;
+                const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
+                tooltip.style('display', 'block')
+                    .html(`${d.data.label}<br>${capitalizedKey}: ${d.data[key]}`);
+            })
+            .on('mousemove', function(event) {
+                tooltip.style('left', `${event.pageX + 10}px`)
+                    .style('top', `${event.pageY - 20}px`);
+            })
+            .on('mouseout', function() {
+                tooltip.style('display', 'none');
+            })
+            .transition()
+            .duration(1000)
+            .attr('y', d => y(d[1]))
+            .attr('height', d => y(d[0]) - y(d[1]));
+    }
+
+    // Function to create an accessible table
+    function createTable(tableId, chartType, labels, deliveredData, failedData) {
+        const table = document.getElementById(tableId);
+        table.innerHTML = ""; // Clear previous data
+
+        const captionText = document.querySelector(`#${chartType} .chart-subtitle`).textContent;
+        const caption = document.createElement('caption');
+        caption.textContent = captionText;
+        const thead = document.createElement('thead');
+        const tbody = document.createElement('tbody');
+
+        // Create table header
+        const headerRow = document.createElement('tr');
+        const headers = ['Day', 'Delivered', 'Failed'];
+        headers.forEach(headerText => {
+            const th = document.createElement('th');
+            th.textContent = headerText;
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+
+        // Create table body
+        labels.forEach((label, index) => {
+            const row = document.createElement('tr');
+            const cellDay = document.createElement('td');
+            cellDay.textContent = label;
+            row.appendChild(cellDay);
+
+            const cellDelivered = document.createElement('td');
+            cellDelivered.textContent = deliveredData[index];
+            row.appendChild(cellDelivered);
+
+            const cellFailed = document.createElement('td');
+            cellFailed.textContent = failedData[index];
+            row.appendChild(cellFailed);
+
+            tbody.appendChild(row);
+        });
+
+        table.appendChild(caption);
+        table.appendChild(thead);
+        table.append(tbody);
+    }
+
+    function fetchData(type) {
+        var ctx = document.getElementById('weeklyChart');
+        if (!ctx) {
+            return;
         }
 
-        // Function to create an accessible table
-        function createTable(tableId, chartType, labels, deliveredData, failedData) {
-            const table = document.getElementById(tableId);
-            table.innerHTML = ""; // Clear previous data
+        var socket = io();
+        var eventType = type === 'service' ? 'fetch_daily_stats' : 'fetch_daily_stats_by_user';
+        var socketConnect = type === 'service' ? 'daily_stats_update' : 'daily_stats_by_user_update';
 
-            const captionText = document.querySelector(`#${chartType} .chart-subtitle`).textContent;
-            const caption = document.createElement('caption');
-            caption.textContent = captionText;
-            const thead = document.createElement('thead');
-            const tbody = document.createElement('tbody');
+        socket.on('connect', function () {
+            const userId = ctx.getAttribute('data-service-id'); // Assuming user ID is the same as service ID
+            socket.emit(eventType);
+        });
 
-            // Create table header
-            const headerRow = document.createElement('tr');
-            const headers = ['Day', 'Delivered', 'Failed'];
-            headers.forEach(headerText => {
-                const th = document.createElement('th');
-                th.textContent = headerText;
-                headerRow.appendChild(th);
-            });
-            thead.appendChild(headerRow);
+        socket.on(socketConnect, function(data) {
+            console.log('Received data:', data);  // Log the received data
 
-            // Create table body
-            labels.forEach((label, index) => {
-                const row = document.createElement('tr');
-                const cellDay = document.createElement('td');
-                cellDay.textContent = label;
-                row.appendChild(cellDay);
+            var labels = [];
+            var deliveredData = [];
+            var failedData = [];
 
-                const cellDelivered = document.createElement('td');
-                cellDelivered.textContent = deliveredData[index];
-                row.appendChild(cellDelivered);
+            for (var dateString in data) {
+                // Parse the date string (assuming format YYYY-MM-DD)
+                const dateParts = dateString.split('-');
+                const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0].slice(2)}`; // Format to MM/DD/YY
 
-                const cellFailed = document.createElement('td');
-                cellFailed.textContent = failedData[index];
-                row.appendChild(cellFailed);
-
-                tbody.appendChild(row);
-            });
-
-            table.appendChild(caption);
-            table.appendChild(thead);
-            table.append(tbody);
-        }
-
-        function fetchData(type) {
-            var ctx = document.getElementById('weeklyChart');
-            if (!ctx) {
-                return;
+                labels.push(formattedDate);
+                deliveredData.push(data[dateString].sms.delivered);
+                failedData.push(data[dateString].sms.failure);
             }
 
-            var socket = io();
-            var eventType = type === 'service' ? 'fetch_daily_stats' : 'fetch_daily_stats_by_user';
-            var socketConnect = type === 'service' ? 'daily_stats_update' : 'daily_stats_by_user_update';
+            createChart('#weeklyChart', labels, deliveredData, failedData);
+            createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
+        });
 
-            socket.on('connect', function () {
-                const userId = ctx.getAttribute('data-service-id'); // Assuming user ID is the same as service ID
-                socket.emit(eventType);
-            });
+        socket.on('error', function(data) {
+            console.log('Error:', data);
+        });
+    }
 
-            socket.on(socketConnect, function(data) {
-                console.log('Received data:', data);  // Log the received data
+    function handleDropdownChange(event) {
+        const selectedValue = event.target.value;
+        const subTitle = document.querySelector(`#activityChartContainer .chart-subtitle`);
+        const selectElement = document.getElementById('options');
+        const selectedText = selectElement.options[selectElement.selectedIndex].text;
 
-                var labels = [];
-                var deliveredData = [];
-                var failedData = [2, 1, 0, 2, 0, 1, 0];
-
-                for (var dateString in data) {
-                    // Parse the date string (assuming format YYYY-MM-DD)
-                    const dateParts = dateString.split('-');
-                    const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0].slice(2)}`; // Format to MM/DD/YY
-
-                    labels.push(formattedDate);
-                    deliveredData.push(data[dateString].sms.delivered);
-                    // failedData.push(data[dateString].sms.failure == [0, 1, 0, 2, 0]);
-                }
-
-                createChart('#weeklyChart', labels, deliveredData, failedData);
-                createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
-            });
-
-            socket.on('error', function(data) {
-                console.log('Error:', data);
-            });
+        if (selectedValue === "individual") {
+            subTitle.textContent = selectedText + " - Last 7 Days";
+            fetchData('individual');
+        } else if (selectedValue === "service") {
+            subTitle.textContent = selectedText + " - Last 7 Days";
+            fetchData('service');
         }
 
-        function handleDropdownChange(event) {
-            const selectedValue = event.target.value;
-            const subTitle = document.querySelector(`#activityChartContainer .chart-subtitle`);
-            const selectElement = document.getElementById('options');
-            const selectedText = selectElement.options[selectElement.selectedIndex].text;
-
-            if (selectedValue === "individual") {
-                subTitle.textContent = selectedText + " - Last 7 Days";
-                fetchData('individual');
-            } else if (selectedValue === "service") {
-                subTitle.textContent = selectedText + " - Last 7 Days";
-                fetchData('service');
-            }
-
-            // Update ARIA live region
+        // Update ARIA live region
             const liveRegion = document.getElementById('aria-live-account');
             liveRegion.textContent = `Data updated for ${selectedText} - Last 7 Days`;
         }
