@@ -59,7 +59,7 @@ module "api_network_route" {
 #       https://cloud.gov/docs/services/external-domain-service/#how-to-create-an-instance-of-this-service
 ###########################################################################
 module "domain" {
-  source = "github.com/18f/terraform-cloudgov//domain?ref=v0.7.1"
+  source = "github.com/18f/terraform-cloudgov//domain?ref=v0.7.1" # TODO: upgrade this
 
   cf_org_name      = local.cf_org_name
   cf_space_name    = local.cf_space_name
