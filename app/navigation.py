@@ -153,6 +153,9 @@ class HeaderNavigation(Navigation):
 
 class MainNavigation(Navigation):
     mapping = {
+        "activity": {
+            "all_jobs_activity",
+        },
         "dashboard": {
             "conversation",
             "inbox",
