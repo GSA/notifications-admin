@@ -1053,9 +1053,13 @@ def get_email_reply_to_address_from_session():
 
 
 def get_sms_sender_from_session():
-    if session.get("sender_id"):
-        return current_service.get_sms_sender(session["sender_id"])["sms_sender"]
-
+    sender_id = session.get("sender_id")
+    if sender_id:
+        sms_sender = current_service.get_sms_sender(session["sender_id"])["sms_sender"]
+        current_app.logger.info(f"SMS Sender ({sender_id}) #: {sms_sender}")
+        return sms_sender
+    else:
+        current_app.logger.error("No SMS Sender!!!!!!")
 
 def get_spreadsheet_column_headings_from_template(template):
     column_headings = []
