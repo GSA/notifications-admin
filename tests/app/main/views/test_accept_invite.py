@@ -100,19 +100,19 @@ MOCK_JOBS = {
 }
 
 
-@pytest.fixture()
+@pytest.fixture
 def _mock_no_users_for_service(mocker):
     mocker.patch("app.models.user.Users.client_method", return_value=[])
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_get_existing_user_by_email(mocker, api_user_active):
     return mocker.patch(
         "app.user_api_client.get_user_by_email", return_value=api_user_active
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_check_invite_token(mocker, sample_invite):
     return mocker.patch("app.invite_api_client.check_token", return_value=sample_invite)
 

@@ -7,7 +7,7 @@ from app.main.views.service_settings import PLATFORM_ADMIN_SERVICE_PERMISSIONS
 from tests.conftest import normalize_spaces
 
 
-@pytest.fixture()
+@pytest.fixture
 def get_service_settings_page(
     client_request,
     platform_admin_user,

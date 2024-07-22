@@ -4,7 +4,7 @@ from notifications_utils.clients.redis import RequestCache
 from notifications_utils.clients.redis.redis_client import RedisClient
 
 
-@pytest.fixture()
+@pytest.fixture
 def mocked_redis_client(app):
     app.config["REDIS_ENABLED"] = True
     redis_client = RedisClient()
@@ -12,7 +12,7 @@ def mocked_redis_client(app):
     return redis_client
 
 
-@pytest.fixture()
+@pytest.fixture
 def cache(mocked_redis_client):
     return RequestCache(mocked_redis_client)
 
