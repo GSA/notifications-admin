@@ -1061,6 +1061,7 @@ def get_sms_sender_from_session():
     else:
         current_app.logger.error("No SMS Sender!!!!!!")
 
+
 def get_spreadsheet_column_headings_from_template(template):
     column_headings = []
 
