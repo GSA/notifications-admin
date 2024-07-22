@@ -71,7 +71,7 @@ def _get_notifications_csv(
     return _get
 
 
-@pytest.fixture()
+@pytest.fixture
 def get_notifications_csv_mock(
     mocker,
     api_user_active,

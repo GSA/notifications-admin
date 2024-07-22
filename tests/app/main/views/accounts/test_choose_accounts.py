@@ -67,7 +67,7 @@ SAMPLE_DATA = {
 }
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_get_orgs_and_services(mocker):
     return mocker.patch(
         "app.user_api_client.get_organizations_and_services_for_user",
