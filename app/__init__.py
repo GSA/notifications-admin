@@ -368,11 +368,23 @@ def make_session_permanent():
 
 
 def create_beta_url(url):
-    url_created = urlparse(url)
-    url_list = list(url_created)
-    url_list[1] = "beta.notify.gov"
-    url_for_redirect = urlunparse(url_list)
-    return url_for_redirect
+    url_created = None
+    try:
+        url_created = urlparse(url)
+        url_list = list(url_created)
+        url_list[1] = "beta.notify.gov"
+        url_for_redirect = urlunparse(url_list)
+        return url_for_redirect
+    except ValueError:
+        # This might be happening due to IPv6, see issue # 1395.
+        # If we see "'RequestContext' object has no attribute 'service'" in the logs
+        # we can search around that timestamp and find this output, hopefully.
+        # It may be sufficient to just catch and log, and prevent the stack trace from being in the logs
+        # but we need to confirm the root cause first.
+        current_app.logger.error(
+            f"create_beta_url orig_url: {url} \
+                                 url_created = {str(url_created)} url_for_redirect {str(url_for_redirect)}"
+        )
 
 
 def redirect_notify_to_beta():
@@ -380,6 +392,7 @@ def redirect_notify_to_beta():
         current_app.config["NOTIFY_ENVIRONMENT"] == "production"
         and "beta.notify.gov" not in request.url
     ):
+        # TODO add debug here to trace what is going on with the URL for the 'RequestContext' error
         url_to_beta = create_beta_url(request.url)
         return redirect(url_to_beta, 302)
 
