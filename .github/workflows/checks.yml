@@ -23,6 +23,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.3.0"
+      - name: Install dependencies
+        run: npm install
       - uses: ./.github/actions/setup-project
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
@@ -86,10 +92,10 @@ jobs:
       - name: Clone API
         uses: actions/checkout@v4
         with:
-         repository: GSA/notifications-api
-         path: 'notifications-api'
+          repository: GSA/notifications-api
+          path: "notifications-api"
       - name: Install API dependencies
-        working-directory: 'notifications-api'
+        working-directory: "notifications-api"
         run: make bootstrap
         env:
           DATABASE_URL: postgresql://user:password@localhost:5432/test_notification_api
@@ -99,7 +105,7 @@ jobs:
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
           NOTIFY_ENVIRONMENT: development
       - name: Run API server
-        working-directory: 'notifications-api'
+        working-directory: "notifications-api"
         run: make run-procfile &
         env:
           DATABASE_URL: postgresql://user:password@localhost:5432/test_notification_api
@@ -185,12 +191,12 @@ jobs:
       - name: Run OWASP Baseline Scan
         uses: zaproxy/action-baseline@v0.9.0
         with:
-          docker_name: 'ghcr.io/zaproxy/zaproxy:weekly'
-          target: 'http://localhost:6012'
+          docker_name: "ghcr.io/zaproxy/zaproxy:weekly"
+          target: "http://localhost:6012"
           fail_action: true
           allow_issue_writing: false
-          rules_file_name: 'zap.conf'
-          cmd_options: '-I'
+          rules_file_name: "zap.conf"
+          cmd_options: "-I"
 
   a11y-scan:
     runs-on: ubuntu-20.04
