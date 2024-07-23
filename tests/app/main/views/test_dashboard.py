@@ -1225,7 +1225,7 @@ def test_menu_send_messages(
         mocker,
         api_user_active,
         service_one,
-        ["view_activity", "send_texts", "send_emails"],
+        ["view_activity", "send_texts", "send_emails", "manage_service"],
     )
     page = str(page)
     assert (
