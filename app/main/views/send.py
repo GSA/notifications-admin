@@ -1,3 +1,4 @@
+from pipes import quote
 import time
 import uuid
 from string import ascii_uppercase
@@ -93,6 +94,7 @@ def get_example_csv_rows(template, use_example_as_example=True, submitted_fields
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def send_messages(service_id, template_id):
+    print(hilite("top of send_messages"))
     notification_count = service_api_client.get_notification_count(service_id)
     remaining_messages = current_service.message_limit - notification_count
 
@@ -485,6 +487,7 @@ def send_one_off_step(service_id, template_id, step_index):
 
 
 def _check_messages(service_id, template_id, upload_id, preview_row, **kwargs):
+    print(hilite("top of _check_messages"))
     try:
         # The happy path is that the job doesn’t already exist, so the
         # API will return a 404 and the client will raise HTTPError.
@@ -620,6 +623,7 @@ def _check_messages(service_id, template_id, upload_id, preview_row, **kwargs):
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def check_messages(service_id, template_id, upload_id, row_index=2):
     data = _check_messages(service_id, template_id, upload_id, row_index)
+    print(hilite(f"data after checking messages: \n {data}"))
     data["allowed_file_extensions"] = Spreadsheet.ALLOWED_FILE_EXTENSIONS
 
     if (
@@ -956,7 +960,10 @@ def send_notification(service_id, template_id):
     values = []
     for k, v in session["placeholders"].items():
         keys.append(k)
-        values.append(v)
+        print(hilite(f"value: {v} type: {type(v)}"))
+        value_quotes = '"' + v + '"'
+        print(hilite(f"value with quotes: {value_quotes}"))
+        values.append(value_quotes)
 
     data = ",".join(keys)
     vals = ",".join(values)
