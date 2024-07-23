@@ -3,7 +3,7 @@ from flask_login import current_user
 from werkzeug.utils import redirect
 
 from app import current_service, job_api_client
-from app.formatters import get_time_left
+from app.formatters import get_time_left, convert_time_unixtimestamp
 from app.main import main
 from app.utils.pagination import (
     generate_next_dict,
@@ -35,7 +35,8 @@ def all_jobs_activity(service_id):
         service_data_retention_days=service_data_retention_days,
         next_page=next_page,
         prev_page=prev_page,
-        pagination=pagination
+        pagination=pagination,
+        jobs=jobs
     )
 
 
@@ -56,10 +57,16 @@ def generate_job_dict(jobs):
     return [
         {
             "job_id": job["id"],
+            "sort_value": hashlib.sha1(job["id"].encode("utf-8")).hexdigest(),
+            "job_sort_value": job["id"].replace("-", ""),
             "time_left": get_time_left(job["created_at"]),
             "download_link": url_for(".view_job_csv", service_id=current_service.id, job_id=job["id"]),
             "view_job_link": url_for(".view_job", service_id=current_service.id, job_id=job["id"]),
             "created_at": job["created_at"],
+            "time_sent_data_value": convert_time_unixtimestamp(job["processing_finished"] if job["processing_finished"] else job["processing_started"]
+                    if job["processing_started"] else job["created_at"]),
+            "processing_finished": job["processing_finished"],
+            "processing_started": job["processing_started"],
             "notification_count": job["notification_count"],
             "created_by": job["created_by"],
             "template_name": job["template_name"]

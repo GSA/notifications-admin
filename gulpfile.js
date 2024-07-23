@@ -127,6 +127,8 @@ const javascripts = () => {
     paths.src + 'javascripts/loginAlert.js',
     paths.src + 'javascripts/main.js',
     paths.src + 'javascripts/sampleChartDashboard.js',
+    paths.src + 'javascripts/sortAlphanumeric.js',
+
   ])
     .pipe(plugins.prettyerror())
     .pipe(plugins.babel({

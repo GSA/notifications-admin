@@ -65,45 +65,36 @@
 
 
 {% block maincolumn_content %}
-
   <div class="dashboard margin-bottom-8">
     <h1 class="usa-sr-only">All activity</h1>
     {% if current_user.has_permissions('manage_templates') and not current_service.all_templates %}
       <!-- {% include 'views/dashboard/write-first-messages.html' %} -->
     {% endif %}
 
-    {{ ajax_block(partials, updates_url, 'upcoming') }}
+    <!-- {{ ajax_block(partials, updates_url, 'upcoming') }} -->
 
     <h2 class="font-body-2xl line-height-sans-2 margin-0">All activity</h2>
 
     <h2 class="margin-top-4 margin-bottom-1">Sent jobs</h2>
-    <div class="usa-table-container--scrollable" tabindex="0">
-      <table class="usa-table usa-table--borderless job-table">
+    <div class="table-wrapper" tabindex="0">
+      <table class="usa-table usa-table--borderless job-table" id="jobIdHeader">
+        <caption></caption>
         <thead class="table-field-headings">
           <tr>
-            <th data-sortable scope="col" role="columnheader" class="table-field-heading-first">
+            <th data-sortable aria-sort="none" scope="col" role="columnheader" class="table-field-heading-first" aria-sort="none" id="jobId">
               <span>Job ID#</span>
             </th>
             <th data-sortable scope="col" role="columnheader" class="table-field-heading">
               <span>Template</span>
             </th>
             <th data-sortable scope="col" role="columnheader" class="table-field-heading">
-              <span>Status</span>
+              <span>Time sent</span>
             </th>
             <th data-sortable scope="col" role="columnheader" class="table-field-heading">
               <span>Sender</span>
             </th>
             <th data-sortable scope="col" role="columnheader" class="table-field-heading">
-              <span>Reports</span>
-            </th>
-            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
-              <span># of Recipients</span>
-            </th>
-            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
-              <span>Message parts used</span>
-            </th>
-            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
-              <span>Delivery rate</span>
+              <span>Report</span>
             </th>
           </tr>
         </thead>
@@ -111,17 +102,24 @@
           {% if all_jobs_dict %}
             {% for job in all_jobs_dict %}
               {% if job.job_id %}
-              <tr class="table-row" id="{{ job.job_id }}">
-                <td class="table-field file-name" data-sort-value="{{ job.job_id[-12:].rjust(12, '0') }}">
+              <tr class="table-row" id="{{ job.job_id|replace('-', '') }}">
+                <!-- <th class="table-field file-name" scope="row" role="rowheader" data-sort-value="{{ job.job_id }}" id="jobId">
                   <a class="usa-link file-list-filename" href="{{ job.view_job_link }}">
-                    {{ job.job_id[-12:] if job and job.job_id else 'Manually entered number' }}
-                </a>
+                  {{ job.job_id if job.job_id else 'Manually entered number' }}
+                  </a>
+                </th> -->
+                <td class="table-field file-name" scope="row" role="rowheader" data-sort-value="{{ job.job_id | replace('-', '')  }}">
+                  <a class="usa-link file-list-filename" href="{{ job.view_job_link }}">
+                      {{ job.job_id if job.job_id else 'Manually entered number' }}
+                  </a>
                 </td>
+
                 <td class="table-field template">
                   {{ job.template_name }}
                 </td>
-                <td class="table-field time-sent">
-                  {{ job.created_at | format_datetime_table }}
+                <td data-sort-value="{{job.time_sent_data_value}}" class="table-field time-sent">
+                  {{ (job.processing_finished if job.processing_finished else job.processing_started
+                    if job.processing_started else job.created_at)|format_datetime_table }}
                 </td>
                 <td class="table-field sender">
                   {{ job.created_by.name }}
@@ -130,25 +128,19 @@
                   {% if job.time_left != "Data no longer available" %}
                     <a class="usa-link file-list-filename" href="{{ job.download_link }}"><img src="{{ url_for('static', filename='img/material-icons/file_download.svg') }}" alt="File Download Icon"></a>
                   {% elif job %}
-                    <span>{{ job.time_left }} n/a</span>
+                    <span>N/A</span>
                   {% endif %}
-                </td>
-                <td class="table-field count-of-recipients">
-                  {{ job.notification_count}}
                 </td>
               </tr>
               {% endif %}
             {% endfor %}
           {% else %}
-            <tr class="table-row">
-              <td class="table-empty-message" colspan="10">No batched job messages found &thinsp;(messages are kept for {{ service_data_retention_days }} days).</td>
-            </tr>
+
         {% endif %}
         </tbody>
       </table>
-      <p>
-        <b>Note:</b> Report data is only available for 7 days after your message has been sent
-      </p>
+      <div class="usa-sr-only usa-table__announcement-region" aria-live="polite"></div>
+      <p><b>Note:</b> Report data is only available for 7 days after your message has been sent</p>
     </div>
     {{show_pagination}}
   </div>
