@@ -65,6 +65,7 @@ class NotifyAdminAPIClient(BaseAPIClient):
                 or "user/email" in arg
                 or "/activate" in arg
                 or "/email-code" in arg
+                or "/verify/code" in arg
             ):
                 still_signing_in = True
 
@@ -79,7 +80,7 @@ class NotifyAdminAPIClient(BaseAPIClient):
             # we are not full signed in yet
             pass
         elif not current_user or not current_user.is_active:
-            current_app.logger.error(f"WHY FAILING {args}")
+            current_app.logger.error(f"Unauthorized URL #notify-compliance-46 {args}")
             abort(403)
 
     def post(self, *args, **kwargs):

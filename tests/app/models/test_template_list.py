@@ -12,7 +12,7 @@ VIS_PARENT_FOLDER_ID = "bbbb222b-2b22-2b22-222b-b222b22b2222"
 INV_CHILD_2_FOLDER_ID = "fafe723f-1d39-4a10-865f-e551e03d8886"
 
 
-@pytest.fixture()
+@pytest.fixture
 def _mock_get_hierarchy_of_folders(
     mock_get_template_folders, active_user_with_permissions
 ):

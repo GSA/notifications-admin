@@ -105,6 +105,8 @@ def service_dashboard(service_id):
                 ".view_job", service_id=current_service.id, job_id=job["id"]
             ),
             "created_at": job["created_at"],
+            "processing_finished": job["processing_finished"],
+            "processing_started": job["processing_started"],
             "notification_count": job["notification_count"],
             "created_by": job["created_by"],
             "notifications": aggregate_notifications_by_job.get(job["id"], []),

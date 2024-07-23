@@ -9,7 +9,7 @@ from tests.conftest import (
 )
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_email_validated_recently(mocker):
     return mocker.patch(
         "app.main.views.two_factor.email_needs_revalidating", return_value=False
