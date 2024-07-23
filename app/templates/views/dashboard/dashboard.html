@@ -18,7 +18,7 @@
 
     {{ ajax_block(partials, updates_url, 'upcoming') }}
 
-    <h2 class="font-body-2xl margin-top-0">{{ current_service.name }} Dashboard</h2>
+    <h2 class="font-body-xl margin-top-0">{{ current_service.name }} Dashboard</h2>
 
     {{ ajax_block(partials, updates_url, 'inbox') }}
 
@@ -52,7 +52,7 @@
           <div class="chart-subtitle">{{ current_service.name }} - Last 7 Days</div>
           <div class="chart-legend" aria-label="Legend"></div>
         </div>
-        <div class="chart-container" id="weeklyChart" data-service-id="{{ service_id }}"></div>
+        <div class="chart-container" id="weeklyChart"></div>
         <table id="weeklyTable" class="usa-sr-only usa-table"></table>
       </div>
     </div>
