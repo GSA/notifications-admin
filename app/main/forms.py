@@ -50,6 +50,7 @@ from app.main.validators import (
     CommonlyUsedPassword,
     CsvFileValidator,
     DoesNotStartWithDoubleZero,
+    FieldCannotContainComma,
     LettersNumbersSingleQuotesFullStopsAndUnderscoresOnly,
     MustContainAlphanumericCharacters,
     NoCommasInPlaceHolders,
@@ -1650,7 +1651,11 @@ def get_placeholder_form_instance(
             )  # TODO: replace with us_mobile_number
     else:
         field = GovukTextInputField(
-            placeholder_name, validators=[DataRequired(message="Cannot be empty")]
+            placeholder_name,
+            validators=[
+                DataRequired(message="Cannot be empty"),
+                FieldCannotContainComma(),
+            ],
         )
 
     PlaceholderForm.placeholder_value = field
