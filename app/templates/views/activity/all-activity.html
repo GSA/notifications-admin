@@ -1,8 +1,5 @@
 {% extends "withnav_template.html" %}
 
-{% from "components/ajax-block.html" import ajax_block %}
-{% from "components/previous-next-navigation.html" import previous_next_navigation %}
-
 {% block service_page_title %}
   All activity
 {% endblock %}
@@ -54,7 +51,6 @@
         >
           <span class="usa-pagination__link-text">Next </span>
           <img src="{{ url_for('static', filename='/img/usa-icons/navigate_next.svg') }}" alt="arrow">
-
         </a>
       </li>
       {% endif %}
@@ -65,23 +61,19 @@
 
 
 {% block maincolumn_content %}
-  <div class="dashboard margin-bottom-8">
+  <div class="margin-bottom-8">
     <h1 class="usa-sr-only">All activity</h1>
     {% if current_user.has_permissions('manage_templates') and not current_service.all_templates %}
-      <!-- {% include 'views/dashboard/write-first-messages.html' %} -->
+      {% include 'views/dashboard/write-first-messages.html' %}
     {% endif %}
-
-    <!-- {{ ajax_block(partials, updates_url, 'upcoming') }} -->
-
     <h2 class="font-body-2xl line-height-sans-2 margin-0">All activity</h2>
-
     <h2 class="margin-top-4 margin-bottom-1">Sent jobs</h2>
     <div class="table-wrapper" tabindex="0">
-      <table class="usa-table usa-table--borderless job-table" id="jobIdHeader">
+      <table class="usa-table usa-table--border job-table" id="jobIdHeader">
         <caption></caption>
         <thead class="table-field-headings">
           <tr>
-            <th data-sortable aria-sort="none" scope="col" role="columnheader" class="table-field-heading-first" aria-sort="none" id="jobId">
+            <th scope="col" role="columnheader" class="table-field-heading-first" id="jobId">
               <span>Job ID#</span>
             </th>
             <th data-sortable scope="col" role="columnheader" class="table-field-heading">
@@ -101,29 +93,18 @@
         <tbody>
           {% if all_jobs_dict %}
             {% for job in all_jobs_dict %}
-              {% if job.job_id %}
-              <tr class="table-row" id="{{ job.job_id|replace('-', '') }}">
-                <!-- <th class="table-field file-name" scope="row" role="rowheader" data-sort-value="{{ job.job_id }}" id="jobId">
-                  <a class="usa-link file-list-filename" href="{{ job.view_job_link }}">
-                  {{ job.job_id if job.job_id else 'Manually entered number' }}
-                  </a>
-                </th> -->
-                <td class="table-field file-name" scope="row" role="rowheader" data-sort-value="{{ job.job_id | replace('-', '')  }}">
-                  <a class="usa-link file-list-filename" href="{{ job.view_job_link }}">
-                      {{ job.job_id if job.job_id else 'Manually entered number' }}
+              <tr class="table-row">
+                <td class="table-field jobid" scope="row" role="rowheader">
+                  <a class="usa-link" href="{{ job.view_job_link }}">
+                    {{ job.job_id[:8] if job.job_id else 'Manually entered number' }}
                   </a>
                 </td>
-
-                <td class="table-field template">
-                  {{ job.template_name }}
-                </td>
+                <td class="table-field template">{{ job.template_name }}</td>
                 <td data-sort-value="{{job.time_sent_data_value}}" class="table-field time-sent">
                   {{ (job.processing_finished if job.processing_finished else job.processing_started
                     if job.processing_started else job.created_at)|format_datetime_table }}
                 </td>
-                <td class="table-field sender">
-                  {{ job.created_by.name }}
-                </td>
+                <td class="table-field sender">{{ job.created_by.name }}</td>
                 <td class="table-field report table-field-center-aligned">
                   {% if job.time_left != "Data no longer available" %}
                     <a class="usa-link file-list-filename" href="{{ job.download_link }}"><img src="{{ url_for('static', filename='img/material-icons/file_download.svg') }}" alt="File Download Icon"></a>
@@ -132,15 +113,13 @@
                   {% endif %}
                 </td>
               </tr>
-              {% endif %}
             {% endfor %}
           {% else %}
-
         {% endif %}
         </tbody>
       </table>
       <div class="usa-sr-only usa-table__announcement-region" aria-live="polite"></div>
-      <p><b>Note:</b> Report data is only available for 7 days after your message has been sent</p>
+      <p><b>Note:</b>Report data is only available for 7 days after your message has been sent</p>
     </div>
     {{show_pagination}}
   </div>
