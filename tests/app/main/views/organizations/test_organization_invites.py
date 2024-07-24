@@ -116,6 +116,7 @@ def test_cancelled_invite_opened_by_user(
     mock_get_organization,
     fake_uuid,
 ):
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     mock_get_user = mocker.patch(
         "app.user_api_client.get_user", return_value=api_user_active
@@ -145,8 +146,9 @@ def test_cancelled_invite_opened_by_user(
 
 
 def test_user_invite_already_accepted(
-    client_request, mock_check_org_accepted_invite_token
+    client_request, mock_check_org_accepted_invite_token, mocker
 ):
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     client_request.get(
         "main.accept_org_invite",
@@ -169,7 +171,9 @@ def test_existing_user_invite_already_is_member_of_organization(
     mock_accept_org_invite,
     mock_add_user_to_organization,
     mock_update_user_attribute,
+    mocker,
 ):
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     mock_update_user_attribute.reset_mock()
     client_request.get(
@@ -201,7 +205,9 @@ def test_existing_user_invite_not_a_member_of_organization(
     mock_accept_org_invite,
     mock_add_user_to_organization,
     mock_update_user_attribute,
+    mocker,
 ):
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     mock_update_user_attribute.reset_mock()
     client_request.get(
@@ -232,7 +238,9 @@ def test_user_accepts_invite(
     mock_check_org_invite_token,
     mock_dont_get_user_by_email,
     mock_get_users_for_organization,
+    mocker,
 ):
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     client_request.get(
         "main.accept_org_invite",
@@ -246,8 +254,9 @@ def test_user_accepts_invite(
 
 
 def test_registration_from_org_invite_404s_if_user_not_in_session(
-    client_request,
+    client_request, mocker
 ):
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     client_request.get(
         "main.register_from_org_invite",
@@ -262,7 +271,7 @@ def test_registration_from_org_invite_404s_if_user_not_in_session(
             {
                 "name": "Bad Mobile",
                 "mobile_number": "not good",
-                "password": "validPassword!",
+                "password": "validPassword!",  # noqa
             },
             "The string supplied did not seem to be a phone number",
         ),
@@ -270,7 +279,7 @@ def test_registration_from_org_invite_404s_if_user_not_in_session(
             {
                 "name": "Bad Password",
                 "mobile_number": "+12021234123",
-                "password": "password",
+                "password": "password",  # noqa
             },
             "Choose a password that’s harder to guess",
         ),
@@ -282,7 +291,9 @@ def test_registration_from_org_invite_has_bad_data(
     data,
     error,
     mock_get_invited_org_user_by_id,
+    mocker,
 ):
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     with client_request.session_transaction() as session:

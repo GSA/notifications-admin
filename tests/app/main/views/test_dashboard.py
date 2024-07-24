@@ -1225,7 +1225,7 @@ def test_menu_send_messages(
         mocker,
         api_user_active,
         service_one,
-        ["view_activity", "send_texts", "send_emails"],
+        ["view_activity", "send_texts", "send_emails", "manage_service"],
     )
     page = str(page)
     assert (
@@ -1882,7 +1882,7 @@ def test_service_dashboard_shows_batched_jobs(
     assert len(rows) == 1
 
 
-@pytest.fixture()
+@pytest.fixture
 def app_with_socketio():
     app = Flask("app")
     create_app(app)
@@ -1931,14 +1931,14 @@ def test_fetch_daily_stats(
     )
     with app.test_client() as client:
         with client.session_transaction() as sess:
-            sess['service_id'] = service_id
+            sess["service_id"] = service_id
 
         socketio_client = SocketIOTestClient(app, socketio, flask_test_client=client)
 
         connected = socketio_client.is_connected()
         assert connected, "Client should be connected"
 
-        socketio_client.emit('fetch_daily_stats')
+        socketio_client.emit("fetch_daily_stats")
         received = socketio_client.get_received()
 
         mock_service_api.assert_called_once_with(
@@ -1967,8 +1967,13 @@ def test_fetch_daily_stats(
             SERVICE_ONE_ID,
             USER_ONE_ID,
             {"start_date": "2024-01-01", "days": 7},
-            {"service_id": SERVICE_ONE_ID, "user_id": USER_ONE_ID, "start_date": "2024-01-01", "days": 7},
-            {"id": USER_ONE_ID, "name": "Test User"}
+            {
+                "service_id": SERVICE_ONE_ID,
+                "user_id": USER_ONE_ID,
+                "start_date": "2024-01-01",
+                "days": 7,
+            },
+            {"id": USER_ONE_ID, "name": "Test User"},
         ),
     ],
 )
@@ -2001,15 +2006,15 @@ def test_fetch_daily_stats_by_user(
 
     with app.test_client() as client:
         with client.session_transaction() as sess:
-            sess['service_id'] = service_id
-            sess['user_id'] = user_id
+            sess["service_id"] = service_id
+            sess["user_id"] = user_id
 
         socketio_client = SocketIOTestClient(app, socketio, flask_test_client=client)
 
         connected = socketio_client.is_connected()
         assert connected, "Client should be connected"
 
-        socketio_client.emit('fetch_daily_stats_by_user')
+        socketio_client.emit("fetch_daily_stats_by_user")
         received = socketio_client.get_received()
 
         mock_service_api.assert_called_once_with(

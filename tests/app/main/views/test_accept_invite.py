@@ -100,19 +100,19 @@ MOCK_JOBS = {
 }
 
 
-@pytest.fixture()
+@pytest.fixture
 def _mock_no_users_for_service(mocker):
     mocker.patch("app.models.user.Users.client_method", return_value=[])
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_get_existing_user_by_email(mocker, api_user_active):
     return mocker.patch(
         "app.user_api_client.get_user_by_email", return_value=api_user_active
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_check_invite_token(mocker, sample_invite):
     return mocker.patch("app.invite_api_client.check_token", return_value=sample_invite)
 
@@ -133,6 +133,8 @@ def test_existing_user_accept_invite_calls_api_and_redirects_to_dashboard(
     mock_get_user,
     mock_update_user_attribute,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     expected_service = service_one["id"]
     expected_permissions = {
@@ -176,6 +178,8 @@ def test_existing_user_with_no_permissions_or_folder_permissions_accept_invite(
     mock_get_user,
     mock_update_user_attribute,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     expected_service = service_one["id"]
@@ -205,6 +209,8 @@ def test_if_existing_user_accepts_twice_they_redirect_to_sign_in(
     mock_get_service,
     mock_update_user_attribute,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     # Logging out updates the current session ID to `None`
     mock_update_user_attribute.reset_mock()
@@ -321,6 +327,8 @@ def test_existing_user_of_service_get_redirected_to_signin(
     mock_accept_invite,
     mock_update_user_attribute,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     sample_invite["email_address"] = api_user_active["email_address"]
     mocker.patch("app.models.user.Users.client_method", return_value=[api_user_active])
@@ -355,6 +363,8 @@ def test_accept_invite_redirects_if_api_raises_an_error_that_they_are_already_pa
     mock_get_user,
     mock_update_user_attribute,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     mocker.patch(
@@ -397,6 +407,8 @@ def test_existing_signed_out_user_accept_invite_redirects_to_sign_in(
     mock_get_user,
     mock_update_user_attribute,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     expected_service = service_one["id"]
     expected_permissions = {
@@ -438,7 +450,10 @@ def test_cancelled_invited_user_accepts_invited_redirect_to_cancelled_invitation
     sample_invite,
     mock_check_invite_token,
     mock_update_user_attribute,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     mock_update_user_attribute.reset_mock()
     sample_invite["status"] = "cancelled"
@@ -466,6 +481,8 @@ def test_new_user_accept_invite_with_malformed_token(
     service_one,
     mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     mocker.patch(
         api_endpoint,
@@ -585,6 +602,8 @@ def test_new_invited_user_verifies_and_added_to_service(
         "app.main.views.verify.service_api_client.retrieve_service_invite_data",
         return_value={},
     )
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     # visit accept token page
@@ -604,7 +623,7 @@ def test_new_invited_user_verifies_and_added_to_service(
         "service": sample_invite["service"],
         "email_address": sample_invite["email_address"],
         "from_user": sample_invite["from_user"],
-        "password": "longpassword",
+        "password": "longpassword",  # noqa
         "mobile_number": "+12027890123",
         "name": "Invited User",
         "auth_type": "sms_auth",
@@ -673,6 +692,8 @@ def test_new_invited_user_is_redirected_to_correct_place(
         "app.main.views.verify.service_api_client.retrieve_service_invite_data",
         return_value={},
     )
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     mocker.patch(
         "app.service_api_client.get_service",

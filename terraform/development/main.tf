@@ -11,12 +11,11 @@ data "cloudfoundry_space" "dev" {
 }
 
 module "logo_upload_bucket" {
-  source = "github.com/18f/terraform-cloudgov//s3?ref=v0.7.1"
+  source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v1.0.0"
 
-  cf_org_name      = local.cf_org_name
-  cf_space_name    = local.cf_space_name
-  recursive_delete = local.recursive_delete
-  name             = "${var.username}-logo-upload-bucket"
+  cf_org_name   = local.cf_org_name
+  cf_space_name = local.cf_space_name
+  name          = "${var.username}-logo-upload-bucket"
 }
 resource "cloudfoundry_service_key" "logo_key" {
   name             = local.key_name

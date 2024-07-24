@@ -529,6 +529,9 @@ def test_deletes_caches_when_modifying_templates(
 def test_deletes_cached_users_when_archiving_service(
     mocker, mock_get_service_templates
 ):
+    mocker.patch(
+        "app.notify_client.service_api_client.ServiceAPIClient.check_inactive_user"
+    )
     mock_redis_delete = mocker.patch("app.extensions.RedisClient.delete")
     mock_redis_delete_by_pattern = mocker.patch(
         "app.extensions.RedisClient.delete_by_pattern"

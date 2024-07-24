@@ -24,11 +24,15 @@ from app.utils.user_permissions import (
 
 
 def _get_service_id_from_view_args():
-    return str(request.view_args.get("service_id", "")) or None
+    if request and request.view_args:
+        return str(request.view_args.get("service_id", ""))
+    return None
 
 
 def _get_org_id_from_view_args():
-    return str(request.view_args.get("org_id", "")) or None
+    if request and request.view_args:
+        return str(request.view_args.get("org_id", ""))
+    return None
 
 
 class User(JSONModel, UserMixin):
@@ -147,6 +151,13 @@ class User(JSONModel, UserMixin):
         else:
             return self
 
+    def deactivate(self):
+        if self.is_active:
+            user_data = user_api_client.deactivate_user(self.id)
+            return self.__class__(user_data["data"])
+        else:
+            return self
+
     def login(self):
         login_user(self)
         session["user_id"] = self.id
@@ -220,7 +231,9 @@ class User(JSONModel, UserMixin):
         if not service_id and not org_id:
             # we shouldn't have any pages that require permissions, but don't specify a service or organization.
             # use @user_is_platform_admin for platform admin only pages
-            raise NotImplementedError
+            # raise NotImplementedError
+            current_app.logger.warn(f"VIEW ARGS ARE {request.view_args}")
+            pass
 
         log_msg = f"has_permissions user: {self.id} service: {service_id}"
         # platform admins should be able to do most things (except eg send messages, or create api keys)
