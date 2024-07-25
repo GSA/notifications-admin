@@ -36,7 +36,11 @@ def _reformat_keystring(orig):
     new_keystring = new_keystring.strip()
     new_keystring = new_keystring.replace(" ", "\n")
     new_keystring = "\n".join(
-        [f"-----BEGIN {private_key}-----", new_keystring, f"-----END {private_key}-----"]
+        [
+            f"-----BEGIN {private_key}-----",
+            new_keystring,
+            f"-----END {private_key}-----",
+        ]
     )
     new_keystring = f"{new_keystring}\n"
     return new_keystring
@@ -67,7 +71,9 @@ def _get_access_token(code, state):
     response = requests.post(url, headers=headers)
     if response.json().get("access_token") is None:
         # Capture the response json here so it hopefully shows up in error reports
-        current_app.logger.error(f"Error when getting access token {response.json()} #notify-admin-1505")
+        current_app.logger.error(
+            f"Error when getting access token {response.json()} #notify-admin-1505"
+        )
         raise KeyError(f"'access_token' {response.json()}")
     access_token = response.json()["access_token"]
     return access_token
@@ -92,7 +98,9 @@ def _do_login_dot_gov():
     login_gov_error = request.args.get("error")
 
     if login_gov_error:
-        current_app.logger.error(f"login.gov error: {login_gov_error} #notify-admin-1505")
+        current_app.logger.error(
+            f"login.gov error: {login_gov_error} #notify-admin-1505"
+        )
         raise Exception(f"Could not login with login.gov {login_gov_error}")
     elif code and state:
 
@@ -108,7 +116,9 @@ def _do_login_dot_gov():
                 abort(403)
             redirect_url = request.args.get("next")
             user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
-            current_app.logger.info(f"Retrieved user {user['id']} from db #notify-admin-1505")
+            current_app.logger.info(
+                f"Retrieved user {user['id']} from db #notify-admin-1505"
+            )
 
             # Check if the email needs to be revalidated
             is_fresh_email = is_less_than_days_ago(

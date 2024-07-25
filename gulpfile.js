@@ -149,7 +149,7 @@ const images = () => {
     paths.govuk_frontend + 'assets/images/**/*',
     paths.src + 'images/**/*',
     paths.src + 'img/**/*',
-  ])
+  ], {encoding: false})
     .pipe(dest(paths.dist + 'images/'))
 };
 
