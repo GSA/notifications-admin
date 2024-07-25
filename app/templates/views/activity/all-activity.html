@@ -68,8 +68,8 @@
     {% endif %}
     <h2 class="font-body-2xl line-height-sans-2 margin-0">All activity</h2>
     <h2 class="margin-top-4 margin-bottom-1">Sent jobs</h2>
-    <div class="table-wrapper" tabindex="0">
-      <table class="usa-table usa-table--border job-table" id="jobIdHeader">
+    <div class="usa-table-container--scrollable-mobile">
+      <table class="usa-table usa-table--compact job-table">
         <caption></caption>
         <thead class="table-field-headings">
           <tr>
@@ -105,9 +105,9 @@
                     if job.processing_started else job.created_at)|format_datetime_table }}
                 </td>
                 <td class="table-field sender">{{ job.created_by.name }}</td>
-                <td class="table-field report table-field-center-aligned">
+                <td class="table-field report">
                   {% if job.time_left != "Data no longer available" %}
-                    <a class="usa-link file-list-filename" href="{{ job.download_link }}"><img src="{{ url_for('static', filename='img/material-icons/file_download.svg') }}" alt="File Download Icon"></a>
+                    <a href="{{ job.download_link }}"><img src="{{ url_for('static', filename='img/material-icons/file_download.svg') }}" alt="File Download Icon"></a>
                   {% elif job %}
                     <span>N/A</span>
                   {% endif %}
@@ -119,7 +119,7 @@
         </tbody>
       </table>
       <div class="usa-sr-only usa-table__announcement-region" aria-live="polite"></div>
-      <p><b>Note:</b>Report data is only available for 7 days after your message has been sent</p>
+      <p><b>Note: </b>Report data is only available for 7 days after your message has been sent</p>
     </div>
     {{show_pagination}}
   </div>

@@ -439,13 +439,21 @@ td.table-empty-message {
    }
    td.report {
       width: 5%;
+      text-align: center;
    }
+   td.report img {
+      padding-top: 5px;
+    }
    th {
       padding: 0.5rem 1rem
    }
-   td {
-      padding: 0.5rem 1rem
-  }
+}
+
+@media (max-width: 768px) {
+   .usa-table-container--scrollable-mobile {
+      margin: 0;
+      overflow-y:hidden;
+   }
 }
 
 #template-list {
