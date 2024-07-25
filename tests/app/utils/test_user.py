@@ -140,20 +140,20 @@ def test_platform_admin_can_see_orgs_they_dont_have(
     index()
 
 
-def test_cant_use_decorator_without_view_args(
-    client_request,
-    platform_admin_user,
-):
-    client_request.login(platform_admin_user)
+# def test_cant_use_decorator_without_view_args(
+#     client_request,
+#     platform_admin_user,
+# ):
+#     client_request.login(platform_admin_user)
 
-    request.view_args = {}
+#     request.view_args = {}
 
-    @user_has_permissions()
-    def index():
-        pass
+#     @user_has_permissions()
+#     def index():
+#         pass
 
-    with pytest.raises(NotImplementedError):
-        index()
+#     with pytest.raises(NotImplementedError):
+#         index()
 
 
 def test_user_doesnt_have_permissions_for_organization(

@@ -161,6 +161,15 @@ class DoesNotStartWithDoubleZero:
             raise ValidationError(self.message)
 
 
+class FieldCannotContainComma:
+    def __init__(self, message="Cannot contain a comma"):
+        self.message = message
+
+    def __call__(self, form, field):
+        if field.data and "," in field.data:
+            raise ValidationError(self.message)
+
+
 class MustContainAlphanumericCharacters:
     regex = re.compile(r".*[a-zA-Z0-9].*[a-zA-Z0-9].*")
 

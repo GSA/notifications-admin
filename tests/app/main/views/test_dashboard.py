@@ -305,10 +305,6 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_messages(
     mock_get_inbound_sms_summary,
 ):
     service_one["permissions"] = ["inbound_sms"]
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -337,10 +333,6 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_no_messages(
     mock_get_inbound_sms_summary_with_no_messages,
 ):
     service_one["permissions"] = ["inbound_sms"]
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -839,10 +831,6 @@ def test_should_not_show_upcoming_jobs_on_dashboard_if_count_is_0(
         },
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -919,10 +907,6 @@ def test_correct_font_size_for_big_numbers(
 
     mocker.patch("app.main.views.dashboard.get_dashboard_totals", return_value=totals)
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=service_one["id"],
@@ -952,10 +936,6 @@ def test_should_not_show_jobs_on_dashboard_for_users_with_uploads_page(
     mock_get_free_sms_fragment_limit,
     mock_get_inbound_sms_summary,
 ):
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -1225,7 +1205,7 @@ def test_menu_send_messages(
         mocker,
         api_user_active,
         service_one,
-        ["view_activity", "send_texts", "send_emails"],
+        ["view_activity", "send_texts", "send_emails", "manage_service"],
     )
     page = str(page)
     assert (
@@ -1882,7 +1862,7 @@ def test_service_dashboard_shows_batched_jobs(
     assert len(rows) == 1
 
 
-@pytest.fixture()
+@pytest.fixture
 def app_with_socketio():
     app = Flask("app")
     create_app(app)
