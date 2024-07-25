@@ -33,16 +33,18 @@ def generate_previous_next_dict(view, service_id, page, title, url_args):
 
 def generate_pagination_pages(total_items, page_size, current_page):
     total_pages = (total_items + page_size - 1) // page_size
-    pagination = {
-        'current': current_page,
-        'pages': [],
-        'last': total_pages
-    }
+    pagination = {"current": current_page, "pages": [], "last": total_pages}
     if total_pages <= 4:
-        pagination['pages'] = list(range(1, total_pages + 1))
+        pagination["pages"] = list(range(1, total_pages + 1))
     else:
         if current_page <= 3:
-            pagination['pages'] = [1, 2, 3, total_pages]
+            pagination["pages"] = [1, 2, 3, total_pages]
         else:
-            pagination['pages'] = [1, current_page - 1, current_page, current_page + 1, total_pages]
+            pagination["pages"] = [
+                1,
+                current_page - 1,
+                current_page,
+                current_page + 1,
+                total_pages,
+            ]
     return pagination
