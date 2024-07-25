@@ -44,33 +44,31 @@
     </div>
   </div>
 
-  <div class="table-wrapper">
-    <div class="dashboard-table">
-      {% call(item, row_number) list_table(
-        notifications_by_type|reverse,
-        caption='Messages sent since May 2023',
-        caption_visible=False,
-        field_headings=[
-          'Date',
-          99|message_count_noun('email')|capitalize,
-          99|message_count_noun('sms')|capitalize,
-        ],
-        empty_message='No data to show'
-      ) %}
-        {% call field() %}
-          {{ item.date | format_date_normal }}
-        {% endcall %}
-        {% call field() %}
-          {{ item.emails|format_thousands }}
-        {% endcall %}
-        {% call field() %}
-          {{ item.sms|format_thousands }}
-        {% endcall %}
+  <div class="dashboard-table overflow-x-auto">
+    {% call(item, row_number) list_table(
+      notifications_by_type|reverse,
+      caption='Messages sent since May 2023',
+      caption_visible=False,
+      field_headings=[
+        'Date',
+        99|message_count_noun('email')|capitalize,
+        99|message_count_noun('sms')|capitalize,
+      ],
+      empty_message='No data to show'
+    ) %}
+      {% call field() %}
+        {{ item.date | format_date_normal }}
       {% endcall %}
-      <p class="table-show-more-link">
-        Only showing the last {{ notifications_by_type|length }} days
-      </p>
-    </div>
+      {% call field() %}
+        {{ item.emails|format_thousands }}
+      {% endcall %}
+      {% call field() %}
+        {{ item.sms|format_thousands }}
+      {% endcall %}
+    {% endcall %}
+    <p class="table-show-more-link">
+      Only showing the last {{ notifications_by_type|length }} days
+    </p>
   </div>
 
   <h2 class="govuk-heading-m">
@@ -84,7 +82,7 @@
       ) }}
     </div>
   </div>
-  <div class="table-wrapper">
+  <div class="overflow-x-auto">
     <div class="dashboard-table">
       {% call(item, row_number) list_table(
         processing_time | reverse,
@@ -124,7 +122,7 @@
       <span class="usa-sr-only">using Notify.</span>
     </div>
   </div>
-  <div class="table-wrapper">
+  <div class="overflow-x-auto">
     <div class="dashboard-table">
       {% call(item, row_number) list_table(
         organizations_using_notify,

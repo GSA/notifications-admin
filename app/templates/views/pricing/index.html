@@ -35,7 +35,7 @@ part.</p>
 
 <h4>Calculation of message parts without special characters</h4>
 
-<div class="bottom-gutter-3-2">
+<div class="overflow-x-auto">
   {% call mapping_table(
   caption='Text message pricing',
   field_headings=['Message length', 'Charge'],
@@ -86,7 +86,7 @@ recipient’s preferred language, but we are aware that, rarely, a phone carrier
 to be calculated as detailed below.<p>
 <h4>Calculation of message parts with special characters or non-romanized scripts</h4>
   {% set accentedChars %}
-<div class="bottom-gutter-3-2">
+<div class="overflow-x-auto">
   {% call mapping_table(
   caption='Accented characters that affect text message charges',
   field_headings=['Character', 'Description'],
@@ -151,7 +151,7 @@ to be calculated as detailed below.<p>
 "html": accentedChars
 }) }}
 
-<div class="bottom-gutter-3-2">
+<div class="overflow-x-auto">
   {% call mapping_table(
   caption='Pricing for text messages containing accented characters that affect the charges',
   field_headings=['Message length', 'Charge'],
