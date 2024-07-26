@@ -69,7 +69,6 @@ module "domain" {
   cf_space_name    = local.cf_space_name
   app_name_or_id   = "${local.app_name}-${local.env}"
   name             = "${local.app_name}-domain-${local.env}"
-  recursive_delete = false
   cdn_plan_name    = "domain"
   domain_name      = "beta.notify.gov"
 }
