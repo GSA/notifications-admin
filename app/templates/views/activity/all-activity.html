@@ -59,13 +59,9 @@
   {% endif %}
 {% endset %}
 
-
 {% block maincolumn_content %}
   <div class="margin-bottom-8">
     <h1 class="usa-sr-only">All activity</h1>
-    {% if current_user.has_permissions('manage_templates') and not current_service.all_templates %}
-      {% include 'views/dashboard/write-first-messages.html' %}
-    {% endif %}
     <h2 class="font-body-2xl line-height-sans-2 margin-0">All activity</h2>
     <h2 class="margin-top-4 margin-bottom-1">Sent jobs</h2>
     <div class="usa-table-container--scrollable-mobile">
@@ -115,6 +111,9 @@
               </tr>
             {% endfor %}
           {% else %}
+            <tr class="table-row">
+              <td class="table-empty-message" colspan="10">No batched job messages found (messages are kept for {{ service_data_retention_days }} days).</td>
+            </tr>
         {% endif %}
         </tbody>
       </table>
