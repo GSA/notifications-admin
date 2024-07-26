@@ -45,11 +45,12 @@ def test_active_service_can_be_modified(notify_admin, method, user, service):
     ("arg", "expected_result"),
     [
         (
-            ("/user/c5f8a5c9-56d5-4fa9-8c30-3449ae10c072/verify/code",),
+            "('/user/c5f8a5c9-56d5-4fa9-8c30-3449ae10c072/verify/code',)",
             True,
         ),
+        ("('/user/get-login-gov-user',)", True),
         (
-            ("/service/blahblahblah",),
+            "('/service/blahblahblah',)",
             False,
         ),
     ],

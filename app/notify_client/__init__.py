@@ -57,7 +57,7 @@ class NotifyAdminAPIClient(BaseAPIClient):
             abort(403)
 
     def is_calling_signin_url(self, arg):
-        return arg[0].startswith("/user")
+        return arg.startswith("('/user")
 
     def check_inactive_user(self, *args):
         still_signing_in = False
