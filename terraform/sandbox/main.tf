@@ -34,13 +34,7 @@ module "logo_upload_bucket" {
   name          = "${local.app_name}-logo-upload-bucket-${local.env}"
 }
 
-# ##########################################################################
-# Connection the allows notify-admin-sandbox and notify-api-sandbox to talk.
-# https://cloud.gov/docs/management/container-to-container/
-# Terraform block will fail to apply unless both apps exist in Cloud.gov.
-# See also: /docs/all.md#api-request-failed
-###########################################################################
-module "api_network_route" {
+module "api_network_route" { # API and Admin apps must both exist in Cloud
   source = "../shared/container_networking"
 
   cf_org_name          = local.cf_org_name
