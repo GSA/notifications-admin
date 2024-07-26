@@ -41,6 +41,25 @@ def test_active_service_can_be_modified(notify_admin, method, user, service):
     assert ret == request.return_value
 
 
+@pytest.mark.parametrize(
+    ("arg", "expected_result"),
+    [
+        (
+            ("/user/c5f8a5c9-56d5-4fa9-8c30-3449ae10c072/verify/code",),
+            True,
+        ),
+        (
+            ("/service/blahblahblah",),
+            False,
+        ),
+    ],
+)
+def test_is_calling_signin_url(arg, expected_result):
+    api_client = NotifyAdminAPIClient()
+    result = api_client.is_calling_signin_url(arg)
+    assert result == expected_result
+
+
 @pytest.mark.parametrize("method", ["put", "post", "delete"])
 def test_inactive_service_cannot_be_modified_by_normal_user(
     notify_admin, api_user_active, method
