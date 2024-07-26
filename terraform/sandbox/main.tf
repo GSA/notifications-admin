@@ -35,12 +35,12 @@ module "logo_upload_bucket" {
 }
 
 # ##########################################################################
-# The following lines need to be commented out for the initial `terraform apply`
-# It can be re-enabled after:
-# 1) the api app has first been deployed
-# 2) the admin app has first been deployed
+# Connection the allows notify-admin-sandbox and notify-api-sandbox to talk.
+# https://cloud.gov/docs/management/container-to-container/
+# Terraform block will fail to apply unless both apps exist in Cloud.gov.
+# See also: /docs/all.md#api-request-failed
 ###########################################################################
-module "api_network_route" { # experiment with uncommenting
+module "api_network_route" {
   source = "../shared/container_networking"
 
   cf_org_name          = local.cf_org_name
