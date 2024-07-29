@@ -402,6 +402,30 @@ td.table-empty-message {
    }
 }
 
+.job-status-table {
+   table-layout: fixed;
+
+   thead tr th {
+      border-bottom: 0;
+   }
+
+   thead,
+   tbody,
+   tr {
+     width: 100%;
+   }
+
+   th:first-child,
+   td:first-child {
+     width: 75%;
+   }
+
+   th:nth-child(2),R
+   td:nth-child(2) {
+     width: 25%;
+   }
+}
+
 .usage-table {
    ul {
       list-style: none;
@@ -454,6 +478,10 @@ td.table-empty-message {
       margin: 0;
       list-style: none;
    }
+}
+
+.usa-prose > p.max-width-full {
+   max-width: 100%;
 }
 
 // Tabs

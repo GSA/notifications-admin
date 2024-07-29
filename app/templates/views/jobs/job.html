@@ -10,7 +10,7 @@
 
 {% block maincolumn_content %}
 
-    {{ page_header("Message status") }}
+    {{ page_header("Job status") }}
     {{ partials['status']|safe }}
     {% if not finished %}
       <div
@@ -25,8 +25,8 @@
       </div>
     {% endif %}
 
-    <p class="notification-status">
-      Messages will remain in pending state until carrier status is received, typically 5 minutes.
+    <p class="notification-status max-width-full">
+      Messages are sent immediately to the cell phone carrier, but will remain in "pending" status until we hear back from the carrier they have received it and attempted deliver. More information on <a class="usa-link" href="{{ url_for('main.message_status') }}">delivery status</a>.
     </p>
     {% if not job.processing_finished %}
       <div
