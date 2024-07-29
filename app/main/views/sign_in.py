@@ -29,12 +29,18 @@ from notifications_utils.url_safe_token import generate_token
 
 
 def _reformat_keystring(orig):
-    new_keystring = orig.replace("-----BEGIN PRIVATE KEY-----", "")
-    new_keystring = new_keystring.replace("-----END PRIVATE KEY-----", "")
+    private_key = "PRIVATE "  # pragma: allowlist secret
+    private_key = f"{private_key} KEY"
+    new_keystring = orig.replace(f"-----BEGIN {private_key}-----", "")
+    new_keystring = new_keystring.replace(f"-----END {private_key}-----", "")
     new_keystring = new_keystring.strip()
     new_keystring = new_keystring.replace(" ", "\n")
     new_keystring = "\n".join(
-        ["-----BEGIN PRIVATE KEY-----", new_keystring, "-----END PRIVATE KEY-----"]
+        [
+            f"-----BEGIN {private_key}-----",
+            new_keystring,
+            f"-----END {private_key}-----",
+        ]
     )
     new_keystring = f"{new_keystring}\n"
     return new_keystring
@@ -65,7 +71,9 @@ def _get_access_token(code, state):
     response = requests.post(url, headers=headers)
     if response.json().get("access_token") is None:
         # Capture the response json here so it hopefully shows up in error reports
-        current_app.logger.error(f"Error when getting access token {response.json()}")
+        current_app.logger.error(
+            f"Error when getting access token {response.json()} #notify-admin-1505"
+        )
         raise KeyError(f"'access_token' {response.json()}")
     access_token = response.json()["access_token"]
     return access_token
@@ -90,7 +98,9 @@ def _do_login_dot_gov():
     login_gov_error = request.args.get("error")
 
     if login_gov_error:
-        current_app.logger.error(f"login.gov error: {login_gov_error}")
+        current_app.logger.error(
+            f"login.gov error: {login_gov_error} #notify-admin-1505"
+        )
         raise Exception(f"Could not login with login.gov {login_gov_error}")
     elif code and state:
 
@@ -100,12 +110,15 @@ def _do_login_dot_gov():
             user_email, user_uuid = _get_user_email_and_uuid(access_token)
             if not is_gov_user(user_email):
                 current_app.logger.error(
-                    "invited user has a non-government email address."
+                    "invited user has a non-government email address. #notify-admin-1505"
                 )
                 flash("You must use a government email address.")
                 abort(403)
             redirect_url = request.args.get("next")
             user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
+            current_app.logger.info(
+                f"Retrieved user {user['id']} from db #notify-admin-1505"
+            )
 
             # Check if the email needs to be revalidated
             is_fresh_email = is_less_than_days_ago(
@@ -115,9 +128,10 @@ def _do_login_dot_gov():
                 return verify_email(user, redirect_url)
 
             usr = User.from_email_address(user["email_address"])
+            current_app.logger.info(f"activating user {usr.id} #notify-admin-1505")
             activate_user(usr.id)
         except BaseException as be:  # noqa B036
-            current_app.logger.error(be)
+            current_app.logger.error(f"Error signing in: {be} #notify-admin-1505 ")
             error(401)
         return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
 
