@@ -30,7 +30,7 @@
       {% block orgNavBreadcrumb %}{% include "/new/components/org_nav_breadcrumb.html" %}{% endblock %}
     {% endif %}
     <div class="grid-row margin-top-5">
-      <div class="tablet:grid-col-3">
+      <div class="tablet:grid-col-2">
         {% block sideNavigation %}
           {% if current_org.name %}
             {% include "/new/components/org_nav.html" %}
@@ -44,7 +44,7 @@
           #}
         {% endblock %}
       </div>
-      <div class="tablet:grid-col-9 tablet:padding-left-4">
+      <div class="tablet:grid-col-10 tablet:padding-left-4">
         {% block beforeContent %}
           {% block backLink %}{% endblock %}
         {% endblock %}
