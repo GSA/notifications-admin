@@ -327,6 +327,16 @@ td.table-empty-message {
    bottom: 0;
 }
 
+@media (max-width: units('desktop-lg')) {
+   .table-overflow-x-auto {
+      overflow-x: auto;
+      table {
+         min-width: 768px;
+      }
+   }
+}
+
+
 // Dashboard
 
 .dashboard {
@@ -375,9 +385,6 @@ td.table-empty-message {
          background-repeat: no-repeat;
          background-image: url(../img/material-icons/description.svg);
       }
-   }
-   .table-wrapper {
-      overflow-x: scroll;
    }
 }
 

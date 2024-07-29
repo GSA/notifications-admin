@@ -7,6 +7,7 @@
 {% from "components/components/details/macro.njk" import usaDetails %}
 
 {% macro services_table(services, caption) %}
+<div class="table-overflow-x-auto">
   {% call(item, row_number) mapping_table(
     caption=caption,
     caption_visible=False,
@@ -48,6 +49,7 @@
     {% endfor %}
 
   {% endcall %}
+</div>
 {% endmacro %}
 
 
