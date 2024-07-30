@@ -58,6 +58,10 @@ class NotifyAdminAPIClient(BaseAPIClient):
 
     def check_inactive_user(self, *args):
         still_signing_in = False
+
+        # TODO clean up and add testing etc.
+        # We really should be checking for exact matches
+        # and we only want to check the first arg
         for arg in args:
             arg = str(arg)
             if (
@@ -66,6 +70,7 @@ class NotifyAdminAPIClient(BaseAPIClient):
                 or "/activate" in arg
                 or "/email-code" in arg
                 or "/verify/code" in arg
+                or "/user" in arg
             ):
                 still_signing_in = True
 

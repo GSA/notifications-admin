@@ -230,7 +230,12 @@ def set_up_your_profile():
         debug_msg(
             f"Added user {usr.email_address} to service {invite_data['service_id']}"
         )
-        return redirect(url_for("main.show_accounts_or_dashboard"))
+        # notify-admin-1766
+        # redirect new users to templates area of new service instead of dashboard
+        service_id = invite_data["service_id"]
+        url = url_for(".service_dashboard", service_id=service_id)
+        url = f"{url}/templates"
+        return redirect(url)
 
     elif login_gov_error:
         current_app.logger.error(f"login.gov error: {login_gov_error}")
