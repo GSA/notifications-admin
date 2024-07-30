@@ -493,5 +493,6 @@ def test_should_show_message_note(
     )
 
     assert normalize_spaces(page.select_one("main p.notification-status").text) == (
-        'Messages are sent immediately to the cell phone carrier, but will remain in "pending" status until we hear back from the carrier they have received it and attempted deliver. More information on delivery status.'
+        'Messages are sent immediately to the cell phone carrier, but will remain in "pending" status until we hear '
+        'back from the carrier they have received it and attempted deliver. More information on delivery status.'
     )
