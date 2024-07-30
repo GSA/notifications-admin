@@ -27,6 +27,7 @@ from app.utils.time import is_less_than_days_ago
 from app.utils.user import is_gov_user
 from notifications_utils.url_safe_token import generate_token
 
+
 def _reformat_keystring(orig):
     arr = orig.split("-----")
     begin = arr[1]
