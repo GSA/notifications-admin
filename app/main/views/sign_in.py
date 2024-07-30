@@ -27,22 +27,12 @@ from app.utils.time import is_less_than_days_ago
 from app.utils.user import is_gov_user
 from notifications_utils.url_safe_token import generate_token
 
-
 def _reformat_keystring(orig):
-    private_key = "PRIVATE "  # pragma: allowlist secret
-    private_key = f"{private_key} KEY"
-    new_keystring = orig.replace(f"-----BEGIN {private_key}-----", "")
-    new_keystring = new_keystring.replace(f"-----END {private_key}-----", "")
-    new_keystring = new_keystring.strip()
-    new_keystring = new_keystring.replace(" ", "\n")
-    new_keystring = "\n".join(
-        [
-            f"-----BEGIN {private_key}-----",
-            new_keystring,
-            f"-----END {private_key}-----",
-        ]
-    )
-    new_keystring = f"{new_keystring}\n"
+    arr = orig.split("-----")
+    begin = arr[1]
+    end = arr[3]
+    middle = arr[2].strip()
+    new_keystring = f"-----{begin}-----\n{middle}\n-----{end}-----\n"
     return new_keystring
 
 
