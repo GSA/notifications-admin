@@ -595,9 +595,10 @@ def test_should_show_recent_templates_on_dashboard(
     ]
     assert "Total Messages" in headers
 
-    table_rows = page.find_all("tbody")[1].find_all("tr")
+    table_rows = page.find_all("tbody")[0].find_all("tr")
 
     assert len(table_rows) == 2
+
 
     assert "two" in table_rows[0].find_all("td")[0].text
     assert "Email template" in table_rows[0].find_all("td")[0].text
@@ -1359,18 +1360,11 @@ def test_menu_all_services_for_platform_admin_user(
     page = _test_dashboard_menu(
         client_request, mocker, platform_admin_user, service_one, []
     )
+    print(page)
     page = str(page)
     assert url_for("main.choose_template", service_id=service_one["id"]) in page
-    # assert url_for("main.manage_users", service_id=service_one["id"]) in page
-    # assert url_for("main.service_settings", service_id=service_one["id"]) in page
-    # assert url_for('main.view_notifications', service_id=service_one['id'], message_type='email') in page
-    assert (
-        url_for(
-            "main.view_notifications", service_id=service_one["id"], message_type="sms"
-        )
-        in page
-    )
-    # assert url_for('main.api_keys', service_id=service_one['id']) not in page
+    assert url_for("main.service_settings", service_id=service_one["id"]) in page
+    assert url_for('main.api_keys', service_id=service_one['id']) not in page
 
 
 def test_route_for_service_permissions(

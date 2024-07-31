@@ -128,16 +128,6 @@
 
     <h2>Recent templates</h2>
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
-    {% if current_user.has_permissions('manage_service') %}
-      <h3 class='margin-bottom-0' id="current-year"></h3>
-      {{ ajax_block(partials, updates_url, 'usage') }}
-      <p class="margin-top-0">During the pilot period, each service has an allowance of 250,000 message parts. Once this allowance is met, the
-      application will stop delivering messages. There's no monthly charge, no setup fee, and no procurement cost.</p>
-      <p class="align-with-heading-copy">
-        What counts as 1 text message part?<br />
-        See <a class="usa-link" href="{{ url_for('.pricing') }}">pricing</a>.
-      </p>
-    {% endif %} #}
   </div>
 
 {% endblock %}
