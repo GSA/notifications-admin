@@ -312,7 +312,7 @@ def get_status_filters(service, message_type, statistics):
     filters = [
         # key, label, option
         ("requested", "total", "sending,delivered,failed"),
-        ("pending", "pending", "pending"),
+        ("pending", "pending", "sending,pending"),
         ("delivered", "delivered", "delivered"),
         ("failed", "failed", "failed"),
     ]

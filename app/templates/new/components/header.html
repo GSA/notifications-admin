@@ -14,10 +14,17 @@
   {% endif %}
 
   {% if current_service %}
-    {% set secondaryNavigation = [
-        {"href": url_for('main.service_settings', service_id=current_service.id), "text": "Settings", "active": secondary_navigation.is_selected('settings')},
+    {% if current_user.has_permissions('manage_service') %}
+      {% set secondaryNavigation = [
+          {"href": url_for('main.service_settings', service_id=current_service.id), "text": "Settings", "active": secondary_navigation.is_selected('settings')},
+          {"href": url_for('main.sign_out'), "text": "Sign out"}
+      ] %}
+    {% else %}
+      {% set secondaryNavigation = [
         {"href": url_for('main.sign_out'), "text": "Sign out"}
-    ] %}
+      ] %}
+
+    {% endif %}
   {% else %}
     {% set secondaryNavigation = [{"href": url_for('main.sign_out'), "text": "Sign out"}] %}
   {% endif %}
@@ -31,7 +38,7 @@
         <div class="logo-img display-flex">
           <a href="/">
             <span class="usa-sr-only">Notify.gov logo</span>
-            <img src="{{ (asset_path | default('/static')) + 'images/notify-logo.png' }}" alt="Notify.gov logo" class="usa-flag-logo margin-right-1">
+            <img src="{{ (asset_path | default('/static')) + 'images/notify-logo.svg' }}" alt="Notify.gov logo" class="usa-flag-logo margin-right-1">
 
           </a>
         </div>

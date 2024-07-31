@@ -9,9 +9,10 @@ from tests.conftest import SERVICE_ONE_ID, normalize_spaces
 
 
 def test_non_logged_in_user_can_see_homepage(
-    client_request,
-    mock_get_service_and_organization_counts,
+    client_request, mock_get_service_and_organization_counts, mocker
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     page = client_request.get("main.index", _test_page_title=False)
 
@@ -69,11 +70,10 @@ def test_robots(client_request):
 )
 @freeze_time("2012-12-12 12:12")  # So we don’t go out of business hours
 def test_hiding_pages_from_search_engines(
-    client_request,
-    mock_get_service_and_organization_counts,
-    endpoint,
-    kwargs,
+    client_request, mock_get_service_and_organization_counts, endpoint, kwargs, mocker
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     response = client_request.get_response(f"main.{endpoint}", **kwargs)
     assert "X-Robots-Tag" in response.headers
@@ -103,11 +103,8 @@ def test_hiding_pages_from_search_engines(
         "billing_details",
     ],
 )
-def test_static_pages(
-    client_request,
-    mock_get_organization_by_domain,
-    view,
-):
+def test_static_pages(client_request, mock_get_organization_by_domain, view, mocker):
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     request = partial(client_request.get, "main.{}".format(view))
 
     # Check the page loads when user is signed in
@@ -130,9 +127,9 @@ def test_static_pages(
     )
 
 
-def test_guidance_pages_link_to_service_pages_when_signed_in(
-    client_request,
-):
+def test_guidance_pages_link_to_service_pages_when_signed_in(client_request, mocker):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     request = partial(client_request.get, "main.edit_and_format_messages")
     selector = ".list-number li a"
 
@@ -170,7 +167,9 @@ def test_guidance_pages_link_to_service_pages_when_signed_in(
         ("callbacks", "documentation"),
     ],
 )
-def test_old_static_pages_redirect(client_request, view, expected_view):
+def test_old_static_pages_redirect(client_request, view, expected_view, mocker):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     client_request.get(
         "main.{}".format(view),
@@ -243,7 +242,10 @@ def test_sms_price(
     mock_get_service_and_organization_counts,
     current_date,
     expected_rate,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     with freeze_time(current_date):

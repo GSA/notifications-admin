@@ -86,12 +86,14 @@ MOCK_JOBS = {
 }
 
 
-def test_render_sign_out_redirects_to_sign_in(client_request):
+def test_render_sign_out_redirects_to_sign_in(client_request, mocker):
     # TODO with the change to using login.gov, we no longer redirect directly to the sign in page.
     # Instead we redirect to login.gov which redirects us to the sign in page.  However, the
     # test for the expected redirect being "/" is buried in conftest and looks fragile.
     # After we move to login.gov officially and get rid of other forms of signing it, it should
     # be refactored.
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     with client_request.session_transaction() as session:
         assert session
     client_request.get(
@@ -99,7 +101,7 @@ def test_render_sign_out_redirects_to_sign_in(client_request):
         _expected_status=302,
     )
     with client_request.session_transaction() as session:
-        assert not session
+        assert session.permanent is False
 
 
 def test_sign_out_user(
@@ -119,6 +121,8 @@ def test_sign_out_user(
     mock_get_free_sms_fragment_limit,
     mock_get_inbound_sms_summary,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     with client_request.session_transaction() as session:
         assert session.get("user_id") is not None
     # Check we are logged in
@@ -141,13 +145,15 @@ def test_sign_out_user(
         assert session.get("user_id") is None
 
 
-def test_sign_out_of_two_sessions(client_request):
+def test_sign_out_of_two_sessions(client_request, mocker):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.get(
         "main.sign_out",
         _expected_status=302,
     )
     with client_request.session_transaction() as session:
-        assert not session
+        assert session.permanent is False
     client_request.get(
         "main.sign_out",
         _expected_status=302,

@@ -38,6 +38,7 @@ def verify_email(token):
             current_app.config["EMAIL_EXPIRY_SECONDS"],
         )
     except SignatureExpired:
+        current_app.logger.error("Email link expired #notify-admin-1505")
         flash(
             "The link in the email we sent you has expired. We've sent you a new one."
         )
@@ -50,6 +51,9 @@ def verify_email(token):
         abort(404)
 
     if user.is_active:
+        current_app.logger.error(
+            f"User is using an invite link but is already logged in {user.id} #notify-admin-1505"
+        )
         flash("That verification link has expired.")
         return redirect(url_for("main.sign_in"))
 
@@ -59,6 +63,7 @@ def verify_email(token):
 
     user.send_verify_code()
     session["user_details"] = {"email": user.email_address, "id": user.id}
+    current_app.logger.info(f"Email verified for user {user.id} #notify-admin-1505")
     return redirect(url_for("main.verify"))
 
 
@@ -78,6 +83,7 @@ def activate_user(user_id):
         return redirect(url_for("main.organization_dashboard", org_id=organization_id))
     else:
         activated_user = user.activate()
+        current_app.logger.info(f"Activated user {user.id} #notify-admin-1505")
         activated_user.login()
-
+        current_app.logger.info(f"Logged in user {user.id} #notify-admin-1505")
         return redirect(url_for("main.add_service", first="first"))

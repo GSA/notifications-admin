@@ -33,7 +33,7 @@ from tests.conftest import (
 FAKE_TEMPLATE_ID = uuid4()
 
 
-@pytest.fixture()
+@pytest.fixture
 def _mock_get_service_settings_page_common(
     mock_get_inbound_number_for_service,
     mock_get_free_sms_fragment_limit,
