@@ -1360,7 +1360,6 @@ def test_menu_all_services_for_platform_admin_user(
     page = _test_dashboard_menu(
         client_request, mocker, platform_admin_user, service_one, []
     )
-    print(page)
     page = str(page)
     assert url_for("main.choose_template", service_id=service_one["id"]) in page
     assert url_for("main.service_settings", service_id=service_one["id"]) in page
