@@ -599,7 +599,6 @@ def test_should_show_recent_templates_on_dashboard(
 
     assert len(table_rows) == 2
 
-
     assert "two" in table_rows[0].find_all("td")[0].text
     assert "Email template" in table_rows[0].find_all("td")[0].text
     assert "200" in table_rows[0].find_all("td")[1].text
