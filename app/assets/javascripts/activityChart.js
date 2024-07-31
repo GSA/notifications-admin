@@ -190,7 +190,6 @@
         var socketConnect = type === 'service' ? 'daily_stats_update' : 'daily_stats_by_user_update';
 
         socket.on('connect', function () {
-            //const userId = ctx.getAttribute('data-service-id'); // Assuming user ID is the same as service ID
             socket.emit(eventType);
         });
 
