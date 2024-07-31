@@ -22,8 +22,6 @@
 
     {{ ajax_block(partials, updates_url, 'inbox') }}
 
-    <!-- {{ ajax_block(partials, updates_url, 'totals') }} -->
-
     <div id="totalMessageChartContainer" data-sms-sent="{{ sms_sent }}" data-sms-allowance-remaining="{{ sms_allowance_remaining }}">
       <h2 id="chartTitle">Total Messages</h2>
       <svg id="totalMessageChart"></svg>
@@ -130,7 +128,6 @@
 
     <h2>Recent templates</h2>
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
-    {#  <h2 class="margin-top-4 margin-bottom-1">Message count</h2>
     {% if current_user.has_permissions('manage_service') %}
       <h3 class='margin-bottom-0' id="current-year"></h3>
       {{ ajax_block(partials, updates_url, 'usage') }}
