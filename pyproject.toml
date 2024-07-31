@@ -17,7 +17,6 @@ flask-basicauth = "~=0.2"
 flask-login = "^0.6"
 flask-talisman = "*"
 flask-wtf = "^1.2"
-govuk-bank-holidays = "^0.14"
 gunicorn = {version = "==22.0.0", extras = ["eventlet"]}
 humanize = "~=4.10"
 itsdangerous = "~=2.2"
