@@ -27,7 +27,6 @@ plugins.uglify = require('gulp-uglify');
 const paths = {
   src: 'app/assets/',
   dist: 'app/static/',
-  templates: 'app/templates/',
   npm: 'node_modules/',
   toolkit: 'node_modules/govuk_frontend_toolkit/',
   govuk_frontend: 'node_modules/govuk-frontend/'
