@@ -456,6 +456,10 @@ td.table-empty-message {
    }
 }
 
+.usa-table th[data-sortable][aria-sort=ascending], .usa-table th[data-sortable][aria-sort=descending] {
+   background-color: #a1d3ff;
+}
+
 #template-list {
    max-height: 500px;
    overflow-y: auto;
