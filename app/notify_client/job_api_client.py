@@ -1,6 +1,7 @@
 import datetime
-from flask import current_app
 from zoneinfo import ZoneInfo
+
+from flask import current_app
 
 from app.extensions import redis_client
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
@@ -28,9 +29,7 @@ class JobApiClient(NotifyAdminAPIClient):
 
     def get_job(self, service_id, job_id):
         params = {}
-        job = self.get(
-            url=f"/service/{service_id}/job/{job_id}", params=params
-        )
+        job = self.get(url=f"/service/{service_id}/job/{job_id}", params=params)
 
         return job
 
@@ -43,6 +42,7 @@ class JobApiClient(NotifyAdminAPIClient):
 
         job = self.get(url=f"/service/{service_id}/job", params=params)
         from json import dumps
+
         current_app.logger.info(dumps(job))
         return job
 
