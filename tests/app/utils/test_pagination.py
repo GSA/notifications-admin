@@ -36,8 +36,18 @@ def test_generate_previous_next_dict_adds_other_url_args(client_request):
         (500, 50, 1, {"current": 1, "pages": [1, 2, 3, 4, 5, 6, 7, 8, 9], "last": 10}),
         (500, 50, 5, {"current": 5, "pages": [1, 2, 3, 4, 5, 6, 7, 8, 9], "last": 10}),
         (500, 50, 6, {"current": 6, "pages": [2, 3, 4, 5, 6, 7, 8, 9, 10], "last": 10}),
-        (500, 50, 10, {"current": 10, "pages": [2, 3, 4, 5, 6, 7, 8, 9, 10], "last": 10}),
-        (950, 50, 15, {"current": 15, "pages": [11, 12, 13, 14, 15, 16, 17, 18, 19], "last": 19}),
+        (
+            500,
+            50,
+            10,
+            {"current": 10, "pages": [2, 3, 4, 5, 6, 7, 8, 9, 10], "last": 10},
+        ),
+        (
+            950,
+            50,
+            15,
+            {"current": 15, "pages": [11, 12, 13, 14, 15, 16, 17, 18, 19], "last": 19},
+        ),
     ],
 )
 def test_generate_pagination_pages(total_items, page_size, current_page, expected):
