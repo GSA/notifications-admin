@@ -42,7 +42,8 @@ class JobApiClient(NotifyAdminAPIClient):
             params["statuses"] = ",".join(statuses)
 
         job = self.get(url=f"/service/{service_id}/job", params=params)
-        current_app.logger.info(job)
+        from json import dumps
+        current_app.logger.info(dumps(job))
         return job
 
     def get_uploads(self, service_id, limit_days=None, page=1):
