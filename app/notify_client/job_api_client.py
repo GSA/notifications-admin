@@ -42,8 +42,7 @@ class JobApiClient(NotifyAdminAPIClient):
             params["statuses"] = ",".join(statuses)
 
         job = self.get(url=f"/service/{service_id}/job", params=params)
-        from pprint import pformat
-        current_app.logger.info(pformat(job))
+        current_app.logger.info(job)
         return job
 
     def get_uploads(self, service_id, limit_days=None, page=1):
