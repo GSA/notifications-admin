@@ -2,7 +2,6 @@ from collections import namedtuple
 from datetime import datetime, time, timedelta
 
 import pytz
-from govuk_bank_holidays.bank_holidays import BankHolidays
 
 from notifications_utils.countries.data import Postage
 from notifications_utils.timezones import utc_string_to_aware_gmt_datetime
@@ -18,16 +17,6 @@ CANCELLABLE_JOB_LETTER_STATUSES = [
 ]
 
 
-non_working_days_dvla = BankHolidays(
-    use_cached_holidays=True,
-    weekend=(5, 6),
-)
-non_working_days_royal_mail = BankHolidays(
-    use_cached_holidays=True,
-    weekend=(6,),  # Only Sunday (day 6 of the week) is a non-working day
-)
-
-
 def set_gmt_hour(day, hour):
     return (
         day.astimezone(pytz.timezone("Europe/London"))
@@ -36,28 +25,27 @@ def set_gmt_hour(day, hour):
     )
 
 
-def get_next_work_day(date, non_working_days):
+def get_next_work_day(date, non_working_days=None):
     next_day = date + timedelta(days=1)
-    if non_working_days.is_work_day(
+    if non_working_days and non_working_days.is_work_day(
         date=next_day.date(),
-        division=BankHolidays.ENGLAND_AND_WALES,
     ):
         return next_day
-    return get_next_work_day(next_day, non_working_days)
+    return get_next_work_day(next_day)
 
 
 def get_next_dvla_working_day(date):
     """
     Printing takes place monday to friday, excluding bank holidays
     """
-    return get_next_work_day(date, non_working_days=non_working_days_dvla)
+    return get_next_work_day(date)
 
 
 def get_next_royal_mail_working_day(date):
     """
     Royal mail deliver letters on monday to saturday
     """
-    return get_next_work_day(date, non_working_days=non_working_days_royal_mail)
+    return get_next_work_day(date)
 
 
 def get_delivery_day(date, *, days_to_deliver):

@@ -353,10 +353,7 @@ def test_should_show_scheduled_job(
     )
 
     assert page.select("main p a")[0]["href"] == url_for(
-        "main.view_template_version",
-        service_id=SERVICE_ONE_ID,
-        template_id="5d729fbd-239c-44ab-b498-75a985f3198f",
-        version=1,
+        "main.message_status",
     )
     assert page.select_one("main button[type=submit]").text.strip() == "Cancel sending"
 
@@ -421,7 +418,7 @@ def test_should_show_updates_for_one_job_as_json(
     assert "failed" in content["counts"]
     assert "Recipient" in content["notifications"]
     assert "2021234567" in content["notifications"]
-    assert "Status" in content["notifications"]
+    assert "Message status" in content["notifications"]
     assert "Delivered" in content["notifications"]
     assert "01-01-2016 at 12:00 AM" in content["notifications"]
 
@@ -462,7 +459,7 @@ def test_should_show_updates_for_scheduled_job_as_json(
     assert "failed" in content["counts"]
     assert "Recipient" in content["notifications"]
     assert "2021234567" in content["notifications"]
-    assert "Status" in content["notifications"]
+    assert "Message status" in content["notifications"]
     assert "Delivered" in content["notifications"]
     assert "01-01-2016 at 12:00 AM" in content["notifications"]
 
@@ -496,5 +493,6 @@ def test_should_show_message_note(
     )
 
     assert normalize_spaces(page.select_one("main p.notification-status").text) == (
-        "Messages will remain in pending state until carrier status is received, typically 5 minutes."
+        'Messages are sent immediately to the cell phone carrier, but will remain in "pending" status until we hear '
+        'back from the carrier they have received it and attempted deliver. More information on delivery status.'
     )

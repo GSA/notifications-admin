@@ -231,6 +231,11 @@ def naturaltime_without_indefinite_article(date):
     )
 
 
+def convert_time_unixtimestamp(date_string):
+    dt = datetime.fromisoformat(date_string)
+    return int(dt.timestamp())
+
+
 def format_delta(date):
     # This method assumes that date is in UTC
     date = parse_naive_dt(date)
