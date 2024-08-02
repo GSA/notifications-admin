@@ -22,9 +22,8 @@ i.e.
 
 @use "uswds-core" as *;
 
-iframe:focus, [href]:focus, [tabindex]:focus, [contentEditable=true]:focus {
-    outline: units(1px) dotted color('blue-40v');
-    outline: units(1px) auto color('blue-40v');
+iframe:focus, [href]:focus, [tabindex]:focus, [contentEditable=true]:focus, button:not([disabled]):focus {
+    outline: units(2px) solid color('blue-40v');
     outline-offset: 0.3rem;
 }
 
@@ -275,6 +274,12 @@ td.table-empty-message {
 
 .usa-hint {
    display: block;
+}
+
+.usa-table {
+   th {
+      border-bottom: 0 !important;
+   }
 }
 
 .js-stick-at-bottom-when-scrolling {
