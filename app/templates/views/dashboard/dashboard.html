@@ -60,7 +60,7 @@
 
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
     <div class="table-container">
-      <div id="table1" class="table-overflow-x-auto">
+      <div id="table1" class="table-overflow-x-auto hidden">
         <h2 class="margin-top-4 margin-bottom-1">My Activity</h2>
         <table class="usa-table job-table">
           <thead class="table-field-headings">
@@ -109,7 +109,7 @@
         </table>
       </div>
 
-      <div id="table2" class="table-overflow-x-auto" style="display:none;">
+      <div id="table2" class="table-overflow-x-auto visible">
         <h2 class="margin-top-4 margin-bottom-1">All Activity</h2>
         <table class="usa-table job-table">
           <thead class="table-field-headings">
