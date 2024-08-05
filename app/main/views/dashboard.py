@@ -113,6 +113,7 @@ def service_dashboard(service_id):
             "original_file_name": job["original_file_name"],
         }
         for job in job_response
+        if job["job_status"] != "cancelled"
     ]
     return render_template(
         "views/dashboard/dashboard.html",
