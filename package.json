@@ -41,7 +41,7 @@
     "timeago": "1.6.7"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.7",
+    "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.24.7",
     "@uswds/compile": "^1.1.0",
     "babel-jest": "^29.7.0",
