@@ -1362,7 +1362,7 @@ def test_menu_all_services_for_platform_admin_user(
     page = str(page)
     assert url_for("main.choose_template", service_id=service_one["id"]) in page
     assert url_for("main.service_settings", service_id=service_one["id"]) in page
-    assert url_for('main.api_keys', service_id=service_one['id']) not in page
+    assert url_for("main.api_keys", service_id=service_one["id"]) not in page
 
 
 def test_route_for_service_permissions(
