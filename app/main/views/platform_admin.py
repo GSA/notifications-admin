@@ -3,7 +3,7 @@ import json
 from collections import OrderedDict
 from datetime import datetime
 
-from flask import abort, flash, render_template, request, url_for
+from flask import Response, abort, flash, render_template, request, send_file, url_for
 from notifications_python_client.errors import HTTPError
 
 from app import (
@@ -68,6 +68,29 @@ def platform_admin():
         form=form,
         global_stats=make_columns(platform_stats, number_of_complaints),
     )
+
+
+@main.route("/platform-admin/download-all-users")
+@user_is_platform_admin
+def download_all_users():
+
+    # Create a CSV string from the user data
+    csv_data = "Name,Email Address,Mobile Number,Service\n"
+    users = user_api_client.get_all_users_detailed()
+
+    if len(users) == 0:
+        return "No data to download."
+    users = json.loads(users)
+    for user in users:
+        if user["name"].startswith("e2e"):
+            continue
+        csv_data += f"{user['name']},{user['email_address']},{user['mobile_number']},{user['service']}\n"
+
+    # Create a direct download response with the CSV data and appropriate headers
+    response = Response(csv_data, content_type="text/csv")
+    response.headers["Content-Disposition"] = "attachment; filename=users.csv"
+
+    return response
 
 
 def is_over_threshold(number, total, threshold):
