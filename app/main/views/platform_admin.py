@@ -3,7 +3,7 @@ import json
 from collections import OrderedDict
 from datetime import datetime
 
-from flask import Response, abort, flash, render_template, request, send_file, url_for
+from flask import Response, abort, flash, render_template, request, url_for
 from notifications_python_client.errors import HTTPError
 
 from app import (
