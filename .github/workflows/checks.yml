@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: "22.3.0"
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - uses: ./.github/actions/setup-project
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
