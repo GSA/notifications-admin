@@ -58,7 +58,6 @@
 
     {% if current_user.has_permissions('manage_service') %}{% endif %}
 
-    {{ ajax_block(partials, updates_url, 'template-statistics') }}
     <div class="table-container">
       <div id="table1" class="table-overflow-x-auto hidden">
         <h2 class="margin-top-4 margin-bottom-1">My Activity</h2>
@@ -158,8 +157,6 @@
         </table>
       </div>
     </div>
-
-    <h2>Recent templates</h2>
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
   </div>
 
