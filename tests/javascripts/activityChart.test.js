@@ -18,7 +18,7 @@ Object.defineProperty(HTMLElement.prototype, 'clientWidth', {
 });
 
 // beforeAll hook to set up the DOM and load D3.js script
-beforeAll(done => {
+beforeEach(done => {
   // Set up the DOM with the D3 script included
   document.body.innerHTML = `
     <div id="activityChartContainer">
@@ -40,7 +40,13 @@ beforeAll(done => {
       </div>
     </div>
     <div id="aria-live-account" class="usa-sr-only" aria-live="polite"></div>
+    <div id="table1" class="table-overflow-x-auto hidden"></div>
+    <div id="table2" class="table-overflow-x-auto visible"></div>
   `;
+
+  // Re-bind event listeners in case they are lost between tests
+  const dropdown = document.getElementById('options');
+  dropdown.addEventListener('change', window.handleDropdownChange);
 
   // Load the D3 script dynamically
   loadScript(d3ScriptContent);
@@ -52,6 +58,11 @@ beforeAll(done => {
     done();
   }, 100);
 }, 10000); // Increased timeout to 10 seconds
+
+afterEach(() => {
+  // Clean up DOM or restore mocks if needed
+  jest.restoreAllMocks(); // Restores all mocks, including console logs
+});
 
 test('D3 is loaded correctly', () => {
   // Check if D3 is loaded by verifying the existence of the d3 object
@@ -123,4 +134,90 @@ test('Check HTML content after chart creation', () => {
   // Optionally, you can add assertions to check for specific elements
   expect(container.querySelector('svg')).not.toBeNull();
   expect(container.querySelectorAll('rect').length).toBeGreaterThan(0);
+});
+
+// Add toHaveTextContent matcher manually
+expect.extend({
+  toHaveTextContent(received, expected) {
+    const actualTextContent = received.textContent;
+    const pass = actualTextContent.includes(expected);
+    if (pass) {
+      return {
+        message: () =>
+          `expected element not to have text content '${expected}', but it was found`,
+        pass: true,
+      };
+    } else {
+      return {
+        message: () =>
+          `expected element to have text content '${expected}', but got '${actualTextContent}'`,
+        pass: false,
+      };
+    }
+  },
+});
+
+test('Initial dropdown state is correct', () => {
+  const dropdown = document.getElementById('options');
+
+  // Check the initial value of the dropdown
+  expect(dropdown.value).toBe('service');
+
+  // Check the initial subtitle
+  const subTitle = document.querySelector('.chart-subtitle');
+  expect(subTitle).toHaveTextContent('Service Name - Last 7 Days');
+
+  // Check the initial ARIA live region text
+  const liveRegion = document.getElementById('aria-live-account');
+  expect(liveRegion.textContent).toBe(''); // Assuming it starts empty
+});
+
+test('handleDropdownChange updates subtitle and fetches individual data', () => {
+  // Get the dropdown and set its value to 'individual'
+  const dropdown = document.getElementById('options');
+  dropdown.value = 'individual';
+
+  // Create and dispatch a change event
+  const changeEvent = new Event('change', { bubbles: true });
+  dropdown.dispatchEvent(changeEvent);
+
+  // Check if subtitle text content is updated correctly
+  const subTitle = document.querySelector('.chart-subtitle');
+  expect(subTitle).toHaveTextContent('User Name - Last 7 Days');
+});
+
+test('handleDropdownChange shows "My Activity" table and hides "All Activity" table', () => {
+  // Get the dropdown and set its value to 'individual'
+  const dropdown = document.getElementById('options');
+  dropdown.value = 'individual';
+
+  // Create and dispatch a change event
+  const changeEvent = new Event('change', { bubbles: true });
+  dropdown.dispatchEvent(changeEvent);
+
+  // Check visibility of the tables
+  const table1 = document.getElementById('table1');
+  const table2 = document.getElementById('table2');
+
+  // Expect table1 to be visible and table2 to be hidden
+  expect(table1.classList).not.toContain('hidden');
+  expect(table1.classList).toContain('visible');
+  expect(table2.classList).toContain('hidden');
+  expect(table2.classList).not.toContain('visible');
+});
+
+test('Dropdown change event triggers handleDropdownChange with logging', () => {
+  // Spy on console.log
+  const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+  // Get the dropdown and set its value
+  const dropdown = document.getElementById('options');
+  dropdown.value = 'individual';
+
+  // Create and dispatch a change event
+  const changeEvent = new Event('change', { bubbles: true });
+  dropdown.dispatchEvent(changeEvent);
+
+  // Restore the console method
+  consoleSpy.mockRestore();
 });

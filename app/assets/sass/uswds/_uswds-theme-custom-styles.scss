@@ -332,6 +332,12 @@ td.table-empty-message {
    bottom: 0;
 }
 
+.table-overflow-x-auto {
+   &.hidden {
+      display: none;
+   }
+}
+
 @media (max-width: units('desktop-lg')) {
    .table-overflow-x-auto {
       overflow-x: auto;
