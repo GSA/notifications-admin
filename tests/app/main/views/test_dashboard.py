@@ -1808,7 +1808,8 @@ def test_service_dashboard_shows_batched_jobs(
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
-    job_table_body = page.find("table", class_="job-table")
+    wrapper_div = page.find("div", id="table2")
+    job_table_body = wrapper_div.find("table", class_="job-table")
 
     rows = job_table_body.find_all("tbody")[0].find_all("tr")
 
