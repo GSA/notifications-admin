@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Admin front end for Notify",
   "engines": {
-    "node": ">=10.15.3"
+    "node": ">=22.0.0"
   },
   "scripts": {
     "lint": "gulp lint",
