@@ -22,6 +22,7 @@
         var svg = d3.select("#totalMessageChart");
         var width = chartContainer.clientWidth;
         var height = 64;
+        console.log('update')
 
         svg.attr("width", width).attr("height", height);
 

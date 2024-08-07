@@ -173,7 +173,7 @@ test('SVG bars are created and animated correctly', done => {
     done();
   }, 1500); // Duration of the animation + buffer time
 });
-console.log('update')
+
   test('Creates chart on DOMContentLoaded', () => {
     const createTotalMessagesChartSpy = jest.spyOn(window, 'createTotalMessagesChart');
 
