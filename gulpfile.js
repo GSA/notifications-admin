@@ -96,7 +96,7 @@ const javascripts = () => {
       paths.npm + 'textarea-caret/index.js',
       paths.npm + 'cbor-js/cbor.js',
       paths.npm + 'socket.io-client/dist/socket.io.min.js',
-      paths.npm + 'chart.js/dist/chart.umd.js'
+      paths.npm + 'd3/dist/d3.min.js'
     ]));
 
   // JS local to this application
@@ -124,8 +124,9 @@ const javascripts = () => {
     paths.src + 'javascripts/timeoutPopup.js',
     paths.src + 'javascripts/date.js',
     paths.src + 'javascripts/loginAlert.js',
+    paths.src + 'javascripts/totalMessagesChart.js',
+    paths.src + 'javascripts/activityChart.js',
     paths.src + 'javascripts/main.js',
-    paths.src + 'javascripts/sampleChartDashboard.js',
   ])
     .pipe(plugins.prettyerror())
     .pipe(plugins.babel({

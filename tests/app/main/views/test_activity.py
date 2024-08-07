@@ -651,7 +651,7 @@ def test_redacts_templates_that_should_be_redacted(
         message_type=notification_type,
     )
 
-    assert normalize_spaces(page.select("tbody tr th")[0].text) == (
+    assert normalize_spaces(page.select("tbody tr td")[0].text) == (
         expected_row_contents
     )
 
