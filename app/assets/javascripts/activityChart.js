@@ -185,12 +185,16 @@
             return;
         }
 
-        var socket = io();
+        var socket = io("/services");
         var eventType = type === 'service' ? 'fetch_daily_stats' : 'fetch_daily_stats_by_user';
         var socketConnect = type === 'service' ? 'daily_stats_update' : 'daily_stats_by_user_update';
 
         socket.on('connect', function () {
             socket.emit(eventType);
+        });
+
+        socket.on('connect_error', function(error) {
+            console.error('WebSocket connection error:', error);
         });
 
         socket.on(socketConnect, function(data) {
