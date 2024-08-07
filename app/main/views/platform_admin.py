@@ -75,7 +75,7 @@ def platform_admin():
 def download_all_users():
 
     # Create a CSV string from the user data
-    csv_data = "Name,Email Address,Mobile Number,Service\n"
+    csv_data = "Name\tEmail Address\tMobile Number\tService\n"
     users = user_api_client.get_all_users_detailed()
 
     if len(users) == 0:
@@ -84,7 +84,7 @@ def download_all_users():
     for user in users:
         if user["name"].startswith("e2e"):
             continue
-        csv_data += f"{user['name']},{user['email_address']},{user['mobile_number']},{user['service']}\n"
+        csv_data += f"{user['name']}\t{user['email_address']}\t{user['mobile_number']}\t{user['service']}\n"
 
     # Create a direct download response with the CSV data and appropriate headers
     response = Response(csv_data, content_type="text/csv")
