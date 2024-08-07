@@ -1,6 +1,6 @@
 const { src, dest, series, parallel, watch } = require('gulp');
 
-const rollupPluginCommonjs = require('@rollup/plugin-commonjs');
+const rollupPluginCommonjs = require(require.resolve('@rollup/plugin-commonjs'));
 const rollupPluginNodeResolve = require('@rollup/plugin-node-resolve');
 const rollup = require('@rollup/stream');
 const source = require('vinyl-source-stream');
