@@ -28,7 +28,6 @@
             throw new Error('Chart container width is 0, cannot set SVG width.');
         }
 
-
         svg.attr("width", width).attr("height", height);
 
         var x = d3.scaleLinear()
