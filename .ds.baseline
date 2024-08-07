@@ -127,24 +127,6 @@
     }
   ],
   "results": {
-    ".github/workflows/checks.yml": [
-      {
-        "type": "Secret Keyword",
-        "filename": ".github/workflows/checks.yml",
-        "hashed_secret": "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8",
-        "is_verified": false,
-        "line_number": 73,
-        "is_secret": false
-      },
-      {
-        "type": "Basic Auth Credentials",
-        "filename": ".github/workflows/checks.yml",
-        "hashed_secret": "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8",
-        "is_verified": false,
-        "line_number": 107,
-        "is_secret": false
-      }
-    ],
     "app/assets/js/uswds.min.js": [
       {
         "type": "Secret Keyword",
@@ -692,5 +674,5 @@
       }
     ]
   },
-  "generated_at": "2024-08-07T19:13:21Z"
+  "generated_at": "2024-08-07T20:27:36Z"
 }
