@@ -124,3 +124,44 @@ test('Check HTML content after chart creation', () => {
   expect(container.querySelector('svg')).not.toBeNull();
   expect(container.querySelectorAll('rect').length).toBeGreaterThan(0);
 });
+
+
+test('Initial fetch data populates chart and table', done => {
+  const mockData = {
+    '2024-07-01': { sms: { delivered: 50, failed: 5 } },
+    '2024-07-02': { sms: { delivered: 60, failed: 2 } },
+    '2024-07-03': { sms: { delivered: 70, failed: 1 } },
+    '2024-07-04': { sms: { delivered: 80, failed: 0 } },
+    '2024-07-05': { sms: { delivered: 90, failed: 3 } },
+    '2024-07-06': { sms: { delivered: 100, failed: 4 } },
+    '2024-07-07': { sms: { delivered: 110, failed: 2 } },
+  };
+
+  const socket = {
+    on: jest.fn((event, callback) => {
+      if (event === 'daily_stats_update') {
+        console.log('Mock data:', mockData);
+        callback(mockData);
+        done();
+      }
+    }),
+    emit: jest.fn(),
+  };
+  window.io = jest.fn(() => socket);
+
+  document.dispatchEvent(new Event('DOMContentLoaded'));
+
+  setTimeout(() => {
+    const table = document.getElementById('weeklyTable');
+    expect(table).toBeDefined();
+
+    const rows = table.getElementsByTagName('tr');
+    expect(rows.length).toBe(8);
+
+    const firstRowCells = rows[1].getElementsByTagName('td');
+    console.log('First row cells:', firstRowCells);
+    expect(firstRowCells[0].textContent).toBe('07/01/24');
+    expect(firstRowCells[1].textContent).toBe('50');
+    expect(firstRowCells[2].textContent).toBe('5');
+  }, 100);
+});
