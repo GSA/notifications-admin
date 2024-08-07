@@ -111,8 +111,8 @@ def format_datetime_scheduled_notification(date):
 
 
 def format_datetime_table(date):
-    # example:  03-18-2024 at 04:53 PM, intended for datetimes in tables
-    return "{} at {}".format(format_date_numeric(date), format_time_12h(date))
+    # example:  Sent on 03-18-2024 at 04:53 PM, intended for datetimes in tables
+    return "Sent on {} at {}".format(format_date_numeric(date), format_time_12h(date))
 
 
 def format_time_12h(date):

@@ -64,11 +64,11 @@
         <table class="usa-table job-table">
           <thead class="table-field-headings">
             <tr>
-              <th scope="col" class="table-field-heading-first"><span>File name</span></th>
-              <th scope="col" class="table-field-heading"><span>Template</span></th>
-              <th scope="col" class="table-field-heading"><span>Job status</span></th>
-              <th scope="col" class="table-field-heading"><span># of Recipients</span></th>
-              <th scope="col" class="table-field-heading"><span>Report</span></th>
+              <th scope="col" class="table-field-heading-first" id="jobId"><span>Job ID#</span></th>
+              <th data-sortable scope="col" class="table-field-heading"><span>Template</span></th>
+              <th data-sortable scope="col" class="table-field-heading"><span>Job status</span></th>
+              <th data-sortable scope="col" class="table-field-heading"><span># of Recipients</span></th>
+              <th data-sortable scope="col" class="table-field-heading"><span>Report</span></th>
             </tr>
           </thead>
           <tbody>
@@ -77,10 +77,10 @@
                 {% if job.created_by.name == current_user.name %}
                   {% set notification = job.notifications[0] %}
                   <tr id="{{ job.job_id }}">
-                    <td class="table-field file-name">
-                      {{ job.original_file_name[:12] if job.original_file_name else 'Manually entered number'}}
-                      <br>
-                      <a class="usa-link file-list-filename" href="{{ job.view_job_link }}">View Batch</a>
+                    <td class="table-field jobid" scope="row" role="rowheader">
+                      <a class="usa-link" href="{{ job.view_job_link }}">
+                        {{ job.job_id[:8] if job.job_id else 'Manually entered number' }}
+                      </a>
                     </td>
                     <td class="table-field template">{{ job.template_name }}</td>
                     <td class="table-field time-sent">
@@ -90,10 +90,9 @@
                     <td class="table-field count-of-recipients">{{ job.notification_count }}</td>
                     <td class="table-field report">
                       {% if job.time_left != "Data no longer available" %}
-                        <a class="usa-link file-list-filename" href="{{ job.download_link }}">Download</a>
-                        <span class="usa-hint">{{ job.time_left }}</span>
+                        <a href="{{ job.download_link }}"><img src="{{ url_for('static', filename='img/material-icons/file_download.svg') }}" alt="File Download Icon"></a>
                       {% elif job %}
-                        <span>{{ job.time_left }}</span>
+                        <span>N/A</span>
                       {% endif %}
                     </td>
                   </tr>
@@ -113,12 +112,12 @@
         <table class="usa-table job-table">
           <thead class="table-field-headings">
             <tr>
-              <th scope="col" class="table-field-heading-first"><span>File name</span></th>
-              <th scope="col" class="table-field-heading"><span>Template</span></th>
-              <th scope="col" class="table-field-heading"><span>Job status</span></th>
-              <th scope="col" class="table-field-heading"><span>Sender</span></th>
-              <th scope="col" class="table-field-heading"><span># of Recipients</span></th>
-              <th scope="col" class="table-field-heading"><span>Report</span></th>
+              <th scope="col" role="columnheader" class="table-field-heading-first" id="jobId"><span>Job ID#</span></th>
+              <th data-sortable scope="col" role="columnheader" class="table-field-heading"><span>Template</span></th>
+              <th data-sortable scope="col" role="columnheader" class="table-field-heading"><span>Job status</span></th>
+              <th data-sortable scope="col" role="columnheader" class="table-field-heading"><span>Sender</span></th>
+              <th data-sortable scope="col" role="columnheader" class="table-field-heading"><span># of Recipients</span></th>
+              <th data-sortable scope="col" role="columnheader" class="table-field-heading"><span>Report</span></th>
             </tr>
           </thead>
           <tbody>
@@ -126,10 +125,10 @@
               {% for job in jobs[:5] %}
                 {% set notification = job.notifications[0] %}
                 <tr id="{{ job.job_id }}">
-                  <td class="table-field file-name">
-                    {{ job.original_file_name[:12] if job.original_file_name else 'Manually entered number'}}
-                    <br>
-                    <a class="usa-link file-list-filename" href="{{ job.view_job_link }}">View Batch</a>
+                  <td class="table-field jobid" scope="row" role="rowheader">
+                    <a class="usa-link" href="{{ job.view_job_link }}">
+                      {{ job.job_id[:8] if job.job_id else 'Manually entered number' }}
+                    </a>
                   </td>
                   <td class="table-field template">{{ job.template_name }}</td>
                   <td class="table-field time-sent">
@@ -155,6 +154,7 @@
             {% endif %}
           </tbody>
         </table>
+        <p><b>Note: </b>Report data is only available for 7 days after your message has been sent</p>
       </div>
     </div>
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
