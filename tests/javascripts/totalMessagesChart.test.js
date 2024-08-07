@@ -15,10 +15,11 @@ function loadScript(scriptContent) {
 Object.defineProperty(HTMLElement.prototype, 'clientWidth', {
   value: 600,
   writable: true,
+  configurable: true,
 });
 
 // beforeAll hook to set up the DOM and load D3.js script
-beforeAll(done => {
+beforeEach(() => {
   // Set up the DOM with the D3 script included
   document.body.innerHTML = `
     <div id="totalMessageChartContainer" data-sms-sent="100" data-sms-allowance-remaining="249900" style="width: 600px;">
@@ -33,15 +34,13 @@ beforeAll(done => {
   loadScript(d3ScriptContent);
 
   // Wait a bit to ensure the script is executed
-  setTimeout(() => {
-    // Require the actual JavaScript file you are testing
-    require('../../app/assets/javascripts/totalMessagesChart.js');
-
-    // Call the function to create the chart
-    window.createTotalMessagesChart();
-
-    done();
-  }, 100);
+  return new Promise(resolve => {
+    setTimeout(() => {
+      // Require the actual JavaScript file you are testing
+      require('../../app/assets/javascripts/totalMessagesChart.js');
+      resolve();
+    }, 100);
+  });
 });
 
 // Single test to check if D3 is loaded correctly
@@ -52,15 +51,20 @@ test('D3 is loaded correctly', () => {
 });
 
 // Test to check if the SVG element is correctly set up
-test('SVG element is correctly set up', () => {
-  const svg = document.getElementById('totalMessageChart');
-  expect(svg).not.toBeNull();
-  expect(svg.getAttribute('width')).toBe('600');
-  expect(svg.getAttribute('height')).toBe('64');
+test('SVG element is correctly set up', done => {
+  window.createTotalMessagesChart();
+
+  setTimeout(() => {
+    const svg = document.getElementById('totalMessageChart');
+    expect(svg.getAttribute('width')).toBe('600');
+    expect(svg.getAttribute('height')).toBe('64');
+    done();
+  }, 1000); // Ensure enough time for the DOM updates
 });
 
 // Test to check if the table is created and populated correctly
 test('Populates the accessible table correctly', () => {
+  window.createTotalMessagesChart();
   const table = document.getElementById('totalMessageTable').getElementsByTagName('table')[0];
   expect(table).toBeDefined();
 
@@ -84,6 +88,8 @@ test('Chart title is correctly set', () => {
 
 // Test to check if the chart resizes correctly on window resize
 test('Chart resizes correctly on window resize', done => {
+  window.createTotalMessagesChart();
+
   setTimeout(() => {
     const svg = document.getElementById('totalMessageChart');
     const chartContainer = document.getElementById('totalMessageChartContainer');
@@ -92,7 +98,7 @@ test('Chart resizes correctly on window resize', done => {
     expect(svg.getAttribute('width')).toBe('600');
 
     // Set new container width
-    Object.defineProperty(chartContainer, 'clientWidth', { value: 800 });
+    Object.defineProperty(chartContainer, 'clientWidth', { value: 800, configurable: true });
 
     // Trigger resize event
     window.dispatchEvent(new Event('resize'));
@@ -101,9 +107,9 @@ test('Chart resizes correctly on window resize', done => {
       // Check if SVG width is updated
       expect(svg.getAttribute('width')).toBe('800');
       done();
-    }, 500); // Adjust the timeout if necessary
+    }, 1000); // Adjust the timeout if necessary
   }, 1000); // Initial wait for the chart to render
-}, 10000); // Adjust the overall test timeout if necessary
+}, 15000); // Adjust the overall test timeout if necessary
 
 // Testing the tooltip
 test('Tooltip displays on hover', () => {
@@ -148,6 +154,7 @@ test('Tooltip displays on hover', () => {
 
 // Test to ensure SVG bars are created and animated correctly
 test('SVG bars are created and animated correctly', done => {
+  window.createTotalMessagesChart();
   const svg = document.getElementById('totalMessageChart');
 
   // Initial check
@@ -176,7 +183,7 @@ test('Handles zero width chart container', () => {
     Object.defineProperty(document.getElementById('totalMessageChartContainer'), 'clientWidth', { value: 0 });
 
     // Call the function to create the chart
-    createTotalMessagesChart();
+    window.createTotalMessagesChart();
 
     // Check if the console error was called
     expect(consoleSpy).toHaveBeenCalledWith('Chart container width is 0, cannot set SVG width.');
