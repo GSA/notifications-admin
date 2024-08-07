@@ -25,9 +25,9 @@
 
         // Ensure the width is set correctly
         if (width === 0) {
-            console.error('Chart container width is 0, cannot set SVG width.');
-            return;
+            throw new Error('Chart container width is 0, cannot set SVG width.');
         }
+
 
         svg.attr("width", width).attr("height", height);
 

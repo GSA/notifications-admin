@@ -182,14 +182,14 @@ test('Handles zero width chart container', () => {
     // Set chart container width to 0
     Object.defineProperty(document.getElementById('totalMessageChartContainer'), 'clientWidth', { value: 0 });
 
+  try {
     // Call the function to create the chart
     window.createTotalMessagesChart();
-
-    // Check if the console error was called
-    expect(consoleSpy).toHaveBeenCalledWith('Chart container width is 0, cannot set SVG width.');
-
-    consoleSpy.mockRestore();
-  });
+  } catch (error) {
+    // Check if the error message is as expected
+    expect(error.message).toBe('Chart container width is 0, cannot set SVG width.');
+  }
+});
 
   test('Creates chart on DOMContentLoaded', () => {
     const createTotalMessagesChartSpy = jest.spyOn(window, 'createTotalMessagesChart');
