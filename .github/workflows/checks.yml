@@ -54,6 +54,7 @@ jobs:
         run: poetry run coverage report --fail-under=90
 
   end-to-end-tests:
+    if: ${{ github.actor != 'dependabot[bot]' }}
     permissions:
       checks: write
       pull-requests: write
@@ -84,7 +85,7 @@ jobs:
         ports:
           # Maps tcp port 6379 on service container to the host
           - 6379:6379
-    if: ${{ github.actor != 'dependabot[bot]' }}
+
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-project
