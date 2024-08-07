@@ -179,16 +179,17 @@ test('Handles zero width chart container', () => {
     // Mock console.error
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-    // Set chart container width to 0
-    Object.defineProperty(document.getElementById('totalMessageChartContainer'), 'clientWidth', { value: 0 });
+  // Set chart container width to 0
+  const chartContainer = document.getElementById('totalMessageChartContainer');
+  Object.defineProperty(chartContainer, 'clientWidth', { value: 0, configurable: true });
 
-  try {
-    // Call the function to create the chart
-    window.createTotalMessagesChart();
-  } catch (error) {
-    // Check if the error message is as expected
-    expect(error.message).toBe('Chart container width is 0, cannot set SVG width.');
-  }
+  // Call the function to create the chart
+  window.createTotalMessagesChart();
+
+  // Check if the console error was called
+  expect(consoleSpy).toHaveBeenCalledWith('Chart container width is 0, cannot set SVG width.');
+
+  consoleSpy.mockRestore();
 });
 
   test('Creates chart on DOMContentLoaded', () => {
