@@ -3,6 +3,7 @@ from flask import Blueprint
 main = Blueprint("main", __name__)
 
 from app.main.views import (  # noqa isort:skip
+    activity,
     add_service,
     api_keys,
     choose_account,

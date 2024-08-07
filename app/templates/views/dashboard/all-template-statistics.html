@@ -28,7 +28,7 @@
           No messages sent
         </p>
       {% else %}
-        <div class='template-statistics-table'>
+        <div class='template-statistics-table table-overflow-x-auto'>
           {% call(item, row_number) list_table(
             month.templates_used,
             caption=month.name,
