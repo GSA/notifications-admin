@@ -54,6 +54,8 @@ jobs:
         run: poetry run isort --check-only ./app ./tests
       - name: Check dead code
         run: make dead-code
+      - name: where is stuff installed
+        run: npm ls -g
       - name: Run js lint
         run: npm run lint
       - name: Run js tests
