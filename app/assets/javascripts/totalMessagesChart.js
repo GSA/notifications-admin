@@ -62,7 +62,7 @@
             .attr("x", 0) // Initially set to 0, will be updated during animation
             .attr("y", 0)
             .attr("height", height)
-            .attr("fill", '#c6cace')
+            .attr("fill", '#C7CACE')
             .attr("width", 0) // Start with width 0 for animation
             .on('mouseover', function(event) {
                 tooltip.style('display', 'block')

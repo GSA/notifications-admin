@@ -159,7 +159,7 @@ test('SVG bars are created and animated correctly', done => {
 
   // Initial check
   const sentBar = svg.querySelector('rect[fill="#0076d6"]');
-  const remainingBar = svg.querySelector('rect[fill="#fa9441"]');
+  const remainingBar = svg.querySelector('rect[fill="#C7CACE"]');
 
   expect(sentBar).not.toBeNull();
   expect(remainingBar).not.toBeNull();
