@@ -100,7 +100,7 @@ def download_all_users():
     csv_data = output.getvalue()
 
     # Create a direct download response with the CSV data and appropriate headers
-    response = Response(csv_data, content_type="text/csv")
+    response = Response(csv_data, content_type="text/csv; charset=utf-8")
     response.headers["Content-Disposition"] = "attachment; filename=users.csv"
 
     return response
