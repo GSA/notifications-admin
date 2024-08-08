@@ -177,7 +177,7 @@ def create_app(application):
 
     init_govuk_frontend(application)
     init_jinja(application)
-    socketio.init_app(application)
+    socketio.init_app(application, cors_allowed_origins=['http://localhost:6012'])
 
     for client in (
         csrf,
