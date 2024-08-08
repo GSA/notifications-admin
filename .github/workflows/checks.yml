@@ -50,6 +50,8 @@ jobs:
       - name: Check directory
         run: ls -al node_modules/@rollup/stream
       - uses: ./.github/actions/setup-project
+        with:
+          node-version: "22.3.0"
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
       - uses: ArtiomTr/jest-coverage-report-action@v2
