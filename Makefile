@@ -61,7 +61,7 @@ py-lint: ## Run python linting scanners and black
 	poetry self add poetry-dotenv-plugin
 	poetry run black .
 	poetry run flake8 .
-	poetry run isort ./app ./tests
+	poetry run isort --check-only ./app ./tests
 
 .PHONY: avg-complexity
 avg-complexity:
