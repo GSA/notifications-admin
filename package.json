@@ -27,6 +27,7 @@
   "dependencies": {
     "@uswds/uswds": "^3.8.1",
     "cbor-js": "0.1.0",
+    "console-log-level": "^1.4.1",
     "d3": "^7.9.0",
     "govuk_frontend_toolkit": "^9.0.1",
     "govuk-frontend": "2.13.0",

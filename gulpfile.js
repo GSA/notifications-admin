@@ -11,6 +11,11 @@ const rollupPluginNodeResolve = require('rollup-plugin-node-resolve');
 const streamqueue = require('streamqueue');
 const stylish = require('jshint-stylish');
 const uswds = require("@uswds/compile");
+const log = require('console-log-level')({
+    level: 'info'
+});
+
+log.info('Testing logging during gulp task.');
 
 const plugins = {};
 plugins.addSrc = require('gulp-add-src');
