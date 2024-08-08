@@ -33,7 +33,8 @@ jobs:
         run: |
           rm -rf node_modules package-lock.json
           npm install
-          npm ci
+          npm uninstall @rollup/stream
+          npm install @rollup/stream
       - name: List installed packages
         run: npm ls
       - name: Print node_modules contents
