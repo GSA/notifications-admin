@@ -1256,7 +1256,7 @@ def test_get_daily_sms_provider_volumes_report_calls_api_and_download_data(
     )
 
 
-def test_get_users_report(client_request, platform_admin_user, mocker):
+def test_download_all_users(client_request, platform_admin_user, mocker):
     mocker.patch(
         "app.main.views.platform_admin.user_api_client.get_all_users_detailed",
         return_value=[
