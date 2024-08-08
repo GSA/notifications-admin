@@ -1,9 +1,9 @@
 import csv
-from io import StringIO
 import itertools
 import json
 from collections import OrderedDict
 from datetime import datetime
+from io import StringIO
 
 from flask import Response, abort, flash, render_template, request, url_for
 from notifications_python_client.errors import HTTPError
