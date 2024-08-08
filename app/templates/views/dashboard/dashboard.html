@@ -68,7 +68,6 @@
               <th data-sortable scope="col" class="table-field-heading"><span>Template</span></th>
               <th data-sortable scope="col" class="table-field-heading"><span>Job status</span></th>
               <th data-sortable scope="col" class="table-field-heading"><span># of Recipients</span></th>
-              <th data-sortable scope="col" class="table-field-heading"><span>Report</span></th>
             </tr>
           </thead>
           <tbody>
@@ -83,18 +82,11 @@
                       </a>
                     </td>
                     <td class="table-field template">{{ job.template_name }}</td>
-                    <td class="table-field time-sent">
+                    <td class="table-field time-sent">Sent on
                       {{ (job.processing_finished if job.processing_finished else job.processing_started
                         if job.processing_started else job.created_at)|format_datetime_table }}
                     </td>
                     <td class="table-field count-of-recipients">{{ job.notification_count }}</td>
-                    <td class="table-field report">
-                      {% if job.time_left != "Data no longer available" %}
-                        <a href="{{ job.download_link }}"><img src="{{ url_for('static', filename='img/material-icons/file_download.svg') }}" alt="File Download Icon"></a>
-                      {% elif job %}
-                        <span>N/A</span>
-                      {% endif %}
-                    </td>
                   </tr>
                 {% endif %}
               {% endfor %}
@@ -117,7 +109,6 @@
               <th data-sortable scope="col" role="columnheader" class="table-field-heading"><span>Job status</span></th>
               <th data-sortable scope="col" role="columnheader" class="table-field-heading"><span>Sender</span></th>
               <th data-sortable scope="col" role="columnheader" class="table-field-heading"><span># of Recipients</span></th>
-              <th data-sortable scope="col" role="columnheader" class="table-field-heading"><span>Report</span></th>
             </tr>
           </thead>
           <tbody>
@@ -131,20 +122,12 @@
                     </a>
                   </td>
                   <td class="table-field template">{{ job.template_name }}</td>
-                  <td class="table-field time-sent">
+                  <td class="table-field time-sent">Sent on
                     {{ (job.processing_finished if job.processing_finished else job.processing_started
                       if job.processing_started else job.created_at)|format_datetime_table }}
                   </td>
                   <td class="table-field sender">{{ job.created_by.name }}</td>
                   <td class="table-field count-of-recipients">{{ job.notification_count }}</td>
-                  <td class="table-field report">
-                    {% if job.time_left != "Data no longer available" %}
-                      <a class="usa-link file-list-filename" href="{{ job.download_link }}">Download</a>
-                      <span class="usa-hint">{{ job.time_left }}</span>
-                    {% elif job %}
-                      <span>{{ job.time_left }}</span>
-                    {% endif %}
-                  </td>
                 </tr>
               {% endfor %}
             {% else %}
