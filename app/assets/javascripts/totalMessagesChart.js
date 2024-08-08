@@ -21,7 +21,7 @@
 
         var svg = d3.select("#totalMessageChart");
         var width = chartContainer.clientWidth;
-        var height = 64;
+        var height = 50;
 
         // Ensure the width is set correctly
         if (width === 0) {
@@ -62,7 +62,7 @@
             .attr("x", 0) // Initially set to 0, will be updated during animation
             .attr("y", 0)
             .attr("height", height)
-            .attr("fill", '#fa9441')
+            .attr("fill", '#c6cace')
             .attr("width", 0) // Start with width 0 for animation
             .on('mouseover', function(event) {
                 tooltip.style('display', 'block')
