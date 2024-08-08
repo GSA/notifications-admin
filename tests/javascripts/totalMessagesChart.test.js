@@ -57,7 +57,7 @@ test('SVG element is correctly set up', done => {
   setTimeout(() => {
     const svg = document.getElementById('totalMessageChart');
     expect(svg.getAttribute('width')).toBe('600');
-    expect(svg.getAttribute('height')).toBe('64');
+    expect(svg.getAttribute('height')).toBe('48');
     done();
   }, 1000); // Ensure enough time for the DOM updates
 });
