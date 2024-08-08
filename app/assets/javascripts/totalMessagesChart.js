@@ -21,7 +21,7 @@
 
         var svg = d3.select("#totalMessageChart");
         var width = chartContainer.clientWidth;
-        var height = 50;
+        var height = 48;
 
         // Ensure the width is set correctly
         if (width === 0) {
