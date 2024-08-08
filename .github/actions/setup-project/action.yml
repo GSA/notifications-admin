@@ -13,6 +13,7 @@ runs:
       uses: actions/setup-python@v4
       with:
         python-version: "3.12.3"
+        node-version: "22.3.0"
     - name: Install poetry
       shell: bash
       run: pip install poetry
