@@ -16,8 +16,8 @@ Additionally, update `API_HOST_NAME` and `NOTIFY_ENVIRONMENT`:
 
 ### Retrieving Environment Variables for Staging
 
-You can retrieve the values needed for these by using the cf CLI (Cloud Foundry CLI tool) and making sure
-you’re targeting the notify-staging space.
+You can retrieve the values needed for these by using the `cf` CLI (Cloud Foundry CLI tool) and making sure
+you’re targeting the `notify-staging` space.
 
 1. `cf login -a [api.fr.cloud.gov](http://api.fr.cloud.gov/) --sso`
 2. select `notify-staging`
