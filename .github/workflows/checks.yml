@@ -39,7 +39,15 @@ jobs:
       - name: Print node_modules contents
         run: ls -la node_modules
       - name: Check for @rollup/stream module
-        run: ls -la node_modules/@rollup
+        run: ls -la node_modules/@rollup/stream
+      - name: Use node to require the module
+        run: node -e "require('@rollup/stream')"
+      - name: check module resolution
+        run: node -p "require.resolve('@rollup/stream')"
+      - name: Check npm list
+        run: npm list @rollup/stream
+      - name: Check directory
+        run: ls -al node_modules/@rollup/st
       - uses: ./.github/actions/setup-project
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
