@@ -22,7 +22,12 @@
         var svg = d3.select("#totalMessageChart");
         var width = chartContainer.clientWidth;
         var height = 64;
-        console.log('update')
+
+        // Ensure the width is set correctly
+        if (width === 0) {
+            console.error('Chart container width is 0, cannot set SVG width.');
+            return;
+        }
 
         svg.attr("width", width).attr("height", height);
 
