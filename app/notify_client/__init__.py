@@ -56,6 +56,9 @@ class NotifyAdminAPIClient(BaseAPIClient):
         ):
             abort(403)
 
+    def is_calling_signin_url(self, arg):
+        return arg.startswith("('/user")
+
     def check_inactive_user(self, *args):
         still_signing_in = False
 
@@ -64,14 +67,7 @@ class NotifyAdminAPIClient(BaseAPIClient):
         # and we only want to check the first arg
         for arg in args:
             arg = str(arg)
-            if (
-                "get-login-gov-user" in arg
-                or "user/email" in arg
-                or "/activate" in arg
-                or "/email-code" in arg
-                or "/verify/code" in arg
-                or "/user" in arg
-            ):
+            if self.is_calling_signin_url(arg):
                 still_signing_in = True
 
             # This seems to be a weird edge case that happens intermittently with invites
