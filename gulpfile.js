@@ -5,17 +5,12 @@
 
 // 1. LIBRARIES
 // - - - - - - - - - - - - - - -
-const { src, pipe, dest, series, parallel, watch } = require('gulp');
+const { src, dest, series, parallel, watch } = require('gulp');
 const rollupPluginCommonjs = require('rollup-plugin-commonjs');
 const rollupPluginNodeResolve = require('rollup-plugin-node-resolve');
-const streamqueue = require('streamqueue');
+const gulpMerge = require('gulp-merge');
 const stylish = require('jshint-stylish');
 const uswds = require("@uswds/compile");
-const log = require('console-log-level')({
-    level: 'info'
-});
-
-log.info('Testing logging during gulp task.');
 
 const plugins = {};
 plugins.addSrc = require('gulp-add-src');
@@ -24,7 +19,7 @@ plugins.cleanCSS = require('gulp-clean-css');
 plugins.concat = require('gulp-concat');
 plugins.jshint = require('gulp-jshint');
 plugins.prettyerror = require('gulp-prettyerror');
-plugins.rollup = require('gulp-better-rollup')
+plugins.rollup = require('gulp-better-rollup');
 plugins.uglify = require('gulp-uglify');
 
 // 2. CONFIGURATION
@@ -37,12 +32,10 @@ const paths = {
   govuk_frontend: 'node_modules/govuk-frontend/'
 };
 // Rewrite /static prefix for URLs in CSS files
-let staticPathMatcher = new RegExp('^\/static\/');
+let staticPathMatcher = new RegExp('^\/static\/')
 if (process.env.NOTIFY_ENVIRONMENT == 'development') { // pass through if on development
   staticPathMatcher = url => url;
 }
-
-
 
 // 3. TASKS
 // - - - - - - - - - - - - - - -
@@ -63,9 +56,6 @@ const copy = {
       .pipe(dest(paths.dist + 'js/'));
   }
 };
-
-
-
 
 const javascripts = () => {
   // JS from third-party sources
@@ -103,7 +93,7 @@ const javascripts = () => {
       paths.npm + 'textarea-caret/index.js',
       paths.npm + 'cbor-js/cbor.js',
       paths.npm + 'socket.io-client/dist/socket.io.min.js',
-      paths.npm + 'd3/dist/d3.min.js'
+      paths.npm + 'chart.js/dist/chart.umd.js'
     ]));
 
   // JS local to this application
@@ -131,9 +121,8 @@ const javascripts = () => {
     paths.src + 'javascripts/timeoutPopup.js',
     paths.src + 'javascripts/date.js',
     paths.src + 'javascripts/loginAlert.js',
-    paths.src + 'javascripts/totalMessagesChart.js',
-    paths.src + 'javascripts/activityChart.js',
     paths.src + 'javascripts/main.js',
+    paths.src + 'javascripts/sampleChartDashboard.js',
   ])
     .pipe(plugins.prettyerror())
     .pipe(plugins.babel({
@@ -142,12 +131,11 @@ const javascripts = () => {
 
   // return single stream of all vinyl objects piped from the end of the vendored stream, then
   // those from the end of the local stream
-  return streamqueue({ objectMode: true }, vendored, local)
+  return gulpMerge(vendored, local)
     .pipe(plugins.uglify())
     .pipe(plugins.concat('all.js'))
     .pipe(dest(paths.dist + 'javascripts/'))
 };
-
 
 // Copy images
 
@@ -160,7 +148,6 @@ const images = () => {
   ], {encoding: false})
     .pipe(dest(paths.dist + 'images/'))
 };
-
 
 const watchFiles = {
   javascripts: (cb) => {
@@ -181,7 +168,6 @@ const watchFiles = {
   }
 };
 
-
 const lint = {
   'js': (cb) => {
     return src(
@@ -192,7 +178,6 @@ const lint = {
       .pipe(plugins.jshint.reporter('fail'))
   }
 };
-
 
 // Default: compile everything
 const defaultTask = parallel(
@@ -211,14 +196,12 @@ const defaultTask = parallel(
   )
 );
 
-
 // Watch for changes and re-run tasks
 const watchForChanges = parallel(
   watchFiles.javascripts,
   watchFiles.images,
   watchFiles.self
 );
-
 
 exports.default = defaultTask;
 
@@ -254,5 +237,5 @@ uswds.paths.dist.theme = './app/assets/sass/uswds';
 exports.init = uswds.init;
 exports.compile = uswds.compile;
 exports.copyAll = uswds.copyAll;
-exports.watch = uswds.watch;
 exports.copyAssets = uswds.copyAssets;
+exports.watch = uswds.watch;
