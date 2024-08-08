@@ -77,24 +77,28 @@ def platform_admin():
 def download_all_users():
 
     # Create a CSV string from the user data
-    csv_data = "Name\tEmail Address\tMobile Number\tService\n"
     users = user_api_client.get_all_users_detailed()
 
     if len(users) == 0:
         return "No data to download."
 
     output = StringIO()
+    header = ["Name", "Email Address", "Phone Number", "Service"]
+    fieldnames = ["name", "email_address", "mobile_number", "service"]
     writer = csv.DictWriter(
         output,
-        fieldnames=["name", "email_address", "mobile_number", "service"],
+        fieldnames=fieldnames,
         delimiter="\t",
     )
-    writer.writeheader()
+    # Write custom header
+    writer.writerow(dict(zip(fieldnames, header)))
     for user in users:
-        if user["name"].startswith("e2e"):
+        user_no_commas = {key: value.replace(",", "") for key, value in user.items()}
+        if user_no_commas["name"].startswith("e2e"):
             continue
-        writer.writerow(user)
+        writer.writerow(user_no_commas)
     csv_data = output.getvalue()
+
     # Create a direct download response with the CSV data and appropriate headers
     response = Response(csv_data, content_type="text/csv")
     response.headers["Content-Disposition"] = "attachment; filename=users.csv"
