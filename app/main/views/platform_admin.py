@@ -1,3 +1,5 @@
+import csv
+from io import StringIO
 import itertools
 import json
 from collections import OrderedDict
@@ -80,12 +82,19 @@ def download_all_users():
 
     if len(users) == 0:
         return "No data to download."
-    users = json.loads(users)
+
+    output = StringIO()
+    writer = csv.DictWriter(
+        output,
+        fieldnames=["name", "email_address", "mobile_number", "service"],
+        delimiter="\t",
+    )
+    writer.writeheader()
     for user in users:
         if user["name"].startswith("e2e"):
             continue
-        csv_data += f"{user['name']}\t{user['email_address']}\t{user['mobile_number']}\t{user['service']}\n"
-
+        writer.writerow(user)
+    csv_data = output.getvalue()
     # Create a direct download response with the CSV data and appropriate headers
     response = Response(csv_data, content_type="text/csv")
     response.headers["Content-Disposition"] = "attachment; filename=users.csv"
