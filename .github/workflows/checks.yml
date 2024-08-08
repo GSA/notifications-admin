@@ -47,7 +47,7 @@ jobs:
       - name: Check npm list
         run: npm list @rollup/stream
       - name: Check directory
-        run: ls -al node_modules/@rollup/st
+        run: ls -al node_modules/@rollup/stream
       - uses: ./.github/actions/setup-project
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
