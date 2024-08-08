@@ -140,7 +140,6 @@ test('Initial fetch data populates chart and table', done => {
   const socket = {
     on: jest.fn((event, callback) => {
       if (event === 'daily_stats_update') {
-        console.log('Mock data:', mockData);
         callback(mockData);
         done();
       }

@@ -174,6 +174,23 @@ test('SVG bars are created and animated correctly', done => {
   }, 1500); // Duration of the animation + buffer time
 });
 
+// Test to check console error when chart container width is 0
+test('Handles zero width chart container', () => {
+    // Mock console.error
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    // Set chart container width to 0
+    Object.defineProperty(document.getElementById('totalMessageChartContainer'), 'clientWidth', { value: 0 });
+
+    // Call the function to create the chart
+    createTotalMessagesChart();
+
+    // Check if the console error was called
+    expect(consoleSpy).toHaveBeenCalledWith('Chart container width is 0, cannot set SVG width.');
+
+    consoleSpy.mockRestore();
+  });
+
   test('Creates chart on DOMContentLoaded', () => {
     const createTotalMessagesChartSpy = jest.spyOn(window, 'createTotalMessagesChart');
 
