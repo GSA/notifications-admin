@@ -91,7 +91,11 @@ const javascripts = () => {
     .pipe(dest(paths.dist + 'javascripts/'));
 };
 
-// Configure USWDS paths
+const copyGtmHead = () => {
+  return src(paths.src + 'js/gtm_head.js')
+    .pipe(dest(paths.dist + 'js/'));
+};
+
 uswds.settings.version = 3;
 uswds.paths.dist.css = paths.dist + 'css';
 uswds.paths.dist.js = paths.dist + 'js';
@@ -99,14 +103,12 @@ uswds.paths.dist.img = paths.dist + 'img';
 uswds.paths.dist.fonts = paths.dist + 'fonts';
 uswds.paths.dist.theme = paths.src + 'sass/uswds';
 
-// Task to compile USWDS styles
 const styles = async () => {
   await uswds.compile();
 };
 
-// Task to copy USWDS assets (optional, if needed)
 const copyAssets = async () => {
   await uswds.copyAssets();
 };
 
-exports.default = series(styles, javascripts, copyAssets);
+exports.default = series(styles, javascripts, copyGtmHead, copyAssets);
