@@ -57,7 +57,7 @@ test('SVG element is correctly set up', done => {
   setTimeout(() => {
     const svg = document.getElementById('totalMessageChart');
     expect(svg.getAttribute('width')).toBe('600');
-    expect(svg.getAttribute('height')).toBe('64');
+    expect(svg.getAttribute('height')).toBe('48');
     done();
   }, 1000); // Ensure enough time for the DOM updates
 });
@@ -159,7 +159,7 @@ test('SVG bars are created and animated correctly', done => {
 
   // Initial check
   const sentBar = svg.querySelector('rect[fill="#0076d6"]');
-  const remainingBar = svg.querySelector('rect[fill="#fa9441"]');
+  const remainingBar = svg.querySelector('rect[fill="#C7CACE"]');
 
   expect(sentBar).not.toBeNull();
   expect(remainingBar).not.toBeNull();
