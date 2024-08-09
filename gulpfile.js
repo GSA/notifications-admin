@@ -50,7 +50,7 @@ const javascripts = () => {
       paths.npm + 'textarea-caret/index.js',
       paths.npm + 'cbor-js/cbor.js',
       paths.npm + 'socket.io-client/dist/socket.io.min.js',
-      paths.npm + 'chart.js/dist/chart.umd.js'
+      paths.npm + 'd3/dist/d3.min.js'
     ]));
 
   const local = src([
