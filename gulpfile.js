@@ -5,6 +5,7 @@ const rollupPluginNodeResolve = require('@rollup/plugin-node-resolve');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 const gulpMerge = require('gulp-merge');
+const uswds = require("@uswds/compile");
 
 const plugins = {};
 plugins.addSrc = require('gulp-add-src');
@@ -90,4 +91,22 @@ const javascripts = () => {
     .pipe(dest(paths.dist + 'javascripts/'));
 };
 
-exports.default = series(javascripts);
+// Configure USWDS paths
+uswds.settings.version = 3;
+uswds.paths.dist.css = paths.dist + 'css';
+uswds.paths.dist.js = paths.dist + 'js';
+uswds.paths.dist.img = paths.dist + 'img';
+uswds.paths.dist.fonts = paths.dist + 'fonts';
+uswds.paths.dist.theme = paths.src + 'sass/uswds';
+
+// Task to compile USWDS styles
+const styles = async () => {
+  await uswds.compile();
+};
+
+// Task to copy USWDS assets (optional, if needed)
+const copyAssets = async () => {
+  await uswds.copyAssets();
+};
+
+exports.default = series(styles, javascripts, copyAssets);
