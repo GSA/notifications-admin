@@ -3,11 +3,9 @@ import json
 from datetime import datetime
 
 import pytest
-from flask import Flask, url_for
-from flask_socketio import SocketIO, SocketIOTestClient
+from flask import url_for
 from freezegun import freeze_time
 
-from app import create_app
 from app.main.views.dashboard import (
     aggregate_notifications_stats,
     aggregate_status_types,
@@ -15,8 +13,6 @@ from app.main.views.dashboard import (
     format_monthly_stats_to_list,
     get_dashboard_totals,
     get_tuples_of_financial_years,
-    handle_fetch_daily_stats,
-    handle_fetch_daily_stats_by_user,
 )
 from tests import (
     organization_json,
@@ -27,8 +23,6 @@ from tests import (
 from tests.conftest import (
     ORGANISATION_ID,
     SERVICE_ONE_ID,
-    SERVICE_TWO_ID,
-    USER_ONE_ID,
     create_active_caseworking_user,
     create_active_user_view_permissions,
     normalize_spaces,
@@ -163,6 +157,22 @@ stub_template_stats = [
     },
 ]
 
+date_range = {"start_date": "2024-01-01", "days": 7}
+
+mock_daily_stats = {
+    date_range["start_date"]: {
+        "email": {"delivered": 0, "failure": 0, "requested": 0},
+        "sms": {"delivered": 0, "failure": 1, "requested": 1},
+    },
+}
+
+mock_daily_stats_by_user = {
+    date_range["start_date"]: {
+        "email": {"delivered": 1, "failure": 0, "requested": 1},
+        "sms": {"delivered": 1, "failure": 0, "requested": 1},
+    },
+}
+
 
 @pytest.mark.parametrize(
     "user",
@@ -221,10 +231,9 @@ def test_get_started(
         return_value=copy.deepcopy(stub_template_stats),
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -251,10 +260,9 @@ def test_get_started_is_hidden_once_templates_exist(
         return_value=copy.deepcopy(stub_template_stats),
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -278,10 +286,9 @@ def test_inbound_messages_not_visible_to_service_without_permissions(
 ):
     service_one["permissions"] = []
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -305,6 +312,9 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_messages(
     mock_get_inbound_sms_summary,
 ):
     service_one["permissions"] = ["inbound_sms"]
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -333,6 +343,9 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_no_messages(
     mock_get_inbound_sms_summary_with_no_messages,
 ):
     service_one["permissions"] = ["inbound_sms"]
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -579,10 +592,9 @@ def test_should_show_recent_templates_on_dashboard(
         return_value=copy.deepcopy(stub_template_stats),
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -636,10 +648,9 @@ def test_should_not_show_recent_templates_on_dashboard_if_only_one_template_used
         return_value=stats,
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
     main = page.select_one("main").text
 
@@ -791,10 +802,9 @@ def test_should_show_upcoming_jobs_on_dashboard(
     mock_get_free_sms_fragment_limit,
     mock_get_inbound_sms_summary,
 ):
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -834,6 +844,9 @@ def test_should_not_show_upcoming_jobs_on_dashboard_if_count_is_0(
         },
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -856,10 +869,9 @@ def test_should_not_show_upcoming_jobs_on_dashboard_if_service_has_no_jobs(
     mock_get_inbound_sms_summary,
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -942,6 +954,9 @@ def test_should_not_show_jobs_on_dashboard_for_users_with_uploads_page(
     mock_get_free_sms_fragment_limit,
     mock_get_inbound_sms_summary,
 ):
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -1202,10 +1217,9 @@ def test_menu_send_messages(
     service_one["permissions"] = ["email", "sms"]
 
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
     page = _test_dashboard_menu(
         client_request,
         mocker,
@@ -1239,10 +1253,9 @@ def test_menu_manage_service(
     mock_get_free_sms_fragment_limit,
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
     page = _test_dashboard_menu(
         client_request,
         mocker,
@@ -1276,10 +1289,9 @@ def test_menu_main_settings(
     mock_get_free_sms_fragment_limit,
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
     page = _test_settings_menu(
         client_request,
         mocker,
@@ -1312,10 +1324,9 @@ def test_menu_manage_api_keys(
     mock_get_free_sms_fragment_limit,
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
     page = _test_dashboard_menu(
         client_request,
         mocker,
@@ -1352,10 +1363,9 @@ def test_menu_all_services_for_platform_admin_user(
     mock_get_free_sms_fragment_limit,
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
     page = _test_dashboard_menu(
         client_request, mocker, platform_admin_user, service_one, []
     )
@@ -1391,10 +1401,9 @@ def test_route_for_service_permissions(
             "app.service_api_client.get_global_notification_count", side_effect=_get
         )
         mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-        mocker.patch(
-            "app.notification_api_client.get_notifications_for_service",
-            return_value=FAKE_ONE_OFF_NOTIFICATION,
-        )
+        mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+        mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
         validate_route_permission(
             mocker,
             notify_admin,
@@ -1536,10 +1545,9 @@ def test_org_breadcrumbs_do_not_show_if_service_has_no_org(
     mock_get_free_sms_fragment_limit,
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
     assert not page.select(".navigation-organization-link")
@@ -1603,10 +1611,9 @@ def test_org_breadcrumbs_show_if_user_is_a_member_of_the_services_org(
         ),
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
     assert page.select_one(".navigation-organization-link")["href"] == url_for(
@@ -1639,11 +1646,9 @@ def test_org_breadcrumbs_do_not_show_if_user_is_a_member_of_the_services_org_but
     mocker.patch("app.models.service.Organization")
 
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
 
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
@@ -1678,10 +1683,9 @@ def test_org_breadcrumbs_show_if_user_is_platform_admin(
 
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
 
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
 
     client_request.login(platform_admin_user, service_one_json)
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
@@ -1714,10 +1718,10 @@ def test_breadcrumb_shows_if_service_is_suspended(
 
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
 
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
     assert "Suspended" in page.select_one(".navigation-service-name").text
@@ -1747,10 +1751,9 @@ def test_service_dashboard_shows_usage(
         },
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
 
     service_one["permissions"] = permissions
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
@@ -1783,11 +1786,9 @@ def test_service_dashboard_shows_free_allowance(
         ],
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
 
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
 
 
 def test_service_dashboard_shows_batched_jobs(
@@ -1801,13 +1802,11 @@ def test_service_dashboard_shows_batched_jobs(
     mock_get_free_sms_fragment_limit,
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
-    )
+    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+
+    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
-
     job_table_body = page.find("table", class_="job-table")
 
     rows = job_table_body.find_all("tbody")[0].find_all("tr")
@@ -1815,158 +1814,3 @@ def test_service_dashboard_shows_batched_jobs(
     assert job_table_body is not None
 
     assert len(rows) == 1
-
-
-@pytest.fixture
-def app_with_socketio():
-    app = Flask("app")
-    create_app(app)
-    socketio = SocketIO(app)
-    socketio.on_event("fetch_daily_stats", handle_fetch_daily_stats)
-    socketio.on_event("fetch_daily_stats_by_user", handle_fetch_daily_stats_by_user)
-    return app, socketio
-
-
-@pytest.mark.parametrize(
-    ("service_id", "date_range", "expected_call_args"),
-    [
-        (
-            SERVICE_ONE_ID,
-            {"start_date": "2024-01-01", "days": 7},
-            {"service_id": SERVICE_ONE_ID, "start_date": "2024-01-01", "days": 7},
-        ),
-        (
-            SERVICE_TWO_ID,
-            {"start_date": "2023-06-01", "days": 7},
-            {"service_id": SERVICE_TWO_ID, "start_date": "2023-06-01", "days": 7},
-        ),
-    ],
-)
-def test_fetch_daily_stats(
-    app_with_socketio,
-    mocker,
-    service_id,
-    date_range,
-    expected_call_args,
-):
-    app, socketio = app_with_socketio
-
-    mocker.patch(
-        "app.main.views.dashboard.get_stats_date_range", return_value=date_range
-    )
-
-    mock_service_api = mocker.patch(
-        "app.service_api_client.get_service_notification_statistics_by_day",
-        return_value={
-            date_range["start_date"]: {
-                "email": {"delivered": 0, "failure": 0, "requested": 0},
-                "sms": {"delivered": 0, "failure": 1, "requested": 1},
-            },
-        },
-    )
-    with app.test_client() as client:
-        with client.session_transaction() as sess:
-            sess["service_id"] = service_id
-
-        socketio_client = SocketIOTestClient(app, socketio, flask_test_client=client)
-
-        connected = socketio_client.is_connected()
-        assert connected, "Client should be connected"
-
-        socketio_client.emit("fetch_daily_stats")
-        received = socketio_client.get_received()
-
-        mock_service_api.assert_called_once_with(
-            expected_call_args["service_id"],
-            start_date=expected_call_args["start_date"],
-            days=expected_call_args["days"],
-        )
-        assert received, "Should receive a response message"
-        assert received[0]["name"] == "daily_stats_update"
-        assert received[0]["args"][0] == {
-            date_range["start_date"]: {
-                "email": {"delivered": 0, "failure": 0, "requested": 0},
-                "sms": {"delivered": 0, "failure": 1, "requested": 1},
-            },
-        }
-
-        socketio_client.disconnect()
-        disconnected = not socketio_client.is_connected()
-        assert disconnected, "Client should be disconnected"
-
-
-@pytest.mark.parametrize(
-    ("service_id", "user_id", "date_range", "expected_call_args", "user"),
-    [
-        (
-            SERVICE_ONE_ID,
-            USER_ONE_ID,
-            {"start_date": "2024-01-01", "days": 7},
-            {
-                "service_id": SERVICE_ONE_ID,
-                "user_id": USER_ONE_ID,
-                "start_date": "2024-01-01",
-                "days": 7,
-            },
-            {"id": USER_ONE_ID, "name": "Test User"},
-        ),
-    ],
-)
-def test_fetch_daily_stats_by_user(
-    app_with_socketio,
-    mocker,
-    service_id,
-    user_id,
-    date_range,
-    expected_call_args,
-    user,
-):
-    app, socketio = app_with_socketio
-
-    mocker.patch(
-        "app.main.views.dashboard.get_stats_date_range", return_value=date_range
-    )
-
-    mock_service_api = mocker.patch(
-        "app.service_api_client.get_user_service_notification_statistics_by_day",
-        return_value={
-            date_range["start_date"]: {
-                "email": {"delivered": 0, "failure": 0, "requested": 0},
-                "sms": {"delivered": 0, "failure": 1, "requested": 1},
-            },
-        },
-    )
-
-    mocker.patch("app.user_api_client.get_user", return_value=user)
-
-    with app.test_client() as client:
-        with client.session_transaction() as sess:
-            sess["service_id"] = service_id
-            sess["user_id"] = user_id
-
-        socketio_client = SocketIOTestClient(app, socketio, flask_test_client=client)
-
-        connected = socketio_client.is_connected()
-        assert connected, "Client should be connected"
-
-        socketio_client.emit("fetch_daily_stats_by_user")
-        received = socketio_client.get_received()
-
-        mock_service_api.assert_called_once_with(
-            expected_call_args["service_id"],
-            expected_call_args["user_id"],
-            start_date=expected_call_args["start_date"],
-            days=expected_call_args["days"],
-        )
-        assert received, "Should receive a response message"
-        assert received[0]["name"] == "daily_stats_by_user_update"
-        assert received[0]["args"][0] == {
-            date_range["start_date"]: {
-                "email": {"delivered": 0, "failure": 0, "requested": 0},
-                "sms": {"delivered": 0, "failure": 1, "requested": 1},
-            },
-        }
-
-        socketio_client.disconnect()
-        disconnected = not socketio_client.is_connected()
-        assert disconnected, "Client should be disconnected"
