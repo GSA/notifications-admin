@@ -14,7 +14,7 @@
         document.getElementById('message').innerText = `${sms_sent.toLocaleString()} sent / ${sms_remaining_messages.toLocaleString()} remaining`;
 
         // Calculate minimum width for "Messages Sent" as 1% of the total chart width
-        var minSentPercentage = 0.01; // Minimum width as a percentage of total messages (1% in this case)
+        var minSentPercentage = 0.02; // Minimum width as a percentage of total messages (1% in this case)
         var minSentValue = totalMessages * minSentPercentage;
         var displaySent = Math.max(sms_sent, minSentValue);
         var displayRemaining = totalMessages - displaySent;

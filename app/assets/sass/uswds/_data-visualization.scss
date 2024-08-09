@@ -11,6 +11,10 @@ $failed: color('gray-cool-20');
   }
 }
 
+#totalMessageChartContainer {
+  max-width: 600px;
+}
+
 .bar {
   border-radius: units(0.5);
   &.delivered, &.usage {

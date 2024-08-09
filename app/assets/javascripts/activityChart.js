@@ -4,7 +4,7 @@
 
         const COLORS = {
             delivered: '#0076d6',
-            failed: '#c6cace',
+            failed: '#fa9441',
             text: '#666'
         };
 
