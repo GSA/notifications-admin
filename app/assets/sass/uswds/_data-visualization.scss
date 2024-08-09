@@ -2,13 +2,17 @@
 
 $delivered: color('blue-50v');
 $pending: color('green-cool-40v');
-$failed: color('orange-30v');
+$failed: color('gray-cool-20');
 
 .chart-container {
   display: flex;
   &.usage {
     height: units(4);
   }
+}
+
+#totalMessageChartContainer {
+  max-width: 600px;
 }
 
 .bar {
