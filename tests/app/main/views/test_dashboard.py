@@ -231,9 +231,14 @@ def test_get_started(
         return_value=copy.deepcopy(stub_template_stats),
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -260,9 +265,14 @@ def test_get_started_is_hidden_once_templates_exist(
         return_value=copy.deepcopy(stub_template_stats),
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -286,9 +296,14 @@ def test_inbound_messages_not_visible_to_service_without_permissions(
 ):
     service_one["permissions"] = []
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -312,9 +327,14 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_messages(
     mock_get_inbound_sms_summary,
 ):
     service_one["permissions"] = ["inbound_sms"]
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -343,9 +363,14 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_no_messages(
     mock_get_inbound_sms_summary_with_no_messages,
 ):
     service_one["permissions"] = ["inbound_sms"]
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -592,9 +617,14 @@ def test_should_show_recent_templates_on_dashboard(
         return_value=copy.deepcopy(stub_template_stats),
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -648,9 +678,14 @@ def test_should_not_show_recent_templates_on_dashboard_if_only_one_template_used
         return_value=stats,
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
     main = page.select_one("main").text
 
@@ -802,9 +837,14 @@ def test_should_show_upcoming_jobs_on_dashboard(
     mock_get_free_sms_fragment_limit,
     mock_get_inbound_sms_summary,
 ):
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -844,9 +884,14 @@ def test_should_not_show_upcoming_jobs_on_dashboard_if_count_is_0(
         },
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -869,9 +914,14 @@ def test_should_not_show_upcoming_jobs_on_dashboard_if_service_has_no_jobs(
     mock_get_inbound_sms_summary,
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -954,9 +1004,14 @@ def test_should_not_show_jobs_on_dashboard_for_users_with_uploads_page(
     mock_get_free_sms_fragment_limit,
     mock_get_inbound_sms_summary,
 ):
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
     page = client_request.get(
         "main.service_dashboard",
         service_id=SERVICE_ONE_ID,
@@ -1217,9 +1272,14 @@ def test_menu_send_messages(
     service_one["permissions"] = ["email", "sms"]
 
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
     page = _test_dashboard_menu(
         client_request,
         mocker,
@@ -1253,9 +1313,14 @@ def test_menu_manage_service(
     mock_get_free_sms_fragment_limit,
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
     page = _test_dashboard_menu(
         client_request,
         mocker,
@@ -1289,9 +1354,14 @@ def test_menu_main_settings(
     mock_get_free_sms_fragment_limit,
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
     page = _test_settings_menu(
         client_request,
         mocker,
@@ -1324,9 +1394,14 @@ def test_menu_manage_api_keys(
     mock_get_free_sms_fragment_limit,
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
     page = _test_dashboard_menu(
         client_request,
         mocker,
@@ -1363,9 +1438,14 @@ def test_menu_all_services_for_platform_admin_user(
     mock_get_free_sms_fragment_limit,
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
     page = _test_dashboard_menu(
         client_request, mocker, platform_admin_user, service_one, []
     )
@@ -1401,9 +1481,14 @@ def test_route_for_service_permissions(
             "app.service_api_client.get_global_notification_count", side_effect=_get
         )
         mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-        mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+        mocker.patch(
+            "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+        )
 
-        mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+        mocker.patch(
+            "app.main.views.dashboard.get_daily_stats_by_user",
+            return_value=mock_daily_stats_by_user,
+        )
         validate_route_permission(
             mocker,
             notify_admin,
@@ -1545,9 +1630,14 @@ def test_org_breadcrumbs_do_not_show_if_service_has_no_org(
     mock_get_free_sms_fragment_limit,
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
     assert not page.select(".navigation-organization-link")
@@ -1611,9 +1701,14 @@ def test_org_breadcrumbs_show_if_user_is_a_member_of_the_services_org(
         ),
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
     assert page.select_one(".navigation-organization-link")["href"] == url_for(
@@ -1646,9 +1741,14 @@ def test_org_breadcrumbs_do_not_show_if_user_is_a_member_of_the_services_org_but
     mocker.patch("app.models.service.Organization")
 
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
@@ -1683,9 +1783,14 @@ def test_org_breadcrumbs_show_if_user_is_platform_admin(
 
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
 
     client_request.login(platform_admin_user, service_one_json)
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
@@ -1718,9 +1823,14 @@ def test_breadcrumb_shows_if_service_is_suspended(
 
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
@@ -1751,9 +1861,14 @@ def test_service_dashboard_shows_usage(
         },
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
 
     service_one["permissions"] = permissions
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
@@ -1786,9 +1901,14 @@ def test_service_dashboard_shows_free_allowance(
         ],
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
 
 
 def test_service_dashboard_shows_batched_jobs(
@@ -1802,9 +1922,14 @@ def test_service_dashboard_shows_batched_jobs(
     mock_get_free_sms_fragment_limit,
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    mocker.patch("app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
+    )
 
-    mocker.patch("app.main.views.dashboard.get_daily_stats_by_user", return_value=mock_daily_stats_by_user)
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value=mock_daily_stats_by_user,
+    )
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
     job_table_body = page.find("table", class_="job-table")
