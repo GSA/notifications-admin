@@ -188,14 +188,14 @@
         var daily_stats = activityChartContainer.getAttribute('data-daily-stats');
         var daily_stats_by_user = activityChartContainer.getAttribute('data-daily_stats_by_user');
 
-        var data;
         try {
-            data = type === 'service' ? eval("(" + daily_stats + ")") : eval("(" + daily_stats_by_user + ")");
+            var serializedStats = type === 'service' ? daily_stats : daily_stats_by_user;
+            serializedStats = serializedStats.replace(/'/g, '"');
+            data = JSON.parse(serializedStats);
         } catch (error) {
-            console.error('Error parsing data:', error);
+            console.error('Error parsing JSON data:', error);
             return;
         }
-
         var labels = [];
         var deliveredData = [];
         var failedData = [];
