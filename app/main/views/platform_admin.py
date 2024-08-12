@@ -88,7 +88,7 @@ def download_all_users():
     writer = csv.DictWriter(
         output,
         fieldnames=fieldnames,
-        delimiter="\t",
+        delimiter=",",
     )
     # Write custom header
     writer.writerow(dict(zip(fieldnames, header)))
