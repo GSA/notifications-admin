@@ -189,9 +189,12 @@
         var daily_stats_by_user = activityChartContainer.getAttribute('data-daily_stats_by_user');
 
         try {
-            var serializedStats = type === 'service' ? daily_stats : daily_stats_by_user;
-            serializedStats = serializedStats.replace(/'/g, '"');
-            data = JSON.parse(serializedStats);
+            // Choose the correct JSON string based on the type ('service' or 'user'),
+            // replace single quotes with double quotes to ensure valid JSON format,
+            // then parse the JSON string into a JavaScript object.
+            var statJson = type === 'service' ? daily_stats : daily_stats_by_user;
+            statJson = statJson.replace(/'/g, '"');
+            data = JSON.parse(statJson);
         } catch (error) {
             console.error('Error parsing JSON data:', error);
             return;
