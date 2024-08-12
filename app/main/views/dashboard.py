@@ -32,7 +32,7 @@ from app.utils.user import user_has_permissions
 from notifications_utils.recipients import format_phone_number_human_readable
 
 
-@socketio.on("fetch_daily_stats")
+@socketio.on("fetch_daily_stats", namespace="/services")
 def handle_fetch_daily_stats():
     service_id = session.get("service_id")
     if service_id:
@@ -45,7 +45,7 @@ def handle_fetch_daily_stats():
         emit("error", {"error": "No service_id provided"})
 
 
-@socketio.on("fetch_daily_stats_by_user")
+@socketio.on("fetch_daily_stats_by_user", namespace="/services")
 def handle_fetch_daily_stats_by_user():
     service_id = session.get("service_id")
     user_id = session.get("user_id")
@@ -113,6 +113,7 @@ def service_dashboard(service_id):
             "original_file_name": job["original_file_name"],
         }
         for job in job_response
+        if job["job_status"] != "cancelled"
     ]
     return render_template(
         "views/dashboard/dashboard.html",

@@ -54,6 +54,7 @@ jobs:
         run: poetry run coverage report --fail-under=90
 
   end-to-end-tests:
+    if: ${{ github.actor != 'dependabot[bot]' }}
     permissions:
       checks: write
       pull-requests: write
@@ -84,6 +85,7 @@ jobs:
         ports:
           # Maps tcp port 6379 on service container to the host
           - 6379:6379
+
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-project
@@ -136,6 +138,12 @@ jobs:
         # Debugging for now to troubleshoot a connectivity issue to the local servers
         # run: curl --request GET --url "http://localhost:6012"
         env:
+          API_HOST_NAME: http://localhost:6011
+          DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
+          ADMIN_CLIENT_USERNAME: notify-admin
+
           NOTIFY_ENVIRONMENT: e2etest
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
