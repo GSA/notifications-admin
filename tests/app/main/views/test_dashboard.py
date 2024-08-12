@@ -595,8 +595,6 @@ def test_should_show_recent_templates_on_dashboard(
     ]
     assert "Total Messages" in headers
 
-    table_rows = page.find_all("tbody")[0].find_all("tr")
-
 
 @pytest.mark.parametrize(
     "stats",
