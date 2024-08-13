@@ -28,15 +28,11 @@
       <div id="message"></div>
     </div>
     <div id="totalMessageTable" class="margin-0"></div>
-    <p class="align-with-heading-copy margin-bottom-4">
-      What counts as 1 text message part?<br />
-      See <a class="usa-link" href="{{ url_for('.pricing') }}">Tracking usage</a>.
-    </p>
 
     <h2 class="line-height-sans-2 margin-bottom-0 margin-top-4">
       Activity snapshot
     </h2>
-    <div id="activityChartContainer">
+    <div id="activityChartContainer" data-daily-stats="{{ daily_stats }}" data-daily_stats_by_user="{{ daily_stats_by_user }}">
       <form class="usa-form">
         <label class="usa-label" for="options">Account</label>
         <select class="usa-select margin-bottom-2" name="options" id="options">
