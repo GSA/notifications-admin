@@ -114,8 +114,8 @@
                     <span>N/A</span>
                   {% endif %}
                 </td>
-                <td class="table-field delivered">{{ job.delivered_count if job.delivered_count is not none else '' }}</td>
-                <td class="table-field failed">{{ job.failed_count if job.failed_count is not none else '' }}</td>
+                <td class="table-field delivered">{{ job.delivered_count if job.delivered_count is not none else '0' }}</td>
+                <td class="table-field failed">{{ job.failed_count if job.failed_count is not none else '0' }}</td>
               </tr>
             {% endfor %}
           {% else %}
