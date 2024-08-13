@@ -21,7 +21,7 @@ MOCK_JOBS = {
             "scheduled_for": None,
             "service": "21b3ee3d-1cb0-4666-bfa0-9c5ac26d3fe3",
             "service_name": {"name": "Mock Texting Service"},
-            "statistics": [{"count": 1, "status": "delivered"},{"count": 5, "status": "failed"}],
+            "statistics": [{"count": 1, "status": "delivered"}, {"count": 5, "status": "failed"}],
             "template": "6a456418-498c-4c86-b0cd-9403c14a216c",
             "template_name": "Mock Template Name",
             "template_type": "sms",
@@ -106,8 +106,6 @@ def test_all_activity(
     assert (
         failed_cell == "5"
     ), f"Expected failed count '5', but got '{failed_cell}'"
-
-
     mock_get_page_of_jobs.assert_called_with(SERVICE_ONE_ID, page=current_page)
 
 
