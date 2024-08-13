@@ -185,41 +185,41 @@
             return;
         }
 
-        var socket = io("/services");
-        var eventType = type === 'service' ? 'fetch_daily_stats' : 'fetch_daily_stats_by_user';
-        var socketConnect = type === 'service' ? 'daily_stats_update' : 'daily_stats_by_user_update';
+        var daily_stats = activityChartContainer.getAttribute('data-daily-stats');
+        var daily_stats_by_user = activityChartContainer.getAttribute('data-daily_stats_by_user');
 
-        socket.on('connect', function () {
-            socket.emit(eventType);
-        });
+        try {
+            // Choose the correct JSON string based on the type ('service' or 'user'),
+            // replace single quotes with double quotes to ensure valid JSON format,
+            // then parse the JSON string into a JavaScript object.
+            var statsJson = type === 'service' ? daily_stats : daily_stats_by_user;
+            statsJson = statsJson.replace(/'/g, '"');
+            data = JSON.parse(statsJson);
+        } catch (error) {
+            console.error('Error parsing JSON data:', error);
+            return;
+        }
+        var labels = [];
+        var deliveredData = [];
+        var failedData = [];
 
-        socket.on('connect_error', function(error) {
-            console.error('WebSocket connection error:', error);
-        });
-
-        socket.on(socketConnect, function(data) {
-
-            var labels = [];
-            var deliveredData = [];
-            var failedData = [];
-
-            for (var dateString in data) {
-                // Parse the date string (assuming format YYYY-MM-DD)
+        for (var dateString in data) {
+            if (data.hasOwnProperty(dateString)) {
                 const dateParts = dateString.split('-');
-                const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0].slice(2)}`; // Format to MM/DD/YY
+                const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0].slice(2)}`;
 
                 labels.push(formattedDate);
                 deliveredData.push(data[dateString].sms.delivered);
                 failedData.push(data[dateString].sms.failure);
             }
+        }
 
+        try {
             createChart('#weeklyChart', labels, deliveredData, failedData);
             createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
-        });
-
-        socket.on('error', function(data) {
-            console.log('Error:', data);
-        });
+        } catch (error) {
+            console.error('Error creating chart or table:', error);
+        }
     };
 
     const handleDropdownChange = function(event) {

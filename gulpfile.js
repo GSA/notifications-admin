@@ -49,7 +49,6 @@ const javascripts = () => {
       paths.npm + 'timeago/jquery.timeago.js',
       paths.npm + 'textarea-caret/index.js',
       paths.npm + 'cbor-js/cbor.js',
-      paths.npm + 'socket.io-client/dist/socket.io.min.js',
       paths.npm + 'd3/dist/d3.min.js'
     ]));
 
@@ -78,7 +77,6 @@ const javascripts = () => {
     paths.src + 'javascripts/date.js',
     paths.src + 'javascripts/loginAlert.js',
     paths.src + 'javascripts/main.js',
-    paths.src + 'javascripts/sampleChartDashboard.js',
     paths.src + 'javascripts/totalMessagesChart.js',
     paths.src + 'javascripts/activityChart.js',
   ])
