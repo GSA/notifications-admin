@@ -99,9 +99,10 @@ const copyGtmHead = () => {
 
 // Task to copy images
 const copyImages = () => {
-  return src(paths.src + 'images/**/*')
+  return src(paths.src + 'images/**/*', { encoding: false })
     .pipe(dest(paths.dist + 'images/'));
 };
+
 
 // Configure USWDS paths
 uswds.settings.version = 3;
