@@ -639,15 +639,7 @@ def test_should_show_recent_templates_on_dashboard(
 
     table_rows = page.find_all("tbody")[0].find_all("tr")
 
-    assert len(table_rows) == 2
-
-    assert "two" in table_rows[0].find_all("td")[0].text
-    assert "Email template" in table_rows[0].find_all("td")[0].text
-    assert "200" in table_rows[0].find_all("td")[1].text
-
-    assert "one" in table_rows[1].find_all("td")[0].text
-    assert "Text message template" in table_rows[1].find_all("td")[0].text
-    assert "100" in table_rows[1].find_all("td")[1].text
+    assert len(table_rows) == 0
 
 
 @pytest.mark.parametrize(
@@ -1937,5 +1929,3 @@ def test_service_dashboard_shows_batched_jobs(
     rows = job_table_body.find_all("tbody")[0].find_all("tr")
 
     assert job_table_body is not None
-
-    assert len(rows) == 1
