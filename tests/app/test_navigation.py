@@ -68,6 +68,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "delivery_status_callback",
             "design_content",
             "documentation",
+            "download_all_users",
             "download_notifications_csv",
             "download_organization_usage_report",
             "edit_and_format_messages",

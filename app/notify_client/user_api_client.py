@@ -157,6 +157,10 @@ class UserApiClient(NotifyAdminAPIClient):
         endpoint = "/user"
         return self.get(endpoint)["data"]
 
+    def get_all_users_detailed(self):
+        endpoint = "/user/report-all-users"
+        return self.get(endpoint)["data"]
+
     @cache.delete("service-{service_id}")
     @cache.delete("service-{service_id}-template-folders")
     @cache.delete("user-{user_id}")
