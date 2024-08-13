@@ -84,6 +84,12 @@
             <th data-sortable scope="col" role="columnheader" class="table-field-heading">
               <span>Report</span>
             </th>
+            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
+              <span>Delivered</span>
+            </th>
+            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
+              <span>Failed</span>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -108,6 +114,8 @@
                     <span>N/A</span>
                   {% endif %}
                 </td>
+                <td class="table-field delivered">{{ job.delivered_count if job.delivered_count is not none else '' }}</td>
+                <td class="table-field failed">{{ job.failed_count if job.failed_count is not none else '' }}</td>
               </tr>
             {% endfor %}
           {% else %}
@@ -121,6 +129,17 @@
       <p><b>Note: </b>Report data is only available for 7 days after your message has been sent</p>
     </div>
     {{show_pagination}}
+    {% if current_user.has_permissions('view_activity') %}
+      <h2 class="line-height-sans-2 margin-bottom-0 margin-top-4">Download recent reports</h2>
+      <p class="font-body-sm">
+        <a href="{{ download_link_one_day }}" download="download" class="usa-link">Download all data last 24 hours (<abbr title="Comma separated values">CSV</abbr>)</a>
+      </p>
+      <p class="font-body-sm">
+        <a href="{{ download_link_five_day }}" download="download" class="usa-link">Download all data last 5 days (<abbr title="Comma separated values">CSV</abbr>)</a>
+      </p>
+      <p class="font-body-sm">
+        <a href="{{ download_link_seven_day }}" download="download" class="usa-link">Download all data last 7 days (<abbr title="Comma separated values">CSV</abbr>)</a>
+      </p>
+    {% endif %}
   </div>
-
 {% endblock %}

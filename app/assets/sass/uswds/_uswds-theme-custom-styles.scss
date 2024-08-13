@@ -464,7 +464,7 @@ td.table-empty-message {
       width: 25%;
    }
    td.time-sent {
-      width: 30%;
+      width: 14%;
    }
    td.sender {
       width: 20%;
@@ -474,12 +474,20 @@ td.table-empty-message {
       width: 5%;
    }
    td.report {
-      width: 5%;
+      width: 2%;
+      text-align: center;
+   }
+   td.delivered {
+      width: 2%;
+      text-align: center;
+   }
+   td.failed {
+      width: 2%;
       text-align: center;
    }
    td.report img {
       padding-top: 5px;
-    }
+   }
    th {
       padding: 0.5rem 1rem
    }
