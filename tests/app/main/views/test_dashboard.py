@@ -1928,4 +1928,6 @@ def test_service_dashboard_shows_batched_jobs(
 
     rows = job_table_body.find_all("tbody")[0].find_all("tr")
 
+    assert len(rows) == 0
+
     assert job_table_body is not None
