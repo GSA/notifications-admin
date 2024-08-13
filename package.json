@@ -32,7 +32,7 @@
     "cbor-js": "0.1.0",
     "d3": "^7.9.0",
     "govuk_frontend_toolkit": "^9.0.1",
-    "govuk-frontend": "2.13.0",
+    "govuk-frontend": "5.5.0",
     "gulp-merge": "^0.1.1",
     "hogan": "1.0.2",
     "jquery": "3.7.1",
