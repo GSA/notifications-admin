@@ -175,7 +175,6 @@ def create_app(application):
     init_govuk_frontend(application)
     init_jinja(application)
 
-
     for client in (
         csrf,
         login_manager,
