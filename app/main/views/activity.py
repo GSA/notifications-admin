@@ -20,7 +20,7 @@ def all_jobs_activity(service_id):
     jobs = job_api_client.get_page_of_jobs(service_id, page=page)
     all_jobs_dict = generate_job_dict(jobs)
     prev_page, next_page, pagination = handle_pagination(jobs, service_id, page)
-    message_type='sms',
+    message_type = ("sms",)
     return render_template(
         "views/activity/all-activity.html",
         all_jobs_dict=all_jobs_dict,
@@ -97,12 +97,20 @@ def generate_job_dict(jobs):
             "created_by": job["created_by"],
             "template_name": job["template_name"],
             "delivered_count": next(
-                (stat["count"] for stat in job["statistics"] if stat["status"] == "delivered"),
-                None
+                (
+                    stat["count"]
+                    for stat in job.get("statistics", [])
+                    if stat["status"] == "delivered"
+                ),
+                None,
             ),
             "failed_count": next(
-                (stat["count"] for stat in job["statistics"] if stat["status"] == "failed"),
-                None
+                (
+                    stat["count"]
+                    for stat in job.get("statistics", [])
+                    if stat["status"] == "failed"
+                ),
+                None,
             ),
         }
         for job in jobs["data"]

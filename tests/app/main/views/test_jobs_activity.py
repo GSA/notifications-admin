@@ -21,7 +21,7 @@ MOCK_JOBS = {
             "scheduled_for": None,
             "service": "21b3ee3d-1cb0-4666-bfa0-9c5ac26d3fe3",
             "service_name": {"name": "Mock Texting Service"},
-            "statistics": [{"count": 1, "status": "sending"}],
+            "statistics": [{"count": 1, "status": "delivered"},{"count": 5, "status": "failed"}],
             "template": "6a456418-498c-4c86-b0cd-9403c14a216c",
             "template_name": "Mock Template Name",
             "template_type": "sms",
@@ -63,7 +63,7 @@ def test_all_activity(
     assert table is not None, "Table not found in the response"
 
     headers = [th.get_text(strip=True) for th in table.find_all("th")]
-    expected_headers = ["Job ID#", "Template", "Time sent", "Sender", "Report"]
+    expected_headers = ["Job ID#", "Template", "Time sent", "Sender", "Report", "Delivered", "Failed"]
 
     assert (
         headers == expected_headers
@@ -74,7 +74,7 @@ def test_all_activity(
 
     job_row = rows[0]
     cells = job_row.find_all("td")
-    assert len(cells) == 5, "Expected five columns in the job row"
+    assert len(cells) == 7, "Expected five columns in the job row"
 
     job_id_cell = cells[0].find("a").get_text(strip=True)
 
@@ -96,6 +96,17 @@ def test_all_activity(
 
     report_cell = cells[4].find("span").get_text(strip=True)
     assert report_cell == "N/A", f"Expected report 'N/A', but got '{report_cell}'"
+
+    delivered_cell = cells[5].get_text(strip=True)
+    assert (
+        delivered_cell == "1"
+    ), f"Expected delivered count '1', but got '{delivered_cell}'"
+
+    failed_cell = cells[6].get_text(strip=True)
+    assert (
+        failed_cell == "5"
+    ), f"Expected failed count '5', but got '{failed_cell}'"
+
 
     mock_get_page_of_jobs.assert_called_with(SERVICE_ONE_ID, page=current_page)
 
