@@ -635,7 +635,7 @@ def test_should_show_recent_templates_on_dashboard(
     headers = [
         header.text.strip() for header in page.find_all("h2") + page.find_all("h1")
     ]
-    assert "Total Messages" in headers
+    assert "Total messages" in headers
 
     table_rows = page.find_all("tbody")[0].find_all("tr")
 

@@ -229,16 +229,16 @@
         const selectedText = selectElement.options[selectElement.selectedIndex].text;
 
         if (selectedValue === "individual") {
-            subTitle.textContent = selectedText + " - Last 7 Days";
+            subTitle.textContent = selectedText + " - last 7 days";
             fetchData('individual');
         } else if (selectedValue === "service") {
-            subTitle.textContent = selectedText + " - Last 7 Days";
+            subTitle.textContent = selectedText + " - last 7 days";
             fetchData('service');
         }
 
         // Update ARIA live region
         const liveRegion = document.getElementById('aria-live-account');
-        liveRegion.textContent = `Data updated for ${selectedText} - Last 7 Days`;
+        liveRegion.textContent = `Data updated for ${selectedText} - last 7 days`;
 
         // Switch tables based on dropdown selection
         const selectedTable = selectedValue === "individual" ? "table1" : "table2";
