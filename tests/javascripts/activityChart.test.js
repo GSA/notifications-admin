@@ -32,7 +32,7 @@ beforeAll(done => {
       </form>
       <div id="activityChart" >
         <div class="chart-header">
-          <div class="chart-subtitle">Service Name - Last 7 Days</div>
+          <div class="chart-subtitle">Service Name - last 7 days</div>
           <div class="chart-legend" aria-label="Legend"></div>
         </div>
         <div class="chart-container" id="weeklyChart" data-service-id="12345" style="width: 600px;"></div>
