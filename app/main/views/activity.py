@@ -35,6 +35,13 @@ def all_jobs_activity(service_id):
             status=request.args.get("status"),
             number_of_days="one_day",
         ),
+        download_link_three_day=url_for(
+            ".download_notifications_csv",
+            service_id=current_service.id,
+            message_type=message_type,
+            status=request.args.get("status"),
+            number_of_days="three_day",
+        ),
         download_link_five_day=url_for(
             ".download_notifications_csv",
             service_id=current_service.id,
