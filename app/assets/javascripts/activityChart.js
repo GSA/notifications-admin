@@ -189,7 +189,7 @@
         }
 
         var url = type === 'service' ? `/daily_stats.json` : `/daily_stats_by_user.json`;
-        fetch(url)
+        return fetch(url)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -214,6 +214,7 @@
 
                 createChart('#weeklyChart', labels, deliveredData, failedData);
                 createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
+                return data;
             })
             .catch(error => console.error('Error fetching daily stats:', error));
     };
