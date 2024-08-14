@@ -94,7 +94,7 @@ def service_dashboard(service_id):
 
 @main.route("/daily_stats.json")
 def get_daily_stats():
-    service_id=session.get('service_id')
+    service_id = session.get('service_id')
     date_range = get_stats_date_range()
 
     stats = service_api_client.get_service_notification_statistics_by_day(
@@ -105,9 +105,9 @@ def get_daily_stats():
 
 @main.route("/daily_stats_by_user.json")
 def get_daily_stats_by_user():
-    service_id=session.get('service_id')
+    service_id = session.get('service_id')
     date_range = get_stats_date_range()
-    user_id =current_user.id
+    user_id = current_user.id
     stats = service_api_client.get_user_service_notification_statistics_by_day(
         service_id,
         user_id,
