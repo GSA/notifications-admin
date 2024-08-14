@@ -96,6 +96,8 @@ EXCLUDED_ENDPOINTS = tuple(
             "get_users_report",
             "get_daily_volumes",
             "get_daily_sms_provider_volumes",
+            "get_daily_stats",
+            "get_daily_stats_by_user",
             "get_volumes_by_service",
             "get_example_csv",
             "get_notifications_as_json",
