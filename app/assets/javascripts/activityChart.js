@@ -185,41 +185,39 @@
             return;
         }
 
-        var daily_stats = activityChartContainer.getAttribute('data-daily-stats');
-        var daily_stats_by_user = activityChartContainer.getAttribute('data-daily_stats_by_user');
+        var url = type === 'service' ? `/daily_stats.json` : `/daily_stats_by_user.json`;
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data)
+                var labels = [];
+                var deliveredData = [];
+                var failedData = [];
 
-        try {
-            // Choose the correct JSON string based on the type ('service' or 'user'),
-            // replace single quotes with double quotes to ensure valid JSON format,
-            // then parse the JSON string into a JavaScript object.
-            var statsJson = type === 'service' ? daily_stats : daily_stats_by_user;
-            statsJson = statsJson.replace(/'/g, '"');
-            data = JSON.parse(statsJson);
-        } catch (error) {
-            console.error('Error parsing JSON data:', error);
-            return;
-        }
-        var labels = [];
-        var deliveredData = [];
-        var failedData = [];
+                for (var dateString in data) {
+                    if (data.hasOwnProperty(dateString)) {
+                        const dateParts = dateString.split('-');
+                        const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0].slice(2)}`;
 
-        for (var dateString in data) {
-            if (data.hasOwnProperty(dateString)) {
-                const dateParts = dateString.split('-');
-                const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0].slice(2)}`;
+                        labels.push(formattedDate);
+                        deliveredData.push(data[dateString].sms.delivered);
+                        failedData.push(data[dateString].sms.failure);
+                    }
+                }
 
-                labels.push(formattedDate);
-                deliveredData.push(data[dateString].sms.delivered);
-                failedData.push(data[dateString].sms.failure);
-            }
-        }
-
-        try {
-            createChart('#weeklyChart', labels, deliveredData, failedData);
-            createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
-        } catch (error) {
-            console.error('Error creating chart or table:', error);
-        }
+                try {
+                    createChart('#weeklyChart', labels, deliveredData, failedData);
+                    createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
+                } catch (error) {
+                    console.error('Error creating chart or table:', error);
+                }
+            })
+            .catch(error => console.error('Error fetching daily stats:', error));
     };
 
     const handleDropdownChange = function(event) {
