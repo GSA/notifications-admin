@@ -238,17 +238,28 @@
 
         // Update ARIA live region
         const liveRegion = document.getElementById('aria-live-account');
-            liveRegion.textContent = `Data updated for ${selectedText} - Last 7 Days`;
-        };
+        liveRegion.textContent = `Data updated for ${selectedText} - Last 7 Days`;
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize activityChart chart and table with service data by default
-            fetchData('service');
-
-            // Add event listener to the dropdown
-            const dropdown = document.getElementById('options');
-            dropdown.addEventListener('change', handleDropdownChange);
+        // Switch tables based on dropdown selection
+        const selectedTable = selectedValue === "individual" ? "table1" : "table2";
+        const tables = document.querySelectorAll('.table-overflow-x-auto');
+        tables.forEach(function(table) {
+            table.classList.add('hidden'); // Hide all tables by adding the hidden class
+            table.classList.remove('visible'); // Ensure they are not visible
         });
+        const tableToShow = document.getElementById(selectedTable);
+        tableToShow.classList.remove('hidden'); // Remove hidden class
+        tableToShow.classList.add('visible'); // Add visible class
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize activityChart chart and table with service data by default
+        fetchData('service');
+
+        // Add event listener to the dropdown
+        const dropdown = document.getElementById('options');
+        dropdown.addEventListener('change', handleDropdownChange);
+    });
 
         // Resize chart on window resize
         window.addEventListener('resize', function() {
