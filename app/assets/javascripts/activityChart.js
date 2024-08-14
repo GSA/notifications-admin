@@ -26,6 +26,13 @@
                 .append('g')
                 .attr('transform', `translate(${margin.left},${margin.top})`);
 
+            let tooltip = d3.select('#tooltip');
+
+            if (tooltip.empty()) {
+                tooltip = d3.select('body').append('div')
+                    .attr('id', 'tooltip')
+                    .style('display', 'none');
+            }
             // Create legend
             const legendContainer = d3.select('.chart-legend');
             legendContainer.selectAll('*').remove(); // Clear any existing legend
@@ -95,10 +102,6 @@
             const color = d3.scaleOrdinal()
                 .domain(['delivered', 'failed'])
                 .range([COLORS.delivered, COLORS.failed]);
-                            // Create tooltip
-            const tooltip = d3.select('body').append('div')
-            .attr('id', 'tooltip')
-            .style('display', 'none');
 
         // Create bars with animation
         const barGroups = svg.selectAll('.bar-group')
@@ -194,10 +197,9 @@
                 return response.json();
             })
             .then(data => {
-                console.log(data)
-                var labels = [];
-                var deliveredData = [];
-                var failedData = [];
+                labels = [];
+                deliveredData = [];
+                failedData = [];
 
                 for (var dateString in data) {
                     if (data.hasOwnProperty(dateString)) {
@@ -210,12 +212,8 @@
                     }
                 }
 
-                try {
-                    createChart('#weeklyChart', labels, deliveredData, failedData);
-                    createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
-                } catch (error) {
-                    console.error('Error creating chart or table:', error);
-                }
+                createChart('#weeklyChart', labels, deliveredData, failedData);
+                createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
             })
             .catch(error => console.error('Error fetching daily stats:', error));
     };
@@ -226,17 +224,12 @@
         const selectElement = document.getElementById('options');
         const selectedText = selectElement.options[selectElement.selectedIndex].text;
 
-        if (selectedValue === "individual") {
-            subTitle.textContent = selectedText + " - Last 7 Days";
-            fetchData('individual');
-        } else if (selectedValue === "service") {
-            subTitle.textContent = selectedText + " - Last 7 Days";
-            fetchData('service');
-        }
+        subTitle.textContent = `${selectedText} - last 7 days`;
+        fetchData(selectedValue);
 
         // Update ARIA live region
         const liveRegion = document.getElementById('aria-live-account');
-        liveRegion.textContent = `Data updated for ${selectedText} - Last 7 Days`;
+        liveRegion.textContent = `Data updated for ${selectedText} - last 7 days`;
 
         // Switch tables based on dropdown selection
         const selectedTable = selectedValue === "individual" ? "table1" : "table2";
@@ -261,8 +254,10 @@
 
         // Resize chart on window resize
         window.addEventListener('resize', function() {
-            const selectedValue = document.getElementById('options').value;
-            handleDropdownChange({ target: { value: selectedValue } });
+            if (labels.length > 0 && deliveredData.length > 0 && failedData.length > 0) {
+                createChart('#weeklyChart', labels, deliveredData, failedData);
+                createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
+            }
         });
 
         // Export functions for testing
