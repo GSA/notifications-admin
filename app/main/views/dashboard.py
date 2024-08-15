@@ -53,17 +53,12 @@ def service_dashboard(service_id):
     free_sms_allowance = billing_api_client.get_free_sms_fragment_limit_for_year(
         current_service.id,
     )
-    date_range = get_stats_date_range()
     usage_data = get_annual_usage_breakdown(yearly_usage, free_sms_allowance)
     sms_sent = usage_data["sms_sent"]
     sms_allowance_remaining = usage_data["sms_allowance_remaining"]
 
     job_response = job_api_client.get_jobs(service_id)["data"]
     service_data_retention_days = 7
-    daily_stats = get_daily_stats(service_id, date_range)
-    daily_stats_by_user = get_daily_stats_by_user(
-        service_id, current_user.id, date_range
-    )
 
     jobs = [
         {
@@ -94,24 +89,32 @@ def service_dashboard(service_id):
         service_data_retention_days=service_data_retention_days,
         sms_sent=sms_sent,
         sms_allowance_remaining=sms_allowance_remaining,
-        daily_stats=daily_stats,
-        daily_stats_by_user=daily_stats_by_user,
     )
 
 
-def get_daily_stats(service_id, date_range):
-    return service_api_client.get_service_notification_statistics_by_day(
+@main.route("/daily_stats.json")
+def get_daily_stats():
+    service_id = session.get("service_id")
+    date_range = get_stats_date_range()
+
+    stats = service_api_client.get_service_notification_statistics_by_day(
         service_id, start_date=date_range["start_date"], days=date_range["days"]
     )
+    return jsonify(stats)
 
 
-def get_daily_stats_by_user(service_id, user_id, date_range):
-    return service_api_client.get_user_service_notification_statistics_by_day(
+@main.route("/daily_stats_by_user.json")
+def get_daily_stats_by_user():
+    service_id = session.get("service_id")
+    date_range = get_stats_date_range()
+    user_id = current_user.id
+    stats = service_api_client.get_user_service_notification_statistics_by_day(
         service_id,
         user_id,
         start_date=date_range["start_date"],
         days=date_range["days"],
     )
+    return jsonify(stats)
 
 
 @main.route("/services/<uuid:service_id>/dashboard.json")
