@@ -5,7 +5,6 @@ from itertools import groupby
 
 from flask import Response, abort, jsonify, render_template, request, session, url_for
 from flask_login import current_user
-from flask_socketio import emit
 from werkzeug.utils import redirect
 
 from app import (
@@ -13,7 +12,6 @@ from app import (
     current_service,
     job_api_client,
     service_api_client,
-    socketio,
     template_statistics_client,
 )
 from app.formatters import format_date_numeric, format_datetime_numeric, get_time_left
@@ -32,38 +30,6 @@ from app.utils.user import user_has_permissions
 from notifications_utils.recipients import format_phone_number_human_readable
 
 
-@socketio.on("fetch_daily_stats")
-def handle_fetch_daily_stats():
-    service_id = session.get("service_id")
-    if service_id:
-        date_range = get_stats_date_range()
-        daily_stats = service_api_client.get_service_notification_statistics_by_day(
-            service_id, start_date=date_range["start_date"], days=date_range["days"]
-        )
-        emit("daily_stats_update", daily_stats)
-    else:
-        emit("error", {"error": "No service_id provided"})
-
-
-@socketio.on("fetch_daily_stats_by_user")
-def handle_fetch_daily_stats_by_user():
-    service_id = session.get("service_id")
-    user_id = session.get("user_id")
-    if service_id and user_id:
-        date_range = get_stats_date_range()
-        daily_stats_by_user = (
-            service_api_client.get_user_service_notification_statistics_by_day(
-                service_id,
-                user_id,
-                start_date=date_range["start_date"],
-                days=date_range["days"],
-            )
-        )
-        emit("daily_stats_by_user_update", daily_stats_by_user)
-    else:
-        emit("error", {"error": "No service_id or user_id provided"})
-
-
 @main.route("/services/<uuid:service_id>/dashboard")
 @user_has_permissions("view_activity", "send_messages")
 def old_service_dashboard(service_id):
@@ -79,6 +45,17 @@ def service_dashboard(service_id):
 
     if not current_user.has_permissions("view_activity"):
         return redirect(url_for("main.choose_template", service_id=service_id))
+
+    yearly_usage = billing_api_client.get_annual_usage_for_service(
+        service_id,
+        get_current_financial_year(),
+    )
+    free_sms_allowance = billing_api_client.get_free_sms_fragment_limit_for_year(
+        current_service.id,
+    )
+    usage_data = get_annual_usage_breakdown(yearly_usage, free_sms_allowance)
+    sms_sent = usage_data["sms_sent"]
+    sms_allowance_remaining = usage_data["sms_allowance_remaining"]
 
     job_response = job_api_client.get_jobs(service_id)["data"]
     service_data_retention_days = 7
@@ -102,6 +79,7 @@ def service_dashboard(service_id):
             "original_file_name": job["original_file_name"],
         }
         for job in job_response
+        if job["job_status"] != "cancelled"
     ]
     return render_template(
         "views/dashboard/dashboard.html",
@@ -109,7 +87,34 @@ def service_dashboard(service_id):
         partials=get_dashboard_partials(service_id),
         jobs=jobs,
         service_data_retention_days=service_data_retention_days,
+        sms_sent=sms_sent,
+        sms_allowance_remaining=sms_allowance_remaining,
     )
+
+
+@main.route("/daily_stats.json")
+def get_daily_stats():
+    service_id = session.get("service_id")
+    date_range = get_stats_date_range()
+
+    stats = service_api_client.get_service_notification_statistics_by_day(
+        service_id, start_date=date_range["start_date"], days=date_range["days"]
+    )
+    return jsonify(stats)
+
+
+@main.route("/daily_stats_by_user.json")
+def get_daily_stats_by_user():
+    service_id = session.get("service_id")
+    date_range = get_stats_date_range()
+    user_id = current_user.id
+    stats = service_api_client.get_user_service_notification_statistics_by_day(
+        service_id,
+        user_id,
+        start_date=date_range["start_date"],
+        days=date_range["days"],
+    )
+    return jsonify(stats)
 
 
 @main.route("/services/<uuid:service_id>/dashboard.json")
