@@ -5,7 +5,6 @@ from itertools import groupby
 
 from flask import Response, abort, jsonify, render_template, request, session, url_for
 from flask_login import current_user
-from flask_socketio import emit
 from werkzeug.utils import redirect
 
 from app import (
@@ -13,7 +12,6 @@ from app import (
     current_service,
     job_api_client,
     service_api_client,
-    socketio,
     template_statistics_client,
 )
 from app.formatters import format_date_numeric, format_datetime_numeric, get_time_left
@@ -30,38 +28,6 @@ from app.utils.pagination import generate_next_dict, generate_previous_dict
 from app.utils.time import get_current_financial_year
 from app.utils.user import user_has_permissions
 from notifications_utils.recipients import format_phone_number_human_readable
-
-
-@socketio.on("fetch_daily_stats")
-def handle_fetch_daily_stats():
-    service_id = session.get("service_id")
-    if service_id:
-        date_range = get_stats_date_range()
-        daily_stats = service_api_client.get_service_notification_statistics_by_day(
-            service_id, start_date=date_range["start_date"], days=date_range["days"]
-        )
-        emit("daily_stats_update", daily_stats)
-    else:
-        emit("error", {"error": "No service_id provided"})
-
-
-@socketio.on("fetch_daily_stats_by_user")
-def handle_fetch_daily_stats_by_user():
-    service_id = session.get("service_id")
-    user_id = session.get("user_id")
-    if service_id and user_id:
-        date_range = get_stats_date_range()
-        daily_stats_by_user = (
-            service_api_client.get_user_service_notification_statistics_by_day(
-                service_id,
-                user_id,
-                start_date=date_range["start_date"],
-                days=date_range["days"],
-            )
-        )
-        emit("daily_stats_by_user_update", daily_stats_by_user)
-    else:
-        emit("error", {"error": "No service_id or user_id provided"})
 
 
 @main.route("/services/<uuid:service_id>/dashboard")
@@ -124,6 +90,31 @@ def service_dashboard(service_id):
         sms_sent=sms_sent,
         sms_allowance_remaining=sms_allowance_remaining,
     )
+
+
+@main.route("/daily_stats.json")
+def get_daily_stats():
+    service_id = session.get("service_id")
+    date_range = get_stats_date_range()
+
+    stats = service_api_client.get_service_notification_statistics_by_day(
+        service_id, start_date=date_range["start_date"], days=date_range["days"]
+    )
+    return jsonify(stats)
+
+
+@main.route("/daily_stats_by_user.json")
+def get_daily_stats_by_user():
+    service_id = session.get("service_id")
+    date_range = get_stats_date_range()
+    user_id = current_user.id
+    stats = service_api_client.get_user_service_notification_statistics_by_day(
+        service_id,
+        user_id,
+        start_date=date_range["start_date"],
+        days=date_range["days"],
+    )
+    return jsonify(stats)
 
 
 @main.route("/services/<uuid:service_id>/dashboard.json")

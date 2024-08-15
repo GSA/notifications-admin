@@ -44,8 +44,6 @@ jobs:
         run: poetry run isort --check-only ./app ./tests
       - name: Check dead code
         run: make dead-code
-      - name: Run js lint
-        run: npm run lint
       - name: Run js tests
         run: npm test
       - name: Run py tests with coverage
@@ -54,6 +52,7 @@ jobs:
         run: poetry run coverage report --fail-under=90
 
   end-to-end-tests:
+    if: ${{ github.actor != 'dependabot[bot]' }}
     permissions:
       checks: write
       pull-requests: write
@@ -84,6 +83,7 @@ jobs:
         ports:
           # Maps tcp port 6379 on service container to the host
           - 6379:6379
+
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-project

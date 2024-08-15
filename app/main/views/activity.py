@@ -13,14 +13,14 @@ from app.utils.user import user_has_permissions
 
 
 @main.route("/activity/services/<uuid:service_id>")
-@user_has_permissions()
+@user_has_permissions("view_activity")
 def all_jobs_activity(service_id):
     service_data_retention_days = 7
     page = get_page_from_request()
     jobs = job_api_client.get_page_of_jobs(service_id, page=page)
     all_jobs_dict = generate_job_dict(jobs)
     prev_page, next_page, pagination = handle_pagination(jobs, service_id, page)
-
+    message_type = ("sms",)
     return render_template(
         "views/activity/all-activity.html",
         all_jobs_dict=all_jobs_dict,
@@ -28,6 +28,34 @@ def all_jobs_activity(service_id):
         next_page=next_page,
         prev_page=prev_page,
         pagination=pagination,
+        download_link_one_day=url_for(
+            ".download_notifications_csv",
+            service_id=current_service.id,
+            message_type=message_type,
+            status=request.args.get("status"),
+            number_of_days="one_day",
+        ),
+        download_link_three_day=url_for(
+            ".download_notifications_csv",
+            service_id=current_service.id,
+            message_type=message_type,
+            status=request.args.get("status"),
+            number_of_days="three_day",
+        ),
+        download_link_five_day=url_for(
+            ".download_notifications_csv",
+            service_id=current_service.id,
+            message_type=message_type,
+            status=request.args.get("status"),
+            number_of_days="five_day",
+        ),
+        download_link_seven_day=url_for(
+            ".download_notifications_csv",
+            service_id=current_service.id,
+            message_type=message_type,
+            status=request.args.get("status"),
+            number_of_days="seven_day",
+        ),
     )
 
 
@@ -75,6 +103,22 @@ def generate_job_dict(jobs):
             "processing_started": job["processing_started"],
             "created_by": job["created_by"],
             "template_name": job["template_name"],
+            "delivered_count": next(
+                (
+                    stat["count"]
+                    for stat in job.get("statistics", [])
+                    if stat["status"] == "delivered"
+                ),
+                None,
+            ),
+            "failed_count": next(
+                (
+                    stat["count"]
+                    for stat in job.get("statistics", [])
+                    if stat["status"] == "failed"
+                ),
+                None,
+            ),
         }
         for job in jobs["data"]
     ]
