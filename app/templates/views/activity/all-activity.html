@@ -15,7 +15,7 @@
           class="usa-pagination__link usa-pagination__previous-page"
           aria-label="Previous page"
           >
-          <img src="{{ url_for('static', filename='img/usa-icons/navigate_before.svg') }}" alt="arrow">
+          <img src="{{ asset_url('img/usa-icons/navigate_before.svg') }}" alt="arrow">
           <span class="usa-pagination__link-text">Previous</span></a
         >
       </li>
@@ -50,7 +50,7 @@
           aria-label="Next page"
         >
           <span class="usa-pagination__link-text">Next </span>
-          <img src="{{ url_for('static', filename='img/usa-icons/navigate_next.svg') }}" alt="arrow">
+          <img src="{{ asset_url('img/usa-icons/navigate_next.svg') }}" alt="arrow">
         </a>
       </li>
       {% endif %}
