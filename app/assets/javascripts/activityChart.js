@@ -26,6 +26,13 @@
                 .append('g')
                 .attr('transform', `translate(${margin.left},${margin.top})`);
 
+            let tooltip = d3.select('#tooltip');
+
+            if (tooltip.empty()) {
+                tooltip = d3.select('body').append('div')
+                    .attr('id', 'tooltip')
+                    .style('display', 'none');
+            }
             // Create legend
             const legendContainer = d3.select('.chart-legend');
             legendContainer.selectAll('*').remove(); // Clear any existing legend
@@ -95,10 +102,6 @@
             const color = d3.scaleOrdinal()
                 .domain(['delivered', 'failed'])
                 .range([COLORS.delivered, COLORS.failed]);
-                            // Create tooltip
-            const tooltip = d3.select('body').append('div')
-            .attr('id', 'tooltip')
-            .style('display', 'none');
 
         // Create bars with animation
         const barGroups = svg.selectAll('.bar-group')
@@ -185,41 +188,35 @@
             return;
         }
 
-        var daily_stats = activityChartContainer.getAttribute('data-daily-stats');
-        var daily_stats_by_user = activityChartContainer.getAttribute('data-daily_stats_by_user');
+        var url = type === 'service' ? `/daily_stats.json` : `/daily_stats_by_user.json`;
+        return fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                labels = [];
+                deliveredData = [];
+                failedData = [];
 
-        try {
-            // Choose the correct JSON string based on the type ('service' or 'user'),
-            // replace single quotes with double quotes to ensure valid JSON format,
-            // then parse the JSON string into a JavaScript object.
-            var statsJson = type === 'service' ? daily_stats : daily_stats_by_user;
-            statsJson = statsJson.replace(/'/g, '"');
-            data = JSON.parse(statsJson);
-        } catch (error) {
-            console.error('Error parsing JSON data:', error);
-            return;
-        }
-        var labels = [];
-        var deliveredData = [];
-        var failedData = [];
+                for (var dateString in data) {
+                    if (data.hasOwnProperty(dateString)) {
+                        const dateParts = dateString.split('-');
+                        const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0].slice(2)}`;
 
-        for (var dateString in data) {
-            if (data.hasOwnProperty(dateString)) {
-                const dateParts = dateString.split('-');
-                const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0].slice(2)}`;
+                        labels.push(formattedDate);
+                        deliveredData.push(data[dateString].sms.delivered);
+                        failedData.push(data[dateString].sms.failure);
+                    }
+                }
 
-                labels.push(formattedDate);
-                deliveredData.push(data[dateString].sms.delivered);
-                failedData.push(data[dateString].sms.failure);
-            }
-        }
-
-        try {
-            createChart('#weeklyChart', labels, deliveredData, failedData);
-            createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
-        } catch (error) {
-            console.error('Error creating chart or table:', error);
-        }
+                createChart('#weeklyChart', labels, deliveredData, failedData);
+                createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
+                return data;
+            })
+            .catch(error => console.error('Error fetching daily stats:', error));
     };
 
     const handleDropdownChange = function(event) {
@@ -228,13 +225,8 @@
         const selectElement = document.getElementById('options');
         const selectedText = selectElement.options[selectElement.selectedIndex].text;
 
-        if (selectedValue === "individual") {
-            subTitle.textContent = selectedText + " - last 7 days";
-            fetchData('individual');
-        } else if (selectedValue === "service") {
-            subTitle.textContent = selectedText + " - last 7 days";
-            fetchData('service');
-        }
+        subTitle.textContent = `${selectedText} - last 7 days`;
+        fetchData(selectedValue);
 
         // Update ARIA live region
         const liveRegion = document.getElementById('aria-live-account');
@@ -263,8 +255,10 @@
 
         // Resize chart on window resize
         window.addEventListener('resize', function() {
-            const selectedValue = document.getElementById('options').value;
-            handleDropdownChange({ target: { value: selectedValue } });
+            if (labels.length > 0 && deliveredData.length > 0 && failedData.length > 0) {
+                createChart('#weeklyChart', labels, deliveredData, failedData);
+                createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
+            }
         });
 
         // Export functions for testing
