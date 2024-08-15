@@ -413,7 +413,7 @@
         "filename": "app/templates/new/components/head.html",
         "hashed_secret": "ee5048791fc7ff45a1545e24f85bec3317371327",
         "is_verified": false,
-        "line_number": 34,
+        "line_number": 35,
         "is_secret": false
       }
     ],
@@ -692,5 +692,5 @@
       }
     ]
   },
-  "generated_at": "2024-08-08T19:45:34Z"
+  "generated_at": "2024-08-15T15:38:37Z"
 }
