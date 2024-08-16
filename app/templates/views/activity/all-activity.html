@@ -110,7 +110,7 @@
                 <td class="table-field report">
                   {% if job.time_left != "Data no longer available" %}
                     <a href="{{ job.download_link }}"><img src="{{ url_for('static', filename='img/material-icons/file_download.svg') }}" alt="File Download Icon"></a>
-                  {% elif job %}
+                  {% else %}
                     <span>N/A</span>
                   {% endif %}
                 </td>
@@ -122,7 +122,7 @@
             <tr class="table-row">
               <td class="table-empty-message" colspan="10">No batched job messages found (messages are kept for {{ service_data_retention_days }} days).</td>
             </tr>
-        {% endif %}
+          {% endif %}
         </tbody>
       </table>
       <div class="usa-sr-only usa-table__announcement-region" aria-live="polite"></div>
