@@ -9,6 +9,9 @@ $failed: color('gray-cool-20');
   &.usage {
     height: units(4);
   }
+  svg {
+    overflow: visible;
+  }
 }
 
 #totalMessageChartContainer {
