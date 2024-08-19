@@ -194,16 +194,12 @@ def user_profile_mobile_number_authenticate():
         return redirect(url_for(".user_profile_mobile_number"))
 
     session[NEW_MOBILE_PASSWORD_CONFIRMED] = True
-    print(f"GOING TO SEND VERIFY CODE TO {session[NEW_MOBILE]}")
     current_user.send_verify_code(to=session[NEW_MOBILE])
     create_mobile_number_change_event(
         user_id=current_user.id,
         updated_by_id=current_user.id,
         original_mobile_number=current_user.mobile_number,
         new_mobile_number=session[NEW_MOBILE],
-    )
-    print(
-        f"sent create_mobile_number_change_event original {current_user.mobile_number} new {session[NEW_MOBILE]}"
     )
     return redirect(url_for(".user_profile_mobile_number_confirm"))
 
