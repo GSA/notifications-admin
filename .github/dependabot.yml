@@ -9,6 +9,10 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
+    assignees:
+      - "A-Shumway42"
+    reviewers:
+      - "A-Shumway42"
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
