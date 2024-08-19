@@ -14,3 +14,7 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: increase
+    assignees:
+      - "alexjanousekGSA"
+    reviewers:
+      - "alexjanousekGSA"
