@@ -35,11 +35,6 @@
               </a>
             </li>
           {% endif %}
-          {% if page == 3 and pagination.last > 4 %}
-            <li class="usa-pagination__item usa-pagination__overflow" aria-label="ellipsis indicating non-visible pages">
-              <span>…</span>
-            </li>
-          {% endif %}
         {% endfor %}
       {% endif %}
       {% if next_page %}
@@ -58,10 +53,11 @@
   </nav>
   {% endif %}
 {% endset %}
-
 {% block maincolumn_content %}
   <div class="margin-bottom-8">
     <h1 class="usa-sr-only">All activity</h1>
+    {{jobs}}
+
     <h2 class="font-body-2xl line-height-sans-2 margin-0">All activity</h2>
     <h2 class="margin-top-4 margin-bottom-1">Sent jobs</h2>
     <div class="usa-table-container--scrollable-mobile">
