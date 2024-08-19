@@ -110,15 +110,13 @@ class UserApiClient(NotifyAdminAPIClient):
             raise
 
     def send_verify_code(self, user_id, code_type, to, next_string=None):
-        print(hilite("SEND VERIFY CODE"))
+
         data = {"to": to}
         if next_string:
             data["next"] = next_string
         if code_type == "email":
             data["email_auth_link_host"] = self.admin_url
-        print(hilite(f"DATA {data}"))
         endpoint = "/user/{0}/{1}-code".format(user_id, code_type)
-        print(hilite(f"ENDPOINT {endpoint}"))
         current_app.logger.warn(hilite(f"Sending verify_code {code_type} to {user_id}"))
         self.post(endpoint, data=data)
 
