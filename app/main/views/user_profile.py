@@ -203,13 +203,6 @@ def user_profile_mobile_number_authenticate():
     )
     return redirect(url_for(".user_profile_mobile_number_confirm"))
 
-    # return render_template(
-    #    "views/user-profile/authenticate.html",
-    #    thing="mobile number",
-    #    form=form,
-    #    back_link=url_for(".user_profile_mobile_number_confirm"),
-    # )
-
 
 @main.route("/user-profile/mobile-number/confirm", methods=["GET", "POST"])
 @user_is_logged_in
