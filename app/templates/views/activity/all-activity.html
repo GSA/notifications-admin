@@ -64,9 +64,20 @@
     <h1 class="usa-sr-only">All activity</h1>
     <h2 class="font-body-2xl line-height-sans-2 margin-0">All activity</h2>
     <h2 class="margin-top-4 margin-bottom-1">Sent jobs</h2>
+    <section aria-label="All activity search" class="margin-top-2">
+      <form class="usa-search usa-search--small table-filter" role="search">
+        <label class="usa-labe margin-top-0" for="activity-search">Search</label>
+        <input
+          class="usa-input"
+          id="activity-search"
+          type="search"
+          name="All activity search"
+        />
+      </form>
+    </section>
     <div class="usa-table-container--scrollable-mobile">
       <table class="usa-table usa-table--compact job-table">
-        <caption></caption>
+        <caption class="usa-sr-only">All activity table</caption>
         <thead class="table-field-headings">
           <tr>
             <th scope="col" role="columnheader" class="table-field-heading-first" id="jobId">
@@ -125,7 +136,9 @@
         {% endif %}
         </tbody>
       </table>
-      <div class="usa-sr-only usa-table__announcement-region" aria-live="polite"></div>
+      <div class="usa-table__announcement-region usa-sr-only" aria-live="polite" aria-atomic="true">
+        <!-- Live region content goes here -->
+      </div>
       <p><b>Note: </b>Report data is only available for 7 days after your message has been sent</p>
     </div>
     {{show_pagination}}

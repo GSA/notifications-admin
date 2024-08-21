@@ -444,6 +444,20 @@ td.table-empty-message {
    }
 }
 
+.usa-search .usa-button {
+   img {
+      margin-left: 0;
+   }
+}
+
+.table-filter {
+   flex-direction: column;
+   input {
+      margin-top: units(1);
+      border-right: 1px solid color('gray-cool-60');
+   }
+}
+
 .usage-table {
    ul {
       list-style: none;
