@@ -201,6 +201,8 @@
                 deliveredData = [];
                 failedData = [];
 
+                let totalMessages = 0;
+
                 for (var dateString in data) {
                     if (data.hasOwnProperty(dateString)) {
                         const dateParts = dateString.split('-');
@@ -209,11 +211,38 @@
                         labels.push(formattedDate);
                         deliveredData.push(data[dateString].sms.delivered);
                         failedData.push(data[dateString].sms.failure);
+
+                        // Calculate the total number of messages
+                        totalMessages += data[dateString].sms.delivered + data[dateString].sms.failure;
                     }
                 }
 
-                createChart('#weeklyChart', labels, deliveredData, failedData);
-                createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
+                // Check if there are no messages sent
+                const subTitle = document.querySelector(`#activityChartContainer .chart-subtitle`);
+                if (totalMessages === 0) {
+                    // Remove existing chart and render the alert message
+                    d3.select('#weeklyChart').selectAll('*').remove();
+                    d3.select('#weeklyChart')
+                        .append('div')
+                        .html(`
+                            <div class="usa-alert usa-alert--info usa-alert--slim">
+                                <div class="usa-alert__body">
+                                    <p class="usa-alert__text">
+                                        No messages sent in the last 7 days
+                                    </p>
+                                </div>
+                            </div>
+                        `);
+                    // Hide the subtitle
+                    if (subTitle) {
+                        subTitle.style.display = 'none';
+                    }
+                } else {
+                    // If there are messages, create the chart and table
+                    createChart('#weeklyChart', labels, deliveredData, failedData);
+                    createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
+                }
+
                 return data;
             })
             .catch(error => console.error('Error fetching daily stats:', error));
