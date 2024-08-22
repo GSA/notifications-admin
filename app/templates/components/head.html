@@ -16,7 +16,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ assetPath | default('/static') }}/images/favicon-16x16.png" />
     <link rel="mask-icon" href="{{ assetPath | default('/static') }}/images/safari-pinned-tab.svg" color="#5bbad5">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ assetPath | default('/static') }}/images/apple-touch-icon.png">
-    <link rel="manifest" href="/site.webmanifest">
+    <link rel="manifest" href="{{ asset_url('images/site.webmanifest') }}">
     <meta name="msapplication-TileColor" content="#da532c">
     <link href="{{ assetPath | default('/static') }}/images/notify-dark-favicon.png" rel="icon" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#ffffff">
@@ -30,7 +30,7 @@
     <meta property="og:image" content="/static/images/notify-og-image.png">
     {# google #}
     <script type="text/javascript" src="{{ asset_url('js/gtm_head.js') }}"></script>
-    <meta name="google-site-verification" content="niWnSqImOWz6mVQTYqNb5tFK8HaKSB4b3ED4Z9gtUQ0" />
+    <meta name="google-site-verification" content="niWnSqImOWz6mVQTYqNb5tFK8HaKSB4b3ED4Z9gtUQ0" /> {# pragma: allowlist secret #}
     {% if g.hide_from_search_engines %}
     <meta name="robots" content="noindex" />
     {% endif %}
