@@ -13,16 +13,17 @@ import humanize
 import markdown
 import pytz
 from bs4 import BeautifulSoup
-from flask import Markup, render_template_string, url_for
+from flask import render_template_string, url_for
 from flask.helpers import get_root_path
+from markupsafe import Markup
+
+from app.utils.csv import get_user_preferred_timezone
+from app.utils.time import parse_naive_dt
 from notifications_utils.field import Field
 from notifications_utils.formatters import make_quotes_smart
 from notifications_utils.formatters import nl2br as utils_nl2br
 from notifications_utils.recipients import InvalidPhoneError, validate_phone_number
 from notifications_utils.take import Take
-
-from app.utils.csv import get_user_preferred_timezone
-from app.utils.time import parse_naive_dt
 
 
 def apply_html_class(tags, html_file):
@@ -228,6 +229,11 @@ def naturaltime_without_indefinite_article(date):
         lambda match: "1 {} ago".format(match.group(1)),
         humanize.naturaltime(date),
     )
+
+
+def convert_time_unixtimestamp(date_string):
+    dt = datetime.fromisoformat(date_string)
+    return int(dt.timestamp())
 
 
 def format_delta(date):

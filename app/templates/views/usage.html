@@ -70,8 +70,7 @@
       </div> #}
 
       {% if months %}
-      <div class="table-wrapper">
-        <div class="dashboard-table usage-table body-copy-table margin-top-4">
+        <div class="dashboard-table usage-table body-copy-table table-overflow-x-auto margin-top-4">
           {% call(item, row_index) list_table(
             months,
             caption="Total spend",
@@ -122,7 +121,6 @@
 
           {% endcall %}
         </div>
-      </div>
       {% endif %}
     </div>
 

@@ -42,10 +42,6 @@ def test_should_redirect_to_add_service_when_sms_code_is_correct(
     mock_create_event,
     fake_uuid,
 ):
-    mocker.patch(
-        "app.main.views.verify.service_api_client.retrieve_service_invite_data",
-        return_value={},
-    )
     api_user_active["current_session_id"] = str(uuid.UUID(int=1))
     mocker.patch("app.user_api_client.get_user", return_value=api_user_active)
 
@@ -81,10 +77,6 @@ def test_should_activate_user_after_verify(
     mock_create_event,
     mock_activate_user,
 ):
-    mocker.patch(
-        "app.main.views.verify.service_api_client.retrieve_service_invite_data",
-        return_value={},
-    )
     client_request.logout()
     mocker.patch("app.user_api_client.get_user", return_value=api_user_pending)
     with client_request.session_transaction() as session:
@@ -156,10 +148,6 @@ def test_verify_email_doesnt_verify_sms_if_user_on_email_auth(
     mock_activate_user,
     fake_uuid,
 ):
-    mocker.patch(
-        "app.main.views.verify.service_api_client.retrieve_service_invite_data",
-        return_value={},
-    )
     pending_user_with_email_auth = create_user(
         auth_type="email_auth", state="pending", id=fake_uuid
     )
@@ -216,6 +204,8 @@ def test_verify_email_redirects_to_sign_in_if_user_active(
     mock_send_verify_code,
     mock_check_verify_code,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     token_data = {"user_id": api_user_active["id"], "secret_code": 12345}
     mocker.patch(
@@ -250,10 +240,6 @@ def test_activate_user_redirects_to_service_dashboard_if_user_already_belongs_to
     mock_get_service,
     mock_get_invited_user_by_id,
 ):
-    mocker.patch(
-        "app.main.views.verify.service_api_client.retrieve_service_invite_data",
-        return_value={},
-    )
     mocker.patch(
         "app.user_api_client.add_user_to_service",
         side_effect=HTTPError(

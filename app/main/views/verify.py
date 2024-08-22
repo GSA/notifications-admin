@@ -2,14 +2,13 @@ import json
 
 from flask import abort, current_app, flash, redirect, render_template, session, url_for
 from itsdangerous import SignatureExpired
-from notifications_utils.url_safe_token import check_token
 
 from app import user_api_client
 from app.main import main
 from app.main.forms import TwoFactorForm
 from app.models.user import User
-from app.notify_client import service_api_client
 from app.utils.login import redirect_to_sign_in
+from notifications_utils.url_safe_token import check_token
 
 
 @main.route("/verify", methods=["GET", "POST"])
@@ -39,6 +38,7 @@ def verify_email(token):
             current_app.config["EMAIL_EXPIRY_SECONDS"],
         )
     except SignatureExpired:
+        current_app.logger.error("Email link expired #notify-admin-1505")
         flash(
             "The link in the email we sent you has expired. We've sent you a new one."
         )
@@ -51,6 +51,9 @@ def verify_email(token):
         abort(404)
 
     if user.is_active:
+        current_app.logger.error(
+            f"User is using an invite link but is already logged in {user.id} #notify-admin-1505"
+        )
         flash("That verification link has expired.")
         return redirect(url_for("main.sign_in"))
 
@@ -60,43 +63,15 @@ def verify_email(token):
 
     user.send_verify_code()
     session["user_details"] = {"email": user.email_address, "id": user.id}
+    current_app.logger.info(f"Email verified for user {user.id} #notify-admin-1505")
     return redirect(url_for("main.verify"))
 
 
 def activate_user(user_id):
     user = User.from_id(user_id)
 
-    # This is the login.gov path
-    try:
-        login_gov_invite_data = service_api_client.retrieve_service_invite_data(
-            f"service-invite-{user.email_address}"
-        )
-    except BaseException:  # noqa
-        # We will hit an exception if we can't find invite data,
-        # but that will be the normal sign in use case
-        login_gov_invite_data = None
-    if login_gov_invite_data:
-        login_gov_invite_data = json.loads(login_gov_invite_data)
-        service_id = login_gov_invite_data["service_id"]
-        user_id = user_id
-        permissions = login_gov_invite_data["permissions"]
-        folder_permissions = login_gov_invite_data["folder_permissions"]
-
-        # Actually call the back end and add the user to the service
-        try:
-            user_api_client.add_user_to_service(
-                service_id, user_id, permissions, folder_permissions
-            )
-        except BaseException as be:  # noqa
-            # TODO if the user is already part of service we should ignore
-            current_app.logger.warning(f"Exception adding user to service {be}")
-
-        activated_user = user.activate()
-        activated_user.login()
-        return redirect(url_for("main.service_dashboard", service_id=service_id))
-
     # TODO add org invites back in the new way
-    # organization_id = redis_client.raw_get(
+    # organization_id = redis_client.get(
     #   f"organization-invite-{user.email_address}"
     # )
     # user_api_client.add_user_to_organization(
@@ -108,18 +83,7 @@ def activate_user(user_id):
         return redirect(url_for("main.organization_dashboard", org_id=organization_id))
     else:
         activated_user = user.activate()
+        current_app.logger.info(f"Activated user {user.id} #notify-admin-1505")
         activated_user.login()
-
+        current_app.logger.info(f"Logged in user {user.id} #notify-admin-1505")
         return redirect(url_for("main.add_service", first="first"))
-
-
-def _add_invited_user_to_service(invitation):
-    user = User.from_id(session["user_id"])
-    service_id = invitation.service
-    user.add_to_service(
-        service_id,
-        invitation.permissions,
-        invitation.folder_permissions,
-        invitation.from_user.id,
-    )
-    return service_id

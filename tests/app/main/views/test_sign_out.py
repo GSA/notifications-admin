@@ -86,12 +86,14 @@ MOCK_JOBS = {
 }
 
 
-def test_render_sign_out_redirects_to_sign_in(client_request):
+def test_render_sign_out_redirects_to_sign_in(client_request, mocker):
     # TODO with the change to using login.gov, we no longer redirect directly to the sign in page.
     # Instead we redirect to login.gov which redirects us to the sign in page.  However, the
     # test for the expected redirect being "/" is buried in conftest and looks fragile.
     # After we move to login.gov officially and get rid of other forms of signing it, it should
     # be refactored.
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     with client_request.session_transaction() as session:
         assert session
     client_request.get(
@@ -99,7 +101,7 @@ def test_render_sign_out_redirects_to_sign_in(client_request):
         _expected_status=302,
     )
     with client_request.session_transaction() as session:
-        assert not session
+        assert session.permanent is False
 
 
 def test_sign_out_user(
@@ -119,14 +121,33 @@ def test_sign_out_user(
     mock_get_free_sms_fragment_limit,
     mock_get_inbound_sms_summary,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     with client_request.session_transaction() as session:
         assert session.get("user_id") is not None
     # Check we are logged in
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
 
+    date_range = {"start_date": "2024-01-01", "days": 7}
+
     mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
+        "app.main.views.dashboard.get_daily_stats",
+        return_value={
+            date_range["start_date"]: {
+                "email": {"delivered": 0, "failure": 0, "requested": 0},
+                "sms": {"delivered": 0, "failure": 1, "requested": 1},
+            },
+        },
+    )
+
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value={
+            date_range["start_date"]: {
+                "email": {"delivered": 1, "failure": 0, "requested": 1},
+                "sms": {"delivered": 1, "failure": 0, "requested": 1},
+            },
+        },
     )
 
     client_request.get(
@@ -141,13 +162,15 @@ def test_sign_out_user(
         assert session.get("user_id") is None
 
 
-def test_sign_out_of_two_sessions(client_request):
+def test_sign_out_of_two_sessions(client_request, mocker):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.get(
         "main.sign_out",
         _expected_status=302,
     )
     with client_request.session_transaction() as session:
-        assert not session
+        assert session.permanent is False
     client_request.get(
         "main.sign_out",
         _expected_status=302,

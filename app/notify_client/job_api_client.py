@@ -27,9 +27,7 @@ class JobApiClient(NotifyAdminAPIClient):
 
     def get_job(self, service_id, job_id):
         params = {}
-        job = self.get(
-            url="/service/{}/job/{}".format(service_id, job_id), params=params
-        )
+        job = self.get(url=f"/service/{service_id}/job/{job_id}", params=params)
 
         return job
 
@@ -40,13 +38,14 @@ class JobApiClient(NotifyAdminAPIClient):
         if statuses is not None:
             params["statuses"] = ",".join(statuses)
 
-        return self.get(url="/service/{}/job".format(service_id), params=params)
+        job = self.get(url=f"/service/{service_id}/job", params=params)
+        return job
 
     def get_uploads(self, service_id, limit_days=None, page=1):
         params = {"page": page}
         if limit_days is not None:
             params["limit_days"] = limit_days
-        return self.get(url="/service/{}/upload".format(service_id), params=params)
+        return self.get(url=f"/service/{service_id}/upload", params=params)
 
     def has_sent_previously(
         self, service_id, template_id, template_version, original_file_name

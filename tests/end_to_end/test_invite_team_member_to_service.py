@@ -117,19 +117,17 @@ def test_invite_team_member_to_service(authenticated_page):
 
     # Check permission labels are on page
     for permission in permissions:
-        expect(
-            page.get_by_label(permission)
-        ).to_be_visible
+        expect(page.get_by_label(permission)).to_be_visible
 
     # There is an issue with checking the send messages box due to possible duplicate
     # "Send messages" appearing on the page.
     # Put checkboxes into checked state.
     checkbox_list = [
-        'See dashboard',
-        'Add and edit templates',
-        'Manage settings, team and usage',
-        'Manage API integration',
-        ]
+        "See dashboard",
+        "Add and edit templates",
+        "Manage settings, team and usage",
+        "Manage API integration",
+    ]
 
     for checkbox in checkbox_list:
         page.check(f"text={checkbox}", force=True)
@@ -138,7 +136,9 @@ def test_invite_team_member_to_service(authenticated_page):
         expect(permission_box_activity).to_be_checked()
 
     # Check for send invitation email button
-    send_invite_email_button = page.get_by_role("button", name=re.compile("Send invitation email"))
+    send_invite_email_button = page.get_by_role(
+        "button", name=re.compile("Send invitation email")
+    )
     expect(send_invite_email_button).to_be_visible()
     # send_invite_email_button.click()
     # Check to make sure that we've arrived at the next page.

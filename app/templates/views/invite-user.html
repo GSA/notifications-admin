@@ -15,7 +15,7 @@
 {% block maincolumn_content %}
 
   {{ page_header('Invite {}'.format(user_to_invite.name if user_to_invite else 'a team member')) }}
-
+  <a href="#permissions">Learn more about user permissions.</a>
   {% call form_wrapper() %}
 
     {% if user_to_invite %}
@@ -36,5 +36,99 @@
     {{ page_footer('Send invitation email') }}
 
   {% endcall %}
+  <h2 id="permissions">Set up user permissions</h2>
+  <p>Setting the right digital control is one of many aspects to keep content and information on a need to know basis. Permissions allow you to do this. Give team members access to important views related to their responsibilities.</p>
+  <h3 class="site-preview-heading">Permissions</h3>
 
+  <div class="usa-accordion usa-accordion--bordered margin-top-1">
+    <h4 class="usa-accordion__heading">
+      <button
+        type="button"
+        class="usa-accordion__button"
+        aria-expanded="true"
+        aria-controls="b-a1"
+      >
+      See dashboard
+      </button>
+    </h4>
+    <div id="b-a1" class="usa-accordion__content usa-prose">
+      <p>Allows users to view the dashboard but not have access to any other functions on the site.
+        Dashboard viewers can see: Weekly message quantity</p>
+        <ul>
+          <li>Message templates used</li>
+          <li>Recent batches of sent messages</li>
+        </ul>
+        <p>This also gives access to:</p>
+        <ul>
+          <li>List of templates used by month</li>
+          <li>Batch details with message status</li>
+        </ul>
+    </div>
+    <h4 class="usa-accordion__heading">
+      <button
+        type="button"
+        class="usa-accordion__button"
+        aria-expanded="false"
+        aria-controls="b-a2"
+      >
+      Send messages
+      </button>
+    </h4>
+    <div id="b-a2" class="usa-accordion__content usa-prose">
+      <p>
+        Allows users to view, select and send approved messages, but restricts users from editing templates
+        and/or folders. Team members responsible for sending message batches can use templates to prepare
+        and schedule texts. Actions they take in this section:
+      </p>
+      <ul>
+        <li>View and use templates</li>
+        <li>Enter personalized message field content</li>
+        <li>Schedule messages for sending</li>
+        <li>Send messages</li>
+      </ul>
+    </div>
+    <h4 class="usa-accordion__heading">
+      <button
+        type="button"
+        class="usa-accordion__button"
+        aria-expanded="false"
+        aria-controls="b-a3"
+      >
+      Add and edit templates
+      </button>
+    </h4>
+    <div id="b-a3" class="usa-accordion__content usa-prose">
+      <p>
+        Allows users to view, create or edit, and more or delete templates and folders. They will set up real
+        messages, but are restricted from uploading data or sending or seeing previous versions. Some actions
+        they can take:
+      </p>
+      <ul>
+        <li>Create a new template</li>
+        <li>Create a new folder</li>
+        <li>Move (or organize) folders and templates</li>
+        <li>Delete templates and/or folders</li>
+      </ul>
+    </div>
+    <h4 class="usa-accordion__heading">
+      <button
+        type="button"
+        class="usa-accordion__button"
+        aria-expanded="false"
+        aria-controls="b-a4"
+      >
+      Manage settings and team
+      </button>
+    </h4>
+    <div id="b-a4" class="usa-accordion__content usa-prose">
+      <p>Leads with service management responsibility may do so in Settings. Managed within Settings:</p>
+      <ul>
+        <li>Change service name</li>
+        <li>Invite team members</li>
+        <li>Remove unnecessary team members</li>
+        <li>Turn off the ability to send text messages</li>
+        <li>Turn off the ability to send service name with text message</li>
+      </ul>
+    </div>
+  </div>
 {% endblock %}

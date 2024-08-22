@@ -1,0 +1,70 @@
+{% from "./components/components/skip-link/macro.njk" import usaSkipLink -%}
+{% from "./components/components/header/macro.njk" import usaHeader -%}
+{% from "./components/components/footer/macro.njk" import usaFooter -%}
+{# specify absolute url for the static assets folder e.g. http://wwww.domain.com/assets #}
+{%- set assetUrl = assetUrl | default(assetPath) -%}
+<!DOCTYPE html>
+<html lang="{{ htmlLang | default('en') }}" class="{{ htmlClasses }}">
+  <head>
+    <meta charset="utf-8" />
+    <title>{% block pageTitle %}Notify.gov{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="f0f0f0" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="1b1b1b" />
+    {% if config['NR_MONITOR_ON'] %}
+      {% include "partials/newrelic.html" -%}
+    {% endif %}
+
+    {# Ensure that older IE versions always render with the correct rendering engine #}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    {% block headIcons %}
+      <link rel="shortcut icon" href="{{ assetPath | default('/static') }}/images/favicon.ico" />
+      <link rel="icon" type="image/png" sizes="32x32"href="{{ assetPath | default('/static') }}/images/favicon-32x32.png"/>
+      <link rel="icon" type="image/png" sizes="16x16" href="{{ assetPath | default('/static') }}/images/favicon-16x16.png" />
+      <link rel="mask-icon" href="{{ assetPath | default('/static') }}/images/safari-pinned-tab.svg" color="#5bbad5">
+      <link rel="apple-touch-icon" sizes="180x180" href="{{ assetPath | default('/static') }}/images/apple-touch-icon.png">
+      <link rel="manifest" href="/site.webmanifest">
+      <meta name="msapplication-TileColor" content="#da532c">
+      <link href="{{ assetPath | default('/static') }}/images/notify-dark-favicon.png" rel="icon" media="(prefers-color-scheme: dark)">
+      <meta name="theme-color" content="#ffffff">
+    {% endblock %}
+
+    {% block head %}{% endblock %}
+    {# The default og:image is added below head so that scrapers see any custom metatags first, and this is just a fallback #}
+    {% block meta %}
+      <meta property="og:site_name" content="Notify.gov">
+      <meta property="og:image" content="{{ asset_url('images/notify-og-image.png') }}">
+    {% endblock %}
+  </head>
+  <body class="usa-template__body {{ bodyClasses }}">
+    <script nonce="{{ csp_nonce() }}">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+    {% block bodyStart %}{% endblock %}
+
+    {% block skipLink %}
+      {{ usaSkipLink({
+        "href": '#main-content',
+        "text": 'Skip to main content'
+      }) }}
+    {% endblock %}
+
+    {% block header %}
+      {{ usaHeader({}) }}
+    {% endblock %}
+
+    {% block main %}
+      <div class="grid-container">
+        {% block beforeContent %}{% endblock %}
+        <main class="{{ mainClasses }}" id="main-content" role="main">
+          {% block content %}{% endblock %}
+        </main>
+      </div>
+    {% endblock %}
+
+    {% block footer %}
+      {{ usaFooter({}) }}
+    {% endblock %}
+
+    {% block bodyEnd %}{% endblock %}
+  </body>
+</html>

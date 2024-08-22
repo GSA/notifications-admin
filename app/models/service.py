@@ -1,5 +1,4 @@
 from flask import abort, current_app
-from notifications_utils.serialised_model import SerialisedModelCollection
 from werkzeug.utils import cached_property
 
 from app.models import JSONModel, SortByNameMixin
@@ -15,6 +14,7 @@ from app.notify_client.organizations_api_client import organizations_client
 from app.notify_client.service_api_client import service_api_client
 from app.notify_client.template_folder_api_client import template_folder_api_client
 from app.utils import get_default_sms_sender
+from notifications_utils.serialised_model import SerialisedModelCollection
 
 
 class Service(JSONModel, SortByNameMixin):
@@ -390,7 +390,7 @@ class Service(JSONModel, SortByNameMixin):
     def get_data_retention_item(self, id):
         return next((dr for dr in self.data_retention if dr["id"] == id), None)
 
-    def get_days_of_retention(self, notification_type):
+    def get_days_of_retention(self, notification_type, number_of_days):
         return next(
             (
                 dr
@@ -398,7 +398,10 @@ class Service(JSONModel, SortByNameMixin):
                 if dr["notification_type"] == notification_type
             ),
             {},
-        ).get("days_of_retention", current_app.config["ACTIVITY_STATS_LIMIT_DAYS"])
+        ).get(
+            "days_of_retention",
+            current_app.config["ACTIVITY_STATS_LIMIT_DAYS"].get(number_of_days),
+        )
 
     @cached_property
     def organization(self):

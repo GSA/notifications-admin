@@ -67,7 +67,7 @@ SAMPLE_DATA = {
 }
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_get_orgs_and_services(mocker):
     return mocker.patch(
         "app.user_api_client.get_organizations_and_services_for_user",
@@ -289,9 +289,10 @@ def test_choose_account_should_not_show_back_to_service_link_if_no_service_in_se
 
 
 def test_choose_account_should_not_show_back_to_service_link_if_not_signed_in(
-    client_request,
-    mock_get_service,
+    client_request, mock_get_service, mocker
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     with client_request.session_transaction() as session:

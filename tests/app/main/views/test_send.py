@@ -6,18 +6,23 @@ from io import BytesIO
 from itertools import repeat
 from os import path
 from random import randbytes
+from unittest.mock import ANY
 from uuid import uuid4
 from zipfile import BadZipFile
 
 import pytest
 from flask import url_for
 from notifications_python_client.errors import HTTPError
-from notifications_utils.recipients import RecipientCSV
-from notifications_utils.template import SMSPreviewTemplate
 from xlrd.biffh import XLRDError
 from xlrd.xldate import XLDateAmbiguous, XLDateError, XLDateNegative, XLDateTooLarge
 
-from tests import validate_route_permission, validate_route_permission_with_client
+from notifications_utils.recipients import RecipientCSV
+from notifications_utils.template import SMSPreviewTemplate
+from tests import (
+    sample_uuid,
+    validate_route_permission,
+    validate_route_permission_with_client,
+)
 from tests.conftest import (
     SERVICE_ONE_ID,
     create_active_caseworking_user,
@@ -434,10 +439,15 @@ def test_upload_files_in_different_formats(
     service_one,
     mocker,
     mock_get_service_template,
-    mock_s3_set_metadata,
-    mock_s3_upload,
     fake_uuid,
 ):
+
+    mock_s3_set_metadata = mocker.patch(
+        "app.main.views.send.set_metadata_on_csv_upload"
+    )
+
+    mock_s3_upload = mocker.patch("app.main.views.send.s3upload")
+
     with open(filename, "rb") as uploaded:
         page = client_request.post(
             "main.send_messages",
@@ -456,7 +466,7 @@ def test_upload_files_in_different_formats(
             "202 205 8823,Still Not Pete,Crimson,Pear"
         )
         mock_s3_set_metadata.assert_called_once_with(
-            SERVICE_ONE_ID, fake_uuid, original_file_name=filename
+            SERVICE_ONE_ID, ANY, original_file_name=filename
         )
     else:
         assert not mock_s3_upload.called
@@ -470,13 +480,16 @@ def test_send_messages_sanitises_and_truncates_file_name_for_metadata(
     service_one,
     mocker,
     mock_get_service_template_with_placeholders,
-    mock_s3_set_metadata,
-    mock_s3_get_metadata,
-    mock_s3_upload,
-    mock_s3_download,
     mock_get_job_doesnt_exist,
     fake_uuid,
 ):
+
+    mock_s3_set_metadata = mocker.patch(
+        "app.main.views.send.set_metadata_on_csv_upload"
+    )
+
+    mocker.patch("app.main.views.send.s3upload")
+
     filename = f"😁{'a' * 2000}.csv"
 
     client_request.post(
@@ -577,15 +590,20 @@ def test_upload_csv_file_with_errors_shows_check_page_with_errors(
     service_one,
     mocker,
     mock_get_service_template_with_placeholders,
-    mock_s3_set_metadata,
-    mock_s3_get_metadata,
-    mock_s3_upload,
     mock_get_users_by_service,
     mock_get_service_statistics,
     mock_get_job_doesnt_exist,
     mock_get_jobs,
     fake_uuid,
 ):
+
+    mocker.patch("app.main.views.send.set_metadata_on_csv_upload")
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
+    mocker.patch("app.main.views.send.s3upload", return_value=sample_uuid())
     mocker.patch(
         "app.main.views.send.s3download",
         return_value="""
@@ -624,15 +642,21 @@ def test_upload_csv_file_with_empty_message_shows_check_page_with_errors(
     service_one,
     mocker,
     mock_get_empty_service_template_with_optional_placeholder,
-    mock_s3_set_metadata,
-    mock_s3_get_metadata,
-    mock_s3_upload,
     mock_get_users_by_service,
     mock_get_service_statistics,
     mock_get_job_doesnt_exist,
     mock_get_jobs,
     fake_uuid,
 ):
+
+    mocker.patch("app.main.views.send.set_metadata_on_csv_upload")
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
+    mocker.patch("app.main.views.send.s3upload", return_value=sample_uuid())
+
     mocker.patch(
         "app.main.views.send.s3download",
         return_value="""
@@ -676,15 +700,20 @@ def test_upload_csv_file_with_very_long_placeholder_shows_check_page_with_errors
     service_one,
     mocker,
     mock_get_service_template_with_placeholders,
-    mock_s3_set_metadata,
-    mock_s3_get_metadata,
-    mock_s3_upload,
     mock_get_users_by_service,
     mock_get_service_statistics,
     mock_get_job_doesnt_exist,
     mock_get_jobs,
     fake_uuid,
 ):
+
+    mocker.patch("app.main.views.send.set_metadata_on_csv_upload")
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
+    mocker.patch("app.main.views.send.s3upload", return_value=sample_uuid())
     big_placeholder = " ".join(["not ok"] * 402)
     mocker.patch(
         "app.main.views.send.s3download",
@@ -811,9 +840,6 @@ def test_upload_csv_file_with_missing_columns_shows_error(
     client_request,
     mocker,
     mock_get_service_template_with_placeholders,
-    mock_s3_set_metadata,
-    mock_s3_get_metadata,
-    mock_s3_upload,
     mock_get_users_by_service,
     mock_get_service_statistics,
     mock_get_job_doesnt_exist,
@@ -823,6 +849,15 @@ def test_upload_csv_file_with_missing_columns_shows_error(
     file_contents,
     expected_error,
 ):
+
+    mocker.patch("app.main.views.send.set_metadata_on_csv_upload")
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
+    mocker.patch("app.main.views.send.s3upload", return_value=sample_uuid())
+
     mocker.patch("app.main.views.send.s3download", return_value=file_contents)
 
     page = client_request.post(
@@ -885,10 +920,13 @@ def test_upload_csv_size_too_big(
 def test_upload_valid_csv_redirects_to_check_page(
     client_request,
     mock_get_service_template_with_placeholders,
-    mock_s3_upload,
-    mock_s3_set_metadata,
     fake_uuid,
+    mocker,
 ):
+
+    mocker.patch("app.main.views.send.set_metadata_on_csv_upload")
+
+    mocker.patch("app.main.views.send.s3upload", return_value=sample_uuid())
     client_request.post(
         "main.send_messages",
         service_id=SERVICE_ONE_ID,
@@ -937,13 +975,16 @@ def test_upload_valid_csv_shows_preview_and_table(
     mock_get_service_statistics,
     mock_get_job_doesnt_exist,
     mock_get_jobs,
-    mock_s3_get_metadata,
-    mock_s3_set_metadata,
     fake_uuid,
     extra_args,
     expected_link_in_first_row,
     expected_message,
 ):
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
     with client_request.session_transaction() as session:
         session["file_uploads"] = {fake_uuid: {"template_id": fake_uuid}}
 
@@ -1031,8 +1072,12 @@ def test_show_all_columns_if_there_are_duplicate_recipient_columns(
     mock_get_job_doesnt_exist,
     mock_get_jobs,
     fake_uuid,
-    mock_s3_get_metadata,
 ):
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
     with client_request.session_transaction() as session:
         session["file_uploads"] = {fake_uuid: {"template_id": fake_uuid}}
 
@@ -1080,12 +1125,17 @@ def test_404_for_previewing_a_row_out_of_range(
     mock_get_service_statistics,
     mock_get_job_doesnt_exist,
     mock_get_jobs,
-    mock_s3_get_metadata,
-    mock_s3_set_metadata,
     fake_uuid,
     row_index,
     expected_status,
 ):
+
+    mocker.patch("app.main.views.send.set_metadata_on_csv_upload")
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
     with client_request.session_transaction() as session:
         session["file_uploads"] = {fake_uuid: {"template_id": fake_uuid}}
 
@@ -1523,7 +1573,6 @@ def test_send_one_off_redirects_to_start_if_you_skip_steps(
     client_request,
     service_one,
     fake_uuid,
-    mock_s3_upload,
     mock_get_users_by_service,
     mock_get_service_statistics,
     mock_has_no_jobs,
@@ -1559,7 +1608,6 @@ def test_send_one_off_redirects_to_start_if_index_out_of_bounds_and_some_placeho
     service_one,
     fake_uuid,
     mock_get_service_email_template,
-    mock_s3_download,
     mock_get_users_by_service,
     mock_get_service_statistics,
     mock_has_no_jobs,
@@ -1628,7 +1676,6 @@ def test_send_one_off_email_to_self_without_placeholders_redirects_to_check_page
     mocker,
     service_one,
     mock_get_service_email_template_without_placeholders,
-    mock_s3_upload,
     mock_get_users_by_service,
     mock_get_service_statistics,
     mock_has_no_jobs,
@@ -1835,13 +1882,20 @@ def test_upload_csvfile_with_valid_phone_shows_all_numbers(
     mock_get_live_service,
     mock_get_job_doesnt_exist,
     mock_get_jobs,
-    mock_s3_get_metadata,
-    mock_s3_set_metadata,
     service_one,
     fake_uuid,
-    mock_s3_upload,
     mocker,
 ):
+
+    mock_s3_set_metadata = mocker.patch(
+        "app.main.views.send.set_metadata_on_csv_upload"
+    )
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
+    mocker.patch("app.main.views.send.s3upload", return_value=sample_uuid())
     mocker.patch(
         "app.main.views.send.s3download",
         return_value="\n".join(
@@ -1895,9 +1949,6 @@ def test_upload_csvfile_with_international_validates(
     api_user_active,
     client_request,
     mock_get_service_template,
-    mock_s3_set_metadata,
-    mock_s3_get_metadata,
-    mock_s3_upload,
     mock_has_permissions,
     mock_get_users_by_service,
     mock_get_service_statistics,
@@ -1908,6 +1959,14 @@ def test_upload_csvfile_with_international_validates(
     should_allow_international,
     service_one,
 ):
+
+    mocker.patch("app.main.views.send.set_metadata_on_csv_upload")
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
+    mocker.patch("app.main.views.send.s3upload", return_value=sample_uuid())
     if international_sms_permission:
         service_one["permissions"] += ("sms", "international_sms")
     mocker.patch(
@@ -1942,15 +2001,20 @@ def test_test_message_can_only_be_sent_now(
     mocker,
     service_one,
     mock_get_service_template,
-    mock_s3_download,
     mock_get_users_by_service,
     mock_get_service_statistics,
     mock_get_job_doesnt_exist,
     mock_get_jobs,
-    mock_s3_get_metadata,
-    mock_s3_set_metadata,
+    mock_s3_download,
     fake_uuid,
 ):
+
+    mocker.patch("app.main.views.send.set_metadata_on_csv_upload")
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
     content = client_request.get(
         "main.check_messages",
         service_id=service_one["id"],
@@ -1972,8 +2036,12 @@ def test_preview_button_is_correctly_labelled(
     mock_get_job_doesnt_exist,
     mock_get_jobs,
     fake_uuid,
-    mock_s3_get_metadata,
 ):
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
     mocker.patch(
         "app.main.views.send.s3download",
         return_value="\n".join(["phone_number"] + (["2028670123"] * 1000)),
@@ -2058,7 +2126,6 @@ def test_route_permissions(
     mock_get_jobs,
     mock_get_notifications,
     mock_create_job,
-    mock_s3_upload,
     fake_uuid,
     route,
     response_code,
@@ -2092,8 +2159,8 @@ def test_route_permissions_send_check_notifications(
     response_code,
     method,
     mock_create_job,
-    mock_s3_upload,
 ):
+    mocker.patch("app.main.views.send.s3upload", return_value=sample_uuid())
     with client_request.session_transaction() as session:
         session["recipient"] = "2028675301"
         session["placeholders"] = {"name": "a"}
@@ -2173,8 +2240,6 @@ def test_check_messages_back_link(
     mock_get_job_doesnt_exist,
     mock_get_jobs,
     mock_s3_download,
-    mock_s3_get_metadata,
-    mock_s3_set_metadata,
     fake_uuid,
     mocker,
     template_type,
@@ -2182,6 +2247,13 @@ def test_check_messages_back_link(
     extra_args,
     expected_url,
 ):
+
+    mocker.patch("app.main.views.send.set_metadata_on_csv_upload")
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
     content = "Hi there ((name))" if has_placeholders else "Hi there"
     template_data = create_template(
         template_id=fake_uuid, template_type=template_type, content=content
@@ -2236,8 +2308,12 @@ def test_check_messages_shows_too_many_messages_errors(
     fake_uuid,
     num_requested,
     expected_msg,
-    mock_s3_get_metadata,
 ):
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
     # csv with 100 phone numbers
     mocker.patch(
         "app.main.views.send.s3download",
@@ -2281,7 +2357,6 @@ def test_check_messages_shows_too_many_messages_errors(
 
 def test_check_messages_shows_trial_mode_error(
     client_request,
-    mock_s3_get_metadata,
     mock_get_users_by_service,
     mock_get_service_template,
     mock_has_permissions,
@@ -2291,6 +2366,11 @@ def test_check_messages_shows_trial_mode_error(
     fake_uuid,
     mocker,
 ):
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
     mocker.patch(
         "app.main.views.send.s3download",
         return_value=("phone number,\n2028675209"),  # Not in team
@@ -2426,8 +2506,12 @@ def test_check_messages_column_error_doesnt_show_optional_columns(
     mock_get_service_statistics,
     mock_get_job_doesnt_exist,
     mock_get_jobs,
-    mock_s3_get_metadata,
 ):
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
     mocker.patch(
         "app.main.views.send.s3download",
         return_value="\n".join(
@@ -2468,10 +2552,17 @@ def test_check_messages_adds_sender_id_in_session_to_metadata(
     mock_get_service_statistics,
     mock_get_job_doesnt_exist,
     mock_get_jobs,
-    mock_s3_get_metadata,
-    mock_s3_set_metadata,
     fake_uuid,
 ):
+
+    mock_s3_set_metadata = mocker.patch(
+        "app.main.views.send.set_metadata_on_csv_upload"
+    )
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
     mocker.patch(
         "app.main.views.send.s3download", return_value=("phone number,\n2028675209")
     )
@@ -2508,11 +2599,15 @@ def test_check_messages_shows_over_max_row_error(
     mock_get_service_statistics,
     mock_get_job_doesnt_exist,
     mock_get_jobs,
-    mock_s3_get_metadata,
     mock_s3_download,
     fake_uuid,
     mocker,
 ):
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
     mock_recipients = mocker.patch("app.main.views.send.RecipientCSV").return_value
     mock_recipients.max_rows = 11111
     mock_recipients.__len__.return_value = 99999
@@ -2662,8 +2757,8 @@ def test_send_notification_submits_data(
     expected_personalisation,
     mocker,
     mock_create_job,
-    mock_s3_upload,
 ):
+    mocker.patch("app.main.views.send.s3upload", return_value=sample_uuid())
     with client_request.session_transaction() as session:
         session["recipient"] = recipient
         session["placeholders"] = placeholders
@@ -2690,8 +2785,8 @@ def test_send_notification_clears_session(
     mock_get_service_template,
     mocker,
     mock_create_job,
-    mock_s3_upload,
 ):
+    mocker.patch("app.main.views.send.s3upload", return_value=sample_uuid())
     with client_request.session_transaction() as session:
         session["recipient"] = "2028675301"
         session["placeholders"] = {"a": "b"}
@@ -2752,8 +2847,8 @@ def test_send_notification_redirects_to_view_page(
     extra_redirect_args,
     mocker,
     mock_create_job,
-    mock_s3_upload,
 ):
+    mocker.patch("app.main.views.send.s3upload", return_value=sample_uuid())
     with client_request.session_transaction() as session:
         session["recipient"] = "2028675301"
         session["placeholders"] = {"a": "b"}
@@ -2812,8 +2907,9 @@ def test_send_notification_shows_error_if_400(
     exception_msg,
     expected_h1,
     expected_err_details,
-    mock_s3_upload,
 ):
+    mocker.patch("app.main.views.send.s3upload", return_value=sample_uuid())
+
     class MockHTTPError(HTTPError):
         message = exception_msg
 
@@ -2851,8 +2947,9 @@ def test_send_notification_shows_email_error_in_trial_mode(
     mocker,
     mock_get_service_email_template,
     mock_create_job,
-    mock_s3_upload,
 ):
+    mocker.patch("app.main.views.send.s3upload", return_value=sample_uuid())
+
     class MockHTTPError(HTTPError):
         message = TRIAL_MODE_MSG
         status_code = 400
@@ -2897,9 +2994,6 @@ def test_reply_to_is_previewed_if_chosen(
     client_request,
     mocker,
     mock_get_service_email_template,
-    mock_s3_download,
-    mock_s3_get_metadata,
-    mock_s3_set_metadata,
     mock_get_users_by_service,
     mock_get_service_statistics,
     mock_get_job_doesnt_exist,
@@ -2910,6 +3004,8 @@ def test_reply_to_is_previewed_if_chosen(
     extra_args,
     reply_to_address,
 ):
+    mocker.patch("app.main.views.send.set_metadata_on_csv_upload")
+
     mocker.patch(
         "app.main.views.send.s3download",
         return_value="""
@@ -2952,9 +3048,6 @@ def test_sms_sender_is_previewed(
     client_request,
     mocker,
     mock_get_service_template,
-    mock_s3_download,
-    mock_s3_get_metadata,
-    mock_s3_set_metadata,
     mock_get_users_by_service,
     mock_get_service_statistics,
     mock_get_job_doesnt_exist,
@@ -2965,6 +3058,13 @@ def test_sms_sender_is_previewed(
     extra_args,
     sms_sender,
 ):
+
+    mocker.patch("app.main.views.send.set_metadata_on_csv_upload")
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
     mocker.patch(
         "app.main.views.send.s3download",
         return_value="""

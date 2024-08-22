@@ -13,26 +13,26 @@
     Email complaints
   </h1>
 
+  <div class="table-overflow-x-auto">
+    {% call(item, row_number) list_table(
+        complaints,
+        caption="Complaints",
+        caption_visible=False,
+        empty_message='No complaints',
+        field_headings=['Notification Id', 'Service', 'Complaint type', 'Complaint Date'],
+        field_headings_visible=True
+    ) %}
 
-  {% call(item, row_number) list_table(
-      complaints,
-      caption="Complaints",
-      caption_visible=False,
-      empty_message='No complaints',
-      field_headings=['Notification Id', 'Service', 'Complaint type', 'Complaint Date'],
-      field_headings_visible=True
-  ) %}
+        {{ link_field(item.notification_id, url_for('main.view_notification', service_id=item.service_id, notification_id=item.notification_id)) }}
 
-      {{ link_field(item.notification_id, url_for('main.view_notification', service_id=item.service_id, notification_id=item.notification_id)) }}
+        {{ link_field(item.service_name, url_for('main.service_dashboard', service_id=item.service_id)) }}
 
-      {{ link_field(item.service_name, url_for('main.service_dashboard', service_id=item.service_id)) }}
+        {{ text_field(item.complaint_type) }}
 
-      {{ text_field(item.complaint_type) }}
+        {{ text_field(item.complaint_date|format_datetime_table if item.complaint_date else None) }}
 
-      {{ text_field(item.complaint_date|format_datetime_table if item.complaint_date else None) }}
-
-  {% endcall %}
-
+    {% endcall %}
+  </div>
   {{ previous_next_navigation(prev_page, next_page) }}
 
 {% endblock %}

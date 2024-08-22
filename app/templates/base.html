@@ -1,0 +1,129 @@
+{% from "components/banner.html" import banner %}
+{% from "components/components/skip-link/macro.njk" import usaSkipLink -%}
+{% from "components/sub-navigation.html" import sub_navigation %}
+
+<!DOCTYPE html>
+<html lang="{{ htmlLang | default('en') }}" class="{{ htmlClasses }}">
+  <head>
+    <title>
+      {% block pageTitle %}
+        {% block per_page_title %}{% endblock %} – Notify.gov
+      {% endblock %}
+    </title>
+    {% include "new/components/head.html" %}
+  </head>
+  <body class="usa-template__body {{ bodyClasses }}">
+    <script nonce="{{ csp_nonce() }}">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+    {% block bodyStart %}
+      {% block extra_javascripts_before_body %}
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WX5NGWF"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+      {% endblock %}
+    {% endblock %}
+
+    {% block skipLink %}
+      {{ usaSkipLink({
+        "href": '#main-content',
+        "text": 'Skip to main content'
+      }) }}
+    {% endblock %}
+
+
+    {% block header %}
+      {% include 'new/components/usa_banner.html' %}
+      {% include 'new/components/header.html' %}
+    {% endblock %}
+
+    {% block main %}
+    <div class="grid-container">
+      {% block beforeContent %}
+        {% block backLink %}{% endblock %}
+      {% endblock %}
+      {% block mainClasses %}
+      {% set mainClasses = "margin-top-5 padding-bottom-5" %}
+      <main class="{{ mainClasses }}" id="main-content" role="main">
+      {% endblock %}
+        {% block content %}
+          {% block flash_messages %}
+            {% include 'new/components/flash_messages.html' %}
+          {% endblock %}
+          {% block maincolumn_content %}
+              <div class="grid-row">
+                {% if navigation_links %}
+                  <div class="tablet:grid-col-2 margin-bottom-4">
+                    {{ sub_navigation(navigation_links) }}
+                  </div>
+                  <div class="tablet:grid-col-10 padding-left-4 usa-prose site-prose">
+                {% else %}
+                  <div class="tablet:grid-col-10">
+                {% endif %}
+                {% block content_column_content %}{% endblock %}
+                </div>
+              </div>
+          {% endblock %}
+        {% endblock %}
+      </main>
+    </div>
+    {% endblock %}
+
+    {% block footer %}
+
+      {% if current_service and current_service.research_mode %}
+        {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="usa-link">Technology Transformation Services</a><span id="research-mode" class="research-mode">research mode</span>' %}
+      {% else %}
+        {% set commit_hash = ", Latest version: " + config['COMMIT_HASH'] %}
+        {% set long_link = '<a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="usa-link">Technology Transformation Services</a>' %}
+        {% set meta_suffix = "Built by the " + long_link + commit_hash %}
+      {% endif %}
+
+      {% include "new/components/footer.html" %}
+
+      {% if current_user.is_authenticated %}
+        {% block sessionUserWarning %}
+        <dialog class="usa-modal" id="sessionTimer" aria-labelledby="sessionTimerHeading" aria-describedby="timerWarning">
+          <div class="usa-modal__content">
+            <div class="usa-modal__main">
+              <h2 class="usa-modal__heading" id="sessionTimerHeading">
+                Your session will end soon.
+                <span class="usa-sr-only">Please choose to extend your session or sign out. Your session will expire in 5 minutes or less.</span>
+              </h2>
+              <div class="usa-prose">
+                <p>You have been inactive for too long.
+                  Your session will expire in <span id="timeLeft" role="timer"></span>.
+                </p>
+              </div>
+              <div class="usa-modal__footer">
+                <ul class="usa-button-group">
+                  <li class="usa-button-group__item">
+                    <button type="button" class="usa-button" id="extendSessionTimer" data-close-modal>
+                      Extend Session
+                    </button>
+                  </li>
+                  <li class="usa-button-group__item">
+                    <button type="button" class="usa-button usa-button--unstyled padding-105 text-center" id="logOutTimer"
+                      data-close-modal>
+                      Sign out
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </dialog>
+        {% endblock %}
+      {% endif %}
+
+    {% endblock %}
+
+    {% block bodyEnd %}
+      {% block extra_javascripts %}
+      {% endblock %}
+      <!--[if gt IE 8]><!-->
+      <script type="text/javascript" src="{{ asset_url('javascripts/all.js') }}"></script>
+      <script type="text/javascript" src="{{ asset_url('js/uswds.min.js') }}"></script>
+      <!--<![endif]-->
+    {% endblock %}
+  </body>
+</html>

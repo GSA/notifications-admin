@@ -27,7 +27,9 @@ from tests.conftest import SERVICE_ONE_ID, SERVICE_TWO_ID, normalize_spaces
         "main.trial_services",
     ],
 )
-def test_should_redirect_if_not_logged_in(client_request, endpoint):
+def test_should_redirect_if_not_logged_in(client_request, endpoint, mocker):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     client_request.get(
         endpoint,
@@ -1252,3 +1254,36 @@ def test_get_daily_sms_provider_volumes_report_calls_api_and_download_data(
         + "80"
         + "\r\n"
     )
+
+
+def test_download_all_users(client_request, platform_admin_user, mocker):
+    mocker.patch(
+        "app.main.views.platform_admin.user_api_client.get_all_users_detailed",
+        return_value=[
+            {
+                "name": "Johnny Sokko",
+                "email_address": "j_sokko@unicorn.gov",
+                "mobile_number": "15555555555",
+                "service": "Emperor, Guillotine, Service",
+            }
+        ],
+    )
+
+    client_request.login(platform_admin_user)
+    response = client_request.get_response(
+        "main.download_all_users",
+        _data={},
+        _expected_status=200,
+    )
+
+    assert response.content_type == "text/csv; charset=utf-8"
+    assert "attachment" in response.headers["Content-Disposition"]
+    assert "filename" in response.headers["Content-Disposition"]
+    assert "users" in response.headers["Content-Disposition"]
+
+    my_response = response.get_data(as_text=True)
+
+    assert "Johnny Sokko" in my_response
+    assert "Emperor Guillotine Service" in my_response
+    assert "j_sokko@unicorn.gov" in my_response
+    assert "15555555555" in my_response

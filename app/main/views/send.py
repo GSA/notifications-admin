@@ -3,14 +3,19 @@ import uuid
 from string import ascii_uppercase
 from zipfile import BadZipFile
 
-from flask import abort, flash, redirect, render_template, request, session, url_for
+from flask import (
+    abort,
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from flask_login import current_user
 from markupsafe import Markup
 from notifications_python_client.errors import HTTPError
-from notifications_utils import SMS_CHAR_COUNT_LIMIT
-from notifications_utils.insensitive_dict import InsensitiveDict
-from notifications_utils.recipients import RecipientCSV, first_column_headings
-from notifications_utils.sanitise_text import SanitiseASCII
 from xlrd.biffh import XLRDError
 from xlrd.xldate import XLDateError
 
@@ -35,10 +40,19 @@ from app.s3_client.s3_csv_client import (
     s3upload,
     set_metadata_on_csv_upload,
 )
-from app.utils import PermanentRedirect, should_skip_template_page, unicode_truncate
+from app.utils import (
+    PermanentRedirect,
+    hilite,
+    should_skip_template_page,
+    unicode_truncate,
+)
 from app.utils.csv import Spreadsheet, get_errors_for_csv
 from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
+from notifications_utils import SMS_CHAR_COUNT_LIMIT
+from notifications_utils.insensitive_dict import InsensitiveDict
+from notifications_utils.recipients import RecipientCSV, first_column_headings
+from notifications_utils.sanitise_text import SanitiseASCII
 
 
 def get_example_csv_fields(column_headers, use_example_as_example, submitted_fields):
@@ -948,9 +962,22 @@ def send_notification(service_id, template_id):
     vals = ",".join(values)
     data = f"{data}\r\n{vals}"
 
-    filename = f"one-off-{current_user.name}-{uuid.uuid4()}.csv"
+    filename = (
+        f"one-off-{uuid.uuid4()}.csv"  # {current_user.name} removed from filename
+    )
     my_data = {"filename": filename, "template_id": template_id, "data": data}
     upload_id = s3upload(service_id, my_data)
+
+    # To debug messages that the user reports have not been sent, we log
+    # the csv filename and the job id.  The user will give us the file name,
+    # so we can search on that to obtain the job id, which we can use elsewhere
+    # on the API side to find out what happens to the message.
+    current_app.logger.info(
+        hilite(
+            f"One-off file: {filename} job_id: {upload_id} s3 location: service-{service_id}-notify/{upload_id}.csv"
+        )
+    )
+
     form = CsvUploadForm()
     form.file.data = my_data
     form.file.name = filename
@@ -1000,14 +1027,17 @@ def send_notification(service_id, template_id):
                 job_id=upload_id,
             )
         )
-
+    total = notifications["total"]
+    current_app.logger.info(
+        hilite(
+            f"job_id: {upload_id} has notifications: {total} and attempts: {attempts}"
+        )
+    )
     return redirect(
         url_for(
             ".view_job",
             service_id=service_id,
             job_id=upload_id,
-            from_job=upload_id,
-            notification_id=notifications["notifications"][0]["id"],
             # used to show the final step of the tour (help=3) or not show
             # a back link on a just sent one off notification (help=0)
             help=request.args.get("help"),
@@ -1023,8 +1053,13 @@ def get_email_reply_to_address_from_session():
 
 
 def get_sms_sender_from_session():
-    if session.get("sender_id"):
-        return current_service.get_sms_sender(session["sender_id"])["sms_sender"]
+    sender_id = session.get("sender_id")
+    if sender_id:
+        sms_sender = current_service.get_sms_sender(session["sender_id"])["sms_sender"]
+        current_app.logger.info(f"SMS Sender ({sender_id}) #: {sms_sender}")
+        return sms_sender
+    else:
+        current_app.logger.error("No SMS Sender!!!!!!")
 
 
 def get_spreadsheet_column_headings_from_template(template):

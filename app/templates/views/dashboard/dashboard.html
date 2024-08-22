@@ -9,7 +9,7 @@
 
 {% block maincolumn_content %}
 
-  <div class="dashboard margin-bottom-8">
+  <div class="dashboard margin-bottom-2">
 
     <h1 class="usa-sr-only">Dashboard</h1>
     {% if current_user.has_permissions('manage_templates') and not current_service.all_templates %}
@@ -18,94 +18,124 @@
 
     {{ ajax_block(partials, updates_url, 'upcoming') }}
 
-    <h2 class="font-body-2xl line-height-sans-2 margin-0">
-      Messages sent
-    </h2>
+    <h2 class="font-body-xl margin-top-0">{{ current_service.name }} Dashboard</h2>
 
     {{ ajax_block(partials, updates_url, 'inbox') }}
 
-    {{ ajax_block(partials, updates_url, 'totals') }}
-
-    {{ ajax_block(partials, updates_url, 'template-statistics') }}
-    <h2 class="margin-top-4 margin-bottom-1">Recent Batches</h2>
-    <div class="table-wrapper">
-      <table class="usa-table usa-table--borderless job-table">
-        <thead class="table-field-headings">
-          <tr>
-            <th scope="col" class="table-field-heading-first">
-              <span>File name</span>
-            </th>
-            <th scope="col" class="table-field-heading">
-              <span>Template</span>
-            </th>
-            <th scope="col" class="table-field-heading">
-              <span>Time sent</span>
-            </th>
-            <th scope="col" class="table-field-heading">
-              <span>Sender</span>
-            </th>
-            <th scope="col" class="table-field-heading">
-              <span># of Recipients</span>
-            </th>
-            <th scope="col" class="table-field-heading">
-              <span>Report</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {% if job_and_notifications %}
-            {% for job in job_and_notifications[:5] %}
-              {% if job.job_id and job.notifications %}
-                {% set notification = job.notifications[0] %}
-                <tr class="table-row" id="{{ job.job_id }}">
-                  <td class="table-field file-name">
-                    {{ notification.job.original_file_name if notification.job.original_file_name else 'Manually entered number'}}
-                    <br>
-                    <a class="usa-link file-list-filename" href="{{ job.view_job_link }}">View Batch</a>
-                  </td>
-                  <td class="table-field template">
-                    {{ notification.template.name }}
-                  </td>
-                  <td class="table-field time-sent">
-                    {{ job.created_at | format_datetime_table }}
-                  </td>
-                  <td class="table-field sender">
-                    {{ notification.created_by.name }}
-                  </td>
-                  <td class="table-field count-of-recipients">
-                    {{ job.notification_count}}
-                  </td>
-                  <td class="table-field report">
-                    {% if notification and job.time_left != "Data no longer available" %}
-                      <a class="usa-link file-list-filename" href="{{ job.download_link }}">Download</a>
-                      <span class="usa-hint">{{ job.time_left }}</span>
-                    {% elif job %}
-                      <span>{{ job.time_left }}</span>
-                    {% endif %}
-                  </td>
-                </tr>
-              {% endif %}
-            {% endfor %}
-          {% else %}
-            <tr class="table-row">
-              <td class="table-empty-message" colspan="10">No batched job messages found &thinsp;(messages are kept for {{ service_data_retention_days }} days).</td>
-            </tr>
-        {% endif %}
-        </tbody>
-      </table>
+    <div id="totalMessageChartContainer" data-sms-sent="{{ sms_sent }}" data-sms-allowance-remaining="{{ sms_allowance_remaining }}">
+      <h2 id="chartTitle">Total messages</h2>
+      <svg id="totalMessageChart"></svg>
+      <div id="message"></div>
     </div>
+    <div id="totalMessageTable" class="margin-0"></div>
 
-    <h2 class="margin-top-4 margin-bottom-1">Message count</h2>
-    {% if current_user.has_permissions('manage_service') %}
-      <h3 class='margin-bottom-0' id="current-year"></h3>
-      {{ ajax_block(partials, updates_url, 'usage') }}
-      <p class="margin-top-0">During the pilot period, each service has an allowance of 250,000 message parts. Once this allowance is met, the
-      application will stop delivering messages. There's no monthly charge, no setup fee, and no procurement cost.</p>
-      <p class="align-with-heading-copy">
-        What counts as 1 text message part?<br />
-        See <a class="usa-link" href="{{ url_for('.pricing') }}">pricing</a>.
-      </p>
-    {% endif %}
+    <h2 class="line-height-sans-2 margin-bottom-0 margin-top-4">
+      Activity snapshot
+    </h2>
+    <div id="activityChartContainer">
+      <form class="usa-form">
+        <label class="usa-label" for="options">Account</label>
+        <select class="usa-select margin-bottom-2" name="options" id="options">
+          <option value>- Select -</option>
+          <option value="service" selected>{{ current_service.name }}</option>
+          <option value="individual">{{ current_user.name }}</option>
+        </select>
+      </form>
+      <div id="activityChart">
+        <div class="chart-header">
+          <div class="chart-subtitle">{{ current_service.name }} - last 7 days</div>
+          <div class="chart-legend" aria-label="Legend"></div>
+        </div>
+        <div class="chart-container" id="weeklyChart"></div>
+        <table id="weeklyTable" class="usa-sr-only usa-table"></table>
+      </div>
+    </div>
+    <div id="aria-live-account" class="usa-sr-only" aria-live="polite"></div>
+
+    {% if current_user.has_permissions('manage_service') %}{% endif %}
+
+    <div class="table-container">
+      <div id="table1" class="table-overflow-x-auto hidden">
+        <h2 class="margin-top-4 margin-bottom-1">My activity</h2>
+        <table class="usa-table job-table">
+          <thead class="table-field-headings">
+            <tr>
+              <th scope="col" class="table-field-heading-first" id="jobId"><span>Job ID#</span></th>
+              <th data-sortable scope="col" class="table-field-heading"><span>Template</span></th>
+              <th data-sortable scope="col" class="table-field-heading"><span>Job status</span></th>
+              <th data-sortable scope="col" class="table-field-heading"><span># of Recipients</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if jobs %}
+              {% for job in jobs[:5] %}
+                {% if job.created_by.name == current_user.name %}
+                  {% set notification = job.notifications[0] %}
+                  <tr id="{{ job.job_id }}">
+                    <td class="table-field jobid" scope="row" role="rowheader">
+                      <a class="usa-link" href="{{ job.view_job_link }}">
+                        {{ job.job_id[:8] if job.job_id else 'Manually entered number' }}
+                      </a>
+                    </td>
+                    <td class="table-field template">{{ job.template_name }}</td>
+                    <td class="table-field time-sent">Sent on
+                      {{ (job.processing_finished if job.processing_finished else job.processing_started
+                        if job.processing_started else job.created_at)|format_datetime_table }}
+                    </td>
+                    <td class="table-field count-of-recipients">{{ job.notification_count }}</td>
+                  </tr>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              <tr class="table-row">
+                <td class="table-empty-message" colspan="10">No batched job messages found &thinsp;(messages are kept for {{ service_data_retention_days }} days).</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+      <div id="table2" class="table-overflow-x-auto visible">
+        <h2 class="margin-top-4 margin-bottom-1">Service activity</h2>
+        <table class="usa-table job-table">
+          <thead class="table-field-headings">
+            <tr>
+              <th scope="col" role="columnheader" class="table-field-heading-first" id="jobId"><span>Job ID#</span></th>
+              <th data-sortable scope="col" role="columnheader" class="table-field-heading"><span>Template</span></th>
+              <th data-sortable scope="col" role="columnheader" class="table-field-heading"><span>Job status</span></th>
+              <th data-sortable scope="col" role="columnheader" class="table-field-heading"><span>Sender</span></th>
+              <th data-sortable scope="col" role="columnheader" class="table-field-heading"><span># of Recipients</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if jobs %}
+              {% for job in jobs[:5] %}
+                {% set notification = job.notifications[0] %}
+                <tr id="{{ job.job_id }}">
+                  <td class="table-field jobid" scope="row" role="rowheader">
+                    <a class="usa-link" href="{{ job.view_job_link }}">
+                      {{ job.job_id[:8] if job.job_id else 'Manually entered number' }}
+                    </a>
+                  </td>
+                  <td class="table-field template">{{ job.template_name }}</td>
+                  <td class="table-field time-sent">Sent on
+                    {{ (job.processing_finished if job.processing_finished else job.processing_started
+                      if job.processing_started else job.created_at)|format_datetime_table }}
+                  </td>
+                  <td class="table-field sender">{{ job.created_by.name }}</td>
+                  <td class="table-field count-of-recipients">{{ job.notification_count }}</td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr class="table-row">
+                <td class="table-empty-message" colspan="10">No batched job messages found &thinsp;(messages are kept for {{ service_data_retention_days }} days).</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {{ ajax_block(partials, updates_url, 'template-statistics') }}
   </div>
 
 {% endblock %}

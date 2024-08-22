@@ -24,11 +24,15 @@ from app.utils.user_permissions import (
 
 
 def _get_service_id_from_view_args():
-    return str(request.view_args.get("service_id", "")) or None
+    if request and request.view_args:
+        return str(request.view_args.get("service_id", ""))
+    return None
 
 
 def _get_org_id_from_view_args():
-    return str(request.view_args.get("org_id", "")) or None
+    if request and request.view_args:
+        return str(request.view_args.get("org_id", ""))
+    return None
 
 
 class User(JSONModel, UserMixin):
@@ -140,12 +144,16 @@ class User(JSONModel, UserMixin):
             set_by_id=set_by_id,
         )
 
-    def logged_in_elsewhere(self):
-        return session.get("current_session_id") != self.current_session_id
-
     def activate(self):
         if self.is_pending:
             user_data = user_api_client.activate_user(self.id)
+            return self.__class__(user_data["data"])
+        else:
+            return self
+
+    def deactivate(self):
+        if self.is_active:
+            user_data = user_api_client.deactivate_user(self.id)
             return self.__class__(user_data["data"])
         else:
             return self
@@ -196,7 +204,7 @@ class User(JSONModel, UserMixin):
 
     @property
     def is_authenticated(self):
-        return not self.logged_in_elsewhere() and super(User, self).is_authenticated
+        return super(User, self).is_authenticated
 
     @property
     def platform_admin(self):
@@ -223,7 +231,9 @@ class User(JSONModel, UserMixin):
         if not service_id and not org_id:
             # we shouldn't have any pages that require permissions, but don't specify a service or organization.
             # use @user_is_platform_admin for platform admin only pages
-            raise NotImplementedError
+            # raise NotImplementedError
+            current_app.logger.warn(f"VIEW ARGS ARE {request.view_args}")
+            pass
 
         log_msg = f"has_permissions user: {self.id} service: {service_id}"
         # platform admins should be able to do most things (except eg send messages, or create api keys)
@@ -674,10 +684,6 @@ class InvitedOrgUser(JSONModel):
 
 
 class AnonymousUser(AnonymousUserMixin):
-    # set the anonymous user so that if a new browser hits us we don't error http://stackoverflow.com/a/19275188
-
-    def logged_in_elsewhere(self):
-        return False
 
     @property
     def default_organization(self):
