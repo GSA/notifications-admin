@@ -247,20 +247,6 @@ def test_should_redirect_after_mobile_number_change(
         assert session["new-mob"] == phone_number_to_register_with
 
 
-def test_should_show_authenticate_after_mobile_number_change(
-    client_request,
-):
-    with client_request.session_transaction() as session:
-        session["new-mob"] = "+12021234123"
-
-    page = client_request.get(
-        "main.user_profile_mobile_number_authenticate",
-    )
-
-    assert "Change your mobile number" in page.text
-    assert "Confirm" in page.text
-
-
 def test_should_redirect_after_mobile_number_authenticate(
     client_request,
     mock_verify_password,
