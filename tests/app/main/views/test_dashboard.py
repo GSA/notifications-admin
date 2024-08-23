@@ -1757,11 +1757,13 @@ def test_org_breadcrumbs_show_if_user_is_platform_admin(
     platform_admin_user,
     client_request,
 ):
+    print("ENTER TESET")
     service_one_json = service_json(
         SERVICE_ONE_ID,
         users=[platform_admin_user["id"]],
         organization_id=ORGANISATION_ID,
     )
+    print("GOT SERVICE ONE")
 
     mocker.patch(
         "app.service_api_client.get_service", return_value={"data": service_one_json}
@@ -1783,10 +1785,14 @@ def test_org_breadcrumbs_show_if_user_is_platform_admin(
         "app.main.views.dashboard.get_daily_stats_by_user",
         return_value=mock_daily_stats_by_user,
     )
+    print("DID ALL PATCHES")
 
     client_request.login(platform_admin_user, service_one_json)
+    print("LOGGED IN")
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
-
+    print("HERE IS THE PAGE")
+    print(page)
+    print("XXXXXXXXXXXXXXXXX")
     assert page.select_one(".navigation-organization-link")["href"] == url_for(
         "main.organization_dashboard",
         org_id=ORGANISATION_ID,

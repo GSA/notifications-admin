@@ -61,7 +61,6 @@ const javascripts = () => {
     paths.src + 'javascripts/fileUpload.js',
     paths.src + 'javascripts/radioSelect.js',
     paths.src + 'javascripts/updateContent.js',
-    paths.src + 'javascripts/setTimezone.js',
     paths.src + 'javascripts/listEntry.js',
     paths.src + 'javascripts/liveSearch.js',
     paths.src + 'javascripts/errorTracking.js',
@@ -98,6 +97,13 @@ const copyGtmHead = () => {
     .pipe(dest(paths.dist + 'js/'));
 };
 
+// Task to copy `setTimezone.js`
+const copySetTimezone = () => {
+  return src(paths.src + 'js/setTimezone.js')
+    .pipe(dest(paths.dist + 'js/'));
+};
+
+
 // Task to copy images
 const copyImages = () => {
   return src(paths.src + 'images/**/*', { encoding: false })
@@ -123,4 +129,4 @@ const copyAssets = async () => {
   await uswds.copyAssets();
 };
 
-exports.default = series(styles, javascripts, copyGtmHead, copyImages, copyAssets);
+exports.default = series(styles, javascripts, copyGtmHead, copySetTimezone, copyImages, copyAssets);
