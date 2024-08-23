@@ -416,6 +416,7 @@ def get_dashboard_partials(service_id):
 def get_dashboard_totals(statistics):
 
     timezone = request.cookies.get('timezone', 'UTC')
+    print(hilite(f"HURRAY TIMEZONE IS {timezone}"))
     if current_user.preferred_timezone is not timezone:
         current_user.update(preferred_timezone=timezone)
 

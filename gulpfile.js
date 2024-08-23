@@ -61,6 +61,7 @@ const javascripts = () => {
     paths.src + 'javascripts/fileUpload.js',
     paths.src + 'javascripts/radioSelect.js',
     paths.src + 'javascripts/updateContent.js',
+    paths.src + 'javascripts/setTimezone.js',
     paths.src + 'javascripts/listEntry.js',
     paths.src + 'javascripts/liveSearch.js',
     paths.src + 'javascripts/errorTracking.js',
