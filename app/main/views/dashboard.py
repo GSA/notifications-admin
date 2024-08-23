@@ -6,7 +6,7 @@ from itertools import groupby
 from flask import (
     Response,
     abort,
-    app,
+    current_app,
     jsonify,
     render_template,
     request,
@@ -292,19 +292,6 @@ def inbox_download(service_id):
     )
 
 
-@main.route("/get-timezone", methods=["POST", "GET"])
-def get_timezone():
-    print(hilite("ENTER GET-TIMEZONE"))
-    timezone = request.cookies.get("timezone", "UTC")
-    print(hilite(f"TIMEZONE {timezone}"))
-    # data = request.get_json()
-    # print(f"HEY DATA WAS {data}")
-    # timezone = data.get('timezone')
-    # print(hilite(f"TIMEZONE = {timezone}"))
-    # session['timezone'] = timezone
-    return jsonify({"message": f"Timezone get successfully {timezone}"}), 200
-
-
 def get_inbox_partials(service_id):
     page = int(request.args.get("page", 1))
     inbound_messages_data = service_api_client.get_most_recent_inbound_sms(
@@ -425,9 +412,9 @@ def get_dashboard_partials(service_id):
 
 
 def get_dashboard_totals(statistics):
-
-    timezone = request.cookies.get("timezone", "UTC")
-    print(hilite(f"HURRAY TIMEZONE IS {timezone}"))
+    # This is set in dashboard.html on page load
+    timezone = request.cookies.get("timezone", "US/Eastern")
+    current_app.logger.debug(hilite(f"User's timezone is {timezone}"))
     if current_user.preferred_timezone is not timezone:
         current_user.update(preferred_timezone=timezone)
 
