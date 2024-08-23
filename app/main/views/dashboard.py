@@ -3,7 +3,7 @@ from datetime import datetime
 from functools import partial
 from itertools import groupby
 
-from flask import Response, abort, jsonify, render_template, request, session, url_for
+from flask import Response, abort, app, jsonify, render_template, request, session, url_for
 from flask_login import current_user
 from werkzeug.utils import redirect
 
@@ -21,6 +21,7 @@ from app.utils import (
     DELIVERED_STATUSES,
     FAILURE_STATUSES,
     REQUESTED_STATUSES,
+    hilite,
     service_has_permission,
 )
 from app.utils.csv import Spreadsheet
@@ -281,6 +282,17 @@ def inbox_download(service_id):
         },
     )
 
+@main.route('/get-timezone', methods=['POST', 'GET'])
+def get_timezone():
+    print(hilite("ENTER GET-TIMEZONE"))
+    timezone = request.cookies.get('timezone', 'UTC')
+    print(hilite(f"TIMEZONE {timezone}"))
+    #data = request.get_json()
+    #print(f"HEY DATA WAS {data}")
+    #timezone = data.get('timezone')
+    #print(hilite(f"TIMEZONE = {timezone}"))
+    #session['timezone'] = timezone
+    return jsonify({'message': f'Timezone get successfully {timezone}'}), 200
 
 def get_inbox_partials(service_id):
     page = int(request.args.get("page", 1))
@@ -402,6 +414,11 @@ def get_dashboard_partials(service_id):
 
 
 def get_dashboard_totals(statistics):
+
+    timezone = request.cookies.get('timezone', 'UTC')
+    if current_user.preferred_timezone is not timezone:
+        current_user.update(preferred_timezone=timezone)
+
     for msg_type in statistics.values():
         msg_type["failed_percentage"] = get_formatted_percentage(
             msg_type["failed"], msg_type["requested"]
