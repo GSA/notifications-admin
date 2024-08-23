@@ -550,14 +550,14 @@ def test_download_inbox(
     )
     assert response.get_data(as_text=True) == (
         "Phone number,Message,Received\r\n"
-        "(202) 867-5300,message-1,07-01-2016 11:00 US/Eastern\r\n"
-        "(202) 867-5300,message-2,07-01-2016 10:59 US/Eastern\r\n"
-        "(202) 867-5300,message-3,07-01-2016 10:59 US/Eastern\r\n"
-        "(202) 867-5302,message-4,07-01-2016 08:59 US/Eastern\r\n"
-        "+33(0)1 12345678,message-5,07-01-2016 06:59 US/Eastern\r\n"
-        "(202) 555-0104,message-6,07-01-2016 04:59 US/Eastern\r\n"
-        "(202) 555-0104,message-7,07-01-2016 02:59 US/Eastern\r\n"
-        "+68212345,message-8,07-01-2016 02:59 US/Eastern\r\n"
+        "(202) 867-5300,message-1,07-01-2016 11:00 America/New_York\r\n"
+        "(202) 867-5300,message-2,07-01-2016 10:59 America/New_York\r\n"
+        "(202) 867-5300,message-3,07-01-2016 10:59 America/New_York\r\n"
+        "(202) 867-5302,message-4,07-01-2016 08:59 America/New_York\r\n"
+        "+33(0)1 12345678,message-5,07-01-2016 06:59 America/New_York\r\n"
+        "(202) 555-0104,message-6,07-01-2016 04:59 America/New_York\r\n"
+        "(202) 555-0104,message-7,07-01-2016 02:59 America/New_York\r\n"
+        "+68212345,message-8,07-01-2016 02:59 America/New_York\r\n"
     )
 
 
@@ -849,7 +849,7 @@ def test_should_show_upcoming_jobs_on_dashboard(
     assert normalize_spaces(page.select_one("main h2").text) == ("In the next few days")
 
     assert normalize_spaces(page.select_one("a.banner-dashboard").text) == (
-        "2 files waiting to send " "- sending starts today at 06:09 US/Eastern"
+        "2 files waiting to send " "- sending starts today at 06:09 America/New_York"
     )
 
     assert page.select_one("a.banner-dashboard")["href"] == url_for(

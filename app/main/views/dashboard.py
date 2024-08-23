@@ -413,10 +413,14 @@ def get_dashboard_partials(service_id):
 
 def get_dashboard_totals(statistics):
     # This is set in dashboard.html on page load
-    timezone = request.cookies.get("timezone", "US/Eastern")
-    current_app.logger.debug(hilite(f"User's timezone is {timezone}"))
-    if current_user.preferred_timezone is not timezone:
-        current_user.update(preferred_timezone=timezone)
+    try:
+        timezone = request.cookies.get("timezone", "US/Eastern")
+        current_app.logger.debug(hilite(f"User's timezone is {timezone}"))
+        serialized_user = current_user.serialize()
+        if serialized_user["preferred_timezone"] is not timezone:
+            current_user.update(preferred_timezone=timezone)
+    except RuntimeError as e:
+        current_app.logger.warning("Can't get timezone, running tests?")
 
     for msg_type in statistics.values():
         msg_type["failed_percentage"] = get_formatted_percentage(

@@ -58,6 +58,7 @@ class User(JSONModel, UserMixin):
         super().__init__(_dict)
         self.permissions = _dict.get("permissions", {})
         self._platform_admin = _dict["platform_admin"]
+        self.preferred_timezone = _dict.get("preferred_timezone", "America/New_York")
 
     @classmethod
     def from_id(cls, user_id):

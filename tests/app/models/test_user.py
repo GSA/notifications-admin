@@ -18,6 +18,7 @@ def test_user(notify_admin):
         "email_address": "test@user.gsa.gov",
         "mobile_number": "+12021231234",
         "state": "pending",
+        "preferred_timezone": "America/Chicago",
         "failed_login_count": 0,
         "platform_admin": False,
     }
