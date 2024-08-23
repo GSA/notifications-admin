@@ -420,7 +420,7 @@ def get_dashboard_totals(statistics):
         if serialized_user["preferred_timezone"] is not timezone:
             current_user.update(preferred_timezone=timezone)
     except RuntimeError as e:
-        current_app.logger.warning("Can't get timezone, running tests?")
+        current_app.logger.warning(f"Can't get timezone, running tests? {e}")
 
     for msg_type in statistics.values():
         msg_type["failed_percentage"] = get_formatted_percentage(
