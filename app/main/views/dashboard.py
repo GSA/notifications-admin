@@ -555,15 +555,12 @@ def get_tuples_of_financial_years(
 
 
 def set_timezone():
-    # This is set in dashboard.html on page load
-    print(hilite("INVOKING set_timezone()!!!!"))
+    # Cookie is set in dashboard.html on page load
     try:
         timezone = request.cookies.get("timezone", "US/Eastern")
         current_app.logger.debug(hilite(f"User's timezone is {timezone}"))
         serialized_user = current_user.serialize()
         if serialized_user["preferred_timezone"] is not timezone:
             current_user.update(preferred_timezone=timezone)
-    except RuntimeError as e:
-        current_app.logger.exception(hilite(f"Can't get timezone, running tests?"))
-    except Exception as e:
-        current_app.logger.exception(hilite(f"Can't get timezone, running tests?"))
+    except Exception:
+        current_app.logger.exception(hilite("Can't get timezone"))
