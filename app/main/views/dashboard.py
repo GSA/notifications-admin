@@ -49,6 +49,7 @@ def old_service_dashboard(service_id):
 @main.route("/services/<uuid:service_id>")
 @user_has_permissions()
 def service_dashboard(service_id):
+
     if session.get("invited_user_id"):
         session.pop("invited_user_id", None)
         session["service_id"] = service_id
@@ -412,21 +413,13 @@ def get_dashboard_partials(service_id):
 
 
 def get_dashboard_totals(statistics):
-    # This is set in dashboard.html on page load
-    try:
-        timezone = request.cookies.get("timezone", "US/Eastern")
-        current_app.logger.debug(hilite(f"User's timezone is {timezone}"))
-        serialized_user = current_user.serialize()
-        if serialized_user["preferred_timezone"] is not timezone:
-            current_user.update(preferred_timezone=timezone)
-    except RuntimeError as e:
-        current_app.logger.warning(f"Can't get timezone, running tests? {e}")
 
     for msg_type in statistics.values():
         msg_type["failed_percentage"] = get_formatted_percentage(
             msg_type["failed"], msg_type["requested"]
         )
         msg_type["show_warning"] = float(msg_type["failed_percentage"]) > 3
+
     return statistics
 
 
@@ -485,6 +478,8 @@ def get_months_for_financial_year(year, time_format="%B"):
 
 
 def get_current_month_for_financial_year(year):
+    # Setting the timezone here because we need to set it somewhere.
+    set_timezone()
     current_month = datetime.now().month
     return current_month
 
@@ -557,3 +552,18 @@ def get_tuples_of_financial_years(
         )
         for year in reversed(range(start, end + 1))
     )
+
+
+def set_timezone():
+    # This is set in dashboard.html on page load
+    print(hilite("INVOKING set_timezone()!!!!"))
+    try:
+        timezone = request.cookies.get("timezone", "US/Eastern")
+        current_app.logger.debug(hilite(f"User's timezone is {timezone}"))
+        serialized_user = current_user.serialize()
+        if serialized_user["preferred_timezone"] is not timezone:
+            current_user.update(preferred_timezone=timezone)
+    except RuntimeError as e:
+        current_app.logger.exception(hilite(f"Can't get timezone, running tests?"))
+    except Exception as e:
+        current_app.logger.exception(hilite(f"Can't get timezone, running tests?"))
