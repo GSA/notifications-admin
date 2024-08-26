@@ -88,7 +88,13 @@ dead-code: ## 60% is our aspirational goal, but currently breaks the build
 .PHONY: e2e-test
 e2e-test: export NEW_RELIC_ENVIRONMENT=test
 e2e-test: ## Run end-to-end integration tests; note that --browser webkit isn't currently working
-	poetry run pytest -vv --browser chromium  --browser firefox tests/end_to_end
+    curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+	sudo install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/
+	sudo sh -c 'echo "deb [arch-amd64] https://packages.microsoft.com/repos/edge stable main" > /etc/apt/sources.list.d/microsoft-edge.list'
+	sudo rm microsoft.gpg
+	sudo apt update
+	sudo apt install microsoft-edge-stable
+	poetry run pytest -vv --browser chromium  --browser firefox --browser msedge tests/end_to_end
 
 .PHONY: js-lint
 js-lint: ## Run javascript linting scanners
