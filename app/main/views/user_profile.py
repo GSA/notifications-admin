@@ -275,3 +275,15 @@ def user_profile_disable_platform_admin_view():
     return render_template(
         "views/user-profile/disable-platform-admin-view.html", form=form
     )
+
+
+def set_timezone():
+    # Cookie is set in dashboard.html on page load
+    try:
+        timezone = request.cookies.get("timezone", "US/Eastern")
+        current_app.logger.debug(f"User's timezone is {timezone}")
+        serialized_user = current_user.serialize()
+        if serialized_user["preferred_timezone"] is not timezone:
+            current_user.update(preferred_timezone=timezone)
+    except Exception:
+        current_app.logger.exception(hilite("Can't get timezone"))
