@@ -10,6 +10,7 @@ from flask import (
     session,
     url_for,
 )
+from app.utils import hilite
 from flask_login import current_user
 
 from app import user_api_client

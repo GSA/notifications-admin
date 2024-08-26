@@ -6,7 +6,6 @@ from itertools import groupby
 from flask import (
     Response,
     abort,
-    current_app,
     jsonify,
     render_template,
     request,
@@ -31,7 +30,6 @@ from app.utils import (
     DELIVERED_STATUSES,
     FAILURE_STATUSES,
     REQUESTED_STATUSES,
-    hilite,
     service_has_permission,
 )
 from app.utils.csv import Spreadsheet
