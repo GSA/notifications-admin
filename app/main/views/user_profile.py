@@ -10,7 +10,6 @@ from flask import (
     session,
     url_for,
 )
-from app.utils import hilite
 from flask_login import current_user
 
 from app import user_api_client
@@ -30,6 +29,7 @@ from app.main.forms import (
     TwoFactorForm,
 )
 from app.models.user import User
+from app.utils import hilite
 from app.utils.user import user_is_gov_user, user_is_logged_in
 from notifications_utils.url_safe_token import check_token
 
