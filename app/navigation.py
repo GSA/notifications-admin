@@ -123,6 +123,7 @@ class HeaderNavigation(Navigation):
             "get_billing_report",
             "get_users_report",
             "get_daily_volumes",
+            "download_all_users",
             "get_daily_sms_provider_volumes",
             "get_volumes_by_service",
             "organizations",
@@ -153,6 +154,9 @@ class HeaderNavigation(Navigation):
 
 class MainNavigation(Navigation):
     mapping = {
+        "activity": {
+            "all_jobs_activity",
+        },
         "dashboard": {
             "conversation",
             "inbox",

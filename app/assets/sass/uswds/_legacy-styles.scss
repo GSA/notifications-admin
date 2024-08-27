@@ -66,6 +66,10 @@ h2.sms-message-header {
   margin-bottom: 0.5rem;
 }
 
+.usa-prose >*+ h2.message-header {
+  margin-top: 1em;
+}
+
 h2.recipient-list {
   margin-bottom: 0.5rem;
 }
@@ -338,13 +342,5 @@ h2.recipient-list {
     & + .table-show-more-link {
       margin-top: -20px;
     }
-  }
-}
-
-.js-focus-style {
-  outline: 3px solid color("blue-40v");
-  box-shadow: 0 0 0 7px color("blue-40v");
-  *:focus {
-    outline: none;
   }
 }

@@ -1,4 +1,4 @@
-{% extends "content_template.html" %}
+{% extends "base.html" %}
 {% from "components/table.html" import mapping_table, row, text_field, edit_field, field with context %}
 {% from "components/sub-navigation.html" import sub_navigation %}
 {% from "components/service-link.html" import service_link %}
@@ -24,6 +24,10 @@
 <p class="usa-body">To send a text with Notify, you need to create a reusable message template first.</p>
 <p class="usa-body">Templates let you send the same thing to lots of people, as often as you need to, without writing a new message each time.</p>
 
+<h2 class="heading-medium" id="organizing-content">Organizing your content</h2>
+<p class="usa-body">You can organize your content by grouping templates, and putting them into folders.</p>
+<p class="usa-body">Set up folders within the Send message section of Notify, where you find templates. You can choose to create a Folder before or after a template is made. If you want to change a user’s ability to view or edit folders, you may control this through their individual team member permissions.</p>
+
 <h2 class="heading-medium" id="personalised-messages">Personalized content</h2>
 <p class="usa-body">Notify makes it easy to send personalized messages from a single template.</p>
 <p class="usa-body">See <a class="usa-link" href="{{ url_for('.guidance_index', _anchor='personalized-content') }}">how to personalize your content</a>.</p>
@@ -44,7 +48,6 @@
 <p class="usa-body">Notify lets you:</p>
 <ul class="list list-bullet">
   <li>set different permission levels for each team member</li>
-  <li>invite team members who do not have a government email address</li>
   <li>choose who else can manage team members</li>
 </ul>
 

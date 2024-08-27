@@ -2,6 +2,7 @@ from flask import current_app
 from notifications_python_client.errors import HTTPError
 
 from app.notify_client import NotifyAdminAPIClient, cache
+from app.utils import hilite
 from app.utils.user_permissions import translate_permissions_from_ui_to_db
 
 ALLOWED_ATTRIBUTES = {
@@ -109,13 +110,14 @@ class UserApiClient(NotifyAdminAPIClient):
             raise
 
     def send_verify_code(self, user_id, code_type, to, next_string=None):
+
         data = {"to": to}
         if next_string:
             data["next"] = next_string
         if code_type == "email":
             data["email_auth_link_host"] = self.admin_url
         endpoint = "/user/{0}/{1}-code".format(user_id, code_type)
-        current_app.logger.warn(f"Sending verify_code {code_type} to {user_id}")
+        current_app.logger.warn(hilite(f"Sending verify_code {code_type} to {user_id}"))
         self.post(endpoint, data=data)
 
     def send_verify_email(self, user_id, to):
@@ -155,6 +157,10 @@ class UserApiClient(NotifyAdminAPIClient):
 
     def get_all_users(self):
         endpoint = "/user"
+        return self.get(endpoint)["data"]
+
+    def get_all_users_detailed(self):
+        endpoint = "/user/report-all-users"
         return self.get(endpoint)["data"]
 
     @cache.delete("service-{service_id}")
@@ -216,6 +222,10 @@ class UserApiClient(NotifyAdminAPIClient):
     @cache.delete("user-{user_id}")
     def activate_user(self, user_id):
         return self.post("/user/{}/activate".format(user_id), data=None)
+
+    @cache.delete("user-{user_id}")
+    def deactivate_user(self, user_id):
+        return self.post("/user/{}/deactivate".format(user_id), data=None)
 
     def send_change_email_verification(self, user_id, new_email):
         endpoint = "/user/{}/change-email-verification".format(user_id)

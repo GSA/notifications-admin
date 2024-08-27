@@ -3,7 +3,7 @@
 {% from "components/live-search.html" import live_search %}
 {% from "components/components/details/macro.njk" import usaDetails %}
 
-{% extends "content_template.html" %}
+{% extends "base.html" %}
 
 {% block per_page_title %}
 Message parts
@@ -15,7 +15,7 @@ Message parts
 
 {{ content_metadata(
 data={
-"Last updated": "February 5, 2024"
+"Last updated": "April 10, 2024"
 }
 ) }}
 
@@ -26,14 +26,16 @@ more parts towards the allowance if you:</p>
 <ul class="list list-bullet">
   <li>send text messages longer than 160 characters</a></li>
   <li>use certain <a class="usa-link" href="#symbols">signs and symbols</a></li>
-  <li>use <a class="usa-link" href="#accents">accents and accented letters</a></li>
+  <li>use <a class="usa-link" href="#accents">accents and accented letters, including non-romanized scripts</a></li>
 </ul>
 
 <h3 class="font-body-lg" id="long-text-messages">Long text messages</h3>
 <p>If a text message is longer than 160 characters (including spaces and service name), it counts as more than one message
 part.</p>
 
-<div class="bottom-gutter-3-2">
+<h4>Calculation of message parts without special characters</h4>
+
+<div class="table-overflow-x-auto">
   {% call mapping_table(
   caption='Text message pricing',
   field_headings=['Message length', 'Charge'],
@@ -72,14 +74,19 @@ and the number of parts you’ll have left.</p>
 
 <p>Using them can increase the cost of sending text messages.</p>
 
-<h3 class="font-body-lg" id="accents">Accents and accented characters</h3>
-<p>Some languages use accented characters.</p>
+<h3 class="font-body-lg" id="accents">Accented characters and non-romanized scripts</h3>
+<p>Notify can handle a wide range of different languages and scripts. However, occasionally some phone carriers may
+struggle to display special characters or non-romanized scripts. (Languages such as Arabic, Chinese, Japanese, Korean,
+and Russian use non-romanized scripts with different characters.) Best practices encourage communication in the
+recipient’s preferred language, but we are aware that, rarely, a phone carrier will not be able to handle the message.</p>
 <p>The following accented characters do not affect the cost of sending text messages: Ä, É, Ö, Ü, à, ä, é, è, ì, ò, ö,
   ù, ü.</p>
-<p>Using other accented characters can increase the cost of sending text messages.
-<p>
+<p>Using other accented characters or scripts will increase the cost of sending text messages. Even one accented character
+(with the exception of those noted above), or use of a non-romanized or logographic script will cause the entire message
+to be calculated as detailed below.<p>
+<h4>Calculation of message parts with special characters or non-romanized scripts</h4>
   {% set accentedChars %}
-<div class="bottom-gutter-3-2">
+<div class="table-overflow-x-auto">
   {% call mapping_table(
   caption='Accented characters that affect text message charges',
   field_headings=['Character', 'Description'],
@@ -144,7 +151,7 @@ and the number of parts you’ll have left.</p>
 "html": accentedChars
 }) }}
 
-<div class="bottom-gutter-3-2">
+<div class="table-overflow-x-auto">
   {% call mapping_table(
   caption='Pricing for text messages containing accented characters that affect the charges',
   field_headings=['Message length', 'Charge'],

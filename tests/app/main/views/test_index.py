@@ -9,9 +9,10 @@ from tests.conftest import SERVICE_ONE_ID, normalize_spaces
 
 
 def test_non_logged_in_user_can_see_homepage(
-    client_request,
-    mock_get_service_and_organization_counts,
+    client_request, mock_get_service_and_organization_counts, mocker
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     page = client_request.get("main.index", _test_page_title=False)
 
@@ -19,15 +20,13 @@ def test_non_logged_in_user_can_see_homepage(
         "Reach people where they are with government-powered text messages"
     )
 
-    assert page.select_one("a.usa-button.usa-button--big")["href"] == url_for(
-        "main.sign_in",
+    assert (
+        page.select_one(
+            "a.usa-button.login-button.login-button--primary.margin-right-2"
+        ).text
+        == "Sign in with \n"
     )
-
-    assert page.select_one("meta[name=description]")["content"].strip() == (
-        "Notify.gov lets you send text messages to your users. "
-        "Try it now if you work in federal, state, or local government."
-    )
-
+    assert page.select_one("meta[name=description]") is not None
     # This area is hidden for the pilot
     # assert normalize_spaces(page.select_one('#whos-using-notify').text) == (
     #     'Who’s using Notify.gov '  # Hiding this next area for the pilot
@@ -71,11 +70,10 @@ def test_robots(client_request):
 )
 @freeze_time("2012-12-12 12:12")  # So we don’t go out of business hours
 def test_hiding_pages_from_search_engines(
-    client_request,
-    mock_get_service_and_organization_counts,
-    endpoint,
-    kwargs,
+    client_request, mock_get_service_and_organization_counts, endpoint, kwargs, mocker
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     response = client_request.get_response(f"main.{endpoint}", **kwargs)
     assert "X-Robots-Tag" in response.headers
@@ -105,16 +103,13 @@ def test_hiding_pages_from_search_engines(
         "billing_details",
     ],
 )
-def test_static_pages(
-    client_request,
-    mock_get_organization_by_domain,
-    view,
-):
+def test_static_pages(client_request, mock_get_organization_by_domain, view, mocker):
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     request = partial(client_request.get, "main.{}".format(view))
 
     # Check the page loads when user is signed in
     page = request()
-    assert not page.select_one("meta[name=description]")
+    assert page.select_one("meta[name=description]")
 
     # Check it still works when they don’t have a recent service
     with client_request.session_transaction() as session:
@@ -132,9 +127,9 @@ def test_static_pages(
     )
 
 
-def test_guidance_pages_link_to_service_pages_when_signed_in(
-    client_request,
-):
+def test_guidance_pages_link_to_service_pages_when_signed_in(client_request, mocker):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     request = partial(client_request.get, "main.edit_and_format_messages")
     selector = ".list-number li a"
 
@@ -172,7 +167,9 @@ def test_guidance_pages_link_to_service_pages_when_signed_in(
         ("callbacks", "documentation"),
     ],
 )
-def test_old_static_pages_redirect(client_request, view, expected_view):
+def test_old_static_pages_redirect(client_request, view, expected_view, mocker):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     client_request.get(
         "main.{}".format(view),
@@ -181,26 +178,6 @@ def test_old_static_pages_redirect(client_request, view, expected_view):
             "main.{}".format(expected_view),
         ),
     )
-
-
-def test_message_status_page_contains_message_status_ids(client_request):
-    # The 'email-statuses' and 'sms-statuses' id are linked to when we display a message status,
-    # so this test ensures we don't accidentally remove them
-    page = client_request.get("main.message_status")
-
-    # email-statuses is commented out in view
-    # assert page.find(id='email-statuses')
-    assert page.find(id="text-message-statuses")
-
-
-def test_message_status_page_contains_link_to_support(client_request):
-    page = client_request.get("main.message_status")
-    sms_status_table = page.find(id="text-message-statuses").findNext("tbody")
-
-    temp_fail_details_cell = sms_status_table.select_one(
-        "tr:nth-child(4) > td:nth-child(2)"
-    )
-    assert temp_fail_details_cell.find("a").attrs["href"] == url_for("main.support")
 
 
 def test_old_using_notify_page(client_request):
@@ -265,7 +242,10 @@ def test_sms_price(
     mock_get_service_and_organization_counts,
     current_date,
     expected_rate,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     with freeze_time(current_date):

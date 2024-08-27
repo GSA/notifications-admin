@@ -1,9 +1,11 @@
+import csv
 import itertools
 import json
 from collections import OrderedDict
 from datetime import datetime
+from io import StringIO
 
-from flask import abort, flash, render_template, request, url_for
+from flask import Response, abort, flash, render_template, request, url_for
 from notifications_python_client.errors import HTTPError
 
 from app import (
@@ -68,6 +70,40 @@ def platform_admin():
         form=form,
         global_stats=make_columns(platform_stats, number_of_complaints),
     )
+
+
+@main.route("/platform-admin/download-all-users")
+@user_is_platform_admin
+def download_all_users():
+
+    # Create a CSV string from the user data
+    users = user_api_client.get_all_users_detailed()
+
+    if len(users) == 0:
+        return "No data to download."
+
+    output = StringIO()
+    header = ["Name", "Email Address", "Phone Number", "Service"]
+    fieldnames = ["name", "email_address", "mobile_number", "service"]
+    writer = csv.DictWriter(
+        output,
+        fieldnames=fieldnames,
+        delimiter=",",
+    )
+    # Write custom header
+    writer.writerow(dict(zip(fieldnames, header)))
+    for user in users:
+        user_no_commas = {key: value.replace(",", "") for key, value in user.items()}
+        if user_no_commas["name"].startswith("e2e"):
+            continue
+        writer.writerow(user_no_commas)
+    csv_data = output.getvalue()
+
+    # Create a direct download response with the CSV data and appropriate headers
+    response = Response(csv_data, content_type="text/csv; charset=utf-8")
+    response.headers["Content-Disposition"] = "attachment; filename=users.csv"
+
+    return response
 
 
 def is_over_threshold(number, total, threshold):

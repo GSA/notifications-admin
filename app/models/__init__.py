@@ -1,6 +1,7 @@
 from abc import abstractmethod
 
 from flask import abort
+
 from notifications_utils.serialised_model import (
     SerialisedModel,
     SerialisedModelCollection,

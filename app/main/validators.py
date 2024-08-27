@@ -1,15 +1,15 @@
 import re
 from abc import ABC, abstractmethod
 
-from notifications_utils.field import Field
-from notifications_utils.formatters import formatted_list
-from notifications_utils.recipients import InvalidEmailError, validate_email_address
-from notifications_utils.sanitise_text import SanitiseSMS
 from wtforms import ValidationError
 
 from app.main._commonly_used_passwords import commonly_used_passwords
 from app.models.spreadsheet import Spreadsheet
 from app.utils.user import is_gov_user
+from notifications_utils.field import Field
+from notifications_utils.formatters import formatted_list
+from notifications_utils.recipients import InvalidEmailError, validate_email_address
+from notifications_utils.sanitise_text import SanitiseSMS
 
 
 class CommonlyUsedPassword:
@@ -158,6 +158,15 @@ class DoesNotStartWithDoubleZero:
 
     def __call__(self, form, field):
         if field.data and field.data.startswith("00"):
+            raise ValidationError(self.message)
+
+
+class FieldCannotContainComma:
+    def __init__(self, message="Cannot contain a comma"):
+        self.message = message
+
+    def __call__(self, form, field):
+        if field.data and "," in field.data:
             raise ValidationError(self.message)
 
 

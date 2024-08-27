@@ -9,7 +9,7 @@ from tests.conftest import (
 )
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_email_validated_recently(mocker):
     return mocker.patch(
         "app.main.views.two_factor.email_needs_revalidating", return_value=False
@@ -26,8 +26,10 @@ def mock_email_validated_recently(mocker):
     ("email_resent", "page_title"), [(None, "Check your email"), (True, "Email resent")]
 )
 def test_two_factor_email_sent_page(
-    client_request, email_resent, page_title, redirect_url, request_url
+    client_request, email_resent, page_title, redirect_url, request_url, mocker
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     page = client_request.get(
         f"main.{request_url}",
@@ -55,6 +57,8 @@ def test_two_factor_email_sent_page(
 def test_should_render_two_factor_page(
     client_request, api_user_active, mock_get_user_by_email, mocker, redirect_url
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     # TODO this lives here until we work out how to
     # reassign the session after it is lost mid register process
@@ -86,7 +90,10 @@ def test_should_login_user_and_should_redirect_to_next_url(
     mock_check_verify_code,
     mock_create_event,
     mock_email_validated_recently,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     with client_request.session_transaction() as session:
@@ -115,6 +122,8 @@ def test_should_send_email_and_redirect_to_info_page_if_user_needs_to_revalidate
     mock_send_verify_code,
     mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     mocker.patch("app.user_api_client.get_user", return_value=api_user_active)
@@ -149,7 +158,10 @@ def test_should_login_user_and_not_redirect_to_external_url(
     mock_get_services_with_one_service,
     mock_create_event,
     mock_email_validated_recently,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     with client_request.session_transaction() as session:
@@ -182,7 +194,10 @@ def test_should_login_user_and_redirect_to_show_accounts(
     mock_create_event,
     mock_email_validated_recently,
     platform_admin,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     with client_request.session_transaction() as session:
@@ -206,6 +221,8 @@ def test_should_return_200_with_sms_code_error_when_sms_code_is_wrong(
     mock_check_verify_code_code_not_found,
     mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     with client_request.session_transaction() as session:
@@ -232,7 +249,10 @@ def test_should_login_user_when_multiple_valid_codes_exist(
     mock_get_services_with_one_service,
     mock_create_event,
     mock_email_validated_recently,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     with client_request.session_transaction() as session:
@@ -257,7 +277,10 @@ def test_two_factor_sms_should_set_password_when_new_password_exists_in_session(
     mock_update_user_password,
     mock_create_event,
     mock_email_validated_recently,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     with client_request.session_transaction() as session:
@@ -285,7 +308,10 @@ def test_two_factor_sms_returns_error_when_user_is_locked(
     mock_get_locked_user,
     mock_check_verify_code_code_not_found,
     mock_get_services_with_one_service,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     with client_request.session_transaction() as session:
@@ -320,6 +346,8 @@ def test_two_factor_sms_should_activate_pending_user(
     mock_activate_user,
     mock_email_validated_recently,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     mocker.patch("app.user_api_client.get_user", return_value=api_user_pending)
     mocker.patch("app.service_api_client.get_services", return_value={"data": []})
@@ -344,6 +372,8 @@ def test_valid_two_factor_email_link_shows_interstitial(
     extra_args,
     expected_encoded_next_arg,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     mock_check_code = mocker.patch("app.user_api_client.check_verify_code")
     encoded_token = valid_token.replace("%2E", ".")
     token_url = url_for(
@@ -400,7 +430,10 @@ def test_two_factor_email_link_has_expired(
     mock_send_verify_code,
     fake_uuid,
     redirect_url,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     with set_config(notify_admin, "EMAIL_EXPIRY_SECONDS", -1):
@@ -419,7 +452,9 @@ def test_two_factor_email_link_has_expired(
     assert mock_send_verify_code.called is False
 
 
-def test_two_factor_email_link_is_invalid(client_request):
+def test_two_factor_email_link_is_invalid(client_request, mocker):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     token = 12345
     page = client_request.post(
@@ -443,8 +478,14 @@ def test_two_factor_email_link_is_invalid(client_request):
     ],
 )
 def test_two_factor_email_link_is_already_used(
-    client_request, valid_token, mocker, mock_send_verify_code, redirect_url
+    client_request,
+    valid_token,
+    mocker,
+    mock_send_verify_code,
+    redirect_url,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     mocker.patch(
         "app.user_api_client.check_verify_code",
@@ -467,8 +508,13 @@ def test_two_factor_email_link_is_already_used(
 
 
 def test_two_factor_email_link_when_user_is_locked_out(
-    client_request, valid_token, mocker, mock_send_verify_code
+    client_request,
+    valid_token,
+    mocker,
+    mock_send_verify_code,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     mocker.patch(
         "app.user_api_client.check_verify_code", return_value=(False, "Code not found")

@@ -1,10 +1,16 @@
-{% extends "settings_template.html" %}
+{% extends "withnav_template.html" %}
 {% from "components/tick-cross.html" import tick_cross %}
 {% from "components/live-search.html" import live_search %}
 {% from "components/components/button/macro.njk" import usaButton %}
 
 {% block service_page_title %}
   Team members
+{% endblock %}
+
+{% block serviceNavigation %}{% endblock %}
+
+{% block sideNavigation %}
+  {% include "components/settings_nav.html" %}
 {% endblock %}
 
 {% block maincolumn_content %}

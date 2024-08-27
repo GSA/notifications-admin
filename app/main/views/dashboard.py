@@ -1,19 +1,16 @@
 import calendar
-from collections import defaultdict
 from datetime import datetime
 from functools import partial
 from itertools import groupby
 
 from flask import Response, abort, jsonify, render_template, request, session, url_for
 from flask_login import current_user
-from notifications_utils.recipients import format_phone_number_human_readable
 from werkzeug.utils import redirect
 
 from app import (
     billing_api_client,
     current_service,
     job_api_client,
-    notification_api_client,
     service_api_client,
     template_statistics_client,
 )
@@ -30,6 +27,7 @@ from app.utils.csv import Spreadsheet
 from app.utils.pagination import generate_next_dict, generate_previous_dict
 from app.utils.time import get_current_financial_year
 from app.utils.user import user_has_permissions
+from notifications_utils.recipients import format_phone_number_human_readable
 
 
 @main.route("/services/<uuid:service_id>/dashboard")
@@ -48,19 +46,21 @@ def service_dashboard(service_id):
     if not current_user.has_permissions("view_activity"):
         return redirect(url_for("main.choose_template", service_id=service_id))
 
+    yearly_usage = billing_api_client.get_annual_usage_for_service(
+        service_id,
+        get_current_financial_year(),
+    )
+    free_sms_allowance = billing_api_client.get_free_sms_fragment_limit_for_year(
+        current_service.id,
+    )
+    usage_data = get_annual_usage_breakdown(yearly_usage, free_sms_allowance)
+    sms_sent = usage_data["sms_sent"]
+    sms_allowance_remaining = usage_data["sms_allowance_remaining"]
+
     job_response = job_api_client.get_jobs(service_id)["data"]
-    notifications_response = notification_api_client.get_notifications_for_service(
-        service_id
-    )["notifications"]
     service_data_retention_days = 7
 
-    aggregate_notifications_by_job = defaultdict(list)
-    for notification in notifications_response:
-        job_id = notification.get("job", {}).get("id", None)
-        if job_id:
-            aggregate_notifications_by_job[job_id].append(notification)
-
-    job_and_notifications = [
+    jobs = [
         {
             "job_id": job["id"],
             "time_left": get_time_left(job["created_at"]),
@@ -71,20 +71,50 @@ def service_dashboard(service_id):
                 ".view_job", service_id=current_service.id, job_id=job["id"]
             ),
             "created_at": job["created_at"],
+            "processing_finished": job.get("processing_finished"),
+            "processing_started": job.get("processing_started"),
             "notification_count": job["notification_count"],
             "created_by": job["created_by"],
-            "notifications": aggregate_notifications_by_job.get(job["id"], []),
+            "template_name": job["template_name"],
+            "original_file_name": job["original_file_name"],
         }
         for job in job_response
-        if aggregate_notifications_by_job.get(job["id"], [])
+        if job["job_status"] != "cancelled"
     ]
     return render_template(
         "views/dashboard/dashboard.html",
         updates_url=url_for(".service_dashboard_updates", service_id=service_id),
         partials=get_dashboard_partials(service_id),
-        job_and_notifications=job_and_notifications,
+        jobs=jobs,
         service_data_retention_days=service_data_retention_days,
+        sms_sent=sms_sent,
+        sms_allowance_remaining=sms_allowance_remaining,
     )
+
+
+@main.route("/daily_stats.json")
+def get_daily_stats():
+    service_id = session.get("service_id")
+    date_range = get_stats_date_range()
+
+    stats = service_api_client.get_service_notification_statistics_by_day(
+        service_id, start_date=date_range["start_date"], days=date_range["days"]
+    )
+    return jsonify(stats)
+
+
+@main.route("/daily_stats_by_user.json")
+def get_daily_stats_by_user():
+    service_id = session.get("service_id")
+    date_range = get_stats_date_range()
+    user_id = current_user.id
+    stats = service_api_client.get_user_service_notification_statistics_by_day(
+        service_id,
+        user_id,
+        start_date=date_range["start_date"],
+        days=date_range["days"],
+    )
+    return jsonify(stats)
 
 
 @main.route("/services/<uuid:service_id>/dashboard.json")
@@ -432,6 +462,24 @@ def aggregate_status_types(counts_dict):
 
 def get_months_for_financial_year(year, time_format="%B"):
     return [month.strftime(time_format) for month in (get_months_for_year(1, 13, year))]
+
+
+def get_current_month_for_financial_year(year):
+    current_month = datetime.now().month
+    return current_month
+
+
+def get_stats_date_range():
+    current_financial_year = get_current_financial_year()
+    current_month = get_current_month_for_financial_year(current_financial_year)
+    start_date = datetime.now().strftime("%Y-%m-%d")
+    days = 7
+    return {
+        "current_financial_year": current_financial_year,
+        "current_month": current_month,
+        "start_date": start_date,
+        "days": days,
+    }
 
 
 def get_months_for_year(start, end, year):

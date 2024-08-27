@@ -23,12 +23,6 @@ from flask_wtf import CSRFProtect
 from flask_wtf.csrf import CSRFError
 from itsdangerous import BadSignature
 from notifications_python_client.errors import HTTPError
-from notifications_utils import logging, request_helper
-from notifications_utils.formatters import (
-    formatted_list,
-    get_lines_with_normalised_whitespace,
-)
-from notifications_utils.recipients import format_phone_number_human_readable
 from werkzeug.exceptions import HTTPException as WerkzeugHTTPException
 from werkzeug.exceptions import abort
 from werkzeug.local import LocalProxy
@@ -36,7 +30,7 @@ from werkzeug.local import LocalProxy
 from app import proxy_fix
 from app.asset_fingerprinter import asset_fingerprinter
 from app.config import configs
-from app.extensions import redis_client, zendesk_client
+from app.extensions import redis_client
 from app.formatters import (
     convert_markdown_template,
     convert_to_boolean,
@@ -114,11 +108,16 @@ from app.notify_client.upload_api_client import upload_api_client
 from app.notify_client.user_api_client import user_api_client
 from app.url_converters import SimpleDateTypeConverter, TemplateTypeConverter
 from app.utils.govuk_frontend_jinja.flask_ext import init_govuk_frontend
+from notifications_utils import logging, request_helper
+from notifications_utils.formatters import (
+    formatted_list,
+    get_lines_with_normalised_whitespace,
+)
+from notifications_utils.recipients import format_phone_number_human_readable
 
 login_manager = LoginManager()
 csrf = CSRFProtect()
 talisman = Talisman()
-
 
 # The current service attached to the request stack.
 current_service = LocalProxy(partial(getattr, request_ctx, "service"))
@@ -202,7 +201,6 @@ def create_app(application):
         user_api_client,
         # External API clients
         redis_client,
-        zendesk_client,
     ):
         client.init_app(application)
 
@@ -230,6 +228,24 @@ def create_app(application):
         force_https=(application.config["HTTP_PROTOCOL"] == "https"),
     )
     logging.init_app(application)
+
+    # Hopefully will help identify if there is a race condition causing the CSRF errors
+    # that we have occasionally seen in our environments.
+    for key in ("SECRET_KEY", "DANGEROUS_SALT"):
+        try:
+            value = application.config[key]
+        except KeyError:
+            application.logger.error(f"Env Var {key} doesn't exist.")
+        else:
+            try:
+                data_len = len(value.strip())
+            except (TypeError, AttributeError):
+                application.logger.error(f"Env Var {key} invalid type: {type(value)}")
+            else:
+                if data_len:
+                    application.logger.info(f"Env Var {key} is a non-zero length.")
+                else:
+                    application.logger.error(f"Env Var {key} is empty.")
 
     login_manager.login_view = "main.sign_in"
     login_manager.login_message_category = "default"
@@ -348,11 +364,23 @@ def make_session_permanent():
 
 
 def create_beta_url(url):
-    url_created = urlparse(url)
-    url_list = list(url_created)
-    url_list[1] = "beta.notify.gov"
-    url_for_redirect = urlunparse(url_list)
-    return url_for_redirect
+    url_created = None
+    try:
+        url_created = urlparse(url)
+        url_list = list(url_created)
+        url_list[1] = "beta.notify.gov"
+        url_for_redirect = urlunparse(url_list)
+        return url_for_redirect
+    except ValueError:
+        # This might be happening due to IPv6, see issue # 1395.
+        # If we see "'RequestContext' object has no attribute 'service'" in the logs
+        # we can search around that timestamp and find this output, hopefully.
+        # It may be sufficient to just catch and log, and prevent the stack trace from being in the logs
+        # but we need to confirm the root cause first.
+        current_app.logger.error(
+            f"create_beta_url orig_url: {url} \
+                                 url_created = {str(url_created)} url_for_redirect {str(url_for_redirect)}"
+        )
 
 
 def redirect_notify_to_beta():
@@ -360,6 +388,7 @@ def redirect_notify_to_beta():
         current_app.config["NOTIFY_ENVIRONMENT"] == "production"
         and "beta.notify.gov" not in request.url
     ):
+        # TODO add debug here to trace what is going on with the URL for the 'RequestContext' error
         url_to_beta = create_beta_url(request.url)
         return redirect(url_to_beta, 302)
 

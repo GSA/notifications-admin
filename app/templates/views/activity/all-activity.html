@@ -1,0 +1,143 @@
+{% extends "withnav_template.html" %}
+
+{% block service_page_title %}
+  All activity
+{% endblock %}
+
+{% set show_pagination %}
+  {% if prev_page or next_page %}
+  <nav aria-label="Pagination" class="usa-pagination">
+    <ul class="usa-pagination__list">
+      {% if prev_page %}
+      <li class="usa-pagination__item usa-pagination__arrow">
+        <a
+          href="{{prev_page['url']}}"
+          class="usa-pagination__link usa-pagination__previous-page"
+          aria-label="Previous page"
+          >
+          <img src="{{ asset_url('img/usa-icons/navigate_before.svg') }}" alt="arrow">
+          <span class="usa-pagination__link-text">Previous</span></a
+        >
+      </li>
+      {% endif %}
+      {% if pagination %}
+        {% for page in pagination.pages %}
+          {% if page == pagination.current %}
+          <li class="usa-pagination__item usa-pagination__page-no">
+            <span class="usa-pagination__button usa-current" aria-label="Page {{ page }}" aria-current="true">
+              {{ page }}
+            </span>
+          </li>
+          {% else %}
+            <li class="usa-pagination__item">
+              <a class="usa-pagination__button" href="?page={{ page }}">
+                {{ page }}
+              </a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      {% if next_page %}
+      <li class="usa-pagination__item usa-pagination__arrow">
+        <a
+          href="{{ next_page['url'] }}"
+          class="usa-pagination__link usa-pagination__next-page"
+          aria-label="Next page"
+        >
+          <span class="usa-pagination__link-text">Next </span>
+          <img src="{{ asset_url('img/usa-icons/navigate_next.svg') }}" alt="arrow">
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+{% endset %}
+{% block maincolumn_content %}
+  <div class="margin-bottom-8">
+    <h1 class="usa-sr-only">All activity</h1>
+    <h2 class="font-body-2xl line-height-sans-2 margin-0">All activity</h2>
+    <h2 class="margin-top-4 margin-bottom-1">Sent jobs</h2>
+    <div class="usa-table-container--scrollable-mobile">
+      <table class="usa-table usa-table--compact job-table">
+        <caption></caption>
+        <thead class="table-field-headings">
+          <tr>
+            <th scope="col" role="columnheader" class="table-field-heading-first" id="jobId">
+              <span>Job ID#</span>
+            </th>
+            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
+              <span>Template</span>
+            </th>
+            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
+              <span>Time sent</span>
+            </th>
+            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
+              <span>Sender</span>
+            </th>
+            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
+              <span>Report</span>
+            </th>
+            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
+              <span>Delivered</span>
+            </th>
+            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
+              <span>Failed</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if all_jobs_dict %}
+            {% for job in all_jobs_dict %}
+              <tr class="table-row">
+                <td class="table-field jobid" scope="row" role="rowheader">
+                  <a class="usa-link" href="{{ job.view_job_link }}">
+                    {{ job.job_id[:8] if job.job_id else 'Manually entered number' }}
+                  </a>
+                </td>
+                <td class="table-field template">{{ job.template_name }}</td>
+                <td data-sort-value="{{job.time_sent_data_value}}" class="table-field time-sent">
+                  {{ (job.processing_finished if job.processing_finished else job.processing_started
+                    if job.processing_started else job.created_at)|format_datetime_table }}
+                </td>
+                <td class="table-field sender">{{ job.created_by.name }}</td>
+                <td class="table-field report">
+                  {% if job.time_left != "Data no longer available" %}
+                    <a href="{{ job.download_link }}"><img src="{{ url_for('static', filename='img/material-icons/file_download.svg') }}" alt="File Download Icon"></a>
+                  {% else %}
+                    <span>N/A</span>
+                  {% endif %}
+                </td>
+                <td class="table-field delivered">{{ job.delivered_count if job.delivered_count is not none else '0' }}</td>
+                <td class="table-field failed">{{ job.failed_count if job.failed_count is not none else '0' }}</td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr class="table-row">
+              <td class="table-empty-message" colspan="10">No messages found</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+      <div class="usa-sr-only usa-table__announcement-region" aria-live="polite"></div>
+      <p><b>Note: </b>Report data is only available for 7 days after your message has been sent</p>
+    </div>
+    {{show_pagination}}
+    {% if current_user.has_permissions('view_activity') %}
+      <h2 class="line-height-sans-2 margin-bottom-0 margin-top-4">Download recent reports</h2>
+      <p class="font-body-sm">
+        <a href="{{ download_link_one_day }}" download="download" class="usa-link">Download all data last 24 hours (<abbr title="Comma separated values">CSV</abbr>)</a>
+      </p>
+      <p class="font-body-sm">
+        <a href="{{ download_link_three_day }}" download="download" class="usa-link">Download all data last 3 days (<abbr title="Comma separated values">CSV</abbr>)</a>
+        &emsp;
+      </p>
+      <p class="font-body-sm">
+        <a href="{{ download_link_five_day }}" download="download" class="usa-link">Download all data last 5 days (<abbr title="Comma separated values">CSV</abbr>)</a>
+      </p>
+      <p class="font-body-sm">
+        <a href="{{ download_link_seven_day }}" download="download" class="usa-link">Download all data last 7 days (<abbr title="Comma separated values">CSV</abbr>)</a>
+      </p>
+    {% endif %}
+  </div>
+{% endblock %}

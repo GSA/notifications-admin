@@ -100,19 +100,19 @@ MOCK_JOBS = {
 }
 
 
-@pytest.fixture()
+@pytest.fixture
 def _mock_no_users_for_service(mocker):
     mocker.patch("app.models.user.Users.client_method", return_value=[])
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_get_existing_user_by_email(mocker, api_user_active):
     return mocker.patch(
         "app.user_api_client.get_user_by_email", return_value=api_user_active
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_check_invite_token(mocker, sample_invite):
     return mocker.patch("app.invite_api_client.check_token", return_value=sample_invite)
 
@@ -133,6 +133,8 @@ def test_existing_user_accept_invite_calls_api_and_redirects_to_dashboard(
     mock_get_user,
     mock_update_user_attribute,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     expected_service = service_one["id"]
     expected_permissions = {
@@ -176,6 +178,8 @@ def test_existing_user_with_no_permissions_or_folder_permissions_accept_invite(
     mock_get_user,
     mock_update_user_attribute,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     expected_service = service_one["id"]
@@ -205,6 +209,8 @@ def test_if_existing_user_accepts_twice_they_redirect_to_sign_in(
     mock_get_service,
     mock_update_user_attribute,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     # Logging out updates the current session ID to `None`
     mock_update_user_attribute.reset_mock()
@@ -294,9 +300,26 @@ def test_accepting_invite_removes_invite_from_session(
 
     client_request.login(user)
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
+    date_range = {"start_date": "2024-01-01", "days": 7}
+
     mocker.patch(
-        "app.notification_api_client.get_notifications_for_service",
-        return_value=FAKE_ONE_OFF_NOTIFICATION,
+        "app.main.views.dashboard.get_daily_stats",
+        return_value={
+            date_range["start_date"]: {
+                "email": {"delivered": 0, "failure": 0, "requested": 0},
+                "sms": {"delivered": 0, "failure": 1, "requested": 1},
+            },
+        },
+    )
+
+    mocker.patch(
+        "app.main.views.dashboard.get_daily_stats_by_user",
+        return_value={
+            date_range["start_date"]: {
+                "email": {"delivered": 1, "failure": 0, "requested": 1},
+                "sms": {"delivered": 1, "failure": 0, "requested": 1},
+            },
+        },
     )
     page = client_request.get(
         "main.accept_invite",
@@ -321,6 +344,8 @@ def test_existing_user_of_service_get_redirected_to_signin(
     mock_accept_invite,
     mock_update_user_attribute,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     sample_invite["email_address"] = api_user_active["email_address"]
     mocker.patch("app.models.user.Users.client_method", return_value=[api_user_active])
@@ -355,6 +380,8 @@ def test_accept_invite_redirects_if_api_raises_an_error_that_they_are_already_pa
     mock_get_user,
     mock_update_user_attribute,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     mocker.patch(
@@ -397,6 +424,8 @@ def test_existing_signed_out_user_accept_invite_redirects_to_sign_in(
     mock_get_user,
     mock_update_user_attribute,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     expected_service = service_one["id"]
     expected_permissions = {
@@ -431,71 +460,6 @@ def test_existing_signed_out_user_accept_invite_redirects_to_sign_in(
     )
 
 
-@pytest.mark.usefixtures("_mock_no_users_for_service")
-def test_new_user_accept_invite_calls_api_and_redirects_to_registration(
-    client_request,
-    service_one,
-    mock_check_invite_token,
-    mock_dont_get_user_by_email,
-    mock_add_user_to_service,
-    mock_get_service,
-    mocker,
-):
-    client_request.logout()
-    client_request.get(
-        "main.accept_invite",
-        token="thisisnotarealtoken",
-        _expected_redirect="/register-from-invite",
-    )
-
-    mock_check_invite_token.assert_called_with("thisisnotarealtoken")
-    mock_dont_get_user_by_email.assert_called_with("invited_user@test.gsa.gov")
-
-
-@pytest.mark.usefixtures("_mock_no_users_for_service")
-def test_new_user_accept_invite_calls_api_and_views_registration_page(
-    client_request,
-    service_one,
-    sample_invite,
-    mock_check_invite_token,
-    mock_dont_get_user_by_email,
-    mock_get_invited_user_by_id,
-    mock_add_user_to_service,
-    mock_get_service,
-    mocker,
-):
-    client_request.logout()
-    page = client_request.get(
-        "main.accept_invite",
-        token="thisisnotarealtoken",
-        _follow_redirects=True,
-    )
-
-    mock_check_invite_token.assert_called_with("thisisnotarealtoken")
-    mock_dont_get_user_by_email.assert_called_with("invited_user@test.gsa.gov")
-    mock_get_invited_user_by_id.assert_called_once_with(sample_invite["id"])
-
-    assert page.h1.string.strip() == "Create an account"
-
-    assert normalize_spaces(page.select_one("main p").text) == (
-        "Your account will be created with this email address: "
-        "invited_user@test.gsa.gov"
-    )
-
-    form = page.find("form")
-    name = form.find("input", id="name")
-    password = form.find("input", id="password")
-    service = form.find("input", type="hidden", id="service")
-    email = form.find("input", type="hidden", id="email_address")
-
-    assert email
-    assert email.attrs["value"] == "invited_user@test.gsa.gov"
-    assert name
-    assert password
-    assert service
-    assert service.attrs["value"] == service_one["id"]
-
-
 def test_cancelled_invited_user_accepts_invited_redirect_to_cancelled_invitation(
     client_request,
     mock_get_user,
@@ -503,7 +467,10 @@ def test_cancelled_invited_user_accepts_invited_redirect_to_cancelled_invitation
     sample_invite,
     mock_check_invite_token,
     mock_update_user_attribute,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     mock_update_user_attribute.reset_mock()
     sample_invite["status"] = "cancelled"
@@ -531,6 +498,8 @@ def test_new_user_accept_invite_with_malformed_token(
     service_one,
     mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     mocker.patch(
         api_endpoint,
@@ -560,65 +529,6 @@ def test_new_user_accept_invite_with_malformed_token(
         normalize_spaces(page.select_one(".banner-dangerous").text)
         == "Something’s wrong with this link. Make sure you’ve copied the whole thing."
     )
-
-
-@pytest.mark.usefixtures("_mock_no_users_for_service")
-def test_new_user_accept_invite_completes_new_registration_redirects_to_verify(
-    client_request,
-    service_one,
-    sample_invite,
-    api_user_active,
-    mock_check_invite_token,
-    mock_dont_get_user_by_email,
-    mock_email_is_not_already_in_use,
-    mock_register_user,
-    mock_send_verify_code,
-    mock_get_invited_user_by_id,
-    mock_accept_invite,
-    mock_add_user_to_service,
-    mock_get_service,
-    mocker,
-):
-    client_request.logout()
-    expected_redirect_location = "/register-from-invite"
-
-    client_request.get(
-        "main.accept_invite",
-        token="thisisnotarealtoken",
-        _expected_redirect=expected_redirect_location,
-    )
-    with client_request.session_transaction() as session:
-        assert session.get("invited_user_id") == sample_invite["id"]
-
-    data = {
-        "service": sample_invite["service"],
-        "email_address": sample_invite["email_address"],
-        "from_user": sample_invite["from_user"],
-        "password": "longpassword",
-        "mobile_number": "+12027890123",
-        "name": "Invited User",
-        "auth_type": "email_auth",
-    }
-
-    expected_redirect_location = "/verify"
-    client_request.post(
-        "main.register_from_invite",
-        _data=data,
-        _expected_redirect=expected_redirect_location,
-    )
-
-    mock_send_verify_code.assert_called_once_with(ANY, "sms", data["mobile_number"])
-    mock_get_invited_user_by_id.assert_called_once_with(sample_invite["id"])
-
-    mock_register_user.assert_called_with(
-        data["name"],
-        data["email_address"],
-        data["mobile_number"],
-        data["password"],
-        data["auth_type"],
-    )
-
-    assert mock_accept_invite.call_count == 1
 
 
 def test_signed_in_existing_user_cannot_use_anothers_invite(
@@ -709,6 +619,8 @@ def test_new_invited_user_verifies_and_added_to_service(
         "app.main.views.verify.service_api_client.retrieve_service_invite_data",
         return_value={},
     )
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
 
     # visit accept token page
@@ -728,7 +640,7 @@ def test_new_invited_user_verifies_and_added_to_service(
         "service": sample_invite["service"],
         "email_address": sample_invite["email_address"],
         "from_user": sample_invite["from_user"],
-        "password": "longpassword",
+        "password": "longpassword",  # noqa
         "mobile_number": "+12027890123",
         "name": "Invited User",
         "auth_type": "sms_auth",
@@ -797,6 +709,8 @@ def test_new_invited_user_is_redirected_to_correct_place(
         "app.main.views.verify.service_api_client.retrieve_service_invite_data",
         return_value={},
     )
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     mocker.patch(
         "app.service_api_client.get_service",

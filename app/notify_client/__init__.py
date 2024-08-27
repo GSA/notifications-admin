@@ -1,10 +1,12 @@
-from flask import abort, has_request_context, request
+import os
+
+from flask import abort, current_app, has_request_context, request
 from flask_login import current_user
 from notifications_python_client import __version__
 from notifications_python_client.base import BaseAPIClient
-from notifications_utils.clients.redis import RequestCache
 
 from app.extensions import redis_client
+from notifications_utils.clients.redis import RequestCache
 
 cache = RequestCache(redis_client)
 
@@ -54,16 +56,47 @@ class NotifyAdminAPIClient(BaseAPIClient):
         ):
             abort(403)
 
+    def is_calling_signin_url(self, arg):
+        return arg.startswith("('/user")
+
+    def check_inactive_user(self, *args):
+        still_signing_in = False
+
+        # TODO clean up and add testing etc.
+        # We really should be checking for exact matches
+        # and we only want to check the first arg
+        for arg in args:
+            arg = str(arg)
+            if self.is_calling_signin_url(arg):
+                still_signing_in = True
+
+            # This seems to be a weird edge case that happens intermittently with invites
+            if str(arg) == "()":
+                still_signing_in = True
+        # TODO:  Update this once E2E tests are managed by a feature flag or some other main config option.
+        if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
+            # allow end-to-end tests to skip check
+            pass
+        elif still_signing_in is True:
+            # we are not full signed in yet
+            pass
+        elif not current_user or not current_user.is_active:
+            current_app.logger.error(f"Unauthorized URL #notify-compliance-46 {args}")
+            abort(403)
+
     def post(self, *args, **kwargs):
         self.check_inactive_service()
+        self.check_inactive_user(args)
         return super().post(*args, **kwargs)
 
     def put(self, *args, **kwargs):
         self.check_inactive_service()
+        self.check_inactive_user()
         return super().put(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         self.check_inactive_service()
+        self.check_inactive_user()
         return super().delete(*args, **kwargs)
 
 

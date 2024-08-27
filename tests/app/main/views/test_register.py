@@ -1,15 +1,18 @@
+import base64
+import json
 from unittest.mock import ANY
 
 import pytest
 from flask import url_for
 
+from app.main.views.register import check_invited_user_email_address_matches_expected
 from app.models.user import User
 from tests.conftest import normalize_spaces
 
 
-def test_render_register_returns_template_with_form(
-    client_request,
-):
+def test_render_register_returns_template_with_form(client_request, mocker):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     page = client_request.get_url("/register")
 
@@ -55,7 +58,10 @@ def test_register_creates_new_user_and_redirects_to_continue_page(
     mock_login,
     phone_number_to_register_with,
     password,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     user_data = {
         "name": "Some One Valid",
@@ -86,9 +92,9 @@ def test_register_creates_new_user_and_redirects_to_continue_page(
     # )
 
 
-def test_register_continue_handles_missing_session_sensibly(
-    client_request,
-):
+def test_register_continue_handles_missing_session_sensibly(client_request, mocker):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     # session is not set
     client_request.get(
@@ -102,7 +108,10 @@ def test_process_register_returns_200_when_mobile_number_is_invalid(
     mock_send_verify_code,
     mock_get_user_by_email_not_found,
     mock_login,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     page = client_request.post(
         "main.register",
@@ -110,7 +119,7 @@ def test_process_register_returns_200_when_mobile_number_is_invalid(
             "name": "Bad Mobile",
             "email_address": "bad_mobile@example.gsa.gov",
             "mobile_number": "not good",
-            "password": "validPassword!",
+            "password": "validPassword!",  # noqa
         },
         _expected_status=200,
     )
@@ -119,9 +128,10 @@ def test_process_register_returns_200_when_mobile_number_is_invalid(
 
 
 def test_should_return_200_when_email_is_not_gov_uk(
-    client_request,
-    mock_get_organizations,
+    client_request, mock_get_organizations, mocker
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     page = client_request.post(
         "main.register",
@@ -145,7 +155,7 @@ def test_should_return_200_when_email_is_not_gov_uk(
     "email_address",
     [
         "notfound@example.gsa.gov",
-        "example@lsquo.net",
+        "example@lsquo.si.edu",
     ],
 )
 def test_should_add_user_details_to_session(
@@ -160,6 +170,8 @@ def test_should_add_user_details_to_session(
     mock_login,
     email_address,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     client_request.post(
         "main.register",
@@ -175,10 +187,10 @@ def test_should_add_user_details_to_session(
 
 
 def test_should_return_200_if_password_is_on_list_of_commonly_used_passwords(
-    client_request,
-    mock_get_user_by_email,
-    mock_login,
+    client_request, mock_get_user_by_email, mock_login, mocker
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     page = client_request.post(
         "main.register",
@@ -186,7 +198,7 @@ def test_should_return_200_if_password_is_on_list_of_commonly_used_passwords(
             "name": "Bad Mobile",
             "email_address": "bad_mobile@example.gsa.gov",
             "mobile_number": "+12021234123",
-            "password": "password",
+            "password": "password",  # noqa
         },
         _expected_status=200,
     )
@@ -199,7 +211,10 @@ def test_register_with_existing_email_sends_emails(
     api_user_active,
     mock_get_user_by_email,
     mock_send_already_registered_email,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     user_data = {
         "name": "Already Hasaccount",
@@ -212,144 +227,6 @@ def test_register_with_existing_email_sends_emails(
         "main.register",
         _data=user_data,
         _expected_redirect=url_for("main.registration_continue"),
-    )
-
-
-@pytest.mark.parametrize(
-    ("email_address", "expected_value"),
-    [
-        ("first.last@example.com", "First Last"),
-        ("first.middle.last@example.com", "First Middle Last"),
-        ("first.m.last@example.com", "First Last"),
-        ("first.last-last@example.com", "First Last-Last"),
-        ("first.o'last@example.com", "First O’Last"),
-        ("first.last+testing@example.com", "First Last"),
-        ("first.last+testing+testing@example.com", "First Last"),
-        ("first.last6@example.com", "First Last"),
-        ("first.last.212@example.com", "First Last"),
-        ("first.2.last@example.com", "First Last"),
-        ("first.2b.last@example.com", "First Last"),
-        ("first.1.2.3.last@example.com", "First Last"),
-        ("first.last.1.2.3@example.com", "First Last"),
-        # Instances where we can’t make a good-enough guess:
-        ("example123@example.com", None),
-        ("f.last@example.com", None),
-        ("f.m.last@example.com", None),
-    ],
-)
-def test_shows_name_on_registration_page_from_invite(
-    client_request,
-    fake_uuid,
-    email_address,
-    expected_value,
-    sample_invite,
-    mock_get_invited_user_by_id,
-):
-    sample_invite["email_address"] = email_address
-    with client_request.session_transaction() as session:
-        session["invited_user_id"] = sample_invite
-
-    page = client_request.get("main.register_from_invite")
-    assert page.select_one("input[name=name]").get("value") == expected_value
-
-
-def test_shows_hidden_email_address_on_registration_page_from_invite(
-    client_request,
-    fake_uuid,
-    sample_invite,
-    mock_get_invited_user_by_id,
-):
-    with client_request.session_transaction() as session:
-        session["invited_user_id"] = sample_invite
-
-    page = client_request.get("main.register_from_invite")
-    assert normalize_spaces(page.select_one("main p").text) == (
-        "Your account will be created with this email address: invited_user@test.gsa.gov"
-    )
-    hidden_input = page.select_one("form .usa-sr-only input")
-    for attr, value in (
-        ("type", "email"),
-        ("name", "username"),
-        ("id", "username"),
-        ("value", "invited_user@test.gsa.gov"),
-        ("disabled", "disabled"),
-        ("tabindex", "-1"),
-        ("aria-hidden", "true"),
-        ("autocomplete", "username"),
-    ):
-        assert hidden_input[attr] == value
-
-
-@pytest.mark.parametrize(
-    "extra_data",
-    [
-        {},
-        # The username field is present in the page but the POST request
-        # should ignore it
-        {"username": "invited@user.com"},
-        {"username": "anythingelse@example.com"},
-    ],
-)
-def test_register_from_invite(
-    client_request,
-    fake_uuid,
-    mock_email_is_not_already_in_use,
-    mock_register_user,
-    mock_send_verify_code,
-    mock_accept_invite,
-    mock_get_invited_user_by_id,
-    sample_invite,
-    extra_data,
-):
-    client_request.logout()
-    with client_request.session_transaction() as session:
-        session["invited_user_id"] = sample_invite["id"]
-    client_request.post(
-        "main.register_from_invite",
-        _data=dict(
-            name="Registered in another Browser",
-            email_address=sample_invite["email_address"],
-            mobile_number="+12024900460",
-            service=sample_invite["service"],
-            password="somreallyhardthingtoguess",
-            auth_type="sms_auth",
-            **extra_data
-        ),
-        _expected_redirect=url_for("main.verify"),
-    )
-    mock_register_user.assert_called_once_with(
-        "Registered in another Browser",
-        sample_invite["email_address"],
-        "+12024900460",
-        "somreallyhardthingtoguess",
-        "sms_auth",
-    )
-    mock_get_invited_user_by_id.assert_called_once_with(sample_invite["id"])
-
-
-def test_register_from_invite_when_user_registers_in_another_browser(
-    client_request,
-    api_user_active,
-    mock_get_user_by_email,
-    mock_accept_invite,
-    mock_get_invited_user_by_id,
-    sample_invite,
-):
-    client_request.logout()
-    sample_invite["email_address"] = api_user_active["email_address"]
-    with client_request.session_transaction() as session:
-        session["invited_user_id"] = sample_invite["id"]
-    client_request.post(
-        "main.register_from_invite",
-        _data={
-            "name": "Registered in another Browser",
-            "email_address": api_user_active["email_address"],
-            "mobile_number": api_user_active["mobile_number"],
-            "service": sample_invite["service"],
-            "password": "somreallyhardthingtoguess",
-            "auth_type": "sms_auth",
-        },
-        _expected_redirect=url_for("main.verify"),
     )
 
 
@@ -379,6 +256,8 @@ def test_register_from_email_auth_invite(
         "app.main.views.verify.service_api_client.retrieve_service_invite_data",
         return_value={},
     )
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     mock_login_user = mocker.patch("app.models.user.login_user")
     sample_invite["auth_type"] = "email_auth"
@@ -392,7 +271,7 @@ def test_register_from_email_auth_invite(
         "name": "invited user",
         "email_address": sample_invite["email_address"],
         "mobile_number": "2028675301",
-        "password": "FSLKAJHFNvdzxgfyst",
+        "password": "FSLKAJHFNvdzxgfyst",  # noqa
         "service": sample_invite["service"],
         "auth_type": "email_auth",
     }
@@ -466,6 +345,8 @@ def test_can_register_email_auth_without_phone_number(
         "app.main.views.verify.service_api_client.retrieve_service_invite_data",
         return_value={},
     )
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     sample_invite["auth_type"] = "email_auth"
     with client_request.session_transaction() as session:
@@ -499,7 +380,10 @@ def test_cannot_register_with_sms_auth_and_missing_mobile_number(
     mock_send_verify_code,
     mock_get_user_by_email_not_found,
     mock_login,
+    mocker,
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     page = client_request.post(
         "main.register",
@@ -516,19 +400,60 @@ def test_cannot_register_with_sms_auth_and_missing_mobile_number(
     assert err.attrs["data-error-label"] == "mobile_number"
 
 
-def test_register_from_invite_form_doesnt_show_mobile_number_field_if_email_auth(
-    client_request,
-    sample_invite,
-    mock_get_invited_user_by_id,
-):
-    client_request.logout()
-    sample_invite["auth_type"] = "email_auth"
-    with client_request.session_transaction() as session:
-        session["invited_user_id"] = sample_invite["id"]
+def test_check_invited_user_email_address_matches_expected(mocker):
+    mock_flash = mocker.patch("app.main.views.register.flash")
+    mock_abort = mocker.patch("app.main.views.register.abort")
 
-    page = client_request.get("main.register_from_invite")
+    check_invited_user_email_address_matches_expected("fake@fake.gov", "Fake@Fake.GOV")
+    mock_flash.assert_not_called()
+    mock_abort.assert_not_called()
 
-    assert (
-        page.find("input", attrs={"name": "auth_type"}).attrs["value"] == "email_auth"
+
+def test_check_invited_user_email_address_doesnt_match_expected(mocker):
+    mock_flash = mocker.patch("app.main.views.register.flash")
+    mock_abort = mocker.patch("app.main.views.register.abort")
+
+    check_invited_user_email_address_matches_expected("real@fake.gov", "Fake@Fake.GOV")
+    mock_flash.assert_called_once_with(
+        "You cannot accept an invite for another person."
     )
-    assert page.find("input", attrs={"name": "mobile_number"}) is None
+    mock_abort.assert_called_once_with(403)
+
+
+def test_check_user_email_address_fails_if_not_government_address(mocker):
+    mock_flash = mocker.patch("app.main.views.register.flash")
+    mock_abort = mocker.patch("app.main.views.register.abort")
+
+    check_invited_user_email_address_matches_expected(
+        "fake@fake.bogus", "Fake@Fake.BOGUS"
+    )
+    mock_flash.assert_called_once_with("You must use a government email address.")
+    mock_abort.assert_called_once_with(403)
+
+
+def test_check_user_email_address_succeeds_if_government_address(mocker):
+    mock_flash = mocker.patch("app.main.views.register.flash")
+    mock_abort = mocker.patch("app.main.views.register.abort")
+
+    check_invited_user_email_address_matches_expected("fake@fake.mil", "Fake@Fake.MIL")
+    mock_flash.assert_not_called()
+    mock_abort.assert_not_called()
+
+
+def decode_invite_data(state):
+    state = state.encode("utf8")
+    state = base64.b64decode(state)
+    state = json.loads(state)
+    return state
+
+
+# Test that we can successfully decode the invited user
+# data that is sent in the state param
+def test_decode_state(encoded_invite_data):
+    assert decode_invite_data(encoded_invite_data) == {
+        "folder_permissions": [],
+        "from_user_id": "xyz",
+        "invited_user_id": "invited_user",
+        "permissions": ["manage_everything"],
+        "service_id": "service",
+    }

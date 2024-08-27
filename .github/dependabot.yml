@@ -3,14 +3,22 @@
 # Please see the documentation for all configuration options:
 # https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
 
-version: 3
+version: 2
 updates:
   - package-ecosystem: "pip" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
-  - package-ecosystem: 'npm'
-    directory: '/'
+    assignees:
+      - "A-Shumway42"
+    reviewers:
+      - "A-Shumway42"
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
-      interval: 'daily'
-
+      interval: "daily"
+    versioning-strategy: increase
+    assignees:
+      - "alexjanousekGSA"
+    reviewers:
+      - "alexjanousekGSA"

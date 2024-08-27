@@ -107,9 +107,10 @@ def test_show_accounts_or_dashboard_doesnt_redirect_to_org_dashboard_if_user_not
 
 
 def test_show_accounts_or_dashboard_redirects_if_not_logged_in(
-    client_request,
-    notify_admin,
+    client_request, notify_admin, mocker
 ):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     client_request.get(
         "main.show_accounts_or_dashboard",

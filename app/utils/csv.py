@@ -1,12 +1,13 @@
 import datetime
 
 import pytz
-from flask import current_app
+from flask import current_app, json
 from flask_login import current_user
-from notifications_utils.recipients import RecipientCSV
 
 from app.models.spreadsheet import Spreadsheet
+from app.utils import hilite
 from app.utils.templates import get_sample_template
+from notifications_utils.recipients import RecipientCSV
 
 
 def get_errors_for_csv(recipients, template_type):
@@ -67,13 +68,28 @@ def generate_notifications_csv(**kwargs):
     from app import notification_api_client
     from app.s3_client.s3_csv_client import s3download
 
-    current_app.logger.info("\n\n\n\nENTER generate_notifications_csv")
     if "page" not in kwargs:
         kwargs["page"] = 1
 
     # This generates the "batch" csv report
     if kwargs.get("job_id"):
+        # Some unit tests are mocking the kwargs and turning them into a function instead of dict,
+        # hence the try/except.
+        try:
+            current_app.logger.info(
+                hilite(f"Setting up report with kwargs {json.dumps(kwargs)}")
+            )
+        except TypeError:
+            pass
+
         original_file_contents = s3download(kwargs["service_id"], kwargs["job_id"])
+        # This will verify that the user actually did successfully upload a csv for a one-off.  Limit the size
+        # we display to 999 characters, because we don't want to show the contents for reports with thousands of rows.
+        current_app.logger.info(
+            hilite(
+                f"Original csv for job_id {kwargs['job_id']}: {original_file_contents[0:999]}"
+            )
+        )
         original_upload = RecipientCSV(
             original_file_contents,
             template=get_sample_template(kwargs["template_type"]),

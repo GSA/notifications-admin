@@ -1,12 +1,14 @@
 {% from "components/table.html" import list_table, field, right_aligned_field_heading, row_heading, spark_bar_field %}
 
 <div class="ajax-block-container">
-  {% if template_statistics|length > 1 %}
-    <div class='template-statistics-table'>
+  {% if template_statistics|length > 0 %}
+  <h2 class="margin-top-4 margin-bottom-1">Recent templates</h2>
+    <div class='template-statistics-table table-overflow-x-auto'>
       {% call(item, row_number) list_table(
         template_statistics,
         caption="Messages sent by template",
-        caption_visible=True,
+        caption_visible=False,
+        border_visible=True,
         empty_message='',
         field_headings=[
           'Template',

@@ -1,31 +1,41 @@
-{% extends "admin_template.html" %}
+{% extends "base.html" %}
 
 {% block per_page_title %}
-  {% block service_page_title %}{% endblock %} – {{ current_service.name }}
+  {% if current_org.name %}
+    {% block org_page_title %}{% endblock %} – {{ current_org.name }}
+  {% else %}
+    {% block service_page_title %}{% endblock %} – {{ current_service.name }}
+  {% endif %}
 {% endblock %}
 
 {% block main %}
   <div class="grid-container">
-    {% include "service_navigation.html" %}
+    {% block serviceNavigation %}
+      {% if current_org.name %}
+      {% else %}
+          {% include "components/service_nav.html" %}
+      {% endif %}
+    {% endblock %}
+    {% if current_org.name %}
+      {% block orgNavBreadcrumb %}{% include "components/org_nav_breadcrumb.html" %}{% endblock %}
+    {% endif %}
     <div class="grid-row margin-top-5">
-      {% if help %}
-        <div class="tablet:grid-col-3">
-      {% else %}
-        <div class="tablet:grid-col-3">
-      {% endif %}
-          {% include "main_nav.html" %}
-        </div>
-      {% if help %}
-        <div class="grid-col-8">
-      {% else %}
-        <div class="tablet:grid-col-9 tablet:padding-left-4">
-      {% endif %}
+      <div class="tablet:grid-col-2">
+        {% block sideNavigation %}
+          {% if current_org.name %}
+            {% include "components/org_nav.html" %}
+          {% else %}
+            {% include "components/main_nav.html" %}
+          {% endif %}
+        {% endblock %}
+      </div>
+      <div class="tablet:grid-col-10 tablet:padding-left-4">
         {% block beforeContent %}
           {% block backLink %}{% endblock %}
         {% endblock %}
         <main id="main-content" role="main" class="usa-prose site-prose margin-bottom-10">
         {% block content %}
-          {% include 'flash_messages.html' %}
+          {% include 'components/flash_messages.html' %}
           {% block maincolumn_content %}{% endblock %}
         {% endblock %}
         </main>

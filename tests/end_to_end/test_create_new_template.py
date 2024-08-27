@@ -4,7 +4,6 @@ import re
 import uuid
 
 from flask import current_app
-
 from playwright.sync_api import expect
 
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
@@ -20,8 +19,6 @@ def _setup(page):
     print(f"E2E ADMIN_CLIENT_SECRET {os.getenv('ADMIN_CLIENT_SECRET')}")
     print(f"E2E ADMIN_CLIENT_USERNAME {os.getenv('ADMIN_CLIENT_USERNAME')}")
     print(f"E2E API_HOST_NAME {os.getenv('API_HOST_NAME')}")
-
-
 
     current_date_time = datetime.datetime.now()
     new_service_name = "E2E Federal Test Service {now} - {browser_type}".format(
