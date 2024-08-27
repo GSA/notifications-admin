@@ -9,7 +9,8 @@ E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 def test_add_new_service_workflow(authenticated_page, end_to_end_context):
     page = authenticated_page
-
+    print(f"IN TEST_ADD_NEW_SERVICE_WORKFLOW PAGE=")
+    print(page)
     # Prepare for adding a new service later in the test.
     current_date_time = datetime.datetime.now()
     new_service_name = "E2E Federal Test Service {now} - {browser_type}".format(
@@ -21,6 +22,8 @@ def test_add_new_service_workflow(authenticated_page, end_to_end_context):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+
+    print(f"FINAL PAGE FOR TEST: {page}")
 
     # Check to make sure that we've arrived at the next page.
     # Check the page title exists and matches what we expect.

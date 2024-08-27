@@ -115,5 +115,6 @@ def authenticated_page(end_to_end_context):
     # Wait for the next page to fully load.
     page.wait_for_load_state("domcontentloaded")
     print("WE WAITED FOR LOAD STATE AND WE ARE ALL GOOD NOW")
+    print(page)
 
     return page
