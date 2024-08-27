@@ -88,7 +88,7 @@ dead-code: ## 60% is our aspirational goal, but currently breaks the build
 .PHONY: e2e-test
 e2e-test: export NEW_RELIC_ENVIRONMENT=test
 e2e-test: ## Run end-to-end integration tests; note that --browser webkit isn't currently working
-	DEBUG=pw.api, pw:browser poetry run pytest -vv --browser chromium  tests/end_to_end/test_create_new_template.py
+	DEBUG=pw:api,pw:browser poetry run pytest -vv --browser chromium  tests/end_to_end/test_create_new_template.py
 
 .PHONY: js-lint
 js-lint: ## Run javascript linting scanners
