@@ -146,7 +146,7 @@ def test_all_activity_no_jobs(client_request, mocker):
     no_jobs_message_td = page.find("td", class_="table-empty-message")
     assert no_jobs_message_td is not None, "No jobs message not found in the response"
 
-    expected_message = "No batched job messages found (messages are kept for 7 days)."
+    expected_message = "No messages found"
     actual_message = no_jobs_message_td.get_text(strip=True)
 
     assert (
