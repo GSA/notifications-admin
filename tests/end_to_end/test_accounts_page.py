@@ -18,6 +18,7 @@ def test_add_new_service_workflow(authenticated_page, end_to_end_context):
         browser_type=end_to_end_context.browser.browser_type.name,
     )
 
+    print(f"TRYING TO GO TO {E2E_TEST_URI}/accounts")
     page.goto(f"{E2E_TEST_URI}/accounts")
 
     # Check to make sure that we've arrived at the next page.
