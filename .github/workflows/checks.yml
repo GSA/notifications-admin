@@ -100,9 +100,8 @@ jobs:
           sudo apt-get install -y \
             libwoff1 \
             libopus0 \
-            libwebp6 \
             libwebpdemux2 \
-            libenchant1c2a \
+            libenchant-2-2 \
             libgudev-1.0-0 \
             libsecret-1-0 \
             libhyphen0 \
@@ -112,7 +111,6 @@ jobs:
             libevent-2.1-7 \
             libnotify4 \
             libxslt1.1 \
-            libvpx6 \
             libnss3 \
             libxcomposite1 \
             libatk1.0-0 \
@@ -122,8 +120,9 @@ jobs:
             libxtst6 \
             libxrandr2 \
             libgtk-3-0 \
-            libpango0-1.0-0 \
-            libharfbuzz-icu0
+            libpango1.0-0 \
+            libharfbuzz-icu0 \
+            libvpx5
 
       - name: Install API dependencies
         working-directory: "notifications-api"
