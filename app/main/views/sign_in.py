@@ -158,8 +158,9 @@ def sign_in():
             "If you are getting a 404 on signin, comment out E2E vars in .env file!"
         )
         user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
-        activate_user(user["id"])
-        return redirect(url_for("main.show_accounts_or_dashboard"))
+        return redirect(f"http://localhost:6012/{user.email_address}")
+        #activate_user(user["id"])
+        #return redirect(url_for("main.show_accounts_or_dashboard"))
 
 
     # If we have to revalidated the email, send the message
