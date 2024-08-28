@@ -89,10 +89,13 @@ def create_new_template(page):
     assert "Test message for e2e test" in page.content()
 
 
-def test_create_new_template(authenticated_page):
-    page = authenticated_page
-
-    print(f"PAGE ON ENTER TEST_CREATE_NEW_TEMPLATE IS {page}")
+def test_create_new_template(end_to_end_context):
+    page = end_to_end_context.new_page()
+    print(f"INITIAL PAGE IS {page}")
+    page.goto(f"{E2E_TEST_URI}/sign-in")
+    # Wait for the next page to fully load.
+    page.wait_for_load_state("domcontentloaded")
+    print(f"PAGE ON ENTER TEST_CREATE_NEW_TEMPLATE AFTER SIGNING IS {page}")
 
     current_date_time = datetime.datetime.now()
     new_service_name = "E2E Federal Test Service {now} - {browser_type}".format(

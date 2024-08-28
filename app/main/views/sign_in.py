@@ -158,7 +158,7 @@ def sign_in():
     redirect_url = request.args.get("next")
 
     if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
-        return _handle_e2e_tests(redirect_url)
+        return _handle_e2e_tests(None)
 
     email_verify_template = _do_login_dot_gov()
     if (
