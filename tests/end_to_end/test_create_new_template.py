@@ -164,6 +164,8 @@ def create_new_template(page):
 def test_create_new_template(authenticated_page):
     page = authenticated_page
 
+    print(f"PAGE ON ENTER TEST_CREATE_NEW_TEMPLATE IS {page}")
+
     _setup(page)
 
     create_new_template(page)

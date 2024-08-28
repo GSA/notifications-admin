@@ -11,6 +11,7 @@ def login_for_end_to_end_testing(browser):
     context = browser.new_context()
     page = context.new_page()
     page.goto(f"{E2E_TEST_URI}/")
+    print(f"PAGE IN CONFTEST IS {page}")
 
     sign_in_button = page.get_by_role("link", name="Sign in")
 
@@ -38,7 +39,7 @@ def login_for_end_to_end_testing(browser):
 
     # Wait for the next page to fully load.
     page.wait_for_load_state("domcontentloaded")
-
+    print(f"PAGE ON CONFTEST AFTER SIGNIN IS {page}")
     # Check for the sign in form elements.
     # NOTE:  Playwright cannot find input elements by role and recommends using
     #        get_by_label() instead; however, hidden form elements do not have
