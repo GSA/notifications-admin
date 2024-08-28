@@ -145,7 +145,9 @@ def _handle_e2e_tests(redirect_url):
     )
     user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
     activate_user(user["id"])
-    return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
+    return redirect(url_for("main.show_accounts_or_dashboard", next=os.getenv("NOTIFY_E2E_TEST_EMAIL")))
+
+    # return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
 
 
 @main.route("/sign-in", methods=(["GET", "POST"]))
