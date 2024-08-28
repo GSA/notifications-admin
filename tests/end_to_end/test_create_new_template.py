@@ -90,6 +90,7 @@ def create_new_template(page):
 
 
 def test_create_new_template(end_to_end_context):
+    print(f"WHAT IS THE TEST EMAIL {os.getenv('NOTIFY_E2E_TEST_EMAIL')}")
     page = end_to_end_context.new_page()
     print(f"INITIAL PAGE IS {page}")
     x = page.goto(f"{E2E_TEST_URI}/sign-in")
