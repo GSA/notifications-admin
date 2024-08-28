@@ -114,10 +114,10 @@ jobs:
           # NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           # NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
           # NOTIFY_ENVIRONMENT: development
+      - name: Check API Server availability
+        run: |
+          curl --fail https://notify-api-staging.app.cloud.gov:6011 || exit 1
       - name: Run Admin server
-        ports:
-          - 6011:6011
-        options: --health-cmd="curl --fail https://notify-api-staging.app.cloud.gov:6011/" || exit 1"
         run: make run-flask &
         env:
           API_HOST_NAME: https://notify-api-staging.app.cloud.gov/
