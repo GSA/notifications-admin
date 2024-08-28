@@ -116,7 +116,7 @@ jobs:
           # NOTIFY_ENVIRONMENT: development
       - name: Check API Server availability
         run: |
-          curl --fail https://notify-api-staging.app.cloud.gov:6011 || exit 1
+          curl --fail -v https://notify-api-staging.app.cloud.gov || exit 1
       - name: Run Admin server
         run: make run-flask &
         env:
