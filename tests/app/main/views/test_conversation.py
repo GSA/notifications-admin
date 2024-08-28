@@ -113,55 +113,55 @@ def test_view_conversation(
         [
             (
                 "message-8",
-                "yesterday at 14:59 US/Eastern",
+                "yesterday at 14:59 America/New_York",
             ),
             (
                 "message-7",
-                "yesterday at 14:59 US/Eastern",
+                "yesterday at 14:59 America/New_York",
             ),
             (
                 "message-6",
-                "yesterday at 16:59 US/Eastern",
+                "yesterday at 16:59 America/New_York",
             ),
             (
                 "message-5",
-                "yesterday at 18:59 US/Eastern",
+                "yesterday at 18:59 America/New_York",
             ),
             (
                 "message-4",
-                "yesterday at 20:59 US/Eastern",
+                "yesterday at 20:59 America/New_York",
             ),
             (
                 "message-3",
-                "yesterday at 22:59 US/Eastern",
+                "yesterday at 22:59 America/New_York",
             ),
             (
                 "message-2",
-                "yesterday at 22:59 US/Eastern",
+                "yesterday at 22:59 America/New_York",
             ),
             (
                 "message-1",
-                "yesterday at 23:00 US/Eastern",
+                "yesterday at 23:00 America/New_York",
             ),
             (
                 expected_outbound_content,
-                "yesterday at 00:00 US/Eastern",
+                "yesterday at 00:00 America/New_York",
             ),
             (
                 expected_outbound_content,
-                "yesterday at 00:00 US/Eastern",
+                "yesterday at 00:00 America/New_York",
             ),
             (
                 expected_outbound_content,
-                "yesterday at 00:00 US/Eastern",
+                "yesterday at 00:00 America/New_York",
             ),
             (
                 expected_outbound_content,
-                "yesterday at 00:00 US/Eastern",
+                "yesterday at 00:00 America/New_York",
             ),
             (
                 expected_outbound_content,
-                "yesterday at 00:00 US/Eastern",
+                "yesterday at 00:00 America/New_York",
             ),
         ]
     ):

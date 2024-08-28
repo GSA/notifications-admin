@@ -52,7 +52,7 @@ def test_get_upload_hub_page(
 
     assert normalize_spaces(uploads[0].text.strip()) == (
         "some.csv "
-        "Sent 1 January 2016 at 06:09 US/Eastern "
+        "Sent 1 January 2016 at 06:09 America/New_York "
         "0 pending 8 delivered 2 failed"
     )
     assert uploads[0].select_one("a.file-list-filename-large")["href"] == (
@@ -82,12 +82,12 @@ def test_uploads_page_shows_scheduled_jobs(
         ("File Status"),
         (
             "even_later.csv "
-            "Sending 1 January 2016 at 18:09 US/Eastern "
+            "Sending 1 January 2016 at 18:09 America/New_York "
             "1 text message waiting to send"
         ),
         (
             "send_me_later.csv "
-            "Sending 1 January 2016 at 06:09 US/Eastern "
+            "Sending 1 January 2016 at 06:09 America/New_York "
             "1 text message waiting to send"
         ),
     ]
