@@ -10,13 +10,12 @@ def login_for_end_to_end_testing(browser):
     # Open a new page and go to the staging site.
     context = browser.new_context()
     page = context.new_page()
-    page.goto(f"{E2E_TEST_URI}/")
-    print(f"PAGE IN CONFTEST IS {page}")
+    page.goto(f"{E2E_TEST_URI}/sign-in")
 
-    sign_in_button = page.get_by_role("link", name="Sign in")
+    #sign_in_button = page.get_by_role("link", name="Sign in")
 
     # Test trying to sign in.
-    sign_in_button.click()
+    #sign_in_button.click()
 
     # Wait for the next page to fully load.
     page.wait_for_load_state("domcontentloaded")
@@ -28,14 +27,14 @@ def login_for_end_to_end_testing(browser):
     # See https://playwright.dev/python/docs/api/class-page#page-get-by-label
     # and https://playwright.dev/python/docs/locators#locate-by-css-or-xpath
     # for more information.
-    email_address_input = page.get_by_label("Email address")
-    password_input = page.get_by_label("Password")
-    continue_button = page.get_by_role("button", name=re.compile("Continue"))
+    #email_address_input = page.get_by_label("Email address")
+    #password_input = page.get_by_label("Password")
+    #continue_button = page.get_by_role("button", name=re.compile("Continue"))
 
     # Sign in to the site.
-    email_address_input.fill(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
-    password_input.fill(os.getenv("NOTIFY_E2E_TEST_PASSWORD"))
-    continue_button.click()
+    #email_address_input.fill(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
+    #password_input.fill(os.getenv("NOTIFY_E2E_TEST_PASSWORD"))
+    #continue_button.click()
 
     # Wait for the next page to fully load.
     page.wait_for_load_state("domcontentloaded")

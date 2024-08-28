@@ -151,21 +151,14 @@ def _handle_e2e_tests(redirect_url):
 @main.route("/sign-in", methods=(["GET", "POST"]))
 @hide_from_search_engines
 def sign_in():
-    if True:
-    #if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
-        current_app.logger.warning("E2E TESTS ARE ENABLED.")
-        current_app.logger.warning(
-            "If you are getting a 404 on signin, comment out E2E vars in .env file!"
-        )
-        user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
-        return redirect(f"http://localhost:6012/{user.email_address}")
-        #activate_user(user["id"])
-        #return redirect(url_for("main.show_accounts_or_dashboard"))
-
 
     # If we have to revalidated the email, send the message
     # via email and redirect to the "verify your email page"
     # and don't proceed further with login
+    redirect_url = request.args.get("next")
+
+    if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
+        return _handle_e2e_tests(redirect_url)
 
     email_verify_template = _do_login_dot_gov()
     if (
@@ -175,10 +168,6 @@ def sign_in():
     ):
         return email_verify_template
 
-    redirect_url = request.args.get("next")
-
-    if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
-        return _handle_e2e_tests(redirect_url)
 
     if current_user and current_user.is_authenticated:
         if redirect_url and is_safe_redirect_url(redirect_url):
