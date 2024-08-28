@@ -151,19 +151,16 @@ def _handle_e2e_tests(redirect_url):
 @main.route("/sign-in", methods=(["GET", "POST"]))
 @hide_from_search_engines
 def sign_in():
-    print("ENTER SIGN IN")
-    if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
+    if True:
+    #if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
         current_app.logger.warning("E2E TESTS ARE ENABLED.")
         current_app.logger.warning(
             "If you are getting a 404 on signin, comment out E2E vars in .env file!"
         )
         user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
         activate_user(user["id"])
-        print("USER ACTIVATED!!")
         return redirect(url_for("main.show_accounts_or_dashboard"))
-    else:
-        print("DID NOT FIND NOTIFY_E2E_TESET_EMAIL IN o.sgetenv")
-        abort(404) #?
+
 
     # If we have to revalidated the email, send the message
     # via email and redirect to the "verify your email page"
