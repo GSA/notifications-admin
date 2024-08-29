@@ -149,11 +149,14 @@ def _handle_e2e_tests(redirect_url):
         return redirect(
             url_for(
                 "main.show_accounts_or_dashboard",
-                next=os.getenv("NOTIFY_E2E_TEST_EMAIL"),
+                next="EMAIL_IS_OK",
             )
         )
     except Exception as e:
-        return redirect(url_for("main.show_accounts_or_dashboard", next=f"{e}"))
+        stre = str(e)
+        stre = stre.replace(" ", "_")
+        # Trying to get a message back to playwright somehow since we can't see the admin logs
+        return redirect(url_for(f"https://{stre}"))
 
     # return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
 

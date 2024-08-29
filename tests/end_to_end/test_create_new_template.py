@@ -92,7 +92,7 @@ def test_create_new_template(end_to_end_context):
     print(f"WHAT IS THE TEST EMAIL {os.getenv('NOTIFY_E2E_TEST_EMAIL')}")
     page = end_to_end_context.new_page()
     print(f"INITIAL PAGE IS {page}")
-    x = page.goto(f"{E2E_TEST_URI}/sign-in")
+    page.goto(f"{E2E_TEST_URI}/sign-in")
     # Wait for the next page to fully load.
     page.wait_for_load_state("domcontentloaded")
     print(f"PAGE ON ENTER TEST_CREATE_NEW_TEMPLATE AFTER SIGNING IN IS {page}")
