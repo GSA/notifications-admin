@@ -52,7 +52,9 @@
     </div>
     <div id="aria-live-account" class="usa-sr-only" aria-live="polite"></div>
 
+    {% if current_user.has_permissions('manage_service') %}{% endif %}
 
+    {{ ajax_block(partials, updates_url, 'template-statistics') }}
     <h2 class="margin-top-4 margin-bottom-1">Recent Batches</h2>
     <div class="table-overflow-x-auto">
       <table class="usa-table usa-table--borderless job-table">
@@ -120,7 +122,7 @@
       </table>
     </div>
 
-    <h2>Most Used Templates</h2>
+    <h2>Recent templates</h2>
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
   </div>
 
