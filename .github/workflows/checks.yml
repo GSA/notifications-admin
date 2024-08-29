@@ -120,10 +120,6 @@ jobs:
       - name: Run Admin server
         run: |
           make run-flask > admin-server.log 2>&1 &
-          until curl -s http://localhost:6012l do
-            echo "Waiting..."
-            sleep 2
-          done
           tail -f admin-server.log &
           make e2e-test
         env:
