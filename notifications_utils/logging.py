@@ -22,7 +22,8 @@ def init_app(app):
     app.config.setdefault("NOTIFY_LOG_LEVEL", "INFO")
     app.config.setdefault("NOTIFY_APP_NAME", "none")
 
-    app.logger.removeHandler(default_handler)
+    # Try adding back default handler
+    # app.logger.removeHandler(default_handler)
 
     handlers = get_handlers(app)
     loglevel = logging.getLevelName(app.config["NOTIFY_LOG_LEVEL"])
