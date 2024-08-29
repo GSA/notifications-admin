@@ -119,7 +119,13 @@ jobs:
           curl --fail -v https://notify-api-staging.app.cloud.gov || exit 1
       - name: Run Admin server
         run: |
-          nohup make run-flask > admin-server.log 2>&1 &
+          make run-flask > admin-server.log 2>&1 &
+          until curl -s http://localhost:6012l do
+            echo "Waiting..."
+            sleep 2
+          done
+          tail -f admin-server.log &
+          make e2e-test
         env:
           API_HOST_NAME: https://notify-api-staging.app.cloud.gov/
           # API_HOST_NAME: http://localhost:6011
@@ -132,34 +138,7 @@ jobs:
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
           NOTIFY_E2E_TEST_URI: http://localhost:6012/
-      - name: Tail logs
-        run: |
-          tail -f admin-server.log &
-      - name: Ensure Admin Server is running
-        run: |
-          until curl -s http://localhost:6012; do
-            echo "waiting for admin server to start..."
-            sleep 2
-          done
-      - name: Run E2E tests
-        # Run the E2E tests against the code found in this PR.
-        # run: poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
-        # --browser webkit doesn't work at this time.
-        run: make e2e-test
-        # Debugging for now to troubleshoot a connectivity issue to the local servers
-        # run: curl --request GET --url "http://localhost:6012"
-        env:
-          E2E_API_HOST_NAME: https://notify-api-staging.app.cloud.gov/
-          # API_HOST_NAME: http://localhost:6011
-          E2E_DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
-          E2E_SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          E2E_ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
-          E2E_ADMIN_CLIENT_USERNAME: notify-admin
-          E2E_NOTIFY_ENVIRONMENT: e2etest
-          NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
-          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
-          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-          NOTIFY_E2E_TEST_URI: http://localhost:6012/
+
 
   validate-new-relic-config:
     runs-on: ubuntu-latest
