@@ -1,4 +1,3 @@
-{# setting navigation and secondarynavigation #}
 {% if current_user.is_authenticated %}
   {% set navigation = [
     {"href": url_for("main.show_accounts_or_dashboard"), "text": "Current service", "active": header_navigation.is_selected('accounts-or-dashboard')},
@@ -30,7 +29,6 @@
   {% endif %}
 {% endif %}
 
-{# usa header #}
 <header class="usa-header usa-header--extended">
   <div class="usa-nav-container">
     <div class="usa-navbar">
