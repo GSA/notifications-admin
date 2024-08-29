@@ -9,7 +9,6 @@ from playwright.sync_api import expect
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 
-
 def create_new_template(page):
 
     current_service_link = page.get_by_text("Current service")
@@ -96,8 +95,7 @@ def test_create_new_template(end_to_end_context):
     x = page.goto(f"{E2E_TEST_URI}/sign-in")
     # Wait for the next page to fully load.
     page.wait_for_load_state("domcontentloaded")
-    print(f"WTF is x? {x}")
-    print(f"PAGE ON ENTER TEST_CREATE_NEW_TEMPLATE AFTER SIGNING IN IS {page.content()}")
+    print(f"PAGE ON ENTER TEST_CREATE_NEW_TEMPLATE AFTER SIGNING IN IS {page}")
 
     current_date_time = datetime.datetime.now()
     new_service_name = "E2E Federal Test Service {now} - {browser_type}".format(
@@ -107,7 +105,6 @@ def test_create_new_template(end_to_end_context):
     print(f"NEW SERVICE NAME {new_service_name}")
     print(f"GOING TO {E2E_TEST_URI}/accounts")
     page.goto(f"{E2E_TEST_URI}/accounts")
-
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")

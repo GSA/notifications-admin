@@ -139,13 +139,21 @@ def verify_email(user, redirect_url):
 
 
 def _handle_e2e_tests(redirect_url):
-    current_app.logger.warning("E2E TESTS ARE ENABLED.")
-    current_app.logger.warning(
-        "If you are getting a 404 on signin, comment out E2E vars in .env file!"
-    )
-    user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
-    activate_user(user["id"])
-    return redirect(url_for("main.show_accounts_or_dashboard", next=os.getenv("NOTIFY_E2E_TEST_EMAIL")))
+    try:
+        current_app.logger.warning("E2E TESTS ARE ENABLED.")
+        current_app.logger.warning(
+            "If you are getting a 404 on signin, comment out E2E vars in .env file!"
+        )
+        user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
+        activate_user(user["id"])
+        return redirect(
+            url_for(
+                "main.show_accounts_or_dashboard",
+                next=os.getenv("NOTIFY_E2E_TEST_EMAIL"),
+            )
+        )
+    except Exception as e:
+        return redirect(url_for("main.show_accounts_or_dashboard", next=f"{e}"))
 
     # return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
 
@@ -159,7 +167,7 @@ def sign_in():
     # and don't proceed further with login
     redirect_url = request.args.get("next")
 
-    #if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
+    # if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
     return _handle_e2e_tests(None)
 
     email_verify_template = _do_login_dot_gov()
@@ -169,7 +177,6 @@ def sign_in():
         and "Check your email" in email_verify_template
     ):
         return email_verify_template
-
 
     if current_user and current_user.is_authenticated:
         if redirect_url and is_safe_redirect_url(redirect_url):
