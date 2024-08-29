@@ -327,6 +327,12 @@ def aggregate_template_usage(template_statistics, sort_key="count"):
                 "template_name": template_stats[0]["template_name"],
                 "template_type": template_stats[0]["template_type"],
                 "count": sum(s["count"] for s in template_stats),
+                "last_used": max(s["last_used"] for s in template_stats if s["last_used"]),
+                "created_by": template_stats[0]["created_by"],
+                "created_by_id": template_stats[0]["created_by_id"],
+                "status": template_stats[0]["status"],
+                "template_folder": template_stats[0]["template_folder"],
+                "template_folder_id": template_stats[0]["template_folder_id"],
             }
         )
 
