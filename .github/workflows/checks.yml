@@ -118,7 +118,9 @@ jobs:
         run: |
           curl --fail -v https://notify-api-staging.app.cloud.gov || exit 1
       - name: Run Admin server
-        run: make run-flask &
+        run: |
+          make run-flask | tee admin-server.log &
+          wait $!
         env:
           API_HOST_NAME: https://notify-api-staging.app.cloud.gov/
           # API_HOST_NAME: http://localhost:6011
