@@ -134,7 +134,7 @@ jobs:
           NOTIFY_E2E_TEST_URI: http://localhost:6012/
       - name: Tail Admin Server logs
         run: |
-          tail -f admin-server.log &
+          tail -f admin-server.log > /dev/null & disown
       - name: Ensure Admin Server is running
         run: |
           until curl -s http://localhost:6012; do
