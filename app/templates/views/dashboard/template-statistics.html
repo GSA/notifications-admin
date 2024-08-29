@@ -1,5 +1,6 @@
 <div class="ajax-block-container">
   {% if template_statistics|length > 1 %}
+  <h2 class="margin-top-4 margin-bottom-1">Most Used Templates</h2>
     <div class="template-statistics-table table-overflow-x-auto">
       <table class="usa-table width-full">
         <caption class="font-body-lg table-heading usa-sr-only">
@@ -29,9 +30,6 @@
             <tr class="table-row">
               <td>
                 <a class="usa-link template-statistics-table-template-name" href="{{ url_for('.view_template', service_id=current_service.id, template_id=item.template_id) }}">{{ item.template_name }}</a>
-                <span class="template-statistics-table-hint">
-                  {{ 1|message_count_label(item.template_type, suffix='template')|capitalize }}
-                </span>
               </td>
               <td><p>{{ item.template_folder }}</p></td>
               <td><p>{{ item.last_used|format_datetime_table}}</p></td>
