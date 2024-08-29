@@ -10,7 +10,7 @@
         {% block per_page_title %}{% endblock %} – Notify.gov
       {% endblock %}
     </title>
-    {% include "new/components/head.html" %}
+    {% include "components/head.html" %}
   </head>
   <body class="usa-template__body {{ bodyClasses }}">
     <script nonce="{{ csp_nonce() }}">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
@@ -32,8 +32,8 @@
 
 
     {% block header %}
-      {% include 'new/components/usa_banner.html' %}
-      {% include 'new/components/header.html' %}
+      {% include 'components/usa_banner.html' %}
+      {% include 'components/header.html' %}
     {% endblock %}
 
     {% block main %}
@@ -47,7 +47,7 @@
       {% endblock %}
         {% block content %}
           {% block flash_messages %}
-            {% include 'new/components/flash_messages.html' %}
+            {% include 'components/flash_messages.html' %}
           {% endblock %}
           {% block maincolumn_content %}
               <div class="grid-row">
@@ -78,7 +78,7 @@
         {% set meta_suffix = "Built by the " + long_link + commit_hash %}
       {% endif %}
 
-      {% include "new/components/footer.html" %}
+      {% include "components/footer.html" %}
 
       {% if current_user.is_authenticated %}
         {% block sessionUserWarning %}

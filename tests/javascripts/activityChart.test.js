@@ -21,7 +21,7 @@ Object.defineProperty(HTMLElement.prototype, 'clientWidth', {
 beforeAll(done => {
   // Set up the DOM with the D3 script included
   document.body.innerHTML = `
-    <div id="activityChartContainer" data-daily-stats="{{ daily_stats }}" data-daily_stats_by_user="{{ daily_stats_by_user }}">
+    <div id="activityChartContainer"">
       <form class="usa-form">
         <label class="usa-label" for="options">Account</label>
         <select class="usa-select margin-bottom-2" name="options" id="options">
@@ -32,7 +32,7 @@ beforeAll(done => {
       </form>
       <div id="activityChart" >
         <div class="chart-header">
-          <div class="chart-subtitle">Service Name - Last 7 Days</div>
+          <div class="chart-subtitle">Service Name - last 7 days</div>
           <div class="chart-legend" aria-label="Legend"></div>
         </div>
         <div class="chart-container" id="weeklyChart" data-service-id="12345" style="width: 600px;"></div>
@@ -123,4 +123,27 @@ test('Check HTML content after chart creation', () => {
   // Optionally, you can add assertions to check for specific elements
   expect(container.querySelector('svg')).not.toBeNull();
   expect(container.querySelectorAll('rect').length).toBeGreaterThan(0);
+});
+
+test('Fetches data and creates chart and table correctly', async () => {
+  const mockResponse = {
+    '2024-07-01': { sms: { delivered: 50, failed: 5 } },
+    '2024-07-02': { sms: { delivered: 60, failed: 2 } },
+    '2024-07-03': { sms: { delivered: 70, failed: 1 } },
+    '2024-07-04': { sms: { delivered: 80, failed: 0 } },
+    '2024-07-05': { sms: { delivered: 90, failed: 3 } },
+    '2024-07-06': { sms: { delivered: 100, failed: 4 } },
+    '2024-07-07': { sms: { delivered: 110, failed: 2 } },
+  };
+  global.fetch = jest.fn(() =>
+    Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(mockResponse),
+    })
+);
+
+const data = await fetchData('service');
+
+expect(global.fetch).toHaveBeenCalledWith('/daily_stats.json');
+expect(data).toEqual(mockResponse);
 });

@@ -29,6 +29,7 @@ from app.main.forms import (
     TwoFactorForm,
 )
 from app.models.user import User
+from app.utils import hilite
 from app.utils.user import user_is_gov_user, user_is_logged_in
 from notifications_utils.url_safe_token import check_token
 
@@ -189,32 +190,19 @@ def user_profile_mobile_number_delete():
 @main.route("/user-profile/mobile-number/authenticate", methods=["GET", "POST"])
 @user_is_logged_in
 def user_profile_mobile_number_authenticate():
-    # Validate password for form
-    def _check_password(pwd):
-        return user_api_client.verify_password(current_user.id, pwd)
-
-    form = ConfirmPasswordForm(_check_password)
 
     if NEW_MOBILE not in session:
         return redirect(url_for(".user_profile_mobile_number"))
 
-    if form.validate_on_submit():
-        session[NEW_MOBILE_PASSWORD_CONFIRMED] = True
-        current_user.send_verify_code(to=session[NEW_MOBILE])
-        create_mobile_number_change_event(
-            user_id=current_user.id,
-            updated_by_id=current_user.id,
-            original_mobile_number=current_user.mobile_number,
-            new_mobile_number=session[NEW_MOBILE],
-        )
-        return redirect(url_for(".user_profile_mobile_number_confirm"))
-
-    return render_template(
-        "views/user-profile/authenticate.html",
-        thing="mobile number",
-        form=form,
-        back_link=url_for(".user_profile_mobile_number_confirm"),
+    session[NEW_MOBILE_PASSWORD_CONFIRMED] = True
+    current_user.send_verify_code(to=session[NEW_MOBILE])
+    create_mobile_number_change_event(
+        user_id=current_user.id,
+        updated_by_id=current_user.id,
+        original_mobile_number=current_user.mobile_number,
+        new_mobile_number=session[NEW_MOBILE],
     )
+    return redirect(url_for(".user_profile_mobile_number_confirm"))
 
 
 @main.route("/user-profile/mobile-number/confirm", methods=["GET", "POST"])
@@ -288,3 +276,15 @@ def user_profile_disable_platform_admin_view():
     return render_template(
         "views/user-profile/disable-platform-admin-view.html", form=form
     )
+
+
+def set_timezone():
+    # Cookie is set in dashboard.html on page load
+    try:
+        timezone = request.cookies.get("timezone", "US/Eastern")
+        current_app.logger.debug(hilite(f"User's timezone is {timezone}"))
+        serialized_user = current_user.serialize()
+        if serialized_user["preferred_timezone"] is not timezone:
+            current_user.update(preferred_timezone=timezone)
+    except Exception:
+        current_app.logger.exception(hilite("Can't get timezone"))

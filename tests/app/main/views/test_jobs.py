@@ -349,7 +349,7 @@ def test_should_show_scheduled_job(
     )
 
     assert normalize_spaces(page.select("main div p")[1].text) == (
-        "Example template - service one was scheduled on January 02, 2016 at 12:00 AM US/Eastern by Test User"
+        "Example template - service one was scheduled on January 02, 2016 at 12:00 AM America/New_York by Test User"
     )
 
     assert page.select("main p a")[0]["href"] == url_for(

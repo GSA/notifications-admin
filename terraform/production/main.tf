@@ -59,10 +59,10 @@ module "api_network_route" {
 module "domain" {
   source = "github.com/GSA-TTS/terraform-cloudgov//domain?ref=v1.0.0"
 
-  cf_org_name      = local.cf_org_name
-  cf_space_name    = local.cf_space_name
-  app_name_or_id   = "${local.app_name}-${local.env}"
-  name             = "${local.app_name}-domain-${local.env}"
-  cdn_plan_name    = "domain"
-  domain_name      = "beta.notify.gov"
+  cf_org_name    = local.cf_org_name
+  cf_space_name  = local.cf_space_name
+  app_name_or_id = "${local.app_name}-${local.env}"
+  name           = "${local.app_name}-domain-${local.env}"
+  cdn_plan_name  = "domain"
+  domain_name    = "beta.notify.gov"
 }

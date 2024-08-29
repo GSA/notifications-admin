@@ -97,11 +97,19 @@ const copyGtmHead = () => {
     .pipe(dest(paths.dist + 'js/'));
 };
 
+// Task to copy `setTimezone.js`
+const copySetTimezone = () => {
+  return src(paths.src + 'js/setTimezone.js')
+    .pipe(dest(paths.dist + 'js/'));
+};
+
+
 // Task to copy images
 const copyImages = () => {
-  return src(paths.src + 'images/**/*')
+  return src(paths.src + 'images/**/*', { encoding: false })
     .pipe(dest(paths.dist + 'images/'));
 };
+
 
 // Configure USWDS paths
 uswds.settings.version = 3;
@@ -121,4 +129,4 @@ const copyAssets = async () => {
   await uswds.copyAssets();
 };
 
-exports.default = series(styles, javascripts, copyGtmHead, copyImages, copyAssets);
+exports.default = series(styles, javascripts, copyGtmHead, copySetTimezone, copyImages, copyAssets);

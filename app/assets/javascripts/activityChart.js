@@ -26,6 +26,13 @@
                 .append('g')
                 .attr('transform', `translate(${margin.left},${margin.top})`);
 
+            let tooltip = d3.select('#tooltip');
+
+            if (tooltip.empty()) {
+                tooltip = d3.select('body').append('div')
+                    .attr('id', 'tooltip')
+                    .style('display', 'none');
+            }
             // Create legend
             const legendContainer = d3.select('.chart-legend');
             legendContainer.selectAll('*').remove(); // Clear any existing legend
@@ -57,7 +64,7 @@
                 .padding(0.1);
                             // Adjust the y-axis domain to add some space above the tallest bar
             const maxY = d3.max(deliveredData.map((d, i) => d + (failedData[i] || 0)));
-            const y = d3.scaleLinear()
+            const y = d3.scaleSqrt()
                 .domain([0, maxY + 2]) // Add 2 units of space at the top
                 .nice()
                 .range([height, 0]);
@@ -95,10 +102,6 @@
             const color = d3.scaleOrdinal()
                 .domain(['delivered', 'failed'])
                 .range([COLORS.delivered, COLORS.failed]);
-                            // Create tooltip
-            const tooltip = d3.select('body').append('div')
-            .attr('id', 'tooltip')
-            .style('display', 'none');
 
         // Create bars with animation
         const barGroups = svg.selectAll('.bar-group')
@@ -185,41 +188,64 @@
             return;
         }
 
-        var daily_stats = activityChartContainer.getAttribute('data-daily-stats');
-        var daily_stats_by_user = activityChartContainer.getAttribute('data-daily_stats_by_user');
+        var url = type === 'service' ? `/daily_stats.json` : `/daily_stats_by_user.json`;
+        return fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                labels = [];
+                deliveredData = [];
+                failedData = [];
 
-        try {
-            // Choose the correct JSON string based on the type ('service' or 'user'),
-            // replace single quotes with double quotes to ensure valid JSON format,
-            // then parse the JSON string into a JavaScript object.
-            var statsJson = type === 'service' ? daily_stats : daily_stats_by_user;
-            statsJson = statsJson.replace(/'/g, '"');
-            data = JSON.parse(statsJson);
-        } catch (error) {
-            console.error('Error parsing JSON data:', error);
-            return;
-        }
-        var labels = [];
-        var deliveredData = [];
-        var failedData = [];
+                let totalMessages = 0;
 
-        for (var dateString in data) {
-            if (data.hasOwnProperty(dateString)) {
-                const dateParts = dateString.split('-');
-                const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0].slice(2)}`;
+                for (var dateString in data) {
+                    if (data.hasOwnProperty(dateString)) {
+                        const dateParts = dateString.split('-');
+                        const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0].slice(2)}`;
 
-                labels.push(formattedDate);
-                deliveredData.push(data[dateString].sms.delivered);
-                failedData.push(data[dateString].sms.failure);
-            }
-        }
+                        labels.push(formattedDate);
+                        deliveredData.push(data[dateString].sms.delivered);
+                        failedData.push(data[dateString].sms.failure);
 
-        try {
-            createChart('#weeklyChart', labels, deliveredData, failedData);
-            createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
-        } catch (error) {
-            console.error('Error creating chart or table:', error);
-        }
+                        // Calculate the total number of messages
+                        totalMessages += data[dateString].sms.delivered + data[dateString].sms.failure;
+                    }
+                }
+
+                // Check if there are no messages sent
+                const subTitle = document.querySelector(`#activityChartContainer .chart-subtitle`);
+                if (totalMessages === 0) {
+                    // Remove existing chart and render the alert message
+                    d3.select('#weeklyChart').selectAll('*').remove();
+                    d3.select('#weeklyChart')
+                        .append('div')
+                        .html(`
+                            <div class="usa-alert usa-alert--info usa-alert--slim">
+                                <div class="usa-alert__body">
+                                    <p class="usa-alert__text">
+                                        No messages sent in the last 7 days
+                                    </p>
+                                </div>
+                            </div>
+                        `);
+                    // Hide the subtitle
+                    if (subTitle) {
+                        subTitle.style.display = 'none';
+                    }
+                } else {
+                    // If there are messages, create the chart and table
+                    createChart('#weeklyChart', labels, deliveredData, failedData);
+                    createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
+                }
+
+                return data;
+            })
+            .catch(error => console.error('Error fetching daily stats:', error));
     };
 
     const handleDropdownChange = function(event) {
@@ -228,32 +254,40 @@
         const selectElement = document.getElementById('options');
         const selectedText = selectElement.options[selectElement.selectedIndex].text;
 
-        if (selectedValue === "individual") {
-            subTitle.textContent = selectedText + " - Last 7 Days";
-            fetchData('individual');
-        } else if (selectedValue === "service") {
-            subTitle.textContent = selectedText + " - Last 7 Days";
-            fetchData('service');
-        }
+        subTitle.textContent = `${selectedText} - last 7 days`;
+        fetchData(selectedValue);
 
         // Update ARIA live region
         const liveRegion = document.getElementById('aria-live-account');
-            liveRegion.textContent = `Data updated for ${selectedText} - Last 7 Days`;
-        };
+        liveRegion.textContent = `Data updated for ${selectedText} - last 7 days`;
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize activityChart chart and table with service data by default
-            fetchData('service');
-
-            // Add event listener to the dropdown
-            const dropdown = document.getElementById('options');
-            dropdown.addEventListener('change', handleDropdownChange);
+        // Switch tables based on dropdown selection
+        const selectedTable = selectedValue === "individual" ? "table1" : "table2";
+        const tables = document.querySelectorAll('.table-overflow-x-auto');
+        tables.forEach(function(table) {
+            table.classList.add('hidden'); // Hide all tables by adding the hidden class
+            table.classList.remove('visible'); // Ensure they are not visible
         });
+        const tableToShow = document.getElementById(selectedTable);
+        tableToShow.classList.remove('hidden'); // Remove hidden class
+        tableToShow.classList.add('visible'); // Add visible class
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize activityChart chart and table with service data by default
+        fetchData('service');
+
+        // Add event listener to the dropdown
+        const dropdown = document.getElementById('options');
+        dropdown.addEventListener('change', handleDropdownChange);
+    });
 
         // Resize chart on window resize
         window.addEventListener('resize', function() {
-            const selectedValue = document.getElementById('options').value;
-            handleDropdownChange({ target: { value: selectedValue } });
+            if (labels.length > 0 && deliveredData.length > 0 && failedData.length > 0) {
+                createChart('#weeklyChart', labels, deliveredData, failedData);
+                createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
+            }
         });
 
         // Export functions for testing

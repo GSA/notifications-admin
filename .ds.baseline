@@ -413,7 +413,7 @@
         "filename": "app/templates/new/components/head.html",
         "hashed_secret": "ee5048791fc7ff45a1545e24f85bec3317371327",
         "is_verified": false,
-        "line_number": 34,
+        "line_number": 33,
         "is_secret": false
       }
     ],
@@ -601,7 +601,7 @@
         "filename": "tests/app/main/views/test_user_profile.py",
         "hashed_secret": "8072d7aad32964ec43fbcb699c75dc38890792f7",
         "is_verified": false,
-        "line_number": 350,
+        "line_number": 336,
         "is_secret": false
       },
       {
@@ -609,7 +609,7 @@
         "filename": "tests/app/main/views/test_user_profile.py",
         "hashed_secret": "4c9dbb972da179e4f66f023eaa5fb9451d835030",
         "is_verified": false,
-        "line_number": 351,
+        "line_number": 337,
         "is_secret": false
       }
     ],
@@ -692,5 +692,5 @@
       }
     ]
   },
-  "generated_at": "2024-08-08T19:45:34Z"
+  "generated_at": "2024-08-20T14:14:36Z"
 }

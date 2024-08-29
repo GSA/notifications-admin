@@ -16,6 +16,7 @@ from app import (
 )
 from app.formatters import format_date_numeric, format_datetime_numeric, get_time_left
 from app.main import main
+from app.main.views.user_profile import set_timezone
 from app.statistics_utils import get_formatted_percentage
 from app.utils import (
     DELIVERED_STATUSES,
@@ -39,6 +40,7 @@ def old_service_dashboard(service_id):
 @main.route("/services/<uuid:service_id>")
 @user_has_permissions()
 def service_dashboard(service_id):
+
     if session.get("invited_user_id"):
         session.pop("invited_user_id", None)
         session["service_id"] = service_id
@@ -53,17 +55,12 @@ def service_dashboard(service_id):
     free_sms_allowance = billing_api_client.get_free_sms_fragment_limit_for_year(
         current_service.id,
     )
-    date_range = get_stats_date_range()
     usage_data = get_annual_usage_breakdown(yearly_usage, free_sms_allowance)
     sms_sent = usage_data["sms_sent"]
     sms_allowance_remaining = usage_data["sms_allowance_remaining"]
 
     job_response = job_api_client.get_jobs(service_id)["data"]
     service_data_retention_days = 7
-    daily_stats = get_daily_stats(service_id, date_range)
-    daily_stats_by_user = get_daily_stats_by_user(
-        service_id, current_user.id, date_range
-    )
 
     jobs = [
         {
@@ -94,24 +91,32 @@ def service_dashboard(service_id):
         service_data_retention_days=service_data_retention_days,
         sms_sent=sms_sent,
         sms_allowance_remaining=sms_allowance_remaining,
-        daily_stats=daily_stats,
-        daily_stats_by_user=daily_stats_by_user,
     )
 
 
-def get_daily_stats(service_id, date_range):
-    return service_api_client.get_service_notification_statistics_by_day(
+@main.route("/daily_stats.json")
+def get_daily_stats():
+    service_id = session.get("service_id")
+    date_range = get_stats_date_range()
+
+    stats = service_api_client.get_service_notification_statistics_by_day(
         service_id, start_date=date_range["start_date"], days=date_range["days"]
     )
+    return jsonify(stats)
 
 
-def get_daily_stats_by_user(service_id, user_id, date_range):
-    return service_api_client.get_user_service_notification_statistics_by_day(
+@main.route("/daily_stats_by_user.json")
+def get_daily_stats_by_user():
+    service_id = session.get("service_id")
+    date_range = get_stats_date_range()
+    user_id = current_user.id
+    stats = service_api_client.get_user_service_notification_statistics_by_day(
         service_id,
         user_id,
         start_date=date_range["start_date"],
         days=date_range["days"],
     )
+    return jsonify(stats)
 
 
 @main.route("/services/<uuid:service_id>/dashboard.json")
@@ -405,11 +410,13 @@ def get_dashboard_partials(service_id):
 
 
 def get_dashboard_totals(statistics):
+
     for msg_type in statistics.values():
         msg_type["failed_percentage"] = get_formatted_percentage(
             msg_type["failed"], msg_type["requested"]
         )
         msg_type["show_warning"] = float(msg_type["failed_percentage"]) > 3
+
     return statistics
 
 
@@ -468,6 +475,8 @@ def get_months_for_financial_year(year, time_format="%B"):
 
 
 def get_current_month_for_financial_year(year):
+    # Setting the timezone here because we need to set it somewhere.
+    set_timezone()
     current_month = datetime.now().month
     return current_month
 

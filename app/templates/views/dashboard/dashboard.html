@@ -1,3 +1,5 @@
+
+
 {% extends "withnav_template.html" %}
 
 {% from "components/table.html" import list_table, field, text_field, link_field, right_aligned_field_heading, hidden_field_heading, row_heading, notification_status_field, notification_carrier_field, notification_carrier_message_field %}
@@ -8,6 +10,8 @@
 {% endblock %}
 
 {% block maincolumn_content %}
+  <script type="text/javascript" src="{{ asset_url('js/setTimezone.js') }}"></script>
+
 
   <div class="dashboard margin-bottom-2">
 
@@ -23,16 +27,14 @@
     {{ ajax_block(partials, updates_url, 'inbox') }}
 
     <div id="totalMessageChartContainer" data-sms-sent="{{ sms_sent }}" data-sms-allowance-remaining="{{ sms_allowance_remaining }}">
-      <h2 id="chartTitle">Total Messages</h2>
+      <h2 id="chartTitle">Total messages</h2>
       <svg id="totalMessageChart"></svg>
       <div id="message"></div>
     </div>
     <div id="totalMessageTable" class="margin-0"></div>
 
-    <h2 class="line-height-sans-2 margin-bottom-0 margin-top-4">
-      Activity snapshot
-    </h2>
-    <div id="activityChartContainer" data-daily-stats="{{ daily_stats }}" data-daily_stats_by_user="{{ daily_stats_by_user }}">
+    <h2 class="line-height-sans-2 margin-bottom-0 margin-top-4">Recent activity</h2>
+    <div id="activityChartContainer">
       <form class="usa-form">
         <label class="usa-label" for="options">Account</label>
         <select class="usa-select margin-bottom-2" name="options" id="options">
@@ -43,7 +45,7 @@
       </form>
       <div id="activityChart">
         <div class="chart-header">
-          <div class="chart-subtitle">{{ current_service.name }} - Last 7 Days</div>
+          <div class="chart-subtitle">{{ current_service.name }} - last 7 days</div>
           <div class="chart-legend" aria-label="Legend"></div>
         </div>
         <div class="chart-container" id="weeklyChart"></div>
@@ -54,75 +56,87 @@
 
     {% if current_user.has_permissions('manage_service') %}{% endif %}
 
-    {{ ajax_block(partials, updates_url, 'template-statistics') }}
-    <h2 class="margin-top-4 margin-bottom-1">Recent Batches</h2>
-    <div class="table-overflow-x-auto">
-      <table class="usa-table usa-table--borderless job-table">
-        <thead class="table-field-headings">
-          <tr>
-            <th scope="col" class="table-field-heading-first">
-              <span>File name</span>
-            </th>
-            <th scope="col" class="table-field-heading">
-              <span>Template</span>
-            </th>
-            <th scope="col" class="table-field-heading">
-              <span>Job status</span>
-            </th>
-            <th scope="col" class="table-field-heading">
-              <span>Sender</span>
-            </th>
-            <th scope="col" class="table-field-heading">
-              <span># of Recipients</span>
-            </th>
-            <th scope="col" class="table-field-heading">
-              <span>Report</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {% if jobs %}
-            {% for job in jobs[:5] %}
+    <div class="table-container">
+      <div id="table1" class="table-overflow-x-auto hidden">
+        <h2 class="margin-top-4 margin-bottom-1">My activity</h2>
+        <table class="usa-table job-table">
+          <thead class="table-field-headings">
+            <tr>
+              <th scope="col" class="table-field-heading-first" id="jobId"><span>Job ID#</span></th>
+              <th data-sortable scope="col" class="table-field-heading"><span>Template</span></th>
+              <th data-sortable scope="col" class="table-field-heading"><span>Job status</span></th>
+              <th data-sortable scope="col" class="table-field-heading"><span># of Recipients</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if jobs %}
+              {% for job in jobs[:5] %}
+                {% if job.created_by.name == current_user.name %}
+                  {% set notification = job.notifications[0] %}
+                  <tr id="{{ job.job_id }}">
+                    <td class="table-field jobid" scope="row" role="rowheader">
+                      <a class="usa-link" href="{{ job.view_job_link }}">
+                        {{ job.job_id[:8] if job.job_id else 'Manually entered number' }}
+                      </a>
+                    </td>
+                    <td class="table-field template">{{ job.template_name }}</td>
+                    <td class="table-field time-sent">Sent on
+                      {{ (job.processing_finished if job.processing_finished else job.processing_started
+                        if job.processing_started else job.created_at)|format_datetime_table }}
+                    </td>
+                    <td class="table-field count-of-recipients">{{ job.notification_count }}</td>
+                  </tr>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              <tr class="table-row">
+                <td class="table-empty-message" colspan="10">No batched job messages found &thinsp;(messages are kept for {{ service_data_retention_days }} days).</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+      <div id="table2" class="table-overflow-x-auto visible">
+        <h2 class="margin-top-4 margin-bottom-1">Service activity</h2>
+        <table class="usa-table job-table">
+          <thead class="table-field-headings">
+            <tr>
+              <th scope="col" role="columnheader" class="table-field-heading-first" id="jobId"><span>Job ID#</span></th>
+              <th data-sortable scope="col" role="columnheader" class="table-field-heading"><span>Template</span></th>
+              <th data-sortable scope="col" role="columnheader" class="table-field-heading"><span>Job status</span></th>
+              <th data-sortable scope="col" role="columnheader" class="table-field-heading"><span>Sender</span></th>
+              <th data-sortable scope="col" role="columnheader" class="table-field-heading"><span># of Recipients</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if jobs %}
+              {% for job in jobs[:5] %}
                 {% set notification = job.notifications[0] %}
                 <tr id="{{ job.job_id }}">
-                  <td class="table-field file-name">
-                    {{ job.original_file_name[:12] if job.original_file_name else 'Manually entered number'}}
-                    <br>
-                    <a class="usa-link file-list-filename" href="{{ job.view_job_link }}">View Batch</a>
+                  <td class="table-field jobid" scope="row" role="rowheader">
+                    <a class="usa-link" href="{{ job.view_job_link }}">
+                      {{ job.job_id[:8] if job.job_id else 'Manually entered number' }}
+                    </a>
                   </td>
-                  <td class="table-field template">
-                    {{ job.template_name }}
-                  </td>
-                  <td class="table-field time-sent">
+                  <td class="table-field template">{{ job.template_name }}</td>
+                  <td class="table-field time-sent">Sent on
                     {{ (job.processing_finished if job.processing_finished else job.processing_started
                       if job.processing_started else job.created_at)|format_datetime_table }}
                   </td>
-                  <td class="table-field sender">
-                    {{ job.created_by.name }}
-                  </td>
-                  <td class="table-field count-of-recipients">
-                    {{ job.notification_count}}
-                  </td>
-                  <td class="table-field report">
-                    {% if job.time_left != "Data no longer available" %}
-                      <a class="usa-link file-list-filename" href="{{ job.download_link }}">Download</a>
-                      <span class="usa-hint">{{ job.time_left }}</span>
-                    {% elif job %}
-                      <span>{{ job.time_left }}</span>
-                    {% endif %}
-                  </td>
+                  <td class="table-field sender">{{ job.created_by.name }}</td>
+                  <td class="table-field count-of-recipients">{{ job.notification_count }}</td>
                 </tr>
-            {% endfor %}
-          {% else %}
-            <tr class="table-row">
-              <td class="table-empty-message" colspan="10">No batched job messages found &thinsp;(messages are kept for {{ service_data_retention_days }} days).</td>
-            </tr>
-        {% endif %}
-        </tbody>
-      </table>
+              {% endfor %}
+            {% else %}
+              <tr class="table-row">
+                <td class="table-empty-message" colspan="10">No batched job messages found &thinsp;(messages are kept for {{ service_data_retention_days }} days).</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
     </div>
-
-    <h2>Recent templates</h2>
     {{ ajax_block(partials, updates_url, 'template-statistics') }}
   </div>
 

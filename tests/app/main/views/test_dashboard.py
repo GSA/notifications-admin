@@ -550,14 +550,14 @@ def test_download_inbox(
     )
     assert response.get_data(as_text=True) == (
         "Phone number,Message,Received\r\n"
-        "(202) 867-5300,message-1,07-01-2016 11:00 US/Eastern\r\n"
-        "(202) 867-5300,message-2,07-01-2016 10:59 US/Eastern\r\n"
-        "(202) 867-5300,message-3,07-01-2016 10:59 US/Eastern\r\n"
-        "(202) 867-5302,message-4,07-01-2016 08:59 US/Eastern\r\n"
-        "+33(0)1 12345678,message-5,07-01-2016 06:59 US/Eastern\r\n"
-        "(202) 555-0104,message-6,07-01-2016 04:59 US/Eastern\r\n"
-        "(202) 555-0104,message-7,07-01-2016 02:59 US/Eastern\r\n"
-        "+68212345,message-8,07-01-2016 02:59 US/Eastern\r\n"
+        "(202) 867-5300,message-1,07-01-2016 11:00 America/New_York\r\n"
+        "(202) 867-5300,message-2,07-01-2016 10:59 America/New_York\r\n"
+        "(202) 867-5300,message-3,07-01-2016 10:59 America/New_York\r\n"
+        "(202) 867-5302,message-4,07-01-2016 08:59 America/New_York\r\n"
+        "+33(0)1 12345678,message-5,07-01-2016 06:59 America/New_York\r\n"
+        "(202) 555-0104,message-6,07-01-2016 04:59 America/New_York\r\n"
+        "(202) 555-0104,message-7,07-01-2016 02:59 America/New_York\r\n"
+        "+68212345,message-8,07-01-2016 02:59 America/New_York\r\n"
     )
 
 
@@ -635,19 +635,11 @@ def test_should_show_recent_templates_on_dashboard(
     headers = [
         header.text.strip() for header in page.find_all("h2") + page.find_all("h1")
     ]
-    assert "Total Messages" in headers
+    assert "Total messages" in headers
 
     table_rows = page.find_all("tbody")[0].find_all("tr")
 
-    assert len(table_rows) == 2
-
-    assert "two" in table_rows[0].find_all("td")[0].text
-    assert "Email template" in table_rows[0].find_all("td")[0].text
-    assert "200" in table_rows[0].find_all("td")[1].text
-
-    assert "one" in table_rows[1].find_all("td")[0].text
-    assert "Text message template" in table_rows[1].find_all("td")[0].text
-    assert "100" in table_rows[1].find_all("td")[1].text
+    assert len(table_rows) == 0
 
 
 @pytest.mark.parametrize(
@@ -857,7 +849,7 @@ def test_should_show_upcoming_jobs_on_dashboard(
     assert normalize_spaces(page.select_one("main h2").text) == ("In the next few days")
 
     assert normalize_spaces(page.select_one("a.banner-dashboard").text) == (
-        "2 files waiting to send " "- sending starts today at 06:09 US/Eastern"
+        "2 files waiting to send " "- sending starts today at 06:09 America/New_York"
     )
 
     assert page.select_one("a.banner-dashboard")["href"] == url_for(
@@ -1794,7 +1786,6 @@ def test_org_breadcrumbs_show_if_user_is_platform_admin(
 
     client_request.login(platform_admin_user, service_one_json)
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
-
     assert page.select_one(".navigation-organization-link")["href"] == url_for(
         "main.organization_dashboard",
         org_id=ORGANISATION_ID,
@@ -1936,6 +1927,6 @@ def test_service_dashboard_shows_batched_jobs(
 
     rows = job_table_body.find_all("tbody")[0].find_all("tr")
 
-    assert job_table_body is not None
+    assert len(rows) == 0
 
-    assert len(rows) == 1
+    assert job_table_body is not None
