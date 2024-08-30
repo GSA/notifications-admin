@@ -325,35 +325,19 @@ def aggregate_template_usage(template_statistics, sort_key="count"):
         key=lambda x: x["template_id"],
     ):
         template_stats = list(v)
-
+        first_stat = template_stats[0] if template_stats else None
         templates.append(
             {
                 "template_id": k,
-                "template_name": (
-                    template_stats[0].get("template_name") if template_stats else None
-                ),
-                "template_type": (
-                    template_stats[0].get("template_type") if template_stats else None
-                ),
+                "template_name": first_stat.get("template_name"),
+                "template_type": first_stat.get("template_type"),
                 "count": sum(s["count"] for s in template_stats),
-                "created_by": (
-                    template_stats[0].get("created_by") if template_stats else None
-                ),
-                "created_by_id": (
-                    template_stats[0].get("created_by_id") if template_stats else None
-                ),
-                "last_used": (
-                    template_stats[0].get("last_used") if template_stats else None
-                ),
-                "status": template_stats[0].get("status") if template_stats else None,
-                "template_folder": (
-                    template_stats[0].get("template_folder") if template_stats else None
-                ),
-                "template_folder_id": (
-                    template_stats[0].get("template_folder_id")
-                    if template_stats
-                    else None
-                ),
+                "created_by": first_stat.get("created_by"),
+                "created_by_id": first_stat.get("created_by_id"),
+                "last_used": first_stat.get("last_used"),
+                "status": first_stat.get("status"),
+                "template_folder": first_stat.get("template_folder"),
+                "template_folder_id": first_stat.get("template_folder_id"),
             }
         )
 
