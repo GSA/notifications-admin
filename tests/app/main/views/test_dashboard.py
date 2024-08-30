@@ -133,6 +133,11 @@ stub_template_stats = [
         "template_id": "id-1",
         "status": "created",
         "count": 50,
+        "last_used": "2024-01-25T23:02:25+00:00",
+        "created_by": "Test user",
+        "created_by_id": "987654",
+        "template_folder": "Some_folder",
+        "template_folder_id": "123456",
     },
     {
         "template_type": "email",
@@ -140,6 +145,11 @@ stub_template_stats = [
         "template_id": "id-2",
         "status": "created",
         "count": 100,
+        "last_used": "2024-01-25T23:02:25+00:00",
+        "created_by": "Test user",
+        "created_by_id": "987654",
+        "template_folder": "Some_folder",
+        "template_folder_id": "123456",
     },
     {
         "template_type": "email",
@@ -147,6 +157,11 @@ stub_template_stats = [
         "template_id": "id-2",
         "status": "technical-failure",
         "count": 100,
+        "last_used": "2024-01-25T23:02:25+00:00",
+        "created_by": "Test user",
+        "created_by_id": "987654",
+        "template_folder": "Some_folder",
+        "template_folder_id": "123456",
     },
     {
         "template_type": "sms",
@@ -154,6 +169,11 @@ stub_template_stats = [
         "template_id": "id-1",
         "status": "delivered",
         "count": 50,
+        "last_used": "2024-01-25T23:02:25+00:00",
+        "created_by": "Test user",
+        "created_by_id": "987654",
+        "template_folder": "Some_folder",
+        "template_folder_id": "123456",
     },
 ]
 

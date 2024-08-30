@@ -329,15 +329,31 @@ def aggregate_template_usage(template_statistics, sort_key="count"):
         templates.append(
             {
                 "template_id": k,
-                "template_name": template_stats[0]["template_name"],
-                "template_type": template_stats[0]["template_type"],
+                "template_name": (
+                    template_stats[0].get("template_name") if template_stats else None
+                ),
+                "template_type": (
+                    template_stats[0].get("template_type") if template_stats else None
+                ),
                 "count": sum(s["count"] for s in template_stats),
-                "last_used": max(s["last_used"] for s in template_stats if s["last_used"]),
-                "created_by": template_stats[0]["created_by"],
-                "created_by_id": template_stats[0]["created_by_id"],
-                "status": template_stats[0]["status"],
-                "template_folder": template_stats[0]["template_folder"],
-                "template_folder_id": template_stats[0]["template_folder_id"],
+                "created_by": (
+                    template_stats[0].get("created_by") if template_stats else None
+                ),
+                "created_by_id": (
+                    template_stats[0].get("created_by_id") if template_stats else None
+                ),
+                "last_used": (
+                    template_stats[0].get("last_used") if template_stats else None
+                ),
+                "status": template_stats[0].get("status") if template_stats else None,
+                "template_folder": (
+                    template_stats[0].get("template_folder") if template_stats else None
+                ),
+                "template_folder_id": (
+                    template_stats[0].get("template_folder_id")
+                    if template_stats
+                    else None
+                ),
             }
         )
 
