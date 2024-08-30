@@ -5,7 +5,7 @@ from collections import OrderedDict
 from datetime import datetime
 from io import StringIO
 
-from flask import Response, abort, flash, render_template, request, url_for
+from flask import Response, abort, flash, render_template, request, session, url_for
 from notifications_python_client.errors import HTTPError
 
 from app import (
@@ -25,17 +25,19 @@ from app.main.forms import (
     DateFilterForm,
     RequiredDateFilterForm,
 )
+from app.main.views.send import _send_notification, send_notification
 from app.statistics_utils import (
     get_formatted_percentage,
     get_formatted_percentage_two_dp,
 )
+from app.utils import hilite
 from app.utils.csv import Spreadsheet
 from app.utils.pagination import (
     generate_next_dict,
     generate_previous_dict,
     get_page_from_request,
 )
-from app.utils.user import user_is_platform_admin
+from app.utils.user import user_has_permissions, user_is_platform_admin
 
 COMPLAINT_THRESHOLD = 0.02
 FAILURE_THRESHOLD = 3
@@ -771,3 +773,40 @@ def _get_user_row(r):
     row.append(r["password_changed_at"])
     row.append(r["state"])
     return row
+
+
+@main.route(
+    "/platform-admin/load-test",
+    methods=["POST", "GET"],
+)
+@user_is_platform_admin
+def load_test():
+    # SIMULATED_SMS_NUMBERS = ("+14254147755", "+14254147167")
+    print(hilite("ENTER LOAD TEST"))
+    session["recipient"] = "+14254147755"
+    session["placeholders"] = {"day of week": "Monday", "color": "blue"}
+    services = service_api_client.find_services_by_name("Test service")
+    services = services["data"]
+
+    for service in services:
+        # print(hilite(f"WHAT IS THE TYPE OF ONE SERVICE {type(service)} {service}"))
+        # print("\n")
+        # service = json.loads(service)
+        # print(hilite(f"SERVICE: {service}"))
+        # service = service['data']
+        if service["name"] is "Test service":
+            break
+    # print(hilite(f"SERVICE IS {service}"))
+    templates = service_api_client.get_service_templates(service["id"])
+    templates = templates["data"]
+    # templates = json.loads(templates)
+    # print(hilite(f"TEMPLATES are {templates}"))
+    example_template = None
+    for template in templates:
+        # template = json.loads(template)
+        print(hilite(f"TEMPLATE {template['name']}"))
+        if template["name"] == "Example text message template":
+            print(hilite(f"FOUND EXAMPLE TEMPLATE"))
+            example_template = template
+    print(f"GOING TO SEND NOTIFICATION NOW")
+    _send_notification(service["id"], example_template["id"])
