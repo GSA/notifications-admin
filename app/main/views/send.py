@@ -995,9 +995,9 @@ def send_notification(service_id, template_id):
 
 def _send_notification(service_id, template_id):
     scheduled_for = session.pop("scheduled_for", "")
-    print("GOING TO GET RECIPIENT") # noqa
+    print("GOING TO GET RECIPIENT")  # noqa
     recipient = get_recipient()
-    print(f"RECIPIENT IS {recipient}, redirecting if None") # noqa
+    print(f"RECIPIENT IS {recipient}, redirecting if None")  # noqa
 
     if not recipient:
         return redirect(

@@ -2815,14 +2815,10 @@ def test_send_notification_clears_session(
     ],
 )
 def test_send_notification_redirects_if_missing_data(
-    client_request,
-    fake_uuid,
-    session_data,
-    mocker
+    client_request, fake_uuid, session_data, mocker
 ):
     with client_request.session_transaction() as session:
         session.update(session_data)
-
 
     mocker.patch("app.main.views.send.s3upload", return_value=sample_uuid())
     client_request.post(
