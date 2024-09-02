@@ -944,8 +944,10 @@ def preview_notification(service_id, template_id):
 def send_notification(service_id, template_id):
     upload_id = _send_notification(service_id, template_id)
 
-    session.pop("recipient")
-    session.pop("placeholders")
+    if session.get("recipient"):
+        session.pop("recipient")
+    if session.get("placeholders"):
+        session.pop("placeholders")
 
     # We have to wait for the job to run and create the notification in the database
     time.sleep(0.1)
