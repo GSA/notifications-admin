@@ -219,7 +219,7 @@ class User(JSONModel, UserMixin):
     def has_permissions(
         self, *permissions, restrict_admin_usage=False, allow_org_user=False
     ):
-        if self.platform_admin:
+        if self.platform_admin and restrict_admin_usage is False:
             return True
 
         unknown_permissions = set(permissions) - all_ui_permissions
