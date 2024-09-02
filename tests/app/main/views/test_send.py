@@ -2820,7 +2820,6 @@ def test_send_notification_redirects_if_missing_data(
     with client_request.session_transaction() as session:
         session.update(session_data)
 
-    mocker.patch("app.main.views.send.s3upload", return_value=sample_uuid())
     client_request.post(
         "main.send_notification",
         service_id=SERVICE_ONE_ID,

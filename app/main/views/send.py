@@ -942,6 +942,18 @@ def preview_notification(service_id, template_id):
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def send_notification(service_id, template_id):
+    print("GOING TO GET RECIPIENT")  # noqa
+    recipient = get_recipient()
+    print(f"RECIPIENT IS {recipient}, redirecting if None")  # noqa
+
+    if not recipient:
+        return redirect(
+            url_for(
+                ".send_one_off",
+                service_id=service_id,
+                template_id=template_id,
+            )
+        )
     upload_id = _send_notification(service_id, template_id)
 
     session.pop("recipient", "")
@@ -995,18 +1007,7 @@ def send_notification(service_id, template_id):
 
 def _send_notification(service_id, template_id):
     scheduled_for = session.pop("scheduled_for", "")
-    print("GOING TO GET RECIPIENT")  # noqa
-    recipient = get_recipient()
-    print(f"RECIPIENT IS {recipient}, redirecting if None")  # noqa
 
-    if not recipient:
-        return redirect(
-            url_for(
-                ".send_one_off",
-                service_id=service_id,
-                template_id=template_id,
-            )
-        )
 
     keys = []
     values = []
