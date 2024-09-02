@@ -996,10 +996,8 @@ def send_notification(service_id, template_id):
 
 
 def _send_notification(service_id, template_id):
-    print(hilite(f"ENTER SEND NOTIFICATION"))
     scheduled_for = session.pop("scheduled_for", "")
     recipient = get_recipient()
-    print(hilite(f"RECIPIENT {recipient}"))
 
     if not recipient:
         return redirect(
@@ -1019,14 +1017,11 @@ def _send_notification(service_id, template_id):
     data = ",".join(keys)
     vals = ",".join(values)
     data = f"{data}\r\n{vals}"
-    print(hilite(f"DATA {data}"))
-
     filename = (
         f"one-off-{uuid.uuid4()}.csv"  # {current_user.name} removed from filename
     )
     my_data = {"filename": filename, "template_id": template_id, "data": data}
     upload_id = s3upload(service_id, my_data)
-    print(hilite(f"UPLOAD ID {upload_id}"))
     # To debug messages that the user reports have not been sent, we log
     # the csv filename and the job id.  The user will give us the file name,
     # so we can search on that to obtain the job id, which we can use elsewhere
@@ -1040,15 +1035,12 @@ def _send_notification(service_id, template_id):
     form = CsvUploadForm()
     form.file.data = my_data
     form.file.name = filename
-    print(f"POPULATED FORM")
-    print(f"USER PERMISSIONS {current_user.permissions[service_id]}")
     # TODO IF RUNNING LOAD TEST WE DONT NEED
-    # check_message_output = check_messages(service_id, template_id, upload_id, 2)
-    # print(hilite(hilite(f"CHECK MESSAGE OUTPUT {check_message_output}")))
-    # if "You cannot send to" in check_message_output:
-    #    return check_messages(service_id, template_id, upload_id, 2)
+    check_message_output = check_messages(service_id, template_id, upload_id, 2)
+    print(hilite(hilite(f"CHECK MESSAGE OUTPUT {check_message_output}")))
+    if "You cannot send to" in check_message_output:
+        return check_messages(service_id, template_id, upload_id, 2)
 
-    print(f"GOING TO CREATE JOB")
     job_api_client.create_job(
         upload_id,
         service_id,

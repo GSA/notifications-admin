@@ -34,7 +34,7 @@ from app.main.forms import (
     DateFilterForm,
     RequiredDateFilterForm,
 )
-from app.main.views.send import _send_notification, send_notification
+from app.main.views.send import _send_notification
 from app.statistics_utils import (
     get_formatted_percentage,
     get_formatted_percentage_two_dp,
@@ -46,7 +46,7 @@ from app.utils.pagination import (
     generate_previous_dict,
     get_page_from_request,
 )
-from app.utils.user import user_has_permissions, user_is_platform_admin
+from app.utils.user import user_is_platform_admin
 
 COMPLAINT_THRESHOLD = 0.02
 FAILURE_THRESHOLD = 3
@@ -851,8 +851,8 @@ def _prepare_load_test_service(service):
                 user_api_client.add_user_to_service(
                     service["id"], user["id"], ["send messages"]
                 )
-            except Exception as e:
-                current_app.logger.warning(
+            except Exception:
+                current_app.logger.exception(
                     f"Couldnt add user, may already be part of service"
                 )
                 pass
