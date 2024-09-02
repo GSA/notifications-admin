@@ -7,7 +7,6 @@ from flask import (
     abort,
     current_app,
     flash,
-    json,
     redirect,
     render_template,
     request,
@@ -621,7 +620,6 @@ def _check_messages(service_id, template_id, upload_id, preview_row, **kwargs):
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def check_messages(service_id, template_id, upload_id, row_index=2):
-    print(hilite("ENTER check_messages"))
     data = _check_messages(service_id, template_id, upload_id, row_index)
     data["allowed_file_extensions"] = Spreadsheet.ALLOWED_FILE_EXTENSIONS
 
@@ -1037,7 +1035,6 @@ def _send_notification(service_id, template_id):
     form.file.name = filename
     # TODO IF RUNNING LOAD TEST WE DONT NEED
     check_message_output = check_messages(service_id, template_id, upload_id, 2)
-    print(hilite(hilite(f"CHECK MESSAGE OUTPUT {check_message_output}")))
     if "You cannot send to" in check_message_output:
         return check_messages(service_id, template_id, upload_id, 2)
 

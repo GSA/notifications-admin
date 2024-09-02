@@ -796,7 +796,6 @@ def load_test():
     messagese will be sent in this service.
     """
     # SIMULATED_SMS_NUMBERS = ("+14254147755", "+14254147167")
-    print(hilite("ENTER LOAD TEST"))
     service = _find_load_test_service()
     _prepare_load_test_service(service)
     example_template = _find_example_template(service)
@@ -853,6 +852,6 @@ def _prepare_load_test_service(service):
                 )
             except Exception:
                 current_app.logger.exception(
-                    f"Couldnt add user, may already be part of service"
+                    "Couldnt add user, may already be part of service"
                 )
                 pass
