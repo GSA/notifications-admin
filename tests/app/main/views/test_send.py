@@ -2818,10 +2818,12 @@ def test_send_notification_redirects_if_missing_data(
     client_request,
     fake_uuid,
     session_data,
+    mocker
 ):
     with client_request.session_transaction() as session:
         session.update(session_data)
 
+    mocker.patch("app.main.views.send._send_notification", return_value="aaa")
     client_request.post(
         "main.send_notification",
         service_id=SERVICE_ONE_ID,
