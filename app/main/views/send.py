@@ -1008,7 +1008,6 @@ def send_notification(service_id, template_id):
 def _send_notification(service_id, template_id):
     scheduled_for = session.pop("scheduled_for", "")
 
-
     keys = []
     values = []
     for k, v in session["placeholders"].items():
