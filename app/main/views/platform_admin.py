@@ -39,7 +39,6 @@ from app.statistics_utils import (
     get_formatted_percentage,
     get_formatted_percentage_two_dp,
 )
-from app.utils import hilite
 from app.utils.csv import Spreadsheet
 from app.utils.pagination import (
     generate_next_dict,
