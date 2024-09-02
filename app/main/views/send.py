@@ -944,10 +944,8 @@ def preview_notification(service_id, template_id):
 def send_notification(service_id, template_id):
     upload_id = _send_notification(service_id, template_id)
 
-    if session.get("recipient"):
-        session.pop("recipient")
-    if session.get("placeholders"):
-        session.pop("placeholders")
+    session.pop("recipient", "")
+    session.pop("placeholders", "")
 
     # We have to wait for the job to run and create the notification in the database
     time.sleep(0.1)
@@ -997,7 +995,9 @@ def send_notification(service_id, template_id):
 
 def _send_notification(service_id, template_id):
     scheduled_for = session.pop("scheduled_for", "")
+    print("GOING TO GET RECIPIENT") # noqa
     recipient = get_recipient()
+    print(f"RECIPIENT IS {recipient}, redirecting if None") # noqa
 
     if not recipient:
         return redirect(
@@ -1035,7 +1035,6 @@ def _send_notification(service_id, template_id):
     form = CsvUploadForm()
     form.file.data = my_data
     form.file.name = filename
-    # TODO IF RUNNING LOAD TEST WE DONT NEED
     check_message_output = check_messages(service_id, template_id, upload_id, 2)
     if "You cannot send to" in check_message_output:
         return check_messages(service_id, template_id, upload_id, 2)
