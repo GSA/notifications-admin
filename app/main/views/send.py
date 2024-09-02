@@ -621,6 +621,7 @@ def _check_messages(service_id, template_id, upload_id, preview_row, **kwargs):
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def check_messages(service_id, template_id, upload_id, row_index=2):
+    print(hilite("ENTER check_messages"))
     data = _check_messages(service_id, template_id, upload_id, row_index)
     data["allowed_file_extensions"] = Spreadsheet.ALLOWED_FILE_EXTENSIONS
 
@@ -943,64 +944,7 @@ def preview_notification(service_id, template_id):
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def send_notification(service_id, template_id):
-    return _send_notification(service_id, template_id)
-
-
-def _send_notification(service_id, template_id):
-    scheduled_for = session.pop("scheduled_for", "")
-    recipient = get_recipient()
-    if not recipient:
-        return redirect(
-            url_for(
-                ".send_one_off",
-                service_id=service_id,
-                template_id=template_id,
-            )
-        )
-
-    keys = []
-    values = []
-    for k, v in session["placeholders"].items():
-        keys.append(k)
-        values.append(v)
-
-    data = ",".join(keys)
-    vals = ",".join(values)
-    data = f"{data}\r\n{vals}"
-
-    filename = (
-        f"one-off-{uuid.uuid4()}.csv"  # {current_user.name} removed from filename
-    )
-    my_data = {"filename": filename, "template_id": template_id, "data": data}
-    upload_id = s3upload(service_id, my_data)
-
-    # To debug messages that the user reports have not been sent, we log
-    # the csv filename and the job id.  The user will give us the file name,
-    # so we can search on that to obtain the job id, which we can use elsewhere
-    # on the API side to find out what happens to the message.
-    current_app.logger.info(
-        hilite(
-            f"One-off file: {filename} job_id: {upload_id} s3 location: service-{service_id}-notify/{upload_id}.csv"
-        )
-    )
-
-    form = CsvUploadForm()
-    form.file.data = my_data
-    form.file.name = filename
-
-    check_message_output = check_messages(service_id, template_id, upload_id, 2)
-    if "You cannot send to" in check_message_output:
-        return check_messages(service_id, template_id, upload_id, 2)
-
-    job_api_client.create_job(
-        upload_id,
-        service_id,
-        scheduled_for=scheduled_for,
-        template_id=template_id,
-        original_file_name=filename,
-        notification_count=1,
-        valid="True",
-    )
+    upload_id = _send_notification(service_id, template_id)
 
     session.pop("recipient")
     session.pop("placeholders")
@@ -1049,6 +993,72 @@ def _send_notification(service_id, template_id):
             help=request.args.get("help"),
         )
     )
+
+
+def _send_notification(service_id, template_id):
+    print(hilite(f"ENTER SEND NOTIFICATION"))
+    scheduled_for = session.pop("scheduled_for", "")
+    recipient = get_recipient()
+    print(hilite(f"RECIPIENT {recipient}"))
+
+    if not recipient:
+        return redirect(
+            url_for(
+                ".send_one_off",
+                service_id=service_id,
+                template_id=template_id,
+            )
+        )
+
+    keys = []
+    values = []
+    for k, v in session["placeholders"].items():
+        keys.append(k)
+        values.append(v)
+
+    data = ",".join(keys)
+    vals = ",".join(values)
+    data = f"{data}\r\n{vals}"
+    print(hilite(f"DATA {data}"))
+
+    filename = (
+        f"one-off-{uuid.uuid4()}.csv"  # {current_user.name} removed from filename
+    )
+    my_data = {"filename": filename, "template_id": template_id, "data": data}
+    upload_id = s3upload(service_id, my_data)
+    print(hilite(f"UPLOAD ID {upload_id}"))
+    # To debug messages that the user reports have not been sent, we log
+    # the csv filename and the job id.  The user will give us the file name,
+    # so we can search on that to obtain the job id, which we can use elsewhere
+    # on the API side to find out what happens to the message.
+    current_app.logger.info(
+        hilite(
+            f"One-off file: {filename} job_id: {upload_id} s3 location: service-{service_id}-notify/{upload_id}.csv"
+        )
+    )
+
+    form = CsvUploadForm()
+    form.file.data = my_data
+    form.file.name = filename
+    print(f"POPULATED FORM")
+    print(f"USER PERMISSIONS {current_user.permissions[service_id]}")
+    # TODO IF RUNNING LOAD TEST WE DONT NEED
+    # check_message_output = check_messages(service_id, template_id, upload_id, 2)
+    # print(hilite(hilite(f"CHECK MESSAGE OUTPUT {check_message_output}")))
+    # if "You cannot send to" in check_message_output:
+    #    return check_messages(service_id, template_id, upload_id, 2)
+
+    print(f"GOING TO CREATE JOB")
+    job_api_client.create_job(
+        upload_id,
+        service_id,
+        scheduled_for=scheduled_for,
+        template_id=template_id,
+        original_file_name=filename,
+        notification_count=1,
+        valid="True",
+    )
+    return upload_id
 
 
 def get_email_reply_to_address_from_session():

@@ -219,6 +219,9 @@ class User(JSONModel, UserMixin):
     def has_permissions(
         self, *permissions, restrict_admin_usage=False, allow_org_user=False
     ):
+        if self.platform_admin:
+            return True
+
         unknown_permissions = set(permissions) - all_ui_permissions
         if unknown_permissions:
             raise TypeError(

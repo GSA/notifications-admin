@@ -5,7 +5,16 @@ from collections import OrderedDict
 from datetime import datetime
 from io import StringIO
 
-from flask import Response, abort, flash, render_template, request, session, url_for
+from flask import (
+    Response,
+    abort,
+    current_app,
+    flash,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from notifications_python_client.errors import HTTPError
 
 from app import (
@@ -781,32 +790,69 @@ def _get_user_row(r):
 )
 @user_is_platform_admin
 def load_test():
+    """
+    The load test assumes that a service called 'Test service' exists.  It will make
+    the platform admin a member of this service if the platform is not already. All
+    messagese will be sent in this service.
+    """
     # SIMULATED_SMS_NUMBERS = ("+14254147755", "+14254147167")
     print(hilite("ENTER LOAD TEST"))
-    session["recipient"] = "+14254147755"
-    session["placeholders"] = {"day of week": "Monday", "color": "blue"}
+    service = _find_load_test_service()
+    _prepare_load_test_service(service)
+    example_template = _find_example_template(service)
+
+    for _ in range(0, 3):
+        session["recipient"] = "+14254147755"
+        session["placeholders"] = {
+            "day of week": "Monday",
+            "color": "blue",
+            "phone number": "+14254147755",
+        }
+        _send_notification(service["id"], example_template["id"])
+    for _ in range(0, 3):
+        session["recipient"] = "+14254147167"
+        session["placeholders"] = {
+            "day of week": "Monday",
+            "color": "blue",
+            "phone number": "+14254147167",
+        }
+        _send_notification(service["id"], example_template["id"])
+
+    return render_template("views/dashboard/dashboard.html")
+
+
+def _find_example_template(service):
+    templates = service_api_client.get_service_templates(service["id"])
+    templates = templates["data"]
+    for template in templates:
+        # template = json.loads(template)
+        if template["name"] == "Example text message template":
+            return template
+
+    raise Exception("Could not find example template for load test")
+
+
+def _find_load_test_service():
     services = service_api_client.find_services_by_name("Test service")
     services = services["data"]
 
     for service in services:
-        # print(hilite(f"WHAT IS THE TYPE OF ONE SERVICE {type(service)} {service}"))
-        # print("\n")
-        # service = json.loads(service)
-        # print(hilite(f"SERVICE: {service}"))
-        # service = service['data']
-        if service["name"] is "Test service":
-            break
-    # print(hilite(f"SERVICE IS {service}"))
-    templates = service_api_client.get_service_templates(service["id"])
-    templates = templates["data"]
-    # templates = json.loads(templates)
-    # print(hilite(f"TEMPLATES are {templates}"))
-    example_template = None
-    for template in templates:
-        # template = json.loads(template)
-        print(hilite(f"TEMPLATE {template['name']}"))
-        if template["name"] == "Example text message template":
-            print(hilite(f"FOUND EXAMPLE TEMPLATE"))
-            example_template = template
-    print(f"GOING TO SEND NOTIFICATION NOW")
-    _send_notification(service["id"], example_template["id"])
+        if service["name"] == "Test service":
+            return service
+
+    raise Exception("Could not find 'Test service' for load test")
+
+
+def _prepare_load_test_service(service):
+    users = user_api_client.get_all_users()
+    for user in users:
+        if user["platform_admin"] == "t":
+            try:
+                user_api_client.add_user_to_service(
+                    service["id"], user["id"], ["send messages"]
+                )
+            except Exception as e:
+                current_app.logger.warning(
+                    f"Couldnt add user, may already be part of service"
+                )
+                pass
