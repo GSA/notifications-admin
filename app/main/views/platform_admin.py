@@ -10,7 +10,6 @@ from flask import (
     abort,
     current_app,
     flash,
-    redirect,
     render_template,
     request,
     session,
@@ -818,8 +817,10 @@ def load_test():
         }
         _send_notification(service["id"], example_template["id"])
 
-    # For now, just hang out on the platform admin page
-    return redirect(request.referrer)
+    # For now, just redirect to the splash page so we know it's done
+    return render_template(
+        "views/platform-admin/splash-page.html",
+    )
 
 
 def _find_example_template(service):

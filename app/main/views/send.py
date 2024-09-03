@@ -943,9 +943,7 @@ def preview_notification(service_id, template_id):
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def send_notification(service_id, template_id):
-    print("GOING TO GET RECIPIENT")  # noqa
     recipient = get_recipient()
-    print(f"RECIPIENT IS {recipient}, redirecting if None")  # noqa
 
     if not recipient:
         return redirect(
