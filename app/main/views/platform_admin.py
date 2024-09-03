@@ -35,7 +35,6 @@ from app.main.forms import (
     DateFilterForm,
     RequiredDateFilterForm,
 )
-from app.main.views.dashboard import get_dashboard_partials
 from app.main.views.send import _send_notification
 from app.statistics_utils import (
     get_formatted_percentage,
