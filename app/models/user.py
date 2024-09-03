@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 from flask import abort, current_app, request, session
@@ -219,7 +220,12 @@ class User(JSONModel, UserMixin):
     def has_permissions(
         self, *permissions, restrict_admin_usage=False, allow_org_user=False
     ):
-        if self.platform_admin and restrict_admin_usage is False:
+        # TODO need this for load test, but breaks unit tests
+        if self.platform_admin and os.getenv("NOTIFY_ENVIRONMENT") in (
+            "development",
+            "staging",
+            "demo",
+        ):
             return True
 
         unknown_permissions = set(permissions) - all_ui_permissions

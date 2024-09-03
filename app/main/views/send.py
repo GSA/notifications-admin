@@ -1,3 +1,4 @@
+import os
 import time
 import uuid
 from string import ascii_uppercase
@@ -1032,12 +1033,16 @@ def _send_notification(service_id, template_id):
         )
     )
 
-    form = CsvUploadForm()
-    form.file.data = my_data
-    form.file.name = filename
-    check_message_output = check_messages(service_id, template_id, upload_id, 2)
-    if "You cannot send to" in check_message_output:
-        return check_messages(service_id, template_id, upload_id, 2)
+    # For load testing we want to skip these checks.  They are doing some fine-grained
+    # comparison about what is in the preview, but the load test just blast messages
+    # and doesn't care about the preview.
+    if os.getenv("NOTIFY_ENVIRONMENT") not in ("development", "staging", "demo"):
+        form = CsvUploadForm()
+        form.file.data = my_data
+        form.file.name = filename
+        check_message_output = check_messages(service_id, template_id, upload_id, 2)
+        if "You cannot send to" in check_message_output:
+            return check_messages(service_id, template_id, upload_id, 2)
 
     job_api_client.create_job(
         upload_id,

@@ -10,6 +10,7 @@ from flask import (
     abort,
     current_app,
     flash,
+    redirect,
     render_template,
     request,
     session,
@@ -34,6 +35,7 @@ from app.main.forms import (
     DateFilterForm,
     RequiredDateFilterForm,
 )
+from app.main.views.dashboard import get_dashboard_partials
 from app.main.views.send import _send_notification
 from app.statistics_utils import (
     get_formatted_percentage,
@@ -794,29 +796,31 @@ def load_test():
     the platform admin a member of this service if the platform is not already. All
     messagese will be sent in this service.
     """
-    # SIMULATED_SMS_NUMBERS = ("+14254147755", "+14254147167")
     service = _find_load_test_service()
     _prepare_load_test_service(service)
     example_template = _find_example_template(service)
 
-    for _ in range(0, 3):
-        session["recipient"] = "+14254147755"
+    # Simulated success
+    for _ in range(0, 250):
+        session["recipient"] = current_app.config["SIMULATED_SMS_NUMBERS"][0]
         session["placeholders"] = {
             "day of week": "Monday",
             "color": "blue",
-            "phone number": "+14254147755",
+            "phone number": current_app.config["SIMULATED_SMS_NUMBERS"][0],
         }
         _send_notification(service["id"], example_template["id"])
-    for _ in range(0, 3):
-        session["recipient"] = "+14254147167"
+    # Simulated failure
+    for _ in range(0, 250):
+        session["recipient"] = current_app.config["SIMULATED_SMS_NUMBERS"][1]
         session["placeholders"] = {
-            "day of week": "Monday",
-            "color": "blue",
-            "phone number": "+14254147167",
+            "day of week": "Wednesday",
+            "color": "orange",
+            "phone number": current_app.config["SIMULATED_SMS_NUMBERS"][1],
         }
         _send_notification(service["id"], example_template["id"])
 
-    return render_template("views/dashboard/dashboard.html")
+    # For now, just hang out on the platform admin page
+    return redirect(request.referrer)
 
 
 def _find_example_template(service):
