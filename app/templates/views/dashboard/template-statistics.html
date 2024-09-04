@@ -1,35 +1,45 @@
-{% from "components/table.html" import list_table, field, right_aligned_field_heading, row_heading, spark_bar_field %}
-
 <div class="ajax-block-container">
-  {% if template_statistics|length > 0 %}
-  <h2 class="margin-top-4 margin-bottom-1">Recent templates</h2>
-    <div class='template-statistics-table table-overflow-x-auto'>
-      {% call(item, row_number) list_table(
-        template_statistics,
-        caption="Messages sent by template",
-        caption_visible=False,
-        border_visible=True,
-        empty_message='',
-        field_headings=[
-          'Template',
-          'Messages sent'
-        ],
-        field_headings_visible=False
-      ) %}
-
-        {% call row_heading() %}
-          <a class="usa-link template-statistics-table-template-name" href="{{ url_for('.view_template', service_id=current_service.id, template_id=item.template_id) }}">{{ item.template_name }}</a>
-          <span class="template-statistics-table-hint">
-            {{ 1|message_count_label(item.template_type, suffix='template')|capitalize }}
-          </span>
-        {% endcall %}
-
-        {{ spark_bar_field(item.count, most_used_template_count, id=item.template_id) }}
-      {% endcall %}
-      <a
-        href="{{ url_for('.template_usage', service_id=current_service.id) }}"
-        class="usa-link show-more-no-border"
-      ><span>See templates used by month</span></a>
+  {% if template_statistics|length > 1 %}
+  <h2 class="margin-top-4 margin-bottom-1">Most Used Templates</h2>
+    <div class="template-statistics-table table-overflow-x-auto">
+      <table class="usa-table width-full">
+        <caption class="font-body-lg table-heading usa-sr-only">
+          Messages sent by template
+        </caption>
+        <thead class="table-field-headings">
+          <tr>
+            <th class="table-field-heading-first" width="">
+              <span>Template name</span>
+            </th>
+            <th class="table-field-heading" width="">
+              <span>Folder</span>
+            </th>
+            <th class="table-field-heading" width="">
+              <span>Last used</span>
+            </th>
+            <th class="table-field-heading" width="">
+              <span>Created by</span>
+            </th>
+            <th class="table-field-heading" width="">
+              <span># Times used</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in template_statistics[:8] %}
+            <tr class="table-row">
+              <td>
+                <a class="usa-link template-statistics-table-template-name" href="{{ url_for('.view_template', service_id=current_service.id, template_id=item.template_id) }}">{{ item.template_name }}</a>
+              </td>
+              <td><p>{{ item.template_folder }}</p></td>
+              <td><p>{{ item.last_used|format_datetime_table}}</p></td>
+              <td><p>{{ item.created_by }}</p></td>
+              <td><p>{{ item.count }}</p></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+        <a href="/services/78409625-0c0a-485e-b82c-b19c8f4b1bdb/template-usage" class="usa-link show-more-no-border"><span>See templates by month</span></a>
     </div>
   {% endif %}
 </div>

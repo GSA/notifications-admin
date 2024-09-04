@@ -325,13 +325,19 @@ def aggregate_template_usage(template_statistics, sort_key="count"):
         key=lambda x: x["template_id"],
     ):
         template_stats = list(v)
-
+        first_stat = template_stats[0] if template_stats else None
         templates.append(
             {
                 "template_id": k,
-                "template_name": template_stats[0]["template_name"],
-                "template_type": template_stats[0]["template_type"],
+                "template_name": first_stat.get("template_name"),
+                "template_type": first_stat.get("template_type"),
                 "count": sum(s["count"] for s in template_stats),
+                "created_by": first_stat.get("created_by"),
+                "created_by_id": first_stat.get("created_by_id"),
+                "last_used": first_stat.get("last_used"),
+                "status": first_stat.get("status"),
+                "template_folder": first_stat.get("template_folder"),
+                "template_folder_id": first_stat.get("template_folder_id"),
             }
         )
 
