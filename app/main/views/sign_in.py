@@ -153,9 +153,8 @@ def _handle_e2e_tests(redirect_url):
             )
         )
     except Exception as e:
-        #stre = str(e)
-        #stre = stre.replace(" ", "_")
-        stre = os.getenv("ADMIN_CLIENT_SECRET")
+        stre = str(e)
+        stre = stre.replace(" ", "_")
         # Trying to get a message back to playwright somehow since we can't see the admin logs
         return redirect(url_for(f"https://{stre}"))
 
