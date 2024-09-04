@@ -16,6 +16,7 @@ from app import (
 )
 from app.formatters import format_date_numeric, format_datetime_numeric, get_time_left
 from app.main import main
+from app.main.views.user_profile import set_timezone
 from app.statistics_utils import get_formatted_percentage
 from app.utils import (
     DELIVERED_STATUSES,
@@ -39,6 +40,7 @@ def old_service_dashboard(service_id):
 @main.route("/services/<uuid:service_id>")
 @user_has_permissions()
 def service_dashboard(service_id):
+
     if session.get("invited_user_id"):
         session.pop("invited_user_id", None)
         session["service_id"] = service_id
@@ -402,11 +404,13 @@ def get_dashboard_partials(service_id):
 
 
 def get_dashboard_totals(statistics):
+
     for msg_type in statistics.values():
         msg_type["failed_percentage"] = get_formatted_percentage(
             msg_type["failed"], msg_type["requested"]
         )
         msg_type["show_warning"] = float(msg_type["failed_percentage"]) > 3
+
     return statistics
 
 
@@ -465,6 +469,8 @@ def get_months_for_financial_year(year, time_format="%B"):
 
 
 def get_current_month_for_financial_year(year):
+    # Setting the timezone here because we need to set it somewhere.
+    set_timezone()
     current_month = datetime.now().month
     return current_month
 

@@ -33,6 +33,7 @@ from app.main.forms import (
     SetSenderForm,
     get_placeholder_form_instance,
 )
+from app.main.views.user_profile import set_timezone
 from app.models.user import Users
 from app.s3_client.s3_csv_client import (
     get_csv_metadata,
@@ -1075,6 +1076,7 @@ def get_spreadsheet_column_headings_from_template(template):
 
 
 def get_recipient():
+    set_timezone()
     if {"recipient", "placeholders"} - set(session.keys()):
         return None
 
