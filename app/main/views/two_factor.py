@@ -48,7 +48,20 @@ def two_factor_email(token):
                 current_app.config["EMAIL_EXPIRY_SECONDS"],
             )
         )
+        current_app.logger.debug(f"Got token_data {token_data}")
     except SignatureExpired:
+        expiry = current_app.config["EMAIL_EXPIRY_SECONDS"]
+        current_app.logger.exception(
+            f"#email-verification token {token} when expiry was {expiry}"
+        )
+        return render_template(
+            "views/email-link-invalid.html", redirect_url=redirect_url
+        )
+    except Exception:
+        expiry = current_app.config["EMAIL_EXPIRY_SECONDS"]
+        current_app.logger.exception(
+            f"#email-verification token {token} when expiry was {expiry}"
+        )
         return render_template(
             "views/email-link-invalid.html", redirect_url=redirect_url
         )
@@ -58,8 +71,12 @@ def two_factor_email(token):
     logged_in, msg = user_api_client.check_verify_code(
         user_id, token_data["secret_code"], "email"
     )
+    current_app.logger.info(f"msg={msg} logged_in={logged_in}")
 
     if not logged_in:
+        current_app.logger.error(
+            "#email-verification verify code was already used, quit!"
+        )
         return render_template(
             "views/email-link-invalid.html", redirect_url=redirect_url
         )
