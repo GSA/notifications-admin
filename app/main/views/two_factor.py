@@ -57,14 +57,7 @@ def two_factor_email(token):
         return render_template(
             "views/email-link-invalid.html", redirect_url=redirect_url
         )
-    except Exception:
-        expiry = current_app.config["EMAIL_EXPIRY_SECONDS"]
-        current_app.logger.exception(
-            f"#email-verification token {token} when expiry was {expiry}"
-        )
-        return render_template(
-            "views/email-link-invalid.html", redirect_url=redirect_url
-        )
+
 
     user_id = token_data["user_id"]
     # checks if code was already used
