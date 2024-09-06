@@ -58,7 +58,6 @@ def two_factor_email(token):
             "views/email-link-invalid.html", redirect_url=redirect_url
         )
 
-
     user_id = token_data["user_id"]
     # checks if code was already used
     logged_in, msg = user_api_client.check_verify_code(
