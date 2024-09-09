@@ -2815,9 +2815,7 @@ def test_send_notification_clears_session(
     ],
 )
 def test_send_notification_redirects_if_missing_data(
-    client_request,
-    fake_uuid,
-    session_data,
+    client_request, fake_uuid, session_data, mocker
 ):
     with client_request.session_transaction() as session:
         session.update(session_data)

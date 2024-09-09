@@ -8,6 +8,7 @@ from notifications_utils import DAILY_MESSAGE_LIMIT
 
 
 class Config(object):
+    SIMULATED_SMS_NUMBERS = ("+14254147755", "+14254147167")
     NOTIFY_APP_NAME = "admin"
     NOTIFY_ENVIRONMENT = getenv("NOTIFY_ENVIRONMENT", "development")
     API_HOST_NAME = getenv("API_HOST_NAME", "localhost")
