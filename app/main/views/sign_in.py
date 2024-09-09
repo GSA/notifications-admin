@@ -170,8 +170,8 @@ def sign_in():
     # and don't proceed further with login
     redirect_url = request.args.get("next")
 
-    # if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
-    return _handle_e2e_tests(None)
+    if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
+        return _handle_e2e_tests(None)
 
     email_verify_template = _do_login_dot_gov()
     if (
