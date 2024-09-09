@@ -121,6 +121,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "link_service_to_organization",
             "live_services",
             "live_services_csv",
+            "load_test",
             "manage_org_users",
             "manage_template_folder",
             "manage_users",

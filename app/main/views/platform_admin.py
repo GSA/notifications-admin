@@ -5,7 +5,16 @@ from collections import OrderedDict
 from datetime import datetime
 from io import StringIO
 
-from flask import Response, abort, flash, render_template, request, url_for
+from flask import (
+    Response,
+    abort,
+    current_app,
+    flash,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from notifications_python_client.errors import HTTPError
 
 from app import (
@@ -25,6 +34,7 @@ from app.main.forms import (
     DateFilterForm,
     RequiredDateFilterForm,
 )
+from app.main.views.send import _send_notification
 from app.statistics_utils import (
     get_formatted_percentage,
     get_formatted_percentage_two_dp,
@@ -771,3 +781,80 @@ def _get_user_row(r):
     row.append(r["password_changed_at"])
     row.append(r["state"])
     return row
+
+
+@main.route(
+    "/platform-admin/load-test",
+    methods=["POST", "GET"],
+)
+@user_is_platform_admin
+def load_test():
+    """
+    The load test assumes that a service called 'Test service' exists.  It will make
+    the platform admin a member of this service if the platform is not already. All
+    messagese will be sent in this service.
+    """
+    service = _find_load_test_service()
+    _prepare_load_test_service(service)
+    example_template = _find_example_template(service)
+
+    # Simulated success
+    for _ in range(0, 250):
+        session["recipient"] = current_app.config["SIMULATED_SMS_NUMBERS"][0]
+        session["placeholders"] = {
+            "day of week": "Monday",
+            "color": "blue",
+            "phone number": current_app.config["SIMULATED_SMS_NUMBERS"][0],
+        }
+        _send_notification(service["id"], example_template["id"])
+    # Simulated failure
+    for _ in range(0, 250):
+        session["recipient"] = current_app.config["SIMULATED_SMS_NUMBERS"][1]
+        session["placeholders"] = {
+            "day of week": "Wednesday",
+            "color": "orange",
+            "phone number": current_app.config["SIMULATED_SMS_NUMBERS"][1],
+        }
+        _send_notification(service["id"], example_template["id"])
+
+    # For now, just redirect to the splash page so we know it's done
+    return render_template(
+        "views/platform-admin/splash-page.html",
+    )
+
+
+def _find_example_template(service):
+    templates = service_api_client.get_service_templates(service["id"])
+    templates = templates["data"]
+    for template in templates:
+        # template = json.loads(template)
+        if template["name"] == "Example text message template":
+            return template
+
+    raise Exception("Could not find example template for load test")
+
+
+def _find_load_test_service():
+    services = service_api_client.find_services_by_name("Test service")
+    services = services["data"]
+
+    for service in services:
+        if service["name"] == "Test service":
+            return service
+
+    raise Exception("Could not find 'Test service' for load test")
+
+
+def _prepare_load_test_service(service):
+    users = user_api_client.get_all_users()
+    for user in users:
+        if user["platform_admin"] == "t":
+            try:
+                user_api_client.add_user_to_service(
+                    service["id"], user["id"], ["send messages"]
+                )
+            except Exception:
+                current_app.logger.exception(
+                    "Couldnt add user, may already be part of service"
+                )
+                pass
