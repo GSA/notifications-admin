@@ -3,7 +3,6 @@ import os
 import re
 import uuid
 
-from flask import current_app
 from playwright.sync_api import expect
 
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
@@ -89,26 +88,20 @@ def create_new_template(page):
 
 
 def test_create_new_template(end_to_end_context):
-    print(f"WHAT IS THE TEST EMAIL {os.getenv('NOTIFY_E2E_TEST_EMAIL')}")
     page = end_to_end_context.new_page()
-    print(f"INITIAL PAGE IS {page}")
     page.goto(f"{E2E_TEST_URI}/sign-in")
     # Wait for the next page to fully load.
     page.wait_for_load_state("domcontentloaded")
-    print(f"PAGE ON ENTER TEST_CREATE_NEW_TEMPLATE AFTER SIGNING IN IS {page}")
 
     current_date_time = datetime.datetime.now()
     new_service_name = "E2E Federal Test Service {now} - {browser_type}".format(
         now=current_date_time.strftime("%m/%d/%Y %H:%M:%S"),
         browser_type=page.context.browser.browser_type.name,
     )
-    print(f"NEW SERVICE NAME {new_service_name}")
-    print(f"GOING TO {E2E_TEST_URI}/accounts")
     page.goto(f"{E2E_TEST_URI}/accounts")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
-    print(page)
 
     # Check to make sure that we've arrived at the next page.
     # Check the page title exists and matches what we expect.

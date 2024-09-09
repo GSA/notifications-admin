@@ -68,8 +68,6 @@ def _setup(page):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
-
-
     # TODO this fails on staging due to duplicate results on 'get_by_text'
     # Check for the service name title and heading.
     # service_heading = page.get_by_text(new_service_name, exact=True)

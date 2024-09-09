@@ -69,8 +69,6 @@ def _setup(page):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
-
-
     # TODO this fails on staging due to duplicate results on 'get_by_text'
     # Check for the service name title and heading.
     # service_heading = page.get_by_text(new_service_name, exact=True)
@@ -176,7 +174,7 @@ def handle_no_existing_template_case(page):
 
     # Start waiting for the download
     # with page.expect_download() as download_info:
-        # download_link.click()
+    # download_link.click()
     # download = download_info.value
     # download.save_as("download_test_file")
     # f = open("download_test_file", "r")
@@ -189,8 +187,8 @@ def handle_no_existing_template_case(page):
     # message and it won't be sent, but the report will still be generated, which is all
     # we care about here.
     # assert (
-      #  "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time"
-      #  in content
+    #  "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time"
+    #  in content
     # )
     # assert "12025555555" in content
     # assert "one-off-" in content

@@ -6,7 +6,6 @@ from itertools import product
 
 from flask import g, request
 from flask.ctx import has_app_context, has_request_context
-from flask.logging import default_handler
 from pythonjsonlogger.jsonlogger import JsonFormatter as BaseJSONFormatter
 
 LOG_FORMAT = (
