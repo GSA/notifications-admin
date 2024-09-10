@@ -6,6 +6,7 @@ from itertools import product
 
 from flask import g, request
 from flask.ctx import has_app_context, has_request_context
+from flask.logging import default_handler
 from pythonjsonlogger.jsonlogger import JsonFormatter as BaseJSONFormatter
 
 LOG_FORMAT = (
@@ -21,8 +22,7 @@ def init_app(app):
     app.config.setdefault("NOTIFY_LOG_LEVEL", "INFO")
     app.config.setdefault("NOTIFY_APP_NAME", "none")
 
-    # Try adding back default handler
-    # app.logger.removeHandler(default_handler)
+    app.logger.removeHandler(default_handler)
 
     handlers = get_handlers(app)
     loglevel = logging.getLevelName(app.config["NOTIFY_LOG_LEVEL"])
