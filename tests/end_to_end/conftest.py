@@ -114,4 +114,4 @@ def check_axe_report(page):
     results = axe.run(page)
 
     for violation in results["violations"]:
-        assert violation["impact"] != "minor", f"Accessibility violation: {violation}"
+        assert violation["impact"] == "minor", f"Accessibility violation: {violation}"
