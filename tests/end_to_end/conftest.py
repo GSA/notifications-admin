@@ -2,6 +2,7 @@ import os
 import re
 
 import pytest
+from axe_core_python.sync_playwright import Axe
 
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
@@ -105,3 +106,13 @@ def authenticated_page(end_to_end_context):
     page.wait_for_load_state("domcontentloaded")
 
     return page
+
+
+def check_axe_report(page):
+    axe = Axe()
+
+    results = axe.run(page)
+
+    assert (
+        len(results["violations"]) == 0
+    ), f"Accessibility violations: {results['violations']}"

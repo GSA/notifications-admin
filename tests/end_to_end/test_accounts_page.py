@@ -4,6 +4,8 @@ import re
 
 from playwright.sync_api import expect
 
+from tests.end_to_end.conftest import check_axe_report
+
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 
@@ -21,6 +23,7 @@ def test_add_new_service_workflow(authenticated_page, end_to_end_context):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # Check to make sure that we've arrived at the next page.
     # Check the page title exists and matches what we expect.
@@ -49,6 +52,7 @@ def test_add_new_service_workflow(authenticated_page, end_to_end_context):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # Check for the sign in heading.
     about_heading = page.get_by_role("heading", name="About your service")
@@ -69,6 +73,7 @@ def test_add_new_service_workflow(authenticated_page, end_to_end_context):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # Check for the service name title and heading.
     service_heading = page.get_by_text(new_service_name, exact=True)
