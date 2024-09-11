@@ -1,6 +1,6 @@
 import os
 
-from axe_core_python import AxeBuilder
+from axe_core_python import Axe
 
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
@@ -20,8 +20,9 @@ def test_a11y(authenticated_page, end_to_end_context):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
-    axe = AxeBuilder(page)
-    results = axe.analyze()
+    axe = Axe(page)
+    axe.inject()
+    results = axe.run()
     assert (
         len(results["violations"]) == 0
     ), f"Accessibility violations: {results['violations']}"
