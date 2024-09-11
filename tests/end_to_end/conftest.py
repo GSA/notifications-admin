@@ -121,12 +121,12 @@ def check_axe_report(page):
             serious_ones.append(violation)
         elif violation["impact"] == "moderate":
             moderate_ones.append(violation)
-    print(f"SERIOUS {serious_ones}")
-    print(f"MODERATE {moderate_ones}")
+
+    assert len(serious_ones) == 0, f"SERIOUS ONES {serious_ones}"
 
     for violation in results["violations"]:
         assert violation["impact"] in [
             "minor",
             "moderate",
-            "serious"
+            "serious",
         ], f"Accessibility violation: {violation}"
