@@ -2,6 +2,7 @@ import os
 import re
 
 from playwright.sync_api import expect
+
 from tests.end_to_end.conftest import check_axe_report
 
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
