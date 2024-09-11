@@ -1,6 +1,6 @@
 import os
 
-from axe_core_playwright import AxeBuilder
+from axe_core_python import AxeBuilder
 
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
