@@ -2,6 +2,7 @@ import os
 import re
 
 from playwright.sync_api import expect
+from tests.end_to_end.conftest import check_axe_report
 
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
@@ -13,6 +14,7 @@ def test_landing_page(end_to_end_context):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # Check the page title exists and matches what we expect.
     expect(page).to_have_title(re.compile("Notify.gov"))
