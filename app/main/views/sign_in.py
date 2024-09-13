@@ -162,15 +162,14 @@ def _handle_e2e_tests(redirect_url):
 @main.route("/sign-in", methods=(["GET", "POST"]))
 @hide_from_search_engines
 def sign_in():
-
-    # If we have to revalidated the email, send the message
-    # via email and redirect to the "verify your email page"
-    # and don't proceed further with login
     redirect_url = request.args.get("next")
 
     if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
         return _handle_e2e_tests(None)
 
+    # If we have to revalidated the email, send the message
+    # via email and redirect to the "verify your email page"
+    # and don't proceed further with login
     email_verify_template = _do_login_dot_gov()
     if (
         email_verify_template
