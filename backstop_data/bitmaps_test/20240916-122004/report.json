@@ -1,0 +1,30 @@
+{
+  "testSuite": "BackstopJS",
+  "tests": [
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/my_project_tests_Homepage_0_document_0_desktop.png",
+        "test": "../bitmaps_test/20240916-122004/my_project_tests_Homepage_0_document_0_desktop.png",
+        "selector": "document",
+        "fileName": "my_project_tests_Homepage_0_document_0_desktop.png",
+        "label": "Homepage",
+        "requireSameDimensions": true,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:6012",
+        "expect": 0,
+        "viewportLabel": "desktop",
+        "engineErrorMsg": "page.waitForSelector: Timeout 30000ms exceeded.\nCall log:\n  \u001b[2m- waiting for locator('a[href*=\"https://idp.int.identitysandbox.gov/openid_connect/authorize\"]') to be visible\u001b[22m\n",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    }
+  ],
+  "id": "my_project_tests"
+}

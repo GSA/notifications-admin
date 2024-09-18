@@ -124,6 +124,7 @@ def _do_login_dot_gov():
         except BaseException as be:  # noqa B036
             current_app.logger.error(f"Error signing in: {be} #notify-admin-1505 ")
             error(401)
+
         return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
 
     # end login.gov
@@ -145,7 +146,11 @@ def _handle_e2e_tests(redirect_url):
     )
     user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
     activate_user(user["id"])
-    return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
+
+    if redirect_url and is_safe_redirect_url(redirect_url):
+            return redirect(redirect_url)
+
+    return redirect(url_for("main.show_accounts_or_dashboard"))
 
 
 @main.route("/sign-in", methods=(["GET", "POST"]))
