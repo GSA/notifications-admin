@@ -197,7 +197,7 @@ def clear_goals():
     return render_template(
         "views/guidance/index.html",
         navigation_links=guidance_nav(),
-        title="Clear Goals"
+        title="Clear Goals",
     )
 
 
@@ -207,7 +207,7 @@ def rules_and_regulations():
     return render_template(
         "views/guidance/index.html",
         navigation_links=guidance_nav(),
-        title="Rules and Regulations"
+        title="Rules and Regulations",
     )
 
 
@@ -217,7 +217,7 @@ def establish_trust():
     return render_template(
         "views/guidance/index.html",
         navigation_links=guidance_nav(),
-        title="Establish Trust"
+        title="Establish Trust",
     )
 
 
@@ -227,7 +227,7 @@ def write_for_action():
     return render_template(
         "views/guidance/index.html",
         navigation_links=guidance_nav(),
-        title="Write For Action"
+        title="Write For Action",
     )
 
 
@@ -237,7 +237,7 @@ def multiple_languages():
     return render_template(
         "views/guidance/index.html",
         navigation_links=guidance_nav(),
-        title="Multiple Languages"
+        title="Multiple Languages",
     )
 
 
@@ -247,7 +247,7 @@ def get_the_word_out():
     return render_template(
         "views/guidance/index.html",
         navigation_links=guidance_nav(),
-        title="Get the Word Out"
+        title="Get the Word Out",
     )
 
 
@@ -257,7 +257,7 @@ def as_people_receive_text():
     return render_template(
         "views/guidance/index.html",
         navigation_links=guidance_nav(),
-        title="As People Receive Text"
+        title="As People Receive Text",
     )
 
 

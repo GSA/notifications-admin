@@ -86,7 +86,7 @@ def guidance_nav():
                     "name": "As people receive texts",
                     "link": "main.as_people_receive_text",
                 },
-            ]
+            ],
         },
         {
             "name": "Write for action",
