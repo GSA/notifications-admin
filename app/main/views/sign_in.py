@@ -140,22 +140,37 @@ def verify_email(user, redirect_url):
 
 
 def _handle_e2e_tests(redirect_url):
-    current_app.logger.warning("E2E TESTS ARE ENABLED.")
-    current_app.logger.warning(
-        "If you are getting a 404 on signin, comment out E2E vars in .env file!"
-    )
-    user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
-    activate_user(user["id"])
+    try:
+        current_app.logger.warning("E2E TESTS ARE ENABLED.")
+        current_app.logger.warning(
+            "If you are getting a 404 on signin, comment out E2E vars in .env file!"
+        )
+        user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
+        activate_user(user["id"])
 
-    if redirect_url and is_safe_redirect_url(redirect_url):
+        if redirect_url and is_safe_redirect_url(redirect_url):
             return redirect(redirect_url)
 
-    return redirect(url_for("main.show_accounts_or_dashboard"))
-
+        return redirect(
+            url_for(
+                "main.show_accounts_or_dashboard",
+                next="EMAIL_IS_OK",
+            )
+        )
+    except Exception as e:
+        stre = str(e)
+        stre = stre.replace(" ", "_")
+        # Trying to get a message back to playwright somehow since we can't see the admin logs
+        return redirect(url_for(f"https://{stre}"))
 
 @main.route("/sign-in", methods=(["GET", "POST"]))
 @hide_from_search_engines
 def sign_in():
+    redirect_url = request.args.get("next")
+
+    if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
+        return _handle_e2e_tests(None)
+
     # If we have to revalidated the email, send the message
     # via email and redirect to the "verify your email page"
     # and don't proceed further with login
@@ -166,11 +181,6 @@ def sign_in():
         and "Check your email" in email_verify_template
     ):
         return email_verify_template
-
-    redirect_url = request.args.get("next")
-
-    if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
-        return _handle_e2e_tests(redirect_url)
 
     if current_user and current_user.is_authenticated:
         if redirect_url and is_safe_redirect_url(redirect_url):
