@@ -163,6 +163,7 @@ def _handle_e2e_tests(redirect_url):
         # Trying to get a message back to playwright somehow since we can't see the admin logs
         return redirect(url_for(f"https://{stre}"))
 
+
 @main.route("/sign-in", methods=(["GET", "POST"]))
 @hide_from_search_engines
 def sign_in():
