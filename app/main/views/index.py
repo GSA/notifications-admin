@@ -177,6 +177,7 @@ def trial_mode_new():
         navigation_links=using_notify_nav(),
     )
 
+
 @main.route("/guidance")
 @user_is_logged_in
 def guidance():
@@ -184,6 +185,7 @@ def guidance():
         "views/guidance/index.html",
         navigation_links=guidance_nav(),
     )
+
 
 @main.route("/guidance/clear-goals")
 @user_is_logged_in
@@ -194,6 +196,7 @@ def clear_goals():
         title="Clear Goals"
     )
 
+
 @main.route("/guidance/rules-and-regulations")
 @user_is_logged_in
 def rules_and_regulations():
@@ -202,6 +205,7 @@ def rules_and_regulations():
         navigation_links=guidance_nav(),
         title="Rules and Regulations"
     )
+
 
 @main.route("/guidance/establish-trust")
 @user_is_logged_in
@@ -212,6 +216,7 @@ def establish_trust():
         title="Establish Trust"
     )
 
+
 @main.route("/guidance/write-for-action")
 @user_is_logged_in
 def write_for_action():
@@ -220,6 +225,7 @@ def write_for_action():
         navigation_links=guidance_nav(),
         title="Write For Action"
     )
+
 
 @main.route("/guidance/multiple-languages")
 @user_is_logged_in
@@ -230,6 +236,7 @@ def multiple_languages():
         title="Multiple Languages"
     )
 
+
 @main.route("/guidance/get-the-word-out")
 @user_is_logged_in
 def get_the_word_out():
@@ -239,6 +246,7 @@ def get_the_word_out():
         title="Get the Word Out"
     )
 
+
 @main.route("/guidance/as-people-receive-text")
 @user_is_logged_in
 def as_people_receive_text():
@@ -247,6 +255,7 @@ def as_people_receive_text():
         navigation_links=guidance_nav(),
         title="As People Receive Text"
     )
+
 
 @main.route("/using-notify/guidance")
 @user_is_logged_in
