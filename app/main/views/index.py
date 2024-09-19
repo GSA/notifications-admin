@@ -7,7 +7,7 @@ from app import status_api_client
 from app.formatters import apply_html_class, convert_markdown_template
 from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
-from app.main.views.sub_navigation_dictionaries import features_nav, using_notify_nav
+from app.main.views.sub_navigation_dictionaries import features_nav, using_notify_nav, guidance_nav
 from app.utils.user import user_is_logged_in
 from notifications_utils.url_safe_token import generate_token
 
@@ -177,6 +177,76 @@ def trial_mode_new():
         navigation_links=using_notify_nav(),
     )
 
+@main.route("/guidance")
+@user_is_logged_in
+def guidance():
+    return render_template(
+        "views/guidance/index.html",
+        navigation_links=guidance_nav(),
+    )
+
+@main.route("/guidance/clear-goals")
+@user_is_logged_in
+def clear_goals():
+    return render_template(
+        "views/guidance/index.html",
+        navigation_links=guidance_nav(),
+        title="Clear Goals"
+    )
+
+@main.route("/guidance/rules-and-regulations")
+@user_is_logged_in
+def rules_and_regulations():
+    return render_template(
+        "views/guidance/index.html",
+        navigation_links=guidance_nav(),
+        title="Rules and Regulations"
+    )
+
+@main.route("/guidance/establish-trust")
+@user_is_logged_in
+def establish_trust():
+    return render_template(
+        "views/guidance/index.html",
+        navigation_links=guidance_nav(),
+        title="Establish Trust"
+    )
+
+@main.route("/guidance/write-for-action")
+@user_is_logged_in
+def write_for_action():
+    return render_template(
+        "views/guidance/index.html",
+        navigation_links=guidance_nav(),
+        title="Write For Action"
+    )
+
+@main.route("/guidance/multiple-languages")
+@user_is_logged_in
+def multiple_languages():
+    return render_template(
+        "views/guidance/index.html",
+        navigation_links=guidance_nav(),
+        title="Multiple Languages"
+    )
+
+@main.route("/guidance/get-the-word-out")
+@user_is_logged_in
+def get_the_word_out():
+    return render_template(
+        "views/guidance/index.html",
+        navigation_links=guidance_nav(),
+        title="Get the Word Out"
+    )
+
+@main.route("/guidance/as-people-receive-text")
+@user_is_logged_in
+def as_people_receive_text():
+    return render_template(
+        "views/guidance/index.html",
+        navigation_links=guidance_nav(),
+        title="As People Receive Text"
+    )
 
 @main.route("/using-notify/guidance")
 @user_is_logged_in

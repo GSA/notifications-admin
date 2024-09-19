@@ -58,3 +58,42 @@ def using_notify_nav():
             # },
         },
     ]
+
+
+def guidance_nav():
+    return [
+        {
+            "name": "Guidance",
+            "link": "main.guidance",
+        },
+        {
+            "name": "Clear goals",
+            "link": "main.clear_goals",
+        },
+        {
+            "name": "Rules and Regulations",
+            "link": "main.rules_and_regulations",
+        },
+        {
+            "name": "Establish trust",
+            "link": "main.establish_trust",
+            "sub_navigation_items": [
+                {
+                    "name": "Get the word out",
+                    "link": "main.get_the_word_out",
+                },
+                {
+                    "name": "As people receive texts",
+                    "link": "main.as_people_receive_text",
+                },
+            ]
+        },
+        {
+            "name": "Write for action",
+            "link": "main.write_for_action",
+        },
+        {
+            "name": "Multiple languages",
+            "link": "main.multiple_languages",
+        },
+    ]
