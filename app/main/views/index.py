@@ -7,7 +7,11 @@ from app import status_api_client
 from app.formatters import apply_html_class, convert_markdown_template
 from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
-from app.main.views.sub_navigation_dictionaries import features_nav, using_notify_nav, guidance_nav
+from app.main.views.sub_navigation_dictionaries import (
+    features_nav,
+    guidance_nav,
+    using_notify_nav,
+)
 from app.utils.user import user_is_logged_in
 from notifications_utils.url_safe_token import generate_token
 
