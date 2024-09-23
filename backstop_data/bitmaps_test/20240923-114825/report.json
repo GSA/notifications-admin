@@ -1,10 +1,10 @@
-report({
+{
   "testSuite": "BackstopJS",
   "tests": [
     {
       "pair": {
         "reference": "../bitmaps_reference/my_project_tests_Homepage_0_document_0_desktop.png",
-        "test": "../bitmaps_test/20240923-115518/my_project_tests_Homepage_0_document_0_desktop.png",
+        "test": "../bitmaps_test/20240923-114825/my_project_tests_Homepage_0_document_0_desktop.png",
         "selector": "document",
         "fileName": "my_project_tests_Homepage_0_document_0_desktop.png",
         "label": "Homepage",
@@ -27,7 +27,7 @@ report({
     {
       "pair": {
         "reference": "../bitmaps_reference/my_project_tests_Accounts_0_document_0_desktop.png",
-        "test": "../bitmaps_test/20240923-115518/my_project_tests_Accounts_0_document_0_desktop.png",
+        "test": "../bitmaps_test/20240923-114825/my_project_tests_Accounts_0_document_0_desktop.png",
         "selector": "document",
         "fileName": "my_project_tests_Accounts_0_document_0_desktop.png",
         "label": "Accounts",
@@ -37,20 +37,23 @@ report({
         "expect": 0,
         "viewportLabel": "desktop",
         "diff": {
-          "isSameDimensions": true,
+          "isSameDimensions": false,
           "dimensionDifference": {
             "width": 0,
-            "height": 0
+            "height": -635
           },
-          "misMatchPercentage": "0.00"
-        }
+          "rawMisMatchPercentage": 25.399217658868718,
+          "misMatchPercentage": "25.40",
+          "analysisTime": 81
+        },
+        "diffImage": "../bitmaps_test/20240923-114825/failed_diff_my_project_tests_Accounts_0_document_0_desktop.png"
       },
-      "status": "pass"
+      "status": "fail"
     },
     {
       "pair": {
         "reference": "../bitmaps_reference/my_project_tests_Add_Service_0_document_0_desktop.png",
-        "test": "../bitmaps_test/20240923-115518/my_project_tests_Add_Service_0_document_0_desktop.png",
+        "test": "../bitmaps_test/20240923-114825/my_project_tests_Add_Service_0_document_0_desktop.png",
         "selector": "document",
         "fileName": "my_project_tests_Add_Service_0_document_0_desktop.png",
         "label": "Add Service",
@@ -60,20 +63,23 @@ report({
         "expect": 0,
         "viewportLabel": "desktop",
         "diff": {
-          "isSameDimensions": true,
+          "isSameDimensions": false,
           "dimensionDifference": {
             "width": 0,
-            "height": 0
+            "height": 507
           },
-          "misMatchPercentage": "0.00"
-        }
+          "rawMisMatchPercentage": 28.20833515188548,
+          "misMatchPercentage": "28.21",
+          "analysisTime": 72
+        },
+        "diffImage": "../bitmaps_test/20240923-114825/failed_diff_my_project_tests_Add_Service_0_document_0_desktop.png"
       },
-      "status": "pass"
+      "status": "fail"
     },
     {
       "pair": {
         "reference": "../bitmaps_reference/my_project_tests_Get_Started_0_document_0_desktop.png",
-        "test": "../bitmaps_test/20240923-115518/my_project_tests_Get_Started_0_document_0_desktop.png",
+        "test": "../bitmaps_test/20240923-114825/my_project_tests_Get_Started_0_document_0_desktop.png",
         "selector": "document",
         "fileName": "my_project_tests_Get_Started_0_document_0_desktop.png",
         "label": "Get Started",
@@ -83,20 +89,23 @@ report({
         "expect": 0,
         "viewportLabel": "desktop",
         "diff": {
-          "isSameDimensions": true,
+          "isSameDimensions": false,
           "dimensionDifference": {
             "width": 0,
-            "height": 0
+            "height": -17
           },
-          "misMatchPercentage": "0.00"
-        }
+          "rawMisMatchPercentage": 29.084107035024154,
+          "misMatchPercentage": "29.08",
+          "analysisTime": 76
+        },
+        "diffImage": "../bitmaps_test/20240923-114825/failed_diff_my_project_tests_Get_Started_0_document_0_desktop.png"
       },
-      "status": "pass"
+      "status": "fail"
     },
     {
       "pair": {
         "reference": "../bitmaps_reference/my_project_tests_Trial_Mode_0_document_0_desktop.png",
-        "test": "../bitmaps_test/20240923-115518/my_project_tests_Trial_Mode_0_document_0_desktop.png",
+        "test": "../bitmaps_test/20240923-114825/my_project_tests_Trial_Mode_0_document_0_desktop.png",
         "selector": "document",
         "fileName": "my_project_tests_Trial_Mode_0_document_0_desktop.png",
         "label": "Trial Mode",
@@ -119,7 +128,7 @@ report({
     {
       "pair": {
         "reference": "../bitmaps_reference/my_project_tests_Pricing_0_document_0_desktop.png",
-        "test": "../bitmaps_test/20240923-115518/my_project_tests_Pricing_0_document_0_desktop.png",
+        "test": "../bitmaps_test/20240923-114825/my_project_tests_Pricing_0_document_0_desktop.png",
         "selector": "document",
         "fileName": "my_project_tests_Pricing_0_document_0_desktop.png",
         "label": "Pricing",
@@ -129,20 +138,23 @@ report({
         "expect": 0,
         "viewportLabel": "desktop",
         "diff": {
-          "isSameDimensions": true,
+          "isSameDimensions": false,
           "dimensionDifference": {
             "width": 0,
-            "height": 0
+            "height": -1367
           },
-          "misMatchPercentage": "0.00"
-        }
+          "rawMisMatchPercentage": 5.647420116559485,
+          "misMatchPercentage": "5.65",
+          "analysisTime": 83
+        },
+        "diffImage": "../bitmaps_test/20240923-114825/failed_diff_my_project_tests_Pricing_0_document_0_desktop.png"
       },
-      "status": "pass"
+      "status": "fail"
     },
     {
       "pair": {
         "reference": "../bitmaps_reference/my_project_tests_Delivery_Status_0_document_0_desktop.png",
-        "test": "../bitmaps_test/20240923-115518/my_project_tests_Delivery_Status_0_document_0_desktop.png",
+        "test": "../bitmaps_test/20240923-114825/my_project_tests_Delivery_Status_0_document_0_desktop.png",
         "selector": "document",
         "fileName": "my_project_tests_Delivery_Status_0_document_0_desktop.png",
         "label": "Delivery Status",
@@ -152,20 +164,23 @@ report({
         "expect": 0,
         "viewportLabel": "desktop",
         "diff": {
-          "isSameDimensions": true,
+          "isSameDimensions": false,
           "dimensionDifference": {
             "width": 0,
-            "height": 0
+            "height": -1007
           },
-          "misMatchPercentage": "0.00"
-        }
+          "rawMisMatchPercentage": 6.6811849759122595,
+          "misMatchPercentage": "6.68",
+          "analysisTime": 82
+        },
+        "diffImage": "../bitmaps_test/20240923-114825/failed_diff_my_project_tests_Delivery_Status_0_document_0_desktop.png"
       },
-      "status": "pass"
+      "status": "fail"
     },
     {
       "pair": {
         "reference": "../bitmaps_reference/my_project_tests_Guidance_0_document_0_desktop.png",
-        "test": "../bitmaps_test/20240923-115518/my_project_tests_Guidance_0_document_0_desktop.png",
+        "test": "../bitmaps_test/20240923-114825/my_project_tests_Guidance_0_document_0_desktop.png",
         "selector": "document",
         "fileName": "my_project_tests_Guidance_0_document_0_desktop.png",
         "label": "Guidance",
@@ -175,20 +190,23 @@ report({
         "expect": 0,
         "viewportLabel": "desktop",
         "diff": {
-          "isSameDimensions": true,
+          "isSameDimensions": false,
           "dimensionDifference": {
             "width": 0,
-            "height": 0
+            "height": -5448
           },
-          "misMatchPercentage": "0.00"
-        }
+          "rawMisMatchPercentage": 2.251061727834302,
+          "misMatchPercentage": "2.25",
+          "analysisTime": 94
+        },
+        "diffImage": "../bitmaps_test/20240923-114825/failed_diff_my_project_tests_Guidance_0_document_0_desktop.png"
       },
-      "status": "pass"
+      "status": "fail"
     },
     {
       "pair": {
         "reference": "../bitmaps_reference/my_project_tests_Features_0_document_0_desktop.png",
-        "test": "../bitmaps_test/20240923-115518/my_project_tests_Features_0_document_0_desktop.png",
+        "test": "../bitmaps_test/20240923-114825/my_project_tests_Features_0_document_0_desktop.png",
         "selector": "document",
         "fileName": "my_project_tests_Features_0_document_0_desktop.png",
         "label": "Features",
@@ -198,20 +216,23 @@ report({
         "expect": 0,
         "viewportLabel": "desktop",
         "diff": {
-          "isSameDimensions": true,
+          "isSameDimensions": false,
           "dimensionDifference": {
             "width": 0,
-            "height": 0
+            "height": -1372
           },
-          "misMatchPercentage": "0.00"
-        }
+          "rawMisMatchPercentage": 5.519632946237517,
+          "misMatchPercentage": "5.52",
+          "analysisTime": 86
+        },
+        "diffImage": "../bitmaps_test/20240923-114825/failed_diff_my_project_tests_Features_0_document_0_desktop.png"
       },
-      "status": "pass"
+      "status": "fail"
     },
     {
       "pair": {
         "reference": "../bitmaps_reference/my_project_tests_Roadmaps_0_document_0_desktop.png",
-        "test": "../bitmaps_test/20240923-115518/my_project_tests_Roadmaps_0_document_0_desktop.png",
+        "test": "../bitmaps_test/20240923-114825/my_project_tests_Roadmaps_0_document_0_desktop.png",
         "selector": "document",
         "fileName": "my_project_tests_Roadmaps_0_document_0_desktop.png",
         "label": "Roadmaps",
@@ -228,7 +249,7 @@ report({
           },
           "rawMisMatchPercentage": 0,
           "misMatchPercentage": "0.00",
-          "analysisTime": 15
+          "analysisTime": 32
         }
       },
       "status": "pass"
@@ -236,7 +257,7 @@ report({
     {
       "pair": {
         "reference": "../bitmaps_reference/my_project_tests_Security_0_document_0_desktop.png",
-        "test": "../bitmaps_test/20240923-115518/my_project_tests_Security_0_document_0_desktop.png",
+        "test": "../bitmaps_test/20240923-114825/my_project_tests_Security_0_document_0_desktop.png",
         "selector": "document",
         "fileName": "my_project_tests_Security_0_document_0_desktop.png",
         "label": "Security",
@@ -246,20 +267,23 @@ report({
         "expect": 0,
         "viewportLabel": "desktop",
         "diff": {
-          "isSameDimensions": true,
+          "isSameDimensions": false,
           "dimensionDifference": {
             "width": 0,
-            "height": 0
+            "height": -2573
           },
-          "misMatchPercentage": "0.00"
-        }
+          "rawMisMatchPercentage": 3.7204470973782775,
+          "misMatchPercentage": "3.72",
+          "analysisTime": 71
+        },
+        "diffImage": "../bitmaps_test/20240923-114825/failed_diff_my_project_tests_Security_0_document_0_desktop.png"
       },
-      "status": "pass"
+      "status": "fail"
     },
     {
       "pair": {
         "reference": "../bitmaps_reference/my_project_tests_Support_0_document_0_desktop.png",
-        "test": "../bitmaps_test/20240923-115518/my_project_tests_Support_0_document_0_desktop.png",
+        "test": "../bitmaps_test/20240923-114825/my_project_tests_Support_0_document_0_desktop.png",
         "selector": "document",
         "fileName": "my_project_tests_Support_0_document_0_desktop.png",
         "label": "Support",
@@ -269,16 +293,19 @@ report({
         "expect": 0,
         "viewportLabel": "desktop",
         "diff": {
-          "isSameDimensions": true,
+          "isSameDimensions": false,
           "dimensionDifference": {
             "width": 0,
-            "height": 0
+            "height": 419
           },
-          "misMatchPercentage": "0.00"
-        }
+          "rawMisMatchPercentage": 28.865741751047487,
+          "misMatchPercentage": "28.87",
+          "analysisTime": 70
+        },
+        "diffImage": "../bitmaps_test/20240923-114825/failed_diff_my_project_tests_Support_0_document_0_desktop.png"
       },
-      "status": "pass"
+      "status": "fail"
     }
   ],
   "id": "my_project_tests"
-});
+}
