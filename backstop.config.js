@@ -29,7 +29,7 @@ module.exports = {
       selectors: ['document'],
       misMatchThreshold: 0.1,
       requireSameDimensions: true,
-      onBeforeScript: 'puppeteer/onBefore.js',
+      onBeforeScript: 'puppeteer/countFeatureLinks.js',
     },
   ],
   paths: {
