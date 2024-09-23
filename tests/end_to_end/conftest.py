@@ -37,5 +37,4 @@ def check_axe_report(page):
         assert violation["impact"] in [
             "minor",
             "moderate",
-            "serious",
         ], f"Accessibility violation: {violation}"
