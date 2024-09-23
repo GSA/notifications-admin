@@ -9,7 +9,7 @@
 
 {% block main %}
   <div class="govuk-width-container">
-    <div class="navigation-service usa-breadcrumb" title="Service Navigation Breadcrumb">
+    <div class="navigation-service usa-breadcrumb" role="navigation">
       <a href="{{ url_for('.organizations') }}" class="usa-link navigation-service usa-breadcrumb__link usa-breadcrumb-back-to">All organizations</a>
       <a href="{{ url_for('main.choose_account') }}" class="usa-link navigation-service usa-breadcrumb-switch">Switch service</a>
     </div>
