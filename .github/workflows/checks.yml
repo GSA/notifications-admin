@@ -89,36 +89,19 @@ jobs:
       - uses: ./.github/actions/setup-project
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
-      - name: Clone API
-        uses: actions/checkout@v4
-        with:
-          repository: GSA/notifications-api
-          path: "notifications-api"
-      - name: Install API dependencies
-        working-directory: "notifications-api"
-        run: make bootstrap
-        env:
-          DATABASE_URL: postgresql://user:password@localhost:5432/test_notification_api
-          SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
-          REDIS_URL: redis://localhost:6379
-          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
-          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-          NOTIFY_ENVIRONMENT: development
-      - name: Run API server
-        working-directory: "notifications-api"
-        run: make run-procfile &
-        env:
-          DATABASE_URL: postgresql://user:password@localhost:5432/test_notification_api
-          SQLALCHEMY_DATABASE_TEST_URI: postgresql://user:password@localhost:5432/test_notification_api
-          REDIS_URL: redis://localhost:6379
-          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
-          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-          NOTIFY_ENVIRONMENT: development
+      - name: Check API Server availability
+        run: |
+          curl --fail -v https://notify-api-staging.app.cloud.gov || exit 1
       - name: Run Admin server
-        run: make run-flask &
+        # If we want to log stuff and see what's broken,
+        # insert this line:
+        # tail -f admin-server.log &
+        # above make e2e-test
+        run: |
+          make run-flask > admin-server.log 2>&1 &
+          make e2e-test
         env:
-          # API_HOST_NAME: https://notify-api-staging.app.cloud.gov
-          API_HOST_NAME: http://localhost:6011
+          API_HOST_NAME: https://notify-api-staging.app.cloud.gov/
           DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
@@ -127,26 +110,7 @@ jobs:
           NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-          NOTIFY_E2E_TEST_URI: http://localhost:6012
-      - name: Run E2E tests
-        # Run the E2E tests against the code found in this PR.
-        # run: poetry run pytest -v --browser chromium --browser firefox --browser webkit tests/end_to_end
-        # --browser webkit doesn't work at this time.
-        run: make e2e-test
-        # Debugging for now to troubleshoot a connectivity issue to the local servers
-        # run: curl --request GET --url "http://localhost:6012"
-        env:
-          API_HOST_NAME: http://localhost:6011
-          DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
-          ADMIN_CLIENT_USERNAME: notify-admin
-
-          NOTIFY_ENVIRONMENT: e2etest
-          NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
-          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
-          NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-          NOTIFY_E2E_TEST_URI: http://localhost:6012
+          NOTIFY_E2E_TEST_URI: http://localhost:6012/
 
   validate-new-relic-config:
     runs-on: ubuntu-latest
