@@ -1,14 +1,10 @@
-const { urls } = require('./urls');
+const { urls, baseUrl } = require('./urls');
 
-// Helper function to automatically generate scenarios from the URLs
-const createScenariosFromUrls = (urlsObj, delay = 1000) => {
-  return Object.keys(urlsObj).map((label) => ({
+const createScenariosFromUrls = (urls, delay = 1000) => {
+  return Object.keys(urls).map((label) => ({
     label,
-    url: urlsObj[label],
-    hideSelectors: [],
-    removeSelectors: [],
+    url: urls[label],
     selectors: ['document'],
-    selectorExpansion: true,
     misMatchThreshold: 0.1,
     requireSameDimensions: true,
     delay,
@@ -16,7 +12,7 @@ const createScenariosFromUrls = (urlsObj, delay = 1000) => {
 };
 
 module.exports = {
-  id: 'my_project_tests',
+  id: 'backstop_test',
   viewports: [
     {
       label: 'desktop',
@@ -24,7 +20,18 @@ module.exports = {
       height: 768,
     },
   ],
-  scenarios: createScenariosFromUrls(urls),
+  scenarios: [
+    ...createScenariosFromUrls(urls),
+    // example page with script
+    {
+      label: 'Get Started Page - Highlight Trial Mode',
+      url: `${baseUrl}/using-notify/get-started`,
+      selectors: ['document'],
+      misMatchThreshold: 0.1,
+      requireSameDimensions: true,
+      onBeforeScript: 'puppeteer/onBefore.js',
+    },
+  ],
   paths: {
     bitmaps_reference: 'backstop_data/bitmaps_reference',
     bitmaps_test: 'backstop_data/bitmaps_test',
@@ -38,5 +45,5 @@ module.exports = {
     timeout: 30000,
   },
   report: ['browser'],
-  debug: true,
+  debug: false,
 };
