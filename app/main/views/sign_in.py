@@ -148,9 +148,10 @@ def _handle_e2e_tests(redirect_url):
     activate_user(user["id"])
 
     if redirect_url and is_safe_redirect_url(redirect_url):
-            return redirect(redirect_url)
+        return redirect(redirect_url)
 
     return redirect(url_for("main.show_accounts_or_dashboard"))
+
 
 @main.route("/sign-in", methods=(["GET", "POST"]))
 @hide_from_search_engines
