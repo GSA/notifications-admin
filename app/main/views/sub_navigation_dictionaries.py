@@ -80,11 +80,11 @@ def guidance_nav():
             "sub_navigation_items": [
                 {
                     "name": "Get the word out",
-                    "link": "main.get_the_word_out",
+                    "link": "main.establish_trust#get-the-word-out",
                 },
                 {
                     "name": "As people receive texts",
-                    "link": "main.as_people_receive_text",
+                    "link": "main.establish_trust#as-people-receive-texts",
                 },
             ],
         },

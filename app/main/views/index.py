@@ -186,7 +186,7 @@ def trial_mode_new():
 @user_is_logged_in
 def guidance():
     return render_template(
-        "views/guidance/index.html",
+        "views/guidance/guidance.html",
         navigation_links=guidance_nav(),
     )
 
@@ -195,9 +195,8 @@ def guidance():
 @user_is_logged_in
 def clear_goals():
     return render_template(
-        "views/guidance/index.html",
+        "views/guidance/clear-goals.html",
         navigation_links=guidance_nav(),
-        title="Clear Goals",
     )
 
 
@@ -205,9 +204,8 @@ def clear_goals():
 @user_is_logged_in
 def rules_and_regulations():
     return render_template(
-        "views/guidance/index.html",
+        "views/guidance/rules-and-regulations.html",
         navigation_links=guidance_nav(),
-        title="Rules and Regulations",
     )
 
 
@@ -215,9 +213,8 @@ def rules_and_regulations():
 @user_is_logged_in
 def establish_trust():
     return render_template(
-        "views/guidance/index.html",
+        "views/guidance/establish-trust.html",
         navigation_links=guidance_nav(),
-        title="Establish Trust",
     )
 
 
@@ -238,16 +235,6 @@ def multiple_languages():
         "views/guidance/index.html",
         navigation_links=guidance_nav(),
         title="Multiple Languages",
-    )
-
-
-@main.route("/guidance/get-the-word-out")
-@user_is_logged_in
-def get_the_word_out():
-    return render_template(
-        "views/guidance/index.html",
-        navigation_links=guidance_nav(),
-        title="Get the Word Out",
     )
 
 
