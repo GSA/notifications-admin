@@ -5,6 +5,8 @@ import uuid
 
 from playwright.sync_api import expect
 
+from tests.end_to_end.conftest import check_axe_report
+
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 
@@ -17,6 +19,7 @@ def _setup(page):
     )
 
     page.goto(f"{E2E_TEST_URI}/accounts")
+    check_axe_report(page)
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
@@ -48,6 +51,7 @@ def _setup(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # Check for the sign in heading.
     about_heading = page.get_by_role("heading", name="About your service")
@@ -96,6 +100,7 @@ def handle_no_existing_template_case(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     new_template_button = page.get_by_text("New template")
     expect(new_template_button).to_be_visible()
@@ -103,6 +108,7 @@ def handle_no_existing_template_case(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     start_with_a_blank_template_radio = page.get_by_text("Start with a blank template")
     expect(start_with_a_blank_template_radio).to_be_visible()
@@ -116,6 +122,7 @@ def handle_no_existing_template_case(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     template_name_input = page.get_by_text("Template name")
     expect(template_name_input).to_be_visible()
@@ -132,6 +139,7 @@ def handle_no_existing_template_case(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     use_this_template_button = page.get_by_text("Use this template")
     expect(use_this_template_button).to_be_visible()
@@ -139,6 +147,7 @@ def handle_no_existing_template_case(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     use_my_phone_number_link = page.get_by_text("Use my phone number")
     expect(use_my_phone_number_link).to_be_visible()
@@ -146,6 +155,7 @@ def handle_no_existing_template_case(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     preview_button = page.get_by_text("Preview")
     expect(preview_button).to_be_visible()
@@ -153,6 +163,7 @@ def handle_no_existing_template_case(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     send_button = page.get_by_role("button", name="Send")
     expect(send_button).to_be_visible()
@@ -160,6 +171,7 @@ def handle_no_existing_template_case(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # TODO staging starts failing here, fix.
     # dashboard_button = page.get_by_text("Dashboard")
@@ -167,7 +179,9 @@ def handle_no_existing_template_case(page):
     # dashboard_button.click()
 
     # Check to make sure that we've arrived at the next page.
-    # page.wait_for_load_state("domcontentloaded")
+
+    page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # download_link = page.get_by_text("Download")
     # expect(download_link).to_be_visible()
@@ -211,6 +225,7 @@ def handle_existing_template_case(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     continue_button = page.get_by_role("button", name="Continue")
 
@@ -220,6 +235,7 @@ def handle_existing_template_case(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     continue_button = page.get_by_role("button", name="Continue")
 
@@ -229,6 +245,7 @@ def handle_existing_template_case(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # day_of_week_input = page.locator('xpath=//input[@name="day of week"]')
     # day_of_week_input = page.get_by_text("day of week")
@@ -244,6 +261,7 @@ def handle_existing_template_case(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     color_input = page.get_by_role("textbox", name="color")
     expect(color_input).to_be_visible()
@@ -255,6 +273,7 @@ def handle_existing_template_case(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     if "/tour" not in page.url:
         # Only execute this part if the current page is not the /tour page
@@ -264,6 +283,7 @@ def handle_existing_template_case(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     send_button = page.get_by_role("button", name="Send")
     expect(send_button).to_be_visible()
@@ -325,6 +345,7 @@ def _teardown(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     page.click("text='Delete this service'")
 
@@ -335,6 +356,7 @@ def _teardown(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # Check to make sure that we've arrived at the next page.
     # Check the page title exists and matches what we expect.
