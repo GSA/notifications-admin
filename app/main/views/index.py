@@ -7,7 +7,11 @@ from app import status_api_client
 from app.formatters import apply_html_class, convert_markdown_template
 from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
-from app.main.views.sub_navigation_dictionaries import features_nav, using_notify_nav
+from app.main.views.sub_navigation_dictionaries import (
+    features_nav,
+    guidance_nav,
+    using_notify_nav,
+)
 from app.utils.user import user_is_logged_in
 from notifications_utils.url_safe_token import generate_token
 
@@ -175,6 +179,69 @@ def trial_mode_new():
     return render_template(
         "views/trial-mode.html",
         navigation_links=using_notify_nav(),
+    )
+
+
+@main.route("/guidance")
+@user_is_logged_in
+def guidance():
+    return render_template(
+        "views/guidance/guidance.html",
+        navigation_links=guidance_nav(),
+    )
+
+
+@main.route("/guidance/clear-goals")
+@user_is_logged_in
+def clear_goals():
+    return render_template(
+        "views/guidance/clear-goals.html",
+        navigation_links=guidance_nav(),
+    )
+
+
+@main.route("/guidance/rules-and-regulations")
+@user_is_logged_in
+def rules_and_regulations():
+    return render_template(
+        "views/guidance/rules-and-regulations.html",
+        navigation_links=guidance_nav(),
+    )
+
+
+@main.route("/guidance/establish-trust")
+@user_is_logged_in
+def establish_trust():
+    return render_template(
+        "views/guidance/establish-trust.html",
+        navigation_links=guidance_nav(),
+    )
+
+
+@main.route("/guidance/write-for-action")
+@user_is_logged_in
+def write_for_action():
+    return render_template(
+        "views/guidance/index.html",
+        navigation_links=guidance_nav(),
+    )
+
+
+@main.route("/guidance/multiple-languages")
+@user_is_logged_in
+def multiple_languages():
+    return render_template(
+        "views/guidance/index.html",
+        navigation_links=guidance_nav(),
+    )
+
+
+@main.route("/guidance/as-people-receive-text")
+@user_is_logged_in
+def as_people_receive_text():
+    return render_template(
+        "views/guidance/index.html",
+        navigation_links=guidance_nav(),
     )
 
 
