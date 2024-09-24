@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% from "components/guidance/circle_number.html" import circle_number %}
+
+{% set page_title = "Establish Trust" %}
+
+{% block per_page_title %}
+{{page_title}}
+{% endblock %}
+
+{% block content_column_content %}
+{% with title=page_title %}{% include "components/guidance/nav_breadcrumb.html" %}{% endwith %}
+<section class="usa-prose">
+  <h1>Write texts that provoke action</h1>
+  <p class="usa-intro text-base"> Help your audience know what to do with the information you send.</p>
+
+  <p>
+    When writing a text, focus on the person who is going to receive the message and write it for them. Use plain
+    language
+    and provide easy to understand next steps.
+  </p>
+
+  <p>When deciding what types of messages to draft for your campaign, think through the following questions:</p>
+  <ul>
+    <li>What do you want recipients to do when they receive the text?</li>
+    <li>What will happen if a recipient doesn't take the action you want them to take?</li>
+    <li>Will you send any follow-up texts depending on if the action was taken or not?</li>
+  </ul>
+  <h2>Be clear and concise</h2>
+  <ul>
+    <li>Use simple, everyday language. Keep the text short and clear. Stay under 300 characters.</li>
+    <li>
+      Say only one important thing per message. Focus on the most essential instructions and information. If there are
+      multiple actions you want someone to take, consider sending a series of well-timed messages.
+    </li>
+    <li>Use a neutral, direct, and professional tone. This works better than a friendly or overly casual tone.</li>
+  </ul>
+  <h2>Build conditions for action</h2>
+  <ul>
+    <li>Clearly state the information and the response you want the recipient to take.</li>
+    <li>Point directly to where the action can be completed, not to more information.</li>
+    <li>Make sure the action can be completed via mobile phone, like calling a person or going to a mobile-friendly URL.
+    </li>
+    <li>
+      Include at least two options for a recipient to take action. Some recipients may be more comfortable talking
+      directly
+      to a person, while others may prefer a web-based experience.
+    </li>
+    <li>Consider clearly explaining any consequences if the desired action is not completed.</li>
+  </ul>
+
+  <p>For example, getting a person to update their mailing address:</p>
+  <ul class="usa-card-group flex-1 flex-wrap">
+    <li class="flex-1 width-full height-full padding-bottom-2">
+      <div class="usa-card__container border-0">
+        <ol class="guidance-list">
+          <li><b>Introduce yourself</b> – Give people time to get to know your texting communications before you need
+            direct
+            action from them</li>
+          <li><b>Phone number</b> – Note the sending phone number your texts will come from</li>
+          <li><b>Text types</b> – Be clear on the types of texts you intend to send, how often, and why they matter</li>
+          <li><b>Privacy policy</b>– For example, state that you will not collect personal information, including the
+            types of
+            information you will never ask for</li>
+          <li><b>Places to verif</b>y – Include a phone number, website, or human where people can verify that the texts
+            are
+            coming from you</li>
+          <li><b>Opt out</b> – Provide opt-out instructions and a disclaimer for the potential cost of receiving the
+            text
+          </li>
+        </ol>
+      </div>
+    </li>
+    <li class="usa-card flex-1 usa-card--media-right width-full">
+      <div class="usa-card__container border-0 width-full">
+        <img class="width-full" src="{{ asset_url('images/phone_grey.svg') }}" role="img" alt="Phone" />
+        <div class="position-absolute flex text-cener padding-5 padding-top-8">
+          <p class="text-center">Write an introductory text before you start sending messages:</p>
+          <p class="text-center">Department of Social Services: Welcome to text updates from the {{ circle_number(1) }}
+            <b>State Department of Social Services.</b>{{ circle_number(2) }}<b>We’ll always text you from this
+              number,</b> save us to your contact list. Our goal is to {{ circle_number(3) }} <b>keep you up to date on
+              your account status.</b> {{ circle_number(4) }} <b>We will never ask for personal details in a text.</b>
+            {{ circle_number(5) }} If you have questions about how we protect your privacy, see
+            state.gov/privacy. <br />{{circle_number(6) }}<b>Reply STOP to stop.</b>
+          </p>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <p>
+    State Medicare Agency: Hello, MEDICARE has attempted to send you an update about your claim, but the mail was
+    returned. Please go to https://www.medicare.gov/account/login?utm_source=TEXT, log in to your account, and click “My
+    Account Information” to verify that your address is correct. If you are having difficulty logging in, call
+    1-800-MEDICARE for assistance. We will attempt to send the mail again in 14 days.
+  </p>
+  <h2>What provoking action looks like</h2>
+  <p>Feeling a sense of ownership can influence behavior.<br>
+    Example – <b>Don't miss this chance to get free internet</b> or $30 per month off your internet bill.</p>
+
+  <p>Individuals are strongly influenced by others’ behaviors.<br>Example – <b>Thousands of residents</b> already get an
+    average of $113/month in money for food.</p>
+
+  <p>Individuals perceive losses more powerfully than gains.<br>Example – Contact us for potentially unclaimed free
+    internet services <b>that belong to you</b>.</p>
+</section>
+{% endblock %}

@@ -186,7 +186,7 @@ def trial_mode_new():
 @user_is_logged_in
 def guidance():
     return render_template(
-        "views/guidance/index.html",
+        "views/guidance/guidance.html",
         navigation_links=guidance_nav(),
     )
 
@@ -195,7 +195,7 @@ def guidance():
 @user_is_logged_in
 def clear_goals():
     return render_template(
-        "views/guidance/index.html",
+        "views/guidance/clear-goals.html",
         navigation_links=guidance_nav(),
     )
 
@@ -204,7 +204,7 @@ def clear_goals():
 @user_is_logged_in
 def rules_and_regulations():
     return render_template(
-        "views/guidance/index.html",
+        "views/guidance/rules-and-regulations.html",
         navigation_links=guidance_nav(),
     )
 
@@ -222,7 +222,7 @@ def establish_trust():
 @user_is_logged_in
 def write_for_action():
     return render_template(
-        "views/guidance/index.html",
+        "views/guidance/write-for-action.html",
         navigation_links=guidance_nav(),
         title="Write For Action",
     )

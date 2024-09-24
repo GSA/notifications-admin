@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% from "components/guidance/circle_number.html" import circle_number %}
+
+{% set page_title = "Establish Trust" %}
+
+{% block per_page_title %}
+{{page_title}}
+{% endblock %}
+
+{% block content_column_content %}
+{% with title=page_title %}{% include "components/guidance/nav_breadcrumb.html" %}{% endwith %}
+<section class="usa-prose">
+  <h1>Establish Trust</h1>
+  <p class="usa-intro text-base">Help your audience anticipate and welcome your texts.</p>
+  <p>
+    People are wary of texts they’re not expecting to receive. Before you send your first text, consider how you will
+    gain trust with your audience and address any concerns of spam. Seize specific moments to reinforce what your
+    audience should expect from your messages.
+  </p>
+  <h2 id="get-the-word-out">Get the word out</h2>
+  <p>Before you launch, let your audience know you are adding texting as a communication method. People are more likely
+    to trust your text once they get it if they know that your program is sending texts.</p>
+
+  <p>How you currently communicate with your audience will determine the best approaches to announce your new
+    initiative. Harness channels you’re already using like social media, public websites, mailing inserts, or fliers at
+    key service locations as well as partnering with community organizations to get the word out about your new texting
+    program.</p>
+  <h3>An example of key messages in direct mail</h3>
+  <img src="{{asset_url('images/snap-renewal.png')}}" alt="snap-renewal">
+  <h3>Prime your audiences to trust you</h3>
+  <p class="padding-bottom-2">To reinforce legitimacy, include these key messages in your outreach:</p>
+
+  <ul class="usa-card-group flex-1 flex-wrap">
+    <li class="flex-1 width-full height-full padding-bottom-2">
+      <div class="usa-card__container border-0">
+        <ol class="guidance-list">
+          <li><b>Introduce yourself</b> – Give people time to get to know your texting communications before you need
+            direct
+            action from them</li>
+          <li><b>Phone number</b> – Note the sending phone number your texts will come from</li>
+          <li><b>Text types</b> – Be clear on the types of texts you intend to send, how often, and why they matter</li>
+          <li><b>Privacy policy</b>– For example, state that you will not collect personal information, including the
+            types of
+            information you will never ask for</li>
+          <li><b>Places to verif</b>y – Include a phone number, website, or human where people can verify that the texts
+            are
+            coming from you</li>
+          <li><b>Opt out</b> – Provide opt-out instructions and a disclaimer for the potential cost of receiving the
+            text
+          </li>
+        </ol>
+      </div>
+    </li>
+    <li class="usa-card flex-1 usa-card--media-right width-full">
+      <div class="usa-card__container border-0 width-full">
+        <img class="width-full" src="{{ asset_url('images/phone_grey.svg') }}" role="img" alt="Phone" />
+        <div class="position-absolute flex text-cener padding-5 padding-top-8">
+          <p class="text-center">Write an introductory text before you start sending messages:</p>
+          <p class="text-center">Department of Social Services: Welcome to text updates from the {{ circle_number(1) }}
+            <b>State Department of Social Services.</b>{{ circle_number(2) }}<b>We’ll always text you from this
+              number,</b> save us to your contact list. Our goal is to {{ circle_number(3) }} <b>keep you up to date on
+              your account status.</b> {{ circle_number(4) }} <b>We will never ask for personal details in a text.</b>
+            {{ circle_number(5) }} If you have questions about how we protect your privacy, see
+            state.gov/privacy. <br />{{circle_number(6) }}<b>Reply STOP to stop.</b>
+          </p>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <hr>
+  <h2 id="as-people-receive-texts">As people receive texts</h2>
+  <p>When a person has questions or needs assistance, reaching out for support may be natural for them. Give direction
+    in your texts so your audience understands what to do with the information you provide. Remember, it’s important to
+    repeat consistent and standardized language across texts and programs.</p>
+  <h3 class="guidance">Be trustworthy</h3>
+  <ul class="usa-card-group flex-1 flex-wrap">
+    <li class="flex-1 width-full height-full padding-bottom-2">
+      <div class="usa-card__container border-0">
+        <ol start="7" class="guidance-list set-two">
+          <li>Identify yourself in the text message. Use a consistent and familiar program name to precede each text you
+            send.</li>
+          <li>Personalize with First name. Through A/B testing, Code for America saw an increase in follow-through by
+            25%
+            if someone’s first name was included.</li>
+          <li>Use full and direct .gov website URLs. Avoid link shorteners, as they obscure your links and potentially
+            make
+            it easier for a malicious actor to spoof your text.</li>
+          <li>If providing a phone number, use a familiar phone number and provide information on how to verify its
+            legitimacy.</li>
+        </ol>
+      </div>
+    </li>
+    <li class="usa-card flex-1 usa-card--media-right width-full">
+      <div class="usa-card__container border-0 width-full height-mobile overflow-hidden">
+        <img class="width-full" src="{{ asset_url('images/phone_grey.svg') }}" role="img" alt="Phone" />
+        <div class="position-absolute flex text-cener padding-5 padding-top-8">
+          <p class="text-center">
+            {{circle_number(7) }}<b>Dept of Social Services:</b> Hi {{circle_number(8) }}<b>Julie,</b> Your Medicaid
+            renewal is closing December 31, 2023. You can renew online at {{circle_number(9) }}<a
+              href="https://www.application.yourstate.gov" target="_blank"
+              rel="application.yourstate.gov">https://www.application.yourstate.gov</a> or {{circle_number(10) }}
+            <b>call the number on the back</b> of your Medicaid card.
+          </p>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <p class="text-center">For example, we’ve seen Medicaid programs use trust-markers in renewal texts –</p>
+
+  <h3 class="guidance">Provide helpful auto-responses</h3>
+  <ul class="usa-card-group flex-1 flex-wrap">
+    <li class="flex-1 width-full height-full padding-bottom-2">
+      <div class="usa-card__container border-0">
+        <ol class="guidance-list set-three">
+          <li>Provide a way to contact a human in any auto-response text</li>
+          <li>Provide information on how to opt out and opt back in</li>
+        </ol>
+      </div>
+    </li>
+    <li class="usa-card flex-1 usa-card--media-right width-full">
+      <div class="usa-card__container border-0 width-full overflow-hidden guidance">
+        <img class="width-full" src="{{ asset_url('images/phone_grey.svg') }}" role="img" alt="Phone" />
+        <div class="position-absolute flex text-cener padding-5 padding-top-8">
+          <p class="text-center">Don’t forget about using auto-response text</p>
+          <p class="text-center">
+            Dept of Social Services: This number is unmonitored. To {{circle_number(11) }} <b>contact us, call
+              888-123-4567</b>. We will never ask for personal details in a text. If you have questions about how to
+            protect your privacy, see state.gov/privacy {{circle_number(12) }} <b>Reply “STOP”</b> to this phone number
+            to opt out of receiving texts, and “START” to opt back in.
+          </p>
+        </div>
+      </div>
+    </li>
+  </ul>
+
+  <h2>Be prepared for questions</h2>
+  <p>
+    Your texting program will only be perceived as legitimate if you get the word out in many different ways. It's also
+    important that agency employees who support text recipients (for example, the call center) are familiar with the
+    texting program. They can accurately respond to recipient questions about them, so make sure you’re priming your
+    delivery staff, especially those who interact directly with your intended audience.
+  </p>
+
+  {% set card_header = "Harness trusted communication channels" %}
+  {% set card_contents = [
+  {
+  "image_src": asset_url('img/usa-icons/close.svg'),
+  "card_heading": "Websites",
+  "p_text": "Post banner alerts about texting on your agency website, and link to a press release for more information.
+  Publish apublic texting privacy policy.",
+  },
+  {
+  "image_src": asset_url('img/usa-icons/close.svg'),
+  "card_heading": "Community organizations",
+  "p_text": "Alert trusted community-based organizations that texts are coming and what they look like. Equip them with
+  fliers, posters, and talking points to spread the word",
+  },
+  {
+  "image_src": asset_url('img/usa-icons/close.svg'),
+  "card_heading": "IVR / Call Centers",
+  "p_text": "Consider adding hold message announcements about your texting initiative to further get the word out.",
+  },
+  ] %}
+
+  {% with card_header=card_header, card_contents=card_contents %}{% include "components/guidance/cards.html" %}{%
+  endwith %}
+
+  {% set card_header = "Prepare your team" %}
+  {% set card_contents = [
+  {
+  "image_src": asset_url('img/usa-icons/close.svg'),
+  "card_heading": "Staff",
+  "p_text": "Give all staff a heads-up about texts before and when they are sent.
+  Share talking points on what texts you’re sending, when you’ll start to send them, the phone number they are coming
+  from, and where staff can escalate any issues.",
+  },
+  {
+  "image_src": asset_url('img/usa-icons/close.svg'),
+  "card_heading": "Case management systems",
+  "p_text": "When it makes sense, include information about texts being sent to specific clients on individual splash
+  pages or
+  within case management notes.",
+  },
+  ] %}
+  {% with card_header=card_header, card_contents=card_contents %}{% include "components/guidance/cards.html" %}{%
+  endwith %}
+</section>
+{% endblock %}

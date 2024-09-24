@@ -1,0 +1,9 @@
+{% macro circle_number(number) %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="45" stroke="black" stroke-width="4" fill="none" />
+    <text x="50%" y="50%" text-anchor="middle" font-size="50" font-weight="bold" fill="black" font-family="Arial"
+        dy=".35em">
+        {{ number }}
+    </text>
+</svg>
+{% endmacro %}
