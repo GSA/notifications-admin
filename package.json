@@ -25,8 +25,8 @@
     "graceful-fs": "^4.2.11"
   },
   "dependencies": {
-    "@rollup/plugin-commonjs": "^26.0.1",
-    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-commonjs": "^26.0.3",
+    "@rollup/plugin-node-resolve": "^15.3.0",
     "@rollup/stream": "^3.0.1",
     "@uswds/uswds": "^3.8.2",
     "cbor-js": "0.1.0",
@@ -37,7 +37,7 @@
     "hogan": "1.0.2",
     "jquery": "3.7.1",
     "morphdom": "^2.7.4",
-    "playwright": "^1.47.1",
+    "playwright": "^1.47.2",
     "python": "^0.0.4",
     "query-command-supported": "1.0.0",
     "sass-embedded": "^1.79.3",
@@ -66,7 +66,7 @@
     "jest-environment-jsdom": "^29.2.2",
     "jshint": "2.13.6",
     "jshint-stylish": "2.2.1",
-    "rollup": "^4.22.2",
+    "rollup": "^4.22.4",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-node-resolve": "5.2.0"
   }
