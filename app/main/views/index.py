@@ -213,7 +213,7 @@ def rules_and_regulations():
 @user_is_logged_in
 def establish_trust():
     return render_template(
-        "views/guidance/index.html",
+        "views/guidance/establish-trust.html",
         navigation_links=guidance_nav(),
     )
 
@@ -235,16 +235,6 @@ def multiple_languages():
         "views/guidance/index.html",
         navigation_links=guidance_nav(),
         title="Multiple Languages",
-    )
-
-
-@main.route("/guidance/as-people-receive-text")
-@user_is_logged_in
-def as_people_receive_text():
-    return render_template(
-        "views/guidance/index.html",
-        navigation_links=guidance_nav(),
-        title="As People Receive Text",
     )
 
 
