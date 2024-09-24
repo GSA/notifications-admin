@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% set page_title = "Rules and Regulations" %}
+
+{% block per_page_title %}
+{{page_title}}
+{% endblock %}
+
+{% block content_column_content %}
+{% with title=page_title %}{% include "components/guidance/nav_breadcrumb.html" %}{% endwith %}
+<section class="usa-prose">
+  <h1>Follow rules & regulations</h1>
+  <p class="usa-intro text-base">Understand what is required when texting the public.</p>
+  <h2>What to know about consent and opting out</h2>
+  <p>
+    Providing consent and opting out are key ways for text recipients to express their text communication preferences. Discuss your obligation to obtain consent with your legal counsel.
+  </p>
+  <p>
+    If you do need expressed consent, consider including a pre-checked plain language opt-in (i.e. “It’s OK to text me.”) on digital forms. Be sure to ask for an up-to-date phone number and include a question about the recipient’s preferred language for text messages if you expect to <a   href="#translate-your-text-messages">translate your text messages</a> in languages other than English.
+  </p>
+  <div class="tablet:grid-col-6"></div>
+  <h3>Complying with the Telephone Consumer Protection Act (TCPA)</h3>
+    <ul class="usa-collection usa-collection--condensed">
+      <li class="usa-collection__item">
+        <div class="usa-collection__body">
+          <h4 class="usa-collection__heading">
+            <a
+              class="usa-link"
+              href="https://digital.gov/guides/mobile-principles/?dg"
+              >The eight principles of mobile-friendliness</a
+            >
+          </h4>
+          <ul class="usa-collection__meta" aria-label="More information">
+            <li class="usa-collection__meta-item position-relative">
+              <svg
+                class="usa-icon position-relative bottom-neg-2px"
+                aria-hidden="true"
+                role="img"
+              >
+                <use xlink:href="/assets/img/sprite.svg#public"></use>
+              </svg>
+              Digital.gov
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li class="usa-collection__item">
+        <div class="usa-collection__body">
+          <h4 class="usa-collection__heading">
+            <a
+              class="usa-link"
+              href="https://designsystem.digital.gov/maturity-model/"
+              >The USWDS maturity model</a
+            >
+          </h4>
+          <ul class="usa-collection__meta" aria-label="More information">
+            <li class="usa-collection__meta-item position-relative">
+              <svg
+                class="usa-icon position-relative bottom-neg-2px"
+                aria-hidden="true"
+                role="img"
+              >
+                <use xlink:href="/assets/img/sprite.svg#public"></use>
+              </svg>
+              U.S. Web Design System
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li class="usa-collection__item">
+        <div class="usa-collection__body">
+          <h4 class="usa-collection__heading">
+            <a class="usa-link" href="#">A news item that’s on our own site</a>
+          </h4>
+        </div>
+      </li>
+      <li class="usa-collection__item">
+        <div class="usa-collection__body">
+          <h4 class="usa-collection__heading">
+            <a
+              class="usa-link"
+              href="https://18f.gsa.gov/2020/11/24/the-key-role-of-product-owners-in-federated-data-projects/"
+              >The key role of product owners in federated data projects</a
+            >
+          </h4>
+          <ul class="usa-collection__meta" aria-label="More information">
+            <li class="usa-collection__meta-item position-relative">
+              <svg
+                class="usa-icon position-relative bottom-neg-2px"
+                aria-hidden="true"
+                role="img"
+              >
+                <use xlink:href="/assets/img/sprite.svg#public"></use>
+              </svg>
+              18F
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li class="usa-collection__item">
+        <div class="usa-collection__body">
+          <h4 class="usa-collection__heading">
+            <a
+              class="usa-link"
+              href="https://trumpadministration.archives.performance.gov/September-2020-Updates-Show-Progress/"
+              >Progress on Cross-Agency Priority (CAP) goals and Agency Priority
+              Goals (APGs)</a
+            >
+          </h4>
+          <ul class="usa-collection__meta" aria-label="More information">
+            <li class="usa-collection__meta-item position-relative">
+              <svg
+                class="usa-icon position-relative bottom-neg-2px"
+                aria-hidden="true"
+                role="img"
+              >
+                <use xlink:href="/assets/img/sprite.svg#public"></use>
+              </svg>
+              Performance.gov
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  <p>
+    The <a href="https://www.fcc.gov/sites/default/files/tcpa-rules.pdf" target="_blank">Telephone Consumer Protection Act (TCPA)</a> (47 USC § 227) is the federal law that impacts how organizations are allowed to communicate in bulk with the public via telephone (including text message or SMS).
+  </p>
+
+  <p>
+    The <a href="https://www.federalregister.gov/documents/2021/02/12/2020-29016/government-and-government-contractor-calls-under-the-telephone-consumer-protection-act-of-1991" target="_blank">FCC has ruled</a> that <b>Federal</b> and <b>State</b> programs are exempt from the TCPA and can send text messages to the public without consent if conducting official business. Without explicit mention in the ruling, local governments, phone carriers, or any texting intermediaries might require it.
+  </p>
+
+  <p>
+    <a href="https://docs.google.com/document/d/1Q8shgH9ODs-aD3wiRolGge4kBSTJzMIebj29dNkqK9Q/edit#heading=h.ddk0bn7sfe86" target="_blank">Download and share our overview of the TCPA with your legal counsel</a>. It provides a baseline interpretation to aid your legal counsel in getting up to speed with what might be needed for your program or use case. For additional questions about the enforcement of the TCPA, you can watch <a href="">a recorded  training on public benefits texting</a> provided by the FCC.
+  </p>
+  <h3>Opting out</h3>
+  <p>
+    There is no policy requirement for senders to communicate opt-out options, but <a href="https://docs.google.com/document/d/1JgH4kKyVfnwh76tBCXjSvOtFk-6xeGVrs141_uAQ210/edit#heading=h.3zv95inge648" target="_blank"> including instructions in introductory and/or auto-response texts </a> on how to opt out and opt back in are effective ways to establish trust with your audience.
+  </p>
+
+  <p>
+    In the US, no matter where texts are coming from, a recipient has the right to revoke consent at any time through any reasonable means. For example, a text recipient can always opt out of receiving text messages from a phone number by responding “STOP”, “QUIT”, or <a href="https://docs.aws.amazon.com/pinpoint/latest/userguide/channels-sms-limitations-opt-out.html#settings-sms-self-opt-out-terms" target="_blank">one of several other keywords</a>.
+  </p>
+
+  <p>
+    Any subsequent messages sent to that number will be blocked by the phone carrier and not delivered. We recommend establishing an internal process to obtain and remove numbers that fail multiple times to avoid continuing to send messages to them.
+  </p>
+  <h2>Honoring privacy</h2>
+  <h3>Phone numbers are personally identifiable information (PII)</h3>
+  <p>
+    When putting together the data spreadsheet (or CSV) file containing text message data, follow relevant security processes for storing and transmitting the file that contains PII.
+  </p>
+  <h3>Don’t text sensitive information</h3>
+  <p>
+    Sensitive information should be protected and secure. Social Security Numbers, driver’s license numbers, personal health information, and passwords are all sensitive PII that should not be shared via text message. Consult with your privacy office to understand what information you can and cannot  include in a text message. Different programs and jurisdictions may have different rules and  interpretations.
+  </p>
+  <h3>Assess risk</h3>
+  <p>
+    Consider the risks if someone who is not the intended recipient receives the text message. Establish an internal process to keep your phone number list up-to-date. The FCC offers a <a href="https://www.fcc.gov/reassigned-numbers-database" target="_blank" rel="Reassigned Numbers Database">Reassigned Numbers Database</a> to identify phone numbers that may have been reassigned since your agency obtained them.
+  </p>
+</section>
+
+
+{% endblock %}
