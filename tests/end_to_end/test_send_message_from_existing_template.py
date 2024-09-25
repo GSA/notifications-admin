@@ -174,8 +174,8 @@ def handle_no_existing_template_case(page):
     check_axe_report(page)
 
     # TODO staging starts failing here, fix.
-    print(page)
-    print(page.content)
+    print(f"SHOULD BE SEND PAGE: {page}")
+    print(page.content())
     activity_button = page.get_by_text("Activity")
     expect(activity_button).to_be_visible()
     activity_button.click()
@@ -184,8 +184,8 @@ def handle_no_existing_template_case(page):
 
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)
-    print(page)
-    print(page.content)
+    print(f"SHOULD BE ACTIVITY PAGE: {page}")
+    print(page.content())
     download_link = page.get_by_text("Download all data last 7 days (CSV)")
     expect(download_link).to_be_visible()
 
