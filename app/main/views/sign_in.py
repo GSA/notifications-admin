@@ -70,7 +70,7 @@ def _get_access_token(code, state):
             f"Error when getting id token {response_json} #notify-admin-1505"
         )
         raise KeyError(f"'access_token' {response.json()}") from e
-    id_token = jwt.decode(id_token, keystring, algorithms=["RS256"])
+    id_token = jwt.decode(encoded_id_token, keystring, algorithms=["RS256"])
     nonce = id_token["nonce"]
     if nonce != os.getenv("TOKEN_NONCE"):
         login_manager.unauthorized()
