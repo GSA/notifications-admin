@@ -174,16 +174,19 @@ def handle_no_existing_template_case(page):
     check_axe_report(page)
 
     # TODO staging starts failing here, fix.
-    dashboard_button = page.get_by_text("Dashboard")
-    expect(dashboard_button).to_be_visible()
-    dashboard_button.click()
+    print(page)
+    print(page.content)
+    activity_button = page.get_by_text("Activity")
+    expect(activity_button).to_be_visible()
+    activity_button.click()
 
     # Check to make sure that we've arrived at the next page.
 
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)
-
-    download_link = page.get_by_text("Download")
+    print(page)
+    print(page.content)
+    download_link = page.get_by_text("Download all data last 7 days (CSV)")
     expect(download_link).to_be_visible()
 
     # Start waiting for the download
