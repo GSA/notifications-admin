@@ -1,4 +1,5 @@
 import os
+import secrets
 import time
 import uuid
 
@@ -60,13 +61,28 @@ def _get_access_token(code, state):
     url = f"{base_url}{cli_assert}&{cli_assert_type}&{code_param}&grant_type=authorization_code"
     headers = {"Authorization": "Bearer %s" % token}
     response = requests.post(url, headers=headers)
-    if response.json().get("access_token") is None:
+    response_json = response.json()
+    try:
+        encoded_id_token = response_json["id_token"]
+    except KeyError as e:
+        # Capture the response json here so it hopefully shows up in error reports
+        current_app.logger.error(
+            f"Error when getting id token {response_json} #notify-admin-1505"
+        )
+        raise KeyError(f"'access_token' {response.json()}") from e
+    id_token = jwt.decode(id_token, keystring, algorithms=["RS256"])
+    nonce = id_token["nonce"]
+    if nonce != os.getenv("TOKEN_NONCE"):
+        login_manager.unauthorized()
+
+    try:
+        access_token = response_json["access_token"]
+    except KeyError as e:
         # Capture the response json here so it hopefully shows up in error reports
         current_app.logger.error(
             f"Error when getting access token {response.json()} #notify-admin-1505"
         )
-        raise KeyError(f"'access_token' {response.json()}")
-    access_token = response.json()["access_token"]
+        raise KeyError(f"'access_token' {response.json()}") from e
     return access_token
 
 
@@ -189,9 +205,11 @@ def sign_in():
         current_app.config["DANGEROUS_SALT"],
     )
     url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
+    nonce = secrets.token_urlsafe()
+    os.environ["TOKEN_NONCE"] = nonce
     # handle unit tests
     if url is not None:
-        url = url.replace("NONCE", token)
+        url = url.replace("NONCE", nonce)
         url = url.replace("STATE", token)
     return render_template(
         "views/signin.html",
