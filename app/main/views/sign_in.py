@@ -1,3 +1,4 @@
+import json
 import os
 import secrets
 import time
@@ -41,6 +42,7 @@ def _reformat_keystring(orig):  # pragma: no cover
 def _get_access_token(code, state):  # pragma: no cover
     client_id = os.getenv("LOGIN_DOT_GOV_CLIENT_ID")
     access_token_url = os.getenv("LOGIN_DOT_GOV_ACCESS_TOKEN_URL")
+    certs_url = os.getenv("LOGIN_DOT_GOV_CERTS_URL")
     keystring = os.getenv("LOGIN_PEM")
     if " " in keystring:
         keystring = _reformat_keystring(keystring)
@@ -66,22 +68,39 @@ def _get_access_token(code, state):  # pragma: no cover
         encoded_id_token = response_json["id_token"]
     except KeyError as e:
         # Capture the response json here so it hopefully shows up in error reports
-        current_app.logger.error(f"Error when getting id token {response_json}")
+        current_app.logger.exception(f"Error when getting id token {response_json}")
         raise KeyError(f"'access_token' {response.json()}") from e
-    id_token = jwt.decode(encoded_id_token, keystring, algorithms=["RS256"])
+
+    # Getting Login.gov signing keys for unpacking the id_token correctly.
+    jwks = requests.get(certs_url).json()
+    public_keys = {
+        jwk["kid"]: {
+            "key": jwt.algorithms.RSAAlgorithm.from_jwk(json.dumps(jwk)),
+            "algo": jwk["alg"],
+        }
+        for jwk in jwks["keys"]
+    }
+    kid = jwt.get_unverified_header(encoded_id_token)["kid"]
+    pub_key = public_keys[kid]["key"]
+    algo = public_keys[kid]["algo"]
+    id_token = jwt.decode(
+        encoded_id_token, pub_key, audience=client_id, algorithms=[algo]
+    )
+
     nonce = id_token["nonce"]
     state = request.args.get("state")
     redis_key = f"token-nonce-{state}"
     token_nonce = redis_client.get(redis_key)
     redis_client.delete(redis_key)
     if nonce != token_nonce:
+        current_app.logger.warning(f"{nonce} != {token_nonce}")
         login_manager.unauthorized()
 
     try:
         access_token = response_json["access_token"]
     except KeyError as e:
         # Capture the response json here so it hopefully shows up in error reports
-        current_app.logger.error(
+        current_app.logger.exception(
             f"Error when getting access token {response.json()} #notify-admin-1505"
         )
         raise KeyError(f"'access_token' {response.json()}") from e
@@ -140,7 +159,7 @@ def _do_login_dot_gov():  # $ pragma: no cover
             current_app.logger.info(f"activating user {usr.id} #notify-admin-1505")
             activate_user(usr.id)
         except BaseException as be:  # noqa B036
-            current_app.logger.error(f"Error signing in: {be} #notify-admin-1505 ")
+            current_app.logger.exception(f"Error signing in: {be} #notify-admin-1505 ")
             error(401)
         return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
 
