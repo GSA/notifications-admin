@@ -35,11 +35,6 @@
               </a>
             </li>
           {% endif %}
-          {% if page == 3 and pagination.last > 4 %}
-            <li class="usa-pagination__item usa-pagination__overflow" aria-label="ellipsis indicating non-visible pages">
-              <span>…</span>
-            </li>
-          {% endif %}
         {% endfor %}
       {% endif %}
       {% if next_page %}
@@ -58,7 +53,6 @@
   </nav>
   {% endif %}
 {% endset %}
-
 {% block maincolumn_content %}
   <div class="margin-bottom-8">
     <h1 class="usa-sr-only">All activity</h1>
@@ -120,7 +114,7 @@
             {% endfor %}
           {% else %}
             <tr class="table-row">
-              <td class="table-empty-message" colspan="10">No batched job messages found (messages are kept for {{ service_data_retention_days }} days).</td>
+              <td class="table-empty-message" colspan="10">No messages found</td>
             </tr>
           {% endif %}
         </tbody>

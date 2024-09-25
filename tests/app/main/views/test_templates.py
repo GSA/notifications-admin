@@ -497,7 +497,7 @@ def test_caseworker_sees_template_page_if_template_is_deleted(
     )
     assert (
         page.select("p.hint")[0].text.strip()
-        == "This template was deleted today at 15:00 US/Eastern."
+        == "This template was deleted today at 15:00 America/New_York."
     )
 
     mock_get_deleted_template.assert_called_with(SERVICE_ONE_ID, template_id, None)
@@ -1591,7 +1591,7 @@ def test_should_show_page_for_a_deleted_template(
     )
     assert (
         page.select("p.hint")[0].text.strip()
-        == "This template was deleted today at 15:00 US/Eastern."
+        == "This template was deleted today at 15:00 America/New_York."
     )
     assert "Delete this template" not in page.select_one("main").text
 

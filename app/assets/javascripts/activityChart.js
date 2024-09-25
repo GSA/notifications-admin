@@ -64,7 +64,7 @@
                 .padding(0.1);
                             // Adjust the y-axis domain to add some space above the tallest bar
             const maxY = d3.max(deliveredData.map((d, i) => d + (failedData[i] || 0)));
-            const y = d3.scaleLinear()
+            const y = d3.scaleSqrt()
                 .domain([0, maxY + 2]) // Add 2 units of space at the top
                 .nice()
                 .range([height, 0]);

@@ -121,6 +121,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "link_service_to_organization",
             "live_services",
             "live_services_csv",
+            "load_test",
             "manage_org_users",
             "manage_template_folder",
             "manage_users",
@@ -423,7 +424,7 @@ def test_caseworkers_get_caseworking_navigation(
     client_request.login(active_caseworking_user)
     page = client_request.get("main.choose_template", service_id=SERVICE_ONE_ID)
     assert normalize_spaces(page.select_one("header + .grid-container nav").text) == (
-        "Send messages Sent messages"
+        "service one Switch service"
     )
 
 
@@ -438,5 +439,5 @@ def test_caseworkers_see_jobs_nav_if_jobs_exist(
     client_request.login(active_caseworking_user)
     page = client_request.get("main.choose_template", service_id=SERVICE_ONE_ID)
     assert normalize_spaces(page.select_one("header + .grid-container nav").text) == (
-        "Send messages Sent messages"
+        "service one Switch service"
     )

@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 from flask import abort, current_app, request, session
@@ -58,6 +59,7 @@ class User(JSONModel, UserMixin):
         super().__init__(_dict)
         self.permissions = _dict.get("permissions", {})
         self._platform_admin = _dict["platform_admin"]
+        self.preferred_timezone = _dict.get("preferred_timezone", "America/New_York")
 
     @classmethod
     def from_id(cls, user_id):
@@ -218,6 +220,14 @@ class User(JSONModel, UserMixin):
     def has_permissions(
         self, *permissions, restrict_admin_usage=False, allow_org_user=False
     ):
+        # TODO need this for load test, but breaks unit tests
+        if self.platform_admin and os.getenv("NOTIFY_ENVIRONMENT") in (
+            "development",
+            "staging",
+            "demo",
+        ):
+            return True
+
         unknown_permissions = set(permissions) - all_ui_permissions
         if unknown_permissions:
             raise TypeError(

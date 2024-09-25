@@ -16,6 +16,7 @@ from app import (
 )
 from app.formatters import format_date_numeric, format_datetime_numeric, get_time_left
 from app.main import main
+from app.main.views.user_profile import set_timezone
 from app.statistics_utils import get_formatted_percentage
 from app.utils import (
     DELIVERED_STATUSES,
@@ -39,6 +40,7 @@ def old_service_dashboard(service_id):
 @main.route("/services/<uuid:service_id>")
 @user_has_permissions()
 def service_dashboard(service_id):
+
     if session.get("invited_user_id"):
         session.pop("invited_user_id", None)
         session["service_id"] = service_id
@@ -323,13 +325,19 @@ def aggregate_template_usage(template_statistics, sort_key="count"):
         key=lambda x: x["template_id"],
     ):
         template_stats = list(v)
-
+        first_stat = template_stats[0] if template_stats else None
         templates.append(
             {
                 "template_id": k,
-                "template_name": template_stats[0]["template_name"],
-                "template_type": template_stats[0]["template_type"],
+                "template_name": first_stat.get("template_name"),
+                "template_type": first_stat.get("template_type"),
                 "count": sum(s["count"] for s in template_stats),
+                "created_by": first_stat.get("created_by"),
+                "created_by_id": first_stat.get("created_by_id"),
+                "last_used": first_stat.get("last_used"),
+                "status": first_stat.get("status"),
+                "template_folder": first_stat.get("template_folder"),
+                "template_folder_id": first_stat.get("template_folder_id"),
             }
         )
 
@@ -402,11 +410,13 @@ def get_dashboard_partials(service_id):
 
 
 def get_dashboard_totals(statistics):
+
     for msg_type in statistics.values():
         msg_type["failed_percentage"] = get_formatted_percentage(
             msg_type["failed"], msg_type["requested"]
         )
         msg_type["show_warning"] = float(msg_type["failed_percentage"]) > 3
+
     return statistics
 
 
@@ -465,6 +475,8 @@ def get_months_for_financial_year(year, time_format="%B"):
 
 
 def get_current_month_for_financial_year(year):
+    # Setting the timezone here because we need to set it somewhere.
+    set_timezone()
     current_month = datetime.now().month
     return current_month
 

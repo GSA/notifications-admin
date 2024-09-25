@@ -1,3 +1,4 @@
+import os
 import time
 import uuid
 from string import ascii_uppercase
@@ -33,6 +34,7 @@ from app.main.forms import (
     SetSenderForm,
     get_placeholder_form_instance,
 )
+from app.main.views.user_profile import set_timezone
 from app.models.user import Users
 from app.s3_client.s3_csv_client import (
     get_csv_metadata,
@@ -941,8 +943,8 @@ def preview_notification(service_id, template_id):
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def send_notification(service_id, template_id):
-    scheduled_for = session.pop("scheduled_for", "")
     recipient = get_recipient()
+
     if not recipient:
         return redirect(
             url_for(
@@ -951,53 +953,10 @@ def send_notification(service_id, template_id):
                 template_id=template_id,
             )
         )
+    upload_id = _send_notification(service_id, template_id)
 
-    keys = []
-    values = []
-    for k, v in session["placeholders"].items():
-        keys.append(k)
-        values.append(v)
-
-    data = ",".join(keys)
-    vals = ",".join(values)
-    data = f"{data}\r\n{vals}"
-
-    filename = (
-        f"one-off-{uuid.uuid4()}.csv"  # {current_user.name} removed from filename
-    )
-    my_data = {"filename": filename, "template_id": template_id, "data": data}
-    upload_id = s3upload(service_id, my_data)
-
-    # To debug messages that the user reports have not been sent, we log
-    # the csv filename and the job id.  The user will give us the file name,
-    # so we can search on that to obtain the job id, which we can use elsewhere
-    # on the API side to find out what happens to the message.
-    current_app.logger.info(
-        hilite(
-            f"One-off file: {filename} job_id: {upload_id} s3 location: service-{service_id}-notify/{upload_id}.csv"
-        )
-    )
-
-    form = CsvUploadForm()
-    form.file.data = my_data
-    form.file.name = filename
-
-    check_message_output = check_messages(service_id, template_id, upload_id, 2)
-    if "You cannot send to" in check_message_output:
-        return check_messages(service_id, template_id, upload_id, 2)
-
-    job_api_client.create_job(
-        upload_id,
-        service_id,
-        scheduled_for=scheduled_for,
-        template_id=template_id,
-        original_file_name=filename,
-        notification_count=1,
-        valid="True",
-    )
-
-    session.pop("recipient")
-    session.pop("placeholders")
+    session.pop("recipient", "")
+    session.pop("placeholders", "")
 
     # We have to wait for the job to run and create the notification in the database
     time.sleep(0.1)
@@ -1045,6 +1004,56 @@ def send_notification(service_id, template_id):
     )
 
 
+def _send_notification(service_id, template_id):
+    scheduled_for = session.pop("scheduled_for", "")
+
+    keys = []
+    values = []
+    for k, v in session["placeholders"].items():
+        keys.append(k)
+        values.append(v)
+
+    data = ",".join(keys)
+    vals = ",".join(values)
+    data = f"{data}\r\n{vals}"
+    filename = (
+        f"one-off-{uuid.uuid4()}.csv"  # {current_user.name} removed from filename
+    )
+    my_data = {"filename": filename, "template_id": template_id, "data": data}
+    upload_id = s3upload(service_id, my_data)
+    # To debug messages that the user reports have not been sent, we log
+    # the csv filename and the job id.  The user will give us the file name,
+    # so we can search on that to obtain the job id, which we can use elsewhere
+    # on the API side to find out what happens to the message.
+    current_app.logger.info(
+        hilite(
+            f"One-off file: {filename} job_id: {upload_id} s3 location: service-{service_id}-notify/{upload_id}.csv"
+        )
+    )
+
+    # For load testing we want to skip these checks.  They are doing some fine-grained
+    # comparison about what is in the preview, but the load test just blast messages
+    # and doesn't care about the preview.
+    if os.getenv("NOTIFY_ENVIRONMENT") not in ("development", "staging", "demo"):
+        form = CsvUploadForm()
+        form.file.data = my_data
+        form.file.name = filename
+        check_message_output = check_messages(service_id, template_id, upload_id, 2)
+        if "You cannot send to" in check_message_output:
+            return check_messages(service_id, template_id, upload_id, 2)
+
+    job_api_client.create_job(
+        upload_id,
+        service_id,
+        scheduled_for=scheduled_for,
+        template_id=template_id,
+        original_file_name=filename,
+        notification_count=1,
+        valid="True",
+    )
+    return upload_id
+
+
 def get_email_reply_to_address_from_session():
     if session.get("sender_id"):
         return current_service.get_email_reply_to_address(session["sender_id"])[
@@ -1075,6 +1084,7 @@ def get_spreadsheet_column_headings_from_template(template):
 
 
 def get_recipient():
+    set_timezone()
     if {"recipient", "placeholders"} - set(session.keys()):
         return None
 

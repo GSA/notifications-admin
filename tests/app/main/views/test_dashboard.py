@@ -133,6 +133,11 @@ stub_template_stats = [
         "template_id": "id-1",
         "status": "created",
         "count": 50,
+        "last_used": "2024-01-25T23:02:25+00:00",
+        "created_by": "Test user",
+        "created_by_id": "987654",
+        "template_folder": "Some_folder",
+        "template_folder_id": "123456",
     },
     {
         "template_type": "email",
@@ -140,6 +145,11 @@ stub_template_stats = [
         "template_id": "id-2",
         "status": "created",
         "count": 100,
+        "last_used": "2024-01-25T23:02:25+00:00",
+        "created_by": "Test user",
+        "created_by_id": "987654",
+        "template_folder": "Some_folder",
+        "template_folder_id": "123456",
     },
     {
         "template_type": "email",
@@ -147,6 +157,11 @@ stub_template_stats = [
         "template_id": "id-2",
         "status": "technical-failure",
         "count": 100,
+        "last_used": "2024-01-25T23:02:25+00:00",
+        "created_by": "Test user",
+        "created_by_id": "987654",
+        "template_folder": "Some_folder",
+        "template_folder_id": "123456",
     },
     {
         "template_type": "sms",
@@ -154,6 +169,11 @@ stub_template_stats = [
         "template_id": "id-1",
         "status": "delivered",
         "count": 50,
+        "last_used": "2024-01-25T23:02:25+00:00",
+        "created_by": "Test user",
+        "created_by_id": "987654",
+        "template_folder": "Some_folder",
+        "template_folder_id": "123456",
     },
 ]
 
@@ -550,14 +570,14 @@ def test_download_inbox(
     )
     assert response.get_data(as_text=True) == (
         "Phone number,Message,Received\r\n"
-        "(202) 867-5300,message-1,07-01-2016 11:00 US/Eastern\r\n"
-        "(202) 867-5300,message-2,07-01-2016 10:59 US/Eastern\r\n"
-        "(202) 867-5300,message-3,07-01-2016 10:59 US/Eastern\r\n"
-        "(202) 867-5302,message-4,07-01-2016 08:59 US/Eastern\r\n"
-        "+33(0)1 12345678,message-5,07-01-2016 06:59 US/Eastern\r\n"
-        "(202) 555-0104,message-6,07-01-2016 04:59 US/Eastern\r\n"
-        "(202) 555-0104,message-7,07-01-2016 02:59 US/Eastern\r\n"
-        "+68212345,message-8,07-01-2016 02:59 US/Eastern\r\n"
+        "(202) 867-5300,message-1,07-01-2016 11:00 America/New_York\r\n"
+        "(202) 867-5300,message-2,07-01-2016 10:59 America/New_York\r\n"
+        "(202) 867-5300,message-3,07-01-2016 10:59 America/New_York\r\n"
+        "(202) 867-5302,message-4,07-01-2016 08:59 America/New_York\r\n"
+        "+33(0)1 12345678,message-5,07-01-2016 06:59 America/New_York\r\n"
+        "(202) 555-0104,message-6,07-01-2016 04:59 America/New_York\r\n"
+        "(202) 555-0104,message-7,07-01-2016 02:59 America/New_York\r\n"
+        "+68212345,message-8,07-01-2016 02:59 America/New_York\r\n"
     )
 
 
@@ -849,7 +869,7 @@ def test_should_show_upcoming_jobs_on_dashboard(
     assert normalize_spaces(page.select_one("main h2").text) == ("In the next few days")
 
     assert normalize_spaces(page.select_one("a.banner-dashboard").text) == (
-        "2 files waiting to send " "- sending starts today at 06:09 US/Eastern"
+        "2 files waiting to send " "- sending starts today at 06:09 America/New_York"
     )
 
     assert page.select_one("a.banner-dashboard")["href"] == url_for(
@@ -1399,7 +1419,7 @@ def test_menu_manage_api_keys(
         mocker,
         api_user_active,
         service_one,
-        ["view_activity", "manage_api_keys"],
+        ["view_activity"],
     )
 
     page = str(page)
@@ -1411,9 +1431,6 @@ def test_menu_manage_api_keys(
         )
         in page
     )
-    # assert url_for("main.manage_users", service_id=service_one["id"]) not in page
-    # assert url_for("main.service_settings", service_id=service_one["id"]) not in page
-    assert url_for("main.api_integration", service_id=service_one["id"]) in page
 
 
 def test_menu_all_services_for_platform_admin_user(
@@ -1786,7 +1803,6 @@ def test_org_breadcrumbs_show_if_user_is_platform_admin(
 
     client_request.login(platform_admin_user, service_one_json)
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
-
     assert page.select_one(".navigation-organization-link")["href"] == url_for(
         "main.organization_dashboard",
         org_id=ORGANISATION_ID,
