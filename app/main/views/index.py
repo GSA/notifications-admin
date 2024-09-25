@@ -224,7 +224,6 @@ def write_for_action():
     return render_template(
         "views/guidance/write-for-action.html",
         navigation_links=guidance_nav(),
-        title="Write For Action",
     )
 
 
@@ -232,9 +231,17 @@ def write_for_action():
 @user_is_logged_in
 def multiple_languages():
     return render_template(
-        "views/guidance/index.html",
+        "views/guidance/multiple-languages.html",
         navigation_links=guidance_nav(),
-        title="Multiple Languages",
+    )
+
+
+@main.route("/guidance/benchmark-performance")
+@user_is_logged_in
+def benchmark_performance():
+    return render_template(
+        "views/guidance/benchmark-performance.html",
+        navigation_links=guidance_nav(),
     )
 
 

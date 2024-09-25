@@ -28,9 +28,9 @@
   <h3>An example of key messages in direct mail</h3>
   <img src="{{asset_url('images/snap-renewal.png')}}" alt="snap-renewal">
   <h3>Prime your audiences to trust you</h3>
-  <p class="padding-bottom-2">To reinforce legitimacy, include these key messages in your outreach:</p>
+  <p>To reinforce legitimacy, include these key messages in your outreach:</p>
 
-  <ul class="usa-card-group flex-1 flex-wrap">
+  <ul class="usa-card-group flex-1 flex-wrap padding-top-2">
     <li class="flex-1 width-full height-full padding-bottom-2">
       <div class="usa-card__container border-0">
         <ol class="guidance-list">
@@ -72,8 +72,8 @@
   <p>When a person has questions or needs assistance, reaching out for support may be natural for them. Give direction
     in your texts so your audience understands what to do with the information you provide. Remember, it’s important to
     repeat consistent and standardized language across texts and programs.</p>
-  <h3 class="guidance">Be trustworthy</h3>
-  <ul class="usa-card-group flex-1 flex-wrap">
+  <h3>Be trustworthy</h3>
+  <ul class="usa-card-group flex-1 flex-wrap padding-top-2">
     <li class="flex-1 width-full height-full padding-bottom-2">
       <div class="usa-card__container border-0">
         <ol start="7" class="guidance-list set-two">
@@ -107,8 +107,8 @@
   </ul>
   <p class="text-center">For example, we’ve seen Medicaid programs use trust-markers in renewal texts –</p>
 
-  <h3 class="guidance">Provide helpful auto-responses</h3>
-  <ul class="usa-card-group flex-1 flex-wrap">
+  <h3>Provide helpful auto-responses</h3>
+  <ul class="usa-card-group flex-1 flex-wrap padding-top-2">
     <li class="flex-1 width-full height-full padding-bottom-2">
       <div class="usa-card__container border-0">
         <ol class="guidance-list set-three">
@@ -143,23 +143,23 @@
 
   {% set card_header = "Harness trusted communication channels" %}
   {% set card_contents = [
-  {
-  "image_src": asset_url('img/usa-icons/close.svg'),
-  "card_heading": "Websites",
-  "p_text": "Post banner alerts about texting on your agency website, and link to a press release for more information.
-  Publish apublic texting privacy policy.",
-  },
-  {
-  "image_src": asset_url('img/usa-icons/close.svg'),
-  "card_heading": "Community organizations",
-  "p_text": "Alert trusted community-based organizations that texts are coming and what they look like. Equip them with
-  fliers, posters, and talking points to spread the word",
-  },
-  {
-  "image_src": asset_url('img/usa-icons/close.svg'),
-  "card_heading": "IVR / Call Centers",
-  "p_text": "Consider adding hold message announcements about your texting initiative to further get the word out.",
-  },
+    {
+    "image_src": asset_url('img/usa-icons/close.svg'),
+    "card_heading": "Websites",
+    "p_text": "Post banner alerts about texting on your agency website, and link to a press release for more information.
+    Publish apublic texting privacy policy.",
+    },
+    {
+    "image_src": asset_url('img/usa-icons/close.svg'),
+    "card_heading": "Community organizations",
+    "p_text": "Alert trusted community-based organizations that texts are coming and what they look like. Equip them with
+    fliers, posters, and talking points to spread the word",
+    },
+    {
+    "image_src": asset_url('img/usa-icons/close.svg'),
+    "card_heading": "IVR / Call Centers",
+    "p_text": "Consider adding hold message announcements about your texting initiative to further get the word out.",
+    },
   ] %}
 
   {% with card_header=card_header, card_contents=card_contents %}{% include "components/guidance/cards.html" %}{%
@@ -167,20 +167,20 @@
 
   {% set card_header = "Prepare your team" %}
   {% set card_contents = [
-  {
-  "image_src": asset_url('img/usa-icons/close.svg'),
-  "card_heading": "Staff",
-  "p_text": "Give all staff a heads-up about texts before and when they are sent.
-  Share talking points on what texts you’re sending, when you’ll start to send them, the phone number they are coming
-  from, and where staff can escalate any issues.",
-  },
-  {
-  "image_src": asset_url('img/usa-icons/close.svg'),
-  "card_heading": "Case management systems",
-  "p_text": "When it makes sense, include information about texts being sent to specific clients on individual splash
-  pages or
-  within case management notes.",
-  },
+    {
+    "image_src": asset_url('img/usa-icons/close.svg'),
+    "card_heading": "Staff",
+    "p_text": "Give all staff a heads-up about texts before and when they are sent.
+    Share talking points on what texts you’re sending, when you’ll start to send them, the phone number they are coming
+    from, and where staff can escalate any issues.",
+    },
+    {
+    "image_src": asset_url('img/usa-icons/close.svg'),
+    "card_heading": "Case management systems",
+    "p_text": "When it makes sense, include information about texts being sent to specific clients on individual splash
+    pages or
+    within case management notes.",
+    },
   ] %}
   {% with card_header=card_header, card_contents=card_contents %}{% include "components/guidance/cards.html" %}{%
   endwith %}

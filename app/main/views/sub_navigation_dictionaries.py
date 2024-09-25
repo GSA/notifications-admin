@@ -96,4 +96,8 @@ def guidance_nav():
             "name": "Multiple languages",
             "link": "main.multiple_languages",
         },
+        {
+            "name": "Benchmark Performance",
+            "link": "main.benchmark_performance",
+        },
     ]

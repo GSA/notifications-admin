@@ -33,6 +33,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "archive_service",
             "archive_user",
             "begin_tour",
+            "benchmark_performance",
             "billing_details",
             "callbacks",
             "cancel_invited_org_user",
