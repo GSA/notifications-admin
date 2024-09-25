@@ -64,10 +64,10 @@ def _get_access_token(code, state):
     response_json = response.json()
     try:
         encoded_id_token = response_json["id_token"]
-    except KeyError as e:
+    except KeyError as e:  # pragma: no cover
         # Capture the response json here so it hopefully shows up in error reports
         current_app.logger.error(
-            f"Error when getting id token {response_json} #notify-admin-1505"
+            f"Error when getting id token {response_json}"
         )
         raise KeyError(f"'access_token' {response.json()}") from e
     id_token = jwt.decode(encoded_id_token, keystring, algorithms=["RS256"])
@@ -81,7 +81,7 @@ def _get_access_token(code, state):
 
     try:
         access_token = response_json["access_token"]
-    except KeyError as e:
+    except KeyError as e:  # pragma: no cover
         # Capture the response json here so it hopefully shows up in error reports
         current_app.logger.error(
             f"Error when getting access token {response.json()} #notify-admin-1505"
