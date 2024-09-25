@@ -1,6 +1,5 @@
 import json
 import os
-import secrets
 import time
 import uuid
 
@@ -18,7 +17,7 @@ from flask import (
 )
 from flask_login import current_user
 
-from app import login_manager, redis_client, user_api_client
+from app import login_manager, user_api_client
 from app.main import main
 from app.main.views.index import error
 from app.main.views.verify import activate_user
@@ -89,12 +88,12 @@ def _get_access_token(code, state):  # pragma: no cover
 
     nonce = id_token["nonce"]
     state = request.args.get("state")
-    redis_key = f"token-nonce-{state}"
-    token_nonce = redis_client.get(redis_key)
-    redis_client.delete(redis_key)
-    if nonce != token_nonce:
-        current_app.logger.warning(f"{nonce} != {token_nonce}")
-        login_manager.unauthorized()
+
+    if nonce != state:
+        current_app.logger.warning(f"{nonce} != {state}")
+        abort(403)
+
+    # redis_client.delete(redis_key)
 
     try:
         access_token = response_json["access_token"]
@@ -226,12 +225,10 @@ def sign_in():  # pragma: no cover
         current_app.config["DANGEROUS_SALT"],
     )
     url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
-    nonce = secrets.token_urlsafe()
     state = request.args.get("state")
-    redis_client.set(f"token-nonce-{state}", nonce)
     # handle unit tests
     if url is not None:
-        url = url.replace("NONCE", nonce)
+        url = url.replace("NONCE", state)  # We are getting the state back as the nonce.
         url = url.replace("STATE", token)
     return render_template(
         "views/signin.html",
