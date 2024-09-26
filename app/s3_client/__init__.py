@@ -12,7 +12,7 @@ AWS_CLIENT_CONFIG = Config(
     s3={
         "addressing_style": "virtual",
     },
-    use_fips_endpoint=True,
+    use_fips_endpoint=os.getenv("NOTIFY_ENVIRONMENT") in ['demo', 'production'],
 )
 
 
