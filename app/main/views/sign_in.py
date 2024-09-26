@@ -1,5 +1,6 @@
 import json
 import os
+import secrets
 import time
 import uuid
 
@@ -13,6 +14,7 @@ from flask import (
     redirect,
     render_template,
     request,
+    session,
     url_for,
 )
 from flask_login import current_user
@@ -87,13 +89,10 @@ def _get_access_token(code, state):  # pragma: no cover
     )
 
     nonce = id_token["nonce"]
-    state = request.args.get("state")
-
-    if nonce != state:
-        current_app.logger.warning(f"{nonce} != {state}")
+    saved_nonce = session.pop("nonce")
+    if nonce != saved_nonce:
+        current_app.logger.error(f"Nonce Error: {nonce} != {saved_nonce}")
         abort(403)
-
-    # redis_client.delete(redis_key)
 
     try:
         access_token = response_json["access_token"]
@@ -225,11 +224,15 @@ def sign_in():  # pragma: no cover
         current_app.config["DANGEROUS_SALT"],
     )
     url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
-    state = request.args.get("state")
+
+    nonce = secrets.token_urlsafe()
+    session["nonce"] = nonce
+
     # handle unit tests
     if url is not None:
-        url = url.replace("NONCE", state)  # We are getting the state back as the nonce.
+        url = url.replace("NONCE", nonce)
         url = url.replace("STATE", token)
+
     return render_template(
         "views/signin.html",
         again=bool(redirect_url),
