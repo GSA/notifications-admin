@@ -99,6 +99,7 @@ jobs:
         # above make e2e-test
         run: |
           make run-flask > admin-server.log 2>&1 &
+          tail -f admin-server.log &
           make e2e-test
         env:
           API_HOST_NAME: https://notify-api-staging.app.cloud.gov/
