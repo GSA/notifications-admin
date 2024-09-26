@@ -12,8 +12,7 @@ AWS_CLIENT_CONFIG = Config(
     s3={
         "addressing_style": "virtual",
     },
-    use_fips_endpoint=os.getenv("NOTIFY_ENVIRONMENT") in ['demo', 'production'],
-    region_name="us-gov-west-1",
+    use_fips_endpoint=True,
 )
 
 
@@ -30,7 +29,10 @@ def get_s3_object(
         aws_secret_access_key=secret_key,
         region_name=region,
     )
-    s3 = session.resource("s3", config=AWS_CLIENT_CONFIG)
+    s3 = session.resource(
+        "s3",
+        endpoint_url="https://s3-fips.us-gov-west-1.amazonaws.com"
+    )
     obj = s3.Object(bucket_name, filename)
     # This 'proves' that use of moto in the relevant tests in test_send.py
     # mocks everything related to S3.  What you will see in the logs is:
