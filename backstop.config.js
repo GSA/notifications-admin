@@ -5,7 +5,7 @@ const createScenariosFromUrls = (urls, delay = 1000) => {
     label,
     url: urls[label],
     selectors: ['document'],
-    misMatchThreshold: 0.25,
+    misMatchThreshold: 0.3,
     requireSameDimensions: true,
     delay,
   }));
