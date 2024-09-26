@@ -4,6 +4,10 @@
 
 BackstopJS is currently optional in this project and is used for visual regression testing to ensure consistency in the UI. To get started with BackstopJS, follow the steps below. The official guide can be found at the [BackstopJS GitHub Repository](https://github.com/garris/BackstopJS).
 
+## Goal
+
+Eventually BackstopJS will be implemented in the pipeline process to help catch errors before they make their way to higher environments.
+
 ## Prerequisites
 
 Before running BackstopJS, ensure the following:
