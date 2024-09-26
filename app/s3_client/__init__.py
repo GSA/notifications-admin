@@ -13,6 +13,7 @@ AWS_CLIENT_CONFIG = Config(
         "addressing_style": "virtual",
     },
     use_fips_endpoint=os.getenv("NOTIFY_ENVIRONMENT") in ['demo', 'production'],
+    region_name="us-gov-west-1",
 )
 
 
