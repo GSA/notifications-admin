@@ -34,7 +34,9 @@ def s3upload(service_id, filedata):
         service_id, upload_id
     )
     if bucket_name == "":
-        raise Exception(f"NO BUCKET NAME {current_app.config['CSV_UPLOAD_BUCKET']['bucket']}")
+        expected_bucket_name = current_app.config['CSV_UPLOAD_BUCKET']['bucket']
+        expected_region = current_app.config['CSV_UPLOAD_BUCKET']['region']
+        raise Exception(f"NO BUCKET NAME SHOULD BE: {expected_bucket_name} WITH REGION {expected_region}")
 
     utils_s3upload(
         filedata=filedata["data"],
