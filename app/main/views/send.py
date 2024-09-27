@@ -1016,10 +1016,9 @@ def _send_notification(service_id, template_id):
         if k != "phone number":
             keys.append(k)
             values.append(v)
-    for k, v in session["placeholders"].items():
-        if k == "phone number":
-            keys.append(k)
-            values.append(v)
+    if "phone number" in session["placeholders"].keys():
+        keys.append("phone number")
+        values.append(session["placeholders"]["phone number"])
 
     data = ",".join(keys)
     vals = ",".join(values)
