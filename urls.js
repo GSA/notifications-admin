@@ -11,7 +11,7 @@ const sublinks = [
   { label: 'Delivery Status', path: '/using-notify/delivery-status' },
   { label: 'Guidance', path: '/using-notify/guidance' },
   { label: 'Features', path: '/features' },
-  { label: 'Roadmaps', path: '/features/roadmaps' },
+  { label: 'Roadmap', path: '/features/roadmap' },
   { label: 'Security', path: '/features/security' },
   { label: 'Support', path: '/support' },
   // Add more links here as needed

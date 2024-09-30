@@ -22,6 +22,13 @@ module.exports = {
   ],
   scenarios: [
     ...createScenariosFromUrls(urls),
+    {
+      label: 'Choose Service - Accounts',
+      url: `${baseUrl}/accounts`,
+      selectors: ['h1.heading-large', 'a.usa-button[href="/add-service"]'],
+      misMatchThreshold: 0.1,
+      requireSameDimensions: true,
+    },
     // example page with script
     {
       label: 'Get Started Page - Highlight Trial Mode',
