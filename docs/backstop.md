@@ -13,7 +13,7 @@ Eventually BackstopJS will be implemented in the pipeline process to help catch 
 Before running BackstopJS, ensure the following:
 
 - Both the API and Admin projects must be running.
-- In the .env file of the API project, make sure the following environment variables are uncommented and set to matching values:
+- In the .env file of both the API and Admin projects, make sure the following environment variables are uncommented and set to matching values:
   - `NOTIFY_E2E_TEST_EMAIL`
   - `NOTIFY_E2E_TEST_PASSWORD`
 
