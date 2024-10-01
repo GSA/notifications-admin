@@ -15,7 +15,7 @@
     action or influence behavior. Therefore, when starting to plan your texting campaign, it’s important to start with
     the end in mind.
   </p>
-  <div class="usa-summary-box" role="region" aria-labelledby="summary-box-establish-clear-goals">
+  <div class="usa-summary-box maxw-tablet" role="region" aria-labelledby="summary-box-establish-clear-goals">
     <div class="usa-summary-box__body">
       <h4 class="usa-summary-box__heading" id="summary-box-establish-clear-goals">
         To establish clear goals, start by answering the following questions:
@@ -34,66 +34,87 @@
   <p>Dept. of Human Services: We believe your EBT card may have been used by someone else. Please call the number on the
     back of your card (888-123-5555) to cancel and get a new one. If you need a new card immediately, please visit your
     local office.</p>
-  <div class="grid-row grid-gap">
+  <div class="grid-row grid-gap-3">
     <div class="tablet:grid-col">
-      <p class="border-top-1px border-base-light padding-top-1 margin-top-0"><b>Use texting to</b> share timely information, provide critical status updates, or remind someone to do something.</p>
-      {% set list_item_dos = [
-        {
-        "list_content": "Your application is due on…",
-        },
-        {
-        "list_content": "We need more information from you to process your application for…",
-        },
-        {
-        "list_content": "We will be calling you about…at…",
-        },
-        {
-        "list_content": "We will be calling you about…at…",
-        },
-      ] %}
-      <p class="margin-bottom-2">Examples:</p>
-      <ul class="usa-icon-list">
-        {% for item in list_item_dos %}
-        <li class="usa-icon-list__item">
-          <img src="{{ asset_url('img/usa-icons/check_circle.svg') }}" role="img" alt="check circle"/>
-          <div class="usa-icon-list__content">
-            {{item.list_content}}
-          </div>
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
+      <div class="do-dont">
+        <div class="do-dont__do">
+          <h3 class="do-dont__heading"><a id="what-to-do" class="usa-anchor"></a>
+            <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+              <use xlink:href="{{ url_for('static', filename='img/sprite.svg') }}#check_circle"></use>
+            </svg>
+            What to do
+          </h3>
+          <div class="do-dont__content">
+            <p><b>Use texting to</b> share timely
+              information, provide critical status updates, or remind someone to do something.</p>
+            <p class="margin-bottom-2">Examples:</p>
 
+            {% set list_item_dos = [
+            {
+            "list_content": "Your application is due on…",
+            },
+            {
+            "list_content": "We need more information from you to process your application for…",
+            },
+            {
+            "list_content": "We will be calling you about…at…",
+            },
+            {
+            "list_content": "We will be calling you about…at…",
+            },
+            ] %}
+            <ul>
+              {% for item in list_item_dos %}
+              <li>
+                {{item.list_content}}
+              </li>
+              {% endfor %}
+              </ul>
+              </div>
+        </div>
+        </div>
+        </div>
     <div class="tablet:grid-col">
-      <p class="border-top-1px border-base-light padding-top-1 margin-top-0">Texting is <b>not great for</b> long, detailed instructions or frequent reminders that may be ignored.
-      </p>
-      <p class="margin-bottom-2">Examples:</p>
-      {% set list_item_donts = [
-        {
-        "list_content": "Your rights and responsibilities",
-        },
-        {
-        "list_content": "How to complete your application",
-        },
-        {
-        "list_content": "Weekly reminder not to share your account information",
-        },
-      ] %}
-      <ul class="usa-icon-list usa-icon-list--primary">
-        {% for item in list_item_donts %}
-        <li class="usa-icon-list__item">
-          <img src="{{ asset_url('img/usa-icons/cancel.svg') }}" role="img" alt="cancel circle"/>
-          <div class="usa-icon-list__content">{{item.list_content}}</div>
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
+      <div class="do-dont">
+        <div class="do-dont__dont">
+          <h3 class="do-dont__heading"><a id="what-not-to-do" class="usa-anchor"></a>
+            <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+              <use xlink:href="{{ url_for('static', filename='img/sprite.svg') }}#cancel"></use>
+            </svg> What not to do
+          </h3>
+          <div class="do-dont__content">
+            <p>Texting is <b>not great for</b> long,
+              detailed instructions or frequent reminders that may be ignored.
+            </p>
+            <p class="margin-bottom-2">Examples:</p>
+            {% set list_item_donts = [
+            {
+            "list_content": "Your rights and responsibilities",
+            },
+            {
+            "list_content": "How to complete your application",
+            },
+            {
+            "list_content": "Weekly reminder not to share your account information",
+            },
+            ] %}
+            <ul>
+              {% for item in list_item_donts %}
+              <li>
+                {{item.list_content}}
+              </li>
+              {% endfor %}
+              </ul>
+              </div>
+              </div>
+          </div>
+          </div>
+          </div>
 
   <p>Your program may already be communicating with your audience through methods like mailed notices and phone calls. Think of text messages as complementary to your existing communications. Review how well you are currently reaching your audience. Are there methods or gaps that could be supplemented with a text message?
   </p>
   <p>
-    The Department of Veterans Affairs provides a <a
+    The Department of Veterans Affairs provides a <a class="use-link usa-link--external"
       href="https://github.com/department-of-veterans-affairs/va.gov-team/blob/master/products/va-notify/notification-guide.md#vanotify-notification-guide"
       target="_blank">helpful
       flow-chart</a> that can help you decide if a text message is needed
@@ -105,15 +126,9 @@
     result
     of implementing text messaging at your agency. For example:
   </p>
-
-  <ul list list-bullet>
-    <li>
-      We believe that texting [specific group of people] when [this happens or on this cadence] to inform/alert them
-      about
-      [subject] will result in [desired action].
-    </li>
-  </ul>
-
+  <p class="site-note bg-base-lighter"> We believe that texting [specific group of people] when [this happens or on this
+    cadence] to
+    inform/alert them about [subject] will result in [desired action].</p>
   <p>
     Review your drafted hypothesis with your team to make sure everyone is aligned on your desired goals. A clear and
     concise hypothesis can help you decide how to <a href="../guidance/write-for-action">write text message content
@@ -153,14 +168,19 @@
       the results you want?",
     },
   ] %}
-  <ul class="usa-icon-list usa-icon-list--primary padding-top-2">
-    {% for item in list_performance_dos %}
-    <li class="usa-icon-list__item">
-      <img src="{{ asset_url('img/usa-icons/check_circle.svg') }}" role="img" alt="check circle"/>
-      <div class="usa-icon-list__content">{{item.list_content |safe}}</div>
-    </li>
-    {% endfor %}
-  </ul>
+  <div class="usa-summary-box maxw-tablet" role="region" aria-labelledby="summary-box-establish-clear-goals">
+    <div class="usa-summary-box__body">
+      <div class="usa-summary-box__text">
+        <ul class="usa-list margin-top-0">
+          {% for item in list_performance_dos %}
+          <li>
+            {{item.list_content |safe}}
+          </li>
+          {% endfor %}
+          </ul>
+      </div>
+    </div>
+  </div>
 </section>
 
 

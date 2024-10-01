@@ -5,7 +5,6 @@ Guidance
 {% endblock %}
 
 {% block content_column_content %}
-{% with title=page_title %}{% include "components/guidance/nav_breadcrumb.html" %}{% endwith %}
 
 <section class="usa-prose">
   <h1>Guidance</h1>
@@ -18,32 +17,32 @@ Guidance
   {% set card_header = "Key elements of a texting campaign" %}
   {% set card_contents = [
     {
-    "image_src": asset_url('img/usa-icons/close.svg'),
+    "image_src": asset_url('images/goal.svg'),
     "card_heading": "Establish clear goals",
     "p_text": "Start with a singular purpose. Make explicit what you want to achieve.",
     },
     {
-    "image_src": asset_url('img/usa-icons/close.svg'),
+    "image_src": asset_url('images/compliant.svg'),
     "card_heading": "Follow rules & regulations",
     "p_text": "Understand what is required when texting the public.",
     },
     {
-    "image_src": asset_url('img/usa-icons/close.svg'),
+    "image_src": asset_url('images/handshake.svg'),
     "card_heading": "Establish trust",
     "p_text": "Help your audience anticipate and welcome your texts.",
     },
     {
-    "image_src": asset_url('img/usa-icons/close.svg'),
+    "image_src": asset_url('images/runer-silhouette-running-fast.svg'),
     "card_heading": "Write texts that provoke action",
     "p_text": "Help your audience know what to do with the information you send.",
     },
     {
-    "image_src": asset_url('img/usa-icons/close.svg'),
+    "image_src": asset_url('images/language.svg'),
     "card_heading": "Send texts in multiple languages",
     "p_text": "What to know as you plan translated texts.",
     },
     {
-    "image_src": asset_url('img/usa-icons/close.svg'),
+    "image_src": asset_url('images/chart.svg'),
     "card_heading": "Measure performance with benchmarking",
     "p_text": "Learn how effective your texting program can be.",
     }

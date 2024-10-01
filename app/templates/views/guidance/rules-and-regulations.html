@@ -23,17 +23,13 @@
   </p>
   {% set links = [
     {
-    "url_link": "https://www.fcc.gov/sites/default/files/tcpa-rules.pdf",
-    "url_text":"Telephone Consumer Protection Act (TCPA)",
-    "p_text": 'The <a href="https://www.fcc.gov/sites/default/files/tcpa-rules.pdf" target="_blank">Telephone Consumer
+    "p_text": 'The <a class="use-link usa-link--external" href="https://www.fcc.gov/sites/default/files/tcpa-rules.pdf"
+      target="_blank">Telephone Consumer
       Protection Act (TCPA)</a> (47 USC § 227) is the federal law that impacts how organizations are allowed to communicate
     in bulk with the public via telephone (including text message or SMS).'
     },
     {
-    "url_link":
-    "https://www.federalregister.gov/documents/2021/02/12/2020-29016/government-and-government-contractor-calls-under-the-telephone-consumer-protection-act-of-1991",
-    "url_text":"Telephone Consumer Protection Act of 1991",
-    "p_text": 'The <a
+    "p_text": 'The <a class="use-link usa-link--external"
       href="https://www.federalregister.gov/documents/2021/02/12/2020-29016/government-and-government-contractor-calls-under-the-telephone-consumer-protection-act-of-1991"
       target="_blank">FCC has ruled</a> that <b>Federal</b> and <b>State</b> programs are exempt from the TCPA and can send
     text messages to the public without consent if conducting official business. Without explicit mention in the ruling,
@@ -45,7 +41,9 @@
     "url_text":"Download and share our overview of the TCPA with your legal counsel",
     "p_text": 'It provides a baseline
     interpretation to aid your legal counsel in getting up to speed with what might be needed for your program or use case.
-    For additional questions about the enforcement of the TCPA, you can watch <a href="https://www.performance.gov/cx/life-experiences/facing-a-financial-shock/outputs/fcc-training/" target="_blank">a recorded training on public
+    For additional questions about the enforcement of the TCPA, you can watch <a class="use-link usa-link--external"
+      href="https://www.performance.gov/cx/life-experiences/facing-a-financial-shock/outputs/fcc-training/"
+      target="_blank">a recorded training on public
       benefits texting</a> provided by the FCC.'
     },
   ] %}
@@ -54,9 +52,11 @@
     {% for item in links %}
     <li class="usa-collection__item">
       <div class="usa-collection__body">
+        {% if item.url_text %}
         <h4 class="usa-collection__heading">
-          <a class="usa-link guidance" href="{{ item.url_link }}" target="_blank">{{ item.url_text }}</a>
+          <a class="use-link usa-link--external" href="{{ item.url_link }}" target="_blank">{{ item.url_text }}</a>
           </h4>
+        {% endif %}
         <p class="usa-collection__description">
           {{item.p_text |safe}}
         </p>
@@ -70,7 +70,11 @@
   </p>
 
   <p>
-    In the US, no matter where texts are coming from, a recipient has the right to revoke consent at any time through any reasonable means. For example, a text recipient can always opt out of receiving text messages from a phone number by responding “STOP”, “QUIT”, or <a href="https://docs.aws.amazon.com/pinpoint/latest/userguide/channels-sms-limitations-opt-out.html#settings-sms-self-opt-out-terms" target="_blank">one of several other keywords</a>.
+    In the US, no matter where texts are coming from, a recipient has the right to revoke consent at any time through any
+    reasonable means. For example, a text recipient can always opt out of receiving text messages from a phone number by
+    responding “STOP”, “QUIT”, or <a class="usa-link usa-link--external"
+      href="https://docs.aws.amazon.com/pinpoint/latest/userguide/channels-sms-limitations-opt-out.html#settings-sms-self-opt-out-terms"
+      target="_blank">one of several other keywords</a>.
   </p>
 
   <p>
@@ -87,7 +91,10 @@
   </p>
   <h3>Assess risk</h3>
   <p>
-    Consider the risks if someone who is not the intended recipient receives the text message. Establish an internal process to keep your phone number list up-to-date. The FCC offers a <a href="https://www.fcc.gov/reassigned-numbers-database" target="_blank" rel="Reassigned Numbers Database">Reassigned Numbers Database</a> to identify phone numbers that may have been reassigned since your agency obtained them.
+    Consider the risks if someone who is not the intended recipient receives the text message. Establish an internal process
+    to keep your phone number list up-to-date. The FCC offers a <a class="use-link usa-link--external"
+      href="https://www.fcc.gov/reassigned-numbers-database" target="_blank" rel="Reassigned Numbers Database">Reassigned
+      Numbers Database</a> to identify phone numbers that may have been reassigned since your agency obtained them.
   </p>
 </section>
 
