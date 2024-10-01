@@ -70,10 +70,10 @@
               </li>
               {% endfor %}
               </ul>
-              </div>
+          </div>
         </div>
-        </div>
-        </div>
+      </div>
+    </div>
     <div class="tablet:grid-col">
       <div class="do-dont">
         <div class="do-dont__dont">
@@ -88,15 +88,15 @@
             </p>
             <p class="margin-bottom-2">Examples:</p>
             {% set list_item_donts = [
-            {
-            "list_content": "Your rights and responsibilities",
-            },
-            {
-            "list_content": "How to complete your application",
-            },
-            {
-            "list_content": "Weekly reminder not to share your account information",
-            },
+              {
+              "list_content": "Your rights and responsibilities",
+              },
+              {
+              "list_content": "How to complete your application",
+              },
+              {
+              "list_content": "Weekly reminder not to share your account information",
+              },
             ] %}
             <ul>
               {% for item in list_item_donts %}
@@ -104,12 +104,12 @@
                 {{item.list_content}}
               </li>
               {% endfor %}
-              </ul>
-              </div>
-              </div>
+            </ul>
           </div>
-          </div>
-          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <p>Your program may already be communicating with your audience through methods like mailed notices and phone calls. Think of text messages as complementary to your existing communications. Review how well you are currently reaching your audience. Are there methods or gaps that could be supplemented with a text message?
   </p>
@@ -150,38 +150,20 @@
     ideally, from people who receive the texts themselves to ensure your messages are clear and actionable.
   </p>
   <h2>Measure performance</h2>
-  <p>
-    Building and operationalizing a texting initiative requires time and effort, and you want to be able to demonstrate
-    the results of that effort. To understand if your texting program is successful, ask:
-  </p>
-  {% set list_performance_dos = [
-    {
-    "list_content": "What do you want to be <i>different</i> for your program or your desired audience after a text message is sent,
-      as
-      compared to your current state?",
-    },
-    {
-    "list_content": "How will you <i>know</i> if text recipients take the desired action?",
-    },
-    {
-    "list_content": "Do you have access to existing data in your system that you could use to determine whether texting is giving you
-      the results you want?",
-    },
-  ] %}
   <div class="usa-summary-box maxw-tablet" role="region" aria-labelledby="summary-box-establish-clear-goals">
     <div class="usa-summary-box__body">
       <div class="usa-summary-box__text">
-        <ul class="usa-list margin-top-0">
-          {% for item in list_performance_dos %}
-          <li>
-            {{item.list_content |safe}}
-          </li>
-          {% endfor %}
-          </ul>
+        <p class="margin-top-0">
+          Building and operationalizing a texting initiative requires time and effort, and you want to be able to demonstrate
+          the results of that effort. To understand if your texting program is successful, ask:
+        </p>
+        <ul class="usa-list">
+          <li>What do you want to be different for your program or your desired audience after a text message is sent, as compared to your current state?</li>
+          <li>How will you know if text recipients take the desired action?</li>
+          <li>Do you have access to existing data in your system that you could use to determine whether texting is giving you the results you want?</li>
+        </ul>
       </div>
     </div>
   </div>
 </section>
-
-
 {% endblock %}
