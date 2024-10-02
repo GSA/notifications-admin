@@ -1,11 +1,13 @@
 const { urls, baseUrl } = require('./urls');
 
+const MISMATCH_THRESHOLD = 0.3;
+
 const createScenariosFromUrls = (urls, delay = 1000) => {
   return Object.keys(urls).map((label) => ({
     label,
     url: urls[label],
     selectors: ['document'],
-    misMatchThreshold: 0.3,
+    misMatchThreshold: MISMATCH_THRESHOLD,
     requireSameDimensions: true,
     delay,
   }));
@@ -26,7 +28,7 @@ module.exports = {
       label: 'Choose Service - Accounts',
       url: `${baseUrl}/accounts`,
       selectors: ['h1.heading-large', 'a.usa-button[href="/add-service"]'],
-      misMatchThreshold: 0.1,
+      misMatchThreshold: MISMATCH_THRESHOLD,
       requireSameDimensions: true,
     },
     // example page with script
@@ -34,7 +36,7 @@ module.exports = {
       label: 'Get Started Page - Highlight Trial Mode',
       url: `${baseUrl}/using-notify/get-started`,
       selectors: ['document'],
-      misMatchThreshold: 0.1,
+      misMatchThreshold: MISMATCH_THRESHOLD,
       requireSameDimensions: true,
       onBeforeScript: 'puppeteer/countFeatureLinks.js',
     },

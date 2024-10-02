@@ -3,7 +3,6 @@ const baseUrl = 'http://localhost:6012';
 // List of routes with paths and labels
 const sublinks = [
   { label: 'Homepage', path: '/' },
-  { label: 'Accounts', path: '/accounts' },
   { label: 'Add Service', path: '/add-service' },
   { label: 'Get Started', path: '/using-notify/get-started' },
   { label: 'Trial Mode', path: '/using-notify/trial-mode' },
