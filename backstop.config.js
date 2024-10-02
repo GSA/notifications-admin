@@ -1,8 +1,9 @@
 const { urls, baseUrl } = require('./urls');
 
 const MISMATCH_THRESHOLD = 0.3;
+const SCREENSHOT_DELAY = 2000;
 
-const createScenariosFromUrls = (urls, delay = 1000) => {
+const createScenariosFromUrls = (urls, delay = SCREENSHOT_DELAY) => {
   return Object.keys(urls).map((label) => ({
     label,
     url: urls[label],
@@ -30,6 +31,7 @@ module.exports = {
       selectors: ['h1.heading-large', 'a.usa-button[href="/add-service"]'],
       misMatchThreshold: MISMATCH_THRESHOLD,
       requireSameDimensions: true,
+      delay: SCREENSHOT_DELAY,
     },
     // example page with script
     {
@@ -39,6 +41,7 @@ module.exports = {
       misMatchThreshold: MISMATCH_THRESHOLD,
       requireSameDimensions: true,
       onBeforeScript: 'puppeteer/countFeatureLinks.js',
+      delay: SCREENSHOT_DELAY,
     },
   ],
   paths: {

@@ -1,6 +1,15 @@
 import os
+import secrets
 
-from flask import abort, current_app, redirect, render_template, request, url_for
+from flask import (
+    abort,
+    current_app,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from flask_login import current_user
 
 from app import status_api_client
@@ -23,8 +32,12 @@ def index():
     )
     url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
     # handle unit tests
+
+    nonce = secrets.token_urlsafe()
+    session["nonce"] = nonce
+
     if url is not None:
-        url = url.replace("NONCE", token)
+        url = url.replace("NONCE", nonce)
         url = url.replace("STATE", token)
     return render_template(
         "views/signedout.html",

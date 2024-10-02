@@ -29,13 +29,9 @@ def check_axe_report(page):
 
     results = axe.run(page)
 
-    # TODO we are setting this to critical for now
-    # to keep tests passing.  Once the serious and
-    # moderate issues are fixed, we will set this
-    # 'moderate'
+    # TODO fix remaining 'moderate' failures
+    # so we can set the level we skip to minor only
     for violation in results["violations"]:
         assert violation["impact"] in [
             "minor",
-            "moderate",
-            "serious",
         ], f"Accessibility violation: {violation}"

@@ -1009,9 +1009,16 @@ def _send_notification(service_id, template_id):
 
     keys = []
     values = []
+    # Guarantee that the real phone number comes last, because some
+    # users will have placeholders like "add your second phone number"
+    # or something like as custom placeholders.
     for k, v in session["placeholders"].items():
-        keys.append(k)
-        values.append(v)
+        if k != "phone number":
+            keys.append(k)
+            values.append(v)
+    if "phone number" in session["placeholders"].keys():
+        keys.append("phone number")
+        values.append(session["placeholders"]["phone number"])
 
     data = ",".join(keys)
     vals = ",".join(values)
