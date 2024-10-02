@@ -40,7 +40,7 @@
   </ol>
 
   <p>For example, getting a person to update their mailing address:</p>
-  <ul class="usa-card-group flex-1 flex-wrap padding-top-2">
+  <ul class="usa-card-group flex-1 flex-wrap padding-top-2 guidance-flex-container">
     <li class="flex-1 width-full height-full padding-bottom-2">
       <div class="usa-card__container border-0">
         <ol class="guidance-list">
@@ -60,9 +60,14 @@
     <li class="usa-card flex-1 usa-card--media-right width-full">
       <div class="usa-card__container border-0 width-full">
         <img class="width-full" src="{{ asset_url('images/phone_grey.svg') }}" role="img" alt="Phone" />
-        <div class="position-absolute flex text-cener padding-5 padding-top-8">
+        <div class="position-absolute flex text-cener padding-5 padding-top-9">
           <p class="text-center">Write an introductory text before you start sending messages:</p>
-          <p class="text-center">{{circle_number(1) }}State Medicare Agency: Hello, MEDICARE has attempted to send you an update about your claim, but the mail was returned. {{circle_number(2) }}Please go to https://www.medicare.gov/account/login?utm_source=TEXT, {{circle_number(3) }}log in to your account, and click “My Account Information” to verify that your address is correct. If you are having difficulty logging in, {{circle_number(4) }}call 1-800-MEDICARE for assistance. {{circle_number(5) }}We will attempt to send the mail again in 14 days.{{circle_number(6) }}
+          <p class="sms-message-wrapper text-center">{{circle_number(1) }}State Medicare Agency: Hello, MEDICARE has attempted to
+            send you an update about your claim, but the mail was returned. {{circle_number(2) }}Please go to
+            https://www.medicare.gov/account/login?utm_source=TEXT, {{circle_number(3) }}log in to your account, and click “My
+            Account Information” to verify that your address is correct. If you are having difficulty logging in,
+            {{circle_number(4) }}call 1-800-MEDICARE for assistance. {{circle_number(5) }}We will attempt to send the mail again
+            in 14 days.{{circle_number(6) }}
           </p>
         </div>
       </div>

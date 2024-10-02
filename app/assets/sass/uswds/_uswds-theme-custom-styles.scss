@@ -699,7 +699,7 @@ ol.guidance-list li {
 
 ol.guidance-list li::before {
    content: counter(item);
-   background-color: #000;
+   background-color: #005ea2;
    color: white;
    width: 32px;
    height: 32px;
@@ -812,4 +812,22 @@ img.guidance_card_img  {
    width: 50%;
    height: auto;
    margin: 0 auto;
+}
+
+.svg-circle-icon {
+   display: inline-block;
+   margin: 0;
+   padding: 0;
+   vertical-align: text-bottom;
+   margin-right: -2px;
+}
+
+.height-phone-lg {
+   max-height: 500px;
+}
+
+@media (max-width: 758px) {
+   .guidance-flex-container {
+      flex-direction: column;
+   }
 }

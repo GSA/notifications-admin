@@ -52,13 +52,13 @@
       </div>
     </li>
     <li class="usa-card flex-1 usa-card--media-right width-full">
-      <div class="usa-card__container border-0 width-full">
+      <div class="usa-card__container border-0 width-full overflow-hidden height-phone-lg">
         <img class="width-full" src="{{ asset_url('images/phone_grey.svg') }}" role="img" alt="Phone" />
-        <div class="position-absolute flex text-cener padding-5 padding-top-8">
+        <div class="position-absolute flex text-cener padding-5 padding-top-9">
           <p class="text-center">Write an introductory text before you start sending messages:</p>
-          <p class="text-center">Department of Social Services: Welcome to text updates from the {{ circle_number(1) }}
-            <b>State Department of Social Services.</b>{{ circle_number(2) }}<b>We’ll always text you from this
-              number,</b> save us to your contact list. Our goal is to {{ circle_number(3) }} <b>keep you up to date on
+          <p class="sms-message-wrapper text-center">Department of Social Services: Welcome to text updates from the
+            {{circle_number(1)}}<b>State Department of Social Services.</b> {{ circle_number(2) }}<b>We’ll always text you from
+              this number,</b> save us to your contact list. Our goal is to {{ circle_number(3) }} <b>keep you up to date on
               your account status.</b> {{ circle_number(4) }} <b>We will never ask for personal details in a text.</b>
             {{ circle_number(5) }} If you have questions about how we protect your privacy, see
             state.gov/privacy. <br />{{circle_number(6) }}<b>Reply STOP to stop.</b>
@@ -93,8 +93,8 @@
     <li class="usa-card flex-1 usa-card--media-right width-full">
       <div class="usa-card__container border-0 width-full height-mobile overflow-hidden">
         <img class="width-full" src="{{ asset_url('images/phone_grey.svg') }}" role="img" alt="Phone" />
-        <div class="position-absolute flex text-cener padding-5 padding-top-8">
-          <p class="text-center">
+        <div class="position-absolute flex text-cener padding-5 padding-top-9">
+          <p class="sms-message-wrapper text-center">
             {{circle_number(7) }}<b>Dept of Social Services:</b> Hi {{circle_number(8) }}<b>Julie,</b> Your Medicaid
             renewal is closing December 31, 2023. You can renew online at {{circle_number(9) }}<a
               href="https://www.application.yourstate.gov" target="_blank"
@@ -103,7 +103,8 @@
           </p>
         </div>
       </div>
-      <p class="text-center font-sans-xs">For example, we’ve seen Medicaid programs use trust-markers in renewal texts</p>
+      <p class="text-center font-sans-xs text-italic">For example, we’ve seen Medicaid programs use trust-markers in renewal
+        texts</p>
     </li>
   </ul>
 
@@ -120,9 +121,9 @@
     <li class="usa-card flex-1 usa-card--media-right width-full">
       <div class="usa-card__container border-0 width-full overflow-hidden guidance">
         <img class="width-full" src="{{ asset_url('images/phone_grey.svg') }}" role="img" alt="Phone" />
-        <div class="position-absolute flex text-cener padding-5 padding-top-8">
+        <div class="position-absolute flex text-cener padding-5 padding-top-9">
           <p class="text-center">Don’t forget about using auto-response text</p>
-          <p class="text-center">
+          <p class="sms-message-wrapper text-center">
             Dept of Social Services: This number is unmonitored. To {{circle_number(11) }} <b>contact us, call
               888-123-4567</b>. We will never ask for personal details in a text. If you have questions about how to
             protect your privacy, see state.gov/privacy {{circle_number(12) }} <b>Reply “STOP”</b> to this phone number
