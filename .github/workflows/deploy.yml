@@ -75,7 +75,33 @@ jobs:
         cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
         cf_org: gsa-tts-benefits-studio
         cf_space: notify-staging
-        cf_command: "push -f manifest.yml --vars-file deploy-config/staging.yml --var var-name=${{ secrets.DANGEROUS_SALT }} --var var-name=${{ secrets.SECRET_KEY }} --var ADMIN_CLIENT_USERNAME=admin-notify --var var-name=${{ secrets.ADMIN_CLIENT_SECRET }} --var var-name=${{ secrets.NEW_RELIC_LICENSE_KEY }} --var var-name=${{ secrets.NR_BROWSER_KEY }} --var var-name=${{ COMMIT_HASH }} --var var-name=${{ secrets.LOGIN_PEM }} --var var-name=${{ LOGIN_DOT_GOV_CLIENT_ID }} --var var-name=${{ LOGIN_DOT_GOV_USER_INFO_URL }} --var var-name=${{ LOGIN_DOT_GOV_ACCESS_TOKEN_URL }} --var var-name=${{ LOGIN_DOT_GOV_LOGOUT_URL }} --var var-name=${{ LOGIN_DOT_GOV_BASE_LOGOUT_URL }} --var var-name=${{ LOGIN_DOT_GOV_SIGNOUT_REDIRECT }} --var var-name=${{ LOGIN_DOT_GOV_INITIAL_SIGNIN_URL }} --strategy rolling"
+        cf_command: >-
+
+
+
+
+
+          push -f manifest.yml
+          --vars-file deploy-config/staging.yml
+          --var DANGEROUS_SALT="$DANGEROUS_SALT"
+          --var SECRET_KEY="$SECRET_KEY"
+          --var ADMIN_CLIENT_SECRET="$ADMIN_CLIENT_SECRET"
+          --var ADMIN_CLIENT_USERNAME="$ADMIN_CLIENT_USERNAME"
+          --var NEW_RELIC_LICENSE_KEY="$NEW_RELIC_LICENSE_KEY"
+          --var NR_BROWSER_KEY="$NR_BROWSER_KEY"
+          --var COMMIT_HASH="$COMMIT_HASH"
+          --var NOTIFY_E2E_TEST_EMAIL="$NOTIFY_E2E_TEST_EMAIL"
+          --var NOTIFY_E2E_TEST_PASSWORD="$NOTIFY_E2E_TEST_PASSWORD"
+          --var LOGIN_DOT_GOV_REGISTRATION_URL="$LOGIN_DOT_GOV_REGISTRATION_URL"
+          --var LOGIN_DOT_GOV_CLIENT_ID="$LOGIN_DOT_GOV_CLIENT_ID"
+          --var LOGIN_DOT_GOV_USER_INFO_URL="$LOGIN_DOT_GOV_USER_INFO_URL"
+          --var LOGIN_DOT_GOV_ACCESS_TOKEN_URL="$LOGIN_DOT_GOV_ACCESS_TOKEN_URL"
+          --var LOGIN_DOT_GOV_LOGOUT_URL="$LOGIN_DOT_GOV_LOGOUT_URL"
+          --var LOGIN_DOT_GOV_BASE_LOGOUT_URL="$LOGIN_DOT_GOV_BASE_LOGOUT_URL"
+          --VAR LOGIN_DOT_GOV_SIGNOUT_REDIRECT="$LOGIN_DOT_GOV_SIGNOUT_REDIRECT"
+          --var LOGIN_DOT_GOV_INITIAL_SIGNIN_URL="$LOGIN_DOT_GOV_INITIAL_SIGNIN_URL"
+          --var LOGIN_PEM="$LOGIN_PEM"
+          --strategy rolling
 
 
     - name: Check for changes to egress config
