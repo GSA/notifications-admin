@@ -28,10 +28,10 @@ NOTIFY_E2E_TEST_PASSWORD=your-password
 
 #### Step 1: Install Gulp Globally
 
-First, install Gulp globally if its not installed:
+First, make sure all dependencies are installed and updated:
 
 ```
-npm install -g gulp
+make bootstrap
 ```
 
 #### Step 2: Run the Gulp Test Task
