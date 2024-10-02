@@ -63,6 +63,7 @@ jobs:
           LOGIN_DOT_GOV_BASE_LOGOUT_URL: "https://secure.login.gov/openid_connect/logout?"
           LOGIN_DOT_GOV_SIGNOUT_REDIRECT: "https://notify-demo.app.cloud.gov/sign-out"
           LOGIN_DOT_GOV_INITIAL_SIGNIN_URL: "https://secure.login.gov/openid_connect/authorize?acr_values=http%3A%2F%2Fidmanagement.gov%2Fns%2Fassurance%2Fial%2F1&client_id=urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:notify-gov&nonce=NONCE&prompt=select_account&redirect_uri=https://notify-demo.app.cloud.gov/sign-in&response_type=code&scope=openid+email&state=STATE"
+          LOGIN_DOT_GOV_CERTS_URL: "https://secure.login.gov/api/openid_connect/certs"
         with:
           cf_username: ${{ secrets.CLOUDGOV_USERNAME }}
           cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
@@ -85,6 +86,7 @@ jobs:
             --var LOGIN_DOT_GOV_BASE_LOGOUT_URL="$LOGIN_DOT_GOV_BASE_LOGOUT_URL"
             --var LOGIN_DOT_GOV_SIGNOUT_REDIRECT="$LOGIN_DOT_GOV_SIGNOUT_REDIRECT"
             --var LOGIN_DOT_GOV_INITIAL_SIGNIN_URL="$LOGIN_DOT_GOV_INITIAL_SIGNIN_URL"
+            --var LOGIN_DOT_GOV_CERTS_URL="$LOGIN_DOT_GOV_CERTS_URL"
 
       - name: Check for changes to egress config
         id: changed-egress-config
