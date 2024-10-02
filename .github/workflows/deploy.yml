@@ -77,8 +77,6 @@ jobs:
         cf_org: gsa-tts-benefits-studio
         cf_space: notify-staging
         cf_command: >-
-
-
           push -f manifest.yml
           --vars-file deploy-config/staging.yml
           --var DANGEROUS_SALT="$DANGEROUS_SALT"
@@ -96,12 +94,11 @@ jobs:
           --var LOGIN_DOT_GOV_ACCESS_TOKEN_URL="$LOGIN_DOT_GOV_ACCESS_TOKEN_URL"
           --var LOGIN_DOT_GOV_LOGOUT_URL="$LOGIN_DOT_GOV_LOGOUT_URL"
           --var LOGIN_DOT_GOV_BASE_LOGOUT_URL="$LOGIN_DOT_GOV_BASE_LOGOUT_URL"
-          --VAR LOGIN_DOT_GOV_SIGNOUT_REDIRECT="$LOGIN_DOT_GOV_SIGNOUT_REDIRECT"
+          --var LOGIN_DOT_GOV_SIGNOUT_REDIRECT="$LOGIN_DOT_GOV_SIGNOUT_REDIRECT"
           --var LOGIN_DOT_GOV_INITIAL_SIGNIN_URL="$LOGIN_DOT_GOV_INITIAL_SIGNIN_URL"
           --var LOGIN_DOT_GOV_CERTS_URL="$LOGIN_DOT_GOV_CERTS_URL"
           --var LOGIN_PEM="$LOGIN_PEM"
           --strategy rolling
-
 
 
     - name: Check for changes to egress config
