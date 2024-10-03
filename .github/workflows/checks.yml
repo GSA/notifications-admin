@@ -60,7 +60,7 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     env:
-      VCAP_SERVICES: ${{ env.VCAP_SERVICES }}
+      VCAP_SERVICES: $VCAP_SERVICES
     services:
       postgres:
         image: postgres
