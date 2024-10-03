@@ -1015,9 +1015,16 @@ def _send_notification(service_id, template_id):
 
     keys = []
     values = []
+    # Guarantee that the real phone number comes last, because some
+    # users will have placeholders like "add your second phone number"
+    # or something like as custom placeholders.
     for k, v in session["placeholders"].items():
-        keys.append(k)
-        values.append(v)
+        if k != "phone number":
+            keys.append(k)
+            values.append(v)
+    if "phone number" in session["placeholders"].keys():
+        keys.append("phone number")
+        values.append(session["placeholders"]["phone number"])
 
     data = ",".join(keys)
     vals = ",".join(values)
@@ -1033,7 +1040,7 @@ def _send_notification(service_id, template_id):
     # on the API side to find out what happens to the message.
     current_app.logger.info(
         hilite(
-            f"One-off file: {filename} job_id: {upload_id} s3 location: service-{service_id}-notify/{upload_id}.csv"
+            f"One-off file: {filename} job_id: {upload_id} s3 location: {service_id}-service-notify/{upload_id}.csv"
         )
     )
 
