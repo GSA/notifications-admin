@@ -53,6 +53,8 @@ jobs:
 
   end-to-end-tests:
     if: ${{ github.actor != 'dependabot[bot]' }}
+    env:
+      VCAP_SERVICES: ${{ env.VCAP_SERVICES }}
     permissions:
       checks: write
       pull-requests: write
