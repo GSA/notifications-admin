@@ -95,10 +95,8 @@ jobs:
       - name: Check API Server availability
         run: |
           curl --fail -v https://notify-api-staging.app.cloud.gov || exit 1
-      - name: Print VCAP Services
-        run: |
-          echo "VCAP SERVICES value on runner:"
-          echo "$VCAP_SERVICES"
+      - name: Print all environment variables
+        run: env
       - name: Run Admin server
         # If we want to log stuff and see what's broken,
         # insert this line:
