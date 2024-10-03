@@ -175,7 +175,7 @@ def handle_no_existing_template_case(page):
     check_axe_report(page)
 
     # TODO staging starts failing here, fix.
-    print(f"SHOULD BE SEND PAGE: {page}")
+    print(f"SHOULD BE SEND PAGE: {page} and VCAP_SERVICES are {os.getenv('VCAP_SERVICES')}")
     activity_button = page.get_by_text("Activity")
     expect(activity_button).to_be_visible()
     activity_button.click()
