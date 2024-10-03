@@ -95,6 +95,10 @@ jobs:
       - name: Check API Server availability
         run: |
           curl --fail -v https://notify-api-staging.app.cloud.gov || exit 1
+      - name: Print VCAP Services
+        run: |
+          echo "VCAP SERVICES value on runner:"
+          echo $VCAP_SERVICES
       - name: Run Admin server
         # If we want to log stuff and see what's broken,
         # insert this line:
@@ -115,7 +119,7 @@ jobs:
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
           NOTIFY_E2E_TEST_URI: http://localhost:6012/
-          VCAP_SERVICES: ${{ env.VCAP_SERVICES }}
+          VCAP_SERVICES: $VCAP_SERVICES
 
   validate-new-relic-config:
     runs-on: ubuntu-latest
