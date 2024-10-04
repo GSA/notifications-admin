@@ -70,7 +70,7 @@ jobs:
       NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
       NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
       NOTIFY_E2E_TEST_URI: http://localhost:6012/
-      JOB_VCAP_SERVICES: ${{ secrets.VCAP_SERVICES }}
+      VCAP_SERVICES: ${{ secrets.VCAP_SERVICES }}
     services:
       postgres:
         image: postgres
@@ -130,6 +130,9 @@ jobs:
         # make e2e-test
 
         run: |
+          echo "length of dangerous salt (#DANGEROUS_SALT)"
+          echo "DANGEROUS_SALT:"
+          echo $DANGEROUS_SALT
           if [ -z "${VCAP_SERVICES}" ]; then
             echo "VCAP_SERVICES is empty or not set"
           else
@@ -139,8 +142,8 @@ jobs:
           echo $VCAP_SERVICES
         env:
           API_HOST_NAME: https://notify-api-staging.app.cloud.gov/
-          DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DANGEROUS_SALT: $DANGEROUS_SALT
           ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
           ADMIN_CLIENT_USERNAME: notify-admin
           NOTIFY_ENVIRONMENT: e2etest
