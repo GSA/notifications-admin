@@ -98,18 +98,22 @@ jobs:
           if [ -z "${{ secrets.E2E_BUCKET_NAME }}" ]; then
             echo "E2E_BUCKET_NAME is empty or not set"
           else
-            echo "E2E_BUCKET_NAME length is ${#${{ secrets.E2E_BUCKET_NAME }}}"
+            echo "E2E_BUCKET_NAME length is ${#E2E_BUCKET_NAME}"
           fi
           if [ -z "${{ secrets.DANGEROUS_SALT }}" ]; then
             echo "DANGEROUS_SALT is empty or not set"
           else
-            echo "DANGEROUS_SALT length is ${#${{ secrets.DANGEROUS_SALT }}}"
+            echo "DANGEROUS_SALT length is ${#DANGEROUS_SALT}"
           fi
           if [ -z "${{ secrets.NEW_RELIC_LICENSE_KEY }}" ]; then
             echo "NEW_RELIC_LICENSE_KEY is empty or not set"
           else
-            echo "NEW_RELIC_LICENSE_KEY length is ${#${{ secrets.NEW_RELIC_LICENSE_KEY }}}"
+            echo "NEW_RELIC_LICENSE_KEY length is ${#NEW_RELIC_LICENSE_KEY}"
           fi
+        env:
+          E2E_BUCKET_NAME: ${{ secrets.E2E_BUCKET_NAME }}
+          DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
+          NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
       - name: Run Admin server
         # If we want to log stuff and see what's broken,
         # insert this line:
