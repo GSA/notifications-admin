@@ -70,7 +70,7 @@ jobs:
       NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
       NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
       NOTIFY_E2E_TEST_URI: http://localhost:6012/
-      VCAP_SERVICES: ${{ secrets.VCAP_SERVICES }}
+      GRRR_SERVICES: ${{ secrets.VCAP_SERVICES }}
     services:
       postgres:
         image: postgres
@@ -105,12 +105,9 @@ jobs:
       - name: Check API Server availability
         run: |
           curl --fail -v https://notify-api-staging.app.cloud.gov || exit 1
-      - name: Check if secret is present
-        run: printenv
-        env:
-          VCAP_SERVICES: ${{ secrets.VCAP_SERVICES }}
-          DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
-
+      - name: Set secret as output
+        id: set_secret
+        run: echo "::set-output name=my_secret::${{ secrets.VCAP_SERVICES }}"
       - name: Run Admin server
         # If we want to log stuff and see what's broken,
         # insert this line:
@@ -121,17 +118,7 @@ jobs:
         # tail -f admin-server.log &
         # make e2e-test
 
-        run: |
-          echo "length of dangerous salt (#DANGEROUS_SALT)"
-          echo "DANGEROUS_SALT:"
-          echo $DANGEROUS_SALT
-          if [ -z "${VCAP_SERVICES}" ]; then
-            echo "VCAP_SERVICES is empty or not set"
-          else
-            echo "VCAP_SERVICES length is ${#VCAP_SERVICES}"
-          fi
-          echo "VCAP SERVICES IS:"
-          echo $VCAP_SERVICES
+        run: printenv
         env:
           API_HOST_NAME: https://notify-api-staging.app.cloud.gov/
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
@@ -143,7 +130,7 @@ jobs:
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
           NOTIFY_E2E_TEST_URI: http://localhost:6012/
-          VCAP_SERVICES: ${{ env.VCAP_SERVICES }}
+          VCAP_SERVICES: ${{ steps.set_secret.outputs.my_secret }}
 
   validate-new-relic-config:
     runs-on: ubuntu-latest
