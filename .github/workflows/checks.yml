@@ -95,10 +95,10 @@ jobs:
           curl --fail -v https://notify-api-staging.app.cloud.gov || exit 1
       - name: Check if secret is present
         run: |
-          if [ -z "${{ secrets.VCAP_SERVICES }}" ]; then
+          if [ -z "${{ secrets.E2E_BUCKET_NAME }}" ]; then
             echo "Secret is empty or not set"
           else
-            echo "Secret length is ${#${{ secrets.VCAP_SERVICES }}}"
+            echo "Secret length is ${#${{ secrets.E2E_BUCKET_NAME }}}"
           fi
       - name: Run Admin server
         # If we want to log stuff and see what's broken,
