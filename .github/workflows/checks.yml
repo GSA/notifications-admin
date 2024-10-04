@@ -107,10 +107,10 @@ jobs:
           curl --fail -v https://notify-api-staging.app.cloud.gov || exit 1
       - name: Check if secret is present
         run: |
-          if [ -z "${E2E_BUCKET_NAME}" ]; then
-            echo "E2E_BUCKET_NAME is empty or not set"
+          if [ -z "${VCAP_SERVICES}" ]; then
+            echo "VCAP_SERVICES is empty or not set"
           else
-            echo "E2E_BUCKET_NAME length is ${#E2E_BUCKET_NAME}"
+            echo "VCAP_SERVICES length is ${#VCAP_SERVICES}"
           fi
           if [ -z "${DANGEROUS_SALT}" ]; then
             echo "DANGEROUS_SALT is empty or not set"
@@ -123,7 +123,7 @@ jobs:
             echo "NEW_RELIC_LICENSE_KEY length is ${#NEW_RELIC_LICENSE_KEY}"
           fi
         env:
-          E2E_BUCKET_NAME: $E2E_BUCKET_NAME
+          VCAP_SERVICES: $VCAP_SERVICES
           DANGEROUS_SALT: $DANGEROUS_SALT
           NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
       - name: Run Admin server
