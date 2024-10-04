@@ -98,9 +98,9 @@ def _get_access_token(code, state):  # pragma: no cover
         access_token = response_json["access_token"]
     except KeyError as e:
         current_app.logger.exception(
-            f"Error when getting access token {response_json()} #notify-admin-1505"
+            f"Error when getting access token {response.json()} #notify-admin-1505"
         )
-        raise KeyError(f"'access_token' {response_json()}") from e
+        raise KeyError(f"'access_token' {response.json()}") from e
     return access_token
 
 
