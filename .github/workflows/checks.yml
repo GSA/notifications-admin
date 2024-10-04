@@ -94,9 +94,12 @@ jobs:
         run: |
           curl --fail -v https://notify-api-staging.app.cloud.gov || exit 1
       - name: Examine Vcap Services
-        run: echo "The length of the secret vcap is ${#SECRET_VALUE}"
+        run: |
+          echo "The length of the secret vcap is ${#SECRET_VALUE}"
+          echo "The length of the danger salt is ${#DANGER_SALT}"
         env:
           SECRET_VALUE: ${{ secrets.VCAP_SERVICES }}
+          DANGER_SALT: $${{ secrets.DANGEROUS_SALT }}
       - name: Run Admin server
         # If we want to log stuff and see what's broken,
         # insert this line:
