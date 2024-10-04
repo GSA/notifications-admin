@@ -203,6 +203,11 @@ def _handle_e2e_tests(redirect_url):  # pragma: no cover
 @main.route("/sign-in", methods=(["GET", "POST"]))
 @hide_from_search_engines
 def sign_in():  # pragma: no cover
+    redirect_url = request.args.get("next")
+
+    if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
+        return _handle_e2e_tests(redirect_url)
+
     # If we have to revalidated the email, send the message
     # via email and redirect to the "verify your email page"
     # and don't proceed further with login
@@ -213,11 +218,6 @@ def sign_in():  # pragma: no cover
         and "Check your email" in email_verify_template
     ):
         return email_verify_template
-
-    redirect_url = request.args.get("next")
-
-    if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
-        return _handle_e2e_tests(redirect_url)
 
     if current_user and current_user.is_authenticated:
         if redirect_url and is_safe_redirect_url(redirect_url):
