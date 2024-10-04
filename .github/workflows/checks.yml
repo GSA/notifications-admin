@@ -146,7 +146,7 @@ jobs:
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
           NOTIFY_E2E_TEST_URI: http://localhost:6012/
-          VCAP_SERVICES: ${{ secrets.VCAP_SERVICES }}
+          VCAP_SERVICES: $VCAP_SERVICES
 
   validate-new-relic-config:
     runs-on: ubuntu-latest
