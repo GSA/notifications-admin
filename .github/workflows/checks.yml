@@ -112,19 +112,13 @@ jobs:
           else
             echo "VCAP_SERVICES length is ${#VCAP_SERVICES}"
           fi
-          if [ -z "${DANGEROUS_SALT}" ]; then
-            echo "DANGEROUS_SALT is empty or not set"
-          else
-            echo "DANGEROUS_SALT length is ${#DANGEROUS_SALT}"
-          fi
           if [ -z "${NEW_RELIC_LICENSE_KEY}" ]; then
             echo "NEW_RELIC_LICENSE_KEY is empty or not set"
           else
             echo "NEW_RELIC_LICENSE_KEY length is ${#NEW_RELIC_LICENSE_KEY}"
           fi
         env:
-          VCAP_SERVICES: $VCAP_SERVICES
-          DANGEROUS_SALT: $DANGEROUS_SALT
+          VCAP_SERVICES: ${{ env.VCAP_SERVICES }}
           NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
       - name: Run Admin server
         # If we want to log stuff and see what's broken,
@@ -132,6 +126,13 @@ jobs:
         # tail -f admin-server.log &
         # above make e2e-test
         run: |
+          if [ -z "${VCAP_SERVICES}" ]; then
+            echo "VCAP_SERVICES is empty or not set"
+          else
+            echo "VCAP_SERVICES length is ${#VCAP_SERVICES}"
+          fi
+          echo "VCAP SERVICES IS:"
+          echo $VCAP_SERVICES
           make run-flask > admin-server.log 2>&1 &
           tail -f admin-server.log &
           make e2e-test
@@ -146,7 +147,7 @@ jobs:
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
           NOTIFY_E2E_TEST_URI: http://localhost:6012/
-          VCAP_SERVICES: $VCAP_SERVICES
+          VCAP_SERVICES: ${{ env.$VCAP_SERVICES }}
 
   validate-new-relic-config:
     runs-on: ubuntu-latest
