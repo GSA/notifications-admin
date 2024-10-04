@@ -1,6 +1,6 @@
 const { urls, baseUrl } = require('./urls');
 
-const MISMATCH_THRESHOLD = 0.3;
+const MISMATCH_THRESHOLD = 0.2;
 const SCREENSHOT_DELAY = 2000;
 
 const createScenariosFromUrls = (urls, delay = SCREENSHOT_DELAY) => {
