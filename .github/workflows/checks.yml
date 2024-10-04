@@ -96,9 +96,19 @@ jobs:
       - name: Check if secret is present
         run: |
           if [ -z "${{ secrets.E2E_BUCKET_NAME }}" ]; then
-            echo "Secret is empty or not set"
+            echo "E2E_BUCKET_NAME is empty or not set"
           else
-            echo "Secret length is ${#${{ secrets.E2E_BUCKET_NAME }}}"
+            echo "E2E_BUCKET_NAME length is ${#${{ secrets.E2E_BUCKET_NAME }}}"
+          fi
+          if [ -z "${{ secrets.DANGEROUS_SALT }}" ]; then
+            echo "DANGEROUS_SALT is empty or not set"
+          else
+            echo "DANGEROUS_SALT length is ${#${{ secrets.DANGEROUS_SALT }}}"
+          fi
+          if [ -z "${{ secrets.NEW_RELIC_LICENSE_KEY }}" ]; then
+            echo "NEW_RELIC_LICENSE_KEY is empty or not set"
+          else
+            echo "NEW_RELIC_LICENSE_KEY length is ${#${{ secrets.NEW_RELIC_LICENSE_KEY }}}"
           fi
       - name: Run Admin server
         # If we want to log stuff and see what's broken,
