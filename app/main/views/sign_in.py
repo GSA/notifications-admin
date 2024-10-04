@@ -64,11 +64,11 @@ def _get_access_token(code, state):  # pragma: no cover
     url = f"{base_url}{cli_assert}&{cli_assert_type}&{code_param}&grant_type=authorization_code"
     headers = {"Authorization": "Bearer %s" % token}
     response = requests.post(url, headers=headers)
+
     response_json = response.json()
     try:
         encoded_id_token = response_json["id_token"]
     except KeyError as e:
-        # Capture the response json here so it hopefully shows up in error reports
         current_app.logger.exception(f"Error when getting id token {response_json}")
         raise KeyError(f"'access_token' {response.json()}") from e
 
@@ -97,7 +97,6 @@ def _get_access_token(code, state):  # pragma: no cover
     try:
         access_token = response_json["access_token"]
     except KeyError as e:
-        # Capture the response json here so it hopefully shows up in error reports
         current_app.logger.exception(
             f"Error when getting access token {response.json()} #notify-admin-1505"
         )
@@ -157,8 +156,9 @@ def _do_login_dot_gov():  # $ pragma: no cover
             current_app.logger.info(f"activating user {usr.id} #notify-admin-1505")
             activate_user(usr.id)
         except BaseException as be:  # noqa B036
-            current_app.logger.exception(f"Error signing in: {be} #notify-admin-1505 ")
+            current_app.logger.error(f"Error signing in: {be} #notify-admin-1505 ")
             error(401)
+
         return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
 
     # end login.gov
@@ -181,16 +181,22 @@ def _handle_e2e_tests(redirect_url):  # pragma: no cover
         )
         user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
         activate_user(user["id"])
+
+        # Check if the redirect URL is present and safe before proceeding further
+        if redirect_url and is_safe_redirect_url(redirect_url):
+            return redirect(redirect_url)
+
         return redirect(
             url_for(
                 "main.show_accounts_or_dashboard",
                 next="EMAIL_IS_OK",
             )
         )
+
     except Exception as e:
         stre = str(e)
         stre = stre.replace(" ", "_")
-        # Trying to get a message back to playwright somehow since we can't see the admin logs
+        # Trying to get a message back to playwright somehow since we can't raise an error
         return redirect(url_for(f"https://{stre}"))
 
 
@@ -200,7 +206,7 @@ def sign_in():  # pragma: no cover
     redirect_url = request.args.get("next")
 
     if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
-        return _handle_e2e_tests(None)
+        return _handle_e2e_tests(redirect_url)
 
     # If we have to revalidated the email, send the message
     # via email and redirect to the "verify your email page"
