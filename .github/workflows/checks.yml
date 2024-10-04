@@ -116,7 +116,7 @@ jobs:
           echo "VCAP SERVICES:"
           echo ${{ env.VCAP_SERVICES }}
           echo "GRRR SERVICES:"
-          echo {$$ env.GRRR_SERVICES }}
+          echo ${{ env.GRRR_SERVICES }}
           make run-flask > admin-server.log 2>&1 &
           tail -f admin-server.log &
           make e2e-test
