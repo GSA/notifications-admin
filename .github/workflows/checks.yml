@@ -108,10 +108,8 @@ jobs:
       - name: Check if secret is present
         run: printenv
         env:
-          VCAP_SERVICES: ${{ env.VCAP_SERVICES }}
+          VCAP_SERVICES: ${{ secrets.VCAP_SERVICES }}
           DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
-          NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
-          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
 
       - name: Run Admin server
         # If we want to log stuff and see what's broken,
