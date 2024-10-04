@@ -53,7 +53,7 @@ jobs:
 
 
     - name: Deploy to cloud.gov
-      uses: cloud-gov/cg-cli-tools@main
+      uses: cloud-gov/cli-tools@main
       env:
         DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
