@@ -106,19 +106,13 @@ jobs:
         run: |
           curl --fail -v https://notify-api-staging.app.cloud.gov || exit 1
       - name: Check if secret is present
-        run: |
-          if [ -z "${STEP_VCAP_SERVICES}" ]; then
-            echo "STEP_VCAP_SERVICES is empty or not set"
-          else
-            echo "STEP_VCAP_SERVICES length is ${#STEP_VCAP_SERVICES}"
-          fi
-          echo "JOB VCAP SERVICES IS:"
-          echo $JOB_VCAP_SERVICES
-          echo "STEP VCAP SERVICES IS:"
-          echo ${STEP_VCAP_SERVICES}
+        run: printenv
         env:
-          STEP_VCAP_SERVICES: ${{ env.JOB_VCAP_SERVICES }}
+          VCAP_SERVICES: ${{ env.VCAP_SERVICES }}
+          DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
           NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
+          NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
+
       - name: Run Admin server
         # If we want to log stuff and see what's broken,
         # insert this line:
