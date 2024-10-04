@@ -71,6 +71,7 @@ jobs:
       NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
       NOTIFY_E2E_TEST_URI: http://localhost:6012/
       GRRR_SERVICES: ${{ secrets.VCAP_SERVICES }}
+      GRRR_BUCKET: ${{ secrets.E2E_BUCKET_NAME }}
     services:
       postgres:
         image: postgres
@@ -117,6 +118,12 @@ jobs:
           echo ${{ env.VCAP_SERVICES }}
           echo "GRRR SERVICES:"
           echo ${{ env.GRRR_SERVICES }}
+          echo "E2E_BUCKET_NAME:"
+          echo ${{ env.E2E_BUCKET_NAME }}
+          echo "GRRR_BUCKET:"
+          echo ${{ env.GRRR_BUCKET }}
+          echo "AS A SECRET BUCKET? "
+          echo ${{ secrets.E2E_BUCKET_NAME }}
           make run-flask > admin-server.log 2>&1 &
           tail -f admin-server.log &
           make e2e-test
@@ -134,6 +141,8 @@ jobs:
           NOTIFY_E2E_TEST_URI: http://localhost:6012/
           VCAP_SERVICES: ${{ secrets.VCAP_SERVICES }}
           GRRR_SERVICES: ${{ env.GRRR_SERVICES }}
+          E2E_BUCKET_HMMM: ${{ secrets.E2E_BUCKET_NAME }}
+          GRRR_BUCKET: ${{ env.GRRR_BUCKET_NAME }}
 
   validate-new-relic-config:
     runs-on: ubuntu-latest
