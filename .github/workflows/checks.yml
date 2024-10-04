@@ -93,13 +93,13 @@ jobs:
       - name: Check API Server availability
         run: |
           curl --fail -v https://notify-api-staging.app.cloud.gov || exit 1
-      - name: Examine Vcap Services
+      - name: Check if secret is present
         run: |
-          echo "The length of the secret vcap is ${#SECRET_VALUE}"
-          echo "The length of the danger salt is ${#DANGER_SALT}"
-        env:
-          SECRET_VALUE: ${{ secrets.VCAP_SERVICES }}
-          DANGER_SALT: $${{ secrets.DANGEROUS_SALT }}
+          if [ -z "${{ secrets.VCAP_SERVICES }}" ]; then
+            echo "Secret is empty or not set"
+          else
+            echo "Secret length is ${#${{ secrests.VCAP_SERVICES }}}"
+          fi
       - name: Run Admin server
         # If we want to log stuff and see what's broken,
         # insert this line:
