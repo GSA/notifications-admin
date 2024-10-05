@@ -47,7 +47,7 @@ jobs:
         run: poetry export --without-hashes --format=requirements.txt > requirements.txt
 
       - name: Deploy to cloud.gov
-        uses: 18f/cg-deploy-action@main
+        uses: cloud-gov/cg-cli-tools@main
         env:
           DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
@@ -70,6 +70,7 @@ jobs:
           cf_org: gsa-tts-benefits-studio
           cf_space: notify-production
           push_arguments: >-
+            push -f manifest.yml
             --vars-file deploy-config/production.yml
             --var DANGEROUS_SALT="$DANGEROUS_SALT"
             --var SECRET_KEY="$SECRET_KEY"
@@ -87,6 +88,7 @@ jobs:
             --var LOGIN_DOT_GOV_SIGNOUT_REDIRECT="$LOGIN_DOT_GOV_SIGNOUT_REDIRECT"
             --var LOGIN_DOT_GOV_INITIAL_SIGNIN_URL="$LOGIN_DOT_GOV_INITIAL_SIGNIN_URL"
             --var LOGIN_DOT_GOV_CERTS_URL="$LOGIN_DOT_GOV_CERTS_URL"
+            --strategy rolling
 
       - name: Check for changes to egress config
         id: changed-egress-config
