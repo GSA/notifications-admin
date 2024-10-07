@@ -71,7 +71,6 @@ jobs:
       NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
       NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
       NOTIFY_E2E_TEST_URI: http://localhost:6012/
-      GRRR_SERVICES: ${{ VCAP_SERVICES }}
     services:
       postgres:
         image: postgres
@@ -114,26 +113,6 @@ jobs:
 
 
         run: |
-          if [ -z "${{ env.VCAP_SERVICES }}" ]; then
-            echo "env vcap is not set"
-          else
-            echo "env vcap is ${#SECRET_KEY}"
-          fi
-          if [ -z "${{ PLAIN_VCAP }}" ]; then
-            echo "Plain vcap is not set"
-          else
-            echo "Length of plain is ${#PLAIN_VCAP}"
-          fi
-          if [ -z "${{ env.GRRR_SERVICES }}" ]; then
-            echo "env grrr is not set"
-          else
-            echo "env grrr is ${#GRRR_SERVICES}"
-          fi
-          if [ -z "${{ PLAIN_GRRR }}" ]; then
-            echo "Plain grrr is not set"
-          else
-            echo "Length of plain grrr is ${#PLAIN_GRRR}"
-          fi
           make run-flask > admin-server.log 2>&1 &
           tail -f admin-server.log &
           make e2e-test
@@ -149,10 +128,7 @@ jobs:
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
           NOTIFY_E2E_TEST_URI: http://localhost:6012/
-          VCAP_SERVICES: ${{ env.VCAP_SERVICES }}
-          PLAIN_VCAP: $VCAP_SERVICES
-          GRRR_SERVICES: ${{ env.GRRR_SERVICES }}
-          PLAIN_GRRR: $GRRR_SERVICES
+          VCAP_SERVICES: ${{ secrets.VCAP_SERVICES }}
   validate-new-relic-config:
     runs-on: ubuntu-latest
     environment: staging

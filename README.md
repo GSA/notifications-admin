@@ -507,3 +507,19 @@ insurance.
 For more information on what we're working on, the Notify tool, and how to get
 involved with our team,
 [see our flyer.](https://github.com/GSA/notifications-admin/blob/main/docs/notify-pilot-flyer.md)
+
+## Updating secrets for the E2E tests
+
+At some point, E2E tests will fail because the secrets held in VCAP_SERVICES have expired.  To refresh
+them, you will need to do the following:
+
+1. Log in the normal way to access cloudfoundry command line options
+2. Run `cf env notify-admin-staging`
+3. Copy everything for the json in VCAP_SERVICES
+4. Open a test file and make a new test anywhere that is convenient
+5. Paste the secret into the test file
+6. Make your test look like this:  `print(json.dumps(VCAP_SERVICES))`
+7. Copy the output of this test (stringified VCAP_SERVICES) into the VCAP_SERVICES secret in github on the staging tier
+8. Delete everything you did in #4, #5, and #6.
+9. Rerun the E2E tests
+10. Note: Pay attention to whitespace, etc.  It's very sensitive to formatting.
