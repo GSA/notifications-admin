@@ -114,16 +114,26 @@ jobs:
 
 
         run: |
-          echo "VCAP SERVICES:"
-          echo ${{ env.VCAP_SERVICES }}
-          echo "GRRR SERVICES:"
-          echo ${{ env.GRRR_SERVICES }}
-          echo "E2E_BUCKET_NAME:"
-          echo ${{ env.E2E_BUCKET_NAME }}
-          echo "GRRR_BUCKET:"
-          echo ${{ env.GRRR_BUCKET }}
-          echo "AS A SECRET BUCKET? "
-          echo ${{ secrets.E2E_BUCKET_NAME }}
+          if [ -z "${{ secrets.SECRET_KEY }}" ]; then
+            echo "Secret key is not set"
+          else
+            echo "Length of secret key is ${#SECRET_KEY}"
+          fi
+          if [ -z "${{ secrets.ADMIN_CLIENT_SECRET }}" ]; then
+            echo "Admin client secret is not set"
+          else
+            echo "Length of admin client secret is ${#ADMIN_CLIENT_SECRET}"
+          fi
+          if [ -z "${{ secrets.E2E_BUCKET_NAME }}" ]; then
+            echo "Bucket name is not set"
+          else
+            echo "Length of bucket name is ${#BUCKET_NAME}"
+          fi
+          if [ -z "${{ secrets.VCAP_SERVICES }}" ]; then
+            echo "VCAP services is not set"
+          else
+            echo "Length of VCAP services is ${#VCAP_SERVICES}"
+          fi
           make run-flask > admin-server.log 2>&1 &
           tail -f admin-server.log &
           make e2e-test
