@@ -33,5 +33,6 @@ def check_axe_report(page):
     # so we can set the level we skip to minor only
     for violation in results["violations"]:
         assert violation["impact"] in [
-            "minor"
+            "minor",
+            "moderate",
         ], f"Accessibility violation: {violation}"

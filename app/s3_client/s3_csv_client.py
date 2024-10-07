@@ -35,10 +35,12 @@ def s3upload(service_id, filedata):
         service_id, upload_id
     )
     if bucket_name == "":
-        exp_bucket = current_app.config['CSV_UPLOAD_BUCKET']['bucket']
-        exp_region = current_app.config['CSV_UPLOAD_BUCKET']['region']
+        exp_bucket = current_app.config["CSV_UPLOAD_BUCKET"]["bucket"]
+        exp_region = current_app.config["CSV_UPLOAD_BUCKET"]["region"]
         tier = os.getenv("NOTIFY_ENVIRONMENT")
-        raise Exception(f"NO BUCKET NAME SHOULD BE: {exp_bucket} WITH REGION {exp_region} TIER {tier}")
+        raise Exception(
+            f"NO BUCKET NAME SHOULD BE: {exp_bucket} WITH REGION {exp_region} TIER {tier}"
+        )
 
     utils_s3upload(
         filedata=filedata["data"],

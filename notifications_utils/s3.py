@@ -37,7 +37,9 @@ def s3upload(
         aws_secret_access_key=secret_key,
         region_name=region,
     )
-    _s3 = session.resource("s3", endpoint_url="https://s3-fips.us-gov-west-1.amazonaws.com")
+    _s3 = session.resource(
+        "s3", endpoint_url="https://s3-fips.us-gov-west-1.amazonaws.com"
+    )
     # This 'proves' that use of moto in the relevant tests in test_send.py
     # mocks everything related to S3.  What you will see in the logs is:
     # Exception: CREATED AT <MagicMock name='resource().Bucket().creation_date' id='4665562448'>

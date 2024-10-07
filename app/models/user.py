@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 
-from flask import abort, current_app, request, session
+from flask import abort, request, session
 from flask_login import AnonymousUserMixin, UserMixin, login_user, logout_user
 from notifications_python_client.errors import HTTPError
 from werkzeug.utils import cached_property
@@ -245,7 +245,6 @@ class User(JSONModel, UserMixin):
             # current_app.logger.warning(f"VIEW ARGS ARE {request.view_args}")
             pass
 
-        log_msg = f"has_permissions user: {self.id} service: {service_id}"
         # platform admins should be able to do most things (except eg send messages, or create api keys)
         if self.platform_admin and not restrict_admin_usage:
             # current_app.logger.warning(f"{log_msg} true because user is platform_admin")
