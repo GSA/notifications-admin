@@ -100,7 +100,8 @@ To get involved, email us at [tts-benefits-studio@gsa.gov](mailto:tts-benefits-s
     
 ## Notify.gov Demo
 
-https://github.com/GSA/notifications-admin/assets/6556888/b87e12a3-6963-4fab-8124-7d0d2bb59901
+https://github.com/user-attachments/assets/e0bc4c61-6154-46b5-8b40-380ecd868b58
+
 
 
 
