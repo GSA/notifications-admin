@@ -25,7 +25,6 @@ def _setup(page):
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)
 
-
     # Check to make sure that we've arrived at the next page.
     # Check the page title exists and matches what we expect.
     expect(page).to_have_title(re.compile("Choose service"))
@@ -75,7 +74,6 @@ def _setup(page):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)
-
 
     # TODO this fails on staging due to duplicate results on 'get_by_text'
     # Check for the service name title and heading.
@@ -357,7 +355,6 @@ def _teardown(page):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)
-
 
     page.click("text='Yes, delete'")
 
