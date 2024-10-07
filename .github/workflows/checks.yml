@@ -60,17 +60,6 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     environment: staging
-    env:
-      API_HOST_NAME: https://notify-api-staging.app.cloud.gov/
-      DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
-      ADMIN_CLIENT_USERNAME: notify-admin
-      NOTIFY_ENVIRONMENT: e2etest
-      NOTIFY_E2E_AUTH_STATE_PATH: ${{ secrets.NOTIFY_E2E_AUTH_STATE_PATH }}
-      NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
-      NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
-      NOTIFY_E2E_TEST_URI: http://localhost:6012/
     services:
       postgres:
         image: postgres
@@ -120,7 +109,7 @@ jobs:
         env:
           API_HOST_NAME: https://notify-api-staging.app.cloud.gov/
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          DANGEROUS_SALT: $DANGEROUS_SALT
+          DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
           ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
           ADMIN_CLIENT_USERNAME: notify-admin
           NOTIFY_ENVIRONMENT: e2etest
