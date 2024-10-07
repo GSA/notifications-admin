@@ -59,6 +59,7 @@ jobs:
       pull-requests: write
       contents: write
     runs-on: ubuntu-latest
+    environment: staging
     env:
       API_HOST_NAME: https://notify-api-staging.app.cloud.gov/
       DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
