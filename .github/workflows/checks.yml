@@ -71,7 +71,7 @@ jobs:
       NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
       NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
       NOTIFY_E2E_TEST_URI: http://localhost:6012/
-      GRRR_SERVICES: ${{ env.VCAP_SERVICES }}
+      GRRR_SERVICES: ${{ VCAP_SERVICES }}
     services:
       postgres:
         image: postgres
