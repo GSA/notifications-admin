@@ -71,8 +71,7 @@ jobs:
       NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
       NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
       NOTIFY_E2E_TEST_URI: http://localhost:6012/
-      GRRR_SERVICES: ${{ secrets.VCAP_SERVICES }}
-      GRRR_BUCKET: ${{ secrets.E2E_BUCKET_NAME }}
+      GRRR_SERVICES: ${{ env.VCAP_SERVICES }}
     services:
       postgres:
         image: postgres
@@ -115,25 +114,25 @@ jobs:
 
 
         run: |
-          if [ -z "${{ secrets.SECRET_KEY }}" ]; then
-            echo "Secret key is not set"
+          if [ -z "${{ env.VCAP_SERVICES }}" ]; then
+            echo "env vcap is not set"
           else
-            echo "Length of secret key is ${#SECRET_KEY}"
+            echo "env vcap is ${#SECRET_KEY}"
           fi
-          if [ -z "${{ secrets.ADMIN_CLIENT_SECRET }}" ]; then
-            echo "Admin client secret is not set"
+          if [ -z "${{ PLAIN_VCAP }}" ]; then
+            echo "Plain vcap is not set"
           else
-            echo "Length of admin client secret is ${#ADMIN_CLIENT_SECRET}"
+            echo "Length of plain is ${#PLAIN_VCAP}"
           fi
-          if [ -z "${{ secrets.E2E_BUCKET_NAME }}" ]; then
-            echo "Bucket name is not set"
+          if [ -z "${{ env.GRRR_SERVICES }}" ]; then
+            echo "env grrr is not set"
           else
-            echo "Length of bucket name is ${#BUCKET_NAME}"
+            echo "env grrr is ${#GRRR_SERVICES}"
           fi
-          if [ -z "${{ secrets.VCAP_SERVICES }}" ]; then
-            echo "VCAP services is not set"
+          if [ -z "${{ PLAIN_GRRR }}" ]; then
+            echo "Plain grrr is not set"
           else
-            echo "Length of VCAP services is ${#VCAP_SERVICES}"
+            echo "Length of plain grrr is ${#PLAIN_GRRR}"
           fi
           make run-flask > admin-server.log 2>&1 &
           tail -f admin-server.log &
@@ -150,11 +149,10 @@ jobs:
           NOTIFY_E2E_TEST_EMAIL: ${{ secrets.NOTIFY_E2E_TEST_EMAIL }}
           NOTIFY_E2E_TEST_PASSWORD: ${{ secrets.NOTIFY_E2E_TEST_PASSWORD }}
           NOTIFY_E2E_TEST_URI: http://localhost:6012/
-          VCAP_SERVICES: ${{ secrets.VCAP_SERVICES }}
+          VCAP_SERVICES: ${{ env.VCAP_SERVICES }}
+          PLAIN_VCAP: $VCAP_SERVICES
           GRRR_SERVICES: ${{ env.GRRR_SERVICES }}
-          E2E_BUCKET_HMMM: ${{ secrets.E2E_BUCKET_NAME }}
-          GRRR_BUCKET: ${{ env.GRRR_BUCKET_NAME }}
-
+          PLAIN_GRRR: $GRRR_SERVICES
   validate-new-relic-config:
     runs-on: ubuntu-latest
     environment: staging
