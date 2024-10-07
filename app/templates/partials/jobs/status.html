@@ -35,7 +35,7 @@
       {% else %}
         <div class="usa-alert usa-alert--success">
           <div class="usa-alert__body">
-            <h4 class="usa-alert__heading">Your text has been sent</h4>
+            <h3 class="usa-alert__heading">Your text has been sent</h3>
             <p class="usa-alert__text">
               {{ job.template_name }} - {{ current_service.name }} was sent on {% if job.processing_started %}
               {{ job.processing_started|format_datetime_table }} {% else %}
