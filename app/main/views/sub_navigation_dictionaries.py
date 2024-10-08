@@ -71,7 +71,7 @@ def guidance_nav():
             "link": "main.clear_goals",
         },
         {
-            "name": "Rules and Regulations",
+            "name": "Rules and regulations",
             "link": "main.rules_and_regulations",
         },
         {
@@ -97,7 +97,7 @@ def guidance_nav():
             "link": "main.multiple_languages",
         },
         {
-            "name": "Benchmark Performance",
+            "name": "Benchmark performance",
             "link": "main.benchmark_performance",
         },
     ]
