@@ -1,7 +1,7 @@
 import pytest
 from freezegun import freeze_time
 
-from app.utils.time import get_current_financial_year, is_less_than_days_ago
+from app.utils.time import is_less_than_days_ago
 
 
 @pytest.mark.parametrize(
