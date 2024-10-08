@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% set page_title = "Clear Goals" %}
+{% set page_title = "Clear goals" %}
 
 {% block per_page_title %}
 {{page_title}}
@@ -30,10 +30,25 @@
       </div>
     </div>
   </div>
-  <p class="text-center">For example, we’ve seen SNAP programs text –</p>
-  <p>Dept. of Human Services: We believe your EBT card may have been used by someone else. Please call the number on the
-    back of your card (888-123-5555) to cancel and get a new one. If you need a new card immediately, please visit your
-    local office.</p>
+
+  <div class="grid-container">
+    <div class="tablet:grid-col-6">
+      <div class="usa-card__container border-0 width-full overflow-hidden height-mobile">
+        <img class="width-full" src="{{ asset_url('images/phone_grey.svg') }}" role="img" alt="Phone" />
+        <div class="position-absolute flex text-cener padding-5 padding-top-9">
+          <p class="sms-message-wrapper text-center">Dept. of Human Services: We believe your EBT card may have been
+            used by
+            someone else. Please call the number on the back of your card (888-123-5555) to cancel and get a new one. If
+            you
+            need a new card immediately, please visit your local office.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+  <h2>Add new header here</h2>
   <div class="grid-row grid-gap-3">
     <div class="tablet:grid-col">
       <div class="do-dont">
@@ -69,7 +84,7 @@
                 {{item.list_content}}
               </li>
               {% endfor %}
-              </ul>
+            </ul>
           </div>
         </div>
       </div>
@@ -88,15 +103,15 @@
             </p>
             <p class="margin-bottom-2">Examples:</p>
             {% set list_item_donts = [
-              {
-              "list_content": "Your rights and responsibilities",
-              },
-              {
-              "list_content": "How to complete your application",
-              },
-              {
-              "list_content": "Weekly reminder not to share your account information",
-              },
+            {
+            "list_content": "Your rights and responsibilities",
+            },
+            {
+            "list_content": "How to complete your application",
+            },
+            {
+            "list_content": "Weekly reminder not to share your account information",
+            },
             ] %}
             <ul>
               {% for item in list_item_donts %}
@@ -111,34 +126,40 @@
     </div>
   </div>
 
-  <p>Your program may already be communicating with your audience through methods like mailed notices and phone calls. Think of text messages as complementary to your existing communications. Review how well you are currently reaching your audience. Are there methods or gaps that could be supplemented with a text message?
+  <p>Your program may already be communicating with your audience through methods like mailed notices and phone calls.
+    Think of text messages as complementary to your existing communications. Review how well you are currently reaching
+    your audience. Are there methods or gaps that could be supplemented with a text message?
   </p>
   <p>
     The Department of Veterans Affairs provides a <a class="use-link usa-link--external"
       href="https://github.com/department-of-veterans-affairs/va.gov-team/blob/master/products/va-notify/notification-guide.md#vanotify-notification-guide"
-      target="_blank">helpful
-      flow-chart</a> that can help you decide if a text message is needed
+      target="_blank">helpful flow-chart</a> that can help you decide if a text message is needed
     for the communication problem you are trying to solve.
   </p>
   <h2>Use a hypothesis framework to plan your campaign</h2>
   <p>
     Think of your texting campaign as a scientific experiment, and try to articulate what you hope to improve as a
-    result
-    of implementing text messaging at your agency. For example:
+    result of implementing text messaging at your agency. For example:
   </p>
-  <p class="site-note bg-base-lighter"> We believe that texting [specific group of people] when [this happens or on this
-    cadence] to
-    inform/alert them about [subject] will result in [desired action].</p>
+  <div class="usa-summary-box maxw-tablet" role="region" aria-labelledby="summary-box-establish-clear-goals">
+    <div class="usa-summary-box__body">
+      <div class="usa-summary-box__text">
+        <p class="margin-top-0 font-body-lg">
+          We believe that texting <i>[specific group of people]</i> when <i>[this happens or on this
+            cadence]</i> to inform/alert them about <i>[subject]</i> will result in <i>[desired action]</i>.
+        </p>
+      </div>
+    </div>
+  </div>
   <p>
     Review your drafted hypothesis with your team to make sure everyone is aligned on your desired goals. A clear and
     concise hypothesis can help you decide how to <a href="../guidance/write-for-action">write text message content
       that provokes action</a>.
   </p>
-  <h2>Start small</h2>
+  <h2>Begin with a small test</h2>
   <p>
     To help you decide how much to invest in text messaging over time, we highly recommend starting small and testing
-    your
-    message campaigns to refine based on feedback and evidence.
+    your message campaigns to refine based on feedback and evidence.
   </p>
   <p>
     Starting small has less risk and more flexibility. It can help you gather data and decide <i>if and how</i> to send
@@ -154,13 +175,14 @@
     <div class="usa-summary-box__body">
       <div class="usa-summary-box__text">
         <p class="margin-top-0">
-          Building and operationalizing a texting initiative requires time and effort, and you want to be able to demonstrate
-          the results of that effort. To understand if your texting program is successful, ask:
+          To understand if your texting program is successful, ask:
         </p>
         <ul class="usa-list">
-          <li>What do you want to be different for your program or your desired audience after a text message is sent, as compared to your current state?</li>
+          <li>What do you want to be different for your program or your desired audience after a text message is sent,
+            as compared to your current state?</li>
           <li>How will you know if text recipients take the desired action?</li>
-          <li>Do you have access to existing data in your system that you could use to determine whether texting is giving you the results you want?</li>
+          <li>Do you have access to existing data in your system that you could use to determine whether texting is
+            giving you the results you want?</li>
         </ul>
       </div>
     </div>

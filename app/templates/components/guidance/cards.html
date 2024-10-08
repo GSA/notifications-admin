@@ -1,19 +1,35 @@
-<h3 class="padding-bottom-2">{{card_header}}</h3>
+<h3 class="padding-bottom-2">
+  {% if card_header %}
+  {{card_header}}
+  {% endif %}
+</h3>
 <ul class="usa-card-group">
   {% for item in card_contents %}
   <li class="usa-card grid-col tablet:grid-col-4">
     <div class="usa-card__container">
-      <div class="usa-card__header">
-        <h4 class="usa-card__heading text-center">{{item.card_heading}}</h4>
+      {% if item.card_heading %}
+      <div class="usa-card__header">{% if condition %}
+
+        {% endif %}
+        <h4
+          class="usa-card__heading {% if text_align != 'left' or text_align is not defined %}text-center{% else %}text-left{% endif %}">
+          {{item.card_heading}}
+        </h4>
       </div>
+      {% endif %}
+      {% if item.image_src %}
       <div class="usa-card__media usa-card__media--inset">
         <img class="guidance_card_img" src="{{item.image_src}}" alt="{{item.card_heading}} image" />
       </div>
+      {% endif %}
+      {% if item.p_text %}
       <div class="usa-card__body">
-        <p class="text-center">
-          {{item.p_text}}
+        <p class="{% if text_align != 'left' or text_align is not defined %}text-center{% else %}text-left{% endif %}">
+          {{item.p_text|safe}}
         </p>
       </div>
+      {% endif %}
+
     </div>
   </li>
   {% endfor %}
