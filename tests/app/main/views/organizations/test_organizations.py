@@ -610,7 +610,7 @@ def test_organization_services_links_to_downloadable_report(
     assert link_to_report.attrs["href"] == url_for(
         ".download_organization_usage_report",
         org_id=ORGANISATION_ID,
-        selected_year=2022,
+        selected_year=2021,
     )
 
 
