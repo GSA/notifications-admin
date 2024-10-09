@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 
-from flask import abort, request, session
+from flask import abort, current_app, request, session
 from flask_login import AnonymousUserMixin, UserMixin, login_user, logout_user
 from notifications_python_client.errors import HTTPError
 from werkzeug.utils import cached_property
@@ -177,7 +177,7 @@ class User(JSONModel, UserMixin):
         # Update the db so the server also knows the user is logged out.
         self.update(current_session_id=None)
         logout_user()
-        # current_app.logger.info(f"Logged out {self.id}")
+        current_app.logger.info(f"Logged out {self.id}")
 
     @property
     def sms_auth(self):
@@ -247,20 +247,26 @@ class User(JSONModel, UserMixin):
 
         # platform admins should be able to do most things (except eg send messages, or create api keys)
         if self.platform_admin and not restrict_admin_usage:
-            # current_app.logger.warning(f"{log_msg} true because user is platform_admin")
+            current_app.logger.debug(
+                "has_permissions is true because user is platform_admin"
+            )
             return True
 
         if org_id:
             value = self.belongs_to_organization(org_id)
-            # current_app.logger.warning(f"{log_msg} org: {org_id} returning {value}")
+            current_app.logger.debug(
+                f"has_permissions returns org: {org_id} returning {value}"
+            )
             return value
 
         if not permissions and self.belongs_to_service(service_id):
-            # current_app.logger.warning(f"{log_msg} True because belongs_to_service")
+            current_app.logger.debug("has_permissions True because belongs_to_service")
             return True
 
         if any(self.permissions_for_service(service_id) & set(permissions)):
-            # current_app.logger.warning(f"{log_msg} permissions valid")
+            current_app.logger.debug(
+                "has_permissions returns True because permissions valid"
+            )
             return True
 
         from app.models.service import Service
@@ -268,7 +274,7 @@ class User(JSONModel, UserMixin):
         org_value = allow_org_user and self.belongs_to_organization(
             Service.from_id(service_id).organization_id
         )
-        # current_app.logger.warning(f"{log_msg} returning {org_value}")
+        current_app.logger.debug(f"has_permissions returning {org_value}")
         return org_value
 
     def permissions_for_service(self, service_id):
@@ -276,10 +282,10 @@ class User(JSONModel, UserMixin):
 
     def has_permission_for_service(self, service_id, permission):
         has_permission = permission in self.permissions_for_service(service_id)
-        # current_app.logger.warning(
-        #    f"has_permission_for_service user: {self.id} service: {service_id} "
-        #    f"permission: {permission} retuning {has_permission}"
-        # )
+        current_app.logger.debug(
+            f"has_permission_for_service user: {self.id} service: {service_id} "
+            f"permission: {permission} retuning {has_permission}"
+        )
         return has_permission
 
     def has_template_folder_permission(self, template_folder, service=None):
