@@ -77,6 +77,11 @@ def invite_user(service_id, user_id=None):
         form.login_authentication.data = "sms_auth"
 
     if form.validate_on_submit():
+        if not form.permissions or len(form.permissions) == 0:
+            return render_template(
+                "views/user-has-no-permissions.html",
+                user_to_invite=user_to_invite,
+            )
         email_address = form.email_address.data
         invited_user = InvitedUser.create(
             current_user.id,
