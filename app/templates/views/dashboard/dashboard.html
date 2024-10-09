@@ -74,7 +74,7 @@
                 {% if job.created_by.name == current_user.name %}
                   {% set notification = job.notifications[0] %}
                   <tr id="{{ job.job_id }}">
-                    <td class="table-field jobid" scope="row" role="rowheader">
+                    <td class="table-field jobid" role="rowheader">
                       <a class="usa-link" href="{{ job.view_job_link }}">
                         {{ job.job_id[:8] if job.job_id else 'Manually entered number' }}
                       </a>
@@ -114,7 +114,7 @@
               {% for job in jobs[:5] %}
                 {% set notification = job.notifications[0] %}
                 <tr id="{{ job.job_id }}">
-                  <td class="table-field jobid" scope="row" role="rowheader">
+                  <td class="table-field jobid" role="rowheader">
                     <a class="usa-link" href="{{ job.view_job_link }}">
                       {{ job.job_id[:8] if job.job_id else 'Manually entered number' }}
                     </a>

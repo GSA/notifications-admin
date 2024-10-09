@@ -90,7 +90,7 @@
           {% if all_jobs_dict %}
             {% for job in all_jobs_dict %}
               <tr class="table-row">
-                <td class="table-field jobid" scope="row" role="rowheader">
+                <td class="table-field jobid" role="rowheader">
                   <a class="usa-link" href="{{ job.view_job_link }}">
                     {{ job.job_id[:8] if job.job_id else 'Manually entered number' }}
                   </a>
