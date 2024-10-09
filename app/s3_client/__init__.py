@@ -30,7 +30,6 @@ def get_s3_object(
         region_name=region,
     )
     s3 = session.resource(
-        #    "s3", endpoint_url="https://s3-fips.us-gov-west-1.amazonaws.com"
         "s3",
         config=AWS_CLIENT_CONFIG,
     )
