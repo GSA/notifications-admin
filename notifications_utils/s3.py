@@ -38,7 +38,9 @@ def s3upload(
         region_name=region,
     )
     _s3 = session.resource(
-        "s3", endpoint_url="https://s3-fips.us-gov-west-1.amazonaws.com"
+        # "s3", endpoint_url="https://s3-fips.us-gov-west-1.amazonaws.com"
+        "s3",
+        config=AWS_CLIENT_CONFIG,
     )
     # This 'proves' that use of moto in the relevant tests in test_send.py
     # mocks everything related to S3.  What you will see in the logs is:
