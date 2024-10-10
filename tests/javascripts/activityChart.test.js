@@ -33,7 +33,7 @@ beforeAll(done => {
       <div id="activityChart" >
         <div class="chart-header">
           <div class="chart-subtitle">Service Name - last 7 days</div>
-          <div class="chart-legend" aria-label="Legend"></div>
+          <div class="chart-legend" role="region" aria-label="Legend"></div>
         </div>
         <div class="chart-container" id="weeklyChart" data-service-id="12345" style="width: 600px;"></div>
         <table id="weeklyTable" class="usa-sr-only usa-table"></table>
@@ -123,6 +123,37 @@ test('Check HTML content after chart creation', () => {
   // Optionally, you can add assertions to check for specific elements
   expect(container.querySelector('svg')).not.toBeNull();
   expect(container.querySelectorAll('rect').length).toBeGreaterThan(0);
+});
+
+test('Legend is visible when there are delivered or failed messages', () => {
+  // Example data with delivered and failed messages
+  const labels = ['Day 1', 'Day 2'];
+  const deliveredData = [10, 20];  // Mock delivered data
+  const failedData = [5, 0];  // Mock failed data
+
+  // Call the createChart function
+  window.createChart('#weeklyChart', labels, deliveredData, failedData);
+
+  // Check if the legend is displayed using computed style
+  const legendContainer = document.querySelector('.chart-legend');
+  const legendDisplayStyle = window.getComputedStyle(legendContainer).display;
+  expect(legendDisplayStyle).toBe('flex');
+  expect(legendContainer.querySelectorAll('.legend-item').length).toBe(2); // Ensure two legend items
+});
+
+test('Legend is hidden when there are no delivered or failed messages', () => {
+  // Example data with no delivered and no failed messages
+  const labels = ['Day 1', 'Day 2'];
+  const deliveredData = [0, 0];  // No delivered messages
+  const failedData = [0, 0];  // No failed messages
+
+  // Call the createChart function
+  window.createChart('#weeklyChart', labels, deliveredData, failedData);
+
+  // Check if the legend is hidden using computed style
+  const legendContainer = document.querySelector('.chart-legend');
+  const legendDisplayStyle = window.getComputedStyle(legendContainer).display;
+  expect(legendDisplayStyle).toBe('none');
 });
 
 test('Fetches data and creates chart and table correctly', async () => {
