@@ -1,3 +1,4 @@
+import os
 import uuid
 
 from flask import current_app
@@ -33,6 +34,14 @@ def s3upload(service_id, filedata):
     bucket_name, file_location, access_key, secret_key, region = get_csv_location(
         service_id, upload_id
     )
+    if bucket_name == "":
+        exp_bucket = current_app.config["CSV_UPLOAD_BUCKET"]["bucket"]
+        exp_region = current_app.config["CSV_UPLOAD_BUCKET"]["region"]
+        tier = os.getenv("NOTIFY_ENVIRONMENT")
+        raise Exception(
+            f"NO BUCKET NAME SHOULD BE: {exp_bucket} WITH REGION {exp_region} TIER {tier}"
+        )
+
     utils_s3upload(
         filedata=filedata["data"],
         region=region,

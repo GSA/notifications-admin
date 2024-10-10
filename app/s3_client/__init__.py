@@ -29,7 +29,10 @@ def get_s3_object(
         aws_secret_access_key=secret_key,
         region_name=region,
     )
-    s3 = session.resource("s3", config=AWS_CLIENT_CONFIG)
+    s3 = session.resource(
+        "s3",
+        config=AWS_CLIENT_CONFIG,
+    )
     obj = s3.Object(bucket_name, filename)
     # This 'proves' that use of moto in the relevant tests in test_send.py
     # mocks everything related to S3.  What you will see in the logs is:

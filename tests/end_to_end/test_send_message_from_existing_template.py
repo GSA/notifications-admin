@@ -23,6 +23,7 @@ def _setup(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # Check to make sure that we've arrived at the next page.
     # Check the page title exists and matches what we expect.
@@ -72,6 +73,7 @@ def _setup(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # TODO this fails on staging due to duplicate results on 'get_by_text'
     # Check for the service name title and heading.
@@ -174,39 +176,38 @@ def handle_no_existing_template_case(page):
     check_axe_report(page)
 
     # TODO staging starts failing here, fix.
-    # dashboard_button = page.get_by_text("Dashboard")
-    # expect(dashboard_button).to_be_visible()
-    # dashboard_button.click()
+    activity_button = page.get_by_text("Activity")
+    expect(activity_button).to_be_visible()
+    activity_button.click()
 
     # Check to make sure that we've arrived at the next page.
 
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)
-
-    # download_link = page.get_by_text("Download")
-    # expect(download_link).to_be_visible()
+    download_link = page.get_by_text("Download all data last 7 days (CSV)")
+    expect(download_link).to_be_visible()
 
     # Start waiting for the download
-    # with page.expect_download() as download_info:
-    # download_link.click()
-    # download = download_info.value
-    # download.save_as("download_test_file")
-    # f = open("download_test_file", "r")
+    with page.expect_download() as download_info:
+        download_link.click()
+        download = download_info.value
+        download.save_as("download_test_file")
+        f = open("download_test_file", "r")
 
-    # content = f.read()
-    # f.close()
-    # We don't want to wait 5 minutes to get a response from AWS about the message we sent
-    # So we are using this invalid phone number the e2e_test_user signed up with (12025555555)
-    # to shortcircuit the sending process.  Our phone number validator will insta-fail the
-    # message and it won't be sent, but the report will still be generated, which is all
-    # we care about here.
-    # assert (
-    #  "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time"
-    #  in content
-    # )
-    # assert "12025555555" in content
-    # assert "one-off-" in content
-    # os.remove("download_test_file")
+        content = f.read()
+        f.close()
+        # We don't want to wait 5 minutes to get a response from AWS about the message we sent
+        # So we are using this invalid phone number the e2e_test_user signed up with (12025555555)
+        # to shortcircuit the sending process.  Our phone number validator will insta-fail the
+        # message and it won't be sent, but the report will still be generated, which is all
+        # we care about here.
+        assert (
+            "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time"
+            in content
+        )
+        assert "12025555555" in content
+        assert "one-off-" in content
+        os.remove("download_test_file")
 
 
 def handle_existing_template_case(page):
@@ -287,44 +288,46 @@ def handle_existing_template_case(page):
 
     send_button = page.get_by_role("button", name="Send")
     expect(send_button).to_be_visible()
-    # send_button.click()
+    send_button.click()
 
     # Check to make sure that we've arrived at the next page.
-    # page.wait_for_load_state("domcontentloaded")
+    page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
-    # dashboard_button = page.get_by_text("Dashboard")
-    # expect(dashboard_button).to_be_visible()
-    # dashboard_button.click()
+    dashboard_button = page.get_by_text("Dashboard")
+    expect(dashboard_button).to_be_visible()
+    dashboard_button.click()
 
     # Check to make sure that we've arrived at the next page.
-    # page.wait_for_load_state("domcontentloaded")
+    page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
-    # download_link = page.get_by_text("Download")
-    # expect(download_link).to_be_visible()
+    download_link = page.get_by_text("Download")
+    expect(download_link).to_be_visible()
 
     # Start waiting for the download
-    # with page.expect_download() as download_info:
-    # Perform the action that initiates download
-    #    download_link.click()
-    # download = download_info.value
-    # Wait for the download process to complete and save the downloaded file somewhere
-    # download.save_as("download_test_file")
-    # f = open("download_test_file", "r")
+    with page.expect_download() as download_info:
+        # Perform the action that initiates download
+        download_link.click()
+        download = download_info.value
+        # Wait for the download process to complete and save the downloaded file somewhere
+        download.save_as("download_test_file")
+        f = open("download_test_file", "r")
 
-    # content = f.read()
-    # f.close()
-    # We don't want to wait 5 minutes to get a response from AWS about the message we sent
-    # So we are using this invalid phone number the e2e_test_user signed up with (12025555555)
-    # to shortcircuit the sending process.  Our phone number validator will insta-fail the
-    # message and it won't be sent, but the report will still be generated, which is all
-    # we care about here.
-    # assert (
-    #    "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time"
-    #    in content
-    # )
-    # assert "12025555555" in content
-    # assert "one-off-e2e_test_user" in content
-    # os.remove("download_test_file")
+        content = f.read()
+        f.close()
+        # We don't want to wait 5 minutes to get a response from AWS about the message we sent
+        # So we are using this invalid phone number the e2e_test_user signed up with (12025555555)
+        # to shortcircuit the sending process.  Our phone number validator will insta-fail the
+        # message and it won't be sent, but the report will still be generated, which is all
+        # we care about here.
+        assert (
+            "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time"
+            in content
+        )
+        assert "12025555555" in content
+        assert "one-off-e2e_test_user" in content
+        os.remove("download_test_file")
 
 
 def test_send_message_from_existing_template(authenticated_page):
@@ -351,6 +354,7 @@ def _teardown(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     page.click("text='Yes, delete'")
 

@@ -802,9 +802,15 @@ def get_skip_link(step_index, template):
 )
 @user_has_permissions("send_messages", restrict_admin_usage=True)
 def send_one_off_to_myself(service_id, template_id):
-    db_template = current_service.get_template_with_user_permission_or_403(
-        template_id, current_user
-    )
+    current_app.logger.info("Send one off to myself")
+    try:
+        db_template = current_service.get_template_with_user_permission_or_403(
+            template_id, current_user
+        )
+    except Exception:
+        current_app.logger.exception("Couldnt get template for one off")
+        # Use 406 just because we're limited to certain codes here and it will point us back to a problem here
+        abort(406)
 
     if db_template["template_type"] not in ("sms", "email"):
         abort(404)
