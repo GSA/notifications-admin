@@ -1,3 +1,8 @@
+import base64
+import json
+import secrets
+
+from app import redis_client
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
 from app.utils.user_permissions import (
     all_ui_permissions,
@@ -32,6 +37,18 @@ class InviteApiClient(NotifyAdminAPIClient):
             "folder_permissions": folder_permissions,
         }
         data = _attach_current_user(data)
+
+        # make the state variable to properly store the nonce.
+        # this matches the api code in app.service_invite.rest.get_user_data_url_safe()
+        state_data = json.dumps(data)
+        state_data = base64.b64encode(state_data.encode("utf8"))
+        state = state_data.decode("utf8")
+
+        # make and store the nonce
+        nonce = secrets.token_urlsafe()
+        redis_client.set(f"invitenonce-{state}", nonce)  # save the nonce to redis.
+        data["nonce"] = nonce  # This is passed to api for the invite url.
+
         resp = self.post(url=f"/service/{service_id}/invite", data=data)
         return resp["data"]
 
