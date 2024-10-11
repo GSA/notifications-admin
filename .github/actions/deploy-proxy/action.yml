@@ -1,6 +1,9 @@
 name: Deploy egress proxy
 description: Set egress space security groups and deploy proxy
 inputs:
+  cf_org:
+    description: The org the target app exists in.
+    required: true
   cf_space:
     description: The space the target app exists in.
     required: true
