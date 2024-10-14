@@ -24,6 +24,13 @@ from app.main.views.sub_navigation_dictionaries import (
 from app.utils.user import user_is_logged_in
 from notifications_utils.url_safe_token import generate_token
 
+feature_guidance_enabled = os.getenv('FEATURE_GUIDANCE_ENABLED', 'false').lower() == 'true'
+
+# Hook to check for guidance routes
+@main.before_request
+def check_guidance_feature():
+    if request.path.startswith("/guidance") and not feature_guidance_enabled:
+        abort(404)
 
 @main.route("/")
 def index():
