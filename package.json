@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
-    "@babel/preset-env": "^7.25.7",
+    "@babel/preset-env": "^7.25.8",
     "@uswds/compile": "^1.2.0",
     "backstopjs": "^6.3.25",
     "better-npm-audit": "^3.11.0",
