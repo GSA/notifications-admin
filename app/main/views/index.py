@@ -7,12 +7,11 @@ from flask import (
     redirect,
     render_template,
     request,
-    session,
     url_for,
 )
 from flask_login import current_user
 
-from app import status_api_client
+from app import status_api_client, redis_client
 from app.formatters import apply_html_class, convert_markdown_template
 from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
@@ -34,7 +33,8 @@ def index():
     # handle unit tests
 
     nonce = secrets.token_urlsafe()
-    session["nonce"] = nonce
+
+    redis_client.set(f"login-nonce-{token}", nonce)
 
     if url is not None:
         url = url.replace("NONCE", nonce)

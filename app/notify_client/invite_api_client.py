@@ -46,7 +46,7 @@ class InviteApiClient(NotifyAdminAPIClient):
 
         # make and store the nonce
         nonce = secrets.token_urlsafe()
-        redis_client.set(f"invitenonce-{state}", nonce)  # save the nonce to redis.
+        redis_client.set(f"login-nonce-{state}", nonce)  # save the nonce to redis.
         data["nonce"] = nonce  # This is passed to api for the invite url.
 
         resp = self.post(url=f"/service/{service_id}/invite", data=data)
