@@ -807,13 +807,6 @@ $do-dont-top-bar-width: 1;
    border-radius: 2px;
 }
 
-img.guidance_card_img  {
-   display: block;
-   width: 50%;
-   height: auto;
-   margin: 0 auto;
-}
-
 .svg-circle-icon {
    display: inline-block;
    margin: 0;
@@ -830,4 +823,31 @@ img.guidance_card_img  {
    .guidance-flex-container {
       flex-direction: column;
    }
+}
+
+.linked-content:hover {
+   cursor: pointer;
+   transform: scale(1.05);
+   transition: transform 0.3s ease, background-color 0.3s ease,
+}
+
+li.linked-card > div:first-child {
+   border-color: #005ea2;
+}
+
+li.linked-card:hover h4,
+li.linked-card:hover p,
+.guidance_card_img{
+   color: #005ea2;
+}
+
+.guidance_card_img {
+   display: block;
+   width: 50%;
+   height: auto;
+   margin: 0 auto;
+}
+
+.guidance_link {
+   text-decoration: none;
 }
