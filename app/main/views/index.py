@@ -1,17 +1,11 @@
 import os
 import secrets
+from urllib.parse import unquote
 
-from flask import (
-    abort,
-    current_app,
-    redirect,
-    render_template,
-    request,
-    url_for,
-)
+from flask import abort, current_app, redirect, render_template, request, url_for
 from flask_login import current_user
 
-from app import status_api_client, redis_client
+from app import redis_client, status_api_client
 from app.formatters import apply_html_class, convert_markdown_template
 from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
@@ -34,7 +28,8 @@ def index():
 
     nonce = secrets.token_urlsafe()
 
-    redis_client.set(f"login-nonce-{token}", nonce)
+    redis_key = f"login-nonce-{unquote(token)}"
+    redis_client.set(redis_key, nonce)
 
     if url is not None:
         url = url.replace("NONCE", nonce)

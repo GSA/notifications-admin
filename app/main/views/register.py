@@ -170,7 +170,7 @@ def set_up_your_profile():
         request_json = request.json()
         id_token = get_id_token(request_json)
         nonce = id_token["nonce"]
-        stored_nonce = redis_client.get(f"login-nonce-{state}")
+        stored_nonce = redis_client.get(f"login-nonce-{state}").decode("utf8")
         if nonce != stored_nonce:
             current_app.logger.error(f"Nonce Error: {nonce} != {stored_nonce}")
             abort(403)

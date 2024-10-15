@@ -2,6 +2,7 @@ import os
 import secrets
 import time
 import uuid
+from urllib.parse import unquote
 
 import jwt
 import requests
@@ -17,7 +18,7 @@ from flask import (
 )
 from flask_login import current_user
 
-from app import login_manager, user_api_client, redis_client
+from app import login_manager, redis_client, user_api_client
 from app.main import main
 from app.main.views.index import error
 from app.main.views.verify import activate_user
@@ -65,7 +66,11 @@ def _get_access_token(code, state):  # pragma: no cover
     response_json = response.json()
     id_token = get_id_token(response_json)
     nonce = id_token["nonce"]
-    stored_nonce = redis_client.get(f"login-nonce-{state}")
+    redis_key = f"login-nonce-{state}"
+    stored_nonce = redis_client.get(redis_key).decode("utf8")
+
+    # 'login-nonce-IjEyNy4wLjAuMSI%2EZw51tw%2EWIkNwqJKjDsd_mAGc2Jgh39KnS4'
+    # 'login-nonce-IjEyNy4wLjAuMSI.Zw51tw.WIkNwqJKjDsd_mAGc2Jgh39KnS4'
 
     if nonce != stored_nonce:
         current_app.logger.error(f"Nonce Error: {nonce} != {stored_nonce}")
@@ -209,7 +214,8 @@ def sign_in():  # pragma: no cover
     url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
 
     nonce = secrets.token_urlsafe()
-    redis_client.set(f"login-nonce-{token}", nonce)
+    redis_key = f"login-nonce-{unquote(token)}"
+    redis_client.set(redis_key, nonce)
 
     # handle unit tests
     if url is not None:
