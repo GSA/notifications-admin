@@ -1,5 +1,3 @@
-import base64
-import json
 import secrets
 from urllib.parse import unquote
 
