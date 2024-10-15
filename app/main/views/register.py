@@ -1,5 +1,6 @@
 import base64
 import json
+from urllib.parse import unquote
 import uuid
 from datetime import datetime, timedelta
 
@@ -166,14 +167,6 @@ def set_up_your_profile():
 
     if redis_client.get(f"invitedata-{state}") is None:
         access_token = sign_in._get_access_token(code, state)
-
-        request_json = request.json()
-        id_token = get_id_token(request_json)
-        nonce = id_token["nonce"]
-        stored_nonce = redis_client.get(f"login-nonce-{state}").decode("utf8")
-        if nonce != stored_nonce:
-            current_app.logger.error(f"Nonce Error: {nonce} != {stored_nonce}")
-            abort(403)
 
         debug_msg("Got the access token for login.gov")
         user_email, user_uuid = sign_in._get_user_email_and_uuid(access_token)

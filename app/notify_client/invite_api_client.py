@@ -1,6 +1,9 @@
 import base64
 import json
 import secrets
+from urllib.parse import unquote
+
+from flask import current_app, request
 
 from app import redis_client
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
@@ -46,7 +49,7 @@ class InviteApiClient(NotifyAdminAPIClient):
 
         # make and store the nonce
         nonce = secrets.token_urlsafe()
-        redis_key = f"login-nonce-{state}"
+        redis_key = f"login-nonce-{unquote(nonce)}"
         redis_client.set(f"{redis_key}", nonce)  # save the nonce to redis.
         data["nonce"] = nonce  # This is passed to api for the invite url.
 
