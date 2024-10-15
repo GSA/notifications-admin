@@ -26,11 +26,13 @@ from notifications_utils.url_safe_token import generate_token
 
 feature_guidance_enabled = os.getenv('FEATURE_GUIDANCE_ENABLED', 'false').lower() == 'true'
 
+
 # Hook to check for guidance routes
 @main.before_request
 def check_guidance_feature():
     if request.path.startswith("/guidance") and not feature_guidance_enabled:
         abort(404)
+
 
 @main.route("/")
 def index():
