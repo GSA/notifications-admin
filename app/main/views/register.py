@@ -1,6 +1,5 @@
 import base64
 import json
-from urllib.parse import unquote
 import uuid
 from datetime import datetime, timedelta
 
@@ -27,7 +26,6 @@ from app.main.views import sign_in
 from app.main.views.verify import activate_user
 from app.models.user import InvitedOrgUser, InvitedUser, User
 from app.utils import hide_from_search_engines, hilite
-from app.utils.login import get_id_token
 from app.utils.user import is_gov_user
 
 
