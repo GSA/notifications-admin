@@ -13,12 +13,11 @@ from flask import (
     redirect,
     render_template,
     request,
-    session,
     url_for,
 )
 from flask_login import current_user
 
-from app import login_manager, user_api_client
+from app import login_manager, user_api_client, redis_client
 from app.main import main
 from app.main.views.index import error
 from app.main.views.verify import activate_user
@@ -66,7 +65,8 @@ def _get_access_token(code, state):  # pragma: no cover
     response_json = response.json()
     id_token = get_id_token(response_json)
     nonce = id_token["nonce"]
-    stored_nonce = session.pop("nonce")
+    stored_nonce = redis_client.get(f"login-nonce-{state}")
+
     if nonce != stored_nonce:
         current_app.logger.error(f"Nonce Error: {nonce} != {stored_nonce}")
         abort(403)
@@ -209,7 +209,7 @@ def sign_in():  # pragma: no cover
     url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
 
     nonce = secrets.token_urlsafe()
-    session["nonce"] = nonce
+    redis_client.set(f"login-nonce-{token}", nonce)
 
     # handle unit tests
     if url is not None:
