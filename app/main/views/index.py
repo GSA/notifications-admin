@@ -18,6 +18,7 @@ from notifications_utils.url_safe_token import generate_token
 def index():
     if current_user and current_user.is_authenticated:
         return redirect(url_for("main.choose_account"))
+
     token = generate_token(
         str(request.remote_addr),
         current_app.config["SECRET_KEY"],
@@ -26,9 +27,11 @@ def index():
     url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
     # handle unit tests
 
+    current_app.logger.warning(f"############### {str(request.remote_addr)}")
+
     nonce = secrets.token_urlsafe()
 
-    redis_key = f"login-nonce-{unquote(token)}"
+    redis_key = f"login-nonce-{unquote(nonce)}"
     redis_client.set(redis_key, nonce)
 
     if url is not None:

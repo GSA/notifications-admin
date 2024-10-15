@@ -66,11 +66,8 @@ def _get_access_token(code, state):  # pragma: no cover
     response_json = response.json()
     id_token = get_id_token(response_json)
     nonce = id_token["nonce"]
-    redis_key = f"login-nonce-{state}"
+    redis_key = f"login-nonce-{unquote(nonce)}"
     stored_nonce = redis_client.get(redis_key).decode("utf8")
-
-    # 'login-nonce-IjEyNy4wLjAuMSI%2EZw51tw%2EWIkNwqJKjDsd_mAGc2Jgh39KnS4'
-    # 'login-nonce-IjEyNy4wLjAuMSI.Zw51tw.WIkNwqJKjDsd_mAGc2Jgh39KnS4'
 
     if nonce != stored_nonce:
         current_app.logger.error(f"Nonce Error: {nonce} != {stored_nonce}")
@@ -214,7 +211,8 @@ def sign_in():  # pragma: no cover
     url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
 
     nonce = secrets.token_urlsafe()
-    redis_key = f"login-nonce-{unquote(token)}"
+    redis_key = f"-{unquote(nonce)}"
+    current_app.logger.info(f"<<<<<<<<<<<<<<<<<<<<<<<< redis key: {redis_key}")
     redis_client.set(redis_key, nonce)
 
     # handle unit tests
