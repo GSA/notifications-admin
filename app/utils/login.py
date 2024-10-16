@@ -1,6 +1,10 @@
+import json
+import os
 from functools import wraps
 
-from flask import redirect, request, session, url_for
+import jwt
+import requests
+from flask import current_app, redirect, request, session, url_for
 
 from app.models.user import User
 from app.utils.time import is_less_than_days_ago
@@ -57,3 +61,32 @@ def is_safe_redirect_url(target):
         redirect_url.scheme in ("http", "https")
         and host_url.netloc == redirect_url.netloc
     )
+
+
+def get_id_token(json_data):
+    """Decode and return the id_token."""
+    client_id = os.getenv("LOGIN_DOT_GOV_CLIENT_ID")
+    certs_url = os.getenv("LOGIN_DOT_GOV_CERTS_URL")
+
+    try:
+        encoded_id_token = json_data["id_token"]
+    except KeyError as e:
+        current_app.logger.exception(f"Error when getting id token {json_data}")
+        raise KeyError(f"'access_token' {request.json()}") from e
+
+    # Getting Login.gov signing keys for unpacking the id_token correctly.
+    jwks = requests.get(certs_url, timeout=5).json()
+    public_keys = {
+        jwk["kid"]: {
+            "key": jwt.algorithms.RSAAlgorithm.from_jwk(json.dumps(jwk)),
+            "algo": jwk["alg"],
+        }
+        for jwk in jwks["keys"]
+    }
+    kid = jwt.get_unverified_header(encoded_id_token)["kid"]
+    pub_key = public_keys[kid]["key"]
+    algo = public_keys[kid]["algo"]
+    id_token = jwt.decode(
+        encoded_id_token, pub_key, audience=client_id, algorithms=[algo]
+    )
+    return id_token

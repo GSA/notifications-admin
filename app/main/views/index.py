@@ -1,18 +1,11 @@
 import os
 import secrets
+from urllib.parse import unquote
 
-from flask import (
-    abort,
-    current_app,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
+from flask import abort, current_app, redirect, render_template, request, url_for
 from flask_login import current_user
 
-from app import status_api_client
+from app import redis_client, status_api_client
 from app.formatters import apply_html_class, convert_markdown_template
 from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
@@ -25,6 +18,7 @@ from notifications_utils.url_safe_token import generate_token
 def index():
     if current_user and current_user.is_authenticated:
         return redirect(url_for("main.choose_account"))
+
     token = generate_token(
         str(request.remote_addr),
         current_app.config["SECRET_KEY"],
@@ -33,8 +27,12 @@ def index():
     url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
     # handle unit tests
 
+    current_app.logger.warning(f"############### {str(request.remote_addr)}")
+
     nonce = secrets.token_urlsafe()
-    session["nonce"] = nonce
+
+    redis_key = f"login-nonce-{unquote(nonce)}"
+    redis_client.set(redis_key, nonce)
 
     if url is not None:
         url = url.replace("NONCE", nonce)
