@@ -9,9 +9,8 @@ from app.utils.csv import get_user_preferred_timezone
 def get_current_financial_year():
     preferred_tz = pytz.timezone(get_user_preferred_timezone())
     now = datetime.now(preferred_tz)
-    current_month = int(now.strftime("%-m"))
     current_year = int(now.strftime("%Y"))
-    return current_year if current_month < 10 else current_year + 1
+    return current_year
 
 
 def is_less_than_days_ago(date_from_db, number_of_days):

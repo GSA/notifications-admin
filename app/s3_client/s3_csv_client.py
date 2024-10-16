@@ -1,3 +1,4 @@
+import os
 import uuid
 
 from flask import current_app
@@ -10,13 +11,13 @@ from app.s3_client import (
 )
 from notifications_utils.s3 import s3upload as utils_s3upload
 
-FILE_LOCATION_STRUCTURE = "service-{}-notify/{}.csv"
+NEW_FILE_LOCATION_STRUCTURE = "{}-service-notify/{}.csv"
 
 
 def get_csv_location(service_id, upload_id):
     return (
         current_app.config["CSV_UPLOAD_BUCKET"]["bucket"],
-        FILE_LOCATION_STRUCTURE.format(service_id, upload_id),
+        NEW_FILE_LOCATION_STRUCTURE.format(service_id, upload_id),
         current_app.config["CSV_UPLOAD_BUCKET"]["access_key_id"],
         current_app.config["CSV_UPLOAD_BUCKET"]["secret_access_key"],
         current_app.config["CSV_UPLOAD_BUCKET"]["region"],
@@ -33,6 +34,14 @@ def s3upload(service_id, filedata):
     bucket_name, file_location, access_key, secret_key, region = get_csv_location(
         service_id, upload_id
     )
+    if bucket_name == "":
+        exp_bucket = current_app.config["CSV_UPLOAD_BUCKET"]["bucket"]
+        exp_region = current_app.config["CSV_UPLOAD_BUCKET"]["region"]
+        tier = os.getenv("NOTIFY_ENVIRONMENT")
+        raise Exception(
+            f"NO BUCKET NAME SHOULD BE: {exp_bucket} WITH REGION {exp_region} TIER {tier}"
+        )
+
     utils_s3upload(
         filedata=filedata["data"],
         region=region,

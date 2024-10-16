@@ -134,3 +134,8 @@ playwright/
 
 # Nodenv
 .node-version
+
+# BackstopJS
+backstop_data/bitmaps_test/
+backstop_data/html_report/
+backstop_data/engine_scripts/playwright/

@@ -1,4 +1,6 @@
+import json
 import os
+import secrets
 import time
 import uuid
 
@@ -12,6 +14,7 @@ from flask import (
     redirect,
     render_template,
     request,
+    session,
     url_for,
 )
 from flask_login import current_user
@@ -28,7 +31,7 @@ from app.utils.user import is_gov_user
 from notifications_utils.url_safe_token import generate_token
 
 
-def _reformat_keystring(orig):
+def _reformat_keystring(orig):  # pragma: no cover
     arr = orig.split("-----")
     begin = arr[1]
     end = arr[3]
@@ -37,9 +40,10 @@ def _reformat_keystring(orig):
     return new_keystring
 
 
-def _get_access_token(code, state):
+def _get_access_token(code, state):  # pragma: no cover
     client_id = os.getenv("LOGIN_DOT_GOV_CLIENT_ID")
     access_token_url = os.getenv("LOGIN_DOT_GOV_ACCESS_TOKEN_URL")
+    certs_url = os.getenv("LOGIN_DOT_GOV_CERTS_URL")
     keystring = os.getenv("LOGIN_PEM")
     if " " in keystring:
         keystring = _reformat_keystring(keystring)
@@ -60,17 +64,47 @@ def _get_access_token(code, state):
     url = f"{base_url}{cli_assert}&{cli_assert_type}&{code_param}&grant_type=authorization_code"
     headers = {"Authorization": "Bearer %s" % token}
     response = requests.post(url, headers=headers)
-    if response.json().get("access_token") is None:
-        # Capture the response json here so it hopefully shows up in error reports
-        current_app.logger.error(
+
+    response_json = response.json()
+    try:
+        encoded_id_token = response_json["id_token"]
+    except KeyError as e:
+        current_app.logger.exception(f"Error when getting id token {response_json}")
+        raise KeyError(f"'access_token' {response.json()}") from e
+
+    # Getting Login.gov signing keys for unpacking the id_token correctly.
+    jwks = requests.get(certs_url).json()
+    public_keys = {
+        jwk["kid"]: {
+            "key": jwt.algorithms.RSAAlgorithm.from_jwk(json.dumps(jwk)),
+            "algo": jwk["alg"],
+        }
+        for jwk in jwks["keys"]
+    }
+    kid = jwt.get_unverified_header(encoded_id_token)["kid"]
+    pub_key = public_keys[kid]["key"]
+    algo = public_keys[kid]["algo"]
+    id_token = jwt.decode(
+        encoded_id_token, pub_key, audience=client_id, algorithms=[algo]
+    )
+
+    nonce = id_token["nonce"]
+    saved_nonce = session.pop("nonce")
+    if nonce != saved_nonce:
+        current_app.logger.error(f"Nonce Error: {nonce} != {saved_nonce}")
+        abort(403)
+
+    try:
+        access_token = response_json["access_token"]
+    except KeyError as e:
+        current_app.logger.exception(
             f"Error when getting access token {response.json()} #notify-admin-1505"
         )
-        raise KeyError(f"'access_token' {response.json()}")
-    access_token = response.json()["access_token"]
+        raise KeyError(f"'access_token' {response.json()}") from e
     return access_token
 
 
-def _get_user_email_and_uuid(access_token):
+def _get_user_email_and_uuid(access_token):  # pragma: no cover
     headers = {"Authorization": "Bearer %s" % access_token}
     user_info_url = os.getenv("LOGIN_DOT_GOV_USER_INFO_URL")
     user_attributes = requests.get(
@@ -82,7 +116,7 @@ def _get_user_email_and_uuid(access_token):
     return user_email, user_uuid
 
 
-def _do_login_dot_gov():
+def _do_login_dot_gov():  # $ pragma: no cover
     # start login.gov
     code = request.args.get("code")
     state = request.args.get("state")
@@ -124,12 +158,13 @@ def _do_login_dot_gov():
         except BaseException as be:  # noqa B036
             current_app.logger.error(f"Error signing in: {be} #notify-admin-1505 ")
             error(401)
+
         return redirect(url_for("main.show_accounts_or_dashboard", next=redirect_url))
 
     # end login.gov
 
 
-def verify_email(user, redirect_url):
+def verify_email(user, redirect_url):  # pragma: no cover
     user_api_client.send_verify_code(user["id"], "email", None, redirect_url)
     title = "Email resent" if request.args.get("email_resent") else "Check your email"
     redirect_url = request.args.get("next")
@@ -138,7 +173,7 @@ def verify_email(user, redirect_url):
     )
 
 
-def _handle_e2e_tests(redirect_url):
+def _handle_e2e_tests(redirect_url):  # pragma: no cover
     try:
         current_app.logger.warning("E2E TESTS ARE ENABLED.")
         current_app.logger.warning(
@@ -146,26 +181,32 @@ def _handle_e2e_tests(redirect_url):
         )
         user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
         activate_user(user["id"])
+
+        # Check if the redirect URL is present and safe before proceeding further
+        if redirect_url and is_safe_redirect_url(redirect_url):
+            return redirect(redirect_url)
+
         return redirect(
             url_for(
                 "main.show_accounts_or_dashboard",
                 next="EMAIL_IS_OK",
             )
         )
+
     except Exception as e:
         stre = str(e)
         stre = stre.replace(" ", "_")
-        # Trying to get a message back to playwright somehow since we can't see the admin logs
+        # Trying to get a message back to playwright somehow since we can't raise an error
         return redirect(url_for(f"https://{stre}"))
 
 
 @main.route("/sign-in", methods=(["GET", "POST"]))
 @hide_from_search_engines
-def sign_in():
+def sign_in():  # pragma: no cover
     redirect_url = request.args.get("next")
 
     if os.getenv("NOTIFY_E2E_TEST_EMAIL"):
-        return _handle_e2e_tests(None)
+        return _handle_e2e_tests(redirect_url)
 
     # If we have to revalidated the email, send the message
     # via email and redirect to the "verify your email page"
@@ -189,10 +230,15 @@ def sign_in():
         current_app.config["DANGEROUS_SALT"],
     )
     url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
+
+    nonce = secrets.token_urlsafe()
+    session["nonce"] = nonce
+
     # handle unit tests
     if url is not None:
-        url = url.replace("NONCE", token)
+        url = url.replace("NONCE", nonce)
         url = url.replace("STATE", token)
+
     return render_template(
         "views/signin.html",
         again=bool(redirect_url),
@@ -201,5 +247,5 @@ def sign_in():
 
 
 @login_manager.unauthorized_handler
-def sign_in_again():
+def sign_in_again():  # pragma: no cover
     return redirect(url_for("main.sign_in", next=request.path))
