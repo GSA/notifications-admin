@@ -52,6 +52,7 @@ jobs:
           DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
+          ADMIN_CLIENT_USERNAME: "notify-admin"
           NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
           NR_BROWSER_KEY: ${{ secrets.NR_BROWSER_KEY }}
           COMMIT_HASH: ${{ github.sha }}
@@ -74,12 +75,11 @@ jobs:
             --vars-file deploy-config/demo.yml
             --var DANGEROUS_SALT="$DANGEROUS_SALT"
             --var SECRET_KEY="$SECRET_KEY"
-            --var ADMIN_CLIENT_USERNAME="notify-admin"
             --var ADMIN_CLIENT_SECRET="$ADMIN_CLIENT_SECRET"
+            --var ADMIN_CLIENT_USERNAME="$ADMIN_CLIENT_USERNAME"
             --var NEW_RELIC_LICENSE_KEY="$NEW_RELIC_LICENSE_KEY"
             --var NR_BROWSER_KEY="$NR_BROWSER_KEY"
             --var COMMIT_HASH="$COMMIT_HASH"
-            --var LOGIN_PEM="$LOGIN_PEM"
             --var LOGIN_DOT_GOV_CLIENT_ID="$LOGIN_DOT_GOV_CLIENT_ID"
             --var LOGIN_DOT_GOV_USER_INFO_URL="$LOGIN_DOT_GOV_USER_INFO_URL"
             --var LOGIN_DOT_GOV_ACCESS_TOKEN_URL="$LOGIN_DOT_GOV_ACCESS_TOKEN_URL"
@@ -88,6 +88,7 @@ jobs:
             --var LOGIN_DOT_GOV_SIGNOUT_REDIRECT="$LOGIN_DOT_GOV_SIGNOUT_REDIRECT"
             --var LOGIN_DOT_GOV_INITIAL_SIGNIN_URL="$LOGIN_DOT_GOV_INITIAL_SIGNIN_URL"
             --var LOGIN_DOT_GOV_CERTS_URL="$LOGIN_DOT_GOV_CERTS_URL"
+            --var LOGIN_PEM="$LOGIN_PEM"
             --strategy rolling
 
       - name: Check for changes to egress config
@@ -101,6 +102,10 @@ jobs:
       - name: Deploy egress proxy
         if: steps.changed-egress-config.outputs.any_changed == 'true'
         uses: ./.github/actions/deploy-proxy
+        env:
+          CF_USERNAME: ${{ secrets.CLOUDGOV_USERNAME }}
+          CF_PASSWORD: ${{ secrets.CLOUDGOV_PASSWORD }}
         with:
+          cf_org: gsa-tts-benefits-studio
           cf_space: notify-demo
           app: notify-admin-demo
