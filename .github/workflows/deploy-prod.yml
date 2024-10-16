@@ -52,6 +52,7 @@ jobs:
           DANGEROUS_SALT: ${{ secrets.DANGEROUS_SALT }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           ADMIN_CLIENT_SECRET: ${{ secrets.ADMIN_CLIENT_SECRET }}
+          ADMIN_CLIENT_USERNAME: "notify-admin"
           NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
           NR_BROWSER_KEY: ${{ secrets.NR_BROWSER_KEY }}
           COMMIT_HASH: ${{ github.sha }}
