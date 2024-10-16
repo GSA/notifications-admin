@@ -2,7 +2,7 @@ beforeAll(() => {
     jest.spyOn(global, 'setTimeout');
 
     document.body.innerHTML = `
-        <dialog class="usa-modal" id="sessionTimer" aria-labelledby="sessionTimerHeading" aria-describedby="timerWarning">
+        <dialog class="usa-modal" id="sessionTimer" aria-labelledby="sessionTimerHeading" aria-describedby="timeLeft">
             <div class="usa-modal__content">
                 <div class="usa-modal__main">
                 <h2 class="usa-modal__heading" id="sessionTimerHeading">
