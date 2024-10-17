@@ -21,6 +21,7 @@ def _setup(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # Check to make sure that we've arrived at the next page.
     # Check the page title exists and matches what we expect.
@@ -49,6 +50,7 @@ def _setup(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # Check for the sign in heading.
     about_heading = page.get_by_role("heading", name="About your service")
@@ -69,6 +71,7 @@ def _setup(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # TODO this fails on staging due to duplicate results on 'get_by_text'
     # Check for the service name title and heading.
@@ -98,6 +101,7 @@ def test_invite_team_member_to_service(authenticated_page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # Check for invite a team member button
     invite_team_member_button = page.get_by_role("button", name="Invite a team member")
@@ -172,6 +176,7 @@ def _teardown(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # Check to make sure that we've arrived at the next page.
     # Check the page title exists and matches what we expect.

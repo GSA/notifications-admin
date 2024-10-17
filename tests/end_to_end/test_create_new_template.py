@@ -5,6 +5,8 @@ import uuid
 
 from playwright.sync_api import expect
 
+from tests.end_to_end.conftest import check_axe_report
+
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 
@@ -16,6 +18,7 @@ def create_new_template(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     send_messages_button = page.get_by_role("link", name="Send messages")
     expect(send_messages_button).to_be_visible()
@@ -23,6 +26,7 @@ def create_new_template(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     create_template_button = page.get_by_role("button", name="New template")
     expect(create_template_button).to_be_visible()
@@ -30,6 +34,7 @@ def create_new_template(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     start_with_a_blank_template_radio = page.get_by_text("Start with a blank template")
     expect(start_with_a_blank_template_radio).to_be_visible()
@@ -43,6 +48,7 @@ def create_new_template(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     template_name_input = page.get_by_text("Template name")
     expect(template_name_input).to_be_visible()
@@ -59,6 +65,7 @@ def create_new_template(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     use_this_template_button = page.get_by_text("Use this template")
     expect(use_this_template_button).to_be_visible()
@@ -80,6 +87,7 @@ def create_new_template(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # We are not going to send the message for this test, we just want to confirm
     # that the template has been created and we are now seeing the message from the
@@ -92,6 +100,7 @@ def test_create_new_template(end_to_end_context):
     page.goto(f"{E2E_TEST_URI}/sign-in")
     # Wait for the next page to fully load.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     current_date_time = datetime.datetime.now()
     new_service_name = "E2E Federal Test Service {now} - {browser_type}".format(
@@ -102,6 +111,7 @@ def test_create_new_template(end_to_end_context):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # Check to make sure that we've arrived at the next page.
     # Check the page title exists and matches what we expect.
@@ -130,6 +140,7 @@ def test_create_new_template(end_to_end_context):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # Check for the sign in heading.
     about_heading = page.get_by_role("heading", name="About your service")
@@ -150,6 +161,7 @@ def test_create_new_template(end_to_end_context):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # TODO this fails on staging due to duplicate results on 'get_by_text'
     # Check for the service name title and heading.
@@ -168,16 +180,19 @@ def _teardown(page):
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     page.click("text='Delete this service'")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     page.click("text='Yes, delete'")
 
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # Check to make sure that we've arrived at the next page.
     # Check the page title exists and matches what we expect.
