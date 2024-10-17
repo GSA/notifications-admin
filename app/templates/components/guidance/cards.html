@@ -5,31 +5,42 @@
 </h3>
 <ul class="usa-card-group">
   {% for item in card_contents %}
-  <li class="usa-card grid-col tablet:grid-col-4">
+  <li class="usa-card grid-col tablet:grid-col-4 {% if item.link %}linked-card linked-content{% endif %}">
     <div class="usa-card__container">
       {% if item.card_heading %}
-      <div class="usa-card__header">{% if condition %}
-
+      <div class="usa-card__header">
+        {% if item.link %}
+        <a href="{{ item.link }}" class="guidance_link">
+          {% endif %}
+          <h4
+            class="usa-card__heading {% if text_align != 'left' or text_align is not defined %}text-center{% else %}text-left{% endif %} {% if item.link %}linked-card{% endif %}">
+            {{ item.card_heading }}
+          </h4>
+          {% if item.link %}
+        </a>
         {% endif %}
-        <h4
-          class="usa-card__heading {% if text_align != 'left' or text_align is not defined %}text-center{% else %}text-left{% endif %}">
-          {{item.card_heading}}
-        </h4>
       </div>
       {% endif %}
-      {% if item.image_src %}
+      {% if item.svg_src or item.image_src%}
       <div class="usa-card__media usa-card__media--inset">
+        {% if item.svg_src %}
+        <svg aria-hidden="true" focusable="false" role="img" class="guidance_card_img">
+          <use xlink:href="{{asset_url('images/guidance-card-sprite.svg')}}#{{item.svg_src}}"></use>
+        </svg>
+        {% endif %}
+        {% if item.image_src %}
         <img class="guidance_card_img" src="{{item.image_src}}" alt="{{item.card_heading}} image" />
+        {% endif %}
       </div>
       {% endif %}
       {% if item.p_text %}
       <div class="usa-card__body">
-        <p class="{% if text_align != 'left' or text_align is not defined %}text-center{% else %}text-left{% endif %}">
+        <p
+          class="{% if text_align != 'left' or text_align is not defined %}text-center{% else %}text-left{% endif %} {% if item.link %}linked-card{% endif %}">
           {{item.p_text|safe}}
         </p>
       </div>
       {% endif %}
-
     </div>
   </li>
   {% endfor %}
