@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% set page_title = "Get the Word Out" %}
+
+{% block per_page_title %}
+{{page_title}}
+{% endblock %}
+
+{% block content_column_content %}
+{% with title=page_title %}{% include "components/guidance/nav_breadcrumb.html" %}{% endwith %}
+<section class="usa-prose">
+  <h2>Get the word out</h2>
+  <p>Before you launch, let your audience know you are adding texting as a communication method. People are more likely to trust your text once they get it if they know that your program is sending texts.</p>
+
+  <p>How you currently communicate with your audience will determine the best approaches to announce your new initiative. Harness channels you’re already using like social media, public websites, mailing inserts, or fliers at key service locations as well as partnering with community organizations to get the word out about your new texting program.</p>
+  <h3>An example of key messages in direct mail</h3>
+  <h1>image goes here</h1>
+  <h3>Prime your audiences to trust you</h3>
+  <p>To reinforce legitimacy, include these key messages in your outreach:</p>
+  <ol>
+    <li><b>Introduce yourself</b> – Give people time to get to know your texting communications before you need direct action from them</li>
+    <li><b>Phone number</b> – Note the sending phone number your texts will come from</li>
+    <li><b>Text types</b> – Be clear on the types of texts you intend to send, how often, and why they matter</li>
+    <li><b>Privacy policy</b>– For example, state that you will not collect personal information, including the types of information you will never ask for</li>
+    <li><b>Places to verif</b>y – Include a phone number, website, or human where people can verify that the texts are coming from you</li>
+    <li><b>Opt out</b> – Provide opt-out instructions and a disclaimer for the potential cost of receiving the text</li>
+  </ol>
+
+  <p class="text-center">Write an introductory text before you start sending messages:</p>
+  <p>Department of Social Services: Welcome to text updates from the (1) <b>State Department of Social Services.</b> (2) <b>We’ll always text you from this number,</b> save us to your contact list. Our goal is to (3) <b>keep you up to date on your account status.</b> (4) <b>We will never ask for personal details in a text.</b> (5) If you have questions about how we protect your privacy, see state.gov/privacy. (6) <b>Reply STOP to stop.</b></p>
+</section>
+
+
+{% endblock %}
