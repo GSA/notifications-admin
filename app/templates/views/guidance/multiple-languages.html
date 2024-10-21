@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% set page_title = "Multiple languages" %}
+{% set page_title = "Text in multiple languages" %}
 
 {% block per_page_title %}
 {{page_title}}
@@ -9,7 +9,7 @@
 {% block content_column_content %}
 {% with title=page_title %}{% include "components/guidance/nav_breadcrumb.html" %}{% endwith %}
 <section class="usa-prose">
-  <h1>Text in multiple languages</h1>
+  <h1>{{page_title}}</h1>
   <p class="font-sans-lg text-base"> What to know as you plan translated texts.</p>
 
   <p>

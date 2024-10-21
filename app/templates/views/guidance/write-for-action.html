@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% from "components/guidance/circle_number.html" import circle_number %}
 
-{% set page_title = "Write for action" %}
+{% set page_title = "Write texts that provoke action" %}
 
 {% block per_page_title %}
 {{page_title}}
@@ -10,7 +10,7 @@
 {% block content_column_content %}
 {% with title=page_title %}{% include "components/guidance/nav_breadcrumb.html" %}{% endwith %}
 <section class="usa-prose">
-  <h1>Write texts that provoke action</h1>
+  <h1>{{page_title}}</h1>
   <p class="font-sans-lg text-base"> Help your audience know what to do with the information you send.</p>
 
   <p>
