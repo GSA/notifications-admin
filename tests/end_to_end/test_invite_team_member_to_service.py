@@ -122,7 +122,6 @@ def test_invite_team_member_to_service(authenticated_page):
         "Send messages",
         "Add and edit templates",
         "Manage settings, team and usage",
-        "Manage API integration",
     ]
 
     # Check permission labels are on page
@@ -136,7 +135,6 @@ def test_invite_team_member_to_service(authenticated_page):
         "See dashboard",
         "Add and edit templates",
         "Manage settings, team and usage",
-        "Manage API integration",
     ]
 
     for checkbox in checkbox_list:
