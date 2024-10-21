@@ -1,4 +1,3 @@
-# import json
 import os
 import secrets
 import time
@@ -25,7 +24,7 @@ from app.main.views.index import error
 from app.main.views.verify import activate_user
 from app.models.user import User
 from app.utils import hide_from_search_engines
-from app.utils.login import is_safe_redirect_url
+from app.utils.login import get_id_token, is_safe_redirect_url
 from app.utils.time import is_less_than_days_ago
 from app.utils.user import is_gov_user
 from notifications_utils.url_safe_token import generate_token
@@ -43,7 +42,6 @@ def _reformat_keystring(orig):  # pragma: no cover
 def _get_access_token(code, state):  # pragma: no cover
     client_id = os.getenv("LOGIN_DOT_GOV_CLIENT_ID")
     access_token_url = os.getenv("LOGIN_DOT_GOV_ACCESS_TOKEN_URL")
-    # certs_url = os.getenv("LOGIN_DOT_GOV_CERTS_URL")
     keystring = os.getenv("LOGIN_PEM")
     if " " in keystring:
         keystring = _reformat_keystring(keystring)
@@ -66,38 +64,12 @@ def _get_access_token(code, state):  # pragma: no cover
     response = requests.post(url, headers=headers)
 
     response_json = response.json()
-
-    # TODO nonce check intermittently fails, investifix
-    # Presumably the nonce is not yet in the session when there
-    # is an invite involved?
-
-    # try:
-    #     encoded_id_token = response_json["id_token"]
-    # except KeyError as e:
-    #     current_app.logger.exception(f"Error when getting id token {response_json}")
-    #     raise KeyError(f"'access_token' {response.json()}") from e
-
-    # Getting Login.gov signing keys for unpacking the id_token correctly.
-    # jwks = requests.get(certs_url).json()
-    # public_keys = {
-    #     jwk["kid"]: {
-    #         "key": jwt.algorithms.RSAAlgorithm.from_jwk(json.dumps(jwk)),
-    #         "algo": jwk["alg"],
-    #     }
-    #     for jwk in jwks["keys"]
-    # }
-    # kid = jwt.get_unverified_header(encoded_id_token)["kid"]
-    # pub_key = public_keys[kid]["key"]
-    # algo = public_keys[kid]["algo"]
-    # id_token = jwt.decode(
-    #    encoded_id_token, pub_key, audience=client_id, algorithms=[algo]
-    # )
-    # nonce = id_token["nonce"]
-
-    # saved_nonce = session.pop("nonce")
-    # if nonce != saved_nonce:
-    #     current_app.logger.error(f"Nonce Error: {nonce} != {saved_nonce}")
-    #     abort(403)
+    id_token = get_id_token(response_json)
+    nonce = id_token["nonce"]
+    stored_nonce = session.pop("nonce")
+    if nonce != stored_nonce:
+        current_app.logger.error(f"Nonce Error: {nonce} != {stored_nonce}")
+        abort(403)
 
     try:
         access_token = response_json["access_token"]

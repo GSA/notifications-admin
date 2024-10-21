@@ -26,6 +26,7 @@ from app.main.views import sign_in
 from app.main.views.verify import activate_user
 from app.models.user import InvitedOrgUser, InvitedUser, User
 from app.utils import hide_from_search_engines, hilite
+from app.utils.login import get_id_token
 from app.utils.user import is_gov_user
 
 
@@ -165,6 +166,15 @@ def set_up_your_profile():
 
     if redis_client.get(f"invitedata-{state}") is None:
         access_token = sign_in._get_access_token(code, state)
+
+        request_json = request.json()
+        id_token = get_id_token(request_json)
+        nonce = id_token["nonce"]
+        stored_nonce = redis_client.get(f"invitenonce-{state}")
+        if nonce != stored_nonce:
+            current_app.logger.error(f"Nonce Error: {nonce} != {stored_nonce}")
+            abort(403)
+
         debug_msg("Got the access token for login.gov")
         user_email, user_uuid = sign_in._get_user_email_and_uuid(access_token)
         debug_msg(
