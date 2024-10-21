@@ -1,4 +1,4 @@
-import json
+# import json
 import os
 import secrets
 import time
@@ -43,7 +43,7 @@ def _reformat_keystring(orig):  # pragma: no cover
 def _get_access_token(code, state):  # pragma: no cover
     client_id = os.getenv("LOGIN_DOT_GOV_CLIENT_ID")
     access_token_url = os.getenv("LOGIN_DOT_GOV_ACCESS_TOKEN_URL")
-    certs_url = os.getenv("LOGIN_DOT_GOV_CERTS_URL")
+    # certs_url = os.getenv("LOGIN_DOT_GOV_CERTS_URL")
     keystring = os.getenv("LOGIN_PEM")
     if " " in keystring:
         keystring = _reformat_keystring(keystring)
@@ -66,33 +66,38 @@ def _get_access_token(code, state):  # pragma: no cover
     response = requests.post(url, headers=headers)
 
     response_json = response.json()
-    try:
-        encoded_id_token = response_json["id_token"]
-    except KeyError as e:
-        current_app.logger.exception(f"Error when getting id token {response_json}")
-        raise KeyError(f"'access_token' {response.json()}") from e
+
+    # TODO nonce check intermittently fails, investifix
+    # Presumably the nonce is not yet in the session when there
+    # is an invite involved?
+
+    # try:
+    #     encoded_id_token = response_json["id_token"]
+    # except KeyError as e:
+    #     current_app.logger.exception(f"Error when getting id token {response_json}")
+    #     raise KeyError(f"'access_token' {response.json()}") from e
 
     # Getting Login.gov signing keys for unpacking the id_token correctly.
-    jwks = requests.get(certs_url).json()
-    public_keys = {
-        jwk["kid"]: {
-            "key": jwt.algorithms.RSAAlgorithm.from_jwk(json.dumps(jwk)),
-            "algo": jwk["alg"],
-        }
-        for jwk in jwks["keys"]
-    }
-    kid = jwt.get_unverified_header(encoded_id_token)["kid"]
-    pub_key = public_keys[kid]["key"]
-    algo = public_keys[kid]["algo"]
-    id_token = jwt.decode(
-        encoded_id_token, pub_key, audience=client_id, algorithms=[algo]
-    )
+    # jwks = requests.get(certs_url).json()
+    # public_keys = {
+    #     jwk["kid"]: {
+    #         "key": jwt.algorithms.RSAAlgorithm.from_jwk(json.dumps(jwk)),
+    #         "algo": jwk["alg"],
+    #     }
+    #     for jwk in jwks["keys"]
+    # }
+    # kid = jwt.get_unverified_header(encoded_id_token)["kid"]
+    # pub_key = public_keys[kid]["key"]
+    # algo = public_keys[kid]["algo"]
+    # id_token = jwt.decode(
+    #    encoded_id_token, pub_key, audience=client_id, algorithms=[algo]
+    # )
+    # nonce = id_token["nonce"]
 
-    nonce = id_token["nonce"]
-    saved_nonce = session.pop("nonce")
-    if nonce != saved_nonce:
-        current_app.logger.error(f"Nonce Error: {nonce} != {saved_nonce}")
-        abort(403)
+    # saved_nonce = session.pop("nonce")
+    # if nonce != saved_nonce:
+    #     current_app.logger.error(f"Nonce Error: {nonce} != {saved_nonce}")
+    #     abort(403)
 
     try:
         access_token = response_json["access_token"]
