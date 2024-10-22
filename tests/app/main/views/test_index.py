@@ -132,7 +132,7 @@ def test_static_pages(client_request, mock_get_organization_by_domain, view, moc
 
 
 @pytest.mark.parametrize(
-    ("endpoint, template"),
+    ("endpoint", "template"),
     [
         ("main.guidance", "views/guidance/guidance.html"),
         ("main.clear_goals", "views/guidance/clear-goals.html"),
@@ -144,10 +144,7 @@ def test_static_pages(client_request, mock_get_organization_by_domain, view, moc
     ]
 )
 def test_guidance_routes(client_request, endpoint, template):
-    # Make the request to the endpoint
     page = client_request.get(endpoint)
-
-    # Assert that the page loads successfully (HTTP 200 OK)
     assert page.status_code == 200
 
 
