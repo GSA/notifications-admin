@@ -212,7 +212,6 @@ def sign_in():  # pragma: no cover
 
     nonce = secrets.token_urlsafe()
     redis_key = f"-{unquote(nonce)}"
-    current_app.logger.info(f"<<<<<<<<<<<<<<<<<<<<<<<< redis key: {redis_key}")
     redis_client.set(redis_key, nonce)
 
     # handle unit tests
