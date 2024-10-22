@@ -831,13 +831,14 @@ $do-dont-top-bar-width: 1;
    transition: transform 0.3s ease, background-color 0.3s ease,
 }
 
-li.linked-card > div:first-child {
+li.linked-card:hover > div:first-child:hover {
    border-color: #005ea2;
 }
 
 li.linked-card:hover h4,
 li.linked-card:hover p,
-.guidance_card_img{
+li.linked-card:hover svg,
+.guidance_card_img:hover{
    color: #005ea2;
 }
 

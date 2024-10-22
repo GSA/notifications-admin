@@ -59,7 +59,7 @@
                           <li class="usa-sidenav__item">
                             <a class="{% if item['link'] == request.endpoint %} usa-current {% endif %}" href="{{ url_for(item.link) }}">{{ item.name }}</a>
                             {% if item.sub_navigation_items %}
-                              <ul class="usa-sidenav__sublist">
+                              <ul class="usa-sidenav__sublist display-none">
                                 {% for sub_item in item.sub_navigation_items %}
                                   <li>
                                     <a href="{{ url_for(sub_item.link.split('#')[0]) }}#{{ sub_item.link.split('#')[1] }}">{{ sub_item.name }}</a>

@@ -10,7 +10,7 @@
       {% if item.card_heading %}
       <div class="usa-card__header">
         {% if item.link %}
-        <a href="{{ item.link }}" class="guidance_link">
+        <a href="{{ item.link }}">
           {% endif %}
           <h4
             class="usa-card__heading {% if text_align != 'left' or text_align is not defined %}text-center{% else %}text-left{% endif %} {% if item.link %}linked-card{% endif %}">
