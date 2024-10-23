@@ -95,6 +95,12 @@ def test_hiding_pages_from_search_engines(
         "features",
         "documentation",
         "guidance",
+        "clear_goals",
+        "rules_and_regulations",
+        "establish_trust",
+        "write_for_action",
+        "multiple_languages",
+        "benchmark_performance",
         "security",
         "message_status",
         "features_sms",
@@ -129,23 +135,6 @@ def test_static_pages(client_request, mock_get_organization_by_domain, view, moc
         _expected_status=302,
         _expected_redirect="/sign-in?next={}".format(url_for("main.{}".format(view))),
     )
-
-
-@pytest.mark.parametrize(
-    ("endpoint", "template"),
-    [
-        ("main.guidance", "views/guidance/guidance.html"),
-        ("main.clear_goals", "views/guidance/clear-goals.html"),
-        ("main.rules_and_regulations", "views/guidance/rules-and-regulations.html"),
-        ("main.establish_trust", "views/guidance/establish-trust.html"),
-        ("main.write_for_action", "views/guidance/write-for-action.html"),
-        ("main.multiple_languages", "views/guidance/multiple-languages.html"),
-        ("main.benchmark_performance", "views/guidance/benchmark-performance.html"),
-    ]
-)
-def test_guidance_routes(client_request, endpoint, template):
-    page = client_request.get(endpoint)
-    assert page.status_code == 200
 
 
 def test_guidance_pages_link_to_service_pages_when_signed_in(client_request, mocker):
