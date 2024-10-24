@@ -60,14 +60,13 @@
         </ol>
       </div>
     </li>
-    <li class="flex-1 usa-card--media-right width-full">
+    <li class="flex-1 usa-card--media-right width-full padding-top-3">
       <div class="usa-card__container border-0 width-full">
         <img class="width-full" src="{{ asset_url('images/phone_grey.svg') }}" role="img" alt="Phone" />
-        <div class="position-absolute flex text-cener padding-5 padding-top-9">
-          <p class="text-center">Write an introductory text before you start sending messages:</p>
-          <p class="sms-message-wrapper text-center">{{circle_number(1) }}State Medicare Agency: Hello, MEDICARE has
+        <div class="position-absolute flex text-center padding-5 padding-top-15">
+          <p class="sms-message-wrapper text-left">{{circle_number(1) }}State Medicare Agency: Hello, MEDICARE has
             attempted to
-            send you an update about your claim, but the mail was returned. {{circle_number(2) }}Please go to
+            send you an update about your claim, but the mail was returned. <br>{{circle_number(2) }}Please go to
             https://www.medicare.gov/account/login?utm_source=TEXT, {{circle_number(3) }}log in to your account, and
             click “My
             Account Information” to verify that your address is correct. If you are having difficulty logging in,
@@ -103,22 +102,5 @@
   ] %}
   {% with card_contents=card_contents, text_align='left' %}{% include "components/guidance/cards.html" %}{%
   endwith %}
-  <!-- <ul class="usa-card-group">
-    {% for item in card_contents %}
-    <li class="usa-card tablet-lg:grid-col-4 widescreen:grid-col-4">
-      <div class="usa-card__container">
-        <div class="usa-card__header">
-          <h4 class="usa-card__heading">{{item.card_heading}}</h4>
-        </div>
-        <div class="usa-card__body">
-          <p>
-            {{item.p_text |safe}}
-          </p>
-        </div>
-      </div>
-    </li>
-    {% endfor %}
-  </ul> -->
-
 </section>
 {% endblock %}
