@@ -42,8 +42,9 @@
   },
   {
   "url_link":
-  "https://docs.google.com/document/d/1Q8shgH9ODs-aD3wiRolGge4kBSTJzMIebj29dNkqK9Q/edit#heading=h.ddk0bn7sfe86",
+  "images/TCPA_Overview.pdf",
   "url_text":"Download and share our overview of the TCPA with your legal counsel",
+  "is_downloadable": true,
   "p_text": 'It provides a baseline
   interpretation to aid your legal counsel in getting up to speed with what might be needed for your program or use
   case.
@@ -60,7 +61,11 @@
       <div class="usa-collection__body">
         {% if item.url_text %}
         <h4 class="usa-collection__heading">
-          <a class="use-link usa-link--external" href="{{ item.url_link }}" target="_blank">{{ item.url_text }}</a>
+          <a class="usa-link {% if item.is_downloadable %}usa-link--downloadable{% else %}usa-link--external{% endif %}"
+            href="{% if item.is_downloadable %}{{ asset_url(item.url_link) }}{% else %}{{ item.url_link }}{% endif %}"
+            target="_blank">
+            {{ item.url_text }}
+          </a>
         </h4>
         {% endif %}
         <p class="usa-collection__description">
@@ -69,6 +74,7 @@
       </div>
     </li>
     {% endfor %}
+
   </ul>
   <h3>Opting out</h3>
   <p>

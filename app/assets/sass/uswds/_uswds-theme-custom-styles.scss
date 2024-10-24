@@ -852,3 +852,35 @@ li.linked-card:hover svg,
 .guidance_link {
    text-decoration: none;
 }
+
+.usa-link--downloadable {
+   position: relative;
+}
+
+.usa-link--downloadable::after {
+   background-image: url(../img/material-icons/download.svg);
+   background-repeat: no-repeat;
+   background-position: center center;
+   background-size: 1.75ex 1.75ex;
+   height: 1.75ex;
+   width: 1.75ex;
+   content: "";
+   display: inline;
+   margin-top: .7ex;
+   margin-left: 2px;
+   padding-left: 1.75ex;
+   vertical-align: middle;
+}
+
+.usa-link--downloadable::after {
+   background: 0 0;
+   background-color: currentColor;
+   -webkit-mask-image: url(../img/material-icons/download.svg), linear-gradient(transparent, transparent);
+   mask-image: url(../img/material-icons/download.svg), linear-gradient(transparent, transparent);
+   -webkit-mask-position: center center;
+   mask-position: center center;
+   -webkit-mask-repeat: no-repeat;
+   mask-repeat: no-repeat;
+   -webkit-mask-size: 1.75ex 1.75ex;
+   mask-size: 1.75ex 1.75ex;
+}
