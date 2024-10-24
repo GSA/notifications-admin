@@ -60,7 +60,7 @@
     <h2 class="margin-top-4 margin-bottom-1">Sent jobs</h2>
     <div class="usa-table-container--scrollable-mobile">
       <table class="usa-table usa-table--compact job-table">
-        <caption></caption>
+        <caption class="usa-sr-only">Table showing all sent jobs for this service</caption>
         <thead class="table-field-headings">
           <tr>
             <th scope="col" role="columnheader" class="table-field-heading-first" id="jobId">
@@ -103,7 +103,10 @@
                 <td class="table-field sender">{{ job.created_by.name }}</td>
                 <td class="table-field report">
                   {% if job.time_left != "Data no longer available" %}
-                    <a href="{{ job.download_link }}"><img src="{{ url_for('static', filename='img/material-icons/file_download.svg') }}" alt="File Download Icon"></a>
+                    <a href="{{ job.download_link }}">
+                      <img src="{{ url_for('static', filename='img/material-icons/file_download.svg') }}" alt="">
+                      <span class="usa-sr-only">Download report link</span>
+                    </a>
                   {% else %}
                     <span>N/A</span>
                   {% endif %}
