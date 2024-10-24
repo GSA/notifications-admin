@@ -165,6 +165,7 @@ def set_up_your_profile():
 
     if redis_client.get(f"invitedata-{state}") is None:
         access_token = sign_in._get_access_token(code, state)
+
         debug_msg("Got the access token for login.gov")
         user_email, user_uuid = sign_in._get_user_email_and_uuid(access_token)
         debug_msg(
