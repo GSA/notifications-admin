@@ -47,7 +47,7 @@
     "vinyl-source-stream": "^2.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.25.8",
+    "@babel/core": "^7.25.9",
     "@babel/preset-env": "^7.25.8",
     "@uswds/compile": "^1.2.0",
     "backstopjs": "^6.3.25",
