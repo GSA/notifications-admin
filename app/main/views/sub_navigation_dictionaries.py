@@ -60,11 +60,11 @@ def using_notify_nav():
     ]
 
 
-def guidance_nav():
+def best_practices_nav():
     return [
         {
-            "name": "Guidance",
-            "link": "main.guidance",
+            "name": "Best Practices",
+            "link": "main.best_practices",
         },
         {
             "name": "Clear goals",

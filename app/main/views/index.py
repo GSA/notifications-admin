@@ -11,21 +11,21 @@ from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
 from app.main.views.sub_navigation_dictionaries import (
     features_nav,
-    guidance_nav,
+    best_practices_nav,
     using_notify_nav,
 )
 from app.utils.user import user_is_logged_in
 from notifications_utils.url_safe_token import generate_token
 
-feature_guidance_enabled = (
-    os.getenv("FEATURE_GUIDANCE_ENABLED", "false").lower() == "true"
+feature_best_practices_enabled = (
+    os.getenv("FEATURE_BEST_PRACTICES_ENABLED", "false").lower() == "true"
 )
 
 
 # Hook to check for guidance routes
 @main.before_request
 def check_guidance_feature():
-    if request.path.startswith("/guidance") and not feature_guidance_enabled:
+    if request.path.startswith("/best_practices") and not feature_best_practices_enabled:
         abort(404)
 
 
@@ -204,66 +204,66 @@ def trial_mode_new():
     )
 
 
-@main.route("/guidance")
+@main.route("/best-practices")
 @user_is_logged_in
-def guidance():
+def best_practices():
     return render_template(
-        "views/guidance/guidance.html",
-        navigation_links=guidance_nav(),
+        "views/best-practices/best-practices.html",
+        navigation_links=best_practices_nav(),
     )
 
 
-@main.route("/guidance/clear-goals")
+@main.route("/best-practices/clear-goals")
 @user_is_logged_in
 def clear_goals():
     return render_template(
-        "views/guidance/clear-goals.html",
-        navigation_links=guidance_nav(),
+        "views/best-practices/clear-goals.html",
+        navigation_links=best_practices_nav(),
     )
 
 
-@main.route("/guidance/rules-and-regulations")
+@main.route("/best-practices/rules-and-regulations")
 @user_is_logged_in
 def rules_and_regulations():
     return render_template(
-        "views/guidance/rules-and-regulations.html",
-        navigation_links=guidance_nav(),
+        "views/best-practices/rules-and-regulations.html",
+        navigation_links=best_practices_nav(),
     )
 
 
-@main.route("/guidance/establish-trust")
+@main.route("/best-practices/establish-trust")
 @user_is_logged_in
 def establish_trust():
     return render_template(
-        "views/guidance/establish-trust.html",
-        navigation_links=guidance_nav(),
+        "views/best-practices/establish-trust.html",
+        navigation_links=best_practices_nav(),
     )
 
 
-@main.route("/guidance/write-for-action")
+@main.route("/best-practices/write-for-action")
 @user_is_logged_in
 def write_for_action():
     return render_template(
-        "views/guidance/write-for-action.html",
-        navigation_links=guidance_nav(),
+        "views/best-practices/write-for-action.html",
+        navigation_links=best_practices_nav(),
     )
 
 
-@main.route("/guidance/multiple-languages")
+@main.route("/best-practices/multiple-languages")
 @user_is_logged_in
 def multiple_languages():
     return render_template(
-        "views/guidance/multiple-languages.html",
-        navigation_links=guidance_nav(),
+        "views/best-practices/multiple-languages.html",
+        navigation_links=best_practices_nav(),
     )
 
 
-@main.route("/guidance/benchmark-performance")
+@main.route("/best-practices/benchmark-performance")
 @user_is_logged_in
 def benchmark_performance():
     return render_template(
-        "views/guidance/benchmark-performance.html",
-        navigation_links=guidance_nav(),
+        "views/best-practices/benchmark-performance.html",
+        navigation_links=best_practices_nav(),
     )
 
 
