@@ -25,10 +25,15 @@ def test_client_creates_invite(
                     "created_at",
                     "auth_type",
                     "folder_permissions",
+                    "nonce",
                 }
             )
         },
     )
+
+    mock_token_urlsafe = mocker.patch("secrets.token_urlsafe")
+    fake_nonce = "1234567890"
+    mock_token_urlsafe.return_value = fake_nonce
 
     invite_api_client.create_invite(
         "12345", "67890", "test@example.com", {"send_messages"}, "sms_auth", [fake_uuid]
@@ -45,6 +50,7 @@ def test_client_creates_invite(
             "permissions": "send_emails,send_texts",
             "invite_link_host": "http://localhost:6012",
             "folder_permissions": [fake_uuid],
+            "nonce": fake_nonce,
         },
     )
 

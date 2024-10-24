@@ -1,8 +1,8 @@
-# import json
 import os
 import secrets
 import time
 import uuid
+from urllib.parse import unquote
 
 import jwt
 import requests
@@ -14,18 +14,17 @@ from flask import (
     redirect,
     render_template,
     request,
-    session,
     url_for,
 )
 from flask_login import current_user
 
-from app import login_manager, user_api_client
+from app import login_manager, redis_client, user_api_client
 from app.main import main
 from app.main.views.index import error
 from app.main.views.verify import activate_user
 from app.models.user import User
 from app.utils import hide_from_search_engines
-from app.utils.login import is_safe_redirect_url
+from app.utils.login import get_id_token, is_safe_redirect_url
 from app.utils.time import is_less_than_days_ago
 from app.utils.user import is_gov_user
 from notifications_utils.url_safe_token import generate_token
@@ -43,7 +42,6 @@ def _reformat_keystring(orig):  # pragma: no cover
 def _get_access_token(code, state):  # pragma: no cover
     client_id = os.getenv("LOGIN_DOT_GOV_CLIENT_ID")
     access_token_url = os.getenv("LOGIN_DOT_GOV_ACCESS_TOKEN_URL")
-    # certs_url = os.getenv("LOGIN_DOT_GOV_CERTS_URL")
     keystring = os.getenv("LOGIN_PEM")
     if " " in keystring:
         keystring = _reformat_keystring(keystring)
@@ -66,38 +64,14 @@ def _get_access_token(code, state):  # pragma: no cover
     response = requests.post(url, headers=headers)
 
     response_json = response.json()
+    id_token = get_id_token(response_json)
+    nonce = id_token["nonce"]
+    redis_key = f"login-nonce-{unquote(nonce)}"
+    stored_nonce = redis_client.get(redis_key).decode("utf8")
 
-    # TODO nonce check intermittently fails, investifix
-    # Presumably the nonce is not yet in the session when there
-    # is an invite involved?
-
-    # try:
-    #     encoded_id_token = response_json["id_token"]
-    # except KeyError as e:
-    #     current_app.logger.exception(f"Error when getting id token {response_json}")
-    #     raise KeyError(f"'access_token' {response.json()}") from e
-
-    # Getting Login.gov signing keys for unpacking the id_token correctly.
-    # jwks = requests.get(certs_url).json()
-    # public_keys = {
-    #     jwk["kid"]: {
-    #         "key": jwt.algorithms.RSAAlgorithm.from_jwk(json.dumps(jwk)),
-    #         "algo": jwk["alg"],
-    #     }
-    #     for jwk in jwks["keys"]
-    # }
-    # kid = jwt.get_unverified_header(encoded_id_token)["kid"]
-    # pub_key = public_keys[kid]["key"]
-    # algo = public_keys[kid]["algo"]
-    # id_token = jwt.decode(
-    #    encoded_id_token, pub_key, audience=client_id, algorithms=[algo]
-    # )
-    # nonce = id_token["nonce"]
-
-    # saved_nonce = session.pop("nonce")
-    # if nonce != saved_nonce:
-    #     current_app.logger.error(f"Nonce Error: {nonce} != {saved_nonce}")
-    #     abort(403)
+    if nonce != stored_nonce:
+        current_app.logger.error(f"Nonce Error: {nonce} != {stored_nonce}")
+        abort(403)
 
     try:
         access_token = response_json["access_token"]
@@ -237,7 +211,8 @@ def sign_in():  # pragma: no cover
     url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
 
     nonce = secrets.token_urlsafe()
-    session["nonce"] = nonce
+    redis_key = f"-{unquote(nonce)}"
+    redis_client.set(redis_key, nonce)
 
     # handle unit tests
     if url is not None:
