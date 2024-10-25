@@ -10,8 +10,8 @@ from app.formatters import apply_html_class, convert_markdown_template
 from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
 from app.main.views.sub_navigation_dictionaries import (
-    features_nav,
     best_practices_nav,
+    features_nav,
     using_notify_nav,
 )
 from app.utils.user import user_is_logged_in
