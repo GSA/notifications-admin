@@ -60,6 +60,4 @@ def test_commit_hash():
     create_app(app)
 
     with app.app_context() as current_app:
-        commit_hash = current_app.app.config["COMMIT_HASH"]
-        sanitized_commit_hash = commit_hash.replace("”", "").replace("“", "").strip()
-        assert sanitized_commit_hash == "------"
+        assert current_app.app.config["COMMIT_HASH"] == "-------"

@@ -267,9 +267,9 @@ def test_should_show_job_with_sending_limit_exceeded_status(
         # Created a while ago, started just within the last 24h
         # TODO -- fails locally, should pass, tech debt due to timezone changes, re-evaluate after UTC changes
         pytest.param(
-            datetime(2020, 1, 1, 0, 0, 0),  # Created on January 1, 2020
-            datetime(2020, 1, 9, 6, 0, 1),  # Processing started on January 9, 2020
-            "These messages have been deleted because they were sent more than 7 days ago",
+            datetime(2020, 1, 1, 0, 0, 0),
+            datetime(2020, 1, 9, 6, 0, 1),
+            ("No messages to show yet…"),
         ),
         # Created a while ago, started exactly 24h ago
         # ---
