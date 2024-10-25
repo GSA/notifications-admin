@@ -53,7 +53,7 @@ def test_logged_in_user_redirects_to_choose_account(
     client_request.get(
         "main.sign_in",
         _expected_status=302,
-        _expected_redirect=url_for("main.show_accounts_or_dashboard") + "?next=EMAIL_IS_OK",
+        _expected_redirect=url_for("main.show_accounts_or_dashboard"),
     )
 
 
@@ -116,7 +116,9 @@ def test_static_pages(client_request, mock_get_organization_by_domain, view, moc
 
     # Skipping the rules_and_regulations page due to missing PDF
     if view == "rules_and_regulations":
-        pytest.skip("Skipping test for 'rules_and_regulations' due to missing PDF file.")
+        pytest.skip(
+            "Skipping test for 'rules_and_regulations' due to missing PDF file."
+        )
 
     # Function to check if a view is feature-flagged and should return 404 when disabled
     def is_feature_flagged(view):

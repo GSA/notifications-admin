@@ -25,7 +25,10 @@ feature_best_practices_enabled = (
 # Hook to check for guidance routes
 @main.before_request
 def check_guidance_feature():
-    if request.path.startswith("/best_practices") and not feature_best_practices_enabled:
+    if (
+        request.path.startswith("/best-practices")
+        and not feature_best_practices_enabled
+    ):
         abort(404)
 
 
