@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "components/guidance/circle_number.html" import circle_number %}
+{% from "components/best-practices/circle_number.html" import circle_number %}
 
 {% set page_title = "Write texts that provoke action" %}
 
@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content_column_content %}
-{% with title=page_title %}{% include "components/guidance/nav_breadcrumb.html" %}{% endwith %}
+{% with title=page_title %}{% include "components/best-practices/nav_breadcrumb.html" %}{% endwith %}
 <section class="usa-prose">
   <h1>{{page_title}}</h1>
   <p class="font-sans-lg text-base"> Help your audience know what to do with the information you send.</p>
@@ -41,11 +41,11 @@
     <li>Use a neutral, direct, and professional tone. This works better than a friendly or overly casual tone.</li>
   </ul>
   <h2>Build conditions for action</h2>
-  <ul class="usa-card-group flex-1 flex-wrap padding-top-2 guidance-flex-container">
+  <ul class="usa-card-group flex-1 flex-wrap padding-top-2 best-practices-flex-container">
     <li class="flex-1 width-full height-full padding-bottom-2">
       <div class="usa-card__container border-0">
         <p>For example, getting a person to update their mailing address:</p>
-        <ol class="guidance-list">
+        <ol class="best-practices-list">
           <li>Clearly state the information and the response you want the recipient to take.</li>
           <li>Point directly to where the action can be completed, not to more information.</li>
           <li>Make sure the action can be completed via mobile phone, like calling a person or going to a
@@ -100,7 +100,7 @@
   internet services <b>that belong to you</b>.",
   },
   ] %}
-  {% with card_contents=card_contents, text_align='left' %}{% include "components/guidance/cards.html" %}{%
+  {% with card_contents=card_contents, text_align='left' %}{% include "components/best-practices/cards.html" %}{%
   endwith %}
 </section>
 {% endblock %}

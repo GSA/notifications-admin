@@ -676,28 +676,28 @@ details form {
    margin-top: 0;
 }
 
-ol.guidance-list {
+ol.best-practices-list {
    counter-reset: item;
    list-style-type: none;
    padding-left: 0;
 }
 
-ol.guidance-list.set-two {
+ol.best-practices-list.set-two {
    counter-reset: item 6;
 }
 
-ol.guidance-list.set-three {
+ol.best-practices-list.set-three {
    counter-reset: item 10;
 }
 
-ol.guidance-list li {
+ol.best-practices-list li {
    counter-increment: item;
    margin-bottom: 15px;
    position: relative;
    padding-left: 40px;
 }
 
-ol.guidance-list li::before {
+ol.best-practices-list li::before {
    content: counter(item);
    background-color: #005ea2;
    color: white;
@@ -713,11 +713,11 @@ ol.guidance-list li::before {
    top: 0;
 }
 
-li.guidance {
+li.best-practices {
    padding-bottom: 50px;
 }
 
-div.guidance {
+div.best-practices {
    height: 400px
 }
 
@@ -820,7 +820,7 @@ $do-dont-top-bar-width: 1;
 }
 
 @media (max-width: 758px) {
-   .guidance-flex-container {
+   .best-practices-flex-container {
       flex-direction: column;
    }
 }
@@ -838,18 +838,18 @@ li.linked-card:hover > div:first-child:hover {
 li.linked-card:hover h4,
 li.linked-card:hover p,
 li.linked-card:hover svg,
-.guidance_card_img:hover{
+.best-practices_card_img:hover{
    color: #005ea2;
 }
 
-.guidance_card_img {
+.best-practices_card_img {
    display: block;
    width: 50%;
    height: auto;
    margin: 0 auto;
 }
 
-.guidance_link {
+.best-practices_link {
    text-decoration: none;
 }
 

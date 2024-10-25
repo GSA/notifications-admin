@@ -34,7 +34,7 @@ cf set-env <APP_NAME> <ENV_VAR_NAME> <VALUE>
 #### Example:
 
 ```
-cf set-env notify-admin-sandbox FEATURE_GUIDANCE_ENABLED true
+cf set-env notify-admin-sandbox FEATURE_BEST_PRACTICES_ENABLED true
 ```
 
 ### 4. Restage the Application

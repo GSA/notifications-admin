@@ -70,7 +70,7 @@ def test_robots(client_request):
         "roadmap",
         "features",
         "documentation",
-        "guidance",
+        "best_practices",
         "clear_goals",
         "rules_and_regulations",
         "establish_trust",
@@ -94,11 +94,11 @@ def test_static_pages(client_request, mock_get_organization_by_domain, view, moc
 
     # Function to check if a view is feature-flagged and should return 404 when disabled
     def is_feature_flagged(view):
-        feature_guidance_enabled = (
-            os.getenv("FEATURE_GUIDANCE_ENABLED", "false").lower() == "true"
+        feature_best_practices_enabled = (
+            os.getenv("FEATURE_BEST_PRACTICES_ENABLED", "false").lower() == "true"
         )
         feature_flagged_views = [
-            "guidance",
+            "best_practices",
             "clear_goals",
             "rules_and_regulations",
             "establish_trust",
@@ -106,7 +106,7 @@ def test_static_pages(client_request, mock_get_organization_by_domain, view, moc
             "multiple_languages",
             "benchmark_performance",
         ]
-        return not feature_guidance_enabled and view in feature_flagged_views
+        return not feature_best_practices_enabled and view in feature_flagged_views
 
     request = partial(client_request.get, "main.{}".format(view))
 
