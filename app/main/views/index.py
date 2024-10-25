@@ -35,24 +35,24 @@ def index():
     if current_user and current_user.is_authenticated:
         return redirect(url_for("main.choose_account"))
 
-    token = generate_token(
+    # make and store the state
+    state = generate_token(
         str(request.remote_addr),
         current_app.config["SECRET_KEY"],
         current_app.config["DANGEROUS_SALT"],
     )
-    url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
-    # handle unit tests
+    state_key = f"login-nonce-{unquote(state)}"
+    redis_client.set(state_key, state)
 
-    current_app.logger.warning(f"############### {str(request.remote_addr)}")
-
+    # make and store the nonce
     nonce = secrets.token_urlsafe()
+    nonce_key = f"login-nonce-{unquote(nonce)}"
+    redis_client.set(nonce_key, nonce)
 
-    redis_key = f"login-nonce-{unquote(nonce)}"
-    redis_client.set(redis_key, nonce)
-
+    url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
     if url is not None:
         url = url.replace("NONCE", nonce)
-        url = url.replace("STATE", token)
+        url = url.replace("STATE", state)
     return render_template(
         "views/signedout.html",
         sms_rate=CURRENT_SMS_RATE,

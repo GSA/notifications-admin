@@ -1,12 +1,15 @@
 import secrets
 from urllib.parse import unquote
 
+from flask import current_app, request
+
 from app import redis_client
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
 from app.utils.user_permissions import (
     all_ui_permissions,
     translate_permissions_from_ui_to_db,
 )
+from notifications_utils.url_safe_token import generate_token
 
 
 class InviteApiClient(NotifyAdminAPIClient):
@@ -37,11 +40,21 @@ class InviteApiClient(NotifyAdminAPIClient):
         }
         data = _attach_current_user(data)
 
+        # make and store the state
+        state = generate_token(
+            str(request.remote_addr),
+            current_app.config["SECRET_KEY"],
+            current_app.config["DANGEROUS_SALT"],
+        )
+        state_key = f"login-state-{unquote(state)}"
+        redis_client.set(state_key, state)
+
         # make and store the nonce
         nonce = secrets.token_urlsafe()
         redis_key = f"login-nonce-{unquote(nonce)}"
         redis_client.set(f"{redis_key}", nonce)  # save the nonce to redis.
         data["nonce"] = nonce  # This is passed to api for the invite url.
+        data["state"] = state  # This is passed to api for the invite url.
 
         resp = self.post(url=f"/service/{service_id}/invite", data=data)
         return resp["data"]

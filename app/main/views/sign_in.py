@@ -66,8 +66,8 @@ def _get_access_token(code):  # pragma: no cover
     response_json = response.json()
     id_token = get_id_token(response_json)
     nonce = id_token["nonce"]
-    redis_key = f"login-nonce-{unquote(nonce)}"
-    stored_nonce = redis_client.get(redis_key).decode("utf8")
+    nonce_key = f"login-nonce-{unquote(nonce)}"
+    stored_nonce = redis_client.get(nonce_key).decode("utf8")
 
     if nonce != stored_nonce:
         current_app.logger.error(f"Nonce Error: {nonce} != {stored_nonce}")
@@ -99,6 +99,12 @@ def _do_login_dot_gov():  # $ pragma: no cover
     # start login.gov
     code = request.args.get("code")
     state = request.args.get("state")
+    state_key = f"login-state-{unquote(state)}"
+    stored_state = redis_client.get(state_key).decode("utf8")
+    if state != stored_state:
+        current_app.logger.error(f"State Error: {state} != {stored_state}")
+        abort(403)
+
     login_gov_error = request.args.get("error")
 
     if login_gov_error:
@@ -203,21 +209,23 @@ def sign_in():  # pragma: no cover
             return redirect(redirect_url)
         return redirect(url_for("main.show_accounts_or_dashboard"))
 
-    token = generate_token(
+    state = generate_token(
         str(request.remote_addr),
         current_app.config["SECRET_KEY"],
         current_app.config["DANGEROUS_SALT"],
     )
-    url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
+    state_key = f"login-state-{unquote(state)}"
+    redis_client.set(state_key, state)
 
     nonce = secrets.token_urlsafe()
-    redis_key = f"login-nonce-{unquote(nonce)}"
-    redis_client.set(redis_key, nonce)
+    nonce_key = f"login-nonce-{unquote(nonce)}"
+    redis_client.set(nonce_key, nonce)
 
+    url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
     # handle unit tests
     if url is not None:
         url = url.replace("NONCE", nonce)
-        url = url.replace("STATE", token)
+        url = url.replace("STATE", state)
 
     return render_template(
         "views/signin.html",
