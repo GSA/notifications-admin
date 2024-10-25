@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% set page_title = "Text in multiple languages" %}
+
+{% block per_page_title %}
+{{page_title}}
+{% endblock %}
+
+{% block content_column_content %}
+{% with title=page_title %}{% include "components/best-practices/nav_breadcrumb.html" %}{% endwith %}
+<section class="usa-prose">
+  <h1>{{page_title}}</h1>
+  <p class="font-sans-lg text-base"> What to know as you plan translated texts.</p>
+
+  <p>
+    Sending messages in recipients’ preferred language demonstrates respect, makes it more likely that recipients will
+    understand and take action on the message, and may be required by your agency or program.
+  </p>
+
+  <p>
+    To send translated messages using Notify.gov you will need two things: a record of your recipients’ preferred
+    language and translation/s of the message template. Notify.gov does not provide translation services.
+  </p>
+
+  <p>
+    As with messages in English, we strongly recommend user testing the translations with people who speak the language
+    to ensure the messages are understandable.
+  </p>
+</section>
+{% endblock %}

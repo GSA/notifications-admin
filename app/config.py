@@ -87,6 +87,7 @@ class Config(object):
             "tts-benefits-studio@gsa.gov",
         ],
     }
+    FEATURE_BEST_PRACTICES_ENABLED = getenv("FEATURE_BEST_PRACTICES_ENABLED", "false")
 
 
 def _s3_credentials_from_env(bucket_prefix):

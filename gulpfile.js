@@ -81,6 +81,7 @@ const javascripts = () => {
     paths.src + 'javascripts/main.js',
     paths.src + 'javascripts/totalMessagesChart.js',
     paths.src + 'javascripts/activityChart.js',
+    paths.src + 'javascripts/subNav.js',
   ])
     .pipe(plugins.prettyerror())
     .pipe(

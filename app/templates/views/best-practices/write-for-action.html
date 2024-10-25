@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% from "components/best-practices/circle_number.html" import circle_number %}
+
+{% set page_title = "Write texts that provoke action" %}
+
+{% block per_page_title %}
+{{page_title}}
+{% endblock %}
+
+{% block content_column_content %}
+{% with title=page_title %}{% include "components/best-practices/nav_breadcrumb.html" %}{% endwith %}
+<section class="usa-prose">
+  <h1>{{page_title}}</h1>
+  <p class="font-sans-lg text-base"> Help your audience know what to do with the information you send.</p>
+
+  <p>
+    When writing a text, focus on the person who is going to receive the message and write it for them. Use plain
+    language and provide easy to understand next steps.
+  </p>
+  <div class="usa-summary-box maxw-tablet" role="region" aria-labelledby="summary-box-establish-clear-goals">
+    <div class="usa-summary-box__body">
+      <h4 class="usa-summary-box__heading" id="summary-box-establish-clear-goals">
+        When deciding what types of messages to draft for your campaign, think through the following questions:
+      </h4>
+      <div class="usa-summary-box__text">
+        <ul class="usa-list">
+          <li>What do you want recipients to do when they receive the text?</li>
+          <li>What will happen if a recipient doesn't take the action you want them to take?</li>
+          <li>Will you send any follow-up texts depending on if the action was taken or not?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <h2>Be clear and concise</h2>
+  <ul>
+    <li>Use simple, everyday language. Keep the text short and clear. Stay under 300 characters.</li>
+    <li>
+      Say only one important thing per message. Focus on the most essential instructions and information. If there are
+      multiple actions you want someone to take, consider sending a series of well-timed messages.
+    </li>
+    <li>Use a neutral, direct, and professional tone. This works better than a friendly or overly casual tone.</li>
+  </ul>
+  <h2>Build conditions for action</h2>
+  <ul class="usa-card-group flex-1 flex-wrap padding-top-2 best-practices-flex-container">
+    <li class="flex-1 width-full height-full padding-bottom-2">
+      <div class="usa-card__container border-0">
+        <p>For example, getting a person to update their mailing address:</p>
+        <ol class="best-practices-list">
+          <li>Clearly state the information and the response you want the recipient to take.</li>
+          <li>Point directly to where the action can be completed, not to more information.</li>
+          <li>Make sure the action can be completed via mobile phone, like calling a person or going to a
+            mobile-friendly URL.
+          </li>
+          <li>
+            Include at least two options for a recipient to take action. Some recipients may be more comfortable talking
+            directly
+            to a person, while others may prefer a web-based experience.
+          </li>
+          <li>Consider clearly explaining any consequences if the desired action is not completed.</li>
+        </ol>
+      </div>
+    </li>
+    <li class="flex-1 usa-card--media-right width-full padding-top-3">
+      <div class="usa-card__container border-0 width-full">
+        <img class="width-full" src="{{ asset_url('images/phone_grey.svg') }}" role="img" alt="Phone" />
+        <div class="position-absolute flex text-center padding-5 padding-top-15">
+          <p class="sms-message-wrapper text-left">{{circle_number(1) }}State Medicare Agency: Hello, MEDICARE has
+            attempted to
+            send you an update about your claim, but the mail was returned. <br>{{circle_number(2) }}Please go to
+            https://www.medicare.gov/account/login?utm_source=TEXT, {{circle_number(3) }}log in to your account, and
+            click “My
+            Account Information” to verify that your address is correct. If you are having difficulty logging in,
+            {{circle_number(4) }}call 1-800-MEDICARE for assistance. {{circle_number(5) }}We will attempt to send the
+            mail again
+            in 14 days.
+          </p>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <h2>What provoking action looks like</h2>
+  <p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10002044/" target="_blank">Evidence shows</a> that employing
+    behavioral science is an effective way to increase the
+    likelihood of a recipient
+    taking action upon receiving your text. Keep in mind these three foundational principles while drafting your text
+    message:</p>
+  {% set card_contents = [
+  {
+  "card_heading": "Feeling a sense of ownership can influence behavior.",
+  "p_text": "Example – <b>Don't miss this chance to get free internet</b> or $30 per month off your internet bill.",
+  },
+  {
+  "card_heading": "Individuals are strongly influenced by others’ behaviors.",
+  "p_text": "Example – <b>Thousands of residents</b> already get an
+  average of $113/month in money for food.",
+  },
+  {
+  "card_heading": "Individuals perceive losses more powerfully than gains.",
+  "p_text": "Example – Contact us for potentially unclaimed free
+  internet services <b>that belong to you</b>.",
+  },
+  ] %}
+  {% with card_contents=card_contents, text_align='left' %}{% include "components/best-practices/cards.html" %}{%
+  endwith %}
+</section>
+{% endblock %}
