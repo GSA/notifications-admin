@@ -114,12 +114,6 @@ def test_hiding_pages_from_search_engines(
 def test_static_pages(client_request, mock_get_organization_by_domain, view, mocker):
     mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
 
-    # Skipping the rules_and_regulations page due to missing PDF
-    if view == "rules_and_regulations":
-        pytest.skip(
-            "Skipping test for 'rules_and_regulations' due to missing PDF file."
-        )
-
     # Function to check if a view is feature-flagged and should return 404 when disabled
     def is_feature_flagged(view):
 
