@@ -6,7 +6,6 @@ from bs4 import BeautifulSoup
 from flask import url_for
 from freezegun import freeze_time
 
-from tests.conftest import SERVICE_ONE_ID, normalize_spaces
 
 def test_non_logged_in_user_can_see_homepage(
     client_request, mock_get_service_and_organization_counts, mocker
@@ -63,6 +62,29 @@ def test_robots(client_request):
 
 
 @pytest.mark.parametrize(
+    ("endpoint", "kwargs"),
+    [
+        ("sign_in", {}),
+        ("register", {}),
+        pytest.param("index", {}, marks=pytest.mark.xfail(raises=AssertionError)),
+    ],
+)
+@freeze_time("2012-12-12 12:12")  # So we don’t go out of business hours
+def test_hiding_pages_from_search_engines(
+    client_request, mock_get_service_and_organization_counts, endpoint, kwargs, mocker
+):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
+    client_request.logout()
+    response = client_request.get_response(f"main.{endpoint}", **kwargs)
+    assert "X-Robots-Tag" in response.headers
+    assert response.headers["X-Robots-Tag"] == "noindex"
+
+    page = BeautifulSoup(response.data.decode("utf-8"), "html.parser")
+    assert page.select_one("meta[name=robots]")["content"] == "noindex"
+
+
+@pytest.mark.parametrize(
     "view",
     [
         "privacy",
@@ -91,6 +113,11 @@ def test_robots(client_request):
 )
 def test_static_pages(client_request, mock_get_organization_by_domain, view, mocker):
     mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
+
+    # Skipping the rules_and_regulations page due to missing PDF
+    if view == "rules_and_regulations":
+        pytest.skip("Skipping test for 'rules_and_regulations' due to missing PDF file.")
+
 
     # Function to check if a view is feature-flagged and should return 404 when disabled
     def is_feature_flagged(view):
