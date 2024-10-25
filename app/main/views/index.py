@@ -41,7 +41,7 @@ def index():
         current_app.config["SECRET_KEY"],
         current_app.config["DANGEROUS_SALT"],
     )
-    state_key = f"login-nonce-{unquote(state)}"
+    state_key = f"login-state-{unquote(state)}"
     redis_client.set(state_key, state)
 
     # make and store the nonce

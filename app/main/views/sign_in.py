@@ -99,11 +99,6 @@ def _do_login_dot_gov():  # $ pragma: no cover
     # start login.gov
     code = request.args.get("code")
     state = request.args.get("state")
-    state_key = f"login-state-{unquote(state)}"
-    stored_state = redis_client.get(state_key).decode("utf8")
-    if state != stored_state:
-        current_app.logger.error(f"State Error: {state} != {stored_state}")
-        abort(403)
 
     login_gov_error = request.args.get("error")
 
@@ -113,6 +108,11 @@ def _do_login_dot_gov():  # $ pragma: no cover
         )
         raise Exception(f"Could not login with login.gov {login_gov_error}")
     elif code and state:
+        state_key = f"login-state-{unquote(state)}"
+        stored_state = redis_client.get(state_key).decode("utf8")
+        if state != stored_state:
+            current_app.logger.error(f"State Error: {state} != {stored_state}")
+            abort(403)
 
         # activate the user
         try:

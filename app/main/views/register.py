@@ -2,6 +2,7 @@ import base64
 import json
 import uuid
 from datetime import datetime, timedelta
+from urllib.parse import unquote
 
 from flask import (
     abort,
@@ -161,6 +162,13 @@ def set_up_your_profile():
     debug_msg(f"Enter set_up_your_profile with request.args {request.args}")
     code = request.args.get("code")
     state = request.args.get("state")
+
+    state_key = f"login-state-{unquote(state)}"
+    stored_state = redis_client.get(state_key).decode("utf8")
+    if state != stored_state:
+        current_app.logger.error(f"State Error: {state} != {stored_state}")
+        abort(403)
+
     login_gov_error = request.args.get("error")
 
     if redis_client.get(f"invitedata-{state}") is None:
