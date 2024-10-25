@@ -39,7 +39,7 @@ def _reformat_keystring(orig):  # pragma: no cover
     return new_keystring
 
 
-def _get_access_token(code, state):  # pragma: no cover
+def _get_access_token(code):  # pragma: no cover
     client_id = os.getenv("LOGIN_DOT_GOV_CLIENT_ID")
     access_token_url = os.getenv("LOGIN_DOT_GOV_ACCESS_TOKEN_URL")
     keystring = os.getenv("LOGIN_PEM")
@@ -110,7 +110,7 @@ def _do_login_dot_gov():  # $ pragma: no cover
 
         # activate the user
         try:
-            access_token = _get_access_token(code, state)
+            access_token = _get_access_token(code)
             user_email, user_uuid = _get_user_email_and_uuid(access_token)
             if not is_gov_user(user_email):
                 current_app.logger.error(
@@ -211,7 +211,7 @@ def sign_in():  # pragma: no cover
     url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
 
     nonce = secrets.token_urlsafe()
-    redis_key = f"-{unquote(nonce)}"
+    redis_key = f"login-nonce-{unquote(nonce)}"
     redis_client.set(redis_key, nonce)
 
     # handle unit tests
