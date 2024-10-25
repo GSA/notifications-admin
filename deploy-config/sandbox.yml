@@ -12,4 +12,4 @@ SECRET_KEY: sandbox-notify-secret-key
 nr_agent_id: ''
 nr_app_id: ''
 NR_BROWSER_KEY: ''
-FEATURE_GUIDANCE_ENABLED: true
+FEATURE_BEST_PRACTICES_ENABLED: true
