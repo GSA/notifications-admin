@@ -21,7 +21,7 @@
                     sublist.classList.toggle('display-none');
                     sublist.classList.toggle('display-block');
 
-                    setTimeout(() => window.location.href = parentLink.href, 100);
+                    setTimeout(() => window.location.href = parentLink.href, 50);
                 }
             });
         });
