@@ -113,7 +113,7 @@ const copyImages = () => {
   );
 };
 
-// Task to copy images
+// Task to pdf files
 const copyPDF = () => {
   return src(paths.src + 'pdf/**/*', { encoding: false }).pipe(
     dest(paths.dist + 'pdf/')
