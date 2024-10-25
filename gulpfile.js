@@ -113,11 +113,19 @@ const copyImages = () => {
   );
 };
 
+// Task to copy images
+const copyPDF = () => {
+  return src(paths.src + 'pdf/**/*', { encoding: false }).pipe(
+    dest(paths.dist + 'pdf/')
+  );
+};
+
 // Configure USWDS paths
 uswds.settings.version = 3;
 uswds.paths.dist.css = paths.dist + 'css';
 uswds.paths.dist.js = paths.dist + 'js';
 uswds.paths.dist.img = paths.dist + 'img';
+uswds.paths.dist.pdf = paths.dist + 'pdf';
 uswds.paths.dist.fonts = paths.dist + 'fonts';
 uswds.paths.dist.theme = paths.src + 'sass/uswds';
 
@@ -164,6 +172,7 @@ exports.default = series(
   copyGtmHead,
   copySetTimezone,
   copyImages,
+  copyPDF,
   copyAssets
 );
 exports.backstopTest = backstopTest;
