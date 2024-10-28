@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from flask import url_for
 from freezegun import freeze_time
 
+from tests.conftest import SERVICE_ONE_ID, normalize_spaces
 
 def test_non_logged_in_user_can_see_homepage(
     client_request, mock_get_service_and_organization_counts, mocker
@@ -157,3 +158,118 @@ def test_static_pages(client_request, mock_get_organization_by_domain, view, moc
                 url_for("main.{}".format(view))
             ),
         )
+
+
+def test_guidance_pages_link_to_service_pages_when_signed_in(client_request, mocker):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
+    request = partial(client_request.get, "main.edit_and_format_messages")
+    selector = ".list-number li a"
+
+    # Check the page loads when user is signed in
+    page = request()
+    assert page.select_one(selector)["href"] == url_for(
+        "main.choose_template",
+        service_id=SERVICE_ONE_ID,
+    )
+
+    # Check it still works when they don’t have a recent service
+    with client_request.session_transaction() as session:
+        session["service_id"] = None
+    page = request()
+    assert not page.select_one(selector)
+
+    # Check it redirects to the login screen when they sign out
+    client_request.logout()
+    with client_request.session_transaction() as session:
+        session["service_id"] = None
+        session["user_id"] = None
+    page = request(_expected_status=302)
+    assert not page.select_one(selector)
+
+
+@pytest.mark.parametrize(
+    ("view", "expected_view"),
+    [
+        ("information_risk_management", "security"),
+        ("old_integration_testing", "integration_testing"),
+        ("old_roadmap", "roadmap"),
+        ("information_security", "using_notify"),
+        ("old_using_notify", "using_notify"),
+        ("delivery_and_failure", "message_status"),
+        ("callbacks", "documentation"),
+    ],
+)
+def test_old_static_pages_redirect(client_request, view, expected_view, mocker):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
+    client_request.logout()
+    client_request.get(
+        "main.{}".format(view),
+        _expected_status=301,
+        _expected_redirect=url_for(
+            "main.{}".format(expected_view),
+        ),
+    )
+
+
+def test_old_using_notify_page(client_request):
+    client_request.get("main.using_notify", _expected_status=410)
+
+
+def test_css_is_served_from_correct_path(client_request):
+    page = client_request.get("main.documentation")  # easy static page
+
+    for index, link in enumerate(page.select("link[rel=stylesheet]")):
+        assert link["href"].startswith(
+            [
+                "https://static.example.com/css/styles.css?",
+            ][index]
+        )
+
+
+# Commenting out until after the pilot when we'll decide on a logo
+# def test_resources_that_use_asset_path_variable_have_correct_path(client_request):
+
+#     page = client_request.get('main.documentation')  # easy static page
+
+#     logo_svg_fallback = page.select_one('.usa-flag-logo')
+
+#     assert logo_svg_fallback['src'].startswith('https://static.example.com/images/us-notify-color.png')
+
+
+@pytest.mark.parametrize(
+    ("current_date", "expected_rate"),
+    [
+        ("2022-05-01", "1.72"),
+    ],
+)
+@pytest.mark.skip(reason="Currently hidden for TTS")
+def test_sms_price(
+    client_request,
+    mock_get_service_and_organization_counts,
+    current_date,
+    expected_rate,
+    mocker,
+):
+
+    mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
+    client_request.logout()
+
+    with freeze_time(current_date):
+        home_page = client_request.get("main.index", _test_page_title=False)
+        pricing_page = client_request.get("main.pricing")
+
+    assert normalize_spaces(
+        home_page.select(".product-page-section")[5].select(".grid-col-6")[1].text
+    ) == (
+        f"Text messages "
+        f"Up to 40,000 free text messages a year, "
+        f"then {expected_rate} pence per message"
+    )
+
+    assert normalize_spaces(pricing_page.select_one("#text-messages + p + p").text) == (
+        f"When a service has used its annual allowance, it costs "
+        f"{expected_rate} pence (plus VAT) for each text message you "
+        f"send."
+    )
