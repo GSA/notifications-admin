@@ -143,48 +143,51 @@
     delivery staff, especially those who interact directly with your intended audience.
   </p>
 
-  {% set card_header = "Harness trusted communication channels" %}
+  <h3 class="padding-bottom-2">Harness trusted communication channels</h3>
   {% set card_contents = [
   {
   "image_src": asset_url('images/website.svg'),
   "card_heading": "Websites",
+  "alt_text": "Graphic representing a website browser",
   "p_text": "Post banner alerts about texting on your agency website and link to a press release for more information.
   Publish a public texting privacy policy.",
   },
   {
   "image_src": asset_url('images/community-org.svg'),
   "card_heading": "Community organizations",
+  "alt_text": "Illustration of community organizations spreading awareness",
   "p_text": "Alert trusted community-based organizations that texts are coming and what they look like. Equip them with
   fliers, posters, and talking points to spread the word.",
   },
   {
   "image_src": asset_url('images/call-center.svg'),
   "card_heading": "IVR / Call Centers",
+  "alt_text": "Illustration of a call center promoting texting initiative",
   "p_text": "Consider adding hold message announcements about your texting initiative to further get the word out.",
   },
   ] %}
 
-  {% with card_header=card_header, card_contents=card_contents %}{% include "components/best-practices/cards.html" %}{%
+  {% with card_contents=card_contents %}{% include "components/best-practices/cards.html" %}{%
   endwith %}
-
-  {% set card_header = "Prepare your team" %}
+  <h3 class="padding-bottom-2">Prepare your team</h3>
   {% set card_contents = [
   {
   "image_src": asset_url('images/grouping.svg'),
   "card_heading": "Staff",
-  "p_text": "Give all staff a heads-up about texts before and when they are sent.
-  Share talking points on what texts you’re sending, when you’ll start to send them, the phone number they are coming
-  from, and where staff can escalate any issues.",
+  "alt_text": "Illustration of staff group briefing",
+  "p_text": "Give all staff a heads-up about texts before and when they are sent. Share talking points on what texts
+  you’re sending, when you’ll start to send them, the phone number they are coming from, and where staff can escalate
+  any issues.",
   },
   {
   "image_src": asset_url('images/project-management.svg'),
   "card_heading": "Case management systems",
+  "alt_text": "Graphic representing project management",
   "p_text": "When it makes sense, include information about texts being sent to specific clients on individual splash
-  pages or
-  within case management notes.",
+  pages or within case management notes.",
   },
   ] %}
-  {% with card_header=card_header, card_contents=card_contents %}{% include "components/best-practices/cards.html" %}{%
+  {% with card_contents=card_contents %}{% include "components/best-practices/cards.html" %}{%
   endwith %}
 </section>
 {% endblock %}

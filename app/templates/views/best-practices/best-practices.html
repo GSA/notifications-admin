@@ -14,8 +14,10 @@ Best Practices
   </p>
 
   <p>This set of best practices will help you get an effective texting initiative up and running.</p>
+  <h2 class="padding-bottom-2">
+    Key elements of a texting campaign
+  </h2>
 
-  {% set card_header = "Key elements of a texting campaign" %}
   {% set card_contents = [
   {
   "svg_src": "goal",
@@ -55,7 +57,7 @@ Best Practices
   }
   ] %}
 
-  {% with card_header=card_header, card_contents=card_contents %}{% include "components/best-practices/cards.html" %}{%
+  {% with card_contents=card_contents %}{% include "components/best-practices/cards.html" %}{%
   endwith %}
 
 </section>

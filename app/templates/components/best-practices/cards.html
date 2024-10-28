@@ -1,8 +1,3 @@
-<h3 class="padding-bottom-2">
-  {% if card_header %}
-  {{card_header}}
-  {% endif %}
-</h3>
 <ul class="usa-card-group">
   {% for item in card_contents %}
   <li class="usa-card grid-col tablet:grid-col-4 {% if item.link %}linked-card linked-content{% endif %}">
@@ -12,10 +7,10 @@
         {% if item.link %}
         <a href="{{ item.link }}">
           {% endif %}
-          <h4
+          <h3
             class="usa-card__heading {% if text_align != 'left' or text_align is not defined %}text-center{% else %}text-left{% endif %} {% if item.link %}linked-card{% endif %}">
             {{ item.card_heading }}
-          </h4>
+          </h3>
           {% if item.link %}
         </a>
         {% endif %}
@@ -29,7 +24,7 @@
         </svg>
         {% endif %}
         {% if item.image_src %}
-        <img class="best-practices_card_img" src="{{item.image_src}}" alt="{{item.card_heading}} image" />
+        <img class="best-practices_card_img" src="{{item.image_src}}" alt="{{ item.alt_text }}" />
         {% endif %}
       </div>
       {% endif %}
