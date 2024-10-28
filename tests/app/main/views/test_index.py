@@ -8,6 +8,7 @@ from freezegun import freeze_time
 
 from tests.conftest import SERVICE_ONE_ID, normalize_spaces
 
+
 def test_non_logged_in_user_can_see_homepage(
     client_request, mock_get_service_and_organization_counts, mocker
 ):
