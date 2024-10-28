@@ -276,6 +276,7 @@ def guidance_index():
     return render_template(
         "views/guidance/index.html",
         navigation_links=using_notify_nav(),
+        feature_best_practices_enabled=feature_best_practices_enabled
     )
 
 
