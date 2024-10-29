@@ -1,9 +1,8 @@
-import os
 from functools import partial
 
 import pytest
 from bs4 import BeautifulSoup
-from flask import url_for
+from flask import current_app, url_for
 from freezegun import freeze_time
 
 from tests.conftest import SERVICE_ONE_ID, normalize_spaces
@@ -118,10 +117,6 @@ def test_static_pages(client_request, mock_get_organization_by_domain, view, moc
 
     # Function to check if a view is feature-flagged and should return 404 when disabled
     def is_feature_flagged(view):
-
-        feature_best_practices_enabled = (
-            os.getenv("FEATURE_BEST_PRACTICES_ENABLED", "false").lower() == "true"
-        )
         feature_flagged_views = [
             "best_practices",
             "clear_goals",
@@ -131,7 +126,10 @@ def test_static_pages(client_request, mock_get_organization_by_domain, view, moc
             "multiple_languages",
             "benchmark_performance",
         ]
-        return not feature_best_practices_enabled and view in feature_flagged_views
+        return (
+            not current_app.config["FEATURE_BEST_PRACTICES_ENABLED"]
+            and view in feature_flagged_views
+        )
 
     request = partial(client_request.get, "main.{}".format(view))
 

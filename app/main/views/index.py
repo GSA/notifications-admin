@@ -17,17 +17,15 @@ from app.main.views.sub_navigation_dictionaries import (
 from app.utils.user import user_is_logged_in
 from notifications_utils.url_safe_token import generate_token
 
-feature_best_practices_enabled = (
-    os.getenv("FEATURE_BEST_PRACTICES_ENABLED", "false").lower() == "true"
-)
-
 
 # Hook to check for guidance routes
 @main.before_request
 def check_guidance_feature():
+    current_app.logger.warning("best practices 1234")
+    current_app.logger.warning(current_app.config["FEATURE_BEST_PRACTICES_ENABLED"])
     if (
         request.path.startswith("/best-practices")
-        and not feature_best_practices_enabled
+        and not current_app.config["FEATURE_BEST_PRACTICES_ENABLED"]
     ):
         abort(404)
 
@@ -276,7 +274,9 @@ def guidance_index():
     return render_template(
         "views/guidance/index.html",
         navigation_links=using_notify_nav(),
-        feature_best_practices_enabled=feature_best_practices_enabled
+        feature_best_practices_enabled=current_app.config[
+            "FEATURE_BEST_PRACTICES_ENABLED"
+        ],
     )
 
 
