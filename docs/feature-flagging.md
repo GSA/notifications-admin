@@ -48,3 +48,9 @@ cf restage <APP_NAME>
 ```
 cf restage notify-admin-sandbox
 ```
+
+### 5. Update environment specific manifest file(s) and merge into source code
+
+#### Example:
+
+If demo environment had a feature flag flipped, then navigate to the demo.yml file and add appropriate value.
