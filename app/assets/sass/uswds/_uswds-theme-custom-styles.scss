@@ -884,3 +884,16 @@ li.linked-card:hover svg,
    -webkit-mask-size: 1.75ex 1.75ex;
    mask-size: 1.75ex 1.75ex;
 }
+
+.usa-sidenav__sublist {
+   display: none;
+}
+
+.usa-sidenav__item:hover .usa-sidenav__sublist,
+.usa-sidenav__item:focus-within .usa-sidenav__sublist {
+   display: block;
+}
+
+.usa-sidenav__item a {
+   display: block;
+}

@@ -57,11 +57,15 @@
                       <ul class="usa-sidenav">
                         {% for item in navigation_links %}
                           <li class="usa-sidenav__item">
-                            <a class="{% if item['link'] == request.endpoint %} usa-current {% endif %}" href="{{ url_for(item.link) }}">{{ item.name }}</a>
+                            <a href="{{ url_for(item.link) }}"
+                              class="parent-link {% if item['link'] == request.endpoint %} usa-current {% endif %}"
+                              aria-haspopup="true" aria-expanded="false">
+                              {{ item.name }}
+                            </a>
                             {% if item.sub_navigation_items %}
-                              <ul class="usa-sidenav__sublist display-none">
+                              <ul class="usa-sidenav__sublist" role="menu">
                                 {% for sub_item in item.sub_navigation_items %}
-                                  <li>
+                                  <li role="menuitem">
                                     <a href="{{ url_for(sub_item.link.split('#')[0]) }}#{{ sub_item.link.split('#')[1] }}">{{ sub_item.name }}</a>
                                   </li>
                                 {% endfor %}
