@@ -10,6 +10,7 @@ def test_client_creates_invite(
     sample_invite,
 ):
     mocker.patch("app.notify_client.current_user")
+    mocker.patch("flask.request")
 
     mock_post = mocker.patch(
         "app.invite_api_client.post",
@@ -26,6 +27,7 @@ def test_client_creates_invite(
                     "auth_type",
                     "folder_permissions",
                     "nonce",
+                    "state",
                 }
             )
         },
@@ -33,7 +35,11 @@ def test_client_creates_invite(
 
     mock_token_urlsafe = mocker.patch("secrets.token_urlsafe")
     fake_nonce = "1234567890"
+    fake_state = "0987654321"
     mock_token_urlsafe.return_value = fake_nonce
+
+    mock_generate_token = mocker.patch("notifications_utils.url_safe_token.generate_token")
+    mock_generate_token.return_value = fake_state
 
     invite_api_client.create_invite(
         "12345", "67890", "test@example.com", {"send_messages"}, "sms_auth", [fake_uuid]
@@ -51,6 +57,7 @@ def test_client_creates_invite(
             "invite_link_host": "http://localhost:6012",
             "folder_permissions": [fake_uuid],
             "nonce": fake_nonce,
+            "state": fake_state,
         },
     )
 
