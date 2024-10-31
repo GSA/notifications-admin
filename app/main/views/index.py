@@ -2,7 +2,15 @@ import os
 import secrets
 from urllib.parse import unquote
 
-from flask import abort, current_app, redirect, render_template, request, url_for
+from flask import (
+    abort,
+    current_app,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 from flask_login import current_user
 
 from app import redis_client, status_api_client
@@ -28,6 +36,13 @@ def check_guidance_feature():
         and not current_app.config["FEATURE_BEST_PRACTICES_ENABLED"]
     ):
         abort(404)
+
+
+@main.route("/test/feature-flags")
+def test_feature_flags():
+    return jsonify({
+        "FEATURE_BEST_PRACTICES_ENABLED": current_app.config["FEATURE_BEST_PRACTICES_ENABLED"]
+    })
 
 
 @main.route("/")
