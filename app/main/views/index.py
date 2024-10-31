@@ -40,9 +40,13 @@ def check_guidance_feature():
 
 @main.route("/test/feature-flags")
 def test_feature_flags():
-    return jsonify({
-        "FEATURE_BEST_PRACTICES_ENABLED": current_app.config["FEATURE_BEST_PRACTICES_ENABLED"]
-    })
+    return jsonify(
+        {
+            "FEATURE_BEST_PRACTICES_ENABLED": current_app.config[
+                "FEATURE_BEST_PRACTICES_ENABLED"
+            ]
+        }
+    )
 
 
 @main.route("/")
