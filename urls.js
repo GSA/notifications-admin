@@ -13,6 +13,13 @@ const sublinks = [
   { label: 'Roadmap', path: '/features/roadmap' },
   { label: 'Security', path: '/features/security' },
   { label: 'Support', path: '/support' },
+  { label: 'Best Practices', path: '/best-practices' },
+  { label: 'Clear Goals', path: '/best-practices/clear-goals' },
+  { label: 'Rules And Regulations', path: '/best-practices/rules-and-regulations' },
+  { label: 'Establish Trust', path: '/best-practices/establish-trust' },
+  { label: 'Write For Action', path: '/best-practices/write-for-action' },
+  { label: 'Multiple Languages', path: '/best-practices/multiple-languages' },
+  { label: 'Benchmark Performance', path: '/best-practices/benchmark-performance' },
   // Add more links here as needed
 ];
 

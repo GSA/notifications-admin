@@ -53,9 +53,30 @@
               <div class="grid-row">
                 {% if navigation_links %}
                   <div class="tablet:grid-col-2 margin-bottom-4">
-                    {{ sub_navigation(navigation_links) }}
+                    <nav class="nav">
+                      <ul class="usa-sidenav">
+                        {% for item in navigation_links %}
+                          <li class="usa-sidenav__item">
+                            <a href="{{ url_for(item.link) }}"
+                              class="parent-link {% if item['link'] == request.endpoint %} usa-current {% endif %}"
+                              aria-haspopup="true" aria-expanded="false">
+                              {{ item.name }}
+                            </a>
+                            {% if item.sub_navigation_items %}
+                              <ul class="usa-sidenav__sublist" role="menu">
+                                {% for sub_item in item.sub_navigation_items %}
+                                  <li role="menuitem">
+                                    <a href="{{ url_for(sub_item.link.split('#')[0]) }}#{{ sub_item.link.split('#')[1] }}">{{ sub_item.name }}</a>
+                                  </li>
+                                {% endfor %}
+                              </ul>
+                            {% endif %}
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </nav>
                   </div>
-                  <div class="tablet:grid-col-10 padding-left-4 usa-prose site-prose">
+                  <div class="tablet:grid-col-10 tablet:padding-left-4 usa-prose site-prose">
                 {% else %}
                   <div class="tablet:grid-col-10">
                 {% endif %}

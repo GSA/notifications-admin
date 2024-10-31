@@ -1,8 +1,10 @@
 env: staging
 instances: 1
 memory: 1G
+command: newrelic-admin run-program gunicorn -c /home/vcap/app/gunicorn_config.py application
 public_admin_route: notify-staging.app.cloud.gov
 cloud_dot_gov_route: notify-staging.app.cloud.gov
 redis_enabled: 1
-nr_agent_id: "1134291385"
-nr_app_id: "1031640326"
+nr_agent_id: '1134291385'
+nr_app_id: '1031640326'
+FEATURE_BEST_PRACTICES_ENABLED: false

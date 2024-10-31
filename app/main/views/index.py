@@ -9,9 +9,25 @@ from app import redis_client, status_api_client
 from app.formatters import apply_html_class, convert_markdown_template
 from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
-from app.main.views.sub_navigation_dictionaries import features_nav, using_notify_nav
+from app.main.views.sub_navigation_dictionaries import (
+    best_practices_nav,
+    features_nav,
+    using_notify_nav,
+)
 from app.utils.user import user_is_logged_in
 from notifications_utils.url_safe_token import generate_token
+
+
+# Hook to check for guidance routes
+@main.before_request
+def check_guidance_feature():
+    current_app.logger.warning("best practices 1234")
+    current_app.logger.warning(current_app.config["FEATURE_BEST_PRACTICES_ENABLED"])
+    if (
+        request.path.startswith("/best-practices")
+        and not current_app.config["FEATURE_BEST_PRACTICES_ENABLED"]
+    ):
+        abort(404)
 
 
 @main.route("/")
@@ -189,12 +205,78 @@ def trial_mode_new():
     )
 
 
+@main.route("/best-practices")
+@user_is_logged_in
+def best_practices():
+    return render_template(
+        "views/best-practices/best-practices.html",
+        navigation_links=best_practices_nav(),
+    )
+
+
+@main.route("/best-practices/clear-goals")
+@user_is_logged_in
+def clear_goals():
+    return render_template(
+        "views/best-practices/clear-goals.html",
+        navigation_links=best_practices_nav(),
+    )
+
+
+@main.route("/best-practices/rules-and-regulations")
+@user_is_logged_in
+def rules_and_regulations():
+    return render_template(
+        "views/best-practices/rules-and-regulations.html",
+        navigation_links=best_practices_nav(),
+    )
+
+
+@main.route("/best-practices/establish-trust")
+@user_is_logged_in
+def establish_trust():
+    return render_template(
+        "views/best-practices/establish-trust.html",
+        navigation_links=best_practices_nav(),
+    )
+
+
+@main.route("/best-practices/write-for-action")
+@user_is_logged_in
+def write_for_action():
+    return render_template(
+        "views/best-practices/write-for-action.html",
+        navigation_links=best_practices_nav(),
+    )
+
+
+@main.route("/best-practices/multiple-languages")
+@user_is_logged_in
+def multiple_languages():
+    return render_template(
+        "views/best-practices/multiple-languages.html",
+        navigation_links=best_practices_nav(),
+    )
+
+
+@main.route("/best-practices/benchmark-performance")
+@user_is_logged_in
+def benchmark_performance():
+    return render_template(
+        "views/best-practices/benchmark-performance.html",
+        navigation_links=best_practices_nav(),
+    )
+
+
 @main.route("/using-notify/guidance")
 @user_is_logged_in
 def guidance_index():
     return render_template(
         "views/guidance/index.html",
         navigation_links=using_notify_nav(),
+        feature_best_practices_enabled=current_app.config[
+            "FEATURE_BEST_PRACTICES_ENABLED"
+        ],
     )
 
 
