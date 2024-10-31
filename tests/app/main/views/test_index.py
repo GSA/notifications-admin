@@ -2,7 +2,7 @@ from functools import partial
 
 import pytest
 from bs4 import BeautifulSoup
-from flask import url_for
+from flask import current_app, url_for
 from freezegun import freeze_time
 
 from tests.conftest import SERVICE_ONE_ID, normalize_spaces
@@ -49,6 +49,8 @@ def test_logged_in_user_redirects_to_choose_account(
         "main.index",
         _expected_status=302,
     )
+
+    # Modify expected URL to include the query parameter
     client_request.get(
         "main.sign_in",
         _expected_status=302,
@@ -91,6 +93,13 @@ def test_hiding_pages_from_search_engines(
         "roadmap",
         "features",
         "documentation",
+        "best_practices",
+        "clear_goals",
+        "rules_and_regulations",
+        "establish_trust",
+        "write_for_action",
+        "multiple_languages",
+        "benchmark_performance",
         "security",
         "message_status",
         "features_sms",
@@ -105,26 +114,49 @@ def test_hiding_pages_from_search_engines(
 )
 def test_static_pages(client_request, mock_get_organization_by_domain, view, mocker):
     mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
+
+    # Function to check if a view is feature-flagged and should return 404 when disabled
+    def is_feature_flagged(view):
+        feature_flagged_views = [
+            "best_practices",
+            "clear_goals",
+            "rules_and_regulations",
+            "establish_trust",
+            "write_for_action",
+            "multiple_languages",
+            "benchmark_performance",
+        ]
+        return (
+            not current_app.config["FEATURE_BEST_PRACTICES_ENABLED"]
+            and view in feature_flagged_views
+        )
+
     request = partial(client_request.get, "main.{}".format(view))
 
-    # Check the page loads when user is signed in
-    page = request()
-    assert page.select_one("meta[name=description]")
+    # If the guidance feature is disabled, expect a 404 for feature-flagged views
+    if is_feature_flagged(view):
+        page = request(_expected_status=404)
+    else:
+        # Check the page loads when user is signed in
+        page = request()
+        assert page.select_one("meta[name=description]")
 
-    # Check it still works when they don’t have a recent service
-    with client_request.session_transaction() as session:
-        session["service_id"] = None
-    request()
+        # Check it still works when they don’t have a recent service
+        with client_request.session_transaction() as session:
+            session["service_id"] = None
+        request()
 
-    # Check it redirects to the login screen when they sign out
-    client_request.logout()
-    with client_request.session_transaction() as session:
-        session["service_id"] = None
-        session["user_id"] = None
-    request(
-        _expected_status=302,
-        _expected_redirect="/sign-in?next={}".format(url_for("main.{}".format(view))),
-    )
+        # Check it redirects to the login screen when they sign out
+        client_request.logout()
+        with client_request.session_transaction() as session:
+            session["service_id"] = None
+            session["user_id"] = None
+        request(
+            _expected_status=302,
+            _expected_redirect="/sign-in?next={}".format(
+                url_for("main.{}".format(view))
+            ),
+        )
 
 
 def test_guidance_pages_link_to_service_pages_when_signed_in(client_request, mocker):
@@ -182,31 +214,6 @@ def test_old_static_pages_redirect(client_request, view, expected_view, mocker):
 
 def test_old_using_notify_page(client_request):
     client_request.get("main.using_notify", _expected_status=410)
-
-
-# def test_old_integration_testing_page(
-#     client_request,
-# ):
-#     page = client_request.get(
-#         'main.integration_testing',
-#         _expected_status=410,
-#     )
-#     assert normalize_spaces(page.select_one('.grid-row').text) == (
-#         'Integration testing '
-#         'This information has moved. '
-#         'Refer to the documentation for the client library you are using.'
-#     )
-#     assert page.select_one('.grid-row a')['href'] == url_for(
-#         'main.documentation'
-#     )
-
-
-# def test_terms_page_has_correct_content(client_request):
-#     terms_page = client_request.get("main.terms")
-#     assert normalize_spaces(terms_page.select("main p")[0].text) == (
-#         "These terms apply to your service’s use of Notify.gov. "
-#         "You must be the service manager to accept them."
-#     )
 
 
 def test_css_is_served_from_correct_path(client_request):
