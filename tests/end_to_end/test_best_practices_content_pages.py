@@ -1,4 +1,3 @@
-import datetime
 import os
 import re
 
@@ -50,8 +49,8 @@ def test_best_practices_side_menu(authenticated_page):
     expect(anchor_target).to_be_visible()
     anchor_target.click()
 
-def test_breadcrumbs_best_practices(authenticated_page):
 
+def test_breadcrumbs_best_practices(authenticated_page):
     page = authenticated_page
 
     page.goto(f"{E2E_TEST_URI}/best-practices")
