@@ -88,7 +88,27 @@ class InviteApiClient(NotifyAdminAPIClient):
         self.post(url=f"/service/{service_id}/invite/{invited_user_id}", data=data)
 
     def resend_invite(self, service_id, invited_user_id):
-        self.post(url=f"/service/{service_id}/invite/{invited_user_id}/resend", data={})
+        # make and store the state
+        state = generate_token(
+            str(request.remote_addr),
+            current_app.config["SECRET_KEY"],
+            current_app.config["DANGEROUS_SALT"],
+        )
+        state_key = f"login-state-{unquote(state)}"
+        redis_client.set(state_key, state)
+
+        # make and store the nonce
+        nonce = secrets.token_urlsafe()
+        nonce_key = f"login-nonce-{unquote(nonce)}"
+        redis_client.set(nonce_key, nonce)
+
+        data = {
+            "nonce": nonce,
+            "state": state,
+        }
+        self.post(
+            url=f"/service/{service_id}/invite/{invited_user_id}/resend", data=data
+        )
 
     @cache.delete("service-{service_id}")
     @cache.delete("user-{invited_user_id}")

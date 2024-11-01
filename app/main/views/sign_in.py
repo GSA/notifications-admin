@@ -109,7 +109,7 @@ def _do_login_dot_gov():  # $ pragma: no cover
         raise Exception(f"Could not login with login.gov {login_gov_error}")
     elif code and state:
         state_key = f"login-state-{unquote(state)}"
-        stored_state = redis_client.get(state_key).decode("utf8")
+        stored_state = unquote(redis_client.get(state_key).decode("utf8"))
         if state != stored_state:
             current_app.logger.error(f"State Error: {state} != {stored_state}")
             abort(403)
