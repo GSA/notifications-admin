@@ -38,22 +38,28 @@
     {% for item in template_list %}
 
     {% set item_link_content %}
-    {% if item.is_folder %}
-    <a href="{{ url_for('.choose_template', service_id=current_service.id, template_type=template_type, template_folder_id=item.id) }}"
-      class="usa-link template-list-folder">
-      <span class="live-search-relevant">{{- format_item_name(item.name) -}}</span>
-    </a>
-    {% elif not item.ancestors %}
-    <a href="{{ url_for('.view_template', service_id=current_service.id, template_id=item.id) }}"
-      class="usa-link template-list-template">
-      <span class="live-search-relevant">
-        {%- if current_service.api_keys -%}
-        <span class="display-none">{{ item.id }} </span>
-        {%- endif -%}
-        {{- format_item_name(item.name) -}}
-      </span>
-    </a>
-    {% endif %}
+      {% if item.is_folder %}
+      <a href="{{ url_for('.choose_template', service_id=current_service.id, template_type=template_type, template_folder_id=item.id) }}"
+        class="usa-link template-list-folder"
+        tabindex="0"
+        role="link"
+        aria-label="{{ format_item_name(item.name) }}">
+        <span class="live-search-relevant">{{- format_item_name(item.name) -}}</span>
+      </a>
+      {% elif not item.ancestors %}
+      <a href="{{ url_for('.view_template', service_id=current_service.id, template_id=item.id) }}"
+        class="usa-link template-list-template"
+        tabindex="0"
+        role="link"
+        aria-label="{{ format_item_name(item.name) }}">
+        <span class="live-search-relevant">
+          {%- if current_service.api_keys -%}
+          <span class="display-none">{{ item.id }} </span>
+          {%- endif -%}
+          {{- format_item_name(item.name) -}}
+        </span>
+      </a>
+      {% endif %}
     {% endset %}
 
     {% set label_content %}
@@ -82,6 +88,8 @@
     "id": "templates-or-folder-" ~ item.id,
     "classes": "template-list-item template-list-item-with-checkbox {}".format(
     "template-list-item-hidden-by-default" if item.ancestors else "template-list-item-without-ancestors"),
+    "attributes": { "role": "checkbox", "aria-describedby": item.id ~ "-item-hint" },
+
     "after": item_link_content ~ item_meta
     } %}
     {% set _ = checkboxes_data.append(checkbox_config) %}
