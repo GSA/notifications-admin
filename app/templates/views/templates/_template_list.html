@@ -43,7 +43,7 @@
         class="usa-link template-list-folder"
         tabindex="0"
         role="link"
-        aria-label="{{ format_item_name(item.name) }}">
+        aria-label="{{ item.name }}">
         <span class="live-search-relevant">{{- format_item_name(item.name) -}}</span>
       </a>
       {% elif not item.ancestors %}
@@ -51,7 +51,7 @@
         class="usa-link template-list-template"
         tabindex="0"
         role="link"
-        aria-label="{{ format_item_name(item.name) }}">
+        aria-label="{{ item.name }}">
         <span class="live-search-relevant">
           {%- if current_service.api_keys -%}
           <span class="display-none">{{ item.id }} </span>
