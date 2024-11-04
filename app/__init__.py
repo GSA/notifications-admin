@@ -162,12 +162,10 @@ def _csp(config):
 
 
 def create_app(application):
-
     @application.context_processor
     def inject_feature_flags():
         feature_best_practices_enabled = os.getenv("FEATURE_BEST_PRACTICES_ENABLED", "false").lower() == "true"
         return dict(FEATURE_BEST_PRACTICES_ENABLED=feature_best_practices_enabled)
-
 
     notify_environment = os.environ["NOTIFY_ENVIRONMENT"]
 
