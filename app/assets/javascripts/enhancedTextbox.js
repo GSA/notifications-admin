@@ -73,10 +73,16 @@
     );
 
     this.update = () => {
+      const isEmpty = this.$textbox.val().trim() === "";
 
-      this.$background.html(
-        this.highlightPlaceholders ? this.contentReplaced() : this.contentEscaped()
-      );
+      if (isEmpty) {
+          this.$background.html(
+              this.highlightPlaceholders ? this.contentReplaced() : this.contentEscaped()
+          );
+          this.$background.show();
+      } else {
+          this.$background.hide();
+      }
 
       this.resize();
 
