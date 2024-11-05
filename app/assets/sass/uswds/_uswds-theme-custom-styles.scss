@@ -133,6 +133,7 @@ td.table-empty-message {
    line-height: 1.2;
    padding: units(1);
    font-family: family("sans");
+   color: black;
 }
 
 .usa-dark-background .pill-item__label {
@@ -604,12 +605,18 @@ details form {
   }
 
    &-background {
+      position: absolute;
+      top: 0;
+      left: 0;
       pointer-events: none;
+      color: black;
       white-space: pre-wrap;
       overflow-wrap: break-word;
       word-wrap: break-word;
       border: 2px solid transparent;
       padding-bottom: units(3);
+      z-index: 10;
+      opacity: 0;
 
     // transparent borders become visible in high contrast modes so set to match background
     @media (-ms-high-contrast: active), (forced-colors: active) {

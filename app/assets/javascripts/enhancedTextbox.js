@@ -23,7 +23,7 @@
           <div class='textbox-highlight-wrapper' />
         `)
         .after(this.$background = $(`
-          <div class="textbox-highlight-background" aria-hidden="true" />
+          <div class="textbox-highlight-background" aria-hidden="true" role="presentation"/>
         `))
         .on("input", this.update);
 
@@ -37,7 +37,7 @@
       this.initialHeight = visibleTextbox.height();
 
       this.$background.css({
-        'border-width': this.$textbox.css('border-width')
+        'border-width': this.$textbox.css('border-width'),
       });
 
       visibleTextbox.remove();
@@ -73,16 +73,10 @@
     );
 
     this.update = () => {
-      const isEmpty = this.$textbox.val().trim() === "";
 
-      if (isEmpty) {
-          this.$background.html(
-              this.highlightPlaceholders ? this.contentReplaced() : this.contentEscaped()
-          );
-          this.$background.show();
-      } else {
-          this.$background.hide();
-      }
+      this.$background.html(
+        this.highlightPlaceholders ? this.contentReplaced() : this.contentEscaped()
+      );
 
       this.resize();
 
