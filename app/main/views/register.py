@@ -164,14 +164,24 @@ def set_up_your_profile():
     state = request.args.get("state")
 
     state_key = f"login-state-{unquote(state)}"
-    stored_state = redis_client.get(state_key).decode("utf8")
+    stored_state = unquote(redis_client.get(state_key).decode("utf8"))
     if state != stored_state:
         current_app.logger.error(f"State Error: {state} != {stored_state}")
         abort(403)
 
     login_gov_error = request.args.get("error")
 
-    if redis_client.get(f"invitedata-{state}") is None:
+    invite_data = json.loads(redis_client.get(f"invitedata-{state}"))
+    user_email = redis_client.get(f"user_email-{state}").decode("utf8")
+    user_uuid = redis_client.get(f"user_uuid-{state}").decode("utf8")
+    # invite_data = json.loads(redis_client.get(f"invitedata-{state}"))
+    # user_email = redis_client.get(f"user_email-{state}").decode("utf8")
+    # user_uuid = redis_client.get(f"user_uuid-{state}").decode("utf8")
+    # invited_user_email_address = redis_client.get(
+    #     f"invited_user_email_address-{state}"
+    # ).decode("utf8")
+
+    if user_email is None or user_uuid is None:  # invite path
         access_token = sign_in._get_access_token(code)
 
         debug_msg("Got the access token for login.gov")
@@ -179,9 +189,9 @@ def set_up_your_profile():
         debug_msg(
             f"Got the user_email {user_email} and user_uuid {user_uuid} from login.gov"
         )
-        invite_data = state.encode("utf8")
-        invite_data = base64.b64decode(invite_data)
-        invite_data = json.loads(invite_data)
+        # invite_data = state.encode("utf8")
+        # invite_data = base64.b64decode(invite_data)
+        # invite_data = json.loads(invite_data)
         debug_msg(f"final state {invite_data}")
         invited_user_id = invite_data["invited_user_id"]
         invited_user_email_address = get_invited_user_email_address(invited_user_id)
@@ -202,10 +212,7 @@ def set_up_your_profile():
 
     form = SetupUserProfileForm()
 
-    if (
-        form.validate_on_submit()
-        and redis_client.get(f"invitedata-{state}") is not None
-    ):
+    if form.validate_on_submit():
         invite_data, user_email, user_uuid, invited_user_email_address = (
             get_invite_data_from_redis(state)
         )
