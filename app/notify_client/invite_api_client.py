@@ -55,15 +55,26 @@ class InviteApiClient(NotifyAdminAPIClient):
         nonce_key = f"login-nonce-{unquote(nonce)}"
         redis_client.set(nonce_key, nonce)  # save the nonce to redis.
 
-        invite_data_key = f"invitedata-{state}"
-        redis_invite_data = json.dumps(data)
-        redis_client.set(invite_data_key, redis_invite_data)
-
         data["nonce"] = nonce  # This is passed to api for the invite url.
         data["state"] = state  # This is passed to api for the invite url.
 
         resp = self.post(url=f"/service/{service_id}/invite", data=data)
-        return resp["data"]
+
+        resp_data = resp["data"]
+        invite_data_key = f"invitedata-{unquote(state)}"
+        remap_keys = {
+            "service": "service_id",
+            "from_user": "from_user_id",
+            "id": "user_id",
+        }
+        redis_invite_data = {
+            remap_keys[key] if key in remap_keys else key: value
+            for key, value in resp_data.items()
+        }
+        redis_invite_data = json.dumps(redis_invite_data)
+        redis_client.set(invite_data_key, redis_invite_data)
+
+        return resp_data
 
     def get_invites_for_service(self, service_id):
         return self.get(f"/service/{service_id}/invite")["data"]

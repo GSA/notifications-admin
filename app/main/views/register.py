@@ -1,4 +1,3 @@
-import base64
 import json
 import uuid
 from datetime import datetime, timedelta
@@ -171,15 +170,8 @@ def set_up_your_profile():
 
     login_gov_error = request.args.get("error")
 
-    invite_data = json.loads(redis_client.get(f"invitedata-{state}"))
-    user_email = redis_client.get(f"user_email-{state}").decode("utf8")
-    user_uuid = redis_client.get(f"user_uuid-{state}").decode("utf8")
-    # invite_data = json.loads(redis_client.get(f"invitedata-{state}"))
-    # user_email = redis_client.get(f"user_email-{state}").decode("utf8")
-    # user_uuid = redis_client.get(f"user_uuid-{state}").decode("utf8")
-    # invited_user_email_address = redis_client.get(
-    #     f"invited_user_email_address-{state}"
-    # ).decode("utf8")
+    user_email = redis_client.get(f"user_email-{state}")
+    user_uuid = redis_client.get(f"user_uuid-{state}")
 
     if user_email is None or user_uuid is None:  # invite path
         access_token = sign_in._get_access_token(code)
@@ -189,11 +181,10 @@ def set_up_your_profile():
         debug_msg(
             f"Got the user_email {user_email} and user_uuid {user_uuid} from login.gov"
         )
-        # invite_data = state.encode("utf8")
-        # invite_data = base64.b64decode(invite_data)
-        # invite_data = json.loads(invite_data)
+        invite_data = redis_client.get(f"invitedata-{state}")
+        invite_data = json.loads(invite_data)
         debug_msg(f"final state {invite_data}")
-        invited_user_id = invite_data["invited_user_id"]
+        invited_user_id = invite_data["user_id"]
         invited_user_email_address = get_invited_user_email_address(invited_user_id)
         debug_msg(f"email address from the invite_date is {invited_user_email_address}")
         check_invited_user_email_address_matches_expected(
