@@ -62,16 +62,7 @@ class InviteApiClient(NotifyAdminAPIClient):
 
         resp_data = resp["data"]
         invite_data_key = f"invitedata-{unquote(state)}"
-        remap_keys = {
-            "service": "service_id",
-            "from_user": "from_user_id",
-            "id": "user_id",
-        }
-        redis_invite_data = {
-            remap_keys[key] if key in remap_keys else key: value
-            for key, value in resp_data.items()
-        }
-        redis_invite_data = json.dumps(redis_invite_data)
+        redis_invite_data = json.dumps(resp_data)
         redis_client.set(invite_data_key, redis_invite_data)
 
         return resp_data
