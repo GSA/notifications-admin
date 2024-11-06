@@ -1,3 +1,4 @@
+import json
 import secrets
 from urllib.parse import unquote
 
@@ -52,10 +53,11 @@ class InviteApiClient(NotifyAdminAPIClient):
         # make and store the nonce
         nonce = secrets.token_urlsafe()
         nonce_key = f"login-nonce-{unquote(nonce)}"
-        redis_client.set(f"{nonce_key}", nonce)  # save the nonce to redis.
+        redis_client.set(nonce_key, nonce)  # save the nonce to redis.
 
+        invite_data_key = f"invitedata-{state}"
         redis_invite_data = json.dumps(data)
-        redis_client.set(f"invitedata-{state}", json.dumps(invite_data), ex=ttl)
+        redis_client.set(invite_data_key, redis_invite_data)
 
         data["nonce"] = nonce  # This is passed to api for the invite url.
         data["state"] = state  # This is passed to api for the invite url.
