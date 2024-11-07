@@ -186,7 +186,7 @@ def set_up_your_profile():
         invite_data = redis_client.get(f"invitedata-{state}")
         invite_data = json.loads(invite_data)
         debug_msg(f"final state {invite_data}")
-        invited_user_id = invite_data["id"]
+        invited_user_id = invite_data["invited_user_id"]
         invited_user_email_address = get_invited_user_email_address(invited_user_id)
         debug_msg(f"email address from the invite_date is {invited_user_email_address}")
         check_invited_user_email_address_matches_expected(
@@ -195,7 +195,7 @@ def set_up_your_profile():
 
         invited_user_accept_invite(invited_user_id)
         debug_msg(
-            f"accepted invite user {invited_user_email_address} to service {invite_data['service']}"
+            f"accepted invite user {invited_user_email_address} to service {invite_data['service_id']}"
         )
         # We need to avoid taking a second trip through the login.gov code because we cannot pull the
         # access token twice.  So once we retrieve these values, let's park them in redis for 15 minutes
@@ -230,16 +230,19 @@ def set_up_your_profile():
         activate_user(user["id"])
         debug_msg("activated user")
         usr = User.from_id(user["id"])
+
         usr.add_to_service(
-            invite_data["service"],
+            invite_data["service_id"],
             invite_data["permissions"],
             invite_data["folder_permissions"],
-            invite_data["from_user"],
+            invite_data["from_user_id"],
         )
-        debug_msg(f"Added user {usr.email_address} to service {invite_data['service']}")
+        debug_msg(
+            f"Added user {usr.email_address} to service {invite_data['service_id']}"
+        )
         # notify-admin-1766
         # redirect new users to templates area of new service instead of dashboard
-        service_id = invite_data["service"]
+        service_id = invite_data["service_id"]
         url = url_for(".service_dashboard", service_id=service_id)
         url = f"{url}/templates"
         return redirect(url)
