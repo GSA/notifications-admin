@@ -38,9 +38,9 @@ def accept_invite(token):
         )
     if invited_user.status == "accepted":
         session.pop("invited_user_id", None)
-        service = Service.from_id(invited_user.service_id)
+        service = Service.from_id(invited_user.service)
         return redirect(
-            url_for("main.service_dashboard", service_id=invited_user.service_id)
+            url_for("main.service_dashboard", service_id=invited_user.service)
         )
 
     session["invited_user_id"] = invited_user.id
