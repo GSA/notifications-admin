@@ -115,9 +115,14 @@ class InviteApiClient(NotifyAdminAPIClient):
             "nonce": nonce,
             "state": state,
         }
-        self.post(
+        resp = self.post(
             url=f"/service/{service_id}/invite/{invited_user_id}/resend", data=data
         )
+
+        invite_data_key = f"invitedata-{unquote(state)}"
+        redis_invite_data = resp["invite"]
+        redis_invite_data = json.dumps(redis_invite_data)
+        redis_client.set(invite_data_key, redis_invite_data)
 
     @cache.delete("service-{service_id}")
     @cache.delete("user-{invited_user_id}")
