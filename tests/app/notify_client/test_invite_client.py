@@ -30,7 +30,8 @@ def test_client_creates_invite(
                     "nonce",
                     "state",
                 }
-            )
+            ),
+            "invite": {},
         },
     )
 
