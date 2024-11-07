@@ -23,7 +23,7 @@
           <div class='textbox-highlight-wrapper' />
         `)
         .after(this.$background = $(`
-          <div class="textbox-highlight-background" aria-hidden="true" role="presentation"/>
+          <div class="textbox-highlight-background" aria-hidden="true" />
         `))
         .on("input", this.update);
 
@@ -37,7 +37,7 @@
       this.initialHeight = visibleTextbox.height();
 
       this.$background.css({
-        'border-width': this.$textbox.css('border-width'),
+        'border-width': this.$textbox.css('border-width')
       });
 
       visibleTextbox.remove();
