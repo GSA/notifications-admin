@@ -33,7 +33,7 @@
 
   {% else %}
 
-    <div class="grid-row">
+    <div class="grid-row flex-column">
       <div class="{% if current_user.has_permissions('manage_templates') %} grid-col-10 {% else %} grid-col-12 {% endif %}">
         <div class="usa-alert usa-alert--slim usa-alert--info">
           <div class="usa-alert__body">
@@ -51,7 +51,7 @@
       </div>
       {% if current_user.has_permissions('manage_templates') and current_template_folder_id and user_has_template_folder_permission %}
         <div class="grid-col-2">
-          <a href="{{ url_for('.manage_template_folder', service_id=current_service.id, template_folder_id=current_template_folder_id) }}" class="usa-link folder-heading-manage-link">Manage<span class="usa-sr-only"> this folder</span></a>
+          <a href="{{ url_for('.manage_template_folder', service_id=current_service.id, template_folder_id=current_template_folder_id) }}" class="usa-link folder-heading-manage-link">Manage this folder<span class="usa-sr-only">Manage this folder</span></a>
         </div>
       {% endif %}
     </div>
