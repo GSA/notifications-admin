@@ -6,7 +6,7 @@ header_navigation.is_selected('accounts-or-dashboard')},
 ] %}
 
 {% if FEATURE_BEST_PRACTICES_ENABLED %}
-{% set navigation = navigation + [{"href": url_for('main.guides'), "text": "Guides", "active":
+{% set navigation = navigation + [{"href": url_for('main.best_practices'), "text": "Guides", "active":
 header_navigation.is_selected('guides')}] %}
 {% endif %}
 

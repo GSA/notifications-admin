@@ -48,6 +48,7 @@ class HeaderNavigation(Navigation):
         },
         "guides": {
             "guides",
+            "best-practies"
         },
         "using_notify": {
             "get_started",

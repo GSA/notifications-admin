@@ -29,7 +29,7 @@ def using_notify_nav():
         },
         {
             "name": "Guides",
-            "link": "main.guides",
+            "link": "main.best_practices",
         },
         {
             "name": "Trial mode",
