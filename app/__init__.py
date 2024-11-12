@@ -162,7 +162,9 @@ def _csp(config):
 
 
 def create_app(application):
-    application.config['FEATURE_BEST_PRACTICES_ENABLED'] = os.getenv("FEATURE_BEST_PRACTICES_ENABLED", "false").lower() == "true"
+    application.config['FEATURE_BEST_PRACTICES_ENABLED'] = (
+        os.getenv("FEATURE_BEST_PRACTICES_ENABLED", "false").lower() == "true"
+    )
 
     @application.context_processor
     def inject_feature_flags():
