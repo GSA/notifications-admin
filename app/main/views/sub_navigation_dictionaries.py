@@ -28,8 +28,8 @@ def using_notify_nav():
             "link": "main.get_started",
         },
         {
-            "name": "Best Practices",
-            "link": "main.best_practices",
+            "name": "Guides",
+            "link": "main.guides",
         },
         {
             "name": "Trial mode",

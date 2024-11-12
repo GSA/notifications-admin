@@ -46,8 +46,8 @@ class HeaderNavigation(Navigation):
             "roadmap",
             "security",
         },
-        "best_practices": {
-            "best_practices",
+        "guides": {
+            "guides",
         },
         "using_notify": {
             "get_started",
