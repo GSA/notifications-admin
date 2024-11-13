@@ -108,17 +108,14 @@ def _do_login_dot_gov():  # $ pragma: no cover
         )
         raise Exception(f"Could not login with login.gov {login_gov_error}")
     elif code and state:
-        try:
+        verify_key = f"login-verify_email-{unquote(state)}"
+        verify_path = bool(redis_client.get(verify_key))
+
+        if not verify_path:
             state_key = f"login-state-{unquote(state)}"
             stored_state = unquote(redis_client.get(state_key).decode("utf8"))
             if state != stored_state:
                 current_app.logger.error(f"State Error: {state} != {stored_state}")
-                abort(403)
-        except AttributeError:  # There is no stored state
-            verify_key = f"login-verify_email-{unquote(state)}"
-            verify_path = bool(redis_client.get(verify_key))
-            if not verify_path:
-                current_app.logger.error("Not verify_email path, no state found.")
                 abort(403)
 
         # activate the user
