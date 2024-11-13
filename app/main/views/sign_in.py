@@ -108,11 +108,18 @@ def _do_login_dot_gov():  # $ pragma: no cover
         )
         raise Exception(f"Could not login with login.gov {login_gov_error}")
     elif code and state:
-        state_key = f"login-state-{unquote(state)}"
-        stored_state = unquote(redis_client.get(state_key).decode("utf8"))
-        if state != stored_state:
-            current_app.logger.error(f"State Error: {state} != {stored_state}")
-            abort(403)
+        try:
+            state_key = f"login-state-{unquote(state)}"
+            stored_state = unquote(redis_client.get(state_key).decode("utf8"))
+            if state != stored_state:
+                current_app.logger.error(f"State Error: {state} != {stored_state}")
+                abort(403)
+        except AttributeError:  # There is no stored state
+            verify_key = f"login-verify_email-{unquote(state)}"
+            verify_path = bool(redis_client.get(verify_key))
+            if not verify_path:
+                current_app.logger.error("Not verify_email path, no state found.")
+                abort(403)
 
         # activate the user
         try:
@@ -135,6 +142,10 @@ def _do_login_dot_gov():  # $ pragma: no cover
                 user["email_access_validated_at"], 90
             )
             if not is_fresh_email:
+                # send email verify
+                ttl = 24 * 60 * 60
+                verify_key = f"login-verify_email-{unquote(state)}"
+                redis_client.set(verify_key, state, ex=ttl)
                 return verify_email(user, redirect_url)
 
             usr = User.from_email_address(user["email_address"])
@@ -209,17 +220,19 @@ def sign_in():  # pragma: no cover
             return redirect(redirect_url)
         return redirect(url_for("main.show_accounts_or_dashboard"))
 
+    ttl = 24 * 60 * 60
+
     state = generate_token(
         str(request.remote_addr),
         current_app.config["SECRET_KEY"],
         current_app.config["DANGEROUS_SALT"],
     )
     state_key = f"login-state-{unquote(state)}"
-    redis_client.set(state_key, state)
+    redis_client.set(state_key, state, ex=ttl)
 
     nonce = secrets.token_urlsafe()
     nonce_key = f"login-nonce-{unquote(nonce)}"
-    redis_client.set(nonce_key, nonce)
+    redis_client.set(nonce_key, nonce, ex=ttl)
 
     url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
     # handle unit tests

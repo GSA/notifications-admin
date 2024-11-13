@@ -41,6 +41,8 @@ class InviteApiClient(NotifyAdminAPIClient):
         }
         data = _attach_current_user(data)
 
+        ttl = 24 * 60 * 60
+
         # make and store the state
         state = generate_token(
             str(request.remote_addr),
@@ -48,12 +50,12 @@ class InviteApiClient(NotifyAdminAPIClient):
             current_app.config["DANGEROUS_SALT"],
         )
         state_key = f"login-state-{unquote(state)}"
-        redis_client.set(state_key, state)
+        redis_client.set(state_key, state, ex=ttl)
 
         # make and store the nonce
         nonce = secrets.token_urlsafe()
         nonce_key = f"login-nonce-{unquote(nonce)}"
-        redis_client.set(nonce_key, nonce)  # save the nonce to redis.
+        redis_client.set(nonce_key, nonce, ex=ttl)  # save the nonce to redis.
 
         data["nonce"] = nonce  # This is passed to api for the invite url.
         data["state"] = state  # This is passed to api for the invite url.
@@ -64,7 +66,7 @@ class InviteApiClient(NotifyAdminAPIClient):
         invite_data_key = f"invitedata-{unquote(state)}"
         redis_invite_data = resp["invite"]
         redis_invite_data = json.dumps(redis_invite_data)
-        redis_client.set(invite_data_key, redis_invite_data)
+        redis_client.set(invite_data_key, redis_invite_data, ex=ttl)
 
         return resp_data
 
@@ -97,6 +99,8 @@ class InviteApiClient(NotifyAdminAPIClient):
         self.post(url=f"/service/{service_id}/invite/{invited_user_id}", data=data)
 
     def resend_invite(self, service_id, invited_user_id):
+        ttl = 24 * 60 * 60
+
         # make and store the state
         state = generate_token(
             str(request.remote_addr),
@@ -104,12 +108,12 @@ class InviteApiClient(NotifyAdminAPIClient):
             current_app.config["DANGEROUS_SALT"],
         )
         state_key = f"login-state-{unquote(state)}"
-        redis_client.set(state_key, state)
+        redis_client.set(state_key, state, ex=ttl)
 
         # make and store the nonce
         nonce = secrets.token_urlsafe()
         nonce_key = f"login-nonce-{unquote(nonce)}"
-        redis_client.set(nonce_key, nonce)
+        redis_client.set(nonce_key, nonce, ex=ttl)
 
         data = {
             "nonce": nonce,
@@ -122,7 +126,7 @@ class InviteApiClient(NotifyAdminAPIClient):
         invite_data_key = f"invitedata-{unquote(state)}"
         redis_invite_data = resp["invite"]
         redis_invite_data = json.dumps(redis_invite_data)
-        redis_client.set(invite_data_key, redis_invite_data)
+        redis_client.set(invite_data_key, redis_invite_data, ex=ttl)
 
     @cache.delete("service-{service_id}")
     @cache.delete("user-{invited_user_id}")
