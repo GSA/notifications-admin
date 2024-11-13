@@ -46,6 +46,7 @@ class HeaderNavigation(Navigation):
             "roadmap",
             "security",
         },
+        "guides": {"guides"},
         "best_practices": {
             "best_practices",
         },
