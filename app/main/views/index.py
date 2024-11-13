@@ -269,7 +269,7 @@ def benchmark_performance():
     )
 
 
-@main.route("/about/about")
+@main.route("/about")
 @user_is_logged_in
 def about_notify():
     return render_template(
