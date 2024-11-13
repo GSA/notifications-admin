@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% set page_title = "About notify" %}
+
+{% block per_page_title %}
+{{page_title}}
+{% endblock %}
+
+{% block content_column_content %}
+<!-- {% with title=page_title %}{% include "components/best-practices/nav_breadcrumb.html" %}{% endwith %} -->
+<section class="usa-prose">
+  <h1>{{page_title}}</h1>
+  <p>Notify.gov is a text messaging service built by and for the government. We help agencies communicate more
+    effectively with the people they serve. With Notify.gov, federal and federally-funded programs can send customized
+    text messages that make it possible to:</p>
+  <ul>
+    <li>Meet people where they are</li>
+    <li>More effectively deliver program outcomes</li>
+    <li>Save administrative costs</li>
+    <li>Implement <a href="https://digital.gov/resources/delivering-digital-first-public-experience/"
+        target="_blank">21st Century IDEA</a> and other directives</li>
+  </ul>
+  <p>Notify.gov is an easy-to-use, web-based platform. It requires no technical expertise or system integration — users
+    can create an account and get started within minutes. We take the security and privacy of messaging data seriously
+    by minimizing data retention and using modern encryption methods.</p>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/fkcy_xbo0Bw?si=UeWmoHOm8hBpLe-q"
+    title="YouTube video player" frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  <h2 class="padding-bottom-2">Product Highlights</h2>
+  {% set product_highlights = [
+  {
+  "svg_src": "#send",
+  "card_heading": "Send customized one-way customized messages",
+  "p_text": "Upload a file with recipient phone numbers and Notify.gov sends customized messages",
+  },
+  {
+  "svg_src": "#translate",
+  "card_heading": "Send in recipients’ preferred language",
+  "p_text": "Notify.gov supports more than 30 character sets to send messages in almost any language",
+  },
+  {
+  "svg_src": "#trending_up",
+  "card_heading": "See how messages perform",
+  "p_text": "Track how many messages you’ve sent and monitor delivery rates",
+  },
+  {
+  "svg_src": "#add",
+  "card_heading": "Create and manage multiple services within a single organization",
+  "p_text": "Set up individual workspaces for different texting services, allowing multiple teams or programs to manage
+  day-to-day texting operations across an organization",
+  },
+  {
+  "svg_src": "#people",
+  "card_heading": "Manage team member and permissions on each service",
+  "p_text": "Administrators can add users and control what they can do in Notify.gov",
+  }
+  ] %}
+  <ul class="usa-icon-list">
+    {% for item in product_highlights %}
+    <li class="usa-icon-list__item">
+      <div class="usa-icon-list__content">
+        <div class="usa-icon-list__icon display-flex flex-align-start">
+          <svg aria-hidden="true" focusable="false" role="img" class="about-icon-list">
+            <use xlink:href="{{ asset_url('img/sprite.svg') }}{{ item.svg_src }}"></use>
+          </svg>
+          <b>{{item.card_heading}}</b>
+        </div>
+        <p class="indented-paragraph">{{item.p_text}}</p>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  <p><a href="/join-notify">See if Notify is right for you</a></p>
+  <p>Notify.gov is a product of the <a href="#" target="_blank">Public Benefits Studio</a>, a product accelerator inside
+    the federal government. </p>
+
+
+</section>
+{% endblock %}

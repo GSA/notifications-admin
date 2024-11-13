@@ -10,6 +10,7 @@ from app.formatters import apply_html_class, convert_markdown_template
 from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
 from app.main.views.sub_navigation_dictionaries import (
+    about_notify_nav,
     best_practices_nav,
     features_nav,
     using_notify_nav,
@@ -265,6 +266,15 @@ def benchmark_performance():
     return render_template(
         "views/best-practices/benchmark-performance.html",
         navigation_links=best_practices_nav(),
+    )
+
+
+@main.route("/about/about")
+@user_is_logged_in
+def about_notify():
+    return render_template(
+        "views/about/about.html",
+        navigation_links=about_notify_nav(),
     )
 
 
