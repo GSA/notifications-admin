@@ -35,6 +35,8 @@ def index():
     if current_user and current_user.is_authenticated:
         return redirect(url_for("main.choose_account"))
 
+    ttl = 24 * 60 * 60
+
     # make and store the state
     state = generate_token(
         str(request.remote_addr),
@@ -42,12 +44,12 @@ def index():
         current_app.config["DANGEROUS_SALT"],
     )
     state_key = f"login-state-{unquote(state)}"
-    redis_client.set(state_key, state)
+    redis_client.set(state_key, state, ex=ttl)
 
     # make and store the nonce
     nonce = secrets.token_urlsafe()
     nonce_key = f"login-nonce-{unquote(nonce)}"
-    redis_client.set(nonce_key, nonce)
+    redis_client.set(nonce_key, nonce, ex=ttl)
 
     url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
     if url is not None:
