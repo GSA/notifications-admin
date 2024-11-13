@@ -48,6 +48,12 @@ class HeaderNavigation(Navigation):
         },
         "best_practices": {
             "best_practices",
+            "clear_goals",
+            "rules_and_regulations",
+            "establish_trust",
+            "write_for_action",
+            "multiple_languages",
+            "benchmark_performance"
         },
         "using_notify": {
             "get_started",
