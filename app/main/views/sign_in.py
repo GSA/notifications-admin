@@ -134,16 +134,17 @@ def _do_login_dot_gov():  # $ pragma: no cover
                 f"Retrieved user {user['id']} from db #notify-admin-1505"
             )
 
-            # Check if the email needs to be revalidated
-            is_fresh_email = is_less_than_days_ago(
-                user["email_access_validated_at"], 90
-            )
-            if not is_fresh_email:
-                # send email verify
-                ttl = 24 * 60 * 60
-                verify_key = f"login-verify_email-{unquote(state)}"
-                redis_client.set(verify_key, state, ex=ttl)
-                return verify_email(user, redirect_url)
+            # Temporary disabling of this until we figure out what is happening.
+            # # Check if the email needs to be revalidated
+            # is_fresh_email = is_less_than_days_ago(
+            #     user["email_access_validated_at"], 90
+            # )
+            # if not is_fresh_email:
+            #     # send email verify
+            #     ttl = 24 * 60 * 60
+            #     verify_key = f"login-verify_email-{unquote(state)}"
+            #     redis_client.set(verify_key, state, ex=ttl)
+            #     return verify_email(user, redirect_url)
 
             usr = User.from_email_address(user["email_address"])
             current_app.logger.info(f"activating user {usr.id} #notify-admin-1505")
