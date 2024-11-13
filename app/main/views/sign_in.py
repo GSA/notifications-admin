@@ -25,6 +25,7 @@ from app.main.views.verify import activate_user
 from app.models.user import User
 from app.utils import hide_from_search_engines
 from app.utils.login import get_id_token, is_safe_redirect_url
+
 # from app.utils.time import is_less_than_days_ago
 from app.utils.user import is_gov_user
 from notifications_utils.url_safe_token import generate_token
