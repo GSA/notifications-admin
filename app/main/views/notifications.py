@@ -177,7 +177,18 @@ def download_notifications_csv(service_id):
     # TODO eventually we want to remove this, when reports become fully asynchronous
     # The UI should be retrieving the report elsewhere via the download_report() method call
     return Response(
-        stream_with_context(csv),
+        stream_with_context(
+            generate_notifications_csv(
+                service_id=service_id,
+                job_id=None,
+                status=filter_args.get("status"),
+                page=request.args.get("page", 1),
+                page_size=10000,
+                format_for_csv=True,
+                template_type=filter_args.get("message_type"),
+                limit_days=service_data_retention_days,
+            )
+        ),
         mimetype="text/csv",
         headers={
             "Content-Disposition": 'inline; filename="{} - {} - {} report.csv"'.format(
