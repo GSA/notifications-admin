@@ -21,10 +21,8 @@ from notifications_utils.url_safe_token import generate_token
 # Hook to check for guidance routes
 @main.before_request
 def check_guidance_feature():
-    current_app.logger.warning("best practices 1234")
-    current_app.logger.warning(current_app.config["FEATURE_BEST_PRACTICES_ENABLED"])
     if (
-        request.path.startswith("/best-practices")
+        request.path.startswith("/guides/best-practices")
         and not current_app.config["FEATURE_BEST_PRACTICES_ENABLED"]
     ):
         abort(404)
@@ -207,7 +205,7 @@ def trial_mode_new():
     )
 
 
-@main.route("/best-practices")
+@main.route("/guides/best-practices")
 @user_is_logged_in
 def best_practices():
     return render_template(
@@ -216,7 +214,7 @@ def best_practices():
     )
 
 
-@main.route("/best-practices/clear-goals")
+@main.route("/guides/best-practices/clear-goals")
 @user_is_logged_in
 def clear_goals():
     return render_template(
@@ -225,7 +223,7 @@ def clear_goals():
     )
 
 
-@main.route("/best-practices/rules-and-regulations")
+@main.route("/guides/best-practices/rules-and-regulations")
 @user_is_logged_in
 def rules_and_regulations():
     return render_template(
@@ -234,7 +232,7 @@ def rules_and_regulations():
     )
 
 
-@main.route("/best-practices/establish-trust")
+@main.route("/guides/best-practices/establish-trust")
 @user_is_logged_in
 def establish_trust():
     return render_template(
@@ -243,7 +241,7 @@ def establish_trust():
     )
 
 
-@main.route("/best-practices/write-for-action")
+@main.route("/guides/best-practices/write-for-action")
 @user_is_logged_in
 def write_for_action():
     return render_template(
@@ -252,7 +250,7 @@ def write_for_action():
     )
 
 
-@main.route("/best-practices/multiple-languages")
+@main.route("/guides/best-practices/multiple-languages")
 @user_is_logged_in
 def multiple_languages():
     return render_template(
@@ -261,7 +259,7 @@ def multiple_languages():
     )
 
 
-@main.route("/best-practices/benchmark-performance")
+@main.route("/guides/best-practices/benchmark-performance")
 @user_is_logged_in
 def benchmark_performance():
     return render_template(
@@ -270,7 +268,7 @@ def benchmark_performance():
     )
 
 
-@main.route("/using-notify/guidance")
+@main.route("/guides/using-notify/guidance")
 @user_is_logged_in
 def guidance_index():
     return render_template(
