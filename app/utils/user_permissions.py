@@ -17,7 +17,6 @@ permission_options = (
     ("send_messages", "Send messages"),
     ("manage_templates", "Add and edit templates"),
     ("manage_service", "Manage settings, team and usage"),
-    ("manage_api_keys", "Manage API integration"),
 )
 
 

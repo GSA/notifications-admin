@@ -38,7 +38,7 @@
       <form class="usa-form">
         <label class="usa-label" for="options">Account</label>
         <select class="usa-select margin-bottom-2" name="options" id="options">
-          <option value>- Select -</option>
+          <option value disabled>- Select -</option>
           <option value="service" selected>{{ current_service.name }}</option>
           <option value="individual">{{ current_user.name }}</option>
         </select>
@@ -60,6 +60,7 @@
       <div id="table1" class="table-overflow-x-auto hidden">
         <h2 class="margin-top-4 margin-bottom-1">My activity</h2>
         <table class="usa-table job-table">
+          <caption class="usa-sr-only">Table showing the sent jobs for {{current_user.name}}</caption>
           <thead class="table-field-headings">
             <tr>
               <th scope="col" class="table-field-heading-first" id="jobId"><span>Job ID#</span></th>
@@ -74,7 +75,7 @@
                 {% if job.created_by.name == current_user.name %}
                   {% set notification = job.notifications[0] %}
                   <tr id="{{ job.job_id }}">
-                    <td class="table-field jobid" scope="row" role="rowheader">
+                    <td class="table-field jobid" role="rowheader">
                       <a class="usa-link" href="{{ job.view_job_link }}">
                         {{ job.job_id[:8] if job.job_id else 'Manually entered number' }}
                       </a>
@@ -100,6 +101,7 @@
       <div id="table2" class="table-overflow-x-auto visible">
         <h2 class="margin-top-4 margin-bottom-1">Service activity</h2>
         <table class="usa-table job-table">
+          <caption class="usa-sr-only">Table showing the sent jobs for this service</caption>
           <thead class="table-field-headings">
             <tr>
               <th scope="col" role="columnheader" class="table-field-heading-first" id="jobId"><span>Job ID#</span></th>
@@ -114,7 +116,7 @@
               {% for job in jobs[:5] %}
                 {% set notification = job.notifications[0] %}
                 <tr id="{{ job.job_id }}">
-                  <td class="table-field jobid" scope="row" role="rowheader">
+                  <td class="table-field jobid" role="rowheader">
                     <a class="usa-link" href="{{ job.view_job_link }}">
                       {{ job.job_id[:8] if job.job_id else 'Manually entered number' }}
                     </a>

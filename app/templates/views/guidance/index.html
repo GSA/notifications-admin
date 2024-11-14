@@ -16,17 +16,22 @@
   <p>Below we explain how to:</p>
 
   <ul class="list list-bullet">
+    {% if not feature_best_practices_enabled %}
     <li><a class="usa-link" href="#format-content">Format your content</a></li>
     <li><a class="usa-link" href="#add-links">Add links</a></li>
+    {% endif %}
     <li><a class="usa-link" href="#personalize-content">Personalize your content</a></li>
     <li><a class="usa-link" href="#conditional-content">Add conditional content</a></li>
     <li><a class="usa-link" href="#indentify-program">Identify your program</a></li>
     <li><a class="usa-link" href="#prepare-data">Prepare your data</a></li>
+    {% if not feature_best_practices_enabled %}
     <li><a class="usa-link" href="#prevent-fraud">Prevent fraud</a></li>
+    {% endif%}
   </ul>
 
   {# Format content #}
   <h2 class="padding-top-1" id="format-content">Format your content</h2>
+  {% if not feature_best_practices_enabled %}
   <p>Effective texts will help your message recipients take the steps needed to secure and keep the benefits and services
   they depend on. To craft an effective text:</p>
 
@@ -37,7 +42,7 @@
     <li>Say only one important thing per message.</li>
     <li>Frame the message to encourage action and explain the consequences of not completing the desired action.</li>
   </ul>
-
+  {% endif %}
   <h3>To create and format your message</h3>
   <ol class="list">
     <li>All messages start from a template</li>
@@ -45,6 +50,7 @@
     <li>Add a new template or choose an existing template and select Edit.</li>
   </ol>
 
+  {% if not feature_best_practices_enabled %}
   {# Add links #}
   <h2 class="padding-top-1" id="add-links">Add links</h2>
   <p>When composing a text message, links to websites or online applications can help your recipient respond quickly.</p>
@@ -64,6 +70,7 @@
     <li>Your link might stop working if there’s a service outage.</li>
     <li>You can no longer control where the redirect goes.</li>
   </ul>
+  {% endif %}
 
   {# Personalize content #}
   <h2 class="padding-top-1" id="personalize-content">Personalize your content</h2>
@@ -214,6 +221,7 @@
     </table>
   </div>
 
+  {% if not feature_best_practices_enabled %}
   {# Preventing fraud #}
   <h2 class="padding-top-1" id="prevent-fraud">Preventing fraud</h2>
   <p>Texting fraud is ever prevalent and while we can’t eliminate the risk, we can reduce the chances that recipients will
@@ -240,5 +248,5 @@
       in a text. If you have questions about how to protect your privacy, see statename.gov/privacy.</p>
     </li>
   </ol>
-
+  {% endif %}
 {% endblock %}

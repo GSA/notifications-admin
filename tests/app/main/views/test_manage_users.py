@@ -32,8 +32,7 @@ from tests.conftest import (
                 "Can See dashboard "
                 "Can Send messages "
                 "Can Add and edit templates "
-                "Can Manage settings, team and usage "
-                "Can Manage API integration"
+                "Can Manage settings, team and usage"
             ),
             True,
         ),
@@ -302,7 +301,6 @@ def test_service_without_caseworking_doesnt_show_admin_vs_caseworker(
     assert permission_checkboxes[1]["value"] == "send_messages"
     assert permission_checkboxes[2]["value"] == "manage_templates"
     assert permission_checkboxes[3]["value"] == "manage_service"
-    assert permission_checkboxes[4]["value"] == "manage_api_keys"
 
 
 @pytest.mark.parametrize(
@@ -386,7 +384,6 @@ def test_user_with_no_mobile_number_cant_be_set_to_sms_auth(
                 ("send_messages", True),
                 ("manage_templates", True),
                 ("manage_service", True),
-                ("manage_api_keys", True),
             ],
         ),
         (
@@ -397,7 +394,6 @@ def test_user_with_no_mobile_number_cant_be_set_to_sms_auth(
                 ("send_messages", False),
                 ("manage_templates", False),
                 ("manage_service", False),
-                ("manage_api_keys", False),
             ],
         ),
     ],
@@ -415,7 +411,7 @@ def test_should_show_page_for_one_user(
     page = client_request.get(endpoint, service_id=SERVICE_ONE_ID, **extra_args)
     checkboxes = page.select("input[type=checkbox]")
 
-    assert len(checkboxes) == 5
+    assert len(checkboxes) == 4
 
     for index, expected in enumerate(expected_checkboxes):
         expected_input_value, expected_checked = expected
@@ -478,7 +474,6 @@ def test_should_not_show_page_for_non_team_member(
                     "send_messages",
                     "manage_templates",
                     "manage_service",
-                    "manage_api_keys",
                 ]
             },
             {
@@ -486,7 +481,6 @@ def test_should_not_show_page_for_non_team_member(
                 "send_messages",
                 "manage_service",
                 "manage_templates",
-                "manage_api_keys",
             },
         ),
         (
@@ -658,7 +652,6 @@ def test_cant_edit_user_folder_permissions_for_platform_admin_users(
         platform_admin_user["id"],
         SERVICE_ONE_ID,
         permissions={
-            "manage_api_keys",
             "manage_service",
             "manage_templates",
             "send_messages",
@@ -710,7 +703,6 @@ def test_edit_user_permissions_including_authentication_with_email_auth_service(
                 "send_messages",
                 "manage_templates",
                 "manage_service",
-                "manage_api_keys",
             ],
             "login_authentication": "sms_auth",
         },
@@ -728,7 +720,6 @@ def test_edit_user_permissions_including_authentication_with_email_auth_service(
             "send_messages",
             "manage_templates",
             "manage_service",
-            "manage_api_keys",
         },
         folder_permissions=[],
     )
@@ -1016,7 +1007,6 @@ def test_invite_user(
                 "send_messages",
                 "manage_templates",
                 "manage_service",
-                "manage_api_keys",
             ],
         },
         _follow_redirects=True,
@@ -1026,7 +1016,6 @@ def test_invite_user(
     assert flash_banner == f"Invite sent to {email_address}"
 
     expected_permissions = {
-        "manage_api_keys",
         "manage_service",
         "manage_templates",
         "send_messages",
@@ -1127,7 +1116,6 @@ def test_invite_user_with_email_auth_service(
                 "send_messages",
                 "manage_templates",
                 "manage_service",
-                "manage_api_keys",
             ],
             "login_authentication": auth_type,
         },
@@ -1140,7 +1128,6 @@ def test_invite_user_with_email_auth_service(
     assert flash_banner == "Invite sent to test@example.gsa.gov"
 
     expected_permissions = {
-        "manage_api_keys",
         "manage_service",
         "manage_templates",
         "send_messages",
@@ -1245,7 +1232,6 @@ def test_cancel_invited_user_doesnt_work_if_user_not_invited_to_this_service(
                 "Can See dashboard "
                 "Can Send messages "
                 "Can Manage settings, team and usage "
-                "Can Manage API integration "
                 "Cancel invitation for invited_user@test.gsa.gov"
             ),
         ),
@@ -1321,7 +1307,7 @@ def test_user_cant_invite_themselves(
         service_id=SERVICE_ONE_ID,
         _data={
             "email_address": active_user_with_permissions["email_address"],
-            "permissions_field": ["send_messages", "manage_service", "manage_api_keys"],
+            "permissions_field": ["send_messages", "manage_service"],
         },
         _follow_redirects=True,
         _expected_status=200,

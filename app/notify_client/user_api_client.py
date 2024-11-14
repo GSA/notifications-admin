@@ -116,7 +116,7 @@ class UserApiClient(NotifyAdminAPIClient):
             data["next"] = next_string
         if code_type == "email":
             data["email_auth_link_host"] = self.admin_url
-        endpoint = "/user/{0}/{1}-code".format(user_id, code_type)
+            endpoint = f"/user/{user_id}/{code_type}-code"
         current_app.logger.warn(hilite(f"Sending verify_code {code_type} to {user_id}"))
         self.post(endpoint, data=data)
 
@@ -168,7 +168,7 @@ class UserApiClient(NotifyAdminAPIClient):
     @cache.delete("user-{user_id}")
     def add_user_to_service(self, service_id, user_id, permissions, folder_permissions):
         # permissions passed in are the combined UI permissions, not DB permissions
-        endpoint = "/service/{}/users/{}".format(service_id, user_id)
+        endpoint = f"/service/{service_id}/users/{user_id}"
         data = {
             "permissions": [
                 {"permission": x}

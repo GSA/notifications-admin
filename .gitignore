@@ -14,6 +14,7 @@
 *.XLSX
 
 ## Non user files allowed to be commited
+!app/assets/pdf/tcpa_overview.pdf
 !tests/test_pdf_files/no_eof_marker.pdf
 !tests/test_pdf_files/multi_page_pdf.pdf
 !tests/test_pdf_files/big.pdf

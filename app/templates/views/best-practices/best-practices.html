@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block per_page_title %}
+Best Practices
+{% endblock %}
+
+{% block content_column_content %}
+
+<section class="usa-prose">
+  <h1>Best Practices</h1>
+  <p class="font-sans-lg text-base">For texting the public</p>
+  <p>Effectively reaching your audience and supporting your program’s goals starts with strategically planning out what
+    text messages can help you achieve and how to approach a thoughtful rollout.
+  </p>
+
+  <p>This set of best practices will help you get an effective texting initiative up and running.</p>
+  <h2 class="padding-bottom-2">
+    Key elements of a texting campaign
+  </h2>
+
+  {% set card_contents = [
+  {
+  "svg_src": "goal",
+  "card_heading": "Establish clear goals",
+  "p_text": "Start with a singular purpose. Make explicit what you want to achieve.",
+  "link": "/best-practices/clear-goals"
+  },
+  {
+  "svg_src": "compliant",
+  "card_heading": "Follow rules & regulations",
+  "p_text": "Understand what is required when texting the public.",
+  "link": "/best-practices/rules-and-regulations"
+  },
+  {
+  "svg_src": "trust",
+  "card_heading": "Establish trust",
+  "p_text": "Help your audience anticipate and welcome your texts.",
+  "link": "/best-practices/establish-trust"
+  },
+  {
+  "svg_src": "runner",
+  "card_heading": "Write texts that provoke action",
+  "p_text": "Help your audience know what to do with the information you send.",
+  "link": "/best-practices/write-for-action"
+  },
+  {
+  "svg_src": "language",
+  "card_heading": "Send texts in multiple languages",
+  "p_text": "What to know as you plan translated texts.",
+  "link": "/best-practices/multiple-languages"
+  },
+  {
+  "svg_src": "chart",
+  "card_heading": "Measure performance with benchmarking",
+  "p_text": "Learn how effective your texting program can be.",
+  "link": "/best-practices/benchmark-performance"
+  }
+  ] %}
+
+  {% with card_contents=card_contents %}{% include "components/best-practices/cards.html" %}{%
+  endwith %}
+
+</section>
+{% endblock %}

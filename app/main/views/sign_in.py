@@ -1,8 +1,8 @@
-# import json
 import os
 import secrets
 import time
 import uuid
+from urllib.parse import unquote
 
 import jwt
 import requests
@@ -14,19 +14,19 @@ from flask import (
     redirect,
     render_template,
     request,
-    session,
     url_for,
 )
 from flask_login import current_user
 
-from app import login_manager, user_api_client
+from app import login_manager, redis_client, user_api_client
 from app.main import main
 from app.main.views.index import error
 from app.main.views.verify import activate_user
 from app.models.user import User
 from app.utils import hide_from_search_engines
-from app.utils.login import is_safe_redirect_url
-from app.utils.time import is_less_than_days_ago
+from app.utils.login import get_id_token, is_safe_redirect_url
+
+# from app.utils.time import is_less_than_days_ago
 from app.utils.user import is_gov_user
 from notifications_utils.url_safe_token import generate_token
 
@@ -40,10 +40,9 @@ def _reformat_keystring(orig):  # pragma: no cover
     return new_keystring
 
 
-def _get_access_token(code, state):  # pragma: no cover
+def _get_access_token(code):  # pragma: no cover
     client_id = os.getenv("LOGIN_DOT_GOV_CLIENT_ID")
     access_token_url = os.getenv("LOGIN_DOT_GOV_ACCESS_TOKEN_URL")
-    # certs_url = os.getenv("LOGIN_DOT_GOV_CERTS_URL")
     keystring = os.getenv("LOGIN_PEM")
     if " " in keystring:
         keystring = _reformat_keystring(keystring)
@@ -66,38 +65,14 @@ def _get_access_token(code, state):  # pragma: no cover
     response = requests.post(url, headers=headers)
 
     response_json = response.json()
+    id_token = get_id_token(response_json)
+    nonce = id_token["nonce"]
+    nonce_key = f"login-nonce-{unquote(nonce)}"
+    stored_nonce = redis_client.get(nonce_key).decode("utf8")
 
-    # TODO nonce check intermittently fails, investifix
-    # Presumably the nonce is not yet in the session when there
-    # is an invite involved?
-
-    # try:
-    #     encoded_id_token = response_json["id_token"]
-    # except KeyError as e:
-    #     current_app.logger.exception(f"Error when getting id token {response_json}")
-    #     raise KeyError(f"'access_token' {response.json()}") from e
-
-    # Getting Login.gov signing keys for unpacking the id_token correctly.
-    # jwks = requests.get(certs_url).json()
-    # public_keys = {
-    #     jwk["kid"]: {
-    #         "key": jwt.algorithms.RSAAlgorithm.from_jwk(json.dumps(jwk)),
-    #         "algo": jwk["alg"],
-    #     }
-    #     for jwk in jwks["keys"]
-    # }
-    # kid = jwt.get_unverified_header(encoded_id_token)["kid"]
-    # pub_key = public_keys[kid]["key"]
-    # algo = public_keys[kid]["algo"]
-    # id_token = jwt.decode(
-    #    encoded_id_token, pub_key, audience=client_id, algorithms=[algo]
-    # )
-    # nonce = id_token["nonce"]
-
-    # saved_nonce = session.pop("nonce")
-    # if nonce != saved_nonce:
-    #     current_app.logger.error(f"Nonce Error: {nonce} != {saved_nonce}")
-    #     abort(403)
+    if nonce != stored_nonce:
+        current_app.logger.error(f"Nonce Error: {nonce} != {stored_nonce}")
+        abort(403)
 
     try:
         access_token = response_json["access_token"]
@@ -125,6 +100,7 @@ def _do_login_dot_gov():  # $ pragma: no cover
     # start login.gov
     code = request.args.get("code")
     state = request.args.get("state")
+
     login_gov_error = request.args.get("error")
 
     if login_gov_error:
@@ -133,10 +109,19 @@ def _do_login_dot_gov():  # $ pragma: no cover
         )
         raise Exception(f"Could not login with login.gov {login_gov_error}")
     elif code and state:
+        verify_key = f"login-verify_email-{unquote(state)}"
+        verify_path = bool(redis_client.get(verify_key))
+
+        if not verify_path:
+            state_key = f"login-state-{unquote(state)}"
+            stored_state = unquote(redis_client.get(state_key).decode("utf8"))
+            if state != stored_state:
+                current_app.logger.error(f"State Error: {state} != {stored_state}")
+                abort(403)
 
         # activate the user
         try:
-            access_token = _get_access_token(code, state)
+            access_token = _get_access_token(code)
             user_email, user_uuid = _get_user_email_and_uuid(access_token)
             if not is_gov_user(user_email):
                 current_app.logger.error(
@@ -150,12 +135,17 @@ def _do_login_dot_gov():  # $ pragma: no cover
                 f"Retrieved user {user['id']} from db #notify-admin-1505"
             )
 
-            # Check if the email needs to be revalidated
-            is_fresh_email = is_less_than_days_ago(
-                user["email_access_validated_at"], 90
-            )
-            if not is_fresh_email:
-                return verify_email(user, redirect_url)
+            # Temporary disabling of this until we figure out what is happening.
+            # # Check if the email needs to be revalidated
+            # is_fresh_email = is_less_than_days_ago(
+            #     user["email_access_validated_at"], 90
+            # )
+            # if not is_fresh_email:
+            #     # send email verify
+            #     ttl = 24 * 60 * 60
+            #     verify_key = f"login-verify_email-{unquote(state)}"
+            #     redis_client.set(verify_key, state, ex=ttl)
+            #     return verify_email(user, redirect_url)
 
             usr = User.from_email_address(user["email_address"])
             current_app.logger.info(f"activating user {usr.id} #notify-admin-1505")
@@ -229,20 +219,25 @@ def sign_in():  # pragma: no cover
             return redirect(redirect_url)
         return redirect(url_for("main.show_accounts_or_dashboard"))
 
-    token = generate_token(
+    ttl = 24 * 60 * 60
+
+    state = generate_token(
         str(request.remote_addr),
         current_app.config["SECRET_KEY"],
         current_app.config["DANGEROUS_SALT"],
     )
-    url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
+    state_key = f"login-state-{unquote(state)}"
+    redis_client.set(state_key, state, ex=ttl)
 
     nonce = secrets.token_urlsafe()
-    session["nonce"] = nonce
+    nonce_key = f"login-nonce-{unquote(nonce)}"
+    redis_client.set(nonce_key, nonce, ex=ttl)
 
+    url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
     # handle unit tests
     if url is not None:
         url = url.replace("NONCE", nonce)
-        url = url.replace("STATE", token)
+        url = url.replace("STATE", state)
 
     return render_template(
         "views/signin.html",

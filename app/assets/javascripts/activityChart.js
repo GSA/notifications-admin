@@ -33,30 +33,43 @@
                     .attr('id', 'tooltip')
                     .style('display', 'none');
             }
-            // Create legend
+
+            // Calculate total messages
+            const totalMessages = d3.sum(deliveredData) + d3.sum(failedData);
+
+            // Create legend only if there are messages
             const legendContainer = d3.select('.chart-legend');
             legendContainer.selectAll('*').remove(); // Clear any existing legend
 
-            const legendData = [
-                { label: 'Delivered', color: COLORS.delivered },
-                { label: 'Failed', color: COLORS.failed }
-            ];
+            if (totalMessages > 0) {
+                // Show legend if there are messages
+                const legendData = [
+                    { label: 'Delivered', color: COLORS.delivered },
+                    { label: 'Failed', color: COLORS.failed }
+                ];
 
-            const legendItem = legendContainer.selectAll('.legend-item')
-                .data(legendData)
-                .enter()
-                .append('div')
-                .attr('class', 'legend-item');
+                const legendItem = legendContainer.selectAll('.legend-item')
+                    .data(legendData)
+                    .enter()
+                    .append('div')
+                    .attr('class', 'legend-item');
 
-            legendItem.append('div')
-                .attr('class', 'legend-rect')
-                .style('background-color', d => d.color)
-                .style('display', 'inline-block')
-                .style('margin-right', '5px');
+                legendItem.append('div')
+                    .attr('class', 'legend-rect')
+                    .style('background-color', d => d.color)
+                    .style('display', 'inline-block')
+                    .style('margin-right', '5px');
 
-            legendItem.append('span')
-                .attr('class', 'legend-label')
-                .text(d => d.label);
+                legendItem.append('span')
+                    .attr('class', 'legend-label')
+                    .text(d => d.label);
+
+                // Ensure the legend is shown
+                legendContainer.style('display', 'flex');
+            } else {
+                // Hide the legend if there are no messages
+                legendContainer.style('display', 'none');
+            }
 
             const x = d3.scaleBand()
                 .domain(labels)

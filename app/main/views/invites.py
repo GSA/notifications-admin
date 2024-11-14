@@ -17,14 +17,12 @@ def accept_invite(token):
         and current_user.email_address.lower() != invited_user.email_address.lower()
     ):
         message = Markup(
-            """
-            You’re signed in as {}.
+            f"""
+            You’re signed in as {current_user.email_address}.
             This invite is for another email address.
-            <a href={} class="usa-link">Sign out</a>
+            <a href={url_for("main.sign_out")} class="usa-link">Sign out</a>
             and click the link again to accept this invite.
-            """.format(
-                current_user.email_address, url_for("main.sign_out")
-            )
+            """
         )
 
         flash(message=message)

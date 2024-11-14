@@ -58,3 +58,46 @@ def using_notify_nav():
             # },
         },
     ]
+
+
+def best_practices_nav():
+    return [
+        {
+            "name": "Best Practices",
+            "link": "main.best_practices",
+        },
+        {
+            "name": "Clear goals",
+            "link": "main.clear_goals",
+        },
+        {
+            "name": "Rules and regulations",
+            "link": "main.rules_and_regulations",
+        },
+        {
+            "name": "Establish trust",
+            "link": "main.establish_trust",
+            "sub_navigation_items": [
+                {
+                    "name": "Get the word out",
+                    "link": "main.establish_trust#get-the-word-out",
+                },
+                {
+                    "name": "As people receive texts",
+                    "link": "main.establish_trust#as-people-receive-texts",
+                },
+            ],
+        },
+        {
+            "name": "Write for action",
+            "link": "main.write_for_action",
+        },
+        {
+            "name": "Multiple languages",
+            "link": "main.multiple_languages",
+        },
+        {
+            "name": "Benchmark performance",
+            "link": "main.benchmark_performance",
+        },
+    ]

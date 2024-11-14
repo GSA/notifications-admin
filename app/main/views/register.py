@@ -1,7 +1,7 @@
-import base64
 import json
 import uuid
 from datetime import datetime, timedelta
+from urllib.parse import unquote
 
 from flask import (
     abort,
@@ -161,17 +161,29 @@ def set_up_your_profile():
     debug_msg(f"Enter set_up_your_profile with request.args {request.args}")
     code = request.args.get("code")
     state = request.args.get("state")
+
+    state_key = f"login-state-{unquote(state)}"
+    stored_state = unquote(redis_client.get(state_key).decode("utf8"))
+    if state != stored_state:
+        current_app.logger.error(f"State Error: {state} != {stored_state}")
+        abort(403)
+
     login_gov_error = request.args.get("error")
 
-    if redis_client.get(f"invitedata-{state}") is None:
-        access_token = sign_in._get_access_token(code, state)
+    user_email = redis_client.get(f"user_email-{state}")
+    user_uuid = redis_client.get(f"user_uuid-{state}")
+
+    new_user = user_email is None or user_uuid is None
+
+    if new_user:  # invite path
+        access_token = sign_in._get_access_token(code)
+
         debug_msg("Got the access token for login.gov")
         user_email, user_uuid = sign_in._get_user_email_and_uuid(access_token)
         debug_msg(
             f"Got the user_email {user_email} and user_uuid {user_uuid} from login.gov"
         )
-        invite_data = state.encode("utf8")
-        invite_data = base64.b64decode(invite_data)
+        invite_data = redis_client.get(f"invitedata-{state}")
         invite_data = json.loads(invite_data)
         debug_msg(f"final state {invite_data}")
         invited_user_id = invite_data["invited_user_id"]
@@ -193,10 +205,7 @@ def set_up_your_profile():
 
     form = SetupUserProfileForm()
 
-    if (
-        form.validate_on_submit()
-        and redis_client.get(f"invitedata-{state}") is not None
-    ):
+    if form.validate_on_submit() and not new_user:
         invite_data, user_email, user_uuid, invited_user_email_address = (
             get_invite_data_from_redis(state)
         )
@@ -221,6 +230,7 @@ def set_up_your_profile():
         activate_user(user["id"])
         debug_msg("activated user")
         usr = User.from_id(user["id"])
+
         usr.add_to_service(
             invite_data["service_id"],
             invite_data["permissions"],
