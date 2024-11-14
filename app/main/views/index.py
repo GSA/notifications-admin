@@ -19,14 +19,18 @@ from app.utils.user import user_is_logged_in
 from notifications_utils.url_safe_token import generate_token
 
 
-# Hook to check for guidance routes
+# Hook to check for feature flags
 @main.before_request
-def check_guidance_feature():
-    current_app.logger.warning("best practices 1234")
-    current_app.logger.warning(current_app.config["FEATURE_BEST_PRACTICES_ENABLED"])
+def check_feature_flags():
     if (
         request.path.startswith("/best-practices")
-        and not current_app.config["FEATURE_BEST_PRACTICES_ENABLED"]
+        and not current_app.config.get("FEATURE_BEST_PRACTICES_ENABLED", False)
+    ):
+        abort(404)
+
+    if (
+        request.path.startswith("/about")
+        and not current_app.config.get("FEATURE_ABOUT_PAGE_ENABLED", False)
     ):
         abort(404)
 
@@ -270,7 +274,6 @@ def benchmark_performance():
 
 
 @main.route("/about")
-@user_is_logged_in
 def about_notify():
     return render_template(
         "views/about/about.html",
