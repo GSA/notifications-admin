@@ -15,10 +15,7 @@ from flask_login import current_user
 from app import current_service, job_api_client, notification_api_client
 from app.main import main
 from app.notify_client.api_key_api_client import KEY_TYPE_TEST
-from app.s3_client.s3_csv_client import (
-    delete_report,
-    report_upload,
-)
+from app.s3_client.s3_csv_client import delete_report, report_upload
 from app.utils import (
     DELIVERED_STATUSES,
     FAILURE_STATUSES,
