@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% set page_title = "Why text messaging" %}
+
+{% block per_page_title %}
+{{page_title}}
+{% endblock %}
+
+{% block content_column_content %}
+<!-- {% with title=page_title %}{% include "components/best-practices/nav_breadcrumb.html" %}{% endwith %} -->
+<section class="usa-prose">
+  <h1>{{page_title}}</h1>
+  <!-- <p>Notify.gov is a text messaging service built by and for the government. We help agencies communicate more
+    effectively with the people they serve. With Notify.gov, federal and federally-funded programs can send customized
+    text messages that make it possible to:</p>
+  <ul>
+    <li>Meet people where they are</li>
+    <li>More effectively deliver program outcomes</li>
+    <li>Save administrative costs</li>
+    <li>Implement <a href="https://digital.gov/resources/delivering-digital-first-public-experience/"
+        target="_blank">21st Century IDEA</a> and other directives</li>
+  </ul>
+  <p>Notify.gov is an easy-to-use, web-based platform. It requires no technical expertise or system integration — users
+    can create an account and get started within minutes. We take the security and privacy of messaging data seriously
+    by minimizing data retention and using modern encryption methods.</p>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/fkcy_xbo0Bw?si=UeWmoHOm8hBpLe-q"
+    title="YouTube video player" frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  <h2 class="padding-bottom-2">Product Highlights</h2>
+  {% set product_highlights = [
+  {
+  "svg_src": "#send",
+  "card_heading": "Send customized one-way customized messages",
+  "p_text": "Upload a file with recipient phone numbers and Notify.gov sends customized messages",
+  },
+  {
+  "svg_src": "#translate",
+  "card_heading": "Send in recipients’ preferred language",
+  "p_text": "Notify.gov supports more than 30 character sets to send messages in almost any language",
+  },
+  {
+  "svg_src": "#trending_up",
+  "card_heading": "See how messages perform",
+  "p_text": "Track how many messages you’ve sent and monitor delivery rates",
+  },
+  {
+  "svg_src": "#add",
+  "card_heading": "Create and manage multiple services within a single organization",
+  "p_text": "Set up individual workspaces for different texting services, allowing multiple teams or programs to manage
+  day-to-day texting operations across an organization",
+  },
+  {
+  "svg_src": "#people",
+  "card_heading": "Manage team member and permissions on each service",
+  "p_text": "Administrators can add users and control what they can do in Notify.gov",
+  }
+  ] %}
+  <ul class="usa-icon-list">
+    {% for item in product_highlights %}
+    <li class="usa-icon-list__item">
+      <div class="usa-icon-list__content">
+        <div class="usa-icon-list__icon display-flex flex-align-start">
+          <svg aria-hidden="true" focusable="false" role="img" class="about-icon-list">
+            <use xlink:href="{{ asset_url('img/sprite.svg') }}{{ item.svg_src }}"></use>
+          </svg>
+          <b>{{item.card_heading}}</b>
+        </div>
+        <p class="indented-paragraph">{{item.p_text}}</p>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  <p><a href="/join-notify">See if Notify is right for you</a></p>
+  <p>Notify.gov is a product of the <a href="#" target="_blank">Public Benefits Studio</a>, a product accelerator inside
+    the federal government. </p> -->
+  <h2>Reach people using a common method</h2>
+  <p>
+    Confusing or <a
+      href="https://kffhealthnews.org/news/tougher-returned-mail-policies-add-to-medicaid-enrollment-drop/"
+      target="_blank">unreceived notifications</a> are one of the largest barriers to people getting and keeping
+    benefits. The typical ways the government communicates with people often fall short. Low income households are more
+    likely to experience housing instability, which means paper mail, already slow, can easily be missed.
+  </p>
+
+  <p>
+    <a href="https://www.pewresearch.org/internet/fact-sheet/mobile/?tabItem=64e32376-5a21-4b1d-8f8b-5f92406db984"
+      target="_blank">Pew Research shows that nearly all adults in the US have a cell phone.</a> Reliance on smartphones
+    for online access is especially common among Americans with lower household incomes and those with lower levels of
+    formal education. Of those earning less than $30,000 a year, 28% say their mobile phone is the sole method to
+    digitally connect.
+  </p>
+  <p>
+    This means that for many people who rely on government services, cell phones may be the most reliable place to meet
+    people where they already are.
+  </p>
+  <h2>Improve customer experience</h2>
+  <p>
+    Text messages can deliver concise information and drive an audience to take action quickly. Timely reminders sent
+    via text message have been proven to decrease re-enrollment churn and save money for administering agencies.
+  </p>
+  <p>
+    Texting not only helps programs reach people using a nearly-universal communication method, it is a cost effective
+    way to do so. With Notify.gov <a href="#" target="_blank">you can get started for free</a>, allowing you to try out
+    texting to complement your existing communications and outreach strategies.
+  </p>
+  <h2>What texting is best for</h2>
+  Agencies, like you, are already using Notify.gov to text about the following programs.
+  {% set card_contents = [
+  {
+  "svg_src": "calendar",
+  "card_heading": "Reminders",
+  "p_text": "In a text bubble // Your Quality Control food phone interview is on ((date)) at ((time)). Failure to
+  attend may lead
+  to closure of your benefits. Call 1-800-222-3333 with questions.",
+  "link": "/best-practices/clear-goals"
+  },
+  {
+  "svg_src": "reminder",
+  "card_heading": "Alerts to take action",
+  "p_text": " In a text bubble // Your household's Medicaid coverage is expiring. To keep getting Medicaid, you must
+  complete your renewal by ((date)). You can renew online at dhs.state.gov…",
+  "link": "/best-practices/rules-and-regulations"
+  },
+  {
+  "svg_src": "checklist",
+  "card_heading": "Important status updates",
+  "p_text": "In a text bubble // Your passport has been issued at the Los Angeles Passport Agency. Please come to the
+  desk
+  between
+  1:30pm and 2:30pm today to pick up your passport…",
+  "link": "/best-practices/establish-trust"
+  },
+  ] %}
+  {% for item in card_contents %}
+  <div class="radius-lg border-2px">
+    <p>{{item.card_heading}}</p>
+    <p>{{item.p_text}}</p>
+    <svg aria-hidden="true" focusable="false" role="img" class="about-icon-list">
+      <use xlink:href="{{ asset_url('images/' ~ item.svg_src ~ '.svg') }}"></use>
+    </svg>
+  </div>
+  {% endfor %}
+
+
+
+</section>
+{% endblock %}

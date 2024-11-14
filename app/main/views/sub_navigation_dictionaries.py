@@ -101,3 +101,12 @@ def best_practices_nav():
             "link": "main.benchmark_performance",
         },
     ]
+
+
+def about_notify_nav():
+    return [
+        {
+            "name": "Why text messaging",
+            "link": "main.why_text_messaging",
+        },
+    ]
