@@ -46,34 +46,38 @@
   </p>
   {% set card_contents = [
   {
-  "svg_src": "calendar",
+  "image_src": asset_url('images/calendar.png'),
   "card_heading": "Reminders",
   "p_text": "In a text bubble // Your Quality Control food phone interview is on ((date)) at ((time)). Failure to
-  attend may lead
-  to closure of your benefits. Call 1-800-222-3333 with questions.",
+  attend may lead to closure of your benefits. Call 1-800-222-3333 with questions.",
+  "alt_text": "reminder text example"
   },
   {
-  "svg_src": "reminder",
+  "image_src": asset_url('images/reminder.png'),
   "card_heading": "Alerts to take action",
-  "p_text": " In a text bubble // Your household's Medicaid coverage is expiring. To keep getting Medicaid, you must
+  "p_text": "In a text bubble // Your household's Medicaid coverage is expiring. To keep getting Medicaid, you must
   complete your renewal by ((date)). You can renew online at dhs.state.gov…",
+  "alt_text": "alerts text example"
   },
   {
-  "svg_src": "checklist",
+  "image_src": asset_url('images/checklist.png'),
   "card_heading": "Important status updates",
   "p_text": "In a text bubble // Your passport has been issued at the Los Angeles Passport Agency. Please come to the
-  desk
-  between
-  1:30pm and 2:30pm today to pick up your passport…",
+  desk between 1:30pm and 2:30pm today to pick up your passport…",
+  "alt_text": "status update text example"
   },
   ] %}
   {% for item in card_contents %}
-  <div class="radius-lg border-2px">
-    <p>{{item.card_heading}}</p>
-    <p>{{item.p_text}}</p>
-    <svg aria-hidden="true" focusable="false" role="img" class="about-icon-list">
-      <use xlink:href="{{asset_url('images/' ~ item.svg_src ~ '.svg')}}"></use>
-    </svg>
+  <div class="radius-lg border-2px maxw-tablet">
+    <div class="grid-row grid-gap-4 padding-4 padding-y-3 flex-align-center">
+      <div class="grid-col flex-3">
+        <p><b>{{item.card_heading}}</b></p>
+        <p>{{item.p_text}}</p>
+      </div>
+      {% if item.image_src %}
+      <img src="{{item.image_src}}" alt="{{ item.alt_text }}" class="height-15" />
+      {% endif %}
+    </div>
   </div>
   {% endfor %}
 
