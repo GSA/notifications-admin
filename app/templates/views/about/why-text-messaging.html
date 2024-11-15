@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% set page_title = "Why text messaging" %}
 
 {% block per_page_title %}
@@ -7,7 +6,9 @@
 {% endblock %}
 
 {% block content_column_content %}
-<!-- {% with title=page_title %}{% include "components/best-practices/nav_breadcrumb.html" %}{% endwith %} -->
+<!-- {% with title=page_title, parent_title="About", url="main.why_text_messaging" %}{% include
+"components/best-practices/nav_breadcrumb.html" %}{% endwith %} -->
+
 <section class="usa-prose">
   <h1>{{page_title}}</h1>
   <h2>Reach people using a common method</h2>
@@ -46,21 +47,21 @@
   </p>
   {% set card_contents = [
   {
-  "image_src": asset_url('images/calendar.png'),
+  "image_src": asset_url('images/calendar.svg'),
   "card_heading": "Reminders",
   "p_text": "In a text bubble // Your Quality Control food phone interview is on ((date)) at ((time)). Failure to
   attend may lead to closure of your benefits. Call 1-800-222-3333 with questions.",
   "alt_text": "reminder text example"
   },
   {
-  "image_src": asset_url('images/reminder.png'),
+  "image_src": asset_url('images/alert.svg'),
   "card_heading": "Alerts to take action",
   "p_text": "In a text bubble // Your household's Medicaid coverage is expiring. To keep getting Medicaid, you must
   complete your renewal by ((date)). You can renew online at dhs.state.gov…",
   "alt_text": "alerts text example"
   },
   {
-  "image_src": asset_url('images/checklist.png'),
+  "image_src": asset_url('images/alarm.svg'),
   "card_heading": "Important status updates",
   "p_text": "In a text bubble // Your passport has been issued at the Los Angeles Passport Agency. Please come to the
   desk between 1:30pm and 2:30pm today to pick up your passport…",
@@ -80,8 +81,5 @@
     </div>
   </div>
   {% endfor %}
-
-
-
 </section>
 {% endblock %}
