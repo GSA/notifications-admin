@@ -18,6 +18,7 @@ from app.main.views.sub_navigation_dictionaries import (
 from app.utils.user import user_is_logged_in
 from notifications_utils.url_safe_token import generate_token
 
+
 # Hook to check for feature flags
 @main.before_request
 def check_feature_flags():
