@@ -18,13 +18,18 @@ from app.main.views.sub_navigation_dictionaries import (
 from app.utils.user import user_is_logged_in
 from notifications_utils.url_safe_token import generate_token
 
-
 # Hook to check for feature flags
 @main.before_request
-def check_guidance_feature():
+def check_feature_flags():
     if (
-        request.path.startswith("/guides/best-practices")
-        and not current_app.config["FEATURE_BEST_PRACTICES_ENABLED"]
+        request.path.startswith("/best-practices")
+        and not current_app.config.get("FEATURE_BEST_PRACTICES_ENABLED", False)
+    ):
+        abort(404)
+
+    if (
+        request.path.startswith("/about")
+        and not current_app.config.get("FEATURE_ABOUT_PAGE_ENABLED", False)
     ):
         abort(404)
 
