@@ -23,7 +23,7 @@ from notifications_utils.url_safe_token import generate_token
 @main.before_request
 def check_feature_flags():
     if (
-        request.path.startswith("/best-practices")
+        request.path.startswith("/guides/best-practices")
         and not current_app.config.get("FEATURE_BEST_PRACTICES_ENABLED", False)
     ):
         abort(404)
