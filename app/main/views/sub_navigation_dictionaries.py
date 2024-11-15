@@ -28,6 +28,10 @@ def using_notify_nav():
             "link": "main.get_started",
         },
         {
+            "name": "Guides",
+            "link": "main.best_practices",
+        },
+        {
             "name": "Trial mode",
             "link": "main.trial_mode_new",
         },

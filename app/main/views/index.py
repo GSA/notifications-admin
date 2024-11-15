@@ -21,16 +21,10 @@ from notifications_utils.url_safe_token import generate_token
 
 # Hook to check for feature flags
 @main.before_request
-def check_feature_flags():
+def check_guidance_feature():
     if (
-        request.path.startswith("/best-practices")
-        and not current_app.config.get("FEATURE_BEST_PRACTICES_ENABLED", False)
-    ):
-        abort(404)
-
-    if (
-        request.path.startswith("/about")
-        and not current_app.config.get("FEATURE_ABOUT_PAGE_ENABLED", False)
+        request.path.startswith("/guides/best-practices")
+        and not current_app.config["FEATURE_BEST_PRACTICES_ENABLED"]
     ):
         abort(404)
 
@@ -40,6 +34,8 @@ def index():
     if current_user and current_user.is_authenticated:
         return redirect(url_for("main.choose_account"))
 
+    ttl = 24 * 60 * 60
+
     # make and store the state
     state = generate_token(
         str(request.remote_addr),
@@ -47,12 +43,12 @@ def index():
         current_app.config["DANGEROUS_SALT"],
     )
     state_key = f"login-state-{unquote(state)}"
-    redis_client.set(state_key, state)
+    redis_client.set(state_key, state, ex=ttl)
 
     # make and store the nonce
     nonce = secrets.token_urlsafe()
     nonce_key = f"login-nonce-{unquote(nonce)}"
-    redis_client.set(nonce_key, nonce)
+    redis_client.set(nonce_key, nonce, ex=ttl)
 
     url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
     if url is not None:
@@ -210,7 +206,7 @@ def trial_mode_new():
     )
 
 
-@main.route("/best-practices")
+@main.route("/guides/best-practices")
 @user_is_logged_in
 def best_practices():
     return render_template(
@@ -219,7 +215,7 @@ def best_practices():
     )
 
 
-@main.route("/best-practices/clear-goals")
+@main.route("/guides/best-practices/clear-goals")
 @user_is_logged_in
 def clear_goals():
     return render_template(
@@ -228,7 +224,7 @@ def clear_goals():
     )
 
 
-@main.route("/best-practices/rules-and-regulations")
+@main.route("/guides/best-practices/rules-and-regulations")
 @user_is_logged_in
 def rules_and_regulations():
     return render_template(
@@ -237,7 +233,7 @@ def rules_and_regulations():
     )
 
 
-@main.route("/best-practices/establish-trust")
+@main.route("/guides/best-practices/establish-trust")
 @user_is_logged_in
 def establish_trust():
     return render_template(
@@ -246,7 +242,7 @@ def establish_trust():
     )
 
 
-@main.route("/best-practices/write-for-action")
+@main.route("/guides/best-practices/write-for-action")
 @user_is_logged_in
 def write_for_action():
     return render_template(
@@ -255,7 +251,7 @@ def write_for_action():
     )
 
 
-@main.route("/best-practices/multiple-languages")
+@main.route("/guides/best-practices/multiple-languages")
 @user_is_logged_in
 def multiple_languages():
     return render_template(
@@ -264,7 +260,7 @@ def multiple_languages():
     )
 
 
-@main.route("/best-practices/benchmark-performance")
+@main.route("/guides/best-practices/benchmark-performance")
 @user_is_logged_in
 def benchmark_performance():
     return render_template(
@@ -273,15 +269,7 @@ def benchmark_performance():
     )
 
 
-@main.route("/about")
-def about_notify():
-    return render_template(
-        "views/about/about.html",
-        navigation_links=about_notify_nav(),
-    )
-
-
-@main.route("/using-notify/guidance")
+@main.route("/guides/using-notify/guidance")
 @user_is_logged_in
 def guidance_index():
     return render_template(
@@ -292,6 +280,13 @@ def guidance_index():
         ],
     )
 
+
+@main.route("/about")
+def about_notify():
+    return render_template(
+        "views/about/about.html",
+        navigation_links=about_notify_nav(),
+    )
 
 @main.route("/using-notify/guidance/create-and-send-messages")
 @user_is_logged_in
