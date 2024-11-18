@@ -61,6 +61,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "conversation_reply",
             "conversation_reply_with_template",
             "conversation_updates",
+            "contact",
             "copy_template",
             "count_content_length",
             "create_and_send_messages",

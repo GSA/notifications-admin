@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% set page_title = "Contact" %}
+
+{% block per_page_title %}
+{{page_title}}
+{% endblock %}
+
+{% block content_column_content %}
+<!-- {% with title=page_title %}{% include "components/best-practices/nav_breadcrumb.html" %}{% endwith %} -->
+<section class="usa-prose">
+  <h1>{{page_title}}</h1>
+  <h2>Notify is designed to be easy to use.</h2>
+  <ul>
+    <li>For information on personalization and data preparation, see <a href="/using-notify/guidance">Using Notify</a>.
+    </li>
+    <li>For help interpreting delivery reports, see <a href="/using-notify/delivery-status">Delivery Status</a>.</li>
+    <li>For details on pricing and what counts as a message part, see <a href="/using-notify/pricing">Tracking
+        Messages</a>.
+    </li>
+  </ul>
+  <p>If you have technical issues or questions, we are available at <a
+      href="mailto:notify-support@gsa.gov">notify-support@gsa.gov</a>.</p>
+  <p>You can expect a response within one business day.</p>
+  <div class="usa-summary-box maxw-tablet __web-inspector-hide-shortcut__" role="region"
+    aria-labelledby="summary-box-contact-us">
+    <div class="usa-summary-box__body">
+      <div class="usa-summary-box__text">
+        <p> For partnership inquiries see, <u>Join Notify</u> or contact us at <br><a
+            href="mailto:tts-notify@gsa.gov">tts-notify@gsa.gov</a>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
