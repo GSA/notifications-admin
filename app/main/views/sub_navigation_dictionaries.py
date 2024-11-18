@@ -125,6 +125,10 @@ def about_notify_nav():
                             "name": "Improve customer experience",
                             "link": "main.why_text_messaging#improve-customer-experience",
                         },
+                        {
+                            "name": "What texting is best for",
+                            "link": "main.why_text_messaging#what-texting-is-best-for",
+                        },
                     ],
                 },
             ],
