@@ -91,6 +91,10 @@ class Config(object):
         getenv("FEATURE_BEST_PRACTICES_ENABLED", "false") == "true"
     )
 
+    FEATURE_ABOUT_PAGE_ENABLED = (
+        getenv("FEATURE_ABOUT_PAGE_ENABLED", "false") == "true"
+    )
+
 
 def _s3_credentials_from_env(bucket_prefix):
     return {

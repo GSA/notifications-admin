@@ -10,6 +10,7 @@ from app.formatters import apply_html_class, convert_markdown_template
 from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
 from app.main.views.sub_navigation_dictionaries import (
+    about_notify_nav,
     best_practices_nav,
     features_nav,
     using_notify_nav,
@@ -18,12 +19,18 @@ from app.utils.user import user_is_logged_in
 from notifications_utils.url_safe_token import generate_token
 
 
-# Hook to check for guidance routes
+# Hook to check for feature flags
 @main.before_request
-def check_guidance_feature():
+def check_feature_flags():
     if (
         request.path.startswith("/guides/best-practices")
-        and not current_app.config["FEATURE_BEST_PRACTICES_ENABLED"]
+        and not current_app.config.get("FEATURE_BEST_PRACTICES_ENABLED", False)
+    ):
+        abort(404)
+
+    if (
+        request.path.startswith("/about")
+        and not current_app.config.get("FEATURE_ABOUT_PAGE_ENABLED", False)
     ):
         abort(404)
 
@@ -277,6 +284,14 @@ def guidance_index():
         feature_best_practices_enabled=current_app.config[
             "FEATURE_BEST_PRACTICES_ENABLED"
         ],
+    )
+
+
+@main.route("/about")
+def about_notify():
+    return render_template(
+        "views/about/about.html",
+        navigation_links=about_notify_nav(),
     )
 
 
