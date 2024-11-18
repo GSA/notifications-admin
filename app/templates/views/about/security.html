@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% set page_title = "Security" %}
+
+{% block per_page_title %}
+{{page_title}}
+{% endblock %}
+
+{% block content_column_content %}
+<!-- {% with title=page_title %}{% include "components/best-practices/nav_breadcrumb.html" %}{% endwith %} -->
+<section class="usa-prose">
+  <h1>{{page_title}}</h1>
+  <p class="font-sans-lg text-base">Notify.gov is built for the needs of government agencies with fundamental system
+    security processes in place to:
+  </p>
+  <ul>
+    <li>protect user data</li>
+    <li>keep systems secure</li>
+    <li>manage risks around information</li>
+  </ul>
+  <p>
+    Notify.gov operates under a full three-year <a href="https://digital.gov/resources/an-introduction-to-ato/"
+      target="_blank">Authority-to-Operate (ATO)</a>. This federal security authorization process leverages security
+    controls provided by National Institute of Standards and Technology (NIST).
+  </p>
+
+  <p>
+    Our infrastructure runs on <a href="https://www.cloud.gov/" target="_blank">cloud.gov</a> and utilizes several
+    services through Amazon Web
+    Services (AWS), including <a href="https://aws.amazon.com/sns/" target="_blank"> AWS SNS </a> for sending SMS
+    messages.
+  </p>
+  <p>For more information about the Notify.gov infrastructure, contact us at <a
+      href="mailto:notify-support@gsa.gov">notify-support@gsa.gov</a>.</p>
+  <h2>Data</h2>
+  <p>
+    On Notify.gov, data is encrypted both in transit and at rest. To send a message, agencies upload a spreadsheet of
+    phone numbers and other necessary data from their existing data management system.
+  </p>
+  <p>
+    Notify.gov is not a system of record, so it does not have a System of Records Notice (SORN). Agencies are
+    responsible for managing their data outside of Notify.gov.
+  </p>
+  <h3>Data retention</h3>
+  <p>
+    Any data uploads that have recipient data are held for seven calendar days; personally identifiable information
+    (PII) is never stored in Notify’s database.
+  </p>
+  <h2>Multi-Factor Authentication</h2>
+  <p>
+    Notify.gov uses <a href="https://login.gov/what-is-login/" target="_blank">Login.gov</a> for enhanced security.
+    Login.gov is an extra layer of security created by the government that uses multi-factor authentication and stronger
+    passwords to protect your account.
+  </p>
+  <p>
+    To access Notify.gov, users will use a Login.gov account associated with their agency (.gov) email with one of the
+    <a href="https://login.gov/help/get-started/authentication-methods/" target="_blank">multi-factor authentication
+      methods</a> offered through Login.gov.
+  </p>
+</section>
+{% endblock %}
