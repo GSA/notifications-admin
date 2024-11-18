@@ -897,3 +897,22 @@ li.linked-card:hover svg,
 .usa-sidenav__item a {
    display: block;
 }
+
+.about-icon-list {
+   display: flex;
+   width: 24px;
+   height: 24px;
+   padding: 2px 1px;
+   justify-content: center;
+   align-items: center;
+   margin-right: 4px;
+}
+
+.usa-icon-list__content{
+   padding-left: 0;
+}
+
+.indented-paragraph {
+   margin-left: calc(24px + 4px);
+   margin-top: 4px;
+}

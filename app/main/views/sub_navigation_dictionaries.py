@@ -28,6 +28,10 @@ def using_notify_nav():
             "link": "main.get_started",
         },
         {
+            "name": "Guides",
+            "link": "main.best_practices",
+        },
+        {
             "name": "Trial mode",
             "link": "main.trial_mode_new",
         },
@@ -106,7 +110,13 @@ def best_practices_nav():
 def about_notify_nav():
     return [
         {
-            "name": "Why text messaging",
-            "link": "main.why_text_messaging",
+            "name": "About notify",
+            "link": "main.about_notify",
+            "sub_navigation_items": [
+                {
+                    "name": "Why text messaging",
+                    "link": "main.why_text_messaging",
+                },
+            ],
         },
     ]
