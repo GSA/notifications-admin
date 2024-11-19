@@ -56,7 +56,7 @@ secondary_navigation.is_selected('settings')},
           <button type="button" class="usa-menu-btn">Menu</button>
           {% endif %}
         </div>
-        {% if not current_user.is_authenticated and FEATURE_ABOUT_PAGE_ENABLED %}
+        {% if not current_user.is_authenticated and FEATURE_ABOUT_PAGE_ENABLED and request.path == '/about'%}
         <div class="usa-nav__login">
           <a class="usa-button usa-button login-button login-button--primary margin-right-2"
             href="{{ initial_signin_url }}">Sign

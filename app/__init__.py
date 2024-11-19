@@ -168,17 +168,12 @@ def create_app(application):
 
     @application.context_processor
     def inject_feature_flags():
-        feature_best_practices_enabled = application.config[
-            "FEATURE_BEST_PRACTICES_ENABLED"
-        ]
-        return dict(FEATURE_BEST_PRACTICES_ENABLED=feature_best_practices_enabled)
-
-    @application.context_processor
-    def inject_feature_flags():
-        feature_best_practices_enabled = application.config[
-            "FEATURE_ABOUT_PAGE_ENABLED"
-        ]
-        return dict(FEATURE_ABOUT_PAGE_ENABLED=feature_best_practices_enabled)
+        feature_best_practices_enabled = application.config.get("FEATURE_BEST_PRACTICES_ENABLED", False)
+        feature_about_page_enabled = application.config.get("FEATURE_ABOUT_PAGE_ENABLED", False)
+        return dict(
+          FEATURE_BEST_PRACTICES_ENABLED=feature_best_practices_enabled,
+         FEATURE_ABOUT_PAGE_ENABLED=feature_about_page_enabled,
+        )
 
     @application.context_processor
     def inject_initial_signin_url():
