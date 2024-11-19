@@ -67,22 +67,18 @@
   <p class="font-body-xs">*We plan to offer plans with additional messages soon; please contact us if you need more
     messages so that we can understand your use case!</p>
 
-  <h2>How to get started</h2>
+  <h2 class="padding-bottom-2">How to get started</h2>
   <div class="usa-summary-box maxw-tablet __web-inspector-hide-shortcut__" role="region"
     aria-labelledby="summary-box-contact-us">
     <div class="usa-summary-box__body">
       <div class="usa-summary-box__text">
-        <p> For partnership inquiries see, <u>Join Notify</u> or contact us at <br><a
-            href="mailto:tts-notify@gsa.gov">tts-notify@gsa.gov</a>.</p>
+        <p>Interested in trying Notify.gov before signing an agreement? We can provide qualifying partners with access
+          to Trial Mode to review Notify.gov features before deciding. In Trial Mode, you can test sending messages,
+          explore the personalization and customization features, and review sample delivery reports.</p>
       </div>
     </div>
   </div>
-  <p>If your organization is interested in using Notify.gov, please submit</p> [this form/the info below].
-  <p>
-    Interested in trying Notify.gov before signing an agreement? We can provide qualifying partners with access to Trial
-    Mode to review Notify.gov features before deciding. In Trial Mode, you can test sending messages, explore the
-    personalization and customization features, and review sample delivery reports.
-  </p>
+
   <h4>Tell us about your program</h4>
   <p class="padding-bottom-3">
     Let’s determine if Notify.gov is a good fit for your organization. To <b>get started</b>, we’ll ask you for
@@ -130,14 +126,14 @@
   {
   "heading": "What if I need more than 250,000 messages?",
   "p_text": "Plans that include additional messages for a fee will be available soon. We want to design these plans
-  based on our partners’ needs, so please contact us if you hope to be able to send more messages, we’d like to talk
-  with you.",
-  "position": "b-a1",
+  based on our partners’ needs, so please <a href='mailto:tts-notify@gsa.gov'>contact us</a> if you hope to be able to
+  send more messages. We’d like to talk with you.",
+  "position": "b-a1"
   },
   {
   "heading": "What phone numbers can my agency send to?",
   "p_text": "Right now, Notify.gov supports sending messages to North American numbers (+1). If you’d like to send to
-  international numbers, we want to hear from you.",
+  international numbers, we want to <u>hear from you</u>.",
   "position": "b-a2",
   },
   {
@@ -150,24 +146,26 @@
   {
   "heading": "Can we use API integrations with Notify?",
   "p_text": "While public API integrations are not yet available, we are working on enabling these. If you're looking
-  for this feature we want to hear from you.",
+  for this feature <a href='/about/contact'>we want to hear from you</a>.",
   "position": "b-a4",
   },
   {
   "heading": "My IT team has questions about how Notify.gov is built, where can I direct them to more information?",
-  "p_text": "To understand how Notify.gov works, see our Security page for the basics. If your IT team needs more
+  "p_text": "To understand how Notify.gov works, see our <u>Security page</u> for the basics. If your IT team needs more
   information we’re happy to share a larger security package upon request.",
   "position": "b-a5",
   },
   {
   "heading": "How does Notify.gov support our records retention policy?",
-  "p_text": "We are not a System of Record. For more see our Security page.",
+  "p_text": "We are not a System of Record. For more see our <u>Security page</u>.",
   "position": "b-a6",
   },
   {
   "heading": "My OGC is asking about consent, where can I get more information for them?",
   "p_text": "Text message notifications are governed by the Telephone Consumer Protection Act. Different levels of
-  government have different consent requirements. Download and share our overview of the TCPA with your legal counsel as
+  government have different consent requirements. Download and share our <a
+    href='https://github.com/GSA/notifications-admin/files/15100120/TCPA.Overview_Notify.gov.pdf'>overview of the
+    TCPA</a> with your legal counsel as
   a starting point.",
   "position": "b-a7",
   },
@@ -204,7 +202,7 @@
     </h4>
     <div id="{{item.position}}" class="usa-accordion__content usa-prose">
       <p>
-        {{item.p_text}}
+        {{ item.p_text | safe }}
       </p>
     </div>
     {% endfor %}
