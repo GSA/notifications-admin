@@ -43,18 +43,29 @@ secondary_navigation.is_selected('settings')},
 <header class="usa-header usa-header--extended">
   <div class="usa-nav-container">
     <div class="usa-navbar">
-      <div class="usa-logo display-flex flex-align-center flex-justify" id="-logo">
-        <div class="logo-img display-flex">
-          <a href="/">
-            <span class="usa-sr-only">Notify.gov logo</span>
-            <img src="{{ (asset_path | default('/static')) + 'images/notify-logo.svg' }}" alt="Notify.gov logo"
-              class="usa-flag-logo margin-right-1">
+      <div class="display-flex flex-align-center flex-justify">
+        <div class="usa-logo display-flex flex-align-center flex-justify" id="-logo">
+          <div class="logo-img display-flex">
+            <a href="/">
+              <span class="usa-sr-only">Notify.gov logo</span>
+              <img src="{{ (asset_path | default('/static')) + 'images/notify-logo.svg' }}" alt="Notify.gov logo"
+                class="usa-flag-logo margin-right-1">
+            </a>
+          </div>
+          {% if navigation %}
+          <button type="button" class="usa-menu-btn">Menu</button>
+          {% endif %}
+        </div>
+        {% if not current_user.is_authenticated and FEATURE_ABOUT_PAGE_ENABLED %}
+        <div class="usa-nav__login">
+          <a class="usa-button usa-button login-button login-button--primary margin-right-2"
+            href="{{ initial_signin_url }}">Sign
+            in with <img src="{{ asset_url('images/logo-login.svg') }}" alt="Login.gov logo">
           </a>
         </div>
-        {% if navigation %}
-        <button type="button" class="usa-menu-btn">Menu</button>
         {% endif %}
       </div>
+
     </div>
     <nav aria-label="Primary navigation" class="usa-nav">
       <div class="usa-nav__inner">
@@ -89,6 +100,7 @@ secondary_navigation.is_selected('settings')},
             {% endif %}
           </ul>
         </div>
+
       </div>
     </nav>
   </div>
