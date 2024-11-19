@@ -171,8 +171,8 @@ def create_app(application):
         feature_best_practices_enabled = application.config.get("FEATURE_BEST_PRACTICES_ENABLED", False)
         feature_about_page_enabled = application.config.get("FEATURE_ABOUT_PAGE_ENABLED", False)
         return dict(
-          FEATURE_BEST_PRACTICES_ENABLED=feature_best_practices_enabled,
-         FEATURE_ABOUT_PAGE_ENABLED=feature_about_page_enabled,
+            FEATURE_BEST_PRACTICES_ENABLED=feature_best_practices_enabled,
+            FEATURE_ABOUT_PAGE_ENABLED=feature_about_page_enabled,
         )
 
     @application.context_processor
