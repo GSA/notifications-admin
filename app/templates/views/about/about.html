@@ -56,9 +56,9 @@
   <ul class="usa-icon-list">
     {% for item in product_highlights %}
     <li class="usa-icon-list__item">
-      <div class="usa-icon-list__content">
+      <div class="usa-icon-list__content padding-left-0">
         <div class="usa-icon-list__icon display-flex flex-align-start">
-          <svg aria-hidden="true" focusable="false" role="img" class="about-icon-list">
+          <svg aria-hidden="true" focusable="false" role="img" class="icon-list">
             <use xlink:href="{{ asset_url('img/sprite.svg') }}{{ item.svg_src }}"></use>
           </svg>
           <b>{{item.card_heading}}</b>

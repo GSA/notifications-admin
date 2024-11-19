@@ -113,4 +113,8 @@ def about_notify_nav():
             "name": "About notify",
             "link": "main.about_notify",
         },
+        {
+            "name": "Join Notify",
+            "link": "main.join_notify",
+        },
     ]
