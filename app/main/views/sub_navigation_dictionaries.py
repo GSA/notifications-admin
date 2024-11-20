@@ -112,9 +112,11 @@ def about_notify_nav():
         {
             "name": "About notify",
             "link": "main.about_notify",
-        },
-        {
-            "name": "Security",
-            "link": "main.about_security",
+            "sub_navigation_items": [
+                {
+                    "name": "Security",
+                    "link": "main.about_security",
+                },
+            ],
         },
     ]
