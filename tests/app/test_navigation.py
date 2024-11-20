@@ -218,6 +218,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "suspend_service",
             "template_history",
             "template_usage",
+            "test_feature_flags",
             "tour_step",
             "trial_mode",
             "trial_mode_new",
