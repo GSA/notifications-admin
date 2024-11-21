@@ -1,8 +1,10 @@
 import os
+import secrets
 import pathlib
+
 from functools import partial
 from time import monotonic
-from urllib.parse import urlparse, urlunparse
+from urllib.parse import urlparse, urlunparse, unquote
 
 import jinja2
 from flask import (
@@ -114,6 +116,7 @@ from notifications_utils.formatters import (
     get_lines_with_normalised_whitespace,
 )
 from notifications_utils.recipients import format_phone_number_human_readable
+from notifications_utils.url_safe_token import generate_token
 
 login_manager = LoginManager()
 csrf = CSRFProtect()
@@ -177,7 +180,28 @@ def create_app(application):
 
     @application.context_processor
     def inject_initial_signin_url():
+        ttl = 24 * 60 * 60
+
+        # make and store the state
+        state = generate_token(
+        str(request.remote_addr),
+        current_app.config["SECRET_KEY"],
+        current_app.config["DANGEROUS_SALT"],
+        )
+
+        state_key = f"login-state-{unquote(state)}"
+        redis_client.set(state_key, state, ex=ttl)
+
+         # make and store the nonce
+        nonce = secrets.token_urlsafe()
+        nonce_key = f"login-nonce-{unquote(nonce)}"
+        redis_client.set(nonce_key, nonce, ex=ttl)
+
         url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
+        if url is not None:
+            url = url.replace("NONCE", nonce)
+            url = url.replace("STATE", state)
+
         return {'initial_signin_url': url}
 
     notify_environment = os.environ["NOTIFY_ENVIRONMENT"]

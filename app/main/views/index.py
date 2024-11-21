@@ -40,31 +40,10 @@ def index():
     if current_user and current_user.is_authenticated:
         return redirect(url_for("main.choose_account"))
 
-    ttl = 24 * 60 * 60
-
-    # make and store the state
-    state = generate_token(
-        str(request.remote_addr),
-        current_app.config["SECRET_KEY"],
-        current_app.config["DANGEROUS_SALT"],
-    )
-    state_key = f"login-state-{unquote(state)}"
-    redis_client.set(state_key, state, ex=ttl)
-
-    # make and store the nonce
-    nonce = secrets.token_urlsafe()
-    nonce_key = f"login-nonce-{unquote(nonce)}"
-    redis_client.set(nonce_key, nonce, ex=ttl)
-
-    url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
-    if url is not None:
-        url = url.replace("NONCE", nonce)
-        url = url.replace("STATE", state)
     return render_template(
         "views/signedout.html",
         sms_rate=CURRENT_SMS_RATE,
-        counts=status_api_client.get_count_of_live_services_and_organizations(),
-        initial_signin_url=url,
+        counts=status_api_client.get_count_of_live_services_and_organizations()
     )
 
 
