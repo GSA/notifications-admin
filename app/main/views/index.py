@@ -2,7 +2,15 @@ import os
 import secrets
 from urllib.parse import unquote
 
-from flask import abort, current_app, redirect, render_template, request, url_for
+from flask import (
+    abort,
+    current_app,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 from flask_login import current_user
 
 from app import redis_client, status_api_client
@@ -33,6 +41,17 @@ def check_feature_flags():
         and not current_app.config.get("FEATURE_ABOUT_PAGE_ENABLED", False)
     ):
         abort(404)
+
+
+@main.route("/test/feature-flags")
+def test_feature_flags():
+    return jsonify(
+        {
+            "FEATURE_BEST_PRACTICES_ENABLED": current_app.config[
+                "FEATURE_BEST_PRACTICES_ENABLED"
+            ]
+        }
+    )
 
 
 @main.route("/")
@@ -275,6 +294,7 @@ def benchmark_performance():
     )
 
 
+@main.route("/using-notify/guidance")
 @main.route("/guides/using-notify/guidance")
 @user_is_logged_in
 def guidance_index():
@@ -299,6 +319,14 @@ def about_notify():
 def about_security():
     return render_template(
         "views/about/security.html",
+        navigation_links=about_notify_nav(),
+    )
+
+
+@main.route("/about/why-text-messaging")
+def why_text_messaging():
+    return render_template(
+        "views/about/why-text-messaging.html",
         navigation_links=about_notify_nav(),
     )
 
