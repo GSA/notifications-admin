@@ -2,7 +2,15 @@ import os
 import secrets
 from urllib.parse import unquote
 
-from flask import abort, current_app, redirect, render_template, request, url_for
+from flask import (
+    abort,
+    current_app,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 from flask_login import current_user
 
 from app import redis_client, status_api_client
@@ -10,6 +18,7 @@ from app.formatters import apply_html_class, convert_markdown_template
 from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
 from app.main.views.sub_navigation_dictionaries import (
+    about_notify_nav,
     best_practices_nav,
     features_nav,
     using_notify_nav,
@@ -18,16 +27,31 @@ from app.utils.user import user_is_logged_in
 from notifications_utils.url_safe_token import generate_token
 
 
-# Hook to check for guidance routes
+# Hook to check for feature flags
 @main.before_request
-def check_guidance_feature():
-    current_app.logger.warning("best practices 1234")
-    current_app.logger.warning(current_app.config["FEATURE_BEST_PRACTICES_ENABLED"])
+def check_feature_flags():
     if (
-        request.path.startswith("/best-practices")
-        and not current_app.config["FEATURE_BEST_PRACTICES_ENABLED"]
+        request.path.startswith("/guides/best-practices")
+        and not current_app.config.get("FEATURE_BEST_PRACTICES_ENABLED", False)
     ):
         abort(404)
+
+    if (
+        request.path.startswith("/about")
+        and not current_app.config.get("FEATURE_ABOUT_PAGE_ENABLED", False)
+    ):
+        abort(404)
+
+
+@main.route("/test/feature-flags")
+def test_feature_flags():
+    return jsonify(
+        {
+            "FEATURE_BEST_PRACTICES_ENABLED": current_app.config[
+                "FEATURE_BEST_PRACTICES_ENABLED"
+            ]
+        }
+    )
 
 
 @main.route("/")
@@ -207,7 +231,7 @@ def trial_mode_new():
     )
 
 
-@main.route("/best-practices")
+@main.route("/guides/best-practices")
 @user_is_logged_in
 def best_practices():
     return render_template(
@@ -216,7 +240,7 @@ def best_practices():
     )
 
 
-@main.route("/best-practices/clear-goals")
+@main.route("/guides/best-practices/clear-goals")
 @user_is_logged_in
 def clear_goals():
     return render_template(
@@ -225,7 +249,7 @@ def clear_goals():
     )
 
 
-@main.route("/best-practices/rules-and-regulations")
+@main.route("/guides/best-practices/rules-and-regulations")
 @user_is_logged_in
 def rules_and_regulations():
     return render_template(
@@ -234,7 +258,7 @@ def rules_and_regulations():
     )
 
 
-@main.route("/best-practices/establish-trust")
+@main.route("/guides/best-practices/establish-trust")
 @user_is_logged_in
 def establish_trust():
     return render_template(
@@ -243,7 +267,7 @@ def establish_trust():
     )
 
 
-@main.route("/best-practices/write-for-action")
+@main.route("/guides/best-practices/write-for-action")
 @user_is_logged_in
 def write_for_action():
     return render_template(
@@ -252,7 +276,7 @@ def write_for_action():
     )
 
 
-@main.route("/best-practices/multiple-languages")
+@main.route("/guides/best-practices/multiple-languages")
 @user_is_logged_in
 def multiple_languages():
     return render_template(
@@ -261,7 +285,7 @@ def multiple_languages():
     )
 
 
-@main.route("/best-practices/benchmark-performance")
+@main.route("/guides/best-practices/benchmark-performance")
 @user_is_logged_in
 def benchmark_performance():
     return render_template(
@@ -270,7 +294,7 @@ def benchmark_performance():
     )
 
 
-@main.route("/using-notify/guidance")
+@main.route("/guides/using-notify/guidance")
 @user_is_logged_in
 def guidance_index():
     return render_template(
@@ -279,6 +303,14 @@ def guidance_index():
         feature_best_practices_enabled=current_app.config[
             "FEATURE_BEST_PRACTICES_ENABLED"
         ],
+    )
+
+
+@main.route("/about")
+def about_notify():
+    return render_template(
+        "views/about/about.html",
+        navigation_links=about_notify_nav(),
     )
 
 

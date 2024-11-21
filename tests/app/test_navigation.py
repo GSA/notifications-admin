@@ -17,6 +17,7 @@ EXCLUDED_ENDPOINTS = tuple(
     map(
         Navigation.get_endpoint_with_blueprint,
         {
+            "about_notify",
             "accept_invite",
             "accept_org_invite",
             "accessibility_statement",
@@ -217,6 +218,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "suspend_service",
             "template_history",
             "template_usage",
+            "test_feature_flags",
             "tour_step",
             "trial_mode",
             "trial_mode_new",

@@ -28,6 +28,10 @@ def using_notify_nav():
             "link": "main.get_started",
         },
         {
+            "name": "Guides",
+            "link": "main.best_practices",
+        },
+        {
             "name": "Trial mode",
             "link": "main.trial_mode_new",
         },
@@ -99,5 +103,14 @@ def best_practices_nav():
         {
             "name": "Benchmark performance",
             "link": "main.benchmark_performance",
+        },
+    ]
+
+
+def about_notify_nav():
+    return [
+        {
+            "name": "About notify",
+            "link": "main.about_notify",
         },
     ]
