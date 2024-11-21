@@ -103,6 +103,7 @@ def generate_notifications_csv(**kwargs):
             "Carrier Response",
             "Status",
             "Time",
+            "Carrier",
         ]
         for header in original_column_headers:
             if header.lower() != "phone number":
@@ -118,6 +119,7 @@ def generate_notifications_csv(**kwargs):
             "Carrier Response",
             "Status",
             "Time",
+            "Carrier",
         ]
 
     yield ",".join(fieldnames) + "\n"
@@ -140,6 +142,7 @@ def generate_notifications_csv(**kwargs):
                     notification["provider_response"],
                     notification["status"],
                     preferred_tz_created_at,
+                    notification["carrier"],
                 ]
                 for header in original_column_headers:
                     if header.lower() != "phone number":
@@ -158,6 +161,7 @@ def generate_notifications_csv(**kwargs):
                     notification["provider_response"],
                     notification["status"],
                     preferred_tz_created_at,
+                    notification["carrier"],
                 ]
             yield Spreadsheet.from_rows([map(str, values)]).as_csv_data
 

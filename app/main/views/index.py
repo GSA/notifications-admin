@@ -30,15 +30,13 @@ from notifications_utils.url_safe_token import generate_token
 # Hook to check for feature flags
 @main.before_request
 def check_feature_flags():
-    if (
-        request.path.startswith("/guides/best-practices")
-        and not current_app.config.get("FEATURE_BEST_PRACTICES_ENABLED", False)
+    if request.path.startswith("/guides/best-practices") and not current_app.config.get(
+        "FEATURE_BEST_PRACTICES_ENABLED", False
     ):
         abort(404)
 
-    if (
-        request.path.startswith("/about")
-        and not current_app.config.get("FEATURE_ABOUT_PAGE_ENABLED", False)
+    if request.path.startswith("/about") and not current_app.config.get(
+        "FEATURE_ABOUT_PAGE_ENABLED", False
     ):
         abort(404)
 
