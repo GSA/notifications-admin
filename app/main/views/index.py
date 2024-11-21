@@ -294,6 +294,7 @@ def benchmark_performance():
     )
 
 
+@main.route("/using-notify/guidance")
 @main.route("/guides/using-notify/guidance")
 @user_is_logged_in
 def guidance_index():
@@ -310,6 +311,14 @@ def guidance_index():
 def about_notify():
     return render_template(
         "views/about/about.html",
+        navigation_links=about_notify_nav(),
+    )
+
+
+@main.route("/about/why-text-messaging")
+def why_text_messaging():
+    return render_template(
+        "views/about/why-text-messaging.html",
         navigation_links=about_notify_nav(),
     )
 

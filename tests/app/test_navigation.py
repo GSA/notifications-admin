@@ -258,6 +258,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "view_template_version",
             "view_template_versions",
             "who_its_for",
+            "why_text_messaging",
             "write_for_action",
         },
     )
