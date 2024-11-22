@@ -1253,7 +1253,7 @@ def test_send_one_off_has_correct_page_title(
         step_index=0,
         _follow_redirects=True,
     )
-    assert page.h1.text.strip() == "Send ‘Two week reminder’"
+    assert page.h1.text.strip() == "Select recipients"
 
     assert len(page.select(".banner-tour")) == 0
 

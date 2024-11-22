@@ -265,6 +265,7 @@ td.table-empty-message {
    margin-bottom: units(2);
    .usa-form-group {
       @include u-width("mobile-lg");
+      margin-top: units(2);
    }
    input#search {
       width: 100%;
@@ -396,6 +397,11 @@ td.table-empty-message {
          background-repeat: no-repeat;
          background-image: url(../img/material-icons/description.svg);
       }
+   }
+   .get-started {
+      border: 1px solid color("gray-90");
+      padding: units(2);
+      margin-bottom: units(4);
    }
 }
 

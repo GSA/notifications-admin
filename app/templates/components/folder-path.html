@@ -4,7 +4,7 @@
   template_type,
   current_user,
   link_current_item=False,
-  root_element='h1'
+  root_element='h2'
 ) %}
   <{{ root_element }} class="font-body-lg folder-heading margin-bottom-0"{% if root_element == 'h1' %} id="page-header"{% endif %}>
     {% for folder in folders %}

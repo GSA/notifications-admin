@@ -6,7 +6,7 @@
       <a href="{{ url_for('.organization_dashboard', org_id=current_service.organization_id) }}" class="usa-link navigation-organization-link">{{ current_service.organization_name }}</a>
     {% endif %}
   {% endif %}
-  <div class="font-body-2xl text-bold">
+  <div class="font-body-lg text-bold">
     {{ current_service.name }}
     {% if not current_service.active %}
       <span class="navigation-service-name navigation-service-type--suspended">Suspended</span>
