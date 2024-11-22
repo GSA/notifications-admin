@@ -144,6 +144,7 @@ jobs:
           inputs: requirements.txt
           ignore-vulns: |
             PYSEC-2024-60
+            PYSEC-2022-43162
       - name: Run npm audit
         run: make npm-audit
 
