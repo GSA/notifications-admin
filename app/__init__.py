@@ -204,7 +204,6 @@ def create_app(application):
 
         return {'initial_signin_url': url}
 
-
     notify_environment = os.environ["NOTIFY_ENVIRONMENT"]
 
     application.config.from_object(configs[notify_environment])
