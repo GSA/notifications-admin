@@ -1,11 +1,7 @@
-import os
-import secrets
-from urllib.parse import unquote
-
 from flask import abort, current_app, redirect, render_template, request, url_for
 from flask_login import current_user
 
-from app import redis_client, status_api_client
+from app import status_api_client
 from app.formatters import apply_html_class, convert_markdown_template
 from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
@@ -16,8 +12,6 @@ from app.main.views.sub_navigation_dictionaries import (
     using_notify_nav,
 )
 from app.utils.user import user_is_logged_in
-from notifications_utils.url_safe_token import generate_token
-
 
 # Hook to check for feature flags
 @main.before_request
