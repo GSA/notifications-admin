@@ -184,15 +184,15 @@ def create_app(application):
 
         # make and store the state
         state = generate_token(
-        str(request.remote_addr),
-        current_app.config["SECRET_KEY"],
-        current_app.config["DANGEROUS_SALT"],
+            str(request.remote_addr),
+            current_app.config["SECRET_KEY"],
+            current_app.config["DANGEROUS_SALT"],
         )
 
         state_key = f"login-state-{unquote(state)}"
         redis_client.set(state_key, state, ex=ttl)
 
-         # make and store the nonce
+        # make and store the nonce
         nonce = secrets.token_urlsafe()
         nonce_key = f"login-nonce-{unquote(nonce)}"
         redis_client.set(nonce_key, nonce, ex=ttl)
@@ -203,6 +203,7 @@ def create_app(application):
             url = url.replace("STATE", state)
 
         return {'initial_signin_url': url}
+
 
     notify_environment = os.environ["NOTIFY_ENVIRONMENT"]
 
