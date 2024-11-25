@@ -1,10 +1,9 @@
 import os
-import secrets
 import pathlib
-
+import secrets
 from functools import partial
 from time import monotonic
-from urllib.parse import urlparse, urlunparse, unquote
+from urllib.parse import unquote, urlparse, urlunparse
 
 import jinja2
 from flask import (
