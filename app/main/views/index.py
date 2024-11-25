@@ -13,6 +13,7 @@ from app.main.views.sub_navigation_dictionaries import (
 )
 from app.utils.user import user_is_logged_in
 
+
 # Hook to check for feature flags
 @main.before_request
 def check_feature_flags():
