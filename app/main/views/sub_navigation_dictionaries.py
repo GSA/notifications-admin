@@ -131,6 +131,10 @@ def about_notify_nav():
                         },
                     ],
                 },
+                {
+                    "name": "Security",
+                    "link": "main.about_security",
+                },
             ],
         },
     ]

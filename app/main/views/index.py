@@ -313,6 +313,14 @@ def about_notify():
     )
 
 
+@main.route("/about/security")
+def about_security():
+    return render_template(
+        "views/about/security.html",
+        navigation_links=about_notify_nav(),
+    )
+
+
 @main.route("/about/why-text-messaging")
 def why_text_messaging():
     return render_template(
