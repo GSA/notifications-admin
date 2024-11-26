@@ -30,7 +30,7 @@ from notifications_utils.url_safe_token import generate_token
 # Hook to check for feature flags
 @main.before_request
 def check_feature_flags():
-    if request.path.startswith("/guides/best-practices") and not current_app.config.get(
+    if request.path.startswith("/guides") and not current_app.config.get(
         "FEATURE_BEST_PRACTICES_ENABLED", False
     ):
         abort(404)
@@ -233,61 +233,61 @@ def trial_mode_new():
 @user_is_logged_in
 def best_practices():
     return render_template(
-        "views/best-practices/best-practices.html",
+        "views/guides/best-practices.html",
         navigation_links=best_practices_nav(),
     )
 
 
-@main.route("/guides/best-practices/clear-goals")
+@main.route("/guides/clear-goals")
 @user_is_logged_in
 def clear_goals():
     return render_template(
-        "views/best-practices/clear-goals.html",
+        "views/guides/clear-goals.html",
         navigation_links=best_practices_nav(),
     )
 
 
-@main.route("/guides/best-practices/rules-and-regulations")
+@main.route("/guides/rules-and-regulations")
 @user_is_logged_in
 def rules_and_regulations():
     return render_template(
-        "views/best-practices/rules-and-regulations.html",
+        "views/guides/rules-and-regulations.html",
         navigation_links=best_practices_nav(),
     )
 
 
-@main.route("/guides/best-practices/establish-trust")
+@main.route("/guides/establish-trust")
 @user_is_logged_in
 def establish_trust():
     return render_template(
-        "views/best-practices/establish-trust.html",
+        "views/guides/establish-trust.html",
         navigation_links=best_practices_nav(),
     )
 
 
-@main.route("/guides/best-practices/write-for-action")
+@main.route("/guides/write-for-action")
 @user_is_logged_in
 def write_for_action():
     return render_template(
-        "views/best-practices/write-for-action.html",
+        "views/guides/write-for-action.html",
         navigation_links=best_practices_nav(),
     )
 
 
-@main.route("/guides/best-practices/multiple-languages")
+@main.route("/guides/multiple-languages")
 @user_is_logged_in
 def multiple_languages():
     return render_template(
-        "views/best-practices/multiple-languages.html",
+        "views/guides/multiple-languages.html",
         navigation_links=best_practices_nav(),
     )
 
 
-@main.route("/guides/best-practices/benchmark-performance")
+@main.route("/guides/benchmark-performance")
 @user_is_logged_in
 def benchmark_performance():
     return render_template(
-        "views/best-practices/benchmark-performance.html",
+        "views/guides/benchmark-performance.html",
         navigation_links=best_practices_nav(),
     )
 

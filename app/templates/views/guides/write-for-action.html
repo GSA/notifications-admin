@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "components/best-practices/circle_number.html" import circle_number %}
+{% from "components/guides/circle_number.html" import circle_number %}
 
 {% set page_title = "Write texts that provoke action" %}
 
@@ -8,7 +8,8 @@
 {% endblock %}
 
 {% block content_column_content %}
-{% with title=page_title %}{% include "components/best-practices/nav_breadcrumb.html" %}{% endwith %}
+{% with title=page_title, parent_menu_title="Guides" %}{% include "components/guides/nav_breadcrumb.html" %}{% endwith
+%}
 <section class="usa-prose">
   <h1>{{page_title}}</h1>
   <p class="font-sans-lg text-base"> Help your audience know what to do with the information you send.</p>
@@ -40,11 +41,11 @@
     <li>Use a neutral, direct, and professional tone. This works better than a friendly or overly casual tone.</li>
   </ul>
   <h2>Build conditions for action</h2>
-  <ul class="usa-card-group flex-1 flex-wrap padding-top-2 best-practices-flex-container">
+  <ul class="usa-card-group flex-1 flex-wrap padding-top-2 guides-flex-container">
     <li class="flex-1 width-full height-full padding-bottom-2">
       <div class="usa-card__container border-0">
         <p>For example, getting a person to update their mailing address:</p>
-        <ol class="best-practices-list">
+        <ol class="guides-list">
           <li>Clearly state the information and the response you want the recipient to take.</li>
           <li>Point directly to where the action can be completed, not to more information.</li>
           <li>Make sure the action can be completed via mobile phone, like calling a person or going to a
@@ -78,7 +79,8 @@
     </li>
   </ul>
   <h2>What provoking action looks like</h2>
-  <p class="padding-bottom-2"><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10002044/" target="_blank">Evidence
+  <p class="padding-bottom-2"><a class="use-link usa-link--external"
+      href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10002044/" target="_blank">Evidence
       shows</a> that employing
     behavioral science is an effective way to increase the
     likelihood of a recipient
@@ -100,7 +102,7 @@
   internet services <b>that belong to you</b>.",
   },
   ] %}
-  {% with card_contents=card_contents, text_align='left' %}{% include "components/best-practices/cards.html" %}{%
+  {% with card_contents=card_contents, text_align='left' %}{% include "components/guides/cards.html" %}{%
   endwith %}
 </section>
 {% endblock %}
