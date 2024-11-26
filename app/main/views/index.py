@@ -1,9 +1,12 @@
-from flask import abort, current_app, jsonify, redirect, render_template, request, url_for
-
-import os
-import secrets
-from urllib.parse import unquote
-
+from flask import (
+    abort,
+    current_app,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 from flask_login import current_user
 
 from app import status_api_client
