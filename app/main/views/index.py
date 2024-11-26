@@ -293,7 +293,6 @@ def benchmark_performance():
 
 
 @main.route("/using-notify/guidance")
-@main.route("/guides/using-notify/guidance")
 @user_is_logged_in
 def guidance_index():
     return render_template(
