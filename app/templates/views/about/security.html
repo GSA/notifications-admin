@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "components/nav_breadcrumb.html" as breadcrumbs %}
 
 {% set page_title = "Security" %}
 
@@ -7,7 +8,8 @@
 {% endblock %}
 
 {% block content_column_content %}
-<!-- {% with title=page_title %}{% include "components/nav_breadcrumb.html" %}{% endwith %} -->
+{{ breadcrumbs.breadcrumb(page_title, "About", "main.about_notify") }}
+
 <section class="usa-prose">
   <h1>{{page_title}}</h1>
   <p class="font-sans-lg text-base">Notify.gov is built for the needs of government agencies with fundamental system

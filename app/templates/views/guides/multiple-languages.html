@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "components/nav_breadcrumb.html" as breadcrumbs %}
 
 {% set page_title = "Text in multiple languages" %}
 
@@ -7,8 +8,8 @@
 {% endblock %}
 
 {% block content_column_content %}
-{% with title=page_title, parent_menu_title="Guides" %}{% include "components/nav_breadcrumb.html" %}{% endwith
-%}
+{{ breadcrumbs.breadcrumb(page_title, "Guides", "main.best_practices") }}
+
 <section class="usa-prose">
   <h1>{{page_title}}</h1>
   <p class="font-sans-lg text-base"> What to know as you plan translated texts.</p>

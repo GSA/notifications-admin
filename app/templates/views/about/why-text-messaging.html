@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% import "components/nav_breadcrumb.html" as breadcrumbs %}
+
 {% set page_title = "Why text messaging" %}
 
 {% block per_page_title %}
@@ -6,8 +8,7 @@
 {% endblock %}
 
 {% block content_column_content %}
-<!-- {% with title=page_title, parent_title="About", url="main.why_text_messaging" %}{% include
-"components/nav_breadcrumb.html" %}{% endwith %} -->
+{{ breadcrumbs.breadcrumb(page_title, "About", "main.about_notify") }}
 
 <section class="usa-prose">
   <h1>{{page_title}}</h1>
