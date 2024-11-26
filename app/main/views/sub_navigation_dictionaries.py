@@ -110,7 +110,31 @@ def best_practices_nav():
 def about_notify_nav():
     return [
         {
-            "name": "About notify",
+            "name": "About Notify",
             "link": "main.about_notify",
+            "sub_navigation_items": [
+                {
+                    "name": "Why text messaging",
+                    "link": "main.why_text_messaging",
+                    "sub_sub_navigation_items": [
+                        {
+                            "name": "Reach people using a common method",
+                            "link": "main.why_text_messaging#reach-people-using-a-common-method",
+                        },
+                        {
+                            "name": "Improve customer experience",
+                            "link": "main.why_text_messaging#improve-customer-experience",
+                        },
+                        {
+                            "name": "What texting is best for",
+                            "link": "main.why_text_messaging#what-texting-is-best-for",
+                        },
+                    ],
+                },
+                {
+                    "name": "Security",
+                    "link": "main.about_security",
+                },
+            ],
         },
     ]

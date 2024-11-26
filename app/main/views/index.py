@@ -1,4 +1,9 @@
-from flask import abort, current_app, redirect, render_template, request, url_for
+from flask import abort, current_app, jsonify, redirect, render_template, request, url_for
+
+import os
+import secrets
+from urllib.parse import unquote
+
 from flask_login import current_user
 
 from app import status_api_client
@@ -17,17 +22,26 @@ from app.utils.user import user_is_logged_in
 # Hook to check for feature flags
 @main.before_request
 def check_feature_flags():
-    if (
-        request.path.startswith("/guides/best-practices")
-        and not current_app.config.get("FEATURE_BEST_PRACTICES_ENABLED", False)
+    if request.path.startswith("/guides/best-practices") and not current_app.config.get(
+        "FEATURE_BEST_PRACTICES_ENABLED", False
     ):
         abort(404)
 
-    if (
-        request.path.startswith("/about")
-        and not current_app.config.get("FEATURE_ABOUT_PAGE_ENABLED", False)
+    if request.path.startswith("/about") and not current_app.config.get(
+        "FEATURE_ABOUT_PAGE_ENABLED", False
     ):
         abort(404)
+
+
+@main.route("/test/feature-flags")
+def test_feature_flags():
+    return jsonify(
+        {
+            "FEATURE_BEST_PRACTICES_ENABLED": current_app.config[
+                "FEATURE_BEST_PRACTICES_ENABLED"
+            ]
+        }
+    )
 
 
 @main.route("/")
@@ -249,6 +263,7 @@ def benchmark_performance():
     )
 
 
+@main.route("/using-notify/guidance")
 @main.route("/guides/using-notify/guidance")
 @user_is_logged_in
 def guidance_index():
@@ -265,6 +280,22 @@ def guidance_index():
 def about_notify():
     return render_template(
         "views/about/about.html",
+        navigation_links=about_notify_nav(),
+    )
+
+
+@main.route("/about/security")
+def about_security():
+    return render_template(
+        "views/about/security.html",
+        navigation_links=about_notify_nav(),
+    )
+
+
+@main.route("/about/why-text-messaging")
+def why_text_messaging():
+    return render_template(
+        "views/about/why-text-messaging.html",
         navigation_links=about_notify_nav(),
     )
 
