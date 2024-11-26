@@ -1,6 +1,5 @@
-from flask import (
-    current_app,
-)
+from flask import current_app
+
 
 def features_nav():
     return [
