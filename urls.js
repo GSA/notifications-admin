@@ -8,7 +8,7 @@ const sublinks = [
   { label: 'Trial Mode', path: '/using-notify/trial-mode' },
   { label: 'Pricing', path: '/using-notify/pricing' },
   { label: 'Delivery Status', path: '/using-notify/delivery-status' },
-  { label: 'Guidance', path: '/using-notify/guidance' },
+  { label: 'Guidance', path: '/guides/using-notify/guidance' },
   { label: 'Features', path: '/features' },
   { label: 'Roadmap', path: '/features/roadmap' },
   { label: 'Security', path: '/features/security' },
