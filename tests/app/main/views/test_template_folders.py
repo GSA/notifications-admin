@@ -347,11 +347,11 @@ def test_should_show_templates_folder_page(
     )
 
     assert normalize_spaces(page.select_one("title").text) == expected_title_tag
-    assert normalize_spaces(page.select_one("h1").text) == expected_page_title
+    assert normalize_spaces(page.select_one("h2").text) == expected_page_title
 
-    assert len(page.select("h1 a")) == len(expected_parent_link_args)
+    assert len(page.select("h2 a")) == len(expected_parent_link_args)
 
-    for index, parent_link in enumerate(page.select("h1 a")):
+    for index, parent_link in enumerate(page.select("h2 a")):
         assert parent_link["href"] == url_for(
             "main.choose_template",
             service_id=SERVICE_ONE_ID,

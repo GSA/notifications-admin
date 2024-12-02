@@ -2712,7 +2712,7 @@ def test_preview_notification_shows_preview(
         template_id=fake_uuid,
         _expected_status=200,
     )
-    assert page.h1.text.strip() == "Preview"
+    assert page.h1.text.strip() == "Preview for sending"
     assert (page.find_all("a", {"class": "usa-back-link"})[0]["href"]) == url_for(
         "main.check_notification",
         service_id=service_one["id"],
