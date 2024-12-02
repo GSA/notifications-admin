@@ -11,7 +11,7 @@ E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 def test_best_practices_side_menu(authenticated_page):
     page = authenticated_page
 
-    page.goto(f"{E2E_TEST_URI}/best-practices")
+    page.goto(f"{E2E_TEST_URI}/guides/best-practices")
 
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)
@@ -58,7 +58,7 @@ def test_best_practices_side_menu(authenticated_page):
 def test_breadcrumbs_best_practices(authenticated_page):
     page = authenticated_page
 
-    page.goto(f"{E2E_TEST_URI}/best-practices")
+    page.goto(f"{E2E_TEST_URI}/guides/best-practices")
 
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)

@@ -30,15 +30,13 @@ from notifications_utils.url_safe_token import generate_token
 # Hook to check for feature flags
 @main.before_request
 def check_feature_flags():
-    if (
-        request.path.startswith("/guides/best-practices")
-        and not current_app.config.get("FEATURE_BEST_PRACTICES_ENABLED", False)
+    if request.path.startswith("/guides/best-practices") and not current_app.config.get(
+        "FEATURE_BEST_PRACTICES_ENABLED", False
     ):
         abort(404)
 
-    if (
-        request.path.startswith("/about")
-        and not current_app.config.get("FEATURE_ABOUT_PAGE_ENABLED", False)
+    if request.path.startswith("/about") and not current_app.config.get(
+        "FEATURE_ABOUT_PAGE_ENABLED", False
     ):
         abort(404)
 
@@ -294,7 +292,6 @@ def benchmark_performance():
     )
 
 
-@main.route("/using-notify/guidance")
 @main.route("/guides/using-notify/guidance")
 @user_is_logged_in
 def guidance_index():
@@ -311,6 +308,14 @@ def guidance_index():
 def about_notify():
     return render_template(
         "views/about/about.html",
+        navigation_links=about_notify_nav(),
+    )
+
+
+@main.route("/about/security")
+def about_security():
+    return render_template(
+        "views/about/security.html",
         navigation_links=about_notify_nav(),
     )
 
