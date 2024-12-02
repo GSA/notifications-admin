@@ -456,7 +456,7 @@ class Service(JSONModel, SortByNameMixin):
         if folder_id is None:
             return {
                 "id": None,
-                "name": "Select or create a template",
+                "name": "Templates",
                 "parent_id": None,
             }
         return self._get_by_id(self.all_template_folders, folder_id)
