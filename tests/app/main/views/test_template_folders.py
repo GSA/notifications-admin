@@ -41,8 +41,8 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
 
 @pytest.mark.parametrize(
     (
-        "expected_title_tag",
         "expected_page_title",
+        "expected_title_tag",
         "expected_parent_link_args",
         "extra_args",
         "expected_nav_links",
@@ -54,7 +54,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
     [
         (
             "Select or create a template – service one – Notify.gov",
-            "Templates",
+            "Select or create a template",
             [],
             {},
             ["Email", "Text message"],
@@ -93,7 +93,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
         ),
         (
             "Select or create a template – service one – Notify.gov",
-            "Templates",
+            "Select or create a template",
             [],
             {"template_type": "all"},
             ["Email", "Text message"],
@@ -132,7 +132,7 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
         ),
         (
             "Select or create a template – service one – Notify.gov",
-            "Templates",
+            "Select or create a template",
             [],
             {"template_type": "sms"},
             ["All", "Email"],
@@ -346,8 +346,9 @@ def test_should_show_templates_folder_page(
         **extra_args,
     )
 
-    assert normalize_spaces(page.select_one("title").text) == expected_title_tag
-    assert normalize_spaces(page.select_one("h2").text) == expected_page_title
+
+    assert normalize_spaces(page.select_one("title").text) == expected_page_title
+    assert normalize_spaces(page.select_one("h1").text) == expected_title_tag
 
     assert len(page.select("h2 a")) == len(expected_parent_link_args)
 
