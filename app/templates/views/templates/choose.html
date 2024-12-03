@@ -1,4 +1,4 @@
-{% from "components/folder-path.html" import folder_path, page_title_folder_path %}
+{% from "components/folder-path.html" import folder_path %}
 {% from "components/pill.html" import pill %}
 {% from "components/live-search.html" import live_search %}
 {% from "components/form.html" import form_wrapper %}
@@ -11,7 +11,7 @@
 {% set page_title = 'Select or create a template' %}
 
 {% block service_page_title %}
-  {{ page_title_folder_path(template_folder_path) }}
+  {{page_title}}
 {% endblock %}
 
 {% block maincolumn_content %}
@@ -34,17 +34,18 @@
   {% else %}
 
     <div class="grid-row flex-column">
-      <h1 class="font-body-2xl line-height-sans-2 margin-bottom-1 margin-top-0">Select or create a template</h1>
+      <h1 class="font-body-2xl line-height-sans-2 margin-bottom-1 margin-top-0">{{page_title}}</h1>
       <div class="{% if current_user.has_permissions('manage_templates') %} grid-col-10 {% else %} grid-col-12 {% endif %}">
         <p class="margin-top-0 margin-bottom-4">
           Every message starts with a template. To send, choose or create a template.
         </p>
-        {{ folder_path(
+        {# you don't need this unless you're trying to add the parent breadcrumb title to the first page of the flow #}
+        <!-- {{ folder_path(
           folders=template_folder_path,
           service_id=current_service.id,
           template_type=template_type,
           current_user=current_user
-        ) }}
+        ) }} -->
       </div>
       {% if current_user.has_permissions('manage_templates') and current_template_folder_id and user_has_template_folder_permission %}
         <div class="grid-col-2">
