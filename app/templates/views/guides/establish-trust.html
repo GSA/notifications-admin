@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% from "components/best-practices/circle_number.html" import circle_number %}
+{% import "components/nav_breadcrumb.html" as breadcrumbs %}
+
+{% from "components/guides/circle_number.html" import circle_number %}
 
 {% set page_title = "Establish trust" %}
 
@@ -8,7 +10,8 @@
 {% endblock %}
 
 {% block content_column_content %}
-{% with title=page_title %}{% include "components/best-practices/nav_breadcrumb.html" %}{% endwith %}
+{{ breadcrumbs.breadcrumb(page_title, "Guides", "main.best_practices") }}
+
 <section class="usa-prose">
   <h1>{{page_title}}</h1>
   <p class="font-sans-lg text-base">Help your audience anticipate and welcome your texts.</p>
@@ -38,7 +41,7 @@
     <li class="flex-1 width-full height-full padding-bottom-2">
       <div class="usa-card__container border-0">
         <p>To reinforce legitimacy, include these key messages in your outreach:</p>
-        <ol class="best-practices-list">
+        <ol class="guides-list">
           <li><b>Introduce yourself</b> – Give people time to get to know your texting communications before you need
             direct action from them</li>
           <li><b>Phone number</b> – Note the sending phone number your texts will come from</li>
@@ -79,7 +82,7 @@
   <ul class="usa-card-group flex-1 flex-wrap padding-top-2">
     <li class="flex-1 width-full height-full padding-bottom-2">
       <div class="usa-card__container border-0">
-        <ol start="7" class="best-practices-list set-two">
+        <ol start="7" class="guides-list set-two">
           <li>Identify yourself in the text message. Use a consistent and familiar <b>program name</b> to precede each
             text you send.</li>
           <li>Personalize with <b>first name</b>. Through A/B testing, Code for America saw an increase in
@@ -98,7 +101,7 @@
           <p class="sms-message-wrapper text-left">
             {{circle_number(7) }}<b>Dept. of Social Services:</b> Hi {{circle_number(8) }}<b>Julie,</b> Your Medicaid
             renewal is closing December 31, 2023. You can renew online at {{circle_number(9) }}<a
-              href="https://www.application.yourstate.gov" target="_blank"
+              class="use-link usa-link--external" href="https://www.application.yourstate.gov" target="_blank"
               rel="application.yourstate.gov">https://www.application.yourstate.gov</a> or {{circle_number(10) }}
             <b>call the number on the back</b> of your Medicaid card.
           </p>
@@ -114,14 +117,14 @@
         <p>If you're sending one-way notifications, phone carriers allow a single auto-response message that will be
           generated if a recipient tries to text a response to your message. Use the auto-response to reaffirm your key
           messages around legitimacy and communicate to recipients that texts are coming from an automated system.</p>
-        <ol class="best-practices-list set-three">
+        <ol class="guides-list set-three">
           <li>Provide <b>a way to contact a human</b> in any auto-response text</li>
           <li>Provide <b>information on how to opt out</b> and opt back in</li>
         </ol>
       </div>
     </li>
     <li class="usa-card flex-1 usa-card--media-right width-full padding-top-3">
-      <div class="usa-card__container border-0 width-full overflow-hidden best-practices">
+      <div class="usa-card__container border-0 width-full overflow-hidden guides">
         <img class="width-full" src="{{ asset_url('images/phone_grey.svg') }}" role="img" alt="Phone" />
         <div class="position-absolute flex text-center padding-5 padding-top-15">
           <p class="sms-message-wrapper text-left">
@@ -167,7 +170,7 @@
   },
   ] %}
 
-  {% with card_contents=card_contents %}{% include "components/best-practices/cards.html" %}{%
+  {% with card_contents=card_contents %}{% include "components/guides/cards.html" %}{%
   endwith %}
   <h3 class="padding-bottom-2">Prepare your team</h3>
   {% set card_contents = [
@@ -187,7 +190,7 @@
   pages or within case management notes.",
   },
   ] %}
-  {% with card_contents=card_contents %}{% include "components/best-practices/cards.html" %}{%
+  {% with card_contents=card_contents %}{% include "components/guides/cards.html" %}{%
   endwith %}
 </section>
 {% endblock %}
