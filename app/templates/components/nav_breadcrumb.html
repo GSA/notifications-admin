@@ -1,8 +1,12 @@
+{% macro breadcrumb(title, parent_menu_title, url) %}
 <nav class="navigation-service usa-breadcrumb padding-top-0">
   <ol class="usa-breadcrumb__list">
     <li class="usa-breadcrumb__list-item">
-      <span class="usa-breadcrumb__label"><a href="{{ url_for('.best_practices') }}"
-          class="usa-link navigation-organization-link">Best Practices</a></span>
+      <span class="usa-breadcrumb__label">
+        <a href="{{ url_for(url) }}" class="usa-link navigation-organization-link">
+          {{ parent_menu_title }}
+        </a>
+      </span>
     </li>
     {% if title %}
     <li class="usa-breadcrumb__list-item">
@@ -11,3 +15,4 @@
     {% endif %}
   </ol>
 </nav>
+{% endmacro %}
