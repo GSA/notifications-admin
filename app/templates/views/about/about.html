@@ -1,13 +1,12 @@
 {% extends "base.html" %}
 
-{% set page_title = "About notify" %}
+{% set page_title = "About Notify" %}
 
 {% block per_page_title %}
 {{page_title}}
 {% endblock %}
 
 {% block content_column_content %}
-<!-- {% with title=page_title %}{% include "components/best-practices/nav_breadcrumb.html" %}{% endwith %} -->
 <section class="usa-prose">
   <h1>{{page_title}}</h1>
   <p>Notify.gov is a text messaging service built by and for the government. We help agencies communicate more
@@ -17,8 +16,9 @@
     <li>Meet people where they are</li>
     <li>More effectively deliver program outcomes</li>
     <li>Save administrative costs</li>
-    <li>Implement <a href="https://digital.gov/resources/delivering-digital-first-public-experience/"
-        target="_blank">21st Century IDEA</a> and other directives</li>
+    <li>Implement <a class="use-link usa-link--external"
+        href="https://digital.gov/resources/delivering-digital-first-public-experience/" target="_blank">21st Century
+        IDEA</a> and other directives</li>
   </ul>
   <p>Notify.gov is an easy-to-use, web-based platform. It requires no technical expertise or system integration — users
     can create an account and get started within minutes. We take the security and privacy of messaging data seriously
@@ -56,9 +56,9 @@
   <ul class="usa-icon-list">
     {% for item in product_highlights %}
     <li class="usa-icon-list__item">
-      <div class="usa-icon-list__content">
+      <div class="usa-icon-list__content padding-left-0">
         <div class="usa-icon-list__icon display-flex flex-align-start">
-          <svg aria-hidden="true" focusable="false" role="img" class="about-icon-list">
+          <svg aria-hidden="true" focusable="false" role="img" class="icon-list">
             <use xlink:href="{{ asset_url('img/sprite.svg') }}{{ item.svg_src }}"></use>
           </svg>
           <b>{{item.card_heading}}</b>
@@ -68,10 +68,8 @@
     </li>
     {% endfor %}
   </ul>
-  <p><a href="/join-notify">See if Notify is right for you</a></p>
-  <p>Notify.gov is a product of the <a href="#" target="_blank">Public Benefits Studio</a>, a product accelerator inside
+  <p><a href="#">See if Notify is right for you</a></p>
+  <p>Notify.gov is a product of the <a href="#">Public Benefits Studio</a>, a product accelerator inside
     the federal government. </p>
-
-
 </section>
 {% endblock %}

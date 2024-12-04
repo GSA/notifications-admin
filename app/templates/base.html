@@ -66,7 +66,20 @@
                               <ul class="usa-sidenav__sublist" role="menu">
                                 {% for sub_item in item.sub_navigation_items %}
                                   <li role="menuitem">
-                                    <a href="{{ url_for(sub_item.link.split('#')[0]) }}#{{ sub_item.link.split('#')[1] }}">{{ sub_item.name }}</a>
+                                    <a href="{{ url_for(sub_item.link.split('#')[0]) }}#{{ sub_item.link.split('#')[1] }}">
+                                      {{ sub_item.name }}
+                                    </a>
+                                    {% if sub_item.sub_sub_navigation_items %}
+                                      <ul class="usa-sidenav__sublist usa-sidenav__sub-sublist" role="menu">
+                                        {% for sub_sub_item in sub_item.sub_sub_navigation_items %}
+                                          <li role="menuitem">
+                                            <a href="{{ url_for(sub_sub_item.link.split('#')[0]) }}#{{ sub_sub_item.link.split('#')[1] }}">
+                                              {{ sub_sub_item.name }}
+                                            </a>
+                                          </li>
+                                        {% endfor %}
+                                      </ul>
+                                    {% endif %}
                                   </li>
                                 {% endfor %}
                               </ul>

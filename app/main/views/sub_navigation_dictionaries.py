@@ -1,3 +1,6 @@
+from flask import current_app
+
+
 def features_nav():
     return [
         {
@@ -22,46 +25,20 @@ def features_nav():
 
 
 def using_notify_nav():
-    return [
-        {
-            "name": "Get started",
-            "link": "main.get_started",
-        },
-        {
-            "name": "Guides",
-            "link": "main.best_practices",
-        },
-        {
-            "name": "Trial mode",
-            "link": "main.trial_mode_new",
-        },
-        {
-            "name": "Tracking usage",
-            "link": "main.pricing",
-        },
-        {
-            "name": "Delivery status",
-            "link": "main.message_status",
-        },
-        {
-            "name": "Guidance",
-            "link": "main.guidance_index",
-            # "sub_navigation_items": [
-            #     {
-            #         "name": "Formatting",
-            #         "link": "main.edit_and_format_messages",
-            #     },
-            #     {
-            #        "name": "Send files by email",
-            #        "link": "main.send_files_by_email",
-            #     },
-            # ]
-            # {
-            #   "name": "API documentation",
-            #   "link": "main.documentation",
-            # },
-        },
+    nav_items = [
+        {"name": "Get started", "link": "main.get_started"},
+        {"name": "Guides", "link": "main.best_practices"},
+        {"name": "Trial mode", "link": "main.trial_mode_new"},
+        {"name": "Tracking usage", "link": "main.pricing"},
+        {"name": "Delivery Status", "link": "main.message_status"},
+        {"name": "Guidance", "link": "main.guidance_index"},
     ]
+    if not current_app.config.get("FEATURE_BEST_PRACTICES_ENABLED"):
+        nav_items = [
+            item for item in nav_items if item["link"] != "main.best_practices"
+        ]
+
+    return nav_items
 
 
 def best_practices_nav():
@@ -110,8 +87,32 @@ def best_practices_nav():
 def about_notify_nav():
     return [
         {
-            "name": "About notify",
+            "name": "About Notify",
             "link": "main.about_notify",
+            "sub_navigation_items": [
+                {
+                    "name": "Why text messaging",
+                    "link": "main.why_text_messaging",
+                    "sub_sub_navigation_items": [
+                        {
+                            "name": "Reach people using a common method",
+                            "link": "main.why_text_messaging#reach-people-using-a-common-method",
+                        },
+                        {
+                            "name": "Improve customer experience",
+                            "link": "main.why_text_messaging#improve-customer-experience",
+                        },
+                        {
+                            "name": "What texting is best for",
+                            "link": "main.why_text_messaging#what-texting-is-best-for",
+                        },
+                    ],
+                },
+                {
+                    "name": "Security",
+                    "link": "main.about_security",
+                },
+            ],
         },
         {
             "name": "Contact",

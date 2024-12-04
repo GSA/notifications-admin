@@ -8,29 +8,29 @@ const sublinks = [
   { label: 'Trial Mode', path: '/using-notify/trial-mode' },
   { label: 'Pricing', path: '/using-notify/pricing' },
   { label: 'Delivery Status', path: '/using-notify/delivery-status' },
-  { label: 'Guidance', path: '/using-notify/guidance' },
+  { label: 'Guidance', path: '/guides/using-notify/guidance' },
   { label: 'Features', path: '/features' },
   { label: 'Roadmap', path: '/features/roadmap' },
   { label: 'Security', path: '/features/security' },
   { label: 'Support', path: '/support' },
   { label: 'Best Practices', path: '/guides/best-practices' },
-  { label: 'Clear Goals', path: '/guides/best-practices/clear-goals' },
+  { label: 'Clear Goals', path: '/guides/clear-goals' },
   {
     label: 'Rules And Regulations',
-    path: '/guides/best-practices/rules-and-regulations',
+    path: '/guides/rules-and-regulations',
   },
-  { label: 'Establish Trust', path: '/guides/best-practices/establish-trust' },
+  { label: 'Establish Trust', path: '/guides/establish-trust' },
   {
     label: 'Write For Action',
-    path: '/guides/best-practices/write-for-action',
+    path: '/guides/write-for-action',
   },
   {
     label: 'Multiple Languages',
-    path: '/guides/best-practices/multiple-languages',
+    path: '/guides/multiple-languages',
   },
   {
     label: 'Benchmark Performance',
-    path: '/guides/best-practices/benchmark-performance',
+    path: '/guides/benchmark-performance',
   },
   // Add more links here as needed
 ];

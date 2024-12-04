@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "components/nav_breadcrumb.html" as breadcrumbs %}
 
 {% set page_title = "Establish clear goals" %}
 
@@ -7,7 +8,8 @@
 {% endblock %}
 
 {% block content_column_content %}
-{% with title=page_title %}{% include "components/best-practices/nav_breadcrumb.html" %}{% endwith %}
+{{ breadcrumbs.breadcrumb(page_title, "Guides", "main.best_practices") }}
+
 <section class="usa-prose">
   <h1>{{page_title}}</h1>
   <p class="font-sans-lg text-base">Start with a singular purpose. Make explicit what you want to achieve.</p>
@@ -160,7 +162,7 @@
   </div>
   <p>
     Review your drafted hypothesis with your team to make sure everyone is aligned on your desired goals. A clear and
-    concise hypothesis can help you decide how to <a href="../best-practices/write-for-action">write text message
+    concise hypothesis can help you decide how to <a href="../guides/write-for-action">write text message
       content
       that provokes action</a>.
   </p>

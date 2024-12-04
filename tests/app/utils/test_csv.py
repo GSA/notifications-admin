@@ -58,6 +58,7 @@ def _get_notifications_csv(
                     "to": recipient,
                     "recipient": recipient,
                     "client_reference": "ref 1234",
+                    "carrier": "AT&T Mobility",
                 }
                 for i in range(rows)
             ],
@@ -88,15 +89,15 @@ def get_notifications_csv_mock(
         (
             None,
             [
-                "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time\n",
-                "8005555555,foo,,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern\r\n",
+                "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time,Carrier\n",
+                "8005555555,foo,,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern,AT&T Mobility\r\n",
             ],
         ),
         (
             "Anne Example",
             [
-                "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time\n",
-                "8005555555,foo,Anne Example,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern\r\n",  # noqa
+                "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time,Carrier\n",
+                "8005555555,foo,Anne Example,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern,AT&T Mobility\r\n",  # noqa
             ],
         ),
     ],
@@ -135,6 +136,7 @@ def test_generate_notifications_csv_without_job(
                 "Carrier Response",
                 "Status",
                 "Time",
+                "Carrier",
             ],
             [
                 "8005555555",
@@ -144,6 +146,7 @@ def test_generate_notifications_csv_without_job(
                 "Did not like it",
                 "Delivered",
                 "1943-04-19 08:00:00 AM US/Eastern",
+                "AT&T Mobility",
             ],
         ),
         (
@@ -159,6 +162,7 @@ def test_generate_notifications_csv_without_job(
                 "Carrier Response",
                 "Status",
                 "Time",
+                "Carrier",
                 "a",
                 "b",
                 "c",
@@ -171,6 +175,7 @@ def test_generate_notifications_csv_without_job(
                 "Did not like it",
                 "Delivered",
                 "1943-04-19 08:00:00 AM US/Eastern",
+                "AT&T Mobility",
                 "🐜",
                 "🐝",
                 "🦀",
@@ -189,6 +194,7 @@ def test_generate_notifications_csv_without_job(
                 "Carrier Response",
                 "Status",
                 "Time",
+                "Carrier",
                 "a",
                 "b",
                 "c",
@@ -201,6 +207,7 @@ def test_generate_notifications_csv_without_job(
                 "Did not like it",
                 "Delivered",
                 "1943-04-19 08:00:00 AM US/Eastern",
+                "AT&T Mobility",
                 "🐜,🐜",
                 "🐝,🐝",
                 "🦀",
