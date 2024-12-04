@@ -269,7 +269,7 @@ def test_invite_goes_in_session(
     ("user", "landing_page_title"),
     [
         (create_active_user_with_permissions(), "Dashboard"),
-        (create_active_caseworking_user(), "Templates"),
+        (create_active_caseworking_user(), "Select or create a template"),
     ],
 )
 def test_accepting_invite_removes_invite_from_session(

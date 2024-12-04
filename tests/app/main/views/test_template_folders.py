@@ -159,8 +159,8 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             None,
         ),
         (
-            "folder_one – Select or create a template – service one – Notify.gov",
-            "Templates folder_one",
+            "Select or create a template – service one – Notify.gov",
+            "Select or create a template",
             [{"template_type": "all"}],
             {"template_folder_id": PARENT_FOLDER_ID},
             ["Email", "Text message"],
@@ -182,8 +182,8 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             None,
         ),
         (
-            "folder_one – Select or create a template – service one – Notify.gov",
-            "Templates folder_one",
+            "Select or create a template – service one – Notify.gov",
+            "Select or create a template",
             [{"template_type": "sms"}],
             {"template_type": "sms", "template_folder_id": PARENT_FOLDER_ID},
             ["All", "Email"],
@@ -199,8 +199,8 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             None,
         ),
         (
-            "folder_one – Select or create a template – service one – Notify.gov",
-            "Templates folder_one",
+            "Select or create a template – service one – Notify.gov",
+            "Select or create a template",
             [{"template_type": "email"}],
             {"template_type": "email", "template_folder_id": PARENT_FOLDER_ID},
             ["All", "Text message"],
@@ -210,8 +210,8 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             "There are no email templates in this folder",
         ),
         (
-            "folder_one_one – folder_one – Select or create a template – service one – Notify.gov",
-            "Templates folder_one folder_one_one",
+            "Select or create a template – service one – Notify.gov",
+            "Select or create a template",
             [
                 {"template_type": "all"},
                 {"template_type": "all", "template_folder_id": PARENT_FOLDER_ID},
@@ -229,8 +229,8 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             None,
         ),
         (
-            "folder_one_one_one – folder_one_one – folder_one – Select or create a template – service one – Notify.gov",
-            "Templates folder_one folder_one_one folder_one_one_one",
+            "Select or create a template – service one – Notify.gov",
+            "Select or create a template",
             [
                 {"template_type": "all"},
                 {"template_type": "all", "template_folder_id": PARENT_FOLDER_ID},
@@ -250,8 +250,8 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             None,
         ),
         (
-            "folder_one_one_one – folder_one_one – folder_one – Select or create a template – service one – Notify.gov",
-            "Templates folder_one folder_one_one folder_one_one_one",
+            "Select or create a template – service one – Notify.gov",
+            "Select or create a template",
             [
                 {"template_type": "email"},
                 {"template_type": "email", "template_folder_id": PARENT_FOLDER_ID},
@@ -268,8 +268,8 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             "There are no email templates in this folder",
         ),
         (
-            "folder_two – Select or create a template – service one – Notify.gov",
-            "Select or create a template folder_two",
+            "Select or create a template – service one – Notify.gov",
+            "Select or create a template",
             [{"template_type": "all"}],
             {"template_folder_id": FOLDER_TWO_ID},
             ["Email", "Text message"],
@@ -279,8 +279,8 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             "This folder is empty",
         ),
         (
-            "folder_two – Select or create a template – service one – Notify.gov",
-            "Select or create a template folder_two",
+            "Select or create a template – service one – Notify.gov",
+            "Select or create a template",
             [{"template_type": "sms"}],
             {"template_folder_id": FOLDER_TWO_ID, "template_type": "sms"},
             ["All", "Email"],
@@ -290,8 +290,8 @@ def _folder(name, folder_id=None, parent=None, users_with_permission=None):
             "This folder is empty",
         ),
         (
-            "folder_two – Select or create a template – service one – Notify.gov",
-            "Select or create a template folder_two",
+            "Select or create a template – service one – Notify.gov",
+            "Select or create a template",
             [{"template_type": "all"}],
             {"template_folder_id": FOLDER_TWO_ID, "template_type": "all"},
             ["Email", "Text message"],
@@ -346,13 +346,13 @@ def test_should_show_templates_folder_page(
         **extra_args,
     )
 
-
     assert normalize_spaces(page.select_one("title").text) == expected_page_title
     assert normalize_spaces(page.select_one("h1").text) == expected_title_tag
 
-    assert len(page.select("h2 a")) == len(expected_parent_link_args)
+    # remove this line if you don't want the breadcrumb on the first page
+    assert len(page.select("nav#breadcrumb-template-folders a")) == len(expected_parent_link_args)
 
-    for index, parent_link in enumerate(page.select("h2 a")):
+    for index, parent_link in enumerate(page.select("nav#breadcrumb-template-folders a")):
         assert parent_link["href"] == url_for(
             "main.choose_template",
             service_id=SERVICE_ONE_ID,
@@ -530,7 +530,7 @@ def test_get_manage_folder_page(
         _test_page_title=False,
     )
     assert normalize_spaces(page.select_one("title").text) == (
-        "folder_two – Select or create a template – service one – Notify.gov"
+        "Select or create a template – service one – Notify.gov"
     )
     assert page.select_one("input[name=name]")["value"] == "folder_two"
     delete_link = page.find("a", string="Delete this folder")
@@ -572,7 +572,7 @@ def test_get_manage_folder_viewing_permissions_for_users(
         _test_page_title=False,
     )
     assert normalize_spaces(page.select_one("title").text) == (
-        "folder_two – Select or create a template – service one – Notify.gov"
+        "Select or create a template – service one – Notify.gov"
     )
     form_labels = page.select("legend.usa-legend")
     assert (
@@ -635,7 +635,7 @@ def test_get_manage_folder_viewing_permissions_for_users_not_visible_when_no_man
         _test_page_title=False,
     )
     assert normalize_spaces(page.select_one("title").text) == (
-        "folder_two – Select or create a template – service one – Notify.gov"
+        "Select or create a template – service one – Notify.gov"
     )
     form_labels = page.select("legend[class=form-label]")
     assert len(form_labels) == 0
@@ -672,7 +672,7 @@ def test_get_manage_folder_viewing_permissions_for_users_not_visible_for_service
         _test_page_title=False,
     )
     assert normalize_spaces(page.select_one("title").text) == (
-        "folder_two – Select or create a template – service one – Notify.gov"
+        "Select or create a template – service one – Notify.gov"
     )
     form_labels = page.select("legend[class=form-label]")
     assert len(form_labels) == 0
@@ -1161,7 +1161,7 @@ def test_should_show_radios_and_buttons_for_move_destination_if_correct_permissi
         FOLDER_TWO_ID,
     ]
     assert [x.text.strip() for x in radio_div.select("label")] == [
-        "Select or create a template",
+        "Templates",
         "folder_one",
         "folder_one_one",
         "folder_one_two",

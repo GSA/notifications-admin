@@ -37,13 +37,15 @@
         <p class="margin-top-0 margin-bottom-4">
           Every message starts with a template. To send, choose or create a template.
         </p>
-        {# you don't need this unless you're trying to add the parent breadcrumb title to the first page of the flow #}
-        <!-- {{ folder_path(
+        {# you don't need folder_path unless you're trying to add the parent breadcrumb title to the first
+        page of the flow, if that's the case, you'll want to delete line 353 within the test_template_folders.py
+        file. assert len(page.select("nav#breadcrumb-template-folders a")) == len(expected_parent_link_args)#}
+        {{ folder_path(
           folders=template_folder_path,
           service_id=current_service.id,
           template_type=template_type,
           current_user=current_user
-        ) }} -->
+        ) }}
       </div>
       {% if current_user.has_permissions('manage_templates') and current_template_folder_id and user_has_template_folder_permission %}
         <div class="grid-col-2">
