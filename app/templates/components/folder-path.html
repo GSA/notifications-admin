@@ -6,7 +6,7 @@
   link_current_item=False,
   root_element='nav'
 ) %}
-  <{{ root_element }} id="breadcrumb-template-folders" class="navigation-service usa-breadcrumb padding-top-0">
+  <{{ root_element }} id="breadcrumb-template-folders" class="navigation-service usa-breadcrumb padding-top-0 padding-bottom-05" aria-label="Template folder path">
     {% for folder in folders %}
       {% if loop.last and not link_current_item %}
         {% if folder.template_type or not folder.id %}
