@@ -282,7 +282,7 @@ def guidance_index():
 def contact():
     return render_template(
         "views/contact.html",
-)
+    )
 
 
 @main.route("/about")
