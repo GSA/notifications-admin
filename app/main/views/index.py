@@ -281,7 +281,7 @@ def guidance_index():
 @main.route("/contact")
 def contact():
     return render_template(
-        "views/about/contact.html",
+        "views/contact.html",
 )
 
 
