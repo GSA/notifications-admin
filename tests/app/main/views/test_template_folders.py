@@ -346,7 +346,6 @@ def test_should_show_templates_folder_page(
         **extra_args,
     )
 
-
     assert normalize_spaces(page.select_one("title").text) == expected_page_title
     assert normalize_spaces(page.select_one("h1").text) == expected_title_tag
 
