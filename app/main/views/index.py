@@ -285,6 +285,7 @@ def about_notify():
         navigation_links=about_notify_nav(),
     )
 
+
 @main.route("/about/security")
 def about_security():
     return render_template(
