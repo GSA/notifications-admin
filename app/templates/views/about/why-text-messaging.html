@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% import "components/nav_breadcrumb.html" as breadcrumbs %}
+
+{% set page_title = "Why text messaging" %}
+
+{% block per_page_title %}
+{{page_title}}
+{% endblock %}
+
+{% block content_column_content %}
+{{ breadcrumbs.breadcrumb(page_title, "About", "main.about_notify") }}
+
+<section class="usa-prose">
+  <h1>{{page_title}}</h1>
+  <h2 id="reach-people-using-a-common-method">Reach people using a common method</h2>
+  <p>
+    Confusing or <a class="use-link usa-link--external"
+      href="https://kffhealthnews.org/news/tougher-returned-mail-policies-add-to-medicaid-enrollment-drop/"
+      target="_blank">unreceived notifications</a> are one of the largest barriers to people getting and keeping
+    benefits. The typical ways the government communicates with people often fall short. Low income households are more
+    likely to experience housing instability, which means paper mail, already slow, can easily be missed.
+  </p>
+
+  <p>
+    <a class="use-link usa-link--external"
+      href="https://www.pewresearch.org/internet/fact-sheet/mobile/?tabItem=64e32376-5a21-4b1d-8f8b-5f92406db984"
+      target="_blank">Pew Research shows that nearly all adults in the US have a cell phone.</a> Reliance on smartphones
+    for online access is especially common among Americans with lower household incomes and those with lower levels of
+    formal education. Of those earning less than $30,000 a year, 28% say their mobile phone is the sole method to
+    digitally connect.
+  </p>
+  <p>
+    This means that for many people who rely on government services, cell phones may be the most reliable place to meet
+    people where they already are.
+  </p>
+  <h2 id="improve-customer-experience">Improve customer experience</h2>
+  <p>
+    Text messages can deliver concise information and drive an audience to take action quickly. Timely reminders sent
+    via text message have been proven to decrease re-enrollment churn and save money for administering agencies.
+  </p>
+  <p>
+    Texting not only helps programs reach people using a nearly-universal communication method, it is a cost effective
+    way to do so. With Notify.gov <a href="#">you can get started for free</a>, allowing you to try out
+    texting to complement your existing communications and outreach strategies.
+  </p>
+  <h2 id="what-texting-is-best-for">What texting is best for</h2>
+  <p>
+    Agencies, like you, are already using Notify.gov to text about the following programs.
+  </p>
+  {% set card_contents = [
+  {
+  "image_src": asset_url('images/calendar.svg'),
+  "card_heading": "Reminders",
+  "p_text": "In a text bubble // Your Quality Control food phone interview is on ((date)) at ((time)). Failure to
+  attend may lead to closure of your benefits. Call 1-800-222-3333 with questions.",
+  "alt_text": "reminder text example"
+  },
+  {
+  "image_src": asset_url('images/alert.svg'),
+  "card_heading": "Alerts to take action",
+  "p_text": "In a text bubble // Your household's Medicaid coverage is expiring. To keep getting Medicaid, you must
+  complete your renewal by ((date)). You can renew online at dhs.state.gov…",
+  "alt_text": "alerts text example"
+  },
+  {
+  "image_src": asset_url('images/alarm.svg'),
+  "card_heading": "Important status updates",
+  "p_text": "In a text bubble // Your passport has been issued at the Los Angeles Passport Agency. Please come to the
+  desk between 1:30pm and 2:30pm today to pick up your passport…",
+  "alt_text": "status update text example"
+  },
+  ] %}
+  {% for item in card_contents %}
+  <div class="radius-lg border-2px maxw-tablet">
+    <div class="grid-row grid-gap-4 padding-4 padding-y-3 flex-align-center">
+      <div class="grid-col flex-3">
+        <p><b>{{item.card_heading}}</b></p>
+        <p>{{item.p_text}}</p>
+      </div>
+      {% if item.image_src %}
+      <img src="{{item.image_src}}" alt="{{ item.alt_text }}" class="height-15" />
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</section>
+{% endblock %}

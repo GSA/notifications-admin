@@ -676,28 +676,28 @@ details form {
    margin-top: 0;
 }
 
-ol.best-practices-list {
+ol.guides-list {
    counter-reset: item;
    list-style-type: none;
    padding-left: 0;
 }
 
-ol.best-practices-list.set-two {
+ol.guides-list.set-two {
    counter-reset: item 6;
 }
 
-ol.best-practices-list.set-three {
+ol.guides-list.set-three {
    counter-reset: item 10;
 }
 
-ol.best-practices-list li {
+ol.guides-list li {
    counter-increment: item;
    margin-bottom: 15px;
    position: relative;
    padding-left: 40px;
 }
 
-ol.best-practices-list li::before {
+ol.guides-list li::before {
    content: counter(item);
    background-color: #005ea2;
    color: white;
@@ -713,11 +713,11 @@ ol.best-practices-list li::before {
    top: 0;
 }
 
-li.best-practices {
+li.guides {
    padding-bottom: 50px;
 }
 
-div.best-practices {
+div.guides {
    height: 400px
 }
 
@@ -820,7 +820,7 @@ $do-dont-top-bar-width: 1;
 }
 
 @media (max-width: 758px) {
-   .best-practices-flex-container {
+   .guides-flex-container {
       flex-direction: column;
    }
 }
@@ -899,6 +899,7 @@ li.linked-card:hover svg,
 }
 
 .icon-list {
+   display: flex;
    width: 24px;
    height: 24px;
    padding: 2px 1px;

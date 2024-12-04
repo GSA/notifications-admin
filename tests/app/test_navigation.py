@@ -18,6 +18,7 @@ EXCLUDED_ENDPOINTS = tuple(
         Navigation.get_endpoint_with_blueprint,
         {
             "about_notify",
+            "about_security",
             "accept_invite",
             "accept_org_invite",
             "accessibility_statement",
@@ -219,6 +220,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "suspend_service",
             "template_history",
             "template_usage",
+            "test_feature_flags",
             "tour_step",
             "trial_mode",
             "trial_mode_new",
@@ -258,6 +260,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "view_template_version",
             "view_template_versions",
             "who_its_for",
+            "why_text_messaging",
             "write_for_action",
         },
     )
