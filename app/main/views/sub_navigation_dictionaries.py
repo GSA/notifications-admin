@@ -114,8 +114,4 @@ def about_notify_nav():
                 },
             ],
         },
-        {
-            "name": "Join Notify",
-            "link": "main.join_notify",
-        },
     ]

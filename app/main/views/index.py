@@ -301,10 +301,10 @@ def why_text_messaging():
     )
 
 
-@main.route("/about/join-notify")
+@main.route("/join-notify")
 def join_notify():
     return render_template(
-        "views/about/join-notify.html",
+        "views/join-notify.html",
     )
 
 
