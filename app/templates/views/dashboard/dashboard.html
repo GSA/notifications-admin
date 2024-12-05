@@ -13,7 +13,7 @@
   <script type="text/javascript" src="{{ asset_url('js/setTimezone.js') }}"></script>
 
 
-  <div class="dashboard margin-bottom-2">
+  <div class="dashboard margin-top-0 margin-bottom-2">
 
     <h1 class="usa-sr-only">Dashboard</h1>
     {% if current_user.has_permissions('manage_templates') and not current_service.all_templates %}
@@ -22,7 +22,7 @@
 
     {{ ajax_block(partials, updates_url, 'upcoming') }}
 
-    <h2 class="font-body-xl margin-top-0">{{ current_service.name }} Dashboard</h2>
+    <h2 class="font-body-2xl line-height-sans-2 margin-top-0">{{ current_service.name }} Dashboard</h2>
 
     {{ ajax_block(partials, updates_url, 'inbox') }}
 
