@@ -309,6 +309,13 @@ def why_text_messaging():
     )
 
 
+@main.route("/join-notify")
+def join_notify():
+    return render_template(
+        "views/join-notify.html",
+    )
+
+
 @main.route("/using-notify/guidance/create-and-send-messages")
 @user_is_logged_in
 def create_and_send_messages():
