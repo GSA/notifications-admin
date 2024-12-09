@@ -1,323 +1,157 @@
-{% extends "base.html" %}
-{% from "components/components/button/macro.njk" import usaButton %}
-
-{% block meta %}
-<meta name="description"
-  content="Notify.gov lets you send text messages to your users. Try it now if you work in federal, state, or local government.">
-{% endblock %}
-
-{% block pageTitle %}
-Notify.gov
-{% endblock %}
-
-{% block main %}
-  {% block beforeContent %}{% endblock %}
-  <main id="main-content" role="main">
-    {% block content %}
-      <section class="usa-section--dark usa-hero" aria-label="Introduction">
-        <div class="grid-container padding-y-4">
-          <div class="grid-row grid-gap display-flex flex-align-center">
-            <div class="desktop:grid-col-7 tablet:grid-col-12">
-              <h1 class="font-serif-2xl usa-hero__heading">Reach people where they are with government-powered text messages</h1>
-              <p class="font-sans-lg">Notify.gov is a text message service that helps federal, state, local, tribal and territorial governments more effectively communicate with the people they serve.</p>
-              <div class="usa-button-group margin-bottom-5 flex-align-center">
-                <a class="usa-button usa-button login-button login-button--primary margin-right-2" href="{{ initial_signin_url }}">Sign in with <img src="{{ asset_url('images/logo-login.svg') }}" alt="Login.gov logo">
-                </a>
-                if you are an existing pilot partner
-              </div>
-              <p class="font-sans-md">Currently we are only working with select pilot partners. If you are interested in using Notify.gov in the future, please contact <br><a href="mailto:tts-benefits-studio@gsa.gov">tts-benefits-studio@gsa.gov</a> to learn more.</p>
-            </div>
-            <div class="desktop:grid-col-4 grid-offset-1 desktop:display-block display-none margin-x-5">
-              <img src="{{ asset_url('images/product/phone-text.png') }}"
-                alt="An illustration of notifications to a phone.">
-            </div>
-          </div>
-        </div>
-      </section>
-      <section class="grid-container usa-section usa-section__home">
-        <div class="grid-row grid-gap">
-          <div class="tablet:grid-col-5 margin-bottom-3 usa-prose">
-            <h2 class="font-heading-xl margin-top-0 margin-bottom-3">
-              Control your content
-            </h2>
-            <p>You do not need any technical knowledge to create message templates.</p>
-          </div>
-          <div class="tablet:grid-col-6 tablet:grid-offset-1">
-            <img src="{{ asset_url('images/product/01-templates-no-chrome.svg') }}"
-              alt="Example screenshot of adding a new text message template">
-          </div>
-        </div>
-      </section>
-      <section class="grid-container usa-section usa-section__home">
-        <div class="grid-row grid-gap">
-          <div class="tablet:grid-col-5 margin-bottom-3 usa-prose">
-            <h2 class="font-heading-xl margin-top-0 margin-bottom-3">
-              See how your messages perform
-            </h2>
-            <p>Track how many messages you’ve sent and find out which ones are not being delivered.</p>
-          </div>
-          <div class="tablet:grid-col-6 tablet:grid-offset-1">
-            <img src="{{ asset_url('images/product/02-reporting-no-chrome.svg') }}"
-              alt="A screenshot of Notify.gov showing counts of emails and text messages sent">
-          </div>
-        </div>
-      </section>
-      <section class="grid-container usa-section usa-section__home">
-        <div class="grid-row grid-gap">
-          <div class="tablet:grid-col-5 margin-bottom-3 usa-prose">
-            <h2 class="font-heading-xl margin-top-0 margin-bottom-3">
-              No technical integration needed
-            </h2>
-            <p>Upload a spreadsheet of phone numbers and Notify.gov sends batches of messages for you.</p>
-          </div>
-          <div class="tablet:grid-col-6 tablet:grid-offset-1">
-            <img src="{{ asset_url('images/product/03-spreadsheet-no-chrome.svg') }}"
-              alt="A screenshot of a spreadsheet with phone numbers, names, and a reference number">
-          </div>
-        </div>
-      </section>
-      <!-- <section class="grid-container usa-section border-top border-base-lighter">
-        <div class="grid-row grid-gap">
-          <h2 class="font-heading-xl margin-top-0 margin-bottom-3 bold">
-            Send messages manually or automatically
-          </h2>
-        </div>
-        <div class="grid-row grid-gap">
-          <div class="tablet:grid-col-6 usa-prose">
-            <p>Upload a spreadsheet of phone numbers and Notify sends the messages.</p>
-            <img src="{{ asset_url('images/product/03-spreadsheet-no-chrome.svg') }}"
-              alt="A screenshot of a spreadsheet with columns for email address, name and color">
-          </div>
-          <div class="tablet:grid-col-6 usa-prose">
-            <p>
-              Integrate the Notify.gov API with your web&nbsp;application or
-              back office system.
-            </p>
-            <img src="{{ asset_url('images/product/04-api-no-chrome.svg') }}"
-              alt="A screenshot of some computer code with a notify.send_email function">
-          </div>
-        </div>
-      </section> -->
-      <!-- <section id="whos-using-notify"
-        class="grid-container usa-section border-top border-base-lighter padding-top-4 padding-bottom-5">
-        <div class="grid-row grid-gap flex-column">
-          <h2 class="font-heading-xl display-flex flex-justify-center margin-top-0 margin-bottom-3 bold">
-            Who’s using Notify.gov
-          </h2>
-          <p class="display-flex flex-justify-center font-body-sm margin-bottom-3">
-            See the
-            <a class="usa-link margin-left-05" href="{{ url_for('main.performance') }}">list of services and
-              organizations</a>.
+{% extends "base.html" %} {% from "components/components/button/macro.njk"
+import usaButton %} {% block meta %}
+<meta
+  name="description"
+  content="Notify.gov lets you send text messages to your users. Try it now if you work in federal, state, or local government."
+/>
+{% endblock %} {% block pageTitle %} Notify.gov {% endblock %} {% block main %}
+{% block beforeContent %}{% endblock %}
+<main id="main-content" role="main">
+  {% block content %}
+  <section class="usa-section--dark usa-hero" aria-label="Introduction">
+    <div class="grid-container padding-y-4">
+      <div class="grid-row grid-gap display-flex flex-align-center">
+        <div class="desktop:grid-col-7 tablet:grid-col-12">
+          <h1 class="font-serif-2xl usa-hero__heading">
+            Reach people where they are with government-powered text messages
+          </h1>
+          <p class="font-sans-lg">
+            Notify.gov is a text message service that helps federal, state,
+            local, tribal and territorial governments more effectively
+            communicate with the people they serve.
           </p>
-        </div>
-        <div class="grid-row">
-          <div class="tablet:grid-col-6 display-flex flex-justify-center flex-align-center flex-column">
-            <span class="usa-sr-only">There are</span>
-            <div class="large-number">{{ counts.organizations|format_thousands }}</div>
-            <p class="font-body-lg margin-bottom-0">Organizations</p>
-          </div>
-          <div class="tablet:grid-col-6 display-flex flex-justify-center flex-align-center flex-column">
-            <span class="usa-sr-only">and</span>
-            <div class="large-number">{{ counts.services|format_thousands }}</div>
-            <p class="font-body-lg margin-bottom-0">Services</p>
-            <span class="usa-sr-only">using Notify.</span>
-          </div>
-        </div>
-      </section> -->
-      <section class="grid-container usa-section usa-section__home border-top border-base-lighter usa-prose">
-        <h2 class="font-heading-xl margin-top-0 margin-bottom-3">
-          About the product
-        </h2>
-        <p class="usa-body">
-          Keeping program participants updated on status changes, due dates, and appointments can be a huge challenge, and many
-          recipients fall through the cracks, ultimately losing their benefits. In the benefits space, data shows that sending
-          text messages helps decrease re-enrollment churn and save money for administering agencies.
-        </p>
-        <p class="usa-body">
-          Notify.gov is an easy text messaging platform that helps government agencies provide program participants with one-way
-          reminders and updates. With minimal set-up and secure, personalized messaging, Notify.gov helps agencies include text
-          messaging as part of their outreach program. Administering agencies can quickly assess the impact of text messaging for
-          their programs, after which they can build a case to expand their texting program if they choose to.
-        </p>
-        <p class="usa-body">
-          Notify.gov is a new shared service currently being piloted by the Public Benefits Studio, within Technology
-          Transformation Services at the General Services Administration.
-        </p>
-        <h2 class="font-heading-xl margin-top-0 margin-bottom-3">
-          Who's Eligible?
-        </h2>
-        <p class="usa-body">
-          Eligible partners include federal agencies as well as state, local, territorial, tribal agencies
-          administering federally funded programs. As part of the onboarding process, non-federal
-          programs must specify the federal program that the messages they want to send are related
-          to. TTS will also seek concurrence from the federal funder.
-        </p>
-        <p class="usa-body">
-          We prioritize partnerships focused on use cases related to increasing transparency and
-          reducing the burden of navigating government programs for low income individuals and
-          families.
-        </p>
-      </section>
-
-      <!-- <div class="product-page-intro"></div> -->
-
-      <!-- <div class="product-page-intro-wrapper" data-module="homepage">
-            <nav class="breadcrumbs breadcrumbs--inverse" aria-label="Breadcrumbs">
-
-            </nav>
-            <div class="grid-row">
-              <div class="grid-col-8">
-                <h1>
-                  Send text messages to your users
-                </h1>
-                <p>
-                  Try Notify.gov now if you work in federal, state, or local government.
-                </p>
-                <div class="button-container">
-                  {{ usaButton({
-                    "element": "a",
-                    "text": "Create an account",
-                    "classes": "product-page-button button-container__button",
-                    "href": url_for('main.register' )
-                  }) }}
-                  or <a class="usa-link" href="{{ url_for('.sign_in' )}}">sign in</a> if you’ve used
-                  it before
-                </div>
-              </div>
-              <div class="grid-col-4">
-                <img
-                  src="{{ asset_url('images/product/proposition-illustration.png') }}"
-                  alt="An illustration of notifications to a phone, a laptop, and a letter.">
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="product-page-section">
-          <div class="grid-row">
-            <div class="grid-col-6">
-              <h2>
-                Control your content
-              </h2>
-              <p>
-                You do not need any technical knowledge to create message templates.
-              </p>
-            </div>
-            <div class="grid-col-6">
+          <div class="usa-button-group margin-bottom-5 flex-align-center">
+            <a
+              class="usa-button usa-button login-button login-button--primary margin-right-2"
+              href="{{ initial_signin_url }}"
+              >Sign in with
               <img
-                src="{{ asset_url('images/product/01-templates.svg') }}"
-                alt="Example screenshot of adding a new text message template">
-            </div>
+                src="{{ asset_url('images/logo-login.svg') }}"
+                alt="Login.gov logo"
+              />
+            </a>
+            if you are an existing partner
           </div>
         </div>
-        <div class="product-page-section">
-          <div class="grid-row">
-            <div class="grid-col-6">
-              <h2>
-                See how your messages perform
-              </h2>
-              <p>
-                Track how many messages you’ve sent and
-                find out which ones are not being delivered.
-              </p>
-            </div>
-            <div class="grid-col-6">
+        <div
+          class="desktop:grid-col-4 grid-offset-1 desktop:display-block display-none margin-x-5"
+        >
+          <img
+            src="{{ asset_url('images/product/phone-text.png') }}"
+            alt="An illustration of notifications to a phone."
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+  <section
+    class="grid-container usa-section usa-section__home border-top border-base-lighter usa-prose"
+  >
+    <h2 class="font-heading-xl margin-top-0 margin-bottom-3">
+      Government texting made easy
+    </h2>
+    <p class="usa-body">
+      Notify.gov is a text messaging platform built for government agencies.
+      With minimal set-up and secure, personalized messaging, you can make
+      one-way texting a part of your outreach program.
+    </p>
+  </section>
+
+  <section class="grid-container usa-section usa-section__home usa-prose">
+    <h2 class="font-heading-xl margin-top-0 margin-bottom-3">Key features</h2>
+    <div class="display-flex flex-wrap fixed-row">
+      <div class="usa-alert usa-alert--info fixed-box">
+        <img src="{{ asset_url('images/internet.svg') }}" alt="Internet icon" />
+        <h3 class="font-heading-md">Web-based</h3>
+        <p>Nothing to download or install</p>
+      </div>
+
+      <div class="usa-alert usa-alert--info fixed-box">
+        <img src="{{ asset_url('images/fast.svg') }}" alt="Fast icon" />
+        <h3 class="font-heading-md">Fast and easy</h3>
+        <p class="usa-body">No technical expertise required</p>
+      </div>
+      <div class="usa-alert usa-alert--info fixed-box">
+        <img src="{{ asset_url('images/status.svg') }}" alt="Status icon" />
+        <h3 class="font-heading-md">Track message delivery</h3>
+        <p class="usa-body">See which messages were received</p>
+      </div>
+    </div>
+
+    <div class="display-flex flex-wrap justify-content fixed-row">
+      <div class="usa-alert usa-alert--info fixed-box">
+        <img
+          src="{{ asset_url('images/translation.svg') }}"
+          alt="Translation icon"
+        />
+        <h3 class="font-heading-md">Send in recipients' preferred language</h3>
+        <p class="usa-body">
+          Notify.gov has support for more than 30 character sets
+        </p>
+      </div>
+
+      <div class="usa-alert usa-alert--info fixed-box">
+        <img src="{{ asset_url('images/security.svg') }}" alt="Security icon" />
+        <h3 class="font-heading-md">Security and privacy</h3>
+        <p class="usa-body">
+          Limited data retention, encryption, and multi-factor authentication
+          protect user data and manage risk
+        </p>
+      </div>
+
+      <div class="usa-alert usa-alert--info fixed-box">
+        <img src="{{ asset_url('images/send.svg') }}" alt="Send icon" />
+        <h3 class="font-heading-md">Send bulk, customized, one-way messages</h3>
+        <p class="usa-body">
+          Send hundreds or thousands of individually customized messages with
+          just a few clicks
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section
+    class="grid-container usa-section usa-section__home usa-prose grid-container"
+  >
+    <h2 class="font-heading-xl margin-top-0 margin-bottom-3">
+      Who can use Notify.gov?
+    </h2>
+    <p class="usa-body">
+      All <span class="text-bold">federal</span> agencies and programs are
+      eligible to use Notify.gov.
+    </p>
+    <p class="usa-body">
+      US
+      <span class="text-bold">state, local, territorial, or tribal</span>
+      governments that administer or deliver federally-funded programs or
+      services may qualify to use Notify.gov to communicate with applicants and
+      participants in these programs.
+    </p>
+    <div class="card-hover-link grid-col-3">
+      <a href="mailto:tts-notify@gsa.gov">
+        <div
+          class="gsa-usa-alert-signed-out usa-alert usa-alert--info padding-3 border-2px bg-white margin-top-3 tablet:grid-col-3"
+        >
+          <div class="grid-row flex-align-center grid-gap-2">
+            <div class="grid-col-auto">
               <img
-                src="{{ asset_url('images/product/02-reporting.svg') }}"
-                alt="A screenshot of Notify.gov showing counts of emails and text messages sent"
-              >
+                src="{{ asset_url('images/contact.svg') }}"
+                alt="Icon for contact us"
+                class="height-6 width-6"
+              />
             </div>
-          </div>
-        </div>
-        <div class="product-page-section">
-          <h2 class="with-keyline">
-            Send messages manually or automatically
-          </h2>
-          <div class="grid-row">
-            <div class="grid-col-6">
-              <p>
-                Upload a spreadsheet of phone&nbsp;numbers and Notify sends the messages.
-              </p>
-              <img
-                src="{{ asset_url('images/product/03-spreadsheet.svg') }}"
-                alt="A screenshot of a spreadsheet with columns for email address, name and color"
-              >
-            </div>
-            <div class="grid-col-6">
-              <p>
-                Integrate the Notify.gov API with your web&nbsp;application or
-                back office system.
-              </p>
-              <img
-                src="{{ asset_url('images/product/04-api.svg') }}"
-                alt="A screenshot of some computer code with a notify.send_email function"
-              >
-            </div>
-          </div>
-        </div>
-        <div class="product-page-section">
-          <div class="with-keyline bottom-gutter-2" id="whos-using-notify">
-            <h2>Who’s using Notify.gov</h2>
-            <div class="grid-row bottom-gutter">
-              <div class="grid-col-6">
-                <span class="usa-sr-only">There are</span>
-                <div class="product-page-big-number">{{ counts.organizations|format_thousands }}</div>
-                <span>organizations</span>
-              </div>
-              <div class="grid-col-6">
-                <span class="usa-sr-only">and</span>
-                <div class="product-page-big-number">{{ counts.services|format_thousands }}</div>
-                <span>services</span>
-                <span class="usa-sr-only">using Notify.</span>
-              </div>
-            </div>
-            <p>
-              See the
-              <a class="usa-link" href="{{ url_for('main.performance') }}">list of services and organizations</a>.
-            </p>
-          </div>
-        </div>
-        <div class="product-page-section">
-          <div class="with-keyline bottom-gutter-2">
-            <h2>Pricing</h2>
-            <div class="grid-row bottom-gutter">
-              <div class="grid-col-6">
-                <h3 class="usa-sr-only">Emails</h3>
-                <div class="product-page-big-number">Unlimited</div>
-                <span>free emails</span>
-              </div>
-              <div class="grid-col-6">
-                <h3 class="usa-sr-only">Text messages</h3>
-                <div class="product-page-big-number">Up to 40,000</div>
-                <span>free text messages a year,<br>
-                then {{ sms_rate }} pence per message</span>
-              </div>
-              <div class="grid-col-6">
-                <p class="align-with-big-number-hint">
-                  There’s no monthly charge, no setup fee and no&nbsp;procurement process.
-                </p>
-                <p>Find out more about <a class="usa-link" href="https://www.notifications.service.gov.uk/pricing">pricing</a>.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="product-page-section">
-          <div class="grid-row margin-bottom-">
-            <div class="grid-col-12">
-              <h2 class="with-keyline">
-                The team
-              </h2>
-              <p>
-                Notify.gov is built and maintained by the Public Benefits Studio, within the General Services Administration's Technology Transformation Services.
-              </p>
-              <p>
-                <a class="usa-link" href="{{ url_for('main.support') }}">Contact us</a> if you have a question or want
-                to give feedback.
+            <div class="grid-col">
+              <p class="margin-0">
+                <strong>Contact us</strong><br />
+                To learn more about becoming a partner!
               </p>
             </div>
           </div>
-        </div>-->
-    {% endblock %}
-  </main>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  {% endblock %}
+</main>
 {% endblock %}
