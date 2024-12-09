@@ -278,6 +278,13 @@ def guidance_index():
     )
 
 
+@main.route("/contact")
+def contact():
+    return render_template(
+        "views/contact.html",
+    )
+
+
 @main.route("/about")
 def about_notify():
     return render_template(

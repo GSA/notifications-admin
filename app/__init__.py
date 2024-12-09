@@ -141,6 +141,10 @@ def _csp(config):
     logo_domain = config["LOGO_CDN_DOMAIN"]
     return {
         "default-src": ["'self'", asset_domain],
+        "frame-src": [
+            "https://www.youtube.com",
+            "https://www.youtube-nocookie.com",
+        ],
         "frame-ancestors": "'none'",
         "form-action": "'self'",
         "script-src": [
