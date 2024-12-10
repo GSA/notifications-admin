@@ -14,18 +14,14 @@
 
 
 {% block skipLink %}
+  {% set skipLink = usaSkipLink({
+    "href": '#main-content',
+    "text": 'Skip to main content'
+  }) %}
   {% if errors %}
-    <div>
-      {{ usaSkipLink({
-      "href": '#main-content',
-      "text": 'Skip to main content'
-      }) }}
-    </div>
+    <div>{{ skipLink }}</div>
   {% else %}
-    {{ usaSkipLink({
-      "href": '#main-content',
-      "text": 'Skip to main content'
-    }) }}
+    {{ skipLink }}
   {% endif %}
 {% endblock %}
 
