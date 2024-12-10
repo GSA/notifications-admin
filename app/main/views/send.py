@@ -479,14 +479,6 @@ def send_one_off_step(service_id, template_id, step_index):
 
     back_link = get_back_link(service_id, template, step_index, placeholders)
 
-    # # Construct params for the template
-    # params = {
-    #     "href": back_link["url"],  # Use the URL from get_back_link
-    #     "text": back_link["text"],  # Use the text from get_back_link
-    #     "classes": "usa-link usa-back-link display-inline-flex",
-    #     "attributes": {},  # Add any additional attributes if needed
-    # }
-
     template.values = template_values
     template.values[current_placeholder] = None
 
@@ -783,7 +775,7 @@ def get_back_link(service_id, template, step_index, placeholders=None, preview=F
                     service_id=service_id,
                     template_id=template.id,
                 ),
-                "text": "Back to View Template",  # Dummy text for skipping template page
+                "text": "Back to View Template",
             }
         else:
             return {
@@ -791,7 +783,7 @@ def get_back_link(service_id, template, step_index, placeholders=None, preview=F
                     ".choose_template",
                     service_id=service_id,
                 ),
-                "text": "Back to Select or create a template",  # Dummy text for choosing template
+                "text": "Back to Select or create a template",
             }
 
     # For all other steps
@@ -802,7 +794,7 @@ def get_back_link(service_id, template, step_index, placeholders=None, preview=F
             template_id=template.id,
             step_index=step_index - 1,
         ),
-        "text": "Back to Personalize this message",  # Dummy text for previous steps
+        "text": "Back to Personalize this message",
     }
 
 
@@ -1132,12 +1124,3 @@ def get_recipient():
     return session["recipient"] or InsensitiveDict(session["placeholders"]).get(
         "address line 1"
     )
-
-params = {
-    "href": {
-        "url": url_for("main.some_view", service_id=service_id),
-        "text": "Back to some view",
-    }
-}
-print(json.dumps(params, indent=2))  # Add this for debugging
-return render_template("views/template.html", params=params)
