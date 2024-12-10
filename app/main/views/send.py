@@ -174,12 +174,25 @@ def send_messages(service_id, template_id):
         flash(error_message)
     column_headings = get_spreadsheet_column_headings_from_template(template)
 
+    params = {
+        "href": {
+            "url": url_for(
+                "main.send_one_off",
+                service_id=current_service.id,
+                template_id=template.id,
+            ),
+            "text": "Back to Select recipients",
+        },
+        "classes": "usa-link usa-back-link",
+    }
+
     return render_template(
         "views/send.html",
         template=template,
         column_headings=list(ascii_uppercase[: len(column_headings)]),
         example=[column_headings, get_example_csv_rows(template)],
         form=form,
+        params=params,
         allowed_file_extensions=Spreadsheet.ALLOWED_FILE_EXTENSIONS,
         remaining_messages=remaining_messages,
     )
@@ -466,6 +479,14 @@ def send_one_off_step(service_id, template_id, step_index):
 
     back_link = get_back_link(service_id, template, step_index, placeholders)
 
+    # # Construct params for the template
+    # params = {
+    #     "href": back_link["url"],  # Use the URL from get_back_link
+    #     "text": back_link["text"],  # Use the text from get_back_link
+    #     "classes": "usa-link usa-back-link display-inline-flex",
+    #     "attributes": {},  # Add any additional attributes if needed
+    # }
+
     template.values = template_values
     template.values[current_placeholder] = None
 
@@ -743,39 +764,46 @@ def get_send_test_page_title(template_type, entering_recipient, name=None):
     return "Personalize this message"
 
 
-def get_back_link(
-    service_id,
-    template,
-    step_index,
-    placeholders=None,
-    preview=False,
-):
+def get_back_link(service_id, template, step_index, placeholders=None, preview=False):
     if preview:
-        return url_for(
-            "main.check_notification",
-            service_id=service_id,
-            template_id=template.id,
-        )
+        return {
+            "url": url_for(
+                "main.check_notification",
+                service_id=service_id,
+                template_id=template.id,
+            ),
+            "text": "Back to Select delivery time",
+        }
 
     if step_index == 0:
         if should_skip_template_page(template._template):
-            return url_for(
-                ".choose_template",
-                service_id=service_id,
-            )
+            return {
+                "url": url_for(
+                    "main.view_template",
+                    service_id=service_id,
+                    template_id=template.id,
+                ),
+                "text": "Back to View Template",  # Dummy text for skipping template page
+            }
         else:
-            return url_for(
-                ".view_template",
-                service_id=service_id,
-                template_id=template.id,
-            )
+            return {
+                "url": url_for(
+                    ".choose_template",
+                    service_id=service_id,
+                ),
+                "text": "Back to Select or create a template",  # Dummy text for choosing template
+            }
 
-    return url_for(
-        "main.send_one_off_step",
-        service_id=service_id,
-        template_id=template.id,
-        step_index=step_index - 1,
-    )
+    # For all other steps
+    return {
+        "url": url_for(
+            "main.send_one_off_step",
+            service_id=service_id,
+            template_id=template.id,
+            step_index=step_index - 1,
+        ),
+        "text": "Back to Personalize this message",  # Dummy text for previous steps
+    }
 
 
 def get_skip_link(step_index, template):
@@ -1104,3 +1132,12 @@ def get_recipient():
     return session["recipient"] or InsensitiveDict(session["placeholders"]).get(
         "address line 1"
     )
+
+params = {
+    "href": {
+        "url": url_for("main.some_view", service_id=service_id),
+        "text": "Back to some view",
+    }
+}
+print(json.dumps(params, indent=2))  # Add this for debugging
+return render_template("views/template.html", params=params)
