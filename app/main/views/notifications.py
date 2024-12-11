@@ -10,10 +10,12 @@ from flask import (
     stream_with_context,
     url_for,
 )
+from flask_login import current_user
 
 from app import current_service, job_api_client, notification_api_client
 from app.main import main
 from app.notify_client.api_key_api_client import KEY_TYPE_TEST
+from app.s3_client.s3_csv_client import delete_report, report_upload
 from app.utils import (
     DELIVERED_STATUSES,
     FAILURE_STATUSES,
@@ -144,6 +146,36 @@ def download_notifications_csv(service_id):
     file_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
     file_time = f"{file_time} {get_user_preferred_timezone()}"
 
+    csv = generate_notifications_csv(
+        service_id=service_id,
+        job_id=None,
+        status=filter_args.get("status"),
+        page=request.args.get("page", 1),
+        page_size=10000,
+        format_for_csv=True,
+        template_type=filter_args.get("message_type"),
+        limit_days=service_data_retention_days,
+    )
+
+    # START asynchronous reporting block
+    csv_file = "".join(csv)
+    file_location = f"reports/{service_id}/{current_user.id}/{service_data_retention_days}/report.csv"
+
+    # TODO these are some capabilities we will probably need when
+    # report generation becomes asynchronous.
+
+    # old_content = report_download(file_location)
+    # current_app.logger.info(f"OLD CONTENT IS {old_content}")
+    # reports = get_downloadable_reports(current_user.id, service_id)
+
+    # TODO these are to support asynchronous report generation.
+    # Leaving them commented in so they get exercised.
+    delete_report(file_location)
+    report_upload(file_location, csv_file)
+    # END asynchronous reporting block
+
+    # TODO eventually we want to remove this, when reports become fully asynchronous
+    # The UI should be retrieving the report elsewhere via the download_report() method call
     return Response(
         stream_with_context(
             generate_notifications_csv(
