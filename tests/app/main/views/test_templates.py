@@ -545,7 +545,7 @@ def test_user_with_only_send_and_view_redirected_to_set_sender_for_one_off(
         (
             ["manage_templates"],
             [
-                (".edit_service_template", "Edit"),
+                (".edit_service_template", "Edit this template"),
             ],
             None,
         ),
@@ -553,7 +553,7 @@ def test_user_with_only_send_and_view_redirected_to_set_sender_for_one_off(
             ["send_messages", "manage_templates"],
             [
                 (".set_sender", "Use this template"),
-                (".edit_service_template", "Edit"),
+                (".edit_service_template", "Edit this template"),
             ],
             None,
         ),
