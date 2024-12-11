@@ -1,13 +1,13 @@
 {% extends "withnav_template.html" %}
 {% from "components/banner.html" import banner_wrapper %}
-{% from "components/folder-path.html" import folder_path, page_title_folder_path %}
+{% from "components/folder-path.html" import folder_path %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/copy-to-clipboard.html" import copy_to_clipboard %}
 {% from "components/components/button/macro.njk" import usaButton %}
 
-{% block service_page_title %}
-  {{ page_title_folder_path(current_service.get_template_path(template._template)) }}
-{% endblock %}
+{% set page_title = 'Confirm your template' %}
+
+{% block service_page_title %}{{page_title}}{% endblock %}
 
 {% block maincolumn_content %}
 
@@ -32,8 +32,8 @@
   {% else %}
     <div class="grid-row">
       <div class="grid-col-12">
-        <h1 class="font-body-xl folder-heading margin-top-0">
-          Review your message
+        <h1 class="font-body-2xl line-height-sans-2 folder-heading margin-top-0">
+          {{page_title}}
         </h1>
         {{ folder_path(
           folders=current_service.get_template_path(template._template),

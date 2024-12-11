@@ -6,9 +6,7 @@
 <html lang="{{ htmlLang | default('en') }}" class="{{ htmlClasses }}">
   <head>
     <title>
-      {% block pageTitle %}
-        {% block per_page_title %}{% endblock %} – Notify.gov
-      {% endblock %}
+      {% block pageTitle %}{% block per_page_title %}{% endblock %} – Notify.gov{% endblock %}
     </title>
     {% include "components/head.html" %}
   </head>

@@ -3,9 +3,9 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
 
-{% block service_page_title %}
-  {{ page_title_folder_path(template_folder_path) }}
-{% endblock %}
+{% set page_title = 'Select or create a template' %}
+
+{% block service_page_title %}{{page_title}}{% endblock %}
 
 {% block maincolumn_content %}
 
