@@ -174,25 +174,12 @@ def send_messages(service_id, template_id):
         flash(error_message)
     column_headings = get_spreadsheet_column_headings_from_template(template)
 
-    params = {
-        "href": {
-            "url": url_for(
-                "main.send_one_off",
-                service_id=current_service.id,
-                template_id=template.id,
-            ),
-            "text": "Back to Select recipients",
-        },
-        "classes": "usa-link usa-back-link",
-    }
-
     return render_template(
         "views/send.html",
         template=template,
         column_headings=list(ascii_uppercase[: len(column_headings)]),
         example=[column_headings, get_example_csv_rows(template)],
         form=form,
-        params=params,
         allowed_file_extensions=Spreadsheet.ALLOWED_FILE_EXTENSIONS,
         remaining_messages=remaining_messages,
     )
@@ -756,46 +743,39 @@ def get_send_test_page_title(template_type, entering_recipient, name=None):
     return "Personalize this message"
 
 
-def get_back_link(service_id, template, step_index, placeholders=None, preview=False):
+def get_back_link(
+    service_id,
+    template,
+    step_index,
+    placeholders=None,
+    preview=False,
+):
     if preview:
-        return {
-            "url": url_for(
-                "main.check_notification",
-                service_id=service_id,
-                template_id=template.id,
-            ),
-            "text": "Back to Select delivery time",
-        }
+        return url_for(
+            "main.check_notification",
+            service_id=service_id,
+            template_id=template.id,
+        )
 
     if step_index == 0:
         if should_skip_template_page(template._template):
-            return {
-                "url": url_for(
-                    "main.view_template",
-                    service_id=service_id,
-                    template_id=template.id,
-                ),
-                "text": "Back to View Template",
-            }
+            return url_for(
+                ".choose_template",
+                service_id=service_id,
+            )
         else:
-            return {
-                "url": url_for(
-                    ".choose_template",
-                    service_id=service_id,
-                ),
-                "text": "Back to Select or create a template",
-            }
+            return url_for(
+                ".view_template",
+                service_id=service_id,
+                template_id=template.id,
+            )
 
-    # For all other steps
-    return {
-        "url": url_for(
-            "main.send_one_off_step",
-            service_id=service_id,
-            template_id=template.id,
-            step_index=step_index - 1,
-        ),
-        "text": "Back to Personalize this message",
-    }
+    return url_for(
+        "main.send_one_off_step",
+        service_id=service_id,
+        template_id=template.id,
+        step_index=step_index - 1,
+    )
 
 
 def get_skip_link(step_index, template):
