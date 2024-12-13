@@ -25,7 +25,7 @@
   ) %}
     <div class="grid-row">
       <div class="grid-col-12 {% if form.placeholder_value.label.text == 'phone number' %}extra-tracking{% endif %}">
-        {{ form.placeholder_value(param_extensions={"classes": ""}) }}
+        {{ form.placeholder_value(param_extensions={"id": "phone-number"}) }}
       </div>
       {% if skip_link or link_to_upload %}
         <div class="grid-col-12 margin-top-1">
