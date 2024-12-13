@@ -17,7 +17,7 @@
 ) %}
   <div
     class="usa-form-group{% if field.errors %} usa-form-group--error{% endif %} {{ extra_form_group_classes }}"
-    data-module="{% if autofocus %}autofocus{% elif colour_preview %}colour-preview{% endif %}"
+    data-module="{% if autofocus %}autofocus{% elif colour_preview %}colour-preview{% endif %}" aria-live="polite" role="alert"
   >
     <label class="usa-label" for="{{ field.name }}">
       {% if label %}
@@ -32,11 +32,11 @@
       </div>
     {% endif %}
     {% if field.errors %}
-    <span class="usa-error-message" data-module="track-error" data-error-type="{{ field.errors[0] }}" data-error-label="{{ field.name }}">
+    <span id="{{ field.name}}-error" class="usa-error-message" data-module="track-error" data-error-type="{{ field.errors[0] }}" data-error-label="{{ field.name }}">
+      <span class="usa-sr-only">Error:</span>
       {% if not safe_error_message %}{{ field.errors[0] }}{% else %}{{ field.errors[0]|safe }}{% endif %}
     </span>
   {% endif %}
-
     {%
       if highlight_placeholders or autosize
     %}
@@ -55,6 +55,7 @@
       data_highlight_placeholders='true' if highlight_placeholders else 'false',
       rows=rows|string,
       placeholder=placeholder,
+      aria_describedby=field.name+"-error",
       **kwargs
     ) }}
     {% if suffix %}

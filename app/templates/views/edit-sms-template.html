@@ -15,6 +15,19 @@
   }) }}
 {% endblock %}
 
+{% block skipLink %}
+  {% set skipLink = usaSkipLink({
+    "href": '#main-content',
+    "text": 'Skip to main content'
+  }) %}
+  {% if errors %}
+    <div>{{ skipLink }}</div>
+  {% else %}
+    {{ skipLink }}
+  {% endif %}
+{% endblock %}
+
+
 {% block maincolumn_content %}
 
     {{ page_header('{} text message template'.format(heading_action)) }}
