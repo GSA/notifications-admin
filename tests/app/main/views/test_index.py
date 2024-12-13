@@ -118,7 +118,7 @@ def test_static_pages(client_request, mock_get_organization_by_domain, view, moc
             "write_for_action",
             "multiple_languages",
             "benchmark_performance",
-            "guidance_index"
+            "guidance_index",
         ]
         return (
             not current_app.config["FEATURE_BEST_PRACTICES_ENABLED"]

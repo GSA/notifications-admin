@@ -350,9 +350,13 @@ def test_should_show_templates_folder_page(
     assert normalize_spaces(page.select_one("h1").text) == expected_title_tag
 
     # remove this line if you don't want the breadcrumb on the first page
-    assert len(page.select("nav#breadcrumb-template-folders a")) == len(expected_parent_link_args)
+    assert len(page.select("nav#breadcrumb-template-folders a")) == len(
+        expected_parent_link_args
+    )
 
-    for index, parent_link in enumerate(page.select("nav#breadcrumb-template-folders a")):
+    for index, parent_link in enumerate(
+        page.select("nav#breadcrumb-template-folders a")
+    ):
         assert parent_link["href"] == url_for(
             "main.choose_template",
             service_id=SERVICE_ONE_ID,

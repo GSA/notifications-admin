@@ -346,14 +346,6 @@ td.table-empty-message {
   }
 }
 
-.usa-section {
-  &__home {
-    h2 {
-      font-family: family('serif');
-    }
-  }
-}
-
 .navigation-service.usa-breadcrumb {
   bottom: 0;
 }
@@ -960,43 +952,34 @@ li.linked-card:hover svg,
   }
 }
 
-.fixed-row {
+.home-cards {
   justify-content: space-between;
-  align-items: end;
-
-  .fixed-box {
-    width: 21em;
-    height: 21em;
-    text-align: center;
-    padding: 1rem;
-    border: 3px solid #000;
-    background-color: #fff;
-    display: flex;
-    flex-direction: column;
+  .usa-card__container {
     align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-
+    text-align: center;
     img {
-      width: 6rem;
-      height: 6rem;
+      margin: units(4) auto 0;
+      width: units(15);
+      height: units(15);
+    }
+    .usa-card__body {
+      margin-bottom: units(2);
     }
   }
 }
 
-.gsa-usa-alert-signed-out {
+.contact-us-card {
+  border: 2px solid color("ink");
+  padding: units(2);
+  color: #000;
   width: 100%;
   transition: background-color 0.15s ease, color 0.15s ease,
     border-color 0.15s ease;
 
-  &:hover {
-    background-color: #005ea2;
-    color: white;
-    border-color: #003d6b;
-
-    strong {
-      color: white;
-    }
+  &:hover, &:focus {
+    background-color: color("blue-60v");
+    color: #FFF;
+    border-color: color("blue-60v");
 
     img {
       filter: brightness(0) invert(1);
