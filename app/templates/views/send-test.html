@@ -12,6 +12,19 @@
   {{ usaBackLink({ "href": back_link }) }}
 {% endblock %}
 
+
+{% block skipLink %}
+  {% set skipLink = usaSkipLink({
+    "href": '#main-content',
+    "text": 'Skip to main content'
+  }) %}
+  {% if errors %}
+    <div>{{ skipLink }}</div>
+  {% else %}
+    {{ skipLink }}
+  {% endif %}
+{% endblock %}
+
 {% block maincolumn_content %}
 
   {{ page_header(page_title) }}
@@ -24,7 +37,7 @@
     data_kwargs={'force-focus': True}
   ) %}
     <div class="grid-row">
-      <div class="grid-col-12 {% if form.placeholder_value.label.text == 'phone number' %}extra-tracking{% endif %}">
+      <div class="grid-col-12 {% if form.placeholder_value.label.text == 'phone number' %}extra-tracking{% endif %}" aria-live="polite" role="alert">
         {{ form.placeholder_value(param_extensions={"classes": ""}) }}
       </div>
       {% if skip_link or link_to_upload %}

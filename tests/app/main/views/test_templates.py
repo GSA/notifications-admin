@@ -69,7 +69,9 @@ def test_should_show_empty_page_when_no_templates(
         service_id=service_one["id"],
     )
 
-    assert normalize_spaces(page.select_one("h1").text) == ("Select or create a template")
+    assert normalize_spaces(page.select_one("h1").text) == (
+        "Select or create a template"
+    )
     assert normalize_spaces(page.select_one("main p").text) == (expected_message)
     assert page.select_one("#add_new_folder_form")
     assert page.select_one("#add_new_template_form")
@@ -87,7 +89,9 @@ def test_should_show_add_template_form_if_service_has_folder_permission(
         service_id=service_one["id"],
     )
 
-    assert normalize_spaces(page.select_one("h1").text) == ("Select or create a template")
+    assert normalize_spaces(page.select_one("h1").text) == (
+        "Select or create a template"
+    )
     assert normalize_spaces(page.select_one("main p").text) == (
         "Every message starts with a template. You can change it later. "
         "You need a template before you can send messages."
