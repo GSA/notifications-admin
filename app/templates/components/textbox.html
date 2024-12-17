@@ -17,7 +17,7 @@
 ) %}
   <div
     class="usa-form-group{% if field.errors %} usa-form-group--error{% endif %} {{ extra_form_group_classes }}"
-    data-module="{% if autofocus %}autofocus{% elif colour_preview %}colour-preview{% endif %}" aria-live="polite" role="alert"
+    data-module="{% if autofocus %}autofocus{% elif colour_preview %}colour-preview{% endif %}"
   >
     <label class="usa-label" for="{{ field.name }}">
       {% if label %}

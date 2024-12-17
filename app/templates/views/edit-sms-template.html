@@ -15,17 +15,6 @@
   }) }}
 {% endblock %}
 
-{% block skipLink %}
-  {% set skipLink = usaSkipLink({
-    "href": '#main-content',
-    "text": 'Skip to main content'
-  }) %}
-  {% if errors %}
-    <div>{{ skipLink }}</div>
-  {% else %}
-    {{ skipLink }}
-  {% endif %}
-{% endblock %}
 
 
 {% block maincolumn_content %}
@@ -42,10 +31,10 @@
 
     {% call form_wrapper() %}
       <div class="grid-row">
-        <div class="tablet:grid-col-9 mobile-lg:grid-col-12">
+        <div class="tablet:grid-col-9 mobile-lg:grid-col-12" aria-live="polite" role="alert">
           {{ form.name(param_extensions={
             "extra_form_group_classes": "margin-bottom-2",
-            "id": "template-name"
+            "id": "name"
           }) }}
           {{ textbox(
             form.template_content,
