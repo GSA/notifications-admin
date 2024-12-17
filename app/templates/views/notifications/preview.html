@@ -10,7 +10,7 @@
   {% elif help %}
     {{ "Example text message" }}
   {% else %}
-    {{ "Preview" }}
+    {{ "Preview for sending" }}
   {% endif %}
 {% endblock %}
 
@@ -50,7 +50,7 @@
       {% endcall %}
     </div>
   {% else %}
-    {{ page_header("Example text message" if help else "Preview") }}
+    {{ page_header("Example text message" if help else "Preview for sending") }}
   {% endif %}
 
   {% if not help %}

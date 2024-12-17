@@ -69,7 +69,9 @@ def test_should_show_empty_page_when_no_templates(
         service_id=service_one["id"],
     )
 
-    assert normalize_spaces(page.select_one("h1").text) == ("Templates")
+    assert normalize_spaces(page.select_one("h1").text) == (
+        "Select or create a template"
+    )
     assert normalize_spaces(page.select_one("main p").text) == (expected_message)
     assert page.select_one("#add_new_folder_form")
     assert page.select_one("#add_new_template_form")
@@ -87,7 +89,9 @@ def test_should_show_add_template_form_if_service_has_folder_permission(
         service_id=service_one["id"],
     )
 
-    assert normalize_spaces(page.select_one("h1").text) == ("Templates")
+    assert normalize_spaces(page.select_one("h1").text) == (
+        "Select or create a template"
+    )
     assert normalize_spaces(page.select_one("main p").text) == (
         "Every message starts with a template. You can change it later. "
         "You need a template before you can send messages."
@@ -110,7 +114,7 @@ def test_should_show_add_template_form_if_service_has_folder_permission(
     [
         (
             create_active_user_view_permissions(),
-            "Templates",
+            "Select or create a template",
             {},
             ["Email", "Text message"],
             [
@@ -122,21 +126,21 @@ def test_should_show_add_template_form_if_service_has_folder_permission(
         ),
         (
             create_active_user_view_permissions(),
-            "Templates",
+            "Select or create a template",
             {"template_type": "sms"},
             ["All", "Email"],
             ["sms_template_one", "sms_template_two"],
         ),
         (
             create_active_user_view_permissions(),
-            "Templates",
+            "Select or create a template",
             {"template_type": "email"},
             ["All", "Text message"],
             ["email_template_one", "email_template_two"],
         ),
         (
             create_active_caseworking_user(),
-            "Templates",
+            "Select or create a template",
             {},
             ["Email", "Text message"],
             [
@@ -148,7 +152,7 @@ def test_should_show_add_template_form_if_service_has_folder_permission(
         ),
         (
             create_active_caseworking_user(),
-            "Templates",
+            "Select or create a template",
             {"template_type": "email"},
             ["All", "Text message"],
             ["email_template_one", "email_template_two"],
@@ -581,9 +585,9 @@ def test_should_be_able_to_view_a_template_with_links(
         _test_page_title=False,
     )
 
-    assert normalize_spaces(page.select_one("h1").text) == ("Review your message")
+    assert normalize_spaces(page.select_one("h1").text) == ("Confirm your template")
     assert normalize_spaces(page.select_one("title").text) == (
-        "Two week reminder – Templates – service one – Notify.gov"
+        "Confirm your template – service one – Notify.gov"
     )
 
     assert [

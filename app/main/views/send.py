@@ -483,6 +483,7 @@ def send_one_off_step(service_id, template_id, step_index):
         link_to_upload=(
             request.endpoint == "main.send_one_off_step" and step_index == 0
         ),
+        errors=form.errors if form.errors else None
     )
 
 
@@ -739,7 +740,7 @@ def all_placeholders_in_session(placeholders):
 
 def get_send_test_page_title(template_type, entering_recipient, name=None):
     if entering_recipient:
-        return "Send ‘{}’".format(name)
+        return "Select recipients"
     return "Personalize this message"
 
 

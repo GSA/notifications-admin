@@ -141,6 +141,10 @@ def _csp(config):
     logo_domain = config["LOGO_CDN_DOMAIN"]
     return {
         "default-src": ["'self'", asset_domain],
+        "frame-src": [
+            "https://www.youtube.com",
+            "https://www.youtube-nocookie.com",
+        ],
         "frame-ancestors": "'none'",
         "form-action": "'self'",
         "script-src": [
@@ -170,8 +174,12 @@ def create_app(application):
 
     @application.context_processor
     def inject_feature_flags():
-        feature_best_practices_enabled = application.config.get("FEATURE_BEST_PRACTICES_ENABLED", False)
-        feature_about_page_enabled = application.config.get("FEATURE_ABOUT_PAGE_ENABLED", False)
+        feature_best_practices_enabled = application.config.get(
+            "FEATURE_BEST_PRACTICES_ENABLED", False
+        )
+        feature_about_page_enabled = application.config.get(
+            "FEATURE_ABOUT_PAGE_ENABLED", False
+        )
         return dict(
             FEATURE_BEST_PRACTICES_ENABLED=feature_best_practices_enabled,
             FEATURE_ABOUT_PAGE_ENABLED=feature_about_page_enabled,
@@ -201,7 +209,7 @@ def create_app(application):
             url = url.replace("NONCE", nonce)
             url = url.replace("STATE", state)
 
-        return {'initial_signin_url': url}
+        return {"initial_signin_url": url}
 
     notify_environment = os.environ["NOTIFY_ENVIRONMENT"]
 
