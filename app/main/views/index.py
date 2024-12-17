@@ -55,7 +55,7 @@ def index():
     return render_template(
         "views/signedout.html",
         sms_rate=CURRENT_SMS_RATE,
-        counts=status_api_client.get_count_of_live_services_and_organizations()
+        counts=status_api_client.get_count_of_live_services_and_organizations(),
     )
 
 
@@ -306,6 +306,13 @@ def why_text_messaging():
     return render_template(
         "views/about/why-text-messaging.html",
         navigation_links=about_notify_nav(),
+    )
+
+
+@main.route("/join-notify")
+def join_notify():
+    return render_template(
+        "views/join-notify.html",
     )
 
 
