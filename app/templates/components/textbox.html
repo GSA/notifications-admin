@@ -13,7 +13,8 @@
   safe_error_message=False,
   rows=8,
   extra_form_group_classes='',
-  placeholder=''
+  placeholder='',
+  required=None
 ) %}
   <div
     class="usa-form-group{% if field.errors %} usa-form-group--error{% endif %} {{ extra_form_group_classes }}"
@@ -56,6 +57,7 @@
       rows=rows|string,
       placeholder=placeholder,
       aria_describedby=field.name+"-error",
+      required='required' if required else None,
       **kwargs
     ) }}
     {% if suffix %}

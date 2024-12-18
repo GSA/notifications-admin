@@ -15,8 +15,6 @@
   }) }}
 {% endblock %}
 
-
-
 {% block maincolumn_content %}
 
     {{ page_header('{} text message template'.format(heading_action)) }}
@@ -34,7 +32,8 @@
         <div class="tablet:grid-col-9 mobile-lg:grid-col-12" aria-live="polite" role="alert">
           {{ form.name(param_extensions={
             "extra_form_group_classes": "margin-bottom-2",
-            "id": "name"
+            "id": "name",
+            "required": True
           }) }}
           {{ textbox(
             form.template_content,
@@ -44,6 +43,7 @@
             rows=5,
             extra_form_group_classes='margin-bottom-1',
             placeholder='Edit me! Check out the Personalization section below for details on cool ((stuff)) you can do with your messages!',
+            required=True
           ) }}
           {% if current_user.platform_admin %}
             {{ form.process_type }}
