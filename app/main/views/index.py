@@ -342,6 +342,12 @@ def send_files_by_email():
         navigation_links=using_notify_nav(),
     )
 
+@main.route("/studio")
+def studio():
+    return render_template(
+        "views/studio.html",
+    )
+
 
 # --- Redirects --- #
 
