@@ -6,6 +6,7 @@ import usaButton %} {% block meta %}
 />
 {% endblock %} {% block pageTitle %} Notify.gov {% endblock %} {% block main %}
 {% block beforeContent %}{% endblock %}
+
 <main id="main-content" role="main">
   {% block content %}
   <section class="usa-section--dark usa-hero" aria-label="Introduction">
@@ -57,13 +58,18 @@ import usaButton %} {% block meta %}
     </p>
   </section>
 
-  <section class="grid-container usa-section usa-section__home usa-prose padding-bottom-1">
+  <section
+    class="grid-container usa-section usa-section__home usa-prose padding-bottom-1"
+  >
     <h2 class="font-sans-xl margin-top-0">Key features</h2>
     <div class="home-cards margin-top-5">
       <ul class="usa-card-group display-flex margin-bottom-4">
         <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
           <div class="usa-card__container">
-            <img src="{{ asset_url('images/internet.svg') }}" alt="Globe on top of a web browser" />
+            <img
+              src="{{ asset_url('images/internet.svg') }}"
+              alt="Globe on top of a web browser"
+            />
             <div class="usa-card__header">
               <h3 class="font-heading-md">Web-based</h3>
             </div>
@@ -74,7 +80,10 @@ import usaButton %} {% block meta %}
         </li>
         <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
           <div class="usa-card__container">
-            <img src="{{ asset_url('images/fast.svg') }}" alt="Stopwatch with a notification speech bubble with a star inside" />
+            <img
+              src="{{ asset_url('images/fast.svg') }}"
+              alt="Stopwatch with a notification speech bubble with a star inside"
+            />
             <div class="usa-card__header">
               <h3 class="font-heading-md">Fast and easy</h3>
             </div>
@@ -85,7 +94,10 @@ import usaButton %} {% block meta %}
         </li>
         <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
           <div class="usa-card__container">
-            <img src="{{ asset_url('images/status.svg') }}" alt="3 status messages, 2 successes and one failure" />
+            <img
+              src="{{ asset_url('images/status.svg') }}"
+              alt="3 status messages, 2 successes and one failure"
+            />
             <div class="usa-card__header">
               <h3 class="font-heading-md">Track message delivery</h3>
             </div>
@@ -103,7 +115,9 @@ import usaButton %} {% block meta %}
               alt="Speech bubbles with the letter A and the Chinese character for language"
             />
             <div class="usa-card__header">
-              <h3 class="font-heading-md">Send in recipients' preferred language</h3>
+              <h3 class="font-heading-md">
+                Send in recipients' preferred language
+              </h3>
             </div>
             <div class="usa-card__body">
               <p>Notify.gov has support for more than 30 character sets</p>
@@ -112,28 +126,36 @@ import usaButton %} {% block meta %}
         </li>
         <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
           <div class="usa-card__container">
-            <img src="{{ asset_url('images/security.svg') }}" alt="Lock with code icon inside on top of a web browser" />
+            <img
+              src="{{ asset_url('images/security.svg') }}"
+              alt="Lock with code icon inside on top of a web browser"
+            />
             <div class="usa-card__header">
               <h3 class="font-heading-md">Security and privacy</h3>
             </div>
             <div class="usa-card__body">
               <p>
-                Limited data retention, encryption, and multi-factor authentication
-                protect user data and manage risk
+                Limited data retention, encryption, and multi-factor
+                authentication protect user data and manage risk
               </p>
             </div>
           </div>
         </li>
         <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
           <div class="usa-card__container">
-            <img src="{{ asset_url('images/send.svg') }}" alt="Paper airplane and a notification icon with the number 1 inside" />
+            <img
+              src="{{ asset_url('images/send.svg') }}"
+              alt="Paper airplane and a notification icon with the number 1 inside"
+            />
             <div class="usa-card__header">
-              <h3 class="font-heading-md">Send bulk, customized, one-way messages</h3>
+              <h3 class="font-heading-md">
+                Send bulk, customized, one-way messages
+              </h3>
             </div>
             <div class="usa-card__body">
               <p>
-                Send hundreds or thousands of individually customized messages with
-                just a few clicks
+                Send hundreds or thousands of individually customized messages
+                with just a few clicks
               </p>
             </div>
           </div>
@@ -142,7 +164,9 @@ import usaButton %} {% block meta %}
     </div>
   </section>
 
-  <section class="grid-container usa-section usa-section__home usa-prose grid-container padding-bottom-10">
+  <section
+    class="grid-container usa-section usa-section__home usa-prose grid-container padding-bottom-10"
+  >
     <h2 class="font-heading-xl margin-top-0 margin-bottom-3">
       Who can use Notify.gov?
     </h2>
@@ -159,7 +183,10 @@ import usaButton %} {% block meta %}
     </p>
     <div class="grid-container margin-top-4 padding-left-0 padding-right-0">
       <div class="grid-row grid-gap-3">
-        <a class="text-no-underline tablet:grid-col-4 mobile-lg:grid-col-12" href="mailto:tts-notify@gsa.gov">
+        <a
+          class="text-no-underline tablet:grid-col-4 mobile-lg:grid-col-12"
+          href="mailto:tts-notify@gsa.gov"
+        >
           <div class="contact-us-card">
             <div class="grid-row flex-align-center grid-gap-2">
               <div class="grid-col-auto">
