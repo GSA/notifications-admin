@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% set page_title = "About the Public Benefits Studio" %}
+
+{% block per_page_title %}{{page_title}}{% endblock %}
+
+{% block content_column_content %}
+
+<section class="usa-prose">
+  <h1>{{page_title}}</h1>
+  <p>The Benefits Studio is a product accelerator inside the federal government.
+    We collaborate with benefits programs and the people they serve to build and
+    scale shared tools that reduce burden within the social safety net.
+  </p>
+  <p>
+    As a part of GSA’s <a href="https://tts.gsa.gov/">Technology Transformation Services (TTS)</a>, the Studio is uniquely
+    positioned to work between and across agencies and programs, to make it easier and
+    cheaper for programs with the same challenges to use the same tools.
+  </p>
+  <p>
+    We focus on benefits programs first, because we believe solving problems for people
+    who face the highest challenges when interacting with the government will result in
+    solutions that serve everyone else well, too.
+  </p>
+  <p class="margin-bottom-4">
+    <strong>The Studio’s first product offering is <a href="/">Notify.gov</a></strong>, a text message service that helps government agencies at all levels more effectively communicate with the people they serve.
+  </p>
+  <p class="font-body-lg">We’re currently exploring two new product spaces:</p>
+  <ul>
+    <li><strong>Better Document Submission:</strong> How might we enable simple digital submission and document processing for benefits agencies?</li>
+    <li><strong>Automated Enrollment Checks:</strong> How might we improve how enrollment information is shared across benefit programs, especially where enrollment in one program provides partial or full eligibility for another program?</li>
+  </ul>
+  <p class="margin-bottom-4">If you’re interested in providing feedback on where we should go next, reach us at <a href="mailto:public-benefits-studio@gsa.gov">public-benefits-studio@gsa.gov.</a></p>
+  <p class="font-body-lg">Read more about the Studio:</p>
+  <ul>
+    <li><a href="https://digital.gov/2023/02/07/collaborate-with-the-tts-public-benefits-studio/">Collaborate with the Public Benefits Studio</a> — Digital.gov, Feb 2023</li>
+    <li><a href="https://federalnewsnetwork.com/it-modernization/2023/10/gsa-considers-text-messages-as-new-frontier-for-better-customer-experience/">GSA considers text messages as new frontier for better customer experience</a> — Federal News Network, Oct 2023</li>
+    <li><a href="https://www.gsa.gov/blog/2024/03/18/notifygov-is-helping-government-meet-families-where-they-are">Notify.gov is helping government meet families where they are</a> — GSA.gov blog, Mar 2024</li>
+  </ul>
+</section>
+
+{% endblock %}

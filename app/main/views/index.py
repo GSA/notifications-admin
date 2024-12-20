@@ -343,6 +343,13 @@ def send_files_by_email():
     )
 
 
+@main.route("/studio")
+def studio():
+    return render_template(
+        "views/studio.html",
+    )
+
+
 # --- Redirects --- #
 
 

@@ -483,7 +483,7 @@ def send_one_off_step(service_id, template_id, step_index):
         link_to_upload=(
             request.endpoint == "main.send_one_off_step" and step_index == 0
         ),
-        errors=form.errors if form.errors else None
+        errors=form.errors if form.errors else None,
     )
 
 
