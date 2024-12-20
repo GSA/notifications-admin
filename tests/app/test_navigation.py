@@ -217,6 +217,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "sign_in",
             "sign_out",
             "start_job",
+            "studio",
             "support",
             "suspend_service",
             "template_history",
