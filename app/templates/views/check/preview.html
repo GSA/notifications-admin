@@ -3,7 +3,6 @@
 {% from "components/table.html" import list_table, field, text_field, hidden_field_heading %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/components/button/macro.njk" import usaButton %}
-{% from "components/components/skip-link/macro.njk" import usaSkipLink %}
 {% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% set file_contents_header_id = 'file-preview' %}
@@ -34,7 +33,7 @@
   <div>
     <ul class="usa-icon-list">
       <li class="usa-icon-list__item">
-        <img src="{{ url_for('static', filename='img/material-icons/description.svg') }}" alt="Description Icon">
+        <img src="{{ url_for('static', filename='img/material-icons/description.svg') }}" alt="">
         <div class="usa-icon-list__content">
           <h3>{{ original_file_name }}</h3>
         </div>

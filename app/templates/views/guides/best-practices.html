@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
+{% set page_title = "Best Practices" %}
+
 {% block per_page_title %}
-Best Practices
+{{page_title}}
 {% endblock %}
 
 {% block content_column_content %}
-
 <section class="usa-prose">
   <h1>Best Practices</h1>
   <p class="font-sans-lg text-base">For texting the public</p>
@@ -23,41 +24,41 @@ Best Practices
   "svg_src": "goal",
   "card_heading": "Establish clear goals",
   "p_text": "Start with a singular purpose. Make explicit what you want to achieve.",
-  "link": "/guides/best-practices/clear-goals"
+  "link": "/guides/clear-goals"
   },
   {
   "svg_src": "compliant",
   "card_heading": "Follow rules & regulations",
   "p_text": "Understand what is required when texting the public.",
-  "link": "/guides/best-practices/rules-and-regulations"
+  "link": "/guides/rules-and-regulations"
   },
   {
   "svg_src": "trust",
   "card_heading": "Establish trust",
   "p_text": "Help your audience anticipate and welcome your texts.",
-  "link": "/guides/best-practices/establish-trust"
+  "link": "/guides/establish-trust"
   },
   {
   "svg_src": "runner",
   "card_heading": "Write texts that provoke action",
   "p_text": "Help your audience know what to do with the information you send.",
-  "link": "/guides/best-practices/write-for-action"
+  "link": "/guides/write-for-action"
   },
   {
   "svg_src": "language",
   "card_heading": "Send texts in multiple languages",
   "p_text": "What to know as you plan translated texts.",
-  "link": "/guides/best-practices/multiple-languages"
+  "link": "/guides/multiple-languages"
   },
   {
   "svg_src": "chart",
   "card_heading": "Measure performance with benchmarking",
   "p_text": "Learn how effective your texting program can be.",
-  "link": "/guides/best-practices/benchmark-performance"
+  "link": "/guides/benchmark-performance"
   }
   ] %}
 
-  {% with card_contents=card_contents %}{% include "components/best-practices/cards.html" %}{%
+  {% with card_contents=card_contents %}{% include "components/guides/cards.html" %}{%
   endwith %}
 
 </section>

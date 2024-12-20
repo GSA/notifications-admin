@@ -24,11 +24,10 @@
         {% endif %}
         {% if current_user.has_permissions('manage_templates') %}
             <a href="{{ url_for(".edit_service_template", service_id=current_service.id, template_id=template.id) }}" class="usa-button usa-button--outline usa-pill-separate-item">
-              Edit
+              Edit this template
             </a>
         {% endif %}
       </div>
     </div>
   {% endif %}
 </div>
-

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "components/nav_breadcrumb.html" as breadcrumbs %}
 
 {% set page_title = "Rules and regulations" %}
 
@@ -7,7 +8,8 @@
 {% endblock %}
 
 {% block content_column_content %}
-{% with title=page_title %}{% include "components/best-practices/nav_breadcrumb.html" %}{% endwith %}
+{{ breadcrumbs.breadcrumb(page_title, "Guides", "main.best_practices") }}
+
 <section class="usa-prose">
   <h1>{{page_title}}</h1>
   <p class="font-sans-lg text-base">Understand what is required when texting the public.</p>
@@ -20,7 +22,7 @@
     If you do need expressed consent, consider including a pre-checked plain language opt-in (i.e. “It’s OK to text
     me.”) on
     digital forms. Be sure to ask for an up-to-date phone number and include a question about the recipient’s preferred
-    language for text messages if you expect to <a href="../best-practices/multiple-languages">translate your text
+    language for text messages if you expect to <a href="../guides/multiple-languages">translate your text
       messages</a> in
     languages other than English.
   </p>
@@ -79,7 +81,7 @@
   <h3>Opting out</h3>
   <p>
     There is no policy requirement for senders to communicate opt-out options, but <a
-      href="../best-practices/establish-trust#as-people-receive-texts"> including instructions in introductory and/or
+      href="../guides/establish-trust#as-people-receive-texts"> including instructions in introductory and/or
       auto-response texts </a> on how to opt out and opt back in are effective ways to establish trust with your
     audience.
   </p>

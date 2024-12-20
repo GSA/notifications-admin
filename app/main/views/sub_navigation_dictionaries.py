@@ -114,4 +114,8 @@ def about_notify_nav():
                 },
             ],
         },
+        {
+            "name": "Contact",
+            "link": "main.contact",
+        },
     ]
