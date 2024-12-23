@@ -1,12 +1,7 @@
 {% extends "base.html" %}
 
-{% block per_page_title %}
-  {% if current_org.name %}
-    {% block org_page_title %}{% endblock %} – {{ current_org.name }}
-  {% else %}
-    {% block service_page_title %}{% endblock %} – {{ current_service.name }}
-  {% endif %}
-{% endblock %}
+{% block per_page_title %}{% if current_org.name %}{% block org_page_title %}{% endblock %} – {{ current_org.name }}{%
+  else %}{% block service_page_title %}{% endblock %} – {{ current_service.name }}{% endif %}{% endblock %}
 
 {% block main %}
   <div class="grid-container">

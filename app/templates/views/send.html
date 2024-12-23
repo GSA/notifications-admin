@@ -12,7 +12,7 @@
 
 
 {% block backLink %}
-  {{ usaBackLink({ "href": url_for('main.send_one_off', service_id=current_service.id, template_id=template.id) }) }}
+  {{ usaBackLink(params) }}
 {% endblock %}
 
 {% block maincolumn_content %}
@@ -31,10 +31,10 @@
   <h2 class="font-body-lg">Your file needs to look like this example</h2>
   <p class="hint">
     Save your file as a
-    <acronym title="Comma Separated Values">CSV</acronym>,
-    <acronym title="Tab Separated Values">TSV</acronym>,
-    <acronym title="Open Document Spreadsheet">ODS</acronym>,
-    or Microsoft Excel spreadsheet
+    <abbr title="Comma Separated Values">CSV</abbr><span aria-hidden="true">, </span>
+    <abbr title="Tab Separated Values">TSV</abbr><span aria-hidden="true">, </span>
+    <abbr title="Open Document Spreadsheet">ODS</abbr>
+    or Microsoft Excel spreadsheet.
   </p>
 
   <div class="spreadsheet" data-module="fullscreen-table">

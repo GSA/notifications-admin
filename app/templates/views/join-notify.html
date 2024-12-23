@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% set page_title = "Join Notify" %}
+
+{% block per_page_title %}{{page_title}}{% endblock %}
+
+{% block content_column_content %}
+
+<section class="usa-prose">
+  <h1>{{page_title}}</h1>
+  <h2>Who is Notify.gov for?</h2>
+  <p>
+    Government agencies at any level of government who deliver <b>federal programs</b> are able to use Notify.gov. Those
+    who sign up to new Notify.gov become our partners.
+  </p>
+  <p>
+    All <b>federal agencies</b> are invited to use Notify.gov to send text messages to their employees, other federal
+    agencies, or to the public.
+  </p>
+  <p>
+    <b>
+      Non-federal agencies (state, local, territorial, or tribal governments) who administer or deliver federally-funded
+      services
+    </b> may qualify to use Notify.gov. These programs must specify which federal program the messages they want to
+    send are related to. The Notify.gov team confirms our authority to work with these programs as part of our
+    agreements process.
+  </p>
+  <h3>What partners receive</h3>
+  <p>
+    To use Notify.gov to send messages (outside of our Trial Mode), partners sign a one-year Memorandum of Understanding
+    with us. This is a basic agreement outlining our relationship and responsibilities.
+  </p>
+  <p class="padding-bottom-3"><b>Our core, no-cost, service offering includes:</b></p>
+  {% set product_highlights = [
+  {
+  "svg_src": "#chat",
+  "card_heading": "Up to 250,000 messages to use over your first year*",
+  },
+  {
+  "svg_src": "#phone",
+  "card_heading": "One toll-free sending phone number",
+  },
+  {
+  "svg_src": "#forum",
+  "card_heading": "An easy-to-use web-based interface for sending bulk or individual messages",
+  },
+  {
+  "svg_src": "#assessment",
+  "card_heading": "Dashboards and downloadable reports for tracking message delivery",
+  },
+  ] %}
+  <ul class="usa-icon-list">
+    {% for item in product_highlights %}
+    <li class="usa-icon-list__item">
+      <div class="usa-icon-list__content padding-left-0">
+        <div class="usa-icon-list__icon display-flex flex-align-start">
+          <svg aria-hidden="true" focusable="false" role="img" class="icon-list">
+            <use xlink:href="{{ asset_url('img/sprite.svg') }}{{ item.svg_src }}"></use>
+          </svg>
+          <b>{{item.card_heading}}</b>
+        </div>
+        <p class="indented-paragraph">{{item.p_text}}</p>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  <p class="font-body-xs">*We plan to offer plans with additional messages soon; please contact us if you need more
+    messages so that we can understand your use case!</p>
+
+  <h2 class="padding-bottom-2" id="summary-box-how-to-get-started">How to get started</h2>
+  <div class="usa-summary-box maxw-tablet __web-inspector-hide-shortcut__" role="region"
+    aria-labelledby="summary-box-how-to-get-started">
+    <div class="usa-summary-box__body">
+      <div class="usa-summary-box__text">
+        <p>Interested in trying Notify.gov before signing an agreement? We can provide qualifying partners with access
+          to Trial Mode to review Notify.gov features before deciding. In Trial Mode, you can test sending messages,
+          explore the personalization and customization features, and review sample delivery reports.</p>
+      </div>
+    </div>
+  </div>
+
+  <h4>Tell us about your program</h4>
+  <p class="padding-bottom-3">
+    Let’s determine if Notify.gov is a good fit for your organization. To <b>get started</b>, we’ll ask you for
+    information such as:
+  </p>
+  {% set bullet_items = [
+  "Organization name and type",
+  "Point of contact’s name and email address",
+  "Your associated federal funding, program, or authority",
+  "The program(s) you want to text about",
+  "Who you are planning to text",
+  "What you’d like to achieve by texting these people",
+  "The estimate number of texts you’d like to send in the first year",
+  "Who would you like to include on the Trial Mode account?",
+  "Provide the official government email address to invite your team members",
+  "When would you like to send your first text(s)?"
+  ] %}
+  <ul class="usa-icon-list padding-bottom-2">
+    {% for item in bullet_items %}
+    <li class="usa-icon-list__item">
+      <div class="usa-icon-list__icon display-flex flex-align-start">
+        <svg class="usa-icon checkmark-icon icon-list" aria-hidden="true" focusable="false" role="img">
+          <use xlink:href="{{ asset_url('img/sprite.svg') }}#check"></use>
+        </svg>
+        <b>{{ item }}</b>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSdZvsPndZaLeFBTtIxvDCx0Rdjyhln_dWXSLSwfgKw4ftEslw/viewform"
+    class="usa-button margin-bottom-3">Get started</a>
+  <hr class="maxw-tablet margin-left-0">
+  <h2>Next Steps</h2>
+  <p>
+    Our team will review the information you provide, and follow up with any questions. We’ll contact you no matter your
+    qualification status.
+  </p>
+  <p>
+    We provide you a one-year, Memorandum of Understanding (MOU). To text the public fully in Live Mode, your
+    organization will need to sign our MOU.
+  </p>
+
+  <h3 class="padding-bottom-3">Getting Started FAQs</h3>
+  {% set accordion_content = [
+  {
+  "heading": "What if I need more than 250,000 messages?",
+  "p_text": "Plans that include additional messages for a fee will be available soon. We want to design these plans
+  based on our partners’ needs, so please <a href='mailto:tts-notify@gsa.gov'>contact us</a> if you hope to be able to
+  send more messages. We’d like to talk with you.",
+  "position": "b-a1"
+  },
+  {
+  "heading": "What phone numbers can my agency send to?",
+  "p_text": "Right now, Notify.gov supports sending messages to North American numbers (+1). If you’d like to send to
+  international numbers, we want to <u>hear from you</u>.",
+  "position": "b-a2",
+  },
+  {
+  "heading": "Can we send from a shortcode or an existing customer service number?",
+  "p_text": "At this time, Notify.gov provides toll-free service numbers. We will be exploring offering shortcodes in
+  the near future. If you wish to send from an existing phone number owned or operated by your agency, this is something
+  that might be possible in the future, but is not currently on our roadmap.",
+  "position": "b-a3",
+  },
+  {
+  "heading": "Can we use API integrations with Notify?",
+  "p_text": "While public API integrations are not yet available, we are working on enabling these. If you're looking
+  for this feature <a href='/about/contact'>we want to hear from you</a>.",
+  "position": "b-a4",
+  },
+  {
+  "heading": "My IT team has questions about how Notify.gov is built, where can I direct them to more information?",
+  "p_text": "To understand how Notify.gov works, see our <a href='/about/security'>Security page </a> for the
+  basics. If your IT team needs more
+  information we’re happy to share a larger security package upon request.",
+  "position": "b-a5",
+  },
+  {
+  "heading": "How does Notify.gov support our records retention policy?",
+  "p_text": "We are not a System of Record. For more see our <a href='/about/security'>Security page</a>.",
+  "position": "b-a6",
+  },
+  {
+  "heading": "My OGC is asking about consent, where can I get more information for them?",
+  "p_text": "Text message notifications are governed by the Telephone Consumer Protection Act. Different levels of
+  government have different consent requirements. Download and share our <a
+    href='https://github.com/GSA/notifications-admin/files/15100120/TCPA.Overview_Notify.gov.pdf'>overview of the
+    TCPA</a> with your legal counsel as
+  a starting point.",
+  "position": "b-a7",
+  },
+  {
+  "heading": "What information does Notify provide about message delivery?",
+  "p_text": "Notify.gov shares back information about message delivery that we receive from individual mobile phone
+  carriers. Carriers can only provide information about whether a message was successfully delivered to a specific phone
+  number (not a person).
+
+  If you happen to send a message to a landline or out-of-service phone number, these messages will show up as ‘failed’
+  in delivery reports.",
+  "position": "b-a8",
+  },
+  {
+  "heading": "Can I track engagement with the messages I send?",
+  "p_text": "Unlike email, you cannot see if someone reads a message or clicks on a link you included in a message. This
+  is a limitation of SMS in general, not Notify.gov. We do highly recommend setting goals for your texting campaigns and
+  tracking performance. By combining the delivery reports provided by Notify.gov with other information from your
+  program, you may be able to assess engagement and impact.",
+  "position": "b-a9",
+  },
+  {
+  "heading": "Is there technical product support offered?",
+  "p_text": "We’re on call to answer any questions as you get started using Notify.gov",
+  "position": "b-a10",
+  },
+  ] %}
+  <div class="usa-accordion usa-accordion--bordered maxw-tablet">
+    {% for item in accordion_content %}
+    <h4 class="usa-accordion__heading">
+      <button type="button" class="usa-accordion__button" aria-controls="{{item.position}}">
+        {{item.heading}}
+      </button>
+    </h4>
+    <div id="{{item.position}}" class="usa-accordion__content usa-prose">
+      <p>
+        {{ item.p_text | safe }}
+      </p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

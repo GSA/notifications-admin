@@ -20,21 +20,14 @@ def test_non_logged_in_user_can_see_homepage(
         "Reach people where they are with government-powered text messages"
     )
 
-    assert (
-        page.select_one(
-            "a.usa-button.login-button.login-button--primary.margin-right-2"
-        ).text
-        == "Sign in with \n"
+    # Assert the entire HTML of the button to include the image
+    button = page.select_one(
+        "a.usa-button.login-button.login-button--primary.margin-right-2"
     )
-    assert page.select_one("meta[name=description]") is not None
-    # This area is hidden for the pilot
-    # assert normalize_spaces(page.select_one('#whos-using-notify').text) == (
-    #     'Who’s using Notify.gov '  # Hiding this next area for the pilot
-    #     # Hiding this next area for the pilot
-    #     # 'See the list of services and organizations. '
-    #     'There are 111 Organizations and 9,999 Services using Notify.'
-    # )
+    assert "Sign in with" in button.text.strip()  # Assert button text
+    assert button.find("img")["alt"] == "Login.gov logo"  # Assert image presence
 
+    assert page.select_one("meta[name=description]") is not None
     assert page.select_one("#whos-using-notify a") is None
 
 
@@ -125,6 +118,7 @@ def test_static_pages(client_request, mock_get_organization_by_domain, view, moc
             "write_for_action",
             "multiple_languages",
             "benchmark_performance",
+            "guidance_index",
         ]
         return (
             not current_app.config["FEATURE_BEST_PRACTICES_ENABLED"]

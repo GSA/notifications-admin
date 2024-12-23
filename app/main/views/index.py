@@ -1,7 +1,3 @@
-import os
-import secrets
-from urllib.parse import unquote
-
 from flask import (
     abort,
     current_app,
@@ -13,7 +9,7 @@ from flask import (
 )
 from flask_login import current_user
 
-from app import redis_client, status_api_client
+from app import status_api_client
 from app.formatters import apply_html_class, convert_markdown_template
 from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
@@ -24,13 +20,12 @@ from app.main.views.sub_navigation_dictionaries import (
     using_notify_nav,
 )
 from app.utils.user import user_is_logged_in
-from notifications_utils.url_safe_token import generate_token
 
 
 # Hook to check for feature flags
 @main.before_request
 def check_feature_flags():
-    if request.path.startswith("/guides/best-practices") and not current_app.config.get(
+    if request.path.startswith("/guides") and not current_app.config.get(
         "FEATURE_BEST_PRACTICES_ENABLED", False
     ):
         abort(404)
@@ -57,31 +52,10 @@ def index():
     if current_user and current_user.is_authenticated:
         return redirect(url_for("main.choose_account"))
 
-    ttl = 24 * 60 * 60
-
-    # make and store the state
-    state = generate_token(
-        str(request.remote_addr),
-        current_app.config["SECRET_KEY"],
-        current_app.config["DANGEROUS_SALT"],
-    )
-    state_key = f"login-state-{unquote(state)}"
-    redis_client.set(state_key, state, ex=ttl)
-
-    # make and store the nonce
-    nonce = secrets.token_urlsafe()
-    nonce_key = f"login-nonce-{unquote(nonce)}"
-    redis_client.set(nonce_key, nonce, ex=ttl)
-
-    url = os.getenv("LOGIN_DOT_GOV_INITIAL_SIGNIN_URL")
-    if url is not None:
-        url = url.replace("NONCE", nonce)
-        url = url.replace("STATE", state)
     return render_template(
         "views/signedout.html",
         sms_rate=CURRENT_SMS_RATE,
         counts=status_api_client.get_count_of_live_services_and_organizations(),
-        initial_signin_url=url,
     )
 
 
@@ -233,61 +207,61 @@ def trial_mode_new():
 @user_is_logged_in
 def best_practices():
     return render_template(
-        "views/best-practices/best-practices.html",
+        "views/guides/best-practices.html",
         navigation_links=best_practices_nav(),
     )
 
 
-@main.route("/guides/best-practices/clear-goals")
+@main.route("/guides/clear-goals")
 @user_is_logged_in
 def clear_goals():
     return render_template(
-        "views/best-practices/clear-goals.html",
+        "views/guides/clear-goals.html",
         navigation_links=best_practices_nav(),
     )
 
 
-@main.route("/guides/best-practices/rules-and-regulations")
+@main.route("/guides/rules-and-regulations")
 @user_is_logged_in
 def rules_and_regulations():
     return render_template(
-        "views/best-practices/rules-and-regulations.html",
+        "views/guides/rules-and-regulations.html",
         navigation_links=best_practices_nav(),
     )
 
 
-@main.route("/guides/best-practices/establish-trust")
+@main.route("/guides/establish-trust")
 @user_is_logged_in
 def establish_trust():
     return render_template(
-        "views/best-practices/establish-trust.html",
+        "views/guides/establish-trust.html",
         navigation_links=best_practices_nav(),
     )
 
 
-@main.route("/guides/best-practices/write-for-action")
+@main.route("/guides/write-for-action")
 @user_is_logged_in
 def write_for_action():
     return render_template(
-        "views/best-practices/write-for-action.html",
+        "views/guides/write-for-action.html",
         navigation_links=best_practices_nav(),
     )
 
 
-@main.route("/guides/best-practices/multiple-languages")
+@main.route("/guides/multiple-languages")
 @user_is_logged_in
 def multiple_languages():
     return render_template(
-        "views/best-practices/multiple-languages.html",
+        "views/guides/multiple-languages.html",
         navigation_links=best_practices_nav(),
     )
 
 
-@main.route("/guides/best-practices/benchmark-performance")
+@main.route("/guides/benchmark-performance")
 @user_is_logged_in
 def benchmark_performance():
     return render_template(
-        "views/best-practices/benchmark-performance.html",
+        "views/guides/benchmark-performance.html",
         navigation_links=best_practices_nav(),
     )
 
@@ -301,6 +275,13 @@ def guidance_index():
         feature_best_practices_enabled=current_app.config[
             "FEATURE_BEST_PRACTICES_ENABLED"
         ],
+    )
+
+
+@main.route("/contact")
+def contact():
+    return render_template(
+        "views/contact.html",
     )
 
 
@@ -325,6 +306,13 @@ def why_text_messaging():
     return render_template(
         "views/about/why-text-messaging.html",
         navigation_links=about_notify_nav(),
+    )
+
+
+@main.route("/join-notify")
+def join_notify():
+    return render_template(
+        "views/join-notify.html",
     )
 
 

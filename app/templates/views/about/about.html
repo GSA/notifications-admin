@@ -7,7 +7,6 @@
 {% endblock %}
 
 {% block content_column_content %}
-<!-- {% with title=page_title %}{% include "components/best-practices/nav_breadcrumb.html" %}{% endwith %} -->
 <section class="usa-prose">
   <h1>{{page_title}}</h1>
   <p>Notify.gov is a text messaging service built by and for the government. We help agencies communicate more
@@ -24,8 +23,7 @@
   <p>Notify.gov is an easy-to-use, web-based platform. It requires no technical expertise or system integration — users
     can create an account and get started within minutes. We take the security and privacy of messaging data seriously
     by minimizing data retention and using modern encryption methods.</p>
-  <!-- add youtube video component here -->
-  <h2 class="padding-bottom-3">Product Highlights</h2>
+    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/fkcy_xbo0Bw?si=qNo94BwL4WCeusy5&amp;start=2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>  <h2 class="padding-bottom-3">Product Highlights</h2>
   {% set product_highlights = [
   {
   "svg_src": "#send",
@@ -69,7 +67,7 @@
     </li>
     {% endfor %}
   </ul>
-  <p><a href="#">See if Notify is right for you</a></p>
+  <p><a href="/join-notify">See if Notify is right for you</a></p>
   <p>Notify.gov is a product of the <a href="#">Public Benefits Studio</a>, a product accelerator inside
     the federal government. </p>
 </section>
