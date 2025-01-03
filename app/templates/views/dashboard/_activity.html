@@ -1,0 +1,19 @@
+<div class="ajax-block-container">
+  sdsadadadadadsadsdsad
+
+  <div class="grid-row grid-gap">
+    <div id="total-sms" class="grid-col-12 margin-top-2">
+      <span class="big-number-with-status display-block margin-bottom-2">
+        <a class="usa-button usa-button--outline" href="{{ url_for('.view_notifications', service_id=service_id, message_type='sms', status='sending,delivered,failed') }}">
+         sdsadadadadadsadsdsad
+        </a>
+        <div id="totalMessageChartContainer" data-sms-sent="{{ sms_sent }}" data-sms-allowance-remaining="{{ sms_allowance_remaining }}">
+          <h2 id="chartTitle">Total messages</h2>
+          <svg id="totalMessageChart"></svg>
+          <div id="message"></div>
+        </div>
+        <div id="totalMessageTable" class="margin-0"></div>
+      </span>
+      </div>
+    </div>
+</div>
