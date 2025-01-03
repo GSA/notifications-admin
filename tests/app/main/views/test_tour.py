@@ -175,7 +175,7 @@ def test_should_show_empty_text_box(
     # shouldn’t also be set on the textbox itself
     assert "data-module" not in textbox
     assert (
-        normalize_spaces(page.select_one("label[for=placeholder_value]").text) == "one"
+        normalize_spaces(page.select_one("label[for=phone-number]").text) == "one"
     )
 
 
