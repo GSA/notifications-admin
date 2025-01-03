@@ -957,6 +957,9 @@ li.linked-card:hover svg,
   .usa-card__container {
     align-items: center;
     text-align: center;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     img {
       margin: units(4) auto 0;
       width: units(15);
@@ -965,8 +968,16 @@ li.linked-card:hover svg,
     .usa-card__body {
       margin-bottom: units(2);
     }
+    .blue-bar {
+      background-color: #005eb8;
+      height: 1.3em;
+      width: 100%;
+      margin: 0;
+      border-radius: 0;
+    }
   }
 }
+
 
 .contact-us-card {
   border: 2px solid color("ink");

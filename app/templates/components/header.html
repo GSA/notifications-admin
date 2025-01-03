@@ -38,7 +38,11 @@
 {% set navigation = [] %}
 
 {% if FEATURE_ABOUT_PAGE_ENABLED %}
-{% set navigation = navigation + [{"href": url_for('main.about_notify'), "text": "About Notify", "active": request.path == '/about'}] %}
+{% set navigation = navigation + [
+  {"href": url_for('main.about_notify'), "text": "About Notify", "active": request.path == '/about'},
+  {"href": url_for('main.join_notify'), "text": "Join Notify", "active": request.path == '/join-notify'},
+  {"href": url_for('main.contact'), "text": "Contact", "active": request.path == '/contact'}
+] %}
 {% endif %}
 {% endif %}
 
