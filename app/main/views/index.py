@@ -350,6 +350,13 @@ def studio():
     )
 
 
+@main.route("/acceptable-use-policy")
+def acceptable_use_policy():
+    return render_template(
+        "views/acceptable-use-policy.html",
+    )
+
+
 # --- Redirects --- #
 
 

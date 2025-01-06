@@ -19,6 +19,7 @@ EXCLUDED_ENDPOINTS = tuple(
         {
             "about_notify",
             "about_security",
+            "acceptable_use_policy",
             "accept_invite",
             "accept_org_invite",
             "accessibility_statement",
