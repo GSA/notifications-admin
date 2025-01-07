@@ -119,7 +119,7 @@ def about_notify_nav():
             "link": "main.join_notify",
         },
         {
-            "name": "Contact",
+            "name": "Contact us",
             "link": "main.contact",
         },
     ]
