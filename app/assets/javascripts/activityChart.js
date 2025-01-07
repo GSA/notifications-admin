@@ -5,6 +5,7 @@
         const COLORS = {
             delivered: '#0076d6',
             failed: '#fa9441',
+            pending: '#808080',
             text: '#666'
         };
 
@@ -45,7 +46,8 @@
                 // Show legend if there are messages
                 const legendData = [
                     { label: 'Delivered', color: COLORS.delivered },
-                    { label: 'Failed', color: COLORS.failed }
+                    { label: 'Failed', color: COLORS.failed },
+                    { label: 'Pending', color: COLORS.pending }
                 ];
 
                 const legendItem = legendContainer.selectAll('.legend-item')
@@ -100,12 +102,13 @@
             const stackData = labels.map((label, i) => ({
                 label: label,
                 delivered: deliveredData[i],
-                failed: failedData[i] || 0 // Ensure there's a value for failed, even if it's 0
+                failed: failedData[i] || 0, // Ensure there's a value for failed, even if it's 0
+                pending: pendingData[i] || 0
             }));
 
             // Stack the data
             const stack = d3.stack()
-                .keys(['delivered', 'failed'])
+                .keys(['delivered', 'failed', 'pending'])
                 .order(d3.stackOrderNone)
                 .offset(d3.stackOffsetNone);
 
@@ -113,8 +116,8 @@
 
             // Color scale
             const color = d3.scaleOrdinal()
-                .domain(['delivered', 'failed'])
-                .range([COLORS.delivered, COLORS.failed]);
+                .domain(['delivered', 'failed', 'pending'])
+                .range([COLORS.delivered, COLORS.failed, COLORS.pending]);
 
         // Create bars with animation
         const barGroups = svg.selectAll('.bar-group')
@@ -164,7 +167,7 @@
 
         // Create table header
         const headerRow = document.createElement('tr');
-        const headers = ['Day', 'Delivered', 'Failed'];
+        const headers = ['Day', 'Delivered', 'Failed', 'Pending'];
         headers.forEach(headerText => {
             const th = document.createElement('th');
             th.textContent = headerText;
@@ -186,6 +189,10 @@
             const cellFailed = document.createElement('td');
             cellFailed.textContent = failedData[index];
             row.appendChild(cellFailed);
+
+            const cellPending = document.createElement('td');
+            cellPending.textContent = pendingData[index];
+            row.appendChild(cellPending);
 
             tbody.appendChild(row);
         });
@@ -213,6 +220,7 @@
                 labels = [];
                 deliveredData = [];
                 failedData = [];
+                pendingData = [];
 
                 let totalMessages = 0;
 
@@ -224,7 +232,7 @@
                         labels.push(formattedDate);
                         deliveredData.push(data[dateString].sms.delivered);
                         failedData.push(data[dateString].sms.failure);
-
+                        pendingData.push(data[dateString].sms.pending || 0);
                         // Calculate the total number of messages
                         totalMessages += data[dateString].sms.delivered + data[dateString].sms.failure;
                     }
@@ -260,7 +268,7 @@
             })
             .catch(error => console.error('Error fetching daily stats:', error));
     };
-
+    // setInterval(() => fetchData('service'), 1000);
     const handleDropdownChange = function(event) {
         const selectedValue = event.target.value;
         const subTitle = document.querySelector(`#activityChartContainer .chart-subtitle`);

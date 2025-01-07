@@ -334,6 +334,18 @@ def get_status_filters(service, message_type, statistics):
 
 
 def _get_job_counts(job):
+    print('''
+
+
+
+          job
+
+
+
+
+          ''', dir(job))
+    print(job.notifications_sending)
+
     job_type = job.template_type
     return [
         (
@@ -358,7 +370,7 @@ def _get_job_counts(job):
             ],
             [
                 Markup(
-                    f"""pending<span class="usa-sr-only">
+                    f"""pending--fdsjfisodj<span class="usa-sr-only">
                     {message_count_noun(job.notifications_sending, job_type)}</span>"""
                 ),
                 "pending",
