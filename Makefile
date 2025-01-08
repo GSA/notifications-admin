@@ -15,7 +15,6 @@ NVMSH := $(shell [ -f "$(HOME)/.nvm/nvm.sh" ] && echo "$(HOME)/.nvm/nvm.sh" || e
 
 .PHONY: bootstrap
 bootstrap: generate-version-file ## Set up everything to run the app
-	poetry self update
 	poetry self add poetry-dotenv-plugin
 	poetry lock --no-update
 	poetry install --sync --no-root

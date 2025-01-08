@@ -282,6 +282,8 @@ def guidance_index():
 def contact():
     return render_template(
         "views/contact.html",
+        navigation_links=about_notify_nav(),
+
     )
 
 
@@ -313,6 +315,8 @@ def why_text_messaging():
 def join_notify():
     return render_template(
         "views/join-notify.html",
+        navigation_links=about_notify_nav(),
+
     )
 
 
