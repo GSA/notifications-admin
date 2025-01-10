@@ -119,203 +119,203 @@
                 .domain(['delivered', 'failed', 'pending'])
                 .range([COLORS.delivered, COLORS.failed, COLORS.pending]);
 
-        // Create bars with animation
-        const barGroups = svg.selectAll('.bar-group')
-            .data(series)
-            .enter()
-            .append('g')
-            .attr('class', 'bar-group')
-            .attr('fill', d => color(d.key));
+            // Create bars with animation
+            const barGroups = svg.selectAll('.bar-group')
+                .data(series)
+                .enter()
+                .append('g')
+                .attr('class', 'bar-group')
+                .attr('fill', d => color(d.key));
 
-        barGroups.selectAll('rect')
-            .data(d => d)
-            .enter()
-            .append('rect')
-            .attr('x', d => x(d.data.label))
-            .attr('y', height)
-            .attr('height', 0)
-            .attr('width', x.bandwidth())
-            .on('mouseover', function(event, d) {
-                const key = d3.select(this.parentNode).datum().key;
-                const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
-                tooltip.style('display', 'block')
-                    .html(`${d.data.label}<br>${capitalizedKey}: ${d.data[key]}`);
-            })
-            .on('mousemove', function(event) {
-                tooltip.style('left', `${event.pageX + 10}px`)
-                    .style('top', `${event.pageY - 20}px`);
-            })
-            .on('mouseout', function() {
-                tooltip.style('display', 'none');
-            })
-            .transition()
-            .duration(1000)
-            .attr('y', d => y(d[1]))
-            .attr('height', d => y(d[0]) - y(d[1]));
-    };
+            barGroups.selectAll('rect')
+                .data(d => d)
+                .enter()
+                .append('rect')
+                .attr('x', d => x(d.data.label))
+                .attr('y', height)
+                .attr('height', 0)
+                .attr('width', x.bandwidth())
+                .on('mouseover', function(event, d) {
+                    const key = d3.select(this.parentNode).datum().key;
+                    const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
+                    tooltip.style('display', 'block')
+                        .html(`${d.data.label}<br>${capitalizedKey}: ${d.data[key]}`);
+                })
+                .on('mousemove', function(event) {
+                    tooltip.style('left', `${event.pageX + 10}px`)
+                        .style('top', `${event.pageY - 20}px`);
+                })
+                .on('mouseout', function() {
+                    tooltip.style('display', 'none');
+                })
+                .transition()
+                .duration(1000)
+                .attr('y', d => y(d[1]))
+                .attr('height', d => y(d[0]) - y(d[1]));
+        };
 
-    // Function to create an accessible table
-    const createTable = function(tableId, chartType, labels, deliveredData, failedData) {
-        const table = document.getElementById(tableId);
-        table.innerHTML = ""; // Clear previous data
+        // Function to create an accessible table
+        const createTable = function(tableId, chartType, labels, deliveredData, failedData) {
+            const table = document.getElementById(tableId);
+            table.innerHTML = ""; // Clear previous data
 
-        const captionText = document.querySelector(`#${chartType} .chart-subtitle`).textContent;
-        const caption = document.createElement('caption');
-        caption.textContent = captionText;
-        const thead = document.createElement('thead');
-        const tbody = document.createElement('tbody');
+            const captionText = document.querySelector(`#${chartType} .chart-subtitle`).textContent;
+            const caption = document.createElement('caption');
+            caption.textContent = captionText;
+            const thead = document.createElement('thead');
+            const tbody = document.createElement('tbody');
 
-        // Create table header
-        const headerRow = document.createElement('tr');
-        const headers = ['Day', 'Delivered', 'Failed', 'Pending'];
-        headers.forEach(headerText => {
-            const th = document.createElement('th');
-            th.textContent = headerText;
-            headerRow.appendChild(th);
-        });
-        thead.appendChild(headerRow);
+            // Create table header
+            const headerRow = document.createElement('tr');
+            const headers = ['Day', 'Delivered', 'Failed', 'Pending'];
+            headers.forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
 
-        // Create table body
-        labels.forEach((label, index) => {
-            const row = document.createElement('tr');
-            const cellDay = document.createElement('td');
-            cellDay.textContent = label;
-            row.appendChild(cellDay);
+            // Create table body
+            labels.forEach((label, index) => {
+                const row = document.createElement('tr');
+                const cellDay = document.createElement('td');
+                cellDay.textContent = label;
+                row.appendChild(cellDay);
 
-            const cellDelivered = document.createElement('td');
-            cellDelivered.textContent = deliveredData[index];
-            row.appendChild(cellDelivered);
+                const cellDelivered = document.createElement('td');
+                cellDelivered.textContent = deliveredData[index];
+                row.appendChild(cellDelivered);
 
-            const cellFailed = document.createElement('td');
-            cellFailed.textContent = failedData[index];
-            row.appendChild(cellFailed);
+                const cellFailed = document.createElement('td');
+                cellFailed.textContent = failedData[index];
+                row.appendChild(cellFailed);
 
-            const cellPending = document.createElement('td');
-            cellPending.textContent = pendingData[index];
-            row.appendChild(cellPending);
+                const cellPending = document.createElement('td');
+                cellPending.textContent = pendingData[index];
+                row.appendChild(cellPending);
 
-            tbody.appendChild(row);
-        });
+                tbody.appendChild(row);
+            });
 
-        table.appendChild(caption);
-        table.appendChild(thead);
-        table.append(tbody);
-    };
+            table.appendChild(caption);
+            table.appendChild(thead);
+            table.append(tbody);
+        };
 
-    const fetchData = function(type) {
-        var ctx = document.getElementById('weeklyChart');
-        if (!ctx) {
-            return;
-        }
+        const fetchData = function(type) {
+            var ctx = document.getElementById('weeklyChart');
+            if (!ctx) {
+                return;
+            }
 
-        var url = type === 'service' ? `/daily_stats.json` : `/daily_stats_by_user.json`;
-        return fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                labels = [];
-                deliveredData = [];
-                failedData = [];
-                pendingData = [];
-
-                let totalMessages = 0;
-
-                for (var dateString in data) {
-                    if (data.hasOwnProperty(dateString)) {
-                        const dateParts = dateString.split('-');
-                        const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0].slice(2)}`;
-
-                        labels.push(formattedDate);
-                        deliveredData.push(data[dateString].sms.delivered);
-                        failedData.push(data[dateString].sms.failure);
-                        pendingData.push(data[dateString].sms.pending || 0);
-                        // Calculate the total number of messages
-                        totalMessages += data[dateString].sms.delivered + data[dateString].sms.failure;
+            var url = type === 'service' ? `/daily_stats.json` : `/daily_stats_by_user.json`;
+            return fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
                     }
-                }
+                    return response.json();
+                })
+                .then(data => {
+                    labels = [];
+                    deliveredData = [];
+                    failedData = [];
+                    pendingData = [];
 
-                // Check if there are no messages sent
-                const subTitle = document.querySelector(`#activityChartContainer .chart-subtitle`);
-                if (totalMessages === 0) {
-                    // Remove existing chart and render the alert message
-                    d3.select('#weeklyChart').selectAll('*').remove();
-                    d3.select('#weeklyChart')
-                        .append('div')
-                        .html(`
-                            <div class="usa-alert usa-alert--info usa-alert--slim">
-                                <div class="usa-alert__body">
-                                    <p class="usa-alert__text">
-                                        No messages sent in the last 7 days
-                                    </p>
+                    let totalMessages = 0;
+
+                    for (var dateString in data) {
+                        if (data.hasOwnProperty(dateString)) {
+                            const dateParts = dateString.split('-');
+                            const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0].slice(2)}`;
+
+                            labels.push(formattedDate);
+                            deliveredData.push(data[dateString].sms.delivered);
+                            failedData.push(data[dateString].sms.failure);
+                            pendingData.push(data[dateString].sms.pending || 0);
+                            // Calculate the total number of messages
+                            totalMessages += data[dateString].sms.delivered + data[dateString].sms.failure;
+                        }
+                    }
+
+                    // Check if there are no messages sent
+                    const subTitle = document.querySelector(`#activityChartContainer .chart-subtitle`);
+                    if (totalMessages === 0) {
+                        // Remove existing chart and render the alert message
+                        d3.select('#weeklyChart').selectAll('*').remove();
+                        d3.select('#weeklyChart')
+                            .append('div')
+                            .html(`
+                                <div class="usa-alert usa-alert--info usa-alert--slim">
+                                    <div class="usa-alert__body">
+                                        <p class="usa-alert__text">
+                                            No messages sent in the last 7 days
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        `);
-                    // Hide the subtitle
-                    if (subTitle) {
-                        subTitle.style.display = 'none';
+                            `);
+                        // Hide the subtitle
+                        if (subTitle) {
+                            subTitle.style.display = 'none';
+                        }
+                    } else {
+                        // If there are messages, create the chart and table
+                        createChart('#weeklyChart', labels, deliveredData, failedData);
+                        createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
                     }
-                } else {
-                    // If there are messages, create the chart and table
+
+                    return data;
+                })
+                .catch(error => console.error('Error fetching daily stats:', error));
+        };
+        setInterval(() => fetchData('service'), 10000);
+        const handleDropdownChange = function(event) {
+            const selectedValue = event.target.value;
+            const subTitle = document.querySelector(`#activityChartContainer .chart-subtitle`);
+            const selectElement = document.getElementById('options');
+            const selectedText = selectElement.options[selectElement.selectedIndex].text;
+
+            subTitle.textContent = `${selectedText} - last 7 days`;
+            fetchData(selectedValue);
+
+            // Update ARIA live region
+            const liveRegion = document.getElementById('aria-live-account');
+            liveRegion.textContent = `Data updated for ${selectedText} - last 7 days`;
+
+            // Switch tables based on dropdown selection
+            const selectedTable = selectedValue === "individual" ? "table1" : "table2";
+            const tables = document.querySelectorAll('.table-overflow-x-auto');
+            tables.forEach(function(table) {
+                table.classList.add('hidden'); // Hide all tables by adding the hidden class
+                table.classList.remove('visible'); // Ensure they are not visible
+            });
+            const tableToShow = document.getElementById(selectedTable);
+            tableToShow.classList.remove('hidden'); // Remove hidden class
+            tableToShow.classList.add('visible'); // Add visible class
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize activityChart chart and table with service data by default
+            fetchData('service');
+
+            // Add event listener to the dropdown
+            const dropdown = document.getElementById('options');
+            dropdown.addEventListener('change', handleDropdownChange);
+        });
+
+            // Resize chart on window resize
+            window.addEventListener('resize', function() {
+                if (labels.length > 0 && deliveredData.length > 0 && failedData.length > 0) {
                     createChart('#weeklyChart', labels, deliveredData, failedData);
                     createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
                 }
+            });
 
-                return data;
-            })
-            .catch(error => console.error('Error fetching daily stats:', error));
-    };
-    // setInterval(() => fetchData('service'), 1000);
-    const handleDropdownChange = function(event) {
-        const selectedValue = event.target.value;
-        const subTitle = document.querySelector(`#activityChartContainer .chart-subtitle`);
-        const selectElement = document.getElementById('options');
-        const selectedText = selectElement.options[selectElement.selectedIndex].text;
-
-        subTitle.textContent = `${selectedText} - last 7 days`;
-        fetchData(selectedValue);
-
-        // Update ARIA live region
-        const liveRegion = document.getElementById('aria-live-account');
-        liveRegion.textContent = `Data updated for ${selectedText} - last 7 days`;
-
-        // Switch tables based on dropdown selection
-        const selectedTable = selectedValue === "individual" ? "table1" : "table2";
-        const tables = document.querySelectorAll('.table-overflow-x-auto');
-        tables.forEach(function(table) {
-            table.classList.add('hidden'); // Hide all tables by adding the hidden class
-            table.classList.remove('visible'); // Ensure they are not visible
-        });
-        const tableToShow = document.getElementById(selectedTable);
-        tableToShow.classList.remove('hidden'); // Remove hidden class
-        tableToShow.classList.add('visible'); // Add visible class
-    };
-
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize activityChart chart and table with service data by default
-        fetchData('service');
-
-        // Add event listener to the dropdown
-        const dropdown = document.getElementById('options');
-        dropdown.addEventListener('change', handleDropdownChange);
-    });
-
-        // Resize chart on window resize
-        window.addEventListener('resize', function() {
-            if (labels.length > 0 && deliveredData.length > 0 && failedData.length > 0) {
-                createChart('#weeklyChart', labels, deliveredData, failedData);
-                createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
-            }
-        });
-
-        // Export functions for testing
-        window.createChart = createChart;
-        window.createTable = createTable;
-        window.handleDropdownChange = handleDropdownChange;
-        window.fetchData = fetchData;
-    }
+            // Export functions for testing
+            window.createChart = createChart;
+            window.createTable = createTable;
+            window.handleDropdownChange = handleDropdownChange;
+            window.fetchData = fetchData;
+        }
 
 })(window);
