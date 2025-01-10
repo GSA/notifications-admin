@@ -915,17 +915,20 @@ li.linked-card:hover svg,
 }
 
 .usa-sidenav__sublist {
-  display: none; /* Default: hidden */
+  display: none;
 }
 
 .usa-sidenav__item.open .usa-sidenav__sublist {
-  display: block; /* Show sublist when the parent has the 'open' class */
+  display: block;
 }
 
 .usa-sidenav__sublist .bold {
   font-weight: bold;
 }
 
+.usa-sidenav__sublist li[role="menuitem"] {
+  border-top: 1px solid #dfe1e2;
+}
 
 .icon-list {
   display: flex;
