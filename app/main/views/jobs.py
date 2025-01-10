@@ -344,7 +344,7 @@ def _get_job_counts(job):
 
 
           ''', dir(job))
-    print(job.notifications_sending)
+    print(job.notification_count)
 
     job_type = job.template_type
     return [
@@ -362,7 +362,7 @@ def _get_job_counts(job):
         for label, query_param, count in [
             [
                 Markup(
-                    f"""total<span class="usa-sr-only">
+                    f"""total notification_count<span class="usa-sr-only">
                     {"text message" if job_type == "sms" else job_type}s</span>"""
                 ),
                 "",
@@ -370,7 +370,7 @@ def _get_job_counts(job):
             ],
             [
                 Markup(
-                    f"""pending--fdsjfisodj<span class="usa-sr-only">
+                    f"""pending notifications_sending<span class="usa-sr-only">
                     {message_count_noun(job.notifications_sending, job_type)}</span>"""
                 ),
                 "pending",
