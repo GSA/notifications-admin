@@ -111,7 +111,6 @@ def test_static_pages(client_request, mock_get_organization_by_domain, view, moc
     # Function to check if a view is feature-flagged and should return 404 when disabled
     def is_feature_flagged(view):
         feature_flagged_views = [
-            "best_practices",
             "clear_goals",
             "rules_and_regulations",
             "establish_trust",
