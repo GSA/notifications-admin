@@ -2,7 +2,7 @@ from functools import partial
 
 import pytest
 from bs4 import BeautifulSoup
-from flask import current_app, url_for
+from flask import url_for
 from freezegun import freeze_time
 
 from tests.conftest import SERVICE_ONE_ID, normalize_spaces
