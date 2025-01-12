@@ -33,10 +33,6 @@ def using_notify_nav():
         {"name": "Delivery Status", "link": "main.message_status"},
         {"name": "Guidance", "link": "main.guidance_index"},
     ]
-    if not current_app.config.get("FEATURE_BEST_PRACTICES_ENABLED"):
-        nav_items = [
-            item for item in nav_items if item["link"] != "main.best_practices"
-        ]
 
     return nav_items
 

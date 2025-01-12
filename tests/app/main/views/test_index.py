@@ -121,8 +121,7 @@ def test_static_pages(client_request, mock_get_organization_by_domain, view, moc
             "guidance_index",
         ]
         return (
-            not current_app.config["FEATURE_BEST_PRACTICES_ENABLED"]
-            and view in feature_flagged_views
+            view in feature_flagged_views
         )
 
     request = partial(client_request.get, "main.{}".format(view))

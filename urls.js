@@ -32,6 +32,27 @@ const sublinks = [
     label: 'Benchmark Performance',
     path: '/guides/benchmark-performance',
   },
+  {
+    label: 'About',
+    path: '/about',
+  },
+  {
+    label: 'Why Text Messaging',
+    path: '/about/why-text-messaging',
+  },
+  {
+    label: 'Security',
+    path: '/about/security',
+  },
+  {
+    label: 'Join Notify',
+    path: '/join-notify',
+  },
+  {
+    label: 'Contact',
+    path: '/contact',
+  },
+
   // Add more links here as needed
 ];
 

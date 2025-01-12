@@ -25,11 +25,6 @@ from app.utils.user import user_is_logged_in
 # Hook to check for feature flags
 @main.before_request
 def check_feature_flags():
-    if request.path.startswith("/guides") and not current_app.config.get(
-        "FEATURE_BEST_PRACTICES_ENABLED", False
-    ):
-        abort(404)
-
     if request.path.startswith("/about") and not current_app.config.get(
         "FEATURE_ABOUT_PAGE_ENABLED", False
     ):
@@ -40,8 +35,8 @@ def check_feature_flags():
 def test_feature_flags():
     return jsonify(
         {
-            "FEATURE_BEST_PRACTICES_ENABLED": current_app.config[
-                "FEATURE_BEST_PRACTICES_ENABLED"
+            "FEATURE_ABOUT_PAGE_ENABLED": current_app.config[
+                "FEATURE_ABOUT_PAGE_ENABLED"
             ]
         }
     )
@@ -272,9 +267,6 @@ def guidance_index():
     return render_template(
         "views/guidance/index.html",
         navigation_links=using_notify_nav(),
-        feature_best_practices_enabled=current_app.config[
-            "FEATURE_BEST_PRACTICES_ENABLED"
-        ],
     )
 
 
