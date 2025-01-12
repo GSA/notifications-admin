@@ -1,3 +1,9 @@
+{% set is_information_section = FEATURE_ABOUT_PAGE_ENABLED and (
+  request.path.startswith('/about') or
+  request.path.startswith('/join-notify') or
+  request.path.startswith('/contact')
+) %}
+
 {% if current_user.is_authenticated %}
 {% set navigation = [
   {"href": url_for("main.show_accounts_or_dashboard"), "text": "Current service", "active": header_navigation.is_selected('accounts-or-dashboard')},
@@ -39,12 +45,14 @@
 
 {% if FEATURE_ABOUT_PAGE_ENABLED %}
 {% set navigation = navigation + [
-  {"href": url_for('main.about_notify'), "text": "About Notify", "active": request.path.startswith('/about')},
-  {"href": url_for('main.join_notify'), "text": "Join Notify", "active": request.path == '/join-notify'},
-  {"href": url_for('main.contact'), "text": "Contact us", "active": request.path == '/contact'}
+  {"href": url_for('main.about_notify'), "text": "About Notify", "active": is_information_section},
+  {"href": url_for('main.join_notify'), "text": "Join Notify", "active": request.path.startswith('/join-notify')},
+  {"href": url_for('main.contact'), "text": "Contact us", "active": request.path.startswith('/contact')}
 ] %}
 {% endif %}
 {% endif %}
+
+
 
 
 <header class="usa-header usa-header--extended">
@@ -63,7 +71,7 @@
           <button type="button" class="usa-menu-btn">Menu</button>
           {% endif %}
         </div>
-        {% if not current_user.is_authenticated and FEATURE_ABOUT_PAGE_ENABLED and request.path == '/about'%}
+        {% if not current_user.is_authenticated and is_information_section%}
         <div class="usa-nav__login">
           <a class="usa-button usa-button login-button login-button--primary margin-right-2"
             href="{{ initial_signin_url }}">Sign
