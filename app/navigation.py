@@ -40,12 +40,6 @@ class HeaderNavigation(Navigation):
         "support": {
             "support",
         },
-        "features": {
-            "features",
-            "features_sms",
-            "roadmap",
-            "security",
-        },
         "best_practices": {
             "best_practices",
             "clear_goals",
