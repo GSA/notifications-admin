@@ -94,8 +94,19 @@ def service_dashboard(service_id):
     )
 
 
-@main.route("/services/<uuid:service_id>/daily_stats_by_user.json")
-def get_daily_stats_by_user(service_id):
+@main.route("/daily_stats.json")
+def get_daily_stats():
+    service_id = session.get("service_id")
+    date_range = get_stats_date_range()
+
+    stats = service_api_client.get_service_notification_statistics_by_day(
+        service_id, start_date=date_range["start_date"], days=date_range["days"]
+    )
+    return jsonify(stats)
+
+
+@main.route("/daily_stats_by_user.json")
+def get_daily_stats_by_user():
     service_id = session.get("service_id")
     date_range = get_stats_date_range()
     user_id = current_user.id
@@ -349,35 +360,7 @@ def aggregate_notifications_stats(template_statistics):
     return notifications
 
 
-def fetch_daily_stats(service_id):
-    date_range = get_stats_date_range()
-    stats = service_api_client.get_service_notification_statistics_by_day(
-        service_id, start_date='2025-01-09', days=date_range["days"]
-    )
-    return stats
-
-# Route using the helper
-@main.route("/daily_stats.json")
-def get_daily_stats():
-    service_id = session.get("service_id")
-    stats = fetch_daily_stats(service_id)  # Use the helper
-    return jsonify(stats)
-
-
 def get_dashboard_partials(service_id):
-    date_range = get_stats_date_range()
-    yearly_usage = billing_api_client.get_annual_usage_for_service(
-        service_id,
-        get_current_financial_year(),
-    )
-    free_sms_allowance = billing_api_client.get_free_sms_fragment_limit_for_year(
-        current_service.id,
-    )
-
-    usage_data = get_annual_usage_breakdown(yearly_usage, free_sms_allowance)
-    sms_sent = usage_data["sms_sent"]
-    sms_allowance_remaining = usage_data["sms_allowance_remaining"]
-    activityStats = fetch_daily_stats
     all_statistics = template_statistics_client.get_template_statistics_for_service(
         service_id, limit_days=7
     )
@@ -401,12 +384,6 @@ def get_dashboard_partials(service_id):
         get_current_financial_year(),
     )
     return {
-        "activity": render_template(
-            "views/dashboard/_activity.html",
-            activityStats=activityStats,
-            sms_sent=sms_sent,
-            sms_allowance_remaining=sms_allowance_remaining,
-        ),
         "upcoming": render_template(
             "views/dashboard/_upcoming.html",
         ),
