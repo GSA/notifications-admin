@@ -198,8 +198,8 @@ td.table-empty-message {
     word-wrap: break-word;
   }
 
-  border: 1px solid color('gray-cool-10');
-  padding: units(2);
+  // border: 1px solid color('gray-cool-10');
+  // padding: units(2);
 
   .tick-cross-list-permissions {
     margin: units(1) 0;
@@ -852,21 +852,36 @@ $do-dont-top-bar-width: 1;
   }
 }
 
-.linked-content:hover {
-  cursor: pointer;
-  transform: scale(1.05);
-  transition: transform 0.3s ease, background-color 0.3s ease;
-}
+.linked-card a {
+  text-decoration: none;
+  .usa-card__header, .usa-card__media {
+    @include at-media('tablet') {
+      padding-top: units(1);
+    }
+  }
+  &:visited {
+    color: color('ink');
+  }
+  &:focus .usa-card__container {
+    outline: units(2px) solid color('blue-40v');
+    outline-offset: 0.3rem;
+  }
+  &:hover .usa-card__container, &:focus .usa-card__container {
+    border-color: color('blue-60v');
+    background: color('blue-60v');
+    p, h3 {
+      color: white;
+    }
+    svg {
+      filter: brightness(0) invert(1);
+    }
+  }
 
-li.linked-card:hover > div:first-child:hover {
-  border-color: #005ea2;
-}
+  &.linked-content:hover, &.linked-content:focus {
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
 
-li.linked-card:hover h4,
-li.linked-card:hover p,
-li.linked-card:hover svg,
-.best-practices_card_img:hover {
-  color: #005ea2;
 }
 
 .best-practices_card_img {
@@ -874,10 +889,6 @@ li.linked-card:hover svg,
   width: 50%;
   height: auto;
   margin: 0 auto;
-}
-
-.best-practices_link {
-  text-decoration: none;
 }
 
 .usa-link--downloadable {
@@ -912,6 +923,11 @@ li.linked-card:hover svg,
   mask-repeat: no-repeat;
   -webkit-mask-size: 1.75ex 1.75ex;
   mask-size: 1.75ex 1.75ex;
+}
+
+nav.nav {
+  position: sticky;
+  top: units(3);
 }
 
 .usa-sidenav__sublist {
