@@ -20,21 +20,27 @@ def test_best_practices_side_menu(authenticated_page):
     page.get_by_role("link", name="Best Practices").click()
     expect(page).to_have_title(re.compile("Best Practice"))
 
+    expect(page.get_by_role("link", name="Clear goals", exact=True)).to_be_visible(timeout=5000)
     page.get_by_role("link", name="Clear goals", exact=True).click()
     expect(page).to_have_title(re.compile("Establish clear goals"))
 
+    expect(page.get_by_role("link", name="Rules and regulations")).to_be_visible(timeout=5000)
     page.get_by_role("link", name="Rules and regulations").click()
     expect(page).to_have_title(re.compile("Rules and regulations"))
 
+    expect(page.get_by_role("link", name="Establish trust")).to_be_visible(timeout=5000)
     page.get_by_role("link", name="Establish trust").click()
     expect(page).to_have_title(re.compile("Establish trust"))
 
+    expect(page.get_by_role("link", name="Write for action")).to_be_visible(timeout=5000)
     page.get_by_role("link", name="Write for action").click()
     expect(page).to_have_title(re.compile("Write texts that provoke"))
 
+    expect(page.get_by_role("link", name="Multiple languages")).to_be_visible(timeout=5000)
     page.get_by_role("link", name="Multiple languages").click()
     expect(page).to_have_title(re.compile("Text in multiple languages"))
 
+    expect(page.get_by_role("link", name="Benchmark performance")).to_be_visible(timeout=5000)
     page.get_by_role("link", name="Benchmark performance").click()
     expect(page).to_have_title(re.compile("Measuring performance with"))
 
@@ -42,6 +48,7 @@ def test_best_practices_side_menu(authenticated_page):
     parent_link.hover()
 
     submenu_item = page.get_by_role("link", name=re.compile("Get the word out"))
+    expect(submenu_item).to_be_visible(timeout=5000)
     submenu_item.click()
 
     expect(page).to_have_url(re.compile(r"#get-the-word-out"))
@@ -60,5 +67,8 @@ def test_breadcrumbs_best_practices(authenticated_page):
     check_axe_report(page)
 
     # Test Best Practices breadcrumbs
+    expect(page.get_by_role("link", name="Clear goals", exact=True)).to_be_visible(timeout=5000)
     page.get_by_role("link", name="Clear goals", exact=True).click()
-    page.locator("ol").get_by_role("link", name="Best Practices").click()
+    breadcrumbs_link = page.locator("ol").get_by_role("link", name="Best Practices")
+    expect(breadcrumbs_link).to_be_visible(timeout=5000)
+    breadcrumbs_link.click()
