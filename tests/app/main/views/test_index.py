@@ -83,6 +83,8 @@ def test_hiding_pages_from_search_engines(
     [
         "privacy",
         "pricing",
+        "old_roadmap",
+        "new_features_page"
         "roadmap",
         "features",
         "documentation",
@@ -95,7 +97,6 @@ def test_hiding_pages_from_search_engines(
         "benchmark_performance",
         "security",
         "message_status",
-        "features_sms",
         "how_to_pay",
         "get_started",
         "guidance_index",
