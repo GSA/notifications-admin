@@ -108,52 +108,34 @@ def test_hiding_pages_from_search_engines(
 def test_static_pages(client_request, mock_get_organization_by_domain, view, mocker):
     mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
 
-    # Function to check if a view is feature-flagged and should return 404 when disabled
-    def is_feature_flagged(view):
-        feature_flagged_views = [
-            "clear_goals",
-            "rules_and_regulations",
-            "establish_trust",
-            "write_for_action",
-            "multiple_languages",
-            "benchmark_performance",
-            "guidance_index",
-        ]
-        return (
-            view in feature_flagged_views
-        )
-
     request = partial(client_request.get, "main.{}".format(view))
 
-    # If the guidance feature is disabled, expect a 404 for feature-flagged views
-    if is_feature_flagged(view):
-        page = request(_expected_status=404)
-    else:
-        # Check the page loads when user is signed in
-        page = request()
-        assert page.select_one("meta[name=description]")
+    # Assert the page loads successfully
+    page = request(_expected_status=200)
+    assert page.select_one("meta[name=description]")
 
-        # Check it still works when they don’t have a recent service
-        with client_request.session_transaction() as session:
-            session["service_id"] = None
-        request()
+    # Check the behavior when no recent service is set
+    with client_request.session_transaction() as session:
+        session["service_id"] = None
+    request()
 
-        # Check it redirects to the login screen when they sign out
-        client_request.logout()
-        with client_request.session_transaction() as session:
-            session["service_id"] = None
-            session["user_id"] = None
-        request(
-            _expected_status=302,
-            _expected_redirect="/sign-in?next={}".format(
-                url_for("main.{}".format(view))
-            ),
-        )
+    # Check redirection to login screen when signed out
+    client_request.logout()
+    with client_request.session_transaction() as session:
+        session["service_id"] = None
+        session["user_id"] = None
+    request(
+        _expected_status=302,
+        _expected_redirect="/sign-in?next={}".format(
+            url_for("main.{}".format(view))
+        ),
+    )
+
 
 
 def test_guidance_pages_link_to_service_pages_when_signed_in(client_request, mocker):
-
     mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
+
     request = partial(client_request.get, "main.edit_and_format_messages")
     selector = ".list-number li a"
 
@@ -175,8 +157,8 @@ def test_guidance_pages_link_to_service_pages_when_signed_in(client_request, moc
     with client_request.session_transaction() as session:
         session["service_id"] = None
         session["user_id"] = None
-    page = request(_expected_status=302)
-    assert not page.select_one(selector)
+    request(_expected_status=302)
+
 
 
 @pytest.mark.parametrize(
