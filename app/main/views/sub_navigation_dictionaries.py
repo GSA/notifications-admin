@@ -6,30 +6,30 @@ def using_notify_nav():
             "link": "main.best_practices",
             "sub_navigation_items": [
                 {
-            "name": "Clear goals",
-            "link": "main.clear_goals",
-        },
-        {
-            "name": "Rules and regulations",
-            "link": "main.rules_and_regulations",
-        },
-        {
-            "name": "Establish trust",
-            "link": "main.establish_trust",
-        },
-        {
-            "name": "Write for action",
-            "link": "main.write_for_action",
-        },
-        {
-            "name": "Multiple languages",
-            "link": "main.multiple_languages",
-        },
-        {
-            "name": "Benchmark performance",
-            "link": "main.benchmark_performance",
-        }
-            ]
+                    "name": "Clear goals",
+                    "link": "main.clear_goals",
+                },
+                {
+                    "name": "Rules and regulations",
+                    "link": "main.rules_and_regulations",
+                },
+                {
+                    "name": "Establish trust",
+                    "link": "main.establish_trust",
+                },
+                {
+                    "name": "Write for action",
+                    "link": "main.write_for_action",
+                },
+                {
+                    "name": "Multiple languages",
+                    "link": "main.multiple_languages",
+                },
+                {
+                    "name": "Benchmark performance",
+                    "link": "main.benchmark_performance",
+                },
+            ],
         },
         {"name": "Trial mode", "link": "main.trial_mode_new"},
         {"name": "Tracking usage", "link": "main.pricing"},
