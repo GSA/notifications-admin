@@ -11,7 +11,7 @@ E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 def test_best_practices_side_menu(authenticated_page):
     page = authenticated_page
 
-    page.goto(f"{E2E_TEST_URI}/guides/best-practices")
+    page.goto(f"{E2E_TEST_URI}guides/best-practices")
     page.wait_for_load_state("networkidle")
     check_axe_report(page)
 
@@ -20,7 +20,7 @@ def test_best_practices_side_menu(authenticated_page):
 
     # Test the individual sublinks under Best Practices
     page.get_by_role("link", name="Clear goals", exact=True).click()
-    expect(page).to_have_title(re.compile("Clear goals"))
+    expect(page).to_have_title(re.compile("Establish clear goals"))
 
     page.get_by_role("link", name="Rules and regulations").click()
     expect(page).to_have_title(re.compile("Rules and regulations"))
