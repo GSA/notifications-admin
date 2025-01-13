@@ -35,20 +35,13 @@ class CsvFileValidator:
                 )
             )
 
-
 class ValidGovEmail:
     def __call__(self, form, field):
         if field.data == "":
             return
 
-        from flask import url_for
+        message = "Enter a public sector email address."
 
-        message = """
-            Enter a public sector email address or
-            <a class="usa-link" href="{}">find out who can use Notify</a>
-        """.format(
-            url_for("main.features")
-        )
         if not is_gov_user(field.data.lower()):
             raise ValidationError(message)
 
