@@ -6,9 +6,7 @@
 {% if current_user.is_authenticated %}
 {% set navigation = [
   {"href": url_for("main.show_accounts_or_dashboard"), "text": "Current service", "active": header_navigation.is_selected('accounts-or-dashboard')},
-  {"href": url_for('main.get_started'), "text": "Using Notify", "active": header_navigation.is_selected('using_notify')},
-  {"href": url_for('main.best_practices'), "text": "Guides", "active": header_navigation.is_selected('best_practices')},
-  {"href": url_for('main.features'), "text": "Features", "active": header_navigation.is_selected('features')},
+  {"href": url_for('main.get_started'), "text": "Using Notify", "active": request.path.startswith('/using-notify')},
   {"href": url_for('main.support'), "text": "Contact us", "active": header_navigation.is_selected('support')}
 ] %}
 

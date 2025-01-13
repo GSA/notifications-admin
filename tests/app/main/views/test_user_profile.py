@@ -84,7 +84,7 @@ def test_should_redirect_after_email_change(
     [
         (
             "me@example.com",
-            "Enter a public sector email address or find out who can use Notify",
+            "Enter a public sector email address.",
         ),
         (
             "not_valid",

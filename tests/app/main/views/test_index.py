@@ -83,8 +83,6 @@ def test_hiding_pages_from_search_engines(
     [
         "privacy",
         "pricing",
-        "roadmap",
-        "features",
         "documentation",
         "best_practices",
         "clear_goals",
@@ -93,9 +91,7 @@ def test_hiding_pages_from_search_engines(
         "write_for_action",
         "multiple_languages",
         "benchmark_performance",
-        "security",
         "message_status",
-        "features_sms",
         "how_to_pay",
         "get_started",
         "guidance_index",
@@ -162,11 +158,7 @@ def test_guidance_pages_link_to_service_pages_when_signed_in(client_request, moc
 @pytest.mark.parametrize(
     ("view", "expected_view"),
     [
-        ("information_risk_management", "security"),
         ("old_integration_testing", "integration_testing"),
-        ("old_roadmap", "roadmap"),
-        ("information_security", "using_notify"),
-        ("old_using_notify", "using_notify"),
         ("delivery_and_failure", "message_status"),
         ("callbacks", "documentation"),
     ],
