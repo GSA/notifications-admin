@@ -35,6 +35,7 @@ class CsvFileValidator:
                 )
             )
 
+
 class ValidGovEmail:
     def __call__(self, form, field):
         if field.data == "":
