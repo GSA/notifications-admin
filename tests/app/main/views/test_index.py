@@ -132,7 +132,6 @@ def test_static_pages(client_request, mock_get_organization_by_domain, view, moc
     )
 
 
-
 def test_guidance_pages_link_to_service_pages_when_signed_in(client_request, mocker):
     mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
 
@@ -158,7 +157,6 @@ def test_guidance_pages_link_to_service_pages_when_signed_in(client_request, moc
         session["service_id"] = None
         session["user_id"] = None
     request(_expected_status=302)
-
 
 
 @pytest.mark.parametrize(
