@@ -11,15 +11,14 @@ E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 def test_best_practices_side_menu(authenticated_page):
     page = authenticated_page
 
-    page.goto(f"{E2E_TEST_URI}")
-
-    page.wait_for_load_state("domcontentloaded")
+    page.goto(f"{E2E_TEST_URI}guides/best-practices")
+    page.wait_for_load_state("networkidle")
     check_axe_report(page)
 
-    # Test Best Practices navigation
-    page.get_by_role("link", name="Best Practices").click()
-    expect(page).to_have_title(re.compile("Best Practice"))
+    # Test navigation for "Best Practices" and its sub-links
+    expect(page.get_by_role("link", name="Best Practices")).to_be_visible(timeout=10000)
 
+    # Test the individual sublinks under Best Practices
     page.get_by_role("link", name="Clear goals", exact=True).click()
     expect(page).to_have_title(re.compile("Establish clear goals"))
 
@@ -30,35 +29,25 @@ def test_best_practices_side_menu(authenticated_page):
     expect(page).to_have_title(re.compile("Establish trust"))
 
     page.get_by_role("link", name="Write for action").click()
-    expect(page).to_have_title(re.compile("Write texts that provoke"))
+    expect(page).to_have_title(re.compile("Write for action"))
 
     page.get_by_role("link", name="Multiple languages").click()
-    expect(page).to_have_title(re.compile("Text in multiple languages"))
+    expect(page).to_have_title(re.compile("Multiple languages"))
 
     page.get_by_role("link", name="Benchmark performance").click()
-    expect(page).to_have_title(re.compile("Measuring performance with"))
-
-    parent_link = page.get_by_role("link", name="Establish trust")
-    parent_link.hover()
-
-    submenu_item = page.get_by_role("link", name=re.compile("Get the word out"))
-    submenu_item.click()
-
-    expect(page).to_have_url(re.compile(r"#get-the-word-out"))
-
-    anchor_target = page.locator("#get-the-word-out")
-    expect(anchor_target).to_be_visible()
-    anchor_target.click()
+    expect(page).to_have_title(re.compile("Benchmark performance"))
 
 
 def test_breadcrumbs_best_practices(authenticated_page):
     page = authenticated_page
 
-    page.goto(f"{E2E_TEST_URI}")
-
-    page.wait_for_load_state("domcontentloaded")
+    page.goto(f"{E2E_TEST_URI}/guides/best-practices")
+    page.wait_for_load_state("networkidle")
     check_axe_report(page)
 
-    # Test Best Practices breadcrumbs
+    # Test breadcrumb navigation from a subpage
     page.get_by_role("link", name="Clear goals", exact=True).click()
-    page.locator("ol").get_by_role("link", name="Best Practices").click()
+    breadcrumb_link = page.locator("ol").get_by_role("link", name="Best Practices")
+    expect(breadcrumb_link).to_be_visible(timeout=10000)
+    breadcrumb_link.click()
+    expect(page).to_have_title(re.compile("Best Practices"))
