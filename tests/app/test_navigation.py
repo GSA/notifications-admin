@@ -94,7 +94,6 @@ EXCLUDED_ENDPOINTS = tuple(
             "email_not_received",
             "error",
             "establish_trust",
-            "features",
             "find_services_by_name",
             "find_users_by_email",
             "forgot_password",
