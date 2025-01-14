@@ -176,10 +176,6 @@ def test_old_static_pages_redirect(client_request, view, expected_view, mocker):
     )
 
 
-def test_old_using_notify_page(client_request):
-    client_request.get("main.using_notify", _expected_status=410)
-
-
 def test_css_is_served_from_correct_path(client_request):
     page = client_request.get("main.documentation")  # easy static page
 

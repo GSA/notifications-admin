@@ -309,14 +309,12 @@ def studio():
 # --- Redirects --- #
 
 
-@main.route("/roadmap", endpoint="old_roadmap")
 @main.route("/information-security", endpoint="information_security")
 @main.route("/using_notify", endpoint="old_using_notify")
 @main.route("/information-risk-management", endpoint="information_risk_management")
 @main.route("/integration_testing", endpoint="old_integration_testing")
 def old_page_redirects():
     redirects = {
-        "main.old_roadmap": "main.roadmap",
         "main.information_security": "main.using_notify",
         "main.old_using_notify": "main.using_notify",
         "main.information_risk_management": "main.security",
