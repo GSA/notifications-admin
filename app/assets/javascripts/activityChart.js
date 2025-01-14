@@ -235,7 +235,6 @@
                         pendingData.push(data[dateString].sms.pending || 0);
                         totalMessages += data[dateString].sms.delivered + data[dateString].sms.failure + data[dateString].sms.pending;
 
-                        // Calculate the total number of messages
                         totalMessages += data[dateString].sms.delivered + data[dateString].sms.failure;
                     }
                 }
