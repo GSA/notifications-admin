@@ -40,12 +40,6 @@ class HeaderNavigation(Navigation):
         "support": {
             "support",
         },
-        "features": {
-            "features",
-            "features_sms",
-            "roadmap",
-            "security",
-        },
         "best_practices": {
             "best_practices",
             "clear_goals",
@@ -57,7 +51,6 @@ class HeaderNavigation(Navigation):
         },
         "using_notify": {
             "get_started",
-            "using_notify",
             "pricing",
             "trial_mode_new",
             "message_status",
