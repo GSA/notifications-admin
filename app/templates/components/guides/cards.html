@@ -1,18 +1,17 @@
-<ul class="usa-card-group">
+<ul class="usa-card-group grid-row flex-row">
   {% for item in card_contents %}
-  <li class="usa-card grid-col tablet:grid-col-4 {% if item.link %}linked-card linked-content{% endif %}">
+  <li class="usa-card grid-col mobile-lg:grid-col-12 tablet:grid-col-6 desktop:grid-col-4 {% if item.link %}linked-card linked-content{% endif %}">
+    {% if item.link %}
+    <a href="{{ item.link }}">
+    {% endif %}
     <div class="usa-card__container">
       {% if item.card_heading %}
       <div class="usa-card__header">
-        {% if item.link %}
-        <a href="{{ item.link }}">
-          {% endif %}
           <h3
             class="usa-card__heading {% if text_align != 'left' or text_align is not defined %}text-center{% else %}text-left{% endif %} {% if item.link %}linked-card{% endif %}">
             {{ item.card_heading }}
           </h3>
           {% if item.link %}
-        </a>
         {% endif %}
       </div>
       {% endif %}
@@ -37,6 +36,9 @@
       </div>
       {% endif %}
     </div>
+    {% if item.link %}
+    </a>
+    {% endif %}
   </li>
   {% endfor %}
 </ul>

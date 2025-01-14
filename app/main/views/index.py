@@ -15,8 +15,6 @@ from app.main import main
 from app.main.views.pricing import CURRENT_SMS_RATE
 from app.main.views.sub_navigation_dictionaries import (
     about_notify_nav,
-    best_practices_nav,
-    features_nav,
     using_notify_nav,
 )
 from app.utils.user import user_is_logged_in
@@ -25,11 +23,6 @@ from app.utils.user import user_is_logged_in
 # Hook to check for feature flags
 @main.before_request
 def check_feature_flags():
-    if request.path.startswith("/guides") and not current_app.config.get(
-        "FEATURE_BEST_PRACTICES_ENABLED", False
-    ):
-        abort(404)
-
     if request.path.startswith("/about") and not current_app.config.get(
         "FEATURE_ABOUT_PAGE_ENABLED", False
     ):
@@ -40,8 +33,8 @@ def check_feature_flags():
 def test_feature_flags():
     return jsonify(
         {
-            "FEATURE_BEST_PRACTICES_ENABLED": current_app.config[
-                "FEATURE_BEST_PRACTICES_ENABLED"
+            "FEATURE_ABOUT_PAGE_ENABLED": current_app.config[
+                "FEATURE_ABOUT_PAGE_ENABLED"
             ]
         }
     )
@@ -111,44 +104,6 @@ def callbacks():
     return redirect(url_for("main.documentation"), 301)
 
 
-# --- Features page set --- #
-
-
-@main.route("/features")
-@user_is_logged_in
-def features():
-    return render_template("views/features.html", navigation_links=features_nav())
-
-
-@main.route("/features/roadmap", endpoint="roadmap")
-@user_is_logged_in
-def roadmap():
-    return render_template("views/roadmap.html", navigation_links=features_nav())
-
-
-@main.route("/features/sms")
-@user_is_logged_in
-def features_sms():
-    return render_template(
-        "views/features/text-messages.html", navigation_links=features_nav()
-    )
-
-
-@main.route("/features/security", endpoint="security")
-@user_is_logged_in
-def security():
-    return render_template("views/security.html", navigation_links=features_nav())
-
-
-@main.route("/features/using_notify")
-@user_is_logged_in
-def using_notify():
-    return (
-        render_template("views/using-notify.html", navigation_links=features_nav()),
-        410,
-    )
-
-
 @main.route("/using-notify/delivery-status")
 @user_is_logged_in
 def message_status():
@@ -203,78 +158,75 @@ def trial_mode_new():
     )
 
 
-@main.route("/guides/best-practices")
+@main.route("/using-notify/best-practices")
 @user_is_logged_in
 def best_practices():
     return render_template(
         "views/guides/best-practices.html",
-        navigation_links=best_practices_nav(),
+        navigation_links=using_notify_nav(),
     )
 
 
-@main.route("/guides/clear-goals")
+@main.route("/using-notify/best-practices/clear-goals")
 @user_is_logged_in
 def clear_goals():
     return render_template(
         "views/guides/clear-goals.html",
-        navigation_links=best_practices_nav(),
+        navigation_links=using_notify_nav(),
     )
 
 
-@main.route("/guides/rules-and-regulations")
+@main.route("/using-notify/best-practices/rules-and-regulations")
 @user_is_logged_in
 def rules_and_regulations():
     return render_template(
         "views/guides/rules-and-regulations.html",
-        navigation_links=best_practices_nav(),
+        navigation_links=using_notify_nav(),
     )
 
 
-@main.route("/guides/establish-trust")
+@main.route("/using-notify/best-practices/establish-trust")
 @user_is_logged_in
 def establish_trust():
     return render_template(
         "views/guides/establish-trust.html",
-        navigation_links=best_practices_nav(),
+        navigation_links=using_notify_nav(),
     )
 
 
-@main.route("/guides/write-for-action")
+@main.route("/using-notify/best-practices/write-for-action")
 @user_is_logged_in
 def write_for_action():
     return render_template(
         "views/guides/write-for-action.html",
-        navigation_links=best_practices_nav(),
+        navigation_links=using_notify_nav(),
     )
 
 
-@main.route("/guides/multiple-languages")
+@main.route("/using-notify/best-practices/multiple-languages")
 @user_is_logged_in
 def multiple_languages():
     return render_template(
         "views/guides/multiple-languages.html",
-        navigation_links=best_practices_nav(),
+        navigation_links=using_notify_nav(),
     )
 
 
-@main.route("/guides/benchmark-performance")
+@main.route("/using-notify/best-practices/benchmark-performance")
 @user_is_logged_in
 def benchmark_performance():
     return render_template(
         "views/guides/benchmark-performance.html",
-        navigation_links=best_practices_nav(),
+        navigation_links=using_notify_nav(),
     )
 
 
-@main.route("/guides/using-notify/guidance")
+@main.route("/using-notify/guidance")
 @user_is_logged_in
 def guidance_index():
     return render_template(
         "views/guidance/index.html",
         navigation_links=using_notify_nav(),
-        feature_best_practices_enabled=current_app.config[
-            "FEATURE_BEST_PRACTICES_ENABLED"
-        ],
     )
 
 
@@ -282,6 +234,8 @@ def guidance_index():
 def contact():
     return render_template(
         "views/contact.html",
+        navigation_links=about_notify_nav(),
+
     )
 
 
@@ -313,6 +267,8 @@ def why_text_messaging():
 def join_notify():
     return render_template(
         "views/join-notify.html",
+        navigation_links=about_notify_nav(),
+
     )
 
 
@@ -343,17 +299,22 @@ def send_files_by_email():
     )
 
 
+@main.route("/studio")
+def studio():
+    return render_template(
+        "views/studio.html",
+    )
+
+
 # --- Redirects --- #
 
 
-@main.route("/roadmap", endpoint="old_roadmap")
 @main.route("/information-security", endpoint="information_security")
 @main.route("/using_notify", endpoint="old_using_notify")
 @main.route("/information-risk-management", endpoint="information_risk_management")
 @main.route("/integration_testing", endpoint="old_integration_testing")
 def old_page_redirects():
     redirects = {
-        "main.old_roadmap": "main.roadmap",
         "main.information_security": "main.using_notify",
         "main.old_using_notify": "main.using_notify",
         "main.information_risk_management": "main.security",

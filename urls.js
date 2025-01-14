@@ -8,30 +8,48 @@ const sublinks = [
   { label: 'Trial Mode', path: '/using-notify/trial-mode' },
   { label: 'Pricing', path: '/using-notify/pricing' },
   { label: 'Delivery Status', path: '/using-notify/delivery-status' },
-  { label: 'Guidance', path: '/guides/using-notify/guidance' },
-  { label: 'Features', path: '/features' },
-  { label: 'Roadmap', path: '/features/roadmap' },
-  { label: 'Security', path: '/features/security' },
+  { label: 'Guidance', path: '/using-notify/guidance' },
   { label: 'Support', path: '/support' },
-  { label: 'Best Practices', path: '/guides/best-practices' },
-  { label: 'Clear Goals', path: '/guides/clear-goals' },
+  { label: 'Best Practices', path: '/using-notify/best-practices' },
+  { label: 'Clear Goals', path: '/using-notify/best-practices/clear-goals' },
   {
     label: 'Rules And Regulations',
-    path: '/guides/rules-and-regulations',
+    path: '/using-notify/best-practices//rules-and-regulations',
   },
-  { label: 'Establish Trust', path: '/guides/establish-trust' },
+  { label: 'Establish Trust', path: '/using-notify/best-practices//establish-trust' },
   {
     label: 'Write For Action',
-    path: '/guides/write-for-action',
+    path: '/using-notify/best-practices//write-for-action',
   },
   {
     label: 'Multiple Languages',
-    path: '/guides/multiple-languages',
+    path: '/using-notify/best-practices//multiple-languages',
   },
   {
     label: 'Benchmark Performance',
-    path: '/guides/benchmark-performance',
+    path: '/using-notify/best-practices//benchmark-performance',
   },
+  {
+    label: 'About',
+    path: '/about',
+  },
+  {
+    label: 'Why Text Messaging',
+    path: '/about/why-text-messaging',
+  },
+  {
+    label: 'Security',
+    path: '/about/security',
+  },
+  {
+    label: 'Join Notify',
+    path: '/join-notify',
+  },
+  {
+    label: 'Contact',
+    path: '/contact',
+  },
+
   // Add more links here as needed
 ];
 
