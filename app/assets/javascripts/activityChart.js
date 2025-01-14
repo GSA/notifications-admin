@@ -1,7 +1,7 @@
 (function (window) {
 
     if (document.getElementById('activityChartContainer')) {
-
+        let currentType = 'service';
         const COLORS = {
             delivered: '#0076d6',
             failed: '#fa9441',
@@ -204,6 +204,7 @@
     };
 
     const fetchData = function(type) {
+
         var ctx = document.getElementById('weeklyChart');
         if (!ctx) {
             return;
@@ -270,9 +271,10 @@
                 })
                 .catch(error => console.error('Error fetching daily stats:', error));
         };
-        setInterval(() => fetchData('service'), 10000);
+        setInterval(() => fetchData(currentType), 10000);
     const handleDropdownChange = function(event) {
         const selectedValue = event.target.value;
+        currentType = selectedValue;
         const subTitle = document.querySelector(`#activityChartContainer .chart-subtitle`);
         const selectElement = document.getElementById('options');
         const selectedText = selectElement.options[selectElement.selectedIndex].text;
@@ -298,7 +300,7 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize activityChart chart and table with service data by default
-        fetchData('service');
+        fetchData(currentType);
 
         // Add event listener to the dropdown
         const dropdown = document.getElementById('options');
