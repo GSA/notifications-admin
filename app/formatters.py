@@ -493,7 +493,7 @@ def message_count_noun(count, template_type):
 
 
 def message_count(count, template_type):
-    return f"format_message_count{format_thousands(count)} " f"{message_count_noun(count, template_type)}"
+    return f"{format_thousands(count)} " f"{message_count_noun(count, template_type)}"
 
 
 def recipient_count_label(count, template_type):
