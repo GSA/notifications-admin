@@ -113,7 +113,7 @@
           </thead>
           <tbody>
             {% if jobs %}
-              {% for job in jobs[:5] %}
+              {% for job in jobs %}
                 {% set notification = job.notifications[0] %}
                 <tr id="{{ job.job_id }}">
                   <td class="table-field jobid" role="rowheader">
@@ -122,9 +122,19 @@
                     </a>
                   </td>
                   <td class="table-field template">{{ job.template_name }}</td>
-                  <td class="table-field time-sent">Sent on
-                    {{ (job.processing_finished if job.processing_finished else job.processing_started
-                      if job.processing_started else job.created_at)|format_datetime_table }}
+                  <td class="table-field time-sent">
+                    {% if job.scheduled_for and not job.processing_finished %}
+                      Scheduled for
+                      {{ job.scheduled_for|format_datetime_table }}
+                    {% else %}
+                        {% if job.processing_finished %}
+                          Sent on {{job.processing_finished|format_datetime_table}}
+                        {% elif job.processing_started %}
+                          Sending since {{job.processing_started|format_datetime_table}}
+                        {% else %}
+                          Created at {{job.created_at|format_datetime_table}}
+                        {% endif %}
+                    {% endif %}
                   </td>
                   <td class="table-field sender">{{ job.created_by.name }}</td>
                   <td class="table-field count-of-recipients">{{ job.notification_count }}</td>
