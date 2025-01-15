@@ -271,7 +271,7 @@
                 })
                 .catch(error => console.error('Error fetching daily stats:', error));
         };
-        setInterval(() => fetchData(currentType), 10000);
+        setInterval(() => fetchData(currentType), 25000);
     const handleDropdownChange = function(event) {
         const selectedValue = event.target.value;
         currentType = selectedValue;

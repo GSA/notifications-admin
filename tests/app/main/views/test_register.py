@@ -144,9 +144,8 @@ def test_should_return_200_when_email_is_not_gov_uk(
         _expected_status=200,
     )
 
-    assert (
-        "Enter a public sector email address."
-        in normalize_spaces(page.select_one(".usa-error-message").text)
+    assert "Enter a public sector email address." in normalize_spaces(
+        page.select_one(".usa-error-message").text
     )
 
 
