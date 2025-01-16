@@ -32,9 +32,6 @@ class Spreadsheet:
                 self._csv_data = converted.getvalue()
         return self._csv_data
 
-    @classmethod
-    def approves_headers(cls, field_data):
-        raise Exception(f"Field data {field_data}")
 
     @classmethod
     def can_handle(cls, filename):
@@ -46,7 +43,11 @@ class Spreadsheet:
 
     @staticmethod
     def normalise_newlines(file_content):
-        return "\r\n".join(file_content.read().decode("utf-8").splitlines())
+        rows = file_content.read().decode("utf-8").splitlines()
+        if rows.get(0) is None or rows[0] == "":
+            raise Exception("No header row")
+        return "\r\n".join(rows)
+
 
     @classmethod
     def from_rows(cls, rows, filename=""):
