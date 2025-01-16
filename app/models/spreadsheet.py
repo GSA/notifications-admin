@@ -44,8 +44,6 @@ class Spreadsheet:
     @staticmethod
     def normalise_newlines(file_content):
         rows = file_content.read().decode("utf-8").splitlines()
-        if len(rows) == 0 or rows[0] is None or rows[0] == "":
-            raise Exception("No header row")
         return "\r\n".join(rows)
 
 
