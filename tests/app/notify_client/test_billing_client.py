@@ -10,10 +10,15 @@ def test_get_free_sms_fragment_limit_for_year_correct_endpoint(mocker, api_user_
     expected_url = "/service/{}/billing/free-sms-fragment-limit".format(service_id)
     client = BillingAPIClient()
 
-    mock_get = mocker.patch("app.notify_client.billing_api_client.BillingAPIClient.get")
+    mock_get = mocker.patch(
+        "app.notify_client.billing_api_client.BillingAPIClient.get",
+        return_value={"free_sms_fragment_limit": 0},
+    )
     mocker.patch(
         "app.notify_client.billing_api_client.redis_client.get", return_value=None
     )
+
+    mocker.patch("app.notify_client.billing_api_client.redis_client.set")
 
     client.get_free_sms_fragment_limit_for_year(service_id, year=1999)
     mock_get.assert_called_once_with(
