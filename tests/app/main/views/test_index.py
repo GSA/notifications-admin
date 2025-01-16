@@ -122,9 +122,7 @@ def test_static_pages(client_request, mock_get_organization_by_domain, view, moc
         session["user_id"] = None
     request(
         _expected_status=302,
-        _expected_redirect="/sign-in?next={}".format(
-            url_for("main.{}".format(view))
-        ),
+        _expected_redirect="/sign-in?next={}".format(url_for("main.{}".format(view))),
     )
 
 

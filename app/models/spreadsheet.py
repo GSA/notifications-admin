@@ -33,6 +33,10 @@ class Spreadsheet:
         return self._csv_data
 
     @classmethod
+    def approves_headers(cls, field_data):
+        raise Exception(f"Field data {field_data}")
+
+    @classmethod
     def can_handle(cls, filename):
         return cls.get_extension(filename) in cls.ALLOWED_FILE_EXTENSIONS
 
