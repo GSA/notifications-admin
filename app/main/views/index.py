@@ -32,11 +32,7 @@ def check_feature_flags():
 @main.route("/test/feature-flags")
 def test_feature_flags():
     return jsonify(
-        {
-            "FEATURE_ABOUT_PAGE_ENABLED": current_app.config[
-                "FEATURE_ABOUT_PAGE_ENABLED"
-            ]
-        }
+        {"FEATURE_ABOUT_PAGE_ENABLED": current_app.config["FEATURE_ABOUT_PAGE_ENABLED"]}
     )
 
 
@@ -235,7 +231,6 @@ def contact():
     return render_template(
         "views/contact.html",
         navigation_links=about_notify_nav(),
-
     )
 
 
@@ -268,7 +263,6 @@ def join_notify():
     return render_template(
         "views/join-notify.html",
         navigation_links=about_notify_nav(),
-
     )
 
 

@@ -11,6 +11,9 @@ def test_get_free_sms_fragment_limit_for_year_correct_endpoint(mocker, api_user_
     client = BillingAPIClient()
 
     mock_get = mocker.patch("app.notify_client.billing_api_client.BillingAPIClient.get")
+    mocker.patch(
+        "app.notify_client.billing_api_client.redis_client.get", return_value=None
+    )
 
     client.get_free_sms_fragment_limit_for_year(service_id, year=1999)
     mock_get.assert_called_once_with(
@@ -28,6 +31,11 @@ def test_post_free_sms_fragment_limit_for_current_year_endpoint(
     )
     client = BillingAPIClient()
 
+    mocker.patch(
+        "app.notify_client.billing_api_client.redis_client.get", return_value=None
+    )
+
+    mocker.patch("app.notify_client.billing_api_client.redis_client.set")
     client.create_or_update_free_sms_fragment_limit(
         service_id=service_id, free_sms_fragment_limit=1111
     )
