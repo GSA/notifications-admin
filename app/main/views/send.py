@@ -46,7 +46,7 @@ from app.utils import (
     PermanentRedirect,
     hilite,
     should_skip_template_page,
-    unicode_truncate,
+#    unicode_truncate,
 )
 from app.utils.csv import Spreadsheet, get_errors_for_csv
 from app.utils.templates import get_template
@@ -54,7 +54,7 @@ from app.utils.user import user_has_permissions
 from notifications_utils import SMS_CHAR_COUNT_LIMIT
 from notifications_utils.insensitive_dict import InsensitiveDict
 from notifications_utils.recipients import RecipientCSV, first_column_headings
-from notifications_utils.sanitise_text import SanitiseASCII
+# from notifications_utils.sanitise_text import SanitiseASCII
 
 
 def get_example_csv_fields(column_headers, use_example_as_example, submitted_fields):
