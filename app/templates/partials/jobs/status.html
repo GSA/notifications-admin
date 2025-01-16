@@ -21,7 +21,7 @@
 
 <div class="ajax-block-container">
   <p class='bottom-gutter'>
-    {% if job.still_processing or arrived_from_preview_page_url %}
+    {% if not job.finished_processing or arrived_from_preview_page_url %}
       {% if job.scheduled_for %}
         <div class="usa-alert usa-alert--info">
           <div class="usa-alert__body">
@@ -33,16 +33,39 @@
         </div>
         {{display_message_status}}
       {% else %}
-        <div class="usa-alert usa-alert--success">
-          <div class="usa-alert__body">
-            <h2 class="usa-alert__heading">Your text has been sent</h2>
-            <p class="usa-alert__text">
-              {{ job.template_name }} - {{ current_service.name }} was sent on {% if job.processing_started %}
-              {{ job.processing_started|format_datetime_table }} {% else %}
-              {{ job.created_at|format_datetime_table }} {% endif %} by {{ job.created_by.name }}
-            </p>
+        {% if job.finished_processing or job.processing_started %}
+          <div class="usa-alert usa-alert--success">
+            <div class="usa-alert__body">
+              <h2 class="usa-alert__heading">
+                {% if job.finished_processing %}
+                  Your text has been sent
+                {% else %}
+                  Your text is sending
+                {% endif %}
+              </h2>
+              <p class="usa-alert__text">
+                {{ job.template_name }} - {{ current_service.name }}
+                {% if job.finished_processing %}
+                  was sent on {{job.processing_started|format_datetime_normal}}
+                {% else %}
+                  has been sending since {{job.processing_started| format_datetime_normal}}
+                {% endif %} by {{ job.created_by.name }}
+              </p>
+            </div>
           </div>
-        </div>
+        {% else %}
+          <div class="usa-alert usa-alert--info">
+            <div class="usa-alert__body">
+              <h2 class="usa-alert__heading">
+                Your text is pending
+              </h2>
+              <p class="usa-alert__text">
+                {{ job.template_name }} - {{ current_service.name }}
+                has been pending since {{job.created_at|format_datetime_normal}} by {{ job.created_by.name }}
+              </p>
+            </div>
+          </div>
+        {% endif %}
         {{display_message_status}}
       {% endif %}
     {% endif %}

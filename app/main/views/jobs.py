@@ -407,6 +407,7 @@ def get_job_partials(job):
         session["arrived_from_preview_page"] = False
 
     arrived_from_preview_page_url = session.get("arrived_from_preview_page", False)
+    print('job', dir(job))
 
     return {
         "counts": counts,
