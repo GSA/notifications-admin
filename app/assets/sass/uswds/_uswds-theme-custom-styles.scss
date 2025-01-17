@@ -552,6 +552,24 @@ td.table-empty-message {
   max-width: 100%;
 }
 
+.usa-tooltip {
+  &__information {
+    background: color('ink');
+    margin-top: 4px;
+    color: white;
+    border-radius: 50%;
+    height: units(3);
+    width: units(3);
+    border: 1px solid color('ink');
+  }
+  .usa-tooltip__body {
+    min-width: units('card-lg');
+    max-width: units('mobile');
+    white-space: normal;
+    word-wrap: break-word;
+  }
+}
+
 // Tabs
 
 .tabs {

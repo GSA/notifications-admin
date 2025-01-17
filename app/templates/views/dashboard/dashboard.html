@@ -27,7 +27,17 @@
     {{ ajax_block(partials, updates_url, 'inbox') }}
 
     <div id="totalMessageChartContainer" data-sms-sent="{{ sms_sent }}" data-sms-allowance-remaining="{{ sms_allowance_remaining }}">
-      <h2 id="chartTitle">Total messages</h2>
+      <div class="grid-row flex-align-center">
+        <h2 id="chartTitle" class="margin-right-1">Total messages</h2>
+        <button
+          type="button"
+          class="usa-tooltip usa-tooltip__information margin-right-0"
+          data-position="top"
+          title="Total messages track the sum of messages for the service: pending, failed, or delivered"
+        >
+          i
+        </button>
+      </div>
       <svg id="totalMessageChart"></svg>
       <div id="message"></div>
     </div>
