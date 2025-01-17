@@ -32,7 +32,6 @@ class Spreadsheet:
                 self._csv_data = converted.getvalue()
         return self._csv_data
 
-
     @classmethod
     def can_handle(cls, filename):
         return cls.get_extension(filename) in cls.ALLOWED_FILE_EXTENSIONS
@@ -45,7 +44,6 @@ class Spreadsheet:
     def normalise_newlines(file_content):
         rows = file_content.read().decode("utf-8").splitlines()
         return "\r\n".join(rows)
-
 
     @classmethod
     def from_rows(cls, rows, filename=""):
