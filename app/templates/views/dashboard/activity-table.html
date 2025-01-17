@@ -18,7 +18,6 @@
             <tbody>
                 {% if jobs %}
                 {% for job in jobs %}
-                {% set notification = job.notifications[0] %}
                 <tr id="{{ job.id }}">
                     <td class="table-field jobid" role="rowheader">
                         <a class="usa-link" href="{{ url_for('.view_job', service_id=current_service.id, job_id=job.id )}}">
