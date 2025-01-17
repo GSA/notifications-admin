@@ -132,6 +132,7 @@ def send_messages(service_id, template_id):
     form = CsvUploadForm()
     if form.validate_on_submit():
         try:
+
             upload_id = s3upload(
                 service_id,
                 Spreadsheet.from_file_form(form).as_dict,

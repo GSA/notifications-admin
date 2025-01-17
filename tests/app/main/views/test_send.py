@@ -898,6 +898,67 @@ def test_upload_csv_invalid_extension(
     assert "invalid.txt is not a spreadsheet that Notify can read" in page.text
 
 
+@pytest.mark.parametrize(
+    ("file_contents", "expected_error"),
+    [
+        (
+            """
+
+            phone number, name
+            +12028675109, example
+            +12028675109,
+            +12028675109, example
+        """,
+            (
+                "There’s a problem with example.csv "
+                "You need to put the column headers in row 1."
+            ),
+        ),
+    ],
+)
+def test_upload_csv_file_with_extra_blank_lines_is_flagged(
+    client_request,
+    mocker,
+    mock_get_service_template_with_placeholders,
+    mock_get_users_by_service,
+    mock_get_service_statistics,
+    mock_get_job_doesnt_exist,
+    mock_get_jobs,
+    service_one,
+    fake_uuid,
+    file_contents,
+    expected_error,
+):
+
+    mocker.patch("app.main.views.send.set_metadata_on_csv_upload")
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "example.csv"},
+    )
+    mocker.patch("app.main.views.send.s3upload", return_value=sample_uuid())
+
+    mocker.patch("app.main.views.send.s3download", return_value=file_contents)
+
+    page = client_request.post(
+        "main.send_messages",
+        service_id=service_one["id"],
+        template_id=fake_uuid,
+        _data={"file": (BytesIO("".encode("utf-8")), "example.csv")},
+        _follow_redirects=True,
+    )
+
+    with client_request.session_transaction() as session:
+        assert "file_uploads" not in session
+
+    assert page.select_one("input[type=file]").has_attr("accept")
+    assert (
+        page.select_one("input[type=file]")["accept"]
+        == ".csv,.xlsx,.xls,.ods,.xlsm,.tsv"
+    )
+    assert normalize_spaces(page.select(".banner-dangerous")[0].text) == expected_error
+
+
 def test_upload_csv_size_too_big(
     client_request,
     mock_login,

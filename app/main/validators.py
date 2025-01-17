@@ -1,3 +1,5 @@
+import csv
+from io import StringIO
 import re
 from abc import ABC, abstractmethod
 
@@ -28,6 +30,16 @@ class CsvFileValidator:
         self.message = message
 
     def __call__(self, form, field):
+
+        data = Spreadsheet.from_file_form(form).as_dict
+        data = data["data"]
+        if data is not None and data != "":
+            csv_file = StringIO(data)
+            reader = csv.reader(csv_file)
+            first_line = next(reader, None)
+            if first_line is None or all(cell.strip() == "" for cell in first_line):
+                raise ValidationError(f"No headers on row 1 in {field.data.filename}")
+
         if not Spreadsheet.can_handle(field.data.filename):
             raise ValidationError(
                 "{} is not a spreadsheet that Notify can read".format(
