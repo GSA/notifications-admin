@@ -87,9 +87,6 @@ class Config(object):
             "tts-benefits-studio@gsa.gov",
         ],
     }
-    FEATURE_BEST_PRACTICES_ENABLED = (
-        getenv("FEATURE_BEST_PRACTICES_ENABLED", "false") == "true"
-    )
 
     FEATURE_ABOUT_PAGE_ENABLED = getenv("FEATURE_ABOUT_PAGE_ENABLED", "false") == "true"
 

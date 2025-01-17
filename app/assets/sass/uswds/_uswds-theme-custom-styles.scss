@@ -198,8 +198,8 @@ td.table-empty-message {
     word-wrap: break-word;
   }
 
-  border: 1px solid color('gray-cool-10');
-  padding: units(2);
+  // border: 1px solid color('gray-cool-10');
+  // padding: units(2);
 
   .tick-cross-list-permissions {
     margin: units(1) 0;
@@ -852,21 +852,36 @@ $do-dont-top-bar-width: 1;
   }
 }
 
-.linked-content:hover {
-  cursor: pointer;
-  transform: scale(1.05);
-  transition: transform 0.3s ease, background-color 0.3s ease;
-}
+.linked-card a {
+  text-decoration: none;
+  .usa-card__header, .usa-card__media {
+    @include at-media('tablet') {
+      padding-top: units(1);
+    }
+  }
+  &:visited {
+    color: color('ink');
+  }
+  &:focus .usa-card__container {
+    outline: units(2px) solid color('blue-40v');
+    outline-offset: 0.3rem;
+  }
+  &:hover .usa-card__container, &:focus .usa-card__container {
+    border-color: color('blue-60v');
+    background: color('blue-60v');
+    p, h3 {
+      color: white;
+    }
+    svg {
+      filter: brightness(0) invert(1);
+    }
+  }
 
-li.linked-card:hover > div:first-child:hover {
-  border-color: #005ea2;
-}
+  &.linked-content:hover, &.linked-content:focus {
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
 
-li.linked-card:hover h4,
-li.linked-card:hover p,
-li.linked-card:hover svg,
-.best-practices_card_img:hover {
-  color: #005ea2;
 }
 
 .best-practices_card_img {
@@ -874,10 +889,6 @@ li.linked-card:hover svg,
   width: 50%;
   height: auto;
   margin: 0 auto;
-}
-
-.best-practices_link {
-  text-decoration: none;
 }
 
 .usa-link--downloadable {
@@ -914,17 +925,25 @@ li.linked-card:hover svg,
   mask-size: 1.75ex 1.75ex;
 }
 
+nav.nav {
+  position: sticky;
+  top: units(3);
+}
+
 .usa-sidenav__sublist {
   display: none;
 }
 
-.usa-sidenav__item:hover .usa-sidenav__sublist,
-.usa-sidenav__item:focus-within .usa-sidenav__sublist {
+.usa-sidenav__item.open .usa-sidenav__sublist {
   display: block;
 }
 
-.usa-sidenav__item a {
-  display: block;
+.usa-sidenav__sublist .bold {
+  font-weight: bold;
+}
+
+.usa-sidenav__sublist li[role="menuitem"] {
+  border-top: 1px solid #dfe1e2;
 }
 
 .icon-list {
@@ -957,6 +976,9 @@ li.linked-card:hover svg,
   .usa-card__container {
     align-items: center;
     text-align: center;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     img {
       margin: units(4) auto 0;
       width: units(15);
@@ -965,8 +987,16 @@ li.linked-card:hover svg,
     .usa-card__body {
       margin-bottom: units(2);
     }
+    .blue-bar {
+      background-color: #005eb8;
+      height: 1.3em;
+      width: 100%;
+      margin: 0;
+      border-radius: 0;
+    }
   }
 }
+
 
 .contact-us-card {
   border: 2px solid color("ink");

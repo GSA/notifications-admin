@@ -7,4 +7,3 @@ cloud_dot_gov_route: notify-staging.app.cloud.gov
 redis_enabled: 1
 nr_agent_id: '1134291385'
 nr_app_id: '1031640326'
-FEATURE_BEST_PRACTICES_ENABLED: false

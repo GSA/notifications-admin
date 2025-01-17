@@ -1,15 +1,12 @@
+{% set is_about_page = request.path.startswith('/about') %}
+{% set is_join_notify_page = request.path.startswith('/join-notify') %}
+{% set is_contact_page = request.path.startswith('/contact') %}
+{% set is_information_section = is_about_page or is_join_notify_page or is_contact_page %}
+
 {% if current_user.is_authenticated %}
 {% set navigation = [
-  {"href": url_for("main.show_accounts_or_dashboard"), "text": "Current service", "active": header_navigation.is_selected('accounts-or-dashboard')},
-  {"href": url_for('main.get_started'), "text": "Using Notify", "active": header_navigation.is_selected('using_notify')}
-] %}
-
-{% if FEATURE_BEST_PRACTICES_ENABLED %}
-{% set navigation = navigation + [{"href": url_for('main.best_practices'), "text": "Guides", "active": header_navigation.is_selected('best_practices')}] %}
-{% endif %}
-
-{% set navigation = navigation + [
-  {"href": url_for('main.features'), "text": "Features", "active": header_navigation.is_selected('features')},
+  {"href": url_for("main.show_accounts_or_dashboard"), "text": "Current service", "active": request.path.startswith('/accounts')},
+  {"href": url_for('main.get_started'), "text": "Using Notify", "active": request.path.startswith('/using-notify')},
   {"href": url_for('main.support'), "text": "Contact us", "active": header_navigation.is_selected('support')}
 ] %}
 
@@ -35,18 +32,23 @@
 {% endif %}
 
 {% else %}
-{% set navigation = [] %}
+{% set navigation = [
+  {"href": url_for('main.about_notify'), "text": "About Notify", "active": is_about_page},
+  {"href": url_for('main.join_notify'), "text": "Join Notify", "active": is_join_notify_page},
+  {"href": url_for('main.contact'), "text": "Contact us", "active": is_contact_page}
+] %}
+{% endif %}
 
-{% if FEATURE_ABOUT_PAGE_ENABLED %}
-{% set navigation = navigation + [{"href": url_for('main.about_notify'), "text": "About Notify", "active": request.path == '/about'}] %}
-{% endif %}
-{% endif %}
+
+
+
+
 
 
 <header class="usa-header usa-header--extended">
   <div class="usa-nav-container">
     <div class="usa-navbar">
-      <div class="display-flex flex-align-center flex-justify">
+      <div class="display-flex flex-align-center flex-justify width-full">
         <div class="usa-logo display-flex flex-align-center flex-justify" id="-logo">
           <div class="logo-img display-flex">
             <a href="/">
@@ -59,7 +61,7 @@
           <button type="button" class="usa-menu-btn">Menu</button>
           {% endif %}
         </div>
-        {% if not current_user.is_authenticated and FEATURE_ABOUT_PAGE_ENABLED and request.path == '/about'%}
+        {% if not current_user.is_authenticated and is_information_section%}
         <div class="usa-nav__login">
           <a class="usa-button usa-button login-button login-button--primary margin-right-2"
             href="{{ initial_signin_url }}">Sign
