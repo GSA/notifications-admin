@@ -21,7 +21,7 @@
                 {% set notification = job.notifications[0] %}
                 <tr id="{{ job.id }}">
                     <td class="table-field jobid" role="rowheader">
-                        <a class="usa-link" href="{{ url_for('.view_job', service_id=service_id, job_id=job.id )}}">
+                        <a class="usa-link" href="{{ url_for('.view_job', service_id=current_service.id, job_id=job.id )}}">
                             {{ job.id[:8] if job.id else 'Manually entered number' }}
                         </a>
                     </td>

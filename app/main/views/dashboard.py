@@ -73,7 +73,6 @@ def service_dashboard(service_id):
         service_data_retention_days=service_data_retention_days,
         sms_sent=sms_sent,
         sms_allowance_remaining=sms_allowance_remaining,
-        service_id=service_id,
     )
 
 
