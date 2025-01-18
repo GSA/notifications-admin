@@ -11,7 +11,19 @@
 {% block maincolumn_content %}
 
     {{ page_header("Message status") }}
-    {{ partials['status']|safe }}
+    <!-- do i need arrived_from_preview_page_url? -->
+    {% if not job.processing_finished %}
+      <div
+        data-module="update-content"
+        data-resource="{{ updates_url }}"
+        data-key="status"
+        data-form=""
+      >
+    {% endif %}
+      {{ partials['status']|safe }}
+    {% if not job.processing_finished %}
+      </div>
+    {% endif %}
     {% if not finished %}
       <div
         data-module="update-content"

@@ -10,7 +10,8 @@
   <div>
     <ul class="usa-icon-list">
       <li class="usa-icon-list__item">
-        <img src="{{ url_for('static', filename='img/material-icons/description.svg') }}" alt="">
+        <img src="{{asset_url('img/material-icons/description.svg')}}" alt="">
+        <!-- fix this image reload on ajax -->
         <div class="usa-icon-list__content">
           <h3>{{ job.original_file_name }}</h3>
         </div>
@@ -20,13 +21,9 @@
 {% endif %}
 <h2>Delivery Status</h2>
 {% endset %}
-{{ ajax_block(
-  partials,
-  url_for('.get_notifications_as_json', service_id=current_service.id, message_type=message_type, status=status),
-  'job'
-) }}
 <div class="ajax-block-container">
   <p class='bottom-gutter'>
+    <!-- do we need not job.finished_processing or arrived_from_preview_page_url?  -->
     {% if not job.finished_processing or arrived_from_preview_page_url %}
       {% if job.scheduled_for %}
         <div class="usa-alert usa-alert--info">
