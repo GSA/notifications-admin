@@ -14,7 +14,7 @@ from app import (
     service_api_client,
     template_statistics_client,
 )
-from app.formatters import format_date_numeric, format_datetime_numeric, get_time_left
+from app.formatters import format_date_numeric, format_datetime_numeric
 from app.main import main
 from app.main.views.user_profile import set_timezone
 from app.statistics_utils import get_formatted_percentage
