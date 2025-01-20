@@ -6,42 +6,38 @@
 {% from "components/ajax-block.html" import ajax_block %}
 
 {% block service_page_title %}
-  Dashboard
+    Dashboard
 {% endblock %}
 
 {% block maincolumn_content %}
-  <script type="text/javascript" src="{{ asset_url('js/setTimezone.js') }}"></script>
+<script type="text/javascript" src="{{ asset_url('js/setTimezone.js') }}"></script>
 
 
-  <div class="dashboard margin-top-0 margin-bottom-2">
+<div class="dashboard margin-top-0 margin-bottom-2">
 
-    <h1 class="usa-sr-only">Dashboard</h1>
-    {% if current_user.has_permissions('manage_templates') and not current_service.all_templates %}
-      {% include 'views/dashboard/write-first-messages.html' %}
-    {% endif %}
+<h1 class="usa-sr-only">Dashboard</h1>
+{% if current_user.has_permissions('manage_templates') and not current_service.all_templates %}
+    {% include 'views/dashboard/write-first-messages.html' %}
+{% endif %}
 
-    {{ ajax_block(partials, updates_url, 'upcoming') }}
+{{ ajax_block(partials, updates_url, 'upcoming') }}
 
-    <h2 class="font-body-2xl line-height-sans-2 margin-top-0">{{ current_service.name }} Dashboard</h2>
+<h2 class="font-body-2xl line-height-sans-2 margin-top-0">{{ current_service.name }} Dashboard</h2>
 
-    {{ ajax_block(partials, updates_url, 'inbox') }}
+{{ ajax_block(partials, updates_url, 'inbox') }}
 
-    <div id="totalMessageChartContainer" data-sms-sent="{{ sms_sent }}" data-sms-allowance-remaining="{{ sms_allowance_remaining }}">
-      <h2 id="chartTitle">Total messages</h2>
-      <svg id="totalMessageChart"></svg>
-      <div id="message"></div>
-    </div>
-    <div id="totalMessageTable" class="margin-0"></div>
+<div id="totalMessageChartContainer" data-sms-sent="{{ sms_sent }}" data-sms-allowance-remaining="{{ sms_allowance_remaining }}">
+    <h2 id="chartTitle">Total messages</h2>
+    <svg id="totalMessageChart"></svg>
+    <div id="message"></div>
+</div>
+<div id="totalMessageTable" class="margin-0"></div>
 
-    {% include 'views/dashboard/activity-chart.html'   %}
+{% include 'views/dashboard/activity-table.html'   %}
 
-    <div id="aria-live-account" class="usa-sr-only" aria-live="polite"></div>
+{% if current_user.has_permissions('manage_service') %}{% endif %}
 
-    {% include 'views/dashboard/activity-table.html'   %}
-
-    {% if current_user.has_permissions('manage_service') %}{% endif %}
-
-    {{ ajax_block(partials, updates_url, 'template-statistics') }}
-  </div>
+{{ ajax_block(partials, updates_url, 'template-statistics') }}
+</div>
 
 {% endblock %}
