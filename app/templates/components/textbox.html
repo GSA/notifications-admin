@@ -13,22 +13,13 @@
   safe_error_message=False,
   rows=8,
   extra_form_group_classes='',
-  placeholder=''
+  placeholder='',
+  required=None
 ) %}
   <div
-    class="form-group{% if field.errors %} form-group-error{% endif %} {{ extra_form_group_classes }}"
+    class="usa-form-group{% if field.errors %} usa-form-group--error{% endif %} {{ extra_form_group_classes }}"
     data-module="{% if autofocus %}autofocus{% elif colour_preview %}colour-preview{% endif %}"
   >
-    {% if field.errors %}
-      <div class="usa-alert usa-alert--error edit-textbox-error-mt" role="alert">
-        <div class="usa-alert__body">
-          <h4 class="usa-alert__heading">Error message</h4>
-          <p class="usa-alert__text" data-module="track-error" data-error-type="{{ field.errors[0] }}" data-error-label="{{ field.name }}">
-            {% if not safe_error_message %}{{ field.errors[0] }}{% else %}{{ field.errors[0]|safe }}{% endif %}
-          </p>
-        </div>
-      </div>
-    {% endif %}
     <label class="usa-label" for="{{ field.name }}">
       {% if label %}
         {{ label }}
@@ -41,6 +32,12 @@
         {{ hint }}
       </div>
     {% endif %}
+    {% if field.errors %}
+    <span id="{{ field.name}}-error" class="usa-error-message" data-module="track-error" data-error-type="{{ field.errors[0] }}" data-error-label="{{ field.name }}">
+      <span class="usa-sr-only">Error:</span>
+      {% if not safe_error_message %}{{ field.errors[0] }}{% else %}{{ field.errors[0]|safe }}{% endif %}
+    </span>
+  {% endif %}
     {%
       if highlight_placeholders or autosize
     %}
@@ -59,6 +56,8 @@
       data_highlight_placeholders='true' if highlight_placeholders else 'false',
       rows=rows|string,
       placeholder=placeholder,
+      aria_describedby=field.name+"-error",
+      required='required' if required else None,
       **kwargs
     ) }}
     {% if suffix %}
