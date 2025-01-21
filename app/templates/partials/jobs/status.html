@@ -1,5 +1,3 @@
-{% from "components/ajax-block.html" import ajax_block %}
-
 {% set display_message_status %}
 {% if job.template.content %}
   <h2 class="sms-message-header">Message</h2>
@@ -10,7 +8,7 @@
   <div>
     <ul class="usa-icon-list">
       <li class="usa-icon-list__item">
-        <img src="{{asset_url('img/material-icons/description.svg')}}" alt="">
+        <img src="{{ url_for('static', filename='img/material-icons/description.svg') }}" alt="">
         <div class="usa-icon-list__content">
           <h3>{{ job.original_file_name }}</h3>
         </div>
@@ -20,9 +18,10 @@
 {% endif %}
 <h2>Delivery Status</h2>
 {% endset %}
+
 <div class="ajax-block-container">
   <p class='bottom-gutter'>
-    {% if not job.finished_processing or arrived_from_preview_page_url %}
+    {% if not job.finished_processing %}
       {% if job.scheduled_for %}
         <div class="usa-alert usa-alert--info">
           <div class="usa-alert__body">
@@ -34,23 +33,15 @@
         </div>
         {{display_message_status}}
       {% else %}
-        {% if job.finished_processing or job.processing_started %}
+        {% if job.processing_started %}
           <div class="usa-alert usa-alert--success">
             <div class="usa-alert__body">
               <h2 class="usa-alert__heading">
-                {% if job.finished_processing %}
-                  Your message has been sent
-                {% else %}
-                  Your message is sending
-                {% endif %}
+                Your message is sending
               </h2>
               <p class="usa-alert__text">
                 {{ job.template_name }} - {{ current_service.name }}
-                {% if job.finished_processing %}
-                  was sent on {{job.processing_started|format_datetime_normal}}
-                {% else %}
-                  has been sending since {{job.processing_started| format_datetime_normal}}
-                {% endif %} by {{ job.created_by.name }}
+                has been sending since {{job.processing_started| format_datetime_normal}} by {{ job.created_by.name }}
               </p>
             </div>
           </div>
@@ -69,6 +60,19 @@
         {% endif %}
         {{display_message_status}}
       {% endif %}
+    {% elif arrived_from_preview_page_url %}
+      <div class="usa-alert usa-alert--success">
+        <div class="usa-alert__body">
+          <h2 class="usa-alert__heading">
+              Your message has been sent
+          </h2>
+          <p class="usa-alert__text">
+            {{ job.template_name }} - {{ current_service.name }}
+              was sent on {{job.processing_started|format_datetime_normal}} by {{ job.created_by.name }}
+          </p>
+        </div>
+      </div>
+      {{display_message_status}}
     {% endif %}
   </p>
   {% if job.status == 'sending limits exceeded'%}
