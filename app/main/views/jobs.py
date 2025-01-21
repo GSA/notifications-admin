@@ -57,7 +57,6 @@ def view_job(service_id, job_id):
 
     filter_args = parse_filter_args(request.args)
     filter_args["status"] = set_status_filters(filter_args)
-    # updates_url
     return render_template(
         "views/jobs/job.html",
         job=job,
@@ -111,7 +110,7 @@ def cancel_job(service_id, job_id):
 @user_has_permissions()
 def view_job_updates(service_id, job_id):
     job = Job.from_id(job_id, service_id=service_id)
-# this could help
+
     return jsonify(**get_job_partials(job))
 
 
@@ -407,7 +406,7 @@ def get_job_partials(job):
         session["arrived_from_preview_page"] = False
 
     arrived_from_preview_page_url = session.get("arrived_from_preview_page", False)
-    # partials here
+
     return {
         "counts": counts,
         "notifications": render_template(

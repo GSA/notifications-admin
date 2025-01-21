@@ -11,7 +11,6 @@
     <ul class="usa-icon-list">
       <li class="usa-icon-list__item">
         <img src="{{asset_url('img/material-icons/description.svg')}}" alt="">
-        <!-- fix this image reload on ajax -->
         <div class="usa-icon-list__content">
           <h3>{{ job.original_file_name }}</h3>
         </div>
@@ -23,7 +22,6 @@
 {% endset %}
 <div class="ajax-block-container">
   <p class='bottom-gutter'>
-    <!-- do we need not job.finished_processing or arrived_from_preview_page_url?  -->
     {% if not job.finished_processing or arrived_from_preview_page_url %}
       {% if job.scheduled_for %}
         <div class="usa-alert usa-alert--info">
