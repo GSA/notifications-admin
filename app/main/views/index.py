@@ -217,11 +217,11 @@ def benchmark_performance():
     )
 
 
-@main.route("/using-notify/guidance")
+@main.route("/using-notify/how-to")
 @user_is_logged_in
-def guidance_index():
+def how_to():
     return render_template(
-        "views/guidance/index.html",
+        "views/how-to/index.html",
         navigation_links=using_notify_nav(),
     )
 
@@ -266,29 +266,29 @@ def join_notify():
     )
 
 
-@main.route("/using-notify/guidance/create-and-send-messages")
+@main.route("/using-notify/how-to/create-and-send-messages")
 @user_is_logged_in
 def create_and_send_messages():
     return render_template(
-        "views/guidance/create-and-send-messages.html",
+        "views/how-to/create-and-send-messages.html",
         navigation_links=using_notify_nav(),
     )
 
 
-@main.route("/using-notify/guidance/edit-and-format-messages")
+@main.route("/using-notify/how-to/edit-and-format-messages")
 @user_is_logged_in
 def edit_and_format_messages():
     return render_template(
-        "views/guidance/edit-and-format-messages.html",
+        "views/how-to/edit-and-format-messages.html",
         navigation_links=using_notify_nav(),
     )
 
 
-@main.route("/using-notify/guidance/send-files-by-email")
+@main.route("/using-notify/how-to/send-files-by-email")
 @user_is_logged_in
 def send_files_by_email():
     return render_template(
-        "views/guidance/send-files-by-email.html",
+        "views/how-to/send-files-by-email.html",
         navigation_links=using_notify_nav(),
     )
 
