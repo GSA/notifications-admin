@@ -5,7 +5,7 @@
         const COLORS = {
             delivered: '#0076d6',
             failed: '#fa9441',
-            pending: '#808080',
+            pending: '#C7CACE',
             text: '#666'
         };
 
