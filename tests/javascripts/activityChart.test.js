@@ -135,7 +135,7 @@ test('Check HTML content after chart creation', () => {
   expect(barGroups.length).toBe(3);
 
   const pendingBars = Array.from(bars).filter(bar =>
-    bar.parentNode.getAttribute('fill') === '#808080'
+    bar.parentNode.getAttribute('fill') === '#C7CACE'
   );
   expect(pendingBars.length).toBe(labels.length);
 });
