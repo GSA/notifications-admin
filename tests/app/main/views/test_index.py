@@ -94,7 +94,7 @@ def test_hiding_pages_from_search_engines(
         "message_status",
         "how_to_pay",
         "get_started",
-        "guidance_index",
+        "how_to",
         "create_and_send_messages",
         "edit_and_format_messages",
         "send_files_by_email",

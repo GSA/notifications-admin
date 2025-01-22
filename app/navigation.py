@@ -54,7 +54,7 @@ class HeaderNavigation(Navigation):
             "pricing",
             "trial_mode_new",
             "message_status",
-            "guidance_index",
+            "how_to",
         },
         "accounts-or-dashboard": {
             "conversation",

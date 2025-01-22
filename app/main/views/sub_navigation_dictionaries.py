@@ -34,7 +34,7 @@ def using_notify_nav():
         {"name": "Trial mode", "link": "main.trial_mode_new"},
         {"name": "Tracking usage", "link": "main.pricing"},
         {"name": "Delivery Status", "link": "main.message_status"},
-        {"name": "Guidance", "link": "main.guidance_index"},
+        {"name": "How to", "link": "main.how_to"},
     ]
 
     return nav_items
