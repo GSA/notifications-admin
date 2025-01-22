@@ -37,7 +37,7 @@ body:
   - type: textarea
     id: acceptanceCriteria
     attributes:
-      label: "Detailed condition or criteria that must be met for the user story to be considered complete."
+      label: "Detailed condition or criteria that must be met for the user story to be considered complete. This includes basic a11y checks around screen readers and keyboard testing."
       description: "List the acceptance criteria for the user story."
     validations:
       required: true
@@ -48,7 +48,7 @@ body:
   - type: textarea
     id: tasks
     attributes:
-      label: "List of specific tasks or sub-tasks that need to be done to implement the user story."
+      label: "List of specific tasks or sub-tasks that need to be done to implement the user story. This includes a11y standards."
       description: "Outline the tasks necessary to implement the user story."
     validations:
       required: true
@@ -59,7 +59,7 @@ body:
   - type: textarea
     id: dependencies
     attributes:
-      label: "List any dependencies that need to be resolved before starting or completing this user story."
+      label: "List any dependencies that need to be resolved before starting or completing this user story. This includes screenreaders and keyboard testing passing."
       description: "Specify any dependencies related to the user story."
     validations:
       required: false
