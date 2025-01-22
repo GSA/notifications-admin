@@ -2,7 +2,7 @@ def using_notify_nav():
     nav_items = [
         {"name": "Get started", "link": "main.get_started"},
         {
-            "name": "Best Practices",
+            "name": "Best practices",
             "link": "main.best_practices",
             "sub_navigation_items": [
                 {
@@ -33,7 +33,7 @@ def using_notify_nav():
         },
         {"name": "Trial mode", "link": "main.trial_mode_new"},
         {"name": "Tracking usage", "link": "main.pricing"},
-        {"name": "Delivery Status", "link": "main.message_status"},
+        {"name": "Delivery status", "link": "main.message_status"},
         {"name": "How to", "link": "main.how_to"},
     ]
 
