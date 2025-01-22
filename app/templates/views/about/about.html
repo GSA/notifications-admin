@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% set page_title = "About Notify" %}
-
 {% block per_page_title %}
 {{page_title}}
 {% endblock %}
@@ -27,7 +26,7 @@
   {% set product_highlights = [
   {
   "svg_src": "#send",
-  "card_heading": "Send customized one-way customized messages",
+  "card_heading": "Send customized one-way messages",
   "p_text": "Upload a file with recipient phone numbers and Notify.gov sends customized messages",
   },
   {
@@ -68,7 +67,7 @@
     {% endfor %}
   </ul>
   <p><a href="/join-notify">See if Notify is right for you</a></p>
-  <p>Notify.gov is a product of the <a href="#">Public Benefits Studio</a>, a product accelerator inside
+  <p>Notify.gov is a product of the <a href="/studio">Public Benefits Studio</a>, a product accelerator inside
     the federal government. </p>
 </section>
 {% endblock %}

@@ -51,35 +51,37 @@
   {
   "image_src": asset_url('images/calendar.svg'),
   "card_heading": "Reminders",
-  "p_text": "In a text bubble // Your Quality Control food phone interview is on ((date)) at ((time)). Failure to
+  "p_text": "Your Quality Control food phone interview is on ((date)) at ((time)). Failure to
   attend may lead to closure of your benefits. Call 1-800-222-3333 with questions.",
   "alt_text": "reminder text example"
   },
   {
   "image_src": asset_url('images/alert.svg'),
   "card_heading": "Alerts to take action",
-  "p_text": "In a text bubble // Your household's Medicaid coverage is expiring. To keep getting Medicaid, you must
+  "p_text": "Your household's Medicaid coverage is expiring. To keep getting Medicaid, you must
   complete your renewal by ((date)). You can renew online at dhs.state.gov…",
   "alt_text": "alerts text example"
   },
   {
   "image_src": asset_url('images/alarm.svg'),
   "card_heading": "Important status updates",
-  "p_text": "In a text bubble // Your passport has been issued at the Los Angeles Passport Agency. Please come to the
+  "p_text": "Your passport has been issued at the Los Angeles Passport Agency. Please come to the
   desk between 1:30pm and 2:30pm today to pick up your passport…",
   "alt_text": "status update text example"
   },
   ] %}
   {% for item in card_contents %}
-  <div class="radius-lg border-2px maxw-tablet">
-    <div class="grid-row grid-gap-4 padding-4 padding-y-3 flex-align-center">
-      <div class="grid-col flex-3">
-        <p><b>{{item.card_heading}}</b></p>
-        <p>{{item.p_text}}</p>
+  <div class="grid-container-tablet padding-3 radius-lg border-2px margin-left-0 ">
+    <h3 class="usa-card__heading padding-y-2">{{item.card_heading}}</h3>
+    <div class="grid-row grid-gap-3 flex-align-center">
+      <div class="grid-col-auto ">
+        <p class="sms-message-wrapper">{{item.p_text}}</p>
       </div>
-      {% if item.image_src %}
-      <img src="{{item.image_src}}" alt="{{ item.alt_text }}" class="height-15" />
-      {% endif %}
+      <div class="grid-col-fill">
+        {% if item.image_src %}
+        <img src="{{ item.image_src }}" alt="{{ item.alt_text }}" class="height-15" />
+        {% endif %}
+      </div>
     </div>
   </div>
   {% endfor %}

@@ -645,6 +645,7 @@ def edit_service_template(service_id, template_id):
         return render_template(
             "views/edit-{}-template.html".format(template["template_type"]),
             form=form,
+            errors=form.errors if form.errors else None,
             template=template,
             heading_action="Edit",
         )

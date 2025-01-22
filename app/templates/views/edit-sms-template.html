@@ -29,9 +29,11 @@
 
     {% call form_wrapper() %}
       <div class="grid-row">
-        <div class="tablet:grid-col-9 mobile-lg:grid-col-12">
+        <div class="tablet:grid-col-9 mobile-lg:grid-col-12" aria-live="polite" role="alert">
           {{ form.name(param_extensions={
             "extra_form_group_classes": "margin-bottom-2",
+            "id": "name",
+            "required": True,
             "hint": {"text": "Your recipients will not see this"}
           }) }}
           {{ textbox(
@@ -41,7 +43,8 @@
             hint=content_hint,
             rows=5,
             extra_form_group_classes='margin-bottom-1',
-            placeholder='Edit me! Check out the Personalization section below for details on cool ((stuff)) you can do with your messages!'
+            placeholder='Edit me! Check out the Personalization section below for details on cool ((stuff)) you can do with your messages!',
+            required=True
           ) }}
           {% if current_user.platform_admin %}
             {{ form.process_type }}
