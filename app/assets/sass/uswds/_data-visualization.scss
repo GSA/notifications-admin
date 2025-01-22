@@ -60,16 +60,16 @@ $failed: color('gray-cool-20');
   }
 }
 
-.usa-tooltip {
-  line-height: 1;
-  .usa-tooltip__body {
-    width: units(mobile);
-      font-size: size("body", 2);
-    height: auto;
-    white-space: wrap;
-    line-height: units(1);
-  }
-}
+// .usa-tooltip {
+//   line-height: 1;
+//   .usa-tooltip__body {
+//     width: units(mobile);
+//       font-size: size("body", 2);
+//     height: auto;
+//     white-space: wrap;
+//     line-height: units(1);
+//   }
+// }
 
 .progress-bar {
   width: 300px;
