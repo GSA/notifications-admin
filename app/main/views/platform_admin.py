@@ -116,6 +116,72 @@ def download_all_users():
     return response
 
 
+@main.route("/platform-admin/get-redis-report")
+@user_is_platform_admin
+def get_redis_report():
+
+    memory_info = redis_client.info("memory")
+    memory_used = memory_info.get("used_memory_human", "N/A")
+    max_memory = memory_info.get("maxmemory_human", "N/A")
+    if max_memory == "0B":
+        max_memory = "No set limit"
+    mem_fragmentation = memory_info.get("mem_fragmentation_ratio", "N/A")
+    frag_quality = "Swapping (bad)"
+    if mem_fragmentation >= 1.0:
+        frag_quality = "Healthy"
+    if mem_fragmentation > 1.5:
+        frag_quality = "Problematic"
+    if mem_fragmentation > 2.0:
+        frag_quality = "Severe fragmentation"
+
+    frag_note = ""
+    if mem_fragmentation > 2.0:
+        frag_note = "Use MEMORY PURGE.\nReplace multiple small keys with hashes.\nAvoid long keys.\nSet max_memory."
+    elif mem_fragmentation < 1.0:
+        frag_note = "Allocate more RAM.\nSet max_memory."
+
+    keys = redis_client.keys("*")
+    key_details = []
+
+    for key in keys:
+        key_type = redis_client.type(key).decode("utf-8")
+        ttl = redis_client.ttl(key)
+        ttl_str = "No Expiry" if ttl == -1 else f"{ttl} seconds"
+        key_details.append(
+            {"Key": key.decode("utf-8"), "Type": key_type, "TTL": ttl_str}
+        )
+    output = StringIO()
+    writer = csv.writer(
+        output,
+    )
+    writer.writerow(["Redis Report"])
+    writer.writerow([])
+
+    writer.writerow(["Memory"])
+    writer.writerow(["", "Metric", "Value"])
+    writer.writerow(["", "Memory Used", memory_used])
+    writer.writerow(["", "Max Memory", max_memory])
+    writer.writerow(["", "Memory Fragmentation Ratio", mem_fragmentation])
+    writer.writerow(["", "Memory Fragmentation Quality", frag_quality])
+    writer.writerow(["", "Memory Fragmentation Note", frag_note])
+    writer.writerow([])
+
+    writer.writerow(["Keys Overview"])
+    writer.writerow(["", "TTL", "Type", "Key"])
+    for key_detail in key_details:
+        writer.writerow(
+            ["", key_detail["TTL"], key_detail["Type"], key_detail["Key"][0:50]]
+        )
+
+    csv_data = output.getvalue()
+
+    # Create a direct download response with the CSV data and appropriate headers
+    response = Response(csv_data, content_type="text/csv; charset=utf-8")
+    response.headers["Content-Disposition"] = "attachment; filename=redis.csv"
+
+    return response
+
+
 def is_over_threshold(number, total, threshold):
     percentage = number / total * 100 if total else 0
     return percentage > threshold
