@@ -37,7 +37,7 @@ body:
   - type: textarea
     id: acceptanceCriteria
     attributes:
-      label: "Detailed condition or criteria that must be met for the user story to be considered complete."
+      label: "Detailed condition or criteria that must be met for the user story to be considered complete. This includes items related to accessibility."
       description: "List the acceptance criteria for the user story."
     validations:
       required: true
@@ -59,7 +59,7 @@ body:
   - type: textarea
     id: dependencies
     attributes:
-      label: "List any dependencies that need to be resolved before starting or completing this user story."
+      label: "List any dependencies that need to be resolved before starting or completing this user story. This includes items related to accessibility."
       description: "Specify any dependencies related to the user story."
     validations:
       required: false
@@ -70,7 +70,7 @@ body:
   - type: textarea
     id: notes
     attributes:
-      label: "Any additional information or context that might be useful for the team."
+      label: "Any additional information or context that might be useful for the team. This includes items related to accessibility."
       description: "Provide any extra notes or context for the user story."
     validations:
       required: false
