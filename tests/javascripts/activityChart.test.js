@@ -40,7 +40,7 @@ beforeAll(done => {
       </div>
     </div>
     <div id="aria-live-account" class="usa-sr-only" aria-live="polite"></div>
-    <div id="activityContainer" data-currentUserName="Test User"></div>
+    <div id="activityContainer" data-currentUserName="Test User" data-currentServiceId="12345"></div>
 
     <div id="aria-live-account" class="usa-sr-only" aria-live="polite"></div>
   `;
@@ -186,6 +186,9 @@ test('Fetches data and creates chart and table correctly', async () => {
     '2024-07-06': { sms: { delivered: 100, failed: 4, pending: 5 } },
     '2024-07-07': { sms: { delivered: 110, failed: 2, pending: 3 } },
   };
+  const tableContainer = document.getElementById('activityContainer');
+  const currentServiceId = tableContainer.getAttribute('data-currentServiceId');
+
 
   global.fetch = jest.fn(() =>
     Promise.resolve({
@@ -196,7 +199,7 @@ test('Fetches data and creates chart and table correctly', async () => {
 
   const data = await fetchData('service');
 
-  expect(global.fetch).toHaveBeenCalledWith('/daily_stats.json');
+  expect(global.fetch).toHaveBeenCalledWith(`/services/${currentServiceId}/daily-stats.json`);
   expect(data).toEqual(mockResponse);
 
   const labels = Object.keys(mockResponse).map(dateString => {
@@ -225,7 +228,7 @@ test('handleDropdownChange updates DOM for individual selection', () => {
       <div class="chart-subtitle"></div>
     </div>
     <div id="aria-live-account"></div>
-    <div id="activityContainer" data-currentUserName="Test User"></div>
+    <div id="activityContainer" data-currentUserName="Test User" data-currentServiceId="12345"></div>
     <div id="tableActivity">
       <h2 id="table-heading"></h2>
       <table id="activity-table">
