@@ -20,3 +20,8 @@ Please enter a detailed description here.
 * Consideration 1
 * Consideration 2
 * Consideration ...
+
+## A11y Checks (if applicable)
+
+* Conduct automated tests through [AxeDevTools](https://www.deque.com/axe/devtools/) and [WAVE](https://wave.webaim.org/)
+* Review the [Manual Checklist](https://docs.google.com/document/d/192bBXStebdXWtYhZQ73qaWMJhGcuSB1W6c9YBXhWZvc/edit?usp=sharing)

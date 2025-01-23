@@ -2,6 +2,8 @@
 
     if (document.getElementById('activityChartContainer')) {
         let currentType = 'service';
+        const tableContainer = document.getElementById('activityContainer');
+        const currentUserName = tableContainer.getAttribute('data-currentUserName');
         const COLORS = {
             delivered: '#0076d6',
             failed: '#fa9441',
@@ -282,27 +284,58 @@
         subTitle.textContent = `${selectedText} - last 7 days`;
         fetchData(selectedValue);
 
-        // Update ARIA live region
         const liveRegion = document.getElementById('aria-live-account');
         liveRegion.textContent = `Data updated for ${selectedText} - last 7 days`;
 
-        // Switch tables based on dropdown selection
-        const selectedTable = selectedValue === "individual" ? "table1" : "table2";
-        const tables = document.querySelectorAll('.table-overflow-x-auto');
-        tables.forEach(function(table) {
-            table.classList.add('hidden'); // Hide all tables by adding the hidden class
-            table.classList.remove('visible'); // Ensure they are not visible
-        });
-        const tableToShow = document.getElementById(selectedTable);
-        tableToShow.classList.remove('hidden'); // Remove hidden class
-        tableToShow.classList.add('visible'); // Add visible class
+        const tableHeading = document.querySelector('#tableActivity h2');
+        const senderColumns = document.querySelectorAll('.sender-column');
+        const allRows = document.querySelectorAll('#activity-table tbody tr');
+        const caption = document.querySelector('#activity-table caption');
+
+        if (selectedValue === 'individual') {
+
+            tableHeading.textContent = 'My activity';
+            caption.textContent = `Table showing the sent jobs for ${currentUserName}`;
+
+            senderColumns.forEach(col => {
+            col.style.display = 'none';
+            });
+
+            allRows.forEach(row => row.style.display = 'none');
+
+            const userRows = Array.from(allRows).filter(row => {
+                const senderCell = row.querySelector('.sender-column');
+                const rowSender = senderCell ? senderCell.textContent.trim() : '';
+                return rowSender === currentUserName;
+            });
+
+            userRows.slice(0, 5).forEach(row => {
+                row.style.display = '';
+            });
+        } else {
+
+            tableHeading.textContent = 'Service activity';
+            caption.textContent = `Table showing the sent jobs for service`;
+
+            senderColumns.forEach(col => {
+            col.style.display = '';
+            });
+
+            allRows.forEach((row, index) => {
+                row.style.display = (index < 5) ? '' : 'none';
+            });
+        }
     };
 
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize activityChart chart and table with service data by default
         fetchData(currentType);
 
-        // Add event listener to the dropdown
+        const allRows = Array.from(document.querySelectorAll('#activity-table tbody tr'));
+        allRows.forEach((row, index) => {
+            row.style.display = (index < 5) ? '' : 'none';
+        });
+
         const dropdown = document.getElementById('options');
         dropdown.addEventListener('change', handleDropdownChange);
     });
