@@ -4,6 +4,7 @@
         let currentType = 'service';
         const tableContainer = document.getElementById('activityContainer');
         const currentUserName = tableContainer.getAttribute('data-currentUserName');
+        const currentServiceId = tableContainer.getAttribute('data-currentServiceId');
         const COLORS = {
             delivered: '#0076d6',
             failed: '#fa9441',
@@ -212,7 +213,7 @@
             return;
         }
 
-        var url = type === 'service' ? `/daily_stats.json` : `/daily_stats_by_user.json`;
+        var url = type === 'service' ? `/services/${currentServiceId}/daily-stats.json` : `/services/${currentServiceId}/daily-stats-by-user.json`;
         return fetch(url)
             .then(response => {
                 if (!response.ok) {
