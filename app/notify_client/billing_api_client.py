@@ -1,3 +1,6 @@
+import json
+
+from app.extensions import redis_client
 from app.notify_client import NotifyAdminAPIClient
 
 
@@ -15,9 +18,18 @@ class BillingAPIClient(NotifyAdminAPIClient):
         )
 
     def get_free_sms_fragment_limit_for_year(self, service_id, year=None):
+        frag_limit = redis_client.get(f"free-sms-fragment-limit-{service_id}-{year}")
+        if frag_limit is not None:
+            return json.loads(frag_limit.decode("utf-8"))
         result = self.get(
             "/service/{0}/billing/free-sms-fragment-limit".format(service_id),
             params=dict(financial_year_start=year),
+        )
+
+        redis_client.set(
+            f"free-sms-fragment-limit-{service_id}-{year}",
+            json.dumps(result["free_sms_fragment_limit"]),
+            ex=30,
         )
         return result["free_sms_fragment_limit"]
 

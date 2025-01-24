@@ -8,7 +8,7 @@ const sublinks = [
   { label: 'Trial Mode', path: '/using-notify/trial-mode' },
   { label: 'Pricing', path: '/using-notify/pricing' },
   { label: 'Delivery Status', path: '/using-notify/delivery-status' },
-  { label: 'Guidance', path: '/using-notify/guidance' },
+  { label: 'How To', path: '/using-notify/how-to' },
   { label: 'Support', path: '/support' },
   { label: 'Best Practices', path: '/using-notify/best-practices' },
   { label: 'Clear Goals', path: '/using-notify/best-practices/clear-goals' },

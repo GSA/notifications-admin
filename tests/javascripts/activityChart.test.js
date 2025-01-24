@@ -21,7 +21,7 @@ Object.defineProperty(HTMLElement.prototype, 'clientWidth', {
 beforeAll(done => {
   // Set up the DOM with the D3 script included
   document.body.innerHTML = `
-    <div id="activityChartContainer"">
+    <div id="activityChartContainer">
       <form class="usa-form">
         <label class="usa-label" for="options">Account</label>
         <select class="usa-select margin-bottom-2" name="options" id="options">
@@ -39,6 +39,9 @@ beforeAll(done => {
         <table id="weeklyTable" class="usa-sr-only usa-table"></table>
       </div>
     </div>
+    <div id="aria-live-account" class="usa-sr-only" aria-live="polite"></div>
+    <div id="activityContainer" data-currentUserName="Test User"></div>
+
     <div id="aria-live-account" class="usa-sr-only" aria-live="polite"></div>
   `;
 
@@ -177,4 +180,60 @@ const data = await fetchData('service');
 
 expect(global.fetch).toHaveBeenCalledWith('/daily_stats.json');
 expect(data).toEqual(mockResponse);
+});
+
+test('handleDropdownChange updates DOM for individual selection', () => {
+  document.body.innerHTML = `
+    <div id="activityChartContainer">
+      <div class="chart-subtitle"></div>
+    </div>
+    <div id="aria-live-account"></div>
+    <div id="activityContainer" data-currentUserName="Test User"></div>
+    <div id="tableActivity">
+      <h2 id="table-heading"></h2>
+      <table id="activity-table">
+        <caption id="caption"></caption>
+        <tbody>
+          <tr><td class="sender-column">Test User</td></tr>
+          <tr><td class="sender-column">Other User</td></tr>
+          <tr><td class="sender-column">Test User</td></tr>
+          <tr><td class="sender-column">Test User</td></tr>
+          <tr><td class="sender-column">Other User</td></tr>
+          <tr><td class="sender-column">Test User</td></tr>
+          <tr><td class="sender-column">Test User</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <select id="options">
+      <option value="service">Service</option>
+      <option value="individual">Individual</option>
+    </select>
+  `;
+
+  window.currentUserName = "Test User";
+
+  jest.spyOn(window, 'fetchData').mockImplementation(() => {});
+
+  const selectElement = document.getElementById('options');
+  selectElement.value = 'individual';
+  const event = { target: selectElement };
+
+  window.handleDropdownChange(event);
+
+  expect(document.getElementById('table-heading').textContent).toBe('My activity');
+  expect(document.getElementById('caption').textContent).toContain('Test User');
+
+  document.querySelectorAll('.sender-column').forEach(col => {
+    expect(col.style.display).toBe('none');
+  });
+
+  const rows = Array.from(document.querySelectorAll('#activity-table tbody tr'));
+  const visibleRows = rows.filter(row => row.style.display !== 'none');
+  expect(visibleRows.length).toBeLessThanOrEqual(5);
+  visibleRows.forEach(row => {
+    const sender = row.querySelector('.sender-column').textContent.trim();
+    expect(sender).toBe('Test User');
+  });
+
+  window.fetchData.mockRestore();
 });
