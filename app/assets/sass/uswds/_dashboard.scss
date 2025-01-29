@@ -1,0 +1,186 @@
+@use "uswds-core" as *;
+
+.dashboard {
+    .big-number-with-status {
+      .big-number-smaller {
+        display: flex;
+        flex-direction: column;
+        .big-number-number {
+          font-size: units(5);
+          line-height: units(5);
+        }
+        .big-number-label {
+          font-size: units(2.5);
+        }
+      }
+      .big-number-status {
+        background: color('green-cool-40v');
+        display: flex;
+        padding: units(1) units(2);
+        &--failing {
+          padding: 0;
+          a.usa-link {
+            color: white;
+            background: color('red-warm-50v');
+            padding: units(1) units(2);
+            margin: 0;
+            width: 100%;
+            &:hover {
+              background: color('red-warm-60v');
+            }
+          }
+        }
+      }
+    }
+    .usa-table {
+      width: 100%;
+      caption {
+        margin-bottom: 0;
+      }
+      .table-field-center-aligned {
+        text-align: center;
+      }
+      .template-statistics-table-template-name {
+        padding-left: units(4);
+        display: inline-block;
+        background-repeat: no-repeat;
+        background-image: url(../img/material-icons/description.svg);
+      }
+    }
+    .get-started {
+      border: 1px solid color('gray-90');
+      padding: units(2);
+      margin-bottom: units(4);
+    }
+  }
+
+  .dashboard-table {
+    table {
+      width: 100%;
+    }
+    .file-list-filename {
+      font-weight: bold;
+    }
+    .file-list-hint {
+      margin: 0;
+      word-break: break-word;
+    }
+    .table-field,
+    .table-field-right-aligned {
+      width: 50%;
+    }
+    &.usage-table {
+      .table-field,
+      .table-field-left-aligned,
+      .table-field-right-aligned {
+        width: auto;
+      }
+    }
+  }
+
+  .job-status-table {
+    table-layout: fixed;
+
+    thead tr th {
+      border-bottom: 0;
+    }
+
+    thead,
+    tbody,
+    tr {
+      width: 100%;
+    }
+
+    th:first-child,
+    td:first-child {
+      width: 75%;
+    }
+
+    th:nth-child(2),
+    R td:nth-child(2) {
+      width: 25%;
+    }
+  }
+
+  .usage-table {
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .big-number-smallest {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .job-table {
+    width: 100%;
+    border-collapse: collapse;
+    td.file-name {
+      width: 25%;
+      overflow-wrap: anywhere;
+    }
+    td.jobid {
+      width: 5%;
+    }
+    td.template {
+      width: 25%;
+    }
+    td.time-sent {
+      width: 15%;
+    }
+    td.sender {
+      width: 20%;
+      overflow-wrap: break-word;
+    }
+    td.count-of-recipients {
+      width: 5%;
+    }
+    td.report {
+      width: 2%;
+      text-align: center;
+    }
+    td.delivered {
+      width: 2%;
+      text-align: center;
+    }
+    td.failed {
+      width: 2%;
+      text-align: center;
+    }
+    td.report img {
+      padding-top: 5px;
+    }
+    th {
+      padding: 0.5rem 1rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .usa-table-container--scrollable-mobile {
+      margin: 0;
+      overflow-y: hidden;
+    }
+  }
+
+  .usa-table th[data-sortable][aria-sort='ascending'],
+  .usa-table th[data-sortable][aria-sort='descending'] {
+    background-color: #a1d3ff;
+  }
+
+  #template-list {
+    max-height: 500px;
+    overflow-y: auto;
+    padding: units(1) 0 units(1) units(1);
+    margin: units(2) 0 units(5);
+    ul {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+  }
+
+  .usa-prose > p.max-width-full {
+    max-width: 100%;
+  }

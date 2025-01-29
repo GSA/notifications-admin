@@ -1,5 +1,10 @@
 @forward "uswds-theme";
 @forward "uswds";
 @forward "uswds-theme-custom-styles";
+@use "tokens" as vars;
 @forward "legacy-styles";
+@forward "home";
+@forward "dashboard";
+@forward "tabs";
+@forward "do-dont";
 @forward "data-visualization";

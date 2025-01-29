@@ -1,0 +1,62 @@
+@use "uswds-core" as *;
+@use "tokens" as vars;
+
+.usa-section--dark {
+    background-color: color('gray-90');
+    h1 {
+        font-family: family('sans');
+        font-size: units(7);
+        color: vars.$notify-light-blue;
+        @media (max-width: units('desktop')) {
+            font-size: units(5);
+        }
+    }
+}
+
+.usa-hero > .grid-container {
+    @media (max-width: units('desktop')) {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+}
+
+.usa-section {
+    &__home {
+        h2 {
+            font-size: units(6);
+            line-height: 1.2;
+        }
+        p {
+            font-size: 20px;
+        }
+    }
+}
+
+.home-cards {
+    justify-content: space-between;
+    .usa-card__container {
+        align-items: center;
+        text-align: center;
+        overflow: hidden;
+        border: 0;
+        .img-container {
+            width: units('card');
+            height: units('card');
+            margin: units(3) 0;
+            border-radius: 50%;
+            background: color('gray-cool-10');
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            img {
+                width: units(10);
+                height: units(10);
+                filter: brightness(0) saturate(100%) invert(22%) sepia(98%) saturate(1829%) hue-rotate(187deg) brightness(88%) contrast(101%);
+            }
+        }
+        h3, p {
+            font-size: units(3);
+            line-height: 1.3;
+        }
+    }
+}

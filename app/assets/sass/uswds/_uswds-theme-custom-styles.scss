@@ -1,25 +1,3 @@
-/*
-* * * * * ==============================
-* * * * * ==============================
-* * * * * ==============================
-* * * * * ==============================
-========================================
-========================================
-========================================
-----------------------------------------
-USWDS THEME CUSTOM STYLES
-----------------------------------------
-!! Copy this file to your project's
-   sass root. Don't edit the version
-   in node_modules.
-----------------------------------------
-Custom project SASS goes here.
-
-i.e.
-@include u-padding-right('05');
-----------------------------------------
-*/
-
 @use 'uswds-core' as *;
 
 iframe:focus,
@@ -56,7 +34,10 @@ button:not([disabled]):focus {
       }
     }
     @include at-media-max('desktop') {
-      padding: 0 units(2);
+      .usa-nav__secondary-links
+      {
+        padding-left: units(2);
+      }
       ul li {
         padding-bottom: units(1);
       }
@@ -160,9 +141,17 @@ td.table-empty-message {
   }
 }
 
-.usa-button img {
-  margin-left: 0.5rem;
-  height: 1rem;
+.login-button {
+  margin-right: 0;
+    img {
+    height: 1rem;
+  }
+  @media (max-width: units('desktop')) {
+    img {
+      height: 14px;
+    }
+    font-size: 14px;
+  }
 }
 
 .usa-button.login-button.login-button--primary,
@@ -365,227 +354,6 @@ td.table-empty-message {
   }
 }
 
-// Dashboard
-
-.dashboard {
-  .big-number-with-status {
-    .big-number-smaller {
-      display: flex;
-      flex-direction: column;
-      .big-number-number {
-        font-size: units(5);
-        line-height: units(5);
-      }
-      .big-number-label {
-        font-size: units(2.5);
-      }
-    }
-    .big-number-status {
-      background: color('green-cool-40v');
-      display: flex;
-      padding: units(1) units(2);
-      &--failing {
-        padding: 0;
-        a.usa-link {
-          color: white;
-          background: color('red-warm-50v');
-          padding: units(1) units(2);
-          margin: 0;
-          width: 100%;
-          &:hover {
-            background: color('red-warm-60v');
-          }
-        }
-      }
-    }
-  }
-  .usa-table {
-    width: 100%;
-    caption {
-      margin-bottom: 0;
-    }
-    .table-field-center-aligned {
-      text-align: center;
-    }
-    .template-statistics-table-template-name {
-      padding-left: units(4);
-      display: inline-block;
-      background-repeat: no-repeat;
-      background-image: url(../img/material-icons/description.svg);
-    }
-  }
-  .get-started {
-    border: 1px solid color('gray-90');
-    padding: units(2);
-    margin-bottom: units(4);
-  }
-}
-
-.dashboard-table {
-  table {
-    width: 100%;
-  }
-  .file-list-filename {
-    font-weight: bold;
-  }
-  .file-list-hint {
-    margin: 0;
-    word-break: break-word;
-  }
-  .table-field,
-  .table-field-right-aligned {
-    width: 50%;
-  }
-  &.usage-table {
-    .table-field,
-    .table-field-left-aligned,
-    .table-field-right-aligned {
-      width: auto;
-    }
-  }
-}
-
-.job-status-table {
-  table-layout: fixed;
-
-  thead tr th {
-    border-bottom: 0;
-  }
-
-  thead,
-  tbody,
-  tr {
-    width: 100%;
-  }
-
-  th:first-child,
-  td:first-child {
-    width: 75%;
-  }
-
-  th:nth-child(2),
-  R td:nth-child(2) {
-    width: 25%;
-  }
-}
-
-.usage-table {
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .big-number-smallest {
-    display: flex;
-    flex-direction: column;
-  }
-}
-
-.job-table {
-  width: 100%;
-  border-collapse: collapse;
-  td.file-name {
-    width: 25%;
-    overflow-wrap: anywhere;
-  }
-  td.jobid {
-    width: 5%;
-  }
-  td.template {
-    width: 25%;
-  }
-  td.time-sent {
-    width: 15%;
-  }
-  td.sender {
-    width: 20%;
-    overflow-wrap: break-word;
-  }
-  td.count-of-recipients {
-    width: 5%;
-  }
-  td.report {
-    width: 2%;
-    text-align: center;
-  }
-  td.delivered {
-    width: 2%;
-    text-align: center;
-  }
-  td.failed {
-    width: 2%;
-    text-align: center;
-  }
-  td.report img {
-    padding-top: 5px;
-  }
-  th {
-    padding: 0.5rem 1rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .usa-table-container--scrollable-mobile {
-    margin: 0;
-    overflow-y: hidden;
-  }
-}
-
-.usa-table th[data-sortable][aria-sort='ascending'],
-.usa-table th[data-sortable][aria-sort='descending'] {
-  background-color: #a1d3ff;
-}
-
-#template-list {
-  max-height: 500px;
-  overflow-y: auto;
-  padding: units(1) 0 units(1) units(1);
-  margin: units(2) 0 units(5);
-  ul {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-  }
-}
-
-.usa-prose > p.max-width-full {
-  max-width: 100%;
-}
-
-// Tabs
-
-.tabs {
-  .pill {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    .pill-item__container {
-      border: 1px solid color('gray-cool-10');
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      text-align: center;
-      font-size: units(2);
-      a {
-        padding: units(4);
-        .big-number-smaller {
-          font-size: units(5);
-          line-height: units(6);
-        }
-        .big-number-smallest {
-          font-size: units(3);
-        }
-        &:not(.pill-item--selected):hover {
-          background: color('blue-warm-70v');
-        }
-        &.pill-item--selected:hover {
-          color: color('blue-60v');
-        }
-      }
-    }
-  }
-}
-
 // Etc
 
 .email-brand,
@@ -747,86 +515,6 @@ div.guides {
   height: 400px;
 }
 
-$do-dont-color-do: 'green-cool-50v';
-$do-dont-color-dont: 'red-cool-50v';
-$do-dont-color-border: 'gray-cool-20';
-$do-dont-padding: 3;
-$do-dont-top-bar-width: 1;
-
-.do-dont {
-  display: flex;
-  height: 100%;
-  padding-top: units(2);
-}
-
-.do-dont__do,
-.do-dont__dont {
-  background-color: color('white');
-  border: 1px solid color($do-dont-color-border);
-  flex: 1 0 0;
-  height: 100%;
-  position: relative;
-}
-
-.do-dont__do {
-  padding: 0rem;
-}
-
-.do-dont__do:before,
-.do-dont__dont:before {
-  content: '';
-  position: absolute;
-  height: units($do-dont-top-bar-width);
-  width: calc(100% + 2px);
-  top: -1px;
-  left: -1px;
-}
-
-.do-dont__do:before {
-  background-color: color($do-dont-color-do);
-}
-
-.do-dont__dont:before {
-  background-color: color($do-dont-color-dont);
-}
-
-.do-dont__heading {
-  // @include typeset("lang", "lg", 2);
-  align-items: center;
-  border-bottom: 1px solid color($do-dont-color-border);
-  display: flex;
-  font-weight: fw('bold');
-  margin: 0;
-  padding: units(4) units($do-dont-padding) units($do-dont-padding);
-
-  .usa-icon {
-    @include u-square(3);
-    margin-right: units(0.5);
-  }
-}
-
-.do-dont__do .do-dont__heading {
-  color: color($do-dont-color-do);
-}
-
-.do-dont__dont .do-dont__heading {
-  color: color($do-dont-color-dont);
-}
-
-.do-dont__content {
-  padding: 0 units($do-dont-padding) units($do-dont-padding)
-    units($do-dont-padding);
-
-  ul {
-    margin-bottom: 0;
-    overflow-wrap: anywhere;
-  }
-
-  li + li {
-    margin-top: units(1);
-  }
-}
-
 .site-note {
   background-color: #dfe1e2;
   max-width: 72ex;
@@ -968,32 +656,6 @@ nav.nav {
 .card-hover-link {
   a {
     text-decoration: none;
-  }
-}
-
-.home-cards {
-  justify-content: space-between;
-  .usa-card__container {
-    align-items: center;
-    text-align: center;
-    border-radius: 4px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    img {
-      margin: units(4) auto 0;
-      width: units(15);
-      height: units(15);
-    }
-    .usa-card__body {
-      margin-bottom: units(2);
-    }
-    .blue-bar {
-      background-color: #005eb8;
-      height: 1.3em;
-      width: 100%;
-      margin: 0;
-      border-radius: 0;
-    }
   }
 }
 
