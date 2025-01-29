@@ -22,7 +22,7 @@ def test_non_logged_in_user_can_see_homepage(
 
     # Assert the entire HTML of the button to include the image
     button = page.select_one(
-        "a.usa-button.login-button.login-button--primary.margin-right-2"
+        "#header_login_button"
     )
     assert "Sign in with" in button.text.strip()  # Assert button text
     assert button.find("img")["alt"] == "Login.gov logo"  # Assert image presence
