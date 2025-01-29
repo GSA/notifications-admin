@@ -112,7 +112,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "get_started_old",
             "go_to_dashboard_after_tour",
             "guest_list",
-            "guidance_index",
+            "how_to",
             "history",
             "how_to_pay",
             "inbound_sms_admin",

@@ -162,7 +162,6 @@ def get_redis_report():
     writer.writerow(["", "Max Memory", max_memory])
     writer.writerow(["", "Memory Fragmentation Ratio", mem_fragmentation])
     writer.writerow(["", "Memory Fragmentation Quality", frag_quality, frag_note])
-    #writer.writerow(["", "Memory Fragmentation Note", frag_note])
     writer.writerow([])
 
     writer.writerow(["Keys Overview"])
