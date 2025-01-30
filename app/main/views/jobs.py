@@ -401,7 +401,9 @@ def get_job_partials(job):
     )
 
     if request.referrer is not None:
-        session["arrived_from_preview_page"] = ("check" in request.referrer) or ("help=0" in request.referrer)
+        session["arrived_from_preview_page"] = ("check" in request.referrer) or (
+            "help=0" in request.referrer
+        )
     else:
         session["arrived_from_preview_page"] = False
 
