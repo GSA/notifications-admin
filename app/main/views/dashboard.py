@@ -115,7 +115,6 @@ def get_daily_stats(service_id):
 @main.route("/services/<uuid:service_id>/daily-stats-by-user.json")
 @user_has_permissions()
 def get_daily_stats_by_user(service_id):
-    service_id = session.get("service_id")
     date_range = get_stats_date_range()
     stats = service_api_client.get_user_service_notification_statistics_by_day(
         service_id,
