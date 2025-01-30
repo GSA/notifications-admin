@@ -201,15 +201,22 @@
             return;
         }
 
-        var url = type === 'service' ? `/daily_stats.json` : `/daily_stats_by_user.json`;
+        // get local timezone
+        var userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        var url = type === 'service'
+        ? `/daily_stats.json?timezone=${encodeURIComponent(userTimezone)}`
+        : `/daily_stats_by_user.json`;
+
         return fetch(url)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
+                console.log(response)
                 return response.json();
             })
             .then(data => {
+                console.log(data)
                 labels = [];
                 deliveredData = [];
                 failedData = [];
