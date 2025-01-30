@@ -1,3 +1,6 @@
+import json
+
+from app.extensions import redis_client
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user
 
 
@@ -41,7 +44,7 @@ class NotificationApiClient(NotifyAdminAPIClient):
         if job_id:
             return method(
                 url="/service/{}/job/{}/notifications".format(service_id, job_id),
-                **kwargs
+                **kwargs,
             )
         else:
             if limit_days is not None:
@@ -96,9 +99,20 @@ class NotificationApiClient(NotifyAdminAPIClient):
         )
 
     def get_notification_count_for_job_id(self, *, service_id, job_id):
-        return self.get(
+        counts = redis_client.get(
+            f"notification-count-for-job-id-{service_id}-{job_id}"
+        )
+        if counts is not None:
+            return json.loads(counts.decode("utf-8"))
+        result = self.get(
             url="/service/{}/job/{}/notification_count".format(service_id, job_id)
-        )["count"]
+        )
+        redis_client.set(
+            f"notification-count-for-job-id-{service_id}-{job_id}",
+            json.dumps(result["count"]),
+            ex=30,
+        )
+        return result["count"]
 
 
 notification_api_client = NotificationApiClient()
