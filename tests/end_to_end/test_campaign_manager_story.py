@@ -5,8 +5,8 @@ import uuid
 
 from playwright.sync_api import expect
 
-from tests.end_to_end.conftest import check_axe_report
 from tests.conftest import create_user
+from tests.end_to_end.conftest import check_axe_report
 
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
@@ -106,32 +106,32 @@ def update_template(page):
     # Check new template name, message and last edited text are on page.
     assert template_name in page.content()
     assert message in page.content()
-    #assert "Last edited just now" in page.content()
+    # assert "Last edited just now" in page.content()
 
 
 def delete_template(page):
-     #Check delete template link is visible
-     delete_template_link = page.get_by_text("Delete this template")
-     expect(delete_template_link).to_be_visible()
-     delete_template_link.click()
+    # Check delete template link is visible
+    delete_template_link = page.get_by_text("Delete this template")
+    expect(delete_template_link).to_be_visible()
+    delete_template_link.click()
 
-     # Check to make sure that we've arrived at the next page.
-     page.wait_for_load_state("domcontentloaded")
-     check_axe_report(page)
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # Check confirmation text is visible
-     assert "Are you sure you want to delete" in page.content()
+    assert "Are you sure you want to delete" in page.content()
 
     # Check that the delete button is visible
-     delete_button = page.get_by_text("Yes, delete")
-     expect(delete_button).to_be_visible()
-     delete_button.click()
+    delete_button = page.get_by_text("Yes, delete")
+    expect(delete_button).to_be_visible()
+    delete_button.click()
 
-     # Check to make sure that we've arrived at the next page.
-     page.wait_for_load_state("domcontentloaded")
-     check_axe_report(page)
+    # Check to make sure that we've arrived at the next page.
+    page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
-     assert "Select or create a template" in page.content()
+    assert "Select or create a template" in page.content()
 
 
 def test_campaign_manager_core_user_story(end_to_end_context):
