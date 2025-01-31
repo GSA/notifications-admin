@@ -11,7 +11,7 @@
 {% block maincolumn_content %}
 
     {{ page_header("Message status") }}
-    {% if not job.processing_finished %}
+    {% if not job.finished_processing %}
       <div
         data-module="update-content"
         data-resource="{{ updates_url }}"
@@ -20,7 +20,7 @@
       >
     {% endif %}
       {{ partials['status']|safe }}
-    {% if not job.processing_finished  %}
+    {% if not job.finished_processing  %}
       </div>
     {% endif %}
     {% if not finished %}

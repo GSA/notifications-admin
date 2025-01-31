@@ -25,7 +25,7 @@
       {% if job.scheduled_for %}
         <div class="usa-alert usa-alert--info">
           <div class="usa-alert__body">
-            <h2 class="usa-alert__heading">Your message has been scheduled</h2>
+            <h2 class="usa-alert__heading">Your {{ 'message has' if job.notification_count == 1 else 'messages have' }} been scheduled</h2>
             <p class="usa-alert__text">
               {{ job.template_name }} - {{ current_service.name }} was scheduled on {{ job.scheduled_for|format_datetime_normal }} by {{ job.created_by.name }}
             </p>
@@ -37,7 +37,7 @@
           <div class="usa-alert usa-alert--success">
             <div class="usa-alert__body">
               <h2 class="usa-alert__heading">
-                Your message is sending
+                Your {{ 'message is' if job.notification_count == 1 else 'messages are' }} sending
               </h2>
               <p class="usa-alert__text">
                 {{ job.template_name }} - {{ current_service.name }}
@@ -49,7 +49,7 @@
           <div class="usa-alert usa-alert--info">
             <div class="usa-alert__body">
               <h2 class="usa-alert__heading">
-                Your message is pending
+                Your {{ 'message is' if job.notification_count == 1 else 'messages are' }} pending
               </h2>
               <p class="usa-alert__text">
                 {{ job.template_name }} - {{ current_service.name }}
@@ -64,7 +64,7 @@
       <div class="usa-alert usa-alert--success">
         <div class="usa-alert__body">
           <h2 class="usa-alert__heading">
-              Your message has been sent
+              Your {{ 'message has' if job.notification_count == 1 else 'messages have' }} been sent
           </h2>
           <p class="usa-alert__text">
             {{ job.template_name }} - {{ current_service.name }}
