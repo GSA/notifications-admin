@@ -3,6 +3,8 @@ import os
 import pytest
 from axe_core_python.sync_playwright import Axe
 
+from app.notify_client.user_api_client import user_api_client
+
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 
@@ -36,3 +38,13 @@ def check_axe_report(page):
             "minor",
             "moderate",
         ], f"Accessibility violation: {violation}"
+
+
+@pytest.fixture
+def admin_user():
+    user = user_api_client.register_user(
+        "E2E Admin Test", "admin@nowhere.huh", "1234567890", "password", "sms"
+    )
+    user_api_client.activate_user(user.id)
+    yield user
+    user_api_client.deactivate_user(user.id)
