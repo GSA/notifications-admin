@@ -66,6 +66,17 @@ body:
 
   - type: markdown
     attributes:
+      value: '**Accessibility:**'
+  - type: textarea
+    id: accessibility
+    attributes:
+      label: "List any specific accessibility guidance or tests that need to be considered for this user story."
+      description: "List what type of accessibility tests need to pass."
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
       value: '**Notes:**'
   - type: textarea
     id: notes

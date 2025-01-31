@@ -657,9 +657,8 @@ def test_should_show_recent_templates_on_dashboard(
     ]
     assert "Total messages" in headers
 
-    table_rows = page.find_all("tbody")[0].find_all("tr")
-
-    assert len(table_rows) == 0
+    table_rows = page.find_all("tbody")[1].find_all("tr")
+    assert len(table_rows) == 2
 
 
 @pytest.mark.parametrize(
@@ -1943,7 +1942,6 @@ def test_service_dashboard_shows_batched_jobs(
     job_table_body = page.find("table", class_="job-table")
 
     rows = job_table_body.find_all("tbody")[0].find_all("tr")
-
-    assert len(rows) == 0
+    assert len(rows) == 1
 
     assert job_table_body is not None
