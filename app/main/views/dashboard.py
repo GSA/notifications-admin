@@ -83,7 +83,6 @@ def get_daily_stats(service_id):
 
     # Get timezone from request (default to UTC if not provided)
     user_timezone = request.args.get("timezone", "UTC")
-    print(f"Detected User Timezone test124: {user_timezone}")
 
     stats = service_api_client.get_service_notification_statistics_by_day(
         service_id, start_date=date_range["start_date"], days=date_range["days"], timezone=user_timezone
