@@ -68,11 +68,12 @@ def _get_access_token(code):  # pragma: no cover
     id_token = get_id_token(response_json)
     nonce = id_token["nonce"]
     nonce_key = f"login-nonce-{unquote(nonce)}"
-    stored_nonce = redis_client.get(nonce_key).decode("utf8")
+    if not os.getenv("NOTIFY_ENVIRONMENT") == "development":
+        stored_nonce = redis_client.get(nonce_key).decode("utf8")
 
-    if nonce != stored_nonce:
-        current_app.logger.error(f"Nonce Error: {nonce} != {stored_nonce}")
-        abort(403)
+        if nonce != stored_nonce:
+            current_app.logger.error(f"Nonce Error: {nonce} != {stored_nonce}")
+            abort(403)
 
     try:
         access_token = response_json["access_token"]
@@ -112,7 +113,7 @@ def _do_login_dot_gov():  # $ pragma: no cover
         verify_key = f"login-verify_email-{unquote(state)}"
         verify_path = bool(redis_client.get(verify_key))
 
-        if not verify_path:
+        if not verify_path and not os.getenv("NOTIFY_ENVIRONMENT") == "development":
             state_key = f"login-state-{unquote(state)}"
             stored_state = unquote(redis_client.get(state_key).decode("utf8"))
             if state != stored_state:

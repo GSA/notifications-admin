@@ -174,6 +174,7 @@ def test_should_show_empty_text_box(
     # data-module=autofocus is set on a containing element so it
     # shouldn’t also be set on the textbox itself
     assert "data-module" not in textbox
+
     assert normalize_spaces(page.select_one("label[for=phone-number]").text) == "one"
 
 
