@@ -80,8 +80,6 @@ def service_dashboard(service_id):
 @user_has_permissions()
 def get_daily_stats(service_id):
     date_range = get_stats_date_range()
-
-    # Get timezone from request (default to UTC if not provided)
     user_timezone = request.args.get("timezone", "UTC")
 
     stats = service_api_client.get_service_notification_statistics_by_day(
@@ -94,12 +92,15 @@ def get_daily_stats(service_id):
 @user_has_permissions()
 def get_daily_stats_by_user(service_id):
     service_id = session.get("service_id")
+    user_timezone = request.args.get("timezone", "UTC")
+
     date_range = get_stats_date_range()
     stats = service_api_client.get_user_service_notification_statistics_by_day(
         service_id,
         user_id=current_user.id,
         start_date=date_range["start_date"],
         days=date_range["days"],
+        user_timezone=user_timezone,
     )
     return jsonify(stats)
 

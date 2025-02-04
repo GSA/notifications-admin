@@ -55,16 +55,15 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         )["data"]
 
     def get_user_service_notification_statistics_by_day(
-        self, service_id, user_id, start_date=None, days=None
+        self, service_id, user_id, start_date=None, days=None, user_timezone="UTC"
     ):
         if start_date is None:
             start_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
         return self.get(
-            "/service/{0}/statistics/user/{1}/{2}/{3}".format(
-                service_id, user_id, start_date, days
-            ),
-        )["data"]
+            "/service/{0}/statistics/user/{1}/{2}/{3}?timezone={4}".format(
+            service_id, user_id, start_date, days, user_timezone
+        ))["data"]
 
     def get_services(self, params_dict=None):
         """
