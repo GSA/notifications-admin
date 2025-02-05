@@ -75,6 +75,12 @@ class ResponseHeaderMiddleware(object):
             if SPAN_ID_HEADER.lower() not in lower_existing_header_names:
                 headers.append((SPAN_ID_HEADER, str(req.span_id)))
 
+            # Some dynamic scan findings
+            headers.append("Cross-Origin-Opener-Policy", "same-origin")
+            headers.append("Cross-Origin-Embedder-Policy", "require-corp")
+            headers.append("Cross-Origin-Resource-Policy", "same-origin")
+            headers.append("Cross-Origin-Opener-Policy", "same-origin")
+
             return start_response(status, headers, exc_info)
 
         return self._app(environ, rewrite_response_headers)
