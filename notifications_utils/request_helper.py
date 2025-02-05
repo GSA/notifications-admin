@@ -76,10 +76,10 @@ class ResponseHeaderMiddleware(object):
                 headers.append((SPAN_ID_HEADER, str(req.span_id)))
 
             # Some dynamic scan findings
-            headers.append("Cross-Origin-Opener-Policy", "same-origin")
-            headers.append("Cross-Origin-Embedder-Policy", "require-corp")
-            headers.append("Cross-Origin-Resource-Policy", "same-origin")
-            headers.append("Cross-Origin-Opener-Policy", "same-origin")
+            headers.append(("Cross-Origin-Opener-Policy", "same-origin"))
+            headers.append(("Cross-Origin-Embedder-Policy", "require-corp"))
+            headers.append(("Cross-Origin-Resource-Policy", "same-origin"))
+            headers.append(("Cross-Origin-Opener-Policy", "same-origin"))
 
             return start_response(status, headers, exc_info)
 
