@@ -81,6 +81,18 @@ class ResponseHeaderMiddleware(object):
             headers.append(("Cross-Origin-Resource-Policy", "same-origin"))
             headers.append(("Cross-Origin-Opener-Policy", "same-origin"))
 
+            # svg content type should not contain charset
+            found_svg = False
+            for _, v in headers:
+                if "svg+xml" in v:
+                    found_svg = True
+            if found_svg:
+                new_headers = [
+                    (k, v) for k, v in headers if k.lower() != "content-type"
+                ]
+                new_headers.append(("Content-Type", "image/svg+xml"))
+                return start_response(status, new_headers, exc_info)
+
             return start_response(status, headers, exc_info)
 
         return self._app(environ, rewrite_response_headers)
