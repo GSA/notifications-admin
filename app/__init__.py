@@ -372,6 +372,11 @@ def init_app(application):
         g.start = monotonic()
         g.endpoint = request.endpoint
 
+    @application.before_request
+    def block_serving_node_files():
+        if "node_modules" in request.path:
+            abort(403)
+
     @application.context_processor
     def inject_global_template_variables():
         return {
