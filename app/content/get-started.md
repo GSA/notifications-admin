@@ -5,7 +5,7 @@
 Explore Notify, add team members, and practice [sending messages to teammates](/using-notify/trial-mode).
 
 2. ## Personalize content
-Learn how to [personalize messages](/using-notify/guidance) to increase response.
+Learn how to [personalize messages](/using-notify/how-to) to increase response.
 
 3. ## Check delivery status
 [Analyze the delivery](/using-notify/delivery-status) of your messages and download reports
