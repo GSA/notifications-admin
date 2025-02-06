@@ -61,7 +61,13 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             start_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
         return self.get(
-            "/service/{0}/statistics/user/{1}/{2}/{3}?timezone={4}".format(service_id, user_id, start_date, days, user_timezone),
+            "/service/{0}/statistics/user/{1}/{2}/{3}?timezone={4}".format(
+                service_id,
+                user_id,
+                start_date,
+                days,
+                user_timezone
+            ),
         )["data"]
 
     def get_services(self, params_dict=None):
