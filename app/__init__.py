@@ -316,7 +316,6 @@ def init_app(application):
     application.before_request(load_organization_before_request)
     application.before_request(request_helper.check_proxy_header_before_request)
     application.before_request(make_session_permanent)
-    application.before_request(block_serving_node_files)
     application.after_request(save_service_or_org_after_request)
 
     start = len(asset_fingerprinter._filesystem_path)
@@ -403,11 +402,6 @@ def make_session_permanent():
     https://stackoverflow.com/questions/34118093/flask-permanent-session-where-to-define-them
     """
     session.permanent = True
-
-
-def block_serving_node_files():
-    if "node_modules" in request.path:
-        abort(403)
 
 
 def create_beta_url(url):
