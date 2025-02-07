@@ -14,20 +14,36 @@
 }
 
 .usa-hero > .grid-container {
-    @media (max-width: units('desktop')) {
+    @media (max-width: units('tablet')) {
         padding-top: 1rem;
         padding-bottom: 1rem;
     }
 }
 
 .usa-section {
+    &.key-features {
+        background-color: color('gray-cool-2');
+    }
+    &.security-and-privacy {
+        img {
+            filter: brightness(0) saturate(100%) invert(22%) sepia(98%) saturate(1829%) hue-rotate(187deg) brightness(88%) contrast(101%);
+        }
+    }
     &__home {
         h2 {
             font-size: units(6);
             line-height: 1.2;
+            @media (max-width: units('desktop')) {
+                font-size: units(4);
+            }
         }
         p {
             font-size: 20px;
+        }
+        img {
+            @media (max-width: units('tablet')) {
+                max-width: 60%;
+            }
         }
     }
 }
@@ -39,6 +55,7 @@
         text-align: center;
         overflow: hidden;
         border: 0;
+        background-color: transparent;
         .img-container {
             width: units('card');
             height: units('card');

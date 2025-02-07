@@ -35,10 +35,12 @@ import usaButton %} {% block meta %}
   </section>
   <section class="grid-container usa-section usa-section__home border-top border-base-lighter usa-prose padding-bottom-4">
     <div class="grid-row flex-align-center flex-justify-center">
-      <div class="tablet:grid-col-4 mobile-lg:grid-col-12">
-        <img src="{{ asset_url('images/product/people-with-phone.png') }}" alt="A couple smiling and looking at a cell phone together"/>
+      <div class="tablet:grid-col-4 mobile-lg:grid-col-12 display-flex flex-justify-center margin-bottom-6">
+        <img
+          src="{{ asset_url('images/product/couple-looking-at-phone.png') }}"
+          alt="A couple smiling and looking at a cell phone together"/>
       </div>
-      <div class="tablet:grid-col-6 tablet:margin-left-6 mobile-lg:grid-col-12">
+      <div class="tablet:grid-col-6 tablet:margin-left-8 mobile-lg:grid-col-12">
         <h2 class="font-body-xl margin-top-0 margin-bottom-3">
           Government texting made easy
         </h2>
@@ -52,9 +54,9 @@ import usaButton %} {% block meta %}
     </div>
   </section>
 
-  <section class="grid-container usa-section usa-section__home usa-prose padding-bottom-4">
+  <section class="usa-section usa-section__home usa-prose key-features padding-bottom-4">
     <h2 class="text-center margin-top-0">Key features</h2>
-    <div class="home-cards margin-top-5">
+    <div class="grid-container home-cards margin-top-5">
       <ul class="usa-card-group display-flex margin-bottom-4">
         <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
           <div class="usa-card__container">
@@ -106,7 +108,7 @@ import usaButton %} {% block meta %}
         </li>
       </ul>
       <ul class="usa-card-group">
-        <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
+        <li class="usa-card tablet:grid-offset-2 tablet:grid-col-4 mobile-lg:grid-col-12">
           <div class="usa-card__container">
             <div class="img-container">
               <img
@@ -119,25 +121,6 @@ import usaButton %} {% block meta %}
             </div>
             <div class="usa-card__body">
               <p>Notify.gov has support for more than 30 character sets</p>
-            </div>
-          </div>
-        </li>
-        <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
-          <div class="usa-card__container">
-            <div class="img-container">
-              <img
-                src="{{ asset_url('images/security.svg') }}"
-                alt=""
-              />
-            </div>
-            <div class="usa-card__header">
-              <h3 class="padding-bottom-0">Security and privacy</h3>
-            </div>
-            <div class="usa-card__body">
-              <p>
-                Limited data retention, encryption, and multi-factor
-                authentication protect user data and manage risk with <br><a href="/about/security">our security efforts</a>
-              </p>
             </div>
           </div>
         </li>
@@ -166,9 +149,35 @@ import usaButton %} {% block meta %}
     </div>
   </section>
 
-  <section class="grid-container usa-section usa-section__home usa-prose grid-container margin-bottom-15">
+  <section class="usa-section usa-section__home usa-prose security-and-privacy padding-y-6 bg-base-lighter">
+    <div class="grid-container">
+      <div class="grid-row flex-align-center flex-justify-center">
+        <div class="tablet:grid-col-7 mobile-lg:grid-col-12 margin-bottom-4">
+          <h2 class="font-heading-xl margin-top-0 margin-bottom-3">
+            Security and privacy
+          </h2>
+          <p class="usa-body margin-bottom-5">
+            Limited data retention, encryption, and multi-factor authentication protect user data and manage risk.
+          </p>
+          <a class="usa-button usa-button--big" href="/join-notify">Our security efforts</a>
+        </div>
+        <div class="tablet:grid-col-3 mobile-lg:grid-col-12 display-flex flex-justify-center">
+          <img
+            class="width-card-lg"
+            src="{{ asset_url('images/security.svg') }}"
+            alt=""
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid-container usa-section usa-section__home usa-prose margin-bottom-15">
     <div class="grid-row flex-align-center flex-justify-center">
-      <div class="tablet:grid-col-6 mobile-lg:grid-col-12 margin-right-6 margin-bottom-6">
+      <div class="tablet:grid-col-4 mobile-lg:grid-col-12 display-flex flex-justify-center margin-right-8 margin-bottom-5">
+        <img src="{{ asset_url('images/product/who-can-use-notify.png') }}" alt="Woman smiling behind two computer screens"/>
+      </div>
+      <div class="tablet:grid-col-6 mobile-lg:grid-col-12">
         <h2 class="font-heading-xl margin-top-0 margin-bottom-3">
           Who can use Notify.gov?
         </h2>
@@ -184,9 +193,6 @@ import usaButton %} {% block meta %}
           participants in these programs.
         </p>
         <a class="usa-button usa-button--big" href="/join-notify">Become a Notify.gov partner</a>
-      </div>
-      <div class="tablet:grid-col-4 mobile-lg:grid-col-12 display-flex flex-justify-center"">
-        <img src="{{ asset_url('images/product/who-can-use-notify.png') }}" alt="Woman smiling behind two computer screens"/>
       </div>
   </section>
   {% endblock %}
