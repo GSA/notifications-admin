@@ -94,7 +94,7 @@ pytest-playwright = "^0.5.1"
 pytest-xdist = "^3.5.0"
 radon = "^6.0.1"
 requests-mock = "^1.11.0"
-vulture = "^2.11"
+vulture = "^2.14"
 
 
 [build-system]
