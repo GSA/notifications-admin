@@ -62,6 +62,13 @@ py-lint: ## Run python linting scanners and black
 	poetry run flake8 .
 	poetry run isort --check-only ./app ./tests
 
+.PHONY: tada
+tada: ## Run python linting scanners and black
+	poetry run isort ./app ./tests
+	poetry run black .
+	poetry run flake8 .
+
+
 .PHONY: avg-complexity
 avg-complexity:
 	echo "*** Shows average complexity in radon of all code ***"

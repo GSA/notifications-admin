@@ -57,7 +57,6 @@ def view_job(service_id, job_id):
 
     filter_args = parse_filter_args(request.args)
     filter_args["status"] = set_status_filters(filter_args)
-
     return render_template(
         "views/jobs/job.html",
         job=job,
@@ -402,7 +401,9 @@ def get_job_partials(job):
     )
 
     if request.referrer is not None:
-        session["arrived_from_preview_page"] = "check" in request.referrer
+        session["arrived_from_preview_page"] = ("check" in request.referrer) or (
+            "help=0" in request.referrer
+        )
     else:
         session["arrived_from_preview_page"] = False
 
