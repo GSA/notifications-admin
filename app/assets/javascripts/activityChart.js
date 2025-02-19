@@ -130,11 +130,12 @@
             .append('g')
             .attr('class', 'bar-group')
             .attr('fill', d => color(d.key));
-
+        const minBarHeight = 5;
         barGroups.selectAll('rect')
             .data(d => d)
             .enter()
             .append('rect')
+            .filter(d => d[1] - d[0] > 0)
             .attr('x', d => x(d.data.label))
             .attr('y', height)
             .attr('height', 0)
@@ -155,8 +156,10 @@
             .transition()
             .duration(1000)
             .attr('y', d => y(d[1]))
-            .attr('height', d => y(d[0]) - y(d[1]));
-    };
+            .attr('height', d => {
+                const calculatedHeight = y(d[0]) - y(d[1]);
+                return calculatedHeight < minBarHeight ? minBarHeight : calculatedHeight;
+            });    };
 
     // Function to create an accessible table
     const createTable = function(tableId, chartType, labels, deliveredData, failedData, pendingData) {
@@ -238,9 +241,6 @@
                         failedData.push(data[dateString].sms.failure);
                         pendingData.push(data[dateString].sms.pending || 0);
                         totalMessages += data[dateString].sms.delivered + data[dateString].sms.failure + data[dateString].sms.pending;
-
-                        // Calculate the total number of messages
-                        totalMessages += data[dateString].sms.delivered + data[dateString].sms.failure;
                     }
                 }
 
