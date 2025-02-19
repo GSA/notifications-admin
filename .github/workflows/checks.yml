@@ -10,7 +10,7 @@ env:
   FLASK_APP: application.py
   WERKZEUG_DEBUG_PIN: off
   REDIS_ENABLED: 0
-  NODE_VERSION: 16.15.1
+  NODE_VERSION: 22.3.0
   AWS_US_TOLL_FREE_NUMBER: "+18556438890"
   ADMIN_BASE_URL: http://localhost:6012
 
@@ -139,7 +139,7 @@ jobs:
       - uses: ./.github/actions/setup-project
       - name: Create requirements.txt
         run: poetry export --without-hashes --format=requirements.txt > requirements.txt
-      - uses: pypa/gh-action-pip-audit@v1.0.8
+      - uses: pypa/gh-action-pip-audit@v1.1.0
         with:
           inputs: requirements.txt
           ignore-vulns: |
