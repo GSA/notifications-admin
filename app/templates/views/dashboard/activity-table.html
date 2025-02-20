@@ -1,0 +1,74 @@
+<h2 class="line-height-sans-2 margin-bottom-0 margin-top-4">Recent activity</h2>
+<div id="activityChartContainer">
+    <form class="usa-form">
+        <label class="usa-label" for="options">Account</label>
+        <select class="usa-select margin-bottom-2" name="options" id="options">
+            <option value disabled>- Select -</option>
+            <option value="service" selected>{{ current_service.name }}</option>
+            <option value="individual">{{ current_user.name }}</option>
+        </select>
+    </form>
+    <div id="activityChart">
+        <div class="chart-header">
+            <div class="chart-subtitle">{{ current_service.name }} - last 7 days</div>
+            <div class="chart-legend" role="region" aria-label="Legend"></div>
+        </div>
+        <div class="chart-container" id="weeklyChart"></div>
+        <table id="weeklyTable" class="usa-sr-only usa-table"></table>
+    </div>
+</div>
+<div id="aria-live-account" class="usa-sr-only" aria-live="polite"></div>
+<div class="table-container" id="activityContainer" data-currentUserName="{{ current_user.name }}" data-currentServiceId="{{current_service.id}}">
+    <div id="tableActivity" class="table-overflow-x-auto">
+        <h2 id="table-heading" class="margin-top-4 margin-bottom-1">Service activity</h2>
+
+        <table class="usa-table job-table" id="activity-table">
+            <caption class="usa-sr-only">Table showing the sent jobs for {{current_service.name}}</caption>
+
+            <thead class="table-field-headings">
+                <tr>
+                    <th scope="col" class="table-field-heading-first" id="jobId">Job ID#</th>
+                    <th data-sortable scope="col" class="table-field-heading" scope="col">Template</th>
+                    <th data-sortable scope="col" class="table-field-heading">Job status</th>
+                    <th data-sortable scope="col" role="columnheader" class="table-field-heading sender-column">Sender
+                    </th>
+                    <th data-sortable scope="col" class="table-field-heading"># of Recipients</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if jobs %}
+                {% for job in jobs %}
+                <tr id="{{ job.id }}">
+                    <td class="table-field jobid" role="rowheader">
+                        <a class="usa-link" href="{{ url_for('.view_job', service_id=current_service.id, job_id=job.id )}}">
+                            {{ job.id[:8] if job.id else 'Manually entered number' }}
+                        </a>
+                    </td>
+                    <td class="table-field template">{{ job.template_name }}</td>
+                    <td class="table-field time-sent">
+                        {% if not job.finished_processing %}
+                            {% if job.scheduled_for%}
+                                Scheduled for {{ job.scheduled_for|format_datetime_table }}
+                            {% elif job.processing_started %}
+                                Sending since {{ job.processing_started|format_datetime_table }}
+                            {% else %}
+                                Pending since {{ job.created_at|format_datetime_table }}
+                            {% endif %}
+                        {% else %}
+                            Sent on {{ job.processing_started|format_datetime_table }}
+                        {% endif %}
+                    </td>
+                    <td class="table-field sender sender-column">{{ job.created_by.name }}</td>
+                    <td class="table-field count-of-recipients">{{ job.notification_count }}</td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr class="table-row">
+                    <td class="table-empty-message" colspan="10">No batched job messages found &thinsp;(messages are
+                        kept for {{ service_data_retention_days }} days).</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
