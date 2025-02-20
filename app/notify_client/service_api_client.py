@@ -38,6 +38,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         """
         return self.get("/service/{0}".format(service_id))
 
+    @cache.set("service-stats-{service_id}-{limit_days}", ttl_in_seconds=30)
     def get_service_statistics(self, service_id, limit_days=None):
         return self.get(
             "/service/{0}/statistics".format(service_id),

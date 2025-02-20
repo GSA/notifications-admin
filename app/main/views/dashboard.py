@@ -65,10 +65,7 @@ def service_dashboard(service_id):
     active_jobs = [job for job in job_response if job["job_status"] != "cancelled"]
     sorted_jobs = sorted(active_jobs, key=lambda job: job["created_at"], reverse=True)
     job_lists = [
-        {
-            **job_dict,
-            "finished_processing": job_is_finished(job_dict)
-        }
+        {**job_dict, "finished_processing": job_is_finished(job_dict)}
         for job_dict in sorted_jobs
     ]
 
@@ -91,7 +88,7 @@ def job_is_finished(job_dict):
         "technical-failure",
         "temporary-failure",
         "permanent-failure",
-        "cancelled"
+        "cancelled",
     ]
 
     processed_count = sum(
