@@ -1,10 +1,15 @@
 import json
 
 from app.extensions import redis_client
-from app.notify_client import NotifyAdminAPIClient, _attach_current_user
+from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
 
 
 class NotificationApiClient(NotifyAdminAPIClient):
+
+    @cache.set(
+        "notifications-{service_id}-{job_id}-{status}-{page}-{limit_days}-{include_jobs}-{include_one_off}",
+        ttl_in_seconds=30,
+    )
     def get_notifications_for_service(
         self,
         service_id,
