@@ -55,6 +55,15 @@ from app.notify_client.notification_api_client import NotificationApiClient
 def test_client_gets_notifications_for_service_and_job_by_page(
     mocker, arguments, expected_call
 ):
+
+    mocker.patch(
+        "app.extensions.RedisClient.get",
+        return_value=None,
+    )
+
+    mocker.patch(
+        "app.extensions.RedisClient.set",
+    )
     mock_get = mocker.patch(
         "app.notify_client.notification_api_client.NotificationApiClient.get"
     )
