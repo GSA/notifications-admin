@@ -128,6 +128,13 @@ def generate_notifications_csv(**kwargs):
         notifications_resp = notification_api_client.get_notifications_for_service(
             **kwargs
         )
+        # Stop if we are finished
+        if (
+            notifications_resp.get("notifications") is None
+            or len(notifications_resp["notifications"]) == 0
+        ):
+            return
+
         for notification in notifications_resp["notifications"]:
             preferred_tz_created_at = convert_report_date_to_preferred_timezone(
                 notification["created_at"]
