@@ -40,7 +40,7 @@
   <input
     class="usa-input {%- if params.classes %} {{ params.classes }}{% endif %} {%- if params.errorMessage %} usa-input--error{% endif %}"
     id="{{ params.label.text | lower | replace(' ', '-') }}"
-    name="{{ params.label.text | lower | replace(' ', '-') }}"
+    name="{{ params.name }}"
     type="{{ params.type | default('text') }}"
     {%- if params.value %} value="{{ params.value }}"{% endif %}
     {%- if describedBy %} aria-describedby="{{ describedBy }}"{% endif %}
