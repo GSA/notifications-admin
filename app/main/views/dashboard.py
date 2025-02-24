@@ -55,16 +55,15 @@ def service_dashboard(service_id):
     sorted_jobs = sorted(filtered_jobs, key=lambda job: job["created_at"], reverse=True)
 
     total_messages = service_api_client.get_service_message_ratio(service_id)
-    total_message_limit = total_messages.get('total_message_limit', 0)
+    messages_remaining = total_messages.get('messages_remaining', 0)
     messages_sent = total_messages.get('messages_sent', 0)
-
     return render_template(
         "views/dashboard/dashboard.html",
         updates_url=url_for(".service_dashboard_updates", service_id=service_id),
         partials=get_dashboard_partials(service_id),
         jobs=sorted_jobs,
         service_data_retention_days=service_data_retention_days,
-        total_message_limit=total_message_limit,
+        messages_remaining=messages_remaining,
         messages_sent=messages_sent
     )
 

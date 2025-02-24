@@ -6,17 +6,17 @@
         var chartTitle = document.getElementById('chartTitle').textContent;
 
         // Access data attributes from the HTML
-        var messages_sent = parseInt(chartContainer.getAttribute('data-messages-sent'));
-        var total_message_limit = parseInt(chartContainer.getAttribute('data-total-message-limit'));
-        var totalMessages = messages_sent + total_message_limit;
+        var messagesSent = parseInt(chartContainer.getAttribute('data-messages-sent'));
+        var messagesRemaining = parseInt(chartContainer.getAttribute('data-messages-remaining'));
+        var totalMessages = messagesSent + messagesRemaining;
 
         // Update the message below the chart
-        document.getElementById('message').innerText = `${messages_sent.toLocaleString()} sent / ${total_message_limit.toLocaleString()} remaining`;
+        document.getElementById('message').innerText = `${messagesSent.toLocaleString()} sent / ${messagesRemaining.toLocaleString()} remaining`;
 
         // Calculate minimum width for "Messages Sent" as 1% of the total chart width
-        var minSentPercentage = (messages_sent === 0) ? 0 : 0.02;
+        var minSentPercentage = (messagesSent === 0) ? 0 : 0.02;
         var minSentValue = totalMessages * minSentPercentage;
-        var displaySent = Math.max(messages_sent, minSentValue);
+        var displaySent = Math.max(messagesSent, minSentValue);
         var displayRemaining = totalMessages - displaySent;
 
         var svg = d3.select("#totalMessageChart");
@@ -48,7 +48,7 @@
             .attr("width", 0) // Start with width 0 for animation
             .on('mouseover', function(event) {
                 tooltip.style('display', 'block')
-                    .html(`Messages Sent: ${messages_sent.toLocaleString()}`);
+                    .html(`Messages Sent: ${messagesSent.toLocaleString()}`);
             })
             .on('mousemove', function(event) {
                 tooltip.style('left', `${event.pageX + 10}px`)
@@ -66,7 +66,7 @@
             .attr("width", 0) // Start with width 0 for animation
             .on('mouseover', function(event) {
                 tooltip.style('display', 'block')
-                    .html(`Remaining: ${total_message_limit.toLocaleString()}`);
+                    .html(`Remaining: ${messagesRemaining.toLocaleString()}`);
             })
             .on('mousemove', function(event) {
                 tooltip.style('left', `${event.pageX + 10}px`)
@@ -115,9 +115,9 @@
         var tbodyRow = document.createElement('tr');
 
         var tdMessagesSent = document.createElement('td');
-        tdMessagesSent.textContent = messages_sent.toLocaleString(); // Value for Messages Sent
+        tdMessagesSent.textContent = messagesSent.toLocaleString(); // Value for Messages Sent
         var tdRemaining = document.createElement('td');
-        tdRemaining.textContent = total_message_limit.toLocaleString(); // Value for Remaining
+        tdRemaining.textContent = messagesRemaining.toLocaleString(); // Value for Remaining
 
         tbodyRow.appendChild(tdMessagesSent);
         tbodyRow.appendChild(tdRemaining);
