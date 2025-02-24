@@ -817,7 +817,7 @@ def test_manage_org_users_should_show_live_search_if_more_than_7_users(
 
     textbox = page.select_one("[data-module=autofocus] .usa-input")
     assert "value" not in textbox
-    assert textbox["name"] == "search"
+    assert textbox["name"] == "search-by-name-or-email-address"
     # data-module=autofocus is set on a containing element so it
     # shouldn’t also be set on the textbox itself
     assert "data-module" not in textbox
