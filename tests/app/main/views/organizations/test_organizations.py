@@ -101,7 +101,7 @@ def test_page_to_create_new_organization(
         (input["type"], input["name"], input.get("value"))
         for input in page.select("input")
     ] == [
-        ("text", "name", None),
+        ("text", "organization-name", None),
         ("radio", "organization_type", "federal"),
         ("radio", "organization_type", "state"),
         # ('radio', 'organization_type', 'nhs_central'),
@@ -824,7 +824,7 @@ def test_manage_org_users_should_show_live_search_if_more_than_7_users(
     assert not page.select_one("[data-force-focus]")
     assert textbox["class"] == ["usa-input"]
     assert (
-        normalize_spaces(page.select_one("label[for=search]").text)
+        normalize_spaces(page.select_one("label[class=usa-label]").text)
         == "Search by name or email address"
     )
 
