@@ -2372,11 +2372,13 @@ def test_send_files_by_email_contact_details_prefills_the_form_with_the_existing
     page = client_request.get(
         "main.send_files_by_email_contact_details", service_id=SERVICE_ONE_ID
     )
+
     assert page.find(
         "input", attrs={"name": "contact_details_type", "value": contact_details_type}
     ).has_attr("checked")
+
     assert (
-        page.find("input", {"id": contact_details_type}).get("value")
+        page.find("input", {"name": contact_details_type}).get("value")
         == contact_details_value
     )
 

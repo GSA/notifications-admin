@@ -616,6 +616,8 @@ def setup_event_handlers():
 
 
 def add_template_filters(application):
+    application.add_template_filter(slugify)
+
     for fn in [
         format_auth_type,
         format_billions,
@@ -673,3 +675,11 @@ def init_jinja(application):
     ]
     jinja_loader = jinja2.FileSystemLoader(template_folders)
     application.jinja_loader = jinja_loader
+
+import re
+
+def slugify(text):
+    """
+    Converts text to lowercase, replaces spaces with hyphens, and removes invalid characters.
+    """
+    return re.sub(r'[^a-z0-9-]', '', re.sub(r'\s+', '-', text.lower()))
