@@ -1,3 +1,4 @@
+import json
 from datetime import datetime, timezone
 
 from app.extensions import redis_client
@@ -517,7 +518,18 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         return int(count)
 
     def get_global_notification_count(self, service_id):
-        return self.get("/service/{}/notification-count".format(service_id))
+        notification_count = redis_client.get(f"notification-count-{service_id}")
+        if notification_count is not None:
+            return json.loads(notification_count.decode("utf-8"))
+
+        notification_count = self.get(
+            "/service/{}/notification-count".format(service_id)
+        )
+        redis_client.set(
+            f"notification-count-{service_id}", json.dumps(notification_count), ex=30
+        )
+
+        return notification_count
 
     def get_service_invite_data(self, redis_key):
         """

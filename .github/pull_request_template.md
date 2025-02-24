@@ -20,3 +20,10 @@ Please enter a detailed description here.
 * Consideration 1
 * Consideration 2
 * Consideration ...
+
+## A11y Checks (if applicable)
+
+* Double check work is getting picked up by the automated E2E tests 
+* Conduct browser-based tests through [AxeDevTools](https://www.deque.com/axe/devtools/) and [WAVE](https://wave.webaim.org/)
+* Review the [Manual Checklist](https://docs.google.com/document/d/192bBXStebdXWtYhZQ73qaWMJhGcuSB1W6c9YBXhWZvc/edit?usp=sharing)
+* Make sure there are no linting errors in VSCode or other IDE of choice

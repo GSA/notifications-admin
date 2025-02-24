@@ -94,7 +94,7 @@ def test_hiding_pages_from_search_engines(
         "message_status",
         "how_to_pay",
         "get_started",
-        "guidance_index",
+        "how_to",
         "create_and_send_messages",
         "edit_and_format_messages",
         "send_files_by_email",
@@ -122,9 +122,7 @@ def test_static_pages(client_request, mock_get_organization_by_domain, view, moc
         session["user_id"] = None
     request(
         _expected_status=302,
-        _expected_redirect="/sign-in?next={}".format(
-            url_for("main.{}".format(view))
-        ),
+        _expected_redirect="/sign-in?next={}".format(url_for("main.{}".format(view))),
     )
 
 

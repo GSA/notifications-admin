@@ -149,6 +149,22 @@ class RedisClient:
             except Exception as e:
                 self.__handle_exception(e, raise_exception, "incr", key)
 
+    def info(self, key):
+        if self.active:
+            return self.redis_store.info(key)
+
+    def keys(self, pattern):
+        if self.active:
+            return self.redis_store.keys(pattern)
+
+    def type(self, key):
+        if self.active:
+            return self.redis_store.type(key)
+
+    def ttl(self, key):
+        if self.active:
+            return self.redis_store.ttl(key)
+
     def get(self, key, raise_exception=False):
         key = prepare_value(key)
         if self.active:
