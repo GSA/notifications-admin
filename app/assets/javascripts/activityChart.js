@@ -1,11 +1,14 @@
 (function (window) {
 
     if (document.getElementById('activityChartContainer')) {
+        let currentType = 'service';
         const tableContainer = document.getElementById('activityContainer');
         const currentUserName = tableContainer.getAttribute('data-currentUserName');
+        const currentServiceId = tableContainer.getAttribute('data-currentServiceId');
         const COLORS = {
             delivered: '#0076d6',
             failed: '#fa9441',
+            pending: '#C7CACE',
             text: '#666'
         };
 
@@ -13,7 +16,7 @@
         const FONT_WEIGHT = 'bold';
         const MAX_Y = 120;
 
-        const createChart = function(containerId, labels, deliveredData, failedData) {
+        const createChart = function(containerId, labels, deliveredData, failedData, pendingData) {
             const container = d3.select(containerId);
             container.selectAll('*').remove(); // Clear any existing content
 
@@ -36,7 +39,7 @@
             }
 
             // Calculate total messages
-            const totalMessages = d3.sum(deliveredData) + d3.sum(failedData);
+            const totalMessages = d3.sum(deliveredData) + d3.sum(failedData) + d3.sum(pendingData);
 
             // Create legend only if there are messages
             const legendContainer = d3.select('.chart-legend');
@@ -46,7 +49,8 @@
                 // Show legend if there are messages
                 const legendData = [
                     { label: 'Delivered', color: COLORS.delivered },
-                    { label: 'Failed', color: COLORS.failed }
+                    { label: 'Failed', color: COLORS.failed },
+                    { label: 'Pending', color: COLORS.pending }
                 ];
 
                 const legendItem = legendContainer.selectAll('.legend-item')
@@ -77,8 +81,9 @@
                 .range([0, width])
                 .padding(0.1);
                             // Adjust the y-axis domain to add some space above the tallest bar
-            const maxY = d3.max(deliveredData.map((d, i) => d + (failedData[i] || 0)));
-            const y = d3.scaleSqrt()
+            const maxY = d3.max(deliveredData.map((d, i) => d + (failedData[i] || 0) + (pendingData[i] || 0)));
+
+            const y = d3.scaleSymlog()
                 .domain([0, maxY + 2]) // Add 2 units of space at the top
                 .nice()
                 .range([height, 0]);
@@ -90,7 +95,7 @@
 
             // Generate the y-axis with whole numbers
             const yAxis = d3.axisLeft(y)
-                .ticks(Math.min(maxY + 2, 10)) // Generate up to 10 ticks based on the data
+                .ticks(Math.min(maxY + 2, 3))
                 .tickFormat(d3.format('d')); // Ensure whole numbers on the y-axis
 
             svg.append('g')
@@ -101,12 +106,13 @@
             const stackData = labels.map((label, i) => ({
                 label: label,
                 delivered: deliveredData[i],
-                failed: failedData[i] || 0 // Ensure there's a value for failed, even if it's 0
+                failed: failedData[i] || 0,
+                pending: pendingData[i] || 0
             }));
 
             // Stack the data
             const stack = d3.stack()
-                .keys(['delivered', 'failed'])
+                .keys(['delivered', 'failed', 'pending'])
                 .order(d3.stackOrderNone)
                 .offset(d3.stackOffsetNone);
 
@@ -114,8 +120,8 @@
 
             // Color scale
             const color = d3.scaleOrdinal()
-                .domain(['delivered', 'failed'])
-                .range([COLORS.delivered, COLORS.failed]);
+                .domain(['delivered', 'failed', 'pending'])
+                .range([COLORS.delivered, COLORS.failed, COLORS.pending]);
 
         // Create bars with animation
         const barGroups = svg.selectAll('.bar-group')
@@ -124,11 +130,12 @@
             .append('g')
             .attr('class', 'bar-group')
             .attr('fill', d => color(d.key));
-
+        const minBarHeight = 5;
         barGroups.selectAll('rect')
             .data(d => d)
             .enter()
             .append('rect')
+            .filter(d => d[1] - d[0] > 0)
             .attr('x', d => x(d.data.label))
             .attr('y', height)
             .attr('height', 0)
@@ -149,11 +156,13 @@
             .transition()
             .duration(1000)
             .attr('y', d => y(d[1]))
-            .attr('height', d => y(d[0]) - y(d[1]));
-    };
+            .attr('height', d => {
+                const calculatedHeight = y(d[0]) - y(d[1]);
+                return calculatedHeight < minBarHeight ? minBarHeight : calculatedHeight;
+            });    };
 
     // Function to create an accessible table
-    const createTable = function(tableId, chartType, labels, deliveredData, failedData) {
+    const createTable = function(tableId, chartType, labels, deliveredData, failedData, pendingData) {
         const table = document.getElementById(tableId);
         table.innerHTML = ""; // Clear previous data
 
@@ -165,7 +174,7 @@
 
         // Create table header
         const headerRow = document.createElement('tr');
-        const headers = ['Day', 'Delivered', 'Failed'];
+        const headers = ['Day', 'Delivered', 'Failed', 'Pending'];
         headers.forEach(headerText => {
             const th = document.createElement('th');
             th.textContent = headerText;
@@ -188,6 +197,10 @@
             cellFailed.textContent = failedData[index];
             row.appendChild(cellFailed);
 
+            const cellPending = document.createElement('td');
+            cellPending.textContent = pendingData[index];
+            row.appendChild(cellPending);
+
             tbody.appendChild(row);
         });
 
@@ -197,12 +210,13 @@
     };
 
     const fetchData = function(type) {
+
         var ctx = document.getElementById('weeklyChart');
         if (!ctx) {
             return;
         }
 
-        var url = type === 'service' ? `/daily_stats.json` : `/daily_stats_by_user.json`;
+        var url = type === 'service' ? `/services/${currentServiceId}/daily-stats.json` : `/services/${currentServiceId}/daily-stats-by-user.json`;
         return fetch(url)
             .then(response => {
                 if (!response.ok) {
@@ -214,7 +228,7 @@
                 labels = [];
                 deliveredData = [];
                 failedData = [];
-
+                pendingData = [];
                 let totalMessages = 0;
 
                 for (var dateString in data) {
@@ -225,9 +239,8 @@
                         labels.push(formattedDate);
                         deliveredData.push(data[dateString].sms.delivered);
                         failedData.push(data[dateString].sms.failure);
-
-                        // Calculate the total number of messages
-                        totalMessages += data[dateString].sms.delivered + data[dateString].sms.failure;
+                        pendingData.push(data[dateString].sms.pending || 0);
+                        totalMessages += data[dateString].sms.delivered + data[dateString].sms.failure + data[dateString].sms.pending;
                     }
                 }
 
@@ -253,17 +266,18 @@
                     }
                 } else {
                     // If there are messages, create the chart and table
-                    createChart('#weeklyChart', labels, deliveredData, failedData);
-                    createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
-                }
+                    createChart('#weeklyChart', labels, deliveredData, failedData, pendingData);
+                    createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData, pendingData);
+                    }
 
-                return data;
-            })
-            .catch(error => console.error('Error fetching daily stats:', error));
-    };
-
+                    return data;
+                })
+                .catch(error => console.error('Error fetching daily stats:', error));
+        };
+        setInterval(() => fetchData(currentType), 25000);
     const handleDropdownChange = function(event) {
         const selectedValue = event.target.value;
+        currentType = selectedValue;
         const subTitle = document.querySelector(`#activityChartContainer .chart-subtitle`);
         const selectElement = document.getElementById('options');
         const selectedText = selectElement.options[selectElement.selectedIndex].text;
@@ -316,7 +330,7 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize activityChart chart and table with service data by default
-        fetchData('service');
+        fetchData(currentType);
 
         const allRows = Array.from(document.querySelectorAll('#activity-table tbody tr'));
         allRows.forEach((row, index) => {
@@ -329,9 +343,9 @@
 
         // Resize chart on window resize
         window.addEventListener('resize', function() {
-            if (labels.length > 0 && deliveredData.length > 0 && failedData.length > 0) {
-                createChart('#weeklyChart', labels, deliveredData, failedData);
-                createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData);
+            if (labels.length > 0 && deliveredData.length > 0 && failedData.length > 0 && pendingData.length > 0) {
+                createChart('#weeklyChart', labels, deliveredData, failedData, pendingData);
+                createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData, pendingData);
             }
         });
 

@@ -51,8 +51,12 @@ def service_dashboard(service_id):
     job_response = job_api_client.get_jobs(service_id)["data"]
     service_data_retention_days = 7
 
-    filtered_jobs = [job for job in job_response if job["job_status"] != "cancelled"]
-    sorted_jobs = sorted(filtered_jobs, key=lambda job: job["created_at"], reverse=True)
+    active_jobs = [job for job in job_response if job["job_status"] != "cancelled"]
+    sorted_jobs = sorted(active_jobs, key=lambda job: job["created_at"], reverse=True)
+    job_lists = [
+        {**job_dict, "finished_processing": job_is_finished(job_dict)}
+        for job_dict in sorted_jobs
+    ]
 
     total_messages = service_api_client.get_service_message_ratio(service_id)
     messages_remaining = total_messages.get('messages_remaining', 0)
@@ -61,32 +65,49 @@ def service_dashboard(service_id):
         "views/dashboard/dashboard.html",
         updates_url=url_for(".service_dashboard_updates", service_id=service_id),
         partials=get_dashboard_partials(service_id),
-        jobs=sorted_jobs,
+        jobs=job_lists,
         service_data_retention_days=service_data_retention_days,
         messages_remaining=messages_remaining,
         messages_sent=messages_sent
     )
 
 
-@main.route("/daily_stats.json")
-def get_daily_stats():
-    service_id = session.get("service_id")
-    date_range = get_stats_date_range()
+def job_is_finished(job_dict):
+    done_statuses = [
+        "delivered",
+        "sent",
+        "failed",
+        "technical-failure",
+        "temporary-failure",
+        "permanent-failure",
+        "cancelled",
+    ]
 
+    processed_count = sum(
+        stat["count"]
+        for stat in job_dict["statistics"]
+        if stat["status"] in done_statuses
+    )
+    return job_dict["notification_count"] == processed_count
+
+
+@main.route("/services/<uuid:service_id>/daily-stats.json")
+@user_has_permissions()
+def get_daily_stats(service_id):
+    date_range = get_stats_date_range()
     stats = service_api_client.get_service_notification_statistics_by_day(
         service_id, start_date=date_range["start_date"], days=date_range["days"]
     )
     return jsonify(stats)
 
 
-@main.route("/daily_stats_by_user.json")
-def get_daily_stats_by_user():
-    service_id = session.get("service_id")
+@main.route("/services/<uuid:service_id>/daily-stats-by-user.json")
+@user_has_permissions()
+def get_daily_stats_by_user(service_id):
     date_range = get_stats_date_range()
-    user_id = current_user.id
     stats = service_api_client.get_user_service_notification_statistics_by_day(
         service_id,
-        user_id,
+        user_id=current_user.id,
         start_date=date_range["start_date"],
         days=date_range["days"],
     )

@@ -14,10 +14,8 @@
     <script nonce="{{ csp_nonce() }}">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     {% block bodyStart %}
       {% block extra_javascripts_before_body %}
-      <!-- Google Tag Manager (noscript) -->
       <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WX5NGWF"
       height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-      <!-- End Google Tag Manager (noscript) -->
       {% endblock %}
     {% endblock %}
 
@@ -145,10 +143,8 @@
     {% block bodyEnd %}
       {% block extra_javascripts %}
       {% endblock %}
-      <!--[if gt IE 8]><!-->
       <script type="text/javascript" src="{{ asset_url('javascripts/all.js') }}"></script>
       <script type="text/javascript" src="{{ asset_url('js/uswds.min.js') }}"></script>
-      <!--<![endif]-->
     {% endblock %}
   </body>
 </html>

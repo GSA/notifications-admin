@@ -141,8 +141,15 @@ def test_get_notification(mocker):
 
 def test_get_notification_count_for_job_id(mocker):
     mock_get = mocker.patch(
-        "app.notify_client.notification_api_client.NotificationApiClient.get"
+        "app.notify_client.notification_api_client.NotificationApiClient.get",
+        return_value={"count": 0},
     )
+
+    mocker.patch(
+        "app.notify_client.notification_api_client.redis_client.get", return_value=None
+    )
+
+    mocker.patch("app.notify_client.billing_api_client.redis_client.set")
     NotificationApiClient().get_notification_count_for_job_id(
         service_id="foo", job_id="bar"
     )
