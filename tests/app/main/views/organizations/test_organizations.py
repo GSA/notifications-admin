@@ -101,7 +101,7 @@ def test_page_to_create_new_organization(
         (input["type"], input["name"], input.get("value"))
         for input in page.select("input")
     ] == [
-        ("text", "organization-name", None),
+        ("text", "name", None),
         ("radio", "organization_type", "federal"),
         ("radio", "organization_type", "state"),
         # ('radio', 'organization_type', 'nhs_central'),
@@ -817,7 +817,7 @@ def test_manage_org_users_should_show_live_search_if_more_than_7_users(
 
     textbox = page.select_one("[data-module=autofocus] .usa-input")
     assert "value" not in textbox
-    assert textbox["name"] == "search-by-name-or-email-address"
+    assert textbox["name"] == "search"
     # data-module=autofocus is set on a containing element so it
     # shouldn’t also be set on the textbox itself
     assert "data-module" not in textbox
