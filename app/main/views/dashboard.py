@@ -48,22 +48,15 @@ def service_dashboard(service_id):
     if not current_user.has_permissions("view_activity"):
         return redirect(url_for("main.choose_template", service_id=service_id))
 
-    yearly_usage = billing_api_client.get_annual_usage_for_service(
-        service_id,
-        get_current_financial_year(),
-    )
-    free_sms_allowance = billing_api_client.get_free_sms_fragment_limit_for_year(
-        current_service.id,
-    )
-    usage_data = get_annual_usage_breakdown(yearly_usage, free_sms_allowance)
-    sms_sent = usage_data["sms_sent"]
-    sms_allowance_remaining = usage_data["sms_allowance_remaining"]
-
     job_response = job_api_client.get_jobs(service_id)["data"]
     service_data_retention_days = 7
 
     filtered_jobs = [job for job in job_response if job["job_status"] != "cancelled"]
     sorted_jobs = sorted(filtered_jobs, key=lambda job: job["created_at"], reverse=True)
+
+    total_messages = service_api_client.get_service_message_ratio(service_id)
+    total_message_limit = total_messages.get('total_message_limit', 0)
+    messages_sent = total_messages.get('messages_sent', 0)
 
     return render_template(
         "views/dashboard/dashboard.html",
@@ -71,8 +64,8 @@ def service_dashboard(service_id):
         partials=get_dashboard_partials(service_id),
         jobs=sorted_jobs,
         service_data_retention_days=service_data_retention_days,
-        sms_sent=sms_sent,
-        sms_allowance_remaining=sms_allowance_remaining,
+        total_message_limit=total_message_limit,
+        messages_sent=messages_sent
     )
 
 
