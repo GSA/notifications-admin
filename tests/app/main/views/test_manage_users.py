@@ -197,7 +197,7 @@ def test_should_show_live_search_if_more_than_7_users(
         "usa-input",
     ]
     assert (
-        normalize_spaces(page.select_one("label[for=search]").text)
+        normalize_spaces(page.select_one("label:contains('Search by')").text)
         == "Search by name or email address"
     )
 
@@ -366,6 +366,8 @@ def test_user_with_no_mobile_number_cant_be_set_to_sms_auth(
         user_id=sample_uuid(),
     )
 
+
+
     sms_auth_radio_button = page.select_one('input[value="sms_auth"]')
     assert sms_auth_radio_button.has_attr("disabled") == sms_option_disabled
     assert normalize_spaces(
@@ -445,9 +447,11 @@ def test_invite_user_has_correct_email_field(
     platform_admin_user,
 ):
     client_request.login(platform_admin_user)
+    page = client_request.get("main.invite_user", service_id=SERVICE_ONE_ID)
+    print(page.prettify())  # Print the full HTML response
     email_field = client_request.get(
         "main.invite_user", service_id=SERVICE_ONE_ID
-    ).select_one("#email_address")
+    ).select_one("#email-address")
     assert email_field["spellcheck"] == "false"
     assert "autocomplete" not in email_field
 
