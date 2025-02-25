@@ -449,8 +449,6 @@ def test_api_users_are_not_told_they_can_search_by_reference_when_service_has_no
         message_type=message_type,
     )
 
-    print(page.prettify())
-
     assert page.select_one("label:contains('Search by')").text.strip() == expected_search_box_label
 
 
