@@ -1,7 +1,7 @@
 import os
 import pathlib
-import secrets
 import re
+import secrets
 from functools import partial
 from time import monotonic
 from urllib.parse import unquote, urlparse, urlunparse
