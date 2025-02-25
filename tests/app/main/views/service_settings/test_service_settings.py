@@ -1310,8 +1310,6 @@ def test_shows_delete_link_for_error_on_post_request_for_edit_email_reply_to_add
         _expected_status=200,
     )
 
-    print(page.prettify())
-
     assert page.select_one(".usa-back-link").text.strip() == "Back"
     assert page.select_one(".usa-back-link")["href"] == url_for(
         ".service_email_reply_to",
