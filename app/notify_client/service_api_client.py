@@ -542,6 +542,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             url="service/get-service-message-ratio?service_id={0}".format(service_id),
         )
 
+
 service_api_client = ServiceAPIClient()
 
 
