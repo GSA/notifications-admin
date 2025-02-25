@@ -448,7 +448,6 @@ def test_invite_user_has_correct_email_field(
 ):
     client_request.login(platform_admin_user)
     page = client_request.get("main.invite_user", service_id=SERVICE_ONE_ID)
-    print(page.prettify())  # Print the full HTML response
     email_field = client_request.get(
         "main.invite_user", service_id=SERVICE_ONE_ID
     ).select_one("#email-address")
