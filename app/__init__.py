@@ -1,6 +1,7 @@
 import os
 import pathlib
 import secrets
+import re
 from functools import partial
 from time import monotonic
 from urllib.parse import unquote, urlparse, urlunparse
@@ -676,7 +677,6 @@ def init_jinja(application):
     jinja_loader = jinja2.FileSystemLoader(template_folders)
     application.jinja_loader = jinja_loader
 
-import re
 
 def slugify(text):
     """
