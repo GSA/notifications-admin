@@ -59,8 +59,8 @@ def service_dashboard(service_id):
     ]
 
     total_messages = service_api_client.get_service_message_ratio(service_id)
-    messages_remaining = total_messages.get('messages_remaining', 0)
-    messages_sent = total_messages.get('messages_sent', 0)
+    messages_remaining = total_messages.get("messages_remaining", 0)
+    messages_sent = total_messages.get("messages_sent", 0)
     return render_template(
         "views/dashboard/dashboard.html",
         updates_url=url_for(".service_dashboard_updates", service_id=service_id),
@@ -68,7 +68,7 @@ def service_dashboard(service_id):
         jobs=job_lists,
         service_data_retention_days=service_data_retention_days,
         messages_remaining=messages_remaining,
-        messages_sent=messages_sent
+        messages_sent=messages_sent,
     )
 
 

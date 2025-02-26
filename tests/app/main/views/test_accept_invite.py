@@ -300,34 +300,13 @@ def test_accepting_invite_removes_invite_from_session(
 
     client_request.login(user)
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    date_range = {"start_date": "2024-01-01", "days": 7}
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats",
-        return_value={
-            date_range["start_date"]: {
-                "email": {"delivered": 0, "failure": 0, "requested": 0},
-                "sms": {"delivered": 0, "failure": 1, "requested": 1},
-            },
-        },
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value={
-            date_range["start_date"]: {
-                "email": {"delivered": 1, "failure": 0, "requested": 1},
-                "sms": {"delivered": 1, "failure": 0, "requested": 1},
-            },
-        },
-    )
 
     mocker.patch(
         "app.service_api_client.get_service_message_ratio",
         return_value={
             "messages_remaining": 71919,
             "messages_sent": 28081,
-            "total_message_limit": 100000
+            "total_message_limit": 100000,
         },
     )
     page = client_request.get(

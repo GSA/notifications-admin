@@ -194,10 +194,10 @@ mock_daily_stats_by_user = {
 }
 
 mock_service_message_ratio = {
-        "messages_remaining": 71919,
-        "messages_sent": 28081,
-        "total_message_limit": 100000
-    }
+    "messages_remaining": 71919,
+    "messages_sent": 28081,
+    "total_message_limit": 100000,
+}
 
 
 @pytest.mark.parametrize(
