@@ -163,8 +163,6 @@ def test_should_show_empty_text_box(
         "main.tour_step", service_id=SERVICE_ONE_ID, template_id=fake_uuid, step_index=1
     )
 
-    print(page.prettify())
-
     textbox = page.select_one(
         "[data-module=autofocus][data-force-focus=True] .usa-input"
     )
