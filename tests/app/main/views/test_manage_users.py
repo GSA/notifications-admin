@@ -367,7 +367,6 @@ def test_user_with_no_mobile_number_cant_be_set_to_sms_auth(
     )
 
 
-
     sms_auth_radio_button = page.select_one('input[value="sms_auth"]')
     assert sms_auth_radio_button.has_attr("disabled") == sms_option_disabled
     assert normalize_spaces(
@@ -447,7 +446,6 @@ def test_invite_user_has_correct_email_field(
     platform_admin_user,
 ):
     client_request.login(platform_admin_user)
-    page = client_request.get("main.invite_user", service_id=SERVICE_ONE_ID)
     email_field = client_request.get(
         "main.invite_user", service_id=SERVICE_ONE_ID
     ).select_one("#email-address")
