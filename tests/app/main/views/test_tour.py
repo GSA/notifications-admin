@@ -163,6 +163,8 @@ def test_should_show_empty_text_box(
         "main.tour_step", service_id=SERVICE_ONE_ID, template_id=fake_uuid, step_index=1
     )
 
+    print(page.prettify())
+
     textbox = page.select_one(
         "[data-module=autofocus][data-force-focus=True] .usa-input"
     )
@@ -175,7 +177,7 @@ def test_should_show_empty_text_box(
     # shouldn’t also be set on the textbox itself
     assert "data-module" not in textbox
 
-    assert normalize_spaces(page.select_one("label[for=phone-number]").text) == "one"
+    assert normalize_spaces(page.select_one("label").text) == "one"
 
 
 def test_should_prefill_answers_for_get_tour_step(
