@@ -366,7 +366,6 @@ def test_user_with_no_mobile_number_cant_be_set_to_sms_auth(
         user_id=sample_uuid(),
     )
 
-
     sms_auth_radio_button = page.select_one('input[value="sms_auth"]')
     assert sms_auth_radio_button.has_attr("disabled") == sms_option_disabled
     assert normalize_spaces(
