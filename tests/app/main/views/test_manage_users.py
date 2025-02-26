@@ -372,6 +372,7 @@ def test_user_with_no_mobile_number_cant_be_set_to_sms_auth(
         page.select_one("label[for=login_authentication-0]").text
     ) == normalize_spaces(expected_label)
 
+
 @pytest.mark.parametrize(
     ("endpoint", "extra_args", "expected_checkboxes"),
     [
