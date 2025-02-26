@@ -321,6 +321,15 @@ def test_accepting_invite_removes_invite_from_session(
             },
         },
     )
+
+    mocker.patch(
+        "app.service_api_client.get_service_message_ratio",
+        return_value={
+            "messages_remaining": 71919,
+            "messages_sent": 28081,
+            "total_message_limit": 100000
+        },
+    )
     page = client_request.get(
         "main.accept_invite",
         token="thisisnotarealtoken",
