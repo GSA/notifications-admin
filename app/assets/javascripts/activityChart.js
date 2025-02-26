@@ -213,7 +213,13 @@
             return;
         }
 
-        var url = type === 'service' ? `/services/${currentServiceId}/daily-stats.json` : `/services/${currentServiceId}/daily-stats-by-user.json`;
+        var userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        var url = type === 'service'
+            ? `/services/${currentServiceId}/daily-stats.json?timezone=${encodeURIComponent(userTimezone)}`
+            : `/services/${currentServiceId}/daily-stats-by-user.json`;
+
+
         return fetch(url)
             .then(response => {
                 if (!response.ok) {
