@@ -1,7 +1,8 @@
 import calendar
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import partial
 from itertools import groupby
+from zoneinfo import ZoneInfo
 
 from flask import Response, abort, jsonify, render_template, request, session, url_for
 from flask_login import current_user
@@ -103,10 +104,47 @@ def job_is_finished(job_dict):
 @user_has_permissions()
 def get_daily_stats(service_id):
     date_range = get_stats_date_range()
-    stats = service_api_client.get_service_notification_statistics_by_day(
-        service_id, start_date=date_range["start_date"], days=date_range["days"]
+    days = date_range["days"]
+    user_timezone = request.args.get("timezone", "UTC")
+
+    stats_utc = service_api_client.get_service_notification_statistics_by_day(
+        service_id,
+        start_date=date_range["start_date"],
+        days=days,
     )
-    return jsonify(stats)
+
+    local_stats = get_local_daily_stats_for_last_x_days(stats_utc, user_timezone, days)
+    return jsonify(local_stats)
+
+
+def get_local_daily_stats_for_last_x_days(stats_utc, user_timezone, days):
+    tz = ZoneInfo(user_timezone)
+    today_local = datetime.now(tz).date()
+    start_local = today_local - timedelta(days=days - 1)
+
+    # Generate exactly days local dates, each with zeroed stats
+    days_list = [
+        (start_local + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(days)
+    ]
+    aggregator = {
+        d: {
+            "sms":   {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
+            "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
+        }
+        for d in days_list
+    }
+
+    # Convert each UTC timestamp to local date and iterate
+    for utc_ts, data in stats_utc.items():
+        utc_dt = datetime.strptime(utc_ts, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=ZoneInfo("UTC"))
+        local_day = utc_dt.astimezone(tz).strftime("%Y-%m-%d")
+
+        if local_day in aggregator:
+            for msg_type in ["sms", "email"]:
+                for status in ["delivered", "failure", "pending", "requested"]:
+                    aggregator[local_day][msg_type][status] += data[msg_type][status]
+
+    return aggregator
 
 
 @main.route("/services/<uuid:service_id>/daily-stats-by-user.json")
