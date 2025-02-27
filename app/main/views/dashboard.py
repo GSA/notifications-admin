@@ -49,17 +49,6 @@ def service_dashboard(service_id):
     if not current_user.has_permissions("view_activity"):
         return redirect(url_for("main.choose_template", service_id=service_id))
 
-    yearly_usage = billing_api_client.get_annual_usage_for_service(
-        service_id,
-        get_current_financial_year(),
-    )
-    free_sms_allowance = billing_api_client.get_free_sms_fragment_limit_for_year(
-        current_service.id,
-    )
-    usage_data = get_annual_usage_breakdown(yearly_usage, free_sms_allowance)
-    sms_sent = usage_data["sms_sent"]
-    sms_allowance_remaining = usage_data["sms_allowance_remaining"]
-
     job_response = job_api_client.get_jobs(service_id)["data"]
     service_data_retention_days = 7
 
@@ -70,14 +59,17 @@ def service_dashboard(service_id):
         for job_dict in sorted_jobs
     ]
 
+    total_messages = service_api_client.get_service_message_ratio(service_id)
+    messages_remaining = total_messages.get("messages_remaining", 0)
+    messages_sent = total_messages.get("messages_sent", 0)
     return render_template(
         "views/dashboard/dashboard.html",
         updates_url=url_for(".service_dashboard_updates", service_id=service_id),
         partials=get_dashboard_partials(service_id),
         jobs=job_lists,
         service_data_retention_days=service_data_retention_days,
-        sms_sent=sms_sent,
-        sms_allowance_remaining=sms_allowance_remaining,
+        messages_remaining=messages_remaining,
+        messages_sent=messages_sent,
     )
 
 

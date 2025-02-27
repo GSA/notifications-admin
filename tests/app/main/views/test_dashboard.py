@@ -196,6 +196,12 @@ mock_daily_stats_by_user = {
     },
 }
 
+mock_service_message_ratio = {
+    "messages_remaining": 71919,
+    "messages_sent": 28081,
+    "total_message_limit": 100000,
+}
+
 
 @pytest.mark.parametrize(
     "user",
@@ -255,12 +261,8 @@ def test_get_started(
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -289,12 +291,8 @@ def test_get_started_is_hidden_once_templates_exist(
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -320,12 +318,8 @@ def test_inbound_messages_not_visible_to_service_without_permissions(
     service_one["permissions"] = []
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -351,12 +345,8 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_messages(
 ):
     service_one["permissions"] = ["inbound_sms"]
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -387,12 +377,8 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_no_messages(
 ):
     service_one["permissions"] = ["inbound_sms"]
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -641,12 +627,8 @@ def test_should_show_recent_templates_on_dashboard(
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -693,12 +675,8 @@ def test_should_not_show_recent_templates_on_dashboard_if_only_one_template_used
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
     main = page.select_one("main").text
@@ -852,12 +830,8 @@ def test_should_show_upcoming_jobs_on_dashboard(
     mock_get_inbound_sms_summary,
 ):
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -899,12 +873,8 @@ def test_should_not_show_upcoming_jobs_on_dashboard_if_count_is_0(
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -929,12 +899,8 @@ def test_should_not_show_upcoming_jobs_on_dashboard_if_service_has_no_jobs(
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -1019,12 +985,8 @@ def test_should_not_show_jobs_on_dashboard_for_users_with_uploads_page(
     mock_get_inbound_sms_summary,
 ):
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -1287,12 +1249,8 @@ def test_menu_send_messages(
 
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = _test_dashboard_menu(
         client_request,
@@ -1328,12 +1286,8 @@ def test_menu_manage_service(
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = _test_dashboard_menu(
         client_request,
@@ -1369,12 +1323,8 @@ def test_menu_main_settings(
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = _test_settings_menu(
         client_request,
@@ -1409,12 +1359,8 @@ def test_menu_manage_api_keys(
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = _test_dashboard_menu(
         client_request,
@@ -1450,12 +1396,8 @@ def test_menu_all_services_for_platform_admin_user(
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = _test_dashboard_menu(
         client_request, mocker, platform_admin_user, service_one, []
@@ -1493,12 +1435,8 @@ def test_route_for_service_permissions(
         )
         mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
         mocker.patch(
-            "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-        )
-
-        mocker.patch(
-            "app.main.views.dashboard.get_daily_stats_by_user",
-            return_value=mock_daily_stats_by_user,
+            "app.service_api_client.get_service_message_ratio",
+            return_value=mock_service_message_ratio,
         )
         validate_route_permission(
             mocker,
@@ -1642,12 +1580,8 @@ def test_org_breadcrumbs_do_not_show_if_service_has_no_org(
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
@@ -1713,12 +1647,8 @@ def test_org_breadcrumbs_show_if_user_is_a_member_of_the_services_org(
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
@@ -1753,12 +1683,8 @@ def test_org_breadcrumbs_do_not_show_if_user_is_a_member_of_the_services_org_but
 
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
@@ -1795,12 +1721,8 @@ def test_org_breadcrumbs_show_if_user_is_platform_admin(
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
 
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
 
     client_request.login(platform_admin_user, service_one_json)
@@ -1832,14 +1754,9 @@ def test_breadcrumb_shows_if_service_is_suspended(
     )
 
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
@@ -1872,12 +1789,8 @@ def test_service_dashboard_shows_usage(
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
 
     service_one["permissions"] = permissions
@@ -1912,12 +1825,8 @@ def test_service_dashboard_shows_free_allowance(
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
 
 
@@ -1933,12 +1842,8 @@ def test_service_dashboard_shows_batched_jobs(
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)

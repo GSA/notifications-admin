@@ -22,7 +22,7 @@ Object.defineProperty(HTMLElement.prototype, 'clientWidth', {
 beforeEach(() => {
   // Set up the DOM with the D3 script included
   document.body.innerHTML = `
-    <div id="totalMessageChartContainer" data-sms-sent="100" data-sms-allowance-remaining="249900" style="width: 600px;">
+    <div id="totalMessageChartContainer" data-messages-sent="28081" data-messages-remaining="71919" style="width: 600px;">
       <h1 id="chartTitle">Total Messages</h1>
       <svg id="totalMessageChart"></svg>
     </div>
@@ -76,8 +76,8 @@ test('Populates the accessible table correctly', () => {
   expect(headers[1].textContent).toBe('Remaining');
 
   const firstRowCells = rows[1].getElementsByTagName('td');
-  expect(firstRowCells[0].textContent).toBe('100');
-  expect(firstRowCells[1].textContent).toBe('249,900');
+  expect(firstRowCells[0].textContent).toBe('28,081');
+  expect(firstRowCells[1].textContent).toBe('71,919');
 });
 
 // Test to check if the chart title is correctly set
@@ -114,7 +114,7 @@ test('Chart resizes correctly on window resize', done => {
 // Testing the tooltip
 test('Tooltip displays on hover', () => {
   document.body.innerHTML = `
-    <div id="totalMessageChartContainer" data-sms-sent="100" data-sms-allowance-remaining="249900" style="width: 600px;">
+    <div id="totalMessageChartContainer" data-messages-sent="100" data-messages-remaining="249900" style="width: 600px;">
       <h1 id="chartTitle">Total Messages</h1>
       <svg id="totalMessageChart"></svg>
     </div>
