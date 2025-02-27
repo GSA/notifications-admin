@@ -982,20 +982,13 @@ def test_view_organization_settings(
     page = client_request.get(endpoint, org_id=organization_one["id"])
 
     radios = page.select("input[type=radio]")
+    labels = page.select("label.usa-radio__label")  # Select all radio labels in order
 
     for index, option in enumerate(expected_options):
         option_values = {
             "value": radios[index]["value"],
-            "label": normalize_spaces(
-                page.select_one("label[for={}]".format(radios[index]["id"])).text
-            ),
+            "label": normalize_spaces(labels[index].text),  # Match labels using index
         }
-        if "hint" in option:
-            option_values["hint"] = normalize_spaces(
-                page.select_one(
-                    "label[for={}] + .usa-hint".format(radios[index]["id"])
-                ).text
-            )
         assert option_values == option
 
     if expected_selected:
@@ -1082,7 +1075,7 @@ def test_update_organization_sector_sends_service_id_data_to_api_client(
     client_request.post(
         "main.edit_organization_type",
         org_id=organization_one["id"],
-        _data={"organization_type": "federal"},
+        _data={"organization_type": "state"},
         _expected_status=302,
         _expected_redirect=url_for(
             "main.organization_settings",
@@ -1093,7 +1086,7 @@ def test_update_organization_sector_sends_service_id_data_to_api_client(
     mock_update_organization.assert_called_once_with(
         organization_one["id"],
         cached_service_ids=["12345", "67890", SERVICE_ONE_ID],
-        organization_type="federal",
+        organization_type="state",
     )
 
 

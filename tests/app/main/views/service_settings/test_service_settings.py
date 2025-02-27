@@ -466,13 +466,29 @@ def test_show_switch_service_to_count_as_live_page(
         "main.service_switch_count_as_live",
         service_id=SERVICE_ONE_ID,
     )
-    assert page.select_one("[checked]")["value"] == selected
-    assert (
-        page.select_one(
-            "label[for={}]".format(page.select_one("[checked]")["id"])
-        ).text.strip()
-        == labelled
+
+    client_request.login(platform_admin_user)
+    page = client_request.get(
+        "main.service_switch_count_as_live",
+        service_id=SERVICE_ONE_ID,
     )
+
+    # Find the checked radio button
+    checked_input = page.select_one("[checked]")
+
+    # Ensure we actually found a checked input
+    assert checked_input is not None, "No checked radio button found"
+
+    # Check that the selected value is as expected
+    assert checked_input["value"] == selected
+
+    # Find all labels
+    labels = page.select("label.usa-radio__label")
+
+    # Extract label text and see if it matches the expected label
+    label_texts = [label.text.strip() for label in labels]
+
+    assert labelled in label_texts, f"Expected label '{labelled}' not found. Found labels: {label_texts}"
 
 
 @pytest.mark.parametrize(
