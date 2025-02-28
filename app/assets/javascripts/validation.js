@@ -1,47 +1,93 @@
-// document.addEventListener("DOMContentLoaded", function () {
-//     const form = document.querySelector(".send-one-off-form");
-//     const phoneInput = document.getElementById("phone-number");
+function showError(input, errorElement, message) {
+    errorElement.textContent = ""; // Clear existing message
+    errorElement.style.display = "block";
 
-//     // Try to get the error element
-//     let phoneError = document.getElementById("phone-number-error");
+    // Small delay to ensure screen readers pick up the change
+    setTimeout(() => {
+        errorElement.textContent = message;
+    }, 10);
 
-//     // If not found, create it
-//     if (!phoneError) {
-//       phoneError = document.createElement("span");
-//       phoneError.id = "phone-number-error";
-//       phoneError.classList.add("usa-error-message");
-//       phoneError.style.display = "none"; // Keep it hidden initially
-//       phoneInput.insertAdjacentElement("afterend", phoneError);
-//     }
+    input.classList.add("usa-input--error");
+    input.setAttribute("aria-describedby", errorElement.id);
+}
 
-//     form.addEventListener("submit", function (event) {
-//       let isValid = true;
+function hideError(input, errorElement) {
+    errorElement.style.display = "none";
+    input.classList.remove("usa-input--error");
+    input.removeAttribute("aria-describedby");
+}
 
-//       if (phoneInput.value.trim() === "") {
-//         showError(phoneInput, phoneError, "Phone number cannot be empty.");
-//         isValid = false;
-//       }
+function getFieldLabel(input) {
+    const label = document.querySelector(`label[for="${input.id}"]`);
+    return label ? label.textContent.trim() : "This field";
+}
 
-//       if (!isValid) event.preventDefault();
-//     });
+// Attach validation logic to forms
+function attachValidation() {
+    const forms = document.querySelectorAll("form");
+    forms.forEach((form) => {
+        const inputs = form.querySelectorAll("input, textarea, select");
 
-//     // Remove error when user starts typing
-//     phoneInput.addEventListener("input", function () {
-//       if (phoneInput.value.trim() !== "") {
-//         hideError(phoneInput, phoneError);
-//       }
-//     });
+        form.addEventListener("submit", function (event) {
+            let isValid = true;
+            let firstInvalidInput = null;
 
-//     function showError(input, errorElement, message) {
-//       errorElement.textContent = message;
-//       errorElement.style.display = "block";
-//       input.classList.add("usa-input--error");
-//       input.setAttribute("aria-describedby", errorElement.id);
-//     }
+            inputs.forEach((input) => {
+                const errorId = input.id ? `${input.id}-error` : `${input.name}-error`;
+                let errorElement = document.getElementById(errorId);
 
-//     function hideError(input, errorElement) {
-//       errorElement.style.display = "none";
-//       input.classList.remove("usa-input--error");
-//       input.removeAttribute("aria-describedby");
-//     }
-//   });
+                if (!errorElement) {
+                    errorElement = document.createElement("span");
+                    errorElement.id = errorId;
+                    errorElement.classList.add("usa-error-message");
+                    errorElement.setAttribute("aria-live", "polite");
+                    input.insertAdjacentElement("afterend", errorElement);
+                }
+
+                if (input.type === "radio") {
+                    // Find all radio buttons with the same name
+                    const radioGroup = document.querySelectorAll(`input[name="${input.name}"]`);
+                    const isChecked = Array.from(radioGroup).some(radio => radio.checked);
+
+                    if (!isChecked) {
+                        showError(input, errorElement, `Error: ${getFieldLabel(input)} must be selected.`);
+                        isValid = false;
+                        if (!firstInvalidInput) {
+                            firstInvalidInput = input;
+                        }
+                    }
+                } else if (input.value.trim() === "") {
+                    showError(input, errorElement, `Error: ${getFieldLabel(input)} is required.`);
+                    isValid = false;
+                    if (!firstInvalidInput) {
+                        firstInvalidInput = input;
+                    }
+                }
+            });
+
+            if (!isValid) {
+                event.preventDefault();
+                if (firstInvalidInput) firstInvalidInput.focus();
+            }
+        });
+
+        inputs.forEach((input) => {
+            input.addEventListener("input", function () {
+                const errorElement = document.getElementById(`${input.id}-error`);
+                if (input.value.trim() !== "" && errorElement) {
+                    hideError(input, errorElement);
+                }
+            });
+        });
+    });
+}
+
+// Automatically attach validation only in the browser
+if (typeof window !== "undefined") {
+    document.addEventListener("DOMContentLoaded", attachValidation);
+}
+
+// ✅ Check if we're in a Node.js environment (for Jest) before using `module.exports`
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+    module.exports = { showError, hideError, getFieldLabel, attachValidation };
+}
