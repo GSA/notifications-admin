@@ -32,7 +32,7 @@
       </div>
     {% endif %}
     {% if field.errors %}
-      <span id="{{ field.name}}-error" class="usa-error-message" data-module="track-error" data-error-type="{{ field.errors[0] }}" data-error-label="{{ field.name }}" tabindex="-1" aria-live="assertive" role="alert">
+      <span id="{{ field.name}}-error" class="error-message usa-error-message" data-module="track-error" data-error-type="{{ field.errors[0] }}" data-error-label="{{ field.name }}" tabindex="-1" aria-live="assertive" role="alert">
         <span class="usa-sr-only">Error:</span>
         {% if not safe_error_message %}{{ field.errors[0] }}{% else %}{{ field.errors[0]|safe }}{% endif %}
       </span>

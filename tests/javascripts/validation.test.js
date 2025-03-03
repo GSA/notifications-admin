@@ -5,14 +5,14 @@ describe("Form Validation", () => {
 
   beforeEach(() => {
     document.body.innerHTML = `
-      <form class="test-form">
+      <form class="send-one-off-form">
         <label for="test-input">Test Input</label>
         <input id="test-input" name="testInput" type="text" />
         <button type="submit">Submit</button>
       </form>
     `;
 
-    form = document.querySelector(".test-form");
+    form = document.querySelector(".send-one-off-form");
     input = document.getElementById("test-input");
     submitButton = form.querySelector("button");
 

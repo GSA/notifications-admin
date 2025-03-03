@@ -24,7 +24,7 @@ function getFieldLabel(input) {
 
 // Attach validation logic to forms
 function attachValidation() {
-    const forms = document.querySelectorAll("form");
+    const forms = document.querySelectorAll("form.send-one-off-form");
     forms.forEach((form) => {
         const inputs = form.querySelectorAll("input, textarea, select");
 
