@@ -1,7 +1,8 @@
 import calendar
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import partial
 from itertools import groupby
+from zoneinfo import ZoneInfo
 
 from flask import Response, abort, jsonify, render_template, request, session, url_for
 from flask_login import current_user
@@ -48,17 +49,6 @@ def service_dashboard(service_id):
     if not current_user.has_permissions("view_activity"):
         return redirect(url_for("main.choose_template", service_id=service_id))
 
-    yearly_usage = billing_api_client.get_annual_usage_for_service(
-        service_id,
-        get_current_financial_year(),
-    )
-    free_sms_allowance = billing_api_client.get_free_sms_fragment_limit_for_year(
-        current_service.id,
-    )
-    usage_data = get_annual_usage_breakdown(yearly_usage, free_sms_allowance)
-    sms_sent = usage_data["sms_sent"]
-    sms_allowance_remaining = usage_data["sms_allowance_remaining"]
-
     job_response = job_api_client.get_jobs(service_id)["data"]
     service_data_retention_days = 7
 
@@ -69,14 +59,17 @@ def service_dashboard(service_id):
         for job_dict in sorted_jobs
     ]
 
+    total_messages = service_api_client.get_service_message_ratio(service_id)
+    messages_remaining = total_messages.get("messages_remaining", 0)
+    messages_sent = total_messages.get("messages_sent", 0)
     return render_template(
         "views/dashboard/dashboard.html",
         updates_url=url_for(".service_dashboard_updates", service_id=service_id),
         partials=get_dashboard_partials(service_id),
         jobs=job_lists,
         service_data_retention_days=service_data_retention_days,
-        sms_sent=sms_sent,
-        sms_allowance_remaining=sms_allowance_remaining,
+        messages_remaining=messages_remaining,
+        messages_sent=messages_sent,
     )
 
 
@@ -103,10 +96,47 @@ def job_is_finished(job_dict):
 @user_has_permissions()
 def get_daily_stats(service_id):
     date_range = get_stats_date_range()
-    stats = service_api_client.get_service_notification_statistics_by_day(
-        service_id, start_date=date_range["start_date"], days=date_range["days"]
+    days = date_range["days"]
+    user_timezone = request.args.get("timezone", "UTC")
+
+    stats_utc = service_api_client.get_service_notification_statistics_by_day(
+        service_id,
+        start_date=date_range["start_date"],
+        days=days,
     )
-    return jsonify(stats)
+
+    local_stats = get_local_daily_stats_for_last_x_days(stats_utc, user_timezone, days)
+    return jsonify(local_stats)
+
+
+def get_local_daily_stats_for_last_x_days(stats_utc, user_timezone, days):
+    tz = ZoneInfo(user_timezone)
+    today_local = datetime.now(tz).date()
+    start_local = today_local - timedelta(days=days - 1)
+
+    # Generate exactly days local dates, each with zeroed stats
+    days_list = [
+        (start_local + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(days)
+    ]
+    aggregator = {
+        d: {
+            "sms":   {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
+            "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
+        }
+        for d in days_list
+    }
+
+    # Convert each UTC timestamp to local date and iterate
+    for utc_ts, data in stats_utc.items():
+        utc_dt = datetime.strptime(utc_ts, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=ZoneInfo("UTC"))
+        local_day = utc_dt.astimezone(tz).strftime("%Y-%m-%d")
+
+        if local_day in aggregator:
+            for msg_type in ["sms", "email"]:
+                for status in ["delivered", "failure", "pending", "requested"]:
+                    aggregator[local_day][msg_type][status] += data[msg_type][status]
+
+    return aggregator
 
 
 @main.route("/services/<uuid:service_id>/daily-stats-by-user.json")
