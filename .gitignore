@@ -15,6 +15,10 @@
 
 ## Non user files allowed to be commited
 !app/assets/pdf/tcpa_overview.pdf
+!app/assets/pdf/investing-notifications-tts-public-benefits-memo.pdf
+!app/assets/pdf/out-of-pilot-announcement.pdf
+!app/assets/pdf/studio-research-snapshot-2022-07-external.pdf
+!app/assets/pdf/TCPA-Overview.pdf
 !tests/test_pdf_files/no_eof_marker.pdf
 !tests/test_pdf_files/multi_page_pdf.pdf
 !tests/test_pdf_files/big.pdf
