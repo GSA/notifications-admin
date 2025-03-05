@@ -15,11 +15,7 @@ from app.main.views.dashboard import (
     get_local_daily_stats_for_last_x_days,
     get_tuples_of_financial_years,
 )
-from tests import (
-    organization_json,
-    service_json,
-    validate_route_permission,
-)
+from tests import organization_json, service_json, validate_route_permission
 from tests.conftest import (
     ORGANISATION_ID,
     SERVICE_ONE_ID,
