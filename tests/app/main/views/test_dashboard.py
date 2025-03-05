@@ -1,5 +1,4 @@
 import copy
-import json
 from datetime import datetime
 from unittest.mock import patch
 from zoneinfo import ZoneInfo
@@ -20,7 +19,6 @@ from tests import (
     organization_json,
     service_json,
     validate_route_permission,
-    validate_route_permission_with_client,
 )
 from tests.conftest import (
     ORGANISATION_ID,
