@@ -29,6 +29,21 @@
 
     {% block header %}
       {% include 'components/usa_banner.html' %}
+      {% if FEATURE_EXIT_BANNER_ENABLED %}
+      <div class="usa-alert usa-alert--emergency" role="alert">
+        <div class="usa-nav-container">
+          <div class="usa-alert__body">
+            <h4 class="usa-alert__heading">Notify status</h4>
+            <p class="usa-alert__text">
+              This service is being sunset and will not be available after X date.
+              <a class="usa-link" href="javascript:void(0);">consectetur adipiscing</a>
+              elit, sed do eiusmod.
+            </p>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
       {% include 'components/header.html' %}
     {% endblock %}
 
