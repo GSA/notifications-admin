@@ -29,16 +29,15 @@
 
     {% block header %}
       {% include 'components/usa_banner.html' %}
-      {% if FEATURE_EXIT_BANNER_ENABLED %}
+      {% if FEATURE_BANNER_ENABLED %}
       <div class="usa-alert usa-alert--emergency" role="alert">
         <div class="usa-nav-container">
           <div class="usa-alert__body">
-            <h4 class="usa-alert__heading">Notify status</h4>
+            <h4 class="usa-alert__heading">End of life announcement</h4>
             <p class="usa-alert__text">
-              This service is being sunset and will not be available after X date.
-              <a class="usa-link" href="javascript:void(0);">consectetur adipiscing</a>
-              elit, sed do eiusmod.
+              The Notify.gov text-messaging service is no longer available.
             </p>
+            <span class="font-body-2xs">Last modified: March 6, 2025</span>
           </div>
         </div>
       </div>

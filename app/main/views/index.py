@@ -33,7 +33,7 @@ def check_feature_flags():
 def test_feature_flags():
     return jsonify(
         {"FEATURE_ABOUT_PAGE_ENABLED": current_app.config["FEATURE_ABOUT_PAGE_ENABLED"]},
-        {"FEATURE_EXIT_BANNER_ENABLED": current_app.config["FEATURE_EXIT_BANNER_ENABLED"]},
+        {"FEATURE_BANNER_ENABLED": current_app.config["FEATURE_BANNER_ENABLED"]},
     )
 
 

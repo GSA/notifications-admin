@@ -89,7 +89,7 @@ class Config(object):
     }
 
     FEATURE_ABOUT_PAGE_ENABLED = getenv("FEATURE_ABOUT_PAGE_ENABLED", "false") == "true"
-    FEATURE_EXIT_BANNER_ENABLED = getenv("FEATURE_EXIT_BANNER_ENABLED", "false") == "true"
+    FEATURE_BANNER_ENABLED = getenv("FEATURE_BANNER_ENABLED", "false") == "true"
 
 
 def _s3_credentials_from_env(bucket_prefix):

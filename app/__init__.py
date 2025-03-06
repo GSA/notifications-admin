@@ -173,12 +173,12 @@ def create_app(application):
         feature_about_page_enabled = application.config.get(
             "FEATURE_ABOUT_PAGE_ENABLED", False
         ),
-        feature_exit_banner_enabled = application.config.get(
-            "FEATURE_EXIT_BANNER_ENABLED", False
+        feature_banner_enabled = application.config.get(
+            "FEATURE_BANNER_ENABLED", False
         )
         return dict(
             FEATURE_ABOUT_PAGE_ENABLED=feature_about_page_enabled,
-            FEATURE_EXIT_BANNER_ENABLED=feature_exit_banner_enabled
+            FEATURE_BANNER_ENABLED=feature_banner_enabled
         )
 
     @application.context_processor
