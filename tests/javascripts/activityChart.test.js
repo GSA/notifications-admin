@@ -199,7 +199,7 @@ test('Fetches data and creates chart and table correctly', async () => {
 
   const data = await fetchData('service');
 
-  expect(global.fetch).toHaveBeenCalledWith(`/services/${currentServiceId}/daily-stats.json?timezone=America%2FNew_York`);
+  expect(global.fetch).toHaveBeenCalledWith(`/services/${currentServiceId}/daily-stats.json?timezone=UTC`);
   expect(data).toEqual(mockResponse);
 
   const labels = Object.keys(mockResponse).map(dateString => {
