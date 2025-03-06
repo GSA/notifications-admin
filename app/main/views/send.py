@@ -167,7 +167,7 @@ def send_messages(service_id, template_id):
         # just show the first error, as we don't expect the form to have more
         # than one, since it only has one field
         first_field_errors = list(form.errors.values())[0]
-        error_message = '<span class="error message usa-error-message">'
+        error_message = '<span class="error-message usa-error-message">'
         error_message = f"{error_message}{first_field_errors[0]}"
         error_message = f"{error_message}</span>"
         error_message = Markup(error_message)
