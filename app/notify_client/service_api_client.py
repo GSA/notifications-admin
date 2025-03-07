@@ -537,6 +537,11 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         """
         return self.get("/service/invite/redis/{0}".format(redis_key))
 
+    def get_service_message_ratio(self, service_id):
+        return self.get(
+            url="service/get-service-message-ratio?service_id={0}".format(service_id),
+        )
+
 
 service_api_client = ServiceAPIClient()
 

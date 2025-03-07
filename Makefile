@@ -162,3 +162,8 @@ upload-static:
 # 	@cf map-route notify-admin ${DNS_NAME} --hostname www
 # 	@cf unmap-route notify-admin-failwhale ${DNS_NAME} --hostname www
 # 	@echo "Failwhale is disabled"
+
+.PHONY: test-single
+test-single: export NEW_RELIC_ENVIRONMENT=test
+test-single: ## Run a single test file
+	poetry run pytest $(TEST_FILE)
