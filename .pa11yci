@@ -1,7 +1,10 @@
 {
   "defaults": {
     "standard": "WCAG2AA",
-    "runners": ["htmlcs"],    
+    "runners": ["htmlcs"],
+    "chromeLaunchConfig": {
+      "executablePath": "/usr/bin/google-chrome"
+    },
     "concurrency": 1,
     "hideElements": [
       "nav > ol a",
