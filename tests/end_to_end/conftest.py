@@ -3,9 +3,11 @@ import os
 
 from contextlib import contextmanager
 
+from flask import Flask
 import pytest
 from axe_core_python.sync_playwright import Axe
 
+from app import create_app
 from app.notify_client.user_api_client import user_api_client
 from app.notify_client.service_api_client import service_api_client
 
@@ -43,31 +45,62 @@ def check_axe_report(page):
             "moderate",
         ], f"Accessibility violation: {violation}"
 
+@pytest.fixture
+def notify_admin_e2e():
+    os.environ["NOTIFY_ENVIRONMENT"] = "e2etest"
+
+    application = Flask("app")
+    create_app(application)
+    return application
+
 
 # Need e2e service defined here?
 @pytest.fixture
-def default_service(browser):
-    current_date_time = datetime.datetime.now()
-    now=current_date_time.strftime("%m/%d/%Y %H:%M:%S")
-    browser_type = browser.browser_type.name
-    service_name = f"E2E Federal Test Service {now} - {browser_type}"
+def default_service(browser, notify_admin_e2e):
+    with notify_admin_e2e.app_context():
+        current_date_time = datetime.datetime.now()
+        now = current_date_time.strftime("%m/%d/%Y %H:%M:%S")
+        browser_type = browser.browser_type.name
+        service_name = f"E2E Federal Test Service {now} - {browser_type}"
 
-    default_user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
-    service = service_api_client.create_service(service_name, "federal", os.environ["DEFAULT_SERVICE_LIMIT"], True, default_user.id, default_user.email_address)
+        default_user = user_api_client.get_user_by_email(
+            os.getenv("NOTIFY_E2E_TEST_EMAIL")
+        )
+        service = service_api_client.create_service(
+            service_name,
+            "federal",
+            os.environ["DEFAULT_SERVICE_LIMIT"],
+            True,
+            default_user.id,
+            default_user.email_address,
+        )
 
-    yield service
+        print("OK I GOT HERE LETS GO!!!")
 
-    service_api_client.archive_service(service.id, None)
+        yield service
+
+        service_api_client.archive_service(service.id, None)
 
 
 @contextmanager
-def _set_up_user(default_service, name, email_addr, phone, password, auth_type, permissions, folder_permissions):
+def _set_up_user(
+    default_service,
+    name,
+    email_addr,
+    phone,
+    password,
+    auth_type,
+    permissions,
+    folder_permissions,
+):
     user = user_api_client.get_user_by_email_or_none(email_addr)
     if user is None:
         user = user_api_client.register_user(
             name, email_addr, phone, password, auth_type
         )
-    user_api_client.add_user_to_service(default_service.id, user.id, permissions, folder_permissions)
+    user_api_client.add_user_to_service(
+        default_service.id, user.id, permissions, folder_permissions
+    )
     user_api_client.activate_user(user.id)
     yield user
     user_api_client.deactivate_user(user.id)
@@ -77,6 +110,11 @@ def _set_up_user(default_service, name, email_addr, phone, password, auth_type, 
 @pytest.fixture
 def admin_user(default_service):
     with _set_up_user(
-        default_service, "E2E Admin Test", "admin@nowhere.huh", "1234567890", "password", "sms"
+        default_service,
+        "E2E Admin Test",
+        "admin@nowhere.huh",
+        "1234567890",
+        "password",
+        "sms",
     ) as user:
         yield user

@@ -134,7 +134,7 @@ def delete_template(page):
     assert "Select or create a template" in page.content()
 
 
-def test_campaign_manager_core_user_story(end_to_end_context):
+def test_campaign_manager_core_user_story(default_service, end_to_end_context):
     create_user()
     page = end_to_end_context.new_page()
     page.goto(f"{E2E_TEST_URI}/sign-in")
