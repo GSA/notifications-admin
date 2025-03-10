@@ -1,7 +1,7 @@
 import datetime
 import os
 
-from decorator import contextmanager
+from contextlib import contextmanager
 
 import pytest
 from axe_core_python.sync_playwright import Axe
