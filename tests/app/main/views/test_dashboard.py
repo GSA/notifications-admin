@@ -1859,22 +1859,22 @@ def test_service_dashboard_shows_batched_jobs(
 def test_simple_local_conversion(mock_dt):
     stats_utc = {
         "2025-02-24T15:00:00Z": {
-            "sms":   {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
+            "sms": {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
             "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
         },
         "2025-02-25T07:00:00Z": {
-            "sms":   {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
+            "sms": {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
             "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
         },
     }
 
     # Mock today's date in local time: 2025-02-25 at 10:00
-    mock_dt.now.return_value = datetime(2025, 2, 25, 10, 0, 0, tzinfo=ZoneInfo("America/New_York"))
+    mock_dt.now.return_value = datetime(
+        2025, 2, 25, 10, 0, 0, tzinfo=ZoneInfo("America/New_York")
+    )
 
     local_stats = get_local_daily_stats_for_last_x_days(
-        stats_utc,
-        "America/New_York",
-        days=2
+        stats_utc, "America/New_York", days=2
     )
 
     assert len(local_stats) == 2
@@ -1909,7 +1909,7 @@ def test_no_timestamps_returns_zeroed_days():
 def test_timestamp_in_future_time_zone():
     stats_utc = {
         "2025-02-25T01:00:00Z": {
-            "sms":   {"delivered": 5, "failure": 0, "pending": 0, "requested": 5},
+            "sms": {"delivered": 5, "failure": 0, "pending": 0, "requested": 5},
             "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
         }
     }
@@ -1931,15 +1931,15 @@ def test_timestamp_in_future_time_zone():
 def test_many_timestamps_one_local_day():
     stats_utc = {
         "2025-02-24T05:00:00Z": {
-            "sms":   {"delivered": 2, "failure": 1, "pending": 0, "requested": 3},
+            "sms": {"delivered": 2, "failure": 1, "pending": 0, "requested": 3},
             "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
         },
         "2025-02-24T09:30:00Z": {
-            "sms":   {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
+            "sms": {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
             "email": {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
         },
         "2025-02-24T16:59:59Z": {
-            "sms":   {"delivered": 4, "failure": 0, "pending": 0, "requested": 4},
+            "sms": {"delivered": 4, "failure": 0, "pending": 0, "requested": 4},
             "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
         },
     }
@@ -1965,18 +1965,22 @@ def test_local_conversion_phoenix():
     """Test aggregator logic in Mountain Time, no DST (America/Phoenix)."""
     stats_utc = {
         "2025-02-25T01:00:00Z": {
-            "sms":   {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
+            "sms": {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
             "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
         },
         "2025-02-25T12:00:00Z": {
-            "sms":   {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
+            "sms": {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
             "email": {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
         },
     }
 
     with patch("app.main.views.dashboard.datetime", wraps=datetime) as mock_dt:
-        mock_dt.now.return_value = datetime(2025, 2, 25, 12, 0, 0, tzinfo=ZoneInfo("America/Phoenix"))
-        local_stats = get_local_daily_stats_for_last_x_days(stats_utc, "America/Phoenix", days=1)
+        mock_dt.now.return_value = datetime(
+            2025, 2, 25, 12, 0, 0, tzinfo=ZoneInfo("America/Phoenix")
+        )
+        local_stats = get_local_daily_stats_for_last_x_days(
+            stats_utc, "America/Phoenix", days=1
+        )
 
         assert len(local_stats) == 1
         (day_key,) = local_stats.keys()
@@ -1988,18 +1992,22 @@ def test_local_conversion_honolulu():
     """Test aggregator logic in Hawaii (Pacific/Honolulu)."""
     stats_utc = {
         "2025-02-25T03:00:00Z": {
-            "sms":   {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
+            "sms": {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
             "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
         },
         "2025-02-25T21:00:00Z": {
-            "sms":   {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
+            "sms": {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
             "email": {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
         },
     }
 
     with patch("app.main.views.dashboard.datetime", wraps=datetime) as mock_dt:
-        mock_dt.now.return_value = datetime(2025, 2, 25, 12, 0, 0, tzinfo=ZoneInfo("Pacific/Honolulu"))
-        local_stats = get_local_daily_stats_for_last_x_days(stats_utc, "Pacific/Honolulu", days=1)
+        mock_dt.now.return_value = datetime(
+            2025, 2, 25, 12, 0, 0, tzinfo=ZoneInfo("Pacific/Honolulu")
+        )
+        local_stats = get_local_daily_stats_for_last_x_days(
+            stats_utc, "Pacific/Honolulu", days=1
+        )
 
         assert len(local_stats) == 1
         (day_key,) = local_stats.keys()
