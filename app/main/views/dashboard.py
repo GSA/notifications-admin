@@ -120,7 +120,7 @@ def get_local_daily_stats_for_last_x_days(stats_utc, user_timezone, days):
     ]
     aggregator = {
         d: {
-            "sms":   {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
+            "sms": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
             "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
         }
         for d in days_list
@@ -128,7 +128,9 @@ def get_local_daily_stats_for_last_x_days(stats_utc, user_timezone, days):
 
     # Convert each UTC timestamp to local date and iterate
     for utc_ts, data in stats_utc.items():
-        utc_dt = datetime.strptime(utc_ts, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=ZoneInfo("UTC"))
+        utc_dt = datetime.strptime(utc_ts, "%Y-%m-%dT%H:%M:%SZ").replace(
+            tzinfo=ZoneInfo("UTC")
+        )
         local_day = utc_dt.astimezone(tz).strftime("%Y-%m-%d")
 
         if local_day in aggregator:
