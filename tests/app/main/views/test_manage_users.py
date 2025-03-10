@@ -197,7 +197,7 @@ def test_should_show_live_search_if_more_than_7_users(
         "usa-input",
     ]
     assert (
-        normalize_spaces(page.select_one("label[for=search]").text)
+        normalize_spaces(page.select_one("label:contains('Search by')").text)
         == "Search by name or email address"
     )
 
@@ -447,7 +447,7 @@ def test_invite_user_has_correct_email_field(
     client_request.login(platform_admin_user)
     email_field = client_request.get(
         "main.invite_user", service_id=SERVICE_ONE_ID
-    ).select_one("#email_address")
+    ).select_one("#email-address")
     assert email_field["spellcheck"] == "false"
     assert "autocomplete" not in email_field
 
