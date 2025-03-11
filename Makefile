@@ -62,6 +62,13 @@ py-lint: ## Run python linting scanners and black
 	poetry run flake8 .
 	poetry run isort --check-only ./app ./tests
 
+.PHONY: tada
+tada: ## Run python linting scanners and black
+	poetry run isort ./app ./tests
+	poetry run black .
+	poetry run flake8 .
+
+
 .PHONY: avg-complexity
 avg-complexity:
 	echo "*** Shows average complexity in radon of all code ***"
@@ -155,3 +162,8 @@ upload-static:
 # 	@cf map-route notify-admin ${DNS_NAME} --hostname www
 # 	@cf unmap-route notify-admin-failwhale ${DNS_NAME} --hostname www
 # 	@echo "Failwhale is disabled"
+
+.PHONY: test-single
+test-single: export NEW_RELIC_ENVIRONMENT=test
+test-single: ## Run a single test file
+	poetry run pytest $(TEST_FILE)

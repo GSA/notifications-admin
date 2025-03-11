@@ -1,6 +1,8 @@
 import copy
 import json
 from datetime import datetime
+from unittest.mock import patch
+from zoneinfo import ZoneInfo
 
 import pytest
 from flask import url_for
@@ -12,6 +14,7 @@ from app.main.views.dashboard import (
     aggregate_template_usage,
     format_monthly_stats_to_list,
     get_dashboard_totals,
+    get_local_daily_stats_for_last_x_days,
     get_tuples_of_financial_years,
 )
 from tests import (
@@ -193,6 +196,12 @@ mock_daily_stats_by_user = {
     },
 }
 
+mock_service_message_ratio = {
+    "messages_remaining": 71919,
+    "messages_sent": 28081,
+    "total_message_limit": 100000,
+}
+
 
 @pytest.mark.parametrize(
     "user",
@@ -252,12 +261,8 @@ def test_get_started(
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -286,12 +291,8 @@ def test_get_started_is_hidden_once_templates_exist(
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -317,12 +318,8 @@ def test_inbound_messages_not_visible_to_service_without_permissions(
     service_one["permissions"] = []
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -348,12 +345,8 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_messages(
 ):
     service_one["permissions"] = ["inbound_sms"]
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -384,12 +377,8 @@ def test_inbound_messages_shows_count_of_messages_when_there_are_no_messages(
 ):
     service_one["permissions"] = ["inbound_sms"]
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -638,12 +627,8 @@ def test_should_show_recent_templates_on_dashboard(
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -657,9 +642,8 @@ def test_should_show_recent_templates_on_dashboard(
     ]
     assert "Total messages" in headers
 
-    table_rows = page.find_all("tbody")[0].find_all("tr")
-
-    assert len(table_rows) == 0
+    table_rows = page.find_all("tbody")[1].find_all("tr")
+    assert len(table_rows) == 2
 
 
 @pytest.mark.parametrize(
@@ -691,12 +675,8 @@ def test_should_not_show_recent_templates_on_dashboard_if_only_one_template_used
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
     main = page.select_one("main").text
@@ -850,12 +830,8 @@ def test_should_show_upcoming_jobs_on_dashboard(
     mock_get_inbound_sms_summary,
 ):
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -897,12 +873,8 @@ def test_should_not_show_upcoming_jobs_on_dashboard_if_count_is_0(
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -927,12 +899,8 @@ def test_should_not_show_upcoming_jobs_on_dashboard_if_service_has_no_jobs(
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -1017,12 +985,8 @@ def test_should_not_show_jobs_on_dashboard_for_users_with_uploads_page(
     mock_get_inbound_sms_summary,
 ):
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get(
         "main.service_dashboard",
@@ -1285,12 +1249,8 @@ def test_menu_send_messages(
 
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = _test_dashboard_menu(
         client_request,
@@ -1326,12 +1286,8 @@ def test_menu_manage_service(
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = _test_dashboard_menu(
         client_request,
@@ -1367,12 +1323,8 @@ def test_menu_main_settings(
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = _test_settings_menu(
         client_request,
@@ -1407,12 +1359,8 @@ def test_menu_manage_api_keys(
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = _test_dashboard_menu(
         client_request,
@@ -1448,12 +1396,8 @@ def test_menu_all_services_for_platform_admin_user(
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = _test_dashboard_menu(
         client_request, mocker, platform_admin_user, service_one, []
@@ -1491,12 +1435,8 @@ def test_route_for_service_permissions(
         )
         mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
         mocker.patch(
-            "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-        )
-
-        mocker.patch(
-            "app.main.views.dashboard.get_daily_stats_by_user",
-            return_value=mock_daily_stats_by_user,
+            "app.service_api_client.get_service_message_ratio",
+            return_value=mock_service_message_ratio,
         )
         validate_route_permission(
             mocker,
@@ -1640,12 +1580,8 @@ def test_org_breadcrumbs_do_not_show_if_service_has_no_org(
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
@@ -1711,12 +1647,8 @@ def test_org_breadcrumbs_show_if_user_is_a_member_of_the_services_org(
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
@@ -1751,12 +1683,8 @@ def test_org_breadcrumbs_do_not_show_if_user_is_a_member_of_the_services_org_but
 
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
@@ -1793,12 +1721,8 @@ def test_org_breadcrumbs_show_if_user_is_platform_admin(
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
 
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
 
     client_request.login(platform_admin_user, service_one_json)
@@ -1830,14 +1754,9 @@ def test_breadcrumb_shows_if_service_is_suspended(
     )
 
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
@@ -1870,12 +1789,8 @@ def test_service_dashboard_shows_usage(
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
 
     service_one["permissions"] = permissions
@@ -1910,12 +1825,8 @@ def test_service_dashboard_shows_free_allowance(
     )
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
 
 
@@ -1931,19 +1842,174 @@ def test_service_dashboard_shows_batched_jobs(
 ):
     mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
     mocker.patch(
-        "app.main.views.dashboard.get_daily_stats", return_value=mock_daily_stats
-    )
-
-    mocker.patch(
-        "app.main.views.dashboard.get_daily_stats_by_user",
-        return_value=mock_daily_stats_by_user,
+        "app.service_api_client.get_service_message_ratio",
+        return_value=mock_service_message_ratio,
     )
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
     job_table_body = page.find("table", class_="job-table")
 
     rows = job_table_body.find_all("tbody")[0].find_all("tr")
-
-    assert len(rows) == 0
+    assert len(rows) == 1
 
     assert job_table_body is not None
+
+
+@patch("app.main.views.dashboard.datetime", wraps=datetime)
+def test_simple_local_conversion(mock_dt):
+    stats_utc = {
+        "2025-02-24T15:00:00Z": {
+            "sms": {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
+            "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
+        },
+        "2025-02-25T07:00:00Z": {
+            "sms": {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
+            "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
+        },
+    }
+
+    # Mock today's date in local time: 2025-02-25 at 10:00
+    mock_dt.now.return_value = datetime(
+        2025, 2, 25, 10, 0, 0, tzinfo=ZoneInfo("America/New_York")
+    )
+
+    local_stats = get_local_daily_stats_for_last_x_days(
+        stats_utc, "America/New_York", days=2
+    )
+
+    assert len(local_stats) == 2
+    assert "2025-02-24" in local_stats
+    assert "2025-02-25" in local_stats
+
+    assert local_stats["2025-02-24"]["sms"]["delivered"] == 1
+    assert local_stats["2025-02-24"]["sms"]["requested"] == 1
+    assert local_stats["2025-02-25"]["sms"]["delivered"] == 2
+    assert local_stats["2025-02-25"]["sms"]["requested"] == 2
+
+
+def test_no_timestamps_returns_zeroed_days():
+    stats_utc = {}
+
+    class MockDateTime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return cls(2025, 2, 26, 8, 0, 0, tzinfo=tz)
+
+    with patch("app.main.views.dashboard.datetime", MockDateTime):
+        local_stats = get_local_daily_stats_for_last_x_days(
+            stats_utc, "America/New_York", days=3
+        )
+        assert list(local_stats.keys()) == ["2025-02-24", "2025-02-25", "2025-02-26"]
+        for day in local_stats:
+            for msg_type in ["sms", "email"]:
+                for status in ["delivered", "failure", "pending", "requested"]:
+                    assert local_stats[day][msg_type][status] == 0
+
+
+def test_timestamp_in_future_time_zone():
+    stats_utc = {
+        "2025-02-25T01:00:00Z": {
+            "sms": {"delivered": 5, "failure": 0, "pending": 0, "requested": 5},
+            "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
+        }
+    }
+
+    class MockDateTime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return cls(2025, 2, 25, 10, 0, 0, tzinfo=tz)
+
+    with patch("app.main.views.dashboard.datetime", MockDateTime):
+        local_stats = get_local_daily_stats_for_last_x_days(
+            stats_utc, "Asia/Shanghai", days=1
+        )
+
+        assert list(local_stats.keys()) == ["2025-02-25"]
+        assert local_stats["2025-02-25"]["sms"]["delivered"] == 5
+
+
+def test_many_timestamps_one_local_day():
+    stats_utc = {
+        "2025-02-24T05:00:00Z": {
+            "sms": {"delivered": 2, "failure": 1, "pending": 0, "requested": 3},
+            "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
+        },
+        "2025-02-24T09:30:00Z": {
+            "sms": {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
+            "email": {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
+        },
+        "2025-02-24T16:59:59Z": {
+            "sms": {"delivered": 4, "failure": 0, "pending": 0, "requested": 4},
+            "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
+        },
+    }
+
+    class MockDateTime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return cls(2025, 2, 24, 20, 0, 0, tzinfo=tz)
+
+    with patch("app.main.views.dashboard.datetime", MockDateTime):
+        local_stats = get_local_daily_stats_for_last_x_days(
+            stats_utc, "America/New_York", days=1
+        )
+
+        assert list(local_stats.keys()) == ["2025-02-24"]
+        assert local_stats["2025-02-24"]["sms"]["delivered"] == 7
+        assert local_stats["2025-02-24"]["sms"]["requested"] == 8
+        assert local_stats["2025-02-24"]["email"]["delivered"] == 2
+        assert local_stats["2025-02-24"]["email"]["requested"] == 2
+
+
+def test_local_conversion_phoenix():
+    """Test aggregator logic in Mountain Time, no DST (America/Phoenix)."""
+    stats_utc = {
+        "2025-02-25T01:00:00Z": {
+            "sms": {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
+            "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
+        },
+        "2025-02-25T12:00:00Z": {
+            "sms": {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
+            "email": {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
+        },
+    }
+
+    with patch("app.main.views.dashboard.datetime", wraps=datetime) as mock_dt:
+        mock_dt.now.return_value = datetime(
+            2025, 2, 25, 12, 0, 0, tzinfo=ZoneInfo("America/Phoenix")
+        )
+        local_stats = get_local_daily_stats_for_last_x_days(
+            stats_utc, "America/Phoenix", days=1
+        )
+
+        assert len(local_stats) == 1
+        (day_key,) = local_stats.keys()
+        sms_delivered = local_stats[day_key]["sms"]["delivered"]
+        assert sms_delivered in (2, 3, 4)
+
+
+def test_local_conversion_honolulu():
+    """Test aggregator logic in Hawaii (Pacific/Honolulu)."""
+    stats_utc = {
+        "2025-02-25T03:00:00Z": {
+            "sms": {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
+            "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
+        },
+        "2025-02-25T21:00:00Z": {
+            "sms": {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
+            "email": {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
+        },
+    }
+
+    with patch("app.main.views.dashboard.datetime", wraps=datetime) as mock_dt:
+        mock_dt.now.return_value = datetime(
+            2025, 2, 25, 12, 0, 0, tzinfo=ZoneInfo("Pacific/Honolulu")
+        )
+        local_stats = get_local_daily_stats_for_last_x_days(
+            stats_utc, "Pacific/Honolulu", days=1
+        )
+
+        assert len(local_stats) == 1
+        (day_key,) = local_stats.keys()
+        total_requested = local_stats[day_key]["sms"]["requested"]
+        assert total_requested in (3, 1, 4)
