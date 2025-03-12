@@ -1,12 +1,12 @@
-
-
 {% extends "withnav_template.html" %}
 
-{% from "components/table.html" import list_table, field, text_field, link_field, right_aligned_field_heading, hidden_field_heading, row_heading, notification_status_field, notification_carrier_field, notification_carrier_message_field %}
+{% from "components/table.html" import list_table, field, text_field, link_field, right_aligned_field_heading,
+hidden_field_heading, row_heading, notification_status_field, notification_carrier_field,
+notification_carrier_message_field %}
 {% from "components/ajax-block.html" import ajax_block %}
 
 {% block service_page_title %}
-    Dashboard
+Dashboard
 {% endblock %}
 
 {% block maincolumn_content %}
@@ -15,32 +15,28 @@
 
 <div class="dashboard margin-top-0 margin-bottom-2">
 
-<h1 class="usa-sr-only">Dashboard</h1>
-{% if current_user.has_permissions('manage_templates') and not current_service.all_templates %}
+    <h1 class="usa-sr-only">Dashboard</h1>
+    {% if current_user.has_permissions('manage_templates') and not current_service.all_templates %}
     {% include 'views/dashboard/write-first-messages.html' %}
-{% endif %}
-<!-- this could use some kind of update once the messages are sent and no more scheduled jobs but not every second call or anything  -->
+    {% endif %}
 
-<!-- {{ ajax_block(partials, updates_url, 'upcoming') }} -->
+    {% include 'views/dashboard/_upcoming.html' %}
 
-{% include 'views/dashboard/_upcoming.html' %}
+    <h2 class="font-body-2xl line-height-sans-2 margin-top-0">{{ current_service.name }} Dashboard</h2>
 
-<h2 class="font-body-2xl line-height-sans-2 margin-top-0">{{ current_service.name }} Dashboard</h2>
+    <div id="totalMessageChartContainer" data-messages-sent="{{ messages_sent }}"
+        data-messages-remaining="{{ messages_remaining }}">
+        <h2 id="chartTitle">Total messages</h2>
+        <svg id="totalMessageChart"></svg>
+        <div id="message"></div>
+    </div>
+    <div id="totalMessageTable" class="margin-0"></div>
 
-<div id="totalMessageChartContainer" data-messages-sent="{{ messages_sent }}" data-messages-remaining="{{ messages_remaining }}">
-    <h2 id="chartTitle">Total messages</h2>
-    <svg id="totalMessageChart"></svg>
-    <div id="message"></div>
-</div>
-<div id="totalMessageTable" class="margin-0"></div>
+    {% include 'views/dashboard/activity-table.html' %}
 
-{% include 'views/dashboard/activity-table.html'   %}
+    {% if current_user.has_permissions('manage_service') %}{% endif %}
 
-{% if current_user.has_permissions('manage_service') %}{% endif %}
-
-<!-- do we actually need this pulling every minute? -->
-<!-- {{ ajax_block(partials, updates_url, 'template-statistics') }} -->
-{% include 'views/dashboard/most-used-templates.html'   %}
+    {% include 'views/dashboard/most-used-templates.html' %}
 
 </div>
 
