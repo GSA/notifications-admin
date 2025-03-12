@@ -17,7 +17,7 @@ from app import (
 from app.main import main
 from app.main.views.user_profile import set_timezone
 from app.statistics_utils import get_formatted_percentage
-from app.utils import FAILURE_STATUSES, REQUESTED_STATUSES
+from app.utils import DELIVERED_STATUSES, FAILURE_STATUSES, REQUESTED_STATUSES
 from app.utils.time import get_current_financial_year
 from app.utils.user import user_has_permissions
 
@@ -70,16 +70,7 @@ def service_dashboard(service_id):
 
 
 def job_is_finished(job_dict):
-    done_statuses = [
-        "delivered",
-        "sent",
-        "failed",
-        "technical-failure",
-        "temporary-failure",
-        "permanent-failure",
-        "cancelled",
-    ]
-
+    done_statuses = DELIVERED_STATUSES + FAILURE_STATUSES + ["cancelled"]
     processed_count = sum(
         stat["count"]
         for stat in job_dict["statistics"]
