@@ -288,7 +288,8 @@ td.table-empty-message {
     @include u-width('mobile-lg');
     margin-top: units(2);
   }
-  input#search {
+  input#search-by-name {
+    margin-top: units(1);
     width: 100%;
     border: 1px solid color('gray-60');
   }
@@ -550,6 +551,24 @@ td.table-empty-message {
 
 .usa-prose > p.max-width-full {
   max-width: 100%;
+}
+
+.usa-tooltip {
+  &__information {
+    background: color('ink');
+    margin-top: 4px;
+    color: white;
+    border-radius: 50%;
+    height: units(3);
+    width: units(3);
+    border: 1px solid color('ink');
+  }
+  .usa-tooltip__body {
+    min-width: units('card-lg');
+    max-width: units('mobile');
+    white-space: normal;
+    word-wrap: break-word;
+  }
 }
 
 // Tabs
