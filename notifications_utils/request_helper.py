@@ -75,11 +75,23 @@ class ResponseHeaderMiddleware(object):
             if SPAN_ID_HEADER.lower() not in lower_existing_header_names:
                 headers.append((SPAN_ID_HEADER, str(req.span_id)))
 
-            # Some dynamic scan findings
-            headers.append(("Cross-Origin-Opener-Policy", "same-origin"))
-            headers.append(("Cross-Origin-Embedder-Policy", "require-corp"))
-            headers.append(("Cross-Origin-Resource-Policy", "same-origin"))
-            headers.append(("Cross-Origin-Opener-Policy", "same-origin"))
+            def rewrite_response_headers(status, headers, exc_info=None):
+                lower_existing_header_names = {name.lower() for name, value in headers}
+
+                # Set COOP once (needed for security)
+                if "cross-origin-opener-policy" not in lower_existing_header_names:
+                    headers.append(("Cross-Origin-Opener-Policy", "same-origin"))
+
+                # Ensure `Cross-Origin-Resource-Policy: cross-origin` is set
+                if "cross-origin-resource-policy" not in lower_existing_header_names:
+                    headers.append(("Cross-Origin-Resource-Policy", "cross-origin"))
+
+                # Apply COEP restrictions to everything except YouTube
+                if "youtube.com" not in request.url and "youtube-nocookie.com" not in request.url:
+                    if "cross-origin-embedder-policy" not in lower_existing_header_names:
+                        headers.append(("Cross-Origin-Embedder-Policy", "require-corp"))
+
+                return start_response(status, headers, exc_info)
 
             # svg content type should not contain charset
             found_svg = False
