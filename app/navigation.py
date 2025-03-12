@@ -58,8 +58,6 @@ class HeaderNavigation(Navigation):
         },
         "accounts-or-dashboard": {
             "conversation",
-            "inbox",
-            "monthly",
             "service_dashboard",
             "template_usage",
             "view_notification",
@@ -161,8 +159,6 @@ class MainNavigation(Navigation):
         },
         "dashboard": {
             "conversation",
-            "inbox",
-            "monthly",
             "service_dashboard",
             "template_usage",
             "view_notification",

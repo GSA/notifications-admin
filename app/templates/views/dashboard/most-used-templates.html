@@ -34,12 +34,13 @@
               <td><p>{{ item.template_folder }}</p></td>
               <td><p>{{ item.last_used|format_datetime_table}}</p></td>
               <td><p>{{ item.created_by }}</p></td>
-              <td><p>{{ item.count }}</p></td>
+              <td><p>{{ '{:,.0f}'.format(item.count) }}</p></td>
             </tr>
           {% endfor %}
         </tbody>
       </table>
-        <a href="/services/78409625-0c0a-485e-b82c-b19c8f4b1bdb/template-usage" class="usa-link show-more-no-border"><span>See templates by month</span></a>
+      <a
+      href="{{ url_for('.template_usage', service_id=current_service.id) }}" class="usa-link show-more-no-border"><span>See templates by month</span></a>
     </div>
   {% endif %}
 </div>
