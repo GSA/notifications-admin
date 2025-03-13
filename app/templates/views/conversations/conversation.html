@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block backLink %}
-  {{ usaBackLink({ "href": url_for("main.inbox", service_id=current_service.id) }) }}
+  {{ usaBackLink({ "href": url_for("main.service_dashboard", service_id=current_service.id) }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
