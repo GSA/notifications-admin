@@ -86,11 +86,6 @@ class ResponseHeaderMiddleware(object):
                 if "cross-origin-resource-policy" not in lower_existing_header_names:
                     headers.append(("Cross-Origin-Resource-Policy", "cross-origin"))
 
-                # Apply COEP restrictions to everything except YouTube
-                if "youtube.com" not in request.url and "youtube-nocookie.com" not in request.url:
-                    if "cross-origin-embedder-policy" not in lower_existing_header_names:
-                        headers.append(("Cross-Origin-Embedder-Policy", "require-corp"))
-
                 return start_response(status, headers, exc_info)
 
             # svg content type should not contain charset
