@@ -261,14 +261,8 @@ def why_text_messaging():
 @main.route("/notify-service-ending")
 @user_is_logged_in
 def notify_service_ending():
-    user_is_authenticated = current_user.is_authenticated
-    user_is_platform_admin = getattr(current_user, "platform_admin", False)
-
-    navigation_links = about_notify_nav() if not (user_is_authenticated or user_is_platform_admin) else None
-
     return render_template(
         "views/notify-service-ending.html",
-        navigation_links=navigation_links
     )
 
 
