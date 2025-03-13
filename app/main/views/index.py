@@ -268,7 +268,7 @@ def notify_service_ending():
 
     return render_template(
         "views/notify-service-ending.html",
-        navigation_links = navigation_links
+        navigation_links=navigation_links
     )
 
 
