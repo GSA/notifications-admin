@@ -13,7 +13,8 @@
     } else {
 
       $submitButton.data('clicked', 'true');
-      setTimeout(renableSubmitButton($submitButton), 1500);
+      $submitButton.prop('disabled', true);
+      setTimeout(renableSubmitButton($submitButton), 10000);
 
     }
 
@@ -22,7 +23,7 @@
   let renableSubmitButton = $submitButton => () => {
 
     $submitButton.data('clicked', '');
-
+    $submitButton.prop('disabled', false);
   };
 
   $('form').on('submit', disableSubmitButtons);
