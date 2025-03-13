@@ -134,6 +134,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "multiple_languages",
             "new_password",
             "notifications_sent_by_service",
+            "notify_service_ending",
             "old_guest_list",
             "old_integration_testing",
             "old_service_dashboard",
