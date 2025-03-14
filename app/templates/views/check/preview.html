@@ -101,6 +101,9 @@
     {% set button_text %}
       {{ "Schedule" if scheduled_for else 'Send'}}
     {% endset %}
-    {{ usaButton({ "text": button_text }) }}
+    {{ usaButton({
+      "text": button_text,
+      "name": button_text
+    }) }}
   </form>
 {% endblock %}
