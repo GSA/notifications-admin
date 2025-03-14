@@ -122,7 +122,6 @@ EXCLUDED_ENDPOINTS = tuple(
             "integration_testing",
             "invite_org_user",
             "invite_user",
-            "join_notify",
             "link_service_to_organization",
             "live_services",
             "live_services_csv",
