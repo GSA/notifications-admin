@@ -258,11 +258,11 @@ def why_text_messaging():
     )
 
 
-@main.route("/join-notify")
-def join_notify():
+@main.route("/notify-service-ending")
+@user_is_logged_in
+def notify_service_ending():
     return render_template(
-        "views/join-notify.html",
-        navigation_links=about_notify_nav(),
+        "views/notify-service-ending.html",
     )
 
 

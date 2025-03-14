@@ -42,12 +42,8 @@ const sublinks = [
     path: '/about/security',
   },
   {
-    label: 'Join Notify',
-    path: '/join-notify',
-  },
-  {
-    label: 'Contact',
-    path: '/contact',
+    label: 'Notify.gov Service Ending',
+    path: '/notify-service-ending',
   },
 
   // Add more links here as needed

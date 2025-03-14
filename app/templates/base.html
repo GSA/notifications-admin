@@ -29,6 +29,30 @@
 
     {% block header %}
       {% include 'components/usa_banner.html' %}
+      {% if current_user.is_authenticated or current_service or current_user.platform_admin %}
+      <section class="usa-site-alert usa-site-alert--emergency usa-site-alert--no-heading" aria-label="Site alert,,,,">
+        <div class="usa-alert">
+          <div class="usa-alert__body">
+            <p class="usa-alert__heading text-bold">Notify.gov Service Ending</p>
+            <p class="usa-alert__text">
+              GSA will no longer offer the Notify.gov service after June 8th, 2025. Visit
+              <a class="usa-link" href="/notify-service-ending">Notify.gov Service Ending</a> for more information.
+            </p>
+          </div>
+        </div>
+      </section>
+      {% else %}
+      <section class="usa-site-alert usa-site-alert--emergency usa-site-alert--no-heading" aria-label="Site alert,,,,">
+        <div class="usa-alert">
+          <div class="usa-alert__body">
+            <p class="usa-alert__heading text-bold">Notify.gov Service Ending</p>
+            <p class="usa-alert__text">
+              Notify.gov is no longer accepting new partners.
+            </p>
+          </div>
+        </div>
+      </section>
+      {% endif %}
       {% include 'components/header.html' %}
     {% endblock %}
 
@@ -94,10 +118,10 @@
     {% block footer %}
 
       {% if current_service and current_service.research_mode %}
-        {% set meta_suffix = 'Built by the <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="usa-link">Technology Transformation Services</a><span id="research-mode" class="research-mode">research mode</span>' %}
+        {% set meta_suffix = 'Built by the <a href="https://tts.gsa.gov/" class="usa-link">Technology Transformation Services</a><span id="research-mode" class="research-mode">research mode</span>' %}
       {% else %}
         {% set commit_hash = ", Latest version: " + config['COMMIT_HASH'] %}
-        {% set long_link = '<a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/tts-solutions" class="usa-link">Technology Transformation Services</a>' %}
+        {% set long_link = '<a href="https://tts.gsa.gov/" class="usa-link">Technology Transformation Services</a>' %}
         {% set meta_suffix = "Built by the " + long_link + commit_hash %}
       {% endif %}
 
