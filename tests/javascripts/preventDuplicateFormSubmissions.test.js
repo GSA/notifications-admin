@@ -44,9 +44,12 @@ describe('Prevent duplicate form submissions', () => {
 
   });
 
-  test("It should prevent the second click on the 'submit' button", () => {
+  test("It should prevent any clicks of the 'submit' button after the first one submitting the form", () => {
+
     helpers.triggerEvent(button, 'click');
     helpers.triggerEvent(button, 'click');
+
+    expect(formEventSpy.mock.calls.length).toEqual(1);
 
   });
 
@@ -54,7 +57,7 @@ describe('Prevent duplicate form submissions', () => {
 
     helpers.triggerEvent(button, 'click');
 
-    jest.advanceTimersByTime(10000);
+    jest.advanceTimersByTime(1500);
 
     helpers.triggerEvent(button, 'click');
 
