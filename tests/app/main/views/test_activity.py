@@ -388,7 +388,10 @@ def test_search_recipient_form(
     query_dict = parse_qs(url.query)
     assert query_dict == {}
 
-    assert page.select_one("label[for=to]").text.strip() == expected_search_box_label
+    assert (
+        page.select_one("label:contains('Search by')").text.strip()
+        == expected_search_box_label
+    )
 
     recipient_inputs = page.select("input[name=to]")
     assert len(recipient_inputs) == 2
@@ -421,7 +424,10 @@ def test_api_users_are_told_they_can_search_by_reference_when_service_has_api_ke
         service_id=SERVICE_ONE_ID,
         message_type=message_type,
     )
-    assert page.select_one("label[for=to]").text.strip() == expected_search_box_label
+    assert (
+        page.select_one("label:contains('Search by')").text.strip()
+        == expected_search_box_label
+    )
 
 
 @pytest.mark.parametrize(
@@ -448,7 +454,11 @@ def test_api_users_are_not_told_they_can_search_by_reference_when_service_has_no
         service_id=SERVICE_ONE_ID,
         message_type=message_type,
     )
-    assert page.select_one("label[for=to]").text.strip() == expected_search_box_label
+
+    assert (
+        page.select_one("label:contains('Search by')").text.strip()
+        == expected_search_box_label
+    )
 
 
 def test_should_show_notifications_for_a_service_with_next_previous(

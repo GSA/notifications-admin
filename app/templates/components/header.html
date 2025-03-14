@@ -1,7 +1,6 @@
 {% set is_about_page = request.path.startswith('/about') %}
-{% set is_join_notify_page = request.path.startswith('/join-notify') %}
 {% set is_contact_page = request.path.startswith('/contact') %}
-{% set is_information_section = is_about_page or is_join_notify_page or is_contact_page %}
+{% set is_information_section = is_about_page or is_contact_page %}
 
 {% if current_user.is_authenticated %}
 {% set navigation = [
@@ -34,7 +33,6 @@
 {% else %}
 {% set navigation = [
   {"href": url_for('main.about_notify'), "text": "About Notify", "active": is_about_page},
-  {"href": url_for('main.join_notify'), "text": "Join Notify", "active": is_join_notify_page},
   {"href": url_for('main.contact'), "text": "Contact us", "active": is_contact_page}
 ] %}
 {% endif %}
