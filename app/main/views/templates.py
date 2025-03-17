@@ -687,34 +687,36 @@ def _is_latin1(s):
 def _get_content_count_error_and_message_for_template(template):
     url = "https://en.wikipedia.org/wiki/ISO/IEC_8859-1"
     if template.template_type == "sms":
-        s1 = f"<html><body>Use of characters outside the <a href='{url}'>IEC_8859-1</a> character set may increase "
-        s2 = "the message fragment count, resulting in additional charges, and these IEC_8859-1 "
-        s3 = "characters may not display properly on some older mobile devices.</body></html>"
+        s1 = f"<html><body>Templates won't save with these characters ™ ∞ • – ≠ “ ‘ … ≤ ≥ or any emoji present. "
+        s2 = "<br>The errors they create lead to texts displaying incorrectly on older mobile phones.</body></html>"
 
         warning = ""
         try:
             _is_latin1(template.content)
         except UnicodeEncodeError:
-            warning = f"{s1}{s2}{s3}"
+            warning = f"{s1}{s2}"
 
+        # If message is too long, return the length error
         if template.is_message_too_long():
             return True, (
                 f"You have "
                 f"{character_count(template.content_count_without_prefix - SMS_CHAR_COUNT_LIMIT)} "
                 f"too many"
             )
+
+        # If there's a warning, return it alone and hide the "Will be charged as..." text
+        if warning:
+            return True, Markup(warning)
+
+        # Otherwise, show the message count as usual
         if template.placeholders:
-            return False, (
-                Markup(
-                    f"Will be charged as {message_count(template.fragment_count, template.template_type)} "
-                    f"(not including personalization).  {warning}"
-                )
+            return False, Markup(
+                f"Will be charged as {message_count(template.fragment_count, template.template_type)} "
+                f"(not including personalization)."
             )
-        return False, (
-            # Markup marks html contents safe so that they render properly.  Don't use it if there is user input.
-            Markup(
-                f"Will be charged as {message_count(template.fragment_count, template.template_type)}.  {warning} "
-            )
+
+        return False, Markup(
+            f"Will be charged as {message_count(template.fragment_count, template.template_type)}."
         )
 
 
