@@ -685,9 +685,8 @@ def _is_latin1(s):
 
 
 def _get_content_count_error_and_message_for_template(template):
-    url = "https://en.wikipedia.org/wiki/ISO/IEC_8859-1"
     if template.template_type == "sms":
-        s1 = f"<html><body>Templates won't save with these characters ™ ∞ • – ≠ “ ‘ … ≤ ≥ or any emoji present. "
+        s1 = "<html><body>Templates won't save with these characters ™ ∞ • – ≠ “ ‘ … ≤ ≥ or any emoji present. "
         s2 = "<br>The errors they create lead to texts displaying incorrectly on older mobile phones.</body></html>"
 
         warning = ""
