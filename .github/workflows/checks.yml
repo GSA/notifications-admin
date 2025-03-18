@@ -51,7 +51,7 @@ jobs:
       - name: Check coverage threshold
         run: poetry run coverage report --fail-under=90
 
-  # TODO FIX
+  # TODO FIX THIS!
   # end-to-end-tests:
   #   if: ${{ github.actor != 'dependabot[bot]' }}
 
