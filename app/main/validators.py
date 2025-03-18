@@ -119,7 +119,6 @@ class OnlySMSCharacters:
             )
 
 
-
 class LettersNumbersSingleQuotesFullStopsAndUnderscoresOnly:
     regex = re.compile(r"^[a-zA-Z0-9\s\._']+$")
 

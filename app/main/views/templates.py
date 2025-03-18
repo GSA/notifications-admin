@@ -682,7 +682,8 @@ def count_content_length(service_id, template_type):
 
 def _get_content_count_error_and_message_for_template(template):
     if template.template_type == "sms":
-        s1 = "<html><body>Looks like your template may have one of these characters • ™ ∞ ≤ or ≥ or emoji, which won't save."
+        s1 = "<html><body>Looks like your template may have one of these characters " \
+        "• ™ ∞ ≤ or ≥ or emoji, which won't save."
         s2 = "<br>Please remove any unaccepted characters or emojis and try again.</body></html>"
 
         # Define characters that should be blocked
