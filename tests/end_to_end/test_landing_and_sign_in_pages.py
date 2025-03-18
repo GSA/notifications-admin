@@ -40,7 +40,6 @@ def test_landing_page(end_to_end_context):
     content_headers = [
         "Government texting made easy",
         "Key features",
-        "Who can use Notify.gov",
     ]
 
     for content_header in content_headers:

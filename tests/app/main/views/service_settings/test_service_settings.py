@@ -488,7 +488,9 @@ def test_show_switch_service_to_count_as_live_page(
     # Extract label text and see if it matches the expected label
     label_texts = [label.text.strip() for label in labels]
 
-    assert labelled in label_texts, f"Expected label '{labelled}' not found. Found labels: {label_texts}"
+    assert (
+        labelled in label_texts
+    ), f"Expected label '{labelled}' not found. Found labels: {label_texts}"
 
 
 @pytest.mark.parametrize(

@@ -75,11 +75,13 @@ class ResponseHeaderMiddleware(object):
             if SPAN_ID_HEADER.lower() not in lower_existing_header_names:
                 headers.append((SPAN_ID_HEADER, str(req.span_id)))
 
-            # Some dynamic scan findings
-            headers.append(("Cross-Origin-Opener-Policy", "same-origin"))
-            headers.append(("Cross-Origin-Embedder-Policy", "require-corp"))
-            headers.append(("Cross-Origin-Resource-Policy", "same-origin"))
-            headers.append(("Cross-Origin-Opener-Policy", "same-origin"))
+            # Set COOP once (needed for security)
+            if "cross-origin-opener-policy" not in lower_existing_header_names:
+                headers.append(("Cross-Origin-Opener-Policy", "same-origin"))
+
+            # Ensure `Cross-Origin-Resource-Policy: cross-origin` is set
+            if "cross-origin-resource-policy" not in lower_existing_header_names:
+                headers.append(("Cross-Origin-Resource-Policy", "cross-origin"))
 
             # svg content type should not contain charset
             found_svg = False
