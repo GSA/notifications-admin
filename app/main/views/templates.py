@@ -680,19 +680,20 @@ def count_content_length(service_id, template_type):
     )
 
 
-def _is_latin1(s):
-    return bool(s.encode(encoding="latin-1", errors="strict"))
-
-
 def _get_content_count_error_and_message_for_template(template):
     if template.template_type == "sms":
-        s1 = "<html><body>Templates won't save with these characters ™ ∞ • – ≠ “ ‘ … ≤ ≥ or any emoji present. "
-        s2 = "<br>The errors they create lead to texts displaying incorrectly on older mobile phones.</body></html>"
+        s1 = "<html><body>Looks like your template may have one of these characters • ™ ∞ ≤ or ≥ or emoji, which won't save."
+        s2 = "<br>Please remove any unaccepted characters or emojis and try again.</body></html>"
+
+        # Define characters that should be blocked
+        BLOCKED_CHARACTERS = {"•", "™", "∞", "≤", "≥"}
+
+        def contains_blocked_characters(content):
+            """Check if the content contains explicitly blocked characters."""
+            return any(c in BLOCKED_CHARACTERS for c in content)
 
         warning = ""
-        try:
-            _is_latin1(template.content)
-        except UnicodeEncodeError:
+        if contains_blocked_characters(template.content):  # Block only disallowed characters
             warning = f"{s1}{s2}"
 
         # If message is too long, return the length error
@@ -705,15 +706,9 @@ def _get_content_count_error_and_message_for_template(template):
 
         # If there's a warning, return it alone and hide the "Will be charged as..." text
         if warning:
-            return True, Markup(warning)
+            return False, Markup(warning)
 
         # Otherwise, show the message count as usual
-        if template.placeholders:
-            return False, Markup(
-                f"Will be charged as {message_count(template.fragment_count, template.template_type)} "
-                f"(not including personalization)."
-            )
-
         return False, Markup(
             f"Will be charged as {message_count(template.fragment_count, template.template_type)}."
         )
