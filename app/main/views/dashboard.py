@@ -132,13 +132,18 @@ def get_local_daily_stats_for_last_x_days(stats_utc, user_timezone, days):
 @user_has_permissions()
 def get_daily_stats_by_user(service_id):
     date_range = get_stats_date_range()
-    stats = service_api_client.get_user_service_notification_statistics_by_day(
+    days = date_range["days"]
+    user_timezone = request.args.get("timezone", "UTC")
+
+    stats_utc = service_api_client.get_user_service_notification_statistics_by_day(
         service_id,
         user_id=current_user.id,
         start_date=date_range["start_date"],
-        days=date_range["days"],
+        days=days,
     )
-    return jsonify(stats)
+
+    local_stats = get_local_daily_stats_for_last_x_days(stats_utc, user_timezone, days)
+    return jsonify(local_stats)
 
 
 @main.route("/services/<uuid:service_id>/template-usage")
