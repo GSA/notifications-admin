@@ -695,9 +695,10 @@ def _get_content_count_error_and_message_for_template(template):
             """Check if the content contains explicitly blocked characters."""
             return any(c in BLOCKED_CHARACTERS for c in content)
 
-        warning = ""
-        if contains_blocked_characters(template.content):  # Block only disallowed characters
+        # Check for blocked characters
+        if contains_blocked_characters(template.content):
             warning = f"{s1}{s2}"
+            return False, Markup(warning)  # 🚨 ONLY show the warning, hiding "Will be charged..."
 
         # If message is too long, return the length error
         if template.is_message_too_long():
@@ -707,17 +708,13 @@ def _get_content_count_error_and_message_for_template(template):
                 f"too many"
             )
 
+        # Show charge message as usual if no warning
         if template.placeholders:
             return False, Markup(
                 f"Will be charged as {message_count(template.fragment_count, template.template_type)} "
-                f"(not including personalization). {warning}"
+                f"(not including personalization)."
             )
 
-        # If there's a warning, return it alone and hide the "Will be charged as..." text
-        if warning:
-            return False, Markup(warning)
-
-        # Otherwise, show the message count as usual
         return False, Markup(
             f"Will be charged as {message_count(template.fragment_count, template.template_type)}."
         )
