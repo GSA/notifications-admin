@@ -220,7 +220,7 @@
 
         var url = type === 'service'
             ? `/services/${currentServiceId}/daily-stats.json?timezone=${encodeURIComponent(userTimezone)}`
-            : `/services/${currentServiceId}/daily-stats-by-user.json`;
+            : `/services/${currentServiceId}/daily-stats-by-user.json?timezone=${encodeURIComponent(userTimezone)}`;
 
 
         return fetch(url)
