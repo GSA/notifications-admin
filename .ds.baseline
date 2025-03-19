@@ -127,16 +127,6 @@
     }
   ],
   "results": {
-    ".github/workflows/checks.yml": [
-      {
-        "type": "Secret Keyword",
-        "filename": ".github/workflows/checks.yml",
-        "hashed_secret": "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8",
-        "is_verified": false,
-        "line_number": 68,
-        "is_secret": false
-      }
-    ],
     "app/assets/js/uswds.min.js": [
       {
         "type": "Secret Keyword",
@@ -684,5 +674,5 @@
       }
     ]
   },
-  "generated_at": "2025-02-26T18:19:37Z"
+  "generated_at": "2025-03-17T23:26:44Z"
 }
