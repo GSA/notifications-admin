@@ -29,13 +29,6 @@
   </div>
 
   <h2 class="font-body-lg">Your file needs to look like this example</h2>
-  <p class="hint">
-    Save your file as a
-    <abbr title="Comma Separated Values">CSV</abbr><span aria-hidden="true">, </span>
-    <abbr title="Tab Separated Values">TSV</abbr><span aria-hidden="true">, </span>
-    <abbr title="Open Document Spreadsheet">ODS</abbr>
-    or Microsoft Excel spreadsheet.
-  </p>
 
   <div class="spreadsheet" data-module="fullscreen-table">
     {% call(item, row_number) list_table(
@@ -50,10 +43,14 @@
       {% endfor %}
     {% endcall %}
   </div>
-  <p class="table-show-more-link">
-    <a class="usa-link" href="{{ url_for('.get_example_csv', service_id=current_service.id, template_id=template.id) }}" download>Download this example (<abbr title="Comma separated values">CSV</abbr>)</a>
+  <p class="hint">
+    Save your spreadsheet as a <abbr title="Comma Separated Values">CSV</abbr> file for bulk messaging. It is the most reliable when uploading your contact list. Start by downloading this example for your message template.
   </p>
-
+  <p class="table-show-more-link">
+    <a class="usa-link display-flex margin-top-1" href="{{ url_for('.get_example_csv', service_id=current_service.id, template_id=template.id) }}" download>Download this example (<abbr title="Comma separated values">CSV</abbr>)
+      <img class="margin-left-05" src="{{ asset_url('img/material-icons/download.svg') }}" role="img" alt="" />
+    </a>
+  </p>
   <h2 class="font-body-lg margin-bottom-1">Your file will populate this template:<br><span class="font-body-lg">({{ template.name }})</span></h2>
   {{ template|string }}
 
