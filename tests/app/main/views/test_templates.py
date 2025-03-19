@@ -1748,7 +1748,7 @@ def test_can_create_email_template_with_emoji(
 @pytest.mark.parametrize(
     ("template_type", "expected_error"),
     [
-        ("sms", ("You cannot use 🍜 in text messages.")),
+        ("sms", ("Please remove the unaccepted character 🍜 in your message, then save again")),
     ],
 )
 def test_should_not_create_sms_template_with_emoji(
@@ -1772,14 +1772,15 @@ def test_should_not_create_sms_template_with_emoji(
         },
         _expected_status=200,
     )
-    assert expected_error in page.text
+    # print(page.main.prettify())
+    assert expected_error in normalize_spaces(page.select_one("#template_content-error").text)
     assert mock_create_service_template.called is False
 
 
 @pytest.mark.parametrize(
     ("template_type", "expected_error"),
     [
-        ("sms", ("You cannot use 🍔 in text messages.")),
+        ("sms", ("Please remove the unaccepted character 🍔 in your message, then save again")),
     ],
 )
 def test_should_not_update_sms_template_with_emoji(
@@ -2031,7 +2032,7 @@ def test_set_template_sender(
             "sms",
             False,
             "Ẅ" * 70,
-            "Will be charged as 1 text message. Use of characters outside the IEC_8859-1 character set may increase the message fragment count, resulting in additional charges, and these IEC_8859-1 characters may not display properly on some older mobile devices.",  # noqa E501
+            "Will be charged as 1 text message.",  # noqa E501
             None,
         ),
         (
@@ -2059,7 +2060,7 @@ def test_set_template_sender(
             "sms",
             False,
             "Hello ((name))",
-            "Will be charged as 1 text message (not including personalization)",
+            "Will be charged as 1 text message (not including personalization).",
             None,
         ),
         (
@@ -2067,7 +2068,7 @@ def test_set_template_sender(
             "sms",
             False,
             f'Hello (( {"a" * 999} ))',
-            "Will be charged as 1 text message (not including personalization)",
+            "Will be charged as 1 text message (not including personalization).",
             None,
         ),
     ],

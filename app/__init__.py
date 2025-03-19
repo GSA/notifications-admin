@@ -682,4 +682,4 @@ def slugify(text):
     """
     Converts text to lowercase, replaces spaces with hyphens, and removes invalid characters.
     """
-    return re.sub(r'[^a-z0-9-]', '', re.sub(r'\s+', '-', text.lower()))
+    return re.sub(r"[^a-z0-9-]", "", re.sub(r"\s+", "-", text.lower()))
