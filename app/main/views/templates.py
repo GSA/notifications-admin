@@ -707,6 +707,12 @@ def _get_content_count_error_and_message_for_template(template):
                 f"too many"
             )
 
+        if template.placeholders:
+            return False, Markup(
+                f"Will be charged as {message_count(template.fragment_count, template.template_type)} "
+                f"(not including personalization). {warning}"
+            )
+
         # If there's a warning, return it alone and hide the "Will be charged as..." text
         if warning:
             return False, Markup(warning)

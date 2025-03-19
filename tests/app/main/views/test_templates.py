@@ -2060,7 +2060,7 @@ def test_set_template_sender(
             "sms",
             False,
             "Hello ((name))",
-            "Will be charged as 1 text message.",
+            "Will be charged as 1 text message (not including personalization).",
             None,
         ),
         (
@@ -2068,7 +2068,7 @@ def test_set_template_sender(
             "sms",
             False,
             f'Hello (( {"a" * 999} ))',
-            "Will be charged as 1 text message.",
+            "Will be charged as 1 text message (not including personalization).",
             None,
         ),
     ],
