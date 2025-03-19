@@ -127,6 +127,15 @@
     }
   ],
   "results": {
+    ".github/workflows/checks.yml": [
+      {
+        "type": "Secret Keyword",
+        "filename": ".github/workflows/checks.yml",
+        "hashed_secret": "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8",
+        "is_verified": false,
+        "line_number": 68
+      }
+    ],
     "app/assets/js/uswds.min.js": [
       {
         "type": "Secret Keyword",
@@ -389,26 +398,6 @@
         "is_secret": false
       }
     ],
-    "app/templates/new/components/head.html": [
-      {
-        "type": "Base64 High Entropy String",
-        "filename": "app/templates/new/components/head.html",
-        "hashed_secret": "ee5048791fc7ff45a1545e24f85bec3317371327",
-        "is_verified": false,
-        "line_number": 33,
-        "is_secret": false
-      }
-    ],
-    "app/templates/old/admin_template.html": [
-      {
-        "type": "Base64 High Entropy String",
-        "filename": "app/templates/old/admin_template.html",
-        "hashed_secret": "ee5048791fc7ff45a1545e24f85bec3317371327",
-        "is_verified": false,
-        "line_number": 18,
-        "is_secret": false
-      }
-    ],
     "deploy-config/sandbox.yml": [
       {
         "type": "Secret Keyword",
@@ -642,37 +631,7 @@
         "line_number": 3266,
         "is_secret": false
       }
-    ],
-    "tests/notifications_utils/clients/antivirus/test_antivirus_client.py": [
-      {
-        "type": "Secret Keyword",
-        "filename": "tests/notifications_utils/clients/antivirus/test_antivirus_client.py",
-        "hashed_secret": "932b25270abe1301c22c709a19082dff07d469ff",
-        "is_verified": false,
-        "line_number": 16,
-        "is_secret": false
-      }
-    ],
-    "tests/notifications_utils/clients/encryption/test_encryption_client.py": [
-      {
-        "type": "Secret Keyword",
-        "filename": "tests/notifications_utils/clients/encryption/test_encryption_client.py",
-        "hashed_secret": "f1e923a9667de11be6a210849a8651c1bfd81605",
-        "is_verified": false,
-        "line_number": 13,
-        "is_secret": false
-      }
-    ],
-    "tests/notifications_utils/clients/zendesk/test_zendesk_client.py": [
-      {
-        "type": "Secret Keyword",
-        "filename": "tests/notifications_utils/clients/zendesk/test_zendesk_client.py",
-        "hashed_secret": "913a73b565c8e2c8ed94497580f619397709b8b6",
-        "is_verified": false,
-        "line_number": 16,
-        "is_secret": false
-      }
     ]
   },
-  "generated_at": "2025-03-17T23:26:44Z"
+  "generated_at": "2025-03-19T03:23:37Z"
 }
