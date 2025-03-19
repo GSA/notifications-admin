@@ -71,15 +71,13 @@ def test_sms_character_validation(client_request, msg):
         (
             "∆ abc 📲 def 📵 ghi",
             (
-                "You cannot use ∆, 📲 or 📵 in text messages. "
-                "They will not show up properly on everyone’s phones."
+                "Please remove the unaccepted character ∆, 📲 and 📵 in your message, then save again"
             ),
         ),
         (
             "📵",
             (
-                "You cannot use 📵 in text messages. "
-                "It will not show up properly on everyone’s phones."
+                "Please remove the unaccepted character 📵 in your message, then save again"
             ),
         ),
     ],
