@@ -13,16 +13,23 @@
     } else {
 
       $submitButton.data('clicked', 'true');
-      setTimeout(renableSubmitButton($submitButton), 1500);
 
+      if ($submitButton.is('[name="Send"], [name="Schedule"]')) {
+        $submitButton.prop('disabled', true);
+
+        setTimeout(() => {
+          renableSubmitButton($submitButton);
+        }, 10000);
+      } else {
+        setTimeout(renableSubmitButton($submitButton), 1500);
+      }
     }
-
   };
 
   let renableSubmitButton = $submitButton => () => {
 
     $submitButton.data('clicked', '');
-
+    $submitButton.prop('disabled', false);
   };
 
   $('form').on('submit', disableSubmitButtons);

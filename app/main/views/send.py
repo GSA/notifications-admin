@@ -924,6 +924,10 @@ def get_template_error_dict(exception):
 def preview_notification(service_id, template_id):
     recipient = get_recipient()
     if not recipient:
+        current_app.logger.warning(
+            f"No recipient found for service {service_id}, template {template_id}. Redirecting..."
+        )
+
         return redirect(
             url_for(
                 ".send_one_off",
