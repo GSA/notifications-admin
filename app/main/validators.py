@@ -127,7 +127,7 @@ class LettersNumbersSingleQuotesFullStopsAndUnderscoresOnly:
 
     def __call__(self, form, field):
         if field.data and not re.match(self.regex, field.data):
-            raise ValidationError(self.parenthesis)
+            raise ValidationError(self.message)
 
 
 class DoesNotStartWithDoubleZero:
