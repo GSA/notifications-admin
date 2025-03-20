@@ -169,14 +169,15 @@ def _csp(config):
 
 
 def create_app(application):
-    @application.context_processor
-    def inject_feature_flags():
-        feature_about_page_enabled = application.config.get(
-            "FEATURE_ABOUT_PAGE_ENABLED", False
-        )
-        return dict(
-            FEATURE_ABOUT_PAGE_ENABLED=feature_about_page_enabled,
-        )
+    # @application.context_processor
+    # def inject_feature_flags():
+    # this is where feature flags can be easily added as a dictionary within context
+    # feature_about_page_enabled = application.config.get(
+    # "FEATURE_ABOUT_PAGE_ENABLED", False
+    # )
+    # return dict(
+    #     FEATURE_ABOUT_PAGE_ENABLED=feature_about_page_enabled,
+    # )
 
     @application.context_processor
     def inject_initial_signin_url():
