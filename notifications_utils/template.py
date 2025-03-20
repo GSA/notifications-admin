@@ -376,7 +376,7 @@ class SMSPreviewTemplate(BaseSMSTemplate):
                     "recipient": Field(
                         "((phone number))",
                         self.values,
-                        with_brackets=False,
+                        with_parenthesis=False,
                         html="escape",
                     ),
                     "show_recipient": self.show_recipient,
@@ -691,7 +691,7 @@ class EmailPreviewTemplate(BaseEmailTemplate):
                     "from_address": self.from_address,
                     "reply_to": self.reply_to,
                     "recipient": Field(
-                        "((email address))", self.values, with_brackets=False
+                        "((email address))", self.values, with_parenthesis=False
                     ),
                     "show_recipient": self.show_recipient,
                 }
@@ -779,7 +779,7 @@ class BaseLetterTemplate(SubjectMixin, Template):
             self.address_block,
             self.values,
             html="escape",
-            with_brackets=False,
+            with_parenthesis=False,
         ).splitlines()
 
     @property

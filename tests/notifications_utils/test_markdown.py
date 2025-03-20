@@ -44,9 +44,9 @@ def test_makes_links_out_of_URLs(url):
             ),
         ),
         (
-            ("this link is in brackets (http://example.com)"),
+            ("this link is in parenthesis (http://example.com)"),
             (
-                "this link is in brackets "
+                "this link is in parenthesis "
                 '(<a style="word-wrap: break-word; color: #1D70B8;" href="http://example.com">http://example.com</a>)'
             ),
         ),

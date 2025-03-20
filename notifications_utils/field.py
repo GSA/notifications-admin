@@ -14,7 +14,7 @@ from notifications_utils.insensitive_dict import InsensitiveDict
 
 class Placeholder:
     def __init__(self, body):
-        # body shouldn’t include leading/trailing brackets, like (( and ))
+        # body shouldn’t include leading/trailing parenthesis, like (( and ))
         self.body = body.lstrip("(").rstrip(")")
 
     @classmethod
@@ -70,14 +70,16 @@ class Field:
     conditional_placeholder_tag = (
         "<span class='placeholder-conditional'>(({}??</span>{}))"
     )
-    placeholder_tag_no_brackets = "<span class='placeholder-no-brackets'>{}</span>"
+    placeholder_tag_no_parenthesis = (
+        "<span class='placeholder-no-parenthesis'>{}</span>"
+    )
     placeholder_tag_redacted = "<span class='placeholder-redacted'>hidden</span>"
 
     def __init__(
         self,
         content,
         values=None,
-        with_brackets=True,
+        with_parenthesis=True,
         html="strip",
         markdown_lists=False,
         redact_missing_personalisation=False,
@@ -85,8 +87,8 @@ class Field:
         self.content = content
         self.values = values
         self.markdown_lists = markdown_lists
-        if not with_brackets:
-            self.placeholder_tag = self.placeholder_tag_no_brackets
+        if not with_parenthesis:
+            self.placeholder_tag = self.placeholder_tag_no_parenthesis
         self.sanitizer = {
             "strip": strip_html,
             "escape": escape_html,
@@ -198,7 +200,7 @@ class PlainTextField(Field):
 
     placeholder_tag = "(({}))"
     conditional_placeholder_tag = "(({}??{}))"
-    placeholder_tag_no_brackets = "{}"
+    placeholder_tag_no_parenthesis = "{}"
     placeholder_tag_redacted = "[hidden]"
 
 

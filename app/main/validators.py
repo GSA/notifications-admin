@@ -61,7 +61,7 @@ class ValidEmail:
 
 
 class NoCommasInPlaceHolders:
-    def __init__(self, message="You cannot put commas between double brackets"):
+    def __init__(self, message="You cannot put commas between double parenthesis"):
         self.message = message
 
     def __call__(self, form, field):

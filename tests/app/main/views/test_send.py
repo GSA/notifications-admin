@@ -775,7 +775,7 @@ def test_upload_csv_file_with_very_long_placeholder_shows_check_page_with_errors
             +12028675109
         """,
             (
-                "Your column names need to match the double brackets in your template "
+                "Your column names need to match the double parenthesis in your template "
                 "Your file is missing a column called ‘name’."
             ),
         ),

@@ -232,8 +232,8 @@ def test_bleach_doesnt_try_to_make_valid_html_before_cleaning():
         # We let users use &amp; because it’s often pasted in URLs
         ("?a=1&amp;b=2", "?a=1&amp;b=2"),
         # We let users use &lpar; and &rpar; because otherwise it’s
-        # impossible to put brackets in the body of conditional placeholders
-        ("((var??&lpar;in brackets&rpar;))", "((var??&lpar;in brackets&rpar;))"),
+        # impossible to put parenthesis in the body of conditional placeholders
+        ("((var??&lpar;in parenthesis&rpar;))", "((var??&lpar;in parenthesis&rpar;))"),
     ],
 )
 def test_escaping_html_entities(

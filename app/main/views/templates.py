@@ -698,7 +698,9 @@ def _get_content_count_error_and_message_for_template(template):
         # Check for blocked characters
         if contains_blocked_characters(template.content):
             warning = f"{s1}{s2}"
-            return False, Markup(warning)  # 🚨 ONLY show the warning, hiding "Will be charged..."
+            return False, Markup(
+                warning
+            )  # 🚨 ONLY show the warning, hiding "Will be charged..."
 
         # If message is too long, return the length error
         if template.is_message_too_long():
