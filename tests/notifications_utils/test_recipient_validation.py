@@ -136,7 +136,7 @@ invalid_email_addresses = (
     "local-with-’-apostrophe@domain.com",
     "local-with-”-quotes@domain.com",
     "domain-starts-with-a-dot@.domain.com",
-    "brackets(in)local@domain.com",
+    "parenthesis(in)local@domain.com",
     "email-too-long-{}@example.com".format("a" * 320),
     "incorrect-punycode@xn---something.com",
 )

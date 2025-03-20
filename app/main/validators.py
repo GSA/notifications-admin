@@ -61,7 +61,7 @@ class ValidEmail:
 
 
 class NoCommasInPlaceHolders:
-    def __init__(self, message="You cannot put commas between double brackets"):
+    def __init__(self, message="You cannot put commas between double parenthesis"):
         self.message = message
 
     def __call__(self, form, field):
@@ -127,7 +127,7 @@ class LettersNumbersSingleQuotesFullStopsAndUnderscoresOnly:
 
     def __call__(self, form, field):
         if field.data and not re.match(self.regex, field.data):
-            raise ValidationError(self.message)
+            raise ValidationError(self.parenthesis)
 
 
 class DoesNotStartWithDoubleZero:
