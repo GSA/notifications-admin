@@ -1,15 +1,14 @@
 import datetime
 import os
-
 from contextlib import contextmanager
 
-from flask import Flask
 import pytest
 from axe_core_python.sync_playwright import Axe
+from flask import Flask, current_app
 
 from app import create_app
-from app.notify_client.user_api_client import user_api_client
 from app.notify_client.service_api_client import service_api_client
+from app.notify_client.user_api_client import user_api_client
 
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
@@ -45,12 +44,14 @@ def check_axe_report(page):
             "moderate",
         ], f"Accessibility violation: {violation}"
 
+
 @pytest.fixture
 def notify_admin_e2e():
     os.environ["NOTIFY_ENVIRONMENT"] = "e2etest"
 
     application = Flask("app")
     create_app(application)
+
     return application
 
 
@@ -69,10 +70,10 @@ def default_service(browser, notify_admin_e2e):
         service = service_api_client.create_service(
             service_name,
             "federal",
-            os.environ["DEFAULT_SERVICE_LIMIT"],
+            current_app.config["DEFAULT_SERVICE_LIMIT"],
             True,
-            default_user.id,
-            default_user.email_address,
+            default_user["id"],
+            default_user["email_address"],
         )
 
         print("OK I GOT HERE LETS GO!!!")

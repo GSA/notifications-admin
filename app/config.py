@@ -183,6 +183,16 @@ class E2ETest(Staging):
         "notify-admin-logo-upload-bucket-staging"
     )
 
+    API_HOST_NAME = "http://localhost:6011"  # nosec B105 - only used in development
+    # credential overrides
+    DANGEROUS_SALT = "development-notify-salt"
+    SECRET_KEY = "dev-notify-secret-key"  # nosec B105 - only used in development
+    # ADMIN_CLIENT_USER_NAME is called ADMIN_CLIENT_ID in api repo, they should match
+    ADMIN_CLIENT_USER_NAME = "notify-admin"
+    ADMIN_CLIENT_SECRET = (
+        "dev-notify-secret-key"  # nosec B105 - only used in development
+    )
+
 
 class Demo(Staging):
     HEADER_COLOUR = "#6F72AF"  # $mauve
