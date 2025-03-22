@@ -56,7 +56,6 @@
     {% set itemHintId = id + '-item-hint' %}
     <div class="usa-radio">
       <input class="usa-radio__input" id="{{ id }}" name="{{ params.name }}" type="radio" value="{{ item.value }}"
-      {{-" checked" if item.checked }}
       {{-" disabled" if item.disabled }}
       {%- if item.conditional %} data-aria-controls="{{ conditionalId }}"{% endif -%}
       {%- if hasHint %} aria-describedby="{{ itemHintId }}"{% endif -%}

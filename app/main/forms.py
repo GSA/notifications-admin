@@ -781,6 +781,9 @@ def govuk_radios_field_widget(self, field, param_extensions=None, **kwargs):
     # returns either a list or a hierarchy of lists
     # depending on how get_items_from_options is implemented
     items = self.get_items_from_options(field)
+    is_field_required = False
+    if getattr(field, 'flags', None) and 'required' in field.flags:
+        is_field_required = True
 
     params = {
         "name": field.name,
@@ -793,6 +796,8 @@ def govuk_radios_field_widget(self, field, param_extensions=None, **kwargs):
         },
         "errorMessage": error_message,
         "items": items,
+        "required": is_field_required,
+
     }
 
     # extend default params with any sent in during instantiation
