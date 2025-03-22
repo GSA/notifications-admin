@@ -43,7 +43,6 @@
       {% endcall %}
     </div>
   {% elif error == 'message-too-long' %}
-    {# the only row_errors we can get when sending one off messages is that the message is too long #}
     <div class="bottom-gutter">
       {% call banner_wrapper(type='dangerous') %}
         {% include "partials/check/message-too-long.html" %}
@@ -77,13 +76,15 @@
         help='3' if help else 0
       )}}" class='page-footer'>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-      <!-- <p>Placeholder: This message will be delivered to <b>400 phone numbers</b> and will use a total of <b>800 message parts</b>, leaving Washington DSHS with <b>249,200 message parts remaining</b>.</p> -->
       <h3>Does everything look good?</h3>
       {% if not error %}
         {% set button_text %}
           {{ "Schedule" if scheduled_for else 'Send'}}
         {% endset %}
-        {{ usaButton({ "text": button_text }) }}
+        {{ usaButton({
+          "text": button_text,
+          "name": button_text
+         }) }}
       {% endif %}
     </form>
   </div>

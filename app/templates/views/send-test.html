@@ -37,6 +37,8 @@
     data_kwargs={'force-focus': True}
   ) %}
     <div class="grid-row">
+      {% set extra_class = "extra-tracking" if form.placeholder_value.label.text == "phone number" else "" %}
+      {% set placeholder_id = "phone number" if form.placeholder_value.label.text == "phone number" else "" %}
       <div class="grid-col-12 {% if form.placeholder_value.label.text == 'phone number' %}extra-tracking{% endif %}">
         {{ form.placeholder_value(param_extensions={"classes": "", "id": "phone-number"}) }}
       </div>

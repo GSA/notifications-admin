@@ -1,5 +1,6 @@
 import os
 import pathlib
+import re
 import secrets
 from functools import partial
 from time import monotonic
@@ -168,14 +169,15 @@ def _csp(config):
 
 
 def create_app(application):
-    @application.context_processor
-    def inject_feature_flags():
-        feature_about_page_enabled = application.config.get(
-            "FEATURE_ABOUT_PAGE_ENABLED", False
-        )
-        return dict(
-            FEATURE_ABOUT_PAGE_ENABLED=feature_about_page_enabled,
-        )
+    # @application.context_processor
+    # def inject_feature_flags():
+    # this is where feature flags can be easily added as a dictionary within context
+    # feature_about_page_enabled = application.config.get(
+    # "FEATURE_ABOUT_PAGE_ENABLED", False
+    # )
+    # return dict(
+    #     FEATURE_ABOUT_PAGE_ENABLED=feature_about_page_enabled,
+    # )
 
     @application.context_processor
     def inject_initial_signin_url():
@@ -616,6 +618,8 @@ def setup_event_handlers():
 
 
 def add_template_filters(application):
+    application.add_template_filter(slugify)
+
     for fn in [
         format_auth_type,
         format_billions,
@@ -673,3 +677,10 @@ def init_jinja(application):
     ]
     jinja_loader = jinja2.FileSystemLoader(template_folders)
     application.jinja_loader = jinja_loader
+
+
+def slugify(text):
+    """
+    Converts text to lowercase, replaces spaces with hyphens, and removes invalid characters.
+    """
+    return re.sub(r"[^a-z0-9-]", "", re.sub(r"\s+", "-", text.lower()))

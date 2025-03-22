@@ -23,10 +23,11 @@ from app.utils.user import user_is_logged_in
 # Hook to check for feature flags
 @main.before_request
 def check_feature_flags():
-    if request.path.startswith("/about") and not current_app.config.get(
-        "FEATURE_ABOUT_PAGE_ENABLED", False
-    ):
-        abort(404)
+    # Placeholder for future feature flag checks
+    # Example:
+    # if request.path.startswith("/some-feature") and not current_app.config.get("FEATURE_SOME_FEATURE_ENABLED", False):
+    #     abort(404)
+    pass
 
 
 @main.route("/test/feature-flags")
@@ -258,11 +259,11 @@ def why_text_messaging():
     )
 
 
-@main.route("/join-notify")
-def join_notify():
+@main.route("/notify-service-ending")
+@user_is_logged_in
+def notify_service_ending():
     return render_template(
-        "views/join-notify.html",
-        navigation_links=about_notify_nav(),
+        "views/notify-service-ending.html",
     )
 
 

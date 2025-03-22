@@ -4,32 +4,22 @@ from functools import partial
 from itertools import groupby
 from zoneinfo import ZoneInfo
 
-from flask import Response, abort, jsonify, render_template, request, session, url_for
+from flask import abort, jsonify, render_template, request, session, url_for
 from flask_login import current_user
 from werkzeug.utils import redirect
 
 from app import (
     billing_api_client,
-    current_service,
     job_api_client,
     service_api_client,
     template_statistics_client,
 )
-from app.formatters import format_date_numeric, format_datetime_numeric
 from app.main import main
 from app.main.views.user_profile import set_timezone
 from app.statistics_utils import get_formatted_percentage
-from app.utils import (
-    DELIVERED_STATUSES,
-    FAILURE_STATUSES,
-    REQUESTED_STATUSES,
-    service_has_permission,
-)
-from app.utils.csv import Spreadsheet
-from app.utils.pagination import generate_next_dict, generate_previous_dict
+from app.utils import DELIVERED_STATUSES, FAILURE_STATUSES, REQUESTED_STATUSES
 from app.utils.time import get_current_financial_year
 from app.utils.user import user_has_permissions
-from notifications_utils.recipients import format_phone_number_human_readable
 
 
 @main.route("/services/<uuid:service_id>/dashboard")
@@ -62,28 +52,25 @@ def service_dashboard(service_id):
     total_messages = service_api_client.get_service_message_ratio(service_id)
     messages_remaining = total_messages.get("messages_remaining", 0)
     messages_sent = total_messages.get("messages_sent", 0)
+    all_statistics = template_statistics_client.get_template_statistics_for_service(
+        service_id, limit_days=7
+    )
+    template_statistics = aggregate_template_usage(all_statistics)
     return render_template(
         "views/dashboard/dashboard.html",
-        updates_url=url_for(".service_dashboard_updates", service_id=service_id),
-        partials=get_dashboard_partials(service_id),
         jobs=job_lists,
         service_data_retention_days=service_data_retention_days,
         messages_remaining=messages_remaining,
         messages_sent=messages_sent,
+        template_statistics=template_statistics,
+        most_used_template_count=max(
+            [row["count"] for row in template_statistics] or [0]
+        ),
     )
 
 
 def job_is_finished(job_dict):
-    done_statuses = [
-        "delivered",
-        "sent",
-        "failed",
-        "technical-failure",
-        "temporary-failure",
-        "permanent-failure",
-        "cancelled",
-    ]
-
+    done_statuses = DELIVERED_STATUSES + FAILURE_STATUSES + ["cancelled"]
     processed_count = sum(
         stat["count"]
         for stat in job_dict["statistics"]
@@ -120,7 +107,7 @@ def get_local_daily_stats_for_last_x_days(stats_utc, user_timezone, days):
     ]
     aggregator = {
         d: {
-            "sms":   {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
+            "sms": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
             "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
         }
         for d in days_list
@@ -128,7 +115,9 @@ def get_local_daily_stats_for_last_x_days(stats_utc, user_timezone, days):
 
     # Convert each UTC timestamp to local date and iterate
     for utc_ts, data in stats_utc.items():
-        utc_dt = datetime.strptime(utc_ts, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=ZoneInfo("UTC"))
+        utc_dt = datetime.strptime(utc_ts, "%Y-%m-%dT%H:%M:%SZ").replace(
+            tzinfo=ZoneInfo("UTC")
+        )
         local_day = utc_dt.astimezone(tz).strftime("%Y-%m-%d")
 
         if local_day in aggregator:
@@ -143,25 +132,18 @@ def get_local_daily_stats_for_last_x_days(stats_utc, user_timezone, days):
 @user_has_permissions()
 def get_daily_stats_by_user(service_id):
     date_range = get_stats_date_range()
-    stats = service_api_client.get_user_service_notification_statistics_by_day(
+    days = date_range["days"]
+    user_timezone = request.args.get("timezone", "UTC")
+
+    stats_utc = service_api_client.get_user_service_notification_statistics_by_day(
         service_id,
         user_id=current_user.id,
         start_date=date_range["start_date"],
-        days=date_range["days"],
+        days=days,
     )
-    return jsonify(stats)
 
-
-@main.route("/services/<uuid:service_id>/dashboard.json")
-@user_has_permissions("view_activity")
-def service_dashboard_updates(service_id):
-    return jsonify(**get_dashboard_partials(service_id))
-
-
-@main.route("/services/<uuid:service_id>/template-activity")
-@user_has_permissions("view_activity")
-def template_history(service_id):
-    return redirect(url_for("main.template_usage", service_id=service_id), code=301)
+    local_stats = get_local_daily_stats_for_last_x_days(stats_utc, user_timezone, days)
+    return jsonify(local_stats)
 
 
 @main.route("/services/<uuid:service_id>/template-usage")
@@ -249,103 +231,6 @@ def usage(service_id):
     )
 
 
-@main.route("/services/<uuid:service_id>/monthly")
-@user_has_permissions("view_activity")
-def monthly(service_id):
-    year, current_financial_year = requested_and_current_financial_year(request)
-    return render_template(
-        "views/dashboard/monthly.html",
-        months=format_monthly_stats_to_list(
-            service_api_client.get_monthly_notification_stats(service_id, year)["data"]
-        ),
-        years=get_tuples_of_financial_years(
-            partial_url=partial(url_for, ".monthly", service_id=service_id),
-            start=current_financial_year - 2,
-            end=current_financial_year,
-        ),
-        selected_year=year,
-    )
-
-
-@main.route("/services/<uuid:service_id>/inbox")
-@user_has_permissions("view_activity")
-@service_has_permission("inbound_sms")
-def inbox(service_id):
-    return render_template(
-        "views/dashboard/inbox.html",
-        partials=get_inbox_partials(service_id),
-        updates_url=url_for(
-            ".inbox_updates", service_id=service_id, page=request.args.get("page")
-        ),
-    )
-
-
-@main.route("/services/<uuid:service_id>/inbox.json")
-@user_has_permissions("view_activity")
-@service_has_permission("inbound_sms")
-def inbox_updates(service_id):
-    return jsonify(get_inbox_partials(service_id))
-
-
-@main.route("/services/<uuid:service_id>/inbox.csv")
-@user_has_permissions("view_activity")
-def inbox_download(service_id):
-    return Response(
-        Spreadsheet.from_rows(
-            [
-                [
-                    "Phone number",
-                    "Message",
-                    "Received",
-                ]
-            ]
-            + [
-                [
-                    format_phone_number_human_readable(message["user_number"]),
-                    message["content"].lstrip(("=+-@")),
-                    format_datetime_numeric(message["created_at"]),
-                ]
-                for message in service_api_client.get_inbound_sms(service_id)["data"]
-            ]
-        ).as_csv_data,
-        mimetype="text/csv",
-        headers={
-            "Content-Disposition": 'inline; filename="Received text messages {}.csv"'.format(
-                format_date_numeric(datetime.utcnow().isoformat())
-            )
-        },
-    )
-
-
-def get_inbox_partials(service_id):
-    page = int(request.args.get("page", 1))
-    inbound_messages_data = service_api_client.get_most_recent_inbound_sms(
-        service_id, page=page
-    )
-    inbound_messages = inbound_messages_data["data"]
-    if not inbound_messages:
-        inbound_number = current_service.inbound_number
-    else:
-        inbound_number = None
-
-    prev_page = None
-    if page > 1:
-        prev_page = generate_previous_dict("main.inbox", service_id, page)
-    next_page = None
-    if inbound_messages_data["has_next"]:
-        next_page = generate_next_dict("main.inbox", service_id, page)
-
-    return {
-        "messages": render_template(
-            "views/dashboard/_inbox_messages.html",
-            messages=inbound_messages,
-            inbound_number=inbound_number,
-            prev_page=prev_page,
-            next_page=next_page,
-        )
-    }
-
-
 def filter_out_cancelled_stats(template_statistics):
     return [s for s in template_statistics if s["status"] != "cancelled"]
 
@@ -375,71 +260,6 @@ def aggregate_template_usage(template_statistics, sort_key="count"):
         )
 
     return sorted(templates, key=lambda x: x[sort_key], reverse=True)
-
-
-def aggregate_notifications_stats(template_statistics):
-    template_statistics = filter_out_cancelled_stats(template_statistics)
-    notifications = {
-        template_type: {status: 0 for status in ("requested", "delivered", "failed")}
-        for template_type in ["sms", "email"]
-    }
-    for stat in template_statistics:
-        notifications[stat["template_type"]]["requested"] += stat["count"]
-        if stat["status"] in DELIVERED_STATUSES:
-            notifications[stat["template_type"]]["delivered"] += stat["count"]
-        elif stat["status"] in FAILURE_STATUSES:
-            notifications[stat["template_type"]]["failed"] += stat["count"]
-
-    return notifications
-
-
-def get_dashboard_partials(service_id):
-    all_statistics = template_statistics_client.get_template_statistics_for_service(
-        service_id, limit_days=7
-    )
-    template_statistics = aggregate_template_usage(all_statistics)
-    stats = aggregate_notifications_stats(all_statistics)
-
-    dashboard_totals = (get_dashboard_totals(stats),)
-    free_sms_allowance = billing_api_client.get_free_sms_fragment_limit_for_year(
-        current_service.id,
-    )
-    # These 2 calls will update the dashboard sms allowance count while in trial mode.
-    billing_api_client.get_monthly_usage_for_service(
-        service_id, get_current_financial_year()
-    )
-    billing_api_client.create_or_update_free_sms_fragment_limit(
-        service_id, free_sms_fragment_limit=free_sms_allowance
-    )
-
-    yearly_usage = billing_api_client.get_annual_usage_for_service(
-        service_id,
-        get_current_financial_year(),
-    )
-    return {
-        "upcoming": render_template(
-            "views/dashboard/_upcoming.html",
-        ),
-        "inbox": render_template(
-            "views/dashboard/_inbox.html",
-        ),
-        "totals": render_template(
-            "views/dashboard/_totals.html",
-            service_id=service_id,
-            statistics=dashboard_totals[0],
-        ),
-        "template-statistics": render_template(
-            "views/dashboard/template-statistics.html",
-            template_statistics=template_statistics,
-            most_used_template_count=max(
-                [row["count"] for row in template_statistics] or [0]
-            ),
-        ),
-        "usage": render_template(
-            "views/dashboard/_usage.html",
-            **get_annual_usage_breakdown(yearly_usage, free_sms_allowance),
-        ),
-    }
 
 
 def get_dashboard_totals(statistics):

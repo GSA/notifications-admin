@@ -82,7 +82,7 @@ const javascripts = () => {
     paths.src + 'javascripts/totalMessagesChart.js',
     paths.src + 'javascripts/activityChart.js',
     paths.src + 'javascripts/sidenav.js',
-
+    paths.src + 'javascripts/validation.js',
   ])
     .pipe(plugins.prettyerror())
     .pipe(

@@ -1,5 +1,4 @@
 import copy
-import json
 from datetime import datetime
 from unittest.mock import patch
 from zoneinfo import ZoneInfo
@@ -9,7 +8,6 @@ from flask import url_for
 from freezegun import freeze_time
 
 from app.main.views.dashboard import (
-    aggregate_notifications_stats,
     aggregate_status_types,
     aggregate_template_usage,
     format_monthly_stats_to_list,
@@ -17,12 +15,7 @@ from app.main.views.dashboard import (
     get_local_daily_stats_for_last_x_days,
     get_tuples_of_financial_years,
 )
-from tests import (
-    organization_json,
-    service_json,
-    validate_route_permission,
-    validate_route_permission_with_client,
-)
+from tests import organization_json, service_json, validate_route_permission
 from tests.conftest import (
     ORGANISATION_ID,
     SERVICE_ONE_ID,
@@ -330,287 +323,6 @@ def test_inbound_messages_not_visible_to_service_without_permissions(
     assert mock_get_inbound_sms_summary.called is False
 
 
-def test_inbound_messages_shows_count_of_messages_when_there_are_messages(
-    client_request,
-    mocker,
-    service_one,
-    mock_get_service_templates_when_no_templates_exist,
-    mock_get_jobs,
-    mock_get_scheduled_job_stats,
-    mock_get_service_statistics,
-    mock_get_template_statistics,
-    mock_get_annual_usage_for_service,
-    mock_get_free_sms_fragment_limit,
-    mock_get_inbound_sms_summary,
-):
-    service_one["permissions"] = ["inbound_sms"]
-    mocker.patch(
-        "app.service_api_client.get_service_message_ratio",
-        return_value=mock_service_message_ratio,
-    )
-    page = client_request.get(
-        "main.service_dashboard",
-        service_id=SERVICE_ONE_ID,
-    )
-    mock_get_jobs.assert_called_with(SERVICE_ONE_ID)
-    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    banner = page.select("a.banner-dashboard")[1]
-    assert (
-        normalize_spaces(banner.text)
-        == "9,999 text messages received latest message just now"
-    )
-    assert banner["href"] == url_for("main.inbox", service_id=SERVICE_ONE_ID)
-
-
-def test_inbound_messages_shows_count_of_messages_when_there_are_no_messages(
-    client_request,
-    mocker,
-    service_one,
-    mock_get_service_templates_when_no_templates_exist,
-    mock_get_jobs,
-    mock_get_scheduled_job_stats,
-    mock_get_service_statistics,
-    mock_get_template_statistics,
-    mock_get_annual_usage_for_service,
-    mock_get_free_sms_fragment_limit,
-    mock_get_inbound_sms_summary_with_no_messages,
-):
-    service_one["permissions"] = ["inbound_sms"]
-    mocker.patch(
-        "app.service_api_client.get_service_message_ratio",
-        return_value=mock_service_message_ratio,
-    )
-    page = client_request.get(
-        "main.service_dashboard",
-        service_id=SERVICE_ONE_ID,
-    )
-    mock_get_jobs.assert_called_with(SERVICE_ONE_ID)
-    mocker.patch("app.job_api_client.get_jobs", return_value=MOCK_JOBS)
-    banner = page.select("a.banner-dashboard")[1]
-    assert normalize_spaces(banner.text) == "0 text messages received"
-    assert banner["href"] == url_for("main.inbox", service_id=SERVICE_ONE_ID)
-
-
-@pytest.mark.parametrize(
-    ("index", "expected_row"),
-    enumerate(
-        [
-            "(202) 867-5300 message-1 1 hour ago",
-            "(202) 867-5300 message-2 1 hour ago",
-            "(202) 867-5300 message-3 1 hour ago",
-            "(202) 867-5302 message-4 3 hours ago",
-            "+33(0)1 12345678 message-5 5 hours ago",
-            "(202) 555-0104 message-6 7 hours ago",
-            "(202) 555-0104 message-7 9 hours ago",
-        ]
-    ),
-)
-def test_inbox_showing_inbound_messages(
-    client_request,
-    service_one,
-    mock_get_service_templates_when_no_templates_exist,
-    mock_get_service_statistics,
-    mock_get_template_statistics,
-    mock_get_annual_usage_for_service,
-    mock_get_most_recent_inbound_sms,
-    index,
-    expected_row,
-):
-    service_one["permissions"] = ["inbound_sms"]
-
-    page = client_request.get(
-        "main.inbox",
-        service_id=SERVICE_ONE_ID,
-    )
-
-    rows = page.select("tbody tr")
-    assert len(rows) == 8
-    assert normalize_spaces(rows[index].text) == expected_row
-    assert page.select_one("a[download]")["href"] == url_for(
-        "main.inbox_download",
-        service_id=SERVICE_ONE_ID,
-    )
-
-
-def test_get_inbound_sms_shows_page_links(
-    client_request,
-    service_one,
-    mock_get_service_templates_when_no_templates_exist,
-    mock_get_service_statistics,
-    mock_get_template_statistics,
-    mock_get_annual_usage_for_service,
-    mock_get_most_recent_inbound_sms,
-    mock_get_inbound_number_for_service,
-):
-    service_one["permissions"] = ["inbound_sms"]
-
-    page = client_request.get(
-        "main.inbox",
-        service_id=SERVICE_ONE_ID,
-        page=2,
-    )
-
-    assert "Next page" in page.find("li", {"class": "next-page"}).text
-    assert "Previous page" in page.find("li", {"class": "previous-page"}).text
-
-
-def test_empty_inbox(
-    client_request,
-    service_one,
-    mock_get_service_templates_when_no_templates_exist,
-    mock_get_service_statistics,
-    mock_get_template_statistics,
-    mock_get_annual_usage_for_service,
-    mock_get_most_recent_inbound_sms_with_no_messages,
-    mock_get_inbound_number_for_service,
-):
-    service_one["permissions"] = ["inbound_sms"]
-
-    page = client_request.get(
-        "main.inbox",
-        service_id=SERVICE_ONE_ID,
-    )
-
-    assert normalize_spaces(page.select("tbody tr")) == (
-        "When users text your service’s phone number (2028675301) you’ll see the messages here"
-    )
-    assert not page.select("a[download]")
-    assert not page.select("li.next-page")
-    assert not page.select("li.previous-page")
-
-
-@pytest.mark.parametrize(
-    "endpoint",
-    [
-        "main.inbox",
-        "main.inbox_updates",
-    ],
-)
-def test_inbox_not_accessible_to_service_without_permissions(
-    client_request,
-    service_one,
-    endpoint,
-):
-    service_one["permissions"] = []
-    client_request.get(
-        endpoint,
-        service_id=SERVICE_ONE_ID,
-        _expected_status=403,
-    )
-
-
-def test_anyone_can_see_inbox(
-    client_request,
-    api_user_active,
-    service_one,
-    mocker,
-    mock_get_most_recent_inbound_sms_with_no_messages,
-    mock_get_inbound_number_for_service,
-):
-    service_one["permissions"] = ["inbound_sms"]
-
-    validate_route_permission_with_client(
-        mocker,
-        client_request,
-        "GET",
-        200,
-        url_for("main.inbox", service_id=service_one["id"]),
-        ["view_activity"],
-        api_user_active,
-        service_one,
-    )
-
-
-def test_view_inbox_updates(
-    client_request,
-    service_one,
-    mocker,
-    mock_get_most_recent_inbound_sms_with_no_messages,
-):
-    service_one["permissions"] += ["inbound_sms"]
-
-    mock_get_partials = mocker.patch(
-        "app.main.views.dashboard.get_inbox_partials",
-        return_value={"messages": "foo"},
-    )
-
-    response = client_request.get_response(
-        "main.inbox_updates",
-        service_id=SERVICE_ONE_ID,
-    )
-
-    assert json.loads(response.get_data(as_text=True)) == {"messages": "foo"}
-
-    mock_get_partials.assert_called_once_with(SERVICE_ONE_ID)
-
-
-@freeze_time("2016-07-01 16:00")
-def test_download_inbox(
-    client_request,
-    mock_get_inbound_sms,
-):
-    response = client_request.get_response(
-        "main.inbox_download",
-        service_id=SERVICE_ONE_ID,
-    )
-    assert response.headers["Content-Type"] == ("text/csv; " "charset=utf-8")
-    assert response.headers["Content-Disposition"] == (
-        "inline; " 'filename="Received text messages 07-01-2016.csv"'
-    )
-    assert response.get_data(as_text=True) == (
-        "Phone number,Message,Received\r\n"
-        "(202) 867-5300,message-1,07-01-2016 11:00 America/New_York\r\n"
-        "(202) 867-5300,message-2,07-01-2016 10:59 America/New_York\r\n"
-        "(202) 867-5300,message-3,07-01-2016 10:59 America/New_York\r\n"
-        "(202) 867-5302,message-4,07-01-2016 08:59 America/New_York\r\n"
-        "+33(0)1 12345678,message-5,07-01-2016 06:59 America/New_York\r\n"
-        "(202) 555-0104,message-6,07-01-2016 04:59 America/New_York\r\n"
-        "(202) 555-0104,message-7,07-01-2016 02:59 America/New_York\r\n"
-        "+68212345,message-8,07-01-2016 02:59 America/New_York\r\n"
-    )
-
-
-@freeze_time("2016-07-01 13:00")
-@pytest.mark.parametrize(
-    ("message_content", "expected_cell"),
-    [
-        ("=2+5", "2+5"),
-        ("==2+5", "2+5"),
-        ("-2+5", "2+5"),
-        ("+2+5", "2+5"),
-        ("@2+5", "2+5"),
-        ("looks safe,=2+5", '"looks safe,=2+5"'),
-    ],
-)
-def test_download_inbox_strips_formulae(
-    mocker,
-    client_request,
-    fake_uuid,
-    message_content,
-    expected_cell,
-):
-    mocker.patch(
-        "app.service_api_client.get_inbound_sms",
-        return_value={
-            "has_next": False,
-            "data": [
-                {
-                    "user_number": "elevenchars",
-                    "notify_number": "foo",
-                    "content": message_content,
-                    "created_at": datetime.utcnow().isoformat(),
-                    "id": fake_uuid,
-                }
-            ],
-        },
-    )
-    response = client_request.get_response(
-        "main.inbox_download",
-        service_id=SERVICE_ONE_ID,
-    )
-    assert expected_cell in response.get_data(as_text=True).split("\r\n")[1]
-
-
 def test_should_show_recent_templates_on_dashboard(
     client_request,
     mocker,
@@ -697,26 +409,6 @@ def test_should_not_show_recent_templates_on_dashboard_if_only_one_template_used
     assert expected_count == 50, f"Expected count to be 50, but got {expected_count}"
 
 
-@freeze_time("2016-07-01 12:00")  # 4 months into 2016 financial year
-@pytest.mark.parametrize(
-    "extra_args",
-    [
-        {},
-        {"year": "2016"},
-    ],
-)
-def test_should_show_redirect_from_template_history(
-    client_request,
-    extra_args,
-):
-    client_request.get(
-        "main.template_history",
-        service_id=SERVICE_ONE_ID,
-        _expected_status=301,
-        **extra_args,
-    )
-
-
 @freeze_time("2017-01-01 12:00")
 @pytest.mark.parametrize(
     "extra_args",
@@ -761,29 +453,9 @@ def test_should_show_monthly_breakdown_of_template_usage(
     )
 
 
-def test_anyone_can_see_monthly_breakdown(
-    client_request,
-    api_user_active,
-    service_one,
-    mocker,
-    mock_get_monthly_notification_stats,
-):
-    validate_route_permission_with_client(
-        mocker,
-        client_request,
-        "GET",
-        200,
-        url_for("main.monthly", service_id=service_one["id"]),
-        ["view_activity"],
-        api_user_active,
-        service_one,
-    )
-
-
 @pytest.mark.parametrize(
     "endpoint",
     [
-        "main.monthly",
         "main.template_usage",
     ],
 )
@@ -804,16 +476,6 @@ def test_stats_pages_show_last_3_years(
         "2014 to 2015 fiscal year "
         "2013 to 2014 fiscal year"
     )
-
-
-def test_monthly_has_equal_length_tables(
-    client_request,
-    service_one,
-    mock_get_monthly_notification_stats,
-):
-    page = client_request.get("main.monthly", service_id=service_one["id"])
-
-    assert page.select_one(".table-field-headings th").get("width") == "33%"
 
 
 @freeze_time("2016-01-01 11:09:00.061258")
@@ -1463,14 +1125,6 @@ def test_aggregate_template_stats():
     assert expected[1]["template_type"] == "sms"
 
 
-def test_aggregate_notifications_stats():
-    expected = aggregate_notifications_stats(copy.deepcopy(stub_template_stats))
-    assert expected == {
-        "sms": {"requested": 100, "delivered": 50, "failed": 0},
-        "email": {"requested": 200, "delivered": 0, "failed": 100},
-    }
-
-
 def test_get_dashboard_totals_adds_percentages():
     stats = {
         "sms": {"requested": 3, "delivered": 0, "failed": 2},
@@ -1859,22 +1513,22 @@ def test_service_dashboard_shows_batched_jobs(
 def test_simple_local_conversion(mock_dt):
     stats_utc = {
         "2025-02-24T15:00:00Z": {
-            "sms":   {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
+            "sms": {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
             "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
         },
         "2025-02-25T07:00:00Z": {
-            "sms":   {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
+            "sms": {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
             "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
         },
     }
 
     # Mock today's date in local time: 2025-02-25 at 10:00
-    mock_dt.now.return_value = datetime(2025, 2, 25, 10, 0, 0, tzinfo=ZoneInfo("America/New_York"))
+    mock_dt.now.return_value = datetime(
+        2025, 2, 25, 10, 0, 0, tzinfo=ZoneInfo("America/New_York")
+    )
 
     local_stats = get_local_daily_stats_for_last_x_days(
-        stats_utc,
-        "America/New_York",
-        days=2
+        stats_utc, "America/New_York", days=2
     )
 
     assert len(local_stats) == 2
@@ -1909,7 +1563,7 @@ def test_no_timestamps_returns_zeroed_days():
 def test_timestamp_in_future_time_zone():
     stats_utc = {
         "2025-02-25T01:00:00Z": {
-            "sms":   {"delivered": 5, "failure": 0, "pending": 0, "requested": 5},
+            "sms": {"delivered": 5, "failure": 0, "pending": 0, "requested": 5},
             "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
         }
     }
@@ -1931,15 +1585,15 @@ def test_timestamp_in_future_time_zone():
 def test_many_timestamps_one_local_day():
     stats_utc = {
         "2025-02-24T05:00:00Z": {
-            "sms":   {"delivered": 2, "failure": 1, "pending": 0, "requested": 3},
+            "sms": {"delivered": 2, "failure": 1, "pending": 0, "requested": 3},
             "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
         },
         "2025-02-24T09:30:00Z": {
-            "sms":   {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
+            "sms": {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
             "email": {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
         },
         "2025-02-24T16:59:59Z": {
-            "sms":   {"delivered": 4, "failure": 0, "pending": 0, "requested": 4},
+            "sms": {"delivered": 4, "failure": 0, "pending": 0, "requested": 4},
             "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
         },
     }
@@ -1965,18 +1619,22 @@ def test_local_conversion_phoenix():
     """Test aggregator logic in Mountain Time, no DST (America/Phoenix)."""
     stats_utc = {
         "2025-02-25T01:00:00Z": {
-            "sms":   {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
+            "sms": {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
             "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
         },
         "2025-02-25T12:00:00Z": {
-            "sms":   {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
+            "sms": {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
             "email": {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
         },
     }
 
     with patch("app.main.views.dashboard.datetime", wraps=datetime) as mock_dt:
-        mock_dt.now.return_value = datetime(2025, 2, 25, 12, 0, 0, tzinfo=ZoneInfo("America/Phoenix"))
-        local_stats = get_local_daily_stats_for_last_x_days(stats_utc, "America/Phoenix", days=1)
+        mock_dt.now.return_value = datetime(
+            2025, 2, 25, 12, 0, 0, tzinfo=ZoneInfo("America/Phoenix")
+        )
+        local_stats = get_local_daily_stats_for_last_x_days(
+            stats_utc, "America/Phoenix", days=1
+        )
 
         assert len(local_stats) == 1
         (day_key,) = local_stats.keys()
@@ -1988,18 +1646,22 @@ def test_local_conversion_honolulu():
     """Test aggregator logic in Hawaii (Pacific/Honolulu)."""
     stats_utc = {
         "2025-02-25T03:00:00Z": {
-            "sms":   {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
+            "sms": {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
             "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
         },
         "2025-02-25T21:00:00Z": {
-            "sms":   {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
+            "sms": {"delivered": 1, "failure": 0, "pending": 0, "requested": 1},
             "email": {"delivered": 2, "failure": 0, "pending": 0, "requested": 2},
         },
     }
 
     with patch("app.main.views.dashboard.datetime", wraps=datetime) as mock_dt:
-        mock_dt.now.return_value = datetime(2025, 2, 25, 12, 0, 0, tzinfo=ZoneInfo("Pacific/Honolulu"))
-        local_stats = get_local_daily_stats_for_last_x_days(stats_utc, "Pacific/Honolulu", days=1)
+        mock_dt.now.return_value = datetime(
+            2025, 2, 25, 12, 0, 0, tzinfo=ZoneInfo("Pacific/Honolulu")
+        )
+        local_stats = get_local_daily_stats_for_last_x_days(
+            stats_utc, "Pacific/Honolulu", days=1
+        )
 
         assert len(local_stats) == 1
         (day_key,) = local_stats.keys()
