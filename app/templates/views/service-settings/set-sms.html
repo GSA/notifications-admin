@@ -20,12 +20,7 @@
       <p>
         You may send up to 250,000 text messages during the pilot period.
       </p>
-      <!--<p>
-        You have a free allowance of
-        {{ '{:,}'.format(current_service.free_sms_fragment_limit) }} text messages each
-        financial year.
-      </p>-->
-      {% call form_wrapper() %}
+      {% call form_wrapper(data_force_focus=True) %}
         {{ form.enabled }}
         {{ page_footer('Save') }}
       {% endcall %}
