@@ -38,7 +38,7 @@ function attachValidation() {
             const validatedRadioNames = new Set();
 
             inputs.forEach((input) => {
-                const errorId = input.id ? `${input.id}-error` : `${input.name}-error`;
+                const errorId = input.type === "radio" ? `${input.name}-error` : `${input.id}-error`;
                 let errorElement = document.getElementById(errorId);
 
                 if (!errorElement) {
@@ -46,21 +46,20 @@ function attachValidation() {
                     errorElement.id = errorId;
                     errorElement.classList.add("usa-error-message");
                     errorElement.setAttribute("aria-live", "polite");
+                    errorElement.style.display = "none";
                     if (input.type === "radio") {
                         const group = form.querySelectorAll(`input[name="${input.name}"]`);
                         const lastRadio = group[group.length - 1];
                         lastRadio.parentElement.insertAdjacentElement("afterend", errorElement);
-                      } else {
+                    } else {
                         input.insertAdjacentElement("afterend", errorElement);
-                      }                }
+                    }
+                }
 
                 if (input.type === "radio") {
-                    if (validatedRadioNames.has(input.name)) {
-                        return; // already validated this group
-                      }
-                      validatedRadioNames.add(input.name);
-                    // Find all radio buttons with the same name
-                    const radioGroup = document.querySelectorAll(`input[name="${input.name}"]`);
+                    if (validatedRadioNames.has(input.name)) return;
+                    validatedRadioNames.add(input.name);
+                    const radioGroup = form.querySelectorAll(`input[name="${input.name}"]`);
                     const isChecked = Array.from(radioGroup).some(radio => radio.checked);
 
                     if (!isChecked) {
@@ -87,19 +86,18 @@ function attachValidation() {
 
         inputs.forEach((input) => {
             input.addEventListener("input", function () {
-                const errorElement = document.getElementById(input.id ? `${input.id}-error` : `${input.name}-error`);
+                const errorId = input.type === "radio" ? `${input.name}-error` : `${input.id}-error`;
+                const errorElement = document.getElementById(errorId);
                 if (errorElement && input.value.trim() !== "") {
                     hideError(input, errorElement);
                 }
             });
-
             if (input.type === "radio") {
                 input.addEventListener("change", function () {
-                    console.log(`Radio ${input.id} changed`);
-
-                    const groupError = document.getElementById(`${input.name}-error`)
-                        || document.getElementById(`${input.id}-error`);
-                    if (groupError) hideError(input, groupError);
+                    const errorElement = document.getElementById(`${input.name}-error`);
+                    if (errorElement) {
+                        hideError(input, errorElement);
+                    }
                 });
             }
         });
