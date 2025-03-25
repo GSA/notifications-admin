@@ -388,18 +388,6 @@ files = [
 ]
 
 [[package]]
-name = "chardet"
-version = "5.2.0"
-description = "Universal encoding detector for Python 3"
-optional = false
-python-versions = ">=3.7"
-groups = ["main"]
-files = [
-    {file = "chardet-5.2.0-py3-none-any.whl", hash = "sha256:e1cf59446890a00105fe7b7912492ea04b6e6f06d4b742b2c788469e34c82970"},
-    {file = "chardet-5.2.0.tar.gz", hash = "sha256:1b3b6ff479a8c414bc3fa2c0852995695c4a026dcd6d0633b2dd092ca39c1cf7"},
-]
-
-[[package]]
 name = "charset-normalizer"
 version = "3.4.0"
 description = "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet."
@@ -1365,14 +1353,14 @@ testing = ["black", "isort", "pytest (>=6,!=7.0.0)", "pytest-xdist (>=2)", "twin
 
 [[package]]
 name = "lml"
-version = "0.1.0"
+version = "0.2.0"
 description = "Load me later. A lazy plugin management system."
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "lml-0.1.0-py2.py3-none-any.whl", hash = "sha256:ec06e850019942a485639c8c2a26bdb99eae24505bee7492b649df98a0bed101"},
-    {file = "lml-0.1.0.tar.gz", hash = "sha256:57a085a29bb7991d70d41c6c3144c560a8e35b4c1030ffb36d85fa058773bcc5"},
+    {file = "lml-0.2.0-py2.py3-none-any.whl", hash = "sha256:20c80728189e46e8d986f5d0cdf6d83c493471fc25b1c31a8cb3fa96e80b58f8"},
+    {file = "lml-0.2.0.tar.gz", hash = "sha256:8dd5afb4367a593d1cdb2144a05874cd9938f5266bebb0c9e1413200423c0d74"},
 ]
 
 [[package]]
@@ -2279,19 +2267,18 @@ dev = ["black", "build", "flake8", "flake8-black", "isort", "jupyter-console", "
 
 [[package]]
 name = "pyexcel"
-version = "0.7.0"
+version = "0.7.2"
 description = "A wrapper library that provides one API to read, manipulate and writedata in different excel formats"
 optional = false
 python-versions = ">=3.6"
 groups = ["main"]
 files = [
-    {file = "pyexcel-0.7.0-py2.py3-none-any.whl", hash = "sha256:ddc6904512bfa2ecda509fb3b58229bb30db14498632fd9e7a5ba7bbfb02ed1b"},
-    {file = "pyexcel-0.7.0.tar.gz", hash = "sha256:fbf0eee5d93b96cef6f19a9f00703f22c0a64f19728d91b95428009a52129709"},
+    {file = "pyexcel-0.7.2-py2.py3-none-any.whl", hash = "sha256:a71bf4f8154f9e380645138881f3292ee81eaffa374996adfd8f2edcc0c6cabb"},
+    {file = "pyexcel-0.7.2.tar.gz", hash = "sha256:a0d6eb788eb06e81a1b438c0e7c00fee080465f3397fbcffe5cec34aebe6a32a"},
 ]
 
 [package.dependencies]
-chardet = "*"
-lml = ">=0.0.4"
+lml = ">=0.2.0"
 pyexcel-io = ">=0.6.2"
 texttable = ">=0.8.2"
 
@@ -3322,4 +3309,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12.2"
-content-hash = "3948df5abe918572aac44fe7091a4930b5810373f7efc0fcde14ec08fab736bc"
+content-hash = "16173b60b0ab3187d99c1f928c5d5490e368820b48202236e665470e738ade9e"
