@@ -2341,14 +2341,14 @@ pyexcel-io = ">=0.6.2"
 
 [[package]]
 name = "pyexcel-xls"
-version = "0.7.0"
+version = "0.7.1"
 description = "A wrapper library to read, manipulate and write data in xls format. Itreads xlsx and xlsm format"
 optional = false
 python-versions = ">=3.6"
 groups = ["main"]
 files = [
-    {file = "pyexcel-xls-0.7.0.tar.gz", hash = "sha256:5ec606ef8667aafbb0c3fbd8242a7c23bf175ee7c10b08f70799b84fb2db84cb"},
-    {file = "pyexcel_xls-0.7.0-py2.py3-none-any.whl", hash = "sha256:31c6652ddc8758428ed59c7f2c34a1173abb8f3c7ebdba6fce051ff6f78b8135"},
+    {file = "pyexcel_xls-0.7.1-py2.py3-none-any.whl", hash = "sha256:5fd1bc29a50ad7abf5e5d5b6b0dfa1f83e01a97dbb3e7a9dc8ef118d5b78b46a"},
+    {file = "pyexcel_xls-0.7.1.tar.gz", hash = "sha256:0e8c598dc840f9216507f1c16975c18b06e36df09acd79bda1a9de2f9cad0761"},
 ]
 
 [package.dependencies]
@@ -3309,4 +3309,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12.2"
-content-hash = "3f1bddef8faad3e773cad9d7f67f2c05fe34e8d678e9281b1704a830fd129407"
+content-hash = "b066d7ae7af2903cbab3abe8b75a4cc0cfe25145deed2f7ed6420a338b62941d"
