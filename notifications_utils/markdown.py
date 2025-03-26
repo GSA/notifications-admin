@@ -107,10 +107,11 @@ class EmailRenderer(mistune.HTMLRenderer):
         title_attr = f' title="{title}"' if title else ""
         return f'<a style="{LINK_STYLE}" href="{href}"{title_attr}>{display_text}</a>'
 
-    def autolink(self, link, is_email=False):
+    def autolink(self, link, is_email=False): # noqa
+
         return create_sanitised_html_for_url(link, style=LINK_STYLE)
 
-    def image(self, src, alt="", title=None, url=None):
+    def image(self, src, alt="", title=None, url=None): # noqa
         return ""
 
     def strikethrough(self, text):
