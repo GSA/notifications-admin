@@ -2742,8 +2742,8 @@ def test_broadcast_message_too_long(
         (EmailPreviewTemplate, "email", {}),
         (HTMLEmailTemplate, "email", {}),
         (PlainTextEmailTemplate, "email", {}),
-        #(LetterPreviewTemplate, "letter", {}),
-        #(LetterImageTemplate, "letter", {"image_url": "foo", "page_count": 1}),
+        # (LetterPreviewTemplate, "letter", {}),
+        # (LetterImageTemplate, "letter", {"image_url": "foo", "page_count": 1}),
     ],
 )
 def test_message_too_long_limit_bigger_or_nonexistent_for_non_sms_templates(
@@ -2873,7 +2873,7 @@ def test_message_too_long_for_an_email_message_within_limits(
         (PlainTextEmailTemplate, "email", {}),
         (HTMLEmailTemplate, "email", {}),
         (EmailPreviewTemplate, "email", {}),
-        #(LetterPreviewTemplate, "letter", {}),
+        # (LetterPreviewTemplate, "letter", {}),
     ],
 )
 def test_whitespace_in_subjects(template_class, template_type, subject, extra_args):
