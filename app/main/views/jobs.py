@@ -21,6 +21,7 @@ from app import (
     format_datetime_table,
     notification_api_client,
     service_api_client,
+    socketio,
 )
 from app.formatters import get_time_left, message_count_noun
 from app.main import main
@@ -28,6 +29,7 @@ from app.main.forms import SearchNotificationsForm
 from app.models.job import Job
 from app.utils import parse_filter_args, set_status_filters
 from app.utils.csv import generate_notifications_csv
+from flask_socketio import emit, SocketIO, send, join_room
 from app.utils.pagination import (
     generate_next_dict,
     generate_previous_dict,
@@ -57,6 +59,7 @@ def view_job(service_id, job_id):
 
     filter_args = parse_filter_args(request.args)
     filter_args["status"] = set_status_filters(filter_args)
+
     return render_template(
         "views/jobs/job.html",
         job=job,
@@ -103,9 +106,11 @@ def view_job_csv(service_id, job_id):
 @user_has_permissions("send_messages")
 def cancel_job(service_id, job_id):
     Job.from_id(job_id, service_id=service_id).cancel()
+
     return redirect(url_for("main.service_dashboard", service_id=service_id))
 
-
+# //this is the resource that gets updated by being passed to ajax via updates_url to data-resource
+# and everything that is within get_job_partials is the html that gets updated
 @main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>.json")
 @user_has_permissions()
 def view_job_updates(service_id, job_id):
@@ -113,6 +118,38 @@ def view_job_updates(service_id, job_id):
 
     return jsonify(**get_job_partials(job))
 
+# def emit_job_update(service_id, job, job_id):
+#     print("⚡️ Emitting job update for:", job_id)
+#     socketio.emit(
+#         "job_update",
+#         {"key": "status", "html": render_template("partials/jobs/status.html", job=job)},
+#         room=f"job-{job_id}"
+#     )
+
+@socketio.on("join")
+def on_join(data):
+    room = data["room"]
+    join_room(room)
+    print(f"Client joined room {room}")
+
+@main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>/test-socket-update")
+def test_socket_update(service_id,job_id):
+    print(f"⚡️ Emitting job update for: {job_id}")
+    # Replace with a real job ID and service ID for testing
+    job = Job.from_id(job_id, service_id)
+    service_id=service_id
+    job_id = job_id
+
+    # Call your emit function
+    socketio.emit(
+        "job_update",
+        {
+            "key": "status",
+            "html": "<div class='text-success'>✅ Real-time update success!</div>"
+        },
+        room=f"job-{job_id}"  # match the room name used in frontend
+    )
+    return "Update sent!"
 
 @main.route("/services/<uuid:service_id>/notifications", methods=["GET", "POST"])
 @main.route(

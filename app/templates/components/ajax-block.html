@@ -12,3 +12,17 @@
     </div>
   {% endif %}
 {% endmacro %}
+
+{% macro socket_block(partials, job_id, key, finished=False, form='') %}
+  {% if not finished %}
+    <div
+      data-module="live-content"
+      data-key="{{ key }}"
+      data-room="job-{{ job_id }}"
+    >
+  {% endif %}
+    {{ partials[key]|safe }}
+  {% if not finished %}
+    </div>
+  {% endif %}
+{% endmacro %}

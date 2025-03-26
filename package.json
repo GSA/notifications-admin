@@ -41,6 +41,7 @@
     "python": "^0.0.4",
     "query-command-supported": "1.0.0",
     "sass-embedded": "^1.86.0",
+    "socket.io-client": "^4.8.1",
     "textarea-caret": "3.1.0",
     "timeago": "1.6.7",
     "vinyl-buffer": "^1.0.1",

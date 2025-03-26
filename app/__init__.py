@@ -20,6 +20,7 @@ from flask import (
 )
 from flask.globals import request_ctx
 from flask_login import LoginManager, current_user
+from flask_socketio import SocketIO
 from flask_talisman import Talisman
 from flask_wtf import CSRFProtect
 from flask_wtf.csrf import CSRFError
@@ -121,6 +122,7 @@ from notifications_utils.url_safe_token import generate_token
 login_manager = LoginManager()
 csrf = CSRFProtect()
 talisman = Talisman()
+socketio = SocketIO()
 
 # The current service attached to the request stack.
 current_service = LocalProxy(partial(getattr, request_ctx, "service"))
@@ -217,6 +219,7 @@ def create_app(application):
 
     init_govuk_frontend(application)
     init_jinja(application)
+    socketio.init_app(application, cors_allowed_origins=['http://localhost:6012'])
 
     for client in (
         csrf,
