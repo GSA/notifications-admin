@@ -10,7 +10,7 @@ package-mode = false
 axe-core-python = "^0.1.0"
 python = "^3.12.2"
 ago = "~=0.0.95"
-beautifulsoup4 = "^4.12.3"
+beautifulsoup4 = "^4.13.3"
 blinker = "~=1.8"
 exceptiongroup = "==1.2.2"
 flask = "~=3.0"
