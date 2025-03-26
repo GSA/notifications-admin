@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io('http://localhost:6011');
 const jobId = document.querySelector("[data-job-id]").dataset.jobId;
 
 socket.on('connect', () => {
@@ -6,15 +6,7 @@ socket.on('connect', () => {
 });
 
 
-  // Join a room
-  socket.emit("join", { room: `job-${jobId}` });
-  console.log("🧠 Joined room:", `job-${jobId}`);
-
-  // Listen for job updates
-  socket.on("job_update", function (data) {
-    const el = document.querySelector(`[data-key="${data.key}"]`);
-    if (el) {
-      el.textContent = "✅ Real-time update success!";
-      el.classList.add("text-success"); // Add a class instead
-    }
+  socket.on('job_update', (data) => {
+    console.log('📡 Received job update:', data);
+    document.getElementById('status').innerText = `Job ${data.job_id}: ${data.status}`;
   });
