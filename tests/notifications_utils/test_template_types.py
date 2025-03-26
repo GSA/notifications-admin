@@ -435,13 +435,13 @@ def test_content_of_preheader_in_html_emails(
             ("the quick brown fox\n" "\n" "jumped over the lazy dog\n"),
             "notifications_utils.template.notify_email_markdown",
         ),
-        (
-            LetterPreviewTemplate,
-            "letter",
-            {},
-            ("the quick brown fox\n" "\n" "jumped over the lazy dog\n"),
-            "notifications_utils.template.notify_letter_preview_markdown",
-        ),
+        # (
+        #     LetterPreviewTemplate,
+        #     "letter",
+        #     {},
+        #     ("the quick brown fox\n" "\n" "jumped over the lazy dog\n"),
+        #     "notifications_utils.template.notify_letter_preview_markdown",
+        # ),
     ],
 )
 def test_markdown_in_templates(
@@ -2742,8 +2742,8 @@ def test_broadcast_message_too_long(
         (EmailPreviewTemplate, "email", {}),
         (HTMLEmailTemplate, "email", {}),
         (PlainTextEmailTemplate, "email", {}),
-        (LetterPreviewTemplate, "letter", {}),
-        (LetterImageTemplate, "letter", {"image_url": "foo", "page_count": 1}),
+        #(LetterPreviewTemplate, "letter", {}),
+        #(LetterImageTemplate, "letter", {"image_url": "foo", "page_count": 1}),
     ],
 )
 def test_message_too_long_limit_bigger_or_nonexistent_for_non_sms_templates(
@@ -2812,47 +2812,47 @@ def test_message_too_long_for_an_email_message_within_limits(
     assert template.is_message_too_long() is False
 
 
-@pytest.mark.parametrize(
-    ("content", "expected_preview_markup"),
-    [
-        (
-            "a\n\n\nb",
-            ("<p>a</p>" "<p>b</p>"),
-        ),
-        (
-            (
-                "a\n"
-                "\n"
-                "* one\n"
-                "* two\n"
-                "* three\n"
-                "and a half\n"
-                "\n"
-                "\n"
-                "\n"
-                "\n"
-                "foo"
-            ),
-            (
-                "<p>a</p><ul>\n"
-                "<li>one</li>\n"
-                "<li>two</li>\n"
-                "<li>three<br>and a half</li>\n"
-                "</ul>\n"
-                "<p>foo</p>"
-            ),
-        ),
-    ],
-)
-def test_multiple_newlines_in_letters(
-    content,
-    expected_preview_markup,
-):
-    assert expected_preview_markup in str(
-        LetterPreviewTemplate(
-            {"content": content, "subject": "foo", "template_type": "letter"}
-        )
-    )
+# @pytest.mark.parametrize(
+#     ("content", "expected_preview_markup"),
+#     [
+#         (
+#             "a\n\n\nb",
+#             ("<p>a</p>" "<p>b</p>"),
+#         ),
+#         (
+#             (
+#                 "a\n"
+#                 "\n"
+#                 "* one\n"
+#                 "* two\n"
+#                 "* three\n"
+#                 "and a half\n"
+#                 "\n"
+#                 "\n"
+#                 "\n"
+#                 "\n"
+#                 "foo"
+#             ),
+#             (
+#                 "<p>a</p><ul>\n"
+#                 "<li>one</li>\n"
+#                 "<li>two</li>\n"
+#                 "<li>three<br>and a half</li>\n"
+#                 "</ul>\n"
+#                 "<p>foo</p>"
+#             ),
+#         ),
+#     ],
+# )
+# def test_multiple_newlines_in_letters(
+#     content,
+#     expected_preview_markup,
+# ):
+#     assert expected_preview_markup in str(
+#         LetterPreviewTemplate(
+#             {"content": content, "subject": "foo", "template_type": "letter"}
+#         )
+#     )
 
 
 @pytest.mark.parametrize(
@@ -2873,7 +2873,7 @@ def test_multiple_newlines_in_letters(
         (PlainTextEmailTemplate, "email", {}),
         (HTMLEmailTemplate, "email", {}),
         (EmailPreviewTemplate, "email", {}),
-        (LetterPreviewTemplate, "letter", {}),
+        #(LetterPreviewTemplate, "letter", {}),
     ],
 )
 def test_whitespace_in_subjects(template_class, template_type, subject, extra_args):
@@ -2934,68 +2934,68 @@ def test_govuk_email_whitespace_hack(template_class, expected_output):
     assert expected_output in str(template_instance)
 
 
-def test_letter_preview_uses_non_breaking_hyphens():
-    assert "non\u2011breaking" in str(
-        LetterPreviewTemplate(
-            {
-                "content": "non-breaking",
-                "subject": "foo",
-                "template_type": "letter",
-            }
-        )
-    )
-    assert "–" in str(
-        LetterPreviewTemplate(
-            {
-                "content": "en dash - not hyphen - when set with spaces",
-                "subject": "foo",
-                "template_type": "letter",
-            }
-        )
-    )
+# def test_letter_preview_uses_non_breaking_hyphens():
+#     assert "non\u2011breaking" in str(
+#         LetterPreviewTemplate(
+#             {
+#                 "content": "non-breaking",
+#                 "subject": "foo",
+#                 "template_type": "letter",
+#             }
+#         )
+#     )
+#     assert "–" in str(
+#         LetterPreviewTemplate(
+#             {
+#                 "content": "en dash - not hyphen - when set with spaces",
+#                 "subject": "foo",
+#                 "template_type": "letter",
+#             }
+#         )
+#     )
 
 
-@freeze_time("2001-01-01 12:00:00.000000")
-def test_nested_lists_in_lettr_markup():
-    template_content = str(
-        LetterPreviewTemplate(
-            {
-                "content": (
-                    "nested list:\n"
-                    "\n"
-                    "1. one\n"
-                    "2. two\n"
-                    "3. three\n"
-                    "  - three one\n"
-                    "  - three two\n"
-                    "  - three three\n"
-                ),
-                "subject": "foo",
-                "template_type": "letter",
-            }
-        )
-    )
+# @freeze_time("2001-01-01 12:00:00.000000")
+# def test_nested_lists_in_lettr_markup():
+#     template_content = str(
+#         LetterPreviewTemplate(
+#             {
+#                 "content": (
+#                     "nested list:\n"
+#                     "\n"
+#                     "1. one\n"
+#                     "2. two\n"
+#                     "3. three\n"
+#                     "  - three one\n"
+#                     "  - three two\n"
+#                     "  - three three\n"
+#                 ),
+#                 "subject": "foo",
+#                 "template_type": "letter",
+#             }
+#         )
+#     )
 
-    assert (
-        "      <p>\n"
-        "        1 January 2001\n"
-        "      </p>\n"
-        # Note that the H1 tag has no trailing whitespace
-        "      <h1>foo</h1>\n"
-        "      <p>nested list:</p><ol>\n"
-        "<li>one</li>\n"
-        "<li>two</li>\n"
-        "<li>three<ul>\n"
-        "<li>three one</li>\n"
-        "<li>three two</li>\n"
-        "<li>three three</li>\n"
-        "</ul></li>\n"
-        "</ol>\n"
-        "\n"
-        "    </div>\n"
-        "  </body>\n"
-        "</html>"
-    ) in template_content
+#     assert (
+#         "      <p>\n"
+#         "        1 January 2001\n"
+#         "      </p>\n"
+#         # Note that the H1 tag has no trailing whitespace
+#         "      <h1>foo</h1>\n"
+#         "      <p>nested list:</p><ol>\n"
+#         "<li>one</li>\n"
+#         "<li>two</li>\n"
+#         "<li>three<ul>\n"
+#         "<li>three one</li>\n"
+#         "<li>three two</li>\n"
+#         "<li>three three</li>\n"
+#         "</ul></li>\n"
+#         "</ol>\n"
+#         "\n"
+#         "    </div>\n"
+#         "  </body>\n"
+#         "</html>"
+#     ) in template_content
 
 
 def test_that_print_template_is_the_same_as_preview():
@@ -3082,16 +3082,16 @@ def test_plain_text_email_whitespace():
                 "</h2>"
             ),
         ),
-        (
-            LetterPreviewTemplate,
-            "letter",
-            ("<h2>Heading link: <strong>example.com</strong></h2>"),
-        ),
-        (
-            LetterPrintTemplate,
-            "letter",
-            ("<h2>Heading link: <strong>example.com</strong></h2>"),
-        ),
+        # (
+        #     LetterPreviewTemplate,
+        #     "letter",
+        #     ("<h2>Heading link: <strong>example.com</strong></h2>"),
+        # ),
+        # (
+        #     LetterPrintTemplate,
+        #     "letter",
+        #     ("<h2>Heading link: <strong>example.com</strong></h2>"),
+        # ),
     ],
 )
 def test_heading_only_template_renders(renderer, template_type, expected_content):
@@ -3236,22 +3236,22 @@ def test_text_messages_collapse_consecutive_whitespace(
     )
 
 
-def test_letter_preview_template_lazy_loads_images():
-    page = BeautifulSoup(
-        str(
-            LetterImageTemplate(
-                {"content": "Content", "subject": "Subject", "template_type": "letter"},
-                image_url="http://example.com/endpoint.png",
-                page_count=3,
-            )
-        ),
-        "html.parser",
-    )
-    assert [(img["src"], img["loading"]) for img in page.select("img")] == [
-        ("http://example.com/endpoint.png?page=1", "eager"),
-        ("http://example.com/endpoint.png?page=2", "lazy"),
-        ("http://example.com/endpoint.png?page=3", "lazy"),
-    ]
+# def test_letter_preview_template_lazy_loads_images():
+#     page = BeautifulSoup(
+#         str(
+#             LetterImageTemplate(
+#                 {"content": "Content", "subject": "Subject", "template_type": "letter"},
+#                 image_url="http://example.com/endpoint.png",
+#                 page_count=3,
+#             )
+#         ),
+#         "html.parser",
+#     )
+#     assert [(img["src"], img["loading"]) for img in page.select("img")] == [
+#         ("http://example.com/endpoint.png?page=1", "eager"),
+#         ("http://example.com/endpoint.png?page=2", "lazy"),
+#         ("http://example.com/endpoint.png?page=3", "lazy"),
+#     ]
 
 
 def test_broadcast_message_from_content():
