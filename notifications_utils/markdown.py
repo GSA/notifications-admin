@@ -1,3 +1,4 @@
+from celery import current_app
 import mistune
 from notifications_utils.formatters import create_sanitised_html_for_url
 import re
@@ -112,6 +113,7 @@ class EmailRenderer(mistune.HTMLRenderer):
         return create_sanitised_html_for_url(link, style=LINK_STYLE)
 
     def image(self, src, alt="", title=None, url=None): # noqa
+        current_app.logger.debug(f"src={src} alt={alt} title={title} url={url}")
         return ""
 
     def strikethrough(self, text):
@@ -202,6 +204,7 @@ class PreheaderRenderer(PlainTextRenderer):
         return text or link
 
     def image(self, src, alt="", title=None, url=None):
+        current_app.logger.debug("src={src} alt={alt} title={title} url={url}")
         return ""
 
 
@@ -220,11 +223,13 @@ class LetterPreviewRenderer(mistune.HTMLRenderer):
         return code.strip()
 
     def link(self, link, text=None, title=None, url=None):
+        current_app.logger(f"title={title}")
         href = url
         display_text = text or link
         return f"{display_text}: <strong>{href.replace('http://', '').replace('https://', '')}</strong>"
 
     def autolink(self, link, is_email=False):
+        current_app.logger.debug(f"is_email={is_email}")
         return f"<strong>{link.replace('http://', '')}.replace(https://', '')</strong>"
 
     def thematic_break(self):
