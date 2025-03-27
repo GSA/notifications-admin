@@ -127,15 +127,6 @@ class EmailRenderer(mistune.HTMLRenderer):
 class PlainTextRenderer(mistune.HTMLRenderer):
     COLUMN_WIDTH = 65
 
-    def table(self, header, body):
-        return ""
-
-    def table_row(self, content):
-        return ""
-
-    def table_cell(self, content, **kwargs):
-        return ""
-
     def heading(self, text, level):
         if level == 1:
             return f"\n\n\n{text}\n{'-' * self.COLUMN_WIDTH}"
@@ -159,9 +150,17 @@ class PlainTextRenderer(mistune.HTMLRenderer):
         return "\n"
 
     def list(self, text, ordered, level=None, **kwargs):
+
+        if ordered is True:
+            text = text.replace("•", "1.", 1)
+            text = text.replace("•", "2.", 1)
+            text = text.replace("•", "3.", 1)
+
+        # print(f"LIST ordered={ordered} text={text}")
         return f"\n{text}"
 
-    def list_item(self, text, level=None):
+    def list_item(self, text, ordered=None, level=None):
+        # print(f"LIST ITEM = {text} ordered={ordered} level {level}")
         return f"\n• {text.strip()}"
 
     def link(self, link=None, text=None, title=None, url=None, **kwargs):
@@ -194,13 +193,14 @@ class PlainTextRenderer(mistune.HTMLRenderer):
 
 
 class PreheaderRenderer(PlainTextRenderer):
+
     def heading(self, text, level):
-        return self.paragraph(text)
+        return html.unescape(self.paragraph(text))
 
     def thematic_break(self):
         return ""
 
-    def link(self, link, text=None, title=None):
+    def link(self, link, text=None, title=None, url=None):
         return text or link
 
     def image(self, src, alt="", title=None, url=None):
@@ -273,6 +273,7 @@ _notify_plain_text_email_markdown = mistune.create_markdown(
 
 
 def notify_email_markdown(text):
+    text = escape_plus_lists(text)
     return _notify_email_markdown(autolinkify(text))
 
 
