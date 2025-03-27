@@ -8,8 +8,8 @@ from notifications_utils.field import Placeholder
 @pytest.mark.parametrize(
     ("body", "expected"),
     [
-        ("((with-brackets))", "with-brackets"),
-        ("without-brackets", "without-brackets"),
+        ("((with-parenthesis))", "with-parenthesis"),
+        ("without-parenthesis", "without-parenthesis"),
     ],
 )
 def test_placeholder_returns_name(body, expected):

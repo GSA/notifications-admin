@@ -56,7 +56,7 @@ def test_for_commas_in_placeholders(
 ):
     with pytest.raises(ValidationError) as error:
         NoCommasInPlaceHolders()(None, _gen_mock_field("Hello ((name,date))"))
-    assert str(error.value) == "You cannot put commas between double brackets"
+    assert str(error.value) == "You cannot put commas between double parenthesis"
     NoCommasInPlaceHolders()(None, _gen_mock_field("Hello ((name))"))
 
 
