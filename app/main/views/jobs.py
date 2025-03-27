@@ -108,6 +108,8 @@ def cancel_job(service_id, job_id):
 
 # //this is the resource that gets updated by being passed to ajax via updates_url to data-resource
 # and everything that is within get_job_partials is the html that gets updated
+
+
 @main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>.json")
 @user_has_permissions()
 def view_job_updates(service_id, job_id):
