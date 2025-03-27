@@ -591,11 +591,25 @@ td.table-empty-message {
         .big-number-smallest {
           font-size: units(3);
         }
+        .pill-item__label {
+          color: white;
+        }
         &:not(.pill-item--selected):hover {
           background: color('blue-warm-70v');
+
+          .pill-item__label {
+            color: white;
+          }
         }
-        &.pill-item--selected:hover {
-          color: color('blue-60v');
+        &.pill-item--selected {
+          .pill-item__label {
+            color: color('blue-60v');
+          }
+          &:hover {
+            .pill-item__label {
+              color: color('blue-60v');
+            }
+          }
         }
       }
     }
