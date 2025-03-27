@@ -1,4 +1,4 @@
-from celery import current_app
+from flask import current_app
 import mistune
 from notifications_utils.formatters import create_sanitised_html_for_url
 import re
@@ -108,11 +108,11 @@ class EmailRenderer(mistune.HTMLRenderer):
         title_attr = f' title="{title}"' if title else ""
         return f'<a style="{LINK_STYLE}" href="{href}"{title_attr}>{display_text}</a>'
 
-    def autolink(self, link, is_email=False): # noqa
+    def autolink(self, link, is_email=False):  # noqa
 
         return create_sanitised_html_for_url(link, style=LINK_STYLE)
 
-    def image(self, src, alt="", title=None, url=None): # noqa
+    def image(self, src, alt="", title=None, url=None):  # noqa
         current_app.logger.debug(f"src={src} alt={alt} title={title} url={url}")
         return ""
 
