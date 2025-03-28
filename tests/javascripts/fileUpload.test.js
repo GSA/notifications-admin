@@ -72,10 +72,11 @@ describe('File upload', () => {
 
     });
 
-    test("It should add a link to cancel the upload by reloading the page", () => {
-
-      expect(form.querySelector("a[href='']")).not.toBeNull();
-
+    test("It should display a disabled Uploading button", () => {
+      const uploadingButton = form.querySelector("button.uploading-button");
+      expect(uploadingButton).not.toBeNull();
+      expect(uploadingButton.textContent).toMatch(/Uploading/);
+      expect(uploadingButton.getAttribute('aria-disabled')).toBe("true");
     });
 
   });
