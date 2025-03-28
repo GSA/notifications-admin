@@ -3,12 +3,21 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/components/back-link/macro.njk" import usaBackLink %}
-
+{% from 'components/ajax-block.html' import socket_block %}
 {% block service_page_title %}
   {{ "Message status" }}
 {% endblock %}
 
 {% block maincolumn_content %}
+{{ socket_block(partials, job_id, "status") }}
+<div id="status" data-key="status" data-job-id="{{ job.id }}">
+  ⏳ Waiting for updates...
+</div>
+<!-- <div data-key="status">
+  {{ partials["status"]|safe }}
+</div> -->
+<!-- {{emit_job_update}}
+{{job.id}} -->
 
     {{ page_header("Message status") }}
     {% if not job.finished_processing %}
