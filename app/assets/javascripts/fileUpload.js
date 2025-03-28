@@ -12,12 +12,13 @@
         </button>
       `);
 
-      // Screen reader live region
       const $srStatus = $('#upload-status-live');
       if ($srStatus.length) {
-        $srStatus.text('File is uploading');
-      } else {
-        this.$form.prepend(`<span id="upload-status-live" class="usa-sr-only" role="status" aria-live="polite">File is uploading</span>`);
+        // Clear and re-set the content to ensure it's treated as a change
+        $srStatus.html('');
+        setTimeout(() => {
+          $srStatus.html('<span>File is uploading</span>');
+        }, 50);
       }
     };
 
@@ -25,19 +26,21 @@
 
       this.$form = $(component);
 
-      // The label gets styled like a button and is used to hide the native file upload control. This is so that
-      // users see a button that looks like the others on the site.
-
-      this.$form.find('label.file-upload-button').addClass('usa-button margin-bottom-1').attr( {role: 'button', tabindex: '0'} );
+      // Handle "Upload your file" button click — CSP-safe version
+      this.$form.on('click', '[data-module="upload-trigger"]', function () {
+        const inputId = $(this).data('file-input-id');
+        const fileInput = document.getElementById(inputId);
+        if (fileInput) fileInput.click();
+      });
 
       // Clear the form if the user navigates back to the page
       $(window).on("pageshow", () => this.$form[0].reset());
 
-      // Need to put the event on the container, not the input for it to work properly
-      this.$form.on(
-        'change', '.file-upload-field',
-        () => this.submit() && this.showCancelButton()
-      );
+      // Watch for file input changes
+      this.$form.on('change', '.file-upload-field', () => {
+        this.submit();
+        this.showCancelButton();
+      });
 
     };
 

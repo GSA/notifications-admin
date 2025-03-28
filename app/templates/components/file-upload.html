@@ -27,17 +27,21 @@
     </label>
     {{ field(**{
       'class': 'file-upload-field',
+      'id': field.name,
       'accept': allowed_file_extensions|format_list_items('.{item}')|join(',')|e
     }) }}
-    <label class="file-upload-button" for="{{ field.name }}">
-      {{ button_text }}
-    </label>
+    <button type="button"
+        class="usa-button file-upload-button"
+        data-module="upload-trigger"
+        data-file-input-id="{{ field.name }}">
+    {{ button_text }}
+    </button>
     {% if alternate_link and alternate_link_text %}
       <span class="file-upload-alternate-link">
         or <a class="usa-link" href="{{ alternate_link }}">{{ alternate_link_text }}</a>
       </span>
     {% endif %}
-    <label class="file-upload-filename" for="{{ field.name }}"></label>
+    <span class="file-upload-filename" aria-live="polite"></span>
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
     {{ usaButton({ "text": "Submit", "classes": "file-upload-submit" }) }}
   </form>

@@ -21,7 +21,6 @@ Error
 {% block maincolumn_content %}
 
 <div class="">
-  {% call banner_wrapper(type='dangerous') %}
 
   {% if recipients.too_many_rows %}
 
@@ -132,7 +131,6 @@ Error
 
   {% endif %}
 
-  {% endcall %}
 </div>
 
 <!--hide the upload button and back to top link for one off sends-->
@@ -150,7 +148,7 @@ Error
     ) }}
     {% endif %}
   </div>
-  <a href="#content" class="usa-link back-to-top-link">Back to top</a>
+  <a href="#content" class="usa-link back-to-top-link display-block margin-top-2">Back to top</a>
 </div>
 {% endif %}
 
