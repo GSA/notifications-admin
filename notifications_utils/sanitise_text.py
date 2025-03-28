@@ -68,7 +68,7 @@ class SanitiseText:
         if decomposed != "" and "<" not in decomposed:
             # decomposition lists the unicode code points a character is made up of, if it's made up of multiple
             # points. For example the á character returns '0061 0301', as in, the character a, followed by a combining
-            # acute accent. The decomposition might, however, also contain a decomposition mapping in angle brackets.
+            # acute accent. The decomposition might, however, also contain a decomposition mapping in angle parenthesis.
             # For a full list of the types, see here: https://www.compart.com/en/unicode/decomposition.
             # If it's got a mapping, we're not sure how best to downgrade it, so just see if it's in the
             # REPLACEMENT_CHARACTERS map. If not, then it's probably a letter with a modifier, eg á

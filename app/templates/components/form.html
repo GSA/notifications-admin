@@ -5,7 +5,8 @@
   class=None,
   id=None,
   module=None,
-  data_kwargs={}
+  data_kwargs={},
+  data_force_focus=False
 ) %}
   <form
     method="{{ method }}"
@@ -19,6 +20,7 @@
         data-{{ key }}="{{ val }}"
       {% endif %}
     {% endfor %}
+    {% if data_force_focus %}data-force-focus="{{ data_force_focus }}"{% endif %}
     novalidate
   >
     {{ caller() }}

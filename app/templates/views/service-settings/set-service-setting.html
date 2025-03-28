@@ -15,7 +15,7 @@
 
   <div class="grid-row">
     <div class="grid-col-10">
-      {% call form_wrapper() %}
+      {% call form_wrapper(data_force_focus=True) %}
         {{ form.enabled(param_extensions={
           "fieldset": {
             "legend": {

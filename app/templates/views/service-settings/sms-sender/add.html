@@ -16,7 +16,7 @@
 
   {{ page_header('Add text message sender') }}
 
-  {% call form_wrapper() %}
+  {% call form_wrapper(data_force_focus=True) %}
     {{ form.sms_sender(param_extensions={
       "hint": {"text": "Up to 11 characters, letters, numbers and spaces only"}
     }) }}
