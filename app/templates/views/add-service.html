@@ -14,7 +14,7 @@
 
     {{ page_header('About your service') }}
 
-    {% call form_wrapper() %}
+    {% call form_wrapper(data_force_focus=True) %}
 
       {{ form.name(param_extensions={"hint": {"text": "You can change this later"}}) }}
 

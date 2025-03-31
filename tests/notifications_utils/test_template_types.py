@@ -896,13 +896,13 @@ def test_phone_templates_normalise_whitespace(template_class):
         (
             {},
             [
-                "<span class='placeholder-no-brackets'>address line 1</span>",
-                "<span class='placeholder-no-brackets'>address line 2</span>",
-                "<span class='placeholder-no-brackets'>address line 3</span>",
-                "<span class='placeholder-no-brackets'>address line 4</span>",
-                "<span class='placeholder-no-brackets'>address line 5</span>",
-                "<span class='placeholder-no-brackets'>address line 6</span>",
-                "<span class='placeholder-no-brackets'>address line 7</span>",
+                "<span class='placeholder-no-parenthesis'>address line 1</span>",
+                "<span class='placeholder-no-parenthesis'>address line 2</span>",
+                "<span class='placeholder-no-parenthesis'>address line 3</span>",
+                "<span class='placeholder-no-parenthesis'>address line 4</span>",
+                "<span class='placeholder-no-parenthesis'>address line 5</span>",
+                "<span class='placeholder-no-parenthesis'>address line 6</span>",
+                "<span class='placeholder-no-parenthesis'>address line 7</span>",
             ],
         ),
         (
@@ -912,12 +912,12 @@ def test_phone_templates_normalise_whitespace(template_class):
             },
             [
                 "123 Fake Street",
-                "<span class='placeholder-no-brackets'>address line 2</span>",
-                "<span class='placeholder-no-brackets'>address line 3</span>",
-                "<span class='placeholder-no-brackets'>address line 4</span>",
-                "<span class='placeholder-no-brackets'>address line 5</span>",
+                "<span class='placeholder-no-parenthesis'>address line 2</span>",
+                "<span class='placeholder-no-parenthesis'>address line 3</span>",
+                "<span class='placeholder-no-parenthesis'>address line 4</span>",
+                "<span class='placeholder-no-parenthesis'>address line 5</span>",
                 "United Kingdom",
-                "<span class='placeholder-no-brackets'>address line 7</span>",
+                "<span class='placeholder-no-parenthesis'>address line 7</span>",
             ],
         ),
         (
@@ -1131,13 +1131,13 @@ def test_letter_image_renderer(
             "image_url": "http://example.com/endpoint.png",
             "page_numbers": expected_page_numbers,
             "address": [
-                "<span class='placeholder-no-brackets'>address line 1</span>",
-                "<span class='placeholder-no-brackets'>address line 2</span>",
-                "<span class='placeholder-no-brackets'>address line 3</span>",
-                "<span class='placeholder-no-brackets'>address line 4</span>",
-                "<span class='placeholder-no-brackets'>address line 5</span>",
-                "<span class='placeholder-no-brackets'>address line 6</span>",
-                "<span class='placeholder-no-brackets'>address line 7</span>",
+                "<span class='placeholder-no-parenthesis'>address line 1</span>",
+                "<span class='placeholder-no-parenthesis'>address line 2</span>",
+                "<span class='placeholder-no-parenthesis'>address line 3</span>",
+                "<span class='placeholder-no-parenthesis'>address line 4</span>",
+                "<span class='placeholder-no-parenthesis'>address line 5</span>",
+                "<span class='placeholder-no-parenthesis'>address line 6</span>",
+                "<span class='placeholder-no-parenthesis'>address line 7</span>",
             ],
             "contact_block": "10 Downing Street",
             "date": "12 December 2012",
@@ -1840,7 +1840,7 @@ def test_is_message_empty_email_and_letter_templates_tries_not_to_count_chars(
                 mock.call(
                     "subject", {}, html="escape", redact_missing_personalisation=False
                 ),
-                mock.call("((email address))", {}, with_brackets=False),
+                mock.call("((email address))", {}, with_parenthesis=False),
             ],
         ),
         (
@@ -1857,7 +1857,9 @@ def test_is_message_empty_email_and_letter_templates_tries_not_to_count_chars(
             "sms",
             {},
             [
-                mock.call("((phone number))", {}, with_brackets=False, html="escape"),
+                mock.call(
+                    "((phone number))", {}, with_parenthesis=False, html="escape"
+                ),
                 mock.call(
                     "content", {}, html="escape", redact_missing_personalisation=False
                 ),
@@ -1876,7 +1878,9 @@ def test_is_message_empty_email_and_letter_templates_tries_not_to_count_chars(
             "broadcast",
             {},
             [
-                mock.call("((phone number))", {}, with_brackets=False, html="escape"),
+                mock.call(
+                    "((phone number))", {}, with_parenthesis=False, html="escape"
+                ),
                 mock.call(
                     "content", {}, html="escape", redact_missing_personalisation=False
                 ),
@@ -1908,7 +1912,7 @@ def test_is_message_empty_email_and_letter_templates_tries_not_to_count_chars(
                         "((address line 7))"
                     ),
                     {},
-                    with_brackets=False,
+                    with_parenthesis=False,
                     html="escape",
                 ),
                 mock.call(
@@ -1939,7 +1943,7 @@ def test_is_message_empty_email_and_letter_templates_tries_not_to_count_chars(
                         "((address line 7))"
                     ),
                     {},
-                    with_brackets=False,
+                    with_parenthesis=False,
                     html="escape",
                 ),
                 mock.call(
@@ -1975,7 +1979,7 @@ def test_is_message_empty_email_and_letter_templates_tries_not_to_count_chars(
                 mock.call(
                     "subject", {}, html="escape", redact_missing_personalisation=True
                 ),
-                mock.call("((email address))", {}, with_brackets=False),
+                mock.call("((email address))", {}, with_parenthesis=False),
             ],
         ),
         (
@@ -1983,7 +1987,9 @@ def test_is_message_empty_email_and_letter_templates_tries_not_to_count_chars(
             "sms",
             {"redact_missing_personalisation": True},
             [
-                mock.call("((phone number))", {}, with_brackets=False, html="escape"),
+                mock.call(
+                    "((phone number))", {}, with_parenthesis=False, html="escape"
+                ),
                 mock.call(
                     "content", {}, html="escape", redact_missing_personalisation=True
                 ),
@@ -1994,7 +2000,9 @@ def test_is_message_empty_email_and_letter_templates_tries_not_to_count_chars(
             "broadcast",
             {"redact_missing_personalisation": True},
             [
-                mock.call("((phone number))", {}, with_brackets=False, html="escape"),
+                mock.call(
+                    "((phone number))", {}, with_parenthesis=False, html="escape"
+                ),
                 mock.call(
                     "content", {}, html="escape", redact_missing_personalisation=True
                 ),
@@ -2036,7 +2044,7 @@ def test_is_message_empty_email_and_letter_templates_tries_not_to_count_chars(
                         "((address line 7))"
                     ),
                     {},
-                    with_brackets=False,
+                    with_parenthesis=False,
                     html="escape",
                 ),
                 mock.call(
@@ -2490,7 +2498,7 @@ def test_email_preview_shows_reply_to_address(extra_args):
 @pytest.mark.parametrize(
     ("template_values", "expected_content"),
     [
-        ({}, "<span class='placeholder-no-brackets'>email address</span>"),
+        ({}, "<span class='placeholder-no-parenthesis'>email address</span>"),
         ({"email address": "test@example.com"}, "test@example.com"),
     ],
 )
@@ -2560,11 +2568,11 @@ def test_email_preview_shows_recipient_address(
             (
                 "<ul>"
                 "<li>line 1</li>"
-                '<li><span class="placeholder-no-brackets">address line 2</span></li>'
-                '<li><span class="placeholder-no-brackets">address line 3</span></li>'
-                '<li><span class="placeholder-no-brackets">address line 4</span></li>'
-                '<li><span class="placeholder-no-brackets">address line 5</span></li>'
-                '<li><span class="placeholder-no-brackets">address line 6</span></li>'
+                '<li><span class="placeholder-no-parenthesis">address line 2</span></li>'
+                '<li><span class="placeholder-no-parenthesis">address line 3</span></li>'
+                '<li><span class="placeholder-no-parenthesis">address line 4</span></li>'
+                '<li><span class="placeholder-no-parenthesis">address line 5</span></li>'
+                '<li><span class="placeholder-no-parenthesis">address line 6</span></li>'
                 # Postcode is not normalised until the address is complete
                 "<li>n1 4wq</li>"
                 "</ul>"
