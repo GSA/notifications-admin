@@ -61,3 +61,7 @@ if (typeof module !== 'undefined' && module.exports) {
     initUploadStatusAnnouncer
   };
 }
+
+if (typeof window !== 'undefined') {
+  initUploadStatusAnnouncer();
+}

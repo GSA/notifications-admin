@@ -20,11 +20,12 @@ Error
 
 {% block maincolumn_content %}
 
-<div class="">
-  {% call banner_wrapper(type='dangerous') %}
 
+
+<div class="">
   {# Alert for users of AT #}
   <span id="upload-error" class="usa-sr-only">File upload failed</span>
+  {% call banner_wrapper(type='dangerous') %}
 
   {% if recipients.too_many_rows %}
 

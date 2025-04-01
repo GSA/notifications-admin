@@ -22,7 +22,7 @@
   {{ template|string }}
   <div class="bottom-gutter-3-2">
     {# Alert for users of AT #}
-    <span id="upload-success" class="usa-sr-only">File upload successful</span>
+    <span id="upload-success" class="usa-sr-only">File uploaded successfully</span>
     <form method="post" enctype="multipart/form-data" action="{{url_for('main.preview_job', service_id=current_service.id, template_id=template_id, upload_id=upload_id)}}" class='page-footer'>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       {% if choose_time_form %}
