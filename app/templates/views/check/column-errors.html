@@ -23,6 +23,9 @@ Error
 <div class="">
   {% call banner_wrapper(type='dangerous') %}
 
+  {# Alert for users of AT #}
+  <span id="upload-error" class="usa-sr-only">File upload failed</span>
+
   {% if recipients.too_many_rows %}
 
   <div class="usa-alert usa-alert--error" role="alert">

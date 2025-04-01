@@ -1,3 +1,25 @@
+function announceUploadStatusFromElement() {
+  const srRegion = document.getElementById('upload-status-live');
+  const success = document.getElementById('upload-success');
+  const error = document.getElementById('upload-error');
+
+  if (!srRegion) return;
+
+  const message = error?.textContent || success?.textContent;
+
+  if (message) {
+    srRegion.textContent = '';
+    setTimeout(() => {
+      srRegion.textContent = message;
+      console.log(message);
+    }, 50);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  announceUploadStatusFromElement();
+});
+
 (function(Modules) {
   "use strict";
 
@@ -11,19 +33,9 @@
           Uploading<span class="dot-anim" aria-hidden="true"></span>
         </button>
       `);
-
-      const $srStatus = $('#upload-status-live');
-      if ($srStatus.length) {
-        // Clear and re-set the content to ensure it's treated as a change
-        $srStatus.html('');
-        setTimeout(() => {
-          $srStatus.html('<span>File is uploading</span>');
-        }, 50);
-      }
     };
 
     this.start = function(component) {
-
       this.$form = $(component);
 
       // Handle "Upload your file" button click — CSP-safe version

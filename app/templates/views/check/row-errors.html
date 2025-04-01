@@ -17,6 +17,8 @@
 
   <div class="">
     {% call banner_wrapper(type='dangerous') %}
+    {# Alert for users of AT #}
+    <span id="upload-failed" class="usa-sr-only">File upload failed</span>
       {% if row_errors|length == 1 %}
         <div class="usa-alert usa-alert--error" role="alert">
           <div class="usa-alert__body">

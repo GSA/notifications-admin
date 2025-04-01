@@ -11,6 +11,11 @@
     {% include "components/head.html" %}
   </head>
   <body class="usa-template__body {{ bodyClasses }}">
+    <div id="upload-status-live"
+      class="usa-sr-only"
+      aria-live="assertive"
+      role="status">
+    </div>
     <script nonce="{{ csp_nonce() }}">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     {% block bodyStart %}
       {% block extra_javascripts_before_body %}
