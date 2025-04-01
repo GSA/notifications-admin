@@ -62,7 +62,7 @@ def _get_access_token(code):  # pragma: no cover
     code_param = f"code={code}"
     url = f"{base_url}{cli_assert}&{cli_assert_type}&{code_param}&grant_type=authorization_code"
     headers = {"Authorization": "Bearer %s" % token}
-    response = requests.post(url, headers=headers)
+    response = requests.post(url, headers=headers, timeout=30)
 
     response_json = response.json()
     id_token = get_id_token(response_json)
@@ -88,10 +88,7 @@ def _get_access_token(code):  # pragma: no cover
 def _get_user_email_and_uuid(access_token):  # pragma: no cover
     headers = {"Authorization": "Bearer %s" % access_token}
     user_info_url = os.getenv("LOGIN_DOT_GOV_USER_INFO_URL")
-    user_attributes = requests.get(
-        user_info_url,
-        headers=headers,
-    )
+    user_attributes = requests.get(user_info_url, headers=headers, timeout=30)
     user_email = user_attributes.json()["email"]
     user_uuid = user_attributes.json()["sub"]
     return user_email, user_uuid
