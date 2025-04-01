@@ -12,7 +12,9 @@
 
 
 {% block backLink %}
-  {{ usaBackLink(params) }}
+  {{ usaBackLink({
+    "href": url_for('main.send_one_off_step', service_id=current_service.id, template_id=template.id, step_index=0)
+  }) }}
 {% endblock %}
 
 {% block maincolumn_content %}
