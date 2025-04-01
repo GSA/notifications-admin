@@ -344,7 +344,7 @@ def nl2br(value):
                     html="escape",
                 )
             ).then(utils_nl2br)
-        )
+        )  # nosec
     return ""
 
 

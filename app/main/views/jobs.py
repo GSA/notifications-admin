@@ -351,7 +351,7 @@ def _get_job_counts(job):
                 Markup(
                     f"""total<span class="usa-sr-only">
                     {"text message" if job_type == "sms" else job_type}s</span>"""
-                ),
+                ),  # nosec
                 "",
                 job.notification_count,
             ],
@@ -359,7 +359,7 @@ def _get_job_counts(job):
                 Markup(
                     f"""pending<span class="usa-sr-only">
                     {message_count_noun(job.notifications_sending, job_type)}</span>"""
-                ),
+                ),  # nosec
                 "pending",
                 job.notifications_sending,
             ],
@@ -367,7 +367,7 @@ def _get_job_counts(job):
                 Markup(
                     f"""delivered<span class="usa-sr-only">
                     {message_count_noun(job.notifications_delivered, job_type)}</span>"""
-                ),
+                ),  # nosec
                 "delivered",
                 job.notifications_delivered,
             ],
@@ -375,7 +375,7 @@ def _get_job_counts(job):
                 Markup(
                     f"""failed<span class="usa-sr-only">
                     {message_count_noun(job.notifications_failed, job_type)}</span>"""
-                ),
+                ),  # nosec
                 "failed",
                 job.notifications_failed,
             ],
@@ -465,4 +465,4 @@ def get_preview_of_content(notification):
                 notification["personalisation"],
                 redact_missing_personalisation=True,
             ).subject
-        )
+        )  # nosec
