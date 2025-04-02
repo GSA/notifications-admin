@@ -10,10 +10,12 @@ function announceUploadStatusFromElement() {
   if (message) {
     srRegion.textContent = '';
     setTimeout(() => {
-      srRegion.textContent = message;
-    }, 50);
+      srRegion.textContent = message + '\u00A0'; // add a non-breaking space
+      srRegion.focus(); // Optional
+    }, 300);
   }
 }
+
 
 // Exported for use in tests
 function initUploadStatusAnnouncer() {

@@ -19,8 +19,8 @@ test('writes upload message to the live region on DOMContentLoaded', () => {
   document.dispatchEvent(new Event('DOMContentLoaded'));
 
   // Live region will be cleared first, then updated
-  jest.advanceTimersByTime(50);
+  jest.advanceTimersByTime(300);
 
   const srRegion = document.getElementById('upload-status-live');
-  expect(srRegion.textContent).toBe('File upload successful');
+  expect(srRegion.textContent).toBe('File upload successful\u00A0');
 });

@@ -146,10 +146,10 @@ describe('announceUploadStatusFromElement', () => {
     expect(srRegion.textContent).toBe('');
 
     // Fast-forward the timer
-    jest.advanceTimersByTime(50);
+    jest.advanceTimersByTime(300);
 
     // Confirm it updates after delay
-    expect(srRegion.textContent).toBe('File upload failed');
+    expect(srRegion.textContent).toBe('File upload failed\u00A0');
   });
 
   test('announces success message from #upload-success if no error is present', () => {
@@ -163,9 +163,9 @@ describe('announceUploadStatusFromElement', () => {
 
     expect(srRegion.textContent).toBe('');
 
-    jest.advanceTimersByTime(50);
+    jest.advanceTimersByTime(301);
 
-    expect(srRegion.textContent).toBe('File upload successful');
+    expect(srRegion.textContent).toBe('File upload successful\u00A0');
   });
 
   test('does nothing if neither success nor error is present', () => {
@@ -178,7 +178,7 @@ describe('announceUploadStatusFromElement', () => {
     // Should not clear or update if no message element is found
     expect(srRegion.textContent).toBe('Old message');
 
-    jest.advanceTimersByTime(50);
+    jest.advanceTimersByTime(300);
 
     // Still unchanged
     expect(srRegion.textContent).toBe('Old message');
