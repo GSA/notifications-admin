@@ -118,9 +118,10 @@ def indent_njk(s, width=4, first=False, blank=False, indentfirst=None):
     indention = " " * width
     newline = "\n"
 
+    # we know 'indention' and 'newline' are safe so use nosec to bypass static scan warning
     if isinstance(s, Markup):
-        indention = Markup(indention)
-        newline = Markup(newline)
+        indention = Markup(indention)  # nosec
+        newline = Markup(newline)  # nosec
 
     s += newline  # this quirk is necessary for splitlines method
 
@@ -190,7 +191,7 @@ class NunjucksUndefined(jinja2.runtime.Undefined):
     def items(self):
         return self
 
-    # Allow escaping with Markup. This is required when
+    # Allow escaping. This is required when
     # autoescape is enabled. Debugging this issue was
     # annoying; the error messages were not clear as to
     # the cause of the issue (see upstream pull request

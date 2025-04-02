@@ -17,7 +17,7 @@ def _sign_out_at_login_dot_gov():
     url = f"{base_url}{client_id}&{post_logout_redirect_uri}"
     current_app.logger.info(f"url={url}")
 
-    response = requests.post(url)
+    response = requests.post(url, timeout=30)
 
     # response = requests.post(url)
     current_app.logger.info(f"login.gov response: {response.text}")

@@ -635,7 +635,7 @@ def test_should_show_sms_template_with_downgraded_unicode_characters(
     mock_get_template_folders,
     fake_uuid,
 ):
-    msg = "here:\tare some “fancy quotes” and zero\u200Bwidth\u200Bspaces"
+    msg = "here:\tare some “fancy quotes” and zero\u200bwidth\u200bspaces"
     rendered_msg = "here: are some “fancy quotes” and zerowidthspaces"
 
     mocker.patch(
@@ -1846,7 +1846,7 @@ def test_should_create_sms_template_without_downgrading_unicode_characters(
 ):
     service_one["permissions"] += [template_type]
 
-    msg = "here:\tare some “fancy quotes” and non\u200Bbreaking\u200Bspaces"
+    msg = "here:\tare some “fancy quotes” and non\u200bbreaking\u200bspaces"
 
     client_request.post(
         ".add_service_template",

@@ -56,11 +56,11 @@ def test_for_commas_in_placeholders(
 ):
     with pytest.raises(ValidationError) as error:
         NoCommasInPlaceHolders()(None, _gen_mock_field("Hello ((name,date))"))
-    assert str(error.value) == "You cannot put commas between double brackets"
+    assert str(error.value) == "You cannot put commas between double parenthesis"
     NoCommasInPlaceHolders()(None, _gen_mock_field("Hello ((name))"))
 
 
-@pytest.mark.parametrize("msg", ["The quick brown fox", "Thé “quick” bröwn fox\u200B"])
+@pytest.mark.parametrize("msg", ["The quick brown fox", "Thé “quick” bröwn fox\u200b"])
 def test_sms_character_validation(client_request, msg):
     OnlySMSCharacters(template_type="sms")(None, _gen_mock_field(msg))
 
