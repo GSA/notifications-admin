@@ -24,7 +24,7 @@
     label='Search by name',
     autofocus=True
   ) }}
-  {% call form_wrapper() %}
+  {% call form_wrapper(data_force_focus=True) %}
     {% if has_organizations %}
       {{ form.organizations }}
       {{ sticky_page_footer('Save') }}

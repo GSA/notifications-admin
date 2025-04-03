@@ -23,7 +23,7 @@ def accept_invite(token):
             <a href={url_for("main.sign_out")} class="usa-link">Sign out</a>
             and click the link again to accept this invite.
             """
-        )
+        )  # nosec
 
         flash(message=message)
 
@@ -98,7 +98,7 @@ def accept_org_invite(token):
             """.format(
                 current_user.email_address, url_for("main.sign_out")
             )
-        )
+        )  # nosec
 
         flash(message=message)
 
