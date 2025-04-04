@@ -40,7 +40,7 @@
     "playwright": "^1.51.1",
     "python": "^0.0.4",
     "query-command-supported": "1.0.0",
-    "sass-embedded": "^1.86.0",
+    "sass-embedded": "^1.86.1",
     "textarea-caret": "3.1.0",
     "timeago": "1.6.7",
     "vinyl-buffer": "^1.0.1",
@@ -66,7 +66,7 @@
     "jest-environment-jsdom": "^29.2.2",
     "jshint": "2.13.6",
     "jshint-stylish": "2.2.1",
-    "rollup": "^4.36.0",
+    "rollup": "^4.38.0",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-node-resolve": "5.2.0"
   }

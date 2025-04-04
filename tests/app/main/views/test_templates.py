@@ -635,7 +635,7 @@ def test_should_show_sms_template_with_downgraded_unicode_characters(
     mock_get_template_folders,
     fake_uuid,
 ):
-    msg = "here:\tare some “fancy quotes” and zero\u200Bwidth\u200Bspaces"
+    msg = "here:\tare some “fancy quotes” and zero\u200bwidth\u200bspaces"
     rendered_msg = "here: are some “fancy quotes” and zerowidthspaces"
 
     mocker.patch(
@@ -1748,7 +1748,12 @@ def test_can_create_email_template_with_emoji(
 @pytest.mark.parametrize(
     ("template_type", "expected_error"),
     [
-        ("sms", ("Please remove the unaccepted character 🍜 in your message, then save again")),
+        (
+            "sms",
+            (
+                "Please remove the unaccepted character 🍜 in your message, then save again"
+            ),
+        ),
     ],
 )
 def test_should_not_create_sms_template_with_emoji(
@@ -1773,14 +1778,21 @@ def test_should_not_create_sms_template_with_emoji(
         _expected_status=200,
     )
     # print(page.main.prettify())
-    assert expected_error in normalize_spaces(page.select_one("#template_content-error").text)
+    assert expected_error in normalize_spaces(
+        page.select_one("#template_content-error").text
+    )
     assert mock_create_service_template.called is False
 
 
 @pytest.mark.parametrize(
     ("template_type", "expected_error"),
     [
-        ("sms", ("Please remove the unaccepted character 🍔 in your message, then save again")),
+        (
+            "sms",
+            (
+                "Please remove the unaccepted character 🍔 in your message, then save again"
+            ),
+        ),
     ],
 )
 def test_should_not_update_sms_template_with_emoji(
@@ -1834,7 +1846,7 @@ def test_should_create_sms_template_without_downgrading_unicode_characters(
 ):
     service_one["permissions"] += [template_type]
 
-    msg = "here:\tare some “fancy quotes” and non\u200Bbreaking\u200Bspaces"
+    msg = "here:\tare some “fancy quotes” and non\u200bbreaking\u200bspaces"
 
     client_request.post(
         ".add_service_template",
