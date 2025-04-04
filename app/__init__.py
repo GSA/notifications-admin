@@ -157,11 +157,14 @@ def _csp(config):
             "https://www.googletagmanager.com",
             "https://www.google-analytics.com",
             "https://dap.digitalgov.gov",
+            "https://cdn.socket.io",
         ],
         "connect-src": [
             "'self'",
             "https://gov-bam.nr-data.net",
             "https://www.google-analytics.com",
+            "http://localhost:6011",
+            "ws://localhost:6011"
         ],
         "style-src": ["'self'", asset_domain],
         "img-src": ["'self'", asset_domain, logo_domain],
