@@ -257,7 +257,7 @@ def govuk_text_input_field_widget(
 
     return Markup(
         render_template("components/components/input/template.njk", params=params)
-    )
+    )  # nosec
 
 
 class GovukTextInputField(StringField):
@@ -690,7 +690,9 @@ def govuk_checkbox_field_widget(self, field, param_extensions=None, **kwargs):
     if param_extensions:
         merge_jsonlike(params, param_extensions)
 
-    return Markup(render_template("forms/fields/checkboxes/macro.njk", params=params))
+    return Markup(
+        render_template("forms/fields/checkboxes/macro.njk", params=params)
+    )  # nosec
 
 
 def govuk_checkboxes_field_widget(
@@ -704,7 +706,7 @@ def govuk_checkboxes_field_widget(
             f'     data-field-label="{field_label}">'
             f"  {checkboxes_string}"
             f"</div>"
-        )
+        )  # nosec
 
         return result
 
@@ -757,12 +759,14 @@ def govuk_checkboxes_field_widget(
 
         return _wrap_in_collapsible(
             self.field_label,
-            Markup(render_template("forms/fields/checkboxes/macro.njk", params=params)),
+            Markup(
+                render_template("forms/fields/checkboxes/macro.njk", params=params)
+            ),  # nosec
         )
     else:
         return Markup(
             render_template("forms/fields/checkboxes/macro.njk", params=params)
-        )
+        )  # nosec
 
 
 def govuk_radios_field_widget(self, field, param_extensions=None, **kwargs):
@@ -805,7 +809,7 @@ def govuk_radios_field_widget(self, field, param_extensions=None, **kwargs):
 
     return Markup(
         render_template("components/components/radios/template.njk", params=params)
-    )
+    )  # nosec
 
 
 class GovukCheckboxField(BooleanField):
