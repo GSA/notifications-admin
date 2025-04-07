@@ -2,13 +2,14 @@
 
 [[package]]
 name = "ago"
-version = "0.0.95"
+version = "0.1.0"
 description = "ago: Human readable timedeltas"
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "ago-0.0.95.tar.gz", hash = "sha256:d2010f5eac3df544ec48ec116102e068591a345b1a580f32973db8a505fca744"},
+    {file = "ago-0.1.0-py3-none-any.whl", hash = "sha256:c0c60d106fe333ac06e2ff2dd7fb5de2c4ec3183ee39708a35b6144ccb86dece"},
+    {file = "ago-0.1.0.tar.gz", hash = "sha256:15604159711c47e08f21251f28bfb4383942087535660dbe640b2f6193f92be4"},
 ]
 
 [[package]]
@@ -3300,4 +3301,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12.2"
-content-hash = "cd66b3d37a7fad97ebed582640cffa098447d6be88c1597a434ab89798380289"
+content-hash = "d03fe2bf36bd0eefe1b98b67a9afcbb15650c32c186509c8fa0a1330e4d153e8"
