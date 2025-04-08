@@ -10,6 +10,8 @@ from app import create_app
 from app.notify_client.service_api_client import service_api_client
 from app.notify_client.user_api_client import user_api_client
 
+from .. import TestClient
+
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 
@@ -52,35 +54,57 @@ def notify_admin_e2e():
     application = Flask("app")
     create_app(application)
 
-    return application
+    application.test_client_class = TestClient
+
+    with application.app_context():
+        yield application
+
+
+@pytest.fixture
+def default_user(notify_admin_e2e):
+    default_user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
+    return default_user
+
+
+@pytest.fixture
+def client(notify_admin_e2e, default_user):
+    """
+    Do not use this fixture directly – use `client_request` instead
+    """
+    with notify_admin_e2e.test_request_context(), notify_admin_e2e.test_client() as client:
+        client.allow_subdomain_redirects = True
+        try:
+            client.login(default_user)
+            yield client
+        finally:
+            client.logout(default_user)
 
 
 # Need e2e service defined here?
 @pytest.fixture
-def default_service(browser, notify_admin_e2e):
-    with notify_admin_e2e.app_context():
-        current_date_time = datetime.datetime.now()
-        now = current_date_time.strftime("%m/%d/%Y %H:%M:%S")
-        browser_type = browser.browser_type.name
-        service_name = f"E2E Federal Test Service {now} - {browser_type}"
+def default_service(browser, client, default_user):
+    current_date_time = datetime.datetime.now()
+    now = current_date_time.strftime("%m/%d/%Y %H:%M:%S")
+    browser_type = browser.browser_type.name
+    service_name = f"E2E Federal Test Service {now} - {browser_type}"
 
-        default_user = user_api_client.get_user_by_email(
-            os.getenv("NOTIFY_E2E_TEST_EMAIL")
-        )
-        service = service_api_client.create_service(
-            service_name,
-            "federal",
-            current_app.config["DEFAULT_SERVICE_LIMIT"],
-            True,
-            default_user["id"],
-            default_user["email_address"],
-        )
+    from pprint import pprint
 
-        print("OK I GOT HERE LETS GO!!!")
+    pprint(default_user)
+    service = service_api_client.create_service(
+        service_name,
+        "federal",
+        current_app.config["DEFAULT_SERVICE_LIMIT"],
+        True,
+        default_user["id"],
+        default_user["email_address"],
+    )
 
-        yield service
+    print("OK I GOT HERE LETS GO!!!")
 
-        service_api_client.archive_service(service.id, None)
+    yield service
+
+    service_api_client.archive_service(service.id, None)
 
 
 @contextmanager
