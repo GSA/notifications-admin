@@ -1,124 +1,36 @@
-(function(Modules) {
-  "use strict";
+(function () {
+  'use strict';
 
-  Modules.FullscreenTable = function() {
+  function initFullscreenTables() {
+    const tables = document.querySelectorAll('.fullscreen-table');
 
-    this.start = function(component) {
+    tables.forEach((component) => {
+      const table = component.querySelector('table');
+      const wrapper = component.querySelector('.table-wrapper');
+      const rightShadow = component.querySelector('.fullscreen-right-shadow');
 
-      this.$component = $(component);
-      this.$table = this.$component.find('table');
-      this.nativeHeight = this.$component.innerHeight() + 20; // 20px to allow room for scrollbar
-      this.topOffset = this.$component.offset().top;
+      if (!table || !wrapper) return;
 
-      this.insertShims();
-      this.maintainWidth();
-      this.maintainHeight();
-      this.toggleShadows();
+      const toggleShadows = () => {
+        const scrollLeft = wrapper.scrollLeft;
+        const maxScrollLeft = wrapper.scrollWidth - wrapper.clientWidth;
 
-      $(window)
-        .on('scroll resize', this.maintainHeight)
-        .on('resize', this.maintainWidth);
+        wrapper.classList.toggle('scrolled', scrollLeft > 0);
 
-      this.$scrollableTable
-        .on('scroll', this.toggleShadows)
-        .on('scroll', this.maintainHeight)
-        .on('focus blur', () => this.$component.toggleClass('js-focus-style'));
+        if (rightShadow) {
+          rightShadow.classList.toggle('visible', scrollLeft < maxScrollLeft);
+        }
+      };
 
-      if (
-        window.GOVUK.stickAtBottomWhenScrolling &&
-        window.GOVUK.stickAtBottomWhenScrolling.recalculate
-      ) {
-        window.GOVUK.stickAtBottomWhenScrolling.recalculate();
-      }
+      wrapper.addEventListener('scroll', toggleShadows);
+      toggleShadows(); // init state
+    });
+  }
 
-      this.maintainWidth();
-
-    };
-
-    this.insertShims = () => {
-
-      const attributesForFocus = 'role aria-labelledby tabindex';
-      let captionId = this.$table.find('caption').text().toLowerCase().replace(/[^A-Za-z]+/g, '');
-
-      this.$table.find('caption').attr('id', captionId);
-      this.$table.wrap(`<div class="fullscreen-scrollable-table" role="region" aria-labelledby="${captionId}" tabindex="0"/>`);
-
-      this.$component
-        .append(
-          this.$component.find('.fullscreen-scrollable-table')
-            .clone()
-            .addClass('fullscreen-fixed-table')
-            .removeClass('fullscreen-scrollable-table')
-            .removeAttr(attributesForFocus)
-            .attr('aria-hidden', true)
-            .find('caption')
-            .removeAttr('id')
-            .closest('.fullscreen-fixed-table')
-        )
-        .append(
-          '<div class="fullscreen-right-shadow" />'
-        )
-        .after(
-          $("<div class='fullscreen-shim'/>").css({
-            'height': this.nativeHeight,
-            'top': this.topOffset
-          })
-        )
-        .css('position', 'absolute');
-
-      this.$scrollableTable = this.$component.find('.fullscreen-scrollable-table');
-      this.$fixedTable = this.$component.find('.fullscreen-fixed-table');
-
-    };
-
-    this.maintainHeight = () => {
-
-      let height = Math.min(
-        $(window).height() - this.topOffset + $(window).scrollTop(),
-        this.nativeHeight
-      );
-
-      this.$scrollableTable.outerHeight(height);
-      this.$fixedTable.outerHeight(height);
-
-    };
-
-    this.maintainWidth = () => {
-
-      let indexColumnWidth = this.$fixedTable.find('.table-field-index').outerWidth();
-
-      this.$scrollableTable
-        .css({
-            'width': this.$component.parent('main').width() - indexColumnWidth,
-            'margin-left': indexColumnWidth
-        });
-
-      this.$fixedTable
-        .width(indexColumnWidth + 4);
-
-    };
-
-    this.toggleShadows = () => {
-
-      this.$fixedTable
-        .toggleClass(
-          'fullscreen-scrolled-table',
-          this.$scrollableTable.scrollLeft() > 0
-        );
-
-      this.$component.find('.fullscreen-right-shadow')
-        .toggleClass(
-          'visible',
-          this.$scrollableTable.scrollLeft() < (this.$table.width() - this.$scrollableTable.width())
-        );
-
-      setTimeout(
-        () => this.$component.find('.fullscreen-right-shadow').addClass('with-transition'),
-        3000
-      );
-
-    };
-
-  };
-
-})(window.GOVUK.Modules);
+  // Run once DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFullscreenTables);
+  } else {
+    initFullscreenTables();
+  }
+})();

@@ -174,8 +174,10 @@ h2.recipient-list {
 }
 
 .spreadsheet {
-
-  margin-bottom: units (1);
+  margin-bottom: units(1);
+  overflow-x: auto;
+  position: relative;
+  padding-left: 0;
 
   .table {
     margin-bottom: 0;
@@ -186,27 +188,54 @@ h2.recipient-list {
   }
 
   th,
-  .table-field-index {
-    background: color('gray-cool-10');
+  td {
+    padding-inline: 10px;
     border: 1px solid color('gray-cool-10');
+    background: white;
+    z-index: 1;
+  }
+
+  td {
+    min-width: calc(194px - 11px);
+
+    &:first-child {
+      min-width: auto;
+    }
+  }
+
+  th.table-field-heading {
+    background: color('gray-cool-10');
     font-weight: bold;
     text-align: center;
   }
 
-  th, td {
-    padding-left: 10px;
-    padding-right: 10px;
-    border: 1px solid color('gray-cool-10');
-  }
+  .table-field-index,
+  .table-field-heading-first {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    background: white;
 
-  td {
-    border-top: 0;
-    // 194 is the width of the table * 1/3.5, so the overflow cuts off
-    // at 3.5 columns wide.
-    // 11 accounts for the padding of the table cell
-    min-width: 194px - 11px;
-    &:first-child {
-      min-width: auto;
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0px;
+      z-index: 11;
+      outline: 1px solid color('gray-cool-10');
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 1px;
+      background: color('gray-cool-10');
+      z-index: 11;
     }
   }
 

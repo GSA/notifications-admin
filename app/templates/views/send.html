@@ -5,6 +5,7 @@
 {% from "components/table.html" import list_table, text_field, index_field, index_field_heading %}
 {% from "components/components/back-link/macro.njk" import usaBackLink %}
 <script type="text/javascript" src="{{ asset_url('js/setTimezone.js') }}"></script>
+import { FullscreenTable } from './fullscreenTable.js';
 
 {% block service_page_title %}
   Upload a list of {{ 999|recipient_count_label(template.template_type) }}
@@ -30,7 +31,7 @@
 
   <h2 class="font-body-lg">Your file needs to look like this example</h2>
 
-  <div class="spreadsheet" data-module="fullscreen-table">
+  <div class="spreadsheet table-wrapper" data-module="fullscreen-table">
     {% call(item, row_number) list_table(
       example,
       caption="Example",
