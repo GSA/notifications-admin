@@ -9,35 +9,22 @@
 {% endblock %}
 
 {% block maincolumn_content %}
-{{ socket_block(partials, job_id, "status") }}
-<div id="status" data-key="status" data-job-id="{{ job.id }}">
-  ⏳ Waiting for updates...
-</div>
-<!-- <div data-key="status">
-  {{ partials["status"]|safe }}
-</div> -->
-<!-- {{emit_job_update}}
-{{job.id}} -->
 
     {{ page_header("Message status") }}
-    {% if not job.finished_processing %}
-      <div
-        data-module="update-content"
-        data-resource="{{ updates_url }}"
-        data-key="status"
-        data-form=""
-      >
-    {% endif %}
+    <div
+      data-socket-update="status"
+      data-resource="{{ updates_url }}"
+      data-key="status"
+      data-job-id="{{ job.id }}"
+    >
       {{ partials['status']|safe }}
-    {% if not job.finished_processing  %}
       </div>
-    {% endif %}
     {% if not finished %}
       <div
-        data-module="update-content"
+        data-socket-update="counts"
+        data-job-id="{{ job.id }}"
         data-resource="{{ updates_url }}"
         data-key="counts"
-        data-form=""
       >
     {% endif %}
       {{ partials['counts']|safe }}
@@ -50,7 +37,8 @@
     </p>
     {% if not job.processing_finished %}
       <div
-        data-module="update-content"
+        data-socket-update="notifications"
+        data-job-id="{{ job.id }}"
         data-resource="{{ updates_url }}"
         data-key="notifications"
         data-form=""
