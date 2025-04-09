@@ -27,10 +27,15 @@
     });
   }
 
-  // Run once DOM is ready
+  // Auto-init on page load in browser
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initFullscreenTables);
   } else {
     initFullscreenTables();
+  }
+
+  // Expose it globally in test environments
+  if (typeof window !== 'undefined') {
+    window.initFullscreenTables = initFullscreenTables;
   }
 })();

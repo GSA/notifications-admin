@@ -1,7 +1,7 @@
 {% extends "withnav_template.html" %}
 {% from "components/banner.html" import banner_wrapper %}
 {% from "components/radios.html" import radio_select %}
-{% from "components/table.html" import list_table, field, text_field, index_field, hidden_field_heading %}
+{% from "components/table.html" import list_table, field, text_field, index_field, index_field_heading %}
 {% from "components/file-upload.html" import file_upload %}
 {% from "components/components/back-link/macro.njk" import usaBackLink %}
 
@@ -161,18 +161,15 @@ recipients.column_headers %}
 
 <h2 class="font-body-lg" id="file-preview">{{ original_file_name }}</h2>
 
-<div class="fullscreen-content" data-module="fullscreen-table">
+<div class="table-wrapper spreadsheet" data-module="fullscreen-table">
   {% call(item, row_number) list_table(
   recipients.displayed_rows,
   caption=original_file_name,
   caption_visible=False,
-  field_headings=[
-  '<span class="usa-sr-only">Row in file</span><span aria-hidden="true">1</span>'|safe
-  ] + column_headers
-  ) %}
+  field_headings=[''] + column_headers )%}
   {% call index_field() %}
   <span>
-    {% set displayed_index = item.index + 2 %}
+    {% set displayed_index = item.index + 1 %}
     {{ displayed_index }}
   </span>
   {% endcall %}

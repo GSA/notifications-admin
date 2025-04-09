@@ -216,6 +216,7 @@ h2.recipient-list {
     z-index: 10;
     background: white;
     text-align: center;
+    width: units(2);
 
     &::before {
       content: "";
