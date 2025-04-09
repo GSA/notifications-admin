@@ -80,8 +80,7 @@ invalid_us_phone_numbers = sum(
 invalid_phone_numbers = [
     ("+80233456789", "Not a valid country prefix"),
     ("1234567", "Not enough digits"),
-    # TODO Fix this one
-    # ("+682 1234", "Invalid country code"),  # Cook Islands phone numbers can be 5 digits
+    ("+682 1234", "Not enough digits"),
     ("+12345 12345 12345 6", "Too many digits"),
 ]
 
