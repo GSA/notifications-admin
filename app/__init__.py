@@ -171,10 +171,8 @@ def _csp(config):
 def create_app(application):
     @application.after_request
     def add_csp_header(response):
-        response.headers["Content-Security-Policy"] = (
-            "frame-ancestors 'none'; "
-            "frame-src https://www.googletagmanager.com"
-        )
+        existing_csp = response.headers.get("Content-Security-Policy", "")
+        response.headers["Content-Security-Policy"] = existing_csp + "; form-action 'self';"
         return response
     # @application.context_processor
     # def inject_feature_flags():
