@@ -145,6 +145,7 @@ def _csp(config):
         "frame-src": [
             "https://www.youtube.com",
             "https://www.youtube-nocookie.com",
+            "https://www.googletagmanager.com",
         ],
         "frame-ancestors": "'none'",
         "form-action": "'self'",
