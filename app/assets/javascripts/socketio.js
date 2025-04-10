@@ -10,29 +10,35 @@ document.addEventListener("DOMContentLoaded", function () {
   const isJobPage = window.location.pathname.includes("/jobs/");
   if (!isJobPage) return;
 
-  const jobId = document.querySelector("[data-job-id]")?.dataset?.jobId;
+  const jobEl = document.querySelector("[data-job-id]");
+  const jobId = jobEl?.dataset?.jobId;
+  const featureEnabled = jobEl?.dataset?.feature === "true";
+
   if (!jobId) return;
 
-  const socket = io("http://localhost:6011");
 
-  socket.on("connect", () => {
-    console.log("Connected to Socket.IO server");
-    socket.emit("join", { room: `job-${jobId}` });
-    console.log("join", { room: `job-${jobId}` });
-  });
+  if (featureEnabled) {
+    const socket = io("http://localhost:6011");
 
-  window.addEventListener("beforeunload", () => {
-    socket.emit("leave", { room: `job-${jobId}` });
-  });
+    socket.on("connect", () => {
+      console.log("Connected to Socket.IO server");
+      socket.emit("join", { room: `job-${jobId}` });
+      console.log("join", { room: `job-${jobId}` });
+    });
 
-  const debouncedUpdate = debounce((data) => {
-    updateAllJobSections();
-  }, 1000);
+    window.addEventListener("beforeunload", () => {
+      socket.emit("leave", { room: `job-${jobId}` });
+    });
 
-  socket.on("job_updated", (data) => {
-    if (data.job_id !== jobId) return;
-    debouncedUpdate(data);
-  });
+    const debouncedUpdate = debounce((data) => {
+      updateAllJobSections();
+    }, 1000);
+
+    socket.on("job_updated", (data) => {
+      if (data.job_id !== jobId) return;
+      debouncedUpdate(data);
+    });
+  }
 
   function updateAllJobSections() {
     const resourceEl = document.querySelector('[data-socket-update="status"]');

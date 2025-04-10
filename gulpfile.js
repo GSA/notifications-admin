@@ -85,7 +85,6 @@ const javascripts = () => {
     paths.src + 'javascripts/sidenav.js',
     paths.src + 'javascripts/validation.js',
     paths.src + 'javascripts/socketio.js',
-
   ])
     .pipe(plugins.prettyerror())
     .pipe(
