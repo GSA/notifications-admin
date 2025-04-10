@@ -174,7 +174,7 @@ def _csp(config):
 def create_app(application):
     @application.context_processor
     def inject_feature_flags():
-    # this is where feature flags can be easily added as a dictionary within context
+        # this is where feature flags can be easily added as a dictionary within context
         feature_socket_enabled = application.config.get(
             "FEATURE_SOCKET_ENABLED", False
         )

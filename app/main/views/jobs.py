@@ -4,8 +4,8 @@ from functools import partial
 
 from flask import (
     Response,
-    current_app,
     abort,
+    current_app,
     jsonify,
     redirect,
     render_template,

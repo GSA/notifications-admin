@@ -88,7 +88,6 @@ class Config(object):
         ],
     }
 
-
     FEATURE_SOCKET_ENABLED = getenv("FEATURE_SOCKET_ENABLED", "false") == "true"
 
 
