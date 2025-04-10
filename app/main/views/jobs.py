@@ -5,6 +5,7 @@ from functools import partial
 from flask import (
     Response,
     abort,
+    current_app,
     jsonify,
     redirect,
     render_template,
@@ -59,6 +60,7 @@ def view_job(service_id, job_id):
     filter_args["status"] = set_status_filters(filter_args)
     return render_template(
         "views/jobs/job.html",
+        FEATURE_SOCKET_ENABLED=current_app.config["FEATURE_SOCKET_ENABLED"],
         job=job,
         status=request.args.get("status", ""),
         updates_url=url_for(

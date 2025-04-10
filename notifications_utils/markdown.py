@@ -1,8 +1,10 @@
-from flask import current_app
-import mistune
-from notifications_utils.formatters import create_sanitised_html_for_url
-import re
 import html
+import re
+
+import mistune
+from flask import current_app
+
+from notifications_utils.formatters import create_sanitised_html_for_url
 
 LINK_STYLE = "word-wrap: break-word; color: #1D70B8;"
 
