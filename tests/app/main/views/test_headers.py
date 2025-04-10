@@ -14,7 +14,7 @@ def test_owasp_useful_headers_set(
     assert response.headers["X-Frame-Options"] == "deny"
     assert response.headers["X-Content-Type-Options"] == "nosniff"
     csp = response.headers["Content-Security-Policy"]
-    assert search(r"frame-src https://www.googletagmanager.com", csp)
+    assert search(r"frame-src.*https://www\.googletagmanager\.com", csp)
     assert search(r"frame-ancestors 'none';", csp)
     assert search(r"form-action 'self';", csp)
     assert search(
