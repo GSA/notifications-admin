@@ -103,11 +103,7 @@ def view_job_csv(service_id, job_id):
 @user_has_permissions("send_messages")
 def cancel_job(service_id, job_id):
     Job.from_id(job_id, service_id=service_id).cancel()
-
     return redirect(url_for("main.service_dashboard", service_id=service_id))
-
-# //this is the resource that gets updated by being passed to ajax via updates_url to data-resource
-# and everything that is within get_job_partials is the html that gets updated
 
 
 @main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>.json")
