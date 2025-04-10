@@ -38,7 +38,7 @@
   },
   {
     "svg_src": "#check_circle",
-    "card_heading": "Label each additional personalized placeholder separately",
+    "card_heading": "Label each additional <a class=\"usa-link\" href=\"/using-notify/how-to#personalize-content\">personalized placeholder</a> separately",
   },
   {
     "svg_src": "#check_circle",
@@ -46,11 +46,11 @@
   },
   {
     "svg_src": "#check_circle",
-    "card_heading": "Fill in each conditional placeholder column with a Yes (Y) or No (N) to “answer” whether the recipient meets its criteria",
+    "card_heading": "Fill in each personalized placeholder with the appropriate data or information",
   },
   {
     "svg_src": "#check_circle",
-    "card_heading": "Fill in each personalized placeholder with the appropriate data or information",
+    "card_heading": "Fill in each <a class=\"usa-link\" href=\"/using-notify/how-to#conditional-content\">conditional placeholder</a> column with a Yes (Y) or No (N) to “answer” whether the recipient meets its criteria",
   }
   ]
 %}
@@ -85,7 +85,7 @@
     {% endcall %}
   </div>
   <p class="hint">
-    Each template saved in Notify is given an example <abbr title="Comma Separated Values">CSV</abbr> formatted spreadsheet like this. It's the most reliable file format for uploading your contact list. Use this example to populate your template with the right data items. Start by downloading this example for your message template. Start by downloading this example for your message template. Then save it as a <abbr title="Comma Separated Values">CSV</abbr> file for bulk messaging.
+    Each template saved in Notify is given an example <abbr title="Comma Separated Values">CSV</abbr> formatted spreadsheet like this. It's the most reliable file format for uploading your contact list. Use this example to populate your template with the right data items. Start by downloading this example for your message template. Then save it as a <abbr title="Comma Separated Values">CSV</abbr> file for bulk messaging.
   </p>
   <p class="table-show-more-link">
     <a class="usa-link display-flex margin-top-1" href="{{ url_for('.get_example_csv', service_id=current_service.id, template_id=template.id) }}" download>Download this example (<abbr title="Comma separated values">CSV</abbr>)
@@ -106,7 +106,7 @@
               </svg>
             </div>
             <div class="usa-icon-list__content">
-              {{item.card_heading}}
+              {{item.card_heading | safe }}
             </div>
           </li>
           {% endfor %}
@@ -123,7 +123,7 @@
               </svg>
             </div>
             <div class="usa-icon-list__content">
-              {{item.card_heading}}
+              {{item.card_heading | safe }}
             </div>
           </li>
           {% endfor %}
@@ -139,7 +139,7 @@
               </svg>
             </div>
             <div class="usa-icon-list__content">
-              If you're receiving any errors, double check your file format and make sure your data is pasted in with values only.
+              If you're receiving any errors, double check your file format and make sure your data is pasted in with values only
             </div>
           </li>
         </ul>
