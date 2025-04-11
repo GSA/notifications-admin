@@ -145,6 +145,7 @@ def _csp(config):
         "frame-src": [
             "https://www.youtube.com",
             "https://www.youtube-nocookie.com",
+            "https://www.googletagmanager.com",
         ],
         "frame-ancestors": "'none'",
         "form-action": "'self'",
@@ -172,6 +173,12 @@ def _csp(config):
 
 
 def create_app(application):
+    @application.after_request
+    def add_csp_header(response):
+        existing_csp = response.headers.get("Content-Security-Policy", "")
+        response.headers["Content-Security-Policy"] = existing_csp + "; form-action 'self';"
+        return response
+
     @application.context_processor
     def inject_feature_flags():
         # this is where feature flags can be easily added as a dictionary within context
