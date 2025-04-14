@@ -1,27 +1,38 @@
-window.GOVUK.Frontend.initAll();
-
-$(() => $("time.timeago").timeago());
+// Initialize GOV.UK Frontend components (modern init)
+window.GOVUKFrontend.initAll();
 
 var showHideContent = new GOVUK.ShowHideContent();
 showHideContent.init();
 
-$(() => GOVUK.modules.start());
-
-$(() => $('.error-message, .usa-error-message').eq(0).parent('label').next('input').trigger('focus'));
-
-$(() => $('.govuk-header__container').on('click', function() {
-  $(this).css('border-color', '#005ea5');
-}));
-
-// Applies our expanded focus style to the siblings of links when that link is wrapped in a heading.
-//
-// This will be possible in CSS in the future, using the :has pseudo-class. When :has is available
-// in the browsers we support, this code can be replaced with a CSS-only solution.
-$('.js-mark-focus-on-parent').on('focus blur', '*', e => {
-  $target = $(e.target);
-  if (e.type === 'focusin') {
-    $target.parent().addClass('js-child-has-focus');
-  } else {
-    $target.parent().removeClass('js-child-has-focus');
+document.addEventListener('DOMContentLoaded', () => {
+  // Autofocus the first error input
+  const errorEl = document.querySelector('.error-message, .usa-error-message');
+  if (errorEl) {
+    const label = errorEl.closest('label');
+    if (label) {
+      const input = label.nextElementSibling;
+      if (input && input.focus) {
+        input.focus();
+      }
+    }
   }
+
+  // Optional: highlight header on click
+  const header = document.querySelector('.govuk-header__container');
+  if (header) {
+    header.addEventListener('click', () => {
+      header.style.borderColor = '#005ea5';
+    });
+  }
+
+  // Focus styling for heading-wrapped links
+  const containers = document.querySelectorAll('.js-mark-focus-on-parent');
+  containers.forEach(container => {
+    container.addEventListener('focusin', e => {
+      e.target.parentElement.classList.add('js-child-has-focus');
+    });
+    container.addEventListener('focusout', e => {
+      e.target.parentElement.classList.remove('js-child-has-focus');
+    });
+  });
 });
