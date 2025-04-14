@@ -15,7 +15,20 @@ NVMSH := $(shell [ -f "$(HOME)/.nvm/nvm.sh" ] && echo "$(HOME)/.nvm/nvm.sh" || e
 ## DEVELOPMENT
 
 .PHONY: bootstrap
-bootstrap: generate-version-file ## Set up everything to run the app
+bootstrap: ## Set up everything to run the app
+	make generate-version-file
+	poetry self add poetry-dotenv-plugin
+	poetry lock --no-update
+	poetry install --sync --no-root
+	poetry run playwright install --with-deps
+	poetry run pre-commit install
+	source $(NVMSH) --no-use && nvm install && npm install
+	source $(NVMSH) && npm ci --no-audit
+	source $(NVMSH) && npm run build
+
+.PHONY: bootstrap-with-git-hooks
+bootstrap-with-git-hooks:  ## Sets everything up and accounts for pre-existing git hooks
+	make generate-version-file
 	poetry self add poetry-dotenv-plugin
 	poetry lock --no-update
 	poetry install --sync --no-root
