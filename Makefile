@@ -6,6 +6,7 @@ APP_VERSION_FILE = app/version.py
 
 GIT_BRANCH ?= $(shell git symbolic-ref --short HEAD 2> /dev/null || echo "detached")
 GIT_COMMIT ?= $(shell git rev-parse HEAD 2> /dev/null || echo "")
+GIT_HOOKS_PATH ?= $(shell git config --global core.hooksPath || echo "")
 
 VIRTUALENV_ROOT := $(shell [ -z $$VIRTUAL_ENV ] && echo $$(pwd)/venv || echo $$VIRTUAL_ENV)
 
@@ -19,7 +20,9 @@ bootstrap: generate-version-file ## Set up everything to run the app
 	poetry lock --no-update
 	poetry install --sync --no-root
 	poetry run playwright install --with-deps
+	git config --global --unset-all core.hooksPath
 	poetry run pre-commit install
+	git config --global core.hookspath "${GIT_HOOKS_PATH}"
 	source $(NVMSH) --no-use && nvm install && npm install
 	source $(NVMSH) && npm ci --no-audit
 	source $(NVMSH) && npm run build
