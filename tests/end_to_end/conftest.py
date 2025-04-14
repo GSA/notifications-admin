@@ -1,18 +1,48 @@
 import datetime
 import os
 from contextlib import contextmanager
+from unittest.mock import patch
 
 import pytest
 from axe_core_python.sync_playwright import Axe
-from flask import Flask, current_app
+from flask import Flask, current_app, url_for
+from flask import session as flask_session
+from flask_login import login_user
+from flask.testing import FlaskClient
 
 from app import create_app
+from app.models.user import User
 from app.notify_client.service_api_client import service_api_client
 from app.notify_client.user_api_client import user_api_client
-
 from .. import TestClient
 
+
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
+
+class TestClient(FlaskClient):
+    def login(self, user, mocker=None, service=None):
+        # Skipping authentication here and just log them in
+        model_user = User(user)
+        with self.session_transaction() as session:
+            session["current_session_id"] = model_user.current_session_id
+            session["user_id"] = model_user.id
+        if mocker:
+            mocker.patch("app.user_api_client.get_user", return_value=user)
+        if mocker and service:
+            with self.session_transaction() as session:
+                session["service_id"] = service["id"]
+            mocker.patch(
+                "app.service_api_client.get_service", return_value={"data": service}
+            )
+
+        with patch("app.events_api_client.create_event"):
+            login_user(model_user, force=True)  # forces the user to be logged in.
+        with self.session_transaction() as test_session:
+            for key, value in flask_session.items():
+                test_session[key] = value
+
+    def logout(self, user):
+        self.get(url_for("main.sign_out"))
 
 
 @pytest.fixture
@@ -62,8 +92,8 @@ def notify_admin_e2e():
 
 @pytest.fixture
 def default_user(notify_admin_e2e):
-    default_user = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
-    return default_user
+    user_data = user_api_client.get_user_by_email(os.getenv("NOTIFY_E2E_TEST_EMAIL"))
+    return user_data
 
 
 @pytest.fixture
@@ -88,9 +118,6 @@ def default_service(browser, client, default_user):
     browser_type = browser.browser_type.name
     service_name = f"E2E Federal Test Service {now} - {browser_type}"
 
-    from pprint import pprint
-
-    pprint(default_user)
     service = service_api_client.create_service(
         service_name,
         "federal",
