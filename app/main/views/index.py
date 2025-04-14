@@ -50,7 +50,8 @@ def index():
         counts = status_api_client.get_count_of_live_services_and_organizations()
     except Exception as e:
         logger.warning(f"API down when loading homepage: {e}")
-        counts = {"live_service_count": "N/A", "live_organization_count": "N/A"}
+        counts = None
+        print(counts)
     return render_template(
         "views/signedout.html",
         sms_rate=CURRENT_SMS_RATE,
