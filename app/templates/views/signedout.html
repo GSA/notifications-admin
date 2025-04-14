@@ -8,7 +8,7 @@ import usaButton %} {% block meta %}
 {% block beforeContent %}{% endblock %}
 
 <main id="main-content" role="main">
-  {% if counts.live_service_count == 'N/A' %}
+  {% if counts %}
     <div class="usa-alert usa-alert--info usa-alert--slim" aria-label="Site alert,,,,">
       <div class="grid-container padding-x-0">
         <div class="usa-alert__body">

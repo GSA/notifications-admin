@@ -15,6 +15,7 @@ class ColorFormatter(logging.Formatter):
         'DEBUG': '\033[94m',
         'WARNING': '\033[93m',
         'ERROR': '\033[91m',
+        'CRITICAL': '\033[95m',
     }
     RESET = '\033[0m'
 
@@ -93,7 +94,6 @@ def init_app(app):
 
 def get_handlers(app):
     handlers = []
-    color_formatter = ColorFormatter(LOG_FORMAT, TIME_FORMAT)
     json_formatter = JSONFormatter(LOG_FORMAT, TIME_FORMAT)
 
     stream_handler = logging.StreamHandler(sys.stdout)
@@ -106,6 +106,8 @@ def get_handlers(app):
             return not ("GET /static/" in msg and " 200 " in msg)
 
         logging.getLogger("werkzeug").addFilter(is_200_static_log)
+        color_formatter = ColorFormatter(LOG_FORMAT, TIME_FORMAT)
+
         handlers.append(configure_handler(stream_handler, app, color_formatter))
 
     return handlers
