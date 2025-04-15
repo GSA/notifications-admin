@@ -27,7 +27,7 @@
       {% set content_hint = 'Your service name will be added to the start of your message. You can turn this off in Settings.' %}
     {% endif %}
 
-    {% call form_wrapper(data_force_focus=True) %}
+    {% call form_wrapper() %}
       <div class="grid-container padding-0">
         <div class="tablet:grid-col-9 mobile-lg:grid-col-12">
           {{ form.name(param_extensions={
