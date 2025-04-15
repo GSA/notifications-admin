@@ -4,7 +4,11 @@ import usaButton %} {% block meta %}
   name="description"
   content="Notify.gov lets you send text messages to your users. Try it now if you work in federal, state, or local government."
 />
-{% endblock %} {% block pageTitle %} Notify.gov {% endblock %} {% block main %}
+{% endblock %}
+{% block pageTitle %} Notify.gov
+  {% if counts %} - There's currently a technical issue {% endif %}
+{% endblock %}
+{% block main %}
 {% block beforeContent %}{% endblock %}
 
 <main id="main-content" role="main">
@@ -20,6 +24,25 @@ import usaButton %} {% block meta %}
     </div>
   {% endif %}
   {% block content %}
+  {% if counts %}
+  <section class="grid-container usa-section margin-top-5 margin-bottom-5">
+  <div class="grid-row flex-justify-center">
+    <div class="desktop:grid-col-3 tablet:grid-col-4 mobile:grid-col-12 flex-align-center">
+      <img
+      class="width-tablet tablet:width-full"
+      src="{{ asset_url('images/api-error.svg') }}"
+      alt="Mobile phone showing error screen"/>
+    </div>
+    <div class="desktop:grid-col-6 tablet:grid-col-12 padding-left-0 desktop:padding-left-5">
+      <h1 class="font-body-3xl line-height-sans-2 text-bold">
+        There's currently a technical issue.
+      </h1>
+      <p class="font-body-lg line-height-sans-2">Thank you for your patience while we work on it. Notify will be back soon.</p>
+    </div>
+  </div>
+  </div>
+  </section>
+  {% endif %}
   <section class="usa-section--dark usa-hero" aria-label="Introduction">
     <div class="grid-container padding-y-4">
       <div class="grid-row grid-gap display-flex flex-align-center">
