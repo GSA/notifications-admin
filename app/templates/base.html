@@ -14,7 +14,7 @@
     <script nonce="{{ csp_nonce() }}">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     {% block bodyStart %}
       {% block extra_javascripts_before_body %}
-      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WX5NGWF"
+      <noscript><iframe sandbox src="https://www.googletagmanager.com/ns.html?id=GTM-WX5NGWF"
       height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       {% endblock %}
     {% endblock %}
