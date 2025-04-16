@@ -3,7 +3,7 @@
     show=False,
     form=None,
     label=None,
-    autofocus=False
+    autofocus=True
 ) %}
     {%- set search_label = label or form.search.label.text %}
 
@@ -13,11 +13,11 @@
     } %}
 
     {% if autofocus %}
-      {% set x=param_extensions.__setitem__("attributes", {"data-module": "autofocus"}) %}
+      {% set _ = param_extensions.__setitem__("attributes", {"autofocus": "autofocus"}) %}
     {% endif %}
 
     {% if show %}
-        <div class="live-search js-header margin-top-0" data-module="live-search" data-targets="{{ target_selector }}">
+        <div class="live-search js-header" data-targets="{{ target_selector }}">
           {{ form.search(param_extensions=param_extensions) }}
           <div aria-live="polite" class="live-search__status usa-sr-only"></div>
         </div>

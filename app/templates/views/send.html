@@ -5,6 +5,7 @@
 {% from "components/table.html" import list_table, text_field, index_field, index_field_heading %}
 {% from "components/components/back-link/macro.njk" import usaBackLink %}
 <script type="text/javascript" src="{{ asset_url('js/setTimezone.js') }}"></script>
+import { FullscreenTable } from './fullscreenTable.js';
 
 {% block service_page_title %}
   Upload your bulk-sending spreadsheet
@@ -71,7 +72,7 @@
 
   <h2 class="font-body-lg">A spreadsheet is available to use</h2>
 
-  <div class="spreadsheet" data-module="fullscreen-table">
+  <div class="table-wrapper spreadsheet" data-module="fullscreen-table">
     {% call(item, row_number) list_table(
       example,
       caption="Example",
