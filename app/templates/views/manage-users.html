@@ -30,13 +30,13 @@
   </div>
 
   {% if show_search_box %}
-    <div data-module="autofocus">
+    <div>
       {{ live_search(target_selector='.user-list-item', show=True, form=form) }}
     </div>
   {% endif %}
 
-  <div class="user-list">
     {% for user in users %}
+    <div class="user-list">
       {% if user.status != 'cancelled' %}
         <div class="user-list-item">
           <h2 class="user-list-item-heading font-body-lg margin-top-0" title="{{ user.email_address }}">
@@ -101,7 +101,7 @@
             {% endif %}
         </div>
       {% endif %}
+    </div>
     {% endfor %}
-  </div>
 
 {% endblock %}

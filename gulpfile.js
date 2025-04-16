@@ -57,7 +57,6 @@ const javascripts = () => {
     paths.toolkit + 'javascripts/govuk/modules.js',
     paths.toolkit + 'javascripts/govuk/show-hide-content.js',
     paths.src + 'javascripts/copyToClipboard.js',
-    paths.src + 'javascripts/autofocus.js',
     paths.src + 'javascripts/enhancedTextbox.js',
     paths.src + 'javascripts/fileUpload.js',
     paths.src + 'javascripts/radioSelect.js',
