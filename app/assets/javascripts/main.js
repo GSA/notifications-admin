@@ -1,5 +1,5 @@
 // Initialize GOV.UK Frontend components (modern init)
-window.GOVUKFrontend.initAll();
+window.GOVUK.Frontend?.initAll?.();
 
 var showHideContent = new GOVUK.ShowHideContent();
 showHideContent.init();
