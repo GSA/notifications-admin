@@ -18,6 +18,12 @@ Object.defineProperty(HTMLElement.prototype, 'clientWidth', {
 });
 
 // beforeAll hook to set up the DOM and load D3.js script
+beforeAll(() => {
+  jest.spyOn(Intl, 'DateTimeFormat').mockImplementation(() => ({
+    resolvedOptions: () => ({ timeZone: 'UTC' })
+  }));
+});
+
 beforeAll(done => {
   // Set up the DOM with the D3 script included
   document.body.innerHTML = `
