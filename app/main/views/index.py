@@ -25,10 +25,8 @@ from app.utils.user import user_is_logged_in
 def check_feature_flags():
     # Placeholder for future feature flag checks
     # Example:
-    if "/jobs" in request.path and not current_app.config.get(
-        "FEATURE_SOCKET_ENABLED", False
-    ):
-        abort(404)
+    # if request.path.startswith("/some-feature") and not current_app.config.get("FEATURE_SOME_FEATURE_ENABLED", False):
+    #     abort(404)
     pass
 
 
