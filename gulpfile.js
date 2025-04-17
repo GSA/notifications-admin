@@ -74,7 +74,6 @@ const javascripts = () => {
     paths.src + 'javascripts/radioSlider.js',
     paths.src + 'javascripts/updateStatus.js',
     paths.src + 'javascripts/errorBanner.js',
-    paths.src + 'javascripts/homepage.js',
     paths.src + 'javascripts/timeoutPopup.js',
     paths.src + 'javascripts/date.js',
     paths.src + 'javascripts/loginAlert.js',
