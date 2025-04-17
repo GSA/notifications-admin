@@ -3,7 +3,7 @@
     show=False,
     form=None,
     label=None,
-    autofocus=False
+    autofocus=True
 ) %}
     {%- set search_label = label or form.search.label.text %}
 
@@ -13,7 +13,7 @@
     } %}
 
     {% if autofocus %}
-      {% set x=param_extensions.__setitem__("attributes", {"data-module": "autofocus"}) %}
+      {% set _ = param_extensions.__setitem__("attributes", {"autofocus": "autofocus"}) %}
     {% endif %}
 
     {% if show %}
