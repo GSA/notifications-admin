@@ -68,7 +68,6 @@ const javascripts = () => {
     paths.src + 'javascripts/errorTracking.js',
     paths.src + 'javascripts/preventDuplicateFormSubmissions.js',
     paths.src + 'javascripts/fullscreenTable.js',
-    paths.src + 'javascripts/colourPreview.js',
     paths.src + 'javascripts/templateFolderForm.js',
     paths.src + 'javascripts/collapsibleCheckboxes.js',
     paths.src + 'javascripts/radioSlider.js',
