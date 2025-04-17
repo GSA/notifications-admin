@@ -12,17 +12,6 @@ import usaButton %} {% block meta %}
 {% block beforeContent %}{% endblock %}
 
 <main id="main-content" role="main">
-  {% if is_api_down %}
-    <div class="usa-alert usa-alert--info usa-alert--slim" aria-label="Site alert,,,,">
-      <div class="grid-container padding-x-0">
-        <div class="usa-alert__body">
-          <p class="usa-alert__text">
-            We're currently having some technical issues. We're working on it and will be back soon. Thanks for your patience!
-          </p>
-        </div>
-      </div>
-    </div>
-  {% endif %}
   {% block content %}
   {% if is_api_down %}
     {% include "error/technical_difficulties.html" %}
