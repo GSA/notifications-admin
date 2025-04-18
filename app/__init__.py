@@ -158,11 +158,14 @@ def _csp(config):
             "https://www.googletagmanager.com",
             "https://www.google-analytics.com",
             "https://dap.digitalgov.gov",
+            "https://cdn.socket.io",
         ],
         "connect-src": [
             "'self'",
             "https://gov-bam.nr-data.net",
             "https://www.google-analytics.com",
+            "http://localhost:6011",
+            "ws://localhost:6011",
         ],
         "style-src": ["'self'", asset_domain],
         "img-src": ["'self'", asset_domain, logo_domain],
@@ -173,17 +176,18 @@ def create_app(application):
     @application.after_request
     def add_csp_header(response):
         existing_csp = response.headers.get("Content-Security-Policy", "")
-        response.headers["Content-Security-Policy"] = existing_csp + "; form-action 'self';"
+        response.headers["Content-Security-Policy"] = (
+            existing_csp + "; form-action 'self';"
+        )
         return response
-    # @application.context_processor
-    # def inject_feature_flags():
-    # this is where feature flags can be easily added as a dictionary within context
-    # feature_about_page_enabled = application.config.get(
-    # "FEATURE_ABOUT_PAGE_ENABLED", False
-    # )
-    # return dict(
-    #     FEATURE_ABOUT_PAGE_ENABLED=feature_about_page_enabled,
-    # )
+
+    @application.context_processor
+    def inject_feature_flags():
+        # this is where feature flags can be easily added as a dictionary within context
+        feature_socket_enabled = application.config.get("FEATURE_SOCKET_ENABLED", False)
+        return dict(
+            FEATURE_SOCKET_ENABLED=feature_socket_enabled,
+        )
 
     @application.context_processor
     def inject_initial_signin_url():
