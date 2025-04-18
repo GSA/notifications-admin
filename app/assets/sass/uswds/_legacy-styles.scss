@@ -344,3 +344,9 @@ h2.recipient-list {
     }
   }
 }
+
+.usa-search__input, [type=search] {
+  border-right: 1px solid;
+  height: 40px;
+  margin-top: units(1);
+}

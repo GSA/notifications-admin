@@ -24,13 +24,13 @@
   </h1>
 
   {% if show_search_box %}
-    <div data-module="autofocus">
+    <div>
       {{ live_search(target_selector='.user-list-item', show=True, form=form) }}
     </div>
   {% endif %}
 
-  <div class="user-list">
-    {% for user in users %}
+  {% for user in users %}
+    <div class="user-list">
       <div class="user-list-item">
         <div class="grid-row">
           <div class="grid-col-9">
@@ -60,8 +60,8 @@
           </div>
         </div>
       </div>
-    {% endfor %}
-  </div>
+    </div>
+  {% endfor %}
 
   <div class="js-stick-at-bottom-when-scrolling">
     {{ usaButton({
