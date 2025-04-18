@@ -19,6 +19,7 @@ from app.main.views.sub_navigation_dictionaries import (
     about_notify_nav,
     using_notify_nav,
 )
+from app.utils.api_health import is_api_down
 from app.utils.user import user_is_logged_in
 
 logger = logging.getLogger(__name__)
@@ -51,11 +52,11 @@ def index():
     except Exception as e:
         logger.warning(f"API down when loading homepage: {e}")
         counts = None
-        print(counts)
     return render_template(
         "views/signedout.html",
         sms_rate=CURRENT_SMS_RATE,
         counts=counts,
+        is_api_down=is_api_down()
     )
 
 

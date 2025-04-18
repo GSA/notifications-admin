@@ -6,42 +6,15 @@ import usaButton %} {% block meta %}
 />
 {% endblock %}
 {% block pageTitle %} Notify.gov
-  {% if counts %} - There's currently a technical issue {% endif %}
+  {% if is_api_down %} - There's currently a technical issue {% endif %}
 {% endblock %}
 {% block main %}
 {% block beforeContent %}{% endblock %}
 
 <main id="main-content" role="main">
-  {% if counts %}
-    <div class="usa-alert usa-alert--info usa-alert--slim" aria-label="Site alert,,,,">
-      <div class="grid-container padding-x-0">
-        <div class="usa-alert__body">
-          <p class="usa-alert__text">
-            We're currently having some technical issues. We're working on it and will be back soon. Thanks for your patience!
-          </p>
-        </div>
-      </div>
-    </div>
-  {% endif %}
   {% block content %}
-  {% if counts %}
-  <section class="grid-container usa-section margin-top-5 margin-bottom-5">
-  <div class="grid-row flex-justify-center">
-    <div class="desktop:grid-col-3 tablet:grid-col-4 mobile:grid-col-12 flex-align-center">
-      <img
-      class="width-tablet tablet:width-full"
-      src="{{ asset_url('images/api-error.svg') }}"
-      alt="Mobile phone showing error screen"/>
-    </div>
-    <div class="desktop:grid-col-6 tablet:grid-col-12 padding-left-0 desktop:padding-left-5">
-      <h1 class="font-body-3xl line-height-sans-2 text-bold">
-        There's currently a technical issue.
-      </h1>
-      <p class="font-body-lg line-height-sans-2">Thank you for your patience while we work on it. Notify will be back soon.</p>
-    </div>
-  </div>
-  </div>
-  </section>
+  {% if is_api_down %}
+    {% include "error/technical_difficulties.html" %}
   {% endif %}
   <section class="usa-section--dark usa-hero" aria-label="Introduction">
     <div class="grid-container padding-y-4">
