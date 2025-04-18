@@ -68,10 +68,11 @@
         data-highlight-placeholders="true"
       >{{ field._value() }}</textarea>
     {% else %}
+    {% set input_type = 'tel' if 'phone' in field.label.text else 'text' %}
       <input
         id="{{ field_id }}"
         name="{{ field.name }}"
-        type="{{ field.type }}"
+        type="{{ input_type }}"
         class="{{ field_class }}"
         value="{{ field._value() }}"
         placeholder="{{ placeholder }}"
