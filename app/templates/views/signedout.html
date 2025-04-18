@@ -13,197 +13,197 @@ import usaButton %} {% block meta %}
 
 <main id="main-content" role="main">
   {% block content %}
-  {% if is_api_down %}
-    {% include "error/technical_difficulties.html" %}
-  {% endif %}
-  <section class="usa-section--dark usa-hero" aria-label="Introduction">
-    <div class="grid-container padding-y-4">
-      <div class="grid-row grid-gap display-flex flex-align-center">
-        <div class="desktop:grid-col-8 tablet:grid-col-12">
-          <h1 class="font-sans-2xl usa-hero__heading">
-            Reach people where they are with government-powered text messages
-          </h1>
-          <p class="font-sans-lg">
-            Notify.gov is a text messaging service that helps federal, state,
-            local, tribal and territorial governments more effectively
-            communicate with the people they serve.
-          </p>
-          <div class="usa-button-group margin-bottom-5 flex-align-center">
-            <a
-              class="usa-button usa-button login-button login-button--primary margin-right-2"
-              href="{{ initial_signin_url }}"
-              >Sign in with
+    {% if is_api_down %}
+      {% include "error/technical_difficulties.html" %}
+    {% else %}
+      <section class="usa-section--dark usa-hero" aria-label="Introduction">
+        <div class="grid-container padding-y-4">
+          <div class="grid-row grid-gap display-flex flex-align-center">
+            <div class="desktop:grid-col-8 tablet:grid-col-12">
+              <h1 class="font-sans-2xl usa-hero__heading">
+                Reach people where they are with government-powered text messages
+              </h1>
+              <p class="font-sans-lg">
+                Notify.gov is a text messaging service that helps federal, state,
+                local, tribal and territorial governments more effectively
+                communicate with the people they serve.
+              </p>
+              <div class="usa-button-group margin-bottom-5 flex-align-center">
+                <a
+                  class="usa-button usa-button login-button login-button--primary margin-right-2"
+                  href="{{ initial_signin_url }}"
+                  >Sign in with
+                  <img
+                    src="{{ asset_url('images/logo-login.svg') }}"
+                    alt="Login.gov logo"
+                  />
+                </a>
+                if you are an existing partner
+              </div>
+            </div>
+            <div
+              class="desktop:grid-col-3 grid-offset-1 desktop:display-block display-none margin-x-5"
+            >
               <img
-                src="{{ asset_url('images/logo-login.svg') }}"
-                alt="Login.gov logo"
+                src="{{ asset_url('images/product/phone-text.png') }}"
+                alt="Illustration of a mobile phone displaying a text message and number on its screen, with a speech bubble coming out from outside the phone, symbolizing communication or notification."
               />
-            </a>
-            if you are an existing partner
+            </div>
           </div>
         </div>
-        <div
-          class="desktop:grid-col-3 grid-offset-1 desktop:display-block display-none margin-x-5"
-        >
-          <img
-            src="{{ asset_url('images/product/phone-text.png') }}"
-            alt="Illustration of a mobile phone displaying a text message and number on its screen, with a speech bubble coming out from outside the phone, symbolizing communication or notification."
-          />
-        </div>
-      </div>
-    </div>
-  </section>
-  <section
-    class="grid-container usa-section usa-section__home border-top border-base-lighter usa-prose padding-bottom-1"
-  >
-    <h2 class="font-body-xl margin-top-0 margin-bottom-3">
-      Government texting made easy
-    </h2>
-    <p class="usa-body">
-      Notify.gov is a text messaging platform built for government agencies.
-      With minimal set-up and secure, personalized messaging, you can make
-      one-way texting a part of your outreach program.
-    </p>
-  </section>
-
-  <section
-    class="grid-container usa-section usa-section__home usa-prose padding-bottom-1"
-  >
-    <h2 class="font-sans-xl margin-top-0">Key features</h2>
-    <div class="home-cards margin-top-5">
-      <ul class="usa-card-group display-flex margin-bottom-4">
-        <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
-          <div class="usa-card__container">
-            <div class="blue-bar"></div>
-            <img
-              src="{{ asset_url('images/internet.svg') }}"
-              alt="Globe on top of a web browser"
-            />
-            <div class="usa-card__header">
-              <h3 class="font-heading-md">Web-based</h3>
-            </div>
-            <div class="usa-card__body">
-              <p>Nothing to download or install</p>
-            </div>
-          </div>
-        </li>
-        <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
-          <div class="usa-card__container">
-            <div class="blue-bar"></div>
-            <img
-              src="{{ asset_url('images/fast.svg') }}"
-              alt="Stopwatch with a notification speech bubble with a star inside"
-            />
-            <div class="usa-card__header">
-              <h3 class="font-heading-md">Fast and easy</h3>
-            </div>
-            <div class="usa-card__body">
-              <p>No technical expertise required</p>
-            </div>
-          </div>
-        </li>
-        <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
-          <div class="usa-card__container">
-            <div class="blue-bar"></div>
-            <img
-              src="{{ asset_url('images/status.svg') }}"
-              alt="3 status messages, 2 successes and one failure"
-            />
-            <div class="usa-card__header">
-              <h3 class="font-heading-md">Track message delivery</h3>
-            </div>
-            <div class="usa-card__body">
-              <p>See which messages were received</p>
-            </div>
-          </div>
-        </li>
-      </ul>
-      <ul class="usa-card-group">
-        <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
-          <div class="usa-card__container">
-            <div class="blue-bar"></div>
-            <img
-              src="{{ asset_url('images/translation.svg') }}"
-              alt="Speech bubbles with the letter A and the Chinese character for language"
-            />
-            <div class="usa-card__header">
-              <h3 class="font-heading-md">
-                Send in recipients' preferred language
-              </h3>
-            </div>
-            <div class="usa-card__body">
-              <p>Notify.gov has support for more than 30 character sets</p>
-            </div>
-          </div>
-        </li>
-        <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
-          <div class="usa-card__container">
-            <div class="blue-bar"></div>
-            <img
-              src="{{ asset_url('images/security.svg') }}"
-              alt="Lock with code icon inside on top of a web browser"
-            />
-            <div class="usa-card__header">
-              <h3 class="font-heading-md">Security and privacy</h3>
-            </div>
-            <div class="usa-card__body">
-              <p>
-                Limited data retention, encryption, and multi-factor
-                authentication protect user data and manage risk with <br><a href="/about/security">our security efforts</a>
-              </p>
-            </div>
-          </div>
-        </li>
-        <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
-          <div class="usa-card__container">
-            <div class="blue-bar"></div>
-            <img
-              src="{{ asset_url('images/send.svg') }}"
-              alt="Paper airplane and a notification icon with the number 1 inside"
-            />
-            <div class="usa-card__header">
-              <h3 class="font-heading-md">
-                Send bulk, customized, one-way messages
-              </h3>
-            </div>
-            <div class="usa-card__body">
-              <p>
-                Send hundreds or thousands of individually customized messages
-                with just a few clicks
-              </p>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  <section
-    class="grid-container usa-section usa-section__home usa-prose grid-container padding-bottom-10">
-    <div class="grid-row grid-gap-3">
-      <a
-        class="text-no-underline tablet:grid-col-4 mobile-lg:grid-col-12"
-        href="mailto:tts-notify@gsa.gov"
+      </section>
+      <section
+        class="grid-container usa-section usa-section__home border-top border-base-lighter usa-prose padding-bottom-1"
       >
-        <div class="contact-us-card">
-          <div class="grid-row flex-align-center grid-gap-2">
-            <div class="grid-col-auto">
-              <img
-                src="{{ asset_url('images/contact.svg') }}"
-                alt=""
-                class="height-7 width-7"
-              />
-            </div>
-            <div class="grid-col">
-              <p class="margin-0">
-                <strong>Contact us</strong><br />
-              </p>
-            </div>
-          </div>
-        </div>
-      </a>
-    </div>
-  </section>
+        <h2 class="font-body-xl margin-top-0 margin-bottom-3">
+          Government texting made easy
+        </h2>
+        <p class="usa-body">
+          Notify.gov is a text messaging platform built for government agencies.
+          With minimal set-up and secure, personalized messaging, you can make
+          one-way texting a part of your outreach program.
+        </p>
+      </section>
 
+      <section
+        class="grid-container usa-section usa-section__home usa-prose padding-bottom-1"
+      >
+        <h2 class="font-sans-xl margin-top-0">Key features</h2>
+        <div class="home-cards margin-top-5">
+          <ul class="usa-card-group display-flex margin-bottom-4">
+            <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
+              <div class="usa-card__container">
+                <div class="blue-bar"></div>
+                <img
+                  src="{{ asset_url('images/internet.svg') }}"
+                  alt="Globe on top of a web browser"
+                />
+                <div class="usa-card__header">
+                  <h3 class="font-heading-md">Web-based</h3>
+                </div>
+                <div class="usa-card__body">
+                  <p>Nothing to download or install</p>
+                </div>
+              </div>
+            </li>
+            <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
+              <div class="usa-card__container">
+                <div class="blue-bar"></div>
+                <img
+                  src="{{ asset_url('images/fast.svg') }}"
+                  alt="Stopwatch with a notification speech bubble with a star inside"
+                />
+                <div class="usa-card__header">
+                  <h3 class="font-heading-md">Fast and easy</h3>
+                </div>
+                <div class="usa-card__body">
+                  <p>No technical expertise required</p>
+                </div>
+              </div>
+            </li>
+            <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
+              <div class="usa-card__container">
+                <div class="blue-bar"></div>
+                <img
+                  src="{{ asset_url('images/status.svg') }}"
+                  alt="3 status messages, 2 successes and one failure"
+                />
+                <div class="usa-card__header">
+                  <h3 class="font-heading-md">Track message delivery</h3>
+                </div>
+                <div class="usa-card__body">
+                  <p>See which messages were received</p>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <ul class="usa-card-group">
+            <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
+              <div class="usa-card__container">
+                <div class="blue-bar"></div>
+                <img
+                  src="{{ asset_url('images/translation.svg') }}"
+                  alt="Speech bubbles with the letter A and the Chinese character for language"
+                />
+                <div class="usa-card__header">
+                  <h3 class="font-heading-md">
+                    Send in recipients' preferred language
+                  </h3>
+                </div>
+                <div class="usa-card__body">
+                  <p>Notify.gov has support for more than 30 character sets</p>
+                </div>
+              </div>
+            </li>
+            <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
+              <div class="usa-card__container">
+                <div class="blue-bar"></div>
+                <img
+                  src="{{ asset_url('images/security.svg') }}"
+                  alt="Lock with code icon inside on top of a web browser"
+                />
+                <div class="usa-card__header">
+                  <h3 class="font-heading-md">Security and privacy</h3>
+                </div>
+                <div class="usa-card__body">
+                  <p>
+                    Limited data retention, encryption, and multi-factor
+                    authentication protect user data and manage risk with <br><a href="/about/security">our security efforts</a>
+                  </p>
+                </div>
+              </div>
+            </li>
+            <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
+              <div class="usa-card__container">
+                <div class="blue-bar"></div>
+                <img
+                  src="{{ asset_url('images/send.svg') }}"
+                  alt="Paper airplane and a notification icon with the number 1 inside"
+                />
+                <div class="usa-card__header">
+                  <h3 class="font-heading-md">
+                    Send bulk, customized, one-way messages
+                  </h3>
+                </div>
+                <div class="usa-card__body">
+                  <p>
+                    Send hundreds or thousands of individually customized messages
+                    with just a few clicks
+                  </p>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section
+        class="grid-container usa-section usa-section__home usa-prose grid-container padding-bottom-10">
+        <div class="grid-row grid-gap-3">
+          <a
+            class="text-no-underline tablet:grid-col-4 mobile-lg:grid-col-12"
+            href="mailto:tts-notify@gsa.gov"
+          >
+            <div class="contact-us-card">
+              <div class="grid-row flex-align-center grid-gap-2">
+                <div class="grid-col-auto">
+                  <img
+                    src="{{ asset_url('images/contact.svg') }}"
+                    alt=""
+                    class="height-7 width-7"
+                  />
+                </div>
+                <div class="grid-col">
+                  <p class="margin-0">
+                    <strong>Contact us</strong><br />
+                  </p>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </section>
+    {% endif %}
   {% endblock %}
 </main>
 {% endblock %}
