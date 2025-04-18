@@ -12,12 +12,11 @@ from pythonjsonlogger.jsonlogger import JsonFormatter as BaseJSONFormatter
 
 class ColorFormatter(logging.Formatter):
     COLOR_MAP = {
-        'DEBUG': '\033[94m',
-        'WARNING': '\033[93m',
-        'ERROR': '\033[91m',
-        'CRITICAL': '\033[95m',
+        "WARNING": "\033[93m",
+        "ERROR": "\033[91m",
+        "CRITICAL": "\033[95m",
     }
-    RESET = '\033[0m'
+    RESET = "\033[0m"
 
     def format(self, record: logging.LogRecord) -> str:
         color = self.COLOR_MAP.get(record.levelname, self.RESET)

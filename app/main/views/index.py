@@ -56,7 +56,7 @@ def index():
         "views/signedout.html",
         sms_rate=CURRENT_SMS_RATE,
         counts=counts,
-        is_api_down=is_api_down()
+        is_api_down=is_api_down(),
     )
 
 
