@@ -5,7 +5,6 @@
   highlight_placeholders=False,
   autofocus=False,
   autosize=False,
-  colour_preview=False,
   help_link=None,
   help_link_text=None,
   width='2-3',
@@ -13,58 +12,82 @@
   safe_error_message=False,
   rows=8,
   extra_form_group_classes='',
-  placeholder=''
+  placeholder='',
+  input_id=None
 ) %}
+  {% set field_id = kwargs.id if kwargs.id is defined else field.id %}
+  {% set described_by = '' %}
+  {% if hint %}{% set described_by = described_by + field_id ~ '-hint' %}{% endif %}
+  {% if field.errors %}
+    {% if described_by %}{% set described_by = described_by + ' ' %}{% endif %}
+    {% set described_by = described_by + field_id ~ '-error' %}
+  {% endif %}
+
   <div
     class="usa-form-group{% if field.errors %} usa-form-group--error{% endif %} {{ extra_form_group_classes }}"
     data-module="{% if autofocus %}autofocus{% elif colour_preview %}colour-preview{% endif %}"
   >
-    <label class="usa-label" for="{{ field.name }}">
-      {% if label %}
-        {{ label }}
-      {% else %}
-        {{ field.label.text }}
-      {% endif %}
+    <label class="usa-label" for="{{ field_id }}">
+      {{ label or field.label.text }}
     </label>
+
     {% if hint %}
-      <div class="usa-hint">
+      <div class="usa-hint" id="{{ field_id }}-hint">
         {{ hint }}
       </div>
     {% endif %}
+
     {% if field.errors %}
-      <span id="{{ field.name}}-error" class="error-message usa-error-message" data-module="track-error" data-error-type="{{ field.errors[0] }}" data-error-label="{{ field.name }}" tabindex="-1" aria-live="assertive" role="alert">
+      <span id="{{ field_id }}-error" class="error-message usa-error-message" data-module="track-error" data-error-type="{{ field.errors[0] }}" data-error-label="{{ field.name }}" tabindex="-1" aria-live="assertive" role="alert">
         <span class="usa-sr-only">Error:</span>
-        {% if not safe_error_message %}{{ field.errors[0] }}{% else %}{{ field.errors[0]|safe }}{% endif %}
+        {% if not safe_error_message %}
+          {{ field.errors[0] }}
+        {% else %}
+          {{ field.errors[0] | safe }}
+        {% endif %}
       </span>
     {% endif %}
-    {%
-      if highlight_placeholders or autosize
-    %}
+
+    {% if highlight_placeholders or autosize %}
       {% set field_class = 'usa-textarea form-control-{} textbox-highlight-textbox'.format(width) %}
     {% else %}
-      {% set field_class = 'form-control-{} {}'.format(width, 'textbox-right-aligned' if suffix else '') %}
+      {% set field_class = 'usa-input' %}
     {% endif %}
-    {%
-      set field_class = 'form-control ' + field_class + (
-        ' form-control-error' if field.errors else ''
-      )
-    %}
-    {{ field(
-      class=field_class,
-      data_module='enhanced-textbox' if highlight_placeholders or autosize else '',
-      data_highlight_placeholders='true' if highlight_placeholders else 'false',
-      rows=rows|string,
-      placeholder=placeholder,
-      aria_describedby=field.name+"-error",
-      required='required' if required else None,
-      **kwargs
-    ) }}
+    {% set field_class = 'form-control ' ~ field_class ~ (' form-control-error' if field.errors else '') %}
+
+    {% if autosize or highlight_placeholders %}
+      <textarea
+        id="{{ field_id }}"
+        name="{{ field.name }}"
+        class="{{ field_class }}"
+        rows="{{ rows }}"
+        placeholder="{{ placeholder }}"
+        aria-describedby="{{ described_by.strip() }}"
+        {% if field.flags.required %}required{% endif %}
+        data-module="enhanced-textbox"
+        data-highlight-placeholders="true"
+      >{{ field._value() }}</textarea>
+    {% else %}
+    {% set input_type = 'tel' if 'phone' in field.label.text else 'text' %}
+      <input
+        id="{{ field_id }}"
+        name="{{ field.name }}"
+        type="{{ input_type }}"
+        class="{{ field_class }}"
+        value="{{ field._value() }}"
+        placeholder="{{ placeholder }}"
+        aria-describedby="{{ described_by.strip() }}"
+        {% if field.flags.required %}required{% endif %}
+      />
+    {% endif %}
+
     {% if suffix %}
       <span>{{ suffix }}</span>
     {% endif %}
+
     {% if help_link and help_link_text %}
       <p class="textbox-help-link">
-        <a class="usa-link" href='{{ help_link }}'>{{ help_link_text }}</a>
+        <a class="usa-link" href="{{ help_link }}">{{ help_link_text }}</a>
       </p>
     {% endif %}
   </div>
