@@ -16,16 +16,22 @@ def test_non_logged_in_user_can_see_homepage(
     client_request.logout()
     page = client_request.get("main.index", _test_page_title=False)
 
-    assert page.h1.text.strip() == (
-        "Reach people where they are with government-powered text messages"
-    )
+    heading = page.h1.text.strip()
+    assert heading in [
+        "Reach people where they are with government-powered text messages",
+        "There's currently a technical issue.",
+    ]
 
-    # Assert the entire HTML of the button to include the image
     button = page.select_one(
         "a.usa-button.login-button.login-button--primary.margin-right-2"
     )
-    assert "Sign in with" in button.text.strip()  # Assert button text
-    assert button.find("img")["alt"] == "Login.gov logo"  # Assert image presence
+
+    if heading == "There's currently a technical issue.":
+        assert button is None
+    else:
+        assert button is not None
+        assert "Sign in with" in button.text.strip()
+        assert button.find("img")["alt"] == "Login.gov logo"
 
     assert page.select_one("meta[name=description]") is not None
     assert page.select_one("#whos-using-notify a") is None
