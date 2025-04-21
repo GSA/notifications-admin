@@ -38,6 +38,7 @@ function attachValidation() {
             const validatedRadioNames = new Set();
 
             inputs.forEach((input) => {
+                if (input.type === "hidden") return;
                 const errorId = input.type === "radio" ? `${input.name}-error` : `${input.id}-error`;
                 let errorElement = document.getElementById(errorId);
 
@@ -85,6 +86,7 @@ function attachValidation() {
         });
 
         inputs.forEach((input) => {
+            if (input.type === "hidden") return;
             input.addEventListener("input", function () {
                 const errorId = input.type === "radio" ? `${input.name}-error` : `${input.id}-error`;
                 const errorElement = document.getElementById(errorId);
