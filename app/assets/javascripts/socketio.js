@@ -13,11 +13,12 @@ document.addEventListener('DOMContentLoaded', function () {
   const jobEl = document.querySelector('[data-job-id]');
   const jobId = jobEl?.dataset?.jobId;
   const featureEnabled = jobEl?.dataset?.feature === 'true';
+  const apiHost = jobEl?.dataset?.host;
 
   if (!jobId) return;
 
   if (featureEnabled) {
-    const socket = io('http://localhost:6011');
+    const socket = io(apiHost);
 
     socket.on('connect', () => {
       socket.emit('join', { room: `job-${jobId}` });
