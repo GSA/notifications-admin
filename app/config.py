@@ -88,6 +88,8 @@ class Config(object):
         ],
     }
 
+    FEATURE_SOCKET_ENABLED = getenv("FEATURE_SOCKET_ENABLED", "false") == "true"
+
 
 def _s3_credentials_from_env(bucket_prefix):
     return {

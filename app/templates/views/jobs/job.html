@@ -11,10 +11,15 @@
 {% block maincolumn_content %}
 
     {{ page_header("Message status") }}
+    <div data-job-id="{{ job.id }}" data-feature="{{FEATURE_SOCKET_ENABLED | lower}}">
     {% if not job.finished_processing %}
       <div
-        data-module="update-content"
         data-resource="{{ updates_url }}"
+        {% if FEATURE_SOCKET_ENABLED %}
+          data-socket-update="status"
+        {% else %}
+          data-module="update-content"
+        {% endif %}
         data-key="status"
         data-form=""
       >
@@ -25,8 +30,12 @@
     {% endif %}
     {% if not finished %}
       <div
-        data-module="update-content"
         data-resource="{{ updates_url }}"
+        {% if FEATURE_SOCKET_ENABLED %}
+          data-socket-update="counts"
+        {% else %}
+          data-module="update-content"
+        {% endif %}
         data-key="counts"
         data-form=""
       >
@@ -41,8 +50,12 @@
     </p>
     {% if not job.processing_finished %}
       <div
-        data-module="update-content"
         data-resource="{{ updates_url }}"
+        {% if FEATURE_SOCKET_ENABLED %}
+          data-socket-update="notifications"
+        {% else %}
+          data-module="update-content"
+        {% endif %}
         data-key="notifications"
         data-form=""
       >
@@ -51,7 +64,6 @@
     {% if not job.processing_finished %}
       </div>
     {% endif %}
-
-    <div> </div>
+  </div>
 
 {% endblock %}
