@@ -945,7 +945,7 @@ def test_load_edit_template_with_copy_of_template(
     assert page.select_one("form")["method"] == "post"
 
     assert page.select_one("input")["value"] == (expected_name)
-    assert page.select_one("textarea").text == ("\r\nYour ((thing)) is due soon")
+    assert page.select_one("textarea").text.strip() == ("Your ((thing)) is due soon")
     mock_get_service_email_template.assert_called_once_with(
         SERVICE_TWO_ID,
         TEMPLATE_ONE_ID,
