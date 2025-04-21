@@ -118,6 +118,8 @@ from notifications_utils.formatters import (
 from notifications_utils.recipients import format_phone_number_human_readable
 from notifications_utils.url_safe_token import generate_token
 
+from app.utils.api_health import is_api_down
+
 login_manager = LoginManager()
 csrf = CSRFProtect()
 talisman = Talisman()
@@ -184,6 +186,10 @@ def create_app(application):
     # return dict(
     #     FEATURE_ABOUT_PAGE_ENABLED=feature_about_page_enabled,
     # )
+
+    @application.context_processor
+    def inject_is_api_down():
+        return {"is_api_down": is_api_down()}
 
     @application.context_processor
     def inject_initial_signin_url():

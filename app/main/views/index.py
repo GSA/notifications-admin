@@ -19,7 +19,6 @@ from app.main.views.sub_navigation_dictionaries import (
     about_notify_nav,
     using_notify_nav,
 )
-from app.utils.api_health import is_api_down
 from app.utils.user import user_is_logged_in
 
 logger = logging.getLogger(__name__)
@@ -47,16 +46,10 @@ def index():
     if current_user and current_user.is_authenticated:
         return redirect(url_for("main.choose_account"))
 
-    try:
-        counts = status_api_client.get_count_of_live_services_and_organizations()
-    except Exception as e:
-        logger.warning(f"API down when loading homepage: {e}")
-        counts = None
     return render_template(
         "views/signedout.html",
         sms_rate=CURRENT_SMS_RATE,
-        counts=counts,
-        is_api_down=is_api_down(),
+        counts=status_api_client.get_count_of_live_services_and_organizations()
     )
 
 
