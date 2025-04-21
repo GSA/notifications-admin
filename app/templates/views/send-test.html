@@ -40,7 +40,7 @@
   ) %}
     <div class="grid-row">
       {% set is_phone_number = form.placeholder_value.label.text == "phone number" %}
-      {% set label_text = "Recipient phone number" if current_placeholder == "phone number" else current_placeholder %}
+      {% set label_text = "Country code and phone number" if current_placeholder == "phone number" else current_placeholder %}
       {% set hint_text = "For example: +18885551234" if is_phone_number else None %}
       {% set extra_class = "extra-tracking" if is_phone_number else "" %}
 
