@@ -30,7 +30,7 @@
         window.GOVUK.stickAtBottomWhenScrolling.recalculate();
       }
 
-      this.maintainWidth();npm
+      this.maintainWidth();
 
     };
 
