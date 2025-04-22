@@ -62,3 +62,4 @@ applications:
       LOGIN_DOT_GOV_CERTS_URL: ((LOGIN_DOT_GOV_CERTS_URL))
 
       # feature flagging
+      FEATURE_SOCKET_ENABLED: ((FEATURE_SOCKET_ENABLED))

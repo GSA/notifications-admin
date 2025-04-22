@@ -7,3 +7,4 @@ cloud_dot_gov_route: notify.app.cloud.gov
 redis_enabled: 1
 nr_agent_id: '1050708682'
 nr_app_id: '1050708682'
+FEATURE_SOCKET_ENABLED: false
