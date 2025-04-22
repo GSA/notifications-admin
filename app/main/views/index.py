@@ -1,3 +1,5 @@
+import logging
+
 from flask import (
     abort,
     current_app,
@@ -18,6 +20,8 @@ from app.main.views.sub_navigation_dictionaries import (
     using_notify_nav,
 )
 from app.utils.user import user_is_logged_in
+
+logger = logging.getLogger(__name__)
 
 
 # Hook to check for feature flags
@@ -45,7 +49,7 @@ def index():
     return render_template(
         "views/signedout.html",
         sms_rate=CURRENT_SMS_RATE,
-        counts=status_api_client.get_count_of_live_services_and_organizations(),
+        counts=status_api_client.get_count_of_live_services_and_organizations()
     )
 
 

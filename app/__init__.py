@@ -109,6 +109,7 @@ from app.notify_client.template_statistics_api_client import template_statistics
 from app.notify_client.upload_api_client import upload_api_client
 from app.notify_client.user_api_client import user_api_client
 from app.url_converters import SimpleDateTypeConverter, TemplateTypeConverter
+from app.utils.api_health import is_api_down
 from app.utils.govuk_frontend_jinja.flask_ext import init_govuk_frontend
 from notifications_utils import logging, request_helper
 from notifications_utils.formatters import (
@@ -188,6 +189,10 @@ def create_app(application):
         return dict(
             FEATURE_SOCKET_ENABLED=feature_socket_enabled,
         )
+
+    @application.context_processor
+    def inject_is_api_down():
+        return {"is_api_down": is_api_down()}
 
     @application.context_processor
     def inject_initial_signin_url():
