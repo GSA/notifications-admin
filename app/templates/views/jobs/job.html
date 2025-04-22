@@ -11,7 +11,7 @@
 {% block maincolumn_content %}
 
     {{ page_header("Message status") }}
-    <div data-job-id="{{ job.id }}" data-feature="{{FEATURE_SOCKET_ENABLED | lower}}">
+    <div data-job-id="{{ job.id }}" data-feature="{{FEATURE_SOCKET_ENABLED | lower}}" data-host="{{ api_host_name }}">
     {% if not job.finished_processing %}
       <div
         data-resource="{{ updates_url }}"
