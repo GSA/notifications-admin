@@ -1,6 +1,7 @@
-import os
-import requests
 import logging
+import os
+
+import requests
 from requests.exceptions import RequestException
 
 logger = logging.getLogger(__name__)

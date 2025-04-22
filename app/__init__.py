@@ -109,6 +109,7 @@ from app.notify_client.template_statistics_api_client import template_statistics
 from app.notify_client.upload_api_client import upload_api_client
 from app.notify_client.user_api_client import user_api_client
 from app.url_converters import SimpleDateTypeConverter, TemplateTypeConverter
+from app.utils.api_health import is_api_down
 from app.utils.govuk_frontend_jinja.flask_ext import init_govuk_frontend
 from notifications_utils import logging, request_helper
 from notifications_utils.formatters import (
@@ -117,8 +118,6 @@ from notifications_utils.formatters import (
 )
 from notifications_utils.recipients import format_phone_number_human_readable
 from notifications_utils.url_safe_token import generate_token
-
-from app.utils.api_health import is_api_down
 
 login_manager = LoginManager()
 csrf = CSRFProtect()
