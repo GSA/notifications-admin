@@ -1264,7 +1264,7 @@ def test_send_one_off_has_correct_page_title(
         (
             0,
             {},
-            "phone number",
+            "Country code and phone number",
         ),
         (
             1,
