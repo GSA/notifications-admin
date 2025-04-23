@@ -2226,14 +2226,14 @@ dev = ["black", "build", "flake8", "flake8-black", "isort", "jupyter-console", "
 
 [[package]]
 name = "pyexcel"
-version = "0.7.2"
+version = "0.7.3"
 description = "A wrapper library that provides one API to read, manipulate and writedata in different excel formats"
 optional = false
 python-versions = ">=3.6"
 groups = ["main"]
 files = [
-    {file = "pyexcel-0.7.2-py2.py3-none-any.whl", hash = "sha256:a71bf4f8154f9e380645138881f3292ee81eaffa374996adfd8f2edcc0c6cabb"},
-    {file = "pyexcel-0.7.2.tar.gz", hash = "sha256:a0d6eb788eb06e81a1b438c0e7c00fee080465f3397fbcffe5cec34aebe6a32a"},
+    {file = "pyexcel-0.7.3-py2.py3-none-any.whl", hash = "sha256:394df2445364fa1960fed4a9bb04c62efdff5435026f3d1346f614a94fe5ba7a"},
+    {file = "pyexcel-0.7.3.tar.gz", hash = "sha256:57b3c3fb55dd09a62cbbf2ae9f1e78aa11b627c2bfc6072ff2d9587c022b06d4"},
 ]
 
 [package.dependencies]
@@ -3289,4 +3289,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12.2"
-content-hash = "5389629c1eed6937e7282684a345cf421e02da94e60fe420bd62054dc3d60b5c"
+content-hash = "9542aa225c52e9238a20ff0bb179b51cee86303e686dc0faabf65dc652d514ab"
