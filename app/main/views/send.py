@@ -481,6 +481,7 @@ def send_one_off_step(service_id, template_id, step_index):
         ),
         template=template,
         form=form,
+        current_placeholder=current_placeholder,
         skip_link=get_skip_link(step_index, template),
         back_link=back_link,
         link_to_upload=(

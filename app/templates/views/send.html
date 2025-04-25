@@ -71,13 +71,14 @@
       show_errors=False
     )}}
   </div>
+  <span id="upload-status-live" class="usa-sr-only" role="status" aria-live="polite" aria-atomic="true"></span>
 
   <h2 class="font-body-lg">A spreadsheet is available to use</h2>
 
   <div class="spreadsheet" data-module="fullscreen-table">
     {% call(item, row_number) list_table(
       example,
-      caption="Example",
+      caption="Example spreadsheet",
       caption_visible=False,
       field_headings=[''] + column_headings
     ) %}
