@@ -476,7 +476,7 @@ def send_one_off_step(service_id, template_id, step_index):
         "views/send-test.html",
         page_title=get_send_test_page_title(
             template.template_type,
-            entering_recipient=(step_index == 0),
+            entering_recipient=not session["recipient"],
             name=template.name,
         ),
         template=template,
@@ -561,24 +561,47 @@ def _check_messages(service_id, template_id, upload_id, preview_row, **kwargs):
     )
 
     if request.args.get("from_test"):
-        # TODO: may not be required after letters code removed
-        back_link = url_for(
-            "main.send_one_off", service_id=service_id, template_id=template.id
-        )
-        back_link_from_preview = url_for(
-            "main.send_one_off", service_id=service_id, template_id=template.id
-        )
+        back_link = {
+            "href": {
+                "url": url_for(
+                    "main.send_one_off", service_id=service_id, template_id=template.id
+                ),
+                "text": "Back to message personalization"
+            },
+            "html": "Back to message personalization"
+        }
+        back_link_from_preview = {
+            "href": {
+                "url": url_for(
+                    "main.send_one_off", service_id=service_id, template_id=template.id
+                ),
+                "text": "Back to message personalization"
+            },
+            "html": "Back to message personalization"
+        }
         choose_time_form = None
     else:
-        back_link = url_for(
-            "main.send_messages", service_id=service_id, template_id=template.id
-        )
-        back_link_from_preview = url_for(
-            "main.check_messages",
-            service_id=service_id,
-            template_id=template.id,
-            upload_id=upload_id,
-        )
+        back_link = {
+            "href": {
+                "url": url_for(
+                    "main.send_messages", service_id=service_id, template_id=template.id
+                ),
+                "text": "Back to upload a file"
+            },
+            "html": "Back to upload a file"
+        }
+        back_link_from_preview = {
+            "href": {
+                "url": url_for(
+                    "main.check_messages",
+                    service_id=service_id,
+                    template_id=template.id,
+                    upload_id=upload_id,
+                ),
+                "text": "Back to check messages"
+            },
+            "html": "Back to check messages"
+        }
         choose_time_form = ChooseTimeForm()
 
     if preview_row < 2:
@@ -763,16 +786,19 @@ def get_back_link(
                     service_id=service_id,
                     template_id=template.id,
                 ),
-                "text": "Back to preview"
+                "text": "Back to select delivery time"
             },
-            "html": "Back to preview"
+            "html": "Back to select delivery time"
         }
 
     if step_index == 0:
         if should_skip_template_page(template._template):
             return {
                 "href": {
-                    "url": url_for(".choose_template", service_id=service_id),
+                    "url": url_for(
+                        ".choose_template",
+                        service_id=service_id,
+                    ),
                     "text": "Back to all templates"
                 },
                 "html": "Back to all templates"
@@ -780,12 +806,17 @@ def get_back_link(
         else:
             return {
                 "href": {
-                    "url": url_for(".view_template", service_id=service_id, template_id=template.id),
+                    "url": url_for(
+                        ".view_template",
+                        service_id=service_id,
+                        template_id=template.id,
+                    ),
                     "text": "Back to confirm your template"
                 },
                 "html": "Back to confirm your template"
             }
 
+    # fallback for other steps
     back_to_text = (
         "Back to select recipients" if step_index == 1 else "Back to message personalization"
     )
