@@ -756,7 +756,7 @@ def get_back_link(
     preview=False,
 ):
     if preview:
-         return {
+        return {
             "href": {
                 "url": url_for(
                     "main.check_notification",
