@@ -476,7 +476,7 @@ def send_one_off_step(service_id, template_id, step_index):
         "views/send-test.html",
         page_title=get_send_test_page_title(
             template.template_type,
-            entering_recipient=not session["recipient"],
+            entering_recipient=(step_index == 0),
             name=template.name,
         ),
         template=template,
@@ -755,31 +755,52 @@ def get_back_link(
     preview=False,
 ):
     if preview:
-        return url_for(
-            "main.check_notification",
-            service_id=service_id,
-            template_id=template.id,
-        )
+         return {
+            "href": {
+                "url": url_for(
+                    "main.check_notification",
+                    service_id=service_id,
+                    template_id=template.id,
+                ),
+                "text": "Back to preview"
+            },
+            "html": "Back to preview"
+        }
 
     if step_index == 0:
         if should_skip_template_page(template._template):
-            return url_for(
-                ".choose_template",
-                service_id=service_id,
-            )
+            return {
+                "href": {
+                    "url": url_for(".choose_template", service_id=service_id),
+                    "text": "Back to all templates"
+                },
+                "html": "Back to all templates"
+            }
         else:
-            return url_for(
-                ".view_template",
+            return {
+                "href": {
+                    "url": url_for(".view_template", service_id=service_id, template_id=template.id),
+                    "text": "Back to confirm your template"
+                },
+                "html": "Back to confirm your template"
+            }
+
+    back_to_text = (
+        "Back to select recipients" if step_index == 1 else "Back to message personalization"
+    )
+
+    return {
+        "href": {
+            "url": url_for(
+                "main.send_one_off_step",
                 service_id=service_id,
                 template_id=template.id,
-            )
-
-    return url_for(
-        "main.send_one_off_step",
-        service_id=service_id,
-        template_id=template.id,
-        step_index=step_index - 1,
-    )
+                step_index=step_index - 1,
+            ),
+            "text": back_to_text
+        },
+        "html": back_to_text
+    }
 
 
 def get_skip_link(step_index, template):
