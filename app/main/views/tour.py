@@ -141,19 +141,27 @@ def _get_tour_step_back_link(service_id, template_id, step_index):
     if step_index == 1:
         return {
             "href": {
-                "url": url_for('main.begin_tour', service_id=service_id, template_id=template_id),
+                "url": url_for('main.begin_tour',
+                    service_id=service_id,
+                    template_id=template_id
+                ),
                 "text": "Back to tour start"
             },
             "html": "Back to tour start"
         }
     else:
         return {
-            "href": {
-                "url": url_for('main.tour_step', service_id=service_id, template_id=template_id, step_index=step_index-1),
-                "text": "Back to previous step"
-            },
-            "html": "Back to previous step"
-        }
+        "href": {
+            "url": url_for(
+                "main.tour_step",
+                service_id=service_id,
+                template_id=template_id,
+                step_index=step_index - 1,
+            ),
+            "text": "Back to previous step",
+        },
+        "html": "Back to previous step",
+    }
 
 
 @main.route(
