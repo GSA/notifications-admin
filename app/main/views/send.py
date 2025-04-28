@@ -932,7 +932,7 @@ def _check_notification(service_id, template_id, exception=None, **kwargs):
     if (not session.get("recipient")) or not all_placeholders_in_session(
         template.placeholders
     ):
-        raise PermanentRedirect(back_link)
+        raise PermanentRedirect(back_link["href"]["url"])
 
     template.values = get_recipient_and_placeholders_from_session(
         template.template_type
