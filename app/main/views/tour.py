@@ -139,14 +139,21 @@ def tour_step(service_id, template_id, step_index):
 
 def _get_tour_step_back_link(service_id, template_id, step_index):
     if step_index == 1:
-        return url_for(".begin_tour", service_id=service_id, template_id=template_id)
-
-    return url_for(
-        ".tour_step",
-        service_id=service_id,
-        template_id=template_id,
-        step_index=step_index - 1,
-    )
+        return {
+            "href": {
+                "url": url_for('main.begin_tour', service_id=service_id, template_id=template_id),
+                "text": "Back to tour start"
+            },
+            "html": "Back to tour start"
+        }
+    else:
+        return {
+            "href": {
+                "url": url_for('main.tour_step', service_id=service_id, template_id=template_id, step_index=step_index-1),
+                "text": "Back to previous step"
+            },
+            "html": "Back to previous step"
+        }
 
 
 @main.route(
@@ -183,12 +190,18 @@ def check_tour_notification(service_id, template_id):
             )
         )
 
-    back_link = url_for(
-        ".tour_step",
-        service_id=current_service.id,
-        template_id=template_id,
-        step_index=len(placeholders),
-    )
+    back_link = {
+        "href": {
+            "url": url_for(
+                "main.tour_step",
+                service_id=current_service.id,
+                template_id=template_id,
+                step_index=len(placeholders),
+            ),
+            "text": "Back to previous step"
+        },
+        "html": "Back to previous step"
+    }
 
     template.values = get_recipient_and_placeholders_from_session(
         template.template_type
