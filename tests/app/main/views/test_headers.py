@@ -1,5 +1,7 @@
 from re import search
+
 from flask import current_app
+
 
 def test_owasp_useful_headers_set(
     client_request,
