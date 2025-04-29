@@ -20,14 +20,14 @@ def test_owasp_useful_headers_set(
     assert search(
         r"script-src 'self' static\.example\.com 'unsafe-eval' https:\/\/js-agent\.new"
         r"relic\.com https:\/\/gov-bam\.nr-data\.net https:\/\/www\.googletagmanager\."
-        r"com https:\/\/www\.google-analytics\."
-        r"com https:\/\/dap\.digitalgov\."
-        r"gov 'nonce-.*';",
+        r"com https:\/\/www\.google-analytics\.com https:\/\/dap\.digitalgov\.gov "
+        r"https:\/\/cdn\.socket\.io",
         csp,
     )
+    assert search(r"'nonce-[^']+';", csp)
     assert search(
-        r"connect-src 'self' https:\/\/gov-bam.nr-data\.net https:\/\/www\.google-analytics\."
-        r"com;",
+        r"connect-src 'self' https:\/\/gov-bam\.nr-data\.net https:\/\/www\.google-analytics\."
+        r"com http:\/\/localhost:6011 ws:\/\/localhost:6011;",
         csp,
     )
     assert search(r"style-src 'self' static\.example\.com 'nonce-.*';", csp)

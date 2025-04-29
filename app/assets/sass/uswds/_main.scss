@@ -350,3 +350,16 @@ h2.recipient-list {
   height: 40px;
   margin-top: units(1);
 }
+
+// Button ellipses loading
+.dot-anim::after {
+  content: '.';
+  animation: dotPulse 1.5s steps(3, end) infinite;
+}
+
+@keyframes dotPulse {
+  0%   { content: ''; }
+  33%  { content: '.'; }
+  66%  { content: '..'; }
+  100% { content: '...'; }
+}

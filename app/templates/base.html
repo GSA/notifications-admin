@@ -11,6 +11,12 @@
     {% include "components/head.html" %}
   </head>
   <body class="usa-template__body {{ bodyClasses }}">
+    <div id="upload-status-live"
+      class="usa-sr-only"
+      aria-live="assertive"
+      tabindex="-1"
+      role="status">
+    </div>
     <script nonce="{{ csp_nonce() }}">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     {% block bodyStart %}
       {% block extra_javascripts_before_body %}
@@ -29,29 +35,31 @@
 
     {% block header %}
       {% include 'components/usa_banner.html' %}
-      {% if current_user.is_authenticated or current_service or current_user.platform_admin %}
-      <section class="usa-site-alert usa-site-alert--info" aria-label="Site alert,,,,">
-        <div class="usa-alert">
-          <div class="usa-alert__body">
-            <p class="usa-alert__heading text-bold">Notify.gov Service Ending</p>
-            <p class="usa-alert__text">
-              GSA will no longer offer the Notify.gov service after June 8th, 2025. Visit
-              <a class="usa-link" href="/notify-service-ending">Notify.gov Service Ending</a> for more information.
-            </p>
+      {% if not is_api_down %}
+        {% if current_user.is_authenticated or current_service or current_user.platform_admin %}
+        <section class="usa-site-alert usa-site-alert--info" aria-label="Site alert,,,,">
+          <div class="usa-alert">
+            <div class="usa-alert__body">
+              <p class="usa-alert__heading text-bold">Notify.gov Service Ending</p>
+              <p class="usa-alert__text">
+                GSA will no longer offer the Notify.gov service after June 8th, 2025. Visit
+                <a class="usa-link" href="/notify-service-ending">Notify.gov Service Ending</a> for more information.
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
-      {% else %}
-      <section class="usa-site-alert usa-site-alert--emergency usa-site-alert--no-heading" aria-label="Site alert,,,,">
-        <div class="usa-alert">
-          <div class="usa-alert__body">
-            <p class="usa-alert__heading text-bold">Notify.gov Service Ending</p>
-            <p class="usa-alert__text">
-              Notify.gov is no longer accepting new partners.
-            </p>
+        </section>
+        {% else %}
+        <section class="usa-site-alert usa-site-alert--emergency usa-site-alert--no-heading" aria-label="Site alert,,,,">
+          <div class="usa-alert">
+            <div class="usa-alert__body">
+              <p class="usa-alert__heading text-bold">Notify.gov Service Ending</p>
+              <p class="usa-alert__text">
+                Notify.gov is no longer accepting new partners.
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+        {% endif %}
       {% endif %}
       {% include 'components/header.html' %}
     {% endblock %}

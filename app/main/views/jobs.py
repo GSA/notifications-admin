@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-
+import os
 from functools import partial
 
 from flask import (
     Response,
     abort,
+    current_app,
     jsonify,
     redirect,
     render_template,
@@ -57,8 +58,12 @@ def view_job(service_id, job_id):
 
     filter_args = parse_filter_args(request.args)
     filter_args["status"] = set_status_filters(filter_args)
+    api_host_name = os.environ.get('API_HOST_NAME')
+
     return render_template(
         "views/jobs/job.html",
+        api_host_name=api_host_name,
+        FEATURE_SOCKET_ENABLED=current_app.config["FEATURE_SOCKET_ENABLED"],
         job=job,
         status=request.args.get("status", ""),
         updates_url=url_for(
