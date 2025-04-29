@@ -1,5 +1,5 @@
 from re import search
-
+from flask import current_app
 
 def test_owasp_useful_headers_set(
     client_request,
@@ -26,9 +26,20 @@ def test_owasp_useful_headers_set(
     )
     assert search(r"'nonce-[^']+';", csp)
     assert search(
-        r"connect-src 'self' https:\/\/gov-bam\.nr-data\.net https:\/\/www\.google-analytics\."
-        r"com http:\/\/localhost:6011 ws:\/\/localhost:6011;",
+        r"connect-src 'self' https:\/\/gov-bam\.nr-data\.net https:\/\/www\.google-analytics\.",
         csp,
     )
     assert search(r"style-src 'self' static\.example\.com 'nonce-.*';", csp)
     assert search(r"img-src 'self' static\.example\.com static-logos\.test\.com", csp)
+    api_host_name = current_app.config.get("API_HOST_NAME")
+    assert api_host_name is not None, f"API_HOST_NAME: {api_host_name} — is missing"
+
+    assert api_host_name in csp
+    if api_host_name.startswith("http://"):
+        assert api_host_name.replace("http://", "ws://") in csp
+    elif api_host_name.startswith("https://"):
+        assert api_host_name.replace("https://", "wss://") in csp
+    else:
+        raise AssertionError(
+            f"Unexpected API_HOST_NAME format: {api_host_name} — must start with 'http://' or 'https://'"
+        )
