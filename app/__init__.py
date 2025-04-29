@@ -183,6 +183,7 @@ def _csp(config):
             csp["connect-src"].append(ws_url)
     return csp
 
+
 def create_app(application):
     @application.after_request
     def add_csp_header(response):
