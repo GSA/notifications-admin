@@ -142,7 +142,7 @@ def _csp(config):
     asset_domain = config["ASSET_DOMAIN"]
     logo_domain = config["LOGO_CDN_DOMAIN"]
 
-    api_host_name = os.getenv('API_HOST_NAME')
+    api_host_name = config["API_HOST_NAME"]
     csp = {
         "default-src": ["'self'", asset_domain],
         "frame-src": [
