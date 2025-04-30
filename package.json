@@ -36,7 +36,7 @@
     "gulp-merge": "^0.1.1",
     "hogan": "1.0.2",
     "jquery": "3.7.1",
-    "morphdom": "^2.7.4",
+    "morphdom": "^2.7.5",
     "playwright": "^1.51.1",
     "python": "^0.0.4",
     "query-command-supported": "1.0.0",
