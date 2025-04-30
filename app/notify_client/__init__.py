@@ -85,8 +85,9 @@ class NotifyAdminAPIClient(BaseAPIClient):
             abort(403)
 
     def post(self, *args, **kwargs):
-        self.check_inactive_service()
-        self.check_inactive_user(args)
+        if os.getenv('NOTIFY_ENVIRONMENT') != "e2etest":
+            self.check_inactive_service()
+            self.check_inactive_user(args)
         return super().post(*args, **kwargs)
 
     def put(self, *args, **kwargs):

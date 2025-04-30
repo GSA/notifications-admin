@@ -11,6 +11,7 @@ from flask_login import login_user
 from flask.testing import FlaskClient
 
 from app import create_app
+from app.models.service import Service
 from app.models.user import User
 from app.notify_client.service_api_client import service_api_client
 from app.notify_client.user_api_client import user_api_client
@@ -118,7 +119,7 @@ def default_service(browser, client, default_user):
     browser_type = browser.browser_type.name
     service_name = f"E2E Federal Test Service {now} - {browser_type}"
 
-    service = service_api_client.create_service(
+    service_id = service_api_client.create_service(
         service_name,
         "federal",
         current_app.config["DEFAULT_SERVICE_LIMIT"],
@@ -127,7 +128,9 @@ def default_service(browser, client, default_user):
         default_user["email_address"],
     )
 
-    print("OK I GOT HERE LETS GO!!!")
+    service_data = service_api_client.get_service(service_id)
+
+    service = Service(service_data)
 
     yield service
 
