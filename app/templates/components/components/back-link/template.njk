@@ -1,4 +1,6 @@
 <nav class="usa-breadcrumb" aria-label="Breadcrumb">
   <a href="{{ params.href.url or params.href or '#' }}" class="usa-link usa-back-link display-inline-flex {{ params.classes or '' }}"
-  {%- for attribute, value in params.attributes %} {{ attribute }}="{{ value }}" {% endfor %}>{{ params.html | safe or params.href.text or 'Back' }}</a>
+  {%- for attribute, value in params.attributes %} {{ attribute }}="{{ value }}" {% endfor %}>
+    {{- params.html | safe or params.href.text or 'Back' -}}
+  </a>
 </nav>

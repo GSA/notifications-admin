@@ -561,24 +561,47 @@ def _check_messages(service_id, template_id, upload_id, preview_row, **kwargs):
     )
 
     if request.args.get("from_test"):
-        # TODO: may not be required after letters code removed
-        back_link = url_for(
-            "main.send_one_off", service_id=service_id, template_id=template.id
-        )
-        back_link_from_preview = url_for(
-            "main.send_one_off", service_id=service_id, template_id=template.id
-        )
+        back_link = {
+            "href": {
+                "url": url_for(
+                    "main.send_one_off", service_id=service_id, template_id=template.id
+                ),
+                "text": "Back to message personalization"
+            },
+            "html": "Back to message personalization"
+        }
+        back_link_from_preview = {
+            "href": {
+                "url": url_for(
+                    "main.send_one_off", service_id=service_id, template_id=template.id
+                ),
+                "text": "Back to message personalization"
+            },
+            "html": "Back to message personalization"
+        }
         choose_time_form = None
     else:
-        back_link = url_for(
-            "main.send_messages", service_id=service_id, template_id=template.id
-        )
-        back_link_from_preview = url_for(
-            "main.check_messages",
-            service_id=service_id,
-            template_id=template.id,
-            upload_id=upload_id,
-        )
+        back_link = {
+            "href": {
+                "url": url_for(
+                    "main.send_messages", service_id=service_id, template_id=template.id
+                ),
+                "text": "Back to upload a file"
+            },
+            "html": "Back to upload a file"
+        }
+        back_link_from_preview = {
+            "href": {
+                "url": url_for(
+                    "main.check_messages",
+                    service_id=service_id,
+                    template_id=template.id,
+                    upload_id=upload_id,
+                ),
+                "text": "Back to check messages"
+            },
+            "html": "Back to check messages"
+        }
         choose_time_form = ChooseTimeForm()
 
     if preview_row < 2:
@@ -756,31 +779,60 @@ def get_back_link(
     preview=False,
 ):
     if preview:
-        return url_for(
-            "main.check_notification",
-            service_id=service_id,
-            template_id=template.id,
-        )
+        return {
+            "href": {
+                "url": url_for(
+                    "main.check_notification",
+                    service_id=service_id,
+                    template_id=template.id,
+                ),
+                "text": "Back to select delivery time"
+            },
+            "html": "Back to select delivery time"
+        }
 
     if step_index == 0:
         if should_skip_template_page(template._template):
-            return url_for(
-                ".choose_template",
-                service_id=service_id,
-            )
+            return {
+                "href": {
+                    "url": url_for(
+                        ".choose_template",
+                        service_id=service_id,
+                    ),
+                    "text": "Back to all templates"
+                },
+                "html": "Back to all templates"
+            }
         else:
-            return url_for(
-                ".view_template",
+            return {
+                "href": {
+                    "url": url_for(
+                        ".view_template",
+                        service_id=service_id,
+                        template_id=template.id,
+                    ),
+                    "text": "Back to confirm your template"
+                },
+                "html": "Back to confirm your template"
+            }
+
+    # fallback for other steps
+    back_to_text = (
+        "Back to select recipients" if step_index == 1 else "Back to message personalization"
+    )
+
+    return {
+        "href": {
+            "url": url_for(
+                "main.send_one_off_step",
                 service_id=service_id,
                 template_id=template.id,
-            )
-
-    return url_for(
-        "main.send_one_off_step",
-        service_id=service_id,
-        template_id=template.id,
-        step_index=step_index - 1,
-    )
+                step_index=step_index - 1,
+            ),
+            "text": back_to_text
+        },
+        "html": back_to_text
+    }
 
 
 def get_skip_link(step_index, template):
@@ -880,7 +932,7 @@ def _check_notification(service_id, template_id, exception=None, **kwargs):
     if (not session.get("recipient")) or not all_placeholders_in_session(
         template.placeholders
     ):
-        raise PermanentRedirect(back_link)
+        raise PermanentRedirect(back_link["href"]["url"])
 
     template.values = get_recipient_and_placeholders_from_session(
         template.template_type

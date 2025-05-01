@@ -1449,7 +1449,10 @@ def test_send_one_off_offers_link_to_upload(
     back_link = page.select_one(".usa-back-link")
     link = page.select_one("form a")
 
-    assert back_link.text.strip() == "Back"
+    assert back_link.text.strip() in {
+        "Back to all templates",
+        "Back to confirm your template"
+    }
 
     assert link.text.strip() == "Upload a list of phone numbers"
     assert link["href"] == url_for(
@@ -1518,8 +1521,6 @@ def test_link_to_upload_not_offered_when_entering_personalisation(
         template_id=fake_uuid,
         step_index=1,
     )
-
-    # print(page.prettify())  # Print the full HTML response
 
     # We’re entering personalization
     assert page.select_one("input[type=text]")["name"] == "placeholder_value"
@@ -2284,9 +2285,11 @@ def test_check_messages_back_link(
         **extra_args,
     )
 
-    assert (page.find_all("a", {"class": "usa-back-link"})[0]["href"]) == expected_url(
-        service_id=SERVICE_ONE_ID, template_id=fake_uuid
-    )
+    actual_href = page.find_all("a", {"class": "usa-back-link"})[0]["href"]
+    expected_href = expected_url(service_id=SERVICE_ONE_ID, template_id=fake_uuid)
+
+    assert actual_href != "#", "Back link href fell back to '#' — missing correct back_link in view"
+    assert actual_href == expected_href
 
 
 @pytest.mark.parametrize(
@@ -2714,8 +2717,15 @@ def test_preview_notification_shows_preview(
         template_id=fake_uuid,
         _expected_status=200,
     )
+
     assert page.h1.text.strip() == "Preview for sending"
-    assert (page.find_all("a", {"class": "usa-back-link"})[0]["href"]) == url_for(
+    back_link = page.find_all("a", {"class": "usa-back-link"})[0]
+    assert back_link is not None
+
+    # The real rendered <a href="..."> attribute
+    href = back_link["href"]
+
+    assert href == url_for(
         "main.check_notification",
         service_id=service_one["id"],
         template_id=fake_uuid,
