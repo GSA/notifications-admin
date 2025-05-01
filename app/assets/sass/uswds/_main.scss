@@ -345,8 +345,13 @@ h2.recipient-list {
   }
 }
 
-// Button ellipses loading
+.usa-search__input, [type=search] {
+  border-right: 1px solid;
+  height: 40px;
+  margin-top: units(1);
+}
 
+// Button ellipses loading
 .dot-anim::after {
   content: '.';
   animation: dotPulse 1.5s steps(3, end) infinite;
