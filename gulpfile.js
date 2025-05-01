@@ -51,6 +51,7 @@ const javascripts = () => {
         paths.npm + 'textarea-caret/index.js',
         paths.npm + 'cbor-js/cbor.js',
         paths.npm + 'd3/dist/d3.min.js',
+        paths.npm + 'socket.io-client/dist/socket.io.min.js',
       ])
     );
 
@@ -68,7 +69,6 @@ const javascripts = () => {
     paths.src + 'javascripts/errorTracking.js',
     paths.src + 'javascripts/preventDuplicateFormSubmissions.js',
     paths.src + 'javascripts/fullscreenTable.js',
-    paths.src + 'javascripts/colourPreview.js',
     paths.src + 'javascripts/templateFolderForm.js',
     paths.src + 'javascripts/collapsibleCheckboxes.js',
     paths.src + 'javascripts/radioSlider.js',
@@ -83,6 +83,7 @@ const javascripts = () => {
     paths.src + 'javascripts/activityChart.js',
     paths.src + 'javascripts/sidenav.js',
     paths.src + 'javascripts/validation.js',
+    paths.src + 'javascripts/socketio.js',
   ])
     .pipe(plugins.prettyerror())
     .pipe(

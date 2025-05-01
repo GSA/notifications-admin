@@ -61,7 +61,7 @@ class ValidEmail:
 
 
 class NoCommasInPlaceHolders:
-    def __init__(self, message="You cannot put commas between double brackets"):
+    def __init__(self, message="You cannot put commas between double parenthesis"):
         self.message = message
 
     def __call__(self, form, field):
@@ -108,31 +108,15 @@ class OnlySMSCharacters:
         )
         if non_sms_characters:
             raise ValidationError(
-                "You cannot use {} in {}. {} will not show up properly on everyone’s phones.".format(
+                "Please remove the unaccepted character {} in your message, then save again".format(
                     formatted_list(
                         non_sms_characters,
-                        conjunction="or",
+                        conjunction="and",
                         before_each="",
                         after_each="",
                     ),
-                    {
-                        "sms": "text messages",
-                    }.get(self._template_type),
-                    ("It" if len(non_sms_characters) == 1 else "They"),
                 )
             )
-
-
-# class NoPlaceholders:
-
-#     def __init__(self, message=None):
-#         self.message = message or (
-#             'You can’t use ((double brackets)) to personalize this message'
-#         )
-
-#     def __call__(self, form, field):
-#         if Field(field.data).placeholders:
-#             raise ValidationError(self.message)
 
 
 class LettersNumbersSingleQuotesFullStopsAndUnderscoresOnly:

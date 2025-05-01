@@ -14,7 +14,7 @@
 
 {% block maincolumn_content %}
 
-  {% call form_wrapper() %}
+  {% call form_wrapper(data_force_focus=True) %}
     {{ page_header('Free text message allowance') }}
     {{ form.free_sms_allowance }}
     {{ page_footer('Save') }}

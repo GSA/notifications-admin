@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-
+import os
 from functools import partial
 
 from flask import (
     Response,
     abort,
+    current_app,
     jsonify,
     redirect,
     render_template,
@@ -57,8 +58,12 @@ def view_job(service_id, job_id):
 
     filter_args = parse_filter_args(request.args)
     filter_args["status"] = set_status_filters(filter_args)
+    api_host_name = os.environ.get('API_HOST_NAME')
+
     return render_template(
         "views/jobs/job.html",
+        api_host_name=api_host_name,
+        FEATURE_SOCKET_ENABLED=current_app.config["FEATURE_SOCKET_ENABLED"],
         job=job,
         status=request.args.get("status", ""),
         updates_url=url_for(
@@ -351,7 +356,7 @@ def _get_job_counts(job):
                 Markup(
                     f"""total<span class="usa-sr-only">
                     {"text message" if job_type == "sms" else job_type}s</span>"""
-                ),
+                ),  # nosec
                 "",
                 job.notification_count,
             ],
@@ -359,7 +364,7 @@ def _get_job_counts(job):
                 Markup(
                     f"""pending<span class="usa-sr-only">
                     {message_count_noun(job.notifications_sending, job_type)}</span>"""
-                ),
+                ),  # nosec
                 "pending",
                 job.notifications_sending,
             ],
@@ -367,7 +372,7 @@ def _get_job_counts(job):
                 Markup(
                     f"""delivered<span class="usa-sr-only">
                     {message_count_noun(job.notifications_delivered, job_type)}</span>"""
-                ),
+                ),  # nosec
                 "delivered",
                 job.notifications_delivered,
             ],
@@ -375,7 +380,7 @@ def _get_job_counts(job):
                 Markup(
                     f"""failed<span class="usa-sr-only">
                     {message_count_noun(job.notifications_failed, job_type)}</span>"""
-                ),
+                ),  # nosec
                 "failed",
                 job.notifications_failed,
             ],
@@ -465,4 +470,4 @@ def get_preview_of_content(notification):
                 notification["personalisation"],
                 redact_missing_personalisation=True,
             ).subject
-        )
+        )  # nosec

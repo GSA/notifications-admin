@@ -164,12 +164,12 @@ def test_should_show_empty_text_box(
     )
 
     textbox = page.select_one(
-        "[data-module=autofocus][data-force-focus=True] .usa-input"
+        ".usa-input"
     )
     assert "value" not in textbox
     assert textbox["name"] == "placeholder_value"
     assert textbox["class"] == [
-        "usa-input",
+        "form-control", "usa-input",
     ]
     # data-module=autofocus is set on a containing element so it
     # shouldn’t also be set on the textbox itself

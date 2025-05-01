@@ -1,3 +1,5 @@
+import logging
+
 from flask import (
     abort,
     current_app,
@@ -19,20 +21,23 @@ from app.main.views.sub_navigation_dictionaries import (
 )
 from app.utils.user import user_is_logged_in
 
+logger = logging.getLogger(__name__)
+
 
 # Hook to check for feature flags
 @main.before_request
 def check_feature_flags():
-    if request.path.startswith("/about") and not current_app.config.get(
-        "FEATURE_ABOUT_PAGE_ENABLED", False
-    ):
-        abort(404)
+    # Placeholder for future feature flag checks
+    # Example:
+    # if request.path.startswith("/some-feature") and not current_app.config.get("FEATURE_SOME_FEATURE_ENABLED", False):
+    #     abort(404)
+    pass
 
 
 @main.route("/test/feature-flags")
 def test_feature_flags():
     return jsonify(
-        {"FEATURE_ABOUT_PAGE_ENABLED": current_app.config["FEATURE_ABOUT_PAGE_ENABLED"]}
+        {"FEATURE_SOCKET_ENABLED": current_app.config["FEATURE_SOCKET_ENABLED"]}
     )
 
 
@@ -44,7 +49,7 @@ def index():
     return render_template(
         "views/signedout.html",
         sms_rate=CURRENT_SMS_RATE,
-        counts=status_api_client.get_count_of_live_services_and_organizations(),
+        counts=status_api_client.get_count_of_live_services_and_organizations()
     )
 
 

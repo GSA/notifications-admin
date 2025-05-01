@@ -635,7 +635,7 @@ def test_should_show_sms_template_with_downgraded_unicode_characters(
     mock_get_template_folders,
     fake_uuid,
 ):
-    msg = "here:\tare some “fancy quotes” and zero\u200Bwidth\u200Bspaces"
+    msg = "here:\tare some “fancy quotes” and zero\u200bwidth\u200bspaces"
     rendered_msg = "here: are some “fancy quotes” and zerowidthspaces"
 
     mocker.patch(
@@ -945,7 +945,7 @@ def test_load_edit_template_with_copy_of_template(
     assert page.select_one("form")["method"] == "post"
 
     assert page.select_one("input")["value"] == (expected_name)
-    assert page.select_one("textarea").text == ("\r\nYour ((thing)) is due soon")
+    assert page.select_one("textarea").text.strip() == ("Your ((thing)) is due soon")
     mock_get_service_email_template.assert_called_once_with(
         SERVICE_TWO_ID,
         TEMPLATE_ONE_ID,
@@ -1748,7 +1748,12 @@ def test_can_create_email_template_with_emoji(
 @pytest.mark.parametrize(
     ("template_type", "expected_error"),
     [
-        ("sms", ("You cannot use 🍜 in text messages.")),
+        (
+            "sms",
+            (
+                "Please remove the unaccepted character 🍜 in your message, then save again"
+            ),
+        ),
     ],
 )
 def test_should_not_create_sms_template_with_emoji(
@@ -1772,14 +1777,22 @@ def test_should_not_create_sms_template_with_emoji(
         },
         _expected_status=200,
     )
-    assert expected_error in page.text
+    # print(page.main.prettify())
+    assert expected_error in normalize_spaces(
+        page.select_one("#template_content-error").text
+    )
     assert mock_create_service_template.called is False
 
 
 @pytest.mark.parametrize(
     ("template_type", "expected_error"),
     [
-        ("sms", ("You cannot use 🍔 in text messages.")),
+        (
+            "sms",
+            (
+                "Please remove the unaccepted character 🍔 in your message, then save again"
+            ),
+        ),
     ],
 )
 def test_should_not_update_sms_template_with_emoji(
@@ -1833,7 +1846,7 @@ def test_should_create_sms_template_without_downgrading_unicode_characters(
 ):
     service_one["permissions"] += [template_type]
 
-    msg = "here:\tare some “fancy quotes” and non\u200Bbreaking\u200Bspaces"
+    msg = "here:\tare some “fancy quotes” and non\u200bbreaking\u200bspaces"
 
     client_request.post(
         ".add_service_template",
@@ -2031,7 +2044,7 @@ def test_set_template_sender(
             "sms",
             False,
             "Ẅ" * 70,
-            "Will be charged as 1 text message. Use of characters outside the IEC_8859-1 character set may increase the message fragment count, resulting in additional charges, and these IEC_8859-1 characters may not display properly on some older mobile devices.",  # noqa E501
+            "Will be charged as 1 text message.",  # noqa E501
             None,
         ),
         (
@@ -2059,7 +2072,7 @@ def test_set_template_sender(
             "sms",
             False,
             "Hello ((name))",
-            "Will be charged as 1 text message (not including personalization)",
+            "Will be charged as 1 text message (not including personalization).",
             None,
         ),
         (
@@ -2067,7 +2080,7 @@ def test_set_template_sender(
             "sms",
             False,
             f'Hello (( {"a" * 999} ))',
-            "Will be charged as 1 text message (not including personalization)",
+            "Will be charged as 1 text message (not including personalization).",
             None,
         ),
     ],

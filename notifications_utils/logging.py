@@ -1,5 +1,4 @@
 import logging
-import logging.handlers
 import re
 import sys
 from itertools import product
@@ -9,6 +8,21 @@ from flask import g, request
 from flask.ctx import has_app_context, has_request_context
 from flask.logging import default_handler
 from pythonjsonlogger.jsonlogger import JsonFormatter as BaseJSONFormatter
+
+
+class ColorFormatter(logging.Formatter):
+    COLOR_MAP = {
+        "WARNING": "\033[93m",
+        "ERROR": "\033[91m",
+        "CRITICAL": "\033[95m",
+    }
+    RESET = "\033[0m"
+
+    def format(self, record: logging.LogRecord) -> str:
+        color = self.COLOR_MAP.get(record.levelname, self.RESET)
+        base_message = super().format(record)
+        return f"{color}{base_message}{self.RESET}"
+
 
 LOG_FORMAT = (
     "%(asctime)s %(app_name)s %(name)s %(levelname)s "
@@ -79,7 +93,6 @@ def init_app(app):
 
 def get_handlers(app):
     handlers = []
-    standard_formatter = logging.Formatter(LOG_FORMAT, TIME_FORMAT)
     json_formatter = JSONFormatter(LOG_FORMAT, TIME_FORMAT)
 
     stream_handler = logging.StreamHandler(sys.stdout)
@@ -92,9 +105,9 @@ def get_handlers(app):
             return not ("GET /static/" in msg and " 200 " in msg)
 
         logging.getLogger("werkzeug").addFilter(is_200_static_log)
+        color_formatter = ColorFormatter(LOG_FORMAT, TIME_FORMAT)
 
-        # human readable stdout logs
-        handlers.append(configure_handler(stream_handler, app, standard_formatter))
+        handlers.append(configure_handler(stream_handler, app, color_formatter))
 
     return handlers
 

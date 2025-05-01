@@ -49,12 +49,12 @@
 }
 
 .sms-message-sender, .sms-message-file-name, .sms-message-scheduler, .sms-message-template, .sms-message-sender {
-  margin:0.25rem 0 0;
+  margin: units(0.5) 0 0;
 }
 
 .sms-message-recipient {
   color: color('gray-cool-90');
-  margin: units(1) 0 units(1);
+  margin: units(0.5) 0 units(2);
 }
 
 .sms-message-status {
@@ -343,4 +343,18 @@ h2.recipient-list {
       margin-top: -20px;
     }
   }
+}
+
+// Button ellipses loading
+
+.dot-anim::after {
+  content: '.';
+  animation: dotPulse 1.5s steps(3, end) infinite;
+}
+
+@keyframes dotPulse {
+  0%   { content: ''; }
+  33%  { content: '.'; }
+  66%  { content: '..'; }
+  100% { content: '...'; }
 }

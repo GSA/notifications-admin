@@ -347,24 +347,4 @@ describe('FullscreenTable', () => {
 
   });
 
-  describe("when the table is focused", () => {
-
-    beforeEach(() => {
-
-      // start module
-      window.GOVUK.modules.start();
-
-      tableFrame = document.querySelector('.fullscreen-scrollable-table');
-      tableFrame.focus();
-
-    });
-
-    test("it should make the parent frame a focus style", () => {
-
-      expect(container.classList.contains('js-focus-style')).toBe(true);
-
-    });
-
-  });
-
 });

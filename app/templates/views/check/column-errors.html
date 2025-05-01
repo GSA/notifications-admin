@@ -20,7 +20,11 @@ Error
 
 {% block maincolumn_content %}
 
+
+
 <div class="">
+  {# Alert for users of AT #}
+  <span id="upload-error" class="usa-sr-only">File upload failed</span>
   {% call banner_wrapper(type='dangerous') %}
 
   {% if recipients.too_many_rows %}
@@ -102,7 +106,7 @@ Error
   <div class="usa-alert usa-alert--error" role="alert">
     <div class="usa-alert__body">
       <h1 class="usa-alert__heading banner-title" data-module="track-error" data-error-type="Missing placeholder columns"
-        data-error-label="{{ upload_id }}">Your column names need to match the double brackets in your template</h1>
+        data-error-label="{{ upload_id }}">Your column names need to match the double parenthesis in your template</h1>
       <p class="usa-alert__text">
         Your file is missing {{ recipients.missing_column_headers | formatted_list(
         conjunction='and',
@@ -150,7 +154,7 @@ Error
     ) }}
     {% endif %}
   </div>
-  <a href="#content" class="usa-link back-to-top-link">Back to top</a>
+  <a href="#content" class="usa-link back-to-top-link display-block margin-top-2">Back to top</a>
 </div>
 {% endif %}
 

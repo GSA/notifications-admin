@@ -14,7 +14,7 @@
 
 {% block maincolumn_content %}
 
-  {% call form_wrapper() %}
+  {% call form_wrapper(data_force_focus=True) %}
     {{ page_header('Rate limit') }}
     {{ form.rate_limit }}
     {{ page_footer('Save') }}

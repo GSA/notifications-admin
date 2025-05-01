@@ -88,7 +88,7 @@ class Config(object):
         ],
     }
 
-    FEATURE_ABOUT_PAGE_ENABLED = getenv("FEATURE_ABOUT_PAGE_ENABLED", "false") == "true"
+    FEATURE_SOCKET_ENABLED = getenv("FEATURE_SOCKET_ENABLED", "false") == "true"
 
 
 def _s3_credentials_from_env(bucket_prefix):

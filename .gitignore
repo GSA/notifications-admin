@@ -14,6 +14,11 @@
 *.XLSX
 
 ## Non user files allowed to be commited
+!app/assets/pdf/wa_case_study.pdf
+!app/assets/pdf/best-practices-for-texting-the-public.pdf
+!app/assets/pdf/investing-in-notifications-tts-public-benefits-studio-decision-memo.pdf
+!app/assets/pdf/best-practices-section-outline.pdf
+!app/assets/pdf/standing-up-your-own-notify.pdf
 !app/assets/pdf/tcpa_overview.pdf
 !app/assets/pdf/investing-notifications-tts-public-benefits-memo.pdf
 !app/assets/pdf/out-of-pilot-announcement.pdf

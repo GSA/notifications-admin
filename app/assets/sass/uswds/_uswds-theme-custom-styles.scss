@@ -139,11 +139,6 @@ td.table-empty-message {
   font-family: family('sans');
 }
 
-.usa-dark-background .pill-item__label {
-  color: white;
-  text-decoration: none !important;
-}
-
 .pill-item.usa-link {
   text-decoration: none !important;
 }
@@ -197,9 +192,6 @@ td.table-empty-message {
     display: block;
     word-wrap: break-word;
   }
-
-  // border: 1px solid color('gray-cool-10');
-  // padding: units(2);
 
   .tick-cross-list-permissions {
     margin: units(1) 0;
@@ -257,6 +249,11 @@ td.table-empty-message {
   }
 }
 
+.usa-checkbox.template-list-item.template-list-item-with-checkbox.template-list-item-without-ancestors {
+  display: flex;
+  flex-direction: column;
+}
+
 .usa-checkbox__label-description {
   margin: units(2px) 0 units(1) units(4);
 }
@@ -292,6 +289,7 @@ td.table-empty-message {
     margin-top: units(1);
     width: 100%;
     border: 1px solid color('gray-60');
+    height: 40px;
   }
 }
 
@@ -594,18 +592,30 @@ td.table-empty-message {
         .big-number-smallest {
           font-size: units(3);
         }
+        .pill-item__label {
+          color: white;
+        }
         &:not(.pill-item--selected):hover {
           background: color('blue-warm-70v');
+
+          .pill-item__label {
+            color: white;
+          }
         }
-        &.pill-item--selected:hover {
-          color: color('blue-60v');
+        &.pill-item--selected {
+          .pill-item__label {
+            color: color('blue-60v');
+          }
+          &:hover {
+            .pill-item__label {
+              color: color('blue-60v');
+            }
+          }
         }
       }
     }
   }
 }
-
-// Etc
 
 .email-brand,
 .browse-list {

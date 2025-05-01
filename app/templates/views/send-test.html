@@ -1,6 +1,7 @@
 {% extends "withnav_template.html" %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
+{% from "components/textbox.html" import textbox %}
 {% from "components/form.html" import form_wrapper %}
 {% from "components/components/back-link/macro.njk" import usaBackLink %}
 
@@ -34,13 +35,22 @@
   {% call form_wrapper(
     class='js-stick-at-top-when-scrolling send-one-off-form' if template.template_type != 'sms' else 'send-one-off-form',
     module="autofocus",
-    data_kwargs={'force-focus': True}
+    data_kwargs={'force-focus': True},
+    data_force_focus=True
   ) %}
     <div class="grid-row">
-      {% set extra_class = "extra-tracking" if form.placeholder_value.label.text == "phone number" else "" %}
-      {% set placeholder_id = "phone number" if form.placeholder_value.label.text == "phone number" else "" %}
-      <div class="grid-col-12 {% if form.placeholder_value.label.text == 'phone number' %}extra-tracking{% endif %}">
-        {{ form.placeholder_value(param_extensions={"classes": "", "id": "phone-number"}) }}
+      {% set is_phone_number = form.placeholder_value.label.text == "phone number" %}
+      {% set label_text = " phone number" if current_placeholder == "phone number" else current_placeholder %}
+      {% set extra_class = "extra-tracking" if is_phone_number else "" %}
+
+      <div class="grid-col-12 {{ extra_class }}">
+        {{ textbox(
+          form.placeholder_value,
+          label=label_text,
+          hint=hint_text,
+          extra_form_group_classes=extra_class,
+          param_extensions={"id": "phone-number", "classes": ""}
+        ) }}
       </div>
       {% if skip_link or link_to_upload %}
         <div class="grid-col-12 margin-top-1">

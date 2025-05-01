@@ -4,6 +4,7 @@ import uuid
 from string import ascii_uppercase
 from zipfile import BadZipFile
 
+import bleach
 from flask import (
     abort,
     current_app,
@@ -170,7 +171,9 @@ def send_messages(service_id, template_id):
         error_message = '<span class="error-message usa-error-message">'
         error_message = f"{error_message}{first_field_errors[0]}"
         error_message = f"{error_message}</span>"
-        error_message = Markup(error_message)
+        # use 'nosec' because we applied bleach.clean to strip dangerous tags
+        error_message = bleach.clean(error_message)
+        error_message = Markup(error_message)  # nosec
         flash(error_message)
     column_headings = get_spreadsheet_column_headings_from_template(template)
 
@@ -478,6 +481,7 @@ def send_one_off_step(service_id, template_id, step_index):
         ),
         template=template,
         form=form,
+        current_placeholder=current_placeholder,
         skip_link=get_skip_link(step_index, template),
         back_link=back_link,
         link_to_upload=(
@@ -924,6 +928,10 @@ def get_template_error_dict(exception):
 def preview_notification(service_id, template_id):
     recipient = get_recipient()
     if not recipient:
+        current_app.logger.warning(
+            f"No recipient found for service {service_id}, template {template_id}. Redirecting..."
+        )
+
         return redirect(
             url_for(
                 ".send_one_off",
