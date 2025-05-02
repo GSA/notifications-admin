@@ -58,7 +58,7 @@ def view_job(service_id, job_id):
 
     filter_args = parse_filter_args(request.args)
     filter_args["status"] = set_status_filters(filter_args)
-    api_host_name = os.environ.get('API_HOST_NAME')
+    api_host_name = os.environ.get("API_HOST_NAME")
 
     return render_template(
         "views/jobs/job.html",

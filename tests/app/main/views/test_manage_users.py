@@ -443,11 +443,17 @@ def test_invite_user_has_correct_email_field(
     mock_get_users_by_service,
     mock_get_template_folders,
     platform_admin_user,
+    service_one,
+    mocker,
 ):
+    mocker.patch("app.models.user.InvitedUsers.client_method", return_value=[])
+    mocker.patch(
+        "app.models.user.Users.client_method", return_value=[platform_admin_user]
+    )
     client_request.login(platform_admin_user)
     email_field = client_request.get(
         "main.invite_user", service_id=SERVICE_ONE_ID
-    ).select_one("#email-address")
+    ).select_one("#email_address")
     assert email_field["spellcheck"] == "false"
     assert "autocomplete" not in email_field
 
