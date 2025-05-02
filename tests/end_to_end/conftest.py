@@ -45,4 +45,27 @@ def check_axe_report(page):
             filtered_violations.append(violation)
 
     for violation in filtered_violations:
-        assert violation["impact"] in ["minor", "moderate"], f"Accessibility violation: {violation}"
+        assert violation["impact"] in [
+            "minor",
+            "moderate",
+        ], f"Accessibility violation: {violation}"
+
+
+@pytest.fixture(autouse=True)
+def _mock_common_api_calls(mocker):
+    # Patch the health check so it doesn't hit external endpoints
+    mocker.patch("app.utils.api_health.check_api_is_running", return_value=True)
+
+    # If ping_json_endpoint is used directly instead
+    mocker.patch(
+        "app.utils.api_health.ping_json_endpoint", return_value={"status": "ok"}
+    )
+
+    # Add more global mocks as needed, like:
+    mocker.patch(
+        "app.service_api_client.get_service",
+        return_value={"id": "1234", "name": "Test Service"},
+    )
+
+    # Optional: silence New Relic or other external integrations
+    mocker.patch("newrelic.agent.initialize", return_value=None)
