@@ -54,12 +54,7 @@ def check_axe_report(page):
 @pytest.fixture(autouse=True)
 def _mock_common_api_calls(mocker):
     # Patch the health check so it doesn't hit external endpoints
-    mocker.patch("app.utils.api_health.check_api_is_running", return_value=True)
-
-    # If ping_json_endpoint is used directly instead
-    mocker.patch(
-        "app.utils.api_health.ping_json_endpoint", return_value={"status": "ok"}
-    )
+    mocker.patch("app.utils.api_health.is_api_down", return_value=False)
 
     # Add more global mocks as needed, like:
     mocker.patch(
