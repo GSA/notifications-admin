@@ -13,7 +13,9 @@ def is_api_down():
         response = requests.get(api_base_url, timeout=2)
         is_down = response.status_code != 200
         if is_down:
-            logger.warning(f"API responded with status {response.status_code} at {api_base_url}")
+            logger.warning(
+                f"API responded with status {response.status_code} at {api_base_url}"
+            )
         return is_down
     except RequestException as e:
         logger.error(f"API down when loading homepage {e}")
