@@ -1337,7 +1337,6 @@ def test_shows_delete_link_for_error_on_post_request_for_edit_email_reply_to_add
         page.select_one(".usa-error-message").text.strip()
         == "Error: Enter a valid email address"
     )
-    print(page.prettify())
 
     assert page.select_one("input[name='email_address']")
 
