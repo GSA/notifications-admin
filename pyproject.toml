@@ -69,6 +69,7 @@ requests = "^2.32.3"
 six = "^1.16.0"
 urllib3 = "^2.2.2"
 webencodings = "^0.5.1"
+virtualenv = "<20.30"
 
 
 [tool.poetry.group.dev.dependencies]
