@@ -16,6 +16,9 @@ runs:
     - name: Install poetry
       shell: bash
       run: pip install poetry==1.8.5
+    - name: Downgrade virtualenv to compatible version
+      shell: bash
+      run: pip install "virtualenv<20.30"
     - name: Install application dependencies
       shell: bash
       run: make bootstrap
