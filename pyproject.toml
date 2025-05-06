@@ -69,6 +69,7 @@ requests = "^2.32.3"
 six = "^1.16.0"
 urllib3 = "^2.2.2"
 webencodings = "^0.5.1"
+virtualenv = "<20.30"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -95,8 +96,12 @@ pytest-xdist = "^3.5.0"
 radon = "^6.0.1"
 requests-mock = "^1.11.0"
 vulture = "^2.14"
+poetry-dotenv-plugin = "^0.2.0"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.plugins."poetry.application.plugin"]
+dotenv = "poetry_dotenv_plugin.plugin:PoetryDotenvPlugin"
