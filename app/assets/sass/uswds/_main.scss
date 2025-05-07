@@ -363,3 +363,7 @@ h2.recipient-list {
   66%  { content: '..'; }
   100% { content: '...'; }
 }
+
+.modal-open {
+  overflow: hidden;
+}
