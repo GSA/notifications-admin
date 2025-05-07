@@ -17,7 +17,6 @@ NVMSH := $(shell [ -f "$(HOME)/.nvm/nvm.sh" ] && echo "$(HOME)/.nvm/nvm.sh" || e
 .PHONY: bootstrap
 bootstrap: ## Set up everything to run the app
 	make generate-version-file
-	poetry self add poetry-dotenv-plugin
 	poetry lock --no-update
 	poetry install --sync --no-root
 	poetry run playwright install --with-deps
@@ -29,7 +28,6 @@ bootstrap: ## Set up everything to run the app
 .PHONY: bootstrap-with-git-hooks
 bootstrap-with-git-hooks:  ## Sets everything up and accounts for pre-existing git hooks
 	make generate-version-file
-	poetry self add poetry-dotenv-plugin
 	poetry lock --no-update
 	poetry install --sync --no-root
 	poetry run playwright install --with-deps
