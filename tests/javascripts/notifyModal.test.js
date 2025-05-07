@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-const { openModal, closeModal } = require("../../app/assets/javascripts/modal"); // adjust path if needed
+const { openModal, closeModal, attachModalTriggers } = require("../../app/assets/javascripts/notifyModal.js"); // adjust path if needed
 
 describe("Modal functionality", () => {
   let modalWrapper, modalElement, openBtn, closeBtn, anotherFocusable;
@@ -118,3 +118,44 @@ describe("Modal functionality", () => {
     expect(modalWrapper.classList.contains("is-hidden")).toBe(true);
   });
 });
+
+describe("Modal trigger buttons", () => {
+    beforeEach(() => {
+      document.body.innerHTML = `
+        <button data-open-modal="myModal">Open Modal</button>
+        <div id="myModal" class="is-hidden">
+          <div class="usa-modal">
+            <div class="usa-modal-content">
+              <button data-close-modal>Close</button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    afterEach(() => {
+      document.body.innerHTML = "";
+    });
+
+    test("Clicking [data-open-modal] opens the modal", () => {
+      attachModalTriggers();
+      const openButton = document.querySelector('[data-open-modal]');
+      openButton.click();
+
+      const modalWrapper = document.getElementById("myModal");
+      expect(modalWrapper.classList.contains("is-hidden")).toBe(false);
+    });
+
+    test("Clicking [data-close-modal] closes the modal", () => {
+      const modalWrapper = document.getElementById("myModal");
+      modalWrapper.classList.remove("is-hidden");
+
+      attachModalTriggers();
+      const closeButton = document.querySelector('[data-close-modal]');
+      closeModal(); // ensure modal is open to begin with
+      openModal("myModal");
+
+      closeButton.click();
+      expect(modalWrapper.classList.contains("is-hidden")).toBe(true);
+    });
+  });

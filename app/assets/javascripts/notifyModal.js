@@ -61,20 +61,20 @@ function closeModal() {
 
 }
 
-// Attach open triggers
-document.querySelectorAll('[data-open-modal]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const modalId = btn.getAttribute('data-open-modal');
-    openModal(modalId);
+function attachModalTriggers() {
+  document.querySelectorAll('[data-open-modal]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const modalId = btn.getAttribute('data-open-modal');
+      openModal(modalId);
+    });
   });
-});
 
-// Attach close triggers
-document.querySelectorAll('[data-close-modal]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    closeModal();
+  document.querySelectorAll('[data-close-modal]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      closeModal();
+    });
   });
-});
+}
 
 // Escape key closes modal
 document.addEventListener('keydown', (e) => {
@@ -89,3 +89,12 @@ document.addEventListener('click', (e) => {
     closeModal();
   }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  attachModalTriggers();
+});
+
+// ✅ Check if we're in a Node.js environment (for Jest) before using `module.exports`
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+  module.exports = { closeModal, openModal, attachModalTriggers };
+}

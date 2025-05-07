@@ -21,6 +21,12 @@
         $submitButton.append('<span class="dot-anim" aria-hidden="true"></span>');
       }
 
+      // Disable Cancel button too
+      const $cancelButton = $('button[name]').filter(function () {
+        return $(this).attr('name')?.toLowerCase() === 'cancel';
+      });
+      $cancelButton.prop('disabled', true);
+
       setTimeout(() => {
         renableSubmitButton($submitButton);
       }, 10000); // fallback safety
