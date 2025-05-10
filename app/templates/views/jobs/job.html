@@ -11,6 +11,9 @@
 {% block maincolumn_content %}
 
     {{ page_header("Message status") }}
+    {% if not job.finished_processing %}
+      <p class="max-width-full">This page refreshes automatically to show the latest message activity delivery rates, details, and reports.<br>You can watch it in progress or check back later.</p>
+    {% endif %}
     <div data-job-id="{{ job.id }}" data-feature="{{FEATURE_SOCKET_ENABLED | lower}}" data-host="{{ api_host_name }}">
     {% if not job.finished_processing %}
       <div
