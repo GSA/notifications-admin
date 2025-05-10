@@ -76,7 +76,7 @@
         help='3' if help else 0
       )}}" class='page-footer'>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-      <h3>Does everything look good?</h3>
+      <h3 class="margin-bottom-">Does everything look good?</h3>
       {% if not error %}
         {% set button_text %}
           {{ "Schedule" if scheduled_for else 'Send'}}
@@ -84,9 +84,54 @@
         {{ usaButton({
           "text": button_text,
           "name": button_text
-         }) }}
+        }) }}
+        {{ usaButton({
+          "text": "Cancel",
+          "name": "Cancel",
+          "classes": "usa-button--secondary",
+          "type": "button",
+          "attributes": {
+            "data-open-modal": "cancelModal"
+          }
+        }) }}
       {% endif %}
     </form>
+  </div>
+
+  <div
+  class="usa-modal"
+  data-module="usa-modal"
+  id="cancelModal"
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="cancelModalHeading"
+  aria-describedby="cancelModalDesc"
+  >
+    <div class="usa-modal__content">
+      <div class="usa-modal__main">
+        <h2 class="usa-modal__heading font-body-lg" id="cancelModalHeading">Are you sure you want to cancel this message?</h2>
+        <p id="cancelModalDesc">Your template is saved, but your message and recipient details will not be. Canceling will bring you back to the template selection page.</p>
+        <div class="usa-modal__footer">
+          <ul class="usa-button-group">
+            <li class="usa-button-group__item">
+              <a href="{{ url_for('main.choose_template', service_id=current_service.id) }}" class="usa-button">Yes, cancel
+                <span class="usa-sr-only">and return to the template selection page</span></a>
+            </li>
+            <li class="usa-button-group__item">
+              <button class="usa-button usa-button--unstyled padding-105 text-center" data-close-modal type="button">
+                No, go back <span class="usa-sr-only">to message send</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <button class="usa-button usa-modal__close" aria-label="Close this window" data-close-modal type="button">
+        <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+          <use xlink:href="{{ asset_url('img/sprite.svg') }}#close"></use>
+        </svg>
+      </button>
+    </div>
   </div>
 
 {% endblock %}

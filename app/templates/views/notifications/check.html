@@ -55,7 +55,7 @@
       {% if not error %}
         {% if choose_time_form %}
           {{ choose_time_form.scheduled_for(param_extensions={
-            'formGroup': {'classes': 'bottom-gutter-2-3'},
+            'formGroup': {'classes': ''},
             'attributes': {
               'data-module': 'radio-select',
               'data-categories': choose_time_form.scheduled_for.categories|join(','),
@@ -66,8 +66,8 @@
         {% set button_text %}
         Preview
         {% endset %}
-        {{ usaButton({ "text": button_text }) }}
-      {% endif %}
+        {{ usaButton({ "text": button_text, "classes": "margin-top-2" }) }}
+        {% endif %}
     </form>
   </div>
 
