@@ -17,8 +17,8 @@ def test_render_register_returns_template_with_form(client_request, mocker):
     page = client_request.get_url("/register")
 
     assert page.find("input", attrs={"name": "auth_type"}).attrs["value"] == "sms_auth"
-    assert page.select_one("#email-address")["spellcheck"] == "false"
-    assert page.select_one("#email-address")["autocomplete"] == "email"
+    assert page.select_one("#email_address")["spellcheck"] == "false"
+    assert page.select_one("#email_address")["autocomplete"] == "email"
     assert page.select_one("#password")["autocomplete"] == "new-password"
     assert "Create an account" in page.text
 

@@ -198,6 +198,7 @@ def convert_report_date_to_preferred_timezone(db_date_str_in_utc):
 
 def get_user_preferred_timezone():
     if current_user and hasattr(current_user, "preferred_timezone"):
-        return current_user.preferred_timezone
-
+        tz = current_user.preferred_timezone
+        if tz in pytz.all_timezones:
+            return tz
     return "US/Eastern"

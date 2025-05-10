@@ -17,7 +17,6 @@ NVMSH := $(shell [ -f "$(HOME)/.nvm/nvm.sh" ] && echo "$(HOME)/.nvm/nvm.sh" || e
 .PHONY: bootstrap
 bootstrap: ## Set up everything to run the app
 	make generate-version-file
-	poetry self add poetry-dotenv-plugin
 	poetry lock --no-update
 	poetry install --sync --no-root
 	poetry run playwright install --with-deps
@@ -29,7 +28,6 @@ bootstrap: ## Set up everything to run the app
 .PHONY: bootstrap-with-git-hooks
 bootstrap-with-git-hooks:  ## Sets everything up and accounts for pre-existing git hooks
 	make generate-version-file
-	poetry self add poetry-dotenv-plugin
 	poetry lock --no-update
 	poetry install --sync --no-root
 	poetry run playwright install --with-deps
@@ -106,11 +104,11 @@ py-test: ## Run python unit tests
 dead-code: ## 60% is our aspirational goal, but currently breaks the build
 	poetry run vulture ./app ./notifications_utils --min-confidence=100
 
-
 .PHONY: e2e-test
 e2e-test: export NEW_RELIC_ENVIRONMENT=test
 e2e-test: ## Run end-to-end integration tests; note that --browser webkit isn't currently working
-	DEBUG=pw:api,pw:browser poetry run pytest -vv --browser chromium  --browser firefox tests/end_to_end
+	@echo "Running E2E tests in path: $${TESTPATH:-tests/end_to_end}"
+	@bash -c 'DEBUG=pw:api,pw:browser poetry run pytest -vv --browser chromium --browser firefox "$${TESTPATH:-tests/end_to_end}"'
 
 .PHONY: js-lint
 js-lint: ## Run javascript linting scanners

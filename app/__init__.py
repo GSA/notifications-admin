@@ -141,7 +141,9 @@ navigation = {
 def _csp(config):
     asset_domain = config["ASSET_DOMAIN"]
     logo_domain = config["LOGO_CDN_DOMAIN"]
-    return {
+    api_host_name = config["API_HOST_NAME"]
+
+    csp = {
         "default-src": ["'self'", asset_domain],
         "frame-src": [
             "https://www.youtube.com",
@@ -165,12 +167,21 @@ def _csp(config):
             "'self'",
             "https://gov-bam.nr-data.net",
             "https://www.google-analytics.com",
-            "http://localhost:6011",
-            "ws://localhost:6011",
         ],
         "style-src": ["'self'", asset_domain],
         "img-src": ["'self'", asset_domain, logo_domain],
     }
+
+    if api_host_name:
+        csp["connect-src"].append(api_host_name)
+        # this is for web socket
+        if api_host_name.startswith("http://"):
+            ws_url = api_host_name.replace("http://", "ws://")
+            csp["connect-src"].append(ws_url)
+        elif api_host_name.startswith("https://"):
+            ws_url = api_host_name.replace("https://", "wss://")
+            csp["connect-src"].append(ws_url)
+    return csp
 
 
 def create_app(application):

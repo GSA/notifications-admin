@@ -10,7 +10,7 @@ from tests.end_to_end.conftest import check_axe_report
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 
-def create_new_template(page):
+async def create_new_template(page):
 
     current_service_link = page.get_by_text("Current service")
     expect(current_service_link).to_be_visible()
@@ -82,6 +82,8 @@ def create_new_template(page):
     page.wait_for_load_state("domcontentloaded")
 
     preview_button = page.get_by_text("Preview")
+    assert await preview_button.evaluate("el => el.tagName") == "BUTTON"
+
     expect(preview_button).to_be_visible()
     preview_button.click()
 
