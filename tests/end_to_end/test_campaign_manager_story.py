@@ -137,16 +137,16 @@ def delete_template(page):
 def test_campaign_manager_core_user_story(default_service, end_to_end_context):
     create_user()
     page = end_to_end_context.new_page()
-    #page.goto(f"{E2E_TEST_URI}/sign-in")
+    # page.goto(f"{E2E_TEST_URI}/sign-in")
     # Wait for the next page to fully load.
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)
 
     current_date_time = datetime.datetime.now()
-    #new_service_name = "E2E Federal Test Service {now} - {browser_type}".format(
+    # new_service_name = "E2E Federal Test Service {now} - {browser_type}".format(
     #    now=current_date_time.strftime("%m/%d/%Y %H:%M:%S"),
     #    browser_type=page.context.browser.browser_type.name,
-    #)
+    # )
     # page.goto(f"{E2E_TEST_URI}/accounts")
 
     # Check to make sure that we've arrived at the next page.
@@ -176,7 +176,7 @@ def test_campaign_manager_core_user_story(default_service, end_to_end_context):
     # expect(existing_service_link).to_have_count(0)
 
     # Click on add a new service.
-    a# dd_service_button.click()
+    a  # dd_service_button.click()
 
     # Check to make sure that we've arrived at the next page.
     # page.wait_for_load_state("domcontentloaded")
@@ -207,6 +207,10 @@ def test_campaign_manager_core_user_story(default_service, end_to_end_context):
     # Check for the service name title and heading.
     # service_heading = page.get_by_text(new_service_name, exact=True)
     # expect(service_heading).to_be_visible()
+
+    print("*" * 80)
+    print(default_service.name)
+    print("*" * 80)
 
     expect(page).to_have_title(re.compile(default_service.name))
 

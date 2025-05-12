@@ -15,10 +15,12 @@ from app.models.service import Service
 from app.models.user import User
 from app.notify_client.service_api_client import service_api_client
 from app.notify_client.user_api_client import user_api_client
+from notifications_python_client.errors import HTTPError
 from .. import TestClient
 
 
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
+
 
 class TestClient(FlaskClient):
     def login(self, user, mocker=None, service=None):
@@ -112,7 +114,7 @@ def client(notify_admin_e2e, default_user):
 
 
 # Need e2e service defined here?
-@pytest.fixture
+@pytest.fixture()
 def default_service(browser, client, default_user):
     current_date_time = datetime.datetime.now()
     now = current_date_time.strftime("%m/%d/%Y %H:%M:%S")
@@ -120,21 +122,28 @@ def default_service(browser, client, default_user):
     service_name = f"E2E Federal Test Service {now} - {browser_type}"
 
     service_id = service_api_client.create_service(
-        service_name,
-        "federal",
-        current_app.config["DEFAULT_SERVICE_LIMIT"],
-        True,
-        default_user["id"],
-        default_user["email_address"],
+        service_name=service_name,
+        organization_type="federal",
+        message_limit=current_app.config["DEFAULT_SERVICE_LIMIT"],
+        restricted=True,
+        user_id=default_user["id"],
+        email_from=default_user["email_address"],
     )
+
+    print("*" * 80)
+    print(service_id)
 
     service_data = service_api_client.get_service(service_id)
 
     service = Service(service_data)
 
-    yield service
+    from pprint import pprint
+    pprint(dir(service))
 
-    service_api_client.archive_service(service.id, None)
+    try:
+        yield service
+    finally:
+        service_api_client.archive_service(service.id, None)
 
 
 @contextmanager
