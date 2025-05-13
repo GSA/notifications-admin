@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from app.s3_client.s3_csv_client import remove_blank_lines, set_metadata_on_csv_upload
+from app.s3_client.s3_csv_client import set_metadata_on_csv_upload
 
 
 def test_sets_metadata(client_request, mocker):
@@ -21,11 +21,3 @@ def test_sets_metadata(client_request, mocker):
         MetadataDirective="REPLACE",
         ServerSideEncryption="AES256",
     )
-
-
-def test_removes_blank_lines():
-    filedata = {
-        "data": "phone number\r\n15555555555\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"
-    }
-    file_data = remove_blank_lines(filedata)
-    assert file_data == {"data": "phone number\n15555555555"}

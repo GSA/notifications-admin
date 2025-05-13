@@ -28,17 +28,8 @@ def get_csv_upload(service_id, upload_id):
     return get_s3_object(*get_csv_location(service_id, upload_id))
 
 
-def remove_blank_lines(filedata):
-    # sometimes people upload files with hundreds of blank lines at the end
-    data = filedata["data"]
-    cleaned_data = "\n".join(line for line in data.splitlines() if line.strip())
-    filedata["data"] = cleaned_data
-    return filedata
-
-
 def s3upload(service_id, filedata):
 
-    filedata = remove_blank_lines(filedata)
     upload_id = str(uuid.uuid4())
     bucket_name, file_location, access_key, secret_key, region = get_csv_location(
         service_id, upload_id
