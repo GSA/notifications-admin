@@ -351,6 +351,10 @@ h2.recipient-list {
   margin-top: units(1);
 }
 
+.usa-search .search-form__button {
+  height: 40px;
+}
+
 // Button ellipses loading
 .dot-anim::after {
   content: '.';
