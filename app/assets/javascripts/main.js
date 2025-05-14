@@ -1,7 +1,5 @@
 window.GOVUK.Frontend.initAll();
 
-$(() => $("time.timeago").timeago());
-
 var showHideContent = new GOVUK.ShowHideContent();
 showHideContent.init();
 

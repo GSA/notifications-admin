@@ -16,9 +16,9 @@
 
 {% block backLink %}
   {% if help %}
-    {{ usaBackLink({ "href": back_link }) }}
+    {{ usaBackLink(back_link) }}
   {% else %}
-    {{ usaBackLink({ "href": back_link_from_preview }) }}
+    {{ usaBackLink(back_link_from_preview) }}
   {% endif %}
 {% endblock %}
 
