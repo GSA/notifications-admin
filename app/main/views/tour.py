@@ -142,13 +142,11 @@ def _get_tour_step_back_link(service_id, template_id, step_index):
         return {
             "href": {
                 "url": url_for(
-                    'main.begin_tour',
-                    service_id=service_id,
-                    template_id=template_id
+                    "main.begin_tour", service_id=service_id, template_id=template_id
                 ),
-                "text": "Back to tour start"
+                "text": "Back to tour start",
             },
-            "html": "Back to tour start"
+            "html": "Back to tour start",
         }
     else:
         return {
@@ -207,9 +205,9 @@ def check_tour_notification(service_id, template_id):
                 template_id=template_id,
                 step_index=len(placeholders),
             ),
-            "text": "Back to previous step"
+            "text": "Back to previous step",
         },
-        "html": "Back to previous step"
+        "html": "Back to previous step",
     }
 
     template.values = get_recipient_and_placeholders_from_session(
