@@ -1451,7 +1451,7 @@ def test_send_one_off_offers_link_to_upload(
 
     assert back_link.text.strip() in {
         "Back to all templates",
-        "Back to confirm your template"
+        "Back to confirm your template",
     }
 
     assert link.text.strip() == "Upload a list of phone numbers"
@@ -2288,7 +2288,9 @@ def test_check_messages_back_link(
     actual_href = page.find_all("a", {"class": "usa-back-link"})[0]["href"]
     expected_href = expected_url(service_id=SERVICE_ONE_ID, template_id=fake_uuid)
 
-    assert actual_href != "#", "Back link href fell back to '#' — missing correct back_link in view"
+    assert (
+        actual_href != "#"
+    ), "Back link href fell back to '#' — missing correct back_link in view"
     assert actual_href == expected_href
 
 
