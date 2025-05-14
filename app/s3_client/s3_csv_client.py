@@ -31,7 +31,7 @@ def get_csv_upload(service_id, upload_id):
 def remove_blank_lines(filedata):
     # sometimes people upload files with hundreds of blank lines at the end
     data = filedata["data"]
-    cleaned_data = "\n".join(line for line in data.splitlines() if line.strip())
+    cleaned_data = "\r\n".join(line for line in data.splitlines() if line.strip())
     filedata["data"] = cleaned_data
     return filedata
 

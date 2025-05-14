@@ -25,7 +25,7 @@ def test_sets_metadata(client_request, mocker):
 
 def test_removes_blank_lines():
     filedata = {
-        "data": "phone number\r\n15555555555\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"
+        "data": "variable,phone number\r\ntest,+15555555555\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"
     }
     file_data = remove_blank_lines(filedata)
-    assert file_data == {"data": "phone number\n15555555555"}
+    assert file_data == {"data": "variable,phone number\r\ntest,+15555555555"}
