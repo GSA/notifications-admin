@@ -1,5 +1,4 @@
 {# Determine type of element to use, if not explicitly set -#}
-
 {% if params.element %}
   {% set element = params.element | lower %}
 {% else %}
@@ -10,26 +9,35 @@
   {% endif %}
 {% endif %}
 
-{#- Define common attributes that we can use across all element types #}
-
+{# Define common attributes to use across all element types -#}
 {%- set commonAttributes %} class="usa-button{% if params.classes %} {{ params.classes }}{% endif %}{% if params.disabled %} usa-button--disabled{% endif %}"{% for attribute, value in params.attributes %} {{attribute}}="{{value}}"{% endfor %}{% endset %}
 
-{#- Define common attributes we can use for both button and input types #}
-
+{# Define attributes for button/input -#}
 {%- set buttonAttributes %}{% if params.name %} name="{{ params.name | trim }}"{% endif %} type="{{ params.type if params.type else 'submit' }}"{% if params.disabled %} disabled="disabled" aria-disabled="true"{% endif %}{% if params.preventDoubleClick %} data-prevent-double-click="true"{% endif %}{% endset %}
 
-{#- Actually create a button... or a link! #}
-
-{%- if element == 'a' %}
-<a href="{{ params.href if params.href else '#' }}" role="button" draggable="false" {{- commonAttributes | safe }}>
+{# Auto-append .dot-anim span for Send/Schedule buttons -#}
+{%- set isSendOrSchedule = params.name and (params.name | lower == 'send' or params.name | lower == 'schedule') -%}
+{%- set textContent %}
   {{ params.html | safe if params.html else params.text }}
-</a>
+  {%- if isSendOrSchedule -%}<span class="dot-anim" aria-hidden="true"></span>{%- endif -%}
+{%- endset %}
 
-{%- elseif element == 'button' %}
-<button {%- if params.value %} value="{{ params.value }}"{% endif %} {{- buttonAttributes | safe }} {{- commonAttributes | safe }} {% if params.disabled %}disabled{% endif %}>
-  {{ params.html | safe if params.html else params.text }}
-</button>
+{# Render the appropriate element -#}
+{% if element == 'a' %}
+  <a href="{{ params.href if params.href else '#' }}" role="button" draggable="false" {{ commonAttributes | safe }}>
+    {{ textContent | safe }}
+  </a>
 
-{%- elseif element == 'input' %}
-<input value="{{ params.text }}" {{- buttonAttributes | safe }} {{- commonAttributes | safe }}>
-{%- endif %}
+{% elseif element == 'button' %}
+  <button
+    {% if params.value %} value="{{ params.value }}"{% endif %}
+    {{ buttonAttributes | safe }}
+    {{ commonAttributes | safe }}
+    {% if params.disabled %}disabled{% endif %}
+  >
+    {{ textContent | safe }}
+  </button>
+
+{% elseif element == 'input' %}
+  <input value="{{ params.text }}" {{ buttonAttributes | safe }} {{ commonAttributes | safe }}>
+{% endif %}

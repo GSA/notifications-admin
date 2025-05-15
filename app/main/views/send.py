@@ -566,18 +566,18 @@ def _check_messages(service_id, template_id, upload_id, preview_row, **kwargs):
                 "url": url_for(
                     "main.send_one_off", service_id=service_id, template_id=template.id
                 ),
-                "text": "Back to message personalization"
+                "text": "Back to message personalization",
             },
-            "html": "Back to message personalization"
+            "html": "Back to message personalization",
         }
         back_link_from_preview = {
             "href": {
                 "url": url_for(
                     "main.send_one_off", service_id=service_id, template_id=template.id
                 ),
-                "text": "Back to message personalization"
+                "text": "Back to message personalization",
             },
-            "html": "Back to message personalization"
+            "html": "Back to message personalization",
         }
         choose_time_form = None
     else:
@@ -586,9 +586,9 @@ def _check_messages(service_id, template_id, upload_id, preview_row, **kwargs):
                 "url": url_for(
                     "main.send_messages", service_id=service_id, template_id=template.id
                 ),
-                "text": "Back to upload a file"
+                "text": "Back to upload a file",
             },
-            "html": "Back to upload a file"
+            "html": "Back to upload a file",
         }
         back_link_from_preview = {
             "href": {
@@ -598,9 +598,9 @@ def _check_messages(service_id, template_id, upload_id, preview_row, **kwargs):
                     template_id=template.id,
                     upload_id=upload_id,
                 ),
-                "text": "Back to check messages"
+                "text": "Back to check messages",
             },
-            "html": "Back to check messages"
+            "html": "Back to check messages",
         }
         choose_time_form = ChooseTimeForm()
 
@@ -786,9 +786,9 @@ def get_back_link(
                     service_id=service_id,
                     template_id=template.id,
                 ),
-                "text": "Back to select delivery time"
+                "text": "Back to select delivery time",
             },
-            "html": "Back to select delivery time"
+            "html": "Back to select delivery time",
         }
 
     if step_index == 0:
@@ -799,9 +799,9 @@ def get_back_link(
                         ".choose_template",
                         service_id=service_id,
                     ),
-                    "text": "Back to all templates"
+                    "text": "Back to all templates",
                 },
-                "html": "Back to all templates"
+                "html": "Back to all templates",
             }
         else:
             return {
@@ -811,14 +811,16 @@ def get_back_link(
                         service_id=service_id,
                         template_id=template.id,
                     ),
-                    "text": "Back to confirm your template"
+                    "text": "Back to confirm your template",
                 },
-                "html": "Back to confirm your template"
+                "html": "Back to confirm your template",
             }
 
     # fallback for other steps
     back_to_text = (
-        "Back to select recipients" if step_index == 1 else "Back to message personalization"
+        "Back to select recipients"
+        if step_index == 1
+        else "Back to message personalization"
     )
 
     return {
@@ -829,9 +831,9 @@ def get_back_link(
                 template_id=template.id,
                 step_index=step_index - 1,
             ),
-            "text": back_to_text
+            "text": back_to_text,
         },
-        "html": back_to_text
+        "html": back_to_text,
     }
 
 
