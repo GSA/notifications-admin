@@ -14,19 +14,22 @@
   </h1>
 
 
-  {% call form_wrapper(
-      action=url_for('.find_services_by_name'),
-      class='usa-search margin-bottom-4'
-  ) %}
-      {{ form.search(param_extensions={
-        "label": {"text": "Find services by name, partial name, or service ID"}
-      }) }}
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-      {{ usaButton({
-        "text": "Search",
-        "classes": "usa-button search-form__button"
-      }) }}
-  {% endcall %}
+ {% call form_wrapper(
+    action=url_for('.find_services_by_name'),
+    class='usa-search margin-bottom-4'
+) %}
+  <div class="display-flex flex-justify-start flex-align-end gap-1 width-full">
+    {{ form.search(param_extensions={
+      "label": {"text": "Find services by name, partial name, or service ID"},
+      "classes": "width-full"
+    }) }}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {{ usaButton({
+      "text": "Search",
+      "classes": "usa-button search-form__button"
+    }) }}
+  </div>
+{% endcall %}
 
   {% call form_wrapper(id='search-form' ) %}
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
