@@ -352,6 +352,19 @@ h2.recipient-list {
 }
 
 // Button ellipses loading
+.dot-anim {
+  display: inline-block;
+  margin-left: 0; /* remove left margin if it exists */
+  padding-left: 0;
+  font-size: 1em;
+  animation: dots 1s steps(3, end) infinite;
+}
+
+/* Optional: reduce spacing by removing whitespace node */
+button span.dot-anim {
+  margin-left: 0; /* forces no space even if white-space exists */
+}
+
 .dot-anim::after {
   content: '.';
   animation: dotPulse 1.5s steps(3, end) infinite;
@@ -362,4 +375,8 @@ h2.recipient-list {
   33%  { content: '.'; }
   66%  { content: '..'; }
   100% { content: '...'; }
+}
+
+.modal-open {
+  overflow: hidden;
 }
