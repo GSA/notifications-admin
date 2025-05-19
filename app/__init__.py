@@ -141,7 +141,7 @@ navigation = {
 def _csp(config):
     asset_domain = config["ASSET_DOMAIN"]
     logo_domain = config["LOGO_CDN_DOMAIN"]
-    api_host_name = config["API_HOST_NAME"]
+    api_public_url = config["API_PUBLIC_URL"]
 
     csp = {
         "default-src": ["'self'", asset_domain],
@@ -172,14 +172,14 @@ def _csp(config):
         "img-src": ["'self'", asset_domain, logo_domain],
     }
 
-    if api_host_name:
-        csp["connect-src"].append(api_host_name)
+    if api_public_url:
+        csp["connect-src"].append(api_public_url)
         # this is for web socket
-        if api_host_name.startswith("http://"):
-            ws_url = api_host_name.replace("http://", "ws://")
+        if api_public_url.startswith("http://"):
+            ws_url = api_public_url.replace("http://", "ws://")
             csp["connect-src"].append(ws_url)
-        elif api_host_name.startswith("https://"):
-            ws_url = api_host_name.replace("https://", "wss://")
+        elif api_public_url.startswith("https://"):
+            ws_url = api_public_url.replace("https://", "wss://")
             csp["connect-src"].append(ws_url)
     return csp
 
