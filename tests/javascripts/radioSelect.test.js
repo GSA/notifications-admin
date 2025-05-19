@@ -244,7 +244,7 @@ describe('RadioSelect', () => {
       const button = document.querySelector('.radio-select__column:nth-child(2) input[type=button]');
 
       expect(button).not.toBeNull();
-      expect(button.getAttribute('value')).toEqual('Done');
+      expect(button.getAttribute('value')).toEqual('Back to select a new time');
       expect(button.getAttribute('aria-expanded')).toEqual('true');
 
     });
