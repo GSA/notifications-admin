@@ -33,15 +33,15 @@ def test_owasp_useful_headers_set(
     )
     assert search(r"style-src 'self' static\.example\.com 'nonce-.*';", csp)
     assert search(r"img-src 'self' static\.example\.com static-logos\.test\.com", csp)
-    api_host_name = current_app.config.get("API_HOST_NAME")
-    assert api_host_name is not None, f"API_HOST_NAME: {api_host_name} — is missing"
+    api_public_url = current_app.config.get("API_PUBLIC_URL")
+    assert api_public_url is not None, f"API_PUBLIC_URL: {api_public_url} — is missing"
 
-    assert api_host_name in csp
-    if api_host_name.startswith("http://"):
-        assert api_host_name.replace("http://", "ws://") in csp
-    elif api_host_name.startswith("https://"):
-        assert api_host_name.replace("https://", "wss://") in csp
+    assert api_public_url in csp
+    if api_public_url.startswith("http://"):
+        assert api_public_url.replace("http://", "ws://") in csp
+    elif api_public_url.startswith("https://"):
+        assert api_public_url.replace("https://", "wss://") in csp
     else:
         raise AssertionError(
-            f"Unexpected API_HOST_NAME format: {api_host_name} — must start with 'http://' or 'https://'"
+            f"Unexpected API_PUBLIC_URL format: {api_public_url} — must start with 'http://' or 'https://'"
         )

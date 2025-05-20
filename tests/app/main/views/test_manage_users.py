@@ -27,7 +27,6 @@ from tests.conftest import (
         (
             create_active_user_with_permissions(),
             (
-
                 "Test User test@user.gsa.gov (you) "
                 "Permissions "
                 "Can See dashboard "
@@ -44,7 +43,11 @@ from tests.conftest import (
         ),
         (
             create_active_user_view_permissions(),
-            ("Test User With Permissions test@user.gsa.gov (you) " "Permissions " "Can See dashboard"),
+            (
+                "Test User With Permissions test@user.gsa.gov (you) "
+                "Permissions "
+                "Can See dashboard"
+            ),
             False,
         ),
         (
@@ -232,7 +235,9 @@ def test_should_show_caseworker_on_overview_page(
 
     assert normalize_spaces(page.select_one("h1").text) == "Team members"
     assert normalize_spaces(page.select(".user-list-item")[0].text) == (
-        "Test User With Permissions test@user.gsa.gov (you) " "Permissions " "Can See dashboard"
+        "Test User With Permissions test@user.gsa.gov (you) "
+        "Permissions "
+        "Can See dashboard"
     )
     # [1:5] are invited users
     assert normalize_spaces(page.select(".user-list-item")[6].text) == (

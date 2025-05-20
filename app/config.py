@@ -12,6 +12,8 @@ class Config(object):
     NOTIFY_APP_NAME = "admin"
     NOTIFY_ENVIRONMENT = getenv("NOTIFY_ENVIRONMENT", "development")
     API_HOST_NAME = getenv("API_HOST_NAME", "localhost")
+    API_PUBLIC_URL = getenv("API_PUBLIC_URL", "localhost")
+
     ADMIN_BASE_URL = getenv("ADMIN_BASE_URL", "http://localhost:6012")
     HEADER_COLOUR = (
         "#81878b"  # mix(govuk-colour("dark-grey"), govuk-colour("mid-grey"))
@@ -132,6 +134,8 @@ class Test(Development):
     ASSET_PATH = "https://static.example.com/"
 
     API_HOST_NAME = "http://you-forgot-to-mock-an-api-call-to"
+    API_PUBLIC_URL = "http://you-forgot-to-mock-an-api-call-to"
+
     REDIS_URL = "redis://you-forgot-to-mock-a-redis-call-to"
     LOGO_CDN_DOMAIN = "static-logos.test.com"
 
