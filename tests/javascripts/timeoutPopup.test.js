@@ -5,7 +5,7 @@ beforeAll(() => {
         <dialog class="usa-modal" id="sessionTimer" aria-labelledby="sessionTimerHeading" aria-describedby="timeLeft">
             <div class="usa-modal__content">
                 <div class="usa-modal__main">
-                <h2 class="usa-modal__heading" id="sessionTimerHeading">
+                <h2 class="usa-modal__heading font-body-lg" id="sessionTimerHeading">
                     Your session will end soon.
                     <span class="usa-sr-only">Please choose to extend your session or sign out. Your session will expire in 5 minutes or less.</span>
                 </h2>

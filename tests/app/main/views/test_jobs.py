@@ -237,11 +237,11 @@ def test_should_show_job_with_sending_limit_exceeded_status(
         job_id=fake_uuid,
     )
 
-    assert normalize_spaces(page.select("main p")[2].text) == (
+    assert normalize_spaces(page.select("main p")[3].text) == (
         "Notify cannot send these messages because you have reached a limit. "
         "You can only send 1,000 messages per day and 250,000 messages in total."
     )
-    assert normalize_spaces(page.select("main p")[3].text) == (
+    assert normalize_spaces(page.select("main p")[4].text) == (
         "Upload this spreadsheet again tomorrow or contact the Notify.gov team to raise the limit."
     )
 
