@@ -186,7 +186,7 @@ session to make the changes take effect.
 Now we're ready to install the Python version we need with `pyenv`, like so:
 
 ```sh
-pyenv install 3.12
+pyenv install 3.12.2
 ```
 
 This will install the latest version of Python 3.12.
