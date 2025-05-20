@@ -11,7 +11,7 @@ class SerialisedModel(ABC):
     guarantees that:
     - all of the ALLOWED_PROPERTIES are present in the underlying
       dictionary
-    - any other abritrary properties of the underlying dictionary can’t
+    - any other arbitrary properties of the underlying dictionary can’t
       be accessed
 
     If you are adding a new field to a model, you should ensure that
