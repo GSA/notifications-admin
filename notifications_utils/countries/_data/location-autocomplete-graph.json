@@ -4033,7 +4033,7 @@
       "en-GB": "Amerca"
     }
   },
-  "nym:Amercia": {
+  "nym:America": {
     "edges": {
       "from": [
         "country:US"
@@ -4047,7 +4047,7 @@
     },
     "names": {
       "cy": false,
-      "en-GB": "Amercia"
+      "en-GB": "America"
     }
   },
   "nym:Ameria": {
@@ -4322,7 +4322,7 @@
       "en-GB": "Argentine Republic"
     }
   },
-  "nym:Argentinia": {
+  "nym:Argentina": {
     "edges": {
       "from": [
         "country:AR"
@@ -4336,7 +4336,7 @@
     },
     "names": {
       "cy": false,
-      "en-GB": "Argentinia"
+      "en-GB": "Argentina"
     }
   },
   "nym:Aruba": {
@@ -9031,7 +9031,7 @@
       "en-GB": "Grand Duchy of Luxembourg"
     }
   },
-  "nym:Grat Britain": {
+  "nym:Great Britain": {
     "edges": {
       "from": [
         "country:GB"
@@ -9045,7 +9045,7 @@
     },
     "names": {
       "cy": false,
-      "en-GB": "Grat Britain"
+      "en-GB": "Great Britain"
     }
   },
   "nym:Great Britain": {
@@ -10748,7 +10748,7 @@
       "en-GB": "Kazakhstán"
     }
   },
-  "nym:Kazakstan": {
+  "nym:Kazakhstan": {
     "edges": {
       "from": [
         "country:KZ"
@@ -10762,7 +10762,7 @@
     },
     "names": {
       "cy": false,
-      "en-GB": "Kazakstan"
+      "en-GB": "Kazakhstan"
     }
   },
   "nym:Kingdom of Bahrain": {
@@ -23821,7 +23821,7 @@
       "en-GB": "afganestan"
     }
   },
-  "nym:afganhistan": {
+  "nym:afghanistan": {
     "edges": {
       "from": [
         "country:AF"
@@ -23835,10 +23835,10 @@
     },
     "names": {
       "cy": false,
-      "en-GB": "afganhistan"
+      "en-GB": "afghanistan"
     }
   },
-  "nym:afganistan": {
+  "nym:afghanistan": {
     "edges": {
       "from": [
         "country:AF"
@@ -23852,7 +23852,7 @@
     },
     "names": {
       "cy": false,
-      "en-GB": "afganistan"
+      "en-GB": "afghanistan"
     }
   },
   "nym:afghanistan": {
@@ -24416,7 +24416,7 @@
       "en-GB": "austraila"
     }
   },
-  "nym:austrailia": {
+  "nym:australia": {
     "edges": {
       "from": [
         "country:AU"
@@ -24430,7 +24430,7 @@
     },
     "names": {
       "cy": false,
-      "en-GB": "austrailia"
+      "en-GB": "australia"
     }
   },
   "nym:australa": {
