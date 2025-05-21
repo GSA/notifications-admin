@@ -18,4 +18,4 @@ If you're working in VS Code, you can also leverage Docker for a containerized d
 
 1. Go to http://localhost:6012
 
-NOTE: when you change .env in the future, you'll need to rebuild the devcontainer for the change to take effect. VS Code _should_ detect the change and prompt you with a toast notification during a cached build. If not, you can find a manual rebuild in command pallette or just `docker rm` the notifications-api container.
+NOTE: when you change .env in the future, you'll need to rebuild the devcontainer for the change to take effect. VS Code _should_ detect the change and prompt you with a toast notification during a cached build. If not, you can find a manual rebuild in command palette or just `docker rm` the notifications-api container.
