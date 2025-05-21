@@ -8,11 +8,8 @@ body:
   attributes:
     label: Log In
     options:
-      - label: notify-staging.app.cloud.gov resolves
-      - label: Clicking sign in takes you to login page
-      - label: 2FA code is sent promptly
-      - label: 2FA code input screen appears as expected
-      - label: After code is entered, you are brought to the “choose service” screen
+      - label: Can sign in via Login.gov
+      - label: After successful login, you are brought to the “choose service” screen
       - label: Choosing a service brings you to the dashboard for that service
 
 - type: checkboxes
