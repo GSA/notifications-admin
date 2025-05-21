@@ -510,7 +510,7 @@
 '66':
   attributes:
     alpha: REG
-    comment: Maximum long message lenght is 459 for GSM7 or 201 for Unicode alphabet.
+    comment: Maximum long message length is 459 for GSM7 or 201 for Unicode alphabet.
       Special registration procedure for sending to DND numbers
     dlr: 'YES'
     generic_sender: SMS
@@ -577,7 +577,7 @@
     sender_and_registration_info: All senders CONVERTED into one available national
       numeric sender
     text_restrictions: Content template MUST be approved by the MNO. Transactional
-      traffic ONLY. Sufix added in the message text
+      traffic ONLY. Suffix added in the message text
   billable_units: 1
   names:
   - China

@@ -2,7 +2,7 @@
 
 ## Using Environment Variables
 
-This guide explains how to update cloud foundry envirionment variables to enable or disable feature flagging.
+This guide explains how to update cloud foundry environment variables to enable or disable feature flagging.
 
 ### Prerequisites
 

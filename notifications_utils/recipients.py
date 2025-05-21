@@ -652,7 +652,7 @@ def _do_simple_email_checks(match, email_address):
 def validate_email_address(email_address):  # noqa (C901 too complex)
     # almost exactly the same as by https://github.com/wtforms/wtforms/blob/master/wtforms/validators.py,
     # with minor tweaks for SES compatibility - to avoid complications we are a lot stricter with the local part
-    # than neccessary - we don't allow any double quotes or semicolons to prevent SES Technical Failures
+    # than necessary - we don't allow any double quotes or semicolons to prevent SES Technical Failures
     email_address = strip_and_remove_obscure_whitespace(email_address)
     match = re.match(EMAIL_REGEX_PATTERN, email_address)
 

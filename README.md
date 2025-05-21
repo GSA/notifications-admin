@@ -31,7 +31,7 @@ You will need the following items:
   [setting up an account](https://cloud.gov/sign-up/) (requires a `.mil`,
   `.gov`, or `.fed.us` email address) and getting access to the
   `notify-local-dev` and `notify-staging` spaces.
-- Admin priviliges and SSH access on your machine; you may need to work with
+- Admin privileges and SSH access on your machine; you may need to work with
   your organization's IT support staff if you're not sure or don't currently
   have this access.
 

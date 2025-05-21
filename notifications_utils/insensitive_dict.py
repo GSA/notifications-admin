@@ -6,7 +6,7 @@ from ordered_set import OrderedSet
 class InsensitiveDict(dict):
     """
     `InsensitiveDict` behaves like an ordered dictionary, except it normalises
-    case, whitespace, hypens and underscores in keys.
+    case, whitespace, hyphens and underscores in keys.
 
     In other words,
     InsensitiveDict({'FIRST_NAME': 'example'}) == InsensitiveDict({'first name': 'example'})
@@ -23,7 +23,7 @@ class InsensitiveDict(dict):
     def from_keys(cls, keys):
         """
         This behaves like `dict.from_keys`, except:
-        - it normalises the keys to ignore case, whitespace, hypens and
+        - it normalises the keys to ignore case, whitespace, hyphens and
           underscores
         - it stores the original, unnormalised key as the value of the
           item so it can be retrieved later
