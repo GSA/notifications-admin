@@ -134,7 +134,6 @@ class Test(Development):
     ASSET_PATH = "https://static.example.com/"
 
     API_HOST_NAME = "http://you-forgot-to-mock-an-api-call-to"
-    API_PUBLIC_URL = "http://you-forgot-to-mock-an-api-call-to"
 
     REDIS_URL = "redis://you-forgot-to-mock-a-redis-call-to"
     LOGO_CDN_DOMAIN = "static-logos.test.com"

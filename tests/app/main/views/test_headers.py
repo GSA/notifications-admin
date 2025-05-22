@@ -27,21 +27,12 @@ def test_owasp_useful_headers_set(
         csp,
     )
     assert search(r"'nonce-[^']+';", csp)
-    assert search(
-        r"connect-src 'self' https:\/\/gov-bam\.nr-data\.net https:\/\/www\.google-analytics\.",
-        csp,
-    )
+    assert search(r"connect-src", csp)
+    assert search(r"https:\/\/gov-bam\.nr-data\.net", csp)
+    assert search(r"https:\/\/www\.google-analytics\.com", csp)
+    assert search(r"http:\/\/localhost:6011", csp)
+    assert search(r"ws:\/\/localhost:6011", csp)
+    assert search(r"https:\/\/notify-api-.*\.app\.cloud\.gov", csp)
+    assert search(r"wss:\/\/notify-api-.*\.app\.cloud\.gov", csp)
     assert search(r"style-src 'self' static\.example\.com 'nonce-.*';", csp)
     assert search(r"img-src 'self' static\.example\.com static-logos\.test\.com", csp)
-    api_public_url = current_app.config.get("API_PUBLIC_URL")
-    assert api_public_url is not None, f"API_PUBLIC_URL: {api_public_url} — is missing"
-
-    assert api_public_url in csp
-    if api_public_url.startswith("http://"):
-        assert api_public_url.replace("http://", "ws://") in csp
-    elif api_public_url.startswith("https://"):
-        assert api_public_url.replace("https://", "wss://") in csp
-    else:
-        raise AssertionError(
-            f"Unexpected API_PUBLIC_URL format: {api_public_url} — must start with 'http://' or 'https://'"
-        )

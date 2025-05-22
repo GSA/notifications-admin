@@ -141,9 +141,8 @@ navigation = {
 def _csp(config):
     asset_domain = config["ASSET_DOMAIN"]
     logo_domain = config["LOGO_CDN_DOMAIN"]
-    api_public_url = config["API_PUBLIC_URL"]
 
-    csp = {
+    return {
         "default-src": ["'self'", asset_domain],
         "frame-src": [
             "https://www.youtube.com",
@@ -167,21 +166,18 @@ def _csp(config):
             "'self'",
             "https://gov-bam.nr-data.net",
             "https://www.google-analytics.com",
+            "http://localhost:6011",
+            "ws://localhost:6011",
+            "https://notify-api-staging.app.cloud.gov",
+            "wss://notify-api-staging.app.cloud.gov",
+            "https://notify-api-demo.app.cloud.gov",
+            "wss://notify-api-demo.app.cloud.gov",
+            "https://notify-api-production.app.cloud.gov",
+            "wss://notify-api-production.app.cloud.gov",
         ],
         "style-src": ["'self'", asset_domain],
         "img-src": ["'self'", asset_domain, logo_domain],
     }
-
-    if api_public_url:
-        csp["connect-src"].append(api_public_url)
-        # this is for web socket
-        if api_public_url.startswith("http://"):
-            ws_url = api_public_url.replace("http://", "ws://")
-            csp["connect-src"].append(ws_url)
-        elif api_public_url.startswith("https://"):
-            ws_url = api_public_url.replace("https://", "wss://")
-            csp["connect-src"].append(ws_url)
-    return csp
 
 
 def create_app(application):
