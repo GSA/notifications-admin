@@ -25,12 +25,28 @@ def test_owasp_useful_headers_set(
         csp,
     )
     assert search(r"'nonce-[^']+';", csp)
-    assert search(r"connect-src", csp)
-    assert search(r"https:\/\/gov-bam\.nr-data\.net", csp)
-    assert search(r"https:\/\/www\.google-analytics\.com", csp)
-    assert search(r"http:\/\/localhost:6011", csp)
-    assert search(r"ws:\/\/localhost:6011", csp)
-    assert search(r"https:\/\/notify-api-.*\.app\.cloud\.gov", csp)
-    assert search(r"wss:\/\/notify-api-.*\.app\.cloud\.gov", csp)
+    connect_src = next(
+        (
+            directive
+            for directive in csp.split(";")
+            if directive.strip().startswith("connect-src")
+        ),
+        None,
+    )
+    assert connect_src is not None, "connect-src directive is missing"
+    from flask import current_app
+
+    config = current_app.config
+    expected_sources = {
+        "'self'",
+        "https://gov-bam.nr-data.net",
+        "https://www.google-analytics.com",
+        config["API_PUBLIC_URL"],
+        config["API_PUBLIC_WS_URL"],
+    }
+    actual_sources = set(connect_src.strip().split()[1:])
+    assert (
+        expected_sources <= actual_sources
+    ), f"Missing sources in connect-src: {expected_sources - actual_sources}"
     assert search(r"style-src 'self' static\.example\.com 'nonce-.*';", csp)
     assert search(r"img-src 'self' static\.example\.com static-logos\.test\.com", csp)
