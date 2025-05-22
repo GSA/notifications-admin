@@ -80,17 +80,6 @@ COPY --from=python-builder /app/app/version.py /app/app/version.py
 
 # Set environment variables
 ENV FLASK_APP=application.py
-ENV NOTIFY_ENVIRONMENT=development
-ENV API_HOST_NAME=http://api:6011
-ENV WERKZEUG_DEBUG_PIN=off
-
-# Admin UI settings
-ENV REDIS_URL=redis://redis:6379/0
-
-# Credentials for local development and E2E testing
-ENV NOTIFY_E2E_TEST_EMAIL=example@fake.gov
-ENV NOTIFY_E2E_TEST_PASSWORD=testpassword
-ENV NOTIFY_E2E_TEST_URI=http://localhost:6012/
 
 # Login.gov sandbox settings
 ENV LOGIN_DOT_GOV_CLIENT_ID="urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:test_notify_gov"
