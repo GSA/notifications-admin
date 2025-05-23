@@ -9,10 +9,9 @@ body:
     label: Log In
     options:
       - label: notify-staging.app.cloud.gov resolves
-      - label: Clicking sign in takes you to login page
-      - label: 2FA code is sent promptly
-      - label: 2FA code input screen appears as expected
-      - label: After code is entered, you are brought to the “choose service” screen
+      - label: Clicking sign in takes you to Login.gov
+      - label: Can sign in via Login.gov
+      - label: After successful login, you are brought to the “choose service” screen
       - label: Choosing a service brings you to the dashboard for that service
 
 - type: checkboxes
@@ -72,11 +71,10 @@ body:
       - label: From team member screen, clicking “Change Details” on a specific profile brings you to that person’s profile
       - label: Clicking on “Remove this team member” prompts a confirmation
       - label: Clicking the confirmation removes the team member
-    
+
 - type: checkboxes
   id: sign_out
   attributes:
     label: Sign Out
     options:
-      - label: Hitting “Sign Out” takes you back to the homepage and logs you out 
-
+      - label: Clicking “Sign Out” takes you back to the homepage and logs you out
