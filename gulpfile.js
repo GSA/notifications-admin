@@ -50,7 +50,7 @@ const javascripts = () => {
         paths.npm + 'textarea-caret/index.js',
         paths.npm + 'cbor-js/cbor.js',
         paths.npm + 'd3/dist/d3.min.js',
-        paths.npm + 'socket.io-client/dist/socket.io.min.js',
+        paths.npm + 'socket.io-client/dist/socket.io.min.js'
       ])
     );
 
@@ -72,6 +72,7 @@ const javascripts = () => {
     paths.src + 'javascripts/radioSlider.js',
     paths.src + 'javascripts/updateStatus.js',
     paths.src + 'javascripts/errorBanner.js',
+    paths.src + 'javascripts/notifyModal.js',
     paths.src + 'javascripts/timeoutPopup.js',
     paths.src + 'javascripts/date.js',
     paths.src + 'javascripts/loginAlert.js',
@@ -118,6 +119,12 @@ const copyPDF = () => {
     dest(paths.dist + 'pdf/')
   );
 };
+
+const copyUSWDSJS = () => {
+  return src('node_modules/@uswds/uswds/dist/js/uswds.min.js')
+    .pipe(dest(paths.dist + 'js/'));
+};
+
 
 // Configure USWDS paths
 uswds.settings.version = 3;
@@ -172,7 +179,8 @@ exports.default = series(
   copySetTimezone,
   copyImages,
   copyPDF,
-  copyAssets
+  copyAssets,
+  copyUSWDSJS
 );
 exports.backstopTest = backstopTest;
 exports.backstopReference = backstopReference;

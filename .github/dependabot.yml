@@ -10,9 +10,9 @@ updates:
     schedule:
       interval: "daily"
     assignees:
-      - "A-Shumway42"
+      - "alexjanousekGSA"
     reviewers:
-      - "A-Shumway42"
+      - "alexjanousekGSA"
   - package-ecosystem: "npm"
     directory: "/"
     schedule:

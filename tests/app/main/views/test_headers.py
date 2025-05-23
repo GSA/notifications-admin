@@ -1,7 +1,5 @@
 from re import search
 
-from flask import current_app
-
 
 def test_owasp_useful_headers_set(
     client_request,
@@ -27,21 +25,28 @@ def test_owasp_useful_headers_set(
         csp,
     )
     assert search(r"'nonce-[^']+';", csp)
-    assert search(
-        r"connect-src 'self' https:\/\/gov-bam\.nr-data\.net https:\/\/www\.google-analytics\.",
-        csp,
+    connect_src = next(
+        (
+            directive
+            for directive in csp.split(";")
+            if directive.strip().startswith("connect-src")
+        ),
+        None,
     )
+    assert connect_src is not None, "connect-src directive is missing"
+    from flask import current_app
+
+    config = current_app.config
+    expected_sources = {
+        "'self'",
+        "https://gov-bam.nr-data.net",
+        "https://www.google-analytics.com",
+        config["API_PUBLIC_URL"],
+        config["API_PUBLIC_WS_URL"],
+    }
+    actual_sources = set(connect_src.strip().split()[1:])
+    assert (
+        expected_sources <= actual_sources
+    ), f"Missing sources in connect-src: {expected_sources - actual_sources}"
     assert search(r"style-src 'self' static\.example\.com 'nonce-.*';", csp)
     assert search(r"img-src 'self' static\.example\.com static-logos\.test\.com", csp)
-    api_host_name = current_app.config.get("API_HOST_NAME")
-    assert api_host_name is not None, f"API_HOST_NAME: {api_host_name} — is missing"
-
-    assert api_host_name in csp
-    if api_host_name.startswith("http://"):
-        assert api_host_name.replace("http://", "ws://") in csp
-    elif api_host_name.startswith("https://"):
-        assert api_host_name.replace("https://", "wss://") in csp
-    else:
-        raise AssertionError(
-            f"Unexpected API_HOST_NAME format: {api_host_name} — must start with 'http://' or 'https://'"
-        )

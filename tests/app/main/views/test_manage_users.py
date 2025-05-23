@@ -27,7 +27,7 @@ from tests.conftest import (
         (
             create_active_user_with_permissions(),
             (
-                "Test User(you) "
+                "Test User test@user.gsa.gov (you) "
                 "Permissions "
                 "Can See dashboard "
                 "Can Send messages "
@@ -38,18 +38,22 @@ from tests.conftest import (
         ),
         (
             create_active_user_empty_permissions(),
-            ("Test User With Empty Permissions(you) " "Permissions"),
+            ("Test User With Empty Permissions test@user.gsa.gov (you) " "Permissions"),
             False,
         ),
         (
             create_active_user_view_permissions(),
-            ("Test User With Permissions(you) " "Permissions " "Can See dashboard"),
+            (
+                "Test User With Permissions test@user.gsa.gov (you) "
+                "Permissions "
+                "Can See dashboard"
+            ),
             False,
         ),
         (
             create_active_user_manage_template_permissions(),
             (
-                "Test User With Permissions(you) "
+                "Test User With Permissions test@user.gsa.gov (you) "
                 "Permissions "
                 "Can See dashboard "
                 "Can Add and edit templates"
@@ -231,7 +235,9 @@ def test_should_show_caseworker_on_overview_page(
 
     assert normalize_spaces(page.select_one("h1").text) == "Team members"
     assert normalize_spaces(page.select(".user-list-item")[0].text) == (
-        "Test User With Permissions(you) " "Permissions " "Can See dashboard"
+        "Test User With Permissions test@user.gsa.gov (you) "
+        "Permissions "
+        "Can See dashboard"
     )
     # [1:5] are invited users
     assert normalize_spaces(page.select(".user-list-item")[6].text) == (
@@ -1233,7 +1239,7 @@ def test_cancel_invited_user_doesnt_work_if_user_not_invited_to_this_service(
         (
             "pending",
             (
-                "invited_user@test.gsa.gov(invited) "
+                "invited_user@test.gsa.gov (invited) "
                 "Permissions "
                 "Can See dashboard "
                 "Can Send messages "

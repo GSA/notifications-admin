@@ -38,7 +38,7 @@
             <label class="usa-radio__label" for="{{id}}">{{label}}</label>
           </div>
         {{/choices}}
-        <input type='button' class='usa-button usa-button--outline radio-select__button--done' aria-expanded='true' value='Done' />
+        <input type='button' class='usa-button usa-button--outline radio-select__button--done margin-top-4' aria-expanded='true' value='Back to select a new time' />
       </div>
     `),
     'chosen': Hogan.compile(`

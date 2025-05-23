@@ -20,6 +20,14 @@ document.addEventListener('DOMContentLoaded', function () {
   if (featureEnabled) {
     const socket = io(apiHost);
 
+    socket.on('connect_error', (err) => {
+      console.error('Socket connect_error:', err);
+    });
+
+    socket.on('error', (err) => {
+      console.error('Socket error:', err);
+    });
+
     socket.on('connect', () => {
       socket.emit('join', { room: `job-${jobId}` });
     });

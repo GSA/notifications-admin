@@ -8,3 +8,5 @@ redis_enabled: 1
 nr_agent_id: '1134291385'
 nr_app_id: '1031640326'
 FEATURE_SOCKET_ENABLED: false
+API_PUBLIC_URL: https://notify-api-staging.app.cloud.gov
+API_PUBLIC_WS_URL: wss://notify-api-staging.app.cloud.gov

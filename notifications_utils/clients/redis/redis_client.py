@@ -103,7 +103,7 @@ class RedisClient:
 
         Notes:
         - Failed requests count. If over the limit and keep making requests you'll stay over the limit.
-        - The actual value in the set is just the timestamp, the same as the score. We don't store any requets details.
+        - The actual value in the set is just the timestamp, the same as the score. We don't store any request details.
         - return value of pipe.execute() is an array containing the outcome of each call.
             - result[2] == outcome of pipe.zcard()
         - If redis is inactive, or we get an exception, allow the request

@@ -179,10 +179,19 @@ td.table-empty-message {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 1rem;
+  padding: 1rem 0;
 }
 
 .user-list-item {
+  border: 2px solid color('gray-5');
+  padding: units(2);
+  button, .usa-accordion__content {
+    background-color: white;
+    border: 2px solid color('gray-5');
+  }
+  button:hover, button[aria-expanded="true"] {
+    background-color: color('gray-5');
+  }
   @include at-media(desktop) {
     width: calc(50% - units(1));
     margin-bottom: 1rem;
@@ -199,7 +208,6 @@ td.table-empty-message {
   }
 
   .hint {
-    display: block;
     font-size: size('body', 'sm');
     font-weight: normal;
   }

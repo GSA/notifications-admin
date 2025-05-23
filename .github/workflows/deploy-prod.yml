@@ -63,6 +63,8 @@ jobs:
           LOGIN_DOT_GOV_SIGNOUT_REDIRECT: "https://beta.notify.gov/sign-out"
           LOGIN_DOT_GOV_INITIAL_SIGNIN_URL: "https://secure.login.gov/openid_connect/authorize?acr_values=http%3A%2F%2Fidmanagement.gov%2Fns%2Fassurance%2Fial%2F1&client_id=urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:notify-gov&nonce=NONCE&prompt=select_account&redirect_uri=https://beta.notify.gov/sign-in&response_type=code&scope=openid+email&state=STATE"
           LOGIN_DOT_GOV_CERTS_URL: "https://secure.login.gov/api/openid_connect/certs"
+          API_PUBLIC_URL: ${{ secrets.API_PUBLIC_URL }}
+          API_PUBLIC_WS_URL: ${{ secrets.API_PUBLIC_WS_URL }}
         with:
           cf_username: ${{ secrets.CLOUDGOV_USERNAME }}
           cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
@@ -87,6 +89,8 @@ jobs:
             --var LOGIN_DOT_GOV_INITIAL_SIGNIN_URL="$LOGIN_DOT_GOV_INITIAL_SIGNIN_URL"
             --var LOGIN_DOT_GOV_CERTS_URL="$LOGIN_DOT_GOV_CERTS_URL"
             --var LOGIN_PEM="$LOGIN_PEM"
+            --var API_PUBLIC_URL="$API_PUBLIC_URL"
+            --var API_PUBLIC_WS_URL="$API_PUBLIC_WS_URL"
             --strategy rolling
 
       - name: Deploy egress proxy
