@@ -179,7 +179,8 @@ def handle_no_existing_template_case(page):
     # TODO: The failure appears to currently be an issue with retrieving info
     #       from the job cache, and the API throws an error, resulting in the
     #       error page "Sorry, we can't deliver what you asked for right now."
-    activity_button = page.get_by_text("Activity")
+    # activity_button = page.get_by_text("Activity")
+    activity_button = page.get_by_role("link", name="Activity")
     expect(activity_button).to_be_visible()
     activity_button.click()
 
