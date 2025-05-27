@@ -130,7 +130,7 @@ py-lock: ## Syncs dependencies and updates lock file without performing recursiv
 
 .PHONY: freeze-requirements
 freeze-requirements: ## create static requirements.txt
-	poetry export --without-hashes --format=requirements.txt > requirements.txt
+	poetry export --output requirements.txt
 
 .PHONY: pip-audit
 pip-audit:
