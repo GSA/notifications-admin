@@ -36,6 +36,9 @@
   {% endif %}
 
   <div class="user-list">
+    <div class="js-live-search-no-results margin-top-3" style="display: none;">
+      <p class="usa-body margin-0">No results found</p>
+    </div>
     {% for user in users %}
       {% if user.status != 'cancelled' %}
         <div class="user-list-item width-full">
