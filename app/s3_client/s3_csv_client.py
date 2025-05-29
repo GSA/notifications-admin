@@ -18,8 +18,6 @@ def get_csv_location(service_id, upload_id):
     return (
         current_app.config["CSV_UPLOAD_BUCKET"]["bucket"],
         NEW_FILE_LOCATION_STRUCTURE.format(service_id, upload_id),
-        current_app.config["CSV_UPLOAD_BUCKET"]["access_key_id"],
-        current_app.config["CSV_UPLOAD_BUCKET"]["secret_access_key"],
         current_app.config["CSV_UPLOAD_BUCKET"]["region"],
     )
 
@@ -40,7 +38,7 @@ def s3upload(service_id, filedata):
 
     filedata = remove_blank_lines(filedata)
     upload_id = str(uuid.uuid4())
-    bucket_name, file_location, access_key, secret_key, region = get_csv_location(
+    bucket_name, file_location, region = get_csv_location(
         service_id, upload_id
     )
     if bucket_name == "":
@@ -56,8 +54,6 @@ def s3upload(service_id, filedata):
         region=region,
         bucket_name=bucket_name,
         file_location=file_location,
-        access_key=access_key,
-        secret_key=secret_key,
     )
     return upload_id
 

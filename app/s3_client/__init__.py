@@ -19,16 +19,11 @@ AWS_CLIENT_CONFIG = Config(
 def get_s3_object(
     bucket_name,
     filename,
-    access_key,
-    secret_key,
     region,
 ):
     # To inspect contents: obj.get()['Body'].read().decode('utf-8')
     session = Session(
-        aws_access_key_id=access_key,
-        aws_secret_access_key=secret_key,
         region_name=region,
-        aws_session_token=os.getenv("AWS_SESSION_TOKEN")
     )
     s3 = session.resource(
         "s3",

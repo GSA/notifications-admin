@@ -9,8 +9,6 @@ class CloudfoundryConfig:
         self.s3_buckets = {bucket["name"]: bucket["credentials"] for bucket in buckets}
         self._empty_bucket_credentials = {
             "bucket": "",
-            "access_key_id": "",
-            "secret_access_key": "",
             "region": "",
         }
 

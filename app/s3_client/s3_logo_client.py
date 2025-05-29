@@ -15,8 +15,6 @@ def get_logo_location(filename=None):
     return (
         bucket_creds("bucket"),
         filename,
-        bucket_creds("access_key_id"),
-        bucket_creds("secret_access_key"),
         bucket_creds("region"),
     )
 
@@ -32,8 +30,8 @@ def delete_s3_object(filename):
 def persist_logo(old_name, new_name):
     if old_name == new_name:
         return
-    bucket_name, filename, access_key, secret_key, region = get_logo_location(new_name)
-    get_s3_object(bucket_name, filename, access_key, secret_key, region).copy_from(
+    bucket_name, filename, region = get_logo_location(new_name)
+    get_s3_object(bucket_name, filename, region).copy_from(
         CopySource="{}/{}".format(bucket_name, old_name)
     )
     delete_s3_object(old_name)
@@ -42,10 +40,7 @@ def persist_logo(old_name, new_name):
 def get_s3_objects_filter_by_prefix(prefix):
     bucket_name = bucket_creds("bucket")
     session = Session(
-        aws_access_key_id=bucket_creds("access_key_id"),
-        aws_secret_access_key=bucket_creds("secret_access_key"),
         region_name=bucket_creds("region"),
-        aws_session_token=os.getenv("AWS_SESSION_TOKEN")
     )
     s3 = session.resource("s3")
     return s3.Bucket(bucket_name).objects.filter(Prefix=prefix)
@@ -69,8 +64,6 @@ def upload_email_logo(filename, filedata, user_id):
         bucket_name=bucket_name,
         file_location=upload_file_name,
         content_type="image/png",
-        access_key=bucket_creds("access_key_id"),
-        secret_key=bucket_creds("secret_access_key"),
     )
 
     return upload_file_name
