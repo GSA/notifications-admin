@@ -12,7 +12,7 @@ AWS_CLIENT_CONFIG = Config(
     s3={
         "addressing_style": "virtual",
     },
-    use_fips_endpoint=True,
+    # use_fips_endpoint=True,
 )
 
 
@@ -28,6 +28,7 @@ def get_s3_object(
         aws_access_key_id=access_key,
         aws_secret_access_key=secret_key,
         region_name=region,
+        aws_session_token=os.getenv("AWS_SESSION_TOKEN")
     )
     s3 = session.resource(
         "s3",

@@ -13,7 +13,7 @@ AWS_CLIENT_CONFIG = Config(
     s3={
         "addressing_style": "virtual",
     },
-    use_fips_endpoint=True,
+    # use_fips_endpoint=True,
 )
 
 default_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
@@ -36,6 +36,7 @@ def s3upload(
         aws_access_key_id=access_key,
         aws_secret_access_key=secret_key,
         region_name=region,
+        aws_session_token=os.getenv("AWS_SESSION_TOKEN")
     )
     _s3 = session.resource(
         "s3",
@@ -93,6 +94,7 @@ def s3download(
             aws_access_key_id=access_key,
             aws_secret_access_key=secret_key,
             region_name=region,
+            aws_session_token=os.getenv("AWS_SESSION_TOKEN")
         )
         s3 = session.resource("s3", config=AWS_CLIENT_CONFIG)
         key = s3.Object(bucket_name, filename)

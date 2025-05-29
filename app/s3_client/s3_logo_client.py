@@ -1,3 +1,4 @@
+import os
 import uuid
 
 from boto3 import Session
@@ -44,6 +45,7 @@ def get_s3_objects_filter_by_prefix(prefix):
         aws_access_key_id=bucket_creds("access_key_id"),
         aws_secret_access_key=bucket_creds("secret_access_key"),
         region_name=bucket_creds("region"),
+        aws_session_token=os.getenv("AWS_SESSION_TOKEN")
     )
     s3 = session.resource("s3")
     return s3.Bucket(bucket_name).objects.filter(Prefix=prefix)
