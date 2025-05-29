@@ -1239,6 +1239,7 @@ def test_cancel_invited_user_doesnt_work_if_user_not_invited_to_this_service(
         (
             "pending",
             (
+                "invited_user@test.gsa.gov "
                 "invited_user@test.gsa.gov (invited) "
                 "Permissions "
                 "Can See dashboard "
