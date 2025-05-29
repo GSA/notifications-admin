@@ -105,18 +105,16 @@
 
           {% if current_user.has_permissions('manage_service') %}
             {% if user.status == 'pending' or user.status == 'expired' %}
-              <a class="user-list-edit-link usa-link" href="{{ url_for('.cancel_invited_user', service_id=current_service.id, invited_user_id=user.id) }}">
+              <a class="user-list-edit-link usa-link padding-x-2" href="{{ url_for('.cancel_invited_user', service_id=current_service.id, invited_user_id=user.id) }}">
                 Cancel invitation<span class="usa-sr-only"> for {{ user.email_address }}</span>
               </a>
             {% endif %}
 
             {% if user.status == 'expired' %}
-              &nbsp;&nbsp;
               <a class="user-list-edit-link usa-link" href="{{ url_for('.resend_invite', service_id=current_service.id, invited_user_id=user.id) }}">
                 Resend invite<span class="usa-sr-only"> for {{ user.email_address }}</span>
               </a>
             {% elif user.is_editable_by(current_user) %}
-              &nbsp;&nbsp;
               <a class="user-list-edit-link usa-link" href="{{ url_for('.edit_user_permissions', service_id=current_service.id, user_id=user.id) }}">
                 Change details<span class="usa-sr-only"> for {{ user.name }} {{ user.email_address }}</span>
               </a>
