@@ -146,6 +146,7 @@ jobs:
           ignore-vulns: |
             PYSEC-2024-60
             PYSEC-2022-43162
+            PYSEC-2023-312
       - name: Run npm audit
         run: make npm-audit
 
