@@ -15,6 +15,7 @@
 
     let query = normalize($searchBox.val());
     let results = 0;
+    let $noResultsMessage = $('.js-live-search-no-results');
 
     $targets.each(function() {
 
@@ -38,6 +39,12 @@
       if (isMatch) { results++; }
 
     });
+
+    if (query !== '' && results === 0) {
+      $noResultsMessage.show();
+    } else {
+      $noResultsMessage.hide();
+    }
 
     if (state === 'loaded') {
       if (query !== '') {
