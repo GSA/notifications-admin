@@ -16,191 +16,157 @@ import usaButton %} {% block meta %}
     {% if is_api_down %}
       {% include "error/technical_difficulties.html" %}
     {% else %}
-      <section class="usa-section--dark usa-hero" aria-label="Introduction">
-        <div class="grid-container padding-y-4">
-          <div class="grid-row grid-gap display-flex flex-align-center">
-            <div class="desktop:grid-col-8 tablet:grid-col-12">
-              <h1 class="font-sans-2xl usa-hero__heading">
-                Reach people where they are with government-powered text messages
+      <section class="usa-section--dark usa-hero usa-prose" aria-label="Introduction">
+        <div class="grid-container">
+          <div class="grid-row">
+            <div class="text-center grid-col-12 padding-y-4">
+              <h1 class="font-sans-2xl usa-hero__heading margin-bottom-2">
+                Sunsetting Notify.gov
               </h1>
-              <p class="font-sans-lg">
-                Notify.gov is a text messaging service that helps federal, state,
-                local, tribal and territorial governments more effectively
-                communicate with the people they serve.
+              <p class="font-sans-lg margin-0">
+                As of May 30, 2025, this service is no longer available.
               </p>
-              <div class="usa-button-group margin-bottom-5 flex-align-center">
-                <a
-                  class="usa-button usa-button login-button login-button--primary margin-right-2"
-                  href="{{ initial_signin_url }}"
-                  >Sign in with
-                  <img
-                    src="{{ asset_url('images/logo-login.svg') }}"
-                    alt="Login.gov logo"
-                  />
-                </a>
-                if you are an existing partner
-              </div>
-            </div>
-            <div
-              class="desktop:grid-col-3 grid-offset-1 desktop:display-block display-none margin-x-5"
-            >
-              <img
-                src="{{ asset_url('images/product/phone-text.png') }}"
-                alt="Illustration of a mobile phone displaying a text message and number on its screen, with a speech bubble coming out from outside the phone, symbolizing communication or notification."
-              />
             </div>
           </div>
         </div>
       </section>
       <section
-        class="grid-container usa-section usa-section__home border-top border-base-lighter usa-prose padding-bottom-1"
+        class="grid-container usa-section usa-section__home border-top border-base-lighter usa-prose padding-bottom-4"
       >
-        <h2 class="font-body-xl margin-top-0 margin-bottom-3">
-          Government texting made easy
-        </h2>
-        <p class="usa-body">
-          Notify.gov is a text messaging platform built for government agencies.
-          With minimal set-up and secure, personalized messaging, you can make
-          one-way texting a part of your outreach program.
-        </p>
-      </section>
-
-      <section
-        class="grid-container usa-section usa-section__home usa-prose padding-bottom-1"
-      >
-        <h2 class="font-sans-xl margin-top-0">Key features</h2>
-        <div class="home-cards margin-top-5">
-          <ul class="usa-card-group display-flex margin-bottom-4">
-            <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
-              <div class="usa-card__container">
-                <div class="blue-bar"></div>
-                <img
-                  src="{{ asset_url('images/internet.svg') }}"
-                  alt="Globe on top of a web browser"
-                />
-                <div class="usa-card__header">
-                  <h3 class="font-heading-md">Web-based</h3>
-                </div>
-                <div class="usa-card__body">
-                  <p>Nothing to download or install</p>
-                </div>
-              </div>
-            </li>
-            <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
-              <div class="usa-card__container">
-                <div class="blue-bar"></div>
-                <img
-                  src="{{ asset_url('images/fast.svg') }}"
-                  alt="Stopwatch with a notification speech bubble with a star inside"
-                />
-                <div class="usa-card__header">
-                  <h3 class="font-heading-md">Fast and easy</h3>
-                </div>
-                <div class="usa-card__body">
-                  <p>No technical expertise required</p>
-                </div>
-              </div>
-            </li>
-            <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
-              <div class="usa-card__container">
-                <div class="blue-bar"></div>
-                <img
-                  src="{{ asset_url('images/status.svg') }}"
-                  alt="3 status messages, 2 successes and one failure"
-                />
-                <div class="usa-card__header">
-                  <h3 class="font-heading-md">Track message delivery</h3>
-                </div>
-                <div class="usa-card__body">
-                  <p>See which messages were received</p>
-                </div>
-              </div>
-            </li>
-          </ul>
-          <ul class="usa-card-group">
-            <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
-              <div class="usa-card__container">
-                <div class="blue-bar"></div>
-                <img
-                  src="{{ asset_url('images/translation.svg') }}"
-                  alt="Speech bubbles with the letter A and the Chinese character for language"
-                />
-                <div class="usa-card__header">
-                  <h3 class="font-heading-md">
-                    Send in recipients' preferred language
-                  </h3>
-                </div>
-                <div class="usa-card__body">
-                  <p>Notify.gov has support for more than 30 character sets</p>
-                </div>
-              </div>
-            </li>
-            <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
-              <div class="usa-card__container">
-                <div class="blue-bar"></div>
-                <img
-                  src="{{ asset_url('images/security.svg') }}"
-                  alt="Lock with code icon inside on top of a web browser"
-                />
-                <div class="usa-card__header">
-                  <h3 class="font-heading-md">Security and privacy</h3>
-                </div>
-                <div class="usa-card__body">
-                  <p>
-                    Limited data retention, encryption, and multi-factor
-                    authentication protect user data and manage risk with <br><a href="/about/security">our security efforts</a>
-                  </p>
-                </div>
-              </div>
-            </li>
-            <li class="usa-card tablet:grid-col-4 mobile-lg:grid-col-12">
-              <div class="usa-card__container">
-                <div class="blue-bar"></div>
-                <img
-                  src="{{ asset_url('images/send.svg') }}"
-                  alt="Paper airplane and a notification icon with the number 1 inside"
-                />
-                <div class="usa-card__header">
-                  <h3 class="font-heading-md">
-                    Send bulk, customized, one-way messages
-                  </h3>
-                </div>
-                <div class="usa-card__body">
-                  <p>
-                    Send hundreds or thousands of individually customized messages
-                    with just a few clicks
-                  </p>
-                </div>
-              </div>
-            </li>
-          </ul>
+        <div class="grid-row flex-justify-center">
+          <div class="grid-col-8">
+            <h2 class="text-center font-body-xl margin-top-0 margin-bottom-3">
+              Serving the public
+            </h2>
+            <p class="text-center usa-body">
+              The Notify.gov text messaging application helped federal, state, local, tribal and territorial governments more effectively communicate with the people they serve.
+            </p>
+            <p class="text-center usa-body margin-bottom-4">
+              From November 2023 to May 2025, Notify.gov partners sent more than 400,000 messages:
+            </p>
+          </div>
         </div>
-      </section>
 
-      <section
-        class="grid-container usa-section usa-section__home usa-prose grid-container padding-bottom-10">
-        <div class="grid-row grid-gap-3">
-          <a
-            class="text-no-underline tablet:grid-col-4 mobile-lg:grid-col-12"
-            href="mailto:tts-notify@gsa.gov"
-          >
-            <div class="contact-us-card">
-              <div class="grid-row flex-align-center grid-gap-2">
-                <div class="grid-col-auto">
-                  <img
-                    src="{{ asset_url('images/contact.svg') }}"
-                    alt=""
-                    class="height-7 width-7"
-                  />
+        <div class="grid-row flex-justify-center">
+          <div class="grid-col-9">
+            <div class="grid-row grid-gap-4">
+              <div class="tablet:grid-col-6 margin-bottom-3">
+                <div class="display-flex flex-align-center">
+
+
+
+
+                <img
+                  src="{{ asset_url('images/icon-health-insurance.svg') }}"
+                  alt="Health insurance icon"
+                  width="80"
+                  height="80"
+                  class="flex-none margin-right-2"
+                />                  <p class="margin-0">Helping people maintain access to health insurance</p>
                 </div>
-                <div class="grid-col">
-                  <p class="margin-0">
-                    <strong>Contact us</strong><br />
-                  </p>
+              </div>
+              <div class="tablet:grid-col-6 margin-bottom-3">
+                <div class="display-flex flex-align-center">
+                <img
+                  src="{{ asset_url('images/icon-snap-benefits.svg') }}"
+                  alt="SNAP benefits icon"
+                  width="80"
+                  height="80"
+                  class="flex-none margin-right-2"
+                />
+                <p class="margin-0">Protecting SNAP benefits from fraud</p>
+                </div>
+              </div>
+              <div class="tablet:grid-col-6 margin-bottom-3">
+                <div class="display-flex flex-align-center">
+                  <img
+                    src="{{ asset_url('images/icon-waiting-times.svg') }}"
+                    alt="Clock icon"
+                    width="80"
+                    height="80"
+                    class="flex-none margin-right-2"
+                  />
+                  <p class="margin-0">Reducing the amount of time people spent waiting in line at government offices</p>
+                </div>
+              </div>
+              <div class="tablet:grid-col-6 margin-bottom-3">
+                <div class="display-flex flex-align-center">
+                  <img
+                    src="{{ asset_url('images/icon-parent-resources.svg') }}"
+                    alt="Mobile alert icon"
+                    width="80"
+                    height="80"
+                    class="flex-none margin-right-2"
+                  />
+                  <p class="margin-0">Alerting parents about resources available for their children</p>
+                </div>
+              </div>
+              <div class="tablet:grid-col-6 margin-bottom-3">
+                <div class="display-flex flex-align-center">
+                  <img
+                    src="{{ asset_url('images/icon-passport-processing.svg') }}"
+                    alt="Speedometer icon"
+                    width="80"
+                    height="80"
+                    class="flex-none margin-right-2"
+                  />
+                  <p class="margin-0">Speeding up passport processing</p>
+                </div>
+              </div>
+              <div class="tablet:grid-col-6 margin-bottom-3">
+                <div class="display-flex flex-align-center">
+                  <img
+                    src="{{ asset_url('images/icon-disaster-feedback.svg') }}"
+                    alt="Feedback icon"
+                    width="80"
+                    height="80"
+                    class="flex-none margin-right-2"
+                  />
+                  <p class="margin-0">Giving residents opportunity to provide feedback on disaster response and recovery</p>
                 </div>
               </div>
             </div>
-          </a>
+          </div>
+        </div>
+      </section>
+      <section class="bg-gray-cool usa-section usa-prose" aria-label="Introduction">
+        <div class="grid-container padding-y-4">
+          <div class="grid-row grid-gap display-flex flex-align-center">
+            <div class="desktop:grid-col-8 tablet:grid-col-12">
+              <h2 class="font-body-xl">
+                Text messaging reaches people
+              </h2>
+              <p class="usa-body">
+                Texting is one of the most effective ways to reach people. Though Notify.gov is winding down, government programs should explore ways to continue to meet people where they are.
+              </p>
+              <p class="usa-body">Agencies can fork and host their own notification platform using the open‑source Notify.gov codebase, or a variety of commercial messaging services that support the same use cases that Notify covered.</p>
+            </div>
+            <div
+              class="desktop:grid-col-3 grid-offset-1 desktop:display-block display-none margin-x-5"
+            >
+              <img
+                src="{{ asset_url('images/messaging-devices.svg') }}"
+                alt="Illustration showing multiple devices including mobile phones and messaging interfaces representing government text messaging communication"
+                width="305"
+                height="304"
+              />
+
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="usa-section usa-prose" aria-label="Thank you message to partners">
+        <div class="grid-container">
+          <div class="grid-row flex-justify-center">
+            <div class="text-center grid-col-8">
+              <h2 class="font-body-xl text-primary margin-bottom-2">
+                A message for our partners
+              </h2>
+              <p class="usa-body margin-0">
+                Thank you to our users and partners for their support, participation, and contributions in developing Notify.gov.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
     {% endif %}

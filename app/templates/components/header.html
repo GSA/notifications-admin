@@ -1,4 +1,4 @@
-{% set is_about_page = request.path.startswith('/about') %}
+{# {% set is_about_page = request.path.startswith('/about') %}
 {% set is_contact_page = request.path.startswith('/contact') %}
 {% set is_information_section = is_about_page or is_contact_page %}
 
@@ -35,13 +35,7 @@
   {"href": url_for('main.about_notify'), "text": "About Notify", "active": is_about_page},
   {"href": url_for('main.contact'), "text": "Contact us", "active": is_contact_page}
 ] %}
-{% endif %}
-
-
-
-
-
-
+{% endif %} #}
 
 <header class="usa-header usa-header--extended">
   <div class="usa-nav-container">
@@ -59,16 +53,7 @@
           <button type="button" class="usa-menu-btn">Menu</button>
           {% endif %}
         </div>
-        {% if not current_user.is_authenticated and is_information_section%}
-        <div class="usa-nav__login">
-          <a class="usa-button usa-button login-button login-button--primary margin-right-2"
-            href="{{ initial_signin_url }}">Sign
-            in with <img src="{{ asset_url('images/logo-login.svg') }}" alt="Login.gov logo">
-          </a>
-        </div>
-        {% endif %}
       </div>
-
     </div>
     <nav aria-label="Primary navigation" class="usa-nav">
       <div class="usa-nav__inner">
@@ -103,7 +88,6 @@
             {% endif %}
           </ul>
         </div>
-
       </div>
     </nav>
   </div>
