@@ -1,42 +1,32 @@
-{# {% set is_about_page = request.path.startswith('/about') %}
-{% set is_contact_page = request.path.startswith('/contact') %}
-{% set is_information_section = is_about_page or is_contact_page %}
-
 {% if current_user.is_authenticated %}
-{% set navigation = [
-  {"href": url_for("main.show_accounts_or_dashboard"), "text": "Current service", "active": request.path.startswith('/accounts')},
-  {"href": url_for('main.get_started'), "text": "Using Notify", "active": request.path.startswith('/using-notify')},
-  {"href": url_for('main.support'), "text": "Contact us", "active": header_navigation.is_selected('support')}
-] %}
+  {% set navigation = [
+    {"href": url_for("main.show_accounts_or_dashboard"), "text": "Current service", "active": request.path.startswith('/accounts')},
+    {"href": url_for('main.get_started'), "text": "Using Notify", "active": request.path.startswith('/using-notify')},
+    {"href": url_for('main.support'), "text": "Contact us", "active": header_navigation.is_selected('support')}
+  ] %}
 
-{% if current_user.platform_admin %}
-{% set navigation = navigation + [{"href": url_for('main.platform_admin_splash_page'), "text": "Platform admin", "active": header_navigation.is_selected('platform-admin')}] %}
-{% else %}
-{% set navigation = navigation + [{"href": url_for('main.user_profile'), "text": "User profile", "active": header_navigation.is_selected('user-profile')}] %}
+  {% if current_user.platform_admin %}
+    {% set navigation = navigation + [{"href": url_for('main.platform_admin_splash_page'), "text": "Platform admin", "active": header_navigation.is_selected('platform-admin')}] %}
+  {% else %}
+    {% set navigation = navigation + [{"href": url_for('main.user_profile'), "text": "User profile", "active": header_navigation.is_selected('user-profile')}] %}
+  {% endif %}
+
+  {% if current_service %}
+    {% if current_user.has_permissions('manage_service') %}
+      {% set secondaryNavigation = [
+        {"href": url_for('main.service_settings', service_id=current_service.id), "text": "Settings", "active": secondary_navigation.is_selected('settings')},
+        {"href": url_for('main.sign_out'), "text": "Sign out"}
+      ] %}
+    {% else %}
+      {% set secondaryNavigation = [
+        {"href": url_for('main.sign_out'), "text": "Sign out"}
+      ] %}
+    {% endif %}
+  {% else %}
+    {% set secondaryNavigation = [{"href": url_for('main.sign_out'), "text": "Sign out"}] %}
+  {% endif %}
+
 {% endif %}
-
-{% if current_service %}
-{% if current_user.has_permissions('manage_service') %}
-{% set secondaryNavigation = [
-  {"href": url_for('main.service_settings', service_id=current_service.id), "text": "Settings", "active": secondary_navigation.is_selected('settings')},
-  {"href": url_for('main.sign_out'), "text": "Sign out"}
-] %}
-{% else %}
-{% set secondaryNavigation = [
-  {"href": url_for('main.sign_out'), "text": "Sign out"}
-] %}
-{% endif %}
-{% else %}
-{% set secondaryNavigation = [{"href": url_for('main.sign_out'), "text": "Sign out"}] %}
-{% endif %}
-
-{% else %}
-{% set navigation = [
-  {"href": url_for('main.about_notify'), "text": "About Notify", "active": is_about_page},
-  {"href": url_for('main.contact'), "text": "Contact us", "active": is_contact_page}
-] %}
-{% endif %} #}
-
 <header class="usa-header usa-header--extended">
   <div class="usa-nav-container">
     <div class="usa-navbar">
