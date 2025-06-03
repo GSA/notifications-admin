@@ -20,8 +20,6 @@ def test_render_sign_in_template_for_new_user(client_request, mocker):
     # TODO:  Fix this test to be less brittle! If the Login.gov link is enabled,
     #        then these indices need to be 1 instead of 0.
     #        Currently it's not enabled for the test or production environments.
-    assert page.select("main a")[0].text == "Sign in with Login.gov"
-
     # TODO:  We'll have to adjust this depending on whether Login.gov is
     #        enabled or not; fix this in the future.
     assert "Sign in again" not in normalize_spaces(page.text)

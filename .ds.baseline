@@ -563,7 +563,7 @@
         "filename": "tests/app/main/views/test_sign_in.py",
         "hashed_secret": "8b8b69116ee882b5e987e330f55db81aba0636f9",
         "is_verified": false,
-        "line_number": 97,
+        "line_number": 95,
         "is_secret": false
       }
     ],
@@ -644,5 +644,5 @@
       }
     ]
   },
-  "generated_at": "2025-05-22T19:03:11Z"
+  "generated_at": "2025-06-02T19:56:12Z"
 }
