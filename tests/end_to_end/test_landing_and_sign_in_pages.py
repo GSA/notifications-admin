@@ -32,9 +32,8 @@ def test_landing_page(end_to_end_context):
     # Retrieve all other main content headers and check that they're
     # visible.
     content_headers = [
-        "Serving the public",
         "Text messaging reaches people",
-        "A message for our partners",
+        "To our partners",
     ]
 
     for content_header in content_headers:
