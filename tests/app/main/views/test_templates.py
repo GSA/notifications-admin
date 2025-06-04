@@ -1783,6 +1783,7 @@ def test_should_not_create_sms_template_with_emoji(
     )
     assert mock_create_service_template.called is False
 
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     ("template_type", "expected_error"),
