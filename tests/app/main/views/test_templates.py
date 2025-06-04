@@ -1744,6 +1744,7 @@ def test_can_create_email_template_with_emoji(
     )
     assert mock_create_service_template.called is True
 
+
 # TODO FIX!
 # @pytest.mark.parametrize(
 #     ("template_type", "expected_error"),

@@ -3,6 +3,7 @@ import os
 import re
 import uuid
 
+import pytest
 from playwright.sync_api import expect
 
 from tests.end_to_end.conftest import check_axe_report
@@ -97,7 +98,8 @@ async def create_new_template(page):
     assert "Test message for e2e test" in page.content()
 
 
-def test_create_new_template(end_to_end_context):
+@pytest.mark.asyncio
+async def test_create_new_template(end_to_end_context):
     page = end_to_end_context.new_page()
     page.goto(f"{E2E_TEST_URI}/sign-in")
     # Wait for the next page to fully load.
