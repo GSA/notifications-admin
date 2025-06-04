@@ -10,7 +10,7 @@ from tests.end_to_end.conftest import check_axe_report
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 
-async def create_new_template(page):
+def create_new_template(page):
 
     current_service_link = page.get_by_text("Current service")
     expect(current_service_link).to_be_visible()
