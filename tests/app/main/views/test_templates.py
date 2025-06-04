@@ -1745,46 +1745,45 @@ def test_can_create_email_template_with_emoji(
     assert mock_create_service_template.called is True
 
 
-# TODO FIX!
-# @pytest.mark.parametrize(
-#     ("template_type", "expected_error"),
-#     [
-#         (
-#             "sms",
-#             (
-#                 "Please remove the unaccepted character 🍜 in your message, then save again"
-#             ),
-#         ),
-#     ],
-# )
-# def test_should_not_create_sms_template_with_emoji(
-#     client_request,
-#     service_one,
-#     mock_create_service_template,
-#     template_type,
-#     expected_error,
-# ):
-#     service_one["permissions"] += [template_type]
-#     page = client_request.post(
-#         ".add_service_template",
-#         service_id=SERVICE_ONE_ID,
-#         template_type=template_type,
-#         _data={
-#             "name": "new name",
-#             "template_content": "here are some noodles 🍜",
-#             "template_type": "sms",
-#             "service": SERVICE_ONE_ID,
-#             "process_type": "normal",
-#         },
-#         _expected_status=200,
-#     )
-#     # print(page.main.prettify())
-#     assert expected_error in normalize_spaces(
-#         page.select_one("#template_content-error").text
-#     )
-#     assert mock_create_service_template.called is False
+@pytest.mark.parametrize(
+    ("template_type", "expected_error"),
+    [
+        (
+            "sms",
+            (
+                "Please remove the unaccepted character 🍜 in your message, then save again"
+            ),
+        ),
+    ],
+)
+def test_should_not_create_sms_template_with_emoji(
+    client_request,
+    service_one,
+    mock_create_service_template,
+    template_type,
+    expected_error,
+):
+    service_one["permissions"] += [template_type]
+    page = client_request.post(
+        ".add_service_template",
+        service_id=SERVICE_ONE_ID,
+        template_type=template_type,
+        _data={
+            "name": "new name",
+            "template_content": "here are some noodles 🍜",
+            "template_type": "sms",
+            "service": SERVICE_ONE_ID,
+            "process_type": "normal",
+        },
+        _expected_status=200,
+    )
+    # print(page.main.prettify())
+    assert expected_error in normalize_spaces(
+        page.select_one("#template_content-error").text
+    )
+    assert mock_create_service_template.called is False
 
-
+@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ("template_type", "expected_error"),
     [
@@ -1796,7 +1795,7 @@ def test_can_create_email_template_with_emoji(
         ),
     ],
 )
-def test_should_not_update_sms_template_with_emoji(
+async def test_should_not_update_sms_template_with_emoji(
     mocker,
     client_request,
     service_one,
