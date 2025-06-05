@@ -12,6 +12,7 @@ python = "^3.13.2"
 ago = "~=0.1.0"
 beautifulsoup4 = "^4.13.3"
 blinker = "~=1.8"
+eventlet = "==0.40.0"
 exceptiongroup = "==1.3.0"
 flask = "~=3.1"
 flask-basicauth = "~=0.2"
@@ -88,7 +89,8 @@ jinja2-cli = {version = "==0.8.2", extras = ["yaml"]}
 moto = "*"
 pip-audit = "*"
 pre-commit = "^4.2.0"
-pytest = "^8.3.2"
+pytest = "^8.4.0"
+pytest-asyncio = "^1.0.0"
 pytest-env = "^1.1.3"
 pytest-mock = "^3.14.1"
 pytest-playwright = "^0.7.0"
@@ -98,6 +100,8 @@ requests-mock = "^1.11.0"
 vulture = "^2.14"
 poetry-dotenv-plugin = "^0.2.0"
 
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
 
 [build-system]
 requires = ["poetry-core"]
