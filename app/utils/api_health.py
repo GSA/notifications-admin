@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 def get_no_x509_strict_context():
     context = ssl.create_default_context()
-    context.options |= ssl.OP_NO_X509_STRICT
+    context.verify_flags &= ~ssl.VERIFY_X509_STRICT
     return context
 
 
