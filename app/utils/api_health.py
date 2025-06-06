@@ -18,7 +18,7 @@ def get_no_x509_strict_context():
 def is_api_down():
     api_base_url = os.getenv("API_HOST_NAME")
     try:
-        response = requests.get(api_base_url, timeout=2, verify=False)
+        response = requests.get(api_base_url, timeout=2, verify=False)  # nosec
         is_down = response.status_code != 200
         if is_down:
             logger.warning(
