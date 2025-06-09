@@ -83,16 +83,13 @@ def create_new_template(page):
     # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
 
-    # TODO FIX THIS IMMEDIATELY
     preview_button = page.get_by_text("Preview")
-    # assert await preview_button.evaluate("el => el.tagName") == "BUTTON"
-
-    # expect(preview_button).to_be_visible()
-    # preview_button.click()
+    expect(preview_button).to_be_visible()
+    preview_button.click()
 
     # Check to make sure that we've arrived at the next page.
-    # page.wait_for_load_state("domcontentloaded")
-    # check_axe_report(page)
+    page.wait_for_load_state("domcontentloaded")
+    check_axe_report(page)
 
     # We are not going to send the message for this test, we just want to confirm
     # that the template has been created and we are now seeing the message from the
