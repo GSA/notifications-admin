@@ -1784,7 +1784,6 @@ def test_should_not_create_sms_template_with_emoji(
     assert mock_create_service_template.called is False
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ("template_type", "expected_error"),
     [
@@ -1796,7 +1795,7 @@ def test_should_not_create_sms_template_with_emoji(
         ),
     ],
 )
-async def test_should_not_update_sms_template_with_emoji(
+def test_should_not_update_sms_template_with_emoji(
     mocker,
     client_request,
     service_one,
