@@ -44,7 +44,6 @@ applications:
 
       NOTIFY_BILLING_DETAILS: '[]'
 
-      SSL_CERT_FILE: '/etc/ssl/certs/ca-certificates.crt'
       REQUESTS_CA_BUNDLE: '/etc/ssl/certs/ca-certificates.crt'
       NEW_RELIC_CA_BUNDLE_PATH: '/etc/ssl/certs/ca-certificates.crt'
 
