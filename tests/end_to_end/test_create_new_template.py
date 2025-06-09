@@ -95,7 +95,7 @@ async def create_new_template(page):
     # We are not going to send the message for this test, we just want to confirm
     # that the template has been created and we are now seeing the message from the
     # template in the preview.
-    # assert "Test message for e2e test" in page.content()
+    assert "Test message for e2e test" in page.content()
 
 
 def test_create_new_template(end_to_end_context):
