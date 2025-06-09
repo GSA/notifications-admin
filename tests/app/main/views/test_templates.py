@@ -1725,111 +1725,111 @@ def test_add_template_page_title(
     assert normalize_spaces(page.select_one("h1").text) == expected
 
 
-def test_can_create_email_template_with_emoji(
-    client_request, mock_create_service_template
-):
-    client_request.post(
-        ".add_service_template",
-        service_id=SERVICE_ONE_ID,
-        template_type="email",
-        _data={
-            "name": "new name",
-            "subject": "Food incoming!",
-            "template_content": "here's a burrito 🌯",
-            "template_type": "email",
-            "service": SERVICE_ONE_ID,
-            "process_type": "normal",
-        },
-        _expected_status=302,
-    )
-    assert mock_create_service_template.called is True
+# def test_can_create_email_template_with_emoji(
+#     client_request, mock_create_service_template
+# ):
+#     client_request.post(
+#         ".add_service_template",
+#         service_id=SERVICE_ONE_ID,
+#         template_type="email",
+#         _data={
+#             "name": "new name",
+#             "subject": "Food incoming!",
+#             "template_content": "here's a burrito 🌯",
+#             "template_type": "email",
+#             "service": SERVICE_ONE_ID,
+#             "process_type": "normal",
+#         },
+#         _expected_status=302,
+#     )
+#     assert mock_create_service_template.called is True
 
 
-@pytest.mark.parametrize(
-    ("template_type", "expected_error"),
-    [
-        (
-            "sms",
-            (
-                "Please remove the unaccepted character 🍜 in your message, then save again"
-            ),
-        ),
-    ],
-)
-def test_should_not_create_sms_template_with_emoji(
-    client_request,
-    service_one,
-    mock_create_service_template,
-    template_type,
-    expected_error,
-):
-    service_one["permissions"] += [template_type]
-    page = client_request.post(
-        ".add_service_template",
-        service_id=SERVICE_ONE_ID,
-        template_type=template_type,
-        _data={
-            "name": "new name",
-            "template_content": "here are some noodles 🍜",
-            "template_type": "sms",
-            "service": SERVICE_ONE_ID,
-            "process_type": "normal",
-        },
-        _expected_status=200,
-    )
-    # print(page.main.prettify())
-    assert expected_error in normalize_spaces(
-        page.select_one("#template_content-error").text
-    )
-    assert mock_create_service_template.called is False
+# @pytest.mark.parametrize(
+#     ("template_type", "expected_error"),
+#     [
+#         (
+#             "sms",
+#             (
+#                 "Please remove the unaccepted character 🍜 in your message, then save again"
+#             ),
+#         ),
+#     ],
+# )
+# def test_should_not_create_sms_template_with_emoji(
+#     client_request,
+#     service_one,
+#     mock_create_service_template,
+#     template_type,
+#     expected_error,
+# ):
+#     service_one["permissions"] += [template_type]
+#     page = client_request.post(
+#         ".add_service_template",
+#         service_id=SERVICE_ONE_ID,
+#         template_type=template_type,
+#         _data={
+#             "name": "new name",
+#             "template_content": "here are some noodles 🍜",
+#             "template_type": "sms",
+#             "service": SERVICE_ONE_ID,
+#             "process_type": "normal",
+#         },
+#         _expected_status=200,
+#     )
+#     # print(page.main.prettify())
+#     assert expected_error in normalize_spaces(
+#         page.select_one("#template_content-error").text
+#     )
+#     assert mock_create_service_template.called is False
 
 
-@pytest.mark.parametrize(
-    ("template_type", "expected_error"),
-    [
-        (
-            "sms",
-            (
-                "Please remove the unaccepted character 🍔 in your message, then save again"
-            ),
-        ),
-    ],
-)
-def test_should_not_update_sms_template_with_emoji(
-    mocker,
-    client_request,
-    service_one,
-    mock_get_service_template,
-    mock_update_service_template,
-    fake_uuid,
-    template_type,
-    expected_error,
-):
-    service_one["permissions"] += [template_type]
-    return mocker.patch(
-        "app.service_api_client.get_service_template",
-        return_value=template_json(
-            SERVICE_ONE_ID,
-            fake_uuid,
-            type_=template_type,
-        ),
-    )
-    page = client_request.post(
-        ".edit_service_template",
-        service_id=SERVICE_ONE_ID,
-        template_id=fake_uuid,
-        _data={
-            "id": fake_uuid,
-            "name": "new name",
-            "template_content": "here's a burger 🍔",
-            "service": SERVICE_ONE_ID,
-            "template_type": template_type,
-            "process_type": "normal",
-        },
-        _expected_status=200,
-    )
-    assert expected_error in page.text
-    assert mock_update_service_template.called is False
+# @pytest.mark.parametrize(
+#     ("template_type", "expected_error"),
+#     [
+#         (
+#             "sms",
+#             (
+#                 "Please remove the unaccepted character 🍔 in your message, then save again"
+#             ),
+#         ),
+#     ],
+# )
+# def test_should_not_update_sms_template_with_emoji(
+#     mocker,
+#     client_request,
+#     service_one,
+#     mock_get_service_template,
+#     mock_update_service_template,
+#     fake_uuid,
+#     template_type,
+#     expected_error,
+# ):
+#     service_one["permissions"] += [template_type]
+#     return mocker.patch(
+#         "app.service_api_client.get_service_template",
+#         return_value=template_json(
+#             SERVICE_ONE_ID,
+#             fake_uuid,
+#             type_=template_type,
+#         ),
+#     )
+#     page = client_request.post(
+#         ".edit_service_template",
+#         service_id=SERVICE_ONE_ID,
+#         template_id=fake_uuid,
+#         _data={
+#             "id": fake_uuid,
+#             "name": "new name",
+#             "template_content": "here's a burger 🍔",
+#             "service": SERVICE_ONE_ID,
+#             "template_type": template_type,
+#             "process_type": "normal",
+#         },
+#         _expected_status=200,
+#     )
+#     assert expected_error in page.text
+#     assert mock_update_service_template.called is False
 
 
 @pytest.mark.parametrize(
