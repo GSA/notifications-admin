@@ -59,6 +59,10 @@
 
     {{ live_search(target_selector='#template-list .template-list-item', show=show_search_box, form=search_form) }}
 
+    <div class="js-live-search-no-results" style="display: none;">
+      <p class="usa-body margin-top-2">No templates found</p>
+    </div>
+
     {% if current_user.has_permissions('manage_templates') and user_has_template_folder_permission %}
       {% call form_wrapper(
           class='sticky-scroll-area',

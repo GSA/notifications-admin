@@ -197,6 +197,11 @@
       if (event.currentTarget.value === 'add-new-template' && this.$singleNotificationChannel) {
         window.location = "/services/" + this.$singleChannelService + "/templates/add-" + this.$singleNotificationChannel;
       } else {
+        if (this.currentState === 'add-new-template') {
+          this.$form.find('input[type=checkbox]').prop('checked', false);
+          this.selectionStatus.update({ total: 0, templates: 0, folders: 0 });
+        }
+
         if (this.stateChanged()) {
           this.render();
         }
@@ -286,7 +291,15 @@
         mode = 'dialog';
       }
 
-      if (currentStateObj && ('setFocus' in currentStateObj)) {
+      if (this.currentState === 'add-new-template') {
+        this.$form.find('.template-list-item').addClass('js-hidden');
+        this.$form.find('input[type=checkbox]').prop('checked', false);
+        this.selectionStatus.update({ total: 0, templates: 0, folders: 0 });
+      } else {
+        this.$form.find('.template-list-item').removeClass('js-hidden');
+      }
+
+      if (currentStateObj && 'setFocus' in currentStateObj) {
         scrollTop = $(window).scrollTop();
         currentStateObj.setFocus();
         $(window).scrollTop(scrollTop);
