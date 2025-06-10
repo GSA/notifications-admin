@@ -25,11 +25,14 @@
         form=search_form,
         autofocus=True
       ) }}
+      <div class="js-live-search-no-results" style="display: none;">
+        <p class="usa-body margin-top-2">No templates found</p>
+      </div>
       <nav id="template-list" aria-label="Copy template list">
         <ul>
         {% for item in services_templates_and_folders %}
 
-          <li class="template-list-item margin-bottom-2 {% if item.ancestors %}template-list-item-hidden-by-default{% endif %} {% if not item.ancestors %}template-list-item-without-ancestors{% endif %}">
+          <li class="template-list-item margin-bottom-2">
             {% if item.is_service %}
             {% elif item.is_folder %}
             {% else %}

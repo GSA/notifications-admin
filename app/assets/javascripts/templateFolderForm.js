@@ -293,10 +293,12 @@
 
       if (this.currentState === 'add-new-template') {
         this.$form.find('.template-list-item').addClass('js-hidden');
+        $('.live-search').addClass('js-hidden');
         this.$form.find('input[type=checkbox]').prop('checked', false);
         this.selectionStatus.update({ total: 0, templates: 0, folders: 0 });
       } else {
         this.$form.find('.template-list-item').removeClass('js-hidden');
+        $('.live-search').removeClass('js-hidden');
       }
 
       if (currentStateObj && 'setFocus' in currentStateObj) {
