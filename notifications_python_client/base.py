@@ -1,6 +1,5 @@
 import json
 import logging
-import time
 import urllib.parse
 
 import requests
@@ -94,7 +93,7 @@ class BaseAPIClient:
         raise TypeError
 
     def _perform_request(self, method, url, kwargs):
-        start_time = time.monotonic()
+
         try:
             response = self.request_session.request(method, url, **kwargs)
             response.raise_for_status()
@@ -109,11 +108,6 @@ class BaseAPIClient:
                 api_error.message,
             )
             raise api_error from e
-        finally:
-            elapsed_time = time.monotonic() - start_time
-            logger.debug(
-                "API %s request on %s finished in %s", method, url, elapsed_time
-            )
 
     def _process_json_response(self, response):
         try:
