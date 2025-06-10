@@ -1605,6 +1605,20 @@ files = [
 ]
 
 [[package]]
+name = "jwt"
+version = "1.3.1"
+description = "JSON Web Token library for Python 3."
+optional = false
+python-versions = ">= 3.6"
+groups = ["main"]
+files = [
+    {file = "jwt-1.3.1-py3-none-any.whl", hash = "sha256:61c9170f92e736b530655e75374681d4fcca9cfa8763ab42be57353b2b203494"},
+]
+
+[package.dependencies]
+cryptography = ">=3.1,<3.4.0 || >3.4.0"
+
+[[package]]
 name = "keyring"
 version = "25.6.0"
 description = "Store and access your passwords safely."
@@ -4120,4 +4134,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12.2"
-content-hash = "b81d04cabfd5ac8f1ce8ecd8dff3118be3edf415ac95bea21aab9fc5d4ea7a00"
+content-hash = "5c223f446f124fa56c71a91388080a12479c692741378c9437d1db5fb01f0c1b"
