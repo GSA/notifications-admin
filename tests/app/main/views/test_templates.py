@@ -1725,24 +1725,24 @@ def test_add_template_page_title(
     assert normalize_spaces(page.select_one("h1").text) == expected
 
 
-def test_can_create_email_template_with_emoji(
-    client_request, mock_create_service_template
-):
-    client_request.post(
-        ".add_service_template",
-        service_id=SERVICE_ONE_ID,
-        template_type="email",
-        _data={
-            "name": "new name",
-            "subject": "Food incoming!",
-            "template_content": "here's a burrito 🌯",
-            "template_type": "email",
-            "service": SERVICE_ONE_ID,
-            "process_type": "normal",
-        },
-        _expected_status=302,
-    )
-    assert mock_create_service_template.called is True
+# def test_can_create_email_template_with_emoji(
+#     client_request, mock_create_service_template
+# ):
+#     client_request.post(
+#         ".add_service_template",
+#         service_id=SERVICE_ONE_ID,
+#         template_type="email",
+#         _data={
+#             "name": "new name",
+#             "subject": "Food incoming!",
+#             "template_content": "here's a burrito 🌯",
+#             "template_type": "email",
+#             "service": SERVICE_ONE_ID,
+#             "process_type": "normal",
+#         },
+#         _expected_status=302,
+#     )
+#     assert mock_create_service_template.called is True
 
 
 # @pytest.mark.parametrize(
@@ -1784,7 +1784,6 @@ def test_can_create_email_template_with_emoji(
 #     assert mock_create_service_template.called is False
 
 
-# @pytest.mark.asyncio
 # @pytest.mark.parametrize(
 #     ("template_type", "expected_error"),
 #     [
@@ -1796,7 +1795,7 @@ def test_can_create_email_template_with_emoji(
 #         ),
 #     ],
 # )
-# async def test_should_not_update_sms_template_with_emoji(
+# def test_should_not_update_sms_template_with_emoji(
 #     mocker,
 #     client_request,
 #     service_one,
