@@ -4,7 +4,6 @@ from functools import partial
 
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user
-from notifications_python_client.errors import HTTPError
 
 from app import current_organization, org_invite_api_client, organizations_client
 from app.main import main
@@ -27,6 +26,7 @@ from app.models.organization import AllOrganizations, Organization
 from app.models.user import InvitedOrgUser, User
 from app.utils.csv import Spreadsheet
 from app.utils.user import user_has_permissions, user_is_platform_admin
+from notifications_python_client.errors import HTTPError
 
 
 @main.route("/organizations", methods=["GET"])

@@ -2,12 +2,12 @@ import time
 import traceback
 
 from flask import current_app, jsonify, request
-from notifications_python_client.errors import HTTPError
 from redis import RedisError
 
 from app import status_api_client, version
 from app.extensions import redis_client
 from app.status import status
+from notifications_python_client.errors import HTTPError
 
 
 @status.route("/_status", methods=["GET"])

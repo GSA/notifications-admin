@@ -1,9 +1,9 @@
 from flask import current_app
-from notifications_python_client.errors import HTTPError
 
 from app.notify_client import NotifyAdminAPIClient, cache
 from app.utils import hilite
 from app.utils.user_permissions import translate_permissions_from_ui_to_db
+from notifications_python_client.errors import HTTPError
 
 ALLOWED_ATTRIBUTES = {
     "name",

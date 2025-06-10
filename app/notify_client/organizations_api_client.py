@@ -1,9 +1,8 @@
 from itertools import chain
 
-from notifications_python_client.errors import HTTPError
-
 from app.extensions import redis_client
 from app.notify_client import NotifyAdminAPIClient, cache
+from notifications_python_client.errors import HTTPError
 
 
 class OrganizationsClient(NotifyAdminAPIClient):

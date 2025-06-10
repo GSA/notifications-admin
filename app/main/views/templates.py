@@ -3,7 +3,6 @@ from functools import partial
 from flask import abort, flash, jsonify, redirect, render_template, request, url_for
 from flask_login import current_user
 from markupsafe import Markup
-from notifications_python_client.errors import HTTPError
 
 from app import (
     current_service,
@@ -29,6 +28,7 @@ from app.models.template_list import TemplateList, TemplateLists
 from app.utils import NOTIFICATION_TYPES, should_skip_template_page
 from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
+from notifications_python_client.errors import HTTPError
 from notifications_utils import SMS_CHAR_COUNT_LIMIT
 
 form_objects = {

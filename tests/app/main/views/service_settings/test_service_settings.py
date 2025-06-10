@@ -5,9 +5,9 @@ from uuid import uuid4
 import pytest
 from flask import url_for
 from freezegun import freeze_time
-from notifications_python_client.errors import HTTPError
 
 import app
+from notifications_python_client.errors import HTTPError
 from tests import (
     find_element_by_tag_and_partial_text,
     organization_json,

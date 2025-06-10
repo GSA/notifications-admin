@@ -12,7 +12,6 @@ from flask import (
     url_for,
 )
 from flask_login import current_user
-from notifications_python_client.errors import HTTPError
 
 from app import (
     billing_api_client,
@@ -52,6 +51,7 @@ from app.main.forms import (
 from app.utils import DELIVERED_STATUSES, FAILURE_STATUSES, SENDING_STATUSES
 from app.utils.time import parse_naive_dt
 from app.utils.user import user_has_permissions, user_is_platform_admin
+from notifications_python_client.errors import HTTPError
 
 PLATFORM_ADMIN_SERVICE_PERMISSIONS = OrderedDict(
     [
