@@ -125,9 +125,14 @@ const copyUSWDSJS = () => {
     .pipe(dest(paths.dist + 'js/'));
 };
 
-
 // Configure USWDS paths
 uswds.settings.version = 3;
+uswds.settings.compile = {
+  sass: true,
+  javascript: true,
+  sprites: false
+};
+
 uswds.paths.dist.css = paths.dist + 'css';
 uswds.paths.dist.js = paths.dist + 'js';
 uswds.paths.dist.img = paths.dist + 'img';
@@ -137,12 +142,23 @@ uswds.paths.dist.theme = paths.src + 'sass/uswds';
 
 // Task to compile USWDS styles
 const styles = async () => {
-  await uswds.compile();
+  await uswds.compileSass();
 };
 
-// Task to copy USWDS assets
-const copyAssets = async () => {
-  await uswds.copyAssets();
+// Task to copy USWDS assetsconst
+const copyUSWDSAssets = () => {
+  return src([
+    'node_modules/@uswds/uswds/dist/img/**/*',
+    'node_modules/@uswds/uswds/dist/fonts/**/*'
+  ], { encoding: false })
+    .pipe(dest((file) => {
+      if (file.path.includes('/img/')) {
+        return paths.dist + 'img/';
+      } else if (file.path.includes('/fonts/')) {
+        return paths.dist + 'fonts/';
+      }
+      return paths.dist;
+    }));
 };
 
 // Optional backstopJS task
@@ -179,7 +195,7 @@ exports.default = series(
   copySetTimezone,
   copyImages,
   copyPDF,
-  copyAssets,
+  copyUSWDSAssets,
   copyUSWDSJS
 );
 exports.backstopTest = backstopTest;
