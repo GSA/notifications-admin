@@ -125,9 +125,14 @@ const copyUSWDSJS = () => {
     .pipe(dest(paths.dist + 'js/'));
 };
 
-
 // Configure USWDS paths
 uswds.settings.version = 3;
+uswds.settings.compile = {
+  sass: true,
+  javascript: true,
+  sprites: false
+};
+
 uswds.paths.dist.css = paths.dist + 'css';
 uswds.paths.dist.js = paths.dist + 'js';
 uswds.paths.dist.img = paths.dist + 'img';
@@ -140,16 +145,21 @@ const styles = async () => {
   await uswds.compile();
 };
 
-// Task to copy USWDS assets
+  // Task to copy USWDS assetsconst
 const copyUSWDSAssets = () => {
   return src([
     'node_modules/@uswds/uswds/dist/img/**/*',
     'node_modules/@uswds/uswds/dist/fonts/**/*'
   ], { encoding: false })
-    .pipe(dest(paths.dist + 'img/'))
-    .pipe(dest(paths.dist + 'fonts/'));
+    .pipe(dest((file) => {
+      if (file.path.includes('/img/')) {
+        return paths.dist + 'img/';
+      } else if (file.path.includes('/fonts/')) {
+        return paths.dist + 'fonts/';
+      }
+      return paths.dist;
+    }));
 };
-
 
 // Optional backstopJS task
 // Install gulp globally and run `gulp backstopTest`
