@@ -32,7 +32,7 @@ def test_landing_page(end_to_end_context):
     # Retrieve all other main content headers and check that they're
     # visible.
     content_headers = [
-        "Text messaging reaches people",
+        "Text messaging services",
         "To our partners",
     ]
 
