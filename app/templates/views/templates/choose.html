@@ -32,9 +32,9 @@
   {% else %}
 
     <div class="grid-row flex-column">
-      <h1 class="font-body-2xl line-height-sans-2 margin-bottom-1 margin-top-0">{{page_title}}</h1>
+      <h1 class="font-body-2xl line-height-sans-2 margin-bottom-1 margin-top-0" id="page-title">{{page_title}}</h1>
       <div class="{% if current_user.has_permissions('manage_templates') %} grid-col-10 {% else %} grid-col-12 {% endif %}">
-        <p class="margin-top-0 margin-bottom-4">
+        <p class="margin-top-0 margin-bottom-4" id="page-description">
           Every message starts with a template. To send, choose or create a template.
         </p>
         {{ folder_path(
@@ -58,6 +58,10 @@
     {% endif %}
 
     {{ live_search(target_selector='#template-list .template-list-item', show=show_search_box, form=search_form) }}
+
+    <div class="js-live-search-no-results" style="display: none;">
+      <p class="usa-body margin-top-2">No templates found</p>
+    </div>
 
     {% if current_user.has_permissions('manage_templates') and user_has_template_folder_permission %}
       {% call form_wrapper(

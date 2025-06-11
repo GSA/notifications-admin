@@ -229,6 +229,10 @@ td.table-empty-message {
   display: none;
 }
 
+.js-hidden {
+  display: none !important;
+}
+
 .folder-heading a.folder-heading-folder,
 .template-list-folder {
   background: url(../img/material-icons/folder.svg) no-repeat;

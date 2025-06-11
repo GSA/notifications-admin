@@ -197,6 +197,11 @@
       if (event.currentTarget.value === 'add-new-template' && this.$singleNotificationChannel) {
         window.location = "/services/" + this.$singleChannelService + "/templates/add-" + this.$singleNotificationChannel;
       } else {
+        if (this.currentState === 'add-new-template') {
+          this.$form.find('input[type=checkbox]').prop('checked', false);
+          this.selectionStatus.update({ total: 0, templates: 0, folders: 0 });
+        }
+
         if (this.stateChanged()) {
           this.render();
         }
@@ -286,7 +291,29 @@
         mode = 'dialog';
       }
 
-      if (currentStateObj && ('setFocus' in currentStateObj)) {
+      if (this.currentState === 'add-new-template') {
+        this.$form.find('.template-list-item').addClass('js-hidden');
+        $('.live-search').addClass('js-hidden');
+        $('#breadcrumb-template-folders').addClass('js-hidden');
+        $('#template-list').addClass('js-hidden');
+        this.$form.find('input[type=checkbox]').prop('checked', false);
+        this.selectionStatus.update({ total: 0, templates: 0, folders: 0 });
+
+        $('#page-title').text('New Template');
+        $('#page-description').text('Every message starts with a template. Choose to start with a blank template or copy an existing template.');
+        document.title = 'New Templates';
+      } else {
+        this.$form.find('.template-list-item').removeClass('js-hidden');
+        $('.live-search').removeClass('js-hidden');
+        $('#breadcrumb-template-folders').removeClass('js-hidden');
+        $('#template-list').removeClass('js-hidden');
+
+        $('#page-title').text('Select or create a template');
+        $('#page-description').text('Every message starts with a template. To send, choose or create a template.');
+        document.title = 'Select or create a template';
+      }
+
+      if (currentStateObj && 'setFocus' in currentStateObj) {
         scrollTop = $(window).scrollTop();
         currentStateObj.setFocus();
         $(window).scrollTop(scrollTop);
