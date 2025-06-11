@@ -300,7 +300,7 @@
         this.selectionStatus.update({ total: 0, templates: 0, folders: 0 });
 
         $('#page-title').text('New Template');
-        $('#page-description').text('Every message starts with a template. Select to start with a blank template or copy an existing template.');
+        $('#page-description').text('Every message starts with a template. Choose to start with a blank template or copy an existing template.');
         document.title = 'New Templates';
       } else {
         this.$form.find('.template-list-item').removeClass('js-hidden');
