@@ -1,5 +1,6 @@
 {% from "components/folder-path.html" import copy_folder_path, page_title_folder_path %}
 {% from "components/live-search.html" import live_search %}
+{% from "components/components/back-link/macro.njk" import usaBackLink %}
 
 {% extends "withnav_template.html" %}
 {% set page_title = "Copy an existing template" %}
@@ -8,6 +9,12 @@
   {{ page_title }}
 {% endblock %}
 
+{% block backLink %}
+  {% if not from_service %}
+    {{ usaBackLink({ "href": url_for('.choose_template', service_id=current_service.id),
+    "html": "Back to all templates" }) }}
+  {% endif %}
+{% endblock %}
 {% block maincolumn_content %}
 
     <div class="">
