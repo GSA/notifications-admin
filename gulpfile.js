@@ -141,9 +141,15 @@ const styles = async () => {
 };
 
 // Task to copy USWDS assets
-const copyAssets = async () => {
-  await uswds.copyAssets();
+const copyUSWDSAssets = () => {
+  return src([
+    'node_modules/@uswds/uswds/dist/img/**/*',
+    'node_modules/@uswds/uswds/dist/fonts/**/*'
+  ], { encoding: false })
+    .pipe(dest(paths.dist + 'img/'))
+    .pipe(dest(paths.dist + 'fonts/'));
 };
+
 
 // Optional backstopJS task
 // Install gulp globally and run `gulp backstopTest`
@@ -179,7 +185,7 @@ exports.default = series(
   copySetTimezone,
   copyImages,
   copyPDF,
-  copyAssets,
+  copyUSWDSAssets,
   copyUSWDSJS
 );
 exports.backstopTest = backstopTest;
