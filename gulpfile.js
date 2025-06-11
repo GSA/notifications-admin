@@ -142,10 +142,10 @@ uswds.paths.dist.theme = paths.src + 'sass/uswds';
 
 // Task to compile USWDS styles
 const styles = async () => {
-  await uswds.compile();
+  await uswds.compileSass();
 };
 
-  // Task to copy USWDS assetsconst
+// Task to copy USWDS assetsconst
 const copyUSWDSAssets = () => {
   return src([
     'node_modules/@uswds/uswds/dist/img/**/*',
