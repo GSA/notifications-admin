@@ -23,23 +23,17 @@ def test_landing_page(end_to_end_context):
     # Retrieve some prominent elements on the page for testing.
     main_header = page.get_by_role(
         "heading",
-        name="Reach people where they are with government-powered text messages",
+        name="Sunsetting Notify.gov",
     )
-    sign_in_button = page.get_by_role("link", name="Sign in with")
 
-    # Check to make sure the elements are visible.
+    # Check to make sure the main header is visible.
     expect(main_header).to_be_visible()
-    expect(sign_in_button).to_be_visible()
-
-    # Check to make sure the sign-in button and email links are correct.
-    href_value = sign_in_button.get_attribute("href")
-    assert href_value is not None, "The sign-in button does not have an href attribute"
 
     # Retrieve all other main content headers and check that they're
     # visible.
     content_headers = [
-        "Government texting made easy",
-        "Key features",
+        "Text messaging services",
+        "To our partners",
     ]
 
     for content_header in content_headers:
