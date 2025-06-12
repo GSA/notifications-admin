@@ -33,12 +33,12 @@
     <div>
       {{ live_search(target_selector='.user-list-item', show=True, form=form) }}
     </div>
-  {% endif %}
-
-  <div class="user-list">
     <div class="js-live-search-no-results" style="display: none;">
       <p class="usa-body margin-0">No results found</p>
     </div>
+  {% endif %}
+
+  <div class="user-list">
     {% for user in users %}
       {% if user.status != 'cancelled' %}
         <div class="user-list-item width-full">
