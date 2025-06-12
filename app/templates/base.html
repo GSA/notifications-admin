@@ -35,32 +35,6 @@
 
     {% block header %}
       {% include 'components/usa_banner.html' %}
-      {% if not is_api_down %}
-        {% if current_user.is_authenticated or current_service or current_user.platform_admin %}
-        <section class="usa-site-alert usa-site-alert--info" aria-label="Site alert,,,,">
-          <div class="usa-alert">
-            <div class="usa-alert__body">
-              <p class="usa-alert__heading text-bold">Notify.gov Service Ending</p>
-              <p class="usa-alert__text">
-                GSA will no longer offer the Notify.gov service after June 8th, 2025. Visit
-                <a class="usa-link" href="/notify-service-ending">Notify.gov Service Ending</a> for more information.
-              </p>
-            </div>
-          </div>
-        </section>
-        {% else %}
-        <section class="usa-site-alert usa-site-alert--emergency usa-site-alert--no-heading" aria-label="Site alert,,,,">
-          <div class="usa-alert">
-            <div class="usa-alert__body">
-              <p class="usa-alert__heading text-bold">Notify.gov Service Ending</p>
-              <p class="usa-alert__text">
-                Notify.gov is no longer accepting new partners.
-              </p>
-            </div>
-          </div>
-        </section>
-        {% endif %}
-      {% endif %}
       {% include 'components/header.html' %}
     {% endblock %}
 
@@ -157,7 +131,7 @@
                     </button>
                   </li>
                   <li class="usa-button-group__item">
-                    <button type="button" class="usa-button usa-button--unstyled padding-105 text-center" id="logOutTimer"
+                    <button type="button" class="text-center usa-button usa-button--unstyled padding-105" id="logOutTimer"
                       data-close-modal>
                       Sign out
                     </button>

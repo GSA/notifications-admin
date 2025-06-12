@@ -20,7 +20,6 @@
     $targets.each(function() {
 
       let content = $('.live-search-relevant', this).text() || $(this).text();
-      let isMatch = normalize(content).indexOf(normalize(query)) > -1;
 
       if ($(this).has(':checked').length) {
         $(this).show();
@@ -29,21 +28,25 @@
       }
 
       if (query == '') {
-        $(this).css('display', '');
+        $(this).removeClass('js-hidden');
         results++;
         return;
       }
 
-      $(this).toggle(isMatch);
+      let isMatch = normalize(content).includes(normalize(query));
 
-      if (isMatch) { results++; }
-
+      if (isMatch) {
+        $(this).removeClass('js-hidden');
+        results++;
+      } else {
+        $(this).addClass('js-hidden');
+      }
     });
 
     if (query !== '' && results === 0) {
-      $noResultsMessage.show();
+      $noResultsMessage.removeClass('js-hidden');
     } else {
-      $noResultsMessage.hide();
+      $noResultsMessage.addClass('js-hidden');
     }
 
     if (state === 'loaded') {

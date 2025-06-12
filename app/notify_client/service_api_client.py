@@ -1,6 +1,8 @@
 import json
 from datetime import datetime, timezone
 
+from flask import current_app
+
 from app.extensions import redis_client
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
 
@@ -81,7 +83,13 @@ class ServiceAPIClient(NotifyAdminAPIClient):
         """
         Retrieve a list of live services data with contact names and notification counts.
         """
-        return self.get("/service/live-services-data", params=params_dict)
+        try:
+            return self.get("/service/live-services-data", params=params_dict)
+        except Exception as e:
+            current_app.logger.error(
+                f"Error getting live services data {str(e)}", exc_info=True
+            )
+            raise e
 
     def get_active_services(self, params_dict=None):
         """
@@ -136,19 +144,29 @@ class ServiceAPIClient(NotifyAdminAPIClient):
 
     @cache.delete("live-service-and-organization-counts")
     def update_status(self, service_id, live):
-        return self.update_service(
-            service_id,
-            message_limit=250000 if live else 50,
-            restricted=(not live),
-            go_live_at=str(datetime.utcnow()) if live else None,
-        )
+        try:
+            return self.update_service(
+                service_id,
+                message_limit=250000 if live else 50,
+                restricted=(not live),
+                go_live_at=str(datetime.utcnow()) if live else None,
+            )
+        except Exception as e:
+            current_app.logger.error(f"Error updating status {str(e)}", exc_info=True)
+            raise e
 
     @cache.delete("live-service-and-organization-counts")
     def update_count_as_live(self, service_id, count_as_live):
-        return self.update_service(
-            service_id,
-            count_as_live=count_as_live,
-        )
+        try:
+            return self.update_service(
+                service_id,
+                count_as_live=count_as_live,
+            )
+        except Exception as e:
+            current_app.logger.error(
+                f"Error updating count as live {str(e)}", exc_info=True
+            )
+            raise e
 
     # This method is not cached because it calls through to one which is
     def update_service_with_properties(self, service_id, properties):
