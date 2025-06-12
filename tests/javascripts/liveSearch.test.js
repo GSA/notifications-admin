@@ -135,7 +135,7 @@ describe('Live search', () => {
         window.GOVUK.modules.start();
 
         const listItems = list.querySelectorAll('.user-list-item');
-        const listItemsShowing = Array.from(listItems).filter(item => window.getComputedStyle(item).display !== 'none');
+        const listItemsShowing = Array.from(listItems).filter(item => !item.classList.contains('js-hidden'));
 
         expect(listItemsShowing.length).toEqual(listItems.length);
         expect(searchTextbox.hasAttribute('aria-label')).toBe(false);
@@ -150,7 +150,7 @@ describe('Live search', () => {
         window.GOVUK.modules.start();
 
         const listItems = list.querySelectorAll('.user-list-item');
-        const listItemsShowing = Array.from(listItems).filter(item => window.getComputedStyle(item).display !== 'none');
+        const listItemsShowing = Array.from(listItems).filter(item => !item.classList.contains('js-hidden'));
 
         expect(listItemsShowing.length).toEqual(1);
         expect(searchTextbox.hasAttribute('aria-label')).toBe(true);
@@ -166,7 +166,7 @@ describe('Live search', () => {
         window.GOVUK.modules.start();
 
         const listItems = list.querySelectorAll('.user-list-item');
-        const listItemsShowing = Array.from(listItems).filter(item => window.getComputedStyle(item).display !== 'none');
+        const listItemsShowing = Array.from(listItems).filter(item => !item.classList.contains('js-hidden'));
 
         expect(listItemsShowing.length).toEqual(1);
         expect(searchTextbox.hasAttribute('aria-label')).toBe(true);
@@ -182,7 +182,7 @@ describe('Live search', () => {
         window.GOVUK.modules.start();
 
         const listItems = list.querySelectorAll('.user-list-item');
-        const listItemsShowing = Array.from(listItems).filter(item => window.getComputedStyle(item).display !== 'none');
+        const listItemsShowing = Array.from(listItems).filter(item => !item.classList.contains('js-hidden'));
 
         // all items contain the "Add and edit templates" permission so would match if all text was matched against the search term
         // only the text containing the label and email address is matched against
@@ -207,7 +207,7 @@ describe('Live search', () => {
         helpers.triggerEvent(searchTextbox, 'input');
 
         const listItems = list.querySelectorAll('.user-list-item');
-        const listItemsShowing = Array.from(listItems).filter(item => window.getComputedStyle(item).display !== 'none');
+        const listItemsShowing = Array.from(listItems).filter(item => !item.classList.contains('js-hidden'));
 
         expect(listItemsShowing.length).toEqual(listItems.length);
 
@@ -225,7 +225,7 @@ describe('Live search', () => {
         helpers.triggerEvent(searchTextbox, 'input');
 
         const listItems = list.querySelectorAll('.user-list-item');
-        const listItemsShowing = Array.from(listItems).filter(item => window.getComputedStyle(item).display !== 'none');
+        const listItemsShowing = Array.from(listItems).filter(item => !item.classList.contains('js-hidden'));
 
         expect(listItemsShowing.length).toEqual(1);
         expect(liveRegion.textContent.trim()).toEqual(liveRegionResults(1));
@@ -244,7 +244,7 @@ describe('Live search', () => {
         helpers.triggerEvent(searchTextbox, 'input');
 
         const listItems = list.querySelectorAll('.user-list-item');
-        const listItemsShowing = Array.from(listItems).filter(item => window.getComputedStyle(item).display !== 'none');
+        const listItemsShowing = Array.from(listItems).filter(item => !item.classList.contains('js-hidden'));
 
         expect(listItemsShowing.length).toEqual(1);
         expect(liveRegion.textContent.trim()).toEqual(liveRegionResults(1));
@@ -263,7 +263,7 @@ describe('Live search', () => {
         helpers.triggerEvent(searchTextbox, 'input');
 
         const listItems = list.querySelectorAll('.user-list-item');
-        const listItemsShowing = Array.from(listItems).filter(item => window.getComputedStyle(item).display !== 'none');
+        const listItemsShowing = Array.from(listItems).filter(item => !item.classList.contains('js-hidden'));
 
         // all items contain the "Add and edit templates" permission so would match if all text was matched against the search term
         // only the text containing the label and email address is matched against
