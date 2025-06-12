@@ -469,7 +469,7 @@
         "filename": "tests/app/main/test_errorhandlers.py",
         "hashed_secret": "005fa73b3f2be8f0d71d361c1f0a9d787cd09b4e",
         "is_verified": false,
-        "line_number": 33,
+        "line_number": 34,
         "is_secret": false
       }
     ],
@@ -634,5 +634,5 @@
       }
     ]
   },
-  "generated_at": "2025-06-04T16:12:20Z"
+  "generated_at": "2025-06-10T18:39:51Z"
 }

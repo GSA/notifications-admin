@@ -1,9 +1,9 @@
 from flask import render_template, request
-from notifications_python_client.errors import HTTPError
 
 from app import user_api_client
 from app.main import main
 from app.main.forms import ForgotPasswordForm
+from notifications_python_client.errors import HTTPError
 
 
 @main.route("/forgot-password", methods=["GET", "POST"])

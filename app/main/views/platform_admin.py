@@ -15,7 +15,6 @@ from flask import (
     session,
     url_for,
 )
-from notifications_python_client.errors import HTTPError
 
 from app import (
     billing_api_client,
@@ -46,6 +45,7 @@ from app.utils.pagination import (
     get_page_from_request,
 )
 from app.utils.user import user_is_platform_admin
+from notifications_python_client.errors import HTTPError
 
 COMPLAINT_THRESHOLD = 0.02
 FAILURE_THRESHOLD = 3

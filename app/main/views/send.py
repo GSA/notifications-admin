@@ -17,7 +17,6 @@ from flask import (
 )
 from flask_login import current_user
 from markupsafe import Markup
-from notifications_python_client.errors import HTTPError
 from xlrd.biffh import XLRDError
 from xlrd.xldate import XLDateError
 
@@ -52,6 +51,7 @@ from app.utils import (
 from app.utils.csv import Spreadsheet, get_errors_for_csv
 from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
+from notifications_python_client.errors import HTTPError
 from notifications_utils import SMS_CHAR_COUNT_LIMIT
 from notifications_utils.insensitive_dict import InsensitiveDict
 from notifications_utils.recipients import RecipientCSV, first_column_headings

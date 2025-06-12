@@ -1,9 +1,9 @@
 import pytest
 from flask import url_for
 from freezegun import freeze_time
-from notifications_python_client.errors import HTTPError
 
 from app.utils.user import is_gov_user
+from notifications_python_client.errors import HTTPError
 from tests import organization_json
 
 

@@ -3,7 +3,6 @@ from datetime import datetime
 
 from flask import abort, current_app, request, session
 from flask_login import AnonymousUserMixin, UserMixin, login_user, logout_user
-from notifications_python_client.errors import HTTPError
 from werkzeug.utils import cached_property
 
 from app.event_handlers import (
@@ -22,6 +21,7 @@ from app.utils.user_permissions import (
     all_ui_permissions,
     translate_permissions_from_db_to_ui,
 )
+from notifications_python_client.errors import HTTPError
 
 
 def _get_service_id_from_view_args():

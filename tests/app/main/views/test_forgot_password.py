@@ -1,8 +1,8 @@
 import pytest
 from flask import Response, url_for
-from notifications_python_client.errors import HTTPError
 
 import app
+from notifications_python_client.errors import HTTPError
 from tests import user_json
 from tests.conftest import SERVICE_ONE_ID
 
