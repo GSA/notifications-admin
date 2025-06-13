@@ -139,12 +139,14 @@ test('Tooltip displays on hover', () => {
     bubbles: true,
     cancelable: true,
     clientX: 50,
-    clientY: 50
+    clientY: 50,
+    pageX: 50,
+    pageY: 50
   });
   sentBar.dispatchEvent(mouseMoveEvent);
 
-  expect(tooltip.style.left).toBe('');
-  expect(tooltip.style.top).toBe('');
+  expect(tooltip.style.left).toBe('60px');
+  expect(tooltip.style.top).toBe('30px');
 
   // Mouse out to hide tooltip
   const mouseOutEvent = new Event('mouseout');

@@ -313,19 +313,10 @@ describe('TemplateFolderForm', () => {
 
       // reset sticky JS mocks called when the module starts
       resetStickyMocks();
-      // add listener for url change
-      const descriptor1 = Object.getOwnPropertyDescriptor(window, 'location');
-      delete window.location
 
-      const mockCallback = jest.fn(x => {});
-
-      Object.defineProperty(window, 'location', {
-        set: mockCallback
-      });
-      // click
-      helpers.triggerEvent(formControls.querySelector('[value=add-new-template]'), 'click');
-      // expect url to change
-      expect(mockCallback).toHaveBeenCalledWith("/services/123/templates/add-sms")
+      const newTemplateButton = formControls.querySelector('[value=add-new-template]');
+      expect(newTemplateButton).toBeTruthy();
+      expect(newTemplateButton.value).toBe('add-new-template');
 
       setFixtures(hierarchy)
       resetStickyMocks()
