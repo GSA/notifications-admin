@@ -229,6 +229,10 @@ td.table-empty-message {
   display: none;
 }
 
+.js-hidden {
+  display: none !important;
+}
+
 .folder-heading a.folder-heading-folder,
 .template-list-folder {
   background: url(../img/material-icons/folder.svg) no-repeat;
@@ -869,6 +873,10 @@ $do-dont-top-bar-width: 1;
   max-width: 72ex;
   padding: 0.5rem;
   border-radius: 2px;
+}
+
+.bg-gray-cool {
+  background-color: #dfe1e2;
 }
 
 .svg-circle-icon {
