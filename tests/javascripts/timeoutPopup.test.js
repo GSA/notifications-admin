@@ -1,7 +1,7 @@
 beforeAll(() => {
-    jest.spyOn(global, 'setTimeout');
+  jest.spyOn(global, 'setTimeout');
 
-    document.body.innerHTML = `
+  document.body.innerHTML = `
         <dialog class="usa-modal" id="sessionTimer" aria-labelledby="sessionTimerHeading" aria-describedby="timeLeft">
             <div class="usa-modal__content">
                 <div class="usa-modal__main">
@@ -32,100 +32,114 @@ beforeAll(() => {
                 </div>
             </div>
         </dialog>
-    `
+    `;
 
-        const sessionTimerModule = require('../../app/assets/javascripts/timeoutPopup.js');
-        window.GOVUK.modules.start();
+  const sessionTimerModule = require('../../app/assets/javascripts/timeoutPopup.js');
+  window.GOVUK.modules.start();
 });
 
 afterAll(() => {
-    document.body.innerHTML = '';
+  document.body.innerHTML = '';
 });
-
 
 describe('When the session timer module is loaded', () => {
-    beforeEach(() => {
-        jest.useFakeTimers();
-    });
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
 
-    afterEach(() => {
-        jest.useFakeTimers();
-    });
+  afterEach(() => {
+    jest.useFakeTimers();
+  });
 
-    test('everything initializes properly', () => {
-        const sessionTimer = document.getElementById("sessionTimer");
-        sessionTimer.showModal = jest.fn();
-        sessionTimer.close = jest.fn();
+  test('everything initializes properly', () => {
+    const sessionTimer = document.getElementById('sessionTimer');
+    sessionTimer.showModal = jest.fn();
+    sessionTimer.close = jest.fn();
 
-        jest.runAllTimers();
-    });
-
+    jest.runAllTimers();
+  });
 });
 
-
 describe('The session timer ', () => {
-    beforeEach(() => {
-        jest.useFakeTimers();
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useFakeTimers();
+  });
+
+  test('signoutUser method logs the user out', () => {
+    const signoutUserMethod = window.GOVUK.Modules.TimeoutPopup.signoutUser;
+
+    expect(window.location.href).toEqual(
+      expect.not.stringContaining('/sign-out')
+    );
+
+    signoutUserMethod();
+
+    expect(window.location.href).toEqual(expect.stringContaining('/sign-out'));
+  });
+
+  test('expireUserSession method logs the user out with next query parameter', () => {
+    const expireUserSessionMethod =
+      window.GOVUK.Modules.TimeoutPopup.expireUserSession;
+
+    expect(window.location.href).toEqual(
+      expect.not.stringContaining('/sign-out?next=')
+    );
+
+    expireUserSessionMethod();
+
+    expect(window.location.href).toEqual(
+      expect.stringContaining('/sign-out?next=')
+    );
+  });
+
+  test('extendSession method reloads the page', () => {
+    // Jest 30 made location.reload read-only, so we can't spy on it the old way.
+    // Instead, we have to replace it with our own mock function.
+    const mockReload = jest.fn();
+    Object.defineProperty(window.location, 'reload', {
+      value: mockReload,
+      configurable: true,
     });
 
-    afterEach(() => {
-        jest.useFakeTimers();
-    });
+    const extendSessionMethod = window.GOVUK.Modules.TimeoutPopup.extendSession;
 
-    test('signoutUser method logs the user out', () => {
-        const signoutUserMethod = window.GOVUK.Modules.TimeoutPopup.signoutUser;
+    extendSessionMethod();
 
-        expect(window.location.href).toEqual(expect.not.stringContaining('/sign-out'));
+    expect(mockReload).toHaveBeenCalled();
+  });
 
-        signoutUserMethod();
+  test('showTimer method shows the session timer modal', () => {
+    const sessionTimer = document.getElementById('sessionTimer');
+    sessionTimer.showModal = jest.fn();
 
-        expect(window.location.href).toEqual(expect.stringContaining('/sign-out'));
-    });
+    const showTimerMock = jest.spyOn(sessionTimer, 'showModal');
 
-    test('expireUserSession method logs the user out with next query parameter', () => {
-        const expireUserSessionMethod = window.GOVUK.Modules.TimeoutPopup.expireUserSession;
+    window.GOVUK.Modules.TimeoutPopup.showTimer();
 
-        expect(window.location.href).toEqual(expect.not.stringContaining('/sign-out?next='));
+    expect(showTimerMock).toHaveBeenCalled();
+  });
 
-        expireUserSessionMethod();
+  test('closeTimer method closes the session timer modal', () => {
+    const sessionTimer = document.getElementById('sessionTimer');
+    sessionTimer.close = jest.fn();
 
-        expect(window.location.href).toEqual(expect.stringContaining('/sign-out?next='));
-    });
+    const closeTimerMock = jest.spyOn(sessionTimer, 'close');
 
-    test('extendSession method reloads the page', () => {
-        const windowReload = jest.spyOn(window.location, 'reload');
-        const extendSessionMethod = window.GOVUK.Modules.TimeoutPopup.extendSession;
+    window.GOVUK.Modules.TimeoutPopup.closeTimer();
 
-        extendSessionMethod();
+    expect(closeTimerMock).toHaveBeenCalled();
+  });
 
-        expect(windowReload).toHaveBeenCalled();
-    });
-
-    test('showTimer method shows the session timer modal', () => {
-        const sessionTimer = document.getElementById("sessionTimer");
-        sessionTimer.showModal = jest.fn();
-
-        const showTimerMock = jest.spyOn(sessionTimer, 'showModal');
-
-        window.GOVUK.Modules.TimeoutPopup.showTimer();
-
-        expect(showTimerMock).toHaveBeenCalled();
-    });
-
-    test('closeTimer method closes the session timer modal', () => {
-        const sessionTimer = document.getElementById("sessionTimer");
-        sessionTimer.close = jest.fn();
-
-        const closeTimerMock = jest.spyOn(sessionTimer, 'close');
-
-        window.GOVUK.Modules.TimeoutPopup.closeTimer();
-
-        expect(closeTimerMock).toHaveBeenCalled();
-    });
-
-    test('checkTimer is called', () => {
-        const checkTimerMock = jest.spyOn(window.GOVUK.Modules.TimeoutPopup, "checkTimer");
-        window.GOVUK.Modules.TimeoutPopup.checkTimer();
-        expect(checkTimerMock).toHaveBeenCalled();
-    });
+  test('checkTimer is called', () => {
+    const checkTimerMock = jest.spyOn(
+      window.GOVUK.Modules.TimeoutPopup,
+      'checkTimer'
+    );
+    window.GOVUK.Modules.TimeoutPopup.checkTimer();
+    expect(checkTimerMock).toHaveBeenCalled();
+  });
 });
