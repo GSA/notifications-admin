@@ -32,15 +32,7 @@ from app.utils.user import is_gov_user
 @main.route("/register", methods=["GET", "POST"])
 @hide_from_search_engines
 def register():
-    if current_user and current_user.is_authenticated:
-        return redirect(url_for("main.show_accounts_or_dashboard"))
-
-    form = RegisterUserForm()
-    if form.validate_on_submit():
-        _do_registration(form, send_sms=False)
-        return redirect(url_for("main.registration_continue"))
-
-    return render_template("views/register.html", form=form)
+    abort(404)
 
 
 @main.route("/register-from-org-invite", methods=["GET", "POST"])
@@ -108,10 +100,7 @@ def _do_registration(form, send_sms=True, send_email=True, organization_id=None)
 
 @main.route("/registration-continue")
 def registration_continue():
-    if not session.get("user_details"):
-        return redirect(url_for(".show_accounts_or_dashboard"))
-    else:
-        raise Exception("Unexpected routing in registration_continue")
+    abort(404)
 
 
 def get_invite_data_from_redis(state):
