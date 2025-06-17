@@ -25,7 +25,7 @@
     "graceful-fs": "^4.2.11"
   },
   "dependencies": {
-    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-commonjs": "^28.0.5",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/stream": "^3.0.1",
     "@uswds/uswds": "^3.13.0",
