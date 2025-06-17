@@ -143,8 +143,10 @@ test('Tooltip displays on hover', () => {
   });
   sentBar.dispatchEvent(mouseMoveEvent);
 
-  expect(tooltip.style.left).toBe('');
-  expect(tooltip.style.top).toBe('');
+  // In Jest 30, the mousemove event actually sets the tooltip position
+  // Check that tooltip has been positioned (not empty)
+  expect(tooltip.style.left).not.toBe('');
+  expect(tooltip.style.top).not.toBe('');
 
   // Mouse out to hide tooltip
   const mouseOutEvent = new Event('mouseout');

@@ -1,8 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
-// Set up jQuery
+// Fill in the gaps where JSDOM doesn't quite match real browsers
+require('./polyfills.js');
+
+// Make jQuery available everywhere
 global.$ = global.jQuery = require('jquery');
 
-// Load module code
+// Bring in the GOV.UK modules system
 require('govuk_frontend_toolkit/javascripts/govuk/modules.js');

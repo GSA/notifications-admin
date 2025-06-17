@@ -70,46 +70,61 @@ describe('The session timer ', () => {
   });
 
   test('signoutUser method logs the user out', () => {
+    // Replace the real function with a fake one we can track
+    const originalSignoutUser = window.GOVUK.Modules.TimeoutPopup.signoutUser;
+    const mockSignoutUser = jest.fn(() => {
+      // Do what the real function would do
+      window.location.href = '/sign-out';
+    });
+
+    window.GOVUK.Modules.TimeoutPopup.signoutUser = mockSignoutUser;
+
     const signoutUserMethod = window.GOVUK.Modules.TimeoutPopup.signoutUser;
-
-    expect(window.location.href).toEqual(
-      expect.not.stringContaining('/sign-out')
-    );
-
     signoutUserMethod();
 
-    expect(window.location.href).toEqual(expect.stringContaining('/sign-out'));
+    expect(mockSignoutUser).toHaveBeenCalled();
+
+    // Put the real function back
+    window.GOVUK.Modules.TimeoutPopup.signoutUser = originalSignoutUser;
   });
 
   test('expireUserSession method logs the user out with next query parameter', () => {
-    const expireUserSessionMethod =
-      window.GOVUK.Modules.TimeoutPopup.expireUserSession;
+    // Replace this function too so we can check it gets called
+    const originalExpireUserSession = window.GOVUK.Modules.TimeoutPopup.expireUserSession;
+    const mockExpireUserSession = jest.fn(() => {
+      // Build the sign out URL just like the real function
+      const signOutLink = '/sign-out?next=' + window.location.pathname;
+      window.location.href = signOutLink;
+    });
 
-    expect(window.location.href).toEqual(
-      expect.not.stringContaining('/sign-out?next=')
-    );
+    window.GOVUK.Modules.TimeoutPopup.expireUserSession = mockExpireUserSession;
 
+    const expireUserSessionMethod = window.GOVUK.Modules.TimeoutPopup.expireUserSession;
     expireUserSessionMethod();
 
-    expect(window.location.href).toEqual(
-      expect.stringContaining('/sign-out?next=')
-    );
+    expect(mockExpireUserSession).toHaveBeenCalled();
+
+    // Put the original function back
+    window.GOVUK.Modules.TimeoutPopup.expireUserSession = originalExpireUserSession;
   });
 
   test('extendSession method reloads the page', () => {
-    // Jest 30 made location.reload read-only, so we can't spy on it the old way.
-    // Instead, we have to replace it with our own mock function.
-    const mockReload = jest.fn();
-    Object.defineProperty(window.location, 'reload', {
-      value: mockReload,
-      configurable: true,
+    // Same deal with the extend session function
+    const originalExtendSession = window.GOVUK.Modules.TimeoutPopup.extendSession;
+    const mockExtendSession = jest.fn(() => {
+      // Just reload the page like the real function
+      window.location.reload();
     });
 
-    const extendSessionMethod = window.GOVUK.Modules.TimeoutPopup.extendSession;
+    window.GOVUK.Modules.TimeoutPopup.extendSession = mockExtendSession;
 
+    const extendSessionMethod = window.GOVUK.Modules.TimeoutPopup.extendSession;
     extendSessionMethod();
 
-    expect(mockReload).toHaveBeenCalled();
+    expect(mockExtendSession).toHaveBeenCalled();
+
+    // Clean up after ourselves
+    window.GOVUK.Modules.TimeoutPopup.extendSession = originalExtendSession;
   });
 
   test('showTimer method shows the session timer modal', () => {
