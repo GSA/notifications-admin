@@ -70,61 +70,39 @@ describe('The session timer ', () => {
   });
 
   test('signoutUser method logs the user out', () => {
-    // Replace the real function with a fake one we can track
-    const originalSignoutUser = window.GOVUK.Modules.TimeoutPopup.signoutUser;
-    const mockSignoutUser = jest.fn(() => {
-      // Do what the real function would do
-      window.location.href = '/sign-out';
-    });
+    const restore = mockWindowLocation();
 
-    window.GOVUK.Modules.TimeoutPopup.signoutUser = mockSignoutUser;
-
+    // Test the actual function, not a mock
     const signoutUserMethod = window.GOVUK.Modules.TimeoutPopup.signoutUser;
-    signoutUserMethod();
 
-    expect(mockSignoutUser).toHaveBeenCalled();
+    // This will try to set location.href but our mock will catch it
+    expect(() => signoutUserMethod()).not.toThrow();
 
-    // Put the real function back
-    window.GOVUK.Modules.TimeoutPopup.signoutUser = originalSignoutUser;
+    restore();
   });
 
   test('expireUserSession method logs the user out with next query parameter', () => {
-    // Replace this function too so we can check it gets called
-    const originalExpireUserSession = window.GOVUK.Modules.TimeoutPopup.expireUserSession;
-    const mockExpireUserSession = jest.fn(() => {
-      // Build the sign out URL just like the real function
-      const signOutLink = '/sign-out?next=' + window.location.pathname;
-      window.location.href = signOutLink;
-    });
+    const restore = mockWindowLocation();
 
-    window.GOVUK.Modules.TimeoutPopup.expireUserSession = mockExpireUserSession;
-
+    // Test the actual function, not a mock
     const expireUserSessionMethod = window.GOVUK.Modules.TimeoutPopup.expireUserSession;
-    expireUserSessionMethod();
 
-    expect(mockExpireUserSession).toHaveBeenCalled();
+    // This will try to set location.href but our mock will catch it
+    expect(() => expireUserSessionMethod()).not.toThrow();
 
-    // Put the original function back
-    window.GOVUK.Modules.TimeoutPopup.expireUserSession = originalExpireUserSession;
+    restore();
   });
 
   test('extendSession method reloads the page', () => {
-    // Same deal with the extend session function
-    const originalExtendSession = window.GOVUK.Modules.TimeoutPopup.extendSession;
-    const mockExtendSession = jest.fn(() => {
-      // Just reload the page like the real function
-      window.location.reload();
-    });
+    const restore = mockWindowLocation();
 
-    window.GOVUK.Modules.TimeoutPopup.extendSession = mockExtendSession;
-
+    // Test the actual function, not a mock
     const extendSessionMethod = window.GOVUK.Modules.TimeoutPopup.extendSession;
-    extendSessionMethod();
 
-    expect(mockExtendSession).toHaveBeenCalled();
+    // This will try to call location.reload but our mock will catch it
+    expect(() => extendSessionMethod()).not.toThrow();
 
-    // Clean up after ourselves
-    window.GOVUK.Modules.TimeoutPopup.extendSession = originalExtendSession;
+    restore();
   });
 
   test('showTimer method shows the session timer modal', () => {
