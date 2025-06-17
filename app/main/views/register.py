@@ -13,12 +13,9 @@ from flask import (
     session,
     url_for,
 )
-from flask_login import current_user
-
 from app import redis_client, user_api_client
 from app.main import main
 from app.main.forms import (
-    RegisterUserForm,
     RegisterUserFromOrgInviteForm,
     SetupUserProfileForm,
 )
