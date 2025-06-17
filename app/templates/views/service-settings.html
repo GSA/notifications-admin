@@ -39,7 +39,7 @@
         {% call row() %}
           {{ text_field('Send text messages') }}
           {{ boolean_field('sms' in current_service.permissions) }}
-          {{ edit_field(
+          {# {{ edit_field(
             'Change',
             url_for(
             '.service_set_channel',
@@ -48,7 +48,7 @@
             ),
             permissions=['manage_service'],
             suffix='your settings for sending text messages',
-          )}}
+          )}} #}
         {% endcall %}
 
        {% if current_user.platform_admin %}
