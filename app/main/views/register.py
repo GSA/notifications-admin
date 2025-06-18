@@ -13,6 +13,7 @@ from flask import (
     session,
     url_for,
 )
+
 from app import redis_client, user_api_client
 from app.main import main
 from app.main.forms import (
