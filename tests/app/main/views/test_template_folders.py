@@ -2,9 +2,9 @@ import uuid
 
 import pytest
 from flask import abort, url_for
-from notifications_python_client.errors import HTTPError
 
 from app.models.user import User
+from notifications_python_client.errors import HTTPError
 from tests import sample_uuid
 from tests.conftest import (
     SERVICE_ONE_ID,

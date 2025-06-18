@@ -6,9 +6,9 @@ import pytest
 from flask import session as flask_session
 from flask import url_for
 from itsdangerous import SignatureExpired
-from notifications_python_client.errors import HTTPError
 
 from app.main.views.verify import activate_user
+from notifications_python_client.errors import HTTPError
 from tests.conftest import create_user
 
 
