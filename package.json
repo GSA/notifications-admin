@@ -62,7 +62,7 @@
     "gulp-prettyerror": "2.0.0",
     "gulp-uglify": "3.0.2",
     "jest": "^30.0.0",
-    "jest-each": "^30.0.0",
+    "jest-each": "^30.0.1",
     "jest-environment-jsdom": "^30.0.0",
     "jshint": "2.13.6",
     "jshint-stylish": "2.2.1",
