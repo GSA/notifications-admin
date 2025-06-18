@@ -7,7 +7,6 @@ from flask import url_for
 
 from app.main.views.register import check_invited_user_email_address_matches_expected
 from app.models.user import User
-from tests.conftest import normalize_spaces
 
 
 def test_render_register_returns_template_with_form(client_request, mocker):
