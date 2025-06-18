@@ -14,13 +14,7 @@ def test_render_register_returns_template_with_form(client_request, mocker):
 
     mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
-    page = client_request.get_url("/register")
-
-    assert page.find("input", attrs={"name": "auth_type"}).attrs["value"] == "sms_auth"
-    assert page.select_one("#email_address")["spellcheck"] == "false"
-    assert page.select_one("#email_address")["autocomplete"] == "email"
-    assert page.select_one("#password")["autocomplete"] == "new-password"
-    assert "Create an account" in page.text
+    client_request.get_url("/register", _expected_status=404)
 
 
 def test_logged_in_user_redirects_to_account(
@@ -28,8 +22,7 @@ def test_logged_in_user_redirects_to_account(
 ):
     client_request.get(
         "main.register",
-        _expected_status=302,
-        _expected_redirect=url_for("main.show_accounts_or_dashboard"),
+        _expected_status=404,
     )
 
 
@@ -99,7 +92,7 @@ def test_register_continue_handles_missing_session_sensibly(client_request, mock
     # session is not set
     client_request.get(
         "main.registration_continue",
-        _expected_redirect=url_for("main.show_accounts_or_dashboard"),
+        _expected_status=404,
     )
 
 
@@ -113,7 +106,7 @@ def test_process_register_returns_200_when_mobile_number_is_invalid(
 
     mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
-    page = client_request.post(
+    client_request.post(
         "main.register",
         _data={
             "name": "Bad Mobile",
@@ -121,10 +114,8 @@ def test_process_register_returns_200_when_mobile_number_is_invalid(
             "mobile_number": "not good",
             "password": "validPassword!",  # noqa
         },
-        _expected_status=200,
+        _expected_status=404,
     )
-
-    assert "The string supplied did not seem to be a phone number" in page.text
 
 
 def test_should_return_200_when_email_is_not_gov_uk(
@@ -133,7 +124,7 @@ def test_should_return_200_when_email_is_not_gov_uk(
 
     mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
-    page = client_request.post(
+    client_request.post(
         "main.register",
         _data={
             "name": "Firstname Lastname",
@@ -141,11 +132,7 @@ def test_should_return_200_when_email_is_not_gov_uk(
             "mobile_number": "2020900123",
             "password": "validPassword!",
         },
-        _expected_status=200,
-    )
-
-    assert "Enter a public sector email address." in normalize_spaces(
-        page.select_one(".usa-error-message").text
+        _expected_status=404,
     )
 
 
@@ -179,9 +166,8 @@ def test_should_add_user_details_to_session(
             "mobile_number": "+12023123123",
             "password": "validPassword!",
         },
+        _expected_status=404,
     )
-    with client_request.session_transaction() as session:
-        assert session["user_details"]["email"] == email_address
 
 
 def test_should_return_200_if_password_is_on_list_of_commonly_used_passwords(
@@ -198,10 +184,9 @@ def test_should_return_200_if_password_is_on_list_of_commonly_used_passwords(
             "mobile_number": "+12021234123",
             "password": "password",  # noqa
         },
-        _expected_status=200,
+        _expected_status=404,
     )
 
-    assert "Choose a password that’s harder to guess" in page.text
 
 
 def test_register_with_existing_email_sends_emails(
@@ -224,7 +209,7 @@ def test_register_with_existing_email_sends_emails(
     client_request.post(
         "main.register",
         _data=user_data,
-        _expected_redirect=url_for("main.registration_continue"),
+        _expected_status=404,
     )
 
 
@@ -383,19 +368,16 @@ def test_cannot_register_with_sms_auth_and_missing_mobile_number(
 
     mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
-    page = client_request.post(
+    client_request.post(
         "main.register",
         _data={
             "name": "Missing Mobile",
             "email_address": "missing_mobile@example.gsa.gov",
             "password": "validPassword!",
         },
-        _expected_status=200,
+        _expected_status=404,
     )
 
-    err = page.select_one(".usa-error-message")
-    assert err.text.strip() == "Error: Cannot be empty"
-    assert err.attrs["data-error-label"] == "mobile_number"
 
 
 def test_check_invited_user_email_address_matches_expected(mocker):
