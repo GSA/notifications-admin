@@ -543,7 +543,7 @@
         "filename": "tests/app/main/views/test_register.py",
         "hashed_secret": "bb5b7caa27d005d38039e3797c3ddb9bcd22c3c8",
         "is_verified": false,
-        "line_number": 257,
+        "line_number": 256,
         "is_secret": false
       }
     ],
@@ -634,5 +634,5 @@
       }
     ]
   },
-  "generated_at": "2025-06-18T01:08:37Z"
+  "generated_at": "2025-06-18T16:51:20Z"
 }

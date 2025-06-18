@@ -176,7 +176,7 @@ def test_should_return_200_if_password_is_on_list_of_commonly_used_passwords(
 
     mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
-    page = client_request.post(
+    client_request.post(
         "main.register",
         _data={
             "name": "Bad Mobile",
@@ -186,7 +186,6 @@ def test_should_return_200_if_password_is_on_list_of_commonly_used_passwords(
         },
         _expected_status=404,
     )
-
 
 
 def test_register_with_existing_email_sends_emails(
@@ -377,7 +376,6 @@ def test_cannot_register_with_sms_auth_and_missing_mobile_number(
         },
         _expected_status=404,
     )
-
 
 
 def test_check_invited_user_email_address_matches_expected(mocker):
