@@ -65,7 +65,6 @@ def test_robots(client_request):
     ("endpoint", "kwargs"),
     [
         ("sign_in", {}),
-        ("register", {}),
         pytest.param("index", {}, marks=pytest.mark.xfail(raises=AssertionError)),
     ],
 )
