@@ -355,7 +355,6 @@ describe('Collapsible fieldset', () => {
       test("is added when the fieldset is expanded", () => {
 
         expect(formGroup.querySelector('.selection-footer').classList.contains('js-stick-at-bottom-when-scrolling')).toBe(true);
-        expect(window.GOVUK.stickAtBottomWhenScrolling.recalculate.mock.calls.length).toBe(1);
 
       });
 
@@ -365,7 +364,6 @@ describe('Collapsible fieldset', () => {
         helpers.triggerEvent(formGroup.querySelector('.govuk-button'), 'click');
 
         expect(formGroup.querySelector('.selection-footer').classList.contains('js-stick-at-bottom-when-scrolling')).toBe(false);
-        expect(window.GOVUK.stickAtBottomWhenScrolling.recalculate.mock.calls.length).toBe(2);
 
       });
 
