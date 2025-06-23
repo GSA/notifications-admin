@@ -1077,3 +1077,15 @@ nav.nav {
 .usa-site-alert .usa-alert .usa-alert__body {
   max-width: 75rem;
 }
+
+.usa-form-group--nested {
+  margin-top: 0;
+}
+
+.selection-content > ul > li.usa-checkbox {
+  margin-top: 1rem;
+}
+
+.selection-content .usa-form-group--nested li.usa-checkbox {
+  margin-top: 0;
+}
