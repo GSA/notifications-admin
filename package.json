@@ -61,12 +61,12 @@
     "gulp-jshint": "2.1.0",
     "gulp-prettyerror": "2.0.0",
     "gulp-uglify": "3.0.2",
-    "jest": "^30.0.0",
-    "jest-each": "^30.0.0",
-    "jest-environment-jsdom": "^30.0.0",
+    "jest": "^30.0.2",
+    "jest-each": "^30.0.2",
+    "jest-environment-jsdom": "^30.0.2",
     "jshint": "2.13.6",
     "jshint-stylish": "2.2.1",
-    "rollup": "^4.43.0",
+    "rollup": "^4.44.0",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-node-resolve": "5.2.0"
   }
