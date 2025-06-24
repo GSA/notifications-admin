@@ -371,6 +371,86 @@ describe('Collapsible fieldset', () => {
 
   });
 
+  describe("check/uncheck all functionality", () => {
+
+    beforeEach(() => {
+      window.GOVUK.modules.start();
+
+      helpers.triggerEvent(formGroup.querySelector('.govuk-button'), 'click');
+    });
+
+    test("adds a 'Select all' button when checkboxes are shown", () => {
+      const toggleButton = document.querySelector('.usa-button--small');
+
+      expect(toggleButton).not.toBeNull();
+      expect(toggleButton.textContent).toEqual('Select all');
+    });
+
+    test("clicking 'Select all' checks all checkboxes", () => {
+      const toggleButton = document.querySelector('.usa-button--small');
+
+      expect(checkboxes[0].checked).toBe(false);
+      expect(checkboxes[9].checked).toBe(false);
+
+      helpers.triggerEvent(toggleButton, 'click');
+
+      expect(checkboxes[0].checked).toBe(true);
+      expect(checkboxes[9].checked).toBe(true);
+    });
+
+    test("button changes to 'Deselect all' when all are checked", () => {
+      const toggleButton = document.querySelector('.usa-button--small');
+
+      helpers.triggerEvent(toggleButton, 'click');
+
+      expect(toggleButton.textContent).toEqual('Deselect all');
+    });
+
+    test("clicking 'Deselect all' unchecks all checkboxes", () => {
+      const toggleButton = document.querySelector('.usa-button--small');
+
+      helpers.triggerEvent(toggleButton, 'click');
+      expect(checkboxes[0].checked).toBe(true);
+
+      helpers.triggerEvent(toggleButton, 'click');
+
+      expect(checkboxes[0].checked).toBe(false);
+      expect(checkboxes[9].checked).toBe(false);
+    });
+
+    test("button is hidden when fieldset is collapsed", () => {
+      const toggleButton = document.querySelector('.usa-button--small');
+      const doneButton = formGroup.querySelector('.govuk-button');
+
+      expect(toggleButton.parentElement.style.display).not.toEqual('none');
+
+      helpers.triggerEvent(doneButton, 'click');
+
+      expect(toggleButton.parentElement.style.display).toEqual('none');
+    });
+
+  });
+
+  describe("toggle button visibility on re-expansion", () => {
+
+    test("shows toggle button again when fieldset is re-opened", () => {
+      window.GOVUK.modules.start();
+
+      helpers.triggerEvent(formGroup.querySelector('.govuk-button'), 'click');
+      const toggleButton = document.querySelector('.usa-button--small');
+      expect(toggleButton).not.toBeNull();
+
+      helpers.triggerEvent(formGroup.querySelector('.govuk-button'), 'click');
+
+      helpers.triggerEvent(formGroup.querySelector('.govuk-button'), 'click');
+
+      const toggleButtonAfter = document.querySelector('.usa-button--small');
+      expect(toggleButtonAfter).not.toBeNull();
+      expect(toggleButtonAfter.parentElement.style.display).not.toEqual('none');
+    });
+
+  });
+
   describe("when the selection changes", () => {
 
     const showCheckboxes = () => {
