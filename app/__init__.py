@@ -35,6 +35,7 @@ from app.extensions import redis_client
 from app.formatters import (
     convert_markdown_template,
     convert_to_boolean,
+    convert_time_unixtimestamp,
     format_auth_type,
     format_billions,
     format_date,
@@ -672,6 +673,7 @@ def add_template_filters(application):
         format_thousands,
         id_safe,
         convert_to_boolean,
+        convert_time_unixtimestamp,
         format_list_items,
         iteration_count,
         recipient_count,

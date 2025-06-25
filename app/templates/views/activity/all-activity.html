@@ -96,13 +96,12 @@
                   </a>
                 </td>
                 <td class="table-field template">{{ job.template_name }}</td>
-                <td data-sort-value="{{job.time_sent_data_value}}" class="table-field time-sent">
-                  {{ (job.processing_finished if job.processing_finished else job.processing_started
-                    if job.processing_started else job.created_at)|format_datetime_table }}
+                <td data-sort-value="{{ job.activity_time | convert_time_unixtimestamp }}" class="table-field time-sent">
+                  {{ job.activity_time|format_datetime_table }}
                 </td>
                 <td class="table-field sender">{{ job.created_by.name }}</td>
                 <td class="table-field report">
-                  {% if job.time_left != "Data no longer available" %}
+                  {% if job.can_download %}
                     <a href="{{ job.download_link }}">
                       <img src="{{ url_for('static', filename='img/material-icons/file_download.svg') }}" alt="">
                       <span class="usa-sr-only">Download report link</span>
