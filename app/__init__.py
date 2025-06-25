@@ -34,8 +34,8 @@ from app.config import configs
 from app.extensions import redis_client
 from app.formatters import (
     convert_markdown_template,
-    convert_to_boolean,
     convert_time_unixtimestamp,
+    convert_to_boolean,
     format_auth_type,
     format_billions,
     format_date,
