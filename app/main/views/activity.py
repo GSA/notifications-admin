@@ -98,15 +98,13 @@ def create_job_dict_entry(job):
     return {
         "job_id": job_id,
         "can_download": can_download,
-        "download_link": url_for(
-            ".view_job_csv",
-            service_id=current_service.id,
-            job_id=job_id
-        ) if can_download else None,
+        "download_link": (
+            url_for(".view_job_csv", service_id=current_service.id, job_id=job_id)
+            if can_download
+            else None
+        ),
         "view_job_link": url_for(
-            ".view_job",
-            service_id=current_service.id,
-            job_id=job_id
+            ".view_job", service_id=current_service.id, job_id=job_id
         ),
         "activity_time": activity_time,
         "created_by": job.get("created_by"),
