@@ -1,7 +1,7 @@
 from flask import abort, render_template, request, url_for
 
 from app import current_service, job_api_client
-from app.formatters import convert_time_unixtimestamp, get_time_left
+from app.formatters import get_time_left
 from app.main import main
 from app.utils.pagination import (
     generate_next_dict,
