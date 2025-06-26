@@ -69,7 +69,7 @@ def test_all_activity(
     expected_headers = [
         "Job ID#",
         "Template",
-        "Time sent",
+        "Started",
         "Sender",
         "Report",
         "Delivered",
