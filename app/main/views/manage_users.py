@@ -49,7 +49,7 @@ def invite_user(service_id, user_id=None):
     form = form_class(
         inviter_email_address=current_user.email_address,
         all_template_folders=current_service.all_template_folders,
-        folder_permissions=[f["id"] for f in current_service.all_template_folders],
+        folder_permissions=[],
     )
 
     if user_id:
