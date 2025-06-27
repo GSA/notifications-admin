@@ -1,7 +1,7 @@
 from flask import abort, render_template, request, url_for
 
 from app import current_service, job_api_client
-from app.formatters import convert_time_unixtimestamp, get_time_left
+from app.formatters import get_time_left
 from app.main import main
 from app.utils.pagination import (
     generate_next_dict,
@@ -78,47 +78,43 @@ def handle_pagination(jobs, service_id, page):
     return prev_page, next_page, pagination
 
 
+JOB_STATUS_DELIVERED = "delivered"
+JOB_STATUS_FAILED = "failed"
+
+
+def get_job_statistics(job, status):
+    statistics = job.get("statistics", [])
+    for stat in statistics:
+        if stat.get("status") == status:
+            return stat.get("count")
+    return None
+
+
+def create_job_dict_entry(job):
+    job_id = job.get("id")
+    can_download = get_time_left(job.get("created_at")) != "Data no longer available"
+    activity_time = job.get("processing_started") or job.get("created_at")
+
+    return {
+        "job_id": job_id,
+        "can_download": can_download,
+        "download_link": (
+            url_for(".view_job_csv", service_id=current_service.id, job_id=job_id)
+            if can_download
+            else None
+        ),
+        "view_job_link": url_for(
+            ".view_job", service_id=current_service.id, job_id=job_id
+        ),
+        "activity_time": activity_time,
+        "created_by": job.get("created_by"),
+        "template_name": job.get("template_name"),
+        "delivered_count": get_job_statistics(job, JOB_STATUS_DELIVERED),
+        "failed_count": get_job_statistics(job, JOB_STATUS_FAILED),
+    }
+
+
 def generate_job_dict(jobs):
-    return [
-        {
-            "job_id": job["id"],
-            "time_left": get_time_left(job["created_at"]),
-            "download_link": url_for(
-                ".view_job_csv", service_id=current_service.id, job_id=job["id"]
-            ),
-            "view_job_link": url_for(
-                ".view_job", service_id=current_service.id, job_id=job["id"]
-            ),
-            "created_at": job["created_at"],
-            "time_sent_data_value": convert_time_unixtimestamp(
-                job["processing_finished"]
-                if job["processing_finished"]
-                else (
-                    job["processing_started"]
-                    if job["processing_started"]
-                    else job["created_at"]
-                )
-            ),
-            "processing_finished": job["processing_finished"],
-            "processing_started": job["processing_started"],
-            "created_by": job["created_by"],
-            "template_name": job["template_name"],
-            "delivered_count": next(
-                (
-                    stat["count"]
-                    for stat in job.get("statistics", [])
-                    if stat["status"] == "delivered"
-                ),
-                None,
-            ),
-            "failed_count": next(
-                (
-                    stat["count"]
-                    for stat in job.get("statistics", [])
-                    if stat["status"] == "failed"
-                ),
-                None,
-            ),
-        }
-        for job in jobs["data"]
-    ]
+    if not jobs or not jobs.get("data"):
+        return []
+    return [create_job_dict_entry(job) for job in jobs["data"]]
