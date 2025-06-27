@@ -316,6 +316,13 @@ td.table-empty-message {
 }
 
 .js-stick-at-bottom-when-scrolling {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  border-top: 1px solid color('gray-cool-10');
+  padding: units(2);
+  margin-top: units(2);
+  z-index: 10;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -1076,4 +1083,16 @@ nav.nav {
 
 .usa-site-alert .usa-alert .usa-alert__body {
   max-width: 75rem;
+}
+
+.usa-form-group--nested {
+  margin-top: 0;
+}
+
+.selection-content > ul > li.usa-checkbox {
+  margin-top: 1rem;
+}
+
+.selection-content .usa-form-group--nested li.usa-checkbox {
+  margin-top: 0;
 }

@@ -243,12 +243,12 @@ git clone git@github.com:GSA/notifications-admin.git
 
 Now go into the project directory (`notifications-admin` by default), create a
 virtual environment, and set the local Python version to point to the virtual
-environment (assumes version Python `3.12.7` is what is installed on your
+environment (assumes version Python `3.12.9` is what is installed on your
 machine):
 
 ```sh
 cd notifications-admin
-pyenv virtualenv 3.12.7 notify-admin
+pyenv virtualenv 3.12.9 notify-admin
 pyenv local notify-admin
 ```
 
@@ -299,7 +299,7 @@ environment with the newer version of Python you just installed:
 
 ```sh
 cd notifications-admin
-pyenv virtualenv 3.12.7 notify-admin
+pyenv virtualenv 3.12.9 notify-admin
 pyenv local notify-admin
 ```
 
