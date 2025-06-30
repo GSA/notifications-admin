@@ -63,7 +63,7 @@
     const buttonContent = this.buttonContent[buttonState](this.fieldLabel);
     const stickyClass = expanded ? ' js-stick-at-bottom-when-scrolling' : '';
 
-    return $(`<div class="selection-footer${stickyClass}">
+    return $(`<div class="selection-footer${stickyClass} margin-top-2">
               <button
                 class="govuk-button govuk-button--secondary selection-footer__button usa-button usa-button--outline"
                 aria-expanded="${expanded ? 'true' : 'false'}"
@@ -78,8 +78,6 @@
 
     this.module.$formGroup.append(this.$el);
 
-    // make footer sticky if expanded, clear up from it being sticky if not
-    GOVUK.stickAtBottomWhenScrolling.recalculate();
   };
 
   function CollapsibleCheckboxes () {}
@@ -97,6 +95,7 @@
     this.total = this.$checkboxes.length;
     this.legendText = this.$fieldset.find('legend').first().text().trim();
     this.expanded = false;
+    this.checkUncheckButtonsAdded = false;
 
     this.addHeadingHideLegend();
 
@@ -124,6 +123,44 @@
 
     this.$fieldset.find('legend').addClass('usa-sr-only');
   };
+  CollapsibleCheckboxes.prototype.addCheckUncheckAllButtons = function() {
+    const $buttonsContainer = $('<div class="check-uncheck-all-buttons margin-bottom-2"></div>');
+
+    this.$toggleAllButton = $('<button type="button" class="usa-button usa-button--outline usa-button--small">Select all</button>');
+
+    $buttonsContainer.append(this.$toggleAllButton);
+
+    this.summary.$el.after($buttonsContainer);
+
+    this.$toggleAllButton.on('click', this.toggleAll.bind(this));
+
+    this.updateToggleButtonText();
+  };
+  CollapsibleCheckboxes.prototype.toggleAll = function(e) {
+    e.preventDefault();
+    const allChecked = this.$checkboxes.filter(':checked').length === this.$checkboxes.length;
+
+    if (allChecked) {
+      this.$checkboxes.prop('checked', false);
+    } else {
+      this.$checkboxes.prop('checked', true);
+    }
+
+    this.handleSelection();
+    this.updateToggleButtonText();
+  };
+  CollapsibleCheckboxes.prototype.updateToggleButtonText = function() {
+    if (!this.$toggleAllButton) return;
+
+    const checkedCount = this.$checkboxes.filter(':checked').length;
+    const allChecked = checkedCount === this.$checkboxes.length;
+
+    if (allChecked) {
+      this.$toggleAllButton.text('Deselect all');
+    } else {
+      this.$toggleAllButton.text('Select all');
+    }
+  };
   CollapsibleCheckboxes.prototype.expand = function(e) {
     if (e !== undefined) { e.preventDefault(); }
 
@@ -132,6 +169,15 @@
       this.expanded = true;
       this.summary.update(this.getSelection());
       this.footer.update(this.expanded);
+
+      if (!this.checkUncheckButtonsAdded) {
+        this.addCheckUncheckAllButtons();
+        this.checkUncheckButtonsAdded = true;
+      } else {
+        if (this.$toggleAllButton) {
+          this.$toggleAllButton.parent().show();
+        }
+      }
     }
 
     // shift focus whether expanded or not
@@ -145,6 +191,10 @@
       this.expanded = false;
       this.summary.update(this.getSelection());
       this.footer.update(this.expanded);
+
+      if (this.$toggleAllButton) {
+        this.$toggleAllButton.parent().hide();
+      }
     }
 
     // shift focus whether expanded or not
@@ -159,6 +209,7 @@
   };
   CollapsibleCheckboxes.prototype.handleSelection = function(e) {
     this.summary.update(this.getSelection(), this.total, this.fieldLabel);
+    this.updateToggleButtonText();
   };
   CollapsibleCheckboxes.prototype.bindEvents = function() {
     const self = this;

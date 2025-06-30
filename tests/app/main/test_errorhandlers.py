@@ -1,6 +1,7 @@
 import pytest
 from flask import Response, url_for
 from flask_wtf.csrf import CSRFError
+
 from notifications_python_client.errors import HTTPError
 
 

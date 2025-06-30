@@ -1,6 +1,9 @@
 module.exports = {
   collectCoverage: true,
   coverageDirectory: './coverage',
+  coveragePathIgnorePatterns: [
+    'support/polyfills.js'
+  ],
   coverageThreshold: {
     global: {
       branches: 75,

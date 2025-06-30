@@ -3,9 +3,9 @@ from unittest.mock import ANY, Mock, call
 import pytest
 from flask import url_for
 from freezegun import freeze_time
-from notifications_python_client.errors import HTTPError
 
 import app
+from notifications_python_client.errors import HTTPError
 from tests import service_json
 from tests.conftest import (
     SERVICE_ONE_ID,

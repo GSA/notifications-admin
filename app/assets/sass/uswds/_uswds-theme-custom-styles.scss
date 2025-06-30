@@ -547,11 +547,17 @@ td.table-empty-message {
   background-color: #a1d3ff;
 }
 
+#template-list,
+#template-list > div,
+.sticky-scroll-area {
+  position: relative;
+}
+
 #template-list {
   max-height: 500px;
   overflow-y: auto;
   padding: units(1) 0 units(1) units(1);
-  margin: units(2) 0 units(5);
+  margin: units(2) 0 units(6);
   ul {
     padding: 0;
     margin: 0;
@@ -1076,4 +1082,16 @@ nav.nav {
 
 .usa-site-alert .usa-alert .usa-alert__body {
   max-width: 75rem;
+}
+
+.usa-form-group--nested {
+  margin-top: 0;
+}
+
+.selection-content > ul > li.usa-checkbox {
+  margin-top: 1rem;
+}
+
+.selection-content .usa-form-group--nested li.usa-checkbox {
+  margin-top: 0;
 }

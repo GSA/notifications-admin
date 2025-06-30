@@ -24,7 +24,6 @@ from flask_talisman import Talisman
 from flask_wtf import CSRFProtect
 from flask_wtf.csrf import CSRFError
 from itsdangerous import BadSignature
-from notifications_python_client.errors import HTTPError
 from werkzeug.exceptions import HTTPException as WerkzeugHTTPException
 from werkzeug.exceptions import abort
 from werkzeug.local import LocalProxy
@@ -35,6 +34,7 @@ from app.config import configs
 from app.extensions import redis_client
 from app.formatters import (
     convert_markdown_template,
+    convert_time_unixtimestamp,
     convert_to_boolean,
     format_auth_type,
     format_billions,
@@ -111,6 +111,7 @@ from app.notify_client.user_api_client import user_api_client
 from app.url_converters import SimpleDateTypeConverter, TemplateTypeConverter
 from app.utils.api_health import is_api_down
 from app.utils.govuk_frontend_jinja.flask_ext import init_govuk_frontend
+from notifications_python_client.errors import HTTPError
 from notifications_utils import logging, request_helper
 from notifications_utils.formatters import (
     formatted_list,
@@ -672,6 +673,7 @@ def add_template_filters(application):
         format_thousands,
         id_safe,
         convert_to_boolean,
+        convert_time_unixtimestamp,
         format_list_items,
         iteration_count,
         recipient_count,

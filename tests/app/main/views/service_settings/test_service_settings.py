@@ -5,9 +5,9 @@ from uuid import uuid4
 import pytest
 from flask import url_for
 from freezegun import freeze_time
-from notifications_python_client.errors import HTTPError
 
 import app
+from notifications_python_client.errors import HTTPError
 from tests import (
     find_element_by_tag_and_partial_text,
     organization_json,
@@ -52,7 +52,7 @@ def _mock_get_service_settings_page_common(
             [
                 "",
                 "Service name Test Service Change service name",
-                "Send text messages On Change your settings for sending text messages",
+                "Send text messages On",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",
             ],
@@ -62,7 +62,7 @@ def _mock_get_service_settings_page_common(
             [
                 "",
                 "Service name Test Service Change service name",
-                "Send text messages On Change your settings for sending text messages",
+                "Send text messages On",
                 "Text message senders (Only visible to Platform Admins) GOVUK Manage text message senders",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",
@@ -190,7 +190,7 @@ def test_send_files_by_email_row_on_settings_page(
             ["email", "sms", "international_sms"],
             [
                 "Service name service one Change service name",
-                "Send text messages On Change your settings for sending text messages",
+                "Send text messages On",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",
             ],
@@ -199,7 +199,7 @@ def test_send_files_by_email_row_on_settings_page(
             ["email", "sms", "email_auth"],
             [
                 "Service name service one Change service name",
-                "Send text messages On Change your settings for sending text messages",
+                "Send text messages On",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",
             ],

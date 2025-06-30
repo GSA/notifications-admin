@@ -12,10 +12,10 @@ from zipfile import BadZipFile
 
 import pytest
 from flask import url_for
-from notifications_python_client.errors import HTTPError
 from xlrd.biffh import XLRDError
 from xlrd.xldate import XLDateAmbiguous, XLDateError, XLDateNegative, XLDateTooLarge
 
+from notifications_python_client.errors import HTTPError
 from notifications_utils.recipients import RecipientCSV
 from notifications_utils.template import SMSPreviewTemplate
 from tests import (
