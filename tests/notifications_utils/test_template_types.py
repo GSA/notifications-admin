@@ -480,11 +480,11 @@ def test_markdown_in_templates(
         #     "email",
         #     'style="word-wrap: break-word; color: #1D70B8;"',
         # ),
-        (SMSPreviewTemplate, "sms", 'class="govuk-link govuk-link--no-visited-state"'),
+        (SMSPreviewTemplate, "sms", 'class="usa-link usa-link--external"'),
         (
             BroadcastPreviewTemplate,
             "broadcast",
-            'class="govuk-link govuk-link--no-visited-state"',
+            'class="usa-link usa-link--external"',
         ),
         pytest.param(
             SMSBodyPreviewTemplate,
@@ -558,7 +558,7 @@ def test_makes_links_out_of_URLs_without_protocol_in_sms_and_broadcast(
 ):
     assert (
         f"<a "
-        f'class="govuk-link govuk-link--no-visited-state" '
+        f'class="usa-link usa-link--external" '
         f'href="http://{url_with_entities_replaced}">'
         f"{url_with_entities_replaced}"
         f"</a>"

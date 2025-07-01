@@ -11,6 +11,13 @@ const routes = {
     { label: 'Notify.gov Sign In', path: '/sign-in' },
   ],
 
+  authenticated: [
+    {
+      label: 'SMS Template Preview',
+      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/send/a4e530e7-cae2-4e24-a1e9-752141a0b58e/one-off/step-0',
+    },
+  ],
+
   // Using Notify section
   usingNotify: [
     { label: 'Get Started', path: '/using-notify/get-started' },
@@ -24,11 +31,26 @@ const routes = {
   // Best Practices subsection
   bestPractices: [
     { label: 'Clear Goals', path: '/using-notify/best-practices/clear-goals' },
-    { label: 'Rules And Regulations', path: '/using-notify/best-practices/rules-and-regulations' },
-    { label: 'Establish Trust', path: '/using-notify/best-practices/establish-trust' },
-    { label: 'Write For Action', path: '/using-notify/best-practices/write-for-action' },
-    { label: 'Multiple Languages', path: '/using-notify/best-practices/multiple-languages' },
-    { label: 'Benchmark Performance', path: '/using-notify/best-practices/benchmark-performance' },
+    {
+      label: 'Rules And Regulations',
+      path: '/using-notify/best-practices/rules-and-regulations',
+    },
+    {
+      label: 'Establish Trust',
+      path: '/using-notify/best-practices/establish-trust',
+    },
+    {
+      label: 'Write For Action',
+      path: '/using-notify/best-practices/write-for-action',
+    },
+    {
+      label: 'Multiple Languages',
+      path: '/using-notify/best-practices/multiple-languages',
+    },
+    {
+      label: 'Benchmark Performance',
+      path: '/using-notify/best-practices/benchmark-performance',
+    },
   ],
 
   // About section
@@ -45,6 +67,7 @@ const sublinks = [
   ...routes.usingNotify,
   ...routes.bestPractices,
   ...routes.about,
+  ...routes.authenticated,
   // Add more sections here as needed
 ];
 

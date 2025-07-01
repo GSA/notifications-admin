@@ -34,12 +34,6 @@ $path: '/static/images/';
 // Dependencies from GOV.UK Frontend, packaged to be specific to this application
 @import './govuk-frontend/all';
 
-// Custom overrides
-.govuk-link {
-    font-weight: bold;
-    color: #005ea5;
-}
-
 // Specific to this application
 @import 'local/typography';
 @import 'grids';
