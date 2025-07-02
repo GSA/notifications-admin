@@ -1668,13 +1668,6 @@ table caption {
     padding: .75em 1.25em .5625em 0
 }
 
-.govuk-link,
-a {
-    font-family: "nta", Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale
-}
-
 /*! Copyright (c) 2011 by Margaret Calvert & Henrik Kubel. All rights reserved. The font has been customised for exclusive use on gov.uk. This cut is not commercially available. */
 @font-face {
     font-family: "nta";
@@ -1713,107 +1706,12 @@ a {
 }
 
 @media print {
-
-    .govuk-link,
-    a {
-        font-family: sans-serif
-    }
-}
-
-.govuk-link:focus,
-a:focus {
-    outline: 3px solid #ffbf47;
-    outline-offset: 0;
-    background-color: #ffbf47
-}
-
-.govuk-link:link,
-a:link {
-    color: #005ea5
-}
-
-.govuk-link:visited,
-a:visited {
-    color: #4c2c92
-}
-
-.govuk-link:hover,
-a:hover {
-    color: #2b8cc4
-}
-
-.govuk-link:active,
-a:active {
-    color: #2b8cc4
-}
-
-.govuk-link:focus,
-a:focus {
-    color: #0b0c0c
 }
 
 @media print {
-
-    .govuk-link[href^="/"]::after,
-    a[href^="/"]::after,
-    .govuk-link[href^="http://"]::after,
-    a[href^="http://"]::after,
-    .govuk-link[href^="https://"]::after,
-    a[href^="https://"]::after {
-        content: " (" attr(href) ")";
-        font-size: 90%;
-        word-wrap: break-word
-    }
-}
-
-.govuk-link--muted:link,
-.govuk-link--muted:visited,
-.govuk-link--muted:hover,
-.govuk-link--muted:active {
-    color: #6f777b
-}
-
-.govuk-link--muted:focus {
-    color: #0b0c0c
-}
-
-.govuk-link--text-colour:link,
-.govuk-link--text-colour:visited,
-.govuk-link--text-colour:hover,
-.govuk-link--text-colour:active,
-.govuk-link--text-colour:focus {
-    color: #0b0c0c
 }
 
 @media print {
-
-    .govuk-link--text-colour:link,
-    .govuk-link--text-colour:visited,
-    .govuk-link--text-colour:hover,
-    .govuk-link--text-colour:active,
-    .govuk-link--text-colour:focus {
-        color: #000
-    }
-}
-
-.govuk-link--no-visited-state:link {
-    color: #005ea5
-}
-
-.govuk-link--no-visited-state:visited {
-    color: #005ea5
-}
-
-.govuk-link--no-visited-state:hover {
-    color: #2b8cc4
-}
-
-.govuk-link--no-visited-state:active {
-    color: #2b8cc4
-}
-
-.govuk-link--no-visited-state:focus {
-    color: #0b0c0c
 }
 
 .govuk-list {
