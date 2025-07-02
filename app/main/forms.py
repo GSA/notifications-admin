@@ -1890,14 +1890,3 @@ class AdminClearCacheForm(StripWhitespaceForm):
     def validate_model_type(self, field):
         if not field.data:
             raise ValidationError("Select at least one option")
-
-
-class ChangeSecurityKeyNameForm(StripWhitespaceForm):
-    security_key_name = GovukTextInputField(
-        "Name of key",
-        validators=[
-            DataRequired(message="Cannot be empty"),
-            MustContainAlphanumericCharacters(),
-            Length(max=255, message="Name of key must be 255 characters or fewer"),
-        ],
-    )
