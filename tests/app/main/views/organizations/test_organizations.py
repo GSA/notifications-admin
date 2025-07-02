@@ -64,7 +64,7 @@ def test_organization_page_shows_all_organizations(
     assert normalize_spaces(archived.parent.text) == "Test 2 - archived 2 live services"
 
     assert (
-        normalize_spaces(page.select_one("a.govuk-button--secondary").text)
+        normalize_spaces(page.select_one("a.usa-button").text)
         == "New organization"
     )
     get_organizations.assert_called_once_with()
