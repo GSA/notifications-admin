@@ -16,6 +16,11 @@ const routes = {
       label: 'SMS Template Preview',
       path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/send/a4e530e7-cae2-4e24-a1e9-752141a0b58e/one-off/step-0',
     },
+    // Pages with govuk buttons that need testing
+    {
+      label: 'API Keys',
+      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/api/keys',
+    },
   ],
 
   // Using Notify section
