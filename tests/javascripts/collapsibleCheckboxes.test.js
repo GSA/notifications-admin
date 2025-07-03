@@ -122,7 +122,7 @@ describe('Collapsible fieldset', () => {
 
     test("has a button to expand the fieldset", () => {
 
-      const button = formGroup.querySelector('.usa-button');
+      const button = formGroup.querySelector('.selection-footer__button');
 
       expect(button).not.toBeNull();
       expect(button.textContent.trim()).toEqual('Choose folders');
@@ -131,7 +131,7 @@ describe('Collapsible fieldset', () => {
 
     test("has the correct aria attributes on the button", () => {
 
-      expect(helpers.element(formGroup.querySelector('.usa-button')).hasAttributesSetTo({
+      expect(helpers.element(formGroup.querySelector('.selection-footer__button')).hasAttributesSetTo({
         'aria-controls': fieldset.getAttribute('id'),
         'aria-expanded': 'false'
       })).toBe(true);
@@ -231,7 +231,7 @@ describe('Collapsible fieldset', () => {
       // start module
       window.GOVUK.modules.start();
 
-      helpers.triggerEvent(formGroup.querySelector('.usa-button'), 'click');
+      helpers.triggerEvent(formGroup.querySelector('.selection-footer__button'), 'click');
 
     });
 
@@ -249,13 +249,13 @@ describe('Collapsible fieldset', () => {
 
     test("it uses ARIA to mark the checkboxes as expanded", () => {
 
-      expect(formGroup.querySelector('.usa-button').getAttribute('aria-expanded')).toEqual('true');
+      expect(formGroup.querySelector('.selection-footer__button').getAttribute('aria-expanded')).toEqual('true');
 
     });
 
     test("it changes it's text to indicate it's new action", () => {
 
-      expect(formGroup.querySelector('.usa-button').textContent.trim()).toEqual("Done choosing folders");
+      expect(formGroup.querySelector('.selection-footer__button').textContent.trim()).toEqual("Done choosing folders");
 
     });
 
@@ -269,10 +269,10 @@ describe('Collapsible fieldset', () => {
       window.GOVUK.modules.start();
 
       // show the checkboxes
-      helpers.triggerEvent(formGroup.querySelector('.usa-button'), 'click');
+      helpers.triggerEvent(formGroup.querySelector('.selection-footer__button'), 'click');
 
       // click the button
-      helpers.triggerEvent(formGroup.querySelector('.usa-button'), 'click');
+      helpers.triggerEvent(formGroup.querySelector('.selection-footer__button'), 'click');
 
     });
 
@@ -290,13 +290,13 @@ describe('Collapsible fieldset', () => {
 
     test("it uses ARIA to mark the checkboxes as collapsed", () => {
 
-      expect(formGroup.querySelector('.usa-button').getAttribute('aria-expanded')).toEqual('false');
+      expect(formGroup.querySelector('.selection-footer__button').getAttribute('aria-expanded')).toEqual('false');
 
     });
 
     test("it changes it's text to indicate it's new action", () => {
 
-      expect(formGroup.querySelector('.usa-button').textContent.trim()).toEqual("Choose folders");
+      expect(formGroup.querySelector('.selection-footer__button').textContent.trim()).toEqual("Choose folders");
 
     });
   });
@@ -311,7 +311,7 @@ describe('Collapsible fieldset', () => {
         window.GOVUK.modules.start();
 
         // show the checkboxes
-        helpers.triggerEvent(formGroup.querySelector('.usa-button'), 'click');
+        helpers.triggerEvent(formGroup.querySelector('.selection-footer__button'), 'click');
 
         expect(formGroup.querySelector('.selection-footer').previousElementSibling.nodeName).toBe('FIELDSET');
 
@@ -329,7 +329,7 @@ describe('Collapsible fieldset', () => {
         window.GOVUK.modules.start();
 
         // show the checkboxes
-        helpers.triggerEvent(formGroup.querySelector('.usa-button'), 'click');
+        helpers.triggerEvent(formGroup.querySelector('.selection-footer__button'), 'click');
 
         expect(formGroup.querySelector('.selection-footer').previousElementSibling.nodeName).toBe('FIELDSET');
 
@@ -348,7 +348,7 @@ describe('Collapsible fieldset', () => {
         window.GOVUK.modules.start();
 
         // show the checkboxes
-        helpers.triggerEvent(formGroup.querySelector('.usa-button'), 'click');
+        helpers.triggerEvent(formGroup.querySelector('.selection-footer__button'), 'click');
 
       });
 
@@ -361,7 +361,7 @@ describe('Collapsible fieldset', () => {
       test("is removed when the fieldset is collapsed", () => {
 
         // click the button to collapse the fieldset
-        helpers.triggerEvent(formGroup.querySelector('.usa-button'), 'click');
+        helpers.triggerEvent(formGroup.querySelector('.selection-footer__button'), 'click');
 
         expect(formGroup.querySelector('.selection-footer').classList.contains('js-stick-at-bottom-when-scrolling')).toBe(false);
 
@@ -376,7 +376,7 @@ describe('Collapsible fieldset', () => {
     beforeEach(() => {
       window.GOVUK.modules.start();
 
-      helpers.triggerEvent(formGroup.querySelector('.usa-button'), 'click');
+      helpers.triggerEvent(formGroup.querySelector('.selection-footer__button'), 'click');
     });
 
     test("adds a 'Select all' button when checkboxes are shown", () => {
@@ -420,7 +420,7 @@ describe('Collapsible fieldset', () => {
 
     test("button is hidden when fieldset is collapsed", () => {
       const toggleButton = document.querySelector('.usa-button--small');
-      const doneButton = formGroup.querySelector('.usa-button');
+      const doneButton = formGroup.querySelector('.selection-footer__button');
 
       expect(toggleButton.parentElement.style.display).not.toEqual('none');
 
@@ -436,13 +436,13 @@ describe('Collapsible fieldset', () => {
     test("shows toggle button again when fieldset is re-opened", () => {
       window.GOVUK.modules.start();
 
-      helpers.triggerEvent(formGroup.querySelector('.usa-button'), 'click');
+      helpers.triggerEvent(formGroup.querySelector('.selection-footer__button'), 'click');
       const toggleButton = document.querySelector('.usa-button--small');
       expect(toggleButton).not.toBeNull();
 
-      helpers.triggerEvent(formGroup.querySelector('.usa-button'), 'click');
+      helpers.triggerEvent(formGroup.querySelector('.selection-footer__button'), 'click');
 
-      helpers.triggerEvent(formGroup.querySelector('.usa-button'), 'click');
+      helpers.triggerEvent(formGroup.querySelector('.selection-footer__button'), 'click');
 
       const toggleButtonAfter = document.querySelector('.usa-button--small');
       expect(toggleButtonAfter).not.toBeNull();
@@ -454,7 +454,7 @@ describe('Collapsible fieldset', () => {
   describe("when the selection changes", () => {
 
     const showCheckboxes = () => {
-      helpers.triggerEvent(formGroup.querySelector('.usa-button'), 'click');
+      helpers.triggerEvent(formGroup.querySelector('.selection-footer__button'), 'click');
     };
 
     const checkFirstCheckbox = () => {
