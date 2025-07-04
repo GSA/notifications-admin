@@ -11,6 +11,7 @@ from app.utils.user_permissions import (
     translate_permissions_from_ui_to_db,
 )
 from notifications_utils.url_safe_token import generate_token
+from app.enums import InvitedUserStatus
 
 
 class InviteApiClient(NotifyAdminAPIClient):
@@ -94,7 +95,7 @@ class InviteApiClient(NotifyAdminAPIClient):
         return self.get(url=f"/invite/service/check/{token}")["data"]
 
     def cancel_invited_user(self, service_id, invited_user_id):
-        data = {"status": "cancelled"}
+        data = {"status": InvitedUserStatus.CANCELLED.value}
         data = _attach_current_user(data)
         self.post(url=f"/service/{service_id}/invite/{invited_user_id}", data=data)
 
@@ -131,7 +132,7 @@ class InviteApiClient(NotifyAdminAPIClient):
     @cache.delete("service-{service_id}")
     @cache.delete("user-{invited_user_id}")
     def accept_invite(self, service_id, invited_user_id):
-        data = {"status": "accepted"}
+        data = {"status": InvitedUserStatus.ACCEPTED.value}
         self.post(url=f"/service/{service_id}/invite/{invited_user_id}", data=data)
 
 

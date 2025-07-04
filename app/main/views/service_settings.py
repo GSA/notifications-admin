@@ -52,6 +52,7 @@ from app.utils import DELIVERED_STATUSES, FAILURE_STATUSES, SENDING_STATUSES
 from app.utils.time import parse_naive_dt
 from app.utils.user import user_has_permissions, user_is_platform_admin
 from notifications_python_client.errors import HTTPError
+from app.enums import VerificationStatus
 
 PLATFORM_ADMIN_SERVICE_PERMISSIONS = OrderedDict(
     [
@@ -397,10 +398,10 @@ def get_service_verify_reply_to_address_partials(service_id, notification_id):
     if replace:
         existing = current_service.get_email_reply_to_address(replace)
         existing_is_default = existing["is_default"]
-    verification_status = "pending"
+    verification_status = VerificationStatus.PENDING.value
     is_default = True if (request.args.get("is_default", False) == "True") else False
     if notification["status"] in DELIVERED_STATUSES:
-        verification_status = "success"
+        verification_status = VerificationStatus.SUCCESS.value
         if notification["to"] not in [
             i["email_address"] for i in current_service.email_reply_to_addresses
         ]:
@@ -441,7 +442,7 @@ def get_service_verify_reply_to_address_partials(service_id, notification_id):
             first_email_address=first_email_address,
             replace=replace,
         ),
-        "stop": 0 if verification_status == "pending" else 1,
+        "stop": 0 if verification_status == VerificationStatus.PENDING.value else 1,
     }
 
 

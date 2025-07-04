@@ -1,5 +1,6 @@
 from werkzeug.utils import cached_property
 
+from app.enums import JobStatus, NotificationStatus
 from app.models import JSONModel, ModelList, PaginatedModelList
 from app.notify_client.job_api_client import job_api_client
 from app.notify_client.notification_api_client import notification_api_client
@@ -32,11 +33,11 @@ class Job(JSONModel):
 
     @property
     def cancelled(self):
-        return self.status == "cancelled"
+        return self.status == JobStatus.CANCELLED.value
 
     @property
     def scheduled(self):
-        return self.status == "scheduled"
+        return self.status == JobStatus.SCHEDULED.value
 
     @property
     def scheduled_for(self):
@@ -61,16 +62,18 @@ class Job(JSONModel):
 
     @property
     def notifications_delivered(self):
-        return self._aggregate_statistics("delivered", "sent")
+        return self._aggregate_statistics(
+            NotificationStatus.DELIVERED.value, NotificationStatus.SENT.value
+        )
 
     @property
     def notifications_failed(self):
         return self._aggregate_statistics(
-            "failed",
-            "technical-failure",
-            "temporary-failure",
-            "permanent-failure",
-            "cancelled",
+            NotificationStatus.FAILED.value,
+            NotificationStatus.TECHNICAL_FAILURE.value,
+            NotificationStatus.TEMPORARY_FAILURE.value,
+            NotificationStatus.PERMANENT_FAILURE.value,
+            NotificationStatus.CANCELLED.value,
         )
 
     @property
@@ -95,7 +98,7 @@ class Job(JSONModel):
 
     @property
     def still_processing(self):
-        return self.status != "finished" or self.percentage_complete < 100
+        return self.status != JobStatus.FINISHED.value or self.percentage_complete < 100
 
     @cached_property
     def finished_processing(self):

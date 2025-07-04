@@ -22,6 +22,7 @@ from app.utils.user_permissions import (
     translate_permissions_from_db_to_ui,
 )
 from notifications_python_client.errors import HTTPError
+from app.enums import InvitedUserStatus
 
 
 def _get_service_id_from_view_args():
@@ -566,7 +567,7 @@ class InvitedUser(JSONModel):
         # current_app.logger.warning(
         #    f"Checking invited user {self.id} for permissions: {permissions}"
         # )
-        if self.status == "cancelled":
+        if self.status == InvitedUserStatus.CANCELLED.value:
             return False
         return set(self.permissions) > set(permissions)
 
@@ -574,7 +575,7 @@ class InvitedUser(JSONModel):
         # current_app.logger.warn(
         #    f"Checking invited user {self.id} for permission: {permission} on service {service_id}"
         # )
-        if self.status == "cancelled":
+        if self.status == InvitedUserStatus.CANCELLED.value:
             return False
         return self.service == service_id and permission in self.permissions
 

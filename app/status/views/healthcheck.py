@@ -5,6 +5,7 @@ from flask import current_app, jsonify, request
 from redis import RedisError
 
 from app import status_api_client, version
+from app.enums import HealthStatus
 from app.extensions import redis_client
 from app.status import status
 from notifications_python_client.errors import HTTPError
@@ -13,16 +14,16 @@ from notifications_python_client.errors import HTTPError
 @status.route("/_status", methods=["GET"])
 def show_status():
     if request.args.get("elb", None) or request.args.get("simple", None):
-        return jsonify(status="ok"), 200
+        return jsonify(status=HealthStatus.OK.value), 200
     else:
         try:
             api_status = status_api_client.get_status()
         except HTTPError as err:
             current_app.logger.exception("API failed to respond")
-            return jsonify(status="error", message=str(err.message)), 500
+            return jsonify(status=HealthStatus.ERROR.value, message=str(err.message)), 500
         return (
             jsonify(
-                status="ok",
+                status=HealthStatus.OK.value,
                 api=api_status,
                 git_commit=version.__git_commit__,
                 build_time=version.__time__,
@@ -60,10 +61,10 @@ def show_redis_status():
             )
         except HTTPError as err:
             current_app.logger.exception("API failed to respond")
-            return jsonify(status="error", message=str(err.message)), 500
+            return jsonify(status=HealthStatus.ERROR.value, message=str(err.message)), 500
         return (
             jsonify(
-                status="ok",
+                status=HealthStatus.OK.value,
                 api=api_status,
                 git_commit=version.__git_commit__,
                 build_time=version.__time__,
@@ -76,7 +77,7 @@ def show_redis_status():
         )
         return (
             jsonify(
-                status=f"error: {err}",
+                status=f"{HealthStatus.ERROR.value}: {err}",
                 api=api_status,
                 git_commit=version.__git_commit__,
                 build_time=version.__time__,

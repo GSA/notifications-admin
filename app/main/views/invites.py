@@ -6,6 +6,7 @@ from app.main import main
 from app.models.organization import Organization
 from app.models.service import Service
 from app.models.user import InvitedOrgUser, InvitedUser, OrganizationUsers, User, Users
+from app.enums import InvitedUserStatus, InvitedOrgUserStatus
 
 
 @main.route("/invitation/<token>")
@@ -29,14 +30,14 @@ def accept_invite(token):
 
         abort(403)
 
-    if invited_user.status == "cancelled":
+    if invited_user.status == InvitedUserStatus.CANCELLED.value:
         service = Service.from_id(invited_user.service)
         return render_template(
             "views/cancelled-invitation.html",
             from_user=invited_user.from_user.name,
             service_name=service.name,
         )
-    if invited_user.status == "accepted":
+    if invited_user.status == InvitedUserStatus.ACCEPTED.value:
         session.pop("invited_user_id", None)
         service = Service.from_id(invited_user.service)
         return redirect(
@@ -104,7 +105,7 @@ def accept_org_invite(token):
 
         abort(403)
 
-    if invited_org_user.status == "cancelled":
+    if invited_org_user.status == InvitedOrgUserStatus.CANCELLED.value:
         organization = Organization.from_id(invited_org_user.organization)
         return render_template(
             "views/cancelled-invitation.html",
@@ -112,7 +113,7 @@ def accept_org_invite(token):
             organization_name=organization.name,
         )
 
-    if invited_org_user.status == "accepted":
+    if invited_org_user.status == InvitedOrgUserStatus.ACCEPTED.value:
         session.pop("invited_org_user_id", None)
         return redirect(
             url_for("main.organization_dashboard", org_id=invited_org_user.organization)

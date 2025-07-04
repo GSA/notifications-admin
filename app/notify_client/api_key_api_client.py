@@ -1,9 +1,10 @@
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user
+from app.enums import ApiKeyType
 
 # must match key types in notifications-api/app/models.py
-KEY_TYPE_NORMAL = "normal"
-KEY_TYPE_TEAM = "team"
-KEY_TYPE_TEST = "test"
+KEY_TYPE_NORMAL = ApiKeyType.NORMAL.value
+KEY_TYPE_TEAM = ApiKeyType.TEAM.value
+KEY_TYPE_TEST = ApiKeyType.TEST.value
 
 
 class ApiKeyApiClient(NotifyAdminAPIClient):

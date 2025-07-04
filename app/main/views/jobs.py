@@ -23,6 +23,7 @@ from app import (
     notification_api_client,
     service_api_client,
 )
+from app.enums import JobStatus
 from app.formatters import get_time_left, message_count_noun
 from app.main import main
 from app.main.forms import SearchNotificationsForm
@@ -398,7 +399,7 @@ def get_job_partials(job):
         counts=_get_job_counts(job),
         status=filter_args["status"],
         notifications_deleted=(
-            job.status == "finished" and not notifications["notifications"]
+            job.status == JobStatus.FINISHED.value and not notifications["notifications"]
         ),
     )
     service_data_retention_days = current_service.get_days_of_retention(
