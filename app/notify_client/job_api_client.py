@@ -1,10 +1,10 @@
 import datetime
 from zoneinfo import ZoneInfo
 
+from app.enums import JobStatus
 from app.extensions import redis_client
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
 from app.utils.csv import get_user_preferred_timezone
-from app.enums import JobStatus
 
 
 class JobApiClient(NotifyAdminAPIClient):
@@ -58,7 +58,7 @@ class JobApiClient(NotifyAdminAPIClient):
                 job["original_file_name"],
             )
             for job in self.get_jobs(service_id, limit_days=0)["data"]
-            if job["job_status"] != JobStatus.CANCELLED.value
+            if job["job_status"] != JobStatus.CANCELLED
         )
 
     def get_page_of_jobs(self, service_id, *, page, statuses=None, limit_days=None):

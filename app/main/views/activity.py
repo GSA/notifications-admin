@@ -79,9 +79,6 @@ def handle_pagination(jobs, service_id, page):
     return prev_page, next_page, pagination
 
 
-
-
-
 def get_job_statistics(job, status):
     statistics = job.get("statistics", [])
     for stat in statistics:

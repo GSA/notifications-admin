@@ -5,6 +5,7 @@ from flask import abort, current_app, request, session
 from flask_login import AnonymousUserMixin, UserMixin, login_user, logout_user
 from werkzeug.utils import cached_property
 
+from app.enums import InvitedUserStatus
 from app.event_handlers import (
     create_add_user_to_service_event,
     create_set_user_permissions_event,
@@ -22,7 +23,6 @@ from app.utils.user_permissions import (
     translate_permissions_from_db_to_ui,
 )
 from notifications_python_client.errors import HTTPError
-from app.enums import InvitedUserStatus
 
 
 def _get_service_id_from_view_args():

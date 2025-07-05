@@ -21,6 +21,7 @@ from app import (
     organizations_client,
     service_api_client,
 )
+from app.enums import VerificationStatus
 from app.event_handlers import (
     create_archive_service_event,
     create_resume_service_event,
@@ -52,7 +53,6 @@ from app.utils import DELIVERED_STATUSES, FAILURE_STATUSES, SENDING_STATUSES
 from app.utils.time import parse_naive_dt
 from app.utils.user import user_has_permissions, user_is_platform_admin
 from notifications_python_client.errors import HTTPError
-from app.enums import VerificationStatus
 
 PLATFORM_ADMIN_SERVICE_PERMISSIONS = OrderedDict(
     [

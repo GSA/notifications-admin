@@ -5,13 +5,13 @@ from urllib.parse import unquote
 from flask import current_app, request
 
 from app import redis_client
+from app.enums import InvitedUserStatus
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
 from app.utils.user_permissions import (
     all_ui_permissions,
     translate_permissions_from_ui_to_db,
 )
 from notifications_utils.url_safe_token import generate_token
-from app.enums import InvitedUserStatus
 
 
 class InviteApiClient(NotifyAdminAPIClient):

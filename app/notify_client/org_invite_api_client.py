@@ -1,5 +1,5 @@
-from app.notify_client import NotifyAdminAPIClient, _attach_current_user
 from app.enums import InvitedOrgUserStatus
+from app.notify_client import NotifyAdminAPIClient, _attach_current_user
 
 
 class OrgInviteApiClient(NotifyAdminAPIClient):
