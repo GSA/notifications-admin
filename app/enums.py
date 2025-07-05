@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import Enum, StrEnum
 
 
-class NotificationStatus(Enum):
+class NotificationStatus(StrEnum):
     CREATED = "created"
     PENDING = "pending"
     SENDING = "sending"
@@ -17,13 +17,13 @@ class NotificationStatus(Enum):
     CANCELLED = "cancelled"
 
 
-class ApiKeyType(Enum):
+class ApiKeyType(StrEnum):
     NORMAL = "normal"
     TEAM = "team"
     TEST = "test"
 
 
-class JobStatus(Enum):
+class JobStatus(StrEnum):
     PENDING = "pending"
     IN_PROGRESS = "in progress"
     FINISHED = "finished"
@@ -34,28 +34,28 @@ class JobStatus(Enum):
     SENT_TO_DVLA = "sent to dvla"
 
 
-class InvitedUserStatus(Enum):
+class InvitedUserStatus(StrEnum):
     ACCEPTED = "accepted"
     CANCELLED = "cancelled"
     EXPIRED = "expired"
 
 
-class InvitedOrgUserStatus(Enum):
+class InvitedOrgUserStatus(StrEnum):
     ACCEPTED = "accepted"
     CANCELLED = "cancelled"
 
 
-class VerificationStatus(Enum):
+class VerificationStatus(StrEnum):
     PENDING = "pending"
     SUCCESS = "success"
 
 
-class HealthStatus(Enum):
+class HealthStatus(StrEnum):
     OK = "ok"
     ERROR = "error"
 
 
-class AuthType(Enum):
+class AuthType(StrEnum):
     EMAIL_AUTH = "email_auth"
     SMS_AUTH = "sms_auth"
 

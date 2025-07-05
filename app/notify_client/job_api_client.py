@@ -9,17 +9,17 @@ from app.enums import JobStatus
 
 class JobApiClient(NotifyAdminAPIClient):
     JOB_STATUSES = {
-        JobStatus.SCHEDULED.value,
-        JobStatus.PENDING.value,
-        JobStatus.IN_PROGRESS.value,
-        JobStatus.FINISHED.value,
-        JobStatus.CANCELLED.value,
-        JobStatus.SENDING_LIMITS_EXCEEDED.value,
-        JobStatus.READY_TO_SEND.value,
-        JobStatus.SENT_TO_DVLA.value,
+        JobStatus.SCHEDULED,
+        JobStatus.PENDING,
+        JobStatus.IN_PROGRESS,
+        JobStatus.FINISHED,
+        JobStatus.CANCELLED,
+        JobStatus.SENDING_LIMITS_EXCEEDED,
+        JobStatus.READY_TO_SEND,
+        JobStatus.SENT_TO_DVLA,
     }
-    SCHEDULED_JOB_STATUS = JobStatus.SCHEDULED.value
-    CANCELLED_JOB_STATUS = JobStatus.CANCELLED.value
+    SCHEDULED_JOB_STATUS = JobStatus.SCHEDULED
+    CANCELLED_JOB_STATUS = JobStatus.CANCELLED
     NON_CANCELLED_JOB_STATUSES = JOB_STATUSES - {CANCELLED_JOB_STATUS}
     NON_SCHEDULED_JOB_STATUSES = JOB_STATUSES - {
         SCHEDULED_JOB_STATUS,

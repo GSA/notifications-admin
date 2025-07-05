@@ -33,11 +33,11 @@ class Job(JSONModel):
 
     @property
     def cancelled(self):
-        return self.status == JobStatus.CANCELLED.value
+        return self.status == JobStatus.CANCELLED
 
     @property
     def scheduled(self):
-        return self.status == JobStatus.SCHEDULED.value
+        return self.status == JobStatus.SCHEDULED
 
     @property
     def scheduled_for(self):
@@ -63,17 +63,17 @@ class Job(JSONModel):
     @property
     def notifications_delivered(self):
         return self._aggregate_statistics(
-            NotificationStatus.DELIVERED.value, NotificationStatus.SENT.value
+            NotificationStatus.DELIVERED, NotificationStatus.SENT
         )
 
     @property
     def notifications_failed(self):
         return self._aggregate_statistics(
-            NotificationStatus.FAILED.value,
-            NotificationStatus.TECHNICAL_FAILURE.value,
-            NotificationStatus.TEMPORARY_FAILURE.value,
-            NotificationStatus.PERMANENT_FAILURE.value,
-            NotificationStatus.CANCELLED.value,
+            NotificationStatus.FAILED,
+            NotificationStatus.TECHNICAL_FAILURE,
+            NotificationStatus.TEMPORARY_FAILURE,
+            NotificationStatus.PERMANENT_FAILURE,
+            NotificationStatus.CANCELLED,
         )
 
     @property
@@ -98,7 +98,7 @@ class Job(JSONModel):
 
     @property
     def still_processing(self):
-        return self.status != JobStatus.FINISHED.value or self.percentage_complete < 100
+        return self.status != JobStatus.FINISHED or self.percentage_complete < 100
 
     @cached_property
     def finished_processing(self):
