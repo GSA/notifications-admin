@@ -399,7 +399,7 @@ def get_job_partials(job):
         counts=_get_job_counts(job),
         status=filter_args["status"],
         notifications_deleted=(
-            job.status == JobStatus.FINISHED.value and not notifications["notifications"]
+            job.status == JobStatus.FINISHED and not notifications["notifications"]
         ),
     )
     service_data_retention_days = current_service.get_days_of_retention(

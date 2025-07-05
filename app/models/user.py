@@ -567,7 +567,7 @@ class InvitedUser(JSONModel):
         # current_app.logger.warning(
         #    f"Checking invited user {self.id} for permissions: {permissions}"
         # )
-        if self.status == InvitedUserStatus.CANCELLED.value:
+        if self.status == InvitedUserStatus.CANCELLED:
             return False
         return set(self.permissions) > set(permissions)
 
@@ -575,7 +575,7 @@ class InvitedUser(JSONModel):
         # current_app.logger.warn(
         #    f"Checking invited user {self.id} for permission: {permission} on service {service_id}"
         # )
-        if self.status == InvitedUserStatus.CANCELLED.value:
+        if self.status == InvitedUserStatus.CANCELLED:
             return False
         return self.service == service_id and permission in self.permissions
 

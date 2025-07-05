@@ -1,4 +1,4 @@
-from enum import Enum, StrEnum
+from enum import StrEnum
 
 
 class NotificationStatus(StrEnum):
@@ -60,15 +60,15 @@ class AuthType(StrEnum):
     SMS_AUTH = "sms_auth"
 
 
-# TODO: UserRole enum
-# class UserRole(Enum):
+# TODO:
+# class UserRole(StrEnum):
 #     ADMIN = "admin"
 #     USER = "user"
 #     GUEST = "guest"
 
 
-# TODO: NotificationType enum
-# class NotificationType(Enum):
+# TODO:
+# class NotificationType(StrEnum):
 #     EMAIL = "email"
 #     SMS = "sms"
 #     PUSH = "push"

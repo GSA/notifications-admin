@@ -14,16 +14,16 @@ from notifications_python_client.errors import HTTPError
 @status.route("/_status", methods=["GET"])
 def show_status():
     if request.args.get("elb", None) or request.args.get("simple", None):
-        return jsonify(status=HealthStatus.OK.value), 200
+        return jsonify(status=HealthStatus.OK), 200
     else:
         try:
             api_status = status_api_client.get_status()
         except HTTPError as err:
             current_app.logger.exception("API failed to respond")
-            return jsonify(status=HealthStatus.ERROR.value, message=str(err.message)), 500
+            return jsonify(status=HealthStatus.ERROR, message=str(err.message)), 500
         return (
             jsonify(
-                status=HealthStatus.OK.value,
+                status=HealthStatus.OK,
                 api=api_status,
                 git_commit=version.__git_commit__,
                 build_time=version.__time__,
@@ -61,10 +61,10 @@ def show_redis_status():
             )
         except HTTPError as err:
             current_app.logger.exception("API failed to respond")
-            return jsonify(status=HealthStatus.ERROR.value, message=str(err.message)), 500
+            return jsonify(status=HealthStatus.ERROR, message=str(err.message)), 500
         return (
             jsonify(
-                status=HealthStatus.OK.value,
+                status=HealthStatus.OK,
                 api=api_status,
                 git_commit=version.__git_commit__,
                 build_time=version.__time__,
@@ -77,7 +77,7 @@ def show_redis_status():
         )
         return (
             jsonify(
-                status=f"{HealthStatus.ERROR.value}: {err}",
+                status=f"{HealthStatus.ERROR}: {err}",
                 api=api_status,
                 git_commit=version.__git_commit__,
                 build_time=version.__time__,

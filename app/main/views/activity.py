@@ -1,6 +1,7 @@
 from flask import abort, render_template, request, url_for
 
 from app import current_service, job_api_client
+from app.enums import NotificationStatus
 from app.formatters import get_time_left
 from app.main import main
 from app.utils.pagination import (
@@ -78,8 +79,7 @@ def handle_pagination(jobs, service_id, page):
     return prev_page, next_page, pagination
 
 
-JOB_STATUS_DELIVERED = "delivered"
-JOB_STATUS_FAILED = "failed"
+
 
 
 def get_job_statistics(job, status):
@@ -109,8 +109,8 @@ def create_job_dict_entry(job):
         "activity_time": activity_time,
         "created_by": job.get("created_by"),
         "template_name": job.get("template_name"),
-        "delivered_count": get_job_statistics(job, JOB_STATUS_DELIVERED),
-        "failed_count": get_job_statistics(job, JOB_STATUS_FAILED),
+        "delivered_count": get_job_statistics(job, NotificationStatus.DELIVERED),
+        "failed_count": get_job_statistics(job, NotificationStatus.FAILED),
     }
 
 
