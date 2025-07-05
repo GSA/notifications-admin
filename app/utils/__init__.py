@@ -7,16 +7,21 @@ from ordered_set import OrderedSet
 from werkzeug.datastructures import MultiDict
 from werkzeug.routing import RequestRedirect
 
+from app.enums import NotificationStatus
 from notifications_utils.field import Field
 
-SENDING_STATUSES = ["created", "pending", "sending"]
-DELIVERED_STATUSES = ["delivered", "sent"]
+SENDING_STATUSES = [
+    NotificationStatus.CREATED,
+    NotificationStatus.PENDING,
+    NotificationStatus.SENDING,
+]
+DELIVERED_STATUSES = [NotificationStatus.DELIVERED, NotificationStatus.SENT]
 FAILURE_STATUSES = [
-    "failed",
-    "temporary-failure",
-    "permanent-failure",
-    "technical-failure",
-    "validation-failed",
+    NotificationStatus.FAILED,
+    NotificationStatus.TEMPORARY_FAILURE,
+    NotificationStatus.PERMANENT_FAILURE,
+    NotificationStatus.TECHNICAL_FAILURE,
+    NotificationStatus.VALIDATION_FAILED,
 ]
 REQUESTED_STATUSES = SENDING_STATUSES + DELIVERED_STATUSES + FAILURE_STATUSES
 

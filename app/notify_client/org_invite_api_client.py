@@ -1,3 +1,4 @@
+from app.enums import InvitedOrgUserStatus
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user
 
 
@@ -33,7 +34,7 @@ class OrgInviteApiClient(NotifyAdminAPIClient):
         return resp["data"]
 
     def cancel_invited_user(self, org_id, invited_user_id):
-        data = {"status": "cancelled"}
+        data = {"status": InvitedOrgUserStatus.CANCELLED}
         data = _attach_current_user(data)
         self.post(
             url="/organization/{0}/invite/{1}".format(org_id, invited_user_id),
@@ -41,7 +42,7 @@ class OrgInviteApiClient(NotifyAdminAPIClient):
         )
 
     def accept_invite(self, org_id, invited_user_id):
-        data = {"status": "accepted"}
+        data = {"status": InvitedOrgUserStatus.ACCEPTED}
         self.post(
             url="/organization/{0}/invite/{1}".format(org_id, invited_user_id),
             data=data,

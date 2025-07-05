@@ -1,6 +1,7 @@
 import datetime
 from zoneinfo import ZoneInfo
 
+from app.enums import JobStatus
 from app.extensions import redis_client
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
 from app.utils.csv import get_user_preferred_timezone
@@ -8,17 +9,17 @@ from app.utils.csv import get_user_preferred_timezone
 
 class JobApiClient(NotifyAdminAPIClient):
     JOB_STATUSES = {
-        "scheduled",
-        "pending",
-        "in progress",
-        "finished",
-        "cancelled",
-        "sending limits exceeded",
-        "ready to send",
-        "sent to dvla",
+        JobStatus.SCHEDULED,
+        JobStatus.PENDING,
+        JobStatus.IN_PROGRESS,
+        JobStatus.FINISHED,
+        JobStatus.CANCELLED,
+        JobStatus.SENDING_LIMITS_EXCEEDED,
+        JobStatus.READY_TO_SEND,
+        JobStatus.SENT_TO_DVLA,
     }
-    SCHEDULED_JOB_STATUS = "scheduled"
-    CANCELLED_JOB_STATUS = "cancelled"
+    SCHEDULED_JOB_STATUS = JobStatus.SCHEDULED
+    CANCELLED_JOB_STATUS = JobStatus.CANCELLED
     NON_CANCELLED_JOB_STATUSES = JOB_STATUSES - {CANCELLED_JOB_STATUS}
     NON_SCHEDULED_JOB_STATUSES = JOB_STATUSES - {
         SCHEDULED_JOB_STATUS,
@@ -57,7 +58,7 @@ class JobApiClient(NotifyAdminAPIClient):
                 job["original_file_name"],
             )
             for job in self.get_jobs(service_id, limit_days=0)["data"]
-            if job["job_status"] != "cancelled"
+            if job["job_status"] != JobStatus.CANCELLED
         )
 
     def get_page_of_jobs(self, service_id, *, page, statuses=None, limit_days=None):

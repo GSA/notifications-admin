@@ -5,6 +5,7 @@ from urllib.parse import unquote
 from flask import current_app, request
 
 from app import redis_client
+from app.enums import InvitedUserStatus
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
 from app.utils.user_permissions import (
     all_ui_permissions,
@@ -94,7 +95,7 @@ class InviteApiClient(NotifyAdminAPIClient):
         return self.get(url=f"/invite/service/check/{token}")["data"]
 
     def cancel_invited_user(self, service_id, invited_user_id):
-        data = {"status": "cancelled"}
+        data = {"status": InvitedUserStatus.CANCELLED}
         data = _attach_current_user(data)
         self.post(url=f"/service/{service_id}/invite/{invited_user_id}", data=data)
 
@@ -131,7 +132,7 @@ class InviteApiClient(NotifyAdminAPIClient):
     @cache.delete("service-{service_id}")
     @cache.delete("user-{invited_user_id}")
     def accept_invite(self, service_id, invited_user_id):
-        data = {"status": "accepted"}
+        data = {"status": InvitedUserStatus.ACCEPTED}
         self.post(url=f"/service/{service_id}/invite/{invited_user_id}", data=data)
 
 
