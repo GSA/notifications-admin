@@ -34,7 +34,7 @@ class OrgInviteApiClient(NotifyAdminAPIClient):
         return resp["data"]
 
     def cancel_invited_user(self, org_id, invited_user_id):
-        data = {"status": InvitedOrgUserStatus.CANCELLED.value}
+        data = {"status": InvitedOrgUserStatus.CANCELLED}
         data = _attach_current_user(data)
         self.post(
             url="/organization/{0}/invite/{1}".format(org_id, invited_user_id),
@@ -42,7 +42,7 @@ class OrgInviteApiClient(NotifyAdminAPIClient):
         )
 
     def accept_invite(self, org_id, invited_user_id):
-        data = {"status": InvitedOrgUserStatus.ACCEPTED.value}
+        data = {"status": InvitedOrgUserStatus.ACCEPTED}
         self.post(
             url="/organization/{0}/invite/{1}".format(org_id, invited_user_id),
             data=data,
