@@ -50,11 +50,6 @@ class VerificationStatus(StrEnum):
     SUCCESS = "success"
 
 
-class HealthStatus(StrEnum):
-    OK = "ok"
-    ERROR = "error"
-
-
 class AuthType(StrEnum):
     EMAIL_AUTH = "email_auth"
     SMS_AUTH = "sms_auth"
