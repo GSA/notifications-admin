@@ -9,18 +9,19 @@
 {% endmacro %}
 
 
-{% macro select_list(options, child_map, disable=[], option_hints={}, input="radio") %}
-    <ul>
+{% macro select_list(options, child_map, disable=[], option_hints={}, input="radio", indent_level=0) %}
     {% for option in options %}
       {% if child_map[option.data] %}
-        {% call select_input(option, disable, option_hints, as_list_item=True, input=input) %}
-          {{ select_list(child_map[option.data], child_map, disable, option_hints, input=input) }}
-        {% endcall %}
+        <div class="{% if indent_level > 0 %}margin-left-{{ indent_level * 4 }}{% endif %}">
+          {{ select_input(option, disable, option_hints, as_list_item=False, input=input) }}
+        </div>
+        {{ select_list(child_map[option.data], child_map, disable, option_hints, input=input, indent_level=indent_level + 1) }}
       {% else %}
-          {{ select_input(option, disable, option_hints, as_list_item=True, input=input) }}
+        <div class="{% if indent_level > 0 %}margin-left-{{ indent_level * 4 }}{% endif %}">
+          {{ select_input(option, disable, option_hints, as_list_item=False, input=input) }}
+        </div>
       {% endif %}
     {% endfor %}
-    </ul>
 {% endmacro %}
 
 
@@ -63,11 +64,7 @@
 {% endmacro %}
 
 {% macro select_input(option, disable=[], option_hints={}, data_target=None, as_list_item=False, input="radio") %}
-  {% if as_list_item %}
-  <li class="multiple-choice test-one" {% if data_target %}data-target="{{ data_target }}"{% endif %}>
-  {% else %}
   <div class="usa-radio" {% if data_target %}data-target="{{ data_target }}"{% endif %}>
-  {% endif %}
     <input
       id="{{ option.id }}" class="usa-radio__input" name="{{ option.name }}" type="{{ input }}" value="{{ option.data }}"
       {% if option.data in disable %}
@@ -80,17 +77,13 @@
     <label class="usa-radio__label" for="{{ option.id }}">
       {{ option.label.text }}
       {% if option_hints[option.data] %}
-        <div class="block-label-hint">
+        <span class="usa-hint">
           {{ option_hints[option.data] }}
-        </div>
+        </span>
       {% endif %}
     </label>
     {% if caller %}
         {{ caller() }}
     {% endif %}
-  {% if as_list_item %}
-  </li>
-  {% else %}
   </div>
-  {% endif %}
 {% endmacro %}

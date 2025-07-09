@@ -108,9 +108,6 @@ p,
   box-shadow: none !important;
 }
 
-.multiple-choice [type='radio']:focus + label::before {
-  box-shadow: 0 0 0 3px color('blue-40v');
-}
 
 .usa-dark-background .pill-item__container {
   color: #fff;
