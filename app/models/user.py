@@ -5,6 +5,7 @@ from flask import abort, current_app, request, session
 from flask_login import AnonymousUserMixin, UserMixin, login_user, logout_user
 from werkzeug.utils import cached_property
 
+from app.enums import InvitedUserStatus
 from app.event_handlers import (
     create_add_user_to_service_event,
     create_set_user_permissions_event,
@@ -566,7 +567,7 @@ class InvitedUser(JSONModel):
         # current_app.logger.warning(
         #    f"Checking invited user {self.id} for permissions: {permissions}"
         # )
-        if self.status == "cancelled":
+        if self.status == InvitedUserStatus.CANCELLED:
             return False
         return set(self.permissions) > set(permissions)
 
@@ -574,7 +575,7 @@ class InvitedUser(JSONModel):
         # current_app.logger.warn(
         #    f"Checking invited user {self.id} for permission: {permission} on service {service_id}"
         # )
-        if self.status == "cancelled":
+        if self.status == InvitedUserStatus.CANCELLED:
             return False
         return self.service == service_id and permission in self.permissions
 
