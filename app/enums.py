@@ -16,6 +16,33 @@ class NotificationStatus(StrEnum):
     VALIDATION_FAILED = "validation-failed"
     CANCELLED = "cancelled"
 
+    @classmethod
+    def sending_statuses(cls):
+        return [cls.CREATED, cls.PENDING, cls.SENDING]
+
+    @classmethod
+    def delivered_statuses(cls):
+        return [cls.DELIVERED, cls.SENT]
+
+    @classmethod
+    def failure_statuses(cls):
+        return [
+            cls.FAILED,
+            cls.TEMPORARY_FAILURE,
+            cls.PERMANENT_FAILURE,
+            cls.TECHNICAL_FAILURE,
+            cls.VALIDATION_FAILED,
+        ]
+
+    @classmethod
+    def requested_statuses(cls):
+        return cls.sending_statuses() + cls.delivered_statuses() + cls.failure_statuses()
+
+
+class NotificationType(StrEnum):
+    EMAIL = "email"
+    SMS = "sms"
+
 
 class ApiKeyType(StrEnum):
     NORMAL = "normal"
@@ -60,10 +87,3 @@ class AuthType(StrEnum):
 #     ADMIN = "admin"
 #     USER = "user"
 #     GUEST = "guest"
-
-
-# TODO:
-# class NotificationType(StrEnum):
-#     EMAIL = "email"
-#     SMS = "sms"
-#     PUSH = "push"
