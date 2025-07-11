@@ -655,7 +655,7 @@ class RegisterUserFromOrgInviteForm(StripWhitespaceForm):
     auth_type = HiddenField("auth_type", validators=[DataRequired()])
 
 
-def govuk_checkbox_field_widget(self, field, param_extensions=None, **kwargs):
+def uswds_checkbox_field_widget(self, field, param_extensions=None, **kwargs):
     # error messages
     error_message = None
     if field.errors:
@@ -695,7 +695,7 @@ def govuk_checkbox_field_widget(self, field, param_extensions=None, **kwargs):
     )  # nosec
 
 
-def govuk_checkboxes_field_widget(
+def uswds_checkboxes_field_widget(
     self, field, wrap_in_collapsible=False, param_extensions=None, **kwargs
 ):
     def _wrap_in_collapsible(field_label, checkboxes_string):
@@ -812,9 +812,9 @@ def govuk_radios_field_widget(self, field, param_extensions=None, **kwargs):
     )  # nosec
 
 
-class GovukCheckboxField(BooleanField):
+class USWDSCheckboxField(BooleanField):
     def __init__(self, label="", validators=None, param_extensions=None, **kwargs):
-        super(GovukCheckboxField, self).__init__(
+        super(USWDSCheckboxField, self).__init__(
             label, validators, false_values=None, **kwargs
         )
         self.param_extensions = param_extensions
@@ -824,17 +824,17 @@ class GovukCheckboxField(BooleanField):
     # 2. calls field.widget
     # this bypasses that by making self.widget a method with the same interface as widget.__call__
     def widget(self, field, param_extensions=None, **kwargs):
-        return govuk_checkbox_field_widget(
+        return uswds_checkbox_field_widget(
             self, field, param_extensions=param_extensions, **kwargs
         )
 
 
 # based on work done by @richardjpope: https://github.com/richardjpope/recourse/blob/master/recourse/forms.py#L6
-class GovukCheckboxesField(SelectMultipleField):
+class USWDSCheckboxesField(SelectMultipleField):
     render_as_list = False
 
     def __init__(self, label="", validators=None, param_extensions=None, **kwargs):
-        super(GovukCheckboxesField, self).__init__(label, validators, **kwargs)
+        super(USWDSCheckboxesField, self).__init__(label, validators, **kwargs)
         self.param_extensions = param_extensions
 
     def get_item_from_option(self, option):
@@ -854,32 +854,32 @@ class GovukCheckboxesField(SelectMultipleField):
     # 2. calls field.widget
     # this bypasses that by making self.widget a method with the same interface as widget.__call__
     def widget(self, field, param_extensions=None, **kwargs):
-        return govuk_checkboxes_field_widget(
+        return uswds_checkboxes_field_widget(
             self, field, param_extensions=param_extensions, **kwargs
         )
 
 
 # Wraps checkboxes rendering in HTML needed by the collapsible JS
-class GovukCollapsibleCheckboxesField(GovukCheckboxesField):
+class USWDSCollapsibleCheckboxesField(USWDSCheckboxesField):
     def __init__(
         self, label="", validators=None, field_label="", param_extensions=None, **kwargs
     ):
-        super(GovukCollapsibleCheckboxesField, self).__init__(
+        super(USWDSCollapsibleCheckboxesField, self).__init__(
             label, validators, param_extensions, **kwargs
         )
         self.field_label = field_label
 
     def widget(self, field, **kwargs):
-        return govuk_checkboxes_field_widget(
+        return uswds_checkboxes_field_widget(
             self, field, wrap_in_collapsible=True, param_extensions=None, **kwargs
         )
 
 
-# GovukCollapsibleCheckboxesField adds an ARIA live-region to the hint and wraps the render in HTML needed by the
+# USWDSCollapsibleCheckboxesField adds an ARIA live-region to the hint and wraps the render in HTML needed by the
 # collapsible JS
 # NestedFieldMixin puts the items into a tree hierarchy, pre-rendering the sub-trees of the top-level items
-class GovukCollapsibleNestedCheckboxesField(
-    NestedFieldMixin, GovukCollapsibleCheckboxesField
+class USWDSCollapsibleNestedCheckboxesField(
+    NestedFieldMixin, USWDSCollapsibleCheckboxesField
 ):
     NONE_OPTION_VALUE = None
     render_as_list = True
@@ -998,7 +998,7 @@ class BasePermissionsForm(StripWhitespaceForm):
                 for item in ([{"name": "Templates", "id": None}] + all_template_folders)
             ]
 
-    folder_permissions = GovukCollapsibleNestedCheckboxesField(
+    folder_permissions = USWDSCollapsibleNestedCheckboxesField(
         "Folders this team member can see", field_label="folder"
     )
 
@@ -1012,7 +1012,7 @@ class BasePermissionsForm(StripWhitespaceForm):
         validators=[DataRequired()],
     )
 
-    permissions_field = GovukCheckboxesField(
+    permissions_field = USWDSCheckboxesField(
         "Permissions",
         filters=[filter_by_permissions],
         choices=[(value, label) for value, label in permission_options],
@@ -1422,7 +1422,7 @@ class ServiceContactDetailsForm(StripWhitespaceForm):
 
 class ServiceReplyToEmailForm(StripWhitespaceForm):
     email_address = email_address(label="Reply-to email address", gov_user=False)
-    is_default = GovukCheckboxField("Make this email address the default")
+    is_default = USWDSCheckboxField("Make this email address the default")
 
 
 class ServiceSmsSenderForm(StripWhitespaceForm):
@@ -1436,11 +1436,11 @@ class ServiceSmsSenderForm(StripWhitespaceForm):
             DoesNotStartWithDoubleZero(),
         ],
     )
-    is_default = GovukCheckboxField("Make this text message sender the default")
+    is_default = USWDSCheckboxField("Make this text message sender the default")
 
 
 class ServiceEditInboundNumberForm(StripWhitespaceForm):
-    is_default = GovukCheckboxField("Make this text message sender the default")
+    is_default = USWDSCheckboxField("Make this text message sender the default")
 
 
 class AdminNotesForm(StripWhitespaceForm):
@@ -1528,7 +1528,7 @@ class GuestList(StripWhitespaceForm):
 class DateFilterForm(StripWhitespaceForm):
     start_date = GovukDateField("Start Date", [validators.optional()])
     end_date = GovukDateField("End Date", [validators.optional()])
-    include_from_test_key = GovukCheckboxField("Include test keys")
+    include_from_test_key = USWDSCheckboxField("Include test keys")
 
 
 class RequiredDateFilterForm(StripWhitespaceForm):
@@ -1732,7 +1732,7 @@ class TemplateFolderForm(StripWhitespaceForm):
                 (item.id, item.name) for item in all_service_users
             ]
 
-    users_with_permission = GovukCollapsibleCheckboxesField(
+    users_with_permission = USWDSCollapsibleCheckboxesField(
         "Team members who can see this folder", field_label="team member"
     )
     name = GovukTextInputField(
@@ -1851,7 +1851,7 @@ class TemplateAndFoldersSelectionForm(Form):
             return self.move_to_new_folder_name.data
         return None
 
-    templates_and_folders = GovukCheckboxesField(
+    templates_and_folders = USWDSCheckboxesField(
         "Choose templates or folders",
         validators=[required_for_ops("move-to-new-folder", "move-to-existing-folder")],
         choices=[],  # added to keep order of arguments, added properly in __init__
@@ -1883,7 +1883,7 @@ class TemplateAndFoldersSelectionForm(Form):
 
 
 class AdminClearCacheForm(StripWhitespaceForm):
-    model_type = GovukCheckboxesField(
+    model_type = USWDSCheckboxesField(
         "What do you want to clear today",
     )
 

@@ -67,10 +67,6 @@ const routes = {
       label: 'Platform Admin Live Services',
       path: '/platform-admin/live-services',
     },
-    {
-      label: 'Platform Admin Trial Services',
-      path: '/platform-admin/trial-services',
-    },
   ],
 
   // Using Notify section
