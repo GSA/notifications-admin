@@ -25,6 +25,7 @@ from app import (
     service_api_client,
     user_api_client,
 )
+from app.enums import NotificationStatus
 from app.extensions import redis_client
 from app.main import main
 from app.main.forms import (
@@ -769,32 +770,41 @@ def filter_and_sort_services(services, trial_mode_services=False):
 
 def create_global_stats(services):
     stats = {
-        "email": {"delivered": 0, "failed": 0, "requested": 0},
-        "sms": {"delivered": 0, "failed": 0, "requested": 0},
+        "email": {
+            NotificationStatus.DELIVERED: 0,
+            NotificationStatus.FAILED: 0,
+            "requested": 0,
+        },
+        "sms": {
+            NotificationStatus.DELIVERED: 0,
+            NotificationStatus.FAILED: 0,
+            "requested": 0,
+        },
     }
     # Issue #1323. The back end is now sending 'failure' instead of
     # 'failed'.  Adjust it here, but keep it flexible in case
     # the backend reverts to 'failed'.
     for service in services:
         if service["statistics"]["sms"].get("failure") is not None:
-            service["statistics"]["sms"]["failed"] = service["statistics"]["sms"][
-                "failure"
-            ]
+            service["statistics"]["sms"][NotificationStatus.FAILED] = service[
+                "statistics"
+            ]["sms"]["failure"]
         if service["statistics"]["email"].get("failure") is not None:
-            service["statistics"]["email"]["failed"] = service["statistics"]["email"][
-                "failure"
-            ]
+            service["statistics"]["email"][NotificationStatus.FAILED] = service[
+                "statistics"
+            ]["email"]["failure"]
 
     for service in services:
 
         for msg_type, status in itertools.product(
-            ("sms", "email"), ("delivered", "failed", "requested")
+            ("sms", "email"),
+            (NotificationStatus.DELIVERED, NotificationStatus.FAILED, "requested"),
         ):
             stats[msg_type][status] += service["statistics"][msg_type][status]
 
     for stat in stats.values():
         stat["failure_rate"] = get_formatted_percentage(
-            stat["failed"], stat["requested"]
+            stat[NotificationStatus.FAILED], stat["requested"]
         )
     return stats
 

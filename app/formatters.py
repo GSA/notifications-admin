@@ -17,6 +17,7 @@ from flask import render_template_string, url_for
 from flask.helpers import get_root_path
 from markupsafe import Markup
 
+from app.enums import AuthType, NotificationStatus
 from app.utils.csv import get_user_preferred_timezone
 from app.utils.time import parse_naive_dt
 from notifications_utils.field import Field
@@ -276,46 +277,53 @@ def format_notification_type(notification_type):
 def format_notification_status(status, template_type):
     return {
         "email": {
-            "failed": "Failed",
-            "technical-failure": "Technical failure",
-            "temporary-failure": "Inbox not accepting messages right now",
-            "permanent-failure": "Email address does not exist",
-            "delivered": "Delivered",
-            "sending": "Sending",
-            "created": "Sending",
-            "sent": "Delivered",
+            NotificationStatus.FAILED: "Failed",
+            NotificationStatus.TECHNICAL_FAILURE: "Technical failure",
+            NotificationStatus.TEMPORARY_FAILURE: "Inbox not accepting messages right now",
+            NotificationStatus.PERMANENT_FAILURE: "Email address does not exist",
+            NotificationStatus.DELIVERED: "Delivered",
+            NotificationStatus.SENDING: "Sending",
+            NotificationStatus.CREATED: "Sending",
+            NotificationStatus.SENT: "Delivered",
         },
         "sms": {
-            "failed": "Failed",
-            "technical-failure": "Technical failure",
-            "temporary-failure": "Phone not accepting messages right now",
-            "permanent-failure": "Not delivered",
-            "delivered": "Delivered",
-            "sending": "Sending",
-            "created": "Sending",
-            "pending": "Sending",
-            "sent": "Sent",
+            NotificationStatus.FAILED: "Failed",
+            NotificationStatus.TECHNICAL_FAILURE: "Technical failure",
+            NotificationStatus.TEMPORARY_FAILURE: "Phone not accepting messages right now",
+            NotificationStatus.PERMANENT_FAILURE: "Not delivered",
+            NotificationStatus.DELIVERED: "Delivered",
+            NotificationStatus.SENDING: "Sending",
+            NotificationStatus.CREATED: "Sending",
+            NotificationStatus.PENDING: "Sending",
+            NotificationStatus.SENT: "Sent",
         },
     }[template_type].get(status, status)
 
 
 def format_notification_status_as_time(status, created, updated):
     return dict.fromkeys(
-        {"created", "pending", "sending"}, " since {}".format(created)
+        {
+            NotificationStatus.CREATED,
+            NotificationStatus.PENDING,
+            NotificationStatus.SENDING,
+        },
+        " since {}".format(created),
     ).get(status, updated)
 
 
 def format_notification_status_as_field_status(status, notification_type):
     return {
-        "failed": "error",
-        "technical-failure": "error",
-        "temporary-failure": "error",
-        "permanent-failure": "error",
-        "delivered": None,
-        "sent": "sent-international" if notification_type == "sms" else None,
-        "sending": "default",
-        "created": "default",
-        "pending": "default",
+        NotificationStatus.FAILED: "error",
+        NotificationStatus.TECHNICAL_FAILURE: "error",
+        NotificationStatus.TEMPORARY_FAILURE: "error",
+        NotificationStatus.PERMANENT_FAILURE: "error",
+        NotificationStatus.DELIVERED: None,
+        NotificationStatus.SENT: (
+            "sent-international" if notification_type == "sms" else None
+        ),
+        NotificationStatus.SENDING: "default",
+        NotificationStatus.CREATED: "default",
+        NotificationStatus.PENDING: "default",
     }.get(status, "error")
 
 
@@ -323,9 +331,9 @@ def format_notification_status_as_url(status, notification_type):
     url = partial(url_for, "main.message_status")
 
     if status not in {
-        "technical-failure",
-        "temporary-failure",
-        "permanent-failure",
+        NotificationStatus.TECHNICAL_FAILURE,
+        NotificationStatus.TEMPORARY_FAILURE,
+        NotificationStatus.PERMANENT_FAILURE,
     }:
         return None
 
@@ -559,8 +567,8 @@ def square_metres_to_square_miles(area):
 
 def format_auth_type(auth_type, with_indefinite_article=False):
     indefinite_article, auth_type = {
-        "email_auth": ("an", "Email link"),
-        "sms_auth": ("a", "Text message code"),
+        AuthType.EMAIL_AUTH: ("an", "Email link"),
+        AuthType.SMS_AUTH: ("a", "Text message code"),
     }[auth_type]
 
     if with_indefinite_article:
