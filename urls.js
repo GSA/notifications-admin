@@ -58,6 +58,15 @@ const routes = {
       label: 'Team Members',
       path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/users',
     },
+    {
+      label: 'Invite User',
+      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/users/invite',
+    },
+    // Platform admin pages with checkboxes
+    {
+      label: 'Platform Admin Live Services',
+      path: '/platform-admin/live-services',
+    },
   ],
 
   // Using Notify section
