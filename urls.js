@@ -9,6 +9,11 @@ const routes = {
     { label: 'Support', path: '/support' },
     { label: 'Notify.gov Service Ending', path: '/notify-service-ending' },
     { label: 'Notify.gov Sign In', path: '/sign-in' },
+    { label: 'Accessibility Statement', path: '/accessibility-statement' },
+    { label: 'Privacy', path: '/privacy' },
+    { label: 'Email Not Received', path: '/email-not-received' },
+    { label: 'Text Not Received', path: '/text-not-received' },
+    { label: 'Performance', path: '/performance' },
   ],
 
   authenticated: [
@@ -74,6 +79,7 @@ const routes = {
     { label: 'Get Started', path: '/using-notify/get-started' },
     { label: 'Trial Mode', path: '/using-notify/trial-mode' },
     { label: 'Pricing', path: '/using-notify/pricing' },
+    { label: 'Pricing Billing Details', path: '/pricing/billing-details' },
     { label: 'Delivery Status', path: '/using-notify/delivery-status' },
     { label: 'How To', path: '/using-notify/how-to' },
     { label: 'Best Practices', path: '/using-notify/best-practices' },
