@@ -13,6 +13,7 @@ const routes = {
     { label: 'Privacy', path: '/privacy' },
     { label: 'Email Not Received', path: '/email-not-received' },
     { label: 'Text Not Received', path: '/text-not-received' },
+    { label: 'Performance', path: '/performance' },
   ],
 
   authenticated: [
