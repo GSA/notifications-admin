@@ -20,9 +20,9 @@ describe('Collapsible fieldset', () => {
       for (let num = start; num <= end; num++) {
         let id = `folder-permissions-${num}`;
 
-        result += `<li class="govuk-checkboxes__item">
-          <input class="govuk-checkboxes__input" id="${id}" name="folder-permissions" type="checkbox" value="${id}">
-          <label class="usa-radio__label govuk-checkboxes__label" for="${id}">
+        result += `<li class="usa-checkbox">
+          <input class="usa-checkbox__input" id="${id}" name="folder-permissions" type="checkbox" value="${id}">
+          <label class="usa-checkbox__label" for="${id}">
             Folder ${id}
           </label>
         </li>`;
@@ -49,7 +49,7 @@ describe('Collapsible fieldset', () => {
                 <div class="selection-summary" role="region" aria-live="polite"></div>
               </span>
             </legend>
-            <ul class="govuk-checkboxes">
+            <ul class="usa-checkbox-group">
               ${_checkboxes(1, 10)}
             </ul>
           </fieldset>
@@ -59,7 +59,7 @@ describe('Collapsible fieldset', () => {
       wrapper = document.querySelector('.selection-wrapper');
       formGroup = wrapper.querySelector('.usa-form-group');
       fieldset = formGroup.querySelector('fieldset');
-      checkboxesContainer = fieldset.querySelector('.govuk-checkboxes');
+      checkboxesContainer = fieldset.querySelector('.usa-checkbox-group');
       checkboxes = checkboxesContainer.querySelectorAll('input[type=checkbox]');
 
   });
@@ -323,7 +323,7 @@ describe('Collapsible fieldset', () => {
         const nestedCheckboxes = document.createElement('div');
         nestedCheckboxes.className = 'usa-form-group usa-form-group--nested';
         nestedCheckboxes.innerHTML = _checkboxes(11, 20);
-        checkboxesContainer.querySelector('.govuk-checkboxes__item').appendChild(nestedCheckboxes);
+        checkboxesContainer.querySelector('.usa-checkbox').appendChild(nestedCheckboxes);
 
         // start module
         window.GOVUK.modules.start();
