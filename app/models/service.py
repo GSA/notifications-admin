@@ -322,7 +322,7 @@ class Service(JSONModel, SortByNameMixin):
 
     @property
     def shouldnt_use_govuk_as_sms_sender(self):
-        return self.organization_type != Organization.TYPE_CENTRAL
+        return self.organization_type != Organization.TYPE_FEDERAL
 
     @cached_property
     def sms_senders(self):

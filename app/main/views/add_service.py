@@ -2,6 +2,7 @@ from flask import current_app, redirect, render_template, session, url_for
 from flask_login import current_user
 
 from app import service_api_client
+from app.enums import OrganizationType
 from app.formatters import email_safe
 from app.main import main
 from app.main.forms import CreateServiceForm
@@ -46,7 +47,7 @@ def _create_example_template(service_id):
 def add_service():
     default_organization_type = current_user.default_organization_type
     if default_organization_type is None:
-        default_organization_type = "federal"
+        default_organization_type = OrganizationType.FEDERAL
     form = CreateServiceForm(
         # This value is currently not useful but if it is not set it will result in a bug
         organization_type=default_organization_type
