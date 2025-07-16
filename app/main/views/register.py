@@ -146,14 +146,14 @@ def check_invited_user_email_address_matches_expected(
 @hide_from_search_engines
 def set_up_your_profile():
 
-    debug_msg(f"Enter set_up_your_profile with request.args {request.args}")
+    current_app.logger.info("#invites: Enter set_up_your_profile")
     code = request.args.get("code")
     state = request.args.get("state")
 
     state_key = f"login-state-{unquote(state)}"
     stored_state = unquote(redis_client.get(state_key).decode("utf8"))
     if state != stored_state:
-        current_app.logger.error(f"State Error: {state} != {stored_state}")
+        current_app.logger.error(f"#invites State Error: {state} != {stored_state}")
         abort(403)
 
     login_gov_error = request.args.get("error")
@@ -164,26 +164,29 @@ def set_up_your_profile():
     new_user = user_email is None or user_uuid is None
 
     if new_user:  # invite path
+        current_app.logger.info(
+            f"#invites: we are processing a new user with login.gov user_uuid {user_uuid}"
+        )
         access_token = sign_in._get_access_token(code)
 
-        debug_msg("Got the access token for login.gov")
         user_email, user_uuid = sign_in._get_user_email_and_uuid(access_token)
-        debug_msg(
-            f"Got the user_email {user_email} and user_uuid {user_uuid} from login.gov"
+        current_app.logger.info(
+            f"#invites: Got the user_email and user_uuid {user_uuid} from login.gov"
         )
         invite_data = redis_client.get(f"invitedata-{state}")
         invite_data = json.loads(invite_data)
-        debug_msg(f"final state {invite_data}")
         invited_user_id = invite_data["invited_user_id"]
         invited_user_email_address = get_invited_user_email_address(invited_user_id)
-        debug_msg(f"email address from the invite_date is {invited_user_email_address}")
+        current_app.logger.info(
+            f"#invites: does user email match expected? {user_email == invited_user_email_address}"
+        )
         check_invited_user_email_address_matches_expected(
             user_email, invited_user_email_address
         )
 
         invited_user_accept_invite(invited_user_id)
-        debug_msg(
-            f"accepted invite user {invited_user_email_address} to service {invite_data['service_id']}"
+        current_app.logger.info(
+            f"accepted invite user with invited_user_id {invited_user_id} to service {invite_data['service_id']}"
         )
         # We need to avoid taking a second trip through the login.gov code because we cannot pull the
         # access token twice.  So once we retrieve these values, let's park them in redis for 15 minutes
@@ -194,9 +197,11 @@ def set_up_your_profile():
     form = SetupUserProfileForm()
 
     if form.validate_on_submit() and not new_user:
+        current_app.logger.info("#invites: this is an invite for a pre-existing user")
         invite_data, user_email, user_uuid, invited_user_email_address = (
             get_invite_data_from_redis(state)
         )
+        current_app.logger.info(f"#invites: login.gov user_uuid from redis {user_uuid}")
 
         # create or update the user
         user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
@@ -208,15 +213,20 @@ def set_up_your_profile():
                 password=str(uuid.uuid4()),
                 auth_type="sms_auth",
             )
-            debug_msg(f"registered user {form.name.data} with email {user_email}")
+            current_app.logger.info(
+                f"#invites: registered the new user with login.gov user_uuid {user_uuid}"
+            )
         else:
             user.update(mobile_number=form.mobile_number.data, name=form.name.data)
-            debug_msg(f"updated user {form.name.data}")
+            current_app.logger.info(
+                f"#invites: updated the pre-existing user with login.gov user_uuid {user_uuid}"
+            )
 
         # activate the user
         user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
+        current_app.logger("#invites: going to activate user")
         activate_user(user["id"])
-        debug_msg("activated user")
+        current_app.logger(f"#invites: activated user with user.id {user['id']}")
         usr = User.from_id(user["id"])
 
         usr.add_to_service(
@@ -225,18 +235,17 @@ def set_up_your_profile():
             invite_data["folder_permissions"],
             invite_data["from_user_id"],
         )
-        debug_msg(
-            f"Added user {usr.email_address} to service {invite_data['service_id']}"
-        )
+
         # notify-admin-1766
         # redirect new users to templates area of new service instead of dashboard
         service_id = invite_data["service_id"]
         url = url_for(".service_dashboard", service_id=service_id)
         url = f"{url}/templates"
+        current_app.logger.info(f"#invites redirecting to {url}")
         return redirect(url)
 
     elif login_gov_error:
-        current_app.logger.error(f"login.gov error: {login_gov_error}")
+        current_app.logger.error(f"#invites: login.gov error: {login_gov_error}")
         abort(403)
 
     # we take two trips through this method, but should only hit this
