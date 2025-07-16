@@ -34,6 +34,11 @@ class JobStatus(StrEnum):
     SENT_TO_DVLA = "sent to dvla"
 
 
+class ServicePermission(StrEnum):
+    SEND_MESSAGES = "send_messages"
+    MANAGE_SERVICE = "manage_service"
+
+
 class InvitedUserStatus(StrEnum):
     ACCEPTED = "accepted"
     CANCELLED = "cancelled"
@@ -53,17 +58,3 @@ class VerificationStatus(StrEnum):
 class AuthType(StrEnum):
     EMAIL_AUTH = "email_auth"
     SMS_AUTH = "sms_auth"
-
-
-# TODO:
-# class UserRole(StrEnum):
-#     ADMIN = "admin"
-#     USER = "user"
-#     GUEST = "guest"
-
-
-# TODO:
-# class NotificationType(StrEnum):
-#     EMAIL = "email"
-#     SMS = "sms"
-#     PUSH = "push"

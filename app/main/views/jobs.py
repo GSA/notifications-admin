@@ -23,7 +23,7 @@ from app import (
     notification_api_client,
     service_api_client,
 )
-from app.enums import JobStatus
+from app.enums import JobStatus, ServicePermission
 from app.formatters import get_time_left, message_count_noun
 from app.main import main
 from app.main.forms import SearchNotificationsForm
@@ -106,7 +106,7 @@ def view_job_csv(service_id, job_id):
 
 
 @main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>", methods=["POST"])
-@user_has_permissions("send_messages")
+@user_has_permissions(ServicePermission.SEND_MESSAGES)
 def cancel_job(service_id, job_id):
     Job.from_id(job_id, service_id=service_id).cancel()
     return redirect(url_for("main.service_dashboard", service_id=service_id))

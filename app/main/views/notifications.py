@@ -12,6 +12,7 @@ from flask import (
 )
 
 from app import current_service, job_api_client, notification_api_client
+from app.enums import ServicePermission
 from app.main import main
 from app.notify_client.api_key_api_client import KEY_TYPE_TEST
 from app.utils import (
@@ -27,7 +28,7 @@ from app.utils.user import user_has_permissions
 
 
 @main.route("/services/<uuid:service_id>/notification/<uuid:notification_id>")
-@user_has_permissions("view_activity", "send_messages")
+@user_has_permissions("view_activity", ServicePermission.SEND_MESSAGES)
 def view_notification(service_id, notification_id, error_message=None):
     if error_message:
         flash(error_message)
@@ -100,7 +101,7 @@ def view_notification(service_id, notification_id, error_message=None):
 
 
 @main.route("/services/<uuid:service_id>/notification/<uuid:notification_id>.json")
-@user_has_permissions("view_activity", "send_messages")
+@user_has_permissions("view_activity", ServicePermission.SEND_MESSAGES)
 def view_notification_updates(service_id, notification_id):
     return jsonify(
         **get_single_notification_partials(

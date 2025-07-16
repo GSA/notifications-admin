@@ -27,7 +27,7 @@
       'messages',
     ) }}
 
-    {% if current_user.has_permissions('send_messages') %}
+    {% if current_user.has_permissions(ServicePermission.SEND_MESSAGES) %}
       <p class="sms-message-reply-link">
         <a class="usa-link" href="{{ url_for('.conversation_reply', service_id=current_service.id, notification_id=notification_id) }}">Send a text message to this phone number</a>
       </p>

@@ -1,10 +1,12 @@
 from itertools import chain
 
+from app.enums import ServicePermission
+
 permission_mappings = {
     # TODO: consider turning off email-sending permissions during SMS pilot
-    "send_messages": ["send_texts", "send_emails"],
+    ServicePermission.SEND_MESSAGES: ["send_texts", "send_emails"],
     "manage_templates": ["manage_templates"],
-    "manage_service": ["manage_users", "manage_settings"],
+    ServicePermission.MANAGE_SERVICE: ["manage_users", "manage_settings"],
     "manage_api_keys": ["manage_api_keys"],
     "view_activity": ["view_activity"],
 }
@@ -14,9 +16,9 @@ all_db_permissions = set(chain(*permission_mappings.values()))
 
 permission_options = (
     ("view_activity", "See dashboard"),
-    ("send_messages", "Send messages"),
+    (ServicePermission.SEND_MESSAGES, "Send messages"),
     ("manage_templates", "Add and edit templates"),
-    ("manage_service", "Manage settings, team and usage"),
+    (ServicePermission.MANAGE_SERVICE, "Manage settings, team and usage"),
 )
 
 
