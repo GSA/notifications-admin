@@ -36,12 +36,20 @@ class NotificationStatus(StrEnum):
 
     @classmethod
     def requested_statuses(cls):
-        return cls.sending_statuses() + cls.delivered_statuses() + cls.failure_statuses()
+        return (
+            cls.sending_statuses() + cls.delivered_statuses() + cls.failure_statuses()
+        )
 
 
 class NotificationType(StrEnum):
     EMAIL = "email"
     SMS = "sms"
+
+
+class OrganizationType(StrEnum):
+    FEDERAL = "federal"
+    STATE = "state"
+    OTHER = "other"
 
 
 class ApiKeyType(StrEnum):
@@ -80,10 +88,3 @@ class VerificationStatus(StrEnum):
 class AuthType(StrEnum):
     EMAIL_AUTH = "email_auth"
     SMS_AUTH = "sms_auth"
-
-
-# TODO:
-# class UserRole(StrEnum):
-#     ADMIN = "admin"
-#     USER = "user"
-#     GUEST = "guest"
