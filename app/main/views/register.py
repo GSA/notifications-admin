@@ -224,9 +224,9 @@ def set_up_your_profile():
 
         # activate the user
         user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
-        current_app.logger("#invites: going to activate user")
+        current_app.logger.info("#invites: going to activate user")
         activate_user(user["id"])
-        current_app.logger(f"#invites: activated user with user.id {user['id']}")
+        current_app.logger.info(f"#invites: activated user with user.id {user['id']}")
         usr = User.from_id(user["id"])
 
         usr.add_to_service(
