@@ -23,7 +23,7 @@ from app import (
     notification_api_client,
     service_api_client,
 )
-from app.enums import JobStatus, ServicePermission
+from app.enums import JobStatus, NotificationStatus, ServicePermission
 from app.formatters import get_time_left, message_count_noun
 from app.main import main
 from app.main.forms import SearchNotificationsForm
@@ -304,22 +304,30 @@ def get_status_filters(service, message_type, statistics):
     if message_type is None:
         stats = {
             key: sum(statistics[message_type][key] for message_type in {"email", "sms"})
-            for key in {"requested", "delivered", "failed"}
+            for key in {
+                "requested",
+                NotificationStatus.DELIVERED,
+                NotificationStatus.FAILED,
+            }
         }
     else:
         stats = statistics[message_type]
 
     if stats.get("failure") is not None:
-        stats["failed"] = stats["failure"]
+        stats[NotificationStatus.FAILED] = stats["failure"]
 
-    stats["pending"] = stats["requested"] - stats["delivered"] - stats["failed"]
+    stats[NotificationStatus.PENDING] = (
+        stats["requested"]
+        - stats[NotificationStatus.DELIVERED]
+        - stats[NotificationStatus.FAILED]
+    )
 
     filters = [
         # key, label, option
         ("requested", "total", "sending,delivered,failed"),
-        ("pending", "pending", "sending,pending"),
-        ("delivered", "delivered", "delivered"),
-        ("failed", "failed", "failed"),
+        (NotificationStatus.PENDING, "pending", "sending,pending"),
+        (NotificationStatus.DELIVERED, "delivered", "delivered"),
+        (NotificationStatus.FAILED, "failed", "failed"),
     ]
     return [
         # return list containing label, option, link, count

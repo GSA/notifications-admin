@@ -15,6 +15,7 @@ from app import (
     template_statistics_client,
 )
 from app.enums import ServicePermission
+from app.enums import JobStatus, NotificationStatus
 from app.main import main
 from app.main.views.user_profile import set_timezone
 from app.statistics_utils import get_formatted_percentage
@@ -43,7 +44,9 @@ def service_dashboard(service_id):
     job_response = job_api_client.get_jobs(service_id)["data"]
     service_data_retention_days = 7
 
-    active_jobs = [job for job in job_response if job["job_status"] != "cancelled"]
+    active_jobs = [
+        job for job in job_response if job["job_status"] != JobStatus.CANCELLED
+    ]
     job_lists = [
         {**job_dict, "finished_processing": job_is_finished(job_dict)}
         for job_dict in active_jobs
@@ -70,7 +73,9 @@ def service_dashboard(service_id):
 
 
 def job_is_finished(job_dict):
-    done_statuses = DELIVERED_STATUSES + FAILURE_STATUSES + ["cancelled"]
+    done_statuses = (
+        DELIVERED_STATUSES + FAILURE_STATUSES + [NotificationStatus.CANCELLED]
+    )
     processed_count = sum(
         stat["count"]
         for stat in job_dict["statistics"]
@@ -107,8 +112,18 @@ def get_local_daily_stats_for_last_x_days(stats_utc, user_timezone, days):
     ]
     aggregator = {
         d: {
-            "sms": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
-            "email": {"delivered": 0, "failure": 0, "pending": 0, "requested": 0},
+            "sms": {
+                NotificationStatus.DELIVERED: 0,
+                "failure": 0,
+                NotificationStatus.PENDING: 0,
+                "requested": 0,
+            },
+            "email": {
+                NotificationStatus.DELIVERED: 0,
+                "failure": 0,
+                NotificationStatus.PENDING: 0,
+                "requested": 0,
+            },
         }
         for d in days_list
     }
@@ -122,7 +137,12 @@ def get_local_daily_stats_for_last_x_days(stats_utc, user_timezone, days):
 
         if local_day in aggregator:
             for msg_type in ["sms", "email"]:
-                for status in ["delivered", "failure", "pending", "requested"]:
+                for status in [
+                    NotificationStatus.DELIVERED,
+                    "failure",
+                    NotificationStatus.PENDING,
+                    "requested",
+                ]:
                     aggregator[local_day][msg_type][status] += data[msg_type][status]
 
     return aggregator
@@ -232,7 +252,9 @@ def usage(service_id):
 
 
 def filter_out_cancelled_stats(template_statistics):
-    return [s for s in template_statistics if s["status"] != "cancelled"]
+    return [
+        s for s in template_statistics if s["status"] != NotificationStatus.CANCELLED
+    ]
 
 
 def aggregate_template_usage(template_statistics, sort_key="count"):
@@ -266,7 +288,7 @@ def get_dashboard_totals(statistics):
 
     for msg_type in statistics.values():
         msg_type["failed_percentage"] = get_formatted_percentage(
-            msg_type["failed"], msg_type["requested"]
+            msg_type[NotificationStatus.FAILED], msg_type["requested"]
         )
         msg_type["show_warning"] = float(msg_type["failed_percentage"]) > 3
 
@@ -315,7 +337,9 @@ def aggregate_status_types(counts_dict):
     return get_dashboard_totals(
         {
             "{}_counts".format(message_type): {
-                "failed": sum(stats.get(status, 0) for status in FAILURE_STATUSES),
+                NotificationStatus.FAILED: sum(
+                    stats.get(status, 0) for status in FAILURE_STATUSES
+                ),
                 "requested": sum(stats.get(status, 0) for status in REQUESTED_STATUSES),
             }
             for message_type, stats in counts_dict.items()

@@ -2,14 +2,15 @@ from collections import OrderedDict
 
 from werkzeug.utils import cached_property
 
+from app.enums import OrganizationType
 from app.models import JSONModel, ModelList, SerialisedModelCollection, SortByNameMixin
 from app.notify_client.organizations_api_client import organizations_client
 
 
 class Organization(JSONModel, SortByNameMixin):
-    TYPE_FEDERAL = "federal"
-    TYPE_STATE = "state"
-    TYPE_OTHER = "other"
+    TYPE_FEDERAL = OrganizationType.FEDERAL
+    TYPE_STATE = OrganizationType.STATE
+    TYPE_OTHER = OrganizationType.OTHER
 
     TYPE_LABELS = OrderedDict(
         [

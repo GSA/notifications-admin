@@ -7,25 +7,15 @@ from ordered_set import OrderedSet
 from werkzeug.datastructures import MultiDict
 from werkzeug.routing import RequestRedirect
 
-from app.enums import NotificationStatus, ServicePermission
+from app.enums import NotificationStatus, NotificationType, ServicePermission
 from notifications_utils.field import Field
 
-SENDING_STATUSES = [
-    NotificationStatus.CREATED,
-    NotificationStatus.PENDING,
-    NotificationStatus.SENDING,
-]
-DELIVERED_STATUSES = [NotificationStatus.DELIVERED, NotificationStatus.SENT]
-FAILURE_STATUSES = [
-    NotificationStatus.FAILED,
-    NotificationStatus.TEMPORARY_FAILURE,
-    NotificationStatus.PERMANENT_FAILURE,
-    NotificationStatus.TECHNICAL_FAILURE,
-    NotificationStatus.VALIDATION_FAILED,
-]
-REQUESTED_STATUSES = SENDING_STATUSES + DELIVERED_STATUSES + FAILURE_STATUSES
+SENDING_STATUSES = NotificationStatus.sending_statuses()
+DELIVERED_STATUSES = NotificationStatus.delivered_statuses()
+FAILURE_STATUSES = NotificationStatus.failure_statuses()
+REQUESTED_STATUSES = NotificationStatus.requested_statuses()
 
-NOTIFICATION_TYPES = ["sms", "email"]
+NOTIFICATION_TYPES = [NotificationType.SMS, NotificationType.EMAIL]
 
 
 def service_has_permission(permission):
