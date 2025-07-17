@@ -104,9 +104,15 @@ def registration_continue():
 
 def get_invite_data_from_redis(state):
 
-    invite_data = json.loads(redis_client.get(f"invitedata-{state}"))
+    invite_data = json.loads(redis_client.get(f"invitedata-{state}").decode("utf8"))
     user_email = redis_client.get(f"user_email-{state}").decode("utf8")
     user_uuid = redis_client.get(f"user_uuid-{state}").decode("utf8")
+
+    # login.gov is going to fail if we don't have at least one of these
+    if user_email is None and user_uuid is None:
+        flash("Can't find user email and/or uuid")
+        abort(403, "Can't find user email and/or uuid")
+
     invited_user_email_address = redis_client.get(
         f"invited_user_email_address-{state}"
     ).decode("utf8")
