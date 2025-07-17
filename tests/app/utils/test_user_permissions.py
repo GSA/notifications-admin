@@ -1,5 +1,6 @@
 import pytest
 
+from app.enums import ServicePermission
 from app.utils.user_permissions import (
     translate_permissions_from_db_to_ui,
     translate_permissions_from_ui_to_db,
@@ -11,7 +12,7 @@ from app.utils.user_permissions import (
     [
         (
             ["manage_templates"],
-            {"manage_templates"},
+            {ServicePermission.MANAGE_TEMPLATES},
         ),
         (
             [
@@ -20,7 +21,11 @@ from app.utils.user_permissions import (
                 "manage_templates",
                 "some_unknown_permission",
             ],
-            {"send_messages", "manage_templates", "some_unknown_permission"},
+            {
+                ServicePermission.SEND_MESSAGES,
+                ServicePermission.MANAGE_TEMPLATES,
+                "some_unknown_permission",
+            },
         ),
     ],
 )
@@ -33,7 +38,11 @@ def test_translate_permissions_from_db_to_ui(
 
 
 def test_translate_permissions_from_ui_to_db():
-    ui_permissions = ["send_messages", "manage_templates", "some_unknown_permission"]
+    ui_permissions = [
+        ServicePermission.SEND_MESSAGES,
+        ServicePermission.MANAGE_TEMPLATES,
+        "some_unknown_permission",
+    ]
     db_permissions = translate_permissions_from_ui_to_db(ui_permissions)
 
     assert db_permissions == {

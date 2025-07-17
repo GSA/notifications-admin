@@ -5,6 +5,7 @@ from unittest.mock import ANY
 import pytest
 from flask import url_for
 
+from app.enums import ServicePermission
 from app.main.views.register import check_invited_user_email_address_matches_expected
 from app.models.user import User
 
@@ -295,7 +296,12 @@ def test_register_from_email_auth_invite(
     mock_add_user_to_service.assert_called_once_with(
         sample_invite["service"],
         fake_uuid,  # This ID matches the return value of mock_register_user
-        {"manage_api_keys", "manage_service", "send_messages", "view_activity"},
+        {
+            "manage_api_keys",
+            ServicePermission.MANAGE_SERVICE,
+            ServicePermission.SEND_MESSAGES,
+            "view_activity",
+        },
         [],
     )
 

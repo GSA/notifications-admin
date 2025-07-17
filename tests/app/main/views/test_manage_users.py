@@ -5,6 +5,7 @@ import pytest
 from flask import url_for
 
 import app
+from app.enums import ServicePermission
 from app.utils.user import is_gov_user
 from tests.conftest import (
     ORGANISATION_ID,
@@ -304,9 +305,9 @@ def test_service_without_caseworking_doesnt_show_admin_vs_caseworker(
     for idx in range(len(permission_checkboxes)):
         assert permission_checkboxes[idx]["name"] == "permissions_field"
     assert permission_checkboxes[0]["value"] == "view_activity"
-    assert permission_checkboxes[1]["value"] == "send_messages"
-    assert permission_checkboxes[2]["value"] == "manage_templates"
-    assert permission_checkboxes[3]["value"] == "manage_service"
+    assert permission_checkboxes[1]["value"] == ServicePermission.SEND_MESSAGES
+    assert permission_checkboxes[2]["value"] == ServicePermission.MANAGE_TEMPLATES
+    assert permission_checkboxes[3]["value"] == ServicePermission.MANAGE_SERVICE
 
 
 @pytest.mark.parametrize(
@@ -387,9 +388,9 @@ def test_user_with_no_mobile_number_cant_be_set_to_sms_auth(
             {"user_id": sample_uuid()},
             [
                 ("view_activity", True),
-                ("send_messages", True),
-                ("manage_templates", True),
-                ("manage_service", True),
+                (ServicePermission.SEND_MESSAGES, True),
+                (ServicePermission.MANAGE_TEMPLATES, True),
+                (ServicePermission.MANAGE_SERVICE, True),
             ],
         ),
         (
@@ -397,9 +398,9 @@ def test_user_with_no_mobile_number_cant_be_set_to_sms_auth(
             {},
             [
                 ("view_activity", False),
-                ("send_messages", False),
-                ("manage_templates", False),
-                ("manage_service", False),
+                (ServicePermission.SEND_MESSAGES, False),
+                (ServicePermission.MANAGE_TEMPLATES, False),
+                (ServicePermission.MANAGE_SERVICE, False),
             ],
         ),
     ],
@@ -483,30 +484,30 @@ def test_should_not_show_page_for_non_team_member(
             {
                 "permissions_field": [
                     "view_activity",
-                    "send_messages",
-                    "manage_templates",
-                    "manage_service",
+                    ServicePermission.SEND_MESSAGES,
+                    ServicePermission.MANAGE_TEMPLATES,
+                    ServicePermission.MANAGE_SERVICE,
                 ]
             },
             {
                 "view_activity",
-                "send_messages",
-                "manage_service",
-                "manage_templates",
+                ServicePermission.SEND_MESSAGES,
+                ServicePermission.MANAGE_SERVICE,
+                ServicePermission.MANAGE_TEMPLATES,
             },
         ),
         (
             {
                 "permissions_field": [
                     "view_activity",
-                    "send_messages",
-                    "manage_templates",
+                    ServicePermission.SEND_MESSAGES,
+                    ServicePermission.MANAGE_TEMPLATES,
                 ]
             },
             {
                 "view_activity",
-                "send_messages",
-                "manage_templates",
+                ServicePermission.SEND_MESSAGES,
+                ServicePermission.MANAGE_TEMPLATES,
             },
         ),
         (
@@ -664,9 +665,9 @@ def test_cant_edit_user_folder_permissions_for_platform_admin_users(
         platform_admin_user["id"],
         SERVICE_ONE_ID,
         permissions={
-            "manage_service",
-            "manage_templates",
-            "send_messages",
+            ServicePermission.MANAGE_SERVICE,
+            ServicePermission.MANAGE_TEMPLATES,
+            ServicePermission.SEND_MESSAGES,
             "view_activity",
         },
         folder_permissions=None,
@@ -685,7 +686,7 @@ def test_cant_edit_non_member_user_permissions(
         user_id=USER_ONE_ID,
         _data={
             "email_address": "test@example.com",
-            "manage_service": "y",
+            ServicePermission.MANAGE_SERVICE: "y",
         },
         _expected_status=404,
     )
@@ -712,9 +713,9 @@ def test_edit_user_permissions_including_authentication_with_email_auth_service(
         _data={
             "email_address": active_user_with_permissions["email_address"],
             "permissions_field": [
-                "send_messages",
-                "manage_templates",
-                "manage_service",
+                ServicePermission.SEND_MESSAGES,
+                ServicePermission.MANAGE_TEMPLATES,
+                ServicePermission.MANAGE_SERVICE,
             ],
             "login_authentication": "sms_auth",
         },
@@ -729,9 +730,9 @@ def test_edit_user_permissions_including_authentication_with_email_auth_service(
         str(active_user_with_permissions["id"]),
         SERVICE_ONE_ID,
         permissions={
-            "send_messages",
-            "manage_templates",
-            "manage_service",
+            ServicePermission.SEND_MESSAGES,
+            ServicePermission.MANAGE_TEMPLATES,
+            ServicePermission.MANAGE_SERVICE,
         },
         folder_permissions=[],
     )
@@ -1016,9 +1017,9 @@ def test_invite_user(
             "email_address": email_address,
             "permissions_field": [
                 "view_activity",
-                "send_messages",
-                "manage_templates",
-                "manage_service",
+                ServicePermission.SEND_MESSAGES,
+                ServicePermission.MANAGE_TEMPLATES,
+                ServicePermission.MANAGE_SERVICE,
             ],
         },
         _follow_redirects=True,
@@ -1028,9 +1029,9 @@ def test_invite_user(
     assert flash_banner == f"Invite sent to {email_address}"
 
     expected_permissions = {
-        "manage_service",
-        "manage_templates",
-        "send_messages",
+        ServicePermission.MANAGE_SERVICE,
+        ServicePermission.MANAGE_TEMPLATES,
+        ServicePermission.SEND_MESSAGES,
         "view_activity",
     }
 
@@ -1072,7 +1073,7 @@ def test_invite_user_when_email_address_is_prefilled(
         _data={
             # No posted email address
             "permissions_field": [
-                "send_messages",
+                ServicePermission.SEND_MESSAGES,
             ],
         },
     )
@@ -1125,9 +1126,9 @@ def test_invite_user_with_email_auth_service(
             "email_address": email_address,
             "permissions_field": [
                 "view_activity",
-                "send_messages",
-                "manage_templates",
-                "manage_service",
+                ServicePermission.SEND_MESSAGES,
+                ServicePermission.MANAGE_TEMPLATES,
+                ServicePermission.MANAGE_SERVICE,
             ],
             "login_authentication": auth_type,
         },
@@ -1140,9 +1141,9 @@ def test_invite_user_with_email_auth_service(
     assert flash_banner == "Invite sent to test@example.gsa.gov"
 
     expected_permissions = {
-        "manage_service",
-        "manage_templates",
-        "send_messages",
+        ServicePermission.MANAGE_SERVICE,
+        ServicePermission.MANAGE_TEMPLATES,
+        ServicePermission.SEND_MESSAGES,
         "view_activity",
     }
 
@@ -1320,7 +1321,10 @@ def test_user_cant_invite_themselves(
         service_id=SERVICE_ONE_ID,
         _data={
             "email_address": active_user_with_permissions["email_address"],
-            "permissions_field": ["send_messages", "manage_service"],
+            "permissions_field": [
+                ServicePermission.SEND_MESSAGES,
+                ServicePermission.MANAGE_SERVICE,
+            ],
         },
         _follow_redirects=True,
         _expected_status=200,

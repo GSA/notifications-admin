@@ -2,6 +2,7 @@ import pytest
 from flask import request
 from werkzeug.exceptions import Forbidden
 
+from app.enums import ServicePermission
 from app.utils.user import user_has_permissions
 
 
@@ -10,17 +11,17 @@ from app.utils.user import user_has_permissions
     [
         [
             # Route has one of the permissions which the user has
-            "manage_service"
+            ServicePermission.MANAGE_SERVICE
         ],
         [
             # Route has more than one of the permissions which the user has
-            "manage_templates",
-            "manage_service",
+            ServicePermission.MANAGE_TEMPLATES,
+            ServicePermission.MANAGE_SERVICE,
         ],
         [
             # Route has one of the permissions which the user has, and one they do not
-            "manage_service",
-            "send_messages",
+            ServicePermission.MANAGE_SERVICE,
+            ServicePermission.SEND_MESSAGES,
         ],
         [
             # Route has no specific permissions required
@@ -52,8 +53,8 @@ def test_permissions(
     "permissions",
     [
         [
-            # Route has a permission which the user doesn’t have
-            "send_messages"
+            # Route has a permission which the user doesn't have
+            ServicePermission.SEND_MESSAGES
         ],
     ],
 )

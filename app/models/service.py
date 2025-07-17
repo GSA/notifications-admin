@@ -176,7 +176,9 @@ class Service(JSONModel, SortByNameMixin):
                 [
                     user
                     for user in self.team_members
-                    if user.has_permission_for_service(self.id, ServicePermission.MANAGE_SERVICE)
+                    if user.has_permission_for_service(
+                        self.id, ServicePermission.MANAGE_SERVICE
+                    )
                 ]
             )
             > 1

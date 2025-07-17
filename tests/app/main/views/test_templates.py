@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from flask import url_for
 from freezegun import freeze_time
 
+from app.enums import ServicePermission
 from notifications_python_client.errors import HTTPError
 from tests import template_json, validate_route_permission
 from tests.app.main.views.test_template_folders import (
@@ -547,14 +548,14 @@ def test_user_with_only_send_and_view_redirected_to_set_sender_for_one_off(
             None,
         ),
         (
-            ["manage_templates"],
+            [ServicePermission.MANAGE_TEMPLATES],
             [
                 (".edit_service_template", "Edit this template"),
             ],
             None,
         ),
         (
-            ["send_messages", "manage_templates"],
+            [ServicePermission.SEND_MESSAGES, ServicePermission.MANAGE_TEMPLATES],
             [
                 (".set_sender", "Use this template"),
                 (".edit_service_template", "Edit this template"),
@@ -1636,7 +1637,7 @@ def test_route_permissions(
             template_type="sms",
             template_id=fake_uuid,
         ),
-        ["manage_templates"],
+        [ServicePermission.MANAGE_TEMPLATES],
         api_user_active,
         service_one,
     )
