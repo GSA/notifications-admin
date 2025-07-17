@@ -1,6 +1,7 @@
 from flask import abort, current_app
 from werkzeug.utils import cached_property
 
+from app.enums import ServicePermission
 from app.models import JSONModel, SortByNameMixin
 from app.models.job import ImmediateJobs, PaginatedJobs, PaginatedUploads, ScheduledJobs
 from app.models.organization import Organization
@@ -175,7 +176,9 @@ class Service(JSONModel, SortByNameMixin):
                 [
                     user
                     for user in self.team_members
-                    if user.has_permission_for_service(self.id, "manage_service")
+                    if user.has_permission_for_service(
+                        self.id, ServicePermission.MANAGE_SERVICE
+                    )
                 ]
             )
             > 1

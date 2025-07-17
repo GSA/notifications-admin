@@ -69,6 +69,12 @@ class JobStatus(StrEnum):
     SENT_TO_DVLA = "sent to dvla"
 
 
+class ServicePermission(StrEnum):
+    SEND_MESSAGES = "send_messages"
+    MANAGE_SERVICE = "manage_service"
+    MANAGE_TEMPLATES = "manage_templates"
+
+
 class InvitedUserStatus(StrEnum):
     ACCEPTED = "accepted"
     CANCELLED = "cancelled"

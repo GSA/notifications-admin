@@ -14,7 +14,7 @@ from app import (
     service_api_client,
     template_statistics_client,
 )
-from app.enums import JobStatus, NotificationStatus
+from app.enums import JobStatus, NotificationStatus, ServicePermission
 from app.main import main
 from app.main.views.user_profile import set_timezone
 from app.statistics_utils import get_formatted_percentage
@@ -24,7 +24,7 @@ from app.utils.user import user_has_permissions
 
 
 @main.route("/services/<uuid:service_id>/dashboard")
-@user_has_permissions("view_activity", "send_messages")
+@user_has_permissions("view_activity", ServicePermission.SEND_MESSAGES)
 def old_service_dashboard(service_id):
     return redirect(url_for(".service_dashboard", service_id=service_id))
 
@@ -222,7 +222,7 @@ def template_usage(service_id):
 
 
 @main.route("/services/<uuid:service_id>/usage")
-@user_has_permissions("manage_service", allow_org_user=True)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def usage(service_id):
     year, current_financial_year = requested_and_current_financial_year(request)
 

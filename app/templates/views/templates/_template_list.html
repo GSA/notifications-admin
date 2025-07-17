@@ -24,7 +24,7 @@
 <nav id="template-list" aria-label="Template list">
   {% set checkboxes_data = [] %}
 
-  {% if not current_user.has_permissions('manage_templates') %}
+  {% if not current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES) %}
   <ul>
     {% endif %}
 
@@ -94,7 +94,7 @@
     } %}
     {% set _ = checkboxes_data.append(checkbox_config) %}
 
-    {% if not current_user.has_permissions('manage_templates') %}
+    {% if not current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES) %}
     <li
       class="template-list-item {%- if item.ancestors %} template-list-item-hidden-by-default {%- else %} template-list-item-without-ancestors{%- endif %}">
       {{ item_link_content }}
@@ -105,11 +105,11 @@
     {% endif %}
     {% endfor %}
 
-    {% if not current_user.has_permissions('manage_templates') %}
+    {% if not current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES) %}
   </ul>
   {% endif %}
 
-  {% if current_user.has_permissions('manage_templates') %}
+  {% if current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES) %}
   {{ templates_and_folders_form.templates_and_folders(param_extensions={
   "items": checkboxes_data,
   "formGroup": False

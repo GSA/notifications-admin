@@ -2,6 +2,8 @@ from itertools import chain
 
 from flask import request
 
+from app.enums import ServicePermission
+
 
 class Navigation:
     mapping = {}
@@ -74,7 +76,7 @@ class HeaderNavigation(Navigation):
             "delete_service_template",
             "edit_service_template",
             "manage_template_folder",
-            "send_messages",
+            ServicePermission.SEND_MESSAGES,
             "send_one_off",
             "send_one_off_step",
             "send_one_off_to_myself",
@@ -177,7 +179,7 @@ class MainNavigation(Navigation):
             "delete_service_template",
             "edit_service_template",
             "manage_template_folder",
-            "send_messages",
+            ServicePermission.SEND_MESSAGES,
             "send_one_off",
             "send_one_off_step",
             "send_one_off_to_myself",

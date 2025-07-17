@@ -2,6 +2,7 @@ from flask import abort, flash, redirect, render_template, request, session, url
 from flask_login import current_user
 
 from app import current_service, service_api_client
+from app.enums import ServicePermission
 from app.event_handlers import (
     create_cancel_user_invite_to_service_event,
     create_email_change_event,
@@ -43,7 +44,7 @@ def manage_users(service_id):
 @main.route(
     "/services/<uuid:service_id>/users/invite/<uuid:user_id>", methods=["GET", "POST"]
 )
-@user_has_permissions("manage_service")
+@user_has_permissions(ServicePermission.MANAGE_SERVICE)
 def invite_user(service_id, user_id=None):
     form_class = InviteUserForm
     form = form_class(
@@ -113,7 +114,7 @@ def invite_user(service_id, user_id=None):
 
 
 @main.route("/services/<uuid:service_id>/users/<uuid:user_id>", methods=["GET", "POST"])
-@user_has_permissions("manage_service")
+@user_has_permissions(ServicePermission.MANAGE_SERVICE)
 def edit_user_permissions(service_id, user_id):
     service_has_email_auth = current_service.has_permission("email_auth")
     user = current_service.get_team_member(user_id)
@@ -164,7 +165,7 @@ def edit_user_permissions(service_id, user_id):
 
 
 @main.route("/services/<uuid:service_id>/users/<uuid:user_id>/delete", methods=["POST"])
-@user_has_permissions("manage_service")
+@user_has_permissions(ServicePermission.MANAGE_SERVICE)
 def remove_user_from_service(service_id, user_id):
     try:
         service_api_client.remove_user_from_service(service_id, user_id)
@@ -187,7 +188,7 @@ def remove_user_from_service(service_id, user_id):
     "/services/<uuid:service_id>/users/<uuid:user_id>/edit-email",
     methods=["GET", "POST"],
 )
-@user_has_permissions("manage_service")
+@user_has_permissions(ServicePermission.MANAGE_SERVICE)
 def edit_user_email(service_id, user_id):
     user = current_service.get_team_member(user_id)
     user_email = user.email_address
@@ -220,7 +221,7 @@ def edit_user_email(service_id, user_id):
     "/services/<uuid:service_id>/users/<uuid:user_id>/edit-email/confirm",
     methods=["GET", "POST"],
 )
-@user_has_permissions("manage_service")
+@user_has_permissions(ServicePermission.MANAGE_SERVICE)
 def confirm_edit_user_email(service_id, user_id):
     user = current_service.get_team_member(user_id)
     session_key = "team_member_email_change-{}".format(user_id)
@@ -258,7 +259,7 @@ def confirm_edit_user_email(service_id, user_id):
     "/services/<uuid:service_id>/users/<uuid:user_id>/edit-mobile-number",
     methods=["GET", "POST"],
 )
-@user_has_permissions("manage_service")
+@user_has_permissions(ServicePermission.MANAGE_SERVICE)
 def edit_user_mobile_number(service_id, user_id):
     user = current_service.get_team_member(user_id)
     user_mobile_number = redact_mobile_number(user.mobile_number)
@@ -288,7 +289,7 @@ def edit_user_mobile_number(service_id, user_id):
     "/services/<uuid:service_id>/users/<uuid:user_id>/edit-mobile-number/confirm",
     methods=["GET", "POST"],
 )
-@user_has_permissions("manage_service")
+@user_has_permissions(ServicePermission.MANAGE_SERVICE)
 def confirm_edit_user_mobile_number(service_id, user_id):
     user = current_service.get_team_member(user_id)
     if "team_member_mobile_change" in session:
@@ -326,7 +327,7 @@ def confirm_edit_user_mobile_number(service_id, user_id):
     "/services/<uuid:service_id>/cancel-invited-user/<uuid:invited_user_id>",
     methods=["GET"],
 )
-@user_has_permissions("manage_service")
+@user_has_permissions(ServicePermission.MANAGE_SERVICE)
 def cancel_invited_user(service_id, invited_user_id):
     current_service.cancel_invite(invited_user_id)
 
@@ -345,7 +346,7 @@ def cancel_invited_user(service_id, invited_user_id):
     "/services/<uuid:service_id>/resend-invite/<uuid:invited_user_id>",
     methods=["GET"],
 )
-@user_has_permissions("manage_service")
+@user_has_permissions(ServicePermission.MANAGE_SERVICE)
 def resend_invite(service_id, invited_user_id):
     current_service.resend_invite(invited_user_id)
 

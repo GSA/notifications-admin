@@ -7,6 +7,7 @@ import pytest
 from flask import url_for
 from freezegun import freeze_time
 
+from app.enums import ServicePermission
 from app.main.views.dashboard import (
     aggregate_status_types,
     aggregate_template_usage,
@@ -956,7 +957,7 @@ def test_menu_manage_service(
         mocker,
         api_user_active,
         service_one,
-        ["view_activity", "manage_templates", "manage_users", "manage_settings"],
+        ["view_activity", ServicePermission.MANAGE_TEMPLATES, "manage_users", "manage_settings"],
     )
     page = str(page)
     assert (

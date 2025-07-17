@@ -360,6 +360,11 @@ def init_app(application):
         return {"current_user": current_user}
 
     @application.context_processor
+    def _attach_enums():
+        from app.enums import ServicePermission
+        return {"ServicePermission": ServicePermission}
+
+    @application.context_processor
     def _nav_selected():
         return navigation
 

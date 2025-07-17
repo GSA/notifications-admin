@@ -36,7 +36,7 @@
             </h2>
           </div>
           <div class="grid-col-3">
-            {% if current_user.has_permissions('manage_service') %}
+            {% if current_user.has_permissions(ServicePermission.MANAGE_SERVICE) %}
               <a class="usa-link user-list-edit-link" href="{{ url_for('.service_edit_email_reply_to', service_id =current_service.id, reply_to_email_id = item.id) }}">
                 Change<span class="usa-sr-only"> {{ item.email_address }}</span>
               </a>
@@ -55,7 +55,7 @@
   </div>
   <div class="grid-row">
     <div class="grid-col-12">
-      {% if current_user.has_permissions('manage_service') %}
+      {% if current_user.has_permissions(ServicePermission.MANAGE_SERVICE) %}
         <div class="js-stick-at-bottom-when-scrolling">
           {{ usaButton({
             "element": "a",

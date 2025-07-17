@@ -19,7 +19,7 @@
     <h1 class="font-body-2xl margin-0">
       Team members
     </h1>
-    {% if current_user.has_permissions('manage_service') %}
+    {% if current_user.has_permissions(ServicePermission.MANAGE_SERVICE) %}
       {{ usaButton({
       "element": "a",
       "text": "Invite a team member",
@@ -108,7 +108,7 @@
 
 
 
-          {% if current_user.has_permissions('manage_service') %}
+          {% if current_user.has_permissions(ServicePermission.MANAGE_SERVICE) %}
             {% if user.status == 'pending' or user.status == 'expired' %}
               <a class="user-list-edit-link usa-link padding-x-2" href="{{ url_for('.cancel_invited_user', service_id=current_service.id, invited_user_id=user.id) }}">
                 Cancel invitation<span class="usa-sr-only"> for {{ user.email_address }}</span>

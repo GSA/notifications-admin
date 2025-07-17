@@ -3,6 +3,7 @@ from unittest.mock import ANY
 from flask import current_app
 
 from app import invite_api_client
+from app.enums import ServicePermission
 
 
 def test_client_creates_invite(
@@ -50,7 +51,7 @@ def test_client_creates_invite(
             "12345",
             "67890",
             "test@example.com",
-            {"send_messages"},
+            {ServicePermission.SEND_MESSAGES},
             "sms_auth",
             [fake_uuid],
         )
