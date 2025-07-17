@@ -14,8 +14,7 @@ from app import (
     service_api_client,
     template_statistics_client,
 )
-from app.enums import ServicePermission
-from app.enums import JobStatus, NotificationStatus
+from app.enums import JobStatus, NotificationStatus, ServicePermission
 from app.main import main
 from app.main.views.user_profile import set_timezone
 from app.statistics_utils import get_formatted_percentage
