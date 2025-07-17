@@ -72,6 +72,7 @@ class JobStatus(StrEnum):
 class ServicePermission(StrEnum):
     SEND_MESSAGES = "send_messages"
     MANAGE_SERVICE = "manage_service"
+    MANAGE_TEMPLATES = "manage_templates"
 
 
 class InvitedUserStatus(StrEnum):

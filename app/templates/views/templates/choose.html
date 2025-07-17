@@ -21,7 +21,7 @@
      <p>
         Every message starts with a template. You can change it later.
 
-        {% if current_user.has_permissions('manage_templates') %}
+        {% if current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES) %}
           You need a template before you can
         {% else %}
           You need to ask your service manager to add templates before you can
@@ -33,7 +33,7 @@
 
     <div class="grid-row flex-column">
       <h1 class="font-body-2xl line-height-sans-2 margin-bottom-1 margin-top-0" id="page-title">{{page_title}}</h1>
-      <div class="{% if current_user.has_permissions('manage_templates') %} grid-col-10 {% else %} grid-col-12 {% endif %}">
+      <div class="{% if current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES) %} grid-col-10 {% else %} grid-col-12 {% endif %}">
         <p class="margin-top-0 margin-bottom-4" id="page-description">
           Every message starts with a template. To send, choose or create a template.
         </p>
@@ -44,7 +44,7 @@
           current_user=current_user
         ) }}
       </div>
-      {% if current_user.has_permissions('manage_templates') and current_template_folder_id and user_has_template_folder_permission %}
+      {% if current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES) and current_template_folder_id and user_has_template_folder_permission %}
         <div class="grid-col-2">
           <a href="{{ url_for('.manage_template_folder', service_id=current_service.id, template_folder_id=current_template_folder_id) }}" class="usa-link folder-heading-manage-link">Manage this folder<span class="usa-sr-only">Manage this folder</span></a>
         </div>
@@ -63,7 +63,7 @@
       <p class="usa-body margin-top-2">No templates found</p>
     </div>
 
-    {% if current_user.has_permissions('manage_templates') and user_has_template_folder_permission %}
+    {% if current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES) and user_has_template_folder_permission %}
       {% call form_wrapper(
           class='sticky-scroll-area',
           module='template-folder-form',

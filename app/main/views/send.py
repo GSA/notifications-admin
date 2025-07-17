@@ -190,7 +190,7 @@ def send_messages(service_id, template_id):
 
 
 @main.route("/services/<uuid:service_id>/send/<uuid:template_id>.csv", methods=["GET"])
-@user_has_permissions(ServicePermission.SEND_MESSAGES, "manage_templates")
+@user_has_permissions(ServicePermission.SEND_MESSAGES, ServicePermission.MANAGE_TEMPLATES)
 def get_example_csv(service_id, template_id):
     template = get_template(
         service_api_client.get_service_template(service_id, template_id)["data"],
@@ -845,7 +845,7 @@ def get_skip_link(step_index, template):
         and template.template_type in ("sms", "email")
         and not (template.template_type == "sms" and current_user.mobile_number is None)
         and current_user.has_permissions(
-            "manage_templates", ServicePermission.MANAGE_SERVICE
+            ServicePermission.MANAGE_TEMPLATES, ServicePermission.MANAGE_SERVICE
         )
     ):
         return (
