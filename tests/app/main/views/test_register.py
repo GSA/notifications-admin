@@ -394,7 +394,10 @@ def test_check_invited_user_email_address_doesnt_match_expected(mocker):
     mock_flash.assert_called_once_with(
         "You cannot accept an invite for another person."
     )
-    mock_abort.assert_called_once_with(403)
+    mock_abort.assert_called_once_with(
+        403,
+        "You cannot accept an invite for another person #invite",
+    )
 
 
 def test_check_user_email_address_fails_if_not_government_address(mocker):
@@ -407,7 +410,7 @@ def test_check_user_email_address_fails_if_not_government_address(mocker):
     mock_flash.assert_called_once_with("You must use a government email address.")
     mock_abort.assert_called_once_with(
         403,
-        +"You must use a government email address #invites",
+        "You must use a government email address #invites",
     )
 
 
