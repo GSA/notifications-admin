@@ -2,6 +2,7 @@ import pytest
 from flask import url_for
 
 from app import current_user
+from app.enums import ServicePermission
 from tests import validate_route_permission
 from tests.conftest import SERVICE_ONE_ID, create_template, normalize_spaces
 
@@ -113,7 +114,7 @@ def test_should_403_if_user_does_not_have_send_permissions_for_tour_start(
             service_id=SERVICE_ONE_ID,
             template_id=fake_uuid,
         ),
-        ["view_activity"],
+        [ServicePermission.VIEW_ACTIVITY],
         api_user_active,
         service_one,
     )
@@ -255,7 +256,7 @@ def test_should_403_if_user_does_not_have_send_permissions_for_tour_step(
             template_id=fake_uuid,
             step_index=1,
         ),
-        ["view_activity"],
+        [ServicePermission.VIEW_ACTIVITY],
         api_user_active,
         service_one,
     )

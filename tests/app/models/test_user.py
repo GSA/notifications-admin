@@ -183,7 +183,7 @@ def test_set_permissions(
     mock_event.assert_called_once_with(
         service_id=SERVICE_ONE_ID,
         user_id=active_user_view_permissions["id"],
-        original_ui_permissions={"view_activity"},
+        original_ui_permissions={ServicePermission.VIEW_ACTIVITY},
         new_ui_permissions={ServicePermission.MANAGE_TEMPLATES},
         set_by_id=fake_uuid,
     )

@@ -13,7 +13,7 @@ from notifications_utils.template import SMSPreviewTemplate
 
 
 @main.route("/services/<uuid:service_id>/conversation/<uuid:notification_id>")
-@user_has_permissions("view_activity")
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY)
 def conversation(service_id, notification_id):
     user_number = get_user_number(service_id, notification_id)
 
@@ -31,7 +31,7 @@ def conversation(service_id, notification_id):
 
 
 @main.route("/services/<uuid:service_id>/conversation/<uuid:notification_id>.json")
-@user_has_permissions("view_activity")
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY)
 def conversation_updates(service_id, notification_id):
     return jsonify(
         get_conversation_partials(

@@ -1,7 +1,7 @@
 from flask import abort, render_template, request, url_for
 
 from app import current_service, job_api_client
-from app.enums import NotificationStatus
+from app.enums import NotificationStatus, ServicePermission
 from app.formatters import get_time_left
 from app.main import main
 from app.utils.pagination import (
@@ -14,7 +14,7 @@ from app.utils.user import user_has_permissions
 
 
 @main.route("/activity/services/<uuid:service_id>")
-@user_has_permissions("view_activity")
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY)
 def all_jobs_activity(service_id):
     service_data_retention_days = 7
     page = get_page_from_request()
