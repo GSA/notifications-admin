@@ -2,7 +2,12 @@ from flask import abort, flash, redirect, render_template, session, url_for
 from flask_login import current_user
 from markupsafe import Markup
 
-from app.enums import InvitedOrgUserStatus, InvitedUserStatus, ServicePermission, AuthType
+from app.enums import (
+    AuthType,
+    InvitedOrgUserStatus,
+    InvitedUserStatus,
+    ServicePermission,
+)
 from app.main import main
 from app.models.organization import Organization
 from app.models.service import Service
