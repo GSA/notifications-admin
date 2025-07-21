@@ -6,7 +6,6 @@ import pytest
 from flask import current_app
 
 from app.enums import ServicePermission
-
 from tests import service_json
 from tests.conftest import (
     ORGANISATION_ID,
