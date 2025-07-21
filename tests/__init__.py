@@ -81,7 +81,7 @@ def user_json(
                 "send_emails",
                 "manage_users",
                 "manage_templates",
-                "manage_settings",
+                ServicePermission.MANAGE_SETTINGS,
                 "manage_api_keys",
             ]
         }

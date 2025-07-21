@@ -605,7 +605,7 @@ def test_get_manage_folder_viewing_permissions_for_users_not_visible_when_no_man
     mocker,
 ):
     active_user_with_permissions["permissions"][SERVICE_ONE_ID] = [
-        "send_texts",
+        ServicePermission.SEND_TEXTS,
         "send_emails",
         "manage_templates",
         "manage_api_keys",
@@ -614,7 +614,7 @@ def test_get_manage_folder_viewing_permissions_for_users_not_visible_when_no_man
     folder_id = str(uuid.uuid4())
     team_member = create_active_user_view_permissions(with_unique_id=True)
     team_member_2 = create_active_user_view_permissions(with_unique_id=True)
-    service_one["permissions"] += ["edit_folder_permissions"]
+    service_one["permissions"] += [ServicePermission.EDIT_FOLDER_PERMISSIONS]
     mock_get_template_folders.return_value = [
         {
             "id": folder_id,
@@ -655,7 +655,7 @@ def test_get_manage_folder_viewing_permissions_for_users_not_visible_for_service
     mocker,
 ):
     folder_id = str(uuid.uuid4())
-    service_one["permissions"] += ["edit_folder_permissions"]
+    service_one["permissions"] += [ServicePermission.EDIT_FOLDER_PERMISSIONS]
     mock_get_template_folders.return_value = [
         {
             "id": folder_id,
@@ -859,7 +859,7 @@ def test_manage_folder_users_doesnt_change_permissions_current_user_cannot_manag
     mocker,
 ):
     active_user_with_permissions["permissions"][SERVICE_ONE_ID] = [
-        "send_texts",
+        ServicePermission.SEND_TEXTS,
         "send_emails",
         "manage_templates",
         "manage_api_keys",

@@ -6,6 +6,7 @@ from unittest.mock import call
 import pytest
 from flask import url_for
 
+from app.enums import ServicePermission
 from app.formatters import format_datetime_table
 from tests import sample_uuid, validate_route_permission
 from tests.conftest import SERVICE_ONE_ID, normalize_spaces
@@ -472,7 +473,7 @@ def test_callback_forms_validation(
     expected_errors,
 ):
     if endpoint == "main.received_text_messages_callback":
-        service_one["permissions"] = ["inbound_sms"]
+        service_one["permissions"] = [ServicePermission.INBOUND_SMS]
 
     data = {
         "url": url,
@@ -516,7 +517,7 @@ def test_callback_forms_can_be_cleared(
 ):
     service_one["service_callback_api"] = [fake_uuid]
     service_one["inbound_api"] = [fake_uuid]
-    service_one["permissions"] = ["inbound_sms"]
+    service_one["permissions"] = [ServicePermission.INBOUND_SMS]
     mocked_delete = mocker.patch("app.service_api_client.delete")
 
     page = client_request.post(
@@ -563,7 +564,7 @@ def test_callback_forms_can_be_cleared_when_callback_and_inbound_apis_are_empty(
     mock_get_empty_service_callback_api,
     mock_get_empty_service_inbound_api,
 ):
-    service_one["permissions"] = ["inbound_sms"]
+    service_one["permissions"] = [ServicePermission.INBOUND_SMS]
     mocked_delete = mocker.patch("app.service_api_client.delete")
 
     page = client_request.post(
@@ -599,7 +600,7 @@ def test_callbacks_button_links_straight_to_delivery_status_if_service_has_no_in
     expected_link,
 ):
     if has_inbound_sms:
-        service_one["permissions"] = ["inbound_sms"]
+        service_one["permissions"] = [ServicePermission.INBOUND_SMS]
 
     page = client_request.get(
         "main.api_integration",
@@ -640,7 +641,7 @@ def test_back_link_directs_to_api_integration_from_delivery_callback_if_no_inbou
     client_request, service_one, mocker, has_inbound_sms, expected_link
 ):
     if has_inbound_sms:
-        service_one["permissions"] = ["inbound_sms"]
+        service_one["permissions"] = [ServicePermission.INBOUND_SMS]
 
     page = client_request.get(
         "main.delivery_status_callback",
@@ -671,7 +672,7 @@ def test_create_delivery_status_and_receive_text_message_callbacks(
     fake_uuid,
 ):
     if endpoint == "main.received_text_messages_callback":
-        service_one["permissions"] = ["inbound_sms"]
+        service_one["permissions"] = [ServicePermission.INBOUND_SMS]
 
     data = {
         "url": "https://test.url.com/",
@@ -739,7 +740,7 @@ def test_update_receive_text_message_callback_details(
     fake_uuid,
 ):
     service_one["inbound_api"] = [fake_uuid]
-    service_one["permissions"] = ["inbound_sms"]
+    service_one["permissions"] = [ServicePermission.INBOUND_SMS]
 
     data = {
         "url": "https://test.url.com/",
@@ -793,7 +794,7 @@ def test_update_receive_text_message_callback_without_changes_does_not_update(
     mock_get_valid_service_inbound_api,
 ):
     service_one["inbound_api"] = [fake_uuid]
-    service_one["permissions"] = ["inbound_sms"]
+    service_one["permissions"] = [ServicePermission.INBOUND_SMS]
     data = {
         "user_id": fake_uuid,
         "url": "https://hello3.gsa.gov",
@@ -842,7 +843,7 @@ def test_callbacks_page_works_when_no_apis_set(
     inbound_url,
     expected_2nd_table_row,
 ):
-    service_one["permissions"] = ["inbound_sms"]
+    service_one["permissions"] = [ServicePermission.INBOUND_SMS]
     service_one["inbound_api"] = inbound_api
     service_one["service_callback_api"] = service_callback_api
 

@@ -2,7 +2,7 @@ from flask import abort, flash, redirect, render_template, session, url_for
 from flask_login import current_user
 from markupsafe import Markup
 
-from app.enums import InvitedOrgUserStatus, InvitedUserStatus
+from app.enums import InvitedOrgUserStatus, InvitedUserStatus, ServicePermission, AuthType
 from app.main import main
 from app.models.organization import Organization
 from app.models.service import Service
@@ -61,10 +61,10 @@ def accept_invite(token):
             # if the user is a Platform Admin, we silently leave this unchanged to prevent a security
             # issue where someone could switch their auth type to something less secure
             if (
-                service.has_permission("email_auth")
+                service.has_permission(ServicePermission.EMAIL_AUTH)
                 and not existing_user.platform_admin
             ):
-                if invited_user.auth_type == "email_auth" or (
+                if invited_user.auth_type == AuthType.EMAIL_AUTH or (
                     # they have a phone number, we want them to start using it.
                     # if they dont have a mobile we just ignore that option of the invite
                     existing_user.mobile_number

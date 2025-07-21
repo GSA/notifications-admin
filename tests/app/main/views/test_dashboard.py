@@ -920,7 +920,7 @@ def test_menu_send_messages(
         mocker,
         api_user_active,
         service_one,
-        ["view_activity", "send_texts", "send_emails", "manage_service"],
+        ["view_activity", ServicePermission.SEND_TEXTS, "send_emails", "manage_service"],
     )
     page = str(page)
     assert (
@@ -957,7 +957,7 @@ def test_menu_manage_service(
         mocker,
         api_user_active,
         service_one,
-        ["view_activity", ServicePermission.MANAGE_TEMPLATES, "manage_users", "manage_settings"],
+        ["view_activity", ServicePermission.MANAGE_TEMPLATES, "manage_users", ServicePermission.MANAGE_SETTINGS],
     )
     page = str(page)
     assert (
@@ -994,7 +994,7 @@ def test_menu_main_settings(
         mocker,
         api_user_active,
         service_one,
-        ["view_activity", "user_profile", "manage_users", "manage_settings"],
+        ["view_activity", "user_profile", "manage_users", ServicePermission.MANAGE_SETTINGS],
     )
     page = str(page)
     assert (

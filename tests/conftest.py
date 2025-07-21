@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 from flask import Flask, url_for
 
 from app import create_app
+from app.enums import AuthType, ServicePermission
 from notifications_python_client.errors import HTTPError
 from notifications_utils.url_safe_token import generate_token
 
@@ -1021,7 +1022,7 @@ def platform_admin_user(fake_uuid):
                 "send_emails",
                 "manage_users",
                 "manage_templates",
-                "manage_settings",
+                ServicePermission.MANAGE_SETTINGS,
                 "manage_api_keys",
                 "view_activity",
             ]
@@ -1045,7 +1046,7 @@ def api_user_active():
 
 @pytest.fixture
 def api_user_active_email_auth(fake_uuid):
-    return create_user(id=fake_uuid, auth_type="email_auth")
+    return create_user(id=fake_uuid, auth_type=AuthType.EMAIL_AUTH)
 
 
 @pytest.fixture
@@ -1081,7 +1082,7 @@ def active_user_with_permission_to_two_services(fake_uuid):
         "send_emails",
         "manage_users",
         "manage_templates",
-        "manage_settings",
+        ServicePermission.MANAGE_SETTINGS,
         "manage_api_keys",
         "view_activity",
     ]
@@ -3188,7 +3189,7 @@ def create_active_user_no_api_key_permission(with_unique_id=False):
         permissions={
             SERVICE_ONE_ID: [
                 "manage_templates",
-                "manage_settings",
+                ServicePermission.MANAGE_SETTINGS,
                 "manage_users",
                 "view_activity",
             ]
@@ -3241,7 +3242,7 @@ def create_service_one_admin(**overrides):
                 "send_emails",
                 "manage_users",
                 "manage_templates",
-                "manage_settings",
+                ServicePermission.MANAGE_SETTINGS,
                 "manage_api_keys",
                 "view_activity",
             ]

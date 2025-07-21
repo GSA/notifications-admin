@@ -73,6 +73,14 @@ class ServicePermission(StrEnum):
     SEND_MESSAGES = "send_messages"
     MANAGE_SERVICE = "manage_service"
     MANAGE_TEMPLATES = "manage_templates"
+    SEND_TEXTS = "send_texts"
+    MANAGE_SETTINGS = "manage_settings"
+    INBOUND_SMS = "inbound_sms"
+    INTERNATIONAL_SMS = "international_sms"
+    EMAIL_AUTH = "email_auth"
+    EDIT_FOLDER_PERMISSIONS = "edit_folder_permissions"
+    RESEARCH_MODE = "research_mode"
+    UPLOAD_DOCUMENT = "upload_document"
 
 
 class InvitedUserStatus(StrEnum):

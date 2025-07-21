@@ -3,6 +3,7 @@ import functools
 import pytest
 from flask import url_for
 
+from app.enums import ServicePermission
 from app.main.views.service_settings import PLATFORM_ADMIN_SERVICE_PERMISSIONS
 from tests.conftest import normalize_spaces
 
@@ -34,7 +35,7 @@ def test_service_set_permission_requires_platform_admin(
     client_request.post(
         "main.service_set_permission",
         service_id=service_one["id"],
-        permission="email_auth",
+        permission=ServicePermission.EMAIL_AUTH,
         _data={"enabled": "True"},
         _expected_status=403,
     )
@@ -45,25 +46,25 @@ def test_service_set_permission_requires_platform_admin(
     [
         (
             [],
-            "inbound_sms",
+            ServicePermission.INBOUND_SMS,
             "True",
-            ["inbound_sms"],
+            [ServicePermission.INBOUND_SMS],
         ),
         (
-            ["inbound_sms"],
-            "inbound_sms",
+            [ServicePermission.INBOUND_SMS],
+            ServicePermission.INBOUND_SMS,
             "False",
             [],
         ),
         (
             [],
-            "email_auth",
+            ServicePermission.EMAIL_AUTH,
             "True",
-            ["email_auth"],
+            [ServicePermission.EMAIL_AUTH],
         ),
         (
-            ["email_auth"],
-            "email_auth",
+            [ServicePermission.EMAIL_AUTH],
+            ServicePermission.EMAIL_AUTH,
             "False",
             [],
         ),
@@ -201,7 +202,7 @@ def test_service_setting_link_toggles_index_error(
     ("permissions", "permissions_text", "visible"),
     [
         ("sms", "inbound SMS", True),
-        ("inbound_sms", "inbound SMS", False),  # no sms parent permission
+        (ServicePermission.INBOUND_SMS, "inbound SMS", False),  # no sms parent permission
         # also test no permissions set
         ("", "inbound SMS", False),
     ],

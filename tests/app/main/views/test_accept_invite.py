@@ -5,6 +5,7 @@ from flask import url_for
 from freezegun import freeze_time
 
 import app
+from app.enums import AuthType, ServicePermission
 from notifications_python_client.errors import HTTPError
 from tests import service_json
 from tests.conftest import (
@@ -747,8 +748,8 @@ def test_existing_user_accepts_and_sets_email_auth(
 ):
     sample_invite["email_address"] = api_user_active["email_address"]
 
-    service_one["permissions"].append("email_auth")
-    sample_invite["auth_type"] = "email_auth"
+    service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
+    sample_invite["auth_type"] = AuthType.EMAIL_AUTH
 
     client_request.get(
         "main.accept_invite",
@@ -762,7 +763,7 @@ def test_existing_user_accepts_and_sets_email_auth(
     mock_get_existing_user_by_email.assert_called_once_with("test@user.gsa.gov")
     assert mock_update_user_attribute.call_args_list == [
         call(api_user_active["id"], email_access_validated_at="2021-12-12T12:12:12"),
-        call(api_user_active["id"], auth_type="email_auth"),
+        call(api_user_active["id"], auth_type=AuthType.EMAIL_AUTH),
     ]
     mock_add_user_to_service.assert_called_once_with(
         ANY, api_user_active["id"], ANY, ANY
@@ -782,8 +783,8 @@ def test_platform_admin_user_accepts_and_preserves_auth(
     mocker,
 ):
     sample_invite["email_address"] = platform_admin_user["email_address"]
-    sample_invite["auth_type"] = "email_auth"
-    service_one["permissions"].append("email_auth")
+    sample_invite["auth_type"] = AuthType.EMAIL_AUTH
+    service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
 
     mocker.patch(
         "app.user_api_client.get_user_by_email", return_value=platform_admin_user
@@ -827,9 +828,9 @@ def test_existing_user_doesnt_get_auth_changed_by_service_without_permission(
 ):
     sample_invite["email_address"] = api_user_active["email_address"]
 
-    assert "email_auth" not in service_one["permissions"]
+    assert ServicePermission.EMAIL_AUTH not in service_one["permissions"]
 
-    sample_invite["auth_type"] = "email_auth"
+    sample_invite["auth_type"] = AuthType.EMAIL_AUTH
 
     client_request.get(
         "main.accept_invite",
@@ -861,9 +862,9 @@ def test_existing_email_auth_user_without_phone_cannot_set_sms_auth(
 ):
     sample_invite["email_address"] = api_user_active["email_address"]
 
-    service_one["permissions"].append("email_auth")
+    service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
 
-    api_user_active["auth_type"] = "email_auth"
+    api_user_active["auth_type"] = AuthType.EMAIL_AUTH
     api_user_active["mobile_number"] = None
     sample_invite["auth_type"] = "sms_auth"
 
@@ -899,7 +900,7 @@ def test_existing_email_auth_user_with_phone_can_set_sms_auth(
     mocker,
 ):
     sample_invite["email_address"] = api_user_active["email_address"]
-    service_one["permissions"].append("email_auth")
+    service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
     sample_invite["auth_type"] = "sms_auth"
 
     client_request.get(

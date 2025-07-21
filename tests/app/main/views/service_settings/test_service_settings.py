@@ -7,6 +7,7 @@ from flask import url_for
 from freezegun import freeze_time
 
 import app
+from app.enums import ServicePermission
 from notifications_python_client.errors import HTTPError
 from tests import (
     find_element_by_tag_and_partial_text,
@@ -196,7 +197,7 @@ def test_send_files_by_email_row_on_settings_page(
             ],
         ),
         (
-            ["email", "sms", "email_auth"],
+            ["email", "sms", ServicePermission.EMAIL_AUTH],
             [
                 "Service name service one Change service name",
                 "Send text messages On",
@@ -2540,7 +2541,7 @@ def test_send_files_by_email_contact_details_does_not_update_invalid_contact_det
     error,
 ):
     service_one["contact_link"] = "http://example.com/"
-    service_one["permissions"].append("upload_document")
+    service_one["permissions"].append(ServicePermission.UPLOAD_DOCUMENT)
 
     page = client_request.post(
         "main.send_files_by_email_contact_details",
@@ -2568,7 +2569,7 @@ def test_send_files_by_email_contact_details_does_not_update_invalid_contact_det
         ),
         (
             "main.service_set_auth_type",
-            ["email_auth"],
+            [ServicePermission.EMAIL_AUTH],
             (
                 "Your username, password, and multi-factor authentication options are handled by Login.gov."
             ),
@@ -2661,7 +2662,7 @@ def test_set_inbound_sms_when_inbound_number_is_set(
     user,
     expected_paragraphs,
 ):
-    service_one["permissions"] = ["inbound_sms"]
+    service_one["permissions"] = [ServicePermission.INBOUND_SMS]
     mocker.patch(
         "app.inbound_number_client.get_inbound_sms_number_for_service",
         return_value={"data": {"number": "2028675309"}},

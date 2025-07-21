@@ -38,7 +38,7 @@ class Service(JSONModel, SortByNameMixin):
         "notes",
         "prefix_sms",
         "purchase_order_number",
-        "research_mode",
+        ServicePermission.RESEARCH_MODE,
         "service_callback_api",
         "volume_email",
         "volume_sms",
@@ -50,11 +50,11 @@ class Service(JSONModel, SortByNameMixin):
     )
 
     ALL_PERMISSIONS = TEMPLATE_TYPES + (
-        "edit_folder_permissions",
-        "email_auth",
-        "inbound_sms",
+        ServicePermission.EDIT_FOLDER_PERMISSIONS,
+        ServicePermission.EMAIL_AUTH,
+        ServicePermission.INBOUND_SMS,
         "international_sms",
-        "upload_document",
+        ServicePermission.UPLOAD_DOCUMENT,
     )
 
     @classmethod
@@ -440,7 +440,7 @@ class Service(JSONModel, SortByNameMixin):
 
     @cached_property
     def inbound_sms_summary(self):
-        if not self.has_permission("inbound_sms"):
+        if not self.has_permission(ServicePermission.INBOUND_SMS):
             return None
         return service_api_client.get_inbound_sms_summary(self.id)
 
