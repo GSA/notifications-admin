@@ -608,7 +608,7 @@ def test_get_manage_folder_viewing_permissions_for_users_not_visible_when_no_man
     active_user_with_permissions["permissions"][SERVICE_ONE_ID] = [
         ServicePermission.SEND_TEXTS,
         ServicePermission.SEND_EMAILS,
-        "manage_templates",
+        ServicePermission.MANAGE_TEMPLATES,
         "manage_api_keys",
         ServicePermission.VIEW_ACTIVITY,
     ]
@@ -862,7 +862,7 @@ def test_manage_folder_users_doesnt_change_permissions_current_user_cannot_manag
     active_user_with_permissions["permissions"][SERVICE_ONE_ID] = [
         ServicePermission.SEND_TEXTS,
         ServicePermission.SEND_EMAILS,
-        "manage_templates",
+        ServicePermission.MANAGE_TEMPLATES,
         "manage_api_keys",
         ServicePermission.VIEW_ACTIVITY,
     ]

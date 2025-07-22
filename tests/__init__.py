@@ -77,11 +77,11 @@ def user_json(
     if permissions is None:
         permissions = {
             str(generate_uuid()): [
-                "view_activity",
-                "send_texts",
-                "send_emails",
-                "manage_users",
-                "manage_templates",
+                ServicePermission.VIEW_ACTIVITY,
+                ServicePermission.SEND_TEXTS,
+                ServicePermission.SEND_EMAILS,
+                ServicePermission.MANAGE_USERS,
+                ServicePermission.MANAGE_TEMPLATES,
                 ServicePermission.MANAGE_SETTINGS,
                 "manage_api_keys",
             ]

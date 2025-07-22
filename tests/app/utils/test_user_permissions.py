@@ -11,14 +11,14 @@ from app.utils.user_permissions import (
     ("db_permissions", "expected_ui_permissions"),
     [
         (
-            ["manage_templates"],
+            [ServicePermission.MANAGE_TEMPLATES],
             {ServicePermission.MANAGE_TEMPLATES},
         ),
         (
             [
                 ServicePermission.SEND_TEXTS,
                 ServicePermission.SEND_EMAILS,
-                "manage_templates",
+                ServicePermission.MANAGE_TEMPLATES,
                 "some_unknown_permission",
             ],
             {

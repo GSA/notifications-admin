@@ -5,7 +5,7 @@ from flask import url_for
 from freezegun import freeze_time
 
 import app
-from app.enums import ServicePermission
+from app.enums import AuthType, ServicePermission
 from notifications_python_client.errors import HTTPError
 from tests import service_json
 from tests.conftest import (
