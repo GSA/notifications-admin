@@ -73,6 +73,9 @@ class ServicePermission(StrEnum):
     SEND_MESSAGES = "send_messages"
     MANAGE_SERVICE = "manage_service"
     MANAGE_TEMPLATES = "manage_templates"
+    VIEW_ACTIVITY = "view_activity"
+    MANAGE_USERS = "manage_users"
+    SEND_EMAILS = "send_emails"
 
 
 class InvitedUserStatus(StrEnum):

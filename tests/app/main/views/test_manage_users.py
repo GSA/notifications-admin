@@ -304,7 +304,7 @@ def test_service_without_caseworking_doesnt_show_admin_vs_caseworker(
 
     for idx in range(len(permission_checkboxes)):
         assert permission_checkboxes[idx]["name"] == "permissions_field"
-    assert permission_checkboxes[0]["value"] == "view_activity"
+    assert permission_checkboxes[0]["value"] == ServicePermission.VIEW_ACTIVITY
     assert permission_checkboxes[1]["value"] == ServicePermission.SEND_MESSAGES
     assert permission_checkboxes[2]["value"] == ServicePermission.MANAGE_TEMPLATES
     assert permission_checkboxes[3]["value"] == ServicePermission.MANAGE_SERVICE
@@ -387,7 +387,7 @@ def test_user_with_no_mobile_number_cant_be_set_to_sms_auth(
             "main.edit_user_permissions",
             {"user_id": sample_uuid()},
             [
-                ("view_activity", True),
+                (ServicePermission.VIEW_ACTIVITY, True),
                 (ServicePermission.SEND_MESSAGES, True),
                 (ServicePermission.MANAGE_TEMPLATES, True),
                 (ServicePermission.MANAGE_SERVICE, True),
@@ -397,7 +397,7 @@ def test_user_with_no_mobile_number_cant_be_set_to_sms_auth(
             "main.invite_user",
             {},
             [
-                ("view_activity", False),
+                (ServicePermission.VIEW_ACTIVITY, False),
                 (ServicePermission.SEND_MESSAGES, False),
                 (ServicePermission.MANAGE_TEMPLATES, False),
                 (ServicePermission.MANAGE_SERVICE, False),
@@ -483,14 +483,14 @@ def test_should_not_show_page_for_non_team_member(
         (
             {
                 "permissions_field": [
-                    "view_activity",
+                    ServicePermission.VIEW_ACTIVITY,
                     ServicePermission.SEND_MESSAGES,
                     ServicePermission.MANAGE_TEMPLATES,
                     ServicePermission.MANAGE_SERVICE,
                 ]
             },
             {
-                "view_activity",
+                ServicePermission.VIEW_ACTIVITY,
                 ServicePermission.SEND_MESSAGES,
                 ServicePermission.MANAGE_SERVICE,
                 ServicePermission.MANAGE_TEMPLATES,
@@ -499,13 +499,13 @@ def test_should_not_show_page_for_non_team_member(
         (
             {
                 "permissions_field": [
-                    "view_activity",
+                    ServicePermission.VIEW_ACTIVITY,
                     ServicePermission.SEND_MESSAGES,
                     ServicePermission.MANAGE_TEMPLATES,
                 ]
             },
             {
-                "view_activity",
+                ServicePermission.VIEW_ACTIVITY,
                 ServicePermission.SEND_MESSAGES,
                 ServicePermission.MANAGE_TEMPLATES,
             },
@@ -668,7 +668,7 @@ def test_cant_edit_user_folder_permissions_for_platform_admin_users(
             ServicePermission.MANAGE_SERVICE,
             ServicePermission.MANAGE_TEMPLATES,
             ServicePermission.SEND_MESSAGES,
-            "view_activity",
+            ServicePermission.VIEW_ACTIVITY,
         },
         folder_permissions=None,
     )
@@ -1016,7 +1016,7 @@ def test_invite_user(
         _data={
             "email_address": email_address,
             "permissions_field": [
-                "view_activity",
+                ServicePermission.VIEW_ACTIVITY,
                 ServicePermission.SEND_MESSAGES,
                 ServicePermission.MANAGE_TEMPLATES,
                 ServicePermission.MANAGE_SERVICE,
@@ -1032,7 +1032,7 @@ def test_invite_user(
         ServicePermission.MANAGE_SERVICE,
         ServicePermission.MANAGE_TEMPLATES,
         ServicePermission.SEND_MESSAGES,
-        "view_activity",
+        ServicePermission.VIEW_ACTIVITY,
     }
 
     app.invite_api_client.create_invite.assert_called_once_with(
@@ -1125,7 +1125,7 @@ def test_invite_user_with_email_auth_service(
         _data={
             "email_address": email_address,
             "permissions_field": [
-                "view_activity",
+                ServicePermission.VIEW_ACTIVITY,
                 ServicePermission.SEND_MESSAGES,
                 ServicePermission.MANAGE_TEMPLATES,
                 ServicePermission.MANAGE_SERVICE,
@@ -1144,7 +1144,7 @@ def test_invite_user_with_email_auth_service(
         ServicePermission.MANAGE_SERVICE,
         ServicePermission.MANAGE_TEMPLATES,
         ServicePermission.SEND_MESSAGES,
-        "view_activity",
+        ServicePermission.VIEW_ACTIVITY,
     }
 
     app.invite_api_client.create_invite.assert_called_once_with(

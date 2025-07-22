@@ -28,7 +28,7 @@ from app.utils.user import user_has_permissions
 
 
 @main.route("/services/<uuid:service_id>/notification/<uuid:notification_id>")
-@user_has_permissions("view_activity", ServicePermission.SEND_MESSAGES)
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY, ServicePermission.SEND_MESSAGES)
 def view_notification(service_id, notification_id, error_message=None):
     if error_message:
         flash(error_message)
@@ -101,7 +101,7 @@ def view_notification(service_id, notification_id, error_message=None):
 
 
 @main.route("/services/<uuid:service_id>/notification/<uuid:notification_id>.json")
-@user_has_permissions("view_activity", ServicePermission.SEND_MESSAGES)
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY, ServicePermission.SEND_MESSAGES)
 def view_notification_updates(service_id, notification_id):
     return jsonify(
         **get_single_notification_partials(
@@ -134,7 +134,7 @@ def get_all_personalisation_from_notification(notification):
 
 
 @main.route("/services/<uuid:service_id>/download-notifications.csv")
-@user_has_permissions("view_activity")
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY)
 def download_notifications_csv(service_id):
     filter_args = parse_filter_args(request.args)
     filter_args["status"] = set_status_filters(filter_args)

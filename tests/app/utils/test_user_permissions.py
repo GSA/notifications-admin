@@ -17,7 +17,7 @@ from app.utils.user_permissions import (
         (
             [
                 "send_texts",
-                "send_emails",
+                ServicePermission.SEND_EMAILS,
                 "manage_templates",
                 "some_unknown_permission",
             ],
@@ -47,7 +47,7 @@ def test_translate_permissions_from_ui_to_db():
 
     assert db_permissions == {
         "send_texts",
-        "send_emails",
+        ServicePermission.SEND_EMAILS,
         "manage_templates",
         "some_unknown_permission",
     }

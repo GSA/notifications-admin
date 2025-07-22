@@ -6,6 +6,7 @@ from unittest.mock import call
 import pytest
 from flask import url_for
 
+from app.enums import ServicePermission
 from app.formatters import format_datetime_table
 from tests import sample_uuid, validate_route_permission
 from tests.conftest import SERVICE_ONE_ID, normalize_spaces
@@ -371,7 +372,7 @@ def test_route_invalid_permissions(
             "GET",
             403,
             url_for(route, service_id=service_one["id"], key_id=fake_uuid),
-            ["view_activity"],
+            [ServicePermission.VIEW_ACTIVITY],
             api_user_active,
             service_one,
         )
