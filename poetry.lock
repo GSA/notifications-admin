@@ -2358,7 +2358,7 @@ version = "25.1.1"
 description = "The PyPA recommended tool for installing Python packages."
 optional = false
 python-versions = ">=3.9"
-groups = ["main", "dev"]
+groups = ["dev"]
 files = [
     {file = "pip-25.1.1-py3-none-any.whl", hash = "sha256:2913a38a2abf4ea6b64ab507bd9e967f3b53dc1ede74b01b0931e1ce548751af"},
     {file = "pip-25.1.1.tar.gz", hash = "sha256:3de45d411d308d5054c2168185d8da7f9a2cd753dbac8acbfa88a8909ecd9077"},
@@ -2427,21 +2427,6 @@ pyparsing = "*"
 [package.extras]
 docs = ["Sphinx (>=3.3.1)", "doc8 (>=0.8.1)", "sphinx-rtd-theme (>=0.5.0)"]
 testing = ["aboutcode-toolkit (>=6.0.0)", "black", "pytest (>=6,!=7.0.0)", "pytest-xdist (>=2)"]
-
-[[package]]
-name = "pip-system-certs"
-version = "5.2"
-description = "Automatically configures Python to use system certificates via truststore"
-optional = false
-python-versions = ">=3.10"
-groups = ["main"]
-files = [
-    {file = "pip_system_certs-5.2-py3-none-any.whl", hash = "sha256:e6ef3e106d4d02313e33955c2bcc4c2b143b2da07ef91e28a6805a0c1c512126"},
-    {file = "pip_system_certs-5.2.tar.gz", hash = "sha256:80b776b5cf17191bf99d313699b7fce2fdb84eb7bbb225fd134109a82706406f"},
-]
-
-[package.dependencies]
-pip = ">=24.2"
 
 [[package]]
 name = "pkginfo"
@@ -4144,4 +4129,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12.9"
-content-hash = "e8d73515c247837463351797b4f6b9bde188ea3f7ef6fcb6da574f6e89396cfc"
+content-hash = "3b1e525166fe084650e33258a33d9e3d0fccfccb096ccdc10ea596d08a8af43c"
