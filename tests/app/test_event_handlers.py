@@ -124,7 +124,7 @@ def test_set_user_permissions(client_request, mock_events):
         "user_id": str(uuid.uuid4()),
         "service_id": str(uuid.uuid4()),
         "original_ui_permissions": {ServicePermission.MANAGE_TEMPLATES},
-        "new_ui_permissions": {ServicePermission.VIEW_ACTIVITY},
+        "new_ui_permissions": {"view_activity"},
         "set_by_id": str(uuid.uuid4()),
     }
 
