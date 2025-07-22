@@ -1,8 +1,4 @@
-import truststore
-
-truststore.inject_into_ssl()
-
-import re  # noqa
+import re
 
 SMS_CHAR_COUNT_LIMIT = 918  # 153 * 6, no network issues but check with providers before upping this further
 LETTER_MAX_PAGE_COUNT = 10
