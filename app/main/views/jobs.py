@@ -222,7 +222,9 @@ def get_notifications(service_id, message_type, status_override=None):  # noqa
             message_type, number_of_days="seven_day"
         )
 
-    if request.path.endswith("csv") and current_user.has_permissions(ServicePermission.VIEW_ACTIVITY):
+    if request.path.endswith("csv") and current_user.has_permissions(
+        ServicePermission.VIEW_ACTIVITY
+    ):
         return Response(
             generate_notifications_csv(
                 service_id=service_id,

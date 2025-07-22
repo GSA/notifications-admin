@@ -924,7 +924,7 @@ def test_menu_send_messages(
             ServicePermission.VIEW_ACTIVITY,
             "send_texts",
             ServicePermission.SEND_EMAILS,
-            ServicePermission.MANAGE_SERVICE
+            ServicePermission.MANAGE_SERVICE,
         ],
     )
     page = str(page)
@@ -1004,7 +1004,12 @@ def test_menu_main_settings(
         mocker,
         api_user_active,
         service_one,
-        [ServicePermission.VIEW_ACTIVITY, "user_profile", ServicePermission.MANAGE_USERS, "manage_settings"],
+        [
+            ServicePermission.VIEW_ACTIVITY,
+            "user_profile",
+            ServicePermission.MANAGE_USERS,
+            "manage_settings",
+        ],
     )
     page = str(page)
     assert (

@@ -6,7 +6,10 @@ permission_mappings = {
     # TODO: consider turning off email-sending permissions during SMS pilot
     ServicePermission.SEND_MESSAGES: ["send_texts", ServicePermission.SEND_EMAILS],
     ServicePermission.MANAGE_TEMPLATES: [ServicePermission.MANAGE_TEMPLATES],
-    ServicePermission.MANAGE_SERVICE: [ServicePermission.MANAGE_USERS, "manage_settings"],
+    ServicePermission.MANAGE_SERVICE: [
+        ServicePermission.MANAGE_USERS,
+        "manage_settings",
+    ],
     "manage_api_keys": ["manage_api_keys"],
     ServicePermission.VIEW_ACTIVITY: [ServicePermission.VIEW_ACTIVITY],
 }

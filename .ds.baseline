@@ -629,10 +629,10 @@
         "filename": "tests/conftest.py",
         "hashed_secret": "f8377c90fcfd699f0ddbdcb30c2c9183d2d933ea",
         "is_verified": false,
-        "line_number": 3266,
+        "line_number": 3267,
         "is_secret": false
       }
     ]
   },
-  "generated_at": "2025-07-21T21:23:30Z"
+  "generated_at": "2025-07-22T18:12:20Z"
 }
