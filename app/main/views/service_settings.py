@@ -594,11 +594,11 @@ def service_set_sms_prefix(service_id):
 def service_set_international_sms(service_id):
     form = ServiceOnOffSettingForm(
         "Send text messages to international phone numbers",
-        enabled=current_service.has_permission("international_sms"),
+        enabled=current_service.has_permission(ServicePermission.INTERNATIONAL_SMS),
     )
     if form.validate_on_submit():
         current_service.force_permission(
-            "international_sms",
+            ServicePermission.INTERNATIONAL_SMS,
             on=form.enabled.data,
         )
         return redirect(url_for(".service_settings", service_id=service_id))

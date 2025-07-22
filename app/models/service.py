@@ -53,7 +53,7 @@ class Service(JSONModel, SortByNameMixin):
         ServicePermission.EDIT_FOLDER_PERMISSIONS,
         ServicePermission.EMAIL_AUTH,
         ServicePermission.INBOUND_SMS,
-        "international_sms",
+        ServicePermission.INTERNATIONAL_SMS,
         ServicePermission.UPLOAD_DOCUMENT,
     )
 
