@@ -372,7 +372,7 @@ def test_route_invalid_permissions(
             "GET",
             403,
             url_for(route, service_id=service_one["id"], key_id=fake_uuid),
-            ["view_activity"],
+            [ServicePermission.VIEW_ACTIVITY],
             api_user_active,
             service_one,
         )

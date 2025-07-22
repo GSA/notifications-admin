@@ -1178,13 +1178,13 @@ def test_get_users_report(client_request, platform_admin_user, mocker):
                 "password_changed_at": "2023-07-21 14:12:54.832850",
                 "permissions": {
                     "test service": [
-                        "manage_users",
+                        ServicePermission.MANAGE_USERS,
                         "manage_templates",
                         ServicePermission.MANAGE_SETTINGS,
                         ServicePermission.SEND_TEXTS,
-                        "send_emails",
+                        ServicePermission.SEND_EMAILS,
                         "manage_api_keys",
-                        "view_activity",
+                        ServicePermission.VIEW_ACTIVITY,
                     ]
                 },
                 "platform_admin": True,

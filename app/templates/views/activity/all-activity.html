@@ -125,7 +125,7 @@
       <p><b>Note: </b>Report data is only available for 7 days after your message has been sent</p>
     </div>
     {{show_pagination}}
-    {% if current_user.has_permissions('view_activity') %}
+    {% if current_user.has_permissions(ServicePermission.VIEW_ACTIVITY) %}
       <h2 class="line-height-sans-2 margin-bottom-0 margin-top-4">Download recent reports</h2>
       <p class="font-body-sm">
         <a href="{{ download_link_one_day }}" download="download" class="usa-link">Download all data last 24 hours (<abbr title="Comma separated values">CSV</abbr>)</a>

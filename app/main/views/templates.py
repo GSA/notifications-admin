@@ -823,7 +823,7 @@ def redact_template(service_id, template_id):
 
 
 @main.route("/services/<uuid:service_id>/templates/<uuid:template_id>/versions")
-@user_has_permissions("view_activity")
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY)
 def view_template_versions(service_id, template_id):
     return render_template(
         "views/templates/choose_history.html",

@@ -5,7 +5,7 @@ from flask import url_for
 from freezegun import freeze_time
 
 import app
-from app.enums import AuthType, ServicePermission
+from app.enums import ServicePermission
 from notifications_python_client.errors import HTTPError
 from tests import service_json
 from tests.conftest import (
@@ -139,7 +139,7 @@ def test_existing_user_accept_invite_calls_api_and_redirects_to_dashboard(
     client_request.logout()
     expected_service = service_one["id"]
     expected_permissions = {
-        "view_activity",
+        ServicePermission.VIEW_ACTIVITY,
         "send_messages",
         "manage_service",
         "manage_api_keys",
@@ -418,7 +418,7 @@ def test_existing_signed_out_user_accept_invite_redirects_to_sign_in(
     client_request.logout()
     expected_service = service_one["id"]
     expected_permissions = {
-        "view_activity",
+        ServicePermission.VIEW_ACTIVITY,
         "send_messages",
         "manage_service",
         "manage_api_keys",
@@ -650,7 +650,7 @@ def test_new_invited_user_verifies_and_added_to_service(
     # when they post codes back to admin user should be added to
     # service and sent on to dash board
     expected_permissions = {
-        "view_activity",
+        ServicePermission.VIEW_ACTIVITY,
         "send_messages",
         "manage_service",
         "manage_api_keys",

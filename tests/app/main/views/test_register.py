@@ -300,7 +300,7 @@ def test_register_from_email_auth_invite(
             "manage_api_keys",
             ServicePermission.MANAGE_SERVICE,
             ServicePermission.SEND_MESSAGES,
-            "view_activity",
+            ServicePermission.VIEW_ACTIVITY,
         },
         [],
     )

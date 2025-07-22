@@ -81,6 +81,9 @@ class ServicePermission(StrEnum):
     EDIT_FOLDER_PERMISSIONS = "edit_folder_permissions"
     RESEARCH_MODE = "research_mode"
     UPLOAD_DOCUMENT = "upload_document"
+    VIEW_ACTIVITY = "view_activity"
+    MANAGE_USERS = "manage_users"
+    SEND_EMAILS = "send_emails"
 
 
 class InvitedUserStatus(StrEnum):

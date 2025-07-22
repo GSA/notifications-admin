@@ -362,6 +362,7 @@ def init_app(application):
     @application.context_processor
     def _attach_enums():
         from app.enums import ServicePermission
+
         return {"ServicePermission": ServicePermission}
 
     @application.context_processor

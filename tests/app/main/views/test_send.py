@@ -1717,7 +1717,7 @@ def test_send_one_off_email_to_self_without_placeholders_redirects_to_check_page
             {},
         ),
         (
-            {ServicePermission.SEND_MESSAGES, "view_activity"},
+            {ServicePermission.SEND_MESSAGES, ServicePermission.VIEW_ACTIVITY},
             "main.choose_template",
             {},
         ),
@@ -2140,7 +2140,7 @@ def test_route_permissions(
         "GET",
         response_code,
         url_for(route, service_id=service_one["id"], template_id=fake_uuid),
-        ["view_activity", ServicePermission.SEND_MESSAGES],
+        [ServicePermission.VIEW_ACTIVITY, ServicePermission.SEND_MESSAGES],
         api_user_active,
         service_one,
     )

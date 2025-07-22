@@ -607,10 +607,10 @@ def test_get_manage_folder_viewing_permissions_for_users_not_visible_when_no_man
 ):
     active_user_with_permissions["permissions"][SERVICE_ONE_ID] = [
         ServicePermission.SEND_TEXTS,
-        "send_emails",
+        ServicePermission.SEND_EMAILS,
         "manage_templates",
         "manage_api_keys",
-        "view_activity",
+        ServicePermission.VIEW_ACTIVITY,
     ]
     folder_id = str(uuid.uuid4())
     team_member = create_active_user_view_permissions(with_unique_id=True)
@@ -861,10 +861,10 @@ def test_manage_folder_users_doesnt_change_permissions_current_user_cannot_manag
 ):
     active_user_with_permissions["permissions"][SERVICE_ONE_ID] = [
         ServicePermission.SEND_TEXTS,
-        "send_emails",
+        ServicePermission.SEND_EMAILS,
         "manage_templates",
         "manage_api_keys",
-        "view_activity",
+        ServicePermission.VIEW_ACTIVITY,
     ]
     team_member = create_active_user_view_permissions(with_unique_id=True)
     mock_update = mocker.patch("app.template_folder_api_client.update_template_folder")

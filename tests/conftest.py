@@ -1019,12 +1019,12 @@ def platform_admin_user(fake_uuid):
         permissions={
             SERVICE_ONE_ID: [
                 ServicePermission.SEND_TEXTS,
-                "send_emails",
-                "manage_users",
+                ServicePermission.SEND_EMAILS,
+                ServicePermission.MANAGE_USERS,
                 ServicePermission.MANAGE_TEMPLATES,
                 ServicePermission.MANAGE_SETTINGS,
                 "manage_api_keys",
-                "view_activity",
+                ServicePermission.VIEW_ACTIVITY,
             ]
         }
     )
@@ -3164,7 +3164,7 @@ def create_active_user_view_permissions(with_unique_id=False):
     return create_service_one_user(
         id=str(uuid4()) if with_unique_id else sample_uuid(),
         name="Test User With Permissions",
-        permissions={SERVICE_ONE_ID: ["view_activity"]},
+        permissions={SERVICE_ONE_ID: [ServicePermission.VIEW_ACTIVITY]},
     )
 
 
@@ -3175,7 +3175,7 @@ def create_active_caseworking_user(with_unique_id=False):
         permissions={
             SERVICE_ONE_ID: [
                 ServicePermission.SEND_TEXTS,
-                "send_emails",
+                ServicePermission.SEND_EMAILS,
             ]
         },
         services=[SERVICE_ONE_ID],
@@ -3190,8 +3190,8 @@ def create_active_user_no_api_key_permission(with_unique_id=False):
             SERVICE_ONE_ID: [
                 ServicePermission.MANAGE_TEMPLATES,
                 ServicePermission.MANAGE_SETTINGS,
-                "manage_users",
-                "view_activity",
+                ServicePermission.MANAGE_USERS,
+                ServicePermission.VIEW_ACTIVITY,
             ]
         },
     )
@@ -3205,7 +3205,7 @@ def create_active_user_no_settings_permission(with_unique_id=False):
             SERVICE_ONE_ID: [
                 ServicePermission.MANAGE_TEMPLATES,
                 "manage_api_keys",
-                "view_activity",
+                ServicePermission.VIEW_ACTIVITY,
             ]
         },
     )
@@ -3218,7 +3218,7 @@ def create_active_user_manage_template_permissions(with_unique_id=False):
         permissions={
             SERVICE_ONE_ID: [
                 ServicePermission.MANAGE_TEMPLATES,
-                "view_activity",
+                ServicePermission.VIEW_ACTIVITY,
             ]
         },
     )
@@ -3239,12 +3239,12 @@ def create_service_one_admin(**overrides):
         "permissions": {
             SERVICE_ONE_ID: [
                 ServicePermission.SEND_TEXTS,
-                "send_emails",
-                "manage_users",
+                ServicePermission.SEND_EMAILS,
+                ServicePermission.MANAGE_USERS,
                 ServicePermission.MANAGE_TEMPLATES,
                 ServicePermission.MANAGE_SETTINGS,
                 "manage_api_keys",
-                "view_activity",
+                ServicePermission.VIEW_ACTIVITY,
             ]
         },
     }
