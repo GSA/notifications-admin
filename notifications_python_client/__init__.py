@@ -8,6 +8,9 @@
 # -- http://semver.org/
 
 __version__ = "10.0.1"
+import truststore
+
+truststore.inject_into_ssl()
 
 from notifications_python_client.errors import (  # noqa
     REQUEST_ERROR_MESSAGE,

@@ -1,13 +1,17 @@
-import os
-import pathlib
-import re
-import secrets
-from functools import partial
-from time import monotonic
-from urllib.parse import unquote, urlparse, urlunparse
+import truststore
 
-import jinja2
-from flask import (
+truststore.inject_into_ssl()
+
+import os  # noqa
+import pathlib  # noqa
+import re  # noqa
+import secrets  # noqa
+from functools import partial  # noqa
+from time import monotonic  # noqa
+from urllib.parse import unquote, urlparse, urlunparse  # noqa
+
+import jinja2  # noqa
+from flask import (  # noqa
     current_app,
     flash,
     g,
@@ -18,21 +22,21 @@ from flask import (
     session,
     url_for,
 )
-from flask.globals import request_ctx
-from flask_login import LoginManager, current_user
-from flask_talisman import Talisman
-from flask_wtf import CSRFProtect
-from flask_wtf.csrf import CSRFError
-from itsdangerous import BadSignature
-from werkzeug.exceptions import HTTPException as WerkzeugHTTPException
-from werkzeug.exceptions import abort
-from werkzeug.local import LocalProxy
+from flask.globals import request_ctx  # noqa
+from flask_login import LoginManager, current_user  # noqa
+from flask_talisman import Talisman  # noqa
+from flask_wtf import CSRFProtect  # noqa
+from flask_wtf.csrf import CSRFError  # noqa
+from itsdangerous import BadSignature  # noqa
+from werkzeug.exceptions import HTTPException as WerkzeugHTTPException  # noqa
+from werkzeug.exceptions import abort  # noqa
+from werkzeug.local import LocalProxy  # noqa
 
-from app import proxy_fix
-from app.asset_fingerprinter import asset_fingerprinter
-from app.config import configs
-from app.extensions import redis_client
-from app.formatters import (
+from app import proxy_fix  # noqa
+from app.asset_fingerprinter import asset_fingerprinter  # noqa
+from app.config import configs  # noqa
+from app.extensions import redis_client  # noqa
+from app.formatters import (  # noqa
     convert_markdown_template,
     convert_time_unixtimestamp,
     convert_to_boolean,
@@ -77,48 +81,54 @@ from app.formatters import (
     square_metres_to_square_miles,
     valid_phone_number,
 )
-from app.models.organization import Organization
-from app.models.service import Service
-from app.models.user import AnonymousUser, User
-from app.navigation import (
+from app.models.organization import Organization  # noqa
+from app.models.service import Service  # noqa
+from app.models.user import AnonymousUser, User  # noqa
+from app.navigation import (  # noqa
     CaseworkNavigation,
     HeaderNavigation,
     MainNavigation,
     OrgNavigation,
     SecondaryNavigation,
 )
-from app.notify_client import InviteTokenError
-from app.notify_client.api_key_api_client import api_key_api_client
-from app.notify_client.billing_api_client import billing_api_client
-from app.notify_client.complaint_api_client import complaint_api_client
-from app.notify_client.events_api_client import events_api_client
-from app.notify_client.inbound_number_client import inbound_number_client
-from app.notify_client.invite_api_client import invite_api_client
-from app.notify_client.job_api_client import job_api_client
-from app.notify_client.notification_api_client import notification_api_client
-from app.notify_client.org_invite_api_client import org_invite_api_client
-from app.notify_client.organizations_api_client import organizations_client
-from app.notify_client.performance_dashboard_api_client import (
+from app.notify_client import InviteTokenError  # noqa
+from app.notify_client.api_key_api_client import api_key_api_client  # noqa
+from app.notify_client.billing_api_client import billing_api_client  # noqa
+from app.notify_client.complaint_api_client import complaint_api_client  # noqa
+from app.notify_client.events_api_client import events_api_client  # noqa
+from app.notify_client.inbound_number_client import inbound_number_client  # noqa
+from app.notify_client.invite_api_client import invite_api_client  # noqa
+from app.notify_client.job_api_client import job_api_client  # noqa
+from app.notify_client.notification_api_client import notification_api_client  # noqa
+from app.notify_client.org_invite_api_client import org_invite_api_client  # noqa
+from app.notify_client.organizations_api_client import organizations_client  # noqa
+from app.notify_client.performance_dashboard_api_client import (  # noqa
     performance_dashboard_api_client,
 )
-from app.notify_client.platform_stats_api_client import platform_stats_api_client
-from app.notify_client.service_api_client import service_api_client
-from app.notify_client.status_api_client import status_api_client
-from app.notify_client.template_folder_api_client import template_folder_api_client
-from app.notify_client.template_statistics_api_client import template_statistics_client
-from app.notify_client.upload_api_client import upload_api_client
-from app.notify_client.user_api_client import user_api_client
-from app.url_converters import SimpleDateTypeConverter, TemplateTypeConverter
-from app.utils.api_health import is_api_down
-from app.utils.govuk_frontend_jinja.flask_ext import init_govuk_frontend
-from notifications_python_client.errors import HTTPError
-from notifications_utils import logging, request_helper
-from notifications_utils.formatters import (
+from app.notify_client.platform_stats_api_client import (  # noqa
+    platform_stats_api_client,
+)
+from app.notify_client.service_api_client import service_api_client  # noqa
+from app.notify_client.status_api_client import status_api_client  # noqa
+from app.notify_client.template_folder_api_client import (  # noqa
+    template_folder_api_client,
+)
+from app.notify_client.template_statistics_api_client import (  # noqa
+    template_statistics_client,
+)
+from app.notify_client.upload_api_client import upload_api_client  # noqa
+from app.notify_client.user_api_client import user_api_client  # noqa
+from app.url_converters import SimpleDateTypeConverter, TemplateTypeConverter  # noqa
+from app.utils.api_health import is_api_down  # noqa
+from app.utils.govuk_frontend_jinja.flask_ext import init_govuk_frontend  # noqa
+from notifications_python_client.errors import HTTPError  # noqa
+from notifications_utils import logging, request_helper  # noqa
+from notifications_utils.formatters import (  # noqa
     formatted_list,
     get_lines_with_normalised_whitespace,
 )
-from notifications_utils.recipients import format_phone_number_human_readable
-from notifications_utils.url_safe_token import generate_token
+from notifications_utils.recipients import format_phone_number_human_readable  # noqa
+from notifications_utils.url_safe_token import generate_token  # noqa
 
 login_manager = LoginManager()
 csrf = CSRFProtect()
@@ -362,6 +372,7 @@ def init_app(application):
     @application.context_processor
     def _attach_enums():
         from app.enums import ServicePermission
+
         return {"ServicePermission": ServicePermission}
 
     @application.context_processor
