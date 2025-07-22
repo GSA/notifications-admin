@@ -10,6 +10,7 @@ from flask import url_for
 from flask.testing import FlaskClient
 from flask_login import login_user
 
+from app.enums import ServicePermission
 from app.models.user import User
 
 # Add itsdangerous to the libraries which freezegun ignores to avoid errors.
