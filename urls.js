@@ -72,6 +72,11 @@ const routes = {
       label: 'Platform Admin Live Services',
       path: '/platform-admin/live-services',
     },
+    // Organization pages
+    {
+      label: 'Add Organization',
+      path: '/organizations/add',
+    },
   ],
 
   // Using Notify section
