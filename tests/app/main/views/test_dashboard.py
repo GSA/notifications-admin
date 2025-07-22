@@ -922,7 +922,7 @@ def test_menu_send_messages(
         service_one,
         [
             ServicePermission.VIEW_ACTIVITY,
-            "send_texts",
+            ServicePermission.SEND_TEXTS,
             ServicePermission.SEND_EMAILS,
             ServicePermission.MANAGE_SERVICE,
         ],
@@ -966,7 +966,7 @@ def test_menu_manage_service(
             ServicePermission.VIEW_ACTIVITY,
             ServicePermission.MANAGE_TEMPLATES,
             ServicePermission.MANAGE_USERS,
-            "manage_settings",
+            ServicePermission.MANAGE_SETTINGS
         ],
     )
     page = str(page)
@@ -1008,7 +1008,7 @@ def test_menu_main_settings(
             ServicePermission.VIEW_ACTIVITY,
             "user_profile",
             ServicePermission.MANAGE_USERS,
-            "manage_settings",
+            ServicePermission.MANAGE_SETTINGS,
         ],
     )
     page = str(page)

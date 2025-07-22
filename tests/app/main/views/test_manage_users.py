@@ -267,7 +267,7 @@ def test_service_with_no_email_auth_hides_auth_type_options(
     platform_admin_user,
 ):
     if service_has_email_auth:
-        service_one["permissions"].append("email_auth")
+        service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
     client_request.login(platform_admin_user)
     page = client_request.get(endpoint, service_id=service_one["id"], **extra_args)
     assert (
@@ -323,7 +323,7 @@ def test_manage_users_page_shows_member_auth_type_if_service_has_email_auth_acti
     displays_auth_type,
 ):
     if service_has_email_auth:
-        service_one["permissions"].append("email_auth")
+        service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
     page = client_request.get("main.manage_users", service_id=service_one["id"])
     assert bool(page.select_one(".tick-cross-list-hint")) == displays_auth_type
 
@@ -362,7 +362,7 @@ def test_user_with_no_mobile_number_cant_be_set_to_sms_auth(
 ):
     active_user_with_permissions["mobile_number"] = mobile_number
 
-    service_one["permissions"].append("email_auth")
+    service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
     mocker.patch(
         "app.user_api_client.get_user", return_value=active_user_with_permissions
     )
@@ -434,7 +434,7 @@ def test_invite_user_allows_to_choose_auth(
     service_one,
     platform_admin_user,
 ):
-    service_one["permissions"].append("email_auth")
+    service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
     client_request.login(platform_admin_user)
     page = client_request.get("main.invite_user", service_id=SERVICE_ONE_ID)
 
@@ -615,7 +615,7 @@ def test_cant_edit_user_folder_permissions_for_platform_admin_users(
     mock_get_template_folders,
     platform_admin_user,
 ):
-    service_one["permissions"] = ["edit_folder_permissions"]
+    service_one["permissions"] = [ServicePermission.EDIT_FOLDER_PERMISSIONS]
     mocker.patch("app.user_api_client.get_user", return_value=platform_admin_user)
     mock_get_template_folders.return_value = [
         {
@@ -704,7 +704,7 @@ def test_edit_user_permissions_including_authentication_with_email_auth_service(
     mock_get_template_folders,
 ):
     active_user_with_permissions["auth_type"] = "email_auth"
-    service_one["permissions"].append("email_auth")
+    service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
 
     client_request.post(
         "main.edit_user_permissions",
@@ -748,7 +748,7 @@ def test_edit_user_permissions_shows_authentication_for_email_auth_service(
     mock_get_template_folders,
     active_user_with_permissions,
 ):
-    service_one["permissions"].append("email_auth")
+    service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
 
     page = client_request.get(
         "main.edit_user_permissions",
@@ -1105,7 +1105,7 @@ def test_invite_user_with_email_auth_service(
     mock_get_organizations,
     mock_get_template_folders,
 ):
-    service_one["permissions"].append("email_auth")
+    service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
     sample_invite["email_address"] = "test@example.gsa.gov"
 
     assert is_gov_user(email_address) is gov_user
@@ -1386,7 +1386,7 @@ def test_manage_user_page_shows_how_many_folders_user_can_view(
     folders_user_can_see,
     expected_message,
 ):
-    service_one["permissions"] = ["edit_folder_permissions"]
+    service_one["permissions"] = [ServicePermission.EDIT_FOLDER_PERMISSIONS]
     mock_get_template_folders.return_value = [
         {
             "id": "folder-id-1",
@@ -1428,7 +1428,7 @@ def test_manage_user_page_doesnt_show_folder_hint_if_service_has_no_folders(
     mock_get_invites_for_service,
     api_user_active,
 ):
-    service_one["permissions"] = ["edit_folder_permissions"]
+    service_one["permissions"] = [ServicePermission.EDIT_FOLDER_PERMISSIONS]
     mock_get_template_folders.return_value = []
 
     page = client_request.get("main.manage_users", service_id=service_one["id"])

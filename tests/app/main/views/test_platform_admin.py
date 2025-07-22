@@ -1179,9 +1179,9 @@ def test_get_users_report(client_request, platform_admin_user, mocker):
                 "permissions": {
                     "test service": [
                         ServicePermission.MANAGE_USERS,
-                        "manage_templates",
-                        "manage_settings",
-                        "send_texts",
+                        ServicePermission.MANAGE_TEMPLATES,
+                        ServicePermission.MANAGE_SETTINGS,
+                        ServicePermission.SEND_TEXTS,
                         ServicePermission.SEND_EMAILS,
                         "manage_api_keys",
                         ServicePermission.VIEW_ACTIVITY,

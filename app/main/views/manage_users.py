@@ -73,7 +73,7 @@ def invite_user(service_id, user_id=None):
     else:
         user_to_invite = None
 
-    service_has_email_auth = current_service.has_permission("email_auth")
+    service_has_email_auth = current_service.has_permission(ServicePermission.EMAIL_AUTH)
     if not service_has_email_auth:
         form.login_authentication.data = "sms_auth"
 
@@ -116,7 +116,7 @@ def invite_user(service_id, user_id=None):
 @main.route("/services/<uuid:service_id>/users/<uuid:user_id>", methods=["GET", "POST"])
 @user_has_permissions(ServicePermission.MANAGE_SERVICE)
 def edit_user_permissions(service_id, user_id):
-    service_has_email_auth = current_service.has_permission("email_auth")
+    service_has_email_auth = current_service.has_permission(ServicePermission.EMAIL_AUTH)
     user = current_service.get_team_member(user_id)
 
     mobile_number = None

@@ -10,6 +10,7 @@ from flask import url_for
 from flask.testing import FlaskClient
 from flask_login import login_user
 
+from app.enums import ServicePermission
 from app.models.user import User
 
 # Add itsdangerous to the libraries which freezegun ignores to avoid errors.
@@ -76,12 +77,12 @@ def user_json(
     if permissions is None:
         permissions = {
             str(generate_uuid()): [
-                "view_activity",
-                "send_texts",
-                "send_emails",
-                "manage_users",
-                "manage_templates",
-                "manage_settings",
+                ServicePermission.VIEW_ACTIVITY,
+                ServicePermission.SEND_TEXTS,
+                ServicePermission.SEND_EMAILS,
+                ServicePermission.MANAGE_USERS,
+                ServicePermission.MANAGE_TEMPLATES,
+                ServicePermission.MANAGE_SETTINGS,
                 "manage_api_keys",
             ]
         }

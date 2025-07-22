@@ -2,6 +2,7 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user
 
 from app import user_api_client
+from app.enums import ServicePermission
 from app.event_handlers import create_archive_user_event
 from app.main import main
 from app.main.forms import AdminSearchUsersByEmailForm, AuthTypeForm
@@ -40,7 +41,7 @@ def archive_user(user_id):
         try:
             user_api_client.archive_user(user_id)
         except HTTPError as e:
-            if e.status_code == 400 and "manage_settings" in e.message:
+            if e.status_code == 400 and ServicePermission.MANAGE_SETTINGS in e.message:
                 flash(
                     "User can’t be removed from a service - "
                     "check all services have another team member with manage_settings"

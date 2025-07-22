@@ -4,7 +4,7 @@ from app.enums import ServicePermission
 
 permission_mappings = {
     # TODO: consider turning off email-sending permissions during SMS pilot
-    ServicePermission.SEND_MESSAGES: ["send_texts", ServicePermission.SEND_EMAILS],
+    ServicePermission.SEND_MESSAGES: [ServicePermission.SEND_TEXTS, ServicePermission.SEND_EMAILS],
     ServicePermission.MANAGE_TEMPLATES: [ServicePermission.MANAGE_TEMPLATES],
     ServicePermission.MANAGE_SERVICE: [
         ServicePermission.MANAGE_USERS,
