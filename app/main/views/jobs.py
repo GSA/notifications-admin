@@ -78,7 +78,7 @@ def view_job(service_id, job_id):
 
 
 @main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>.csv")
-@user_has_permissions("view_activity")
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY)
 def view_job_csv(service_id, job_id):
     job = Job.from_id(job_id, service_id=service_id)
     filter_args = parse_filter_args(request.args)
@@ -222,7 +222,9 @@ def get_notifications(service_id, message_type, status_override=None):  # noqa
             message_type, number_of_days="seven_day"
         )
 
-    if request.path.endswith("csv") and current_user.has_permissions("view_activity"):
+    if request.path.endswith("csv") and current_user.has_permissions(
+        ServicePermission.VIEW_ACTIVITY
+    ):
         return Response(
             generate_notifications_csv(
                 service_id=service_id,

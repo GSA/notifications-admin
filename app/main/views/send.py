@@ -446,7 +446,7 @@ def send_one_off_step(service_id, template_id, step_index):
         dict_to_populate_from=get_normalised_placeholders_from_session(),
         template_type=template.template_type,
         allow_international_phone_numbers=current_service.has_permission(
-            "international_sms"
+            ServicePermission.INTERNATIONAL_SMS
         ),
     )
 
@@ -560,7 +560,7 @@ def _check_messages(service_id, template_id, upload_id, preview_row, **kwargs):
         max_errors_shown=50,
         guestlist=allow_list,
         remaining_messages=remaining_messages,
-        allow_international_sms=current_service.has_permission("international_sms"),
+        allow_international_sms=current_service.has_permission(ServicePermission.INTERNATIONAL_SMS),
     )
 
     if request.args.get("from_test"):

@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 
 from flask import current_app
 
+from app.enums import ServicePermission
 from app.extensions import redis_client
 from app.notify_client import NotifyAdminAPIClient, _attach_current_user, cache
 
@@ -126,7 +127,7 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             "purchase_order_number",
             "rate_limit",
             "reply_to_email_address",
-            "research_mode",
+            ServicePermission.RESEARCH_MODE,
             "restricted",
             "sms_sender",
             "volume_email",

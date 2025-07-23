@@ -17,7 +17,7 @@ class Config(object):
 
     ADMIN_BASE_URL = getenv("ADMIN_BASE_URL", "http://localhost:6012")
     HEADER_COLOUR = (
-        "#81878b"  # mix(govuk-colour("dark-grey"), govuk-colour("mid-grey"))
+        "#81878b"  # mix of dark-grey and mid-grey
     )
     LOGO_CDN_DOMAIN = (
         "static-logos.notifications.service.gov.uk"  # TODO use our own CDN
@@ -141,7 +141,7 @@ class Test(Development):
 
 
 class Production(Config):
-    HEADER_COLOUR = "#005EA5"  # $govuk-blue
+    HEADER_COLOUR = "#005EA5"  # primary blue
     HTTP_PROTOCOL = "https"
     ASSET_DOMAIN = ""  # TODO use a CDN
     ASSET_PATH = "/static/"  # TODO use a CDN

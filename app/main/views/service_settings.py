@@ -57,14 +57,14 @@ from notifications_python_client.errors import HTTPError
 PLATFORM_ADMIN_SERVICE_PERMISSIONS = OrderedDict(
     [
         (
-            "inbound_sms",
+            ServicePermission.INBOUND_SMS,
             {
                 "title": "Receive inbound SMS",
                 "requires": "sms",
                 "endpoint": ".service_set_inbound_number",
             },
         ),
-        ("email_auth", {"title": "Email authentication"}),
+        (ServicePermission.EMAIL_AUTH, {"title": "Email authentication"}),
     ]
 )
 
@@ -558,7 +558,7 @@ def service_set_inbound_number(service_id):
             is_default=True,
             inbound_number_id=form.inbound_number.data,
         )
-        current_service.force_permission("inbound_sms", on=True)
+        current_service.force_permission(ServicePermission.INBOUND_SMS, on=True)
         return redirect(url_for(".service_settings", service_id=service_id))
 
     return render_template(
@@ -594,11 +594,11 @@ def service_set_sms_prefix(service_id):
 def service_set_international_sms(service_id):
     form = ServiceOnOffSettingForm(
         "Send text messages to international phone numbers",
-        enabled=current_service.has_permission("international_sms"),
+        enabled=current_service.has_permission(ServicePermission.INTERNATIONAL_SMS),
     )
     if form.validate_on_submit():
         current_service.force_permission(
-            "international_sms",
+            ServicePermission.INTERNATIONAL_SMS,
             on=form.enabled.data,
         )
         return redirect(url_for(".service_settings", service_id=service_id))

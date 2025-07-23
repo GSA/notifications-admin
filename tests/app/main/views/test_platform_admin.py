@@ -8,6 +8,7 @@ import pytest
 from flask import url_for
 from freezegun import freeze_time
 
+from app.enums import ServicePermission
 from app.main.views.platform_admin import (
     create_global_stats,
     format_stats_by_service,
@@ -1177,13 +1178,13 @@ def test_get_users_report(client_request, platform_admin_user, mocker):
                 "password_changed_at": "2023-07-21 14:12:54.832850",
                 "permissions": {
                     "test service": [
-                        "manage_users",
-                        "manage_templates",
-                        "manage_settings",
-                        "send_texts",
-                        "send_emails",
+                        ServicePermission.MANAGE_USERS,
+                        ServicePermission.MANAGE_TEMPLATES,
+                        ServicePermission.MANAGE_SETTINGS,
+                        ServicePermission.SEND_TEXTS,
+                        ServicePermission.SEND_EMAILS,
                         "manage_api_keys",
-                        "view_activity",
+                        ServicePermission.VIEW_ACTIVITY,
                     ]
                 },
                 "platform_admin": True,

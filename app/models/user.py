@@ -5,7 +5,7 @@ from flask import abort, current_app, request, session
 from flask_login import AnonymousUserMixin, UserMixin, login_user, logout_user
 from werkzeug.utils import cached_property
 
-from app.enums import InvitedUserStatus
+from app.enums import AuthType, InvitedUserStatus
 from app.event_handlers import (
     create_add_user_to_service_event,
     create_set_user_permissions_event,
@@ -186,7 +186,7 @@ class User(JSONModel, UserMixin):
 
     @property
     def email_auth(self):
-        return self.auth_type == "email_auth"
+        return self.auth_type == AuthType.EMAIL_AUTH
 
     def reset_failed_login_count(self):
         user_api_client.reset_failed_login_count(self.id)
@@ -546,7 +546,7 @@ class InvitedUser(JSONModel):
 
     @property
     def email_auth(self):
-        return self.auth_type == "email_auth"
+        return self.auth_type == AuthType.EMAIL_AUTH
 
     @classmethod
     def from_token(cls, token):

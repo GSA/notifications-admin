@@ -97,7 +97,7 @@ def tour_step(service_id, template_id, step_index):
         dict_to_populate_from=get_normalised_placeholders_from_session(),
         template_type=template.template_type,
         allow_international_phone_numbers=current_service.has_permission(
-            "international_sms"
+            ServicePermission.INTERNATIONAL_SMS
         ),
     )
 

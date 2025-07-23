@@ -24,7 +24,7 @@ from app.utils.user import user_has_permissions
 
 
 @main.route("/services/<uuid:service_id>/dashboard")
-@user_has_permissions("view_activity", ServicePermission.SEND_MESSAGES)
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY, ServicePermission.SEND_MESSAGES)
 def old_service_dashboard(service_id):
     return redirect(url_for(".service_dashboard", service_id=service_id))
 
@@ -37,7 +37,7 @@ def service_dashboard(service_id):
         session.pop("invited_user_id", None)
         session["service_id"] = service_id
 
-    if not current_user.has_permissions("view_activity"):
+    if not current_user.has_permissions(ServicePermission.VIEW_ACTIVITY):
         return redirect(url_for("main.choose_template", service_id=service_id))
 
     job_response = job_api_client.get_jobs(service_id)["data"]
@@ -166,7 +166,7 @@ def get_daily_stats_by_user(service_id):
 
 
 @main.route("/services/<uuid:service_id>/template-usage")
-@user_has_permissions("view_activity")
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY)
 def template_usage(service_id):
     year, current_financial_year = requested_and_current_financial_year(request)
     stats = template_statistics_client.get_monthly_template_usage_for_service(

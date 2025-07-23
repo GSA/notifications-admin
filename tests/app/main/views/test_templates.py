@@ -518,7 +518,7 @@ def test_user_with_only_send_and_view_redirected_to_set_sender_for_one_off(
 ):
     active_user_with_permissions["permissions"][SERVICE_ONE_ID] = [
         "send_messages",
-        "view_activity",
+        ServicePermission.VIEW_ACTIVITY,
     ]
     client_request.login(active_user_with_permissions)
     client_request.get(
@@ -538,7 +538,7 @@ def test_user_with_only_send_and_view_redirected_to_set_sender_for_one_off(
     ("permissions", "links_to_be_shown", "permissions_warning_to_be_shown"),
     [
         (
-            ["view_activity"],
+            [ServicePermission.VIEW_ACTIVITY],
             [],
             "If you need to send this text message or edit this template, contact your manager.",
         ),
@@ -575,7 +575,7 @@ def test_should_be_able_to_view_a_template_with_links(
     permissions_warning_to_be_shown,
 ):
     active_user_with_permissions["permissions"][SERVICE_ONE_ID] = permissions + [
-        "view_activity"
+        ServicePermission.VIEW_ACTIVITY
     ]
     client_request.login(active_user_with_permissions)
 
@@ -1698,7 +1698,7 @@ def test_route_invalid_permissions(
             template_type="sms",
             template_id=fake_uuid,
         ),
-        ["view_activity"],
+        [ServicePermission.VIEW_ACTIVITY],
         api_user_active,
         service_one,
     )

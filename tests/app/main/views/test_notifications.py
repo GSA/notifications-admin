@@ -4,6 +4,7 @@ import pytest
 from flask import url_for
 from freezegun import freeze_time
 
+from app.enums import ServicePermission
 from tests.conftest import (
     SERVICE_ONE_ID,
     create_active_caseworking_user,
@@ -298,8 +299,8 @@ def test_notification_page_does_not_show_cancel_link_for_sms_or_email_notificati
     ("service_permissions", "template_type", "link_expected"),
     [
         ([], "", False),
-        (["inbound_sms"], "email", False),
-        (["inbound_sms"], "sms", True),
+        ([ServicePermission.INBOUND_SMS], "email", False),
+        ([ServicePermission.INBOUND_SMS], "sms", True),
     ],
 )
 def test_notification_page_has_link_to_send_another_for_sms(
