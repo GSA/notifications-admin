@@ -15,6 +15,7 @@ from flask import url_for
 from xlrd.biffh import XLRDError
 from xlrd.xldate import XLDateAmbiguous, XLDateError, XLDateNegative, XLDateTooLarge
 
+from app.enums import ServicePermission
 from notifications_python_client.errors import HTTPError
 from notifications_utils.recipients import RecipientCSV
 from notifications_utils.template import SMSPreviewTemplate
@@ -1706,17 +1707,17 @@ def test_send_one_off_email_to_self_without_placeholders_redirects_to_check_page
     ("permissions", "expected_back_link_endpoint", "extra_args"),
     [
         (
-            {"send_messages", "manage_templates"},
+            {ServicePermission.SEND_MESSAGES, ServicePermission.MANAGE_TEMPLATES},
             "main.view_template",
             {"template_id": unchanging_fake_uuid},
         ),
         (
-            {"send_messages"},
+            {ServicePermission.SEND_MESSAGES},
             "main.choose_template",
             {},
         ),
         (
-            {"send_messages", "view_activity"},
+            {ServicePermission.SEND_MESSAGES, ServicePermission.VIEW_ACTIVITY},
             "main.choose_template",
             {},
         ),
@@ -2139,7 +2140,7 @@ def test_route_permissions(
         "GET",
         response_code,
         url_for(route, service_id=service_one["id"], template_id=fake_uuid),
-        ["view_activity", "send_messages"],
+        [ServicePermission.VIEW_ACTIVITY, ServicePermission.SEND_MESSAGES],
         api_user_active,
         service_one,
     )
@@ -2180,7 +2181,7 @@ def test_route_permissions_send_check_notifications(
         method,
         response_code,
         url_for(route, service_id=service_one["id"], template_id=fake_uuid),
-        ["send_messages"],
+        [ServicePermission.SEND_MESSAGES],
         api_user_active,
         service_one,
     )

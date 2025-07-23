@@ -16,7 +16,7 @@ Dashboard
 <div class="dashboard margin-top-0 margin-bottom-2">
 
     <h1 class="usa-sr-only">Dashboard</h1>
-    {% if current_user.has_permissions('manage_templates') and not current_service.all_templates %}
+    {% if current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES) and not current_service.all_templates %}
     {% include 'views/dashboard/write-first-messages.html' %}
     {% endif %}
 
@@ -43,7 +43,7 @@ Dashboard
     <div id="totalMessageTable" class="margin-0"></div>
     {% include 'views/dashboard/activity-table.html' %}
 
-    {% if current_user.has_permissions('manage_service') %}{% endif %}
+    {% if current_user.has_permissions(ServicePermission.MANAGE_SERVICE) %}{% endif %}
 
     {% include 'views/dashboard/most-used-templates.html' %}
 

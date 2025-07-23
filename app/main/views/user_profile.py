@@ -13,6 +13,7 @@ from flask import (
 from flask_login import current_user
 
 from app import user_api_client
+from app.enums import AuthType
 from app.event_handlers import (
     create_email_change_event,
     create_mobile_number_change_event,
@@ -179,7 +180,7 @@ def user_profile_mobile_number():
 @main.route("/user-profile/mobile-number/delete", methods=["POST"])
 @user_is_logged_in
 def user_profile_mobile_number_delete():
-    if current_user.auth_type != "email_auth":
+    if current_user.auth_type != AuthType.EMAIL_AUTH:
         abort(403)
 
     current_user.update(mobile_number=None)

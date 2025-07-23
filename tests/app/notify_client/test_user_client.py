@@ -4,6 +4,7 @@ from unittest.mock import call
 import pytest
 
 from app import invite_api_client, service_api_client, user_api_client
+from app.enums import ServicePermission
 from tests import sample_uuid
 from tests.conftest import SERVICE_ONE_ID
 
@@ -104,7 +105,7 @@ def test_client_converts_admin_permissions_to_db_permissions_on_edit(
         mock_post.call_args[1]["data"]["permissions"], key=lambda x: x["permission"]
     ) == sorted(
         [
-            {"permission": "send_texts"},
+            {"permission": ServicePermission.SEND_TEXTS},
             {"permission": "send_emails"},
             {"permission": "view_activity"},
         ],
@@ -131,7 +132,7 @@ def test_client_converts_admin_permissions_to_db_permissions_on_add_to_service(
         mock_post.call_args[1]["data"]["permissions"], key=lambda x: x["permission"]
     ) == sorted(
         [
-            {"permission": "send_texts"},
+            {"permission": ServicePermission.SEND_TEXTS},
             {"permission": "send_emails"},
             {"permission": "view_activity"},
         ],

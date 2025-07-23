@@ -61,7 +61,7 @@
         href="{{ url_for('.view_template_versions', service_id=current_service.id, template_id=template.id) }}">See previous versions</a>
       </div>
     {% endif %}
-    {% if current_user.has_permissions('manage_templates') and user_has_template_permission %}
+    {% if current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES) and user_has_template_permission %}
       <h2 class="margin-bottom-1 font-body-lg">More actions</h2>
       <ul class="usa-list usa-list--unstyled">
         {% if not template._template.archived %}

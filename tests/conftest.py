@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 from flask import Flask, url_for
 
 from app import create_app
+from app.enums import AuthType, ServicePermission
 from notifications_python_client.errors import HTTPError
 from notifications_utils.url_safe_token import generate_token
 
@@ -1017,13 +1018,13 @@ def platform_admin_user(fake_uuid):
     return create_platform_admin_user(
         permissions={
             SERVICE_ONE_ID: [
-                "send_texts",
-                "send_emails",
-                "manage_users",
-                "manage_templates",
-                "manage_settings",
+                ServicePermission.SEND_TEXTS,
+                ServicePermission.SEND_EMAILS,
+                ServicePermission.MANAGE_USERS,
+                ServicePermission.MANAGE_TEMPLATES,
+                ServicePermission.MANAGE_SETTINGS,
                 "manage_api_keys",
-                "view_activity",
+                ServicePermission.VIEW_ACTIVITY,
             ]
         }
     )
@@ -1045,7 +1046,7 @@ def api_user_active():
 
 @pytest.fixture
 def api_user_active_email_auth(fake_uuid):
-    return create_user(id=fake_uuid, auth_type="email_auth")
+    return create_user(id=fake_uuid, auth_type=AuthType.EMAIL_AUTH)
 
 
 @pytest.fixture
@@ -1081,7 +1082,7 @@ def active_user_with_permission_to_two_services(fake_uuid):
         "send_emails",
         "manage_users",
         "manage_templates",
-        "manage_settings",
+        ServicePermission.MANAGE_SETTINGS,
         "manage_api_keys",
         "view_activity",
     ]
@@ -3163,7 +3164,7 @@ def create_active_user_view_permissions(with_unique_id=False):
     return create_service_one_user(
         id=str(uuid4()) if with_unique_id else sample_uuid(),
         name="Test User With Permissions",
-        permissions={SERVICE_ONE_ID: ["view_activity"]},
+        permissions={SERVICE_ONE_ID: [ServicePermission.VIEW_ACTIVITY]},
     )
 
 
@@ -3173,8 +3174,8 @@ def create_active_caseworking_user(with_unique_id=False):
         email_address="caseworker@example.gsa.gov",
         permissions={
             SERVICE_ONE_ID: [
-                "send_texts",
-                "send_emails",
+                ServicePermission.SEND_TEXTS,
+                ServicePermission.SEND_EMAILS,
             ]
         },
         services=[SERVICE_ONE_ID],
@@ -3187,10 +3188,10 @@ def create_active_user_no_api_key_permission(with_unique_id=False):
         name="Test User With Permissions",
         permissions={
             SERVICE_ONE_ID: [
-                "manage_templates",
-                "manage_settings",
-                "manage_users",
-                "view_activity",
+                ServicePermission.MANAGE_TEMPLATES,
+                ServicePermission.MANAGE_SETTINGS,
+                ServicePermission.MANAGE_USERS,
+                ServicePermission.VIEW_ACTIVITY,
             ]
         },
     )
@@ -3202,9 +3203,9 @@ def create_active_user_no_settings_permission(with_unique_id=False):
         name="Test User With Permissions",
         permissions={
             SERVICE_ONE_ID: [
-                "manage_templates",
+                ServicePermission.MANAGE_TEMPLATES,
                 "manage_api_keys",
-                "view_activity",
+                ServicePermission.VIEW_ACTIVITY,
             ]
         },
     )
@@ -3216,8 +3217,8 @@ def create_active_user_manage_template_permissions(with_unique_id=False):
         name="Test User With Permissions",
         permissions={
             SERVICE_ONE_ID: [
-                "manage_templates",
-                "view_activity",
+                ServicePermission.MANAGE_TEMPLATES,
+                ServicePermission.VIEW_ACTIVITY,
             ]
         },
     )
@@ -3237,13 +3238,13 @@ def create_service_one_admin(**overrides):
     user_data = {
         "permissions": {
             SERVICE_ONE_ID: [
-                "send_texts",
-                "send_emails",
-                "manage_users",
-                "manage_templates",
-                "manage_settings",
+                ServicePermission.SEND_TEXTS,
+                ServicePermission.SEND_EMAILS,
+                ServicePermission.MANAGE_USERS,
+                ServicePermission.MANAGE_TEMPLATES,
+                ServicePermission.MANAGE_SETTINGS,
                 "manage_api_keys",
-                "view_activity",
+                ServicePermission.VIEW_ACTIVITY,
             ]
         },
     }

@@ -4,13 +4,14 @@ from operator import attrgetter
 from flask import render_template, request
 
 from app import current_service, format_date_numeric
+from app.enums import ServicePermission
 from app.main import main
 from app.models.event import APIKeyEvent, APIKeyEvents, ServiceEvents
 from app.utils.user import user_has_permissions
 
 
 @main.route("/services/<uuid:service_id>/history")
-@user_has_permissions("manage_service")
+@user_has_permissions(ServicePermission.MANAGE_SERVICE)
 def history(service_id):
     events = _get_events(current_service.id, request.args.get("selected"))
 

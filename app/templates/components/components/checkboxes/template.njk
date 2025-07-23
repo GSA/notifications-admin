@@ -49,7 +49,7 @@
     visuallyHiddenText: params.errorMessage.visuallyHiddenText
   }) | indent(2) | trim }}
 {% endif %}
-  <div class="govuk-checkboxes {%- if params.classes %} {{ params.classes }}{% endif %}"
+  <div class="usa-checkbox-group {%- if params.classes %} {{ params.classes }}{% endif %}"
     {%- for attribute, value in params.attributes %} {{ attribute }}="{{ value }}"{% endfor %}
     {%- if isConditional %} data-module="checkboxes"{% endif -%}>
     {% for item in params.items %}
@@ -60,8 +60,8 @@
     {% set itemHintId = id + "-item-hint" if hasHint else "" %}
     {% set itemDescribedBy = describedBy if not hasFieldset else "" %}
     {% set itemDescribedBy = (itemDescribedBy + " " + itemHintId) | trim %}
-    <div class="govuk-checkboxes__item">
-      <input class="govuk-checkboxes__input" id="{{ id }}" name="{{ name }}" type="checkbox" value="{{ item.value }}"
+    <div class="usa-checkbox">
+      <input class="usa-checkbox__input" id="{{ id }}" name="{{ name }}" type="checkbox" value="{{ item.value }}"
       {{-" checked" if item.checked }}
       {{-" disabled" if item.disabled }}
       {%- if item.conditional %} data-aria-controls="{{ conditionalId }}"{% endif -%}
@@ -70,14 +70,14 @@
       {{ usaLabel({
         html: item.html,
         text: item.text,
-        classes: 'govuk-checkboxes__label' + (' ' + item.label.classes if item.label.classes),
+        classes: 'usa-checkbox__label' + (' ' + item.label.classes if item.label.classes),
         attributes: item.label.attributes,
         for: id
       }) | indent(6) | trim }}
       {%- if hasHint %}
       {{ usaHint({
         id: itemHintId,
-        classes: 'govuk-checkboxes__hint',
+        classes: 'usa-checkbox__label-description',
         attributes: item.hint.attributes,
         html: item.hint.html,
         text: item.hint.text
@@ -85,7 +85,7 @@
       {%- endif %}
     </div>
     {% if item.conditional %}
-      <div class="govuk-checkboxes__conditional{% if not item.checked %} govuk-checkboxes__conditional--hidden{% endif %}" id="{{ conditionalId }}">
+      <div class="usa-checkbox__conditional{% if not item.checked %} display-none{% endif %}" id="{{ conditionalId }}">
         {{ item.conditional.html | safe }}
       </div>
     {% endif %}

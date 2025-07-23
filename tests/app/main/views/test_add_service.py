@@ -54,7 +54,7 @@ def test_get_should_not_render_radios_if_org_type_known(
     page = client_request.get("main.add_service")
     assert page.select_one("h1").text.strip() == "About your service"
     assert page.select_one("input[name=name]").get("value") is None
-    assert not page.select(".multiple-choice")
+    assert not page.select(".usa-radio")
 
 
 def test_show_different_page_if_user_org_type_is_local(

@@ -2,6 +2,7 @@ from flask import jsonify, redirect, render_template, session, url_for
 from flask_login import current_user
 
 from app import current_service, notification_api_client, service_api_client
+from app.enums import ServicePermission
 from app.main import main
 from app.main.forms import SearchByNameForm
 from app.models.template_list import TemplateList
@@ -12,7 +13,7 @@ from notifications_utils.template import SMSPreviewTemplate
 
 
 @main.route("/services/<uuid:service_id>/conversation/<uuid:notification_id>")
-@user_has_permissions("view_activity")
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY)
 def conversation(service_id, notification_id):
     user_number = get_user_number(service_id, notification_id)
 
@@ -30,7 +31,7 @@ def conversation(service_id, notification_id):
 
 
 @main.route("/services/<uuid:service_id>/conversation/<uuid:notification_id>.json")
-@user_has_permissions("view_activity")
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY)
 def conversation_updates(service_id, notification_id):
     return jsonify(
         get_conversation_partials(
@@ -45,7 +46,7 @@ def conversation_updates(service_id, notification_id):
 @main.route(
     "/services/<uuid:service_id>/conversation/<uuid:notification_id>/reply-with/from-folder/<uuid:from_folder>"
 )
-@user_has_permissions("send_messages")
+@user_has_permissions(ServicePermission.SEND_MESSAGES)
 def conversation_reply(
     service_id,
     notification_id,
@@ -69,7 +70,7 @@ def conversation_reply(
 @main.route(
     "/services/<uuid:service_id>/conversation/<uuid:notification_id>/reply-with/<uuid:template_id>"
 )
-@user_has_permissions("send_messages")
+@user_has_permissions(ServicePermission.SEND_MESSAGES)
 def conversation_reply_with_template(
     service_id,
     notification_id,

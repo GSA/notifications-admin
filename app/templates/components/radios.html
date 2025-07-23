@@ -40,7 +40,7 @@
      <div class="radio-select" data-module="radio-select" data-categories="{{ field.categories|join(',') }}" data-show-now-as-default="{{ show_now_as_default|string|lower }}">
        <div class="radio-select-column">
        {% for option in field %}
-         <div class="multiple-choice">
+         <div class="usa-radio">
            {{ option }}
            <label for="{{ option.id }}">
              {{ option.label.text }}

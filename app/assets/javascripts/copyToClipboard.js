@@ -80,14 +80,14 @@
               $('.copy-to-clipboard__value', component)[0], () =>
                 $component
                   .html(states.valueCopied(stateOptions))
-                  .find('.govuk-button').focus()
+                  .find('.usa-button').focus()
             )
         )
         .on(
           'click', '.copy-to-clipboard__button--show', () =>
             $component
               .html(states.valueVisible(stateOptions))
-              .find('.govuk-button').focus()
+              .find('.usa-button').focus()
         );
 
       if ('stickAtBottomWhenScrolling' in GOVUK) {

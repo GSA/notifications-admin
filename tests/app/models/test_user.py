@@ -1,5 +1,6 @@
 import pytest
 
+from app.enums import ServicePermission
 from app.models.user import AnonymousUser, InvitedOrgUser, InvitedUser, User
 from tests.conftest import SERVICE_ONE_ID, USER_ONE_ID
 
@@ -173,7 +174,7 @@ def test_set_permissions(
 
     User(active_user_view_permissions).set_permissions(
         service_id=SERVICE_ONE_ID,
-        permissions={"manage_templates"},
+        permissions={ServicePermission.MANAGE_TEMPLATES},
         folder_permissions=[],
         set_by_id=fake_uuid,
     )
@@ -182,8 +183,8 @@ def test_set_permissions(
     mock_event.assert_called_once_with(
         service_id=SERVICE_ONE_ID,
         user_id=active_user_view_permissions["id"],
-        original_ui_permissions={"view_activity"},
-        new_ui_permissions={"manage_templates"},
+        original_ui_permissions={ServicePermission.VIEW_ACTIVITY},
+        new_ui_permissions={ServicePermission.MANAGE_TEMPLATES},
         set_by_id=fake_uuid,
     )
 
@@ -194,7 +195,7 @@ def test_add_to_service(client_request, mocker, api_user_active, fake_uuid):
 
     User(api_user_active).add_to_service(
         service_id=SERVICE_ONE_ID,
-        permissions={"manage_templates"},
+        permissions={ServicePermission.MANAGE_TEMPLATES},
         folder_permissions=[],
         invited_by_id=fake_uuid,
     )
@@ -204,5 +205,5 @@ def test_add_to_service(client_request, mocker, api_user_active, fake_uuid):
         service_id=SERVICE_ONE_ID,
         user_id=api_user_active["id"],
         invited_by_id=fake_uuid,
-        ui_permissions={"manage_templates"},
+        ui_permissions={ServicePermission.MANAGE_TEMPLATES},
     )

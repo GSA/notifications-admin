@@ -2,6 +2,12 @@ from flask import abort, flash, redirect, render_template, session, url_for
 from flask_login import current_user
 from markupsafe import Markup
 
+from app.enums import (
+    AuthType,
+    InvitedOrgUserStatus,
+    InvitedUserStatus,
+    ServicePermission,
+)
 from app.main import main
 from app.models.organization import Organization
 from app.models.service import Service
@@ -29,14 +35,14 @@ def accept_invite(token):
 
         abort(403)
 
-    if invited_user.status == "cancelled":
+    if invited_user.status == InvitedUserStatus.CANCELLED:
         service = Service.from_id(invited_user.service)
         return render_template(
             "views/cancelled-invitation.html",
             from_user=invited_user.from_user.name,
             service_name=service.name,
         )
-    if invited_user.status == "accepted":
+    if invited_user.status == InvitedUserStatus.ACCEPTED:
         session.pop("invited_user_id", None)
         service = Service.from_id(invited_user.service)
         return redirect(
@@ -60,10 +66,10 @@ def accept_invite(token):
             # if the user is a Platform Admin, we silently leave this unchanged to prevent a security
             # issue where someone could switch their auth type to something less secure
             if (
-                service.has_permission("email_auth")
+                service.has_permission(ServicePermission.EMAIL_AUTH)
                 and not existing_user.platform_admin
             ):
-                if invited_user.auth_type == "email_auth" or (
+                if invited_user.auth_type == AuthType.EMAIL_AUTH or (
                     # they have a phone number, we want them to start using it.
                     # if they dont have a mobile we just ignore that option of the invite
                     existing_user.mobile_number
@@ -104,7 +110,7 @@ def accept_org_invite(token):
 
         abort(403)
 
-    if invited_org_user.status == "cancelled":
+    if invited_org_user.status == InvitedOrgUserStatus.CANCELLED:
         organization = Organization.from_id(invited_org_user.organization)
         return render_template(
             "views/cancelled-invitation.html",
@@ -112,7 +118,7 @@ def accept_org_invite(token):
             organization_name=organization.name,
         )
 
-    if invited_org_user.status == "accepted":
+    if invited_org_user.status == InvitedOrgUserStatus.ACCEPTED:
         session.pop("invited_org_user_id", None)
         return redirect(
             url_for("main.organization_dashboard", org_id=invited_org_user.organization)

@@ -23,6 +23,7 @@ from app import (
     notification_api_client,
     service_api_client,
 )
+from app.enums import JobStatus, NotificationStatus, ServicePermission
 from app.formatters import get_time_left, message_count_noun
 from app.main import main
 from app.main.forms import SearchNotificationsForm
@@ -77,7 +78,7 @@ def view_job(service_id, job_id):
 
 
 @main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>.csv")
-@user_has_permissions("view_activity")
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY)
 def view_job_csv(service_id, job_id):
     job = Job.from_id(job_id, service_id=service_id)
     filter_args = parse_filter_args(request.args)
@@ -105,7 +106,7 @@ def view_job_csv(service_id, job_id):
 
 
 @main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>", methods=["POST"])
-@user_has_permissions("send_messages")
+@user_has_permissions(ServicePermission.SEND_MESSAGES)
 def cancel_job(service_id, job_id):
     Job.from_id(job_id, service_id=service_id).cancel()
     return redirect(url_for("main.service_dashboard", service_id=service_id))
@@ -221,7 +222,9 @@ def get_notifications(service_id, message_type, status_override=None):  # noqa
             message_type, number_of_days="seven_day"
         )
 
-    if request.path.endswith("csv") and current_user.has_permissions("view_activity"):
+    if request.path.endswith("csv") and current_user.has_permissions(
+        ServicePermission.VIEW_ACTIVITY
+    ):
         return Response(
             generate_notifications_csv(
                 service_id=service_id,
@@ -303,22 +306,30 @@ def get_status_filters(service, message_type, statistics):
     if message_type is None:
         stats = {
             key: sum(statistics[message_type][key] for message_type in {"email", "sms"})
-            for key in {"requested", "delivered", "failed"}
+            for key in {
+                "requested",
+                NotificationStatus.DELIVERED,
+                NotificationStatus.FAILED,
+            }
         }
     else:
         stats = statistics[message_type]
 
     if stats.get("failure") is not None:
-        stats["failed"] = stats["failure"]
+        stats[NotificationStatus.FAILED] = stats["failure"]
 
-    stats["pending"] = stats["requested"] - stats["delivered"] - stats["failed"]
+    stats[NotificationStatus.PENDING] = (
+        stats["requested"]
+        - stats[NotificationStatus.DELIVERED]
+        - stats[NotificationStatus.FAILED]
+    )
 
     filters = [
         # key, label, option
         ("requested", "total", "sending,delivered,failed"),
-        ("pending", "pending", "sending,pending"),
-        ("delivered", "delivered", "delivered"),
-        ("failed", "failed", "failed"),
+        (NotificationStatus.PENDING, "pending", "sending,pending"),
+        (NotificationStatus.DELIVERED, "delivered", "delivered"),
+        (NotificationStatus.FAILED, "failed", "failed"),
     ]
     return [
         # return list containing label, option, link, count
@@ -398,7 +409,7 @@ def get_job_partials(job):
         counts=_get_job_counts(job),
         status=filter_args["status"],
         notifications_deleted=(
-            job.status == "finished" and not notifications["notifications"]
+            job.status == JobStatus.FINISHED and not notifications["notifications"]
         ),
     )
     service_data_retention_days = current_service.get_days_of_retention(

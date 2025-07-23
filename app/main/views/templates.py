@@ -12,6 +12,7 @@ from app import (
     template_folder_api_client,
     template_statistics_client,
 )
+from app.enums import ServicePermission
 from app.formatters import character_count, message_count
 from app.main import main
 from app.main.forms import (
@@ -117,7 +118,7 @@ def choose_template(service_id, template_type="all", template_folder_id=None):
         single_notification_channel = notification_channels[0]
 
     if request.method == "POST" and templates_and_folders_form.validate_on_submit():
-        if not current_user.has_permissions("manage_templates"):
+        if not current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES):
             abort(403)
         try:
             return process_folder_management_form(
@@ -266,7 +267,7 @@ def _add_template_by_type(template_type, template_folder_id):
 @main.route(
     "/services/<uuid:service_id>/templates/copy/from-service/<uuid:from_service>/from-folder/<uuid:from_folder>"
 )
-@user_has_permissions("manage_templates")
+@user_has_permissions(ServicePermission.MANAGE_TEMPLATES)
 def choose_template_to_copy(
     service_id,
     from_service=None,
@@ -298,7 +299,7 @@ def choose_template_to_copy(
     "/services/<uuid:service_id>/templates/copy/<uuid:template_id>",
     methods=["GET", "POST"],
 )
-@user_has_permissions("manage_templates")
+@user_has_permissions(ServicePermission.MANAGE_TEMPLATES)
 def copy_template(service_id, template_id):
     from_service = request.args.get("from_service")
 
@@ -355,7 +356,7 @@ def _get_template_copy_name(template, existing_templates):
         "<template_type:notification_type>/<return_to>/<uuid:template_id>"
     )
 )
-@user_has_permissions("manage_templates")
+@user_has_permissions(ServicePermission.MANAGE_TEMPLATES)
 def action_blocked(service_id, notification_type, return_to, template_id=None):
     back_link = {
         "add_new_template": partial(
@@ -387,7 +388,7 @@ def action_blocked(service_id, notification_type, return_to, template_id=None):
     "/services/<uuid:service_id>/templates/folders/<uuid:template_folder_id>/manage",
     methods=["GET", "POST"],
 )
-@user_has_permissions("manage_templates")
+@user_has_permissions(ServicePermission.MANAGE_TEMPLATES)
 def manage_template_folder(service_id, template_folder_id):
     template_folder = current_service.get_template_folder_with_user_permission_or_403(
         template_folder_id, current_user
@@ -401,7 +402,7 @@ def manage_template_folder(service_id, template_folder_id):
     )
     if form.validate_on_submit():
         if (
-            current_user.has_permissions("manage_service")
+            current_user.has_permissions(ServicePermission.MANAGE_SERVICE)
             and form.users_with_permission.all_service_users
         ):
             users_with_permission = form.users_with_permission.data + [current_user.id]
@@ -437,7 +438,7 @@ def manage_template_folder(service_id, template_folder_id):
     "/services/<uuid:service_id>/templates/folders/<uuid:template_folder_id>/delete",
     methods=["GET", "POST"],
 )
-@user_has_permissions("manage_templates")
+@user_has_permissions(ServicePermission.MANAGE_TEMPLATES)
 def delete_template_folder(service_id, template_folder_id):
     template_folder = current_service.get_template_folder_with_user_permission_or_403(
         template_folder_id, current_user
@@ -502,7 +503,7 @@ def delete_template_folder(service_id, template_folder_id):
     "/services/<uuid:service_id>/templates/folders/<uuid:template_folder_id>/add-<template_type:template_type>",
     methods=["GET", "POST"],
 )
-@user_has_permissions("manage_templates")
+@user_has_permissions(ServicePermission.MANAGE_TEMPLATES)
 def add_service_template(service_id, template_type, template_folder_id=None):
     if template_type not in current_service.available_template_types:
         return redirect(
@@ -566,7 +567,7 @@ def abort_403_if_not_admin_user():
     "/services/<uuid:service_id>/templates/<uuid:template_id>/edit",
     methods=["GET", "POST"],
 )
-@user_has_permissions("manage_templates")
+@user_has_permissions(ServicePermission.MANAGE_TEMPLATES)
 def edit_service_template(service_id, template_id):
     template = current_service.get_template_with_user_permission_or_403(
         template_id, current_user
@@ -724,7 +725,7 @@ def _get_content_count_error_and_message_for_template(template):
     "/services/<uuid:service_id>/templates/<uuid:template_id>/delete",
     methods=["GET", "POST"],
 )
-@user_has_permissions("manage_templates")
+@user_has_permissions(ServicePermission.MANAGE_TEMPLATES)
 def delete_service_template(service_id, template_id):
     template = current_service.get_template_with_user_permission_or_403(
         template_id, current_user
@@ -782,7 +783,7 @@ def delete_service_template(service_id, template_id):
 @main.route(
     "/services/<uuid:service_id>/templates/<uuid:template_id>/redact", methods=["GET"]
 )
-@user_has_permissions("manage_templates")
+@user_has_permissions(ServicePermission.MANAGE_TEMPLATES)
 def confirm_redact_template(service_id, template_id):
     template = current_service.get_template_with_user_permission_or_403(
         template_id, current_user
@@ -803,7 +804,7 @@ def confirm_redact_template(service_id, template_id):
 @main.route(
     "/services/<uuid:service_id>/templates/<uuid:template_id>/redact", methods=["POST"]
 )
-@user_has_permissions("manage_templates")
+@user_has_permissions(ServicePermission.MANAGE_TEMPLATES)
 def redact_template(service_id, template_id):
     service_api_client.redact_service_template(service_id, template_id)
 
@@ -822,7 +823,7 @@ def redact_template(service_id, template_id):
 
 
 @main.route("/services/<uuid:service_id>/templates/<uuid:template_id>/versions")
-@user_has_permissions("view_activity")
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY)
 def view_template_versions(service_id, template_id):
     return render_template(
         "views/templates/choose_history.html",
@@ -842,7 +843,7 @@ def view_template_versions(service_id, template_id):
     "/services/<uuid:service_id>/templates/<uuid:template_id>/set-template-sender",
     methods=["GET", "POST"],
 )
-@user_has_permissions("manage_templates")
+@user_has_permissions(ServicePermission.MANAGE_TEMPLATES)
 def set_template_sender(service_id, template_id):
     template = current_service.get_template_with_user_permission_or_403(
         template_id, current_user

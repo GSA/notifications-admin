@@ -5,6 +5,7 @@ from unittest.mock import ANY
 import pytest
 from flask import url_for
 
+from app.enums import ServicePermission
 from app.main.views.register import check_invited_user_email_address_matches_expected
 from app.models.user import User
 
@@ -295,7 +296,12 @@ def test_register_from_email_auth_invite(
     mock_add_user_to_service.assert_called_once_with(
         sample_invite["service"],
         fake_uuid,  # This ID matches the return value of mock_register_user
-        {"manage_api_keys", "manage_service", "send_messages", "view_activity"},
+        {
+            "manage_api_keys",
+            ServicePermission.MANAGE_SERVICE,
+            ServicePermission.SEND_MESSAGES,
+            ServicePermission.VIEW_ACTIVITY,
+        },
         [],
     )
 
@@ -394,7 +400,10 @@ def test_check_invited_user_email_address_doesnt_match_expected(mocker):
     mock_flash.assert_called_once_with(
         "You cannot accept an invite for another person."
     )
-    mock_abort.assert_called_once_with(403)
+    mock_abort.assert_called_once_with(
+        403,
+        "You cannot accept an invite for another person #invite",
+    )
 
 
 def test_check_user_email_address_fails_if_not_government_address(mocker):
@@ -405,7 +414,10 @@ def test_check_user_email_address_fails_if_not_government_address(mocker):
         "fake@fake.bogus", "Fake@Fake.BOGUS"
     )
     mock_flash.assert_called_once_with("You must use a government email address.")
-    mock_abort.assert_called_once_with(403)
+    mock_abort.assert_called_once_with(
+        403,
+        "You must use a government email address #invites",
+    )
 
 
 def test_check_user_email_address_succeeds_if_government_address(mocker):

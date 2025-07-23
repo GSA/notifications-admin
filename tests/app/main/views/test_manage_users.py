@@ -5,6 +5,7 @@ import pytest
 from flask import url_for
 
 import app
+from app.enums import ServicePermission
 from app.utils.user import is_gov_user
 from tests.conftest import (
     ORGANISATION_ID,
@@ -266,7 +267,7 @@ def test_service_with_no_email_auth_hides_auth_type_options(
     platform_admin_user,
 ):
     if service_has_email_auth:
-        service_one["permissions"].append("email_auth")
+        service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
     client_request.login(platform_admin_user)
     page = client_request.get(endpoint, service_id=service_one["id"], **extra_args)
     assert (
@@ -303,10 +304,10 @@ def test_service_without_caseworking_doesnt_show_admin_vs_caseworker(
 
     for idx in range(len(permission_checkboxes)):
         assert permission_checkboxes[idx]["name"] == "permissions_field"
-    assert permission_checkboxes[0]["value"] == "view_activity"
-    assert permission_checkboxes[1]["value"] == "send_messages"
-    assert permission_checkboxes[2]["value"] == "manage_templates"
-    assert permission_checkboxes[3]["value"] == "manage_service"
+    assert permission_checkboxes[0]["value"] == ServicePermission.VIEW_ACTIVITY
+    assert permission_checkboxes[1]["value"] == ServicePermission.SEND_MESSAGES
+    assert permission_checkboxes[2]["value"] == ServicePermission.MANAGE_TEMPLATES
+    assert permission_checkboxes[3]["value"] == ServicePermission.MANAGE_SERVICE
 
 
 @pytest.mark.parametrize(
@@ -322,7 +323,7 @@ def test_manage_users_page_shows_member_auth_type_if_service_has_email_auth_acti
     displays_auth_type,
 ):
     if service_has_email_auth:
-        service_one["permissions"].append("email_auth")
+        service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
     page = client_request.get("main.manage_users", service_id=service_one["id"])
     assert bool(page.select_one(".tick-cross-list-hint")) == displays_auth_type
 
@@ -361,7 +362,7 @@ def test_user_with_no_mobile_number_cant_be_set_to_sms_auth(
 ):
     active_user_with_permissions["mobile_number"] = mobile_number
 
-    service_one["permissions"].append("email_auth")
+    service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
     mocker.patch(
         "app.user_api_client.get_user", return_value=active_user_with_permissions
     )
@@ -386,20 +387,20 @@ def test_user_with_no_mobile_number_cant_be_set_to_sms_auth(
             "main.edit_user_permissions",
             {"user_id": sample_uuid()},
             [
-                ("view_activity", True),
-                ("send_messages", True),
-                ("manage_templates", True),
-                ("manage_service", True),
+                (ServicePermission.VIEW_ACTIVITY, True),
+                (ServicePermission.SEND_MESSAGES, True),
+                (ServicePermission.MANAGE_TEMPLATES, True),
+                (ServicePermission.MANAGE_SERVICE, True),
             ],
         ),
         (
             "main.invite_user",
             {},
             [
-                ("view_activity", False),
-                ("send_messages", False),
-                ("manage_templates", False),
-                ("manage_service", False),
+                (ServicePermission.VIEW_ACTIVITY, False),
+                (ServicePermission.SEND_MESSAGES, False),
+                (ServicePermission.MANAGE_TEMPLATES, False),
+                (ServicePermission.MANAGE_SERVICE, False),
             ],
         ),
     ],
@@ -433,7 +434,7 @@ def test_invite_user_allows_to_choose_auth(
     service_one,
     platform_admin_user,
 ):
-    service_one["permissions"].append("email_auth")
+    service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
     client_request.login(platform_admin_user)
     page = client_request.get("main.invite_user", service_id=SERVICE_ONE_ID)
 
@@ -482,31 +483,31 @@ def test_should_not_show_page_for_non_team_member(
         (
             {
                 "permissions_field": [
-                    "view_activity",
-                    "send_messages",
-                    "manage_templates",
-                    "manage_service",
+                    ServicePermission.VIEW_ACTIVITY,
+                    ServicePermission.SEND_MESSAGES,
+                    ServicePermission.MANAGE_TEMPLATES,
+                    ServicePermission.MANAGE_SERVICE,
                 ]
             },
             {
-                "view_activity",
-                "send_messages",
-                "manage_service",
-                "manage_templates",
+                ServicePermission.VIEW_ACTIVITY,
+                ServicePermission.SEND_MESSAGES,
+                ServicePermission.MANAGE_SERVICE,
+                ServicePermission.MANAGE_TEMPLATES,
             },
         ),
         (
             {
                 "permissions_field": [
-                    "view_activity",
-                    "send_messages",
-                    "manage_templates",
+                    ServicePermission.VIEW_ACTIVITY,
+                    ServicePermission.SEND_MESSAGES,
+                    ServicePermission.MANAGE_TEMPLATES,
                 ]
             },
             {
-                "view_activity",
-                "send_messages",
-                "manage_templates",
+                ServicePermission.VIEW_ACTIVITY,
+                ServicePermission.SEND_MESSAGES,
+                ServicePermission.MANAGE_TEMPLATES,
             },
         ),
         (
@@ -614,7 +615,7 @@ def test_cant_edit_user_folder_permissions_for_platform_admin_users(
     mock_get_template_folders,
     platform_admin_user,
 ):
-    service_one["permissions"] = ["edit_folder_permissions"]
+    service_one["permissions"] = [ServicePermission.EDIT_FOLDER_PERMISSIONS]
     mocker.patch("app.user_api_client.get_user", return_value=platform_admin_user)
     mock_get_template_folders.return_value = [
         {
@@ -664,10 +665,10 @@ def test_cant_edit_user_folder_permissions_for_platform_admin_users(
         platform_admin_user["id"],
         SERVICE_ONE_ID,
         permissions={
-            "manage_service",
-            "manage_templates",
-            "send_messages",
-            "view_activity",
+            ServicePermission.MANAGE_SERVICE,
+            ServicePermission.MANAGE_TEMPLATES,
+            ServicePermission.SEND_MESSAGES,
+            ServicePermission.VIEW_ACTIVITY,
         },
         folder_permissions=None,
     )
@@ -685,7 +686,7 @@ def test_cant_edit_non_member_user_permissions(
         user_id=USER_ONE_ID,
         _data={
             "email_address": "test@example.com",
-            "manage_service": "y",
+            ServicePermission.MANAGE_SERVICE: "y",
         },
         _expected_status=404,
     )
@@ -703,7 +704,7 @@ def test_edit_user_permissions_including_authentication_with_email_auth_service(
     mock_get_template_folders,
 ):
     active_user_with_permissions["auth_type"] = "email_auth"
-    service_one["permissions"].append("email_auth")
+    service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
 
     client_request.post(
         "main.edit_user_permissions",
@@ -712,9 +713,9 @@ def test_edit_user_permissions_including_authentication_with_email_auth_service(
         _data={
             "email_address": active_user_with_permissions["email_address"],
             "permissions_field": [
-                "send_messages",
-                "manage_templates",
-                "manage_service",
+                ServicePermission.SEND_MESSAGES,
+                ServicePermission.MANAGE_TEMPLATES,
+                ServicePermission.MANAGE_SERVICE,
             ],
             "login_authentication": "sms_auth",
         },
@@ -729,9 +730,9 @@ def test_edit_user_permissions_including_authentication_with_email_auth_service(
         str(active_user_with_permissions["id"]),
         SERVICE_ONE_ID,
         permissions={
-            "send_messages",
-            "manage_templates",
-            "manage_service",
+            ServicePermission.SEND_MESSAGES,
+            ServicePermission.MANAGE_TEMPLATES,
+            ServicePermission.MANAGE_SERVICE,
         },
         folder_permissions=[],
     )
@@ -747,7 +748,7 @@ def test_edit_user_permissions_shows_authentication_for_email_auth_service(
     mock_get_template_folders,
     active_user_with_permissions,
 ):
-    service_one["permissions"].append("email_auth")
+    service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
 
     page = client_request.get(
         "main.edit_user_permissions",
@@ -1015,10 +1016,10 @@ def test_invite_user(
         _data={
             "email_address": email_address,
             "permissions_field": [
-                "view_activity",
-                "send_messages",
-                "manage_templates",
-                "manage_service",
+                ServicePermission.VIEW_ACTIVITY,
+                ServicePermission.SEND_MESSAGES,
+                ServicePermission.MANAGE_TEMPLATES,
+                ServicePermission.MANAGE_SERVICE,
             ],
         },
         _follow_redirects=True,
@@ -1028,10 +1029,10 @@ def test_invite_user(
     assert flash_banner == f"Invite sent to {email_address}"
 
     expected_permissions = {
-        "manage_service",
-        "manage_templates",
-        "send_messages",
-        "view_activity",
+        ServicePermission.MANAGE_SERVICE,
+        ServicePermission.MANAGE_TEMPLATES,
+        ServicePermission.SEND_MESSAGES,
+        ServicePermission.VIEW_ACTIVITY,
     }
 
     app.invite_api_client.create_invite.assert_called_once_with(
@@ -1072,7 +1073,7 @@ def test_invite_user_when_email_address_is_prefilled(
         _data={
             # No posted email address
             "permissions_field": [
-                "send_messages",
+                ServicePermission.SEND_MESSAGES,
             ],
         },
     )
@@ -1104,7 +1105,7 @@ def test_invite_user_with_email_auth_service(
     mock_get_organizations,
     mock_get_template_folders,
 ):
-    service_one["permissions"].append("email_auth")
+    service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
     sample_invite["email_address"] = "test@example.gsa.gov"
 
     assert is_gov_user(email_address) is gov_user
@@ -1124,10 +1125,10 @@ def test_invite_user_with_email_auth_service(
         _data={
             "email_address": email_address,
             "permissions_field": [
-                "view_activity",
-                "send_messages",
-                "manage_templates",
-                "manage_service",
+                ServicePermission.VIEW_ACTIVITY,
+                ServicePermission.SEND_MESSAGES,
+                ServicePermission.MANAGE_TEMPLATES,
+                ServicePermission.MANAGE_SERVICE,
             ],
             "login_authentication": auth_type,
         },
@@ -1140,10 +1141,10 @@ def test_invite_user_with_email_auth_service(
     assert flash_banner == "Invite sent to test@example.gsa.gov"
 
     expected_permissions = {
-        "manage_service",
-        "manage_templates",
-        "send_messages",
-        "view_activity",
+        ServicePermission.MANAGE_SERVICE,
+        ServicePermission.MANAGE_TEMPLATES,
+        ServicePermission.SEND_MESSAGES,
+        ServicePermission.VIEW_ACTIVITY,
     }
 
     app.invite_api_client.create_invite.assert_called_once_with(
@@ -1320,7 +1321,10 @@ def test_user_cant_invite_themselves(
         service_id=SERVICE_ONE_ID,
         _data={
             "email_address": active_user_with_permissions["email_address"],
-            "permissions_field": ["send_messages", "manage_service"],
+            "permissions_field": [
+                ServicePermission.SEND_MESSAGES,
+                ServicePermission.MANAGE_SERVICE,
+            ],
         },
         _follow_redirects=True,
         _expected_status=200,
@@ -1382,7 +1386,7 @@ def test_manage_user_page_shows_how_many_folders_user_can_view(
     folders_user_can_see,
     expected_message,
 ):
-    service_one["permissions"] = ["edit_folder_permissions"]
+    service_one["permissions"] = [ServicePermission.EDIT_FOLDER_PERMISSIONS]
     mock_get_template_folders.return_value = [
         {
             "id": "folder-id-1",
@@ -1424,7 +1428,7 @@ def test_manage_user_page_doesnt_show_folder_hint_if_service_has_no_folders(
     mock_get_invites_for_service,
     api_user_active,
 ):
-    service_one["permissions"] = ["edit_folder_permissions"]
+    service_one["permissions"] = [ServicePermission.EDIT_FOLDER_PERMISSIONS]
     mock_get_template_folders.return_value = []
 
     page = client_request.get("main.manage_users", service_id=service_one["id"])

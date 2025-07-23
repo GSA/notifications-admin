@@ -5,20 +5,16 @@
 
 version: 2
 updates:
-  - package-ecosystem: "pip" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: 'pip' # See documentation for possible values
+    directory: '/' # Location of package manifests
     schedule:
-      interval: "daily"
+      interval: 'daily'
     assignees:
-      - "alexjanousekGSA"
-    reviewers:
-      - "alexjanousekGSA"
-  - package-ecosystem: "npm"
-    directory: "/"
+      - 'alexjanousekGSA'
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "daily"
+      interval: 'daily'
     versioning-strategy: increase
     assignees:
-      - "alexjanousekGSA"
-    reviewers:
-      - "alexjanousekGSA"
+      - 'alexjanousekGSA'

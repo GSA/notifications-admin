@@ -1,6 +1,7 @@
 from flask import abort, current_app
 from werkzeug.utils import cached_property
 
+from app.enums import ServicePermission
 from app.models import JSONModel, SortByNameMixin
 from app.models.job import ImmediateJobs, PaginatedJobs, PaginatedUploads, ScheduledJobs
 from app.models.organization import Organization
@@ -37,7 +38,7 @@ class Service(JSONModel, SortByNameMixin):
         "notes",
         "prefix_sms",
         "purchase_order_number",
-        "research_mode",
+        ServicePermission.RESEARCH_MODE,
         "service_callback_api",
         "volume_email",
         "volume_sms",
@@ -49,11 +50,11 @@ class Service(JSONModel, SortByNameMixin):
     )
 
     ALL_PERMISSIONS = TEMPLATE_TYPES + (
-        "edit_folder_permissions",
-        "email_auth",
-        "inbound_sms",
-        "international_sms",
-        "upload_document",
+        ServicePermission.EDIT_FOLDER_PERMISSIONS,
+        ServicePermission.EMAIL_AUTH,
+        ServicePermission.INBOUND_SMS,
+        ServicePermission.INTERNATIONAL_SMS,
+        ServicePermission.UPLOAD_DOCUMENT,
     )
 
     @classmethod
@@ -175,7 +176,9 @@ class Service(JSONModel, SortByNameMixin):
                 [
                     user
                     for user in self.team_members
-                    if user.has_permission_for_service(self.id, "manage_service")
+                    if user.has_permission_for_service(
+                        self.id, ServicePermission.MANAGE_SERVICE
+                    )
                 ]
             )
             > 1
@@ -322,7 +325,7 @@ class Service(JSONModel, SortByNameMixin):
 
     @property
     def shouldnt_use_govuk_as_sms_sender(self):
-        return self.organization_type != Organization.TYPE_CENTRAL
+        return self.organization_type != Organization.TYPE_FEDERAL
 
     @cached_property
     def sms_senders(self):
@@ -437,7 +440,7 @@ class Service(JSONModel, SortByNameMixin):
 
     @cached_property
     def inbound_sms_summary(self):
-        if not self.has_permission("inbound_sms"):
+        if not self.has_permission(ServicePermission.INBOUND_SMS):
             return None
         return service_api_client.get_inbound_sms_summary(self.id)
 

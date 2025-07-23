@@ -1,6 +1,7 @@
 from flask import abort, redirect, render_template, session
 
 from app import current_service, current_user, service_api_client, url_for
+from app.enums import ServicePermission
 from app.main import main
 from app.main.views.send import (
     all_placeholders_in_session,
@@ -14,7 +15,7 @@ from app.utils.user import user_has_permissions
 
 
 @main.route("/services/<uuid:service_id>/tour/<uuid:template_id>")
-@user_has_permissions("send_messages")
+@user_has_permissions(ServicePermission.SEND_MESSAGES)
 def begin_tour(service_id, template_id):
     db_template = current_service.get_template_with_user_permission_or_403(
         template_id, current_user
@@ -47,7 +48,7 @@ def begin_tour(service_id, template_id):
     "/services/<uuid:service_id>/tour/<uuid:template_id>/step-<int:step_index>",
     methods=["GET", "POST"],
 )
-@user_has_permissions("send_messages", restrict_admin_usage=True)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True)
 def tour_step(service_id, template_id, step_index):
     db_template = current_service.get_template_with_user_permission_or_403(
         template_id, current_user
@@ -96,7 +97,7 @@ def tour_step(service_id, template_id, step_index):
         dict_to_populate_from=get_normalised_placeholders_from_session(),
         template_type=template.template_type,
         allow_international_phone_numbers=current_service.has_permission(
-            "international_sms"
+            ServicePermission.INTERNATIONAL_SMS
         ),
     )
 
@@ -166,7 +167,7 @@ def _get_tour_step_back_link(service_id, template_id, step_index):
 @main.route(
     "/services/<uuid:service_id>/tour/<uuid:template_id>/check", methods=["GET"]
 )
-@user_has_permissions("send_messages", restrict_admin_usage=True)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True)
 def check_tour_notification(service_id, template_id):
     db_template = current_service.get_template_with_user_permission_or_403(
         template_id, current_user
@@ -223,7 +224,7 @@ def check_tour_notification(service_id, template_id):
 
 
 @main.route("/services/<uuid:service_id>/end-tour/<uuid:example_template_id>")
-@user_has_permissions("manage_templates")
+@user_has_permissions(ServicePermission.MANAGE_TEMPLATES)
 def go_to_dashboard_after_tour(service_id, example_template_id):
     service_api_client.delete_service_template(service_id, example_template_id)
 

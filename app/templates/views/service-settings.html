@@ -30,7 +30,7 @@
           {{ edit_field(
               'Change',
               url_for('.service_name_change', service_id=current_service.id),
-              permissions=['manage_service'],
+              permissions=[ServicePermission.MANAGE_SERVICE],
               suffix='service name',
             )
           }}
@@ -46,7 +46,7 @@
             service_id=current_service.id,
             channel='sms'
             ),
-            permissions=['manage_service'],
+            permissions=[ServicePermission.MANAGE_SERVICE],
             suffix='your settings for sending text messages',
           )}} #}
         {% endcall %}
@@ -65,7 +65,7 @@
           {{ edit_field(
             'Manage',
             url_for('.service_sms_senders', service_id=current_service.id),
-            permissions=['manage_service','manage_api_keys'],
+            permissions=[ServicePermission.MANAGE_SERVICE,'manage_api_keys'],
             suffix='text message senders',
           )
         }}
@@ -78,7 +78,7 @@
           {{ edit_field(
             'Change',
             url_for('.service_set_sms_prefix', service_id=current_service.id),
-            permissions=['manage_service'],
+            permissions=[ServicePermission.MANAGE_SERVICE],
             suffix='your settings for starting text messages with service name',
           )
           }}
@@ -91,7 +91,7 @@
             {{ edit_field(
               'Change',
               url_for('.service_set_international_sms', service_id=current_service.id),
-              permissions=['manage_service'],
+              permissions=[ServicePermission.MANAGE_SERVICE],
               suffix='your settings for sending international text messages',
             )
             }}
@@ -104,7 +104,7 @@
                   {{ edit_field(
                       'Change',
                       url_for('.service_set_inbound_sms', service_id=current_service.id),
-                      permissions=['manage_service'],
+                      permissions=[ServicePermission.MANAGE_SERVICE],
                       suffix='your settings for receiving text messages',
                   )
                   }}
@@ -128,7 +128,7 @@
               channel='email',
               service_id=current_service.id
             ),
-            permissions=['manage_service'],
+            permissions=[ServicePermission.MANAGE_SERVICE],
             suffix='your settings for sending emails',
           )}}
         {% endcall %}
@@ -146,7 +146,7 @@
           {{ edit_field(
               'Manage',
               url_for('.service_email_reply_to', service_id=current_service.id),
-              permissions=['manage_service','manage_api_keys'],
+              permissions=[ServicePermission.MANAGE_SERVICE,'manage_api_keys'],
               suffix='reply-to email addresses',
             )
           }}
@@ -158,7 +158,7 @@
           {{ edit_field(
             'Manage',
             url_for('.send_files_by_email_contact_details', service_id=current_service.id),
-            permissions=['manage_service'],
+            permissions=[ServicePermission.MANAGE_SERVICE],
             suffix='sending files by email',
           )}}
         {% endcall %}
@@ -178,7 +178,7 @@
         </ul>
 
       <p>
-        {% if current_user.has_permissions('manage_service') %}
+        {% if current_user.has_permissions(ServicePermission.MANAGE_SERVICE) %}
           To remove these restrictions, you can send us a
           <a class="usa-link" href="mailto:notify-support@gsa.gov">request to go live</a>.
         {% else %}

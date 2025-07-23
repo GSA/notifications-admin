@@ -159,22 +159,6 @@ clean:
 upload-static:
 	aws s3 cp --region us-west-2 --recursive --cache-control max-age=315360000,immutable ./app/static s3://${DNS_NAME}-static
 
-# .PHONY: cf-failwhale-deployed
-# cf-failwhale-deployed:
-# 	@cf app notify-admin-failwhale --guid || (echo "notify-admin-failwhale is not deployed on ${CF_SPACE}" && exit 1)
-
-# .PHONY: enable-failwhale
-# enable-failwhale: cf-target cf-failwhale-deployed ## Enable the failwhale app and disable admin
-# 	@cf map-route notify-admin-failwhale ${DNS_NAME} --hostname www
-# 	@cf unmap-route notify-admin ${DNS_NAME} --hostname www
-# 	@echo "Failwhale is enabled"
-
-# .PHONY: disable-failwhale
-# disable-failwhale: cf-target cf-failwhale-deployed ## Disable the failwhale app and enable admin
-# 	@cf map-route notify-admin ${DNS_NAME} --hostname www
-# 	@cf unmap-route notify-admin-failwhale ${DNS_NAME} --hostname www
-# 	@echo "Failwhale is disabled"
-
 .PHONY: test-single
 test-single: export NEW_RELIC_ENVIRONMENT=test
 test-single: ## Run a single test file

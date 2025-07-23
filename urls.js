@@ -9,6 +9,74 @@ const routes = {
     { label: 'Support', path: '/support' },
     { label: 'Notify.gov Service Ending', path: '/notify-service-ending' },
     { label: 'Notify.gov Sign In', path: '/sign-in' },
+    { label: 'Accessibility Statement', path: '/accessibility-statement' },
+    { label: 'Privacy', path: '/privacy' },
+    { label: 'Email Not Received', path: '/email-not-received' },
+    { label: 'Text Not Received', path: '/text-not-received' },
+    { label: 'Performance', path: '/performance' },
+  ],
+
+  authenticated: [
+    {
+      label: 'SMS Template Preview',
+      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/send/a4e530e7-cae2-4e24-a1e9-752141a0b58e/one-off/step-0',
+    },
+    // Pages with govuk buttons that need testing
+    {
+      label: 'API Keys',
+      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/api/keys',
+    },
+    // Pages to test radio buttons before converting govukRadios to USWDS
+    {
+      label: 'API Keys Create',
+      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/api/keys/create',
+    },
+    {
+      label: 'Change User Auth',
+      path: '/users/6af522d0-2915-4e52-83a3-3690455a5fe6/change_auth',
+    },
+    {
+      label: 'User Profile Timezone',
+      path: '/user-profile/preferred_timezone',
+    },
+    {
+      label: 'Service Settings',
+      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/service-settings',
+    },
+    {
+      label: 'Service Send Files By Email',
+      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/service-settings/send-files-by-email',
+    },
+    {
+      label: 'Service SMS Prefix',
+      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/service-settings/sms-prefix',
+    },
+    {
+      label: 'Send One Off Step 2',
+      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/send/a4e530e7-cae2-4e24-a1e9-752141a0b58e/one-off/step-2',
+    },
+    {
+      label: 'Choose Template',
+      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/templates',
+    },
+    {
+      label: 'Team Members',
+      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/users',
+    },
+    {
+      label: 'Invite User',
+      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/users/invite',
+    },
+    // Platform admin pages with checkboxes
+    {
+      label: 'Platform Admin Live Services',
+      path: '/platform-admin/live-services',
+    },
+    // Organization pages
+    {
+      label: 'Add Organization',
+      path: '/organizations/add',
+    },
   ],
 
   // Using Notify section
@@ -16,6 +84,7 @@ const routes = {
     { label: 'Get Started', path: '/using-notify/get-started' },
     { label: 'Trial Mode', path: '/using-notify/trial-mode' },
     { label: 'Pricing', path: '/using-notify/pricing' },
+    { label: 'Pricing Billing Details', path: '/pricing/billing-details' },
     { label: 'Delivery Status', path: '/using-notify/delivery-status' },
     { label: 'How To', path: '/using-notify/how-to' },
     { label: 'Best Practices', path: '/using-notify/best-practices' },
@@ -24,11 +93,26 @@ const routes = {
   // Best Practices subsection
   bestPractices: [
     { label: 'Clear Goals', path: '/using-notify/best-practices/clear-goals' },
-    { label: 'Rules And Regulations', path: '/using-notify/best-practices/rules-and-regulations' },
-    { label: 'Establish Trust', path: '/using-notify/best-practices/establish-trust' },
-    { label: 'Write For Action', path: '/using-notify/best-practices/write-for-action' },
-    { label: 'Multiple Languages', path: '/using-notify/best-practices/multiple-languages' },
-    { label: 'Benchmark Performance', path: '/using-notify/best-practices/benchmark-performance' },
+    {
+      label: 'Rules And Regulations',
+      path: '/using-notify/best-practices/rules-and-regulations',
+    },
+    {
+      label: 'Establish Trust',
+      path: '/using-notify/best-practices/establish-trust',
+    },
+    {
+      label: 'Write For Action',
+      path: '/using-notify/best-practices/write-for-action',
+    },
+    {
+      label: 'Multiple Languages',
+      path: '/using-notify/best-practices/multiple-languages',
+    },
+    {
+      label: 'Benchmark Performance',
+      path: '/using-notify/best-practices/benchmark-performance',
+    },
   ],
 
   // About section
@@ -45,6 +129,7 @@ const sublinks = [
   ...routes.usingNotify,
   ...routes.bestPractices,
   ...routes.about,
+  ...routes.authenticated,
   // Add more sections here as needed
 ];
 

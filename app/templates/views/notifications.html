@@ -7,7 +7,7 @@
 
 {% set page_title = (
   (99|message_count_label(message_type, suffix='')) | capitalize
-  if current_user.has_permissions('view_activity')
+  if current_user.has_permissions(ServicePermission.VIEW_ACTIVITY)
   else 'Sent messages'
 ) %}
 
@@ -62,7 +62,7 @@
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   {% endcall %}
 
-  {% if current_user.has_permissions('view_activity') %}
+  {% if current_user.has_permissions(ServicePermission.VIEW_ACTIVITY) %}
     <p class="font-body-sm">
       <a href="{{ download_link_seven_day }}" download="download" class="usa-link">Download all data last 7 days (<abbr title="Comma separated values">CSV</abbr>)</a>
       &emsp;

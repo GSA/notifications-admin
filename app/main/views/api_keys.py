@@ -8,6 +8,7 @@ from app import (
     notification_api_client,
     service_api_client,
 )
+from app.enums import ServicePermission
 from app.formatters import email_safe
 from app.main import main
 from app.main.forms import CallbackForm, CreateKeyForm, GuestList
@@ -26,7 +27,7 @@ dummy_bearer_token = "bearer_token_set"  # nosec B105 - this is not a real token
 def api_integration(service_id):
     callbacks_link = (
         ".api_callbacks"
-        if current_service.has_permission("inbound_sms")
+        if current_service.has_permission(ServicePermission.INBOUND_SMS)
         else ".delivery_status_callback"
     )
     return render_template(
@@ -162,7 +163,7 @@ def check_token_against_dummy_bearer(token):
 @main.route("/services/<uuid:service_id>/api/callbacks", methods=["GET"])
 @user_has_permissions("manage_api_keys")
 def api_callbacks(service_id):
-    if not current_service.has_permission("inbound_sms"):
+    if not current_service.has_permission(ServicePermission.INBOUND_SMS):
         return redirect(url_for(".delivery_status_callback", service_id=service_id))
 
     delivery_status_callback, received_text_messages_callback = get_apis()
@@ -196,7 +197,7 @@ def delivery_status_callback(service_id):
     delivery_status_callback = get_delivery_status_callback_details()
     back_link = (
         ".api_callbacks"
-        if current_service.has_permission("inbound_sms")
+        if current_service.has_permission(ServicePermission.INBOUND_SMS)
         else ".api_integration"
     )
 
@@ -260,7 +261,7 @@ def get_received_text_messages_callback():
 )
 @user_has_permissions("manage_api_keys")
 def received_text_messages_callback(service_id):
-    if not current_service.has_permission("inbound_sms"):
+    if not current_service.has_permission(ServicePermission.INBOUND_SMS):
         return redirect(url_for(".api_integration", service_id=service_id))
 
     received_text_messages_callback = get_received_text_messages_callback()

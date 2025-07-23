@@ -17,7 +17,7 @@
 
   {% if not templates_and_folders.templates_to_show %}
 
-    {% if current_user.has_permissions('manage_templates') %}
+    {% if current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES) %}
        <p class="bottom-gutter">
          You need a template before you can send text messages.
        </p>

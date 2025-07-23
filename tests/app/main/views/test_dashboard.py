@@ -7,6 +7,7 @@ import pytest
 from flask import url_for
 from freezegun import freeze_time
 
+from app.enums import ServicePermission
 from app.main.views.dashboard import (
     aggregate_status_types,
     aggregate_template_usage,
@@ -919,7 +920,12 @@ def test_menu_send_messages(
         mocker,
         api_user_active,
         service_one,
-        ["view_activity", "send_texts", "send_emails", "manage_service"],
+        [
+            ServicePermission.VIEW_ACTIVITY,
+            ServicePermission.SEND_TEXTS,
+            ServicePermission.SEND_EMAILS,
+            ServicePermission.MANAGE_SERVICE,
+        ],
     )
     page = str(page)
     assert (
@@ -956,7 +962,12 @@ def test_menu_manage_service(
         mocker,
         api_user_active,
         service_one,
-        ["view_activity", "manage_templates", "manage_users", "manage_settings"],
+        [
+            ServicePermission.VIEW_ACTIVITY,
+            ServicePermission.MANAGE_TEMPLATES,
+            ServicePermission.MANAGE_USERS,
+            ServicePermission.MANAGE_SETTINGS
+        ],
     )
     page = str(page)
     assert (
@@ -993,7 +1004,12 @@ def test_menu_main_settings(
         mocker,
         api_user_active,
         service_one,
-        ["view_activity", "user_profile", "manage_users", "manage_settings"],
+        [
+            ServicePermission.VIEW_ACTIVITY,
+            "user_profile",
+            ServicePermission.MANAGE_USERS,
+            ServicePermission.MANAGE_SETTINGS,
+        ],
     )
     page = str(page)
     assert (
@@ -1029,7 +1045,7 @@ def test_menu_manage_api_keys(
         mocker,
         api_user_active,
         service_one,
-        ["view_activity"],
+        [ServicePermission.VIEW_ACTIVITY],
     )
 
     page = str(page)
@@ -1106,7 +1122,7 @@ def test_route_for_service_permissions(
             "GET",
             200,
             url_for("main.service_dashboard", service_id=service_one["id"]),
-            ["view_activity"],
+            [ServicePermission.VIEW_ACTIVITY],
             api_user_active,
             service_one,
         )

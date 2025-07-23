@@ -12,17 +12,17 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
       nodes
         .filter(node => node.type === 'folder')
         .forEach(node => {
-          result += `<li class="multiple-choice">
+          result += `<div class="usa-radio">
                       <input id="node-${count}" name="move_to" type="radio" value="node-${count}">
                       <label class="usa-label" for="node-${count}">
                         ${node.label}
                       </label>
                       ${node.children ? foldersCheckboxesHTML(node.children) : ''}
-                    </li>`;
+                    </div>`;
           count++;
         });
 
-      return `<ul>${result}</ul>`;
+      return `<div>${result}</div>`;
     };
 
   }();
@@ -83,25 +83,25 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
                       <legend class="form-label">
                         New template
                       </legend>
-                      <div class="multiple-choice">
+                      <div class="usa-radio">
                         <input id="add_template_by_template_type-0" name="add_template_by_template_type" type="radio" value="email">
                         <label class="usa-label" for="add_template_by_template_type-0">
                           Email
                         </label>
                       </div>
-                      <div class="multiple-choice">
+                      <div class="usa-radio">
                         <input id="add_template_by_template_type-1" name="add_template_by_template_type" type="radio" value="sms">
                         <label class="usa-label" for="add_template_by_template_type-1">
                           Text message
                         </label>
                       </div>
-                      <div class="multiple-choice">
+                      <div class="usa-radio">
                         <input id="add_template_by_template_type-2" name="add_template_by_template_type" type="radio" value="letter">
                         <label class="usa-label" for="add_template_by_template_type-2">
                           Letter
                         </label>
                       </div>
-                      <div class="multiple-choice">
+                      <div class="usa-radio">
                         <input id="add_template_by_template_type-3" name="add_template_by_template_type" type="radio" value="copy-existing">
                         <label class="usa-label" for="add_template_by_template_type-3">
                           Copy an existing template

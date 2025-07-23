@@ -403,7 +403,7 @@ class SMSPreviewTemplate(BaseSMSTemplate):
                     .then(nl2br)
                     .then(
                         autolink_urls,
-                        classes="govuk-link govuk-link--no-visited-state",
+                        classes="usa-link usa-link--external",
                     ),
                 }
             )

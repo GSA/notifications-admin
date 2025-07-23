@@ -15,6 +15,7 @@ from flask import (
 )
 
 from app import redis_client, user_api_client
+from app.enums import InvitedUserStatus
 from app.main import main
 from app.main.forms import (
     RegisterUserFromOrgInviteForm,
@@ -40,7 +41,7 @@ def register():
 def register_from_org_invite():
     invited_org_user = InvitedOrgUser.from_session()
     if not invited_org_user:
-        abort(404)
+        abort(404, "No invited_org_user")
 
     form = RegisterUserFromOrgInviteForm(
         invited_org_user,
@@ -52,7 +53,7 @@ def register_from_org_invite():
             form.organization.data != invited_org_user.organization
             or form.email_address.data != invited_org_user.email_address
         ):
-            abort(400)
+            abort(400, "organization or email address doesn't match")
         _do_registration(
             form,
             send_email=False,
@@ -103,9 +104,15 @@ def registration_continue():
 
 def get_invite_data_from_redis(state):
 
-    invite_data = json.loads(redis_client.get(f"invitedata-{state}"))
+    invite_data = json.loads(redis_client.get(f"invitedata-{state}").decode("utf8"))
     user_email = redis_client.get(f"user_email-{state}").decode("utf8")
     user_uuid = redis_client.get(f"user_uuid-{state}").decode("utf8")
+
+    # login.gov is going to fail if we don't have at least one of these
+    if user_email is None and user_uuid is None:
+        flash("Can't find user email and/or uuid")
+        abort(403, "Can't find user email and/or uuid")
+
     invited_user_email_address = redis_client.get(
         f"invited_user_email_address-{state}"
     ).decode("utf8")
@@ -115,7 +122,7 @@ def get_invite_data_from_redis(state):
 def put_invite_data_in_redis(
     state, invite_data, user_email, user_uuid, invited_user_email_address
 ):
-    ttl = 60 * 15  # 15 minutes
+    ttl = 2 * 24 * 60 * 60
 
     redis_client.set(f"invitedata-{state}", json.dumps(invite_data), ex=ttl)
     redis_client.set(f"user_email-{state}", user_email, ex=ttl)
@@ -131,31 +138,32 @@ def check_invited_user_email_address_matches_expected(
     user_email, invited_user_email_address
 ):
     if user_email.lower() != invited_user_email_address.lower():
-        debug_msg("invited user email did not match expected email, abort(403)")
         flash("You cannot accept an invite for another person.")
-        abort(403)
+        abort(403, "You cannot accept an invite for another person #invite")
 
     if not is_gov_user(user_email):
-        debug_msg("invited user has a non-government email address.")
         flash("You must use a government email address.")
-        abort(403)
+        abort(403, "You must use a government email address #invites")
 
 
 @main.route("/set-up-your-profile", methods=["GET", "POST"])
 @hide_from_search_engines
 def set_up_your_profile():
 
-    debug_msg(f"Enter set_up_your_profile with request.args {request.args}")
+    current_app.logger.info("#invites: Enter set_up_your_profile")
     code = request.args.get("code")
     state = request.args.get("state")
 
     state_key = f"login-state-{unquote(state)}"
     stored_state = unquote(redis_client.get(state_key).decode("utf8"))
     if state != stored_state:
-        current_app.logger.error(f"State Error: {state} != {stored_state}")
-        abort(403)
+        flash("Internal error: cannot recognize stored state")
+        abort(403, "Internal error: cannot recognize stored state #invites")
 
     login_gov_error = request.args.get("error")
+    if login_gov_error:
+        flash(f"Login.gov error: {login_gov_error}")
+        abort(403, f"login_gov_error {login_gov_error} #invites")
 
     user_email = redis_client.get(f"user_email-{state}")
     user_uuid = redis_client.get(f"user_uuid-{state}")
@@ -163,26 +171,30 @@ def set_up_your_profile():
     new_user = user_email is None or user_uuid is None
 
     if new_user:  # invite path
+        current_app.logger.info(
+            f"#invites: we are processing a new user with login.gov user_uuid {user_uuid}"
+        )
         access_token = sign_in._get_access_token(code)
 
-        debug_msg("Got the access token for login.gov")
         user_email, user_uuid = sign_in._get_user_email_and_uuid(access_token)
-        debug_msg(
-            f"Got the user_email {user_email} and user_uuid {user_uuid} from login.gov"
+        current_app.logger.info(
+            f"#invites: Got the user_email and user_uuid {user_uuid} from login.gov"
         )
         invite_data = redis_client.get(f"invitedata-{state}")
         invite_data = json.loads(invite_data)
-        debug_msg(f"final state {invite_data}")
         invited_user_id = invite_data["invited_user_id"]
         invited_user_email_address = get_invited_user_email_address(invited_user_id)
-        debug_msg(f"email address from the invite_date is {invited_user_email_address}")
+        current_app.logger.info(
+            f"#invites: does user email match expected? {user_email == invited_user_email_address}"
+        )
         check_invited_user_email_address_matches_expected(
             user_email, invited_user_email_address
         )
 
         invited_user_accept_invite(invited_user_id)
-        debug_msg(
-            f"accepted invite user {invited_user_email_address} to service {invite_data['service_id']}"
+        current_app.logger.info(
+            f"#invites: accepted invite user with invited_user_id \
+              {invited_user_id} to service {invite_data['service_id']}"
         )
         # We need to avoid taking a second trip through the login.gov code because we cannot pull the
         # access token twice.  So once we retrieve these values, let's park them in redis for 15 minutes
@@ -193,9 +205,11 @@ def set_up_your_profile():
     form = SetupUserProfileForm()
 
     if form.validate_on_submit() and not new_user:
+        current_app.logger.info("#invites: this is an invite for a pre-existing user")
         invite_data, user_email, user_uuid, invited_user_email_address = (
             get_invite_data_from_redis(state)
         )
+        current_app.logger.info(f"#invites: login.gov user_uuid from redis {user_uuid}")
 
         # create or update the user
         user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
@@ -207,15 +221,20 @@ def set_up_your_profile():
                 password=str(uuid.uuid4()),
                 auth_type="sms_auth",
             )
-            debug_msg(f"registered user {form.name.data} with email {user_email}")
+            current_app.logger.info(
+                f"#invites: registered the new user with login.gov user_uuid {user_uuid}"
+            )
         else:
             user.update(mobile_number=form.mobile_number.data, name=form.name.data)
-            debug_msg(f"updated user {form.name.data}")
+            current_app.logger.info(
+                f"#invites: updated the pre-existing user with login.gov user_uuid {user_uuid}"
+            )
 
         # activate the user
         user = user_api_client.get_user_by_uuid_or_email(user_uuid, user_email)
+        current_app.logger.info("#invites: going to activate user")
         activate_user(user["id"])
-        debug_msg("activated user")
+        current_app.logger.info(f"#invites: activated user with user.id {user['id']}")
         usr = User.from_id(user["id"])
 
         usr.add_to_service(
@@ -224,19 +243,14 @@ def set_up_your_profile():
             invite_data["folder_permissions"],
             invite_data["from_user_id"],
         )
-        debug_msg(
-            f"Added user {usr.email_address} to service {invite_data['service_id']}"
-        )
+
         # notify-admin-1766
         # redirect new users to templates area of new service instead of dashboard
         service_id = invite_data["service_id"]
         url = url_for(".service_dashboard", service_id=service_id)
         url = f"{url}/templates"
+        current_app.logger.info(f"#invites redirecting to {url}")
         return redirect(url)
-
-    elif login_gov_error:
-        current_app.logger.error(f"login.gov error: {login_gov_error}")
-        abort(403)
 
     # we take two trips through this method, but should only hit this
     # line on the first trip.  On the second trip, we should get redirected
@@ -254,19 +268,19 @@ def get_invited_user_email_address(invited_user_id):
 def invited_user_accept_invite(invited_user_id):
     invited_user = InvitedUser.by_id(invited_user_id)
 
-    if invited_user.status == "expired":
+    if invited_user.status == InvitedUserStatus.EXPIRED:
         current_app.logger.error("User invitation has expired")
         flash(
             "Your invitation has expired; please contact the person who invited you for additional help."
         )
-        abort(401)
+        abort(401, "Your invitation has expired #invites")
 
-    if invited_user.status == "cancelled":
+    if invited_user.status == InvitedUserStatus.CANCELLED:
         current_app.logger.error("User invitation has been cancelled")
         flash(
             "Your invitation is no longer valid; please contact the person who invited you for additional help."
         )
-        abort(401)
+        abort(401, "Your invitation was canceled #invites")
 
     invited_user.accept_invite()
 
