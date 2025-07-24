@@ -7,9 +7,6 @@ $(() => GOVUK.modules.start());
 
 $(() => $('.error-message, .usa-error-message').eq(0).parent('label').next('input').trigger('focus'));
 
-$(() => $('.govuk-header__container').on('click', function() {
-  $(this).css('border-color', '#005ea5');
-}));
 
 // Applies our expanded focus style to the siblings of links when that link is wrapped in a heading.
 //
