@@ -67,15 +67,21 @@ const routes = {
       label: 'Invite User',
       path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/users/invite',
     },
-    // Platform admin pages with checkboxes
     {
       label: 'Platform Admin Live Services',
       path: '/platform-admin/live-services',
     },
-    // Organization pages
     {
       label: 'Add Organization',
       path: '/organizations/add',
+    },
+    {
+      label: 'Uploads',
+      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/uploads',
+    },
+    {
+      label: 'API Guest List',
+      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/api/guest-list',
     },
   ],
 
