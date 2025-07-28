@@ -1,11 +1,7 @@
-from gevent import monkey
+from flask import Flask
+from werkzeug.serving import WSGIRequestHandler
 
-monkey.patch_all()
-
-from flask import Flask  # noqa
-from werkzeug.serving import WSGIRequestHandler  # noqa
-
-from app import create_app  # noqa
+from app import create_app
 
 WSGIRequestHandler.version_string = lambda self: "SecureServer"
 
