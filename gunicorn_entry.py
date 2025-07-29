@@ -1,10 +1,5 @@
-# from gevent import monkey
+from gevent import monkey
 
-# monkey.patch_all()
-
-
-import newrelic.agent  # noqa
-
-newrelic.agent.initialize("./newrelic.ini")
+monkey.patch_all()
 
 from application import application  # noqa
