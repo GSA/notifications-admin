@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 API_PUBLIC_URL = getenv("API_PUBLIC_URL", "localhost")
 
+
 class BaseAPIClient:
     """
     Base class for Notify.gov API client.
