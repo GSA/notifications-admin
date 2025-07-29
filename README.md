@@ -251,7 +251,7 @@ machine):
 
 ```sh
 cd notifications-admin
-pyenv virtualenv 3.13.9 notify-admin
+pyenv virtualenv 3.13.2 notify-admin
 pyenv local notify-admin
 ```
 
