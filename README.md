@@ -302,7 +302,7 @@ environment with the newer version of Python you just installed:
 
 ```sh
 cd notifications-admin
-pyenv virtualenv 3.13.9 notify-admin
+pyenv virtualenv 3.13.2 notify-admin
 pyenv local notify-admin
 ```
 
