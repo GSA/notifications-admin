@@ -19,9 +19,7 @@ class Config(object):
     HEADER_COLOUR = (
         "#81878b"  # mix of dark-grey and mid-grey
     )
-    LOGO_CDN_DOMAIN = (
-        "static-logos.notifications.service.gov.uk"  # TODO use our own CDN
-    )
+
     ASSETS_DEBUG = False
 
     # Credentials
