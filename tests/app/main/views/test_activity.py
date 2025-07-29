@@ -285,6 +285,94 @@ def test_link_to_download_notifications(
     )
 
 
+def test_download_links_show_when_data_available(
+    client_request,
+    service_one,
+    active_user_with_permissions,
+    mocker,
+):
+
+    mock_jobs_with_data = {
+        "data": [{"id": "job1", "created_at": "2020-01-01T00:00:00.000000+00:00"}],
+        "total": 1,
+        "page_size": 50
+    }
+    mock_jobs_empty = {"data": [], "total": 0, "page_size": 50}
+
+    mocker.patch("app.job_api_client.get_page_of_jobs", return_value=mock_jobs_with_data)
+    mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[{"id": "job1"}])
+
+    page = client_request.get(
+        "main.all_jobs_activity",
+        service_id=service_one["id"],
+    )
+
+    assert "Download recent reports" in page.text
+    assert "Download all data last 24 hours" in page.text
+    assert "Download all data last 3 days" in page.text
+    assert "Download all data last 5 days" in page.text
+    assert "Download all data last 7 days" in page.text
+    assert "No recent activity to download" not in page.text
+
+
+def test_download_links_partial_data_available(
+    client_request,
+    service_one,
+    active_user_with_permissions,
+    mocker,
+):
+    mock_jobs_with_data = {
+        "data": [{"id": "job1", "created_at": "2020-01-01T00:00:00.000000+00:00"}],
+        "total": 1,
+        "page_size": 50
+    }
+    mock_jobs_empty = {"data": [], "total": 0, "page_size": 50}
+
+    def mock_get_page_of_jobs(service_id, page=1, limit_days=None):
+        if limit_days in [1, 5]:
+            return mock_jobs_with_data
+        return mock_jobs_empty
+
+    mocker.patch("app.job_api_client.get_page_of_jobs", side_effect=mock_get_page_of_jobs)
+    mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
+
+    page = client_request.get(
+        "main.all_jobs_activity",
+        service_id=service_one["id"],
+    )
+
+    assert "Download recent reports" in page.text
+    assert "Download all data last 24 hours" in page.text
+    assert "Download all data last 3 days" not in page.text
+    assert "Download all data last 5 days" in page.text
+    assert "Download all data last 7 days" not in page.text
+    assert "No recent activity to download" not in page.text
+
+
+def test_download_links_no_data_available(
+    client_request,
+    service_one,
+    active_user_with_permissions,
+    mocker,
+):
+    mock_jobs_empty = {"data": [], "total": 0, "page_size": 50}
+
+    mocker.patch("app.job_api_client.get_page_of_jobs", return_value=mock_jobs_empty)
+    mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
+
+    page = client_request.get(
+        "main.all_jobs_activity",
+        service_id=service_one["id"],
+    )
+
+    assert "Download recent reports" in page.text
+    assert "Download all data last 24 hours" not in page.text
+    assert "Download all data last 3 days" not in page.text
+    assert "Download all data last 5 days" not in page.text
+    assert "Download all data last 7 days" not in page.text
+    assert "No recent activity to download. Download links will appear when jobs are available." in page.text
+
+
 def test_download_not_available_to_users_without_dashboard(
     client_request,
     active_caseworking_user,
