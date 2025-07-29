@@ -9,6 +9,7 @@ from freezegun import freeze_time
 
 from app.main.views.jobs import get_status_filters, get_time_left
 from app.models.service import Service
+from tests import notification_json
 from tests.conftest import (
     SERVICE_ONE_ID,
     create_active_caseworking_user,
@@ -465,12 +466,17 @@ def test_should_show_notifications_for_a_service_with_next_previous(
     client_request,
     service_one,
     active_user_with_permissions,
-    mock_get_notifications_with_previous_next,
     mock_get_service_statistics,
     mock_get_service_data_retention,
     mock_get_no_api_keys,
     mocker,
 ):
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=notification_json(
+            service_one["id"], rows=50, with_links=True
+        ) | {"total": 100},
+    )
     page = client_request.get(
         "main.view_notifications",
         service_id=service_one["id"],
@@ -504,16 +510,47 @@ def test_should_show_notifications_for_a_service_with_next_previous(
     assert "page 1" in prev_page_link.text.strip()
 
 
-def test_doesnt_show_pagination_with_search_term(
+def test_doesnt_show_pagination_when_50_or_fewer_items(
     client_request,
     service_one,
     active_user_with_permissions,
-    mock_get_notifications_with_previous_next,
     mock_get_service_statistics,
     mock_get_service_data_retention,
     mock_get_no_api_keys,
     mocker,
 ):
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=notification_json(
+            service_one["id"], rows=50, with_links=False
+        ),
+    )
+    page = client_request.get(
+        "main.view_notifications",
+        service_id=service_one["id"],
+        message_type="sms",
+    )
+
+    assert not page.find("a", {"rel": "next"})
+    assert not page.find("a", {"rel": "previous"})
+    assert not page.select_one(".table-show-more-link")
+
+
+def test_doesnt_show_pagination_with_search_term(
+    client_request,
+    service_one,
+    active_user_with_permissions,
+    mock_get_service_statistics,
+    mock_get_service_data_retention,
+    mock_get_no_api_keys,
+    mocker,
+):
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=notification_json(
+            service_one["id"], rows=50, with_links=True
+        ) | {"total": 100},
+    )
     page = client_request.post(
         "main.view_notifications",
         service_id=service_one["id"],

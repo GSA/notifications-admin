@@ -126,20 +126,33 @@
     </div>
     {{show_pagination}}
     {% if current_user.has_permissions(ServicePermission.VIEW_ACTIVITY) %}
-      <h2 class="line-height-sans-2 margin-bottom-0 margin-top-4">Download recent reports</h2>
-      <p class="font-body-sm">
-        <a href="{{ download_link_one_day }}" download="download" class="usa-link">Download all data last 24 hours (<abbr title="Comma separated values">CSV</abbr>)</a>
-      </p>
-      <p class="font-body-sm">
-        <a href="{{ download_link_three_day }}" download="download" class="usa-link">Download all data last 3 days (<abbr title="Comma separated values">CSV</abbr>)</a>
-        &emsp;
-      </p>
-      <p class="font-body-sm">
-        <a href="{{ download_link_five_day }}" download="download" class="usa-link">Download all data last 5 days (<abbr title="Comma separated values">CSV</abbr>)</a>
-      </p>
-      <p class="font-body-sm">
-        <a href="{{ download_link_seven_day }}" download="download" class="usa-link">Download all data last 7 days (<abbr title="Comma separated values">CSV</abbr>)</a>
-      </p>
+      {% if has_any_download_data %}
+        <h2 class="line-height-sans-2 margin-bottom-0 margin-top-4">Download recent reports</h2>
+        {% if has_1_day_data %}
+          <p class="font-body-sm">
+            <a href="{{ download_link_one_day }}" download="download" class="usa-link">Download all data last 24 hours (<abbr title="Comma separated values">CSV</abbr>)</a>
+          </p>
+        {% endif %}
+        {% if has_3_day_data %}
+          <p class="font-body-sm">
+            <a href="{{ download_link_three_day }}" download="download" class="usa-link">Download all data last 3 days (<abbr title="Comma separated values">CSV</abbr>)</a>
+            &emsp;
+          </p>
+        {% endif %}
+        {% if has_5_day_data %}
+          <p class="font-body-sm">
+            <a href="{{ download_link_five_day }}" download="download" class="usa-link">Download all data last 5 days (<abbr title="Comma separated values">CSV</abbr>)</a>
+          </p>
+        {% endif %}
+        {% if has_7_day_data %}
+          <p class="font-body-sm">
+            <a href="{{ download_link_seven_day }}" download="download" class="usa-link">Download all data last 7 days (<abbr title="Comma separated values">CSV</abbr>)</a>
+          </p>
+        {% endif %}
+      {% else %}
+        <h2 class="line-height-sans-2 margin-bottom-0 margin-top-4">Download recent reports</h2>
+        <p class="font-body-sm">No recent activity to download. Download links will appear when jobs are available.</p>
+      {% endif %}
     {% endif %}
   </div>
 {% endblock %}
