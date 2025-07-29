@@ -15,7 +15,7 @@ NVMSH := $(shell [ -f "$(HOME)/.nvm/nvm.sh" ] && echo "$(HOME)/.nvm/nvm.sh" || e
 ## DEVELOPMENT
 
 .PHONY: bootstrap
-bootstrap: ## Set up everything to run the app
+bootstrap: ## Set up everything to run the application
 	make generate-version-file
 	poetry sync --no-root
 	poetry run playwright install --with-deps
