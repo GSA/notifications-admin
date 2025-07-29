@@ -254,10 +254,13 @@ def get_notifications(service_id, message_type, status_override=None):  # noqa
     next_page = None
 
     total_items = notifications.get("total", 0)
+    page_size = notifications.get("page_size", 50)
+    total_pages = (total_items + page_size - 1) // page_size
     if (
         "links" in notifications
         and notifications["links"].get("next", None)
         and total_items > 50
+        and page < total_pages
     ):
         next_page = generate_next_dict(
             "main.view_notifications", service_id, page, url_args

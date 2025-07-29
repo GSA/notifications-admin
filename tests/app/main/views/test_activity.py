@@ -562,7 +562,7 @@ def test_should_show_notifications_for_a_service_with_next_previous(
         "app.notification_api_client.get_notifications_for_service",
         return_value=notification_json(
             service_one["id"], rows=50, with_links=True
-        ) | {"total": 100},
+        ) | {"total": 150},
     )
     page = client_request.get(
         "main.view_notifications",
@@ -595,6 +595,35 @@ def test_should_show_notifications_for_a_service_with_next_previous(
     )
     assert "Previous page" in prev_page_link.text.strip()
     assert "page 1" in prev_page_link.text.strip()
+
+
+def test_doesnt_show_next_button_on_last_page(
+    client_request,
+    service_one,
+    active_user_with_permissions,
+    mock_get_service_statistics,
+    mock_get_service_data_retention,
+    mock_get_no_api_keys,
+    mocker,
+):
+    mocker.patch(
+        "app.notification_api_client.get_notifications_for_service",
+        return_value=notification_json(
+            service_one["id"], rows=50, with_links=True
+        ) | {"total": 100},
+    )
+    page = client_request.get(
+        "main.view_notifications",
+        service_id=service_one["id"],
+        message_type="sms",
+        page=2,
+    )
+
+    next_page_link = page.find("a", {"rel": "next"})
+    prev_page_link = page.find("a", {"rel": "previous"})
+
+    assert next_page_link is None
+    assert prev_page_link is not None
 
 
 def test_doesnt_show_pagination_when_50_or_fewer_items(

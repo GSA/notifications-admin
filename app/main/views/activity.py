@@ -97,10 +97,12 @@ def handle_pagination(jobs, service_id, page):
         else None
     )
     total_items = jobs.get("total", 0)
+    page_size = jobs.get("page_size", 50)
+    total_pages = (total_items + page_size - 1) // page_size
     has_next_link = jobs.get("links", {}).get("next") is not None
     next_page = (
         generate_next_dict("main.all_jobs_activity", service_id, page)
-        if has_next_link and total_items > 50
+        if has_next_link and total_items > 50 and page < total_pages
         else None
     )
     pagination = generate_pagination_pages(
