@@ -297,7 +297,6 @@ def test_download_links_show_when_data_available(
         "total": 1,
         "page_size": 50
     }
-    mock_jobs_empty = {"data": [], "total": 0, "page_size": 50}
 
     mocker.patch("app.job_api_client.get_page_of_jobs", return_value=mock_jobs_with_data)
     mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[{"id": "job1"}])
