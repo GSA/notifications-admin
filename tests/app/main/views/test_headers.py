@@ -49,4 +49,4 @@ def test_owasp_useful_headers_set(
         expected_sources <= actual_sources
     ), f"Missing sources in connect-src: {expected_sources - actual_sources}"
     assert search(r"style-src 'self' static\.example\.com 'nonce-.*';", csp)
-    assert search(r"img-src 'self' static\.example\.com static-logos\.test\.com", csp)
+    assert search(r"img-src 'self' static\.example\.com", csp)

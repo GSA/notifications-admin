@@ -2,6 +2,7 @@ import os
 import pathlib
 import re
 import secrets
+import sys
 from functools import partial
 from time import monotonic
 from urllib.parse import unquote, urlparse, urlunparse
@@ -147,7 +148,6 @@ navigation = {
 
 def _csp(config):
     asset_domain = config["ASSET_DOMAIN"]
-    logo_domain = config["LOGO_CDN_DOMAIN"]
     api_public_url = config["API_PUBLIC_URL"]
     api_public_ws_url = config["API_PUBLIC_WS_URL"]
 
@@ -179,7 +179,7 @@ def _csp(config):
             f"{api_public_ws_url}",
         ],
         "style-src": ["'self'", asset_domain],
-        "img-src": ["'self'", asset_domain, logo_domain],
+        "img-src": ["'self'", asset_domain],
     }
 
 
@@ -545,26 +545,28 @@ def register_errorhandlers(application):  # noqa (C901 too complex)
 
     @application.errorhandler(HTTPError)
     def render_http_error(error):
+        error_url = error.response.url if error.response else "unknown URL"
+
         application.logger.warning(
-            "API {} failed with status {} message {}".format(
-                error.response.url if error.response else "unknown",
-                error.status_code,
-                error.message,
-            )
+            f"API {error_url} failed with status {error.status_code} message {error.message}",
+            exc_info=sys.exc_info(),
+            stack_info=True
         )
+
         error_code = error.status_code
+
         if error_code not in [401, 404, 403, 410]:
             # probably a 500 or 503.
             # it might be a 400, which we should handle as if it's an internal server error. If the API might
             # legitimately return a 400, we should handle that within the view or the client that calls it.
             application.logger.exception(
-                "API {} failed with status {} message {}".format(
-                    error.response.url if error.response else "unknown",
-                    error.status_code,
-                    error.message,
-                )
+                f"API {error_url} failed with status {error.status_code} message {error.message}",
+                exc_info=sys.exc_info(),
+                stack_info=True
             )
+
             error_code = 500
+
         return _error_response(error_code)
 
     @application.errorhandler(400)
