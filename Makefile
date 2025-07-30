@@ -42,7 +42,7 @@ watch-frontend:  ## Build frontend and watch for changes
 
 .PHONY: run-flask
 run-flask:  ## Run flask
-	poetry run newrelic-admin run-program gunicorn -c gunicorn_config.py gunicorn_entry:application -b 0.0.0.0:6012
+    poetry run newrelic-admin run-program flask run -p 6012 --host=0.0.0.0
 
 .PHONY: run-flask-bare
 run-flask-bare:  ## Run flask without invoking poetry so we can override ENV variables in .env
