@@ -20,8 +20,7 @@
 
   {% call form_wrapper() %}
     {{ form.key_name }}
-    <div class="margin-top-4 margin-bottom-3">
-      <div class="api-key-radios">
+    <div class="api-key-radios margin-top-5">
         {% if current_service.trial_mode %}
           {{ radios(
             form.key_type,
@@ -31,7 +30,6 @@
         {% else %}
           {{ radios(form.key_type) }}
         {% endif %}
-      </div>
     </div>
     {{ page_footer('Continue') }}
   {% endcall %}

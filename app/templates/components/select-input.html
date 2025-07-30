@@ -12,12 +12,12 @@
 {% macro select_list(options, child_map, disable=[], option_hints={}, input="radio", indent_level=0) %}
     {% for option in options %}
       {% if child_map[option.data] %}
-        <div class="{% if indent_level > 0 %}margin-left-{{ indent_level * 4 }}{% endif %}">
+        <div class="{% if indent_level > 0 %}margin-left-{{ indent_level + 2 }}{% endif %}">
           {{ select_input(option, disable, option_hints, as_list_item=False, input=input) }}
         </div>
         {{ select_list(child_map[option.data], child_map, disable, option_hints, input=input, indent_level=indent_level + 1) }}
       {% else %}
-        <div class="{% if indent_level > 0 %}margin-left-{{ indent_level * 4 }}{% endif %}">
+        <div class="{% if indent_level > 0 %}margin-left-{{ indent_level + 2 }}{% endif %}">
           {{ select_input(option, disable, option_hints, as_list_item=False, input=input) }}
         </div>
       {% endif %}

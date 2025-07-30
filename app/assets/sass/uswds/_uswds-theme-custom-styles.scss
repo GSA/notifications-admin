@@ -1093,7 +1093,13 @@ nav.nav {
   margin-top: 0;
 }
 
-// Global styling for radio button legends
-fieldset legend.usa-legend {
+// Radio button and checkbox legends
+.usa-radio legend.usa-legend,
+.usa-checkbox legend.usa-legend,
+.api-key-radios legend.usa-legend,
+.login-auth-radios legend.usa-legend,
+.auth-type-radios legend.usa-legend,
+.notification-type-radios legend.usa-legend,
+.organizations-radios legend.usa-legend {
   font-weight: 700;
 }

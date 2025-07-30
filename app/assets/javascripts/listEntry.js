@@ -27,7 +27,7 @@
   };
   ListEntry.optionalAttributes = ['aria-describedby'];
   ListEntry.prototype.entryTemplate = Hogan.compile(
-    '<div class="list-entry margin-bottom-2">' +
+    '<div class="list-entry">' +
       '<label for="{{{id}}}" class="usa-label">' +
         '<span class="usa-sr-only">{{listItemName}} number </span>{{number}}.' +
       '</label>' +
@@ -39,14 +39,14 @@
         ' {{{sharedAttributes}}}' +
       '/>' +
       '{{#button}}' +
-        '<button type="button" class="usa-button--unstyled text-primary margin-top-1 input-list__button--remove">' +
+        '<button type="button" class="usa-button usa-button--secondary input-list__button--remove">' +
           'Remove<span class="usa-sr-only"> {{listItemName}} number {{number}}</span>' +
         '</button>' +
       '{{/button}}' +
     '</div>'
   );
   ListEntry.prototype.addButtonTemplate = Hogan.compile(
-    '<button type="button" class="usa-button usa-button--outline input-list__button--add margin-top-2">Add another {{listItemName}} ({{entriesLeft}} remaining)</button>'
+    '<button type="button" class="usa-button usa-button--outline input-list__button--add">Add another {{listItemName}} ({{entriesLeft}} remaining)</button>'
   );
   ListEntry.prototype.getSharedAttributes = function () {
     var $inputs = this.$wrapper.find('input'),
@@ -101,15 +101,8 @@
     if ($firstInput.length) {
       var classList = $firstInput.attr('class');
       if (classList) {
-        // Remove any GOV.UK or USA numbered classes, keep others
-        this.additionalClasses = classList
-          .split(' ')
-          .filter(function(cls) {
-            return cls &&
-                   !cls.match(/^(govuk-input|usa-input)/) &&
-                   cls !== 'usa-input--numbered';
-          })
-          .join(' ');
+        // Preserve any additional classes from the original input
+        this.additionalClasses = classList;
       } else {
         this.additionalClasses = '';
       }
