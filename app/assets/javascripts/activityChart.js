@@ -316,9 +316,18 @@
                 return rowSender === currentUserName;
             });
 
-            userRows.slice(0, 5).forEach(row => {
-                row.style.display = '';
-            });
+            if (userRows.length > 0) {
+                userRows.slice(0, 5).forEach(row => {
+                    row.style.display = '';
+                });
+            } else {
+                const emptyMessageRow = Array.from(allRows).find(row => {
+                    return row.querySelector('.table-empty-message');
+                });
+                if (emptyMessageRow) {
+                    emptyMessageRow.style.display = '';
+                }
+            }
         } else {
 
             tableHeading.textContent = 'Service activity';
