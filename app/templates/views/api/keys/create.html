@@ -4,6 +4,7 @@
 {% from "components/banner.html" import banner_wrapper %}
 {% from "components/form.html" import form_wrapper %}
 {% from "components/components/back-link/macro.njk" import usaBackLink %}
+{% from "components/radios.html" import radios %}
 
 {% block service_page_title %}
   Create an API key
@@ -19,7 +20,19 @@
 
   {% call form_wrapper() %}
     {{ form.key_name }}
-    {{ form.key_type }}
+    <div class="margin-top-4 margin-bottom-3">
+      <div class="api-key-radios">
+        {% if current_service.trial_mode %}
+          {{ radios(
+            form.key_type,
+            disable=['normal'],
+            option_hints={'normal': 'Not available because your service is in <a class="usa-link" href="/features/trial-mode">trial mode</a>'|safe}
+          ) }}
+        {% else %}
+          {{ radios(form.key_type) }}
+        {% endif %}
+      </div>
+    </div>
     {{ page_footer('Continue') }}
   {% endcall %}
 

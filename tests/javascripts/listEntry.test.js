@@ -50,10 +50,10 @@ describe("List entry", () => {
         result += `
             <div class="list-entry">
               <div class="usa-form-group">
-                <label for="domains-${idx + 1}" class="usa-radio__label govuk-input--numbered__label">
+                <label for="domains-${idx + 1}" class="usa-label">
                   <span class="usa-sr-only">domain number </span>${idx + 1}.
                 </label>
-                <input type="text" name="domains-${idx + 1}" id="domains-${idx + 1}" class="govuk-input govuk-input--numbered " autocomplete="off">
+                <input type="text" name="domains-${idx + 1}" id="domains-${idx + 1}" class="usa-input" autocomplete="off">
               </div>
             </div>`;
       }
@@ -249,7 +249,7 @@ describe("List entry", () => {
       triggerEvent(inputList.querySelectorAll('.input-list__button--remove')[0], 'click');
 
       const newNums = Array.from(
-                        inputList.querySelectorAll('.govuk-input--numbered__label')
+                        inputList.querySelectorAll('.usa-label')
                       )
                       .map((itemNum, idx) => {
                         return parseInt(itemNum.lastChild.nodeValue, 10);

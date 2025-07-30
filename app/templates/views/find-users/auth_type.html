@@ -3,6 +3,7 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
 {% from "components/components/back-link/macro.njk" import usaBackLink %}
+{% from "components/radios.html" import radios %}
 
 {% block per_page_title %}
   Set auth type for {{ user.name }}
@@ -19,7 +20,9 @@
       {{ page_header('Set auth type for ' + user.name) }}
 
       {% call form_wrapper() %}
-        {{ form.auth_type }}
+        <div class="auth-type-radios">
+          {{ radios(form.auth_type) }}
+        </div>
         {{ page_footer('Save') }}
       {% endcall %}
     </div>

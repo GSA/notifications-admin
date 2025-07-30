@@ -14,22 +14,26 @@ const routes = {
     { label: 'Email Not Received', path: '/email-not-received' },
     { label: 'Text Not Received', path: '/text-not-received' },
     { label: 'Performance', path: '/performance' },
+    // Registration pages with radio buttons
+    // Note: /register returns 404, registration is handled through login.gov
+    // { label: 'Register', path: '/register' },
+    // { label: 'Register From Invite', path: '/register/from-invite/example-token' },
   ],
 
   authenticated: [
     {
       label: 'SMS Template Preview',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/send/a4e530e7-cae2-4e24-a1e9-752141a0b58e/one-off/step-0',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/send/9c2b7a55-8785-4dc6-84d6-eb0e0615590d/one-off/step-0',
     },
     // Pages with govuk buttons that need testing
     {
       label: 'API Keys',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/api/keys',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/api/keys',
     },
     // Pages to test radio buttons before converting govukRadios to USWDS
     {
       label: 'API Keys Create',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/api/keys/create',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/api/keys/create',
     },
     {
       label: 'Change User Auth',
@@ -41,41 +45,75 @@ const routes = {
     },
     {
       label: 'Service Settings',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/service-settings',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/service-settings',
     },
     {
       label: 'Service Send Files By Email',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/service-settings/send-files-by-email',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/service-settings/send-files-by-email',
     },
     {
       label: 'Service SMS Prefix',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/service-settings/sms-prefix',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/service-settings/sms-prefix',
     },
     {
       label: 'Send One Off Step 2',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/send/a4e530e7-cae2-4e24-a1e9-752141a0b58e/one-off/step-2',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/send/9c2b7a55-8785-4dc6-84d6-eb0e0615590d/one-off/step-2',
     },
     {
       label: 'Choose Template',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/templates',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/templates',
     },
     {
       label: 'Team Members',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/users',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/users',
     },
     {
       label: 'Invite User',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/users/invite',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/users/invite',
     },
-    // Platform admin pages with checkboxes
     {
       label: 'Platform Admin Live Services',
       path: '/platform-admin/live-services',
     },
-    // Organization pages
     {
       label: 'Add Organization',
       path: '/organizations/add',
+    },
+    {
+      label: 'Uploads',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/uploads',
+    },
+    {
+      label: 'API Guest List',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/api/guest-list',
+    },
+    // User profile and auth pages with radio buttons
+    // Note: /set-up-your-profile requires special auth flow from login.gov
+    // {
+    //   label: 'Set Up Your Profile',
+    //   path: '/set-up-your-profile',
+    // },
+    {
+      label: 'Platform Admin User Auth Type',
+      path: '/users/6af522d0-2915-4e52-83a3-3690455a5fe6/change_auth',
+    },
+    // Service settings pages with radio buttons
+    {
+      label: 'Data Retention Add',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/data-retention/add',
+    },
+    {
+      label: 'Link Service to Organization',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/service-settings/link-service-to-organization',
+    },
+    // Template sender pages with radio buttons
+    {
+      label: 'Set Template Sender',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/send/9c2b7a55-8785-4dc6-84d6-eb0e0615590d/set-sender',
+    },
+    {
+      label: 'Set Template Letter Sender',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/templates/9c2b7a55-8785-4dc6-84d6-eb0e0615590d/set-template-sender',
     },
   ],
 

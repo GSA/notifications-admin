@@ -1092,3 +1092,8 @@ nav.nav {
 .selection-content .usa-form-group--nested li.usa-checkbox {
   margin-top: 0;
 }
+
+// Global styling for radio button legends
+fieldset legend.usa-legend {
+  font-weight: 700;
+}

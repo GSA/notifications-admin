@@ -1,3 +1,5 @@
+{% from "components/checkboxes.html" import checkboxes %}
+
 {% macro format_item_name(name, separators=True) -%}
   {%- if name is string -%}
     {{- name -}}
