@@ -45,7 +45,11 @@
     <fieldset id="{{ field.id }}" class="usa-fieldset" {% if inline %}class="inline"{% endif %}>
       <legend class="{{ 'usa-legend' if not hide_legend else '' }}{% if legend_style != 'text' %} {{ legend_style }}{% endif %}">
         {% if hide_legend %}<span class="usa-sr-only">{% endif %}
-          {{ field.label.text|safe }}
+          {% if legend_style == 'usa-legend--large' %}
+            <h1 class="usa-legend font-sans-lg">{{ field.label.text|safe }}</h1>
+          {% else %}
+            {{ field.label.text|safe }}
+          {% endif %}
         {% if hide_legend %}</span>{% endif %}
         {% if hint %}
           <span class="form-hint">
