@@ -966,7 +966,7 @@ def test_menu_manage_service(
             ServicePermission.VIEW_ACTIVITY,
             ServicePermission.MANAGE_TEMPLATES,
             ServicePermission.MANAGE_USERS,
-            ServicePermission.MANAGE_SETTINGS
+            ServicePermission.MANAGE_SETTINGS,
         ],
     )
     page = str(page)

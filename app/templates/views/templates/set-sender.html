@@ -16,7 +16,7 @@
 
   <div class="grid-row">
     {% call form_wrapper() %}
-      {{ radios(form.sender) }}
+      {{ radios(form.sender, legend_style='usa-legend--large') }}
       <div class="grid-col-9">
         {{ page_footer('Continue') }}
       </div>

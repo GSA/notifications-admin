@@ -182,10 +182,12 @@ def test_should_show_create_api_key_page(
     for index, option in enumerate(expected_options):
         item = page.select(".usa-radio")[index]
         if type(option) is tuple:
-            assert normalize_spaces(item.select_one(".usa-label").text) == option[0]
+            assert (
+                normalize_spaces(item.select_one(".usa-radio__label").text) == option[0]
+            )
             assert normalize_spaces(item.select_one(".usa-hint").text) == option[1]
         else:
-            assert normalize_spaces(item.select_one(".usa-label").text) == option
+            assert normalize_spaces(item.select_one(".usa-radio__label").text) == option
 
 
 def test_should_create_api_key_with_type_normal(

@@ -94,7 +94,9 @@ def view_notification(service_id, notification_id, error_message=None):
         updated_at=notification["sent_at"],
         help=get_help_argument(),
         notification_id=notification["id"],
-        can_receive_inbound=(current_service.has_permission(ServicePermission.INBOUND_SMS)),
+        can_receive_inbound=(
+            current_service.has_permission(ServicePermission.INBOUND_SMS)
+        ),
         sent_with_test_key=(notification.get("key_type") == KEY_TYPE_TEST),
         back_link=back_link,
     )
