@@ -39,7 +39,7 @@
         ' {{{sharedAttributes}}}' +
       '/>' +
       '{{#button}}' +
-        '<button type="button" class="usa-button usa-button--secondary input-list__button--remove">' +
+        '<button type="button" class="usa-button usa-button--unstyled input-list__button--remove">' +
           'Remove<span class="usa-sr-only"> {{listItemName}} number {{number}}</span>' +
         '</button>' +
       '{{/button}}' +
