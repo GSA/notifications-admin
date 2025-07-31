@@ -202,7 +202,11 @@ def test_service_setting_link_toggles_index_error(
     ("permissions", "permissions_text", "visible"),
     [
         ("sms", "inbound SMS", True),
-        (ServicePermission.INBOUND_SMS, "inbound SMS", False),  # no sms parent permission
+        (
+            ServicePermission.INBOUND_SMS,
+            "inbound SMS",
+            False,
+        ),  # no sms parent permission
         # also test no permissions set
         ("", "inbound SMS", False),
     ],

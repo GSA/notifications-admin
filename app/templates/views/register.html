@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
+{% from "components/radios.html" import radios %}
 
 {% block per_page_title %}
 Create an account
@@ -26,7 +27,7 @@ Create an account
         }) }}
       </div>
       {{ form.password(param_extensions={"hint": {"text": "At least 8 characters"}, "autocomplete": "new-password"}) }}
-      {{form.auth_type}}
+      {{ radios(form.auth_type) }}
       {{ page_footer("Continue") }}
     {% endcall %}
   </div>

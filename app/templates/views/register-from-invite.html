@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
+{% from "components/radios.html" import radios %}
 
 {% block per_page_title %}
 Create an account
@@ -40,7 +41,7 @@ Create an account
       {{ page_footer("Continue") }}
       {{form.service}}
       {{form.email_address}}
-      {{form.auth_type}}
+      {{ radios(form.auth_type) }}
     {% endcall %}
   </div>
 </div>

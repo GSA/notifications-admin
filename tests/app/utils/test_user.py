@@ -36,7 +36,11 @@ def test_permissions(
     request.view_args.update({"service_id": "foo"})
 
     api_user_active["permissions"] = {
-        "foo": [ServicePermission.MANAGE_USERS, ServicePermission.MANAGE_TEMPLATES, ServicePermission.MANAGE_SETTINGS]
+        "foo": [
+            ServicePermission.MANAGE_USERS,
+            ServicePermission.MANAGE_TEMPLATES,
+            ServicePermission.MANAGE_SETTINGS,
+        ]
     }
     api_user_active["services"] = ["foo", "bar"]
 
@@ -66,7 +70,11 @@ def test_permissions_forbidden(
     request.view_args.update({"service_id": "foo"})
 
     api_user_active["permissions"] = {
-        "foo": [ServicePermission.MANAGE_USERS, ServicePermission.MANAGE_TEMPLATES, ServicePermission.MANAGE_SETTINGS]
+        "foo": [
+            ServicePermission.MANAGE_USERS,
+            ServicePermission.MANAGE_TEMPLATES,
+            ServicePermission.MANAGE_SETTINGS,
+        ]
     }
     api_user_active["services"] = ["foo", "bar"]
 
@@ -179,7 +187,11 @@ def test_user_with_no_permissions_to_service_goes_to_templates(
     api_user_active,
 ):
     api_user_active["permissions"] = {
-        "foo": [ServicePermission.MANAGE_USERS, ServicePermission.MANAGE_TEMPLATES, ServicePermission.MANAGE_SETTINGS]
+        "foo": [
+            ServicePermission.MANAGE_USERS,
+            ServicePermission.MANAGE_TEMPLATES,
+            ServicePermission.MANAGE_SETTINGS,
+        ]
     }
     api_user_active["services"] = ["foo", "bar"]
     client_request.login(api_user_active)

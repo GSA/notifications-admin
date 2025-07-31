@@ -2,6 +2,7 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
 {% from "components/components/select/macro.njk" import usaSelect -%}
+{% from "components/radios.html" import radios %}
 
 {% block per_page_title %}
 Set up your profile
@@ -68,7 +69,7 @@ Set up your profile
       ]
       })
       }}-->
-      {{form.auth_type}}
+      {{ radios(form.auth_type) }}
       {{ page_footer("Save") }}
     {% endcall %}
   </div>

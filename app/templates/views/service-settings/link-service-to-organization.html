@@ -4,6 +4,7 @@
 {% from "components/live-search.html" import live_search %}
 {% from "components/form.html" import form_wrapper %}
 {% from "components/components/back-link/macro.njk" import usaBackLink %}
+{% from "components/radios.html" import radios %}
 
 {% set page_title = "Link service to organization" %}
 
@@ -26,7 +27,9 @@
   ) }}
   {% call form_wrapper(data_force_focus=True) %}
     {% if has_organizations %}
-      {{ form.organizations }}
+      <div class="organizations-radios">
+        {{ radios(form.organizations) }}
+      </div>
       {{ sticky_page_footer('Save') }}
     {% else %}
       <p class="hint"> No organizations </p>

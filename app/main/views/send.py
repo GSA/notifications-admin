@@ -560,7 +560,9 @@ def _check_messages(service_id, template_id, upload_id, preview_row, **kwargs):
         max_errors_shown=50,
         guestlist=allow_list,
         remaining_messages=remaining_messages,
-        allow_international_sms=current_service.has_permission(ServicePermission.INTERNATIONAL_SMS),
+        allow_international_sms=current_service.has_permission(
+            ServicePermission.INTERNATIONAL_SMS
+        ),
     )
 
     if request.args.get("from_test"):
