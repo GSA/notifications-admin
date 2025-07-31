@@ -185,7 +185,9 @@ def test_should_show_create_api_key_page(
             label = item.select_one(".usa-radio__label")
             hint = label.select_one(".usa-hint")
             # Get the label text without the hint text
-            label_text = label.text.replace(hint.text, "").strip() if hint else label.text
+            label_text = (
+                label.text.replace(hint.text, "").strip() if hint else label.text
+            )
             assert normalize_spaces(label_text) == option[0]
             assert normalize_spaces(hint.text) == option[1]
         else:

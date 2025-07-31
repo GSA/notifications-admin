@@ -48,7 +48,7 @@
     `;
   };
   ListEntry.prototype.renderAddButton = function(data) {
-    return `<button type="button" class="usa-button usa-button--outline input-list__button--add">Add another ${data.listItemName} (${data.entriesLeft} remaining)</button>`;
+    return `<button type="button" class="usa-button usa-button--outline input-list__button--add margin-top-4">Add another ${data.listItemName} (${data.entriesLeft} remaining)</button>`;
   };
   ListEntry.prototype.getSharedAttributes = function () {
     var $inputs = this.$wrapper.find('input'),
