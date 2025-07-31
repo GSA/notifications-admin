@@ -25,30 +25,31 @@
     this.bindEvents();
   };
   ListEntry.optionalAttributes = ['aria-describedby'];
-  ListEntry.prototype.entryTemplate = Hogan.compile(
-    '<div class="list-entry">' +
-      '<label for="{{{id}}}" class="govuk-input--numbered__label">' +
-        '<span class="usa-sr-only">{{listItemName}} number </span>{{number}}.' +
-      '</label>' +
-      '<input' +
-        ' name="{{name}}"' +
-        ' id="{{id}}"' +
-        ' {{#value}}value="{{value}}{{/value}}"' +
-        ' {{{sharedAttributes}}}' +
-      '/>' +
-      '{{#button}}' +
-        '<button type="button" class="usa-button input-list__button--remove">' +
-          'Remove<span class="usa-sr-only"> {{listItemName}} number {{number}}</span>' +
-        '</button>' +
-      '{{/button}}' +
-    '</div>'
-  );
-  ListEntry.prototype.addButtonTemplate = Hogan.compile(
-    '<button type="button" class="usa-button input-list__button--add">Add another {{listItemName}} ({{entriesLeft}} remaining)</button>'
-  );
+  ListEntry.prototype.renderEntry = function(data) {
+    return `
+      <div class="list-entry">
+        <label for="${data.id}" class="govuk-input--numbered__label">
+          <span class="usa-sr-only">${data.listItemName} number </span>${data.number}.
+        </label>
+        <input
+          name="${data.name}"
+          id="${data.id}"
+          ${data.value ? `value="${data.value}"` : ''}
+          ${data.sharedAttributes}
+        />
+        ${data.button ? `
+          <button type="button" class="usa-button input-list__button--remove">
+            Remove<span class="usa-sr-only"> ${data.listItemName} number ${data.number}</span>
+          </button>
+        ` : ''}
+      </div>
+    `;
+  };
+  ListEntry.prototype.renderAddButton = function(data) {
+    return `<button type="button" class="usa-button input-list__button--add">Add another ${data.listItemName} (${data.entriesLeft} remaining)</button>`;
+  };
   ListEntry.prototype.getSharedAttributes = function () {
     var $inputs = this.$wrapper.find('input'),
-        attributeTemplate = Hogan.compile(' {{name}}="{{value}}"'),
         generatedAttributes = ['id', 'name', 'value'],
         attributes = [],
         attrIdx,
@@ -68,7 +69,7 @@
         while (attrIdx--) {
           // prevent duplicates
           if ($.inArray(elmAttrs[attrIdx].name, existingAttributes) === -1) {
-            attrStr += attributeTemplate.render({ 'name': elmAttrs[attrIdx].name, 'value': elmAttrs[attrIdx].value });
+            attrStr += ` ${elmAttrs[attrIdx].name}="${elmAttrs[attrIdx].value}"`;
             existingAttributes.push(elmAttrs[attrIdx].name);
           }
         }
@@ -188,10 +189,10 @@
       if (entryNumber > 1) {
         dataObj.button = true;
       }
-      this.$wrapper.append(this.entryTemplate.render(dataObj));
+      this.$wrapper.append(this.renderEntry(dataObj));
     }.bind(this));
     if (this.entries.length < this.maxEntries) {
-      this.$wrapper.append(this.addButtonTemplate.render({
+      this.$wrapper.append(this.renderAddButton({
         'listItemName' : this.listItemName,
         'entriesLeft' : (this.maxEntries - this.entries.length)
       }));

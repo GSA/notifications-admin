@@ -19,17 +19,17 @@ const routes = {
   authenticated: [
     {
       label: 'SMS Template Preview',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/send/a4e530e7-cae2-4e24-a1e9-752141a0b58e/one-off/step-0',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/send/9c2b7a55-8785-4dc6-84d6-eb0e0615590d/one-off/step-0',
     },
     // Pages with govuk buttons that need testing
     {
       label: 'API Keys',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/api/keys',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/api/keys',
     },
     // Pages to test radio buttons before converting govukRadios to USWDS
     {
       label: 'API Keys Create',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/api/keys/create',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/api/keys/create',
     },
     {
       label: 'Change User Auth',
@@ -41,31 +41,31 @@ const routes = {
     },
     {
       label: 'Service Settings',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/service-settings',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/service-settings',
     },
     {
       label: 'Service Send Files By Email',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/service-settings/send-files-by-email',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/service-settings/send-files-by-email',
     },
     {
       label: 'Service SMS Prefix',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/service-settings/sms-prefix',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/service-settings/sms-prefix',
     },
     {
       label: 'Send One Off Step 2',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/send/a4e530e7-cae2-4e24-a1e9-752141a0b58e/one-off/step-2',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/send/9c2b7a55-8785-4dc6-84d6-eb0e0615590d/one-off/step-2',
     },
     {
       label: 'Choose Template',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/templates',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/templates',
     },
     {
       label: 'Team Members',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/users',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/users',
     },
     {
       label: 'Invite User',
-      path: '/services/e6de050d-bd56-4f49-b44b-cb789c4f79fd/users/invite',
+      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/users/invite',
     },
     // Platform admin pages with checkboxes
     {

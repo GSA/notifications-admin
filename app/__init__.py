@@ -185,8 +185,7 @@ def _csp(config):
 def create_app(application):
     @application.after_request
     def add_security_headers(response):
-        # Add Cross-Origin-Embedder-Policy header
-        response.headers["Cross-Origin-Embedder-Policy"] = "credentialless"
+        response.headers['Cross-Origin-Embedder-Policy'] = 'credentialless'
         return response
 
     @application.context_processor
@@ -274,14 +273,11 @@ def create_app(application):
         content_security_policy=_csp(application.config),
         content_security_policy_nonce_in=["style-src", "script-src"],
         permissions_policy={
-            "accelerometer": "()",
-            "ambient-light-sensor": "()",
-            "autoplay": "()",
-            "battery": "()",
+            "accelerometer": "(self \"https://www.youtube-nocookie.com\")",
+            "autoplay": "(self \"https://www.youtube-nocookie.com\")",
             "camera": "()",
-            "document-domain": "()",
             "geolocation": "()",
-            "gyroscope": "()",
+            "gyroscope": "(self \"https://www.youtube-nocookie.com\")",
             "local-fonts": "()",
             "magnetometer": "()",
             "microphone": "()",
