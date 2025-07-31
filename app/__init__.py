@@ -550,7 +550,7 @@ def register_errorhandlers(application):  # noqa (C901 too complex)
         application.logger.warning(
             f"API {error_url} failed with status {error.status_code} message {error.message}",
             exc_info=sys.exc_info(),
-            stack_info=True
+            stack_info=True,
         )
 
         error_code = error.status_code
@@ -562,7 +562,7 @@ def register_errorhandlers(application):  # noqa (C901 too complex)
             application.logger.exception(
                 f"API {error_url} failed with status {error.status_code} message {error.message}",
                 exc_info=sys.exc_info(),
-                stack_info=True
+                stack_info=True,
             )
 
             error_code = 500

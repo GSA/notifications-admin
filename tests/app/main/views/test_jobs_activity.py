@@ -50,9 +50,7 @@ def test_all_activity(
     mock_get_page_of_jobs = mocker.patch(
         "app.job_api_client.get_page_of_jobs", return_value=MOCK_JOBS
     )
-    mocker.patch(
-        "app.job_api_client.get_immediate_jobs", return_value=[]
-    )
+    mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
 
     response = client_request.get_response(
         "main.all_jobs_activity",
@@ -65,7 +63,7 @@ def test_all_activity(
     assert "All activity" in response.text
 
     assert any(
-        call[0][0] == SERVICE_ONE_ID and call[1].get('page') == current_page
+        call[0][0] == SERVICE_ONE_ID and call[1].get("page") == current_page
         for call in mock_get_page_of_jobs.call_args_list
     )
     page = BeautifulSoup(response.data, "html.parser")
@@ -139,9 +137,7 @@ def test_all_activity_no_jobs(client_request, mocker):
             "total": 0,
         },
     )
-    mocker.patch(
-        "app.job_api_client.get_immediate_jobs", return_value=[]
-    )
+    mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
     response = client_request.get_response(
         "main.all_jobs_activity",
         service_id=SERVICE_ONE_ID,
@@ -162,7 +158,7 @@ def test_all_activity_no_jobs(client_request, mocker):
         expected_message == actual_message
     ), f"Expected message '{expected_message}', but got '{actual_message}'"
     assert any(
-        call[0][0] == SERVICE_ONE_ID and call[1].get('page') == current_page
+        call[0][0] == SERVICE_ONE_ID and call[1].get("page") == current_page
         for call in mock_get_page_of_jobs.call_args_list
     )
 
@@ -194,9 +190,7 @@ def test_all_activity_pagination(client_request, mocker):
             "total": 100,
         },
     )
-    mocker.patch(
-        "app.job_api_client.get_immediate_jobs", return_value=[]
-    )
+    mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
 
     response = client_request.get_response(
         "main.all_jobs_activity",
@@ -204,7 +198,7 @@ def test_all_activity_pagination(client_request, mocker):
         page=current_page,
     )
     assert any(
-        call[0][0] == SERVICE_ONE_ID and call[1].get('page') == current_page
+        call[0][0] == SERVICE_ONE_ID and call[1].get("page") == current_page
         for call in mock_get_page_of_jobs.call_args_list
     )
 
