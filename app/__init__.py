@@ -185,7 +185,7 @@ def _csp(config):
 def create_app(application):
     @application.after_request
     def add_security_headers(response):
-        response.headers['Cross-Origin-Embedder-Policy'] = 'credentialless'
+        response.headers["Cross-Origin-Embedder-Policy"] = "credentialless"
         return response
 
     @application.context_processor
@@ -273,11 +273,11 @@ def create_app(application):
         content_security_policy=_csp(application.config),
         content_security_policy_nonce_in=["style-src", "script-src"],
         permissions_policy={
-            "accelerometer": "(self \"https://www.youtube-nocookie.com\")",
-            "autoplay": "(self \"https://www.youtube-nocookie.com\")",
+            "accelerometer": '(self "https://www.youtube-nocookie.com")',
+            "autoplay": '(self "https://www.youtube-nocookie.com")',
             "camera": "()",
             "geolocation": "()",
-            "gyroscope": "(self \"https://www.youtube-nocookie.com\")",
+            "gyroscope": '(self "https://www.youtube-nocookie.com")',
             "local-fonts": "()",
             "magnetometer": "()",
             "microphone": "()",
@@ -543,7 +543,7 @@ def register_errorhandlers(application):  # noqa (C901 too complex)
         application.logger.warning(
             f"API {error_url} failed with status {error.status_code} message {error.message}",
             exc_info=sys.exc_info(),
-            stack_info=True
+            stack_info=True,
         )
 
         error_code = error.status_code
@@ -555,7 +555,7 @@ def register_errorhandlers(application):  # noqa (C901 too complex)
             application.logger.exception(
                 f"API {error_url} failed with status {error.status_code} message {error.message}",
                 exc_info=sys.exc_info(),
-                stack_info=True
+                stack_info=True,
             )
 
             error_code = 500
