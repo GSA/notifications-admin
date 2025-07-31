@@ -11,13 +11,15 @@
 {% endif %}
 
 {% if service_has_email_auth %}
-  {% if not mobile_number %}
-    {{ radios(
-      form.login_authentication,
-      disable=['sms_auth'],
-      option_hints={'sms_auth': 'Not available because this team member has not added a phone&nbsp;number to their profile'|safe}
-    ) }}
-  {% else %}
-    {{ radios(form.login_authentication) }}
-  {% endif %}
+  <div class="login-auth-radios">
+    {% if not mobile_number %}
+      {{ radios(
+        form.login_authentication,
+        disable=['sms_auth'],
+        option_hints={'sms_auth': 'Not available because this team member has not added a phone&nbsp;number to their profile'|safe}
+      ) }}
+    {% else %}
+      {{ radios(form.login_authentication) }}
+    {% endif %}
+  </div>
 {% endif %}

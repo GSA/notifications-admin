@@ -2,8 +2,6 @@ import multiprocessing
 import os
 import sys
 import traceback
-import logging
-from app.utils import hilite
 import gunicorn
 
 # Let gunicorn figure out the right number of workers
@@ -13,8 +11,6 @@ import gunicorn
 workers = multiprocessing.cpu_count()
 worker_class = "gevent"
 
-logging.basicConfig(level=logging.INFO)
-logging.info(hilite("Gunicorn timeout set to 240 seconds"))
 timeout = 240
 bind = "0.0.0.0:{}".format(os.getenv("PORT"))
 disable_redirect_access_to_syslog = True
