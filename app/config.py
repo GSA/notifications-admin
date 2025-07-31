@@ -16,7 +16,12 @@ class Config(object):
     API_PUBLIC_WS_URL = getenv("API_PUBLIC_WS_URL", "localhost")
 
     ADMIN_BASE_URL = getenv("ADMIN_BASE_URL", "http://localhost:6012")
-    HEADER_COLOUR = "#81878b"  # mix of dark-grey and mid-grey
+    HEADER_COLOUR = (
+        "#81878b"  # mix of dark-grey and mid-grey
+    )
+    LOGO_CDN_DOMAIN = (
+        "static-logos.notifications.service.gov.uk"  # TODO use our own CDN
+    )
 
     ASSETS_DEBUG = False
 
