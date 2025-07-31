@@ -130,7 +130,7 @@ configuration after installation to get working out of the box:
 - [jq](https://stedolan.github.io/jq/) - for working with JSON in the command
   line
 - [git](https://git-scm.com/) - for version control management
-- [tfenv](https://github.com/tfutils/tfenv) - for managing
+- [tenv](https://github.com/tofuutils/tenv) - for managing
   [Terraform](https://www.terraform.io/) installations
 - [cf-cli@8](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html) - for
   working with a Cloud Foundry platform (e.g., cloud.gov)
@@ -147,15 +147,18 @@ brew install jq git tfenv cloudfoundry/tap/cf-cli@8 vim wget
 
 #### [API Step] Terraform Installation
 
-As a part of the installation above, you just installed `tfenv` to manage
+As a part of the installation above, you just installed `tenv` to manage
 Terraform installations. This is great, but you still need to install Terraform
 itself, which can be done with this command:
 
 ```sh
-tfenv install latest:^1.4.0
+tenv
 ```
 
-_NOTE: This project currently uses the latest `1.4.x release of Terraform._
+This will open a menu for you; choose Terraform, then choose the latest stable
+version.
+
+_NOTE: This project currently uses the latest `1.12.x release of Terraform._
 
 #### [API Step] Python Installation
 

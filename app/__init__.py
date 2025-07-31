@@ -1,17 +1,14 @@
-import truststore
+import os
+import pathlib
+import re
+import secrets
+import sys
+from functools import partial
+from time import monotonic
+from urllib.parse import unquote, urlparse, urlunparse
 
-truststore.inject_into_ssl()
-
-import os  # noqa
-import pathlib  # noqa
-import re  # noqa
-import secrets  # noqa
-from functools import partial  # noqa
-from time import monotonic  # noqa
-from urllib.parse import unquote, urlparse, urlunparse  # noqa
-
-import jinja2  # noqa
-from flask import (  # noqa
+import jinja2
+from flask import (
     current_app,
     flash,
     g,
@@ -22,21 +19,21 @@ from flask import (  # noqa
     session,
     url_for,
 )
-from flask.globals import request_ctx  # noqa
-from flask_login import LoginManager, current_user  # noqa
-from flask_talisman import Talisman  # noqa
-from flask_wtf import CSRFProtect  # noqa
-from flask_wtf.csrf import CSRFError  # noqa
-from itsdangerous import BadSignature  # noqa
-from werkzeug.exceptions import HTTPException as WerkzeugHTTPException  # noqa
-from werkzeug.exceptions import abort  # noqa
-from werkzeug.local import LocalProxy  # noqa
+from flask.globals import request_ctx
+from flask_login import LoginManager, current_user
+from flask_talisman import Talisman
+from flask_wtf import CSRFProtect
+from flask_wtf.csrf import CSRFError
+from itsdangerous import BadSignature
+from werkzeug.exceptions import HTTPException as WerkzeugHTTPException
+from werkzeug.exceptions import abort
+from werkzeug.local import LocalProxy
 
-from app import proxy_fix  # noqa
-from app.asset_fingerprinter import asset_fingerprinter  # noqa
-from app.config import configs  # noqa
-from app.extensions import redis_client  # noqa
-from app.formatters import (  # noqa
+from app import proxy_fix
+from app.asset_fingerprinter import asset_fingerprinter
+from app.config import configs
+from app.extensions import redis_client
+from app.formatters import (
     convert_markdown_template,
     convert_time_unixtimestamp,
     convert_to_boolean,
@@ -81,54 +78,54 @@ from app.formatters import (  # noqa
     square_metres_to_square_miles,
     valid_phone_number,
 )
-from app.models.organization import Organization  # noqa
-from app.models.service import Service  # noqa
-from app.models.user import AnonymousUser, User  # noqa
-from app.navigation import (  # noqa
+from app.models.organization import Organization
+from app.models.service import Service
+from app.models.user import AnonymousUser, User
+from app.navigation import (
     CaseworkNavigation,
     HeaderNavigation,
     MainNavigation,
     OrgNavigation,
     SecondaryNavigation,
 )
-from app.notify_client import InviteTokenError  # noqa
-from app.notify_client.api_key_api_client import api_key_api_client  # noqa
-from app.notify_client.billing_api_client import billing_api_client  # noqa
-from app.notify_client.complaint_api_client import complaint_api_client  # noqa
-from app.notify_client.events_api_client import events_api_client  # noqa
-from app.notify_client.inbound_number_client import inbound_number_client  # noqa
-from app.notify_client.invite_api_client import invite_api_client  # noqa
-from app.notify_client.job_api_client import job_api_client  # noqa
-from app.notify_client.notification_api_client import notification_api_client  # noqa
-from app.notify_client.org_invite_api_client import org_invite_api_client  # noqa
-from app.notify_client.organizations_api_client import organizations_client  # noqa
-from app.notify_client.performance_dashboard_api_client import (  # noqa
+from app.notify_client import InviteTokenError
+from app.notify_client.api_key_api_client import api_key_api_client
+from app.notify_client.billing_api_client import billing_api_client
+from app.notify_client.complaint_api_client import complaint_api_client
+from app.notify_client.events_api_client import events_api_client
+from app.notify_client.inbound_number_client import inbound_number_client
+from app.notify_client.invite_api_client import invite_api_client
+from app.notify_client.job_api_client import job_api_client
+from app.notify_client.notification_api_client import notification_api_client
+from app.notify_client.org_invite_api_client import org_invite_api_client
+from app.notify_client.organizations_api_client import organizations_client
+from app.notify_client.performance_dashboard_api_client import (
     performance_dashboard_api_client,
 )
-from app.notify_client.platform_stats_api_client import (  # noqa
+from app.notify_client.platform_stats_api_client import (
     platform_stats_api_client,
 )
-from app.notify_client.service_api_client import service_api_client  # noqa
-from app.notify_client.status_api_client import status_api_client  # noqa
-from app.notify_client.template_folder_api_client import (  # noqa
+from app.notify_client.service_api_client import service_api_client
+from app.notify_client.status_api_client import status_api_client
+from app.notify_client.template_folder_api_client import (
     template_folder_api_client,
 )
-from app.notify_client.template_statistics_api_client import (  # noqa
+from app.notify_client.template_statistics_api_client import (
     template_statistics_client,
 )
-from app.notify_client.upload_api_client import upload_api_client  # noqa
-from app.notify_client.user_api_client import user_api_client  # noqa
-from app.url_converters import SimpleDateTypeConverter, TemplateTypeConverter  # noqa
-from app.utils.api_health import is_api_down  # noqa
-from app.utils.govuk_frontend_jinja.flask_ext import init_govuk_frontend  # noqa
-from notifications_python_client.errors import HTTPError  # noqa
-from notifications_utils import logging, request_helper  # noqa
-from notifications_utils.formatters import (  # noqa
+from app.notify_client.upload_api_client import upload_api_client
+from app.notify_client.user_api_client import user_api_client
+from app.url_converters import SimpleDateTypeConverter, TemplateTypeConverter
+from app.utils.api_health import is_api_down
+from app.utils.govuk_frontend_jinja.flask_ext import init_govuk_frontend
+from notifications_python_client.errors import HTTPError
+from notifications_utils import logging, request_helper
+from notifications_utils.formatters import (
     formatted_list,
     get_lines_with_normalised_whitespace,
 )
-from notifications_utils.recipients import format_phone_number_human_readable  # noqa
-from notifications_utils.url_safe_token import generate_token  # noqa
+from notifications_utils.recipients import format_phone_number_human_readable
+from notifications_utils.url_safe_token import generate_token
 
 login_manager = LoginManager()
 csrf = CSRFProtect()
@@ -151,7 +148,6 @@ navigation = {
 
 def _csp(config):
     asset_domain = config["ASSET_DOMAIN"]
-    logo_domain = config["LOGO_CDN_DOMAIN"]
     api_public_url = config["API_PUBLIC_URL"]
     api_public_ws_url = config["API_PUBLIC_WS_URL"]
 
@@ -183,7 +179,7 @@ def _csp(config):
             f"{api_public_ws_url}",
         ],
         "style-src": ["'self'", asset_domain],
-        "img-src": ["'self'", asset_domain, logo_domain],
+        "img-src": ["'self'", asset_domain],
     }
 
 
@@ -549,26 +545,28 @@ def register_errorhandlers(application):  # noqa (C901 too complex)
 
     @application.errorhandler(HTTPError)
     def render_http_error(error):
+        error_url = error.response.url if error.response else "unknown URL"
+
         application.logger.warning(
-            "API {} failed with status {} message {}".format(
-                error.response.url if error.response else "unknown",
-                error.status_code,
-                error.message,
-            )
+            f"API {error_url} failed with status {error.status_code} message {error.message}",
+            exc_info=sys.exc_info(),
+            stack_info=True
         )
+
         error_code = error.status_code
+
         if error_code not in [401, 404, 403, 410]:
             # probably a 500 or 503.
             # it might be a 400, which we should handle as if it's an internal server error. If the API might
             # legitimately return a 400, we should handle that within the view or the client that calls it.
             application.logger.exception(
-                "API {} failed with status {} message {}".format(
-                    error.response.url if error.response else "unknown",
-                    error.status_code,
-                    error.message,
-                )
+                f"API {error_url} failed with status {error.status_code} message {error.message}",
+                exc_info=sys.exc_info(),
+                stack_info=True
             )
+
             error_code = 500
+
         return _error_response(error_code)
 
     @application.errorhandler(400)

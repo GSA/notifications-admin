@@ -50,6 +50,9 @@ def test_all_activity(
     mock_get_page_of_jobs = mocker.patch(
         "app.job_api_client.get_page_of_jobs", return_value=MOCK_JOBS
     )
+    mocker.patch(
+        "app.job_api_client.get_immediate_jobs", return_value=[]
+    )
 
     response = client_request.get_response(
         "main.all_jobs_activity",
@@ -60,7 +63,11 @@ def test_all_activity(
     assert response.data is not None, "Response data is None"
 
     assert "All activity" in response.text
-    mock_get_page_of_jobs.assert_called_with(SERVICE_ONE_ID, page=current_page)
+
+    assert any(
+        call[0][0] == SERVICE_ONE_ID and call[1].get('page') == current_page
+        for call in mock_get_page_of_jobs.call_args_list
+    )
     page = BeautifulSoup(response.data, "html.parser")
     table = page.find("table")
     assert table is not None, "Table not found in the response"
@@ -115,7 +122,6 @@ def test_all_activity(
 
     failed_cell = cells[6].get_text(strip=True)
     assert failed_cell == "5", f"Expected failed count '5', but got '{failed_cell}'"
-    mock_get_page_of_jobs.assert_called_with(SERVICE_ONE_ID, page=current_page)
 
 
 def test_all_activity_no_jobs(client_request, mocker):
@@ -132,6 +138,9 @@ def test_all_activity_no_jobs(client_request, mocker):
             "page_size": 50,
             "total": 0,
         },
+    )
+    mocker.patch(
+        "app.job_api_client.get_immediate_jobs", return_value=[]
     )
     response = client_request.get_response(
         "main.all_jobs_activity",
@@ -152,7 +161,10 @@ def test_all_activity_no_jobs(client_request, mocker):
     assert (
         expected_message == actual_message
     ), f"Expected message '{expected_message}', but got '{actual_message}'"
-    mock_get_page_of_jobs.assert_called_with(SERVICE_ONE_ID, page=current_page)
+    assert any(
+        call[0][0] == SERVICE_ONE_ID and call[1].get('page') == current_page
+        for call in mock_get_page_of_jobs.call_args_list
+    )
 
 
 def test_all_activity_pagination(client_request, mocker):
@@ -182,13 +194,19 @@ def test_all_activity_pagination(client_request, mocker):
             "total": 100,
         },
     )
+    mocker.patch(
+        "app.job_api_client.get_immediate_jobs", return_value=[]
+    )
 
     response = client_request.get_response(
         "main.all_jobs_activity",
         service_id=SERVICE_ONE_ID,
         page=current_page,
     )
-    mock_get_page_of_jobs.assert_called_with(SERVICE_ONE_ID, page=current_page)
+    assert any(
+        call[0][0] == SERVICE_ONE_ID and call[1].get('page') == current_page
+        for call in mock_get_page_of_jobs.call_args_list
+    )
 
     page = BeautifulSoup(response.data, "html.parser")
     pagination_controls = page.find_all("li", class_="usa-pagination__item")

@@ -13,6 +13,32 @@ from app.utils.pagination import (
 from app.utils.user import user_has_permissions
 
 
+def get_download_availability(service_id):
+    """
+    Check if there are jobs available for each download time period.
+    """
+    jobs_1_day = job_api_client.get_page_of_jobs(service_id, page=1, limit_days=1)
+    jobs_3_days = job_api_client.get_page_of_jobs(service_id, page=1, limit_days=3)
+    jobs_5_days = job_api_client.get_page_of_jobs(service_id, page=1, limit_days=5)
+    jobs_7_days = job_api_client.get_immediate_jobs(service_id)
+
+    has_1_day_data = len(generate_job_dict(jobs_1_day)) > 0
+    has_3_day_data = len(generate_job_dict(jobs_3_days)) > 0
+    has_5_day_data = len(generate_job_dict(jobs_5_days)) > 0
+    has_7_day_data = len(jobs_7_days) > 0
+
+    return {
+        "has_1_day_data": has_1_day_data,
+        "has_3_day_data": has_3_day_data,
+        "has_5_day_data": has_5_day_data,
+        "has_7_day_data": has_7_day_data,
+        "has_any_download_data": has_1_day_data
+        or has_3_day_data
+        or has_5_day_data
+        or has_7_day_data,
+    }
+
+
 @main.route("/activity/services/<uuid:service_id>")
 @user_has_permissions(ServicePermission.VIEW_ACTIVITY)
 def all_jobs_activity(service_id):
@@ -22,6 +48,7 @@ def all_jobs_activity(service_id):
     all_jobs_dict = generate_job_dict(jobs)
     prev_page, next_page, pagination = handle_pagination(jobs, service_id, page)
     message_type = ("sms",)
+    download_availability = get_download_availability(service_id)
     return render_template(
         "views/activity/all-activity.html",
         all_jobs_dict=all_jobs_dict,
@@ -29,6 +56,7 @@ def all_jobs_activity(service_id):
         next_page=next_page,
         prev_page=prev_page,
         pagination=pagination,
+        **download_availability,
         download_link_one_day=url_for(
             ".download_notifications_csv",
             service_id=current_service.id,
@@ -68,9 +96,13 @@ def handle_pagination(jobs, service_id, page):
         if page > 1
         else None
     )
+    total_items = jobs.get("total", 0)
+    page_size = jobs.get("page_size", 50)
+    total_pages = (total_items + page_size - 1) // page_size
+    has_next_link = jobs.get("links", {}).get("next") is not None
     next_page = (
         generate_next_dict("main.all_jobs_activity", service_id, page)
-        if jobs.get("links", {}).get("next")
+        if has_next_link and total_items > 50 and page < total_pages
         else None
     )
     pagination = generate_pagination_pages(
