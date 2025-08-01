@@ -283,3 +283,58 @@ test('handleDropdownChange updates DOM for individual selection', () => {
 
   window.fetchData.mockRestore();
 });
+
+test('handleDropdownChange shows empty message when user has no jobs', () => {
+  document.body.innerHTML = `
+    <div id="activityChartContainer">
+      <div class="chart-subtitle"></div>
+    </div>
+    <div id="aria-live-account"></div>
+    <div id="activityContainer" data-currentUserName="Test User" data-currentServiceId="12345"></div>
+    <div id="tableActivity">
+      <h2 id="table-heading"></h2>
+      <table id="activity-table">
+        <caption id="caption"></caption>
+        <tbody>
+          <tr><td class="sender-column">Other User</td></tr>
+          <tr><td class="sender-column">Another User</td></tr>
+          <tr><td class="sender-column">Different User</td></tr>
+          <tr class="table-row">
+            <td class="table-empty-message" colspan="10">No batched job messages found (messages are kept for 7 days).</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <select id="options">
+      <option value="service">Service</option>
+      <option value="individual">Individual</option>
+    </select>
+  `;
+
+  window.currentUserName = "Test User";
+
+  jest.spyOn(window, 'fetchData').mockImplementation(() => {});
+
+  const selectElement = document.getElementById('options');
+  selectElement.value = 'individual';
+  const event = { target: selectElement };
+
+  window.handleDropdownChange(event);
+
+  expect(document.getElementById('table-heading').textContent).toBe('My activity');
+  expect(document.getElementById('caption').textContent).toContain('Test User');
+
+  document.querySelectorAll('.sender-column').forEach(col => {
+    expect(col.style.display).toBe('none');
+  });
+
+  const emptyMessageRow = document.querySelector('.table-empty-message').closest('tr');
+  expect(emptyMessageRow.style.display).toBe('');
+
+  const allRows = Array.from(document.querySelectorAll('#activity-table tbody tr'));
+  const visibleRows = allRows.filter(row => row.style.display !== 'none');
+  expect(visibleRows.length).toBe(1);
+  expect(visibleRows[0].querySelector('.table-empty-message')).not.toBeNull();
+
+  window.fetchData.mockRestore();
+});
