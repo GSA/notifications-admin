@@ -70,7 +70,7 @@ requests = "^2.32.4"
 six = "^1.16.0"
 urllib3 = "^2.5.0"
 webencodings = "^0.5.1"
-virtualenv = "<20.33"
+virtualenv = "<20.34"
 
 
 [tool.poetry.group.dev.dependencies]
