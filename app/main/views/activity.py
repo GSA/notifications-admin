@@ -44,7 +44,22 @@ def get_download_availability(service_id):
 def all_jobs_activity(service_id):
     service_data_retention_days = 7
     page = get_page_from_request()
-    jobs = job_api_client.get_page_of_jobs(service_id, page=page)
+
+    filter_type = request.args.get('filter')
+
+    limit_days = None
+    if filter_type == '24hours':
+        limit_days = 1
+    elif filter_type == '3days':
+        limit_days = 3
+    elif filter_type == '7days':
+        limit_days = 7
+
+    if limit_days:
+        jobs = job_api_client.get_page_of_jobs(service_id, page=page, limit_days=limit_days)
+    else:
+        jobs = job_api_client.get_page_of_jobs(service_id, page=page)
+
     all_jobs_dict = generate_job_dict(jobs)
     prev_page, next_page, pagination = handle_pagination(jobs, service_id, page)
     message_type = ("sms",)

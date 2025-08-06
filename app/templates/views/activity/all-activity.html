@@ -58,6 +58,36 @@
     <h1 class="usa-sr-only">All activity</h1>
     <h2 class="font-body-2xl line-height-sans-2 margin-0">All activity</h2>
     <h2 class="margin-top-4 margin-bottom-1">Sent jobs</h2>
+    <div class="flex-wrap gap-3 display-flex flex-align-start margin-top-2">
+      <div class="flex-1">
+        <ul class="usa-button-group usa-button-group--segmented">
+          <li class="usa-button-group__item">
+            <a href="{{ url_for('main.all_jobs_activity', service_id=current_service.id) }}"
+               class="usa-button usa-button--small {% if not request.args.get('filter') %}{% else %}usa-button--outline{% endif %}">
+              All
+            </a>
+          </li>
+          <li class="usa-button-group__item">
+            <a href="{{ url_for('main.all_jobs_activity', service_id=current_service.id, filter='24hours') }}"
+               class="usa-button usa-button--small {% if request.args.get('filter') == '24hours' %}{% else %}usa-button--outline{% endif %}">
+              Last 24 hours
+            </a>
+          </li>
+          <li class="usa-button-group__item">
+            <a href="{{ url_for('main.all_jobs_activity', service_id=current_service.id, filter='3days') }}"
+               class="usa-button usa-button--small {% if request.args.get('filter') == '3days' %}{% else %}usa-button--outline{% endif %}">
+              Last 3 days
+            </a>
+          </li>
+          <li class="usa-button-group__item">
+            <a href="{{ url_for('main.all_jobs_activity', service_id=current_service.id, filter='7days') }}"
+               class="usa-button usa-button--small {% if request.args.get('filter') == '7days' %}{% else %}usa-button--outline{% endif %}">
+              Last 7 days
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
     <div class="usa-table-container--scrollable-mobile">
       <table class="usa-table usa-table--compact job-table">
         <caption class="usa-sr-only">Table showing all sent jobs for this service</caption>
