@@ -295,10 +295,12 @@ def test_download_links_show_when_data_available(
     mock_jobs_with_data = {
         "data": [{"id": "job1", "created_at": "2020-01-01T00:00:00.000000+00:00"}],
         "total": 1,
-        "page_size": 50
+        "page_size": 50,
     }
 
-    mocker.patch("app.job_api_client.get_page_of_jobs", return_value=mock_jobs_with_data)
+    mocker.patch(
+        "app.job_api_client.get_page_of_jobs", return_value=mock_jobs_with_data
+    )
     mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[{"id": "job1"}])
 
     page = client_request.get(
@@ -323,7 +325,7 @@ def test_download_links_partial_data_available(
     mock_jobs_with_data = {
         "data": [{"id": "job1", "created_at": "2020-01-01T00:00:00.000000+00:00"}],
         "total": 1,
-        "page_size": 50
+        "page_size": 50,
     }
     mock_jobs_empty = {"data": [], "total": 0, "page_size": 50}
 
@@ -332,7 +334,9 @@ def test_download_links_partial_data_available(
             return mock_jobs_with_data
         return mock_jobs_empty
 
-    mocker.patch("app.job_api_client.get_page_of_jobs", side_effect=mock_get_page_of_jobs)
+    mocker.patch(
+        "app.job_api_client.get_page_of_jobs", side_effect=mock_get_page_of_jobs
+    )
     mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
 
     page = client_request.get(
@@ -369,7 +373,10 @@ def test_download_links_no_data_available(
     assert "Download all data last 3 days" not in page.text
     assert "Download all data last 5 days" not in page.text
     assert "Download all data last 7 days" not in page.text
-    assert "No recent activity to download. Download links will appear when jobs are available." in page.text
+    assert (
+        "No recent activity to download. Download links will appear when jobs are available."
+        in page.text
+    )
 
 
 def test_download_not_available_to_users_without_dashboard(
@@ -560,9 +567,8 @@ def test_should_show_notifications_for_a_service_with_next_previous(
 ):
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
-        return_value=notification_json(
-            service_one["id"], rows=50, with_links=True
-        ) | {"total": 150},
+        return_value=notification_json(service_one["id"], rows=50, with_links=True)
+        | {"total": 150},
     )
     page = client_request.get(
         "main.view_notifications",
@@ -608,9 +614,8 @@ def test_doesnt_show_next_button_on_last_page(
 ):
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
-        return_value=notification_json(
-            service_one["id"], rows=50, with_links=True
-        ) | {"total": 100},
+        return_value=notification_json(service_one["id"], rows=50, with_links=True)
+        | {"total": 100},
     )
     page = client_request.get(
         "main.view_notifications",
@@ -637,9 +642,7 @@ def test_doesnt_show_pagination_when_50_or_fewer_items(
 ):
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
-        return_value=notification_json(
-            service_one["id"], rows=50, with_links=False
-        ),
+        return_value=notification_json(service_one["id"], rows=50, with_links=False),
     )
     page = client_request.get(
         "main.view_notifications",
@@ -663,9 +666,8 @@ def test_doesnt_show_pagination_with_search_term(
 ):
     mocker.patch(
         "app.notification_api_client.get_notifications_for_service",
-        return_value=notification_json(
-            service_one["id"], rows=50, with_links=True
-        ) | {"total": 100},
+        return_value=notification_json(service_one["id"], rows=50, with_links=True)
+        | {"total": 100},
     )
     page = client_request.post(
         "main.view_notifications",

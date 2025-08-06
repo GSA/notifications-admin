@@ -22,9 +22,7 @@ class BaseAPIClient:
     This class is not thread-safe.
     """
 
-    def __init__(
-        self, api_key, base_url=API_PUBLIC_URL, timeout=30
-    ):
+    def __init__(self, api_key, base_url=API_PUBLIC_URL, timeout=30):
         """
         Initialise the client
         Error if either of base_url or secret missing

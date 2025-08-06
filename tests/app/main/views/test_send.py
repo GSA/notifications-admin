@@ -145,9 +145,7 @@ def test_default_email_sender_is_checked_and_has_hint(
     )
 
     assert page.select(".usa-radio input")[0].has_attr("checked")
-    assert (
-        normalize_spaces(page.select_one(".usa-radio .usa-hint").text) == "(Default)"
-    )
+    assert normalize_spaces(page.select_one(".usa-radio .usa-hint").text) == "(Default)"
     assert not page.select(".usa-radio input")[1].has_attr("checked")
 
 
@@ -162,9 +160,7 @@ def test_default_sms_sender_is_checked_and_has_hint(
     )
 
     assert page.select(".usa-radio input")[0].has_attr("checked")
-    assert (
-        normalize_spaces(page.select_one(".usa-radio .usa-hint").text) == "(Default)"
-    )
+    assert normalize_spaces(page.select_one(".usa-radio .usa-hint").text) == "(Default)"
     assert not page.select(".usa-radio input")[1].has_attr("checked")
 
 
@@ -179,9 +175,7 @@ def test_default_sms_sender_is_checked_and_has_hint_when_there_are_no_inbound_nu
     )
 
     assert page.select(".usa-radio input")[0].has_attr("checked")
-    assert (
-        normalize_spaces(page.select_one(".usa-radio .usa-hint").text) == "(Default)"
-    )
+    assert normalize_spaces(page.select_one(".usa-radio .usa-hint").text) == "(Default)"
     assert not page.select(".usa-radio input")[1].has_attr("checked")
 
 
