@@ -51,6 +51,11 @@
       {% endif %}
     </ul>
   </nav>
+  {% if pagination and total_jobs %}
+  <p class="text-center font-body-sm ">
+    Page {{ pagination.current }} of {{ pagination.last }} ({{ total_jobs }} total jobs)
+  </p>
+  {% endif %}
   {% endif %}
 {% endset %}
 {% block maincolumn_content %}
@@ -90,28 +95,28 @@
           {% if all_jobs_dict %}
             {% for job in all_jobs_dict %}
               <tr class="table-row">
-                <td class="table-field jobid" role="rowheader">
+                <td class="table-field jobid width-10" role="rowheader">
                   <a class="usa-link" href="{{ job.view_job_link }}">
                     {{ job.job_id[:8] if job.job_id else 'Manually entered number' }}
                   </a>
                 </td>
-                <td class="table-field template">{{ job.template_name }}</td>
-                <td data-sort-value="{{ job.activity_time | convert_time_unixtimestamp }}" class="table-field time-sent">
+                <td class="table-field template width-35 text-wrap">{{ job.template_name }}</td>
+                <td data-sort-value="{{ job.activity_time | convert_time_unixtimestamp }}" class="table-field time-sent width-15">
                   {{ job.activity_time|format_datetime_table }}
                 </td>
-                <td class="table-field sender">{{ job.created_by.name }}</td>
-                <td class="table-field report">
+                <td class="table-field sender width-20 text-wrap">{{ job.created_by.name }}</td>
+                <td class="text-center table-field report width-5">
                   {% if job.can_download %}
                     <a href="{{ job.download_link }}">
-                      <img src="{{ url_for('static', filename='img/material-icons/file_download.svg') }}" alt="">
+                      <img src="{{ url_for('static', filename='img/material-icons/file_download.svg') }}" alt="" class="padding-top-05">
                       <span class="usa-sr-only">Download report link</span>
                     </a>
                   {% else %}
                     <span>N/A</span>
                   {% endif %}
                 </td>
-                <td class="table-field delivered">{{ job.delivered_count if job.delivered_count is not none else '0' }}</td>
-                <td class="table-field failed">{{ job.failed_count if job.failed_count is not none else '0' }}</td>
+                <td class="text-center table-field delivered width-7">{{ job.delivered_count if job.delivered_count is not none else '0' }}</td>
+                <td class="text-center table-field failed width-8">{{ job.failed_count if job.failed_count is not none else '0' }}</td>
               </tr>
             {% endfor %}
           {% else %}
