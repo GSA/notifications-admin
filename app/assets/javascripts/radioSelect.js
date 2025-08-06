@@ -3,65 +3,70 @@
   "use strict";
 
   var Modules = global.GOVUK.Modules;
-  var Hogan = global.Hogan;
 
-  // Object holding all the states for the component's HTML
-  let states = {
-    'initial': Hogan.compile(`
-      {{#showNowAsDefault}}
+  // Template functions for rendering component states
+  let renderStates = {
+    'initial': function(data) {
+      return `
+        ${data.showNowAsDefault ? `
+          <div class="radio-select__column margin-y-2">
+            <div class="usa-radio">
+              <input class="usa-radio__input" checked="checked" id="${data.name}-0" name="${data.name}" type="radio" value="">
+              <label class="usa-radio__label" for="${data.name}-0">Now</label>
+            </div>
+          </div>
+        ` : ''}
         <div class="radio-select__column margin-y-2">
-          <div class="usa-radio">
-            <input class="usa-radio__input" checked="checked" id="{{name}}-0" name="{{name}}" type="radio" value="">
-            <label class="usa-radio__label" for="{{name}}-0">Now</label>
-          </div>
+          ${data.categories.map(category =>
+            `<input type='button' class='usa-button usa-button--outline radio-select__button--category' aria-expanded="false" value='${category}' />`
+          ).join('')}
         </div>
-      {{/showNowAsDefault}}
-      <div class="radio-select__column margin-y-2">
-        {{#categories}}
-          <input type='button' class='usa-button usa-button--outline radio-select__button--category' aria-expanded="false" value='{{.}}' />
-        {{/categories}}
-      </div>
-    `),
-    'choose': Hogan.compile(`
-      {{#showNowAsDefault}}
+      `;
+    },
+    'choose': function(data) {
+      return `
+        ${data.showNowAsDefault ? `
+          <div class="radio-select__column margin-y-2">
+            <div class="usa-radio">
+              <input class="usa-radio__input" checked="checked" id="${data.name}-0" name="${data.name}" type="radio" value="">
+              <label class="usa-radio__label" for="${data.name}-0">Now</label>
+            </div>
+          </div>
+        ` : ''}
         <div class="radio-select__column margin-y-2">
-          <div class="usa-radio">
-            <input class="usa-radio__input" checked="checked" id="{{name}}-0" name="{{name}}" type="radio" value="">
-            <label class="usa-radio__label" for="{{name}}-0">Now</label>
-          </div>
+          ${data.choices.map(choice => `
+            <div class="usa-radio js-option">
+              <input class="usa-radio__input" type="radio" value="${choice.value}" id="${choice.id}" name="${data.name}" />
+              <label class="usa-radio__label" for="${choice.id}">${choice.label}</label>
+            </div>
+          `).join('')}
+          <input type='button' class='usa-button usa-button--outline radio-select__button--done margin-top-4' aria-expanded='true' value='Back to select a new time' />
         </div>
-      {{/showNowAsDefault}}
-      <div class="radio-select__column margin-y-2">
-        {{#choices}}
-          <div class="usa-radio js-option">
-            <input class="usa-radio__input" type="radio" value="{{value}}" id="{{id}}" name="{{name}}" />
-            <label class="usa-radio__label" for="{{id}}">{{label}}</label>
+      `;
+    },
+    'chosen': function(data) {
+      return `
+        ${data.showNowAsDefault ? `
+          <div class="radio-select__column margin-y-2">
+            <div class="usa-radio">
+              <input class="usa-radio__input" id="${data.name}-0" name="${data.name}" type="radio" value="">
+              <label class="usa-radio__label" for="${data.name}-0">Now</label>
+            </div>
           </div>
-        {{/choices}}
-        <input type='button' class='usa-button usa-button--outline radio-select__button--done margin-top-4' aria-expanded='true' value='Back to select a new time' />
-      </div>
-    `),
-    'chosen': Hogan.compile(`
-      {{#showNowAsDefault}}
+        ` : ''}
         <div class="radio-select__column margin-y-2">
-          <div class="usa-radio">
-            <input class="usa-radio__input" id="{{name}}-0" name="{{name}}" type="radio" value="">
-            <label class="usa-radio__label" for="{{name}}-0">Now</label>
-          </div>
+          ${data.choices.map(choice => `
+            <div class="usa-radio">
+              <input class="usa-radio__input" checked="checked" type="radio" value="${choice.value}" id="${choice.id}" name="${data.name}" />
+              <label class="usa-radio__label" for="${choice.id}">${choice.label}</label>
+            </div>
+          `).join('')}
         </div>
-      {{/showNowAsDefault}}
-      <div class="radio-select__column margin-y-2">
-        {{#choices}}
-          <div class="usa-radio">
-            <input class="usa-radio__input" checked="checked" type="radio" value="{{value}}" id="{{id}}" name="{{name}}" />
-            <label class="usa-radio__label" for="{{id}}">{{label}}</label>
-          </div>
-        {{/choices}}
-      </div>
-      <div class="radio-select__column margin-y-2">
-        <input type='button' class='usa-button usa-button--outline radio-select__button--reset' aria-expanded='false' value='Choose a different time' />
-      </div>
-    `)
+        <div class="radio-select__column margin-y-2">
+          <input type='button' class='usa-button usa-button--outline radio-select__button--reset' aria-expanded='false' value='Choose a different time' />
+        </div>
+      `;
+    }
   };
 
   let shiftFocus = function(elementToFocus, component) {
@@ -80,7 +85,7 @@
 
       let $component = $(component);
       let render = (state, data) => {
-        $component.html(states[state].render(data));
+        $component.html(renderStates[state](data));
       };
       // store array of all options in component
       let choices = $('label', $component).toArray().map(function(element) {

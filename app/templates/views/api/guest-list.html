@@ -59,11 +59,13 @@
           autocomplete=False
         ) }}
 
-        {{ list_entry(
-          form.phone_numbers,
-          item_name='phone number',
-          autocomplete=False
-        ) }}
+        <div class="margin-top-4">
+          {{ list_entry(
+            form.phone_numbers,
+            item_name='phone number',
+            autocomplete=False
+          ) }}
+        </div>
 
       </div>
     </div>
