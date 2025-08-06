@@ -35,18 +35,3 @@ def how_to_pay():
         "views/pricing/how-to-pay.html",
         navigation_links=using_notify_nav(),
     )
-
-
-@main.route("/pricing/billing-details")
-@user_is_logged_in
-def billing_details():
-    if current_user.is_authenticated:
-        return render_template(
-            "views/pricing/billing-details.html",
-            billing_details=current_app.config["NOTIFY_BILLING_DETAILS"],
-            navigation_links=using_notify_nav(),
-        )
-    return render_template(
-        "views/pricing/billing-details-signed-out.html",
-        navigation_links=using_notify_nav(),
-    )

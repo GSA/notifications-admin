@@ -2,7 +2,7 @@
 
   "use strict";
 
-  global.NotifyModules.RadioSlider = function() {
+  global.NotifyModules['radio-slider'] = function() {
 
     this.start = function(component) {
 

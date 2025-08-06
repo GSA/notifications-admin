@@ -216,7 +216,7 @@
     }
   };
 
-  Modules.ListEntry = function () {
+  Modules['list-entry'] = function () {
 
     this.start = component => lists.push(new ListEntry($(component)));
 

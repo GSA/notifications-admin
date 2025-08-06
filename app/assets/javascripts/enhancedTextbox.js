@@ -9,7 +9,7 @@
 
   const tagPattern = /\(\(([^\)\((\?)]+)(\?\?)?([^\)\(]*)\)\)/g;
 
-  window.NotifyModules.EnhancedTextbox = function() {
+  window.NotifyModules['enhanced-textbox'] = function() {
 
     this.start = function(textarea) {
 

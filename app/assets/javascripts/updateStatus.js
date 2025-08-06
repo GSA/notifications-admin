@@ -1,7 +1,7 @@
 (function(window) {
   "use strict";
 
-  window.NotifyModules.UpdateStatus = function() {
+  window.NotifyModules['update-status'] = function() {
 
     const getRenderer = $component => response => $component.html(
       response.html

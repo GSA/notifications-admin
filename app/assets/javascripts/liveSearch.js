@@ -70,7 +70,7 @@
   };
 
 
-  Modules.LiveSearch = function() {
+  Modules['live-search'] = function() {
 
     this.start = function(component) {
 

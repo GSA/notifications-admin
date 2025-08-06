@@ -27,7 +27,7 @@ function initUploadStatusAnnouncer() {
 (function(Modules) {
   "use strict";
 
-  Modules.FileUpload = function() {
+  Modules['file-upload'] = function() {
     this.submit = () => this.$form.trigger('submit');
 
     this.showCancelButton = () => {

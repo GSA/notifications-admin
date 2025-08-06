@@ -3,7 +3,7 @@
 
   if (!document.queryCommandSupported('copy')) return;
 
-  Modules.CopyToClipboard = function() {
+  Modules['copy-to-clipboard'] = function() {
 
     const states = {
       'valueVisible': (options) => `

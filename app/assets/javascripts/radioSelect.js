@@ -79,7 +79,7 @@
     }
   };
 
-  Modules.RadioSelect = function() {
+  Modules['radio-select'] = function() {
 
     this.start = function(component) {
 

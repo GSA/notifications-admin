@@ -1,7 +1,7 @@
 (function(window) {
   "use strict";
 
-  window.NotifyModules.TrackError = function() {
+  window.NotifyModules['track-error'] = function() {
 
     this.start = function(component) {
 

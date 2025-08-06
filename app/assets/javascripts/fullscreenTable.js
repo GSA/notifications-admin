@@ -1,7 +1,7 @@
 (function(Modules) {
   "use strict";
 
-  Modules.FullscreenTable = function() {
+  Modules['fullscreen-table'] = function() {
 
     this.start = function(component) {
 

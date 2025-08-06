@@ -106,7 +106,7 @@
     );
   };
 
-  global.NotifyModules.UpdateContent = function() {
+  global.NotifyModules['update-content'] = function() {
 
     this.start = component => {
       var $component = $(component);
@@ -144,6 +144,6 @@
 
   };
 
-  global.NotifyModules.UpdateContent.calculateBackoff = calculateBackoff;
+  global.NotifyModules['update-content'].calculateBackoff = calculateBackoff;
 
 })(window);
