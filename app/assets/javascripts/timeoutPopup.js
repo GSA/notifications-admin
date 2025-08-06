@@ -1,6 +1,5 @@
-window.GOVUK = window.GOVUK || {};
-window.GOVUK.Modules = window.GOVUK.Modules || {};
-window.GOVUK.Modules.TimeoutPopup = window.GOVUK.Modules.TimeoutPopup || {};
+window.NotifyModules = window.NotifyModules || {};
+window.NotifyModules.TimeoutPopup = window.NotifyModules.TimeoutPopup || {};
 
 (function(global) {
     "use strict";
@@ -56,10 +55,10 @@ window.GOVUK.Modules.TimeoutPopup = window.GOVUK.Modules.TimeoutPopup || {};
         setTimeout(setSessionTimer, 25 * 60 * 1000);
     }
 
-    global.GOVUK.Modules.TimeoutPopup.checkTimer = checkTimer;
-    global.GOVUK.Modules.TimeoutPopup.expireUserSession = expireUserSession;
-    global.GOVUK.Modules.TimeoutPopup.signoutUser = signoutUser;
-    global.GOVUK.Modules.TimeoutPopup.extendSession = extendSession;
-    global.GOVUK.Modules.TimeoutPopup.showTimer = showTimer;
-    global.GOVUK.Modules.TimeoutPopup.closeTimer = closeTimer;
+    global.NotifyModules.TimeoutPopup.checkTimer = checkTimer;
+    global.NotifyModules.TimeoutPopup.expireUserSession = expireUserSession;
+    global.NotifyModules.TimeoutPopup.signoutUser = signoutUser;
+    global.NotifyModules.TimeoutPopup.extendSession = extendSession;
+    global.NotifyModules.TimeoutPopup.showTimer = showTimer;
+    global.NotifyModules.TimeoutPopup.closeTimer = closeTimer;
 })(window);

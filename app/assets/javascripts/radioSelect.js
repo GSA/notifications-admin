@@ -2,7 +2,7 @@
 
   "use strict";
 
-  var Modules = global.GOVUK.Modules;
+  var Modules = global.NotifyModules;
 
   // Template functions for rendering component states
   let renderStates = {

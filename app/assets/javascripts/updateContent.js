@@ -2,7 +2,8 @@
   "use strict";
 
   var queues = {};
-  var morphdom = global.GOVUK.vendor.morphdom;
+  // morphdom is now imported directly from node_modules
+  var morphdom = window.morphdom || (window.NotifyModules && window.NotifyModules.vendor && window.NotifyModules.vendor.morphdom);
   var defaultInterval = 2000;
   var interval = 0;
 
@@ -105,7 +106,7 @@
     );
   };
 
-  global.GOVUK.Modules.UpdateContent = function() {
+  global.NotifyModules.UpdateContent = function() {
 
     this.start = component => {
       var $component = $(component);
@@ -143,6 +144,6 @@
 
   };
 
-  global.GOVUK.Modules.UpdateContent.calculateBackoff = calculateBackoff;
+  global.NotifyModules.UpdateContent.calculateBackoff = calculateBackoff;
 
 })(window);

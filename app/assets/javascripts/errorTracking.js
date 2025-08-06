@@ -1,13 +1,13 @@
 (function(window) {
   "use strict";
 
-  window.GOVUK.Modules.TrackError = function() {
+  window.NotifyModules.TrackError = function() {
 
     this.start = function(component) {
 
-      if (!('analytics' in window.GOVUK)) return;
-
-      window.GOVUK.analytics.trackEvent(
+      // Analytics tracking removed - no longer using GOVUK analytics
+      // If analytics is needed, integrate with USWDS analytics or custom solution
+      console.log(
         'Error',
         $(component).data('error-type'),
         {

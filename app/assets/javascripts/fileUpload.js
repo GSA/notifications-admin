@@ -55,7 +55,7 @@ function initUploadStatusAnnouncer() {
       });
     };
   };
-})(window.GOVUK.Modules);
+})(window.NotifyModules);
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {

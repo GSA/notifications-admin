@@ -90,11 +90,11 @@
               .find('.usa-button').focus()
         );
 
-      if ('stickAtBottomWhenScrolling' in GOVUK) {
-        GOVUK.stickAtBottomWhenScrolling.recalculate();
+      if ('stickAtBottomWhenScrolling' in window.NotifyModules) {
+        window.NotifyModules.stickAtBottomWhenScrolling.recalculate();
       }
 
     };
   };
 
-})(window.GOVUK.Modules);
+})(window.NotifyModules);

@@ -1,5 +1,7 @@
-(function(Modules) {
+(function(global) {
   "use strict";
+
+  window.NotifyModules = window.NotifyModules || {};
 
   if (
     !('oninput' in document.createElement('input'))
@@ -7,7 +9,7 @@
 
   const tagPattern = /\(\(([^\)\((\?)]+)(\?\?)?([^\)\(]*)\)\)/g;
 
-  Modules.EnhancedTextbox = function() {
+  window.NotifyModules.EnhancedTextbox = function() {
 
     this.start = function(textarea) {
 
@@ -58,8 +60,8 @@
         )
       );
 
-      if ('stickAtBottomWhenScrolling' in GOVUK) {
-        GOVUK.stickAtBottomWhenScrolling.recalculate();
+      if ('stickAtBottomWhenScrolling' in window.NotifyModules) {
+        window.NotifyModules.stickAtBottomWhenScrolling.recalculate();
       }
 
     };
@@ -84,4 +86,4 @@
 
   };
 
-})(window.GOVUK.Modules);
+})(window);

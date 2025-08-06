@@ -222,4 +222,4 @@
 
   };
 
-})(window.GOVUK.Modules);
+})(window.NotifyModules);

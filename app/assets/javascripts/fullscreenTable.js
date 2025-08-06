@@ -24,10 +24,10 @@
         .on('scroll', this.maintainHeight)
 
       if (
-        window.GOVUK.stickAtBottomWhenScrolling &&
-        window.GOVUK.stickAtBottomWhenScrolling.recalculate
+        window.NotifyModules.stickAtBottomWhenScrolling &&
+        window.NotifyModules.stickAtBottomWhenScrolling.recalculate
       ) {
-        window.GOVUK.stickAtBottomWhenScrolling.recalculate();
+        window.NotifyModules.stickAtBottomWhenScrolling.recalculate();
       }
 
       this.maintainWidth();
@@ -120,4 +120,4 @@
 
   };
 
-})(window.GOVUK.Modules);
+})(window.NotifyModules);

@@ -2,7 +2,7 @@
   'use strict';
 
   var $ = global.jQuery;
-  var GOVUK = global.GOVUK || {};
+  var NotifyModules = global.NotifyModules || {};
   var _mode = 'default';
 
   // Constructor to make objects representing the area sticky elements can scroll in
@@ -677,7 +677,7 @@
     }
 
     self.setElementDimensions(elObj, onDimensionsSet);
-  }; 
+  };
   Sticky.prototype.remove = function (el) {
     if ($.inArray(el, this._els) !== -1) {
 
@@ -989,7 +989,7 @@
     el.unstop();
   };
 
-  GOVUK.stickAtTopWhenScrolling = stickAtTop;
-  GOVUK.stickAtBottomWhenScrolling = stickAtBottom;
-  global.GOVUK = GOVUK;
+  NotifyModules.stickAtTopWhenScrolling = stickAtTop;
+  NotifyModules.stickAtBottomWhenScrolling = stickAtBottom;
+  global.NotifyModules = NotifyModules;
 })(window);

@@ -62,7 +62,9 @@
     // make sticky JS recalculate its cache of the element's position
     // because live search can change the height document
     if ('stickAtBottomWhenScrolling' in GOVUK) {
-      GOVUK.stickAtBottomWhenScrolling.recalculate();
+      if (window.NotifyModules && window.NotifyModules.stickAtBottomWhenScrolling) {
+        window.NotifyModules.stickAtBottomWhenScrolling.recalculate();
+      }
     }
 
   };
@@ -95,4 +97,4 @@
 
   };
 
-})(window.GOVUK.Modules);
+})(window.NotifyModules);

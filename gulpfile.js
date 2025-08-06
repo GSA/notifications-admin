@@ -37,7 +37,7 @@ const javascripts = () => {
     ],
     output: {
       format: 'iife',
-      name: 'GOVUK',
+      name: 'NotifyModules',
     },
   })
     .pipe(source('all.mjs'))
