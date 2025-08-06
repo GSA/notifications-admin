@@ -3297,14 +3297,14 @@ all = ["numpy"]
 
 [[package]]
 name = "redis"
-version = "6.2.0"
+version = "6.3.0"
 description = "Python client for Redis database and key-value store"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "redis-6.2.0-py3-none-any.whl", hash = "sha256:c8ddf316ee0aab65f04a11229e94a64b2618451dab7a67cb2f77eb799d872d5e"},
-    {file = "redis-6.2.0.tar.gz", hash = "sha256:e821f129b75dde6cb99dd35e5c76e8c49512a5a0d8dfdc560b2fbd44b85ca977"},
+    {file = "redis-6.3.0-py3-none-any.whl", hash = "sha256:92f079d656ded871535e099080f70fab8e75273c0236797126ac60242d638e9b"},
+    {file = "redis-6.3.0.tar.gz", hash = "sha256:3000dbe532babfb0999cdab7b3e5744bcb23e51923febcfaeb52c8cfb29632ef"},
 ]
 
 [package.extras]
@@ -4223,4 +4223,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12.9"
-content-hash = "c0a71dff93a06af1ad6c7925d5aeec6f3a810d6b3f1fc9f92b49a5e8ddcc7045"
+content-hash = "9c4815ed8afb0be6324db1a3a04aaaff93cc697af6be0b9d5bf272bec2f3aee8"
