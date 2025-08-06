@@ -1,7 +1,6 @@
 import json
 import logging
 import urllib.parse
-
 from os import getenv
 
 import requests

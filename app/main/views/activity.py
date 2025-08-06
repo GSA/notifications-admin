@@ -45,18 +45,20 @@ def all_jobs_activity(service_id):
     service_data_retention_days = 7
     page = get_page_from_request()
 
-    filter_type = request.args.get('filter')
+    filter_type = request.args.get("filter")
 
     limit_days = None
-    if filter_type == '24hours':
+    if filter_type == "24hours":
         limit_days = 1
-    elif filter_type == '3days':
+    elif filter_type == "3days":
         limit_days = 3
-    elif filter_type == '7days':
+    elif filter_type == "7days":
         limit_days = 7
 
     if limit_days:
-        jobs = job_api_client.get_page_of_jobs(service_id, page=page, limit_days=limit_days)
+        jobs = job_api_client.get_page_of_jobs(
+            service_id, page=page, limit_days=limit_days
+        )
     else:
         jobs = job_api_client.get_page_of_jobs(service_id, page=page)
 
