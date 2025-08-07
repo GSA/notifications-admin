@@ -68,6 +68,10 @@ const routes = {
       path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/users',
     },
     {
+      label: 'All Activity',
+      path: '/activity/services/9c765540-266e-474e-b6bb-8e2e0e32b781',
+    },
+    {
       label: 'Invite User',
       path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/users/invite',
     },
