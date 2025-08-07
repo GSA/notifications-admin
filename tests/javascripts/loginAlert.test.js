@@ -13,7 +13,7 @@ beforeAll(() => {
     `
 
     const sessionTimerModule = require('../../app/assets/javascripts/loginAlert.js');
-    window.GOVUK.modules.start();
+    window.NotifyModules.start();
 });
 
 jest.useFakeTimers();

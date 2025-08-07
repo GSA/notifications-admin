@@ -16,7 +16,7 @@ describe("Error Banner", () => {
       document.body.innerHTML = `
       <span class="usa-error-message banner-dangerous js-error-visible">
       </span>`;
-      window.GOVUK.ErrorBanner.hideBanner();
+      window.NotifyModules.ErrorBanner.hideBanner();
       expect(document.querySelector('.banner-dangerous').classList).toContain('display-none')
     });
   });
@@ -27,7 +27,7 @@ describe("Error Banner", () => {
         <span class="usa-error-message banner-dangerous js-error-visible display-none">
         </span>`;
 
-      window.GOVUK.ErrorBanner.showBanner('Some Err');
+      window.NotifyModules.ErrorBanner.showBanner('Some Err');
     });
 
     test("Will show the element", () => {

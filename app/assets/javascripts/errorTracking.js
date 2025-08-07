@@ -3,17 +3,19 @@
 
   window.NotifyModules['track-error'] = function() {
 
-    this.start = function(component) {
+    this.start = function(element) {
+      var component = $(element);
 
-      // Analytics tracking removed - no longer using GOVUK analytics
-      // If analytics is needed, integrate with USWDS analytics or custom solution
-      console.log(
-        'Error',
-        $(component).data('error-type'),
-        {
-          'label': $(component).data('error-label')
-        }
-      );
+      // Track error to analytics if available
+      if (window.NotifyModules && window.NotifyModules.analytics && window.NotifyModules.analytics.trackEvent) {
+        window.NotifyModules.analytics.trackEvent(
+          'Error',
+          component.data('error-type'),
+          {
+            'label': component.data('error-label')
+          }
+        );
+      }
 
     };
 

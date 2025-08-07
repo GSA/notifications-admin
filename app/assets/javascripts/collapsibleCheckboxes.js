@@ -220,6 +220,8 @@
     this.summary.bindEvents(this);
   };
 
-  NotifyModules['collapsible-checkboxes'] = CollapsibleCheckboxes;
+  NotifyModules['collapsible-checkboxes'] = function() {
+    return new CollapsibleCheckboxes();
+  };
 
 }(window));

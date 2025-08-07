@@ -132,8 +132,8 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
 
 function resetStickyMocks () {
 
-  GOVUK.stickAtBottomWhenScrolling.recalculate.mockClear();
-  GOVUK.stickAtBottomWhenScrolling.setMode.mockClear();
+  window.NotifyModules.stickAtBottomWhenScrolling.recalculate.mockClear();
+  window.NotifyModules.stickAtBottomWhenScrolling.setMode.mockClear();
 
 };
 
@@ -192,7 +192,7 @@ describe('TemplateFolderForm', () => {
   beforeAll(() => {
 
     // stub out calls to sticky JS
-    GOVUK.stickAtBottomWhenScrolling = {
+    window.NotifyModules.stickAtBottomWhenScrolling = {
       setMode: jest.fn(),
       recalculate: jest.fn()
     };
@@ -201,7 +201,7 @@ describe('TemplateFolderForm', () => {
 
   afterAll(() => {
 
-    GOVUK.stickAtBottomWhenScrolling = undefined;
+    window.NotifyModules.stickAtBottomWhenScrolling = undefined;
 
   });
 
@@ -252,7 +252,7 @@ describe('TemplateFolderForm', () => {
     beforeEach(() => {
 
       // start module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
 
       formControls = templateFolderForm.querySelector('#sticky_template_forms');
       visibleCounter = getVisibleCounter();
@@ -307,7 +307,7 @@ describe('TemplateFolderForm', () => {
       templateFolderForm = document.querySelector('form[data-module=template-folder-form]');
 
       // start module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
 
       formControls = templateFolderForm.querySelector('#sticky_template_forms');
 
@@ -339,7 +339,7 @@ describe('TemplateFolderForm', () => {
     beforeEach(() => {
 
       // start module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
 
       formControls = templateFolderForm.querySelector('#sticky_template_forms');
 
@@ -449,7 +449,7 @@ describe('TemplateFolderForm', () => {
     beforeEach(() => {
 
       // start module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
 
       formControls = templateFolderForm.querySelector('#sticky_template_forms');
 
@@ -513,7 +513,7 @@ describe('TemplateFolderForm', () => {
       expect(formControls.querySelector('#add_new_folder_form .js-stick-at-bottom-when-scrolling')).not.toBeNull();
 
       // .recalculate should have been called so the sticky JS picks up the controls
-      expect(GOVUK.stickAtBottomWhenScrolling.recalculate.mock.calls.length).toEqual(0);
+      expect(window.NotifyModules.stickAtBottomWhenScrolling.recalculate.mock.calls.length).toEqual(0);
 
     });
 
@@ -552,7 +552,7 @@ describe('TemplateFolderForm', () => {
     beforeEach(() => {
 
       // start module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
 
       templateFolderCheckboxes = getTemplateFolderCheckboxes();
 
@@ -836,7 +836,7 @@ describe('TemplateFolderForm', () => {
     beforeEach(() => {
 
       // start module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
 
       templateFolderCheckboxes = getTemplateFolderCheckboxes();
       visibleCounterText = getVisibleCounter().textContent.trim();

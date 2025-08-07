@@ -8,4 +8,5 @@ require('./polyfills.js');
 global.$ = global.jQuery = require('jquery');
 
 // Bring in the GOV.UK modules system
-require('govuk_frontend_toolkit/javascripts/govuk/modules.js');
+// Removing - now using NotifyModules instead
+// require('govuk_frontend_toolkit/javascripts/govuk/modules.js');
