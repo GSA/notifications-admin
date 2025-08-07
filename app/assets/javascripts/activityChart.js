@@ -295,24 +295,28 @@
         liveRegion.textContent = `Data updated for ${selectedText} - last 7 days`;
 
         const tableHeading = document.querySelector('#tableActivity h2');
-        const senderColumns = document.querySelectorAll('.sender-column');
+        const senderElements = [
+            document.querySelector('[data-column="sender"]'),
+            ...document.querySelectorAll('[data-sender]')
+        ];
         const allRows = document.querySelectorAll('#activity-table tbody tr');
-        const caption = document.querySelector('#activity-table caption');
+        const table = document.getElementById('activity-table');
+        const caption = table.querySelector('caption');
 
         if (selectedValue === 'individual') {
 
             tableHeading.textContent = 'My activity';
             caption.textContent = `Table showing the sent jobs for ${currentUserName}`;
 
-            senderColumns.forEach(col => {
-            col.style.display = 'none';
+            senderElements.forEach(el => {
+                if (el) el.style.display = 'none';
             });
 
             allRows.forEach(row => row.style.display = 'none');
 
             const userRows = Array.from(allRows).filter(row => {
-                const senderCell = row.querySelector('.sender-column');
-                const rowSender = senderCell ? senderCell.textContent.trim() : '';
+                const senderCell = row.querySelector('[data-sender]');
+                const rowSender = senderCell ? senderCell.dataset.sender : '';
                 return rowSender === currentUserName;
             });
 
@@ -333,8 +337,8 @@
             tableHeading.textContent = 'Service activity';
             caption.textContent = `Table showing the sent jobs for service`;
 
-            senderColumns.forEach(col => {
-            col.style.display = '';
+            senderElements.forEach(el => {
+                if (el) el.style.display = '';
             });
 
             allRows.forEach((row, index) => {

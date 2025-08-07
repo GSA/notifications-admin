@@ -51,6 +51,11 @@
       {% endif %}
     </ul>
   </nav>
+  {% if pagination and total_jobs %}
+  <p class="text-center font-body-sm">
+    Page <span class="text-bold">{{ pagination.current }}</span> of <span class="text-bold">{{ pagination.last }}</span> (<span>{{ total_jobs }}</span> total jobs)
+  </p>
+  {% endif %}
   {% endif %}
 {% endset %}
 {% block maincolumn_content %}
@@ -58,7 +63,7 @@
     <h1 class="usa-sr-only">All activity</h1>
     <h2 class="font-body-2xl line-height-sans-2 margin-0">All activity</h2>
     <h2 class="margin-top-4 margin-bottom-1">Sent jobs</h2>
-    <div class="usa-table-container--scrollable-mobile">
+    <div class="usa-table-container--scrollable-mobile table-overflow-x-auto">
       <table class="usa-table usa-table--compact job-table">
         <caption class="usa-sr-only">Table showing all sent jobs for this service</caption>
         <thead class="table-field-headings">
@@ -66,23 +71,20 @@
             <th scope="col" role="columnheader" class="table-field-heading-first" id="jobId">
               <span>Job ID#</span>
             </th>
-            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
+            <th scope="col" role="columnheader" class="table-field-heading">
               <span>Template</span>
             </th>
-            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
+            <th scope="col" role="columnheader" class="table-field-heading">
               <span>Started</span>
             </th>
-            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
+            <th scope="col" role="columnheader" class="table-field-heading">
               <span>Sender</span>
             </th>
-            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
+            <th scope="col" role="columnheader" class="table-field-heading">
               <span>Report</span>
             </th>
-            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
-              <span>Delivered</span>
-            </th>
-            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
-              <span>Failed</span>
+            <th scope="col" role="columnheader" class="table-field-heading">
+              <span>Status</span>
             </th>
           </tr>
         </thead>
@@ -90,28 +92,34 @@
           {% if all_jobs_dict %}
             {% for job in all_jobs_dict %}
               <tr class="table-row">
-                <td class="table-field jobid" role="rowheader">
+                <td class="table-field width-5" role="rowheader">
                   <a class="usa-link" href="{{ job.view_job_link }}">
                     {{ job.job_id[:8] if job.job_id else 'Manually entered number' }}
                   </a>
                 </td>
-                <td class="table-field template">{{ job.template_name }}</td>
-                <td data-sort-value="{{ job.activity_time | convert_time_unixtimestamp }}" class="table-field time-sent">
+                <td class="table-field width-16">{{ job.template_name }}</td>
+                <td data-sort-value="{{ job.activity_time | convert_time_unixtimestamp }}" class="table-field width-18">
                   {{ job.activity_time|format_datetime_table }}
                 </td>
-                <td class="table-field sender">{{ job.created_by.name }}</td>
-                <td class="table-field report">
+                <td class="table-field width-30 ">{{ job.created_by.name }}</td>
+                <td class="text-center table-field width-2">
                   {% if job.can_download %}
                     <a href="{{ job.download_link }}">
-                      <img src="{{ url_for('static', filename='img/material-icons/file_download.svg') }}" alt="">
+                      <img src="{{ url_for('static', filename='img/material-icons/file_download.svg') }}" alt="" class="padding-top-05">
                       <span class="usa-sr-only">Download report link</span>
                     </a>
                   {% else %}
                     <span>N/A</span>
                   {% endif %}
                 </td>
-                <td class="table-field delivered">{{ job.delivered_count if job.delivered_count is not none else '0' }}</td>
-                <td class="table-field failed">{{ job.failed_count if job.failed_count is not none else '0' }}</td>
+                <td class="table-field width-15">
+                  <span class="bg-base-lighter padding-x-05 padding-y-0 font-body-3xs text-bold radius-sm margin-right-05 display-inline-block text-nowrap">
+                    {{ job.delivered_count if job.delivered_count is not none else '0' }} delivered
+                  </span>
+                  <span class="bg-base-lighter padding-x-05 padding-y-0 font-body-3xs text-bold radius-sm display-inline-block text-nowrap">
+                    {{ job.failed_count if job.failed_count is not none else '0' }} failed
+                  </span>
+                </td>
               </tr>
             {% endfor %}
           {% else %}
@@ -122,7 +130,7 @@
         </tbody>
       </table>
       <div class="usa-sr-only usa-table__announcement-region" aria-live="polite"></div>
-      <p><b>Note: </b>Report data is only available for 7 days after your message has been sent</p>
+      <p class="font-body-sm"><b>Note: </b>Report data is only available for 7 days after your message has been sent</p>
     </div>
     {{show_pagination}}
     {% if current_user.has_permissions(ServicePermission.VIEW_ACTIVITY) %}
