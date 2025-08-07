@@ -490,6 +490,8 @@ td.table-empty-message {
 }
 
 .job-table {
+  width: 100%;
+  border-collapse: collapse;
   th {
     padding: 0.5rem 1rem;
   }

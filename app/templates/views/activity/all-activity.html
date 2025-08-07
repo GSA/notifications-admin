@@ -84,10 +84,7 @@
               <span>Report</span>
             </th>
             <th data-sortable scope="col" role="columnheader" class="table-field-heading">
-              <span>Delivered</span>
-            </th>
-            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
-              <span>Failed</span>
+              <span>Status</span>
             </th>
           </tr>
         </thead>
@@ -95,17 +92,17 @@
           {% if all_jobs_dict %}
             {% for job in all_jobs_dict %}
               <tr class="table-row">
-                <td class="table-field jobid width-10" role="rowheader">
+                <td class="table-field width-5" role="rowheader">
                   <a class="usa-link" href="{{ job.view_job_link }}">
                     {{ job.job_id[:8] if job.job_id else 'Manually entered number' }}
                   </a>
                 </td>
-                <td class="table-field template width-35 text-wrap">{{ job.template_name }}</td>
-                <td data-sort-value="{{ job.activity_time | convert_time_unixtimestamp }}" class="table-field time-sent width-15">
+                <td class="table-field width-16">{{ job.template_name }}</td>
+                <td data-sort-value="{{ job.activity_time | convert_time_unixtimestamp }}" class="table-field width-18">
                   {{ job.activity_time|format_datetime_table }}
                 </td>
-                <td class="table-field sender width-20 text-wrap">{{ job.created_by.name }}</td>
-                <td class="text-center table-field report width-5">
+                <td class="table-field width-30 ">{{ job.created_by.name }}</td>
+                <td class="text-center table-field width-2">
                   {% if job.can_download %}
                     <a href="{{ job.download_link }}">
                       <img src="{{ url_for('static', filename='img/material-icons/file_download.svg') }}" alt="" class="padding-top-05">
@@ -115,8 +112,14 @@
                     <span>N/A</span>
                   {% endif %}
                 </td>
-                <td class="text-center table-field delivered width-7">{{ job.delivered_count if job.delivered_count is not none else '0' }}</td>
-                <td class="text-center table-field failed width-8">{{ job.failed_count if job.failed_count is not none else '0' }}</td>
+                <td class="table-field width-15">
+                  <span class="bg-base-lighter padding-x-05 padding-y-0 font-body-3xs text-bold radius-sm margin-right-05 display-inline-block ">
+                    {{ job.delivered_count if job.delivered_count is not none else '0' }} delivered
+                  </span>
+                  <span class="bg-base-lighter padding-x-05 padding-y-0 font-body-3xs text-bold radius-sm display-inline-block">
+                    {{ job.failed_count if job.failed_count is not none else '0' }} failed
+                  </span>
+                </td>
               </tr>
             {% endfor %}
           {% else %}
