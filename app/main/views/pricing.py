@@ -1,5 +1,4 @@
-from flask import current_app, render_template
-from flask_login import current_user
+from flask import render_template
 
 from app.main import main
 from app.main.forms import SearchByNameForm

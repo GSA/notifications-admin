@@ -25,12 +25,12 @@
       <div class="dashboard-table job-status-table table-overflow-x-auto">
     {% endif %}
       {% if job.still_processing %}
-        <p class="bottom-gutter hint">
+        <p class="margin-bottom-3 hint">
           Report is {{ "{:.0f}%".format(job.percentage_complete * 0.99) }} complete…
         </p>
       {% elif notifications  and time_left != "Data no longer available" %}
-        <p class="bottom-gutter">
-          <a href="{{ download_link }}" download class="usa-link heading-small">Download this report (<abbr title="Comma separated values">CSV</abbr>)</a>
+        <p class="margin-bottom-3">
+          <a href="{{ download_link }}" download class="usa-link font-heading-md">Download this report (<abbr title="Comma separated values">CSV</abbr>)</a>
           &emsp;
           <span id="time-left">{{ time_left }}</span>
         </p>
