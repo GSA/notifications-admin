@@ -239,14 +239,19 @@ test('handleDropdownChange updates DOM for individual selection', () => {
       <h2 id="table-heading"></h2>
       <table id="activity-table">
         <caption id="caption"></caption>
+        <thead>
+          <tr>
+            <th data-column="sender">Sender</th>
+          </tr>
+        </thead>
         <tbody>
-          <tr><td class="sender-column">Test User</td></tr>
-          <tr><td class="sender-column">Other User</td></tr>
-          <tr><td class="sender-column">Test User</td></tr>
-          <tr><td class="sender-column">Test User</td></tr>
-          <tr><td class="sender-column">Other User</td></tr>
-          <tr><td class="sender-column">Test User</td></tr>
-          <tr><td class="sender-column">Test User</td></tr>
+          <tr><td data-sender="Test User">Test User</td></tr>
+          <tr><td data-sender="Other User">Other User</td></tr>
+          <tr><td data-sender="Test User">Test User</td></tr>
+          <tr><td data-sender="Test User">Test User</td></tr>
+          <tr><td data-sender="Other User">Other User</td></tr>
+          <tr><td data-sender="Test User">Test User</td></tr>
+          <tr><td data-sender="Test User">Test User</td></tr>
         </tbody>
       </table>
     </div>
@@ -269,15 +274,18 @@ test('handleDropdownChange updates DOM for individual selection', () => {
   expect(document.getElementById('table-heading').textContent).toBe('My activity');
   expect(document.getElementById('caption').textContent).toContain('Test User');
 
-  document.querySelectorAll('.sender-column').forEach(col => {
-    expect(col.style.display).toBe('none');
+  const senderHeader = document.querySelector('[data-column="sender"]');
+  expect(senderHeader.style.display).toBe('none');
+
+  document.querySelectorAll('[data-sender]').forEach(cell => {
+    expect(cell.style.display).toBe('none');
   });
 
   const rows = Array.from(document.querySelectorAll('#activity-table tbody tr'));
   const visibleRows = rows.filter(row => row.style.display !== 'none');
   expect(visibleRows.length).toBeLessThanOrEqual(5);
   visibleRows.forEach(row => {
-    const sender = row.querySelector('.sender-column').textContent.trim();
+    const sender = row.querySelector('[data-sender]').dataset.sender;
     expect(sender).toBe('Test User');
   });
 
@@ -295,10 +303,15 @@ test('handleDropdownChange shows empty message when user has no jobs', () => {
       <h2 id="table-heading"></h2>
       <table id="activity-table">
         <caption id="caption"></caption>
+        <thead>
+          <tr>
+            <th data-column="sender">Sender</th>
+          </tr>
+        </thead>
         <tbody>
-          <tr><td class="sender-column">Other User</td></tr>
-          <tr><td class="sender-column">Another User</td></tr>
-          <tr><td class="sender-column">Different User</td></tr>
+          <tr><td data-sender="Other User">Other User</td></tr>
+          <tr><td data-sender="Another User">Another User</td></tr>
+          <tr><td data-sender="Different User">Different User</td></tr>
           <tr class="table-row">
             <td class="table-empty-message" colspan="10">No batched job messages found (messages are kept for 7 days).</td>
           </tr>
@@ -324,8 +337,11 @@ test('handleDropdownChange shows empty message when user has no jobs', () => {
   expect(document.getElementById('table-heading').textContent).toBe('My activity');
   expect(document.getElementById('caption').textContent).toContain('Test User');
 
-  document.querySelectorAll('.sender-column').forEach(col => {
-    expect(col.style.display).toBe('none');
+  const senderHeader = document.querySelector('[data-column="sender"]');
+  expect(senderHeader.style.display).toBe('none');
+
+  document.querySelectorAll('[data-sender]').forEach(cell => {
+    expect(cell.style.display).toBe('none');
   });
 
   const emptyMessageRow = document.querySelector('.table-empty-message').closest('tr');
