@@ -557,7 +557,7 @@ def mock_update_service_raise_httperror_duplicate_name(mocker):
 
 
 @pytest.fixture(autouse=True)
-def disable_e2e_mode_for_unit_tests(monkeypatch, request):
+def _disable_e2e_mode_for_unit_tests(monkeypatch, request):
     """
     Disable E2E test mode for all unit tests to prevent unmocked API calls.
     E2E tests are run in a separate job and should not interfere with unit tests.
