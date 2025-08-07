@@ -73,6 +73,7 @@ def all_jobs_activity(service_id):
         next_page=next_page,
         prev_page=prev_page,
         pagination=pagination,
+        total_jobs=jobs.get("total", 0),
         **download_availability,
         download_link_one_day=url_for(
             ".download_notifications_csv",
