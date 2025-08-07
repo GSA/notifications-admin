@@ -25,7 +25,7 @@
       <div class="dashboard-table job-status-table table-overflow-x-auto">
     {% endif %}
       {% if job.still_processing %}
-        <p class="margin-bottom-3 hint">
+        <p class="margin-bottom-3 usa-hint">
           Report is {{ "{:.0f}%".format(job.percentage_complete * 0.99) }} complete…
         </p>
       {% elif notifications  and time_left != "Data no longer available" %}

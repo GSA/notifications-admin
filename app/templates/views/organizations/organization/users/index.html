@@ -38,7 +38,7 @@
               {%- if user.name -%}
                 <span class="font-heading-md">{{ user.name }}</span>&ensp;
               {%- endif -%}
-              <span class="hint">
+              <span class="usa-hint">
                 {%- if user.status == 'pending' -%}
                   {{ user.email_address }} (invited)
                 {%- elif user.status == 'cancelled' -%}

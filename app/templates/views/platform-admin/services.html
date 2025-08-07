@@ -26,7 +26,7 @@
           {% call field(border=False, colspan=3) %}
             <a href="{{ url_for('main.service_dashboard', service_id=service['id']) }}" class="file-list-filename-large usa-link">{{ service['name'] }}</a>
             {% if not service['active'] %}
-              <span class="font-heading-lg hint">&ensp;Archived</span>
+              <span class="font-heading-lg usa-hint">&ensp;Archived</span>
             {% endif %}
             {% if service['name'] == 'Test service' %}
               <a class="usa-link" href="{{ url_for('main.load_test') }}">Load Test</a>

@@ -22,7 +22,7 @@
     {% if inbound_number %}
       <p>
         <span class="margin-bottom-1"> {{ sms_sender.sms_sender }} </span>
-        <span class="hint"> This phone number receives replies and cannot be changed </span>
+        <span class="usa-hint"> This phone number receives replies and cannot be changed </span>
       </p>
     {% else %}
       {{ form.sms_sender(param_extensions={

@@ -57,7 +57,7 @@
           {% call field(status='default' if current_service.default_sms_sender == "None" else '') %}
           {{ current_service.default_sms_sender | nl2br if current_service.default_sms_sender else 'None'}}
             {% if current_service.count_sms_senders > 1 %}
-            <div class="hint">
+            <div class="usa-hint">
               {{ '…and %d more' | format(current_service.count_sms_senders - 1) }}
             </div>
             {% endif %}
@@ -138,7 +138,7 @@
           {% call field(status='default' if current_service.count_email_reply_to_addresses == 0 else '') %}
             {{ current_service.default_email_reply_to_address or 'Not set' }}
             {% if current_service.count_email_reply_to_addresses > 1 %}
-              <div class="hint">
+              <div class="usa-hint">
                 {{ '…and %d more' | format(current_service.count_email_reply_to_addresses - 1) }}
               </div>
             {% endif %}
@@ -253,7 +253,7 @@
                 <span class="table-field-status-default">Not set</span>
               {% endif %}
               {% if current_service.organization_type %}
-                <div class="hint">
+                <div class="usa-hint">
                   {{ current_service.organization_type_label }}
                 </div>
               {% endif %}
@@ -342,7 +342,7 @@
     {% endif %}
     {% if (not current_service.active) and current_user.platform_admin %}
       <p>
-        <div class="hint ">
+        <div class="usa-hint ">
           Service suspended
         </div>
 

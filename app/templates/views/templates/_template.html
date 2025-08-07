@@ -5,7 +5,7 @@
 </div>
 <div class="grid-col-12">
   {% if template._template.archived %}
-    <p class="hint">
+    <p class="usa-hint">
       This template was deleted {{ template._template.updated_at|format_datetime_relative }}.
     </p>
   {% elif not current_user.has_permissions(ServicePermission.SEND_MESSAGES, 'manage_api_keys', ServicePermission.MANAGE_TEMPLATES, ServicePermission.MANAGE_SERVICE) or not user_has_template_permission %}

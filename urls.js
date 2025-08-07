@@ -122,7 +122,6 @@ const routes = {
     { label: 'Get Started', path: '/using-notify/get-started' },
     { label: 'Trial Mode', path: '/using-notify/trial-mode' },
     { label: 'Pricing', path: '/using-notify/pricing' },
-    { label: 'Pricing Billing Details', path: '/pricing/billing-details' },
     { label: 'Delivery Status', path: '/using-notify/delivery-status' },
     { label: 'How To', path: '/using-notify/how-to' },
     { label: 'Best Practices', path: '/using-notify/best-practices' },
