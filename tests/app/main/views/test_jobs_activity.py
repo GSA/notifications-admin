@@ -77,8 +77,7 @@ def test_all_activity(
         "Started",
         "Sender",
         "Report",
-        "Delivered",
-        "Failed",
+        "Status",
     ]
 
     assert (
@@ -90,7 +89,7 @@ def test_all_activity(
 
     job_row = rows[0]
     cells = job_row.find_all("td")
-    assert len(cells) == 7, "Expected five columns in the job row"
+    assert len(cells) == 6, "Expected six columns in the job row"
 
     job_id_cell = cells[0].find("a").get_text(strip=True)
 
@@ -113,13 +112,10 @@ def test_all_activity(
     report_cell = cells[4].find("span").get_text(strip=True)
     assert report_cell == "N/A", f"Expected report 'N/A', but got '{report_cell}'"
 
-    delivered_cell = cells[5].get_text(strip=True)
+    status_cell = cells[5].get_text(strip=True)
     assert (
-        delivered_cell == "1"
-    ), f"Expected delivered count '1', but got '{delivered_cell}'"
-
-    failed_cell = cells[6].get_text(strip=True)
-    assert failed_cell == "5", f"Expected failed count '5', but got '{failed_cell}'"
+        "1 delivered" in status_cell and "5 failed" in status_cell
+    ), f"Expected status to contain '1 delivered' and '5 failed', but got '{status_cell}'"
 
 
 def test_all_activity_no_jobs(client_request, mocker):
