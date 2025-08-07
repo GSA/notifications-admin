@@ -52,8 +52,8 @@
     </ul>
   </nav>
   {% if pagination and total_jobs %}
-  <p class="text-center font-body-sm ">
-    Page {{ pagination.current }} of {{ pagination.last }} ({{ total_jobs }} total jobs)
+  <p class="text-center font-body-sm">
+    Page <span class="text-bold">{{ pagination.current }}</span> of <span class="text-bold">{{ pagination.last }}</span> (<span>{{ total_jobs }}</span> total jobs)
   </p>
   {% endif %}
   {% endif %}
@@ -130,7 +130,7 @@
         </tbody>
       </table>
       <div class="usa-sr-only usa-table__announcement-region" aria-live="polite"></div>
-      <p><b>Note: </b>Report data is only available for 7 days after your message has been sent</p>
+      <p class="font-body-sm"><b>Note: </b>Report data is only available for 7 days after your message has been sent</p>
     </div>
     {{show_pagination}}
     {% if current_user.has_permissions(ServicePermission.VIEW_ACTIVITY) %}
