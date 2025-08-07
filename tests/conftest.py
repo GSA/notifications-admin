@@ -556,6 +556,18 @@ def mock_update_service_raise_httperror_duplicate_name(mocker):
     return mocker.patch("app.service_api_client.update_service", side_effect=_update)
 
 
+@pytest.fixture(autouse=True)
+def _disable_e2e_mode_for_unit_tests(monkeypatch, request):
+    """
+    Disable E2E test mode for all unit tests to prevent unmocked API calls.
+    E2E tests are run in a separate job and should not interfere with unit tests.
+    """
+    # Only disable if unit tests are not being run
+    if "end_to_end" not in request.node.nodeid:
+        monkeypatch.delenv("NOTIFY_E2E_TEST_EMAIL", raising=False)
+        monkeypatch.delenv("NOTIFY_E2E_TEST_PASSWORD", raising=False)
+
+
 SERVICE_ONE_ID = "596364a0-858e-42c8-9062-a8fe822260eb"
 SERVICE_TWO_ID = "147ad62a-2951-4fa1-9ca0-093cd1a52c52"
 ORGANISATION_ID = "c011fa40-4cbe-4524-b415-dde2f421bd9c"

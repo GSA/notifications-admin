@@ -101,7 +101,8 @@ jobs:
         # above make e2e-test
 
         run: |
-          make run-flask-and-wait > admin-server.log 2>&1 &
+          make run-flask > admin-server.log 2>&1 &
+          make wait-for-flask
           tail -f admin-server.log &
           make e2e-test
 
