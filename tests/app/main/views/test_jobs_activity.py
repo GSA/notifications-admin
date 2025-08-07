@@ -214,7 +214,7 @@ def test_all_activity_pagination(client_request, mocker):
     ), f"Expected pagination controls {expected_pagination_texts}, but got {pagination_texts}"
 
 
-@pytest.mark.parametrize("filter_type,expected_limit_days", [
+@pytest.mark.parametrize(("filter_type", "expected_limit_days"), [
     ("24hours", 1),
     ("3days", 3),
     ("7days", 7),
