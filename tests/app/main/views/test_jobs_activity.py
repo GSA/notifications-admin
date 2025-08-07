@@ -113,9 +113,8 @@ def test_all_activity(
     assert report_cell == "N/A", f"Expected report 'N/A', but got '{report_cell}'"
 
     status_cell = cells[5].get_text(strip=True)
-    assert (
-        "1 delivered" in status_cell and "5 failed" in status_cell
-    ), f"Expected status to contain '1 delivered' and '5 failed', but got '{status_cell}'"
+    assert "1 delivered" in status_cell, f"Expected status to contain '1 delivered', but got '{status_cell}'"
+    assert "5 failed" in status_cell, f"Expected status to contain '5 failed', but got '{status_cell}'"
 
 
 def test_all_activity_no_jobs(client_request, mocker):
