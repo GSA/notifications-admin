@@ -44,6 +44,13 @@ watch-frontend:  ## Build frontend and watch for changes
 run-flask:  ## Run flask
 	poetry run newrelic-admin run-program flask run -p 6012 --host=0.0.0.0
 
+.PHONY: run-flask-and-wait
+run-flask-and-wait:
+	@make run-flask &
+	@echo "Waiting for Flask to start..."
+	@timeout 30 bash -c 'until curl -sf http://localhost:6012 > /dev/null 2>&1; do sleep 1; done'
+	@echo "Flask is ready!"
+
 .PHONY: run-flask-bare
 run-flask-bare:  ## Run flask without invoking poetry so we can override ENV variables in .env
 	flask run -p 6012 --host=0.0.0.0
