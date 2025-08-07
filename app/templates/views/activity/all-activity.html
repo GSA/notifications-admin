@@ -113,10 +113,10 @@
                   {% endif %}
                 </td>
                 <td class="table-field width-15">
-                  <span class="bg-base-lighter padding-x-05 padding-y-0 font-body-3xs text-bold radius-sm margin-right-05 display-inline-block ">
+                  <span class="bg-base-lighter padding-x-05 padding-y-0 font-body-3xs text-bold radius-sm margin-right-05 display-inline-block text-nowrap">
                     {{ job.delivered_count if job.delivered_count is not none else '0' }} delivered
                   </span>
-                  <span class="bg-base-lighter padding-x-05 padding-y-0 font-body-3xs text-bold radius-sm display-inline-block">
+                  <span class="bg-base-lighter padding-x-05 padding-y-0 font-body-3xs text-bold radius-sm display-inline-block text-nowrap">
                     {{ job.failed_count if job.failed_count is not none else '0' }} failed
                   </span>
                 </td>
