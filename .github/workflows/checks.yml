@@ -103,6 +103,7 @@ jobs:
 
         run: |
           make run-flask > admin-server.log 2>&1 &
+          timeout 30 bash -c 'until grep -q "Running on http://127.0.0.1:6012" admin-server.log 2>/dev/null; do sleep 0.5; done'
           tail -f admin-server.log &
           make e2e-test
 
