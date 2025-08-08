@@ -97,8 +97,8 @@ def test_history(
 
     assert page.select_one("h1").text == "Audit events"
 
-    headings = page.select("main h2.heading-small")
-    events = page.select("main ul.bottom-gutter")
+    headings = page.select("main h2.font-heading-md")
+    events = page.select("main ul.margin-bottom-3")
 
     assert len(headings) == len(events) == len(expected_headings_and_events)
 

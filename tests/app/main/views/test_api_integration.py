@@ -25,13 +25,10 @@ def test_should_show_api_page(
         service_id=SERVICE_ONE_ID,
     )
     assert page.h1.string.strip() == "API integration"
-    rows = page.find_all("details")
+    rows = page.find_all("div", {"class": "usa-accordion api-notifications-item"})
     assert len(rows) == 5
     for row in rows:
-        assert (
-            row.select("h3 .govuk-details__summary-text")[0].string.strip()
-            == "2021234567"
-        )
+        assert row.select("button span")[0].string.strip() == "2021234567"
 
 
 def test_should_show_api_page_with_lots_of_notifications(

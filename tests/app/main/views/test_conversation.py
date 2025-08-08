@@ -277,7 +277,7 @@ def test_conversation_reply_shows_link_to_add_templates_if_service_has_no_templa
         service_id=SERVICE_ONE_ID,
         notification_id=fake_uuid,
     )
-    page_text = page.find("p", class_="bottom-gutter").text
+    page_text = page.find("p", class_="margin-bottom-3").text
     link = page.find("a", text=re.compile("Add a new template"))["href"]
 
     assert (

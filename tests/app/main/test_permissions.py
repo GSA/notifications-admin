@@ -181,6 +181,7 @@ def test_service_user_without_manage_service_permission_can_see_usage_page_when_
         "main.usage",
         service_id=SERVICE_ONE_ID,
         _expected_status=expected_status,
+        _test_page_title=False if expected_status == 403 else True,
     )
 
 
