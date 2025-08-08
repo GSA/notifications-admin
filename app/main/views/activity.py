@@ -57,7 +57,7 @@ def all_jobs_activity(service_id):
 
     if limit_days:
         jobs = job_api_client.get_page_of_jobs(
-            service_id, page=page, limit_days=limit_days
+            service_id, page=page, limit_days=limit_days, use_processing_time=True
         )
     else:
         jobs = job_api_client.get_page_of_jobs(service_id, page=page)
@@ -109,8 +109,13 @@ def all_jobs_activity(service_id):
 def handle_pagination(jobs, service_id, page):
     if page is None:
         abort(404, "Invalid page argument ({}).".format(request.args.get("page")))
+
+    url_args = {}
+    if request.args.get("filter"):
+        url_args["filter"] = request.args.get("filter")
+
     prev_page = (
-        generate_previous_dict("main.all_jobs_activity", service_id, page)
+        generate_previous_dict("main.all_jobs_activity", service_id, page, url_args)
         if page > 1
         else None
     )
@@ -119,7 +124,7 @@ def handle_pagination(jobs, service_id, page):
     total_pages = (total_items + page_size - 1) // page_size
     has_next_link = jobs.get("links", {}).get("next") is not None
     next_page = (
-        generate_next_dict("main.all_jobs_activity", service_id, page)
+        generate_next_dict("main.all_jobs_activity", service_id, page, url_args)
         if has_next_link and total_items > 50 and page < total_pages
         else None
     )

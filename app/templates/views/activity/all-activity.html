@@ -30,7 +30,7 @@
           </li>
           {% else %}
             <li class="usa-pagination__item">
-              <a class="usa-pagination__button" href="?page={{ page }}">
+              <a class="usa-pagination__button" href="?page={{ page }}{% if request.args.get('filter') %}&filter={{ request.args.get('filter') }}{% endif %}">
                 {{ page }}
               </a>
             </li>
