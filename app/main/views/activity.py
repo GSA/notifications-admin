@@ -39,12 +39,7 @@ def get_download_availability(service_id):
     }
 
 
-@main.route("/activity/services/<uuid:service_id>")
-@user_has_permissions(ServicePermission.VIEW_ACTIVITY)
-def all_jobs_activity(service_id):
-    service_data_retention_days = 7
-    page = get_page_from_request()
-
+def get_filtered_jobs(service_id, page):
     filter_type = request.args.get("filter")
 
     limit_days = None
@@ -56,11 +51,20 @@ def all_jobs_activity(service_id):
         limit_days = 7
 
     if limit_days:
-        jobs = job_api_client.get_page_of_jobs(
+        return job_api_client.get_page_of_jobs(
             service_id, page=page, limit_days=limit_days, use_processing_time=True
         )
     else:
-        jobs = job_api_client.get_page_of_jobs(service_id, page=page)
+        return job_api_client.get_page_of_jobs(service_id, page=page)
+
+
+@main.route("/activity/services/<uuid:service_id>")
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY)
+def all_jobs_activity(service_id):
+    service_data_retention_days = 7
+    page = get_page_from_request()
+
+    jobs = get_filtered_jobs(service_id, page)
 
     all_jobs_dict = generate_job_dict(jobs)
     prev_page, next_page, pagination = handle_pagination(jobs, service_id, page)
