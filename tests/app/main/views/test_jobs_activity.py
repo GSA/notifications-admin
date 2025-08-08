@@ -114,8 +114,12 @@ def test_all_activity(
     assert report_cell == "N/A", f"Expected report 'N/A', but got '{report_cell}'"
 
     status_cell = cells[5].get_text(strip=True)
-    assert "1 delivered" in status_cell, f"Expected status to contain '1 delivered', but got '{status_cell}'"
-    assert "5 failed" in status_cell, f"Expected status to contain '5 failed', but got '{status_cell}'"
+    assert (
+        "1 delivered" in status_cell
+    ), f"Expected status to contain '1 delivered', but got '{status_cell}'"
+    assert (
+        "5 failed" in status_cell
+    ), f"Expected status to contain '5 failed', but got '{status_cell}'"
 
 
 def test_all_activity_no_jobs(client_request, mocker):
@@ -209,12 +213,15 @@ def test_all_activity_pagination(client_request, mocker):
     ), f"Expected pagination controls {expected_pagination_texts}, but got {pagination_texts}"
 
 
-@pytest.mark.parametrize(("filter_type", "expected_limit_days"), [
-    ("24hours", 1),
-    ("3days", 3),
-    ("7days", 7),
-    (None, None),
-])
+@pytest.mark.parametrize(
+    ("filter_type", "expected_limit_days"),
+    [
+        ("24hours", 1),
+        ("3days", 3),
+        ("7days", 7),
+        (None, None),
+    ],
+)
 def test_all_activity_filters(client_request, mocker, filter_type, expected_limit_days):
     current_page = get_page_from_request()
     mock_get_page_of_jobs = mocker.patch(
@@ -224,10 +231,7 @@ def test_all_activity_filters(client_request, mocker, filter_type, expected_limi
 
     kwargs = {"filter": filter_type} if filter_type else {}
     response = client_request.get_response(
-        "main.all_jobs_activity",
-        service_id=SERVICE_ONE_ID,
-        page=current_page,
-        **kwargs
+        "main.all_jobs_activity", service_id=SERVICE_ONE_ID, page=current_page, **kwargs
     )
 
     assert response.status_code == 200
@@ -235,7 +239,7 @@ def test_all_activity_filters(client_request, mocker, filter_type, expected_limi
 
     if expected_limit_days:
         mock_get_page_of_jobs.assert_any_call(
-            SERVICE_ONE_ID, page=current_page, limit_days=expected_limit_days
+            SERVICE_ONE_ID, page=current_page, limit_days=expected_limit_days, use_processing_time=True
         )
     else:
         mock_get_page_of_jobs.assert_any_call(SERVICE_ONE_ID, page=current_page)
