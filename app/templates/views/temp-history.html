@@ -12,7 +12,7 @@
   {{ page_header("Audit events") }}
 
   {% if show_navigation %}
-    <div class="bottom-gutter">
+    <div class="margin-bottom-3">
       {{ pill(
         [
           ('All', None, url_for('main.history', service_id=current_service.id), None),
@@ -26,10 +26,10 @@
   {% endif %}
 
   {% for day, events in days %}
-    <h2 class="heading-small top-gutter">
+    <h2 class="font-heading-md top-gutter">
       {{ events[0].time|format_date_human|title }}
     </h2>
-    <ul class="bottom-gutter">
+    <ul class="margin-bottom-3">
       {% for event in events %}
         <li class="history-list-item">
           <div class="grid-row">

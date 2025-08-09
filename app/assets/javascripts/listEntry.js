@@ -216,10 +216,10 @@
     }
   };
 
-  Modules.ListEntry = function () {
+  Modules['list-entry'] = function () {
 
     this.start = component => lists.push(new ListEntry($(component)));
 
   };
 
-})(window.GOVUK.Modules);
+})(window.NotifyModules);

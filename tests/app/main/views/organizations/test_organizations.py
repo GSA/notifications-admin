@@ -27,7 +27,7 @@ def test_organization_page_shows_all_organizations(
         "app.models.organization.AllOrganizations.client_method", return_value=orgs
     )
     client_request.login(platform_admin_user)
-    page = client_request.get(".organizations")
+    page = client_request.get("main.organizations")
 
     assert normalize_spaces(page.select_one("h1").text) == "Organizations"
 
@@ -59,7 +59,7 @@ def test_organization_page_shows_all_organizations(
         ),
     ]
 
-    archived = page.select_one(".table-field-status-default.heading-medium")
+    archived = page.select_one(".table-field-status-default.font-heading-lg")
     assert normalize_spaces(archived.text) == "- archived"
     assert normalize_spaces(archived.parent.text) == "Test 2 - archived 2 live services"
 

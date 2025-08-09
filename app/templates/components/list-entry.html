@@ -1,6 +1,3 @@
-{% from "components/components/fieldset/macro.njk" import govukFieldset %}
-{% from "components/components/error-message/macro.njk" import usaErrorMessage %}
-
 {% macro list_entry(
   field,
   item_name,
@@ -9,53 +6,43 @@
 ) %}
 
   <div class="usa-form-group">
-    {% if hint %}
-      {% set attributes = {"aria-describedby": field.name + '-hint'} %}
-    {% else %}
-      {% set attributes = {} %}
-    {% endif %}
-    {% call govukFieldset({
-        "legend": {
-          "text": field.label.text,
-          "isPageHeading": False,
-          "classes": "text-bold"
-        },
-        "attributes": attributes
-      })
-    %}
-    {% if hint %}
-      <div id="{{ field.name }}-hint" class="usa-hint">
-        {{ hint }}
-      </div>
-    {% endif %}
-    <div class="input-list" data-module="list-entry" data-list-item-name="{{ item_name }}" id="list-entry-{{ field.name }}">
-      {% for entry in field.entries %}
-        <div class="list-entry">
-          {% if not autocomplete %}
-            {% set autocomplete = "off" %}
-          {% else %}
-            {% set autocomplete = "" %}
-          {% endif %}
-          {% if entry.errors %}
-            {% set label_classes = "usa-label usa-label--error" %}
-          {% else %}
-            {% set label_classes = "usa-label" %}
-          {% endif %}
-          {% set field_name = field.name + "-" + loop.index|string %}
-          {{ entry(param_extensions={
-            "id": "input-" + field_name,
-            "name": field_name,
-            "label": {
-              "html": '<span class="usa-sr-only">' + item_name + ' number </span>' + loop.index|string + '.',
-              "classes": label_classes
-            },
-            "classes": "usa-input",
-            "value": field.data[loop.index0],
-            "autocomplete": autocomplete
-          }) }}
+    <fieldset class="usa-fieldset" {% if hint %}aria-describedby="{{ field.name }}-hint"{% endif %}>
+      <legend class="usa-legend text-bold">
+        {{ field.label.text }}
+      </legend>
+      {% if hint %}
+        <div id="{{ field.name }}-hint" class="usa-hint">
+          {{ hint }}
         </div>
-      {% endfor %}
-    </div>
-  {% endcall %}
+      {% endif %}
+      <div class="input-list" data-module="list-entry" data-list-item-name="{{ item_name }}" id="list-entry-{{ field.name }}">
+        {% for entry in field.entries %}
+          <div class="list-entry">
+            {% if not autocomplete %}
+              {% set autocomplete = "off" %}
+            {% else %}
+              {% set autocomplete = "" %}
+            {% endif %}
+            {% if entry.errors %}
+              {% set label_classes = "usa-label usa-label--error" %}
+            {% else %}
+              {% set label_classes = "usa-label" %}
+            {% endif %}
+            {% set field_name = field.name + "-" + loop.index|string %}
+            {{ entry(param_extensions={
+              "id": "input-" + field_name,
+              "name": field_name,
+              "label": {
+                "html": '<span class="usa-sr-only">' + item_name + ' number </span>' + loop.index|string + '.',
+                "classes": label_classes
+              },
+              "classes": "usa-input",
+              "value": field.data[loop.index0],
+              "autocomplete": autocomplete
+            }) }}
+          </div>
+        {% endfor %}
+      </div>
+    </fieldset>
 
 {% endmacro %}
