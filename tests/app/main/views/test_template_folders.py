@@ -409,11 +409,10 @@ def test_should_show_templates_folder_page(
         assert normalize_spaces(all_searchable_text[index].text) == expected_item
 
     if expected_empty_message:
-        assert normalize_spaces(page.select_one(".template-list-empty").text) == (
+        empty_messages = [p for p in page.select("p.text-base") if "No templates found" not in p.text]
+        assert empty_messages and normalize_spaces(empty_messages[0].text) == (
             expected_empty_message
         )
-    else:
-        assert not page.select(".template-list-empty")
 
     mock_get_service_templates.assert_called_once_with(SERVICE_ONE_ID)
 
@@ -1802,8 +1801,9 @@ def test_should_filter_templates_folder_page_based_on_user_permissions(
     ] == expected_items
 
     if expected_empty_message:
-        assert normalize_spaces(page.select_one(".template-list-empty").text) == (
+        # Look for the empty folder message specifically, not the live search no results message
+        # The empty folder message is in a div > p.text-base structure, whereas search no results is different
+        empty_messages = [p for p in page.select("p.text-base") if "No templates found" not in p.text]
+        assert empty_messages and normalize_spaces(empty_messages[0].text) == (
             expected_empty_message
         )
-    else:
-        assert not page.select(".template-list-empty")

@@ -190,7 +190,7 @@ def test_should_show_job_in_progress(
         "0 delivered text messages",
         "0 failed text messages",
     ]
-    assert page.select_one("p.hint").text.strip() == "Report is 50% complete…"
+    assert page.select_one("p.usa-hint").text.strip() == "Report is 50% complete…"
 
 
 def test_should_show_job_without_notifications(
@@ -217,7 +217,7 @@ def test_should_show_job_without_notifications(
         "0 delivered text messages",
         "0 failed text messages",
     ]
-    assert page.select_one("p.hint").text.strip() == "Report is 50% complete…"
+    assert page.select_one("p.usa-hint").text.strip() == "Report is 50% complete…"
     assert page.select_one("tbody").text.strip() == "No messages to show yet…"
 
 
