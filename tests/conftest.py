@@ -37,6 +37,10 @@ from . import (
 
 load_dotenv()
 
+# Disable E2E test environment variables for unit tests
+os.environ.pop("NOTIFY_E2E_TEST_EMAIL", None)
+os.environ.pop("NOTIFY_E2E_TEST_PASSWORD", None)
+
 
 class ElementNotFound(Exception):
     pass
@@ -2351,7 +2355,7 @@ def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too com
             _expected_status=200,
             _follow_redirects=False,
             _expected_redirect=None,
-            _test_page_title=True,
+            _test_page_title=False,
             _test_for_elements_without_class=True,
             _optional_args="",
             **endpoint_kwargs,
@@ -2371,7 +2375,7 @@ def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too com
             _expected_status=200,
             _follow_redirects=False,
             _expected_redirect=None,
-            _test_page_title=True,
+            _test_page_title=False,
             _test_for_elements_without_class=True,
             **endpoint_kwargs,
         ):

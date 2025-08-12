@@ -1,10 +1,8 @@
-# import datetime
 import datetime
 import os
 import re
 import uuid
 
-# import pytest
 from playwright.sync_api import expect
 
 from tests.end_to_end.conftest import check_axe_report

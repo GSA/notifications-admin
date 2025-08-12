@@ -38,7 +38,6 @@ EXCLUDED_ENDPOINTS = tuple(
             "begin_tour",
             "benchmark_performance",
             "best_practices",
-            "billing_details",
             "callbacks",
             "cancel_invited_org_user",
             "cancel_invited_user",
