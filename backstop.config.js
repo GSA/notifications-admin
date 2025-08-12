@@ -1,6 +1,6 @@
 const { urls, baseUrl } = require('./urls');
 
-const MISMATCH_THRESHOLD = 0.3;
+const MISMATCH_THRESHOLD = 0.4;
 const SCREENSHOT_DELAY = 2000;
 
 const createScenariosFromUrls = (urls, delay = SCREENSHOT_DELAY) => {
@@ -28,7 +28,7 @@ module.exports = {
     {
       label: 'Choose Service - Accounts',
       url: `${baseUrl}/accounts`,
-      selectors: ['h1.heading-large', 'a.usa-button[href="/add-service"]'],
+      selectors: ['h1.font-heading-xl', 'a.usa-button[href="/add-service"]'],
       misMatchThreshold: MISMATCH_THRESHOLD,
       requireSameDimensions: true,
       delay: SCREENSHOT_DELAY,

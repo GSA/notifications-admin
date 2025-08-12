@@ -30,10 +30,10 @@ beforeAll(() => {
 
   $.ajax.mockImplementation(() => jqueryAJAXReturnObj);
 
-  // RollupJS assigns our bundled module code, including morphdom, to window.GOVUK.
+  // RollupJS assigns our bundled module code, including morphdom, to window.NotifyModules.
   // morphdom is assigned to its vendor property so we need to copy that here for the updateContent
   // code to pick it up.
-  window.GOVUK.vendor = {
+  window.NotifyModules.vendor = {
     morphdom: require('morphdom')
   };
   require('../../app/assets/javascripts/updateContent.js');
@@ -68,7 +68,7 @@ describe('Update content', () => {
       beforeEach(() => {
 
         // start the module
-        window.GOVUK.modules.start();
+        window.NotifyModules.start();
 
       });
 
@@ -115,7 +115,7 @@ describe('Update content', () => {
         [24000, 10000],
       ]).test('It calculates a delay of %dms if the API responds in %dms', (waitTime, responseTime) => {
           expect(
-            window.GOVUK.Modules.UpdateContent.calculateBackoff(responseTime)
+            window.NotifyModules['update-content'].calculateBackoff(responseTime)
           ).toBe(
             waitTime
           );
@@ -138,7 +138,7 @@ describe('Update content', () => {
         document.querySelector('[data-module=update-content]').setAttribute('data-form', 'service');
 
         // start the module
-        window.GOVUK.modules.start();
+        window.NotifyModules.start();
 
       });
 
@@ -225,7 +225,7 @@ describe('Update content', () => {
       responseObj[updateKey] = getPartial(partialData);
 
       // start the module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
 
       expect(document.querySelector('.ajax-block-container').parentNode.hasAttribute('data-resource')).toBe(false);
 
@@ -237,7 +237,7 @@ describe('Update content', () => {
       responseObj[updateKey] = getPartial(partialData);
 
       // start the module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
       jest.advanceTimersByTime(2000);
 
       expect($.ajax.mock.calls[0][0]).toEqual(resourceURL);
@@ -250,7 +250,7 @@ describe('Update content', () => {
       responseObj[updateKey] = getPartial(partialData);
 
       // start the module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
       jest.advanceTimersByTime(2000);
 
       // check a sample DOM node is unchanged
@@ -266,7 +266,7 @@ describe('Update content', () => {
       responseObj[updateKey] = getPartial(partialData);
 
       // start the module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
       jest.advanceTimersByTime(2000);
 
       // check the right DOM node is updated
@@ -349,7 +349,7 @@ describe('Update content', () => {
       responseObj[updateKey] = getPartial(partialData);
 
       // start the module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
       jest.advanceTimersByTime(2000);
 
       // check it has the same number of items
@@ -376,7 +376,7 @@ describe('Update content', () => {
       responseObj[updateKey] = getPartial(partialData);
 
       // start the module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
       jest.advanceTimersByTime(2000);
 
       // check the node has been added
@@ -408,7 +408,7 @@ describe('Update content', () => {
       responseObj[updateKey] = getPartial(partialData);
 
       // start the module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
       jest.advanceTimersByTime(2000);
 
       // check the node has been removed
@@ -442,7 +442,7 @@ describe('Update content', () => {
       responseObj[updateKey] = getPartial(partialData);
 
       // start the module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
       jest.advanceTimersByTime(2000);
 
       // check the class is still there
@@ -480,7 +480,7 @@ describe('Update content', () => {
       responseObj[updateKey] = getPartial(partialData);
 
       // start the module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
       jest.advanceTimersByTime(2000);
 
       // re-select in case nodes in partialsInPage have changed
