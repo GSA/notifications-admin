@@ -92,7 +92,6 @@ class HeaderNavigation(Navigation):
         },
         "pricing": {
             "how_to_pay",
-            "billing_details",
         },
         "documentation": {
             "documentation",
