@@ -4,8 +4,10 @@ from datetime import datetime
 import pytz
 from flask import (
     Response,
+    current_app,
     flash,
     jsonify,
+    redirect,
     render_template,
     request,
     stream_with_context,
@@ -147,20 +149,6 @@ PERIOD_TO_S3_FILENAME = {
 }
 
 
-def generate_empty_report_csv():
-    headers = [
-        "Phone Number",
-        "Template",
-        "Sent by",
-        "Batch File",
-        "Carrier Response",
-        "Status",
-        "Time",
-        "Carrier",
-    ]
-    yield ",".join(headers) + "\n"
-
-
 @main.route("/services/<uuid:service_id>/download-notifications.csv")
 @user_has_permissions(ServicePermission.VIEW_ACTIVITY)
 def download_notifications_csv(service_id):
@@ -178,6 +166,9 @@ def download_notifications_csv(service_id):
     if not job_id and number_of_days in PERIOD_TO_S3_FILENAME:
         try:
             s3_report_id = PERIOD_TO_S3_FILENAME[number_of_days]
+            current_app.logger.info(
+                f"User is attempting to download {s3_report_id} for service {service_id}"
+            )
             s3_file_content = s3download(service_id, s3_report_id)
             return Response(
                 stream_with_context(convert_s3_csv_timestamps(s3_file_content)),
@@ -191,16 +182,21 @@ def download_notifications_csv(service_id):
                 },
             )
         except S3ObjectNotFound:
-            return Response(
-                stream_with_context(generate_empty_report_csv()),
-                mimetype="text/csv",
-                headers={
-                    "Content-Disposition": 'inline; filename="{} - {} - {} report.csv"'.format(
-                        file_time,
-                        filter_args["message_type"][0],
-                        current_service.name,
-                    )
-                },
+            # Edge case: File was deleted between page load and download attempt
+            current_app.logger.warning(
+                f"File {s3_report_id} was expected but not found for service {service_id}. "
+                "It may have been deleted after page load."
+            )
+            flash(
+                "The report is no longer available. Please refresh the page.", "default"
+            )
+            return redirect(
+                url_for(
+                    "main.view_notifications",
+                    service_id=service_id,
+                    message_type=filter_args["message_type"][0],
+                    status="sending,delivered,failed",
+                )
             )
     return Response(
         stream_with_context(

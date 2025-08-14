@@ -50,6 +50,19 @@ def get_s3_object(
     return obj
 
 
+def check_s3_file_exists(obj):
+    try:
+        obj.load()
+        return True
+    except botocore.exceptions.ClientError as client_error:
+        if client_error.response["Error"]["Code"] in ["404", "NoSuchKey"]:
+            return False
+        current_app.logger.error(
+            f"Error checking S3 file {obj.bucket_name}/{obj.key}: {client_error}"
+        )
+        return False
+
+
 def get_s3_metadata(obj):
     try:
         return obj.get()["Metadata"]
@@ -73,9 +86,9 @@ def set_s3_metadata(obj, **kwargs):
 
 
 def get_s3_contents(obj):
-    contents = ""
     try:
-        contents = obj.get()["Body"].read().decode("utf-8")
+        response = obj.get()
+        return response["Body"].read().decode("utf-8")
     except botocore.exceptions.ClientError as client_error:
         current_app.logger.error(
             f"Unable to download s3 file {obj.bucket_name}/{obj.key}"
@@ -83,4 +96,3 @@ def get_s3_contents(obj):
         if client_error.response["Error"]["Code"] == "NoSuchKey":
             raise S3ObjectNotFound(client_error.response, client_error.operation_name)
         raise client_error
-    return contents

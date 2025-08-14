@@ -34,7 +34,10 @@ def test_should_200_for_tour_start(
         "service one: ((one)) ((two)) ((three))"
     )
 
-    assert page.select("a.usa-button")[0]["href"] == url_for(
+    # Find the tour step button specifically, not just any usa-button
+    tour_buttons = [btn for btn in page.select("a.usa-button") if "tour" in btn.get("href", "")]
+    assert len(tour_buttons) > 0, "No tour button found"
+    assert tour_buttons[0]["href"] == url_for(
         ".tour_step", service_id=SERVICE_ONE_ID, template_id=fake_uuid, step_index=1
     )
 

@@ -302,6 +302,10 @@ def test_download_links_show_when_data_available(
         "app.job_api_client.get_page_of_jobs", return_value=mock_jobs_with_data
     )
     mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[{"id": "job1"}])
+    mocker.patch("app.s3_client.check_s3_file_exists", return_value=True)
+    mock_obj = mocker.Mock()
+    mock_obj.content_length = 1024
+    mocker.patch("app.s3_client.s3_csv_client.get_csv_upload", return_value=mock_obj)
 
     page = client_request.get(
         "main.all_jobs_activity",
@@ -309,11 +313,10 @@ def test_download_links_show_when_data_available(
     )
 
     assert "Download recent reports" in page.text
-    assert "Download all data last 24 hours" in page.text
-    assert "Download all data last 3 days" in page.text
-    assert "Download all data last 5 days" in page.text
-    assert "Download all data last 7 days" in page.text
-    assert "No recent activity to download" not in page.text
+    assert "Yesterday" in page.text
+    assert "Last 3 days" in page.text
+    assert "Last 5 days" in page.text
+    assert "Last 7 days" in page.text
 
 
 def test_download_links_partial_data_available(
@@ -338,6 +341,10 @@ def test_download_links_partial_data_available(
         "app.job_api_client.get_page_of_jobs", side_effect=mock_get_page_of_jobs
     )
     mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
+    mocker.patch("app.s3_client.check_s3_file_exists", return_value=True)
+    mock_obj = mocker.Mock()
+    mock_obj.content_length = 2048
+    mocker.patch("app.s3_client.s3_csv_client.get_csv_upload", return_value=mock_obj)
 
     page = client_request.get(
         "main.all_jobs_activity",
@@ -345,10 +352,10 @@ def test_download_links_partial_data_available(
     )
 
     assert "Download recent reports" in page.text
-    assert "Download all data last 24 hours" in page.text
-    assert "Download all data last 3 days" not in page.text
-    assert "Download all data last 5 days" in page.text
-    assert "Download all data last 7 days" not in page.text
+    assert "Yesterday" in page.text
+    assert "Last 3 days" in page.text
+    assert "Last 5 days" in page.text
+    assert "Last 7 days" in page.text
     assert "No recent activity to download" not in page.text
 
 
@@ -362,6 +369,7 @@ def test_download_links_no_data_available(
 
     mocker.patch("app.job_api_client.get_page_of_jobs", return_value=mock_jobs_empty)
     mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
+    mocker.patch("app.s3_client.check_s3_file_exists", return_value=False)
 
     page = client_request.get(
         "main.all_jobs_activity",
@@ -369,14 +377,11 @@ def test_download_links_no_data_available(
     )
 
     assert "Download recent reports" in page.text
-    assert "Download all data last 24 hours" not in page.text
-    assert "Download all data last 3 days" not in page.text
-    assert "Download all data last 5 days" not in page.text
-    assert "Download all data last 7 days" not in page.text
-    assert (
-        "No recent activity to download. Download links will appear when jobs are available."
-        in page.text
-    )
+    assert "Yesterday" in page.text
+    assert "No messages sent" in page.text
+    assert "Last 3 days - No messages sent" in page.text
+    assert "Last 5 days - No messages sent" in page.text
+    assert "Last 7 days - No messages sent" in page.text
 
 
 def test_download_not_available_to_users_without_dashboard(

@@ -1,10 +1,6 @@
 from unittest.mock import patch
 
-from app.main.views.notifications import (
-    PERIOD_TO_S3_FILENAME,
-    generate_empty_report_csv,
-)
-from notifications_utils.s3 import S3ObjectNotFound
+from app.main.views.notifications import PERIOD_TO_S3_FILENAME
 from tests.conftest import SERVICE_ONE_ID
 
 
@@ -13,12 +9,6 @@ def test_period_to_s3_filename_mapping():
     assert PERIOD_TO_S3_FILENAME["three_day"] == "3-day-report"
     assert PERIOD_TO_S3_FILENAME["five_day"] == "5-day-report"
     assert PERIOD_TO_S3_FILENAME["seven_day"] == "7-day-report"
-
-
-def test_empty_csv_has_correct_headers():
-    result = list(generate_empty_report_csv())
-    assert len(result) == 1
-    assert "Phone Number,Template,Sent by,Batch File" in result[0]
 
 
 @patch("app.main.views.notifications.s3download")
@@ -71,27 +61,30 @@ def test_general_reports_use_s3(
 
 
 @patch("app.main.views.notifications.s3download")
-def test_missing_s3_file_returns_headers_only(
+def test_missing_s3_file_redirects_gracefully(
     mock_s3download,
     client_request,
     service_one,
     mock_get_service_data_retention,
 ):
+    from notifications_utils.s3 import S3ObjectNotFound
+
     mock_s3download.side_effect = S3ObjectNotFound(
         {"Error": {"Code": "NoSuchKey"}}, "GetObject"
     )
 
-    response = client_request.get_response(
+    # Verify that when an S3 file is missing, we redirect gracefully
+    # instead of showing a 500 error
+    client_request.get(
         "main.download_notifications_csv",
         service_id=SERVICE_ONE_ID,
         number_of_days="five_day",
         message_type="sms",
-        _test_page_title=False,
+        _expected_redirect=f"/services/{SERVICE_ONE_ID}/notifications/sms?status=sending,delivered,failed",
     )
 
-    assert response.status_code == 200
-    assert b"Phone Number,Template,Sent by" in response.data
-    assert response.data.count(b"\n") == 1
+    # The redirect happens, which means no 500 error occurred
+    mock_s3download.assert_called_once_with(SERVICE_ONE_ID, "5-day-report")
 
 
 @patch("app.main.views.notifications.convert_s3_csv_timestamps")

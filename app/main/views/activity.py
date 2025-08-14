@@ -13,26 +13,37 @@ from app.utils.pagination import (
 from app.utils.user import user_has_permissions
 
 
-def get_download_availability(service_id):
-    jobs_1_day = job_api_client.get_page_of_jobs(service_id, page=1, limit_days=1)
-    jobs_3_days = job_api_client.get_page_of_jobs(service_id, page=1, limit_days=3)
-    jobs_5_days = job_api_client.get_page_of_jobs(service_id, page=1, limit_days=5)
-    jobs_7_days = job_api_client.get_immediate_jobs(service_id)
+def get_report_info(service_id, report_name):
+    from app.s3_client import check_s3_file_exists
+    from app.s3_client.s3_csv_client import get_csv_upload
 
-    has_1_day_data = len(generate_job_dict(jobs_1_day)) > 0
-    has_3_day_data = len(generate_job_dict(jobs_3_days)) > 0
-    has_5_day_data = len(generate_job_dict(jobs_5_days)) > 0
-    has_7_day_data = len(jobs_7_days) > 0
+    try:
+        obj = get_csv_upload(service_id, report_name)
+        if check_s3_file_exists(obj):
+            size_bytes = obj.content_length
+            if size_bytes < 1024:
+                size_str = f"{size_bytes} B"
+            elif size_bytes < 1024 * 1024:
+                size_str = f"{size_bytes / 1024:.1f} KB"
+            else:
+                size_str = f"{size_bytes / (1024 * 1024):.1f} MB"
+            return {"available": True, "size": size_str}
+    except Exception:
+        pass
+    return {"available": False, "size": None}
+
+
+def get_download_availability(service_id):
+    report_1_day = get_report_info(service_id, "1-day-report")
+    report_3_day = get_report_info(service_id, "3-day-report")
+    report_5_day = get_report_info(service_id, "5-day-report")
+    report_7_day = get_report_info(service_id, "7-day-report")
 
     return {
-        "has_1_day_data": has_1_day_data,
-        "has_3_day_data": has_3_day_data,
-        "has_5_day_data": has_5_day_data,
-        "has_7_day_data": has_7_day_data,
-        "has_any_download_data": has_1_day_data
-        or has_3_day_data
-        or has_5_day_data
-        or has_7_day_data,
+        "report_1_day": report_1_day,
+        "report_3_day": report_3_day,
+        "report_5_day": report_5_day,
+        "report_7_day": report_7_day,
     }
 
 
