@@ -38,7 +38,7 @@ def convert_s3_csv_timestamps(csv_content):
         if len(row) > time_column_index and row[time_column_index]:
             try:
                 row[time_column_index] = convert_report_date_to_preferred_timezone(row[time_column_index])
-            except Exception:
+            except Exception:  # nosec B110
                 pass
 
         writer.writerow(row)
