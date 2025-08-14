@@ -5,6 +5,8 @@ from boto3 import Session
 from botocore.config import Config
 from flask import current_app
 
+from notifications_utils.s3 import S3ObjectNotFound
+
 AWS_CLIENT_CONFIG = Config(
     # This config is required to enable S3 to connect to FIPS-enabled
     # endpoints.  See https://aws.amazon.com/compliance/fips/ for more
@@ -55,6 +57,8 @@ def get_s3_metadata(obj):
         current_app.logger.error(
             f"Unable to download s3 file {obj.bucket_name}/{obj.key}"
         )
+        if client_error.response["Error"]["Code"] == "NoSuchKey":
+            raise S3ObjectNotFound(client_error.response, client_error.operation_name)
         raise client_error
 
 
@@ -76,5 +80,7 @@ def get_s3_contents(obj):
         current_app.logger.error(
             f"Unable to download s3 file {obj.bucket_name}/{obj.key}"
         )
+        if client_error.response["Error"]["Code"] == "NoSuchKey":
+            raise S3ObjectNotFound(client_error.response, client_error.operation_name)
         raise client_error
     return contents

@@ -1,11 +1,12 @@
 import csv
 import io
+
 from app.utils.csv import convert_report_date_to_preferred_timezone
 
 
 def convert_s3_csv_timestamps(csv_content):
     if isinstance(csv_content, bytes):
-        csv_content = csv_content.decode('utf-8')
+        csv_content = csv_content.decode("utf-8")
 
     reader = csv.reader(io.StringIO(csv_content))
 
@@ -13,7 +14,7 @@ def convert_s3_csv_timestamps(csv_content):
     try:
         header = next(reader)
         for i, col in enumerate(header):
-            if col.strip().lower() == 'time':
+            if col.strip().lower() == "time":
                 time_column_index = i
                 break
 
@@ -37,7 +38,9 @@ def convert_s3_csv_timestamps(csv_content):
     for row in reader:
         if len(row) > time_column_index and row[time_column_index]:
             try:
-                row[time_column_index] = convert_report_date_to_preferred_timezone(row[time_column_index])
+                row[time_column_index] = convert_report_date_to_preferred_timezone(
+                    row[time_column_index]
+                )
             except Exception:  # nosec B110
                 pass
 

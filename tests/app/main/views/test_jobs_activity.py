@@ -239,7 +239,10 @@ def test_all_activity_filters(client_request, mocker, filter_type, expected_limi
 
     if expected_limit_days:
         mock_get_page_of_jobs.assert_any_call(
-            SERVICE_ONE_ID, page=current_page, limit_days=expected_limit_days, use_processing_time=True
+            SERVICE_ONE_ID,
+            page=current_page,
+            limit_days=expected_limit_days,
+            use_processing_time=True,
         )
     else:
         mock_get_page_of_jobs.assert_any_call(SERVICE_ONE_ID, page=current_page)

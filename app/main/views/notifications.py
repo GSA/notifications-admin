@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-import pytz
 
+import pytz
 from flask import (
     Response,
-    current_app,
     flash,
     jsonify,
     render_template,
@@ -17,7 +16,6 @@ from app import current_service, job_api_client, notification_api_client
 from app.enums import ServicePermission
 from app.main import main
 from app.notify_client.api_key_api_client import KEY_TYPE_TEST
-from app.utils.s3_csv import convert_s3_csv_timestamps
 from app.s3_client.s3_csv_client import s3download
 from app.utils import (
     DELIVERED_STATUSES,
@@ -27,6 +25,7 @@ from app.utils import (
     set_status_filters,
 )
 from app.utils.csv import generate_notifications_csv, get_user_preferred_timezone
+from app.utils.s3_csv import convert_s3_csv_timestamps
 from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
 from notifications_utils.s3 import S3ObjectNotFound
