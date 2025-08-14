@@ -29,7 +29,7 @@ def get_report_info(service_id, report_name):
                 size_str = f"{size_bytes / (1024 * 1024):.1f} MB"
             return {"available": True, "size": size_str}
     except Exception:
-        pass
+        return {"available": False, "size": None}
     return {"available": False, "size": None}
 
 

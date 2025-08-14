@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
-import pytz
 from flask import (
     Response,
     current_app,
@@ -158,7 +158,7 @@ def download_notifications_csv(service_id):
     service_data_retention_days = current_service.get_days_of_retention(
         filter_args.get("message_type")[0], number_of_days
     )
-    user_tz = pytz.timezone(get_user_preferred_timezone())
+    user_tz = ZoneInfo(get_user_preferred_timezone())
     file_time = datetime.now(user_tz).strftime("%Y-%m-%d %I:%M:%S %p")
     file_time = f"{file_time} {get_user_preferred_timezone()}"
 
