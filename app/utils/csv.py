@@ -191,9 +191,9 @@ def convert_report_date_to_preferred_timezone(db_date_str_in_utc):
     utc_date_obj = utc_date_obj.astimezone(pytz.utc)
     preferred_timezone = pytz.timezone(get_user_preferred_timezone())
     preferred_date_obj = utc_date_obj.astimezone(preferred_timezone)
-    preferred_tz_created_at = preferred_date_obj.strftime("%Y-%m-%d %I:%M:%S %p")
+    preferred_tz_created_at = preferred_date_obj.strftime("%Y-%m-%d %H:%M:%S")
 
-    return f"{preferred_tz_created_at} {get_user_preferred_timezone()}"
+    return preferred_tz_created_at
 
 
 def get_user_preferred_timezone():

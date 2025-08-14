@@ -17,7 +17,8 @@ def test_convert_s3_csv_timestamps_with_real_format():
     ) as mock_convert:
 
         def mock_conversion(timestamp):
-            return f"{timestamp} US/Eastern"
+            # Just return the timestamp as-is for testing
+            return timestamp
 
         mock_convert.side_effect = mock_conversion
 
@@ -31,8 +32,8 @@ def test_convert_s3_csv_timestamps_with_real_format():
         assert mock_convert.call_count == 2
         mock_convert.assert_any_call("2024-03-15 17:19:00")
         mock_convert.assert_any_call("2024-03-15 20:30:00")
-        assert "2024-03-15 17:19:00 US/Eastern" in full_result
-        assert "2024-03-15 20:30:00 US/Eastern" in full_result
+        assert "2024-03-15 17:19:00" in full_result
+        assert "2024-03-15 20:30:00" in full_result
 
 
 def test_convert_s3_csv_handles_empty_csv():
@@ -56,7 +57,7 @@ def test_convert_s3_csv_handles_bytes():
     with patch(
         "app.utils.s3_csv.convert_report_date_to_preferred_timezone"
     ) as mock_convert:
-        mock_convert.return_value = "2024-01-15 03:30:00 PM US/Eastern"
+        mock_convert.return_value = "2024-01-15 15:30:00"
 
         result = list(convert_s3_csv_timestamps(csv_bytes))
         assert len(result) == 2
@@ -73,14 +74,14 @@ def test_convert_s3_csv_handles_malformed_dates():
     ) as mock_convert:
         mock_convert.side_effect = [
             Exception("Invalid date"),
-            "2024-01-15 04:45:00 PM US/Eastern",
+            "2024-01-15 16:45:00",
         ]
 
         result = list(convert_s3_csv_timestamps(csv_content))
         full_result = "".join(result)
 
         assert "INVALID_DATE" in full_result
-        assert "2024-01-15 04:45:00 PM US/Eastern" in full_result
+        assert "2024-01-15 16:45:00" in full_result
 
 
 def test_finds_time_column_dynamically():
@@ -109,5 +110,7 @@ def test_actual_timezone_conversion():
 
         result = convert_report_date_to_preferred_timezone("2024-01-15 20:30:00")
 
-        assert "03:30:00 PM" in result or "15:30:00 PM" in result
-        assert "US/Eastern" in result
+        # Should be in 24-hour format without AM/PM or timezone
+        assert "15:30:00" in result
+        assert "PM" not in result
+        assert "US/Eastern" not in result
