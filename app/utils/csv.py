@@ -199,6 +199,13 @@ def convert_report_date_to_preferred_timezone(db_date_str_in_utc):
 def get_user_preferred_timezone():
     if current_user and hasattr(current_user, "preferred_timezone"):
         tz = current_user.preferred_timezone
-        if tz in pytz.all_timezones:
+        # Use a set of common US timezones for quick validation instead of checking all timezones
+        valid_timezones = {
+            "US/Eastern", "US/Central", "US/Mountain", "US/Pacific",
+            "US/Alaska", "US/Hawaii", "America/New_York", "America/Chicago",
+            "America/Denver", "America/Los_Angeles", "America/Anchorage",
+            "America/Honolulu", "America/Phoenix", "America/Puerto_Rico"
+        }
+        if tz in valid_timezones:
             return tz
     return "US/Eastern"

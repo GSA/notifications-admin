@@ -158,9 +158,10 @@ def download_notifications_csv(service_id):
     service_data_retention_days = current_service.get_days_of_retention(
         filter_args.get("message_type")[0], number_of_days
     )
-    user_tz = ZoneInfo(get_user_preferred_timezone())
+    user_tz_name = get_user_preferred_timezone()
+    user_tz = ZoneInfo(user_tz_name)
     file_time = datetime.now(user_tz).strftime("%Y-%m-%d %I:%M:%S %p")
-    file_time = f"{file_time} {get_user_preferred_timezone()}"
+    file_time = f"{file_time} {user_tz_name}"
 
     job_id = request.args.get("job_id")
     if not job_id and number_of_days in PERIOD_TO_S3_FILENAME:
