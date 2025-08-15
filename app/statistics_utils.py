@@ -1,10 +1,9 @@
 from datetime import datetime
 from functools import reduce
 
-import pytz
 from dateutil import parser
 
-from app.utils.csv import get_user_preferred_timezone
+from app.utils.csv import get_user_preferred_timezone_obj
 
 
 def sum_of_statistics(delivery_statistics):
@@ -27,7 +26,7 @@ def sum_of_statistics(delivery_statistics):
 
 
 def add_rates_to(delivery_statistics):
-    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    preferred_tz = get_user_preferred_timezone_obj()
     return dict(
         emails_failure_rate=get_formatted_percentage(
             delivery_statistics["emails_failed"],

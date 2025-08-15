@@ -1,6 +1,6 @@
 import datetime
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-import pytz
 from flask import current_app, json
 from flask_login import current_user
 
@@ -188,17 +188,33 @@ def convert_report_date_to_preferred_timezone(db_date_str_in_utc):
     db_date_str_in_utc = f"{date_arr[0]}T{date_arr[1]}+00:00"
     utc_date_obj = datetime.datetime.fromisoformat(db_date_str_in_utc)
 
-    utc_date_obj = utc_date_obj.astimezone(pytz.utc)
-    preferred_timezone = pytz.timezone(get_user_preferred_timezone())
+    utc_date_obj = utc_date_obj.replace(tzinfo=ZoneInfo("UTC"))
+    preferred_timezone = get_user_preferred_timezone_obj()
     preferred_date_obj = utc_date_obj.astimezone(preferred_timezone)
-    preferred_tz_created_at = preferred_date_obj.strftime("%Y-%m-%d %I:%M:%S %p")
+    preferred_tz_created_at = preferred_date_obj.strftime("%Y-%m-%d %H:%M:%S")
 
-    return f"{preferred_tz_created_at} {get_user_preferred_timezone()}"
+    return preferred_tz_created_at
+
+
+_timezone_cache = {}
 
 
 def get_user_preferred_timezone():
     if current_user and hasattr(current_user, "preferred_timezone"):
         tz = current_user.preferred_timezone
-        if tz in pytz.all_timezones:
+        # Validate timezone using ZoneInfo - it will raise if invalid
+        try:
+            ZoneInfo(tz)
             return tz
+        except ZoneInfoNotFoundError:
+            # Invalid timezone, fall back to default
+            pass
     return "US/Eastern"
+
+
+def get_user_preferred_timezone_obj():
+    """Get the ZoneInfo object for the user's preferred timezone, cached for performance."""
+    tz_name = get_user_preferred_timezone()
+    if tz_name not in _timezone_cache:
+        _timezone_cache[tz_name] = ZoneInfo(tz_name)
+    return _timezone_cache[tz_name]

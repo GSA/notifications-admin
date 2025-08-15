@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from flask import (
     Response,
+    current_app,
     flash,
     jsonify,
+    redirect,
     render_template,
     request,
     stream_with_context,
@@ -15,6 +18,7 @@ from app import current_service, job_api_client, notification_api_client
 from app.enums import ServicePermission
 from app.main import main
 from app.notify_client.api_key_api_client import KEY_TYPE_TEST
+from app.s3_client.s3_csv_client import s3download
 from app.utils import (
     DELIVERED_STATUSES,
     FAILURE_STATUSES,
@@ -23,8 +27,10 @@ from app.utils import (
     set_status_filters,
 )
 from app.utils.csv import generate_notifications_csv, get_user_preferred_timezone
+from app.utils.s3_csv import convert_s3_csv_timestamps
 from app.utils.templates import get_template
 from app.utils.user import user_has_permissions
+from notifications_utils.s3 import S3ObjectNotFound
 
 
 @main.route("/services/<uuid:service_id>/notification/<uuid:notification_id>")
@@ -135,6 +141,14 @@ def get_all_personalisation_from_notification(notification):
     return notification["personalisation"]
 
 
+PERIOD_TO_S3_FILENAME = {
+    "one_day": "1-day-report",
+    "three_day": "3-day-report",
+    "five_day": "5-day-report",
+    "seven_day": "7-day-report",
+}
+
+
 @main.route("/services/<uuid:service_id>/download-notifications.csv")
 @user_has_permissions(ServicePermission.VIEW_ACTIVITY)
 def download_notifications_csv(service_id):
@@ -144,14 +158,52 @@ def download_notifications_csv(service_id):
     service_data_retention_days = current_service.get_days_of_retention(
         filter_args.get("message_type")[0], number_of_days
     )
-    file_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
-    file_time = f"{file_time} {get_user_preferred_timezone()}"
+    user_tz_name = get_user_preferred_timezone()
+    user_tz = ZoneInfo(user_tz_name)
+    file_time = datetime.now(user_tz).strftime("%Y-%m-%d %I:%M:%S %p")
+    file_time = f"{file_time} {user_tz_name}"
 
+    job_id = request.args.get("job_id")
+    if not job_id and number_of_days in PERIOD_TO_S3_FILENAME:
+        try:
+            s3_report_id = PERIOD_TO_S3_FILENAME[number_of_days]
+            current_app.logger.info(
+                f"User is attempting to download {s3_report_id} for service {service_id}"
+            )
+            s3_file_content = s3download(service_id, s3_report_id)
+            return Response(
+                stream_with_context(convert_s3_csv_timestamps(s3_file_content)),
+                mimetype="text/csv",
+                headers={
+                    "Content-Disposition": 'inline; filename="{} - {} - {} report.csv"'.format(
+                        file_time,
+                        filter_args["message_type"][0],
+                        current_service.name,
+                    )
+                },
+            )
+        except S3ObjectNotFound:
+            # Edge case: File was deleted between page load and download attempt
+            current_app.logger.warning(
+                f"File {s3_report_id} was expected but not found for service {service_id}. "
+                "It may have been deleted after page load."
+            )
+            flash(
+                "The report is no longer available. Please refresh the page.", "default"
+            )
+            return redirect(
+                url_for(
+                    "main.view_notifications",
+                    service_id=service_id,
+                    message_type=filter_args["message_type"][0],
+                    status="sending,delivered,failed",
+                )
+            )
     return Response(
         stream_with_context(
             generate_notifications_csv(
                 service_id=service_id,
-                job_id=None,
+                job_id=job_id,
                 status=filter_args.get("status"),
                 page=request.args.get("page", 1),
                 page_size=10000,

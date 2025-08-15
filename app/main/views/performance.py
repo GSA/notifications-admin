@@ -3,17 +3,16 @@ from itertools import groupby
 from operator import itemgetter
 from statistics import mean
 
-import pytz
 from flask import render_template
 
 from app import performance_dashboard_api_client, status_api_client
 from app.main import main
-from app.utils.csv import get_user_preferred_timezone
+from app.utils.csv import get_user_preferred_timezone_obj
 
 
 @main.route("/performance")
 def performance():
-    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    preferred_tz = get_user_preferred_timezone_obj()
     stats = performance_dashboard_api_client.get_performance_dashboard_stats(
         start_date=(datetime.now(preferred_tz) - timedelta(days=7)).date(),
         end_date=datetime.now(preferred_tz).date(),

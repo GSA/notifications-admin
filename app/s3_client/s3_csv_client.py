@@ -4,6 +4,7 @@ import uuid
 from flask import current_app
 
 from app.s3_client import (
+    check_s3_file_exists,
     get_s3_contents,
     get_s3_metadata,
     get_s3_object,
@@ -72,3 +73,7 @@ def set_metadata_on_csv_upload(service_id, upload_id, **kwargs):
 
 def get_csv_metadata(service_id, upload_id):
     return get_s3_metadata(get_csv_upload(service_id, upload_id))
+
+
+def check_s3_report_exists(service_id, upload_id):
+    return check_s3_file_exists(get_csv_upload(service_id, upload_id))

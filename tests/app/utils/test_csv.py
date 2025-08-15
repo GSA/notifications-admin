@@ -90,14 +90,14 @@ def get_notifications_csv_mock(
             None,
             [
                 "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time,Carrier\n",
-                "8005555555,foo,,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern,AT&T Mobility\r\n",
+                "8005555555,foo,,,Did not like it,Delivered,1943-04-19 08:00:00,AT&T Mobility\r\n",
             ],
         ),
         (
             "Anne Example",
             [
                 "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time,Carrier\n",
-                "8005555555,foo,Anne Example,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern,AT&T Mobility\r\n",  # noqa
+                "8005555555,foo,Anne Example,,Did not like it,Delivered,1943-04-19 08:00:00,AT&T Mobility\r\n",  # noqa
             ],
         ),
     ],
@@ -145,7 +145,7 @@ def test_generate_notifications_csv_without_job(
                 "bar.csv",
                 "Did not like it",
                 "Delivered",
-                "1943-04-19 08:00:00 AM US/Eastern",
+                "1943-04-19 08:00:00",
                 "AT&T Mobility",
             ],
         ),
@@ -174,7 +174,7 @@ def test_generate_notifications_csv_without_job(
                 "bar.csv",
                 "Did not like it",
                 "Delivered",
-                "1943-04-19 08:00:00 AM US/Eastern",
+                "1943-04-19 08:00:00",
                 "AT&T Mobility",
                 "🐜",
                 "🐝",
@@ -206,7 +206,7 @@ def test_generate_notifications_csv_without_job(
                 "bar.csv",
                 "Did not like it",
                 "Delivered",
-                "1943-04-19 08:00:00 AM US/Eastern",
+                "1943-04-19 08:00:00",
                 "AT&T Mobility",
                 "🐜,🐜",
                 "🐝,🐝",
@@ -385,4 +385,4 @@ def test_get_errors_for_csv(
 def test_convert_report_date_to_preferred_timezone():
     original = "2023-11-16 05:00:00"
     altered = convert_report_date_to_preferred_timezone(original)
-    assert altered == "2023-11-16 12:00:00 AM US/Eastern"
+    assert altered == "2023-11-16 00:00:00"

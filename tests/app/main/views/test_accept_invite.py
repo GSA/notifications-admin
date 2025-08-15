@@ -892,7 +892,6 @@ def test_existing_email_auth_user_with_phone_can_set_sms_auth(
     api_user_active,
     service_one,
     sample_invite,
-    mock_get_existing_user_by_email,
     mock_check_invite_token,
     mock_accept_invite,
     mock_update_user_attribute,
@@ -902,6 +901,11 @@ def test_existing_email_auth_user_with_phone_can_set_sms_auth(
     sample_invite["email_address"] = api_user_active["email_address"]
     service_one["permissions"].append(ServicePermission.EMAIL_AUTH)
     sample_invite["auth_type"] = "sms_auth"
+
+    # Mock get_user_by_email explicitly to avoid hanging
+    mock_get_existing_user_by_email = mocker.patch(
+        "app.user_api_client.get_user_by_email", return_value=api_user_active
+    )
 
     client_request.get(
         "main.accept_invite",

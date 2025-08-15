@@ -1,9 +1,12 @@
+import gevent
 from flask import abort, render_template, request, url_for
 
 from app import current_service, job_api_client
 from app.enums import NotificationStatus, ServicePermission
 from app.formatters import get_time_left
 from app.main import main
+from app.s3_client import check_s3_file_exists
+from app.s3_client.s3_csv_client import get_csv_upload
 from app.utils.pagination import (
     generate_next_dict,
     generate_pagination_pages,
@@ -13,26 +16,37 @@ from app.utils.pagination import (
 from app.utils.user import user_has_permissions
 
 
-def get_download_availability(service_id):
-    jobs_1_day = job_api_client.get_page_of_jobs(service_id, page=1, limit_days=1)
-    jobs_3_days = job_api_client.get_page_of_jobs(service_id, page=1, limit_days=3)
-    jobs_5_days = job_api_client.get_page_of_jobs(service_id, page=1, limit_days=5)
-    jobs_7_days = job_api_client.get_immediate_jobs(service_id)
+def get_report_info(service_id, report_name):
+    try:
+        obj = get_csv_upload(service_id, report_name)
+        if check_s3_file_exists(obj):
+            size_bytes = obj.content_length
+            if size_bytes < 1024:
+                size_str = f"{size_bytes} B"
+            elif size_bytes < 1024 * 1024:
+                size_str = f"{size_bytes / 1024:.1f} KB"
+            else:
+                size_str = f"{size_bytes / (1024 * 1024):.1f} MB"
+            return {"available": True, "size": size_str}
+    except Exception:
+        return {"available": False, "size": None}
+    return {"available": False, "size": None}
 
-    has_1_day_data = len(generate_job_dict(jobs_1_day)) > 0
-    has_3_day_data = len(generate_job_dict(jobs_3_days)) > 0
-    has_5_day_data = len(generate_job_dict(jobs_5_days)) > 0
-    has_7_day_data = len(jobs_7_days) > 0
+
+def get_download_availability(service_id):
+    report_names = ["1-day-report", "3-day-report", "5-day-report", "7-day-report"]
+
+    greenlets = [
+        gevent.spawn(get_report_info, service_id, name) for name in report_names
+    ]
+    gevent.joinall(greenlets)
+    results = [g.value for g in greenlets]
 
     return {
-        "has_1_day_data": has_1_day_data,
-        "has_3_day_data": has_3_day_data,
-        "has_5_day_data": has_5_day_data,
-        "has_7_day_data": has_7_day_data,
-        "has_any_download_data": has_1_day_data
-        or has_3_day_data
-        or has_5_day_data
-        or has_7_day_data,
+        "report_1_day": results[0],
+        "report_3_day": results[1],
+        "report_5_day": results[2],
+        "report_7_day": results[3],
     }
 
 

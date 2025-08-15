@@ -52,6 +52,8 @@ def test_all_activity(
         "app.job_api_client.get_page_of_jobs", return_value=MOCK_JOBS
     )
     mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
+    mocker.patch("app.s3_client.check_s3_file_exists", return_value=False)
+    mocker.patch("app.s3_client.s3_csv_client.get_csv_upload", return_value=None)
 
     response = client_request.get_response(
         "main.all_jobs_activity",
@@ -138,6 +140,8 @@ def test_all_activity_no_jobs(client_request, mocker):
         },
     )
     mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
+    mocker.patch("app.s3_client.check_s3_file_exists", return_value=False)
+    mocker.patch("app.s3_client.s3_csv_client.get_csv_upload", return_value=None)
     response = client_request.get_response(
         "main.all_jobs_activity",
         service_id=SERVICE_ONE_ID,
@@ -191,6 +195,8 @@ def test_all_activity_pagination(client_request, mocker):
         },
     )
     mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
+    mocker.patch("app.s3_client.check_s3_file_exists", return_value=False)
+    mocker.patch("app.s3_client.s3_csv_client.get_csv_upload", return_value=None)
 
     response = client_request.get_response(
         "main.all_jobs_activity",
@@ -228,6 +234,8 @@ def test_all_activity_filters(client_request, mocker, filter_type, expected_limi
         "app.job_api_client.get_page_of_jobs", return_value=MOCK_JOBS
     )
     mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
+    mocker.patch("app.s3_client.check_s3_file_exists", return_value=False)
+    mocker.patch("app.s3_client.s3_csv_client.get_csv_upload", return_value=None)
 
     kwargs = {"filter": filter_type} if filter_type else {}
     response = client_request.get_response(
@@ -239,7 +247,10 @@ def test_all_activity_filters(client_request, mocker, filter_type, expected_limi
 
     if expected_limit_days:
         mock_get_page_of_jobs.assert_any_call(
-            SERVICE_ONE_ID, page=current_page, limit_days=expected_limit_days, use_processing_time=True
+            SERVICE_ONE_ID,
+            page=current_page,
+            limit_days=expected_limit_days,
+            use_processing_time=True,
         )
     else:
         mock_get_page_of_jobs.assert_any_call(SERVICE_ONE_ID, page=current_page)

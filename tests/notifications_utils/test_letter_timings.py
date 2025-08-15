@@ -1,7 +1,7 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 import pytest
-import pytz
 from freezegun import freeze_time
 
 from notifications_utils.letter_timings import (
@@ -163,9 +163,7 @@ def test_get_estimated_delivery_date_for_letter(
     # remove the day string from the upload_time, which is purely informational
 
     def format_dt(x):
-        return x.astimezone(pytz.timezone("America/New_York")).strftime(
-            "%A %Y-%m-%d %H:%M"
-        )
+        return x.astimezone(ZoneInfo("America/New_York")).strftime("%A %Y-%m-%d %H:%M")
 
     upload_time = upload_time.split(" ", 1)[1]
 
