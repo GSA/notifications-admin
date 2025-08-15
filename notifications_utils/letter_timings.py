@@ -1,7 +1,6 @@
 from collections import namedtuple
 from datetime import datetime, time, timedelta
-
-import pytz
+from zoneinfo import ZoneInfo
 
 from notifications_utils.countries.data import Postage
 from notifications_utils.timezones import utc_string_to_aware_gmt_datetime
@@ -19,9 +18,9 @@ CANCELLABLE_JOB_LETTER_STATUSES = [
 
 def set_gmt_hour(day, hour):
     return (
-        day.astimezone(pytz.timezone("Europe/London"))
+        day.astimezone(ZoneInfo("Europe/London"))
         .replace(hour=hour, minute=0)
-        .astimezone(pytz.utc)
+        .astimezone(ZoneInfo("UTC"))
     )
 
 
@@ -91,8 +90,8 @@ def get_letter_timings(upload_time, postage):
     printed_by = set_gmt_hour(print_day, hour=15)
     now = (
         datetime.utcnow()
-        .replace(tzinfo=pytz.utc)
-        .astimezone(pytz.timezone("Europe/London"))
+        .replace(tzinfo=ZoneInfo("UTC"))
+        .astimezone(ZoneInfo("Europe/London"))
     )
 
     return LetterTimings(
