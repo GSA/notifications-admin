@@ -80,6 +80,9 @@ generate-version-file: ## Generates the app version file
 .PHONY: test
 test: py-lint py-test js-test ## Run tests
 
+.PHONY: test-fast
+test-fast: py-lint py-test-fast js-test ## Run tests quickly in parallel (testing locally first)
+
 .PHONY: py-lint
 py-lint: ## Run python linting scanners and black
 	poetry self add poetry-dotenv-plugin
@@ -110,6 +113,11 @@ py-test: ## Run python unit tests
 	poetry run coverage run -m pytest --maxfail=10 --ignore=tests/end_to_end tests/
 	poetry run coverage report --fail-under=93
 	poetry run coverage html -d .coverage_cache
+
+.PHONY: py-test-fast
+py-test-fast: export NEW_RELIC_ENVIRONMENT=test
+py-test-fast: ## Run python unit tests in parallel (testing locally first)
+	poetry run pytest --maxfail=10 --ignore=tests/end_to_end tests/ -n auto
 
 .PHONY: dead-code
 dead-code: ## 60% is our aspirational goal, but currently breaks the build

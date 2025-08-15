@@ -1,9 +1,13 @@
+from concurrent.futures import ThreadPoolExecutor
+
 from flask import abort, render_template, request, url_for
 
 from app import current_service, job_api_client
 from app.enums import NotificationStatus, ServicePermission
 from app.formatters import get_time_left
 from app.main import main
+from app.s3_client import check_s3_file_exists
+from app.s3_client.s3_csv_client import get_csv_upload
 from app.utils.pagination import (
     generate_next_dict,
     generate_pagination_pages,
@@ -14,9 +18,6 @@ from app.utils.user import user_has_permissions
 
 
 def get_report_info(service_id, report_name):
-    from app.s3_client import check_s3_file_exists
-    from app.s3_client.s3_csv_client import get_csv_upload
-
     try:
         obj = get_csv_upload(service_id, report_name)
         if check_s3_file_exists(obj):
@@ -34,16 +35,19 @@ def get_report_info(service_id, report_name):
 
 
 def get_download_availability(service_id):
-    report_1_day = get_report_info(service_id, "1-day-report")
-    report_3_day = get_report_info(service_id, "3-day-report")
-    report_5_day = get_report_info(service_id, "5-day-report")
-    report_7_day = get_report_info(service_id, "7-day-report")
+    report_names = ["1-day-report", "3-day-report", "5-day-report", "7-day-report"]
+
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        futures = [
+            executor.submit(get_report_info, service_id, name) for name in report_names
+        ]
+        results = [future.result() for future in futures]
 
     return {
-        "report_1_day": report_1_day,
-        "report_3_day": report_3_day,
-        "report_5_day": report_5_day,
-        "report_7_day": report_7_day,
+        "report_1_day": results[0],
+        "report_3_day": results[1],
+        "report_5_day": results[2],
+        "report_7_day": results[3],
     }
 
 
