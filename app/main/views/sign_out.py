@@ -27,6 +27,7 @@ def _sign_out_at_login_dot_gov():
 def sign_out():
 
     if current_user.is_authenticated:
+        # current_user.deactivate()
         session.clear()
         current_user.sign_out()
 
