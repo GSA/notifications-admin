@@ -154,16 +154,20 @@ def set_up_your_profile():
     code = request.args.get("code")
     state = request.args.get("state")
 
+    login_gov_error = request.args.get("error")
+    if login_gov_error:
+        flash(f"Login.gov error: {login_gov_error}")
+        abort(403, f"login_gov_error {login_gov_error} #invites")
+
+    if not state:
+        flash("Login.gov state not detected")
+        abort(403, "Login.gov state not detected #invites")
+
     state_key = f"login-state-{unquote(state)}"
     stored_state = unquote(redis_client.get(state_key).decode("utf8"))
     if state != stored_state:
         flash("Internal error: cannot recognize stored state")
         abort(403, "Internal error: cannot recognize stored state #invites")
-
-    login_gov_error = request.args.get("error")
-    if login_gov_error:
-        flash(f"Login.gov error: {login_gov_error}")
-        abort(403, f"login_gov_error {login_gov_error} #invites")
 
     user_email = redis_client.get(f"user_email-{state}")
     user_uuid = redis_client.get(f"user_uuid-{state}")
