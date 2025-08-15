@@ -147,7 +147,9 @@ def _do_login_dot_gov():  # $ pragma: no cover
 
             usr = User.from_email_address(user["email_address"])
             current_app.logger.info(f"activating user {usr.id} #notify-admin-1505")
-            activate_user(usr.id)
+            # New users on the invite path need activation
+            if not usr.is_active:
+                activate_user(usr.id)
         except BaseException as be:  # noqa B036
             current_app.logger.error(f"Error signing in: {be} #notify-admin-1505 ")
             error(401)
