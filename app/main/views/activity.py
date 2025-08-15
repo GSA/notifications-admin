@@ -1,5 +1,4 @@
-from concurrent.futures import ThreadPoolExecutor
-
+import gevent
 from flask import abort, render_template, request, url_for
 
 from app import current_service, job_api_client
@@ -37,11 +36,11 @@ def get_report_info(service_id, report_name):
 def get_download_availability(service_id):
     report_names = ["1-day-report", "3-day-report", "5-day-report", "7-day-report"]
 
-    with ThreadPoolExecutor(max_workers=4) as executor:
-        futures = [
-            executor.submit(get_report_info, service_id, name) for name in report_names
-        ]
-        results = [future.result() for future in futures]
+    greenlets = [
+        gevent.spawn(get_report_info, service_id, name) for name in report_names
+    ]
+    gevent.joinall(greenlets)
+    results = [g.value for g in greenlets]
 
     return {
         "report_1_day": results[0],
