@@ -188,7 +188,8 @@ def handle_no_existing_template_case(page):
 
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)
-    download_link = page.get_by_text("Download all data last 7 days (CSV)")
+    # Look for the new button format "Last 7 days - {size}"
+    download_link = page.get_by_role("link", name=re.compile(r"Last 7 days.*"))
     expect(download_link).to_be_visible()
 
     # Start waiting for the download
