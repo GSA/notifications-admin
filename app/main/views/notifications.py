@@ -17,6 +17,7 @@ from flask import (
 from app import current_service, job_api_client, notification_api_client
 from app.enums import ServicePermission
 from app.main import main
+from app.main.views.user_profile import set_timezone
 from app.notify_client.api_key_api_client import KEY_TYPE_TEST
 from app.s3_client.s3_csv_client import s3download
 from app.utils import (
@@ -152,6 +153,7 @@ PERIOD_TO_S3_FILENAME = {
 @main.route("/services/<uuid:service_id>/download-notifications.csv")
 @user_has_permissions(ServicePermission.VIEW_ACTIVITY)
 def download_notifications_csv(service_id):
+    set_timezone()
     filter_args = parse_filter_args(request.args)
     filter_args["status"] = set_status_filters(filter_args)
     number_of_days = request.args["number_of_days"]
