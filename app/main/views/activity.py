@@ -16,16 +16,16 @@ from app.utils.user import user_has_permissions
 
 def get_report_info(service_id, report_name, s3_config):
     try:
-        from app.s3_client import get_s3_object, check_s3_file_exists
+        from app.s3_client import check_s3_file_exists, get_s3_object
         from app.s3_client.s3_csv_client import NEW_FILE_LOCATION_STRUCTURE
 
         key = NEW_FILE_LOCATION_STRUCTURE.format(service_id, report_name)
         obj = get_s3_object(
-            s3_config['bucket'],
+            s3_config["bucket"],
             key,
-            s3_config['access_key_id'],
-            s3_config['secret_access_key'],
-            s3_config['region']
+            s3_config["access_key_id"],
+            s3_config["secret_access_key"],
+            s3_config["region"],
         )
 
         exists = check_s3_file_exists(obj)
@@ -55,23 +55,34 @@ def get_download_availability(service_id):
     s3_config = {
         "bucket": current_app.config["CSV_UPLOAD_BUCKET"]["bucket"],
         "access_key_id": current_app.config["CSV_UPLOAD_BUCKET"]["access_key_id"],
-        "secret_access_key": current_app.config["CSV_UPLOAD_BUCKET"]["secret_access_key"],
+        "secret_access_key": current_app.config["CSV_UPLOAD_BUCKET"][
+            "secret_access_key"
+        ],
         "region": current_app.config["CSV_UPLOAD_BUCKET"]["region"],
     }
 
     report_names = ["1-day-report", "3-day-report", "5-day-report", "7-day-report"]
 
     greenlets = [
-        gevent.spawn(get_report_info, service_id, name, s3_config) for name in report_names
+        gevent.spawn(get_report_info, service_id, name, s3_config)
+        for name in report_names
     ]
     gevent.joinall(greenlets)
     results = [g.value for g in greenlets]
 
     return {
-        "report_1_day": results[0] if results[0] else {"available": False, "size": None},
-        "report_3_day": results[1] if results[1] else {"available": False, "size": None},
-        "report_5_day": results[2] if results[2] else {"available": False, "size": None},
-        "report_7_day": results[3] if results[3] else {"available": False, "size": None},
+        "report_1_day": (
+            results[0] if results[0] else {"available": False, "size": None}
+        ),
+        "report_3_day": (
+            results[1] if results[1] else {"available": False, "size": None}
+        ),
+        "report_5_day": (
+            results[2] if results[2] else {"available": False, "size": None}
+        ),
+        "report_7_day": (
+            results[3] if results[3] else {"available": False, "size": None}
+        ),
     }
 
 
