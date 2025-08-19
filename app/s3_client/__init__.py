@@ -55,11 +55,11 @@ def check_s3_file_exists(obj):
         obj.load()
         return True
     except botocore.exceptions.ClientError as client_error:
-        if client_error.response["Error"]["Code"] in ["404", "NoSuchKey"]:
+        error_code = client_error.response["Error"]["Code"]
+        if error_code in ["404", "NoSuchKey"]:
             return False
-        current_app.logger.error(
-            f"Error checking S3 file {obj.bucket_name}/{obj.key}: {client_error}"
-        )
+        return False
+    except Exception:
         return False
 
 
