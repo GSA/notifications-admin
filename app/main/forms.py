@@ -1728,7 +1728,8 @@ class TemplateFolderForm(StripWhitespaceForm):
         if all_service_users is not None:
             self.users_with_permission.all_service_users = all_service_users
             self.users_with_permission.choices = [
-                (item.id, item.name) for item in all_service_users
+                (item.id, f"{item.name} (admin)" if item.platform_admin else item.name)
+                for item in all_service_users
             ]
 
     users_with_permission = USWDSCollapsibleCheckboxesField(
