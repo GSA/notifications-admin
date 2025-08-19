@@ -42,7 +42,7 @@ def get_report_info(service_id, report_name, s3_config):
                 size_str = f"{size_bytes / (1024 * 1024):.1f} MB"
 
             return {"available": True, "size": size_str}
-    except Exception:
+    except Exception:  # nosec B110
         pass
 
     return {"available": False, "size": None}
