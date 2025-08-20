@@ -48,9 +48,9 @@ body:
   attributes:
     label: Checking template folder permissions
     options:
-      - label: Only the template creator and platform admins should be able to see a new template
-      - label: Adding a non platform admin user to a folder should grant them access to see the templates
-      - label: Removing a non platform admin user to a folder should remove their access to see the templates
+      - label: Only the template creator and platform admins should be able to see a new template folder
+      - label: Adding a non platform admin user to a folder should grant them access to see and copy the templates
+      - label: Removing a non platform admin user to a folder should remove their access to see and copy the templates
       - label: Platform admins should not be able to be added or removed from template folders, since they have full access regardless
 
 - type: checkboxes
