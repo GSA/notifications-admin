@@ -107,5 +107,9 @@ def test_s3_csv_gets_timezone_converted(
         _test_page_title=False,
     )
 
-    mock_convert.assert_called_once_with(b"csv,data")
+    # Now it passes the user_timezone parameter
+    assert mock_convert.call_count == 1
+    call_args = mock_convert.call_args
+    assert call_args[0][0] == b"csv,data"
+    assert "user_timezone" in call_args[1]
     assert response.status_code == 200
