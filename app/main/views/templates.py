@@ -180,7 +180,10 @@ def process_folder_management_form(form, current_folder_id):
 
     if form.is_add_folder_op:
         new_folder_id = template_folder_api_client.create_template_folder(
-            current_service.id, name=form.get_folder_name(), parent_id=current_folder_id
+            current_service.id,
+            name=form.get_folder_name(),
+            parent_id=current_folder_id,
+            created_by_id=str(current_user.id)
         )
 
     if form.is_move_op:

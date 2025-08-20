@@ -1726,10 +1726,14 @@ class TemplateFolderForm(StripWhitespaceForm):
     def __init__(self, all_service_users=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if all_service_users is not None:
-            self.users_with_permission.all_service_users = all_service_users
+            regular_users = [user for user in all_service_users if not user.platform_admin]
+            platform_admins = [user for user in all_service_users if user.platform_admin]
+
+            self.users_with_permission.all_service_users = regular_users
             self.users_with_permission.choices = [
-                (item.id, item.name) for item in all_service_users
+                (item.id, item.name) for item in regular_users
             ]
+            self.platform_admins = platform_admins
 
     users_with_permission = USWDSCollapsibleCheckboxesField(
         "Team members who can see this folder", field_label="team member"
