@@ -52,7 +52,7 @@ def create_new_template(page):
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)
 
-    template_name_input = page.get_by_text("Template name")
+    template_name_input = page.get_by_label("Template name")
     expect(template_name_input).to_be_visible()
     template_name = str(uuid.uuid4())
     template_name_input.fill(template_name)
