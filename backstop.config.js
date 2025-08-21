@@ -23,6 +23,7 @@ module.exports = {
       height: 768,
     },
   ],
+  onReadyScript: 'puppeteer/onReady.js',
   scenarios: [
     ...createScenariosFromUrls(urls),
     {
@@ -55,6 +56,7 @@ module.exports = {
   engineOptions: {
     browser: 'chromium',
     timeout: 30000,
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--force-device-scale-factor=1'],
   },
   report: ['browser'],
   debug: false,
