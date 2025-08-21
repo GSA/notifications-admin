@@ -138,6 +138,7 @@
   };
   CollapsibleCheckboxes.prototype.toggleAll = function(e) {
     e.preventDefault();
+    e.stopPropagation();
     const allChecked = this.$checkboxes.filter(':checked').length === this.$checkboxes.length;
 
     if (allChecked) {

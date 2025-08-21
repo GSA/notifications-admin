@@ -4,6 +4,7 @@ import uuid
 from flask import current_app
 
 from app.s3_client import (
+    check_s3_file_exists,
     get_s3_contents,
     get_s3_metadata,
     get_s3_object,
@@ -15,12 +16,16 @@ NEW_FILE_LOCATION_STRUCTURE = "{}-service-notify/{}.csv"
 
 
 def get_csv_location(service_id, upload_id):
+    bucket = current_app.config["CSV_UPLOAD_BUCKET"]["bucket"]
+    key = NEW_FILE_LOCATION_STRUCTURE.format(service_id, upload_id)
+    region = current_app.config["CSV_UPLOAD_BUCKET"]["region"]
+
     return (
-        current_app.config["CSV_UPLOAD_BUCKET"]["bucket"],
-        NEW_FILE_LOCATION_STRUCTURE.format(service_id, upload_id),
+        bucket,
+        key,
         current_app.config["CSV_UPLOAD_BUCKET"]["access_key_id"],
         current_app.config["CSV_UPLOAD_BUCKET"]["secret_access_key"],
-        current_app.config["CSV_UPLOAD_BUCKET"]["region"],
+        region,
     )
 
 
@@ -72,3 +77,7 @@ def set_metadata_on_csv_upload(service_id, upload_id, **kwargs):
 
 def get_csv_metadata(service_id, upload_id):
     return get_s3_metadata(get_csv_upload(service_id, upload_id))
+
+
+def check_s3_report_exists(service_id, upload_id):
+    return check_s3_file_exists(get_csv_upload(service_id, upload_id))

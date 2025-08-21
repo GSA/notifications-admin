@@ -1,3 +1,4 @@
+import pytest
 from bs4 import BeautifulSoup
 
 from app.utils.pagination import get_page_from_request
@@ -51,6 +52,8 @@ def test_all_activity(
         "app.job_api_client.get_page_of_jobs", return_value=MOCK_JOBS
     )
     mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
+    mocker.patch("app.s3_client.check_s3_file_exists", return_value=False)
+    mocker.patch("app.s3_client.s3_csv_client.get_csv_upload", return_value=None)
 
     response = client_request.get_response(
         "main.all_jobs_activity",
@@ -77,8 +80,7 @@ def test_all_activity(
         "Started",
         "Sender",
         "Report",
-        "Delivered",
-        "Failed",
+        "Status",
     ]
 
     assert (
@@ -90,7 +92,7 @@ def test_all_activity(
 
     job_row = rows[0]
     cells = job_row.find_all("td")
-    assert len(cells) == 7, "Expected five columns in the job row"
+    assert len(cells) == 6, "Expected six columns in the job row"
 
     job_id_cell = cells[0].find("a").get_text(strip=True)
 
@@ -113,13 +115,13 @@ def test_all_activity(
     report_cell = cells[4].find("span").get_text(strip=True)
     assert report_cell == "N/A", f"Expected report 'N/A', but got '{report_cell}'"
 
-    delivered_cell = cells[5].get_text(strip=True)
+    status_cell = cells[5].get_text(strip=True)
     assert (
-        delivered_cell == "1"
-    ), f"Expected delivered count '1', but got '{delivered_cell}'"
-
-    failed_cell = cells[6].get_text(strip=True)
-    assert failed_cell == "5", f"Expected failed count '5', but got '{failed_cell}'"
+        "1 delivered" in status_cell
+    ), f"Expected status to contain '1 delivered', but got '{status_cell}'"
+    assert (
+        "5 failed" in status_cell
+    ), f"Expected status to contain '5 failed', but got '{status_cell}'"
 
 
 def test_all_activity_no_jobs(client_request, mocker):
@@ -138,6 +140,8 @@ def test_all_activity_no_jobs(client_request, mocker):
         },
     )
     mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
+    mocker.patch("app.s3_client.check_s3_file_exists", return_value=False)
+    mocker.patch("app.s3_client.s3_csv_client.get_csv_upload", return_value=None)
     response = client_request.get_response(
         "main.all_jobs_activity",
         service_id=SERVICE_ONE_ID,
@@ -191,6 +195,8 @@ def test_all_activity_pagination(client_request, mocker):
         },
     )
     mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
+    mocker.patch("app.s3_client.check_s3_file_exists", return_value=False)
+    mocker.patch("app.s3_client.s3_csv_client.get_csv_upload", return_value=None)
 
     response = client_request.get_response(
         "main.all_jobs_activity",
@@ -211,3 +217,40 @@ def test_all_activity_pagination(client_request, mocker):
     assert (
         pagination_texts == expected_pagination_texts
     ), f"Expected pagination controls {expected_pagination_texts}, but got {pagination_texts}"
+
+
+@pytest.mark.parametrize(
+    ("filter_type", "expected_limit_days"),
+    [
+        ("24hours", 1),
+        ("3days", 3),
+        ("7days", 7),
+        (None, None),
+    ],
+)
+def test_all_activity_filters(client_request, mocker, filter_type, expected_limit_days):
+    current_page = get_page_from_request()
+    mock_get_page_of_jobs = mocker.patch(
+        "app.job_api_client.get_page_of_jobs", return_value=MOCK_JOBS
+    )
+    mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
+    mocker.patch("app.s3_client.check_s3_file_exists", return_value=False)
+    mocker.patch("app.s3_client.s3_csv_client.get_csv_upload", return_value=None)
+
+    kwargs = {"filter": filter_type} if filter_type else {}
+    response = client_request.get_response(
+        "main.all_jobs_activity", service_id=SERVICE_ONE_ID, page=current_page, **kwargs
+    )
+
+    assert response.status_code == 200
+    assert "All activity" in response.text
+
+    if expected_limit_days:
+        mock_get_page_of_jobs.assert_any_call(
+            SERVICE_ONE_ID,
+            page=current_page,
+            limit_days=expected_limit_days,
+            use_processing_time=True,
+        )
+    else:
+        mock_get_page_of_jobs.assert_any_call(SERVICE_ONE_ID, page=current_page)

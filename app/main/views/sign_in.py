@@ -146,6 +146,9 @@ def _do_login_dot_gov():  # $ pragma: no cover
             #     return verify_email(user, redirect_url)
 
             usr = User.from_email_address(user["email_address"])
+
+            # New users on the invite path need activation
+            # if not usr.is_active:
             current_app.logger.info(f"activating user {usr.id} #notify-admin-1505")
             activate_user(usr.id)
         except BaseException as be:  # noqa B036

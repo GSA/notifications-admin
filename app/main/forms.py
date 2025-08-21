@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 from itertools import chain
 from numbers import Number
 
-import pytz
 from flask import render_template, request
 from flask_login import current_user
 from flask_wtf import FlaskForm as Form
@@ -62,7 +61,7 @@ from app.main.validators import (
 )
 from app.models.organization import Organization
 from app.utils import merge_jsonlike
-from app.utils.csv import get_user_preferred_timezone
+from app.utils.csv import get_user_preferred_timezone, get_user_preferred_timezone_obj
 from app.utils.user_permissions import all_ui_permissions, permission_options
 from notifications_utils.formatters import strip_all_whitespace
 from notifications_utils.insensitive_dict import InsensitiveDict
@@ -70,7 +69,7 @@ from notifications_utils.recipients import InvalidPhoneError, validate_phone_num
 
 
 def get_time_value_and_label(future_time):
-    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    preferred_tz = get_user_preferred_timezone_obj()
     return (
         future_time.astimezone(preferred_tz).isoformat(),
         "{} at {} {}".format(
@@ -90,7 +89,7 @@ def get_human_time(time):
 def get_human_day(time, prefix_today_with="T"):
     #  Add 1 hour to get ‘midnight today’ instead of ‘midnight tomorrow’
 
-    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    preferred_tz = get_user_preferred_timezone_obj()
     time = (time - timedelta(hours=1)).strftime("%A")
     if time == datetime.now(preferred_tz).strftime("%A"):
         return "{}oday".format(prefix_today_with)
@@ -101,12 +100,12 @@ def get_human_day(time, prefix_today_with="T"):
 
 def get_furthest_possible_scheduled_time():
     # We want local time to find date boundaries
-    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    preferred_tz = get_user_preferred_timezone_obj()
     return (datetime.now(preferred_tz) + timedelta(days=4)).replace(hour=0)
 
 
 def get_next_hours_until(until):
-    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    preferred_tz = get_user_preferred_timezone_obj()
     now = datetime.now(preferred_tz)
     hours = int((until - now).total_seconds() / (60 * 60))
     return [
@@ -116,7 +115,7 @@ def get_next_hours_until(until):
 
 
 def get_next_days_until(until):
-    preferred_tz = pytz.timezone(get_user_preferred_timezone())
+    preferred_tz = get_user_preferred_timezone_obj()
     now = datetime.now(preferred_tz)
     days = int((until - now).total_seconds() / (60 * 60 * 24))
     return [
@@ -1727,10 +1726,18 @@ class TemplateFolderForm(StripWhitespaceForm):
     def __init__(self, all_service_users=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if all_service_users is not None:
-            self.users_with_permission.all_service_users = all_service_users
-            self.users_with_permission.choices = [
-                (item.id, item.name) for item in all_service_users
+            regular_users = [
+                user for user in all_service_users if not user.platform_admin
             ]
+            platform_admins = [
+                user for user in all_service_users if user.platform_admin
+            ]
+
+            self.users_with_permission.all_service_users = regular_users
+            self.users_with_permission.choices = [
+                (item.id, item.name) for item in regular_users
+            ]
+            self.platform_admins = platform_admins
 
     users_with_permission = USWDSCollapsibleCheckboxesField(
         "Team members who can see this folder", field_label="team member"

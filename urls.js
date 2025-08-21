@@ -23,17 +23,17 @@ const routes = {
   authenticated: [
     {
       label: 'SMS Template Preview',
-      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/send/9c2b7a55-8785-4dc6-84d6-eb0e0615590d/one-off/step-0',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/send/31588995-646b-40ae-bed1-617612d9245e/one-off/step-0',
     },
     // Pages with govuk buttons that need testing
     {
       label: 'API Keys',
-      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/api/keys',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/api/keys',
     },
     // Pages to test radio buttons before converting govukRadios to USWDS
     {
       label: 'API Keys Create',
-      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/api/keys/create',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/api/keys/create',
     },
     {
       label: 'Change User Auth',
@@ -45,31 +45,35 @@ const routes = {
     },
     {
       label: 'Service Settings',
-      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/service-settings',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings',
     },
     {
       label: 'Service Send Files By Email',
-      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/service-settings/send-files-by-email',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings/send-files-by-email',
     },
     {
       label: 'Service SMS Prefix',
-      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/service-settings/sms-prefix',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings/sms-prefix',
     },
     {
       label: 'Send One Off Step 2',
-      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/send/9c2b7a55-8785-4dc6-84d6-eb0e0615590d/one-off/step-2',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/send/31588995-646b-40ae-bed1-617612d9245e/one-off/step-2',
     },
     {
       label: 'Choose Template',
-      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/templates',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/templates',
     },
     {
       label: 'Team Members',
-      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/users',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/users',
+    },
+    {
+      label: 'All Activity',
+      path: '/activity/services/da14b8fa-6a9e-4320-8484-9cd6e900c333',
     },
     {
       label: 'Invite User',
-      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/users/invite',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/users/invite',
     },
     {
       label: 'Platform Admin Live Services',
@@ -81,11 +85,11 @@ const routes = {
     },
     {
       label: 'Uploads',
-      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/uploads',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/uploads',
     },
     {
       label: 'API Guest List',
-      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/api/guest-list',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/api/guest-list',
     },
     // User profile and auth pages with radio buttons
     // Note: /set-up-your-profile requires special auth flow from login.gov
@@ -100,20 +104,20 @@ const routes = {
     // Service settings pages with radio buttons
     {
       label: 'Data Retention Add',
-      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/data-retention/add',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/data-retention/add',
     },
     {
       label: 'Link Service to Organization',
-      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/service-settings/link-service-to-organization',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings/link-service-to-organization',
     },
     // Template sender pages with radio buttons
     {
       label: 'Set Template Sender',
-      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/send/9c2b7a55-8785-4dc6-84d6-eb0e0615590d/set-sender',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/send/31588995-646b-40ae-bed1-617612d9245e/set-sender',
     },
     {
       label: 'Set Template Letter Sender',
-      path: '/services/829ac564-59e9-47c5-ad69-e91315641c31/templates/9c2b7a55-8785-4dc6-84d6-eb0e0615590d/set-template-sender',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/templates/31588995-646b-40ae-bed1-617612d9245e/set-template-sender',
     },
   ],
 

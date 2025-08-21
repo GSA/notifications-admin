@@ -1,3 +1,4 @@
+import gevent
 from flask import abort, render_template, request, url_for
 
 from app import current_service, job_api_client
@@ -13,30 +14,112 @@ from app.utils.pagination import (
 from app.utils.user import user_has_permissions
 
 
-def get_download_availability(service_id):
-    """
-    Check if there are jobs available for each download time period.
-    """
-    jobs_1_day = job_api_client.get_page_of_jobs(service_id, page=1, limit_days=1)
-    jobs_3_days = job_api_client.get_page_of_jobs(service_id, page=1, limit_days=3)
-    jobs_5_days = job_api_client.get_page_of_jobs(service_id, page=1, limit_days=5)
-    jobs_7_days = job_api_client.get_immediate_jobs(service_id)
+def get_report_info(service_id, report_name, s3_config):
+    try:
+        from app.s3_client import check_s3_file_exists, get_s3_object
+        from app.s3_client.s3_csv_client import NEW_FILE_LOCATION_STRUCTURE
 
-    has_1_day_data = len(generate_job_dict(jobs_1_day)) > 0
-    has_3_day_data = len(generate_job_dict(jobs_3_days)) > 0
-    has_5_day_data = len(generate_job_dict(jobs_5_days)) > 0
-    has_7_day_data = len(jobs_7_days) > 0
+        key = NEW_FILE_LOCATION_STRUCTURE.format(service_id, report_name)
+        obj = get_s3_object(
+            s3_config["bucket"],
+            key,
+            s3_config["access_key_id"],
+            s3_config["secret_access_key"],
+            s3_config["region"],
+        )
+
+        exists = check_s3_file_exists(obj)
+
+        if exists:
+            # check_s3_file_exists already called obj.load(), so metadata should be populated
+            size_bytes = obj.content_length
+
+            # Only show as available if file has any content (not empty)
+            if size_bytes > 0:
+                if size_bytes < 1024:
+                    size_str = f"{size_bytes} B"
+                elif size_bytes < 1024 * 1024:
+                    size_str = f"{size_bytes / 1024:.1f} KB"
+                else:
+                    size_str = f"{size_bytes / (1024 * 1024):.1f} MB"
+
+                return {"available": True, "size": size_str}
+    except Exception:  # nosec B110
+        pass
+
+    return {"available": False, "size": None}
+
+
+def get_download_availability(service_id):
+    from flask import current_app
+
+    # Get S3 config before spawning greenlets
+    s3_config = {
+        "bucket": current_app.config["CSV_UPLOAD_BUCKET"]["bucket"],
+        "access_key_id": current_app.config["CSV_UPLOAD_BUCKET"]["access_key_id"],
+        "secret_access_key": current_app.config["CSV_UPLOAD_BUCKET"][
+            "secret_access_key"
+        ],
+        "region": current_app.config["CSV_UPLOAD_BUCKET"]["region"],
+    }
+
+    report_names = ["1-day-report", "3-day-report", "5-day-report", "7-day-report"]
+
+    greenlets = [
+        gevent.spawn(get_report_info, service_id, name, s3_config)
+        for name in report_names
+    ]
+    gevent.joinall(greenlets)
+    results = [g.value for g in greenlets]
 
     return {
-        "has_1_day_data": has_1_day_data,
-        "has_3_day_data": has_3_day_data,
-        "has_5_day_data": has_5_day_data,
-        "has_7_day_data": has_7_day_data,
-        "has_any_download_data": has_1_day_data
-        or has_3_day_data
-        or has_5_day_data
-        or has_7_day_data,
+        "report_1_day": (
+            results[0] if results[0] else {"available": False, "size": None}
+        ),
+        "report_3_day": (
+            results[1] if results[1] else {"available": False, "size": None}
+        ),
+        "report_5_day": (
+            results[2] if results[2] else {"available": False, "size": None}
+        ),
+        "report_7_day": (
+            results[3] if results[3] else {"available": False, "size": None}
+        ),
     }
+
+
+def get_download_links(message_type):
+    time_periods = ["one_day", "three_day", "five_day", "seven_day"]
+    links = {}
+
+    for period in time_periods:
+        links[f"download_link_{period}"] = url_for(
+            ".download_notifications_csv",
+            service_id=current_service.id,
+            message_type=message_type,
+            status=request.args.get("status"),
+            number_of_days=period,
+        )
+    return links
+
+
+def get_filtered_jobs(service_id, page):
+    filter_type = request.args.get("filter")
+
+    limit_days = None
+    if filter_type == "24hours":
+        limit_days = 1
+    elif filter_type == "3days":
+        limit_days = 3
+    elif filter_type == "7days":
+        limit_days = 7
+
+    if limit_days:
+        return job_api_client.get_page_of_jobs(
+            service_id, page=page, limit_days=limit_days, use_processing_time=True
+        )
+    else:
+        return job_api_client.get_page_of_jobs(service_id, page=page)
 
 
 @main.route("/activity/services/<uuid:service_id>")
@@ -44,11 +127,15 @@ def get_download_availability(service_id):
 def all_jobs_activity(service_id):
     service_data_retention_days = 7
     page = get_page_from_request()
-    jobs = job_api_client.get_page_of_jobs(service_id, page=page)
+
+    jobs = get_filtered_jobs(service_id, page)
+
     all_jobs_dict = generate_job_dict(jobs)
     prev_page, next_page, pagination = handle_pagination(jobs, service_id, page)
     message_type = ("sms",)
     download_availability = get_download_availability(service_id)
+    download_links = get_download_links(message_type)
+
     return render_template(
         "views/activity/all-activity.html",
         all_jobs_dict=all_jobs_dict,
@@ -56,43 +143,22 @@ def all_jobs_activity(service_id):
         next_page=next_page,
         prev_page=prev_page,
         pagination=pagination,
+        total_jobs=jobs.get("total", 0),
         **download_availability,
-        download_link_one_day=url_for(
-            ".download_notifications_csv",
-            service_id=current_service.id,
-            message_type=message_type,
-            status=request.args.get("status"),
-            number_of_days="one_day",
-        ),
-        download_link_three_day=url_for(
-            ".download_notifications_csv",
-            service_id=current_service.id,
-            message_type=message_type,
-            status=request.args.get("status"),
-            number_of_days="three_day",
-        ),
-        download_link_five_day=url_for(
-            ".download_notifications_csv",
-            service_id=current_service.id,
-            message_type=message_type,
-            status=request.args.get("status"),
-            number_of_days="five_day",
-        ),
-        download_link_seven_day=url_for(
-            ".download_notifications_csv",
-            service_id=current_service.id,
-            message_type=message_type,
-            status=request.args.get("status"),
-            number_of_days="seven_day",
-        ),
+        **download_links,
     )
 
 
 def handle_pagination(jobs, service_id, page):
     if page is None:
         abort(404, "Invalid page argument ({}).".format(request.args.get("page")))
+
+    url_args = {}
+    if request.args.get("filter"):
+        url_args["filter"] = request.args.get("filter")
+
     prev_page = (
-        generate_previous_dict("main.all_jobs_activity", service_id, page)
+        generate_previous_dict("main.all_jobs_activity", service_id, page, url_args)
         if page > 1
         else None
     )
@@ -101,7 +167,7 @@ def handle_pagination(jobs, service_id, page):
     total_pages = (total_items + page_size - 1) // page_size
     has_next_link = jobs.get("links", {}).get("next") is not None
     next_page = (
-        generate_next_dict("main.all_jobs_activity", service_id, page)
+        generate_next_dict("main.all_jobs_activity", service_id, page, url_args)
         if has_next_link and total_items > 50 and page < total_pages
         else None
     )

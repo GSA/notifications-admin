@@ -430,6 +430,36 @@ describe('Collapsible fieldset', () => {
       expect(toggleButton.parentElement.style.display).toEqual('none');
     });
 
+    test("clicking 'Select all' does not collapse the fieldset", () => {
+      const toggleButton = document.querySelector('.usa-button--small');
+      const doneButton = formGroup.querySelector('.selection-footer__button');
+
+      expect(helpers.element(fieldset).is('hidden')).toBe(false);
+      expect(doneButton.getAttribute('aria-expanded')).toEqual('true');
+
+      helpers.triggerEvent(toggleButton, 'click');
+
+      expect(helpers.element(fieldset).is('hidden')).toBe(false);
+      expect(doneButton.getAttribute('aria-expanded')).toEqual('true');
+      expect(doneButton.textContent.trim()).toEqual("Done choosing folders");
+    });
+
+    test("clicking 'Deselect all' does not collapse the fieldset", () => {
+      const toggleButton = document.querySelector('.usa-button--small');
+      const doneButton = formGroup.querySelector('.selection-footer__button');
+
+      helpers.triggerEvent(toggleButton, 'click');
+
+      expect(helpers.element(fieldset).is('hidden')).toBe(false);
+      expect(doneButton.getAttribute('aria-expanded')).toEqual('true');
+
+      helpers.triggerEvent(toggleButton, 'click');
+
+      expect(helpers.element(fieldset).is('hidden')).toBe(false);
+      expect(doneButton.getAttribute('aria-expanded')).toEqual('true');
+      expect(doneButton.textContent.trim()).toEqual("Done choosing folders");
+    });
+
   });
 
   describe("toggle button visibility on re-expansion", () => {

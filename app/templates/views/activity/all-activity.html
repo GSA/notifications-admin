@@ -30,7 +30,7 @@
           </li>
           {% else %}
             <li class="usa-pagination__item">
-              <a class="usa-pagination__button" href="?page={{ page }}">
+              <a class="usa-pagination__button" href="?page={{ page }}{% if request.args.get('filter') %}&filter={{ request.args.get('filter') }}{% endif %}">
                 {{ page }}
               </a>
             </li>
@@ -51,14 +51,62 @@
       {% endif %}
     </ul>
   </nav>
+  {% if pagination and total_jobs %}
+  <p class="text-center font-body-sm">
+    Page <span class="text-bold">{{ pagination.current }}</span> of <span class="text-bold">{{ pagination.last }}</span> (<span>{{ total_jobs }}</span> total jobs)
+  </p>
+  {% endif %}
   {% endif %}
 {% endset %}
 {% block maincolumn_content %}
+  <style>
+    .download-reports-container .usa-button {
+      padding: 0.75rem 1rem;
+      min-height: 48px;
+      justify-content: flex-start;
+    }
+
+    .download-reports-container .usa-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      flex-shrink: 0;
+    }
+  </style>
   <div class="margin-bottom-8">
     <h1 class="usa-sr-only">All activity</h1>
     <h2 class="font-body-2xl line-height-sans-2 margin-0">All activity</h2>
     <h2 class="margin-top-4 margin-bottom-1">Sent jobs</h2>
-    <div class="usa-table-container--scrollable-mobile">
+    <div class="flex-wrap gap-3 display-flex flex-align-start margin-top-2">
+      <div class="flex-1">
+        <ul class="usa-button-group usa-button-group--segmented">
+          <li class="usa-button-group__item">
+            <a href="{{ url_for('main.all_jobs_activity', service_id=current_service.id) }}"
+               class="usa-button usa-button--small {% if not request.args.get('filter') %}{% else %}usa-button--outline{% endif %}">
+              All
+            </a>
+          </li>
+          <li class="usa-button-group__item">
+            <a href="{{ url_for('main.all_jobs_activity', service_id=current_service.id, filter='24hours') }}"
+               class="usa-button usa-button--small {% if request.args.get('filter') == '24hours' %}{% else %}usa-button--outline{% endif %}">
+              Last 24 hours
+            </a>
+          </li>
+          <li class="usa-button-group__item">
+            <a href="{{ url_for('main.all_jobs_activity', service_id=current_service.id, filter='3days') }}"
+               class="usa-button usa-button--small {% if request.args.get('filter') == '3days' %}{% else %}usa-button--outline{% endif %}">
+              Last 3 days
+            </a>
+          </li>
+          <li class="usa-button-group__item">
+            <a href="{{ url_for('main.all_jobs_activity', service_id=current_service.id, filter='7days') }}"
+               class="usa-button usa-button--small {% if request.args.get('filter') == '7days' %}{% else %}usa-button--outline{% endif %}">
+              Last 7 days
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="usa-table-container--scrollable-mobile table-overflow-x-auto">
       <table class="usa-table usa-table--compact job-table">
         <caption class="usa-sr-only">Table showing all sent jobs for this service</caption>
         <thead class="table-field-headings">
@@ -66,23 +114,20 @@
             <th scope="col" role="columnheader" class="table-field-heading-first" id="jobId">
               <span>Job ID#</span>
             </th>
-            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
+            <th scope="col" role="columnheader" class="table-field-heading">
               <span>Template</span>
             </th>
-            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
+            <th scope="col" role="columnheader" class="table-field-heading">
               <span>Started</span>
             </th>
-            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
+            <th scope="col" role="columnheader" class="table-field-heading">
               <span>Sender</span>
             </th>
-            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
+            <th scope="col" role="columnheader" class="table-field-heading">
               <span>Report</span>
             </th>
-            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
-              <span>Delivered</span>
-            </th>
-            <th data-sortable scope="col" role="columnheader" class="table-field-heading">
-              <span>Failed</span>
+            <th scope="col" role="columnheader" class="table-field-heading">
+              <span>Status</span>
             </th>
           </tr>
         </thead>
@@ -90,28 +135,34 @@
           {% if all_jobs_dict %}
             {% for job in all_jobs_dict %}
               <tr class="table-row">
-                <td class="table-field jobid" role="rowheader">
+                <td class="table-field width-5" role="rowheader">
                   <a class="usa-link" href="{{ job.view_job_link }}">
                     {{ job.job_id[:8] if job.job_id else 'Manually entered number' }}
                   </a>
                 </td>
-                <td class="table-field template">{{ job.template_name }}</td>
-                <td data-sort-value="{{ job.activity_time | convert_time_unixtimestamp }}" class="table-field time-sent">
+                <td class="table-field width-16">{{ job.template_name }}</td>
+                <td data-sort-value="{{ job.activity_time | convert_time_unixtimestamp }}" class="table-field width-18">
                   {{ job.activity_time|format_datetime_table }}
                 </td>
-                <td class="table-field sender">{{ job.created_by.name }}</td>
-                <td class="table-field report">
+                <td class="table-field width-30 ">{{ job.created_by.name }}</td>
+                <td class="text-center table-field width-2">
                   {% if job.can_download %}
                     <a href="{{ job.download_link }}">
-                      <img src="{{ url_for('static', filename='img/material-icons/file_download.svg') }}" alt="">
+                      <img src="{{ url_for('static', filename='img/material-icons/file_download.svg') }}" alt="" class="padding-top-05">
                       <span class="usa-sr-only">Download report link</span>
                     </a>
                   {% else %}
                     <span>N/A</span>
                   {% endif %}
                 </td>
-                <td class="table-field delivered">{{ job.delivered_count if job.delivered_count is not none else '0' }}</td>
-                <td class="table-field failed">{{ job.failed_count if job.failed_count is not none else '0' }}</td>
+                <td class="table-field width-15">
+                  <span class="bg-base-lighter padding-x-05 padding-y-0 font-body-3xs text-bold radius-sm margin-right-05 display-inline-block text-nowrap">
+                    {{ job.delivered_count if job.delivered_count is not none else '0' }} delivered
+                  </span>
+                  <span class="bg-base-lighter padding-x-05 padding-y-0 font-body-3xs text-bold radius-sm display-inline-block text-nowrap">
+                    {{ job.failed_count if job.failed_count is not none else '0' }} failed
+                  </span>
+                </td>
               </tr>
             {% endfor %}
           {% else %}
@@ -122,37 +173,104 @@
         </tbody>
       </table>
       <div class="usa-sr-only usa-table__announcement-region" aria-live="polite"></div>
-      <p><b>Note: </b>Report data is only available for 7 days after your message has been sent</p>
+      <p class="font-body-sm"><b>Note: </b>Report data is only available for 7 days after your message has been sent</p>
     </div>
     {{show_pagination}}
     {% if current_user.has_permissions(ServicePermission.VIEW_ACTIVITY) %}
-      {% if has_any_download_data %}
-        <h2 class="line-height-sans-2 margin-bottom-0 margin-top-4">Download recent reports</h2>
-        {% if has_1_day_data %}
-          <p class="font-body-sm">
-            <a href="{{ download_link_one_day }}" download="download" class="usa-link">Download all data last 24 hours (<abbr title="Comma separated values">CSV</abbr>)</a>
-          </p>
-        {% endif %}
-        {% if has_3_day_data %}
-          <p class="font-body-sm">
-            <a href="{{ download_link_three_day }}" download="download" class="usa-link">Download all data last 3 days (<abbr title="Comma separated values">CSV</abbr>)</a>
-            &emsp;
-          </p>
-        {% endif %}
-        {% if has_5_day_data %}
-          <p class="font-body-sm">
-            <a href="{{ download_link_five_day }}" download="download" class="usa-link">Download all data last 5 days (<abbr title="Comma separated values">CSV</abbr>)</a>
-          </p>
-        {% endif %}
-        {% if has_7_day_data %}
-          <p class="font-body-sm">
-            <a href="{{ download_link_seven_day }}" download="download" class="usa-link">Download all data last 7 days (<abbr title="Comma separated values">CSV</abbr>)</a>
-          </p>
-        {% endif %}
-      {% else %}
-        <h2 class="line-height-sans-2 margin-bottom-0 margin-top-4">Download recent reports</h2>
-        <p class="font-body-sm">No recent activity to download. Download links will appear when jobs are available.</p>
-      {% endif %}
+      <div class="usa-summary-box margin-top-4" role="region" aria-labelledby="download-reports-heading">
+        <div class="usa-summary-box__body">
+          <h2 class="usa-summary-box__heading" id="download-reports-heading">Download recent reports</h2>
+
+          <div class="usa-summary-box__text">
+            <p class="font-body-xs margin-bottom-3">
+              Reports are automatically generated daily at midnight and include data through the previous day.
+              Today's activity will appear in tomorrow's report.
+            </p>
+
+            <div class="download-reports-container maxw-tablet-lg">
+              <div class="margin-bottom-2">
+                {% if report_1_day.available %}
+                  <a href="{{ download_link_one_day }}"
+                     class="usa-button width-full display-flex flex-align-center"
+                     download
+                     aria-label="Download yesterday's report, CSV format, {{ report_1_day.size }}">
+                    <svg class="usa-icon margin-right-2" aria-hidden="true" focusable="false" role="img">
+                      <use xlink:href="{{ asset_url('img/sprite.svg') }}#file_download"></use>
+                    </svg>
+                    <span>Yesterday&nbsp; - {{ report_1_day.size }}</span>
+                  </a>
+                {% else %}
+                  <button class="usa-button width-full"
+                          disabled
+                          aria-label="Yesterday's report not available - no messages were sent">
+                    Yesterday&nbsp; - &nbsp;No messages sent
+                  </button>
+                {% endif %}
+              </div>
+
+              <div class="margin-bottom-2">
+                {% if report_3_day.available %}
+                  <a href="{{ download_link_three_day }}"
+                     class="usa-button width-full display-flex flex-align-center"
+                     download
+                     aria-label="Download last 3 days report, CSV format, {{ report_3_day.size }}">
+                    <svg class="usa-icon margin-right-2" aria-hidden="true" focusable="false" role="img">
+                      <use xlink:href="{{ asset_url('img/sprite.svg') }}#file_download"></use>
+                    </svg>
+                    <span>Last 3 days - {{ report_3_day.size }}</span>
+                  </a>
+                {% else %}
+                  <button class="usa-button width-full"
+                          disabled
+                          aria-label="Last 3 days report not available - no messages were sent">
+                    Last 3 days - No messages sent
+                  </button>
+                {% endif %}
+              </div>
+
+              <div class="margin-bottom-2">
+                {% if report_5_day.available %}
+                  <a href="{{ download_link_five_day }}"
+                     class="usa-button width-full display-flex flex-align-center"
+                     download
+                     aria-label="Download last 5 days report, CSV format, {{ report_5_day.size }}">
+                    <svg class="usa-icon margin-right-2" aria-hidden="true" focusable="false" role="img">
+                      <use xlink:href="{{ asset_url('img/sprite.svg') }}#file_download"></use>
+                    </svg>
+                    <span>Last 5 days - {{ report_5_day.size }}</span>
+                  </a>
+                {% else %}
+                  <button class="usa-button width-full"
+                          disabled
+                          aria-label="Last 5 days report not available - no messages were sent">
+                    Last 5 days - No messages sent
+                  </button>
+                {% endif %}
+              </div>
+
+              <div class="margin-bottom-2">
+                {% if report_7_day.available %}
+                  <a href="{{ download_link_seven_day }}"
+                     class="usa-button width-full display-flex flex-align-center"
+                     download
+                     aria-label="Download last 7 days report, CSV format, {{ report_7_day.size }}">
+                    <svg class="usa-icon margin-right-2" aria-hidden="true" focusable="false" role="img">
+                      <use xlink:href="{{ asset_url('img/sprite.svg') }}#file_download"></use>
+                    </svg>
+                    <span>Last 7 days - {{ report_7_day.size }}</span>
+                  </a>
+                {% else %}
+                  <button class="usa-button width-full"
+                          disabled
+                          aria-label="Last 7 days report not available - no messages were sent">
+                    Last 7 days - No messages sent
+                  </button>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     {% endif %}
   </div>
 {% endblock %}
