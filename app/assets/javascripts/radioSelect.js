@@ -2,7 +2,7 @@
 
   "use strict";
 
-  var Modules = global.GOVUK.Modules;
+  var Modules = global.NotifyModules;
 
   // Template functions for rendering component states
   let renderStates = {
@@ -79,7 +79,7 @@
     }
   };
 
-  Modules.RadioSelect = function() {
+  Modules['radio-select'] = function() {
 
     this.start = function(component) {
 

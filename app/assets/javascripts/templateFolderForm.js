@@ -1,7 +1,7 @@
 (function(Modules) {
   "use strict";
 
-  Modules.TemplateFolderForm = function() {
+  Modules['template-folder-form'] = function() {
 
     this.start = function(templateFolderForm) {
       this.$form = $(templateFolderForm);
@@ -327,7 +327,9 @@
             <button class="usa-button usa-button--event" value="add-new-template" aria-expanded="false">
               New template
             </button>
-            <button class="usa-button usa-button--event" value="add-new-folder" aria-expanded="false">New folder</button>
+            <button class="usa-button usa-button--outline usa-button--event" value="add-new-folder" aria-expanded="false">
+              New folder
+            </button>
           </div>
           <div class="template-list-selected-counter">
             <span class="template-list-selected-counter__count" aria-hidden="true">
@@ -345,10 +347,12 @@
             <button class="usa-button usa-button--event" value="move-to-existing-folder" aria-expanded="false">
               Move<span class="usa-sr-only"> selection to folder</span>
             </button>
-            <button class="usa-button usa-button--event" value="move-to-new-folder" aria-expanded="false">Add to new folder</button>
+            <button class="usa-button usa-button--outline usa-button--event" value="move-to-new-folder" aria-expanded="false">
+              Add to new folder
+            </button>
           </div>
           <div class="template-list-selected-counter" aria-hidden="true">
-            <span class="template-list-selected-counter__count" aria-hidden="true">
+            <span class="template-list-selected-counter__count text-base" aria-hidden="true">
               ${this.selectionStatus.selected(1)}
             </span>
           </div>
@@ -357,4 +361,4 @@
     `).get(0);
   };
 
-})(window.GOVUK.Modules);
+})(window.NotifyModules);

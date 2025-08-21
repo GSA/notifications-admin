@@ -15,13 +15,15 @@
 {%- endmacro %}
 
 {% if template_list.template_folder_id and not template_list.templates_to_show %}
-<p class="template-list-empty">
-  {% if template_list.folder_is_empty %}
-  This folder is empty
-  {% else %}
-  There are no {{ 1|message_count_label(template_type, suffix='') }} templates in this folder
-  {% endif %}
-</p>
+<div>
+  <p class="text-base">
+    {% if template_list.folder_is_empty %}
+    This folder is empty
+    {% else %}
+    There are no {{ 1|message_count_label(template_type, suffix='') }} templates in this folder
+    {% endif %}
+  </p>
+</div>
 {% else %}
 <nav id="template-list" aria-label="Template list">
   {% set checkboxes_data = [] %}
@@ -85,7 +87,7 @@
     {% set checkbox_config = {
     "html": label_content,
     "label": {
-    "classes": "template-list-item-label margin-top-05",
+    "classes": "template-list-item-label margin-top-1",
     },
     "id": "templates-or-folder-" ~ item.id,
     "classes": "template-list-item template-list-item-with-checkbox {}".format(
@@ -100,7 +102,7 @@
     <li
       class="template-list-item {%- if item.ancestors %} template-list-item-hidden-by-default {%- else %} template-list-item-without-ancestors{%- endif %}">
       {{ item_link_content }}
-      <p class="template-list-item-hint">
+      <p class="usa-hint margin-top-1">
         {{ item.hint }}
       </p>
     </li>

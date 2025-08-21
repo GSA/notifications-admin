@@ -31,8 +31,6 @@ $path: '/static/images/';
 @import 'elements/panels';
 @import 'elements/tables';
 
-// Dependencies from GOV.UK Frontend, packaged to be specific to this application
-@import './govuk-frontend/all';
 
 // Specific to this application
 @import 'local/typography';
