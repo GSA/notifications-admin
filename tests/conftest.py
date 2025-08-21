@@ -12,6 +12,15 @@ from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from flask import Flask, url_for
 
+# Mock is_api_down to prevent network calls during unit tests
+# Set API_HOST_NAME to localhost to avoid network timeouts (sometimes they slow down in cicd)
+import os
+os.environ['API_HOST_NAME'] = 'http://localhost:6011'
+
+# Also mock the function itself as a backup
+import app.utils.api_health
+app.utils.api_health.is_api_down = lambda: False
+
 from app import create_app
 from app.enums import AuthType, ServicePermission
 from notifications_python_client.errors import HTTPError
