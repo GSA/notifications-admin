@@ -179,36 +179,66 @@ def generate_notifications_csv(**kwargs):
     raise Exception("Should never reach here")
 
 
-def convert_report_date_to_preferred_timezone(db_date_str_in_utc):
+def convert_report_date_to_preferred_timezone(db_date_str_in_utc, target_timezone=None):
     """
     Report dates in the db are in UTC.  We need to convert them to the user's default timezone,
     which defaults to "US/Eastern"
+    Format: "2025-05-14 07:22:18 AM America/Los_Angeles"
+
+    Args:
+        db_date_str_in_utc: UTC datetime string in format "YYYY-MM-DD HH:MM:SS"
+        target_timezone: Optional timezone name to use (e.g. "US/Eastern", "America/Los_Angeles")
+                        If not provided, will use current user's preference or default
     """
-    date_arr = db_date_str_in_utc.split(" ")
-    db_date_str_in_utc = f"{date_arr[0]}T{date_arr[1]}+00:00"
-    utc_date_obj = datetime.datetime.fromisoformat(db_date_str_in_utc)
+    try:
+        date_arr = db_date_str_in_utc.split(" ")
+        db_date_str_in_utc = f"{date_arr[0]}T{date_arr[1]}+00:00"
+        utc_date_obj = datetime.datetime.fromisoformat(db_date_str_in_utc)
 
-    utc_date_obj = utc_date_obj.replace(tzinfo=ZoneInfo("UTC"))
-    preferred_timezone = get_user_preferred_timezone_obj()
-    preferred_date_obj = utc_date_obj.astimezone(preferred_timezone)
-    preferred_tz_created_at = preferred_date_obj.strftime("%Y-%m-%d %H:%M:%S")
+        utc_date_obj = utc_date_obj.replace(tzinfo=ZoneInfo("UTC"))
 
-    return preferred_tz_created_at
+        if not target_timezone:
+            target_timezone = get_user_preferred_timezone()
+
+        preferred_timezone = ZoneInfo(target_timezone)
+        preferred_date_obj = utc_date_obj.astimezone(preferred_timezone)
+
+        formatted_date = preferred_date_obj.strftime("%Y-%m-%d %I:%M:%S %p")
+        preferred_tz_created_at = f"{formatted_date} {target_timezone}"
+        return preferred_tz_created_at
+
+    except Exception as e:
+        try:
+            current_app.logger.error(
+                f"Error converting timezone for {db_date_str_in_utc}: {e}"
+            )
+        except RuntimeError:
+            pass
+        return f"{db_date_str_in_utc} UTC"
 
 
 _timezone_cache = {}
 
 
 def get_user_preferred_timezone():
-    if current_user and hasattr(current_user, "preferred_timezone"):
-        tz = current_user.preferred_timezone
-        # Validate timezone using ZoneInfo - it will raise if invalid
-        try:
-            ZoneInfo(tz)
-            return tz
-        except ZoneInfoNotFoundError:
-            # Invalid timezone, fall back to default
-            pass
+    try:
+        if (
+            current_user
+            and current_user.is_authenticated
+            and hasattr(current_user, "preferred_timezone")
+        ):
+            tz = current_user.preferred_timezone
+            if tz:
+                try:
+                    ZoneInfo(tz)
+                    return tz
+                except ZoneInfoNotFoundError:
+                    pass
+    except (AttributeError, RuntimeError):
+        # AttributeError: current_user might not have expected attributes
+        # RuntimeError: working outside of request context
+        pass
+
     return "US/Eastern"
 
 

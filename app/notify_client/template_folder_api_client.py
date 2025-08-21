@@ -4,7 +4,9 @@ from app.notify_client import NotifyAdminAPIClient, cache
 
 class TemplateFolderAPIClient(NotifyAdminAPIClient):
     @cache.delete("service-{service_id}-template-folders")
-    def create_template_folder(self, service_id, name, parent_id=None, created_by_id=None):
+    def create_template_folder(
+        self, service_id, name, parent_id=None, created_by_id=None
+    ):
         data = {"name": name, "parent_id": parent_id}
         if created_by_id:
             data["created_by_id"] = created_by_id

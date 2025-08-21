@@ -1726,8 +1726,12 @@ class TemplateFolderForm(StripWhitespaceForm):
     def __init__(self, all_service_users=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if all_service_users is not None:
-            regular_users = [user for user in all_service_users if not user.platform_admin]
-            platform_admins = [user for user in all_service_users if user.platform_admin]
+            regular_users = [
+                user for user in all_service_users if not user.platform_admin
+            ]
+            platform_admins = [
+                user for user in all_service_users if user.platform_admin
+            ]
 
             self.users_with_permission.all_service_users = regular_users
             self.users_with_permission.choices = [

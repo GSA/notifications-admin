@@ -90,14 +90,14 @@ def get_notifications_csv_mock(
             None,
             [
                 "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time,Carrier\n",
-                "8005555555,foo,,,Did not like it,Delivered,1943-04-19 08:00:00,AT&T Mobility\r\n",
+                "8005555555,foo,,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern,AT&T Mobility\r\n",
             ],
         ),
         (
             "Anne Example",
             [
                 "Phone Number,Template,Sent by,Batch File,Carrier Response,Status,Time,Carrier\n",
-                "8005555555,foo,Anne Example,,Did not like it,Delivered,1943-04-19 08:00:00,AT&T Mobility\r\n",  # noqa
+                "8005555555,foo,Anne Example,,Did not like it,Delivered,1943-04-19 08:00:00 AM US/Eastern,AT&T Mobility\r\n",  # noqa
             ],
         ),
     ],
@@ -145,7 +145,7 @@ def test_generate_notifications_csv_without_job(
                 "bar.csv",
                 "Did not like it",
                 "Delivered",
-                "1943-04-19 08:00:00",
+                "1943-04-19 08:00:00 AM US/Eastern",
                 "AT&T Mobility",
             ],
         ),
@@ -174,7 +174,7 @@ def test_generate_notifications_csv_without_job(
                 "bar.csv",
                 "Did not like it",
                 "Delivered",
-                "1943-04-19 08:00:00",
+                "1943-04-19 08:00:00 AM US/Eastern",
                 "AT&T Mobility",
                 "🐜",
                 "🐝",
@@ -206,7 +206,7 @@ def test_generate_notifications_csv_without_job(
                 "bar.csv",
                 "Did not like it",
                 "Delivered",
-                "1943-04-19 08:00:00",
+                "1943-04-19 08:00:00 AM US/Eastern",
                 "AT&T Mobility",
                 "🐜,🐜",
                 "🐝,🐝",
@@ -383,6 +383,47 @@ def test_get_errors_for_csv(
 
 
 def test_convert_report_date_to_preferred_timezone():
+    """Test that timezone conversion includes AM/PM and timezone name."""
     original = "2023-11-16 05:00:00"
     altered = convert_report_date_to_preferred_timezone(original)
-    assert altered == "2023-11-16 00:00:00"
+    assert altered == "2023-11-16 12:00:00 AM US/Eastern"
+
+    original = "2023-11-16 17:30:00"
+    altered = convert_report_date_to_preferred_timezone(original)
+    assert altered == "2023-11-16 12:30:00 PM US/Eastern"
+
+    original = "2023-11-16 17:00:00"
+    altered = convert_report_date_to_preferred_timezone(original)
+    assert altered == "2023-11-16 12:00:00 PM US/Eastern"
+
+    original = "2023-11-16 05:00:00"
+    altered = convert_report_date_to_preferred_timezone(original)
+    assert altered == "2023-11-16 12:00:00 AM US/Eastern"
+
+
+def test_convert_report_date_with_custom_timezone(mocker):
+    """Test timezone conversion with a user who has a custom timezone."""
+    mocker.patch(
+        "app.utils.csv.get_user_preferred_timezone", return_value="America/Los_Angeles"
+    )
+
+    original = "2023-11-16 15:22:18"
+    altered = convert_report_date_to_preferred_timezone(original)
+    assert altered == "2023-11-16 07:22:18 AM America/Los_Angeles"
+
+
+def test_convert_report_date_with_explicit_timezone():
+    """Test timezone conversion with explicitly provided timezone."""
+    original = "2023-11-16 15:22:18"
+    altered = convert_report_date_to_preferred_timezone(
+        original, target_timezone="America/Los_Angeles"
+    )
+    assert altered == "2023-11-16 07:22:18 AM America/Los_Angeles"
+
+    altered = convert_report_date_to_preferred_timezone(
+        original, target_timezone="US/Eastern"
+    )
+    assert altered == "2023-11-16 10:22:18 AM US/Eastern"
+
+    altered = convert_report_date_to_preferred_timezone(original, target_timezone="UTC")
+    assert altered == "2023-11-16 03:22:18 PM UTC"

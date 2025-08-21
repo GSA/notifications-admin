@@ -34,14 +34,16 @@ def get_report_info(service_id, report_name, s3_config):
             # check_s3_file_exists already called obj.load(), so metadata should be populated
             size_bytes = obj.content_length
 
-            if size_bytes < 1024:
-                size_str = f"{size_bytes} B"
-            elif size_bytes < 1024 * 1024:
-                size_str = f"{size_bytes / 1024:.1f} KB"
-            else:
-                size_str = f"{size_bytes / (1024 * 1024):.1f} MB"
+            # Only show as available if file has any content (not empty)
+            if size_bytes > 0:
+                if size_bytes < 1024:
+                    size_str = f"{size_bytes} B"
+                elif size_bytes < 1024 * 1024:
+                    size_str = f"{size_bytes / 1024:.1f} KB"
+                else:
+                    size_str = f"{size_bytes / (1024 * 1024):.1f} MB"
 
-            return {"available": True, "size": size_str}
+                return {"available": True, "size": size_str}
     except Exception:  # nosec B110
         pass
 

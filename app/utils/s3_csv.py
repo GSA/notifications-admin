@@ -1,12 +1,25 @@
 import csv
 import io
 
-from app.utils.csv import convert_report_date_to_preferred_timezone
+from app.utils.csv import (
+    convert_report_date_to_preferred_timezone,
+    get_user_preferred_timezone,
+)
 
 
-def convert_s3_csv_timestamps(csv_content):
+def convert_s3_csv_timestamps(csv_content, user_timezone=None):
+    """
+    Convert UTC timestamps in CSV to user's preferred timezone.
+
+    Args:
+        csv_content: The CSV content as string or bytes
+        user_timezone: Optional pre-captured timezone (to avoid context issues in streaming)
+    """
     if isinstance(csv_content, bytes):
         csv_content = csv_content.decode("utf-8")
+
+    if user_timezone is None:
+        user_timezone = get_user_preferred_timezone()
 
     reader = csv.reader(io.StringIO(csv_content))
 
@@ -39,7 +52,7 @@ def convert_s3_csv_timestamps(csv_content):
         if len(row) > time_column_index and row[time_column_index]:
             try:
                 row[time_column_index] = convert_report_date_to_preferred_timezone(
-                    row[time_column_index]
+                    row[time_column_index], target_timezone=user_timezone
                 )
             except Exception:  # nosec B110
                 pass
