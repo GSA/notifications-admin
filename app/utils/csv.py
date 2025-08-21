@@ -234,7 +234,9 @@ def get_user_preferred_timezone():
                     return tz
                 except ZoneInfoNotFoundError:
                     pass
-    except Exception:
+    except (AttributeError, RuntimeError):
+        # AttributeError: current_user might not have expected attributes
+        # RuntimeError: working outside of request context
         pass
 
     return "US/Eastern"
