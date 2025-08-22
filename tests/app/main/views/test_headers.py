@@ -18,7 +18,7 @@ def test_owasp_useful_headers_set(
     assert search(r"frame-ancestors 'none';", csp)
     assert search(r"form-action 'self';", csp)
     assert search(
-        r"script-src 'self' static\.example\.com 'unsafe-eval' https:\/\/js-agent\.new"
+        r"script-src 'self' static\.example\.com https:\/\/js-agent\.new"
         r"relic\.com https:\/\/gov-bam\.nr-data\.net https:\/\/www\.googletagmanager\."
         r"com https:\/\/www\.google-analytics\.com https:\/\/dap\.digitalgov\.gov "
         r"https:\/\/cdn\.socket\.io",
@@ -49,4 +49,7 @@ def test_owasp_useful_headers_set(
         expected_sources <= actual_sources
     ), f"Missing sources in connect-src: {expected_sources - actual_sources}"
     assert search(r"style-src 'self' static\.example\.com 'nonce-.*';", csp)
-    assert search(r"img-src 'self' static\.example\.com static-logos\.test\.com", csp)
+    assert search(r"img-src 'self' static\.example\.com", csp)
+
+    # Test for Cross-Origin-Embedder-Policy header
+    assert response.headers["Cross-Origin-Embedder-Policy"] == "credentialless"

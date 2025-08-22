@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from flask import Flask, url_for
 
+import app.utils.api_health
 from app import create_app
 from app.enums import AuthType, ServicePermission
 from notifications_python_client.errors import HTTPError
@@ -34,6 +35,13 @@ from . import (
     template_version_json,
     user_json,
 )
+
+# Mock is_api_down to prevent network calls during unit tests
+# Set API_HOST_NAME to localhost to avoid network timeouts (sometimes they slow down in cicd)
+os.environ["API_HOST_NAME"] = "http://localhost:6011"
+
+# Also mock the function itself as a backup
+app.utils.api_health.is_api_down = lambda: False
 
 load_dotenv()
 
@@ -554,6 +562,18 @@ def mock_update_service_raise_httperror_duplicate_name(mocker):
         raise http_error
 
     return mocker.patch("app.service_api_client.update_service", side_effect=_update)
+
+
+@pytest.fixture(autouse=True)
+def _disable_e2e_mode_for_unit_tests(monkeypatch, request):
+    """
+    Disable E2E test mode for all unit tests to prevent unmocked API calls.
+    E2E tests are run in a separate job and should not interfere with unit tests.
+    """
+    # Only disable if unit tests are not being run
+    if "end_to_end" not in request.node.nodeid:
+        monkeypatch.delenv("NOTIFY_E2E_TEST_EMAIL", raising=False)
+        monkeypatch.delenv("NOTIFY_E2E_TEST_PASSWORD", raising=False)
 
 
 SERVICE_ONE_ID = "596364a0-858e-42c8-9062-a8fe822260eb"

@@ -1,6 +1,7 @@
 import json
 import logging
 import urllib.parse
+from os import getenv
 
 import requests
 
@@ -10,21 +11,21 @@ from notifications_python_client.errors import HTTPError, InvalidResponse
 
 logger = logging.getLogger(__name__)
 
+API_PUBLIC_URL = getenv("API_PUBLIC_URL", "localhost")
+
 
 class BaseAPIClient:
     """
-    Base class for GOV.UK Notify API client.
+    Base class for Notify.gov API client.
 
     This class is not thread-safe.
     """
 
-    def __init__(
-        self, api_key, base_url="https://api.notifications.service.gov.uk", timeout=30
-    ):
+    def __init__(self, api_key, base_url=API_PUBLIC_URL, timeout=30):
         """
         Initialise the client
         Error if either of base_url or secret missing
-        :param base_url - base URL of GOV.UK Notify API:
+        :param base_url - base URL of Notify.gov API:
         :param secret - application secret - used to sign the request:
         :param timeout - request timeout on the client
         :return:

@@ -239,14 +239,19 @@ test('handleDropdownChange updates DOM for individual selection', () => {
       <h2 id="table-heading"></h2>
       <table id="activity-table">
         <caption id="caption"></caption>
+        <thead>
+          <tr>
+            <th data-column="sender">Sender</th>
+          </tr>
+        </thead>
         <tbody>
-          <tr><td class="sender-column">Test User</td></tr>
-          <tr><td class="sender-column">Other User</td></tr>
-          <tr><td class="sender-column">Test User</td></tr>
-          <tr><td class="sender-column">Test User</td></tr>
-          <tr><td class="sender-column">Other User</td></tr>
-          <tr><td class="sender-column">Test User</td></tr>
-          <tr><td class="sender-column">Test User</td></tr>
+          <tr><td data-sender="Test User">Test User</td></tr>
+          <tr><td data-sender="Other User">Other User</td></tr>
+          <tr><td data-sender="Test User">Test User</td></tr>
+          <tr><td data-sender="Test User">Test User</td></tr>
+          <tr><td data-sender="Other User">Other User</td></tr>
+          <tr><td data-sender="Test User">Test User</td></tr>
+          <tr><td data-sender="Test User">Test User</td></tr>
         </tbody>
       </table>
     </div>
@@ -269,17 +274,83 @@ test('handleDropdownChange updates DOM for individual selection', () => {
   expect(document.getElementById('table-heading').textContent).toBe('My activity');
   expect(document.getElementById('caption').textContent).toContain('Test User');
 
-  document.querySelectorAll('.sender-column').forEach(col => {
-    expect(col.style.display).toBe('none');
+  const senderHeader = document.querySelector('[data-column="sender"]');
+  expect(senderHeader.style.display).toBe('none');
+
+  document.querySelectorAll('[data-sender]').forEach(cell => {
+    expect(cell.style.display).toBe('none');
   });
 
   const rows = Array.from(document.querySelectorAll('#activity-table tbody tr'));
   const visibleRows = rows.filter(row => row.style.display !== 'none');
   expect(visibleRows.length).toBeLessThanOrEqual(5);
   visibleRows.forEach(row => {
-    const sender = row.querySelector('.sender-column').textContent.trim();
+    const sender = row.querySelector('[data-sender]').dataset.sender;
     expect(sender).toBe('Test User');
   });
+
+  window.fetchData.mockRestore();
+});
+
+test('handleDropdownChange shows empty message when user has no jobs', () => {
+  document.body.innerHTML = `
+    <div id="activityChartContainer">
+      <div class="chart-subtitle"></div>
+    </div>
+    <div id="aria-live-account"></div>
+    <div id="activityContainer" data-currentUserName="Test User" data-currentServiceId="12345"></div>
+    <div id="tableActivity">
+      <h2 id="table-heading"></h2>
+      <table id="activity-table">
+        <caption id="caption"></caption>
+        <thead>
+          <tr>
+            <th data-column="sender">Sender</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td data-sender="Other User">Other User</td></tr>
+          <tr><td data-sender="Another User">Another User</td></tr>
+          <tr><td data-sender="Different User">Different User</td></tr>
+          <tr class="table-row">
+            <td class="table-empty-message" colspan="10">No batched job messages found (messages are kept for 7 days).</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <select id="options">
+      <option value="service">Service</option>
+      <option value="individual">Individual</option>
+    </select>
+  `;
+
+  window.currentUserName = "Test User";
+
+  jest.spyOn(window, 'fetchData').mockImplementation(() => {});
+
+  const selectElement = document.getElementById('options');
+  selectElement.value = 'individual';
+  const event = { target: selectElement };
+
+  window.handleDropdownChange(event);
+
+  expect(document.getElementById('table-heading').textContent).toBe('My activity');
+  expect(document.getElementById('caption').textContent).toContain('Test User');
+
+  const senderHeader = document.querySelector('[data-column="sender"]');
+  expect(senderHeader.style.display).toBe('none');
+
+  document.querySelectorAll('[data-sender]').forEach(cell => {
+    expect(cell.style.display).toBe('none');
+  });
+
+  const emptyMessageRow = document.querySelector('.table-empty-message').closest('tr');
+  expect(emptyMessageRow.style.display).toBe('');
+
+  const allRows = Array.from(document.querySelectorAll('#activity-table tbody tr'));
+  const visibleRows = allRows.filter(row => row.style.display !== 'none');
+  expect(visibleRows.length).toBe(1);
+  expect(visibleRows[0].querySelector('.table-empty-message')).not.toBeNull();
 
   window.fetchData.mockRestore();
 });

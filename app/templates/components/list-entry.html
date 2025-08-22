@@ -17,7 +17,8 @@
     {% call govukFieldset({
         "legend": {
           "text": field.label.text,
-          "isPageHeading": False
+          "isPageHeading": False,
+          "classes": "text-bold"
         },
         "attributes": attributes
       })
@@ -36,9 +37,9 @@
             {% set autocomplete = "" %}
           {% endif %}
           {% if entry.errors %}
-            {% set label_classes = "usa-input--numbered__label usa-input--numbered__label--error" %}
+            {% set label_classes = "usa-label usa-label--error" %}
           {% else %}
-            {% set label_classes = "usa-input--numbered__label" %}
+            {% set label_classes = "usa-label" %}
           {% endif %}
           {% set field_name = field.name + "-" + loop.index|string %}
           {{ entry(param_extensions={
@@ -48,7 +49,7 @@
               "html": '<span class="usa-sr-only">' + item_name + ' number </span>' + loop.index|string + '.',
               "classes": label_classes
             },
-            "classes": "usa-input--numbered ",
+            "classes": "usa-input",
             "value": field.data[loop.index0],
             "autocomplete": autocomplete
           }) }}

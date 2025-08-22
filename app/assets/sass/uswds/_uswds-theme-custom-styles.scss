@@ -492,42 +492,10 @@ td.table-empty-message {
 .job-table {
   width: 100%;
   border-collapse: collapse;
-  td.file-name {
-    width: 25%;
-    overflow-wrap: anywhere;
-  }
-  td.jobid {
-    width: 5%;
-  }
-  td.template {
-    width: 25%;
-  }
-  td.time-sent {
-    width: 15%;
-  }
-  td.sender {
-    width: 20%;
-    overflow-wrap: break-word;
-  }
-  td.count-of-recipients {
-    width: 5%;
-  }
-  td.report {
-    width: 2%;
-    text-align: center;
-  }
-  td.delivered {
-    width: 2%;
-    text-align: center;
-  }
-  td.failed {
-    width: 2%;
-    text-align: center;
-  }
-  td.report img {
-    padding-top: 5px;
-  }
   th {
+    padding: 0.5rem 1rem;
+  }
+  td {
     padding: 0.5rem 1rem;
   }
 }
@@ -1091,4 +1059,15 @@ nav.nav {
 
 .selection-content .usa-form-group--nested li.usa-checkbox {
   margin-top: 0;
+}
+
+// Radio button and checkbox legends
+.usa-radio legend.usa-legend,
+.usa-checkbox legend.usa-legend,
+.api-key-radios legend.usa-legend,
+.login-auth-radios legend.usa-legend,
+.auth-type-radios legend.usa-legend,
+.notification-type-radios legend.usa-legend,
+.organizations-radios legend.usa-legend {
+  font-weight: 700;
 }

@@ -15,7 +15,7 @@ NVMSH := $(shell [ -f "$(HOME)/.nvm/nvm.sh" ] && echo "$(HOME)/.nvm/nvm.sh" || e
 ## DEVELOPMENT
 
 .PHONY: bootstrap
-bootstrap: ## Set up everything to run the app
+bootstrap: ## Set up everything to run the application
 	make generate-version-file
 	poetry sync --no-root
 	poetry run playwright install --with-deps
@@ -44,6 +44,19 @@ watch-frontend:  ## Build frontend and watch for changes
 run-flask:  ## Run flask
 	poetry run newrelic-admin run-program flask run -p 6012 --host=0.0.0.0
 
+.PHONY: wait-for-flask
+wait-for-flask:
+	@echo "Waiting for Flask to start..."
+	@timeout 30 bash -c 'until curl -sf http://localhost:6012 > /dev/null 2>&1; do sleep 1; done'
+	@echo "Flask is ready!"
+
+.PHONY: run-flask-and-wait
+run-flask-and-wait:
+	@make run-flask &
+	@echo "Waiting for Flask to start..."
+	@timeout 30 bash -c 'until curl -sf http://localhost:6012 > /dev/null 2>&1; do sleep 1; done'
+	@echo "Flask is ready!"
+
 .PHONY: run-flask-bare
 run-flask-bare:  ## Run flask without invoking poetry so we can override ENV variables in .env
 	flask run -p 6012 --host=0.0.0.0
@@ -66,6 +79,9 @@ generate-version-file: ## Generates the app version file
 
 .PHONY: test
 test: py-lint py-test js-test ## Run tests
+
+.PHONY: test-fast
+test-fast: py-lint py-test-fast js-test ## Run tests quickly in parallel (testing locally first)
 
 .PHONY: py-lint
 py-lint: ## Run python linting scanners and black
@@ -97,6 +113,11 @@ py-test: ## Run python unit tests
 	poetry run coverage run -m pytest --maxfail=10 --ignore=tests/end_to_end tests/
 	poetry run coverage report --fail-under=93
 	poetry run coverage html -d .coverage_cache
+
+.PHONY: py-test-fast
+py-test-fast: export NEW_RELIC_ENVIRONMENT=test
+py-test-fast: ## Run python unit tests in parallel (testing locally first)
+	poetry run pytest --maxfail=10 --ignore=tests/end_to_end tests/ -n auto
 
 .PHONY: dead-code
 dead-code: ## 60% is our aspirational goal, but currently breaks the build

@@ -161,7 +161,7 @@
         "filename": "app/config.py",
         "hashed_secret": "577a4c667e4af8682ca431857214b3a920883efc",
         "is_verified": false,
-        "line_number": 123,
+        "line_number": 122,
         "is_secret": false
       }
     ],
@@ -629,10 +629,10 @@
         "filename": "tests/conftest.py",
         "hashed_secret": "f8377c90fcfd699f0ddbdcb30c2c9183d2d933ea",
         "is_verified": false,
-        "line_number": 3267,
+        "line_number": 3287,
         "is_secret": false
       }
     ]
   },
-  "generated_at": "2025-07-22T17:07:31Z"
+  "generated_at": "2025-08-21T16:06:57Z"
 }

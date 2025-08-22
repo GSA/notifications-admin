@@ -1500,7 +1500,10 @@ def test_new_folder_is_created_if_only_new_folder_is_filled_out(
 
     assert mock_move_to_template_folder.called is False
     mock_create_template_folder.assert_called_once_with(
-        SERVICE_ONE_ID, name="new folder", parent_id=None
+        SERVICE_ONE_ID,
+        name="new folder",
+        parent_id=None,
+        created_by_id="6ce466d0-fd6a-11e5-82f5-e0accb9d11a6",
     )
 
 
@@ -1538,7 +1541,10 @@ def test_should_be_able_to_move_to_new_folder(
     )
 
     mock_create_template_folder.assert_called_once_with(
-        SERVICE_ONE_ID, name="new folder", parent_id=None
+        SERVICE_ONE_ID,
+        name="new folder",
+        parent_id=None,
+        created_by_id="6ce466d0-fd6a-11e5-82f5-e0accb9d11a6",
     )
     mock_move_to_template_folder.assert_called_once_with(
         service_id=SERVICE_ONE_ID,

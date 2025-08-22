@@ -27,6 +27,14 @@
     }) }}
     {% if current_user.has_permissions(ServicePermission.MANAGE_SERVICE) and form.users_with_permission.all_service_users %}
       {{ form.users_with_permission }}
+      {% if form.platform_admins is defined and form.platform_admins %}
+        <p class="usa-hint">Platform admin can see all folders:</p>
+        <ul class="usa-hint usa-list">
+          {% for admin in form.platform_admins %}
+            <li>{{ admin.name }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
     {% endif %}
 
     {{ page_footer(

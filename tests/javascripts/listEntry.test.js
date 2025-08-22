@@ -1,6 +1,4 @@
 beforeAll(() => {
-  Hogan = require('hogan.js');
-
   require('../../app/assets/javascripts/listEntry.js');
 });
 
@@ -50,10 +48,10 @@ describe("List entry", () => {
         result += `
             <div class="list-entry">
               <div class="usa-form-group">
-                <label for="domains-${idx + 1}" class="usa-radio__label govuk-input--numbered__label">
+                <label for="domains-${idx + 1}" class="usa-label">
                   <span class="usa-sr-only">domain number </span>${idx + 1}.
                 </label>
-                <input type="text" name="domains-${idx + 1}" id="domains-${idx + 1}" class="govuk-input govuk-input--numbered " autocomplete="off">
+                <input type="text" name="domains-${idx + 1}" id="domains-${idx + 1}" class="usa-input" autocomplete="off">
               </div>
             </div>`;
       }
@@ -249,7 +247,7 @@ describe("List entry", () => {
       triggerEvent(inputList.querySelectorAll('.input-list__button--remove')[0], 'click');
 
       const newNums = Array.from(
-                        inputList.querySelectorAll('.govuk-input--numbered__label')
+                        inputList.querySelectorAll('.usa-label')
                       )
                       .map((itemNum, idx) => {
                         return parseInt(itemNum.lastChild.nodeValue, 10);
@@ -350,6 +348,74 @@ describe("List entry", () => {
 
       expect(inputList.querySelector('.input-list__button--add')).toBeNull();
 
+    });
+  });
+
+  describe("getOriginalClasses functionality", () => {
+    test("Should handle inputs without any classes", () => {
+      // Create input without classes
+      document.body.innerHTML = `
+        <div class="input-list" data-module="list-entry" data-list-item-name="domain" id="list-entry-domains">
+          <div class="list-entry">
+            <input type="text" name="domains-1" id="domains-1">
+          </div>
+        </div>`;
+
+      inputList = document.querySelector('.input-list');
+
+      // start module
+      window.GOVUK.modules.start();
+
+      // Check that it handles missing classes gracefully
+      const newInput = inputList.querySelector('.list-entry input');
+      expect(newInput).not.toBeNull();
+    });
+
+    test("Should handle empty input list", () => {
+      // Create div without any inputs
+      document.body.innerHTML = `
+        <div class="input-list" data-module="list-entry" data-list-item-name="domain" id="list-entry-domains">
+        </div>`;
+
+      inputList = document.querySelector('.input-list');
+
+      // This should not throw an error
+      expect(() => {
+        window.GOVUK.modules.start();
+      }).not.toThrow();
+    });
+  });
+
+  describe("getId functionality", () => {
+    test("Should generate IDs correctly with and without number parameter", () => {
+      // Set up a simpler structure to test ID generation
+      document.body.innerHTML = `
+        <div class="input-list" data-module="list-entry" data-list-item-name="test-item" id="list-entry-test">
+          <div class="list-entry">
+            <input type="text" name="test-1" id="test-1" class="usa-input">
+          </div>
+          <div class="list-entry">
+            <input type="text" name="test-2" id="test-2" class="usa-input">
+          </div>
+        </div>`;
+
+      inputList = document.querySelector('.input-list');
+
+      // start module
+      window.GOVUK.modules.start();
+
+      // After module starts, check that IDs are generated correctly
+      // The module will have regenerated the DOM
+      const inputs = inputList.querySelectorAll('input');
+
+      // Check that inputs have proper IDs with numbers
+      expect(inputs[0].id).toEqual("test-1");
+      expect(inputs[1].id).toEqual("test-2");
+
+      // The getId function is called internally during render
+      // We can verify it worked by checking the generated HTML structure
+      expect(inputList.innerHTML).toContain('id="test-1"');
+      expect(inputList.innerHTML).toContain('id="test-2"');
     });
   });
 });

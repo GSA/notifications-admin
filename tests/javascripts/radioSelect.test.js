@@ -1,7 +1,6 @@
 const helpers = require('./support/helpers');
 
 beforeAll(() => {
-  window.Hogan = require('hogan.js');
   require('../../app/assets/javascripts/radioSelect.js');
 });
 

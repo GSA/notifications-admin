@@ -10,7 +10,9 @@ import gunicorn
 # but we have an unusual configuration with a lot of cpus and not much memory
 # so adjust it.
 workers = multiprocessing.cpu_count()
-worker_class = "eventlet"
+worker_class = "gevent"
+
+timeout = 240
 bind = "0.0.0.0:{}".format(os.getenv("PORT"))
 disable_redirect_access_to_syslog = True
 gunicorn.SERVER_SOFTWARE = "None"

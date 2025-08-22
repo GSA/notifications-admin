@@ -44,7 +44,6 @@ const javascripts = () => {
     .pipe(buffer())
     .pipe(
       plugins.addSrc.prepend([
-        paths.npm + 'hogan.js/dist/hogan-3.0.2.js',
         paths.npm + 'jquery/dist/jquery.min.js',
         paths.npm + 'query-command-supported/dist/queryCommandSupported.min.js',
         paths.npm + 'textarea-caret/index.js',
@@ -82,6 +81,7 @@ const javascripts = () => {
     paths.src + 'javascripts/sidenav.js',
     paths.src + 'javascripts/validation.js',
     paths.src + 'javascripts/socketio.js',
+    paths.src + 'javascripts/scrollPosition.js',
   ])
     .pipe(plugins.prettyerror())
     .pipe(

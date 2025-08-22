@@ -2,6 +2,7 @@ import os
 import pathlib
 import re
 import secrets
+import sys
 from functools import partial
 from time import monotonic
 from urllib.parse import unquote, urlparse, urlunparse
@@ -101,11 +102,17 @@ from app.notify_client.organizations_api_client import organizations_client
 from app.notify_client.performance_dashboard_api_client import (
     performance_dashboard_api_client,
 )
-from app.notify_client.platform_stats_api_client import platform_stats_api_client
+from app.notify_client.platform_stats_api_client import (
+    platform_stats_api_client,
+)
 from app.notify_client.service_api_client import service_api_client
 from app.notify_client.status_api_client import status_api_client
-from app.notify_client.template_folder_api_client import template_folder_api_client
-from app.notify_client.template_statistics_api_client import template_statistics_client
+from app.notify_client.template_folder_api_client import (
+    template_folder_api_client,
+)
+from app.notify_client.template_statistics_api_client import (
+    template_statistics_client,
+)
 from app.notify_client.upload_api_client import upload_api_client
 from app.notify_client.user_api_client import user_api_client
 from app.url_converters import SimpleDateTypeConverter, TemplateTypeConverter
@@ -141,7 +148,6 @@ navigation = {
 
 def _csp(config):
     asset_domain = config["ASSET_DOMAIN"]
-    logo_domain = config["LOGO_CDN_DOMAIN"]
     api_public_url = config["API_PUBLIC_URL"]
     api_public_ws_url = config["API_PUBLIC_WS_URL"]
 
@@ -157,7 +163,6 @@ def _csp(config):
         "script-src": [
             "'self'",
             asset_domain,
-            "'unsafe-eval'",
             "https://js-agent.newrelic.com",
             "https://gov-bam.nr-data.net",
             "https://www.googletagmanager.com",
@@ -173,17 +178,14 @@ def _csp(config):
             f"{api_public_ws_url}",
         ],
         "style-src": ["'self'", asset_domain],
-        "img-src": ["'self'", asset_domain, logo_domain],
+        "img-src": ["'self'", asset_domain],
     }
 
 
 def create_app(application):
     @application.after_request
-    def add_csp_header(response):
-        existing_csp = response.headers.get("Content-Security-Policy", "")
-        response.headers["Content-Security-Policy"] = (
-            existing_csp + "; form-action 'self';"
-        )
+    def add_security_headers(response):
+        response.headers["Cross-Origin-Embedder-Policy"] = "credentialless"
         return response
 
     @application.context_processor
@@ -271,14 +273,11 @@ def create_app(application):
         content_security_policy=_csp(application.config),
         content_security_policy_nonce_in=["style-src", "script-src"],
         permissions_policy={
-            "accelerometer": "()",
-            "ambient-light-sensor": "()",
-            "autoplay": "()",
-            "battery": "()",
+            "accelerometer": '(self "https://www.youtube-nocookie.com")',
+            "autoplay": '(self "https://www.youtube-nocookie.com")',
             "camera": "()",
-            "document-domain": "()",
             "geolocation": "()",
-            "gyroscope": "()",
+            "gyroscope": '(self "https://www.youtube-nocookie.com")',
             "local-fonts": "()",
             "magnetometer": "()",
             "microphone": "()",
@@ -539,26 +538,28 @@ def register_errorhandlers(application):  # noqa (C901 too complex)
 
     @application.errorhandler(HTTPError)
     def render_http_error(error):
+        error_url = error.response.url if error.response else "unknown URL"
+
         application.logger.warning(
-            "API {} failed with status {} message {}".format(
-                error.response.url if error.response else "unknown",
-                error.status_code,
-                error.message,
-            )
+            f"API {error_url} failed with status {error.status_code} message {error.message}",
+            exc_info=sys.exc_info(),
+            stack_info=True,
         )
+
         error_code = error.status_code
+
         if error_code not in [401, 404, 403, 410]:
             # probably a 500 or 503.
             # it might be a 400, which we should handle as if it's an internal server error. If the API might
             # legitimately return a 400, we should handle that within the view or the client that calls it.
             application.logger.exception(
-                "API {} failed with status {} message {}".format(
-                    error.response.url if error.response else "unknown",
-                    error.status_code,
-                    error.message,
-                )
+                f"API {error_url} failed with status {error.status_code} message {error.message}",
+                exc_info=sys.exc_info(),
+                stack_info=True,
             )
+
             error_code = 500
+
         return _error_response(error_code)
 
     @application.errorhandler(400)
