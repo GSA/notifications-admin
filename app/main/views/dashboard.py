@@ -41,7 +41,7 @@ def service_dashboard(service_id):
         return redirect(url_for("main.choose_template", service_id=service_id))
 
     job_response = job_api_client.get_jobs(service_id)["data"]
-    service_data_retention_days = 7
+    service_data_retention_days = 8
 
     active_jobs = [
         job for job in job_response if job["job_status"] != JobStatus.CANCELLED
@@ -55,7 +55,7 @@ def service_dashboard(service_id):
     messages_remaining = total_messages.get("messages_remaining", 0)
     messages_sent = total_messages.get("messages_sent", 0)
     all_statistics = template_statistics_client.get_template_statistics_for_service(
-        service_id, limit_days=7
+        service_id, limit_days=8
     )
     template_statistics = aggregate_template_usage(all_statistics)
     return render_template(
@@ -361,7 +361,7 @@ def get_stats_date_range():
     current_financial_year = get_current_financial_year()
     current_month = get_current_month_for_financial_year(current_financial_year)
     start_date = datetime.now().strftime("%Y-%m-%d")
-    days = 7
+    days = 8
     return {
         "current_financial_year": current_financial_year,
         "current_month": current_month,

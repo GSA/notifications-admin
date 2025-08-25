@@ -421,7 +421,7 @@ def redact_mobile_number(mobile_number, spacing=""):
     return "".join(mobile_number_list)
 
 
-def get_time_left(created_at, service_data_retention_days=7):
+def get_time_left(created_at, service_data_retention_days=8):
     return ago.human(
         (datetime.now(timezone.utc))
         - (
