@@ -55,7 +55,7 @@ def service_dashboard(service_id):
     messages_remaining = total_messages.get("messages_remaining", 0)
     messages_sent = total_messages.get("messages_sent", 0)
     all_statistics = template_statistics_client.get_template_statistics_for_service(
-        service_id
+        service_id, limit_days=8
     )
     template_statistics = aggregate_template_usage(all_statistics)
     return render_template(

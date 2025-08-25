@@ -348,7 +348,7 @@ def test_should_show_recent_templates_on_dashboard(
         service_id=SERVICE_ONE_ID,
     )
 
-    mock_template_stats.assert_called_once_with(SERVICE_ONE_ID)
+    mock_template_stats.assert_called_once_with(SERVICE_ONE_ID, limit_days=8)
 
     headers = [
         header.text.strip() for header in page.find_all("h2") + page.find_all("h1")
@@ -394,7 +394,7 @@ def test_should_not_show_recent_templates_on_dashboard_if_only_one_template_used
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
     main = page.select_one("main").text
 
-    mock_template_stats.assert_called_once_with(SERVICE_ONE_ID)
+    mock_template_stats.assert_called_once_with(SERVICE_ONE_ID, limit_days=8)
 
     assert (
         stats[0]["template_name"] == "one"
