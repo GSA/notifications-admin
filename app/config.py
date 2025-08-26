@@ -12,8 +12,8 @@ class Config(object):
     NOTIFY_APP_NAME = "admin"
     NOTIFY_ENVIRONMENT = getenv("NOTIFY_ENVIRONMENT", "development")
     API_HOST_NAME = getenv("API_HOST_NAME", "localhost")
-    API_PUBLIC_URL = getenv("API_PUBLIC_URL", "http://localhost")
-    API_PUBLIC_WS_URL = getenv("API_PUBLIC_WS_URL", "ws://localhost")
+    API_PUBLIC_URL = getenv("API_PUBLIC_URL", "localhost")
+    API_PUBLIC_WS_URL = getenv("API_PUBLIC_WS_URL", "localhost")
 
     ADMIN_BASE_URL = getenv("ADMIN_BASE_URL", "http://localhost:6012")
     HEADER_COLOUR = "#81878b"  # mix of dark-grey and mid-grey
