@@ -19,9 +19,7 @@ plugins.uglify = require('gulp-uglify');
 const paths = {
   src: 'app/assets/',
   dist: 'app/static/',
-  npm: 'node_modules/',
-  toolkit: 'node_modules/govuk_frontend_toolkit/',
-  govuk_frontend: 'node_modules/govuk-frontend/',
+  npm: 'node_modules/'
 };
 
 const javascripts = () => {
@@ -54,8 +52,8 @@ const javascripts = () => {
     );
 
   const local = src([
-    paths.toolkit + 'javascripts/govuk/modules.js',
-    paths.toolkit + 'javascripts/govuk/show-hide-content.js',
+    paths.src + 'javascripts/modules/uswds-modules.js',
+    paths.src + 'javascripts/modules/show-hide-content.js',
     paths.src + 'javascripts/copyToClipboard.js',
     paths.src + 'javascripts/enhancedTextbox.js',
     paths.src + 'javascripts/fileUpload.js',

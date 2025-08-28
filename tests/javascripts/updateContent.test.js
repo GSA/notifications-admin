@@ -291,18 +291,18 @@ describe('Update content', () => {
 
         return `
           <div class="keyline-block">
-            <div class="file-list govuk-!-margin-bottom-2">
+            <div class="file-list margin-bottom-2">
               <h2>
                 <a class="file-list-filename-large usa-link" href="/services/7597847f-ad8e-4600-8faf-c42a647d8dee/current-alerts/b9e53cda-54f9-47bc-9fb2-b78a11eda6a9">${content.title}</a>
               </h2>
-              <div class="govuk-grid-row">
+              <div class="grid-row">
                 <div class="grid-col-6">
-                  <span class="file-list-hint-large govuk-!-margin-bottom-2">
+                  <span class="file-list-hint-large margin-bottom-2">
                     ${content.hint}
                   </span>
                 </div>
                 <div class="grid-col-6 file-list-status">
-                  <p class="usa-body govuk-!-margin-bottom-0 usa-hint">
+                  <p class="usa-body margin-bottom-0 usa-hint">
                     ${content.status}
                   </p>
                 </div>

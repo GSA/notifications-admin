@@ -41,12 +41,14 @@ def njk_to_j2(template):
         r"""^([ ]*)([^ '"#\r\n:]+?)\s*:""", r"\1'\2':", template, flags=re.M
     )
 
-    # govukFieldset can accept a call block argument, however the Jinja
+    # Fieldset macros can accept a call block argument, however the Jinja
     # compiler does not detect this as the macro body is included from
     # the template file. A workaround is to patch the declaration of the
     # macro to include an explicit caller argument.
-    template = template.replace(
-        "macro govukFieldset(params)", "macro govukFieldset(params, caller=none)"
+    template = re.sub(
+        r"macro usaFieldset\(params\)",
+        r"macro usaFieldset(params, caller=none)",
+        template
     )
 
     # Many components feature an attributes field, which is supposed to be
@@ -54,8 +56,6 @@ def njk_to_j2(template):
     # are iterated. In Python, the default iterator for a dict is .keys(), but
     # we want .items().
     # This only works because our undefined implements .items()
-    # We've tested this explicitly with: govukInput, govukCheckbox, govukTable,
-    # govukSummaryList
     template = re.sub(
         r"for attribute, value in (params|item|cell|action).attributes",
         r"for attribute, value in \1.attributes.items()",
@@ -75,7 +75,7 @@ def njk_to_j2(template):
     # Change any references to describedBy to be nonlocal.describedBy,
     # unless describedBy is a dictionary key (i.e. quoted or dotted).
     template = re.sub(r"""(?<!['".])describedBy""", r"nonlocal.describedBy", template)
-    # govukSummaryList
+    # SummaryList components
     template = re.sub(
         r"""^([ ]*)({% set anyRowHasActions = false %})""",
         r"\1{%- set nonlocal = namespace() -%}\n\1\2",
@@ -85,7 +85,7 @@ def njk_to_j2(template):
     template = re.sub(
         r"""(?<!['".])anyRowHasActions""", r"nonlocal.anyRowHasActions", template
     )
-    # govukRadios and govukCheckboxes
+    # Radios and Checkboxes components
     # Since both of these templates set describedBy before isConditional, we can use
     # the existing nonlocal.
     template = re.sub(

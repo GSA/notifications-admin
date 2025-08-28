@@ -8,16 +8,16 @@ afterAll(() => {
 
 describe("List entry", () => {
   const domains = [
-    'gov.uk',
-    'dwp.gov.uk',
-    'hmrc.gov.uk',
-    'defra.gov.uk',
-    'beis.gov.uk',
-    'dcms.gov.uk',
-    'dfe.gov.uk',
-    'did.gov.uk',
-    'dvla.gov.uk',
-    'dvsa.gov.uk'
+    'usa.gov',
+    'state.gov',
+    'irs.gov',
+    'defense.gov',
+    'energy.gov',
+    'justice.gov',
+    'education.gov',
+    'dhs.gov',
+    'transportation.gov',
+    'va.gov'
   ];
   let inputList;
 
@@ -66,7 +66,7 @@ describe("List entry", () => {
           </span>
         </legend>
         <span id="domains-hint" class="usa-hint">
-          For example cabinet-office.gov.uk
+          For example agency.usa.gov
         </span>
         <div class="input-list" data-module="list-entry" data-list-item-name="domain" id="list-entry-domains">
           ${entries()} }

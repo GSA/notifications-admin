@@ -77,11 +77,11 @@ describe("Stick to top/bottom of window when scrolling", () => {
     beforeEach(() => {
 
       document.body.innerHTML = `
-        <div class="govuk-grid-row">
-          <main class="govuk-grid-column-three-quarters column-main">
+        <div class="grid-row">
+          <main class="grid-col-9 column-main">
             <form method="post" autocomplete="off">
-              <div class="govuk-grid-row js-stick-at-top-when-scrolling">
-                <div class="govuk-grid-column-two-thirds ">
+              <div class="grid-row js-stick-at-top-when-scrolling">
+                <div class="grid-col-8">
                   <div class="form-group" data-module="">
                     <label class="form-label" for="placeholder_value">
                       name
@@ -98,7 +98,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
         </div>
         <footer class="js-footer"></footer>`;
 
-      inputForm = document.querySelector('form > .govuk-grid-row');
+      inputForm = document.querySelector('form > .grid-row');
       formFooter = document.querySelector('.page-footer');
       footer = document.querySelector('.js-footer');
 
@@ -724,7 +724,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
     beforeEach(() => {
 
       document.body.innerHTML = `
-        <main role="main" class="govuk-grid-column-three-quarters column-main">
+        <main role="main" class="grid-col-9 column-main">
           <a class="usa-back-link" href="">Back</a>
           <h1 class="heading-large js-header">
             Preview of ‘Content email’
@@ -752,7 +752,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
               <p>This is a paragraph with a horizontal line underneath.</p>
               <hr>
               <p>This is a paragraph with a horizontal line above.</p>
-              <p>This paragraph has a link in it: <a class="usa-link" href="https://www.gov.uk">https://www.gov.uk</a>.</p>
+              <p>This paragraph has a link in it: <a class="usa-link" href="https://www.usa.gov">https://www.usa.gov</a>.</p>
             </div>
             <div class="page-footer js-stick-at-bottom-when-scrolling">
               <form method="post" action="">
