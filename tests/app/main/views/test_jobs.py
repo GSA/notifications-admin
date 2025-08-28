@@ -467,10 +467,11 @@ def test_should_show_updates_for_scheduled_job_as_json(
 @pytest.mark.parametrize(
     ("job_created_at", "expected_message"),
     [
-        ("2016-01-10 11:09:00.000000+00:00", "Data available for 7 days"),
-        ("2016-01-04 11:09:00.000000+00:00", "Data available for 1 day"),
-        ("2016-01-03 11:09:00.000000+00:00", "Data available for 12 hours"),
-        ("2016-01-02 23:59:59.000000+00:00", "Data no longer available"),
+        ("2016-01-10 11:09:00.000000+00:00", "Data available for 8 days"),
+        ("2016-01-04 11:09:00.000000+00:00", "Data available for 2 days"),
+        ("2016-01-03 11:09:00.000000+00:00", "Data available for 1 day"),
+        ("2016-01-02 11:09:00.000000+00:00", "Data available for 12 hours"),
+        ("2016-01-01 23:59:59.000000+00:00", "Data no longer available"),
     ],
 )
 @freeze_time("2016-01-10 12:00:00.000000")

@@ -38,7 +38,7 @@ beforeAll(done => {
       </form>
       <div id="activityChart" >
         <div class="chart-header">
-          <div class="chart-subtitle">Service Name - last 7 days</div>
+          <div class="chart-subtitle">Service Name - last 8 days</div>
           <div class="chart-legend" role="region" aria-label="Legend"></div>
         </div>
         <div class="chart-container" id="weeklyChart" data-service-id="12345" style="width: 600px;"></div>
@@ -313,7 +313,7 @@ test('handleDropdownChange shows empty message when user has no jobs', () => {
           <tr><td data-sender="Another User">Another User</td></tr>
           <tr><td data-sender="Different User">Different User</td></tr>
           <tr class="table-row">
-            <td class="table-empty-message" colspan="10">No batched job messages found (messages are kept for 7 days).</td>
+            <td class="table-empty-message" colspan="10">No batched job messages found (messages are kept for 8 days).</td>
           </tr>
         </tbody>
       </table>

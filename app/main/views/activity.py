@@ -125,7 +125,7 @@ def get_filtered_jobs(service_id, page):
 @main.route("/activity/services/<uuid:service_id>")
 @user_has_permissions(ServicePermission.VIEW_ACTIVITY)
 def all_jobs_activity(service_id):
-    service_data_retention_days = 7
+    service_data_retention_days = 8
     page = get_page_from_request()
 
     jobs = get_filtered_jobs(service_id, page)
