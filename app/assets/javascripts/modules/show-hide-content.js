@@ -83,7 +83,11 @@
     }
 
     function escapeElementName (str) {
-      return str ? str.replace(/([!"#$%&'()*+,./:;<=>?@[\]^`{|}~])/g, '\\$1') : str;
+      // First escape backslashes, then escape other special characters
+      // This prevents double-escaping issues identified by CodeQL
+      return str
+        ? str.replace(/\\/g, '\\\\').replace(/([!"#$%&'()*+,./:;<=>?@[\]^`{|}~])/g, '\\$1')
+        : str;
     }
 
     function setupHandlers () {
