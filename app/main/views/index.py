@@ -77,6 +77,7 @@ def accessibility_statement():
 def delivery_and_failure():
     return redirect(url_for(".message_status"), 301)
 
+
 @main.route("/documentation")
 @user_is_logged_in
 def documentation():

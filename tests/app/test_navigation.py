@@ -72,7 +72,6 @@ EXCLUDED_ENDPOINTS = tuple(
             "delete_template_folder",
             "delivery_and_failure",
             "delivery_status_callback",
-            "design_content",
             "documentation",
             "download_all_users",
             "download_notifications_csv",
