@@ -313,9 +313,18 @@ def get_notifications(service_id, message_type, status_override=None):  # noqa
 def get_status_filters(service, message_type, statistics):
     if message_type is None:
         stats = {
-            "requested": sum(statistics[message_type]["requested"] for message_type in {"email", "sms"}),
-            "delivered": sum(statistics[message_type]["delivered"] for message_type in {"email", "sms"}),
-            "failure": sum(statistics[message_type].get("failure", 0) for message_type in {"email", "sms"}),
+            "requested": sum(
+                statistics[message_type]["requested"]
+                for message_type in {"email", "sms"}
+            ),
+            "delivered": sum(
+                statistics[message_type]["delivered"]
+                for message_type in {"email", "sms"}
+            ),
+            "failure": sum(
+                statistics[message_type].get("failure", 0)
+                for message_type in {"email", "sms"}
+            ),
         }
     else:
         stats = statistics[message_type]

@@ -651,7 +651,7 @@ def test_back_link_directs_to_api_integration_from_delivery_callback_if_no_inbou
         _follow_redirects=True,
     )
 
-    assert page.select_one(".usa-back-link")["href"] == url_for(
+    assert page.select_one("nav.usa-breadcrumb a")["href"] == url_for(
         expected_link, service_id=service_one["id"]
     )
 

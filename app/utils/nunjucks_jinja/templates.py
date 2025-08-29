@@ -48,7 +48,7 @@ def njk_to_j2(template):
     template = re.sub(
         r"macro usaFieldset\(params\)",
         r"macro usaFieldset(params, caller=none)",
-        template
+        template,
     )
 
     # Many components feature an attributes field, which is supposed to be

@@ -977,9 +977,15 @@ def test_service_verify_reply_to_address(
     )
     assert page.find("h1").text == "{} email reply-to address".format(expected_header)
     if replace:
-        assert "/email-reply-to/123/edit" in page.find("a", text="Back").attrs["href"]
+        assert (
+            "/email-reply-to/123/edit"
+            in page.select_one("nav.usa-breadcrumb a").attrs["href"]
+        )
     else:
-        assert "/email-reply-to/add" in page.find("a", text="Back").attrs["href"]
+        assert (
+            "/email-reply-to/add"
+            in page.select_one("nav.usa-breadcrumb a").attrs["href"]
+        )
 
     assert len(page.find_all("div", class_="banner-dangerous")) == expected_failure
     assert (
@@ -1268,8 +1274,8 @@ def test_shows_delete_link_for_get_request_for_edit_email_reply_to_address(
         reply_to_email_id=sample_uuid(),
     )
 
-    assert page.select_one(".usa-back-link").text.strip() == "Back"
-    assert page.select_one(".usa-back-link")["href"] == url_for(
+    assert "Back" in page.select_one("nav.usa-breadcrumb a").text.strip()
+    assert page.select_one("nav.usa-breadcrumb a")["href"] == url_for(
         ".service_email_reply_to",
         service_id=SERVICE_ONE_ID,
     )
@@ -1329,8 +1335,8 @@ def test_shows_delete_link_for_error_on_post_request_for_edit_email_reply_to_add
         _expected_status=200,
     )
 
-    assert page.select_one(".usa-back-link").text.strip() == "Back"
-    assert page.select_one(".usa-back-link")["href"] == url_for(
+    assert "Back" in page.select_one("nav.usa-breadcrumb a").text.strip()
+    assert page.select_one("nav.usa-breadcrumb a")["href"] == url_for(
         ".service_email_reply_to",
         service_id=SERVICE_ONE_ID,
     )
@@ -1539,9 +1545,9 @@ def test_shows_delete_link_for_sms_sender(
     )
 
     link = page.select_one(".page-footer a")
-    back_link = page.select_one(".usa-back-link")
+    back_link = page.select_one("nav.usa-breadcrumb a")
 
-    assert back_link.text.strip() == "Back"
+    assert "Back" in back_link.text.strip()
     assert back_link["href"] == url_for(
         ".service_sms_senders",
         service_id=SERVICE_ONE_ID,
@@ -1592,9 +1598,9 @@ def test_inbound_sms_sender_is_not_deleteable(
         sms_sender_id=fake_uuid,
     )
 
-    back_link = page.select_one(".usa-back-link")
+    back_link = page.select_one("nav.usa-breadcrumb a")
     footer_link = page.select_one(".page-footer a")
-    assert normalize_spaces(back_link.text) == "Back"
+    assert "Back" in normalize_spaces(back_link.text)
 
     if expected_link_text:
         assert normalize_spaces(footer_link.text) == expected_link_text

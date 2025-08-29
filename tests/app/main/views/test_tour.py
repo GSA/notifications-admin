@@ -295,7 +295,7 @@ def test_back_link_from_first_get_tour_step_points_to_tour_start(
         "main.tour_step", service_id=SERVICE_ONE_ID, template_id=fake_uuid, step_index=1
     )
 
-    assert page.select(".usa-back-link")[0]["href"] == url_for(
+    assert page.select("nav.usa-breadcrumb a")[0]["href"] == url_for(
         "main.begin_tour", service_id=SERVICE_ONE_ID, template_id=fake_uuid
     )
 
@@ -313,7 +313,7 @@ def test_back_link_from_get_tour_step_points_to_previous_step(
         "main.tour_step", service_id=SERVICE_ONE_ID, template_id=fake_uuid, step_index=2
     )
 
-    assert page.select(".usa-back-link")[0]["href"] == url_for(
+    assert page.select("nav.usa-breadcrumb a")[0]["href"] == url_for(
         "main.tour_step", service_id=SERVICE_ONE_ID, template_id=fake_uuid, step_index=1
     )
 
@@ -563,7 +563,7 @@ def test_back_link_from_check_tour_notification_points_to_last_tour_step(
         template_id=fake_uuid,
     )
 
-    assert page.select(".usa-back-link")[0]["href"] == url_for(
+    assert page.select("nav.usa-breadcrumb a")[0]["href"] == url_for(
         "main.tour_step", service_id=SERVICE_ONE_ID, template_id=fake_uuid, step_index=3
     )
 
