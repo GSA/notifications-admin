@@ -77,15 +77,6 @@ def accessibility_statement():
 def delivery_and_failure():
     return redirect(url_for(".message_status"), 301)
 
-
-@main.route("/design-patterns-content-guidance")
-@user_is_logged_in
-def design_content():
-    return redirect(
-        "https://www.gov.uk/service-manual/design/sending-emails-and-text-messages", 301
-    )
-
-
 @main.route("/documentation")
 @user_is_logged_in
 def documentation():

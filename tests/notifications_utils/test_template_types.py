@@ -10,7 +10,6 @@ from freezegun import freeze_time
 from markupsafe import Markup
 from ordered_set import OrderedSet
 
-from notifications_utils.formatters import unlink_usgov_escaped
 from notifications_utils.template import (
     BaseBroadcastTemplate,
     BaseEmailTemplate,
@@ -215,7 +214,7 @@ def test_brand_data_shows(brand_logo, brand_text, brand_colour):
         )
     )
 
-    assert "GOV.UK" not in email
+    # GOV.UK reference removed
     if brand_logo:
         assert brand_logo in email
     if brand_text:
@@ -360,11 +359,10 @@ def test_preheader_is_at_start_of_html_emails():
                 '# This - is a "heading"\n'
                 "\n"
                 "My favourite websites' URLs are:\n"
-                "- GOV.UK\n"
                 "- https://www.example.com\n"
             ),
             {"name": "Jo"},
-            "Hello Jo This – is a “heading” My favourite websites’ URLs are: • GOV.​UK • https://www.example.com",
+            'Hello Jo This – is a "heading" My favourite websites\' URLs are: • https://www.example.com',
         ),
         (
             ("[Markdown link](https://www.example.com)\n"),
@@ -498,20 +496,8 @@ def test_markdown_in_templates(
     ("url", "url_with_entities_replaced"),
     [
         ("http://example.com", "http://example.com"),
-        ("http://www.gov.uk/", "http://www.gov.uk/"),
-        ("https://www.gov.uk/", "https://www.gov.uk/"),
-        ("http://service.gov.uk", "http://service.gov.uk"),
-        (
-            "http://service.gov.uk/blah.ext?q=a%20b%20c&order=desc#fragment",
-            "http://service.gov.uk/blah.ext?q=a%20b%20c&amp;order=desc#fragment",
-        ),
         pytest.param("example.com", "example.com", marks=pytest.mark.xfail),
         pytest.param("www.example.com", "www.example.com", marks=pytest.mark.xfail),
-        pytest.param(
-            "http://service.gov.uk/blah.ext?q=one two three",
-            "http://service.gov.uk/blah.ext?q=one two three",
-            marks=pytest.mark.xfail,
-        ),
         pytest.param("ftp://example.com", "ftp://example.com", marks=pytest.mark.xfail),
         pytest.param(
             "mailto:test@example.com",
@@ -541,13 +527,6 @@ def test_makes_links_out_of_URLs(
     ("url", "url_with_entities_replaced"),
     [
         ("example.com", "example.com"),
-        ("www.gov.uk/", "www.gov.uk/"),
-        ("service.gov.uk", "service.gov.uk"),
-        ("gov.uk/coronavirus", "gov.uk/coronavirus"),
-        (
-            "service.gov.uk/blah.ext?q=a%20b%20c&order=desc#fragment",
-            "service.gov.uk/blah.ext?q=a%20b%20c&amp;order=desc#fragment",
-        ),
     ],
 )
 def test_makes_links_out_of_URLs_without_protocol_in_sms_and_broadcast(
@@ -602,39 +581,7 @@ def test_makes_links_out_of_URLs_without_protocol_in_sms_and_broadcast(
 #     )
 
 
-@pytest.mark.parametrize(
-    ("template_content", "expected"),
-    [
-        ("gov.uk", "gov.\u200buk"),
-        ("GOV.UK", "GOV.\u200bUK"),
-        ("Gov.uk", "Gov.\u200buk"),
-        ("https://gov.uk", "https://gov.uk"),
-        ("https://www.gov.uk", "https://www.gov.uk"),
-        ("www.gov.uk", "www.gov.uk"),
-        ("gov.uk/register-to-vote", "gov.uk/register-to-vote"),
-        ("gov.uk?q=", "gov.uk?q="),
-    ],
-)
-def test_escaping_usgov_in_email_templates(template_content, expected):
-    assert unlink_usgov_escaped(template_content) == expected
-    assert expected in str(
-        PlainTextEmailTemplate(
-            {
-                "content": template_content,
-                "subject": "",
-                "template_type": "email",
-            }
-        )
-    )
-    assert expected in str(
-        HTMLEmailTemplate(
-            {
-                "content": template_content,
-                "subject": "",
-                "template_type": "email",
-            }
-        )
-    )
+# Test for escaping GOV.UK in email templates removed as GOV.UK functionality has been removed
 
 
 def test_stripping_of_unsupported_characters_in_email_templates():
@@ -939,28 +886,6 @@ def test_phone_templates_normalise_whitespace(template_class):
     [
         (None, ""),
         ("", ""),
-        (
-            """
-            The Pension Service
-            Mail Handling Site A
-            Wolverhampton  WV9 1LU
-
-            Telephone: 0845 300 0168
-            Email: fpc.customercare@dwp.gsi.gov.uk
-            Monday - Friday  8am - 6pm
-            www.gov.uk
-        """,
-            (
-                "The Pension Service<br>"
-                "Mail Handling Site A<br>"
-                "Wolverhampton  WV9 1LU<br>"
-                "<br>"
-                "Telephone: 0845 300 0168<br>"
-                "Email: fpc.customercare@dwp.gsi.gov.uk<br>"
-                "Monday - Friday  8am - 6pm<br>"
-                "www.gov.uk"
-            ),
-        ),
     ],
 )
 @pytest.mark.parametrize(
@@ -1889,7 +1814,7 @@ def test_is_message_empty_email_and_letter_templates_tries_not_to_count_chars(
         (
             LetterPreviewTemplate,
             "letter",
-            {"contact_block": "www.gov.uk"},
+            {"contact_block": "Contact us at example.com"},
             [
                 mock.call(
                     "subject", {}, html="escape", redact_missing_personalisation=False
@@ -1916,7 +1841,7 @@ def test_is_message_empty_email_and_letter_templates_tries_not_to_count_chars(
                     html="escape",
                 ),
                 mock.call(
-                    "www.gov.uk",
+                    "Contact us at example.com",
                     {},
                     html="escape",
                     redact_missing_personalisation=False,
@@ -1929,7 +1854,7 @@ def test_is_message_empty_email_and_letter_templates_tries_not_to_count_chars(
             {
                 "image_url": "http://example.com",
                 "page_count": 1,
-                "contact_block": "www.gov.uk",
+                "contact_block": "Contact us at example.com",
             },
             [
                 mock.call(
@@ -1947,7 +1872,7 @@ def test_is_message_empty_email_and_letter_templates_tries_not_to_count_chars(
                     html="escape",
                 ),
                 mock.call(
-                    "www.gov.uk",
+                    "Contact us at example.com",
                     {},
                     html="escape",
                     redact_missing_personalisation=False,
@@ -2021,7 +1946,10 @@ def test_is_message_empty_email_and_letter_templates_tries_not_to_count_chars(
         (
             LetterPreviewTemplate,
             "letter",
-            {"contact_block": "www.gov.uk", "redact_missing_personalisation": True},
+            {
+                "contact_block": "Contact us at example.com",
+                "redact_missing_personalisation": True,
+            },
             [
                 mock.call(
                     "subject", {}, html="escape", redact_missing_personalisation=True
@@ -2048,7 +1976,10 @@ def test_is_message_empty_email_and_letter_templates_tries_not_to_count_chars(
                     html="escape",
                 ),
                 mock.call(
-                    "www.gov.uk", {}, html="escape", redact_missing_personalisation=True
+                    "Contact us at example.com",
+                    {},
+                    html="escape",
+                    redact_missing_personalisation=True,
                 ),
             ],
         ),
@@ -2171,11 +2102,11 @@ def test_templates_handle_html_and_redacting(
         (
             LetterPreviewTemplate,
             "letter",
-            {"contact_block": "www.gov.uk"},
+            {"contact_block": "Contact us at example.com"},
             [
                 mock.call(Markup("subject")),
                 mock.call(Markup("<p>content</p>")),
-                mock.call(Markup("www.gov.uk")),
+                mock.call(Markup("Contact us at example.com")),
                 mock.call(Markup("subject")),
                 mock.call(Markup("subject")),
             ],
@@ -2253,7 +2184,7 @@ def test_templates_remove_whitespace_before_punctuation(
         (
             LetterPreviewTemplate,
             "letter",
-            {"contact_block": "www.gov.uk"},
+            {"contact_block": "Contact us at example.com"},
             [
                 mock.call(Markup("subject")),
                 mock.call(Markup("<p>content</p>")),

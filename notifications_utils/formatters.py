@@ -26,7 +26,9 @@ ALL_WHITESPACE = (
     string.whitespace + OBSCURE_ZERO_WIDTH_WHITESPACE + OBSCURE_FULL_WIDTH_WHITESPACE
 )
 
-usgov_not_a_link = re.compile(r"(^|\s)(#|\*|\^)?([\w]+)\.(GOV)(?!\/|\?|#)", re.IGNORECASE)
+usgov_not_a_link = re.compile(
+    r"(^|\s)(#|\*|\^)?([\w]+)\.(GOV)(?!\/|\?|#)", re.IGNORECASE
+)
 
 smartypants.tags_to_skip = smartypants.tags_to_skip + ["a"]
 

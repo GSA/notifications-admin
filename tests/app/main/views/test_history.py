@@ -97,7 +97,7 @@ def test_history(
 
     assert page.select_one("h1").text == "Audit events"
 
-    # Check for content directly since GOV.UK CSS classes don't exist
+    # Check for content directly
     page_text = normalize_spaces(page.text)
 
     for expected_heading, expected_events in expected_headings_and_events:

@@ -2870,10 +2870,7 @@ def test_send_notification_redirects_to_view_page(
     )
 
 
-TRIAL_MODE_MSG = (
-    "Cannot send to this recipient when service is in trial mode – "
-    "see https://www.notifications.service.gov.uk/trial-mode"
-)
+TRIAL_MODE_MSG = "Cannot send to this recipient when service is in trial mode"
 TOO_LONG_MSG = "Text messages cannot be longer than 918 characters. Your message is 954 characters."
 SERVICE_DAILY_LIMIT_MSG = "Exceeded send limits (1000) for today"
 
@@ -3011,12 +3008,12 @@ def test_reply_to_is_previewed_if_chosen(
         "app.main.views.send.s3download",
         return_value="""
         email_address,date,thing
-        notify@digital.cabinet-office.gov.uk,foo,bar
+        notify@example.com,foo,bar
     """,
     )
 
     with client_request.session_transaction() as session:
-        session["recipient"] = "notify@digital.cabinet-office.gov.uk"
+        session["recipient"] = "notify@example.com"
         session["placeholders"] = {}
         session["file_uploads"] = {fake_uuid: {"template_id": fake_uuid}}
         session["sender_id"] = reply_to_address

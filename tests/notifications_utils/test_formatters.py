@@ -385,30 +385,6 @@ def test_normalise_whitespace(value):
             '<a href="http://example.com#foo">example.com#foo</a>',
         ),
         (
-            "Go to gov.uk/example.",
-            "Go to " '<a href="http://gov.uk/example">gov.uk/example</a>.',
-        ),
-        (
-            "Go to gov.uk/example:",
-            "Go to " '<a href="http://gov.uk/example">gov.uk/example</a>:',
-        ),
-        (
-            "Go to gov.uk/example;",
-            "Go to " '<a href="http://gov.uk/example;">gov.uk/example;</a>',
-        ),
-        (
-            "(gov.uk/example)",
-            "(" '<a href="http://gov.uk/example">gov.uk/example</a>)',
-        ),
-        (
-            "(gov.uk/example)...",
-            "(" '<a href="http://gov.uk/example">gov.uk/example</a>)...',
-        ),
-        (
-            "(gov.uk/example.)",
-            "(" '<a href="http://gov.uk/example">gov.uk/example</a>.)',
-        ),
-        (
             "(see example.com/foo_(bar))",
             "(see "
             '<a href="http://example.com/foo_%28bar%29">example.com/foo_(bar)</a>)',
@@ -416,32 +392,6 @@ def test_normalise_whitespace(value):
         (
             "example.com/foo(((((((bar",
             '<a href="http://example.com/foo%28%28%28%28%28%28%28bar">example.com/foo(((((((bar</a>',
-        ),
-        (
-            "government website (gov.uk). Other websites…",
-            "government website ("
-            '<a href="http://gov.uk">gov.uk</a>). Other websites…',
-        ),
-        (
-            "[gov.uk/example]",
-            "[" '<a href="http://gov.uk/example">gov.uk/example</a>]',
-        ),
-        (
-            "gov.uk/foo, gov.uk/bar",
-            '<a href="http://gov.uk/foo">gov.uk/foo</a>, '
-            '<a href="http://gov.uk/bar">gov.uk/bar</a>',
-        ),
-        (
-            "<p>gov.uk/foo</p>",
-            "<p>" '<a href="http://gov.uk/foo">gov.uk/foo</a></p>',
-        ),
-        (
-            "gov.uk?foo&amp;",
-            '<a href="http://gov.uk?foo&amp;">gov.uk?foo&amp;</a>',
-        ),
-        (
-            "a .service.gov.uk domain",
-            "a .service.gov.uk domain",
         ),
         (
             'http://foo.com/"bar"?x=1#2',
