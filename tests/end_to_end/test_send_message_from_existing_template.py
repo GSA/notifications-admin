@@ -175,14 +175,9 @@ def handle_no_existing_template_case(page):
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)
 
-    # TODO staging starts failing here, fix.
-    # TODO: The failure appears to currently be an issue with retrieving info
-    #       from the job cache, and the API throws an error, resulting in the
-    #       error page "Sorry, we can't deliver what you asked for right now."
-    # activity_button = page.get_by_text("Activity")
-    # First wait for navigation to be visible and stable
-    page.wait_for_selector("nav.nav", state="visible")
-    activity_button = page.get_by_role("link", name="Activity")
+    # After sending, click on Activity to see the job status
+    # The Activity link should be in the navigation
+    activity_button = page.get_by_text("Activity")
     expect(activity_button).to_be_visible()
     activity_button.click()
 
