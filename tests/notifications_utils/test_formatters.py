@@ -14,11 +14,8 @@ from notifications_utils.formatters import (
     strip_all_whitespace,
     strip_and_remove_obscure_whitespace,
     strip_unsupported_characters,
-    unlink_usgov_escaped,
 )
 from notifications_utils.template import (
-    HTMLEmailTemplate,
-    PlainTextEmailTemplate,
     SMSMessageTemplate,
     SMSPreviewTemplate,
 )
@@ -43,96 +40,9 @@ def test_URLs_get_escaped_in_sms(url, expected_html):
     )
 
 
-def test_HTML_template_has_URLs_replaced_with_links():
-    assert (
-        '<a style="word-wrap: break-word; color: #1D70B8;" href="https://service.example.com/accept_invite/a1b2c3d4">'
-        "https://service.example.com/accept_invite/a1b2c3d4"
-        "</a>"
-    ) in str(
-        HTMLEmailTemplate(
-            {
-                "content": (
-                    "You’ve been invited to a service. Click this link:\n"
-                    "https://service.example.com/accept_invite/a1b2c3d4\n"
-                    "\n"
-                    "Thanks\n"
-                ),
-                "subject": "",
-                "template_type": "email",
-            }
-        )
-    )
+# test_HTML_template_has_URLs_replaced_with_links removed since email functionality is not currently used
 
-
-def test_escaping_usgov_in_email_templates():
-    template_content = "GOV.UK"
-    expected = "GOV.\u200bUK"
-    assert unlink_usgov_escaped(template_content) == expected
-    template_json = {
-        "content": template_content,
-        "subject": "",
-        "template_type": "email",
-    }
-    assert expected in str(PlainTextEmailTemplate(template_json))
-    assert expected in str(HTMLEmailTemplate(template_json))
-
-
-@pytest.mark.parametrize(
-    ("template_content", "expected"),
-    [
-        # Cases that we add the breaking space
-        ("GOV.UK", "GOV.\u200bUK"),
-        ("gov.uk", "gov.\u200buk"),
-        (
-            "content with space infront GOV.UK",
-            "content with space infront GOV.\u200bUK",
-        ),
-        ("content with tab infront\tGOV.UK", "content with tab infront\tGOV.\u200bUK"),
-        (
-            "content with newline infront\nGOV.UK",
-            "content with newline infront\nGOV.\u200bUK",
-        ),
-        ("*GOV.UK", "*GOV.\u200bUK"),
-        ("#GOV.UK", "#GOV.\u200bUK"),
-        ("^GOV.UK", "^GOV.\u200bUK"),
-        (" #GOV.UK", " #GOV.\u200bUK"),
-        ("GOV.UK with CONTENT after", "GOV.\u200bUK with CONTENT after"),
-        ("#GOV.UK with CONTENT after", "#GOV.\u200bUK with CONTENT after"),
-        # Cases that we don't add the breaking space
-        ("https://gov.uk", "https://gov.uk"),
-        ("https://www.gov.uk", "https://www.gov.uk"),
-        ("www.gov.uk", "www.gov.uk"),
-        ("WWW.GOV.UK", "WWW.GOV.UK"),
-        ("WWW.GOV.UK.", "WWW.GOV.UK."),
-        (
-            "https://www.gov.uk/?utm_source=gov.uk",
-            "https://www.gov.uk/?utm_source=gov.uk",
-        ),
-        ("mygov.uk", "mygov.uk"),
-        ("www.this-site-is-not-gov.uk", "www.this-site-is-not-gov.uk"),
-        (
-            "www.gov.uk?websites=bbc.co.uk;gov.uk;nsh.scot",
-            "www.gov.uk?websites=bbc.co.uk;gov.uk;nsh.scot",
-        ),
-        ("reply to: xxxx@xxx.gov.uk", "reply to: xxxx@xxx.gov.uk"),
-        ("southwark.gov.uk", "southwark.gov.uk"),
-        ("data.gov.uk", "data.gov.uk"),
-        ("gov.uk/foo", "gov.uk/foo"),
-        ("*GOV.UK/foo", "*GOV.UK/foo"),
-        ("#GOV.UK/foo", "#GOV.UK/foo"),
-        ("^GOV.UK/foo", "^GOV.UK/foo"),
-        ("gov.uk#departments-and-policy", "gov.uk#departments-and-policy"),
-        # Cases that we know currently aren't supported by our regex and have a non breaking space added when they
-        # shouldn't however, we accept the fact that our regex isn't perfect as we think the chance of a user using a
-        # URL like this in their content is very small.
-        # We document these edge cases here
-        pytest.param("gov.uk.com", "gov.uk.com", marks=pytest.mark.xfail),
-        pytest.param("gov.ukandi.com", "gov.ukandi.com", marks=pytest.mark.xfail),
-        pytest.param("gov.uks", "gov.uks", marks=pytest.mark.xfail),
-    ],
-)
-def test_unlink_usgov_escaped(template_content, expected):
-    assert unlink_usgov_escaped(template_content) == expected
+# Tests for escaping gov domains removed since email functionality is not currently used
 
 
 @pytest.mark.parametrize(
