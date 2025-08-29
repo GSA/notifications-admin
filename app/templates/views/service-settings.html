@@ -327,13 +327,13 @@
         </span>
         {% if current_user.platform_admin %}
           <span class="page-footer-link">
-            <a href="{{ url_for('.suspend_service', service_id=current_service.id) }}" class="usa-link usa-link--destructive page-footer-link">
+            <a href="{{ url_for('.suspend_service', service_id=current_service.id) }}" class="usa-button usa-button--outline">
                 Suspend service
               </a>
           </span>
 
           <span class="page-footer-link">
-            <a href="{{ url_for('.history', service_id=current_service.id) }}" class="usa-link page-footer-link">
+            <a href="{{ url_for('.history', service_id=current_service.id) }}" class="usa-button usa-button--outline">
               Service history
             </a>
           </span>
@@ -353,7 +353,7 @@
         </span>
 
         <span class="page-footer-link">
-          <a href="{{ url_for('.history', service_id=current_service.id) }}" class="usa-link page-footer-link">
+          <a href="{{ url_for('.history', service_id=current_service.id) }}" class="usa-button usa-button--outline">
             Service history
           </a>
         </span>

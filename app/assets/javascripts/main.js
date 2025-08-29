@@ -24,8 +24,6 @@ window.NotifyModules.start = function() {
 $(() => window.NotifyModules.start());
 
 $(() => $('.error-message, .usa-error-message').eq(0).parent('label').next('input').trigger('focus'));
-
-
 // Applies our expanded focus style to the siblings of links when that link is wrapped in a heading.
 //
 // This will be possible in CSS in the future, using the :has pseudo-class. When :has is available

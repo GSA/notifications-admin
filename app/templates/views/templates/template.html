@@ -64,24 +64,25 @@
     {% if current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES) and user_has_template_permission %}
       <h2 class="margin-bottom-1 font-body-lg">More actions</h2>
       <ul class="usa-list usa-list--unstyled">
-        {% if not template._template.archived %}
-          <li>
-            <a class="usa-link margin-right-3"
-            href="{{ url_for('.delete_service_template', service_id=current_service.id, template_id=template.id) }}">
-              Delete this template
-            </a>
-          </li>
-        {% endif %}
         {% if not template._template.redact_personalisation %}
           <li>
-            <a class="usa-link"
+            <p class="margin-bottom-1">For increased privacy protection:</p>
+            <a class="usa-button usa-button--outline"
             href="{{ url_for('.confirm_redact_template', service_id=current_service.id, template_id=template.id) }}">
-              Hide all personalized and conditional content after sending
-            </a> for increased privacy protection
+              Hide personalized content after sending
+            </a>
           </li>
         {% else %}
           <li>
             <p class="usa-hint">Personalization is hidden after sending</p>
+          </li>
+        {% endif %}
+        {% if not template._template.archived %}
+          <li class="margin-top-2">
+            <a class="usa-button usa-button--secondary"
+            href="{{ url_for('.delete_service_template', service_id=current_service.id, template_id=template.id) }}">
+              Delete this template
+            </a>
           </li>
         {% endif %}
       </ul>

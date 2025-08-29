@@ -571,18 +571,18 @@ def _check_messages(service_id, template_id, upload_id, preview_row, **kwargs):
                 "url": url_for(
                     "main.send_one_off", service_id=service_id, template_id=template.id
                 ),
-                "text": "Back to message personalization",
+                "text": "Back",
             },
-            "html": "Back to message personalization",
+            "html": "Back",
         }
         back_link_from_preview = {
             "href": {
                 "url": url_for(
                     "main.send_one_off", service_id=service_id, template_id=template.id
                 ),
-                "text": "Back to message personalization",
+                "text": "Back",
             },
-            "html": "Back to message personalization",
+            "html": "Back",
         }
         choose_time_form = None
     else:
@@ -791,9 +791,9 @@ def get_back_link(
                     service_id=service_id,
                     template_id=template.id,
                 ),
-                "text": "Back to select delivery time",
+                "text": "Back",
             },
-            "html": "Back to select delivery time",
+            "html": "Back",
         }
 
     if step_index == 0:
@@ -816,17 +816,13 @@ def get_back_link(
                         service_id=service_id,
                         template_id=template.id,
                     ),
-                    "text": "Back to confirm your template",
+                    "text": "Back",
                 },
-                "html": "Back to confirm your template",
+                "html": "Back",
             }
 
     # fallback for other steps
-    back_to_text = (
-        "Back to select recipients"
-        if step_index == 1
-        else "Back to message personalization"
-    )
+    back_to_text = "Back"
 
     return {
         "href": {

@@ -33,7 +33,7 @@ function initUploadStatusAnnouncer() {
     this.showCancelButton = () => {
       $('.file-upload-button', this.$form).replaceWith(`
         <button class='usa-button uploading-button' aria-disabled="true" tabindex="0">
-          Uploading<span class="dot-anim" aria-hidden="true"></span>
+          Uploading<span class="loading-spinner" role="status" aria-label="Uploading"></span>
         </button>
       `);
     };

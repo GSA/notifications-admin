@@ -39,6 +39,10 @@ const routes = {
       path: '/users/6af522d0-2915-4e52-83a3-3690455a5fe6/change_auth',
     },
     {
+      label: 'User Profile',
+      path: '/user-profile',
+    },
+    {
       label: 'User Profile Timezone',
       path: '/user-profile/preferred_timezone',
     },
@@ -73,6 +77,10 @@ const routes = {
     {
       label: 'Invite User',
       path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/users/invite',
+    },
+    {
+      label: 'Platform Admin Splash',
+      path: '/platform-admin',
     },
     {
       label: 'Platform Admin Live Services',

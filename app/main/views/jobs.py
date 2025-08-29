@@ -313,18 +313,19 @@ def get_notifications(service_id, message_type, status_override=None):  # noqa
 def get_status_filters(service, message_type, statistics):
     if message_type is None:
         stats = {
-            key: sum(statistics[message_type][key] for message_type in {"email", "sms"})
-            for key in {
-                "requested",
-                NotificationStatus.DELIVERED,
-                NotificationStatus.FAILED,
-            }
+            "requested": sum(statistics[message_type]["requested"] for message_type in {"email", "sms"}),
+            "delivered": sum(statistics[message_type]["delivered"] for message_type in {"email", "sms"}),
+            "failure": sum(statistics[message_type].get("failure", 0) for message_type in {"email", "sms"}),
         }
     else:
         stats = statistics[message_type]
 
     if stats.get("failure") is not None:
         stats[NotificationStatus.FAILED] = stats["failure"]
+
+    # Ensure we have the delivered key with the enum too
+    if "delivered" in stats:
+        stats[NotificationStatus.DELIVERED] = stats["delivered"]
 
     stats[NotificationStatus.PENDING] = (
         stats["requested"]
