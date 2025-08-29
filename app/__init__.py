@@ -170,13 +170,13 @@ def _csp(config):
             "https://dap.digitalgov.gov",
             "https://cdn.socket.io",
         ],
-        "connect-src": [
+        "connect-src": list(dict.fromkeys([
             "'self'",
             "https://gov-bam.nr-data.net",
             "https://www.google-analytics.com",
             f"{api_public_url}",
             f"{api_public_ws_url}",
-        ],
+        ])),
         "style-src": ["'self'", asset_domain],
         "img-src": ["'self'", asset_domain],
     }

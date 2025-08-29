@@ -20,13 +20,14 @@ def test_non_logged_in_user_can_see_homepage(
     assert heading in [
         "Reach people where they are with government-powered text messages",
         "There's currently a technical issue.",
+        "Sunsetting Notify.gov",
     ]
 
     button = page.select_one(
         "a.usa-button.login-button.login-button--primary.margin-right-2"
     )
 
-    if heading == "There's currently a technical issue.":
+    if heading in ["There's currently a technical issue.", "Sunsetting Notify.gov"]:
         assert button is None
     else:
         assert button is not None
