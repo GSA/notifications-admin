@@ -10,7 +10,7 @@ from freezegun import freeze_time
 from markupsafe import Markup
 from ordered_set import OrderedSet
 
-from notifications_utils.formatters import unlink_govuk_escaped
+from notifications_utils.formatters import unlink_usgov_escaped
 from notifications_utils.template import (
     BaseBroadcastTemplate,
     BaseEmailTemplate,
@@ -164,7 +164,7 @@ def test_default_template(content):
 
 
 @pytest.mark.parametrize("show_banner", [True, False])
-def test_govuk_banner(show_banner):
+def test_federal_banner(show_banner):
     email = HTMLEmailTemplate(
         {
             "content": "hello world",
@@ -172,7 +172,7 @@ def test_govuk_banner(show_banner):
             "template_type": "email",
         }
     )
-    email.govuk_banner = show_banner
+    email.federal_banner = show_banner
     if show_banner:
         assert "beta.notify.gov" in str(email)
     else:
@@ -184,7 +184,7 @@ def test_brand_banner_shows():
         HTMLEmailTemplate(
             {"content": "hello world", "subject": "", "template_type": "email"},
             brand_banner=True,
-            govuk_banner=False,
+            federal_banner=False,
         )
     )
     assert ('<td width="10" height="10" valign="middle"></td>') not in email
@@ -208,7 +208,7 @@ def test_brand_data_shows(brand_logo, brand_text, brand_colour):
         HTMLEmailTemplate(
             {"content": "hello world", "subject": "", "template_type": "email"},
             brand_banner=True,
-            govuk_banner=False,
+            federal_banner=False,
             brand_logo=brand_logo,
             brand_text=brand_text,
             brand_colour=brand_colour,
@@ -224,11 +224,11 @@ def test_brand_data_shows(brand_logo, brand_text, brand_colour):
         assert 'bgcolor="{}"'.format(brand_colour) in email
 
 
-def test_alt_text_with_brand_text_and_govuk_banner_shown():
+def test_alt_text_with_brand_text_and_federal_banner_shown():
     email = str(
         HTMLEmailTemplate(
             {"content": "hello world", "subject": "", "template_type": "email"},
-            govuk_banner=True,
+            federal_banner=True,
             brand_logo="http://example.com/image.png",
             brand_text="Example",
             brand_banner=True,
@@ -239,11 +239,11 @@ def test_alt_text_with_brand_text_and_govuk_banner_shown():
     assert 'alt="Notify Logo"' not in email
 
 
-def test_alt_text_with_no_brand_text_and_govuk_banner_shown():
+def test_alt_text_with_no_brand_text_and_federal_banner_shown():
     email = str(
         HTMLEmailTemplate(
             {"content": "hello world", "subject": "", "template_type": "email"},
-            govuk_banner=True,
+            federal_banner=True,
             brand_logo="http://example.com/image.png",
             brand_text=None,
             brand_banner=True,
@@ -263,11 +263,11 @@ def test_alt_text_with_no_brand_text_and_govuk_banner_shown():
         (False, None, 'alt="Notify Logo"'),
     ],
 )
-def test_alt_text_with_no_govuk_banner(brand_banner, brand_text, expected_alt_text):
+def test_alt_text_with_no_federal_banner(brand_banner, brand_text, expected_alt_text):
     email = str(
         HTMLEmailTemplate(
             {"content": "hello world", "subject": "", "template_type": "email"},
-            govuk_banner=False,
+            federal_banner=False,
             brand_logo="http://example.com/image.png",
             brand_text=brand_text,
             brand_banner=brand_banner,
@@ -615,8 +615,8 @@ def test_makes_links_out_of_URLs_without_protocol_in_sms_and_broadcast(
         ("gov.uk?q=", "gov.uk?q="),
     ],
 )
-def test_escaping_govuk_in_email_templates(template_content, expected):
-    assert unlink_govuk_escaped(template_content) == expected
+def test_escaping_usgov_in_email_templates(template_content, expected):
+    assert unlink_usgov_escaped(template_content) == expected
     assert expected in str(
         PlainTextEmailTemplate(
             {
@@ -733,7 +733,7 @@ def test_sms_message_adds_prefix_only_if_asked_to(
     add_prefix.assert_called_once_with(*expected_call)
 
 
-@pytest.mark.parametrize("content_to_look_for", ["GOVUK", "sms-message-sender"])
+@pytest.mark.parametrize("content_to_look_for", ["USGOV", "sms-message-sender"])
 @pytest.mark.parametrize(
     "show_sender",
     [
@@ -748,7 +748,7 @@ def test_sms_message_preview_shows_sender(
     assert content_to_look_for in str(
         SMSPreviewTemplate(
             {"content": "foo", "template_type": "sms"},
-            sender="GOVUK",
+            sender="USGOV",
             show_sender=show_sender,
         )
     )
@@ -886,7 +886,7 @@ def test_phone_templates_normalise_whitespace(template_class):
 
 @freeze_time("2012-12-12 12:12:12")
 @mock.patch("notifications_utils.template.LetterPreviewTemplate.jinja_template.render")
-@mock.patch("notifications_utils.template.unlink_govuk_escaped")
+@mock.patch("notifications_utils.template.unlink_usgov_escaped")
 @mock.patch(
     "notifications_utils.template.notify_letter_preview_markdown", return_value="Bar"
 )
@@ -980,7 +980,7 @@ def test_phone_templates_normalise_whitespace(template_class):
 )
 def test_letter_preview_renderer(
     letter_markdown,
-    unlink_govuk,
+    unlink_usgov,
     jinja_template,
     values,
     expected_address,
@@ -1014,7 +1014,7 @@ def test_letter_preview_renderer(
         }
     )
     letter_markdown.assert_called_once_with(Markup("Foo\n"))
-    unlink_govuk.assert_not_called()
+    unlink_usgov.assert_not_called()
 
 
 @freeze_time("2001-01-01 12:00:00.000000")
@@ -2934,7 +2934,7 @@ def test_whitespace_in_subject_placeholders(template_class):
 #         ),
 #     ],
 # )
-# def test_govuk_email_whitespace_hack(template_class, expected_output):
+# def test_email_whitespace_hack(template_class, expected_output):
 #     template_instance = template_class(
 #         {
 #             "content": "paragraph one\n\n&nbsp;\n\nparagraph two",

@@ -19,10 +19,6 @@ def find_canonical(item, graph, key):
     )
 
 
-# Copied from
-# https://github.com/alphagov/govuk-country-and-territory-autocomplete
-# /blob/b61091a502983fd2a77b3cdb5f94a604412eb093
-# /dist/location-autocomplete-graph.json
 _graph = _load_data("location-autocomplete-graph.json")
 
 UK = "United Kingdom"

@@ -1,7 +1,7 @@
 (function (global) {
   "use strict";
 
-  const GOVUK = global.GOVUK;
+  const USWDS = global.USWDS || {};
 
   function Summary (module) {
     this.module = module;

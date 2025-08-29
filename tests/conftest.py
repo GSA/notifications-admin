@@ -304,7 +304,7 @@ def single_sms_sender(mocker):
             {
                 "id": "1234",
                 "service_id": service_id,
-                "sms_sender": "GOVUK",
+                "sms_sender": "USGOV",
                 "is_default": True,
                 "created_at": datetime.utcnow(),
                 "inbound_number_id": None,
@@ -321,7 +321,7 @@ def get_default_sms_sender(mocker):
         return {
             "id": "1234",
             "service_id": service_id,
-            "sms_sender": "GOVUK",
+            "sms_sender": "USGOV",
             "is_default": True,
             "created_at": datetime.utcnow(),
             "inbound_number_id": None,
@@ -337,7 +337,7 @@ def get_non_default_sms_sender(mocker):
         return {
             "id": "1234",
             "service_id": service_id,
-            "sms_sender": "GOVUK",
+            "sms_sender": "USGOV",
             "is_default": False,
             "created_at": datetime.utcnow(),
             "inbound_number_id": None,
@@ -3349,7 +3349,7 @@ def create_multiple_email_reply_to_addresses(service_id="abcd"):
 def create_sms_sender(
     id_="1234",
     service_id="abcd",
-    sms_sender="GOVUK",
+    sms_sender="USGOV",
     is_default=True,
     created_at=None,
     inbound_number_id=None,

@@ -1071,3 +1071,44 @@ nav.nav {
 .organizations-radios legend.usa-legend {
   font-weight: 700;
 }
+
+.dashboard-uploads-table {
+  table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  th:first-child,
+  td:first-child {
+    width: 60%;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    width: 40%;
+  }
+
+  .file-name-cell {
+    .file-link {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .status-display {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: nowrap;
+    align-items: baseline;
+
+    .status-item {
+      white-space: nowrap;
+
+      strong {
+        font-weight: 700;
+      }
+    }
+  }
+}

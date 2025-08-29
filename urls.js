@@ -25,12 +25,11 @@ const routes = {
       label: 'SMS Template Preview',
       path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/send/31588995-646b-40ae-bed1-617612d9245e/one-off/step-0',
     },
-    // Pages with govuk buttons that need testing
+    // Pages with USWDS buttons that need testing
     {
       label: 'API Keys',
       path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/api/keys',
     },
-    // Pages to test radio buttons before converting govukRadios to USWDS
     {
       label: 'API Keys Create',
       path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/api/keys/create',

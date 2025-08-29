@@ -64,7 +64,7 @@ def _mock_get_service_settings_page_common(
                 "",
                 "Service name Test Service Change service name",
                 "Send text messages On",
-                "Text message senders (Only visible to Platform Admins) GOVUK Manage text message senders",
+                "Text message senders (Only visible to Platform Admins) USGOV Manage text message senders",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",
                 "Send international text messages Off Change your settings for sending international text messages",
@@ -692,7 +692,7 @@ def test_and_more_hint_appears_on_settings_with_more_than_just_a_single_sender(
             0,
             "test@example.com (default) Change test@example.com",
         ),
-        ("main.service_sms_senders", 0, "GOVUK (default) Change GOVUK"),
+        ("main.service_sms_senders", 0, "USGOV (default) Change USGOV"),
     ],
 )
 def test_api_ids_dont_show_on_option_pages_with_a_single_sender(
@@ -1646,7 +1646,7 @@ def test_inbound_sms_sender_is_not_editable(
     if hide_textbox:
         assert (
             normalize_spaces(page.select_one('form[method="post"] p').text)
-            == "GOVUK This phone number receives replies and cannot be changed"
+            == "USGOV This phone number receives replies and cannot be changed"
         )
 
 

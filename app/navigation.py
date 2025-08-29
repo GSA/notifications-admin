@@ -148,7 +148,7 @@ class HeaderNavigation(Navigation):
         },
     }
 
-    # header HTML now comes from GOVUK Frontend so requires a boolean, not an attribute
+    # header HTML now comes from USWDS so requires a boolean, not an attribute
     def is_selected(self, navigation_item):
         return request.endpoint in self.mapping[navigation_item]
 

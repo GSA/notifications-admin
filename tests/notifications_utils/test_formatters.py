@@ -14,7 +14,7 @@ from notifications_utils.formatters import (
     strip_all_whitespace,
     strip_and_remove_obscure_whitespace,
     strip_unsupported_characters,
-    unlink_govuk_escaped,
+    unlink_usgov_escaped,
 )
 from notifications_utils.template import (
     HTMLEmailTemplate,
@@ -64,10 +64,10 @@ def test_HTML_template_has_URLs_replaced_with_links():
     )
 
 
-def test_escaping_govuk_in_email_templates():
+def test_escaping_usgov_in_email_templates():
     template_content = "GOV.UK"
     expected = "GOV.\u200bUK"
-    assert unlink_govuk_escaped(template_content) == expected
+    assert unlink_usgov_escaped(template_content) == expected
     template_json = {
         "content": template_content,
         "subject": "",
@@ -131,8 +131,8 @@ def test_escaping_govuk_in_email_templates():
         pytest.param("gov.uks", "gov.uks", marks=pytest.mark.xfail),
     ],
 )
-def test_unlink_govuk_escaped(template_content, expected):
-    assert unlink_govuk_escaped(template_content) == expected
+def test_unlink_usgov_escaped(template_content, expected):
+    assert unlink_usgov_escaped(template_content) == expected
 
 
 @pytest.mark.parametrize(

@@ -6,7 +6,3 @@ require('./polyfills.js');
 
 // Make jQuery available everywhere
 global.$ = global.jQuery = require('jquery');
-
-// Bring in the GOV.UK modules system
-// Removing - now using NotifyModules instead
-// require('govuk_frontend_toolkit/javascripts/govuk/modules.js');
