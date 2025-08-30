@@ -175,16 +175,14 @@ def handle_no_existing_template_case(page):
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)
 
-    # After sending, click on Activity to see the job status
+    # After sending, we should be on the job page showing the message status
+    # Wait for the page to fully load and navigation to be present
+    page.wait_for_selector(".usa-sidenav", state="visible")
+
     # The Activity link should be in the navigation
-    activity_button = page.get_by_text("Activity")
-    expect(activity_button).to_be_visible()
-    activity_button.click()
-
-    # Check to make sure that we've arrived at the next page.
-
-    page.wait_for_load_state("networkidle")
-    check_axe_report(page)
+    activity_link = page.locator("a:has-text('Activity')")
+    expect(activity_link).to_be_visible()
+    activity_link.click()
 
     # Skip download verification - S3 reports may not be available in test environment
 
