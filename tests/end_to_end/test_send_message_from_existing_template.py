@@ -171,14 +171,13 @@ def handle_no_existing_template_case(page):
     expect(send_button).to_be_visible()
     send_button.click()
 
-    # Check to make sure that we've arrived at the next page.
+    # Wait for the send to process and navigate to the job page
+    # This can take a few seconds as it creates the job
+    page.wait_for_url("**/jobs/**", timeout=30000)
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)
 
-    # After sending, we should be on the job page showing the message status
-    # Wait for the page to fully load and navigation to be present
-    page.wait_for_selector(".usa-sidenav", state="visible")
-
+    # Now we should be on the job page with full navigation
     # The Activity link should be in the navigation
     activity_link = page.locator("a:has-text('Activity')")
     expect(activity_link).to_be_visible()
