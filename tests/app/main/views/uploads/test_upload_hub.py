@@ -55,7 +55,7 @@ def test_get_upload_hub_page(
         "Sent 1 January 2016 at 06:09 America/New_York "
         "0 pending 8 delivered 2 failed"
     )
-    assert uploads[0].select_one("a.file-list-filename-large")["href"] == (
+    assert uploads[0].select_one("a.file-link")["href"] == (
         "/services/{}/jobs/job_id_1".format(SERVICE_ONE_ID)
     )
 

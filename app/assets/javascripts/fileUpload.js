@@ -27,13 +27,13 @@ function initUploadStatusAnnouncer() {
 (function(Modules) {
   "use strict";
 
-  Modules.FileUpload = function() {
+  Modules['file-upload'] = function() {
     this.submit = () => this.$form.trigger('submit');
 
     this.showCancelButton = () => {
       $('.file-upload-button', this.$form).replaceWith(`
         <button class='usa-button uploading-button' aria-disabled="true" tabindex="0">
-          Uploading<span class="dot-anim" aria-hidden="true"></span>
+          Uploading<span class="loading-spinner" role="status" aria-label="Uploading"></span>
         </button>
       `);
     };
@@ -55,7 +55,7 @@ function initUploadStatusAnnouncer() {
       });
     };
   };
-})(window.GOVUK.Modules);
+})(window.NotifyModules);
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {

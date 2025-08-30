@@ -1,7 +1,7 @@
 (function (global) {
   "use strict";
 
-  const GOVUK = global.GOVUK;
+  const USWDS = global.USWDS || {};
 
   function Summary (module) {
     this.module = module;
@@ -221,6 +221,8 @@
     this.summary.bindEvents(this);
   };
 
-  GOVUK.Modules.CollapsibleCheckboxes = CollapsibleCheckboxes;
+  NotifyModules['collapsible-checkboxes'] = function() {
+    return new CollapsibleCheckboxes();
+  };
 
 }(window));

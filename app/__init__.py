@@ -117,7 +117,7 @@ from app.notify_client.upload_api_client import upload_api_client
 from app.notify_client.user_api_client import user_api_client
 from app.url_converters import SimpleDateTypeConverter, TemplateTypeConverter
 from app.utils.api_health import is_api_down
-from app.utils.govuk_frontend_jinja.flask_ext import init_govuk_frontend
+from app.utils.nunjucks_jinja.flask_ext import init_nunjucks_environment
 from notifications_python_client.errors import HTTPError
 from notifications_utils import logging, request_helper
 from notifications_utils.formatters import (
@@ -170,13 +170,17 @@ def _csp(config):
             "https://dap.digitalgov.gov",
             "https://cdn.socket.io",
         ],
-        "connect-src": list(dict.fromkeys([
-            "'self'",
-            "https://gov-bam.nr-data.net",
-            "https://www.google-analytics.com",
-            f"{api_public_url}",
-            f"{api_public_ws_url}",
-        ])),
+        "connect-src": list(
+            dict.fromkeys(
+                [
+                    "'self'",
+                    "https://gov-bam.nr-data.net",
+                    "https://www.google-analytics.com",
+                    f"{api_public_url}",
+                    f"{api_public_ws_url}",
+                ]
+            )
+        ),
         "style-src": ["'self'", asset_domain],
         "img-src": ["'self'", asset_domain],
     }
@@ -236,7 +240,7 @@ def create_app(application):
     if "extensions" not in application.jinja_options:
         application.jinja_options["extensions"] = []
 
-    init_govuk_frontend(application)
+    init_nunjucks_environment(application)
     init_jinja(application)
 
     for client in (
