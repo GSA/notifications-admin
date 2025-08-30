@@ -171,14 +171,9 @@ def handle_no_existing_template_case(page):
     expect(send_button).to_be_visible()
     send_button.click()
 
-    # Wait for the send to process and navigate to the job page
-    # This can take a few seconds as it creates the job
-    page.wait_for_url("**/jobs/**", timeout=30000)
-    page.wait_for_load_state("domcontentloaded")
+    page.wait_for_load_state("networkidle", timeout=30000)
     check_axe_report(page)
 
-    # Now we should be on the job page with full navigation
-    # The Activity link should be in the navigation
     activity_link = page.locator("a:has-text('Activity')")
     expect(activity_link).to_be_visible()
     activity_link.click()
