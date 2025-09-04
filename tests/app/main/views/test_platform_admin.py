@@ -871,7 +871,7 @@ def test_get_live_services_report(
                     "consent_to_research": True,
                     "contact_name": "Forest fairy",
                     "organization_type": "Ecosystem",
-                    "contact_email": "forest.fairy@digital.cabinet-office.gov.uk",
+                    "contact_email": "forest.fairy@example.com",
                     "contact_mobile": "+12028675109",
                     "live_date": "Sat, 29 Mar 2014 00:00:00 GMT",
                     "sms_volume_intent": 100,
@@ -908,7 +908,7 @@ def test_get_live_services_report(
         "Service ID,Organization,Organization type,Service name,Consent to research,Main contact,Contact email,"
         + "Contact mobile,Live date,SMS volume intent,Email volume intent,SMS sent this year,"
         + "Emails sent this year,Free sms allowance\r\n"
-        + "1,Forest,Ecosystem,jessie the oak tree,True,Forest fairy,forest.fairy@digital.cabinet-office.gov.uk,"
+        + "1,Forest,Ecosystem,jessie the oak tree,True,Forest fairy,forest.fairy@example.com,"
         + "+12028675109,29-03-2014,100,50,300,1200,100\r\n"
         + "2,Forest,Ecosystem,james the pine tree,,,,,,,60,0,0,200"
     )

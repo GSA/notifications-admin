@@ -31,36 +31,42 @@
 
   {% else %}
 
-    <div class="grid-row flex-column">
-      <h1 class="font-body-2xl line-height-sans-2 margin-bottom-1 margin-top-0" id="page-title">{{page_title}}</h1>
-      <div class="{% if current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES) %} grid-col-10 {% else %} grid-col-12 {% endif %}">
-        <p class="margin-top-0 margin-bottom-4" id="page-description">
-          Every message starts with a template. To send, choose or create a template.
-        </p>
-        {{ folder_path(
-          folders=template_folder_path,
-          service_id=current_service.id,
-          template_type=template_type,
-          current_user=current_user
-        ) }}
-      </div>
-      {% if current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES) and current_template_folder_id and user_has_template_folder_permission %}
-        <div class="grid-col-2">
-          <a href="{{ url_for('.manage_template_folder', service_id=current_service.id, template_folder_id=current_template_folder_id) }}" class="usa-link folder-heading-manage-link">Manage this folder<span class="usa-sr-only">Manage this folder</span></a>
+    <div class="grid-row">
+      <div class="grid-col-12">
+        <h2 class="font-body-2xl line-height-sans-2 margin-0" id="page-title">{{page_title}}</h2>
+        <div class="grid-row">
+          <div class="{% if current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES) and current_template_folder_id and user_has_template_folder_permission %}grid-col-10{% else %}grid-col-12{% endif %}">
+            <p class="margin-bottom-4" id="page-description">
+              Every message starts with a template. To send, choose or create a template.
+            </p>
+            {{ folder_path(
+              folders=template_folder_path,
+              service_id=current_service.id,
+              template_type=template_type,
+              current_user=current_user
+            ) }}
+          </div>
+          {% if current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES) and current_template_folder_id and user_has_template_folder_permission %}
+            <div class="grid-col-2 text-right">
+              <a href="{{ url_for('.manage_template_folder', service_id=current_service.id, template_folder_id=current_template_folder_id) }}" class="usa-link">Manage this folder</a>
+            </div>
+          {% endif %}
         </div>
-      {% endif %}
+      </div>
     </div>
   {% endif %}
     {% if show_template_nav %}
-      <div class="bottom-gutter-2-3">
+      <div class="margin-y-3">
         {{ pill(template_nav_items, current_value=template_type, show_count=False) }}
       </div>
     {% endif %}
 
     {{ live_search(target_selector='#template-list .template-list-item', show=show_search_box, form=search_form) }}
 
-    <div class="js-live-search-no-results js-hidden">
-      <p class="usa-body margin-top-2">No templates found</p>
+    <div class="js-live-search-no-results js-hidden margin-top-3">
+      <div class="padding-3 bg-base-lightest radius-md">
+        <p class="text-base margin-0">No templates found</p>
+      </div>
     </div>
 
     {% if current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES) and user_has_template_folder_permission %}
