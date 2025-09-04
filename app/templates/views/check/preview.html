@@ -101,9 +101,16 @@
     {% set button_text %}
       {{ "Schedule" if scheduled_for else 'Send'}}
     {% endset %}
-    {{ usaButton({
-      "text": button_text,
-      "name": button_text
-    }) }}
+    <div>
+      {{ usaButton({
+        "text": button_text,
+        "name": button_text
+      }) }}
+      {{ usaButton({
+        "text": "Change CSV file",
+        "classes": "usa-button--outline",
+        "href": url_for('main.change_csv', service_id=current_service.id, template_id=template_id)
+      }) }}
+    </div>
   </form>
 {% endblock %}
