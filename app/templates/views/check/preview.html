@@ -109,7 +109,7 @@
       {{ usaButton({
         "text": "Change CSV file",
         "classes": "usa-button--outline",
-        "href": url_for('main.change_csv', service_id=current_service.id, template_id=template_id)
+        "href": url_for('main.send_messages', service_id=current_service.id, template_id=template_id)
       }) }}
     </div>
   </form>
