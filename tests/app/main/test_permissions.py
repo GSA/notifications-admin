@@ -69,8 +69,6 @@ def test_services_pages_that_org_users_are_allowed_to_see(
     client_request.login(
         api_user_active,
         service=service if SERVICE_ONE_ID in user_services else None,
-        nonce="nonce",
-        state="state",
     )
 
     endpoints = (
