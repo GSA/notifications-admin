@@ -164,7 +164,9 @@ def set_up_your_profile():
         abort(403, "Login.gov state not detected #invites")
 
     state_key = f"login-state-{unquote(state)}"
+    current_app.logger.debug(hilite(f"Register tries to fetch state_key {state_key}"))
     stored_state = unquote(redis_client.get(state_key).decode("utf8"))
+
     if state != stored_state:
         flash("Internal error: cannot recognize stored state")
         abort(403, "Internal error: cannot recognize stored state #invites")
@@ -185,6 +187,7 @@ def set_up_your_profile():
             f"#invites: Got the user_email and user_uuid {user_uuid} from login.gov"
         )
         invite_data = redis_client.get(f"invitedata-{state}")
+        # TODO fails here.
         invite_data = json.loads(invite_data)
         invited_user_id = invite_data["invited_user_id"]
         invited_user_email_address = get_invited_user_email_address(invited_user_id)
