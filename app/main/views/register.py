@@ -189,19 +189,34 @@ def set_up_your_profile():
         invite_data = redis_client.get(f"invitedata-{state}")
         # TODO fails here.
         invite_data = json.loads(invite_data)
-        invited_user_id = invite_data["invited_user_id"]
-        invited_user_email_address = get_invited_user_email_address(invited_user_id)
+        current_app.logger.debug(hilite(f"HERE IS INVITE DATA {invite_data}"))
+        is_org_invite = False
+        if invite_data.get("invited_user_id"):
+            invited_user_id = invite_data["invited_user_id"]
+
+            invited_user_email_address = get_invited_user_email_address(invited_user_id)
+        else:
+            invited_user_id = invite_data["id"]
+            is_org_invite = True
+            invited_user_email_address = get_invited_org_user_email_address(
+                invited_user_id
+            )
+
         current_app.logger.info(
             f"#invites: does user email match expected? {user_email == invited_user_email_address}"
         )
         check_invited_user_email_address_matches_expected(
             user_email, invited_user_email_address
         )
+        if is_org_invite:
+            invited_org_user_accept_invite(invited_user_id)
 
-        invited_user_accept_invite(invited_user_id)
+        else:
+            invited_user_accept_invite(invited_user_id)
+
         current_app.logger.info(
             f"#invites: accepted invite user with invited_user_id \
-              {invited_user_id} to service {invite_data['service_id']}"
+              {invited_user_id}"
         )
         # We need to avoid taking a second trip through the login.gov code because we cannot pull the
         # access token twice.  So once we retrieve these values, let's park them in redis for 15 minutes
@@ -242,22 +257,29 @@ def set_up_your_profile():
         current_app.logger.info("#invites: going to activate user")
         activate_user(user["id"])
         current_app.logger.info(f"#invites: activated user with user.id {user['id']}")
-        usr = User.from_id(user["id"])
 
-        usr.add_to_service(
-            invite_data["service_id"],
-            invite_data["permissions"],
-            invite_data["folder_permissions"],
-            invite_data["from_user_id"],
-        )
+        if invite_data.get("service_id"):
+            usr = User.from_id(user["id"])
 
-        # notify-admin-1766
-        # redirect new users to templates area of new service instead of dashboard
-        service_id = invite_data["service_id"]
-        url = url_for(".service_dashboard", service_id=service_id)
-        url = f"{url}/templates"
-        current_app.logger.info(f"#invites redirecting to {url}")
-        return redirect(url)
+            usr.add_to_service(
+                invite_data["service_id"],
+                invite_data["permissions"],
+                invite_data["folder_permissions"],
+                invite_data["from_user_id"],
+            )
+
+            # notify-admin-1766
+            # redirect new users to templates area of new service instead of dashboard
+            service_id = invite_data["service_id"]
+            url = url_for(".service_dashboard", service_id=service_id)
+            url = f"{url}/templates"
+            current_app.logger.info(f"#invites redirecting to {url}")
+            return redirect(url)
+        else:
+            org_id = invite_data["organization"]
+            url = url_for(".organization_dashboard", org_id=org_id)
+            current_app.logger.info(f"#invites redirecting to {url}")
+            return redirect(url)
 
     # we take two trips through this method, but should only hit this
     # line on the first trip.  On the second trip, we should get redirected
@@ -272,8 +294,37 @@ def get_invited_user_email_address(invited_user_id):
     return invited_user.email_address
 
 
+def get_invited_org_user_email_address(invited_user_id):
+    # InvitedUser is an unhashable type and hard to mock in tests
+    # so this convenience method is a workaround for that
+    invited_user = InvitedOrgUser.by_id(invited_user_id)
+    return invited_user.email_address
+
+
 def invited_user_accept_invite(invited_user_id):
     invited_user = InvitedUser.by_id(invited_user_id)
+
+    if invited_user.status == InvitedUserStatus.EXPIRED:
+        current_app.logger.error("User invitation has expired")
+        flash(
+            "Your invitation has expired; please contact the person who invited you for additional help."
+        )
+        abort(401, "Your invitation has expired #invites")
+
+    if invited_user.status == InvitedUserStatus.CANCELLED:
+        current_app.logger.error("User invitation has been cancelled")
+        flash(
+            "Your invitation is no longer valid; please contact the person who invited you for additional help."
+        )
+        abort(401, "Your invitation was canceled #invites")
+
+    invited_user.accept_invite()
+
+
+def invited_org_user_accept_invite(invited_user_id):
+    invited_user = InvitedOrgUser.by_id(invited_user_id)
+
+    current_app.logger.debug(hilite(f"INVITED ORG USER {invited_user.serialize()}"))
 
     if invited_user.status == InvitedUserStatus.EXPIRED:
         current_app.logger.error("User invitation has expired")

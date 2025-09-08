@@ -53,7 +53,12 @@ class OrgInviteApiClient(NotifyAdminAPIClient):
         current_app.logger.debug(hilite(f"RESP is {resp}"))
 
         invite_data_key = f"invitedata-{unquote(state)}"
-        redis_invite_data = resp["invite"]
+        # For historical reasons 'invite' signifies a service invite
+        # and 'data' signifies an org invite
+        if resp.get("invite"):
+            redis_invite_data = resp["invite"]
+        else:
+            redis_invite_data = resp["data"]
         redis_invite_data = json.dumps(redis_invite_data)
         redis_client.set(invite_data_key, redis_invite_data, ex=ttl)
         current_app.logger.debug(
