@@ -69,6 +69,8 @@ def test_services_pages_that_org_users_are_allowed_to_see(
     client_request.login(
         api_user_active,
         service=service if SERVICE_ONE_ID in user_services else None,
+        nonce="nonce",
+        state="state",
     )
 
     endpoints = (
@@ -81,6 +83,8 @@ def test_services_pages_that_org_users_are_allowed_to_see(
             endpoint,
             service_id=SERVICE_ONE_ID,
             _expected_status=expected_status,
+            nonce="nonce",
+            state="state",
         )
 
     assert mock_get_service.called is organization_checked
