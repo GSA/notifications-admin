@@ -164,7 +164,7 @@ def set_up_your_profile():
         abort(403, "Login.gov state not detected #invites")
 
     state_key = f"login-state-{unquote(state)}"
-    current_app.logger.debug(hilite(f"Register tries to fetch state_key {state_key}"))
+    debug_msg(f"Register tries to fetch state_key {state_key}")
     stored_state = unquote(redis_client.get(state_key).decode("utf8"))
 
     if state != stored_state:
@@ -189,18 +189,10 @@ def set_up_your_profile():
         invite_data = redis_client.get(f"invitedata-{state}")
         # TODO fails here.
         invite_data = json.loads(invite_data)
-        current_app.logger.debug(hilite(f"HERE IS INVITE DATA {invite_data}"))
-        is_org_invite = False
-        if invite_data.get("invited_user_id"):
-            invited_user_id = invite_data["invited_user_id"]
 
-            invited_user_email_address = get_invited_user_email_address(invited_user_id)
-        else:
-            invited_user_id = invite_data["id"]
-            is_org_invite = True
-            invited_user_email_address = get_invited_org_user_email_address(
-                invited_user_id
-            )
+        is_org_invite, invited_user_id, invited_user_email_address = (
+            process_invited_user(invite_data)
+        )
 
         current_app.logger.info(
             f"#invites: does user email match expected? {user_email == invited_user_email_address}"
@@ -326,8 +318,6 @@ def invited_user_accept_invite(invited_user_id):
 def invited_org_user_accept_invite(invited_user_id):
     invited_user = InvitedOrgUser.by_id(invited_user_id)
 
-    current_app.logger.debug(hilite(f"INVITED ORG USER {invited_user.serialize()}"))
-
     if invited_user.status == InvitedUserStatus.EXPIRED:
         current_app.logger.error("User invitation has expired")
         flash(
@@ -347,3 +337,17 @@ def invited_org_user_accept_invite(invited_user_id):
 
 def debug_msg(msg):
     current_app.logger.debug(hilite(msg))
+
+
+def process_invited_user(invite_data):
+    is_org_invite = False
+    if invite_data.get("invited_user_id"):
+        invited_user_id = invite_data["invited_user_id"]
+
+        invited_user_email_address = get_invited_user_email_address(invited_user_id)
+    else:
+        invited_user_id = invite_data["id"]
+        is_org_invite = True
+        invited_user_email_address = get_invited_org_user_email_address(invited_user_id)
+
+    return is_org_invite, invited_user_id, invited_user_email_address
