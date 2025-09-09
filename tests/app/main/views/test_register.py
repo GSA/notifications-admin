@@ -6,7 +6,10 @@ import pytest
 from flask import url_for
 
 from app.enums import ServicePermission
-from app.main.views.register import check_invited_user_email_address_matches_expected, process_invited_user
+from app.main.views.register import (
+    check_invited_user_email_address_matches_expected,
+    process_invited_user,
+)
 from app.models.user import User
 
 
@@ -447,19 +450,23 @@ def test_decode_state(encoded_invite_data):
         "service_id": "service",
     }
 
-#@pytest.mark.parametrize(
+
+# @pytest.mark.parametrize(
 #    ("user_services", "user_organizations", "expected_status", "organization_checked"),
 #    [
 #        ([SERVICE_ONE_ID], [], 200, False),
+
 
 @pytest.mark.parametrize(
     ("invite_data", "expected_is_org_invite", "expected_user_id"),
     [
         ({"invited_user_id": "service_p"}, False, "service_p"),
         ({"id": "org_p"}, True, "org_p"),
-    ]
+    ],
 )
-def test_process_invited_user(invite_data, expected_is_org_invite, expected_user_id, mocker):
+def test_process_invited_user(
+    invite_data, expected_is_org_invite, expected_user_id, mocker
+):
 
     mocker.patch("app.main.views.register.get_invited_user_email_address")
     mocker.patch("app.main.views.register.get_invited_org_user_email_address")
