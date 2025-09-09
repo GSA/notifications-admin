@@ -259,7 +259,7 @@ class User(JSONModel, UserMixin):
 
                 # TODO this is sketch! Fix this!
                 # This is temporary to restore org invite functionality only
-                self.add_to_organization(org_id)
+                # self.add_to_organization(org_id)
                 value = self.belongs_to_organization(org_id)
                 current_app.logger.debug(
                     f"has_permissions returns org: {org_id} returning {value}"
@@ -326,8 +326,8 @@ class User(JSONModel, UserMixin):
 
         # TODO this is sketch! Fix this!
         # This is temporary to restore org invite functionality only
-        if str(organization_id) not in self.organization_ids:
-            self.add_to_organization(organization_id)
+        # if str(organization_id) not in self.organization_ids:
+        #    self.add_to_organization(organization_id)
         return str(organization_id) in self.organization_ids
 
     @property

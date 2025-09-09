@@ -276,7 +276,9 @@ def set_up_your_profile():
             current_app.logger.info(f"#invites redirecting to {url}")
             return redirect(url)
         else:
+            usr = User.from_id(user["id"])
             org_id = invite_data["organization"]
+            usr.add_to_organization(org_id)
             url = url_for(".organization_dashboard", org_id=org_id)
             current_app.logger.info(f"#invites redirecting to {url}")
             return redirect(url)
