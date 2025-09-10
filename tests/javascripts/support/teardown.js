@@ -1,6 +1,6 @@
 window.jQuery = null;
 $ = null;
 
-delete window.GOVUK;
+delete window.USWDS;
 
 jest.restoreAllMocks();

@@ -2,14 +2,7 @@
 
 ## Installation
 
-See the [main README quick start guide](https://github.com/alphagov/govuk-frontend#quick-start) for how to install this component.
-
-## Guidance and Examples
-
-Find out when to use the back link component in your service in the [GOV.UK Design System](https://design-system.service.gov.uk/components/back-link).
-
+See the [main README quick start guide](https://designsystem.digital.gov/) for how to install this component.
 ## Component options
 
 Use options to customize the appearance, content and behavior of a component when using a macro, for example, changing the text.
-
-See [options table](https://design-system.service.gov.uk/components/back-link/#options-example-default) for details.

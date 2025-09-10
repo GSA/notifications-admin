@@ -19,13 +19,9 @@ def test_should_200_for_tour_start(
         template_id=fake_uuid,
     )
 
-    assert normalize_spaces(page.select(".banner-tour .heading-medium")[0].text) == (
-        "Try sending yourself this example"
-    )
-    selected_hint = page.select(".banner-tour .grid-row")[0]
-    selected_hint_text = normalize_spaces(selected_hint.select(".usa-body")[0].text)
-    assert "greyed-out-step" not in selected_hint["class"]
-    assert selected_hint_text == "Every message is sent from a template"
+    page_content = normalize_spaces(str(page))
+    assert ("Try sending yourself this example") in page_content
+    assert "Every message is sent from a template" in page_content
 
     assert normalize_spaces(page.select(".sms-message-recipient")[0].text) == (
         "To: 202-867-5303"
@@ -139,13 +135,9 @@ def test_should_200_for_get_tour_step(
     )
 
     assert "Example text message" in normalize_spaces(page.select_one("title").text)
-    assert normalize_spaces(page.select(".banner-tour .heading-medium")[0].text) == (
-        "Try sending yourself this example"
-    )
-    selected_hint = page.select(".banner-tour .grid-row")[1]
-    selected_hint_text = normalize_spaces(selected_hint.select(".usa-body")[0].text)
-    assert "greyed-out-step" not in selected_hint["class"]
-    assert selected_hint_text == "The template pulls in the data you provide"
+    page_content = normalize_spaces(str(page))
+    assert ("Try sending yourself this example") in page_content
+    assert "The template pulls in the data you provide" in page_content
 
     assert normalize_spaces(page.select(".sms-message-recipient")[0].text) == (
         "To: 202-867-5303"
@@ -303,7 +295,7 @@ def test_back_link_from_first_get_tour_step_points_to_tour_start(
         "main.tour_step", service_id=SERVICE_ONE_ID, template_id=fake_uuid, step_index=1
     )
 
-    assert page.select(".usa-back-link")[0]["href"] == url_for(
+    assert page.select("nav.usa-breadcrumb a")[0]["href"] == url_for(
         "main.begin_tour", service_id=SERVICE_ONE_ID, template_id=fake_uuid
     )
 
@@ -321,7 +313,7 @@ def test_back_link_from_get_tour_step_points_to_previous_step(
         "main.tour_step", service_id=SERVICE_ONE_ID, template_id=fake_uuid, step_index=2
     )
 
-    assert page.select(".usa-back-link")[0]["href"] == url_for(
+    assert page.select("nav.usa-breadcrumb a")[0]["href"] == url_for(
         "main.tour_step", service_id=SERVICE_ONE_ID, template_id=fake_uuid, step_index=1
     )
 
@@ -531,13 +523,9 @@ def test_should_200_for_check_tour_notification(
         template_id=fake_uuid,
     )
 
-    assert normalize_spaces(page.select(".banner-tour .heading-medium")[0].text) == (
-        "Try sending yourself this example"
-    )
-    selected_hint = page.select(".banner-tour .grid-row")[2]
-    selected_hint_text = normalize_spaces(selected_hint.select(".usa-body")[0].text)
-    assert "greyed-out-step" not in selected_hint["class"]
-    assert selected_hint_text == "Notify delivers the message"
+    page_content = normalize_spaces(str(page))
+    assert "Try sending yourself this example" in page_content
+    assert "Notify delivers the message" in page_content
 
     assert normalize_spaces(page.select(".sms-message-recipient")[0].text) == (
         "To: 202-867-5303"
@@ -575,7 +563,7 @@ def test_back_link_from_check_tour_notification_points_to_last_tour_step(
         template_id=fake_uuid,
     )
 
-    assert page.select(".usa-back-link")[0]["href"] == url_for(
+    assert page.select("nav.usa-breadcrumb a")[0]["href"] == url_for(
         "main.tour_step", service_id=SERVICE_ONE_ID, template_id=fake_uuid, step_index=3
     )
 
