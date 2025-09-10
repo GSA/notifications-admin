@@ -202,14 +202,18 @@ def set_up_your_profile():
         )
         if is_org_invite:
             invited_org_user_accept_invite(invited_user_id)
+            current_app.logger.info(
+                f"#invites: accepted org invite user with invited_user_id \
+              {invited_user_id}"
+            )
 
         else:
             invited_user_accept_invite(invited_user_id)
-
-        current_app.logger.info(
-            f"#invites: accepted invite user with invited_user_id \
+            current_app.logger.info(
+                f"#invites: accepted invite user with invited_user_id \
               {invited_user_id}"
-        )
+            )
+
         # We need to avoid taking a second trip through the login.gov code because we cannot pull the
         # access token twice.  So once we retrieve these values, let's park them in redis for 15 minutes
         put_invite_data_in_redis(
@@ -299,18 +303,18 @@ def invited_user_accept_invite(invited_user_id):
     invited_user = InvitedUser.by_id(invited_user_id)
 
     if invited_user.status == InvitedUserStatus.EXPIRED:
-        current_app.logger.error("User invitation has expired")
+        current_app.logger.error("Service invitation has expired")
         flash(
-            "Your invitation has expired; please contact the person who invited you for additional help."
+            "Your service invitation has expired; please contact the person who invited you for additional help."
         )
-        abort(401, "Your invitation has expired #invites")
+        abort(401, "Your service invitation has expired #invites")
 
     if invited_user.status == InvitedUserStatus.CANCELLED:
-        current_app.logger.error("User invitation has been cancelled")
+        current_app.logger.error("Service invitation has been cancelled")
         flash(
-            "Your invitation is no longer valid; please contact the person who invited you for additional help."
+            "Your service invitation is no longer valid; please contact the person who invited you for additional help."
         )
-        abort(401, "Your invitation was canceled #invites")
+        abort(401, "Your service invitation was canceled #invites")
 
     invited_user.accept_invite()
 
@@ -319,18 +323,19 @@ def invited_org_user_accept_invite(invited_user_id):
     invited_user = InvitedOrgUser.by_id(invited_user_id)
 
     if invited_user.status == InvitedUserStatus.EXPIRED:
-        current_app.logger.error("User invitation has expired")
+        current_app.logger.error("Organization invitation has expired")
         flash(
-            "Your invitation has expired; please contact the person who invited you for additional help."
+            "Your organization invitation has expired; please contact the person who invited you for additional help."
         )
-        abort(401, "Your invitation has expired #invites")
+        abort(401, "Your organization invitation has expired #invites")
 
     if invited_user.status == InvitedUserStatus.CANCELLED:
-        current_app.logger.error("User invitation has been cancelled")
+        current_app.logger.error("Organization invitation has been cancelled")
         flash(
-            "Your invitation is no longer valid; please contact the person who invited you for additional help."
+            "Your organization invitation is no longer valid; \
+                please contact the person who invited you for additional help."
         )
-        abort(401, "Your invitation was canceled #invites")
+        abort(401, "Your organization invitation was canceled #invites")
 
     invited_user.accept_invite()
 
