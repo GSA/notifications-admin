@@ -81,6 +81,8 @@ def test_services_pages_that_org_users_are_allowed_to_see(
             endpoint,
             service_id=SERVICE_ONE_ID,
             _expected_status=expected_status,
+            nonce="dummy-nonce",
+            state="dummy-state",
         )
 
     assert mock_get_service.called is organization_checked

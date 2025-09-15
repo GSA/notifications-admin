@@ -189,12 +189,12 @@ session to make the changes take effect.
 Now we're ready to install the Python version we need with `pyenv`, like so:
 
 ```sh
-pyenv install 3.12
+pyenv install 3.13
 ```
 
-This will install the latest version of Python 3.12.
+This will install the latest version of Python 3.13.
 
-_NOTE: This project currently runs on Python 3.12.x._
+_NOTE: This project currently runs on Python 3.13.x._
 
 #### [API Step] Python Dependency Installation
 
@@ -246,12 +246,12 @@ git clone git@github.com:GSA/notifications-admin.git
 
 Now go into the project directory (`notifications-admin` by default), create a
 virtual environment, and set the local Python version to point to the virtual
-environment (assumes version Python `3.12.9` is what is installed on your
+environment (assumes version Python `3.13.2` is what is installed on your
 machine):
 
 ```sh
 cd notifications-admin
-pyenv virtualenv 3.12.9 notify-admin
+pyenv virtualenv 3.13.2 notify-admin
 pyenv local notify-admin
 ```
 
@@ -284,10 +284,10 @@ If you're upgrading an existing project to a newer version of Python, you can
 follow these steps to get yourself up-to-date.
 
 First, use `pyenv` to install the newer version of Python you'd like to use;
-we'll use `3.12` in our example here since we recently upgraded to this version:
+we'll use `3.13` in our example here since we recently upgraded to this version:
 
 ```sh
-pyenv install 3.12
+pyenv install 3.13
 ```
 
 Next, delete the virtual environment you previously had set up. If you followed
@@ -302,7 +302,7 @@ environment with the newer version of Python you just installed:
 
 ```sh
 cd notifications-admin
-pyenv virtualenv 3.12.9 notify-admin
+pyenv virtualenv 3.13.2 notify-admin
 pyenv local notify-admin
 ```
 
