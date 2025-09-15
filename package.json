@@ -35,7 +35,6 @@
     "govuk-frontend": "2.13.0",
     "gulp-merge": "^0.1.1",
     "jquery": "3.7.1",
-    "morphdom": "^2.7.7",
     "playwright": "^1.55.0",
     "python": "^0.0.4",
     "query-command-supported": "1.0.0",

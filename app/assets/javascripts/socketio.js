@@ -1,11 +1,3 @@
-function debounce(func, wait) {
-  let timeout;
-  return function (...args) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), wait);
-  };
-}
-
 document.addEventListener('DOMContentLoaded', function () {
   const isJobPage = window.location.pathname.includes('/jobs/');
   if (!isJobPage) return;
@@ -15,69 +7,105 @@ document.addEventListener('DOMContentLoaded', function () {
   const featureEnabled = jobEl?.dataset?.feature === 'true';
   const apiHost = jobEl?.dataset?.host;
 
-  if (!jobId) return;
+  if (!jobId || !featureEnabled) return;
 
-  if (featureEnabled) {
-    const socket = io(apiHost);
+  const DEFAULT_INTERVAL_MS = 10000;
+  const MIN_INTERVAL_MS = 1000;
+  const MAX_INTERVAL_MS = 30000;
 
-    socket.on('connect_error', (err) => {
-      console.error('Socket connect_error:', err);
-    });
+  let pollInterval;
+  let currentInterval = DEFAULT_INTERVAL_MS;
+  let isPolling = false;
 
-    socket.on('error', (err) => {
-      console.error('Socket error:', err);
-    });
-
-    socket.on('connect', () => {
-      socket.emit('join', { room: `job-${jobId}` });
-    });
-
-    window.addEventListener('beforeunload', () => {
-      socket.emit('leave', { room: `job-${jobId}` });
-    });
-
-    const debouncedUpdate = debounce((data) => {
-      updateAllJobSections();
-    }, 1000);
-
-    socket.on('job_updated', (data) => {
-      if (data.job_id !== jobId) return;
-      debouncedUpdate(data);
-    });
+  function calculateBackoff(responseTime) {
+    return Math.min(
+      MAX_INTERVAL_MS,
+      Math.max(
+        MIN_INTERVAL_MS,
+        Math.floor((250 * Math.sqrt(responseTime)) - 1000)
+      )
+    );
   }
 
-  function updateAllJobSections() {
+  async function updateAllJobSections() {
+    if (document.hidden || isPolling) return;
+
+    isPolling = true;
+    const startTime = Date.now();
+
     const resourceEl = document.querySelector('[data-socket-update="status"]');
     const url = resourceEl?.dataset?.resource;
 
     if (!url) {
-      console.warn('No resource URL found for job updates');
+      isPolling = false;
       return;
     }
 
-    fetch(url)
-      .then((res) => res.json())
-      .then(({ status, counts, notifications }) => {
-        const sections = {
-          status: document.querySelector('[data-socket-update="status"]'),
-          counts: document.querySelector('[data-socket-update="counts"]'),
-          notifications: document.querySelector(
-            '[data-socket-update="notifications"]'
-          ),
-        };
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
 
-        if (status && sections.status) {
-          sections.status.innerHTML = status;
-        }
-        if (counts && sections.counts) {
-          sections.counts.innerHTML = counts;
-        }
-        if (notifications && sections.notifications) {
-          sections.notifications.innerHTML = notifications;
-        }
-      })
-      .catch((err) => {
-        console.error('Error fetching job update partials:', err);
-      });
+      const sections = {
+        status: document.querySelector('[data-socket-update="status"]'),
+        counts: document.querySelector('[data-socket-update="counts"]'),
+        notifications: document.querySelector('[data-socket-update="notifications"]'),
+      };
+
+      if (data.status && sections.status) {
+        sections.status.innerHTML = data.status;
+      }
+      if (data.counts && sections.counts) {
+        sections.counts.innerHTML = data.counts;
+      }
+      if (data.notifications && sections.notifications) {
+        sections.notifications.innerHTML = data.notifications;
+      }
+
+      const responseTime = Date.now() - startTime;
+      currentInterval = calculateBackoff(responseTime);
+
+      if (data.stop === 1 || data.finished === true) {
+        stopPolling();
+      }
+
+    } catch (error) {
+      console.error('Error fetching job updates:', error);
+      currentInterval = Math.min(currentInterval * 2, MAX_INTERVAL_MS);
+    } finally {
+      isPolling = false;
+    }
   }
+
+  function startPolling() {
+    updateAllJobSections();
+
+    function scheduleNext() {
+      if (pollInterval) clearTimeout(pollInterval);
+      pollInterval = setTimeout(() => {
+        updateAllJobSections();
+        scheduleNext();
+      }, currentInterval);
+    }
+
+    scheduleNext();
+  }
+
+  function stopPolling() {
+    if (pollInterval) {
+      clearTimeout(pollInterval);
+      pollInterval = null;
+    }
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      stopPolling();
+    } else {
+      startPolling();
+    }
+  });
+
+  window.addEventListener('beforeunload', stopPolling);
+
+  startPolling();
 });
