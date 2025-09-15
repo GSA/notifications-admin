@@ -316,7 +316,10 @@
         }
     });
 
-    startPolling();
+    if (typeof jest === 'undefined') {
+        startPolling();
+    }
+
     const handleDropdownChange = function(event) {
         const selectedValue = event.target.value;
         currentType = selectedValue;
