@@ -15,56 +15,44 @@
       <p class="max-width-full">This page refreshes automatically to show the latest message activity delivery rates, details, and reports.<br>You can watch it in progress or check back later.</p>
     {% endif %}
     <div data-job-id="{{ job.id }}" data-feature="{{FEATURE_SOCKET_ENABLED | lower}}" data-host="{{ api_public_url }}">
-    {% if not job.finished_processing %}
+    {% if not job.finished_processing and FEATURE_SOCKET_ENABLED %}
       <div
         data-resource="{{ updates_url }}"
-        {% if FEATURE_SOCKET_ENABLED %}
-          data-socket-update="status"
-        {% else %}
-          data-module="update-content"
-        {% endif %}
+        data-socket-update="status"
         data-key="status"
         data-form=""
       >
     {% endif %}
       {{ partials['status']|safe }}
-    {% if not job.finished_processing  %}
+    {% if not job.finished_processing and FEATURE_SOCKET_ENABLED %}
       </div>
     {% endif %}
-    {% if not finished %}
+    {% if not finished and FEATURE_SOCKET_ENABLED %}
       <div
         data-resource="{{ updates_url }}"
-        {% if FEATURE_SOCKET_ENABLED %}
-          data-socket-update="counts"
-        {% else %}
-          data-module="update-content"
-        {% endif %}
+        data-socket-update="counts"
         data-key="counts"
         data-form=""
       >
     {% endif %}
       {{ partials['counts']|safe }}
-    {% if not finished %}
+    {% if not finished and FEATURE_SOCKET_ENABLED %}
       </div>
     {% endif %}
 
     <p class="notification-status max-width-full">
       Messages are sent immediately to the cell phone carrier, but will remain in "pending" status until we hear back from the carrier they have received it and attempted deliver. More information on <a class="usa-link" href="{{ url_for('main.message_status') }}">delivery status</a>.
     </p>
-    {% if not job.processing_finished %}
+    {% if not job.processing_finished and FEATURE_SOCKET_ENABLED %}
       <div
         data-resource="{{ updates_url }}"
-        {% if FEATURE_SOCKET_ENABLED %}
-          data-socket-update="notifications"
-        {% else %}
-          data-module="update-content"
-        {% endif %}
+        data-socket-update="notifications"
         data-key="notifications"
         data-form=""
       >
     {% endif %}
       {{ partials['notifications']|safe }}
-    {% if not job.processing_finished %}
+    {% if not job.processing_finished and FEATURE_SOCKET_ENABLED %}
       </div>
     {% endif %}
   </div>
