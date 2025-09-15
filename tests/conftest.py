@@ -1857,7 +1857,7 @@ def mock_get_users_by_service(mocker):
                 id=sample_uuid(),
                 logged_in_at=None,
                 mobile_number="+12028675109",
-                email_address="notify@example.com",
+                email_address="notify@example.gov",
             )
         ]
 
