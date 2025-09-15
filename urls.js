@@ -51,6 +51,10 @@ const routes = {
       path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings',
     },
     {
+      label: 'Service Settings with Platform Admin Controls',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings?show_admin_view=true',
+    },
+    {
       label: 'Service Send Files By Email',
       path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings/send-files-by-email',
     },
@@ -85,6 +89,43 @@ const routes = {
     {
       label: 'Platform Admin Live Services',
       path: '/platform-admin/live-services',
+    },
+    {
+      label: 'Platform Admin Trial Services',
+      path: '/platform-admin/trial-services',
+    },
+    {
+      label: 'Platform Admin Summary',
+      path: '/platform-admin/summary',
+    },
+    {
+      label: 'Platform Admin Reports',
+      path: '/platform-admin/reports',
+    },
+    {
+      label: 'Platform Admin Complaints',
+      path: '/platform-admin/complaints',
+    },
+    {
+      label: 'Platform Admin Clear Cache',
+      path: '/platform-admin/clear-cache',
+    },
+    {
+      label: 'Platform Admin Usage Report',
+      path: '/platform-admin/reports/usage-for-all-services',
+    },
+    {
+      label: 'Platform Admin Volumes by Service',
+      path: '/platform-admin/reports/volumes-by-service',
+    },
+    {
+      label: 'Platform Admin Daily Volumes',
+      path: '/platform-admin/reports/daily-volumes-report',
+    },
+    // Platform Admin Service-Specific Settings
+    {
+      label: 'Platform Admin Service History',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/history',
     },
     {
       label: 'Add Organization',
