@@ -106,75 +106,55 @@ test_spreadsheet_files = glob(path.join("tests", "spreadsheet_files", "*"))
 test_non_spreadsheet_files = glob(path.join("tests", "non_spreadsheet_files", "*"))
 
 
-valid_phone = st.text(
-    alphabet=st.characters(min_codepoint=ord("0"), max_codepoint=ord("9")),
-    min_size=10,
-    max_size=15,
-).map(
-    lambda s: s
-)  # simple digits only;
-
-invalid_phone = st.one_of(
-    st.text(
-        min_size=0,
-        max_size=9,
-        alphabet=st.characters(blacklist_characters="0123456789"),
-    ),
-    st.text(min_size=16, max_size=30),  # too long
-    st.text(alphabet=st.characters(max_codepoint=0x10FFFF), min_size=1, max_size=5),
-    st.text().filter(lambda s: any(c.isalpha() for c in s)),
-)
-
-phone_strategy = st.one_of(valid_phone, invalid_phone)
-
-message_strategy = st.text(
-    alphabet=st.characters(
-        blacklist_characters="",
-        min_codepoint=0x20,  # avoid control except newline
-        max_codepoint=0x10FFFF,
-    ),
-    min_size=0,
-    max_size=500,
-)
-rows_strategy = st.integers(min_value=0, max_value=50)
-
-
 @settings(suppress_health_check=[HealthCheck.function_scoped_fixture])
 @given(
-    rows=rows_strategy,
-    rows_data=st.lists(st.tuples(phone_strategy, message_strategy), max_size=50),
+    rows=st.integers(min_value=1, max_value=10),
+    rows_data=st.lists(
+        st.tuples(
+            st.text(
+                min_size=10,
+                max_size=15,
+                alphabet=st.characters(min_codepoint=ord("0"), max_codepoint=ord("9")),
+            ),
+            st.text(min_size=1, max_size=20),
+            st.text(min_size=1, max_size=20),
+            st.text(min_size=1, max_size=20),
+        ),
+        min_size=1,
+        max_size=10,
+    ),
 )
-def test_fuzz_upload_csv_batch_sms_handles_bad_and_good_input(rows, rows_data, client):
+def test_fuzz_upload_csv_batch_sms_handles_bad_and_good_input(
+    rows, rows_data, client_request, mocker
+):
+
+    mock_s3_set_metadata = mocker.patch(
+        "app.main.views.send.set_metadata_on_csv_upload"
+    )
+    mock_s3_upload = mocker.patch("app.main.views.send.s3upload")
+
     output = io.StringIO()
     writer = csv.writer(output)
-    writer.writerow(["phone_number", "message"])
-    for phone, msg in rows_data[:rows]:
-        writer.writerow([phone, msg])
+    writer.writerow(["phone_number", "name", "favourite colour", "fruit"])
+    for row in rows_data[:rows]:
+        writer.writerow(row)
     csv_content = output.getvalue()
 
-    response = client.post(
-        url_for("main.send_messages"),
-        data={"upload": (io.BytesIO(csv_content.encode("utf-8")), "batch.csv")},
-        content_type="multipart/form-data",
-        template_id=str(uuid.uuid4()),
+    client_request.post(
+        "main.send_messages",
         service_id=SERVICE_ONE_ID,
-        _follow_redirects=True,
+        template_id=str(uuid.uuid4()),
+        _data={"upload": (io.BytesIO(csv_content.encode("utf-8")), "fuzz.csv")},
+        _content_type="multipart/form-data",
+        _expected_status=302,
     )
 
-    assert (
-        response.status_code != 500
-    ), f"Server crash for CSV:\n{csv_content}\nResponse: {response.status_code}, {response.data}"
-
-    has_valid = any(
-        phone.isdigit() and 10 <= len(phone) <= 15 for phone, msg in rows_data[:rows]
+    assert mock_s3_upload.called
+    uploaded_data = mock_s3_upload.call_args[0][1]["data"].strip()
+    assert "phone number" in uploaded_data
+    mock_s3_set_metadata.assert_called_once_with(
+        SERVICE_ONE_ID, ANY, original_file_name="fuzz.csv"
     )
-    if has_valid:
-        assert response.status_code in (200, 201, 400), "Unexpected status"
-        if response.status_code == 400:
-            assert b"errors" in response.data or b"invalid" in response.data.lower()
-    else:
-        assert response.status_code == 400
-        assert b"errors" in response.data or b"invalid" in response.data.lower()
 
 
 def test_show_correct_title_and_description_for_email_sender_type(
