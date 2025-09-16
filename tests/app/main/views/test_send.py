@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import csv
+import io
 import uuid
 from functools import partial
 from glob import glob
@@ -12,6 +14,8 @@ from zipfile import BadZipFile
 
 import pytest
 from flask import url_for
+from hypothesis import given
+from hypothesis import strategies as st
 from xlrd.biffh import XLRDError
 from xlrd.xldate import XLDateAmbiguous, XLDateError, XLDateNegative, XLDateTooLarge
 
@@ -100,6 +104,73 @@ unchanging_fake_uuid = uuid.uuid4()
 # The * ignores hidden files, eg .DS_Store
 test_spreadsheet_files = glob(path.join("tests", "spreadsheet_files", "*"))
 test_non_spreadsheet_files = glob(path.join("tests", "non_spreadsheet_files", "*"))
+
+
+valid_phone = st.text(
+    alphabet=st.characters(min_codepoint=ord("0"), max_codepoint=ord("9")),
+    min_size=10,
+    max_size=15,
+).map(
+    lambda s: s
+)  # simple digits only;
+
+invalid_phone = st.one_of(
+    st.text(
+        min_size=0,
+        max_size=9,
+        alphabet=st.characters(blacklist_characters="0123456789"),
+    ),
+    st.text(min_size=16, max_size=30),  # too long
+    st.text(alphabet=st.characters(max_codepoint=0x10FFFF), min_size=1, max_size=5),
+    st.text().filter(lambda s: any(c.isalpha() for c in s)),
+)
+
+phone_strategy = st.one_of(valid_phone, invalid_phone)
+
+message_strategy = st.text(
+    alphabet=st.characters(
+        blacklist_characters="",
+        min_codepoint=0x20,  # avoid control except newline
+        max_codepoint=0x10FFFF,
+    ),
+    min_size=0,
+    max_size=500,
+)
+rows_strategy = st.integers(min_value=0, max_value=50)
+
+
+@given(
+    rows=rows_strategy,
+    rows_data=st.lists(st.tuples(phone_strategy, message_strategy), max_size=50),
+)
+def test_fuzz_upload_csv_batch_sms_handles_bad_and_good_input(rows, rows_data, client):
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["phone_number", "message"])
+    for phone, msg in rows_data[:rows]:
+        writer.writerow([phone, msg])
+    csv_content = output.getvalue()
+
+    response = client.post(
+        url_for("send_batch_sms_upload"),
+        data={"csv_file": (io.BytesIO(csv_content.encode("utf-8")), "batch.csv")},
+        content_type="multipart/form-data",
+    )
+
+    assert (
+        response.status_code != 500
+    ), f"Server crash for CSV:\n{csv_content}\nResponse: {response.status_code}, {response.data}"
+
+    has_valid = any(
+        phone.isdigit() and 10 <= len(phone) <= 15 for phone, msg in rows_data[:rows]
+    )
+    if has_valid:
+        assert response.status_code in (200, 201, 400), "Unexpected status"
+        if response.status_code == 400:
+            assert b"errors" in response.data or b"invalid" in response.data.lower()
+    else:
+        assert response.status_code == 400
+        assert b"errors" in response.data or b"invalid" in response.data.lower()
 
 
 def test_show_correct_title_and_description_for_email_sender_type(
