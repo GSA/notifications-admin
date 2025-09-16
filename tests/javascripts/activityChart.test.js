@@ -354,3 +354,73 @@ test('handleDropdownChange shows empty message when user has no jobs', () => {
 
   window.fetchData.mockRestore();
 });
+
+test('fetchData returns early when isPolling is true', async () => {
+  window.isPolling = true;
+  global.fetch = jest.fn();
+
+  const result = await window.fetchData('service');
+
+  expect(global.fetch).not.toHaveBeenCalled();
+  expect(result).toBeUndefined();
+
+  window.isPolling = false;
+  delete global.fetch;
+});
+
+
+test('fetchData returns early when document is hidden', async () => {
+  Object.defineProperty(document, 'hidden', { value: true, writable: true });
+  global.fetch = jest.fn();
+
+  const result = await window.fetchData('service');
+
+  expect(global.fetch).not.toHaveBeenCalled();
+  expect(result).toBeUndefined();
+
+  Object.defineProperty(document, 'hidden', { value: false, writable: true });
+  delete global.fetch;
+});
+
+
+test('fetchData returns undefined when weeklyChart is missing', async () => {
+  const chart = document.getElementById('weeklyChart');
+  if (chart) {
+    chart.remove();
+  }
+
+  window.isPolling = false;
+  global.fetch = jest.fn();
+
+  const result = await window.fetchData('service');
+
+  expect(result).toBeUndefined();
+  expect(global.fetch).not.toHaveBeenCalled();
+
+  const container = document.getElementById('activityChart');
+  if (container && !document.getElementById('weeklyChart')) {
+    const newChart = document.createElement('div');
+    newChart.id = 'weeklyChart';
+    newChart.setAttribute('data-service-id', '12345');
+    newChart.style.width = '600px';
+    container.appendChild(newChart);
+  }
+
+  delete global.fetch;
+});
+
+
+test('handleDropdownChange updates subtitle text correctly', () => {
+  const selectElement = document.getElementById('options');
+  selectElement.value = 'individual';
+  const event = { target: selectElement };
+
+  jest.spyOn(window, 'fetchData').mockImplementation(() => {});
+
+  window.handleDropdownChange(event);
+
+  const subtitle = document.querySelector('#activityChartContainer .chart-subtitle');
+  expect(subtitle.textContent).toContain('Individual');
+
+  window.fetchData.mockRestore();
+});
