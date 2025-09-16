@@ -14,7 +14,7 @@ from zipfile import BadZipFile
 
 import pytest
 from flask import url_for
-from hypothesis import given
+from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
 from xlrd.biffh import XLRDError
 from xlrd.xldate import XLDateAmbiguous, XLDateError, XLDateNegative, XLDateTooLarge
@@ -139,6 +139,7 @@ message_strategy = st.text(
 rows_strategy = st.integers(min_value=0, max_value=50)
 
 
+@settings(suppress_health_check=[HealthCheck.function_scoped_fixture])
 @given(
     rows=rows_strategy,
     rows_data=st.lists(st.tuples(phone_strategy, message_strategy), max_size=50),
