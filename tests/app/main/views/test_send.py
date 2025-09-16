@@ -140,14 +140,18 @@ def test_fuzz_upload_csv_batch_sms_handles_bad_and_good_input(
         writer.writerow(row)
     csv_content = output.getvalue()
 
-    client_request.post(
-        "main.send_messages",
-        service_id=SERVICE_ONE_ID,
-        template_id=str(uuid.uuid4()),
-        _data={"upload": (io.BytesIO(csv_content.encode("utf-8")), "fuzz.csv")},
-        _content_type="multipart/form-data",
-        _expected_status=302,
-    )
+    try:
+        client_request.post(
+            "main.send_messages",
+            service_id=SERVICE_ONE_ID,
+            template_id=str(uuid.uuid4()),
+            _data={"file": (io.BytesIO(csv_content.encode("utf-8")), "fuzz.csv")},
+            _content_type="multipart/form-data",
+            _expected_status=302,
+        )
+    except Exception:
+        print("Generated CSV that caused 500:\n", csv_content)  # noqa
+        raise
 
     assert mock_s3_upload.called
     uploaded_data = mock_s3_upload.call_args[0][1]["data"].strip()
