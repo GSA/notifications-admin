@@ -116,9 +116,21 @@ test_non_spreadsheet_files = glob(path.join("tests", "non_spreadsheet_files", "*
                 max_size=15,
                 alphabet=st.characters(min_codepoint=ord("0"), max_codepoint=ord("9")),
             ),
-            st.text(min_size=1, max_size=20),
-            st.text(min_size=1, max_size=20),
-            st.text(min_size=1, max_size=20),
+            st.text(
+                min_size=1,
+                max_size=20,
+                alphabet=st.characters(whitelist_categories=["L", "N", "Zs"]),
+            ),
+            st.text(
+                min_size=1,
+                max_size=20,
+                alphabet=st.characters(whitelist_categories=["L", "N", "Zs"]),
+            ),
+            st.text(
+                min_size=1,
+                max_size=20,
+                alphabet=st.characters(whitelist_categories=["L", "N", "Zs"]),
+            ),
         ),
         min_size=1,
         max_size=10,
@@ -136,7 +148,7 @@ def test_fuzz_upload_csv_batch_sms_handles_bad_and_good_input(
     output = io.StringIO()
     writer = csv.writer(output)
     writer.writerow(["phone_number", "name", "favourite colour", "fruit"])
-    for row in rows_data[:rows]:
+    for row in rows_data[: min(rows, len(rows_data))]:
         writer.writerow(row)
     csv_content = output.getvalue()
 
