@@ -156,7 +156,9 @@ def test_fuzz_upload_csv_batch_sms_handles_bad_and_good_input(rows, rows_data, c
         url_for("main.send_messages"),
         data={"upload": (io.BytesIO(csv_content.encode("utf-8")), "batch.csv")},
         content_type="multipart/form-data",
-        follow_redirects=True,
+        template_id=str(uuid.uuid4()),
+        service_id=SERVICE_ONE_ID,
+        _follow_redirects=True,
     )
 
     assert (
