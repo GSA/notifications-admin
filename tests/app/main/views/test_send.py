@@ -137,7 +137,7 @@ test_non_spreadsheet_files = glob(path.join("tests", "non_spreadsheet_files", "*
     ),
 )
 def test_fuzz_upload_csv_batch_sms_handles_bad_and_good_input(
-    rows, rows_data, client_request, mocker
+    rows, rows_data, client_request, mocker, fake_uuid
 ):
 
     mock_s3_set_metadata = mocker.patch(
@@ -156,10 +156,10 @@ def test_fuzz_upload_csv_batch_sms_handles_bad_and_good_input(
         client_request.post(
             "main.send_messages",
             service_id=SERVICE_ONE_ID,
-            template_id=str(uuid.uuid4()),
+            template_id=fake_uuid,
             _data={"file": (io.BytesIO(csv_content.encode("utf-8")), "fuzz.csv")},
             _content_type="multipart/form-data",
-            _expected_status=302,
+            _follows_redirects=False,
         )
     except Exception:
         print("Generated CSV that caused 500:\n", csv_content)  # noqa
