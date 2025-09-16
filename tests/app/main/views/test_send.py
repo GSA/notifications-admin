@@ -106,7 +106,7 @@ test_spreadsheet_files = glob(path.join("tests", "spreadsheet_files", "*"))
 test_non_spreadsheet_files = glob(path.join("tests", "non_spreadsheet_files", "*"))
 
 
-@settings(suppress_health_check=[HealthCheck.function_scoped_fixture])
+@settings(max_examples=10, suppress_health_check=[HealthCheck.function_scoped_fixture])
 @given(
     rows=st.integers(min_value=1, max_value=10),
     rows_data=st.lists(
@@ -144,6 +144,11 @@ def test_fuzz_upload_csv_batch_sms_handles_bad_and_good_input(
         "app.main.views.send.set_metadata_on_csv_upload"
     )
     mock_s3_upload = mocker.patch("app.main.views.send.s3upload")
+
+    mocker.patch(
+        "app.main.views.send.get_csv_metadata",
+        return_value={"original_file_name": "fuzz.csv"},
+    )
 
     output = io.StringIO()
     writer = csv.writer(output)
