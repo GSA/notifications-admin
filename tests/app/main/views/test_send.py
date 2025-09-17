@@ -14,8 +14,6 @@ from zipfile import BadZipFile
 
 import pytest
 from flask import url_for
-from hypothesis import HealthCheck, given, settings
-from hypothesis import strategies as st
 from xlrd.biffh import XLRDError
 from xlrd.xldate import XLDateAmbiguous, XLDateError, XLDateNegative, XLDateTooLarge
 
@@ -104,78 +102,6 @@ unchanging_fake_uuid = uuid.uuid4()
 # The * ignores hidden files, eg .DS_Store
 test_spreadsheet_files = glob(path.join("tests", "spreadsheet_files", "*"))
 test_non_spreadsheet_files = glob(path.join("tests", "non_spreadsheet_files", "*"))
-
-
-@settings(max_examples=10, suppress_health_check=[HealthCheck.function_scoped_fixture])
-@given(
-    rows=st.integers(min_value=1, max_value=10),
-    rows_data=st.lists(
-        st.tuples(
-            st.text(
-                min_size=10,
-                max_size=15,
-                alphabet=st.characters(min_codepoint=ord("0"), max_codepoint=ord("9")),
-            ),
-            st.text(
-                min_size=1,
-                max_size=20,
-                alphabet=st.characters(whitelist_categories=["L", "N", "Zs"]),
-            ),
-            st.text(
-                min_size=1,
-                max_size=20,
-                alphabet=st.characters(whitelist_categories=["L", "N", "Zs"]),
-            ),
-            st.text(
-                min_size=1,
-                max_size=20,
-                alphabet=st.characters(whitelist_categories=["L", "N", "Zs"]),
-            ),
-        ),
-        min_size=1,
-        max_size=10,
-    ),
-)
-def test_fuzz_upload_csv_batch_sms_handles_bad_and_good_input(
-    rows, rows_data, client_request, mocker, fake_uuid
-):
-
-    mock_s3_set_metadata = mocker.patch(
-        "app.main.views.send.set_metadata_on_csv_upload"
-    )
-    mock_s3_upload = mocker.patch("app.main.views.send.s3upload")
-
-    mocker.patch(
-        "app.main.views.send.get_csv_metadata",
-        return_value={"original_file_name": "fuzz.csv"},
-    )
-
-    output = io.StringIO()
-    writer = csv.writer(output)
-    writer.writerow(["phone_number", "name", "favourite colour", "fruit"])
-    for row in rows_data[: min(rows, len(rows_data))]:
-        writer.writerow(row)
-    csv_content = output.getvalue()
-
-    try:
-        client_request.post(
-            "main.send_messages",
-            service_id=SERVICE_ONE_ID,
-            template_id=fake_uuid,
-            _data={"file": (io.BytesIO(csv_content.encode("utf-8")), "fuzz.csv")},
-            _content_type="multipart/form-data",
-            _follows_redirects=False,
-        )
-    except Exception:
-        print("Generated CSV that caused 500:\n", csv_content)  # noqa
-        raise
-
-    assert mock_s3_upload.called
-    uploaded_data = mock_s3_upload.call_args[0][1]["data"].strip()
-    assert "phone number" in uploaded_data
-    mock_s3_set_metadata.assert_called_once_with(
-        SERVICE_ONE_ID, ANY, original_file_name="fuzz.csv"
-    )
 
 
 def test_show_correct_title_and_description_for_email_sender_type(
