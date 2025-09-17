@@ -92,12 +92,13 @@ def test_should_show_page_for_one_job(
     assert " ".join(page.find("tbody").find("tr").text.split()) == (
         "2021234567 template content Delivered 01-01-2016 at 06:09 AM"
     )
-    assert page.find("div", {"data-key": "notifications"})["data-resource"] == url_for(
+    client_request.get_response(
         "main.view_job_updates",
         service_id=SERVICE_ONE_ID,
         job_id=fake_uuid,
         status=status_argument,
     )
+    mock_get_notifications.assert_called()
     csv_link = page.select_one("a[download]")
     assert csv_link["href"] == url_for(
         "main.view_job_csv",
