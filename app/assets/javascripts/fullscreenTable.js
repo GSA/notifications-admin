@@ -1,7 +1,7 @@
-(function(Modules) {
+(function(window) {
   "use strict";
 
-  Modules['fullscreen-table'] = function() {
+  window.NotifyModules['fullscreen-table'] = function() {
 
     this.start = function(component) {
 
@@ -120,4 +120,4 @@
 
   };
 
-})(window.NotifyModules);
+})(window);

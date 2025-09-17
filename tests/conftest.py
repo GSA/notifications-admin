@@ -449,8 +449,8 @@ def mock_get_service(mocker, api_user_active):
 def mock_get_service_statistics(mocker, api_user_active):
     def _get(service_id, limit_days=None):
         return {
-            "email": {"requested": 0, "delivered": 0, "failed": 0},
-            "sms": {"requested": 0, "delivered": 0, "failed": 0},
+            "email": {"requested": 0, "delivered": 0, "failure": 0},
+            "sms": {"requested": 0, "delivered": 0, "failure": 0},
         }
 
     return mocker.patch(

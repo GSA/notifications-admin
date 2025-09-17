@@ -1,6 +1,7 @@
-(function(Modules) {
+(function(window) {
   "use strict";
 
+  var Modules = window.NotifyModules;
   let state;
   let normalize = (string) => string.toLowerCase().replace(/ /g,'');
   let resultsSummary = (num) => {
@@ -95,4 +96,4 @@
 
   };
 
-})(window.NotifyModules);
+})(window);

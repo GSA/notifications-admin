@@ -1,6 +1,7 @@
-(function (Modules) {
+(function (window) {
   'use strict';
 
+  var Modules = window.NotifyModules;
   var lists = [],
       listEntry,
       ListEntry;
@@ -222,4 +223,4 @@
 
   };
 
-})(window.NotifyModules);
+})(window);

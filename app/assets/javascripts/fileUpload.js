@@ -24,10 +24,10 @@ function initUploadStatusAnnouncer() {
   });
 }
 
-(function(Modules) {
+(function(window) {
   "use strict";
 
-  Modules['file-upload'] = function() {
+  window.NotifyModules['file-upload'] = function() {
     this.submit = () => this.$form.trigger('submit');
 
     this.showCancelButton = () => {
@@ -55,7 +55,7 @@ function initUploadStatusAnnouncer() {
       });
     };
   };
-})(window.NotifyModules);
+})(window);
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {

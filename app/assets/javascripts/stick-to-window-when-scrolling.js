@@ -1,8 +1,8 @@
-;(function (global) {
+;(function (window) {
   'use strict';
 
-  var $ = global.jQuery;
-  var NotifyModules = global.NotifyModules || {};
+  var $ = window.jQuery;
+  var NotifyModules = window.NotifyModules || {};
   var _mode = 'default';
 
   // Constructor to make objects representing the area sticky elements can scroll in
@@ -630,7 +630,7 @@
     };
 
     if ((!el.hasLoaded()) && ($img.length > 0)) {
-      var image = new global.Image();
+      var image = new window.Image();
       image.onload = function () {
         onload();
       };
@@ -734,25 +734,25 @@
     // window position
     if (this._scrollTimeout === false) {
       $(global).scroll(this._scrollEvent);
-      this._scrollTimeout = global.setInterval(this.checkScroll.bind(this), 50);
+      this._scrollTimeout = window.setInterval(this.checkScroll.bind(this), 50);
     }
 
     // Recalculate all dimensions when the window resizes
     if (this._resizeTimeout === false) {
       $(global).resize(this._resizeEvent);
-      this._resizeTimeout = global.setInterval(this.checkResize.bind(this), 50);
+      this._resizeTimeout = window.setInterval(this.checkResize.bind(this), 50);
     }
   };
   Sticky.prototype.clearEvents = function () {
     if (this._scrollTimeout !== false) {
       $(global).off('scroll', this._scrollEvent);
-      global.clearInterval(this._scrollTimeout);
+      window.clearInterval(this._scrollTimeout);
       this._scrollTimeout = false;
     }
 
     if (this._resizeTimeout !== false) {
       $(global).off('resize', this._resizeEvent);
-      global.clearInterval(this._resizeTimeout);
+      window.clearInterval(this._resizeTimeout);
       this._resizeTimeout = false;
     }
 
@@ -991,5 +991,5 @@
 
   NotifyModules.stickAtTopWhenScrolling = stickAtTop;
   NotifyModules.stickAtBottomWhenScrolling = stickAtBottom;
-  global.NotifyModules = NotifyModules;
+  window.NotifyModules = NotifyModules;
 })(window);

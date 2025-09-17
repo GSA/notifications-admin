@@ -2,6 +2,7 @@ from enum import StrEnum
 
 
 class NotificationStatus(StrEnum):
+    REQUESTED = "requested"
     CREATED = "created"
     PENDING = "pending"
     SENDING = "sending"

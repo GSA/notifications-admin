@@ -1,7 +1,7 @@
-(function (global) {
+(function (window) {
   "use strict";
 
-  const USWDS = global.USWDS || {};
+  const USWDS = window.USWDS || {};
 
   function Summary (module) {
     this.module = module;

@@ -1,7 +1,7 @@
-(function(Modules) {
+(function(window) {
   "use strict";
 
-  Modules['template-folder-form'] = function() {
+  window.NotifyModules['template-folder-form'] = function() {
 
     this.start = function(templateFolderForm) {
       this.$form = $(templateFolderForm);
@@ -361,4 +361,4 @@
     `).get(0);
   };
 
-})(window.NotifyModules);
+})(window);

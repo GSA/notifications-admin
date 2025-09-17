@@ -12,7 +12,7 @@ def test_select_all_button_works(
         return_value=[
             {"id": "folder-1", "name": "Folder 1", "parent_id": None},
             {"id": "folder-2", "name": "Folder 2", "parent_id": None},
-        ]
+        ],
     )
 
     page = client_request.get(
@@ -21,9 +21,9 @@ def test_select_all_button_works(
         user_id=sample_uuid(),
     )
 
-    button = page.select_one('button#select-all-folders')
+    button = page.select_one("button#select-all-folders")
     assert button is not None
-    assert button.text.strip() in ['Select all', 'Deselect all']
+    assert button.text.strip() in ["Select all", "Deselect all"]
 
 
 def test_javascript_parent_child_logic_exists(
@@ -37,7 +37,7 @@ def test_javascript_parent_child_logic_exists(
         return_value=[
             {"id": "folder-1", "name": "Parent", "parent_id": None},
             {"id": "folder-2", "name": "Child", "parent_id": "folder-1"},
-        ]
+        ],
     )
 
     page = client_request.get(
@@ -48,9 +48,9 @@ def test_javascript_parent_child_logic_exists(
     )
 
     page_html = str(page)
-    assert 'handleParentSelection' in page_html
-    assert 'data-parent-id' in page_html
-    assert 'toggleSelectAll' in page_html
+    assert "handleParentSelection" in page_html
+    assert "data-parent-id" in page_html
+    assert "toggleSelectAll" in page_html
 
 
 def test_hidden_from_platform_admins(
@@ -60,9 +60,7 @@ def test_hidden_from_platform_admins(
     mock_get_invites_for_service,
     mock_get_template_folders,
 ):
-    mocker.patch(
-        "app.user_api_client.get_user", return_value=platform_admin_user
-    )
+    mocker.patch("app.user_api_client.get_user", return_value=platform_admin_user)
     mocker.patch(
         "app.models.user.Users.client_method",
         return_value=[platform_admin_user],
@@ -74,5 +72,5 @@ def test_hidden_from_platform_admins(
         user_id=platform_admin_user["id"],
     )
 
-    assert 'Platform admin users can access all template folders' in page.text
-    assert page.select_one('div#custom-folder-permissions') is None
+    assert "Platform admin users can access all template folders" in page.text
+    assert page.select_one("div#custom-folder-permissions") is None

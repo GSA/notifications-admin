@@ -1,9 +1,9 @@
-(function(Modules) {
+(function(window) {
   "use strict";
 
   if (!document.queryCommandSupported('copy')) return;
 
-  Modules['copy-to-clipboard'] = function() {
+  window.NotifyModules['copy-to-clipboard'] = function() {
 
     const states = {
       'valueVisible': (options) => `
@@ -97,4 +97,4 @@
     };
   };
 
-})(window.NotifyModules);
+})(window);

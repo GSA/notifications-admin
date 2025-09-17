@@ -362,8 +362,8 @@ def test_preheader_is_at_start_of_html_emails():
                 "- https://www.example.com\n"
             ),
             {"name": "Jo"},
-            'Hello Jo This \u2013 is a \u201cheading\u201d My favourite websites\u2019 '
-            'URLs are: \u2022 https://www.example.com',
+            "Hello Jo This \u2013 is a \u201cheading\u201d My favourite websites\u2019 "
+            "URLs are: \u2022 https://www.example.com",
         ),
         (
             ("[Markdown link](https://www.example.com)\n"),

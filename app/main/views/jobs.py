@@ -23,7 +23,7 @@ from app import (
     notification_api_client,
     service_api_client,
 )
-from app.enums import JobStatus, NotificationStatus, ServicePermission
+from app.enums import JobStatus, NotificationStatus, NotificationType, ServicePermission
 from app.formatters import get_time_left, message_count_noun
 from app.main import main
 from app.main.forms import SearchNotificationsForm
@@ -311,45 +311,37 @@ def get_notifications(service_id, message_type, status_override=None):  # noqa
 
 
 def get_status_filters(service, message_type, statistics):
-    if message_type is None:
-        stats = {
-            "requested": sum(
-                statistics[message_type]["requested"]
-                for message_type in {"email", "sms"}
-            ),
-            NotificationStatus.DELIVERED: sum(
-                statistics[message_type][NotificationStatus.DELIVERED]
-                for message_type in {"email", "sms"}
-            ),
-            "failure": sum(
-                statistics[message_type].get("failure", 0)
-                for message_type in {"email", "sms"}
-            ),
-        }
-    else:
-        stats = statistics[message_type]
+    message_types = (
+        [message_type]
+        if message_type
+        else [NotificationType.EMAIL, NotificationType.SMS]
+    )
 
-    # Map API keys to enum keys for consistency
-    if stats.get("failure") is not None:
-        stats[NotificationStatus.FAILED] = stats["failure"]
-    if stats.get(NotificationStatus.DELIVERED) is not None:
-        stats[NotificationStatus.DELIVERED] = stats[NotificationStatus.DELIVERED]
+    stats = {
+        NotificationStatus.REQUESTED: sum(
+            statistics[mt].get(NotificationStatus.REQUESTED, 0) for mt in message_types
+        ),
+        NotificationStatus.DELIVERED: sum(
+            statistics[mt].get(NotificationStatus.DELIVERED, 0) for mt in message_types
+        ),
+        NotificationStatus.FAILED: sum(
+            statistics[mt].get("failure", 0) for mt in message_types
+        ),
+    }
 
     stats[NotificationStatus.PENDING] = (
-        stats["requested"]
+        stats[NotificationStatus.REQUESTED]
         - stats[NotificationStatus.DELIVERED]
         - stats[NotificationStatus.FAILED]
     )
 
     filters = [
-        # key, label, option
-        ("requested", "total", "sending,delivered,failed"),
+        (NotificationStatus.REQUESTED, "total", "sending,delivered,failed"),
         (NotificationStatus.PENDING, "pending", "sending,pending"),
         (NotificationStatus.DELIVERED, "delivered", "delivered"),
         (NotificationStatus.FAILED, "failed", "failed"),
     ]
     return [
-        # return list containing label, option, link, count
         (
             label,
             option,

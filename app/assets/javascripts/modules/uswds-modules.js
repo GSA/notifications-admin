@@ -1,11 +1,9 @@
-(function (global) {
+(function (window) {
   'use strict';
 
-  var $ = global.jQuery;
+  var $ = window.jQuery;
 
-  global.NotifyModules = global.NotifyModules || {};
-
-  global.NotifyModules.moduleSystem = {
+  window.NotifyModules.moduleSystem = {
     find: function (container) {
       container = container || $('body');
 
@@ -31,8 +29,8 @@
           var type = this.camelCaseAndCapitalise(element.data('module'));
           var started = element.data('module-started');
 
-          if (typeof global.NotifyModules[type] === 'function' && !started) {
-            module = new global.NotifyModules[type]();
+          if (typeof window.NotifyModules[type] === 'function' && !started) {
+            module = new window.NotifyModules[type]();
             if (module.start) {
               module.start(element);
             }
