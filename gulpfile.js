@@ -1,14 +1,8 @@
 const { src, dest, series } = require('gulp');
-const rollup = require('@rollup/stream');
-const rollupPluginCommonjs = require('@rollup/plugin-commonjs');
-const rollupPluginNodeResolve = require('@rollup/plugin-node-resolve');
-const source = require('vinyl-source-stream');
-const buffer = require('vinyl-buffer');
 const gulpMerge = require('gulp-merge');
 const uswds = require('@uswds/compile');
 const { exec } = require('child_process');
 const plugins = {};
-plugins.addSrc = require('gulp-add-src');
 plugins.babel = require('gulp-babel');
 plugins.cleanCSS = require('gulp-clean-css');
 plugins.concat = require('gulp-concat');
@@ -23,33 +17,14 @@ const paths = {
 };
 
 const javascripts = () => {
-  const vendored = rollup({
-    input: paths.src + 'javascripts/modules/all.mjs',
-    plugins: [
-      rollupPluginNodeResolve({
-        mainFields: ['module', 'main'],
-      }),
-      rollupPluginCommonjs({
-        include: 'node_modules/**',
-      }),
-    ],
-    output: {
-      format: 'iife',
-      name: 'NotifyModules',
-    },
-  })
-    .pipe(source('all.mjs'))
-    .pipe(buffer())
-    .pipe(
-      plugins.addSrc.prepend([
-        paths.npm + 'jquery/dist/jquery.min.js',
-        paths.npm + 'query-command-supported/dist/queryCommandSupported.min.js',
-        paths.npm + 'textarea-caret/index.js',
-        paths.npm + 'cbor-js/cbor.js',
-        paths.npm + 'd3/dist/d3.min.js',
-        paths.npm + 'socket.io-client/dist/socket.io.min.js'
-      ])
-    );
+  const vendored = src([
+    paths.npm + 'jquery/dist/jquery.min.js',
+    paths.npm + 'query-command-supported/dist/queryCommandSupported.min.js',
+    paths.npm + 'textarea-caret/index.js',
+    paths.npm + 'cbor-js/cbor.js',
+    paths.npm + 'd3/dist/d3.min.js',
+    paths.npm + 'socket.io-client/dist/socket.io.min.js'
+  ]);
 
   const local = src([
     paths.src + 'javascripts/modules/uswds-modules.js',
@@ -58,7 +33,6 @@ const javascripts = () => {
     paths.src + 'javascripts/enhancedTextbox.js',
     paths.src + 'javascripts/fileUpload.js',
     paths.src + 'javascripts/radioSelect.js',
-    paths.src + 'javascripts/updateContent.js',
     paths.src + 'javascripts/listEntry.js',
     paths.src + 'javascripts/liveSearch.js',
     paths.src + 'javascripts/errorTracking.js',
