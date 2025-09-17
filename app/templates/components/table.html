@@ -128,7 +128,7 @@
 {% macro edit_field(text, link, permissions=[], suffix=None) -%}
   {% call field(align='right') %}
     {% if not permissions or current_user.has_permissions(*permissions) %}
-      <a class="usa-button usa-button--outline" href="{{ link }}">
+      <a class="usa-link" href="{{ link }}">
         {{ text }}
         {%- if suffix %}<span class="usa-sr-only"> {{ suffix }}</span>{% endif -%}
       </a>
