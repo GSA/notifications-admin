@@ -1,65 +1,78 @@
-from bs4 import BeautifulSoup
-from flask import url_for
-
-from tests.conftest import SERVICE_ONE_ID, USER_ONE_ID
+from tests.conftest import SERVICE_ONE_ID, sample_uuid
 
 
-def test_select_all_button_works(client, mocker):
-    mocker.patch('app.service_api_client.get_service', return_value={'data': {
-        'id': SERVICE_ONE_ID,
-    }})
-
-    mocker.patch('app.user_api_client.get_user', return_value={
-        'id': USER_ONE_ID,
-        'platform_admin': False,
-    })
-
-    page = client.get(
-        url_for('main.edit_user_permissions', service_id=SERVICE_ONE_ID, user_id=USER_ONE_ID)
+def test_select_all_button_works(
+    client_request,
+    mocker,
+    mock_get_users_by_service,
+    mock_get_invites_for_service,
+):
+    mocker.patch(
+        "app.template_folder_api_client.get_template_folders",
+        return_value=[
+            {"id": "folder-1", "name": "Folder 1", "parent_id": None},
+            {"id": "folder-2", "name": "Folder 2", "parent_id": None},
+        ]
     )
-    soup = BeautifulSoup(page.data.decode('utf-8'), 'html.parser')
 
-    button = soup.find('button', {'id': 'select-all-folders'})
+    page = client_request.get(
+        "main.edit_user_permissions",
+        service_id=SERVICE_ONE_ID,
+        user_id=sample_uuid(),
+    )
+
+    button = page.select_one('button#select-all-folders')
     assert button is not None
     assert button.text.strip() in ['Select all', 'Deselect all']
 
 
-def test_javascript_parent_child_logic_exists(client, mocker):
-    mocker.patch('app.service_api_client.get_service', return_value={'data': {
-        'id': SERVICE_ONE_ID,
-    }})
-
-    mocker.patch('app.user_api_client.get_user', return_value={
-        'id': USER_ONE_ID,
-        'platform_admin': False,
-    })
-
-    page = client.get(
-        url_for('main.edit_user_permissions', service_id=SERVICE_ONE_ID, user_id=USER_ONE_ID)
+def test_javascript_parent_child_logic_exists(
+    client_request,
+    mocker,
+    mock_get_users_by_service,
+    mock_get_invites_for_service,
+):
+    mocker.patch(
+        "app.template_folder_api_client.get_template_folders",
+        return_value=[
+            {"id": "folder-1", "name": "Parent", "parent_id": None},
+            {"id": "folder-2", "name": "Child", "parent_id": "folder-1"},
+        ]
     )
-    html = page.data.decode('utf-8')
 
-    assert 'handleParentSelection' in html
-    assert 'data-parent-id' in html
-    assert 'toggleSelectAll' in html
-
-
-def test_hidden_from_platform_admins(client, mocker):
-    mocker.patch('app.service_api_client.get_service', return_value={'data': {
-        'id': SERVICE_ONE_ID,
-    }})
-
-    mocker.patch('app.user_api_client.get_user', return_value={
-        'id': USER_ONE_ID,
-        'platform_admin': True,
-    })
-
-    page = client.get(
-        url_for('main.edit_user_permissions', service_id=SERVICE_ONE_ID, user_id=USER_ONE_ID)
+    page = client_request.get(
+        "main.edit_user_permissions",
+        service_id=SERVICE_ONE_ID,
+        user_id=sample_uuid(),
+        _test_page_title=False,
     )
-    soup = BeautifulSoup(page.data.decode('utf-8'), 'html.parser')
 
-    assert 'Platform admin users can access all template folders' in page.data.decode('utf-8')
+    page_html = str(page)
+    assert 'handleParentSelection' in page_html
+    assert 'data-parent-id' in page_html
+    assert 'toggleSelectAll' in page_html
 
-    folder_container = soup.find('div', {'id': 'custom-folder-permissions'})
-    assert folder_container is None
+
+def test_hidden_from_platform_admins(
+    mocker,
+    client_request,
+    platform_admin_user,
+    mock_get_invites_for_service,
+    mock_get_template_folders,
+):
+    mocker.patch(
+        "app.user_api_client.get_user", return_value=platform_admin_user
+    )
+    mocker.patch(
+        "app.models.user.Users.client_method",
+        return_value=[platform_admin_user],
+    )
+
+    page = client_request.get(
+        "main.edit_user_permissions",
+        service_id=SERVICE_ONE_ID,
+        user_id=platform_admin_user["id"],
+    )
+
+    assert 'Platform admin users can access all template folders' in page.text
+    assert page.select_one('div#custom-folder-permissions') is None
