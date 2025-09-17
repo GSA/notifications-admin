@@ -424,3 +424,23 @@ test('handleDropdownChange updates subtitle text correctly', () => {
 
   window.fetchData.mockRestore();
 });
+
+test('dropdown change handles DOM updates for table filtering', () => {
+  const selectElement = document.getElementById('options');
+
+  jest.spyOn(window, 'fetchData').mockImplementation(() => {});
+
+  selectElement.value = 'service';
+  window.handleDropdownChange({ target: selectElement });
+
+  let subtitle = document.querySelector('#activityChartContainer .chart-subtitle');
+  expect(subtitle.textContent).toContain('Service');
+
+  selectElement.value = 'individual';
+  window.handleDropdownChange({ target: selectElement });
+
+  subtitle = document.querySelector('#activityChartContainer .chart-subtitle');
+  expect(subtitle.textContent).toContain('Individual');
+
+  window.fetchData.mockRestore();
+});
