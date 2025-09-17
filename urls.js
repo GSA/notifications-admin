@@ -127,6 +127,47 @@ const routes = {
       label: 'Platform Admin Service History',
       path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/history',
     },
+    // Platform Admin Service Settings Change Links
+    {
+      label: 'Platform Admin Switch Service Live',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings/switch-live',
+    },
+    {
+      label: 'Platform Admin Switch Count As Live',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings/switch-count-as-live',
+    },
+    {
+      label: 'Platform Admin Edit Billing Details',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/edit-billing-details',
+    },
+    {
+      label: 'Platform Admin Edit Service Notes',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/notes',
+    },
+    {
+      label: 'Platform Admin Link Service to Organization',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings/link-service-to-organization',
+    },
+    {
+      label: 'Platform Admin Set Rate Limit',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings/set-rate-limit',
+    },
+    {
+      label: 'Platform Admin Set Message Limit',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings/set-message-limit',
+    },
+    {
+      label: 'Platform Admin Set Free SMS Allowance',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings/set-free-sms-allowance',
+    },
+    {
+      label: 'Platform Admin Data Retention',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/data-retention',
+    },
+    {
+      label: 'Platform Admin Add Data Retention',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/data-retention/add',
+    },
     {
       label: 'Add Organization',
       path: '/organizations/add',

@@ -18,7 +18,7 @@
         </button>
       </div>
 
-      <div class="border-1px border-base-lighter radius-md padding-4 folder-permissions-container">
+      <div class="border-1px border-base-lighter radius-md padding-4 folder-permissions-container selection-wrapper">
         <div id="custom-folder-permissions">
           <ul class="usa-list usa-list--unstyled" role="list" aria-label="Folder permissions">
             {% set folder_dict = {} %}
@@ -47,7 +47,6 @@
               </li>
             {% endmacro %}
 
-            {{ render_folder('', 'Templates', 0, None in form.folder_permissions.data, None) }}
             {% for folder in form.folder_permissions.all_template_folders %}
               {% if folder.parent_id is none %}
                 {{ render_folder(folder.id, folder.name, 0, folder.id in (form.folder_permissions.data or []), None) }}
