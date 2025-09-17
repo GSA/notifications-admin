@@ -167,7 +167,6 @@ def test_can_show_notifications(
 
     assert page_title in page.h1.text.strip()
 
-
     json_response = client_request.get_response(
         "main.get_notifications_as_json",
         service_id=SERVICE_ONE_ID,
