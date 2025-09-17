@@ -27,6 +27,7 @@ const javascripts = () => {
   ]);
 
   const local = src([
+    paths.src + 'javascripts/modules/init.js',
     paths.src + 'javascripts/modules/uswds-modules.js',
     paths.src + 'javascripts/modules/show-hide-content.js',
     paths.src + 'javascripts/copyToClipboard.js',

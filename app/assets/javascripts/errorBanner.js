@@ -1,8 +1,6 @@
 (function (window) {
   "use strict";
 
-  window.NotifyModules = window.NotifyModules || {};
-
   /*
   This module is intended to be used to show and hide an error banner based on a javascript trigger. You should make
   sure the banner has an appropriate aria-live attribute, and a tabindex of -1 so that screenreaders and keyboard users

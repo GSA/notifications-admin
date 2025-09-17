@@ -1,7 +1,7 @@
-(function (global) {
+(function (window) {
   'use strict';
 
-  var $ = global.jQuery;
+  var $ = window.jQuery;
 
   function ShowHideContent () {
     var self = this;
@@ -149,7 +149,6 @@
     }
   };
 
-  global.NotifyModules = global.NotifyModules || {};
-  global.NotifyModules.ShowHideContent = ShowHideContent;
+  window.NotifyModules.ShowHideContent = ShowHideContent;
 
 })(window);

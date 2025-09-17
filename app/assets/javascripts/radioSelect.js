@@ -1,8 +1,8 @@
-(function(global) {
+(function(window) {
 
   "use strict";
 
-  var Modules = global.NotifyModules;
+  var Modules = window.NotifyModules;
 
   // Template functions for rendering component states
   let renderStates = {

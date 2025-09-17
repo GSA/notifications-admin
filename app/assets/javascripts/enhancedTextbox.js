@@ -1,7 +1,5 @@
-(function(global) {
+(function(window) {
   "use strict";
-
-  global.NotifyModules = global.NotifyModules || {};
 
   if (
     !('oninput' in document.createElement('input'))
@@ -9,7 +7,7 @@
 
   const tagPattern = /\(\(([^\)\((\?)]+)(\?\?)?([^\)\(]*)\)\)/g;
 
-  global.NotifyModules['enhanced-textbox'] = function() {
+  window.NotifyModules['enhanced-textbox'] = function() {
 
     this.start = function(element) {
 
@@ -61,8 +59,8 @@
         )
       );
 
-      if ('stickAtBottomWhenScrolling' in global.NotifyModules) {
-        global.NotifyModules.stickAtBottomWhenScrolling.recalculate();
+      if ('stickAtBottomWhenScrolling' in window.NotifyModules) {
+        window.NotifyModules.stickAtBottomWhenScrolling.recalculate();
       }
 
     };

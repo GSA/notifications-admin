@@ -4,7 +4,6 @@ if (window.uswds) {
 }
 
 // Initialize custom modules
-window.NotifyModules = window.NotifyModules || {};
 window.NotifyModules.start = function() {
   var modules = document.querySelectorAll('[data-module]');
   modules.forEach(function(element) {

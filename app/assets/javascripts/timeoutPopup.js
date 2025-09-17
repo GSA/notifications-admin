@@ -1,7 +1,6 @@
-window.NotifyModules = window.NotifyModules || {};
 window.NotifyModules.TimeoutPopup = window.NotifyModules.TimeoutPopup || {};
 
-(function(global) {
+(function(window) {
     "use strict";
 
     const sessionTimer = document.getElementById("sessionTimer");
@@ -55,10 +54,10 @@ window.NotifyModules.TimeoutPopup = window.NotifyModules.TimeoutPopup || {};
         setTimeout(setSessionTimer, 25 * 60 * 1000);
     }
 
-    global.NotifyModules.TimeoutPopup.checkTimer = checkTimer;
-    global.NotifyModules.TimeoutPopup.expireUserSession = expireUserSession;
-    global.NotifyModules.TimeoutPopup.signoutUser = signoutUser;
-    global.NotifyModules.TimeoutPopup.extendSession = extendSession;
-    global.NotifyModules.TimeoutPopup.showTimer = showTimer;
-    global.NotifyModules.TimeoutPopup.closeTimer = closeTimer;
+    window.NotifyModules.TimeoutPopup.checkTimer = checkTimer;
+    window.NotifyModules.TimeoutPopup.expireUserSession = expireUserSession;
+    window.NotifyModules.TimeoutPopup.signoutUser = signoutUser;
+    window.NotifyModules.TimeoutPopup.extendSession = extendSession;
+    window.NotifyModules.TimeoutPopup.showTimer = showTimer;
+    window.NotifyModules.TimeoutPopup.closeTimer = closeTimer;
 })(window);
