@@ -28,7 +28,9 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   async function updateAllJobSections() {
-    if (document.hidden || isPolling) return;
+    if (isPolling || document.hidden) {
+      return;
+    }
 
     isPolling = true;
     const startTime = Date.now();
@@ -43,6 +45,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     try {
       const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
       const data = await response.json();
 
       const sections = {
@@ -69,7 +74,12 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
     } catch (error) {
-      console.error('Error fetching job updates:', error);
+      console.error('Error fetching job updates:', {
+        error: error.message,
+        url: url,
+        jobId: jobId,
+        timestamp: new Date().toISOString()
+      });
       currentInterval = Math.min(currentInterval * 2, MAX_INTERVAL_MS);
     } finally {
       isPolling = false;
