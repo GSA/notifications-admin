@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-import csv
-import io
 import uuid
 from functools import partial
 from glob import glob

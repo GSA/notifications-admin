@@ -3,7 +3,7 @@ import json
 from unittest.mock import ANY
 
 import pytest
-from flask import current_app, url_for
+from flask import url_for
 from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
 
