@@ -1,7 +1,7 @@
 (function(global) {
   "use strict";
 
-  window.NotifyModules = window.NotifyModules || {};
+  global.NotifyModules = global.NotifyModules || {};
 
   if (
     !('oninput' in document.createElement('input'))
@@ -9,7 +9,7 @@
 
   const tagPattern = /\(\(([^\)\((\?)]+)(\?\?)?([^\)\(]*)\)\)/g;
 
-  window.NotifyModules['enhanced-textbox'] = function() {
+  global.NotifyModules['enhanced-textbox'] = function() {
 
     this.start = function(element) {
 
@@ -61,8 +61,8 @@
         )
       );
 
-      if ('stickAtBottomWhenScrolling' in window.NotifyModules) {
-        window.NotifyModules.stickAtBottomWhenScrolling.recalculate();
+      if ('stickAtBottomWhenScrolling' in global.NotifyModules) {
+        global.NotifyModules.stickAtBottomWhenScrolling.recalculate();
       }
 
     };

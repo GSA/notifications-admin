@@ -317,8 +317,8 @@ def get_status_filters(service, message_type, statistics):
                 statistics[message_type]["requested"]
                 for message_type in {"email", "sms"}
             ),
-            "delivered": sum(
-                statistics[message_type]["delivered"]
+            NotificationStatus.DELIVERED: sum(
+                statistics[message_type][NotificationStatus.DELIVERED]
                 for message_type in {"email", "sms"}
             ),
             "failure": sum(
@@ -329,12 +329,11 @@ def get_status_filters(service, message_type, statistics):
     else:
         stats = statistics[message_type]
 
+    # Map API keys to enum keys for consistency
     if stats.get("failure") is not None:
         stats[NotificationStatus.FAILED] = stats["failure"]
-
-    # Ensure we have the delivered key with the enum too
-    if "delivered" in stats:
-        stats[NotificationStatus.DELIVERED] = stats["delivered"]
+    if stats.get(NotificationStatus.DELIVERED) is not None:
+        stats[NotificationStatus.DELIVERED] = stats[NotificationStatus.DELIVERED]
 
     stats[NotificationStatus.PENDING] = (
         stats["requested"]
