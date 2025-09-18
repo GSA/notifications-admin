@@ -1,7 +1,7 @@
 from functools import partial
+from urllib.parse import urlparse
 
 from flask import abort, flash, jsonify, redirect, render_template, request, url_for
-from urllib.parse import urlparse
 from flask_login import current_user
 from markupsafe import Markup
 
