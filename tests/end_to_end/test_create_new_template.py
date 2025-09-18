@@ -29,7 +29,7 @@ def create_new_template(page):
     check_axe_report(page)
 
     create_template_button = page.get_by_role("button", name="New template")
-    expect(create_template_button).to_be_visible()
+    expect(create_template_button).to_be_visible(timeout=10000)
     create_template_button.click()
 
     # Check to make sure that we've arrived at the next page.

@@ -324,10 +324,10 @@
       <div id="nothing_selected">
         <div class="js-stick-at-bottom-when-scrolling">
           <div class="usa-button-group">
-            <button class="usa-button" value="add-new-template" aria-expanded="false">
+            <button class="usa-button" value="add-new-template" aria-expanded="false" role="button">
               New template
             </button>
-            <button class="usa-button usa-button--outline" value="add-new-folder" aria-expanded="false">
+            <button class="usa-button usa-button--outline" value="add-new-folder" aria-expanded="false" role="button">
               New folder
             </button>
           </div>
@@ -344,10 +344,10 @@
       <div id="items_selected">
         <div class="js-stick-at-bottom-when-scrolling">
           <div class="usa-button-group">
-            <button class="usa-button" value="move-to-existing-folder" aria-expanded="false">
+            <button class="usa-button" value="move-to-existing-folder" aria-expanded="false" role="button">
               Move<span class="usa-sr-only"> selection to folder</span>
             </button>
-            <button class="usa-button usa-button--outline" value="move-to-new-folder" aria-expanded="false">
+            <button class="usa-button usa-button--outline" value="move-to-new-folder" aria-expanded="false" role="button">
               Add to new folder
             </button>
           </div>
