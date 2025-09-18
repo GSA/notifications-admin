@@ -1,8 +1,8 @@
-(function(global) {
+(function(window) {
 
   "use strict";
 
-  global.GOVUK.Modules.RadioSlider = function() {
+  window.NotifyModules['radio-slider'] = function() {
 
     this.start = function(component) {
 

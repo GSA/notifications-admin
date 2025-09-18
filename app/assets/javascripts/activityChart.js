@@ -399,19 +399,19 @@
         dropdown.addEventListener('change', handleDropdownChange);
     });
 
-        // Resize chart on window resize
-        window.addEventListener('resize', function() {
-            if (labels.length > 0 && deliveredData.length > 0 && failedData.length > 0 && pendingData.length > 0) {
-                createChart('#weeklyChart', labels, deliveredData, failedData, pendingData);
-                createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData, pendingData);
-            }
-        });
+    // Resize chart on window resize
+    window.addEventListener('resize', function() {
+        if (labels.length > 0 && deliveredData.length > 0 && failedData.length > 0 && pendingData.length > 0) {
+            createChart('#weeklyChart', labels, deliveredData, failedData, pendingData);
+            createTable('weeklyTable', 'activityChart', labels, deliveredData, failedData, pendingData);
+        }
+    });
 
-        // Export functions for testing
-        window.createChart = createChart;
-        window.createTable = createTable;
-        window.handleDropdownChange = handleDropdownChange;
-        window.fetchData = fetchData;
-    }
+    // Export functions for testing
+    window.createChart = createChart;
+    window.createTable = createTable;
+    window.handleDropdownChange = handleDropdownChange;
+    window.fetchData = fetchData;
+}
 
 })(window);

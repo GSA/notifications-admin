@@ -1,10 +1,8 @@
-# import datetime
 import datetime
 import os
 import re
 import uuid
 
-# import pytest
 from playwright.sync_api import expect
 
 from tests.end_to_end.conftest import check_axe_report
@@ -30,7 +28,7 @@ def create_new_template(page):
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)
 
-    create_template_button = page.get_by_role("button", name="New template")
+    create_template_button = page.get_by_text("New template")
     expect(create_template_button).to_be_visible()
     create_template_button.click()
 

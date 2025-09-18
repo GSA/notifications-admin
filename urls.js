@@ -25,12 +25,11 @@ const routes = {
       label: 'SMS Template Preview',
       path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/send/31588995-646b-40ae-bed1-617612d9245e/one-off/step-0',
     },
-    // Pages with govuk buttons that need testing
+    // Pages with USWDS buttons that need testing
     {
       label: 'API Keys',
       path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/api/keys',
     },
-    // Pages to test radio buttons before converting govukRadios to USWDS
     {
       label: 'API Keys Create',
       path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/api/keys/create',
@@ -40,12 +39,20 @@ const routes = {
       path: '/users/6af522d0-2915-4e52-83a3-3690455a5fe6/change_auth',
     },
     {
+      label: 'User Profile',
+      path: '/user-profile',
+    },
+    {
       label: 'User Profile Timezone',
       path: '/user-profile/preferred_timezone',
     },
     {
       label: 'Service Settings',
       path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings',
+    },
+    {
+      label: 'Service Settings with Platform Admin Controls',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings?show_admin_view=true',
     },
     {
       label: 'Service Send Files By Email',
@@ -76,8 +83,90 @@ const routes = {
       path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/users/invite',
     },
     {
+      label: 'Platform Admin Splash',
+      path: '/platform-admin',
+    },
+    {
       label: 'Platform Admin Live Services',
       path: '/platform-admin/live-services',
+    },
+    {
+      label: 'Platform Admin Trial Services',
+      path: '/platform-admin/trial-services',
+    },
+    {
+      label: 'Platform Admin Summary',
+      path: '/platform-admin/summary',
+    },
+    {
+      label: 'Platform Admin Reports',
+      path: '/platform-admin/reports',
+    },
+    {
+      label: 'Platform Admin Complaints',
+      path: '/platform-admin/complaints',
+    },
+    {
+      label: 'Platform Admin Clear Cache',
+      path: '/platform-admin/clear-cache',
+    },
+    {
+      label: 'Platform Admin Usage Report',
+      path: '/platform-admin/reports/usage-for-all-services',
+    },
+    {
+      label: 'Platform Admin Volumes by Service',
+      path: '/platform-admin/reports/volumes-by-service',
+    },
+    {
+      label: 'Platform Admin Daily Volumes',
+      path: '/platform-admin/reports/daily-volumes-report',
+    },
+    // Platform Admin Service-Specific Settings
+    {
+      label: 'Platform Admin Service History',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/history',
+    },
+    // Platform Admin Service Settings Change Links
+    {
+      label: 'Platform Admin Switch Service Live',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings/switch-live',
+    },
+    {
+      label: 'Platform Admin Switch Count As Live',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings/switch-count-as-live',
+    },
+    {
+      label: 'Platform Admin Edit Billing Details',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/edit-billing-details',
+    },
+    {
+      label: 'Platform Admin Edit Service Notes',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/notes',
+    },
+    {
+      label: 'Platform Admin Link Service to Organization',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings/link-service-to-organization',
+    },
+    {
+      label: 'Platform Admin Set Rate Limit',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings/set-rate-limit',
+    },
+    {
+      label: 'Platform Admin Set Message Limit',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings/set-message-limit',
+    },
+    {
+      label: 'Platform Admin Set Free SMS Allowance',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/service-settings/set-free-sms-allowance',
+    },
+    {
+      label: 'Platform Admin Data Retention',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/data-retention',
+    },
+    {
+      label: 'Platform Admin Add Data Retention',
+      path: '/services/da14b8fa-6a9e-4320-8484-9cd6e900c333/data-retention/add',
     },
     {
       label: 'Add Organization',
@@ -126,7 +215,6 @@ const routes = {
     { label: 'Get Started', path: '/using-notify/get-started' },
     { label: 'Trial Mode', path: '/using-notify/trial-mode' },
     { label: 'Pricing', path: '/using-notify/pricing' },
-    { label: 'Pricing Billing Details', path: '/pricing/billing-details' },
     { label: 'Delivery Status', path: '/using-notify/delivery-status' },
     { label: 'How To', path: '/using-notify/how-to' },
     { label: 'Best Practices', path: '/using-notify/best-practices' },

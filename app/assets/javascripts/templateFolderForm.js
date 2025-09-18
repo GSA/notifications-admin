@@ -1,7 +1,7 @@
-(function(Modules) {
+(function(window) {
   "use strict";
 
-  Modules.TemplateFolderForm = function() {
+  window.NotifyModules['template-folder-form'] = function() {
 
     this.start = function(templateFolderForm) {
       this.$form = $(templateFolderForm);
@@ -82,7 +82,7 @@
         this.render();
       }
 
-      this.$form.on('click', 'button.usa-button--event', (event) => this.actionButtonClicked(event));
+      this.$form.on('click', 'button.usa-button', (event) => this.actionButtonClicked(event));
       this.$form.on('change', 'input[type=checkbox]', () => this.templateFolderCheckboxChanged());
     };
 
@@ -324,10 +324,12 @@
       <div id="nothing_selected">
         <div class="js-stick-at-bottom-when-scrolling">
           <div class="usa-button-group">
-            <button class="usa-button usa-button--event" value="add-new-template" aria-expanded="false">
+            <button class="usa-button" value="add-new-template" aria-expanded="false" role="button">
               New template
             </button>
-            <button class="usa-button usa-button--event" value="add-new-folder" aria-expanded="false">New folder</button>
+            <button class="usa-button usa-button--outline" value="add-new-folder" aria-expanded="false" role="button">
+              New folder
+            </button>
           </div>
           <div class="template-list-selected-counter">
             <span class="template-list-selected-counter__count" aria-hidden="true">
@@ -342,13 +344,15 @@
       <div id="items_selected">
         <div class="js-stick-at-bottom-when-scrolling">
           <div class="usa-button-group">
-            <button class="usa-button usa-button--event" value="move-to-existing-folder" aria-expanded="false">
+            <button class="usa-button" value="move-to-existing-folder" aria-expanded="false" role="button">
               Move<span class="usa-sr-only"> selection to folder</span>
             </button>
-            <button class="usa-button usa-button--event" value="move-to-new-folder" aria-expanded="false">Add to new folder</button>
+            <button class="usa-button usa-button--outline" value="move-to-new-folder" aria-expanded="false" role="button">
+              Add to new folder
+            </button>
           </div>
           <div class="template-list-selected-counter" aria-hidden="true">
-            <span class="template-list-selected-counter__count" aria-hidden="true">
+            <span class="template-list-selected-counter__count text-base" aria-hidden="true">
               ${this.selectionStatus.selected(1)}
             </span>
           </div>
@@ -357,4 +361,4 @@
     `).get(0);
   };
 
-})(window.GOVUK.Modules);
+})(window);
