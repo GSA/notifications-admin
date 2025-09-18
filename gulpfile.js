@@ -1,8 +1,9 @@
 const { src, dest, series } = require('gulp');
-const gulpMerge = require('gulp-merge');
+const mergeStream = require('merge-stream');
 const uswds = require('@uswds/compile');
 const { exec } = require('child_process');
 const plugins = {};
+plugins.addSrc = require('gulp-add-src');
 plugins.babel = require('gulp-babel');
 plugins.cleanCSS = require('gulp-clean-css');
 plugins.concat = require('gulp-concat');
@@ -26,35 +27,33 @@ const javascripts = () => {
     paths.npm + 'socket.io-client/dist/socket.io.min.js'
   ]);
 
+  // Files that don't use NotifyModules and can be uglified
   const local = src([
     paths.src + 'javascripts/modules/init.js',
     paths.src + 'javascripts/modules/uswds-modules.js',
     paths.src + 'javascripts/modules/show-hide-content.js',
-    paths.src + 'javascripts/copyToClipboard.js',
-    paths.src + 'javascripts/enhancedTextbox.js',
-    paths.src + 'javascripts/fileUpload.js',
     paths.src + 'javascripts/radioSelect.js',
-    paths.src + 'javascripts/listEntry.js',
     paths.src + 'javascripts/liveSearch.js',
-    paths.src + 'javascripts/errorTracking.js',
     paths.src + 'javascripts/preventDuplicateFormSubmissions.js',
-    paths.src + 'javascripts/fullscreenTable.js',
-    paths.src + 'javascripts/templateFolderForm.js',
-    paths.src + 'javascripts/collapsibleCheckboxes.js',
-    paths.src + 'javascripts/radioSlider.js',
-    paths.src + 'javascripts/updateStatus.js',
     paths.src + 'javascripts/errorBanner.js',
     paths.src + 'javascripts/notifyModal.js',
     paths.src + 'javascripts/timeoutPopup.js',
     paths.src + 'javascripts/date.js',
     paths.src + 'javascripts/loginAlert.js',
-    paths.src + 'javascripts/main.js',
-    paths.src + 'javascripts/totalMessagesChart.js',
-    paths.src + 'javascripts/activityChart.js',
     paths.src + 'javascripts/sidenav.js',
     paths.src + 'javascripts/validation.js',
     paths.src + 'javascripts/socketio.js',
     paths.src + 'javascripts/scrollPosition.js',
+  ])
+
+  // Files that use NotifyModules - split into two groups to avoid stream issues
+  const notifyModules1 = src([
+    paths.src + 'javascripts/copyToClipboard.js',
+    paths.src + 'javascripts/enhancedTextbox.js',
+    paths.src + 'javascripts/fileUpload.js',
+    paths.src + 'javascripts/errorTracking.js',
+    paths.src + 'javascripts/fullscreenTable.js',
+    paths.src + 'javascripts/templateFolderForm.js',
   ])
     .pipe(plugins.prettyerror())
     .pipe(
@@ -63,8 +62,38 @@ const javascripts = () => {
       })
     );
 
-  return gulpMerge(vendored, local)
-    .pipe(plugins.uglify())
+  const notifyModules2 = src([
+    paths.src + 'javascripts/collapsibleCheckboxes.js',
+    paths.src + 'javascripts/radioSlider.js',
+    paths.src + 'javascripts/updateStatus.js',
+    paths.src + 'javascripts/main.js',
+  ])
+    .pipe(plugins.prettyerror())
+    .pipe(
+      plugins.babel({
+        presets: ['@babel/preset-env'],
+      })
+    );
+
+  // Apply uglify only to local files
+  const localUglified = local
+    .pipe(
+      plugins.babel({
+        presets: ['@babel/preset-env'],
+      })
+    )
+    .pipe(plugins.uglify());
+
+  // Concatenate: vendored, uglified local, non-uglified NotifyModules, then append non-transpiled files
+  const mainBundle = mergeStream(vendored, localUglified, notifyModules1, notifyModules2);
+
+  // Use the mainBundle as the base and append non-transpiled files at the end
+  return mainBundle
+    .pipe(plugins.addSrc.append(paths.src + 'javascripts/jquery-expose.js'))
+    .pipe(plugins.addSrc.append(paths.src + 'javascripts/listEntry.js'))
+    .pipe(plugins.addSrc.append(paths.src + 'javascripts/stick-to-window-when-scrolling.js'))
+    .pipe(plugins.addSrc.append(paths.src + 'javascripts/totalMessagesChart.js'))
+    .pipe(plugins.addSrc.append(paths.src + 'javascripts/activityChart.js'))
     .pipe(plugins.concat('all.js'))
     .pipe(dest(paths.dist + 'javascripts/'));
 };
