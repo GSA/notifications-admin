@@ -4,6 +4,8 @@ from unittest.mock import ANY
 
 import pytest
 from flask import url_for
+from hypothesis import HealthCheck, given, settings
+from hypothesis import strategies as st
 
 from app.enums import ServicePermission
 from app.main.views.register import (
@@ -78,15 +80,6 @@ def test_register_creates_new_user_and_redirects_to_continue_page(
         == "An email has been sent to notfound@example.gsa.gov."
     )
 
-    # mock_send_verify_email.assert_called_with(ANY, user_data["email_address"])
-    # mock_register_user.assert_called_with(
-    #    user_data["name"],
-    #    user_data["email_address"],
-    #    user_data["mobile_number"],
-    #    user_data["password"],
-    #    user_data["auth_type"],
-    # )
-
 
 def test_register_continue_handles_missing_session_sensibly(client_request, mocker):
 
@@ -139,33 +132,24 @@ def test_should_return_200_when_email_is_not_gov_uk(
     )
 
 
-@pytest.mark.parametrize(
-    "email_address",
-    [
-        "notfound@example.gsa.gov",
-        "example@lsquo.si.edu",
-    ],
+@settings(suppress_health_check=[HealthCheck.function_scoped_fixture])
+@given(
+    fuzzed_email_address=st.from_regex(
+        r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", fullmatch=True
+    )
 )
 def test_should_add_user_details_to_session(
     client_request,
     mocker,
-    mock_send_verify_code,
-    mock_register_user,
-    mock_get_user_by_email_not_found,
-    mock_get_organizations_with_unusual_domains,
-    mock_email_is_not_already_in_use,
-    mock_send_verify_email,
-    mock_login,
-    email_address,
+    fuzzed_email_address,
 ):
-
     mocker.patch("app.notify_client.user_api_client.UserApiClient.deactivate_user")
     client_request.logout()
     client_request.post(
         "main.register",
         _data={
             "name": "Test Codes",
-            "email_address": email_address,
+            "email_address": fuzzed_email_address,
             "mobile_number": "+12023123123",
             "password": "validPassword!",
         },
@@ -449,12 +433,6 @@ def test_decode_state(encoded_invite_data):
         "permissions": ["manage_everything"],
         "service_id": "service",
     }
-
-
-# @pytest.mark.parametrize(
-#    ("user_services", "user_organizations", "expected_status", "organization_checked"),
-#    [
-#        ([SERVICE_ONE_ID], [], 200, False),
 
 
 @pytest.mark.parametrize(

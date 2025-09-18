@@ -122,7 +122,6 @@ def send_messages(service_id, template_id):
                 template_id=template_id,
             )
         )
-
     template = get_template(
         db_template,
         current_service,
@@ -130,7 +129,6 @@ def send_messages(service_id, template_id):
         email_reply_to=email_reply_to,
         sms_sender=sms_sender,
     )
-
     form = CsvUploadForm()
     if form.validate_on_submit():
         try:
