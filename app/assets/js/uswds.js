@@ -630,7 +630,7 @@ var trim = String.prototype.trim ? function (str) {
   return str.replace(RE_TRIM, '');
 };
 var queryById = function (id) {
-  return this.querySelector('[id="' + id.replace(/"/g, '\\"') + '"]');
+  return this.querySelector('[id="' + id.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"]');
 };
 module.exports = function resolveIds(ids, doc) {
   if (typeof ids !== 'string') {
@@ -4391,7 +4391,9 @@ function toggleHtmlTag(isMobile) {
   const primaryLinks = bigFooter.querySelectorAll(BUTTON);
   primaryLinks.forEach(currentElement => {
     const currentElementClasses = currentElement.getAttribute("class");
-    const preservedHtmlTag = currentElement.getAttribute("data-tag") || currentElement.tagName;
+    const preservedHtmlTagRaw = currentElement.getAttribute("data-tag") || currentElement.tagName;
+    const allowedTags = ["button", "h4"];
+    const preservedHtmlTag = allowedTags.includes(preservedHtmlTagRaw.toLowerCase()) ? preservedHtmlTagRaw.toLowerCase() : "h4";
     const newElementType = isMobile ? "button" : preservedHtmlTag;
 
     // Create the new element

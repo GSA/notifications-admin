@@ -194,7 +194,9 @@ def process_folder_management_form(form, current_folder_id):
             ids_to_move=form.templates_and_folders.data, move_to=move_to_id
         )
 
-    return redirect(request.url)
+    # Use request.full_path which includes query string but not host
+    # This avoids host header injection while preserving all parameters
+    return redirect(request.full_path)
 
 
 def get_template_nav_label(value):
