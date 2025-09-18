@@ -92,23 +92,17 @@ def get_example_csv_rows(template, use_example_as_example=True, submitted_fields
     )
 
 
-def msg(message):
-    print(message)  # noqa
-
-
 @main.route(
     "/services/<uuid:service_id>/send/<uuid:template_id>/csv", methods=["GET", "POST"]
 )
 @user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True)
 def send_messages(service_id, template_id):
-    msg("ENTER send_messages")
     notification_count = service_api_client.get_notification_count(service_id)
     remaining_messages = current_service.message_limit - notification_count
 
     db_template = current_service.get_template_with_user_permission_or_403(
         template_id, current_user
     )
-    msg(f"GOT db_template {db_template}")
 
     email_reply_to = None
     sms_sender = None
@@ -117,7 +111,7 @@ def send_messages(service_id, template_id):
         email_reply_to = get_email_reply_to_address_from_session()
     elif db_template["template_type"] == "sms":
         sms_sender = get_sms_sender_from_session()
-    msg("OKAY C")
+
     if db_template["template_type"] not in current_service.available_template_types:
         return redirect(
             url_for(
@@ -128,7 +122,6 @@ def send_messages(service_id, template_id):
                 template_id=template_id,
             )
         )
-    msg("OKAY D")
     template = get_template(
         db_template,
         current_service,
@@ -136,7 +129,6 @@ def send_messages(service_id, template_id):
         email_reply_to=email_reply_to,
         sms_sender=sms_sender,
     )
-    msg("OKAY E")
     form = CsvUploadForm()
     if form.validate_on_submit():
         try:
@@ -183,7 +175,7 @@ def send_messages(service_id, template_id):
         error_message = Markup(error_message)  # nosec
         flash(error_message)
     column_headings = get_spreadsheet_column_headings_from_template(template)
-    msg("OKAY F")
+
     return render_template(
         "views/send.html",
         template=template,
