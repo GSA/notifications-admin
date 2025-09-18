@@ -53,14 +53,17 @@ def email_needs_revalidating(user):
 
 # see https://stackoverflow.com/questions/60532973/how-do-i-get-a-is-safe-url-function-to-use-with-flask-and-how-does-it-work  # noqa
 def is_safe_redirect_url(target):
-    from urllib.parse import urljoin, urlparse
+    from urllib.parse import urlparse
 
-    host_url = urlparse(request.host_url)
-    redirect_url = urlparse(urljoin(request.host_url, target))
-    return (
-        redirect_url.scheme in ("http", "https")
-        and host_url.netloc == redirect_url.netloc
-    )
+    if not target:
+        return False
+
+    target = target.replace('\\', '')
+
+    parsed = urlparse(target)
+
+    # This prevents redirects to external sites
+    return not parsed.scheme and not parsed.netloc
 
 
 def get_id_token(json_data):
