@@ -3,6 +3,8 @@ import uuid
 
 import pytest
 from flask import url_for
+from hypothesis import given
+from hypothesis import strategies as st
 
 import app
 from app.enums import ServicePermission
@@ -1219,19 +1221,28 @@ def test_cancel_invited_user_cancels_user_invitations(
     )
 
 
+@pytest.mark.usefixtures(
+    "client_request",
+    "mock_get_invites_for_service",
+    "mocker",
+)
 def test_cancel_invited_user_doesnt_work_if_user_not_invited_to_this_service(
     client_request,
     mock_get_invites_for_service,
     mocker,
 ):
-    mock_cancel = mocker.patch("app.invite_api_client.cancel_invited_user")
-    client_request.get(
-        "main.cancel_invited_user",
-        service_id=SERVICE_ONE_ID,
-        invited_user_id=sample_uuid(),
-        _expected_status=404,
-    )
-    assert mock_cancel.called is False
+    @given(fuzzed_uuid=st.uuids())
+    def inner(fuzzed_uuid):
+        mock_cancel = mocker.patch("app.invite_api_client.cancel_invited_user")
+        client_request.get(
+            "main.cancel_invited_user",
+            service_id=SERVICE_ONE_ID,
+            invited_user_id=fuzzed_uuid,
+            _expected_status=404,
+        )
+        assert mock_cancel.called is False
+
+    inner()
 
 
 @pytest.mark.parametrize(

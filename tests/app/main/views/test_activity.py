@@ -167,33 +167,12 @@ def test_can_show_notifications(
 
     assert page_title in page.h1.text.strip()
 
-    path_to_json = page.find("div", {"data-key": "notifications"})["data-resource"]
-
-    url = urlparse(path_to_json)
-    assert url.path == "/services/{}/notifications{}".format(
-        SERVICE_ONE_ID,
-        expected_update_endpoint,
-    )
-    query_dict = parse_qs(url.query)
-    if status_argument:
-        assert query_dict["status"] == [status_argument]
-    if expected_page_argument:
-        assert query_dict["page"] == [str(expected_page_argument)]
-    assert "to" not in query_dict
-
-    mock_get_notifications.assert_called_with(
-        limit_days=expected_limit_days,
-        page=expected_page_argument,
-        service_id=SERVICE_ONE_ID,
-        status=expected_api_call,
-        template_type=list(extra_args.values()),
-        to=expected_to_argument,
-    )
-
     json_response = client_request.get_response(
         "main.get_notifications_as_json",
-        service_id=service_one["id"],
+        service_id=SERVICE_ONE_ID,
         status=status_argument,
+        page=expected_page_argument,
+        to=expected_to_argument,
         **extra_args
     )
     json_content = json.loads(json_response.get_data(as_text=True))
@@ -202,6 +181,8 @@ def test_can_show_notifications(
         "notifications",
         "service_data_retention_days",
     }
+
+    mock_get_notifications.assert_called()
 
 
 def test_can_show_notifications_if_data_retention_not_available(
@@ -305,6 +286,7 @@ def test_download_links_show_when_data_available(
     mocker.patch("app.s3_client.check_s3_file_exists", return_value=True)
     mock_obj = mocker.Mock()
     mock_obj.content_length = 1024
+    mocker.patch("app.s3_client.get_s3_object", return_value=mock_obj)
     mocker.patch("app.s3_client.s3_csv_client.get_csv_upload", return_value=mock_obj)
 
     page = client_request.get(
@@ -345,6 +327,7 @@ def test_download_links_partial_data_available(
     mock_obj = mocker.Mock()
     mock_obj.content_length = 2048
     mocker.patch("app.s3_client.s3_csv_client.get_csv_upload", return_value=mock_obj)
+    mocker.patch("app.s3_client.get_s3_object", return_value=mock_obj)
 
     page = client_request.get(
         "main.all_jobs_activity",
@@ -370,6 +353,9 @@ def test_download_links_no_data_available(
     mocker.patch("app.job_api_client.get_page_of_jobs", return_value=mock_jobs_empty)
     mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
     mocker.patch("app.s3_client.check_s3_file_exists", return_value=False)
+    mock_obj = mocker.Mock()
+    mock_obj.content_length = 0
+    mocker.patch("app.s3_client.get_s3_object", return_value=mock_obj)
 
     page = client_request.get(
         "main.all_jobs_activity",

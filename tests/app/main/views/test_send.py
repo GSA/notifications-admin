@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import uuid
 from functools import partial
 from glob import glob

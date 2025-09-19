@@ -5,6 +5,9 @@
         const tableContainer = document.getElementById('activityContainer');
         const currentUserName = tableContainer.getAttribute('data-currentUserName');
         const currentServiceId = tableContainer.getAttribute('data-currentServiceId');
+        let pollInterval;
+        let isPolling = false;
+        const POLL_INTERVAL_MS = 25000;
         const COLORS = {
             delivered: '#0076d6',
             failed: '#fa9441',
@@ -153,8 +156,6 @@
             .on('mouseout', function() {
                 tooltip.style('display', 'none');
             })
-            .transition()
-            .duration(1000)
             .attr('y', d => y(d[1]))
             .attr('height', d => {
                 const calculatedHeight = y(d[0]) - y(d[1]);
@@ -209,12 +210,21 @@
         table.append(tbody);
     };
 
-    const fetchData = function(type) {
+    const fetchData = async function(type) {
+        if (isPolling) {
+            return;
+        }
+
+        if (document.hidden) {
+            return;
+        }
 
         var ctx = document.getElementById('weeklyChart');
         if (!ctx) {
             return;
         }
+
+        isPolling = true;
 
         var userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -222,15 +232,13 @@
             ? `/services/${currentServiceId}/daily-stats.json?timezone=${encodeURIComponent(userTimezone)}`
             : `/services/${currentServiceId}/daily-stats-by-user.json?timezone=${encodeURIComponent(userTimezone)}`;
 
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
 
-        return fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
+            const data = await response.json();
                 labels = [];
                 deliveredData = [];
                 failedData = [];
@@ -277,10 +285,41 @@
                     }
 
                     return data;
-                })
-                .catch(error => console.error('Error fetching daily stats:', error));
-        };
-        setInterval(() => fetchData(currentType), 25000);
+        } catch (error) {
+            console.error('Error fetching daily stats:', error);
+        } finally {
+            isPolling = false;
+        }
+    };
+
+    function startPolling() {
+        fetchData(currentType);
+
+        pollInterval = setInterval(() => {
+            fetchData(currentType);
+        }, POLL_INTERVAL_MS);
+    }
+
+    function stopPolling() {
+        if (pollInterval) {
+            clearInterval(pollInterval);
+            pollInterval = null;
+        }
+    }
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            stopPolling();
+        } else {
+            stopPolling();
+            startPolling();
+        }
+    });
+
+    if (typeof jest === 'undefined') {
+        startPolling();
+    }
+
     const handleDropdownChange = function(event) {
         const selectedValue = event.target.value;
         currentType = selectedValue;

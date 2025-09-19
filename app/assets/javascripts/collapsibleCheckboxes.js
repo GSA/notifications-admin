@@ -118,7 +118,8 @@
   CollapsibleCheckboxes.prototype.addHeadingHideLegend = function() {
     const headingLevel = this.$component.data('heading-level') || '2';
 
-    this.$heading = $(`<h${headingLevel} class="heading-small">${this.legendText}</h${headingLevel}>`);
+    this.$heading = $(`<h${headingLevel} class="heading-small"></h${headingLevel}>`);
+    this.$heading.text(this.legendText);
     this.$fieldset.before(this.$heading);
 
     this.$fieldset.find('legend').addClass('usa-sr-only');

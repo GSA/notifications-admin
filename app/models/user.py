@@ -202,7 +202,6 @@ class User(JSONModel, UserMixin):
     @property
     def is_gov_user(self):
         is_gov = is_gov_user(self.email_address)
-        # current_app.logger.info(f"User {self.id} is_gov_user: {is_gov}")
         return is_gov
 
     @property
@@ -211,9 +210,6 @@ class User(JSONModel, UserMixin):
 
     @property
     def platform_admin(self):
-        # current_app.logger.warning(
-        #    f"Checking User {self.id} for platform admin: {self._platform_admin}"
-        # )
         return self._platform_admin and not session.get(
             "disable_platform_admin_view", False
         )
@@ -243,14 +239,10 @@ class User(JSONModel, UserMixin):
             # we shouldn't have any pages that require permissions, but don't specify a service or organization.
             # use @user_is_platform_admin for platform admin only pages
             # raise NotImplementedError
-            # current_app.logger.warning(f"VIEW ARGS ARE {request.view_args}")
             pass
 
         # platform admins should be able to do most things (except eg send messages, or create api keys)
         if self.platform_admin and not restrict_admin_usage:
-            current_app.logger.debug(
-                "has_permissions is true because user is platform_admin"
-            )
             return True
 
         if org_id:
@@ -564,17 +556,11 @@ class InvitedUser(JSONModel):
         return cls.by_id(invited_user_id) if invited_user_id else None
 
     def has_permissions(self, *permissions):
-        # current_app.logger.warning(
-        #    f"Checking invited user {self.id} for permissions: {permissions}"
-        # )
         if self.status == InvitedUserStatus.CANCELLED:
             return False
         return set(self.permissions) > set(permissions)
 
     def has_permission_for_service(self, service_id, permission):
-        # current_app.logger.warn(
-        #    f"Checking invited user {self.id} for permission: {permission} on service {service_id}"
-        # )
         if self.status == InvitedUserStatus.CANCELLED:
             return False
         return self.service == service_id and permission in self.permissions
