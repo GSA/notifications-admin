@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const responseTime = Date.now() - startTime;
       currentInterval = calculateBackoff(responseTime);
 
-      if (data.stop === 1 || data.finished === true) {
+      if (data.finished === true) {
         stopPolling();
       }
 
