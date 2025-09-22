@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
     );
   }
 
-  async function updateAllJobSections() {
+  async function updateAllJobSections(retryCount = 0) {
     if (isPolling || document.hidden) {
       return;
     }
@@ -74,7 +74,18 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
     } catch (error) {
-      console.error('Error fetching job updates:', {
+      if (retryCount < 3) {
+        console.debug(`Job polling retry ${retryCount}`, error.message);
+        isPolling = false;
+
+        const retryDelay = Math.pow(2, retryCount) * 1000;
+        setTimeout(() => {
+          updateAllJobSections(retryCount + 1);
+        }, retryDelay);
+        return;
+      }
+
+      console.warn('Job polling failed after 3 retries:', {
         error: error.message,
         url: url,
         jobId: jobId,
