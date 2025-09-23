@@ -4,6 +4,8 @@ from datetime import datetime, timezone
 import pytest
 from flask import url_for
 from freezegun import freeze_time
+from hypothesis import HealthCheck, given, settings
+from hypothesis import strategies as st
 
 from app.main.views.jobs import get_time_left
 from tests import job_json, sample_uuid, user_json
@@ -92,12 +94,13 @@ def test_should_show_page_for_one_job(
     assert " ".join(page.find("tbody").find("tr").text.split()) == (
         "2021234567 template content Delivered 01-01-2016 at 06:09 AM"
     )
-    assert page.find("div", {"data-key": "notifications"})["data-resource"] == url_for(
+    client_request.get_response(
         "main.view_job_updates",
         service_id=SERVICE_ONE_ID,
         job_id=fake_uuid,
         status=status_argument,
     )
+    mock_get_notifications.assert_called()
     csv_link = page.select_one("a[download]")
     assert csv_link["href"] == url_for(
         "main.view_job_csv",
@@ -380,16 +383,15 @@ def test_should_cancel_job(
     mock_cancel.assert_called_once_with(SERVICE_ONE_ID, fake_uuid)
 
 
+@settings(suppress_health_check=[HealthCheck.function_scoped_fixture])
+@given(fuzzed_uuid=st.uuids())
 def test_should_not_show_cancelled_job(
-    client_request,
-    active_user_with_permissions,
-    mock_get_cancelled_job,
-    fake_uuid,
+    client_request, active_user_with_permissions, mock_get_cancelled_job, fuzzed_uuid
 ):
     client_request.get(
         "main.view_job",
         service_id=SERVICE_ONE_ID,
-        job_id=fake_uuid,
+        job_id=fuzzed_uuid,
         _expected_status=404,
     )
 

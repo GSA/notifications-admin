@@ -14,7 +14,6 @@ import Button from 'govuk-frontend/components/button/button';
 import Radios from 'govuk-frontend/components/radios/radios';
 
 // Modules from 3rd party vendors
-import morphdom from 'morphdom';
 
 /**
  * TODO: Ideally this would be a NodeList.prototype.forEach polyfill
@@ -67,13 +66,8 @@ var Frontend = {
   "initAll": initAll
 }
 
-var vendor = {
-  "morphdom": morphdom
-}
-
 // The exported object will be assigned to window.GOVUK in our production code
 // (bundled into an IIFE by RollupJS)
 export {
-  Frontend,
-  vendor
+  Frontend
 }
