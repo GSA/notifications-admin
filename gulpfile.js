@@ -18,15 +18,6 @@ const paths = {
 };
 
 const javascripts = () => {
-  const vendored = src([
-    paths.npm + 'jquery/dist/jquery.min.js',
-    paths.npm + 'query-command-supported/dist/queryCommandSupported.min.js',
-    paths.npm + 'textarea-caret/index.js',
-    paths.npm + 'cbor-js/cbor.js',
-    paths.npm + 'd3/dist/d3.min.js',
-    paths.npm + 'socket.io-client/dist/socket.io.min.js'
-  ]);
-
   // Files that don't use NotifyModules and can be uglified
   const local = src([
     paths.src + 'javascripts/modules/init.js',
@@ -84,12 +75,22 @@ const javascripts = () => {
     )
     .pipe(plugins.uglify());
 
-  // Concatenate: vendored, uglified local, non-uglified NotifyModules, then append non-transpiled files
-  const mainBundle = mergeStream(vendored, localUglified, notifyModules1, notifyModules2);
+  // First create vendored with jquery-expose immediately after jQuery
+  const vendoredWithExpose = src([
+    paths.npm + 'jquery/dist/jquery.min.js',
+    paths.src + 'javascripts/jquery-expose.js',
+    paths.npm + 'query-command-supported/dist/queryCommandSupported.min.js',
+    paths.npm + 'textarea-caret/index.js',
+    paths.npm + 'cbor-js/cbor.js',
+    paths.npm + 'd3/dist/d3.min.js',
+    paths.npm + 'socket.io-client/dist/socket.io.min.js'
+  ]);
 
-  // Use the mainBundle as the base and append non-transpiled files at the end
+  // Concatenate all streams
+  const mainBundle = mergeStream(vendoredWithExpose, localUglified, notifyModules1, notifyModules2);
+
+  // Use the mainBundle as the base and append remaining non-transpiled files at the end
   return mainBundle
-    .pipe(plugins.addSrc.append(paths.src + 'javascripts/jquery-expose.js'))
     .pipe(plugins.addSrc.append(paths.src + 'javascripts/listEntry.js'))
     .pipe(plugins.addSrc.append(paths.src + 'javascripts/stick-to-window-when-scrolling.js'))
     .pipe(plugins.addSrc.append(paths.src + 'javascripts/totalMessagesChart.js'))

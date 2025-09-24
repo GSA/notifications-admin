@@ -90,7 +90,16 @@ def organization_dashboard(org_id):
 @main.route("/organizations/<uuid:org_id>/download-usage-report.csv", methods=["GET"])
 @user_has_permissions()
 def download_organization_usage_report(org_id):
-    selected_year = request.args.get("selected_year")
+    selected_year_input = request.args.get("selected_year")
+    # Validate selected_year to prevent header injection
+    if (
+        selected_year_input
+        and selected_year_input.isdigit()
+        and len(selected_year_input) == 4
+    ):
+        selected_year = selected_year_input
+    else:
+        selected_year = str(datetime.now().year)
     services_usage = current_organization.services_and_usage(
         financial_year=selected_year
     )["services"]
@@ -121,6 +130,12 @@ def download_organization_usage_report(org_id):
         for service in services_usage
     ]
 
+    # Sanitize organization name for filename to prevent header injection
+    import re
+
+    safe_org_name = re.sub(r"[^\w\s-]", "", current_organization.name).strip()
+    safe_org_name = re.sub(r"[-\s]+", "-", safe_org_name)
+
     return (
         Spreadsheet.from_rows(org_usage_data).as_csv_data,
         200,
@@ -130,7 +145,7 @@ def download_organization_usage_report(org_id):
                 "inline;"
                 'filename="{} organization usage report for year {}'
                 ' - generated on {}.csv"'.format(
-                    current_organization.name,
+                    safe_org_name,
                     selected_year,
                     datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
                 )

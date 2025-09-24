@@ -459,6 +459,7 @@ def get_job_partials(job):
             job=job,
             arrived_from_preview_page_url=arrived_from_preview_page_url,
         ),
+        "finished": job.finished_processing,
     }
 
 

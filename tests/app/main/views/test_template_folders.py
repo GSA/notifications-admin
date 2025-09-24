@@ -1195,7 +1195,6 @@ def test_should_be_able_to_move_to_existing_folder(
         _expected_redirect=url_for(
             "main.choose_template",
             service_id=SERVICE_ONE_ID,
-            _external=True,
         ),
     )
     mock_move_to_template_folder.assert_called_once_with(
@@ -1455,7 +1454,6 @@ def test_new_folder_is_created_if_only_new_folder_is_filled_out(
             "main.choose_template",
             service_id=service_one["id"],
             template_folder_id=None,
-            _external=True,
         ),
     )
 
@@ -1496,9 +1494,7 @@ def test_should_be_able_to_move_to_new_folder(
             ],
         },
         _expected_status=302,
-        _expected_redirect=url_for(
-            "main.choose_template", service_id=SERVICE_ONE_ID, _external=True
-        ),
+        _expected_redirect=url_for("main.choose_template", service_id=SERVICE_ONE_ID),
     )
 
     mock_create_template_folder.assert_called_once_with(

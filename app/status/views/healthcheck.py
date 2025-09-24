@@ -76,7 +76,7 @@ def show_redis_status():
         )
         return (
             jsonify(
-                status=f"error: {err}",
+                status="error: internal server error",
                 api=api_status,
                 git_commit=version.__git_commit__,
                 build_time=version.__time__,
