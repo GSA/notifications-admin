@@ -29,10 +29,10 @@
       $cancelButton.prop('disabled', true);
 
       setTimeout(() => {
-        renableSubmitButton($submitButton);
+        renableSubmitButton($submitButton)();
       }, 10000); // fallback safety
     } else {
-      setTimeout(renableSubmitButton($submitButton), 1500);
+      setTimeout(() => renableSubmitButton($submitButton)(), 1500);
     }
   };
 

@@ -90,7 +90,7 @@
     this.addDescriptionsToStates = function () {
       let id, description;
 
-      $.each(this.states.filter(state => 'description' in state), (idx, state) => {
+      $.each(this.states.filter(state => 'description' in state), (_, state) => {
         id = `${state.key}__description`;
         description = `<p class="usa-sr-only" id="${id}">${state.description}</p>`;
         state.$el
@@ -295,8 +295,8 @@
 
     this.countSelectedCheckboxes = function() {
       const allSelected = this.$form.find('input:checkbox:checked');
-      const templates = allSelected.filter((idx, el) => $(el).siblings('.template-list-template').length > 0).length;
-      const folders = allSelected.filter((idx, el) => $(el).siblings('.template-list-folder').length > 0).length;
+      const templates = allSelected.filter((_, el) => $(el).siblings('.template-list-template').length > 0).length;
+      const folders = allSelected.filter((_, el) => $(el).siblings('.template-list-folder').length > 0).length;
       const results = {
         'templates': templates,
         'folders': folders,
@@ -306,7 +306,6 @@
     };
 
     this.render = function() {
-      let mode = 'default';
       let currentStateObj = this.states.filter(state => { return (state.key === this.currentState); })[0];
       let scrollTop;
 
@@ -314,11 +313,6 @@
       this.states.forEach(
         state => (state.key === this.currentState ? this.$liveRegionCounter.before(state.$el) : state.$el.detach())
       );
-
-      // use dialog mode for states which contain more than one form control
-      if (['move-to-existing-folder', 'add-new-template'].indexOf(this.currentState) !== -1) {
-        mode = 'dialog';
-      }
 
       if (this.currentState === 'add-new-template') {
         this.$form.find('.template-list-item').addClass('js-hidden');
