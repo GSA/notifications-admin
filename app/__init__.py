@@ -170,13 +170,17 @@ def _csp(config):
             "https://dap.digitalgov.gov",
             "https://cdn.socket.io",
         ],
-        "connect-src": list(dict.fromkeys([
-            "'self'",
-            "https://gov-bam.nr-data.net",
-            "https://www.google-analytics.com",
-            f"{api_public_url}",
-            f"{api_public_ws_url}",
-        ])),
+        "connect-src": list(
+            dict.fromkeys(
+                [
+                    "'self'",
+                    "https://gov-bam.nr-data.net",
+                    "https://www.google-analytics.com",
+                    f"{api_public_url}",
+                    f"{api_public_ws_url}",
+                ]
+            )
+        ),
         "style-src": ["'self'", asset_domain],
         "img-src": ["'self'", asset_domain],
     }
@@ -192,6 +196,12 @@ def create_app(application):
     def inject_feature_flags():
         # this is where feature flags can be easily added as a dictionary within context
         feature_socket_enabled = application.config.get("FEATURE_SOCKET_ENABLED", True)
+
+        current_app.logger.debug(
+            f"FEATURE_SOCKET_ENABLED value in __init__.py coming \
+                                 from config is {application.config.get('FEATURED_SOCKET_ENABLED')} and \
+                                    the ending value is {feature_socket_enabled}"
+        )
         return dict(
             FEATURE_SOCKET_ENABLED=feature_socket_enabled,
         )
