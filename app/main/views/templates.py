@@ -263,14 +263,24 @@ def _add_template_by_type(template_type, template_folder_id):
             )
         )
 
-    return redirect(
-        url_for(
-            ".add_service_template",
-            service_id=current_service.id,
-            template_type=template_type,
-            template_folder_id=template_folder_id,
+    # Use the appropriate route based on whether we're in a folder or not
+    if template_folder_id:
+        return redirect(
+            url_for(
+                ".add_service_template",
+                service_id=current_service.id,
+                template_type=template_type,
+                template_folder_id=template_folder_id,
+            )
         )
-    )
+    else:
+        return redirect(
+            url_for(
+                ".add_service_template",
+                service_id=current_service.id,
+                template_type=template_type,
+            )
+        )
 
 
 @main.route("/services/<uuid:service_id>/templates/copy")

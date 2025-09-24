@@ -84,6 +84,7 @@
 
       this.$form.on('click', 'button.usa-button', (event) => this.actionButtonClicked(event));
       this.$form.on('change', 'input[type=checkbox]', () => this.templateFolderCheckboxChanged());
+      this.$form.on('change', 'input[name="add_template_by_template_type"]', () => this.templateTypeChanged());
     };
 
     this.addDescriptionsToStates = function () {
@@ -191,17 +192,30 @@
     this.$singleChannelService = (document.querySelector('div[id=add_new_template_form]')).getAttribute("data-service");
 
     this.actionButtonClicked = function(event) {
-      event.preventDefault();
       this.currentState = $(event.currentTarget).val();
 
       if (event.currentTarget.value === 'add-new-template' && this.$singleNotificationChannel) {
+        event.preventDefault();
         window.location = "/services/" + this.$singleChannelService + "/templates/add-" + this.$singleNotificationChannel;
-      } else {
-        if (this.currentState === 'add-new-template') {
+      } else if (this.currentState === 'add-new-template') {
+        // Check if a template type is selected
+        const selectedTemplateType = this.$form.find('input[name="add_template_by_template_type"]:checked').val();
+
+        if (selectedTemplateType) {
+          // Template type is selected, let the form submit normally
+          return true;
+        } else {
+          // No template type selected, show the selection UI
+          event.preventDefault();
           this.$form.find('input[type=checkbox]').prop('checked', false);
           this.selectionStatus.update({ total: 0, templates: 0, folders: 0 });
-        }
 
+          if (this.stateChanged()) {
+            this.render();
+          }
+        }
+      } else {
+        event.preventDefault();
         if (this.stateChanged()) {
           this.render();
         }
@@ -260,6 +274,21 @@
 
     };
 
+    this.templateTypeChanged = function() {
+      this.updateContinueButtonState();
+    };
+
+    this.updateContinueButtonState = function() {
+      const selectedTemplateType = this.$form.find('input[name="add_template_by_template_type"]:checked').val();
+      const continueButton = this.$form.find('#add_new_template_form button[value="add-new-template"]');
+
+      if (selectedTemplateType) {
+        continueButton.prop('disabled', false);
+      } else {
+        continueButton.prop('disabled', true);
+      }
+    };
+
     this.hasCheckboxes = function() {
       return !!this.$form.find('input:checkbox').length;
     };
@@ -302,6 +331,9 @@
         $('#page-title').text('New Template');
         $('#page-description').text('Every message starts with a template. Choose to start with a blank template or copy an existing template.');
         document.title = 'New Templates';
+
+        // Disable Continue button initially and update based on selection
+        this.updateContinueButtonState();
       } else {
         this.$form.find('.template-list-item').removeClass('js-hidden');
         $('.live-search').removeClass('js-hidden');

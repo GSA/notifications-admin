@@ -41,16 +41,13 @@ def create_new_template(page):
     start_with_a_blank_template_radio.click()
 
     continue_button = page.get_by_role("button", name="Continue")
-
-    # continue_button = page.get_by_text("Continue")
     expect(continue_button).to_be_visible()
     continue_button.click()
 
-    # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)
 
-    template_name_input = page.get_by_label("Template name")
+    template_name_input = page.locator('input[type="text"]:visible').first
     expect(template_name_input).to_be_visible()
     template_name = str(uuid.uuid4())
     template_name_input.fill(template_name)
