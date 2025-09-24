@@ -29,7 +29,7 @@
           return $(this).attr('name')?.toLowerCase() === 'cancel';
         });
         $cancelButton.prop('disabled', true);
-      }, 0);
+      }, 50); // Small delay to ensure form submits first
 
       setTimeout(() => {
         renableSubmitButton($submitButton)();

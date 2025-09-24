@@ -170,15 +170,8 @@ def handle_no_existing_template_case(page):
     send_button = page.get_by_role("button", name="Send")
     expect(send_button).to_be_visible()
 
-    # Test that the send button is clickable and the flow works
-    # We don't need to wait for actual SMS sending to complete
-    send_button.click()
-
-    # Just wait a moment to ensure the click was processed
-    page.wait_for_timeout(1000)
-
-    # The important part is that the button was clickable and the form submitted
-    # We don't need to verify the SMS actually gets sent for this UI test
+    # Click without waiting for navigation (which hangs due to SMS sending)
+    send_button.click(no_wait_after=True)
 
 
 def handle_existing_template_case(page):
@@ -260,15 +253,8 @@ def handle_existing_template_case(page):
     send_button = page.get_by_role("button", name="Send")
     expect(send_button).to_be_visible()
 
-    # Test that the send button is clickable and the flow works
-    # We don't need to wait for actual SMS sending to complete
-    send_button.click()
-
-    # Just wait a moment to ensure the click was processed
-    page.wait_for_timeout(1000)
-
-    # The important part is that the button was clickable and the form submitted
-    # We don't need to verify the SMS actually gets sent for this UI test
+    # Click without waiting for navigation (which hangs due to SMS sending)
+    send_button.click(no_wait_after=True)
 
 
 def test_send_message_from_existing_template(authenticated_page):
