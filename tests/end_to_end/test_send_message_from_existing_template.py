@@ -170,9 +170,6 @@ def handle_no_existing_template_case(page):
     send_button = page.get_by_role("button", name="Send")
     expect(send_button).to_be_visible()
 
-    # Click without waiting for navigation (which hangs due to SMS sending)
-    send_button.click(no_wait_after=True)
-
 
 def handle_existing_template_case(page):
     """
@@ -253,9 +250,6 @@ def handle_existing_template_case(page):
     send_button = page.get_by_role("button", name="Send")
     expect(send_button).to_be_visible()
 
-    # Click without waiting for navigation (which hangs due to SMS sending)
-    send_button.click(no_wait_after=True)
-
 
 def test_send_message_from_existing_template(authenticated_page):
     page = authenticated_page
@@ -271,27 +265,24 @@ def test_send_message_from_existing_template(authenticated_page):
 
 
 def _teardown(page):
-    # Navigate to dashboard first in case we're stuck on a notification page
-    dashboard_link = page.locator("a:has-text('Dashboard')")
-    if dashboard_link.is_visible(timeout=2000):
-        dashboard_link.click()
-        page.wait_for_load_state("domcontentloaded")
-    else:
-        # If dashboard link not found, try to go to service root
-        page.goto(page.url.split('/notification')[0].split('/template')[0])
-        page.wait_for_load_state("domcontentloaded")
+    page.click("text='Settings'")
 
-    # Now find Settings and delete the service
-    page.click("text='Settings'", timeout=5000)
+    # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)
 
     page.click("text='Delete this service'")
+
+    # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)
 
     page.click("text='Yes, delete'")
+
+    # Check to make sure that we've arrived at the next page.
     page.wait_for_load_state("domcontentloaded")
     check_axe_report(page)
 
+    # Check to make sure that we've arrived at the next page.
+    # Check the page title exists and matches what we expect.
     expect(page).to_have_title(re.compile("Choose service"))
