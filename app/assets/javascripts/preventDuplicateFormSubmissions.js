@@ -14,7 +14,7 @@
     // Add loading spinner for Send/Schedule/Cancel buttons
     const buttonName = $submitButton.attr('name')?.toLowerCase();
     if (["send", "schedule", "cancel"].includes(buttonName)) {
-      // Small delay only for Send buttons to allow E2E test form submission to complete
+      // Use setTimeout with minimal delay to allow form submission to proceed first
       setTimeout(() => {
         $submitButton.prop('disabled', true);
 
@@ -29,7 +29,7 @@
           return $(this).attr('name')?.toLowerCase() === 'cancel';
         });
         $cancelButton.prop('disabled', true);
-      }, 50);
+      }, 0);
 
       setTimeout(() => {
         renableSubmitButton($submitButton)();

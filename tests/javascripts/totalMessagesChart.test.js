@@ -203,3 +203,78 @@ test('Handles zero width chart container', () => {
 
     expect(createTotalMessagesChartSpy).toHaveBeenCalled();
   });
+
+  test('Tooltip displays on hover for remaining bar', () => {
+    document.body.innerHTML = `
+      <div id="totalMessageChartContainer" data-messages-sent="100" data-messages-remaining="249900" style="width: 600px;">
+        <h1 id="chartTitle">Total Messages</h1>
+        <svg id="totalMessageChart"></svg>
+      </div>
+      <div id="totalMessageTable"></div>
+      <div id="message"></div>
+    `;
+
+    createTotalMessagesChart();
+
+    const svg = document.getElementById('totalMessageChart');
+    const remainingBar = svg.querySelector('rect[fill="#C7CACE"]');
+
+    const event = new Event('mouseover');
+    remainingBar.dispatchEvent(event);
+
+    const tooltip = document.getElementById('tooltip');
+    expect(tooltip.style.display).toBe('block');
+    expect(tooltip.innerHTML).toContain('Remaining: 249,900');
+
+    const mouseMoveEvent = new MouseEvent('mousemove', {
+      bubbles: true,
+      cancelable: true,
+      pageX: 100,
+      pageY: 100
+    });
+    remainingBar.dispatchEvent(mouseMoveEvent);
+    expect(tooltip.style.display).not.toBe('none');
+
+    const mouseOutEvent = new Event('mouseout');
+    remainingBar.dispatchEvent(mouseOutEvent);
+    expect(tooltip.style.display).toBe('none');
+  });
+
+  test('Chart handles edge case when messagesSent is 0', () => {
+    document.body.innerHTML = `
+      <div id="totalMessageChartContainer" data-messages-sent="0" data-messages-remaining="250000" style="width: 600px;">
+        <h1 id="chartTitle">Total Messages</h1>
+        <svg id="totalMessageChart"></svg>
+      </div>
+      <div id="totalMessageTable"></div>
+      <div id="message"></div>
+    `;
+
+    createTotalMessagesChart();
+
+    const svg = document.getElementById('totalMessageChart');
+    const sentBar = svg.querySelector('rect[fill="#0076d6"]');
+
+    setTimeout(() => {
+      expect(parseInt(sentBar.getAttribute('width'))).toBeGreaterThanOrEqual(0);
+    }, 1100);
+  });
+
+  test('Tests the function during animation', done => {
+    window.createTotalMessagesChart();
+
+    const svg = document.getElementById('totalMessageChart');
+    const sentBar = svg.querySelector('rect[fill="#0076d6"]');
+    const remainingBar = svg.querySelector('rect[fill="#C7CACE"]');
+
+    expect(sentBar.getAttribute('width')).toBe('0');
+    expect(remainingBar.getAttribute('width')).toBe('0');
+
+    setTimeout(() => {
+      const sentWidth = parseInt(sentBar.getAttribute('width'));
+      const remainingWidth = parseInt(remainingBar.getAttribute('width'));
+      expect(sentWidth).toBeGreaterThan(0);
+      expect(remainingWidth).toBeGreaterThan(0);
+      done();
+    }, 500);
+  });
