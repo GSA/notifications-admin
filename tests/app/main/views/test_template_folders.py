@@ -1533,9 +1533,7 @@ def test_should_be_able_to_move_to_new_folder(
             ],
         },
         _expected_status=302,
-        _expected_redirect=url_for(
-            "main.choose_template", service_id=SERVICE_ONE_ID
-        ),
+        _expected_redirect=url_for("main.choose_template", service_id=SERVICE_ONE_ID),
     )
 
     mock_create_template_folder.assert_called_once_with(

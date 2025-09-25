@@ -499,3 +499,143 @@ def test_should_show_message_note(
         'Messages are sent immediately to the cell phone carrier, but will remain in "pending" status until we hear '
         "back from the carrier they have received it and attempted deliver. More information on delivery status."
     )
+
+
+def test_poll_status_endpoint(
+    client_request,
+    service_one,
+    active_user_with_permissions,
+    mock_get_service_data_retention,
+    mocker,
+    fake_uuid,
+):
+    """Test that the poll status endpoint returns only required data without notifications"""
+    mock_job = mocker.patch("app.job_api_client.get_job")
+    mock_job.return_value = {
+        "data": {
+            **job_json(
+                service_one["id"],
+                created_by=user_json(),
+                job_id=fake_uuid,
+                job_status="finished",
+                notification_count=100,
+                notifications_requested=100,
+            ),
+            "statistics": [
+                {"status": "delivered", "count": 90},
+                {"status": "failed", "count": 10},
+                {"status": "pending", "count": 0},
+            ],
+        }
+    }
+
+    response = client_request.get_response(
+        "main.view_job_status_poll",
+        service_id=service_one["id"],
+        job_id=fake_uuid,
+    )
+
+    assert response.status_code == 200
+    data = json.loads(response.get_data(as_text=True))
+
+    expected_keys = {
+        "sent_count",
+        "failed_count",
+        "pending_count",
+        "total_count",
+        "finished",
+    }
+    assert set(data.keys()) == expected_keys
+
+    assert data["sent_count"] == 90
+    assert data["failed_count"] == 10
+    assert data["pending_count"] == 0
+    assert data["total_count"] == 100
+    assert data["finished"] is True
+
+
+def test_poll_status_with_zero_notifications(
+    client_request,
+    service_one,
+    active_user_with_permissions,
+    mock_get_service_data_retention,
+    mocker,
+    fake_uuid,
+):
+    """Test poll status endpoint handles edge case of no notifications"""
+    mock_job = mocker.patch("app.job_api_client.get_job")
+    mock_job.return_value = {
+        "data": {
+            **job_json(
+                service_one["id"],
+                created_by=user_json(),
+                job_id=fake_uuid,
+                job_status="pending",
+                notification_count=0,
+                notifications_requested=0,
+            ),
+            "statistics": [],
+        }
+    }
+
+    response = client_request.get_response(
+        "main.view_job_status_poll",
+        service_id=service_one["id"],
+        job_id=fake_uuid,
+    )
+
+    assert response.status_code == 200
+    data = json.loads(response.get_data(as_text=True))
+
+    assert data["total_count"] == 0
+    assert (
+        data["finished"] is True
+    )
+
+
+def test_poll_status_endpoint_does_not_query_notifications_table(
+    client_request,
+    service_one,
+    active_user_with_permissions,
+    mock_get_service_data_retention,
+    mocker,
+    fake_uuid,
+):
+    """Critical regression test: ensure poll status endpoint never queries notifications"""
+    mock_job = mocker.patch("app.job_api_client.get_job")
+    mock_job.return_value = {
+        "data": {
+            **job_json(
+                service_one["id"],
+                created_by=user_json(),
+                job_id=fake_uuid,
+                job_status="sending",
+                notification_count=500,
+                notifications_requested=500,
+            ),
+            "statistics": [
+                {"status": "delivered", "count": 300},
+                {"status": "failed", "count": 50},
+                {"status": "pending", "count": 150},
+            ],
+        }
+    }
+
+    mock_get_notifications = mocker.patch(
+        "app.notification_api_client.get_notifications_for_service"
+    )
+
+    response = client_request.get_response(
+        "main.view_job_status_poll",
+        service_id=service_one["id"],
+        job_id=fake_uuid,
+    )
+
+    assert response.status_code == 200
+
+    # Verify no notifications were fetched
+    mock_get_notifications.assert_not_called()
+
+    data = json.loads(response.get_data(as_text=True))
+    assert data["total_count"] == 500
+    assert data["sent_count"] == 300

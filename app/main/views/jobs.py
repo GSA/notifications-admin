@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 import os
 from functools import partial
 
@@ -67,12 +68,6 @@ def view_job(service_id, job_id):
         FEATURE_SOCKET_ENABLED=current_app.config["FEATURE_SOCKET_ENABLED"],
         job=job,
         status=request.args.get("status", ""),
-        updates_url=url_for(
-            ".view_job_updates",
-            service_id=service_id,
-            job_id=job.id,
-            status=request.args.get("status", ""),
-        ),
         partials=get_job_partials(job),
     )
 
@@ -112,11 +107,48 @@ def cancel_job(service_id, job_id):
     return redirect(url_for("main.service_dashboard", service_id=service_id))
 
 
+@main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>/status.json")
+@user_has_permissions()
+def view_job_status_poll(service_id, job_id):
+    """
+    Poll status endpoint that only queries jobs table.
+    Returns minimal data needed for polling.
+    """
+    import time
+
+    start_time = time.time()
+
+    job = Job.from_id(job_id, service_id=service_id)
+
+    processed_count = job.notifications_delivered + job.notifications_failed
+    total_count = job.notification_count
+
+    response_data = {
+        "sent_count": job.notifications_delivered,
+        "failed_count": job.notifications_failed,
+        "pending_count": job.notifications_sending,
+        "total_count": total_count,
+        "finished": job.finished_processing,
+    }
+
+    response_time_ms = round((time.time() - start_time) * 1000, 2)
+    response_json = json.dumps(response_data)
+    response_size_bytes = len(response_json.encode("utf-8"))
+
+    current_app.logger.info(
+        f"Poll status request - job_id={job_id[:8]} "
+        f"response_size={response_size_bytes}b "
+        f"response_time={response_time_ms}ms "
+        f"progress={processed_count}/{total_count}"
+    )
+
+    return jsonify(response_data)
+
+
 @main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>.json")
 @user_has_permissions()
 def view_job_updates(service_id, job_id):
     job = Job.from_id(job_id, service_id=service_id)
-
     return jsonify(**get_job_partials(job))
 
 

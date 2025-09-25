@@ -14,10 +14,9 @@
     {% if not job.finished_processing %}
       <p class="max-width-full">This page refreshes automatically to show the latest message activity delivery rates, details, and reports.<br>You can watch it in progress or check back later.</p>
     {% endif %}
-    <div data-job-id="{{ job.id }}" data-feature="{{FEATURE_SOCKET_ENABLED | lower}}" data-host="{{ api_public_url }}">
+    <div data-job-id="{{ job.id }}" data-host="{{ api_public_url }}">
     {% if not job.finished_processing and FEATURE_SOCKET_ENABLED %}
       <div
-        data-resource="{{ updates_url }}"
         data-socket-update="status"
         data-key="status"
         data-form=""
@@ -29,7 +28,6 @@
     {% endif %}
     {% if not finished and FEATURE_SOCKET_ENABLED %}
       <div
-        data-resource="{{ updates_url }}"
         data-socket-update="counts"
         data-key="counts"
         data-form=""
@@ -45,7 +43,6 @@
     </p>
     {% if not job.processing_finished and FEATURE_SOCKET_ENABLED %}
       <div
-        data-resource="{{ updates_url }}"
         data-socket-update="notifications"
         data-key="notifications"
         data-form=""

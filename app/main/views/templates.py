@@ -198,16 +198,14 @@ def process_folder_management_form(form, current_folder_id):
     # Use request.full_path which includes query string but not host
     # This avoids host header injection while preserving all parameters
     # Hardened redirect: only allow relative URLs, and strip any backslashes
-    target = request.full_path.replace('\\', '')
+    target = request.full_path.replace("\\", "")
     parts = urlparse(target)
-    if not parts.scheme and not parts.netloc and target.startswith('/'):
+    if not parts.scheme and not parts.netloc and target.startswith("/"):
         return redirect(target)
     # Fallback to main template list for this service
-    return redirect(url_for(
-        '.choose_template',
-        service_id=current_service.id,
-        template_type='all'
-    ))
+    return redirect(
+        url_for(".choose_template", service_id=current_service.id, template_type="all")
+    )
 
 
 def get_template_nav_label(value):

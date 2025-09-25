@@ -58,7 +58,7 @@ def is_safe_redirect_url(target):
     if not target:
         return False
 
-    target = target.replace('\\', '')
+    target = target.replace("\\", "")
 
     parsed = urlparse(target)
 
