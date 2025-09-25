@@ -16,7 +16,7 @@ from tests import job_json, user_json
 
 
 @pytest.mark.parametrize(
-    "delivered,failed,pending,finished,js_should_update_notifications,reason",
+    ("delivered", "failed", "pending", "finished", "js_should_update_notifications", "reason"),
     [
         (20, 10, 70, False, True, "30 messages processed (≤50 threshold)"),
         (40, 10, 50, False, True, "50 messages processed (exactly at threshold)"),
@@ -86,11 +86,16 @@ def test_poll_status_notification_update_logic(
     processed_count = delivered + failed
 
     if js_should_update_notifications:
-        assert (processed_count <= 50 and not finished) or finished, \
-            f"JS updates notifications: {reason}"
+        # JavaScript would call: await updateNotifications()
+        if finished:
+            assert finished, f"JS updates notifications: {reason}"
+        else:
+            assert processed_count <= 50, f"JS updates notifications: {reason}"
+            assert not finished, f"JS updates notifications: {reason}"
     else:
-        assert processed_count > 50 and not finished, \
-            f"JS skips notification update: {reason}"
+        # JavaScript would NOT update notifications
+        assert processed_count > 50, f"JS skips notification update: {reason}"
+        assert not finished, f"JS skips notification update: {reason}"
 
 
 def test_poll_status_provides_required_fields(
