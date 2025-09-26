@@ -10,12 +10,13 @@ from notifications_utils.markdown import (
     "url",
     [
         "http://example.com",
-        "http://www.gov.uk/",
-        "https://www.gov.uk/",
-        "http://service.gov.uk",
-        "http://service.gov.uk/blah.ext?q=a%20b%20c&order=desc#fragment",
+        "http://www.example.com/",
+        "https://www.example.com/",
+        "http://service.example.com",
+        "http://service.example.com/blah.ext?q=a%20b%20c&order=desc#fragment",
         pytest.param(
-            "http://service.gov.uk/blah.ext?q=one two three", marks=pytest.mark.xfail
+            "http://service.example.com/blah.ext?q=one two three",
+            marks=pytest.mark.xfail,
         ),
     ],
 )

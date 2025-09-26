@@ -14,7 +14,7 @@
 {% block backLink %}
   {{ usaBackLink({
     "href": url_for('main.send_one_off_step', service_id=current_service.id, template_id=template.id, step_index=0),
-    "html": "Back to select recipients"
+    "html": "Back to message personalization"
   }) }}
 {% endblock %}
 
@@ -63,7 +63,7 @@
   {{ page_header('Upload your bulk-sending spreadsheet')}}
   <p class="font-sans-lg text-base">Organize phone numbers and information in a single spreadsheet and upload when you have multiple messages to send. Column headers in the spreadsheet will place the data in the right spots within the template that's selected.</p>
 
-  <div class="page-footer bottom-gutter margin-top-3">
+  <div class="page-footer margin-bottom-3 margin-top-3">
     {{file_upload(
       form.file,
       allowed_file_extensions=allowed_file_extensions,
@@ -88,7 +88,7 @@
       {% endfor %}
     {% endcall %}
   </div>
-  <p class="hint">
+  <p class="usa-hint">
     Each template saved in Notify is given an example <abbr title="Comma Separated Values">CSV</abbr> formatted spreadsheet like this. It's the most reliable file format for uploading your contact list. Use this example to populate your template with the right data items. Start by downloading this example for your message template. Then save it as a <abbr title="Comma Separated Values">CSV</abbr> file for bulk messaging.
   </p>
   <p class="table-show-more-link">

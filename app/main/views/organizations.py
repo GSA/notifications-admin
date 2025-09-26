@@ -92,7 +92,11 @@ def organization_dashboard(org_id):
 def download_organization_usage_report(org_id):
     selected_year_input = request.args.get("selected_year")
     # Validate selected_year to prevent header injection
-    if selected_year_input and selected_year_input.isdigit() and len(selected_year_input) == 4:
+    if (
+        selected_year_input
+        and selected_year_input.isdigit()
+        and len(selected_year_input) == 4
+    ):
         selected_year = selected_year_input
     else:
         selected_year = str(datetime.now().year)
@@ -128,8 +132,9 @@ def download_organization_usage_report(org_id):
 
     # Sanitize organization name for filename to prevent header injection
     import re
-    safe_org_name = re.sub(r'[^\w\s-]', '', current_organization.name).strip()
-    safe_org_name = re.sub(r'[-\s]+', '-', safe_org_name)
+
+    safe_org_name = re.sub(r"[^\w\s-]", "", current_organization.name).strip()
+    safe_org_name = re.sub(r"[-\s]+", "-", safe_org_name)
 
     return (
         Spreadsheet.from_rows(org_usage_data).as_csv_data,
