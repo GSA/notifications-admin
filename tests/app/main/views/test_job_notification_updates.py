@@ -1,14 +1,10 @@
 """
-Tests for job notification update logic during polling.
+Tests for disabled job polling endpoint.
 
-These tests verify the poll status endpoint behavior and document
-the JavaScript notification refresh logic:
-1. Notifications update for first 50 messages
-2. Notifications stop updating after 50 messages (to prevent performance issues)
-3. Notifications always update when job finishes
+These tests verify that the poll status endpoint is properly disabled
+and returns 410 Gone status. The JavaScript notification refresh logic
+is no longer used as polling has been replaced with manual refresh.
 """
-
-import json
 
 import pytest
 
@@ -58,31 +54,14 @@ def test_poll_status_notification_update_logic(
         "main.view_job_status_poll",
         service_id=service_one["id"],
         job_id=fake_uuid,
+        _expected_status=410,
     )
 
-    assert response.status_code == 200
-    data = json.loads(response.get_data(as_text=True))
+    assert response.status_code == 410
+    # Endpoint is disabled, so no data to verify
 
-    # Verify the response
-    assert data["sent_count"] == delivered
-    assert data["failed_count"] == failed
-    assert data["pending_count"] == pending
-    assert data["total_count"] == total
-    assert data["finished"] is finished
-
-    processed_count = delivered + failed
-
-    if js_should_update_notifications:
-        # JavaScript would call: await updateNotifications()
-        if finished:
-            assert finished, f"JS updates notifications: {reason}"
-        else:
-            assert processed_count <= 50, f"JS updates notifications: {reason}"
-            assert not finished, f"JS updates notifications: {reason}"
-    else:
-        # JavaScript would NOT update notifications
-        assert processed_count > 50, f"JS skips notification update: {reason}"
-        assert not finished, f"JS skips notification update: {reason}"
+    # Since the polling endpoint is disabled, the JavaScript logic being tested
+    # is no longer relevant. The test now verifies the endpoint is disabled.
 
 
 def test_poll_status_provides_required_fields(
@@ -107,12 +86,7 @@ def test_poll_status_provides_required_fields(
         "main.view_job_status_poll",
         service_id=service_one["id"],
         job_id=fake_uuid,
+        _expected_status=410,
     )
 
-    data = json.loads(response.get_data(as_text=True))
-
-    required_fields = {"sent_count", "failed_count", "finished", "pending_count", "total_count"}
-    assert set(data.keys()) == required_fields
-
-    response_size = len(response.get_data(as_text=True))
-    assert response_size < 200, f"Response too large: {response_size} bytes"
+    assert response.status_code == 410
