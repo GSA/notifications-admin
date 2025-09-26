@@ -12,8 +12,6 @@ import json
 
 import pytest
 
-from tests import job_json, user_json
-
 
 @pytest.mark.parametrize(
     ("delivered", "failed", "pending", "finished", "js_should_update_notifications", "reason"),
