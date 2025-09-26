@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-import json
 import os
-import time
 from functools import partial
 
 from flask import (
@@ -22,7 +20,6 @@ from markupsafe import Markup
 from app import (
     current_service,
     format_datetime_table,
-    job_api_client,
     notification_api_client,
     service_api_client,
 )

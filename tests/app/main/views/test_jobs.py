@@ -358,7 +358,11 @@ def test_should_show_scheduled_job(
     assert page.select("main p a")[0]["href"] == url_for(
         "main.message_status",
     )
-    assert page.select_one("main button[type=submit]").text.strip() == "Cancel sending"
+    # Test that both buttons are present
+    buttons = page.select("main button[type=submit]")
+    button_texts = [b.text.strip() for b in buttons]
+    assert "Refresh Status" in button_texts
+    assert "Cancel sending" in button_texts
 
 
 def test_should_cancel_job(
@@ -523,25 +527,10 @@ def test_poll_status_endpoint(
         "main.view_job_status_poll",
         service_id=service_one["id"],
         job_id=fake_uuid,
+        _expected_status=410,
     )
 
-    assert response.status_code == 200
-    data = json.loads(response.get_data(as_text=True))
-
-    expected_keys = {
-        "sent_count",
-        "failed_count",
-        "pending_count",
-        "total_count",
-        "finished",
-    }
-    assert set(data.keys()) == expected_keys
-
-    assert data["sent_count"] == 90
-    assert data["failed_count"] == 10
-    assert data["pending_count"] == 0
-    assert data["total_count"] == 100
-    assert data["finished"] is True
+    assert response.status_code == 410
 
 
 def test_poll_status_with_zero_notifications(
@@ -566,13 +555,10 @@ def test_poll_status_with_zero_notifications(
         "main.view_job_status_poll",
         service_id=service_one["id"],
         job_id=fake_uuid,
+        _expected_status=410,
     )
 
-    assert response.status_code == 200
-    data = json.loads(response.get_data(as_text=True))
-
-    assert data["total_count"] == 0
-    assert data["finished"] is True
+    assert response.status_code == 410
 
 
 def test_poll_status_endpoint_does_not_query_notifications_table(
@@ -601,16 +587,10 @@ def test_poll_status_endpoint_does_not_query_notifications_table(
         "main.view_job_status_poll",
         service_id=service_one["id"],
         job_id=fake_uuid,
+        _expected_status=410,
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 410
 
-    # Verify no notifications were fetched
+    # Verify no notifications were fetched (since endpoint is disabled)
     mock_get_notifications.assert_not_called()
-
-    data = json.loads(response.get_data(as_text=True))
-    assert data["total_count"] == 500
-    assert data["sent_count"] == 300
-    assert data["failed_count"] == 50
-    assert data["pending_count"] == 150
-    assert data["finished"] is False
