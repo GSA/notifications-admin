@@ -16,7 +16,14 @@ from tests import job_json, user_json
 
 
 @pytest.mark.parametrize(
-    ("delivered", "failed", "pending", "finished", "js_should_update_notifications", "reason"),
+    (
+        "delivered",
+        "failed",
+        "pending",
+        "finished",
+        "js_should_update_notifications",
+        "reason",
+    ),
     [
         (20, 10, 70, False, True, "30 messages processed (≤50 threshold)"),
         (40, 10, 50, False, True, "50 messages processed (exactly at threshold)"),
@@ -134,7 +141,13 @@ def test_poll_status_provides_required_fields(
 
     data = json.loads(response.get_data(as_text=True))
 
-    required_fields = {"sent_count", "failed_count", "finished", "pending_count", "total_count"}
+    required_fields = {
+        "sent_count",
+        "failed_count",
+        "finished",
+        "pending_count",
+        "total_count",
+    }
     assert set(data.keys()) == required_fields
 
     response_size = len(response.get_data(as_text=True))

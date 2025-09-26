@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import os
+import time
 from functools import partial
 
 from flask import (
@@ -21,6 +22,7 @@ from markupsafe import Markup
 from app import (
     current_service,
     format_datetime_table,
+    job_api_client,
     notification_api_client,
     service_api_client,
 )
@@ -111,35 +113,42 @@ def cancel_job(service_id, job_id):
 @user_has_permissions()
 def view_job_status_poll(service_id, job_id):
     """
-    Poll status endpoint that only queries jobs table.
+    Poll status endpoint using new lightweight cached API endpoint.
     Returns minimal data needed for polling.
     """
-    import time
-
     start_time = time.time()
 
-    job = Job.from_id(job_id, service_id=service_id)
+    # Use new lightweight status endpoint
+    try:
+        status_data = job_api_client.get_job_status(service_id, job_id)
 
-    processed_count = job.notifications_delivered + job.notifications_failed
-    total_count = job.notification_count
+        # Validate the response has expected fields
+        required_fields = ["sent_count", "failed_count", "pending_count", "total_count", "processing_finished"]
+        if all(key in status_data for key in required_fields):
+            response_data = {
+                "sent_count": status_data["sent_count"],
+                "failed_count": status_data["failed_count"],
+                "pending_count": status_data["pending_count"],
+                "total_count": status_data["total_count"],
+                "finished": status_data["processing_finished"],
+            }
+            processed_count = status_data["sent_count"] + status_data["failed_count"]
+        else:
+            current_app.logger.error(f"Status endpoint returned invalid response for job {job_id[:8]}: {status_data}")
+            abort(500, "Invalid status response from API")
 
-    response_data = {
-        "sent_count": job.notifications_delivered,
-        "failed_count": job.notifications_failed,
-        "pending_count": job.notifications_sending,
-        "total_count": total_count,
-        "finished": job.finished_processing,
-    }
+    except Exception as e:
+        current_app.logger.error(f"Status endpoint failed for job {job_id[:8]}: {e}")
+        abort(500, "Status endpoint unavailable")
 
     response_time_ms = round((time.time() - start_time) * 1000, 2)
     response_json = json.dumps(response_data)
     response_size_bytes = len(response_json.encode("utf-8"))
-
     current_app.logger.info(
         f"Poll status request - job_id={job_id[:8]} "
         f"response_size={response_size_bytes}b "
         f"response_time={response_time_ms}ms "
-        f"progress={processed_count}/{total_count}"
+        f"progress={processed_count}/{response_data['total_count']}"
     )
 
     return jsonify(response_data)

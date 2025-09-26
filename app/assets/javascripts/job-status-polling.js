@@ -9,14 +9,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Extract job info from URL path: /services/{serviceId}/jobs/{jobId}
   const pathParts = window.location.pathname.split('/');
-  if (pathParts.length < 5 || pathParts[1] !== 'services' || pathParts[3] !== 'jobs') return;
+  if (
+    pathParts.length < 5 ||
+    pathParts[1] !== 'services' ||
+    pathParts[3] !== 'jobs'
+  )
+    return;
 
   const serviceId = pathParts[2];
   const jobId = pathParts[4];
 
   // Validate service and job IDs to prevent path injection
   function isValidUuid(id) {
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const uuidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     return uuidRegex.test(id);
   }
 
@@ -40,8 +46,8 @@ document.addEventListener('DOMContentLoaded', function () {
       MAX_INTERVAL_MS,
       Math.max(
         MIN_INTERVAL_MS,
-        Math.floor((250 * Math.sqrt(responseTime)) - 1000)
-      )
+        Math.floor(250 * Math.sqrt(responseTime) - 1000),
+      ),
     );
   }
 
@@ -57,7 +63,9 @@ document.addEventListener('DOMContentLoaded', function () {
       const data = await response.json();
 
       // Update notifications container if it exists
-      const notificationsContainer = document.querySelector('[data-key="notifications"]');
+      const notificationsContainer = document.querySelector(
+        '[data-key="notifications"]',
+      );
       if (notificationsContainer && data.notifications) {
         notificationsContainer.innerHTML = data.notifications;
       }
@@ -87,7 +95,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const countsContainer = document.querySelector('[data-key="counts"]');
       if (countsContainer) {
         // Get all big-number elements in order: total, pending, delivered, failed
-        const countElements = countsContainer.querySelectorAll('.big-number-number');
+        const countElements =
+          countsContainer.querySelectorAll('.big-number-number');
 
         if (countElements.length >= 4) {
           if (data.total_count !== undefined) {
@@ -116,7 +125,11 @@ document.addEventListener('DOMContentLoaded', function () {
       // Update notifications conditionally:
       // 1. If we have new messages and still under 50 total
       // 2. Always when job is finished
-      if (processedCount > lastProcessedCount && processedCount <= 50 && !data.finished) {
+      if (
+        processedCount > lastProcessedCount &&
+        processedCount <= 50 &&
+        !data.finished
+      ) {
         // Update notifications for first 50 messages to show early results
         await updateNotifications();
         lastProcessedCount = processedCount;
@@ -126,7 +139,6 @@ document.addEventListener('DOMContentLoaded', function () {
         await updateNotifications();
         stopPolling();
       }
-
     } catch (error) {
       if (retryCount < 3) {
         console.debug(`Job polling retry ${retryCount}`, error.message);
@@ -143,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
         error: error.message,
         url: pollStatusUrl,
         jobId: jobId,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
       currentInterval = Math.min(currentInterval * 2, MAX_INTERVAL_MS);
     } finally {

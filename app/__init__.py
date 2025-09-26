@@ -199,7 +199,7 @@ def create_app(application):
 
         current_app.logger.info(
             f"FEATURE_SOCKET_ENABLED value in __init__.py coming \
-                                 from config is {application.config.get('FEATURED_SOCKET_ENABLED')} and \
+                                 from config is {application.config.get('FEATURE_SOCKET_ENABLED')} and \
                                     the ending value is {feature_socket_enabled}"
         )
         return dict(
