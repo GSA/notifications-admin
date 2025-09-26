@@ -510,23 +510,13 @@ def test_poll_status_endpoint(
     fake_uuid,
 ):
     """Test that the poll status endpoint returns only required data without notifications"""
-    mock_job = mocker.patch("app.job_api_client.get_job")
-    mock_job.return_value = {
-        "data": {
-            **job_json(
-                service_one["id"],
-                created_by=user_json(),
-                job_id=fake_uuid,
-                job_status="finished",
-                notification_count=100,
-                notifications_requested=100,
-            ),
-            "statistics": [
-                {"status": "delivered", "count": 90},
-                {"status": "failed", "count": 10},
-                {"status": "pending", "count": 0},
-            ],
-        }
+    mock_job_status = mocker.patch("app.job_api_client.get_job_status")
+    mock_job_status.return_value = {
+        "sent_count": 90,
+        "failed_count": 10,
+        "pending_count": 0,
+        "total_count": 100,
+        "processing_finished": True,
     }
 
     response = client_request.get_response(
@@ -563,19 +553,13 @@ def test_poll_status_with_zero_notifications(
     fake_uuid,
 ):
     """Test poll status endpoint handles edge case of no notifications"""
-    mock_job = mocker.patch("app.job_api_client.get_job")
-    mock_job.return_value = {
-        "data": {
-            **job_json(
-                service_one["id"],
-                created_by=user_json(),
-                job_id=fake_uuid,
-                job_status="pending",
-                notification_count=0,
-                notifications_requested=0,
-            ),
-            "statistics": [],
-        }
+    mock_job_status = mocker.patch("app.job_api_client.get_job_status")
+    mock_job_status.return_value = {
+        "sent_count": 0,
+        "failed_count": 0,
+        "pending_count": 0,
+        "total_count": 0,
+        "processing_finished": True,
     }
 
     response = client_request.get_response(
@@ -588,9 +572,7 @@ def test_poll_status_with_zero_notifications(
     data = json.loads(response.get_data(as_text=True))
 
     assert data["total_count"] == 0
-    assert (
-        data["finished"] is True
-    )
+    assert data["finished"] is True
 
 
 def test_poll_status_endpoint_does_not_query_notifications_table(
@@ -602,23 +584,13 @@ def test_poll_status_endpoint_does_not_query_notifications_table(
     fake_uuid,
 ):
     """Critical regression test: ensure poll status endpoint never queries notifications"""
-    mock_job = mocker.patch("app.job_api_client.get_job")
-    mock_job.return_value = {
-        "data": {
-            **job_json(
-                service_one["id"],
-                created_by=user_json(),
-                job_id=fake_uuid,
-                job_status="sending",
-                notification_count=500,
-                notifications_requested=500,
-            ),
-            "statistics": [
-                {"status": "delivered", "count": 300},
-                {"status": "failed", "count": 50},
-                {"status": "pending", "count": 150},
-            ],
-        }
+    mock_job_status = mocker.patch("app.job_api_client.get_job_status")
+    mock_job_status.return_value = {
+        "sent_count": 300,
+        "failed_count": 50,
+        "pending_count": 150,
+        "total_count": 500,
+        "processing_finished": False,
     }
 
     mock_get_notifications = mocker.patch(
@@ -639,3 +611,6 @@ def test_poll_status_endpoint_does_not_query_notifications_table(
     data = json.loads(response.get_data(as_text=True))
     assert data["total_count"] == 500
     assert data["sent_count"] == 300
+    assert data["failed_count"] == 50
+    assert data["pending_count"] == 150
+    assert data["finished"] is False

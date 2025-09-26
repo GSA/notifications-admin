@@ -126,7 +126,6 @@ document.addEventListener('DOMContentLoaded', function () {
         await updateNotifications();
         stopPolling();
       }
-
     } catch (error) {
       if (retryCount < 3) {
         console.debug(`Job polling retry ${retryCount}`, error.message);

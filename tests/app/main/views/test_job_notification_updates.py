@@ -12,8 +12,6 @@ import json
 
 import pytest
 
-from tests import job_json, user_json
-
 
 @pytest.mark.parametrize(
     ("delivered", "failed", "pending", "finished", "js_should_update_notifications", "reason"),
@@ -46,25 +44,14 @@ def test_poll_status_notification_update_logic(
         job is finished (regardless of count)
     """
     total = delivered + failed + pending
-    job_status = "finished" if finished else "sending"
 
-    mock_job = mocker.patch("app.job_api_client.get_job")
-    mock_job.return_value = {
-        "data": {
-            **job_json(
-                service_one["id"],
-                created_by=user_json(),
-                job_id=fake_uuid,
-                job_status=job_status,
-                notification_count=total,
-                notifications_requested=total,
-            ),
-            "statistics": [
-                {"status": "delivered", "count": delivered},
-                {"status": "failed", "count": failed},
-                {"status": "pending", "count": pending},
-            ],
-        }
+    mock_job_status = mocker.patch("app.job_api_client.get_job_status")
+    mock_job_status.return_value = {
+        "sent_count": delivered,
+        "failed_count": failed,
+        "pending_count": pending,
+        "total_count": total,
+        "processing_finished": finished,
     }
 
     response = client_request.get_response(
@@ -107,23 +94,13 @@ def test_poll_status_provides_required_fields(
     fake_uuid,
 ):
     """Verify poll status endpoint returns all fields needed for notification update logic."""
-    mock_job = mocker.patch("app.job_api_client.get_job")
-    mock_job.return_value = {
-        "data": {
-            **job_json(
-                service_one["id"],
-                created_by=user_json(),
-                job_id=fake_uuid,
-                job_status="sending",
-                notification_count=25,
-                notifications_requested=25,
-            ),
-            "statistics": [
-                {"status": "delivered", "count": 15},
-                {"status": "failed", "count": 5},
-                {"status": "pending", "count": 5},
-            ],
-        }
+    mock_job_status = mocker.patch("app.job_api_client.get_job_status")
+    mock_job_status.return_value = {
+        "sent_count": 15,
+        "failed_count": 5,
+        "pending_count": 5,
+        "total_count": 25,
+        "processing_finished": False,
     }
 
     response = client_request.get_response(
