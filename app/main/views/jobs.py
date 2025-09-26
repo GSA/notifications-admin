@@ -144,6 +144,7 @@ def view_job_status_poll(service_id, job_id):
     response_time_ms = round((time.time() - start_time) * 1000, 2)
     response_json = json.dumps(response_data)
     response_size_bytes = len(response_json.encode("utf-8"))
+
     current_app.logger.info(
         f"Poll status request - job_id={job_id[:8]} "
         f"response_size={response_size_bytes}b "
