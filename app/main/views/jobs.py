@@ -279,9 +279,7 @@ def get_notifications(service_id, message_type, status_override=None):  # noqa
         to=search_term,
     )
 
-    notifications_list = notifications.get(
-        "notifications", notifications.get("items", [])
-    )
+    notifications_list = notifications.get("notifications", [])
 
     url_args = {"message_type": message_type, "status": request.args.get("status")}
     prev_page = None
@@ -291,7 +289,7 @@ def get_notifications(service_id, message_type, status_override=None):  # noqa
         )
     next_page = None
 
-    total_items = notifications.get("total", len(notifications_list))
+    total_items = notifications.get("total", 0)
     page_size = notifications.get("page_size", 50)
     total_pages = (total_items + page_size - 1) // page_size
     if (
