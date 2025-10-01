@@ -23,7 +23,7 @@ from app import (
     service_api_client,
 )
 from app.enums import NotificationStatus, ServicePermission
-from app.formatters import message_count_noun
+from app.formatters import get_time_left, message_count_noun
 from app.main import main
 from app.main.forms import SearchNotificationsForm
 from app.models.job import Job
@@ -136,7 +136,9 @@ def view_job_status_poll(service_id, job_id):
     try:
         api_response = job_api_client.get_job_status(service_id, job_id)
     except HTTPError as e:
-        current_app.logger.error(f"API error fetching job status: {e.status_code} - {e.message}")
+        current_app.logger.error(
+            f"API error fetching job status: {e.status_code} - {e.message}"
+        )
         if e.status_code == 404:
             abort(404)
         elif e.status_code >= 500:
@@ -153,6 +155,44 @@ def view_job_status_poll(service_id, job_id):
     }
 
     return jsonify(response_data)
+
+
+@main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>/notifications-table")
+@user_has_permissions()
+def view_job_notifications_table(service_id, job_id):
+    """Endpoint that returns only the notifications table HTML fragment."""
+    job = Job.from_id(job_id, service_id=current_service.id)
+
+    if job.cancelled or not job.finished_processing:
+        return "", 204
+
+    filter_args = parse_filter_args(request.args)
+    filter_args["status"] = set_status_filters(filter_args)
+
+    notifications_data = job.get_notifications(status=filter_args["status"])
+    notifications = list(
+        add_preview_of_content_to_notifications(
+            notifications_data.get("notifications", [])
+        )
+    )
+    more_than_one_page = bool(notifications_data.get("links", {}).get("next"))
+
+    return render_template(
+        "partials/jobs/notifications.html",
+        job=job,
+        notifications=notifications,
+        more_than_one_page=more_than_one_page,
+        uploaded_file_name=job.original_file_name,
+        time_left=get_time_left(job.created_at),
+        service_data_retention_days=current_service.get_days_of_retention(
+            job.template_type, number_of_days="seven_day"
+        ),
+        download_link=url_for(
+            ".view_job_csv",
+            service_id=current_service.id,
+            job_id=job.id,
+        ),
+    )
 
 
 @main.route("/services/<uuid:service_id>/notifications", methods=["GET", "POST"])
