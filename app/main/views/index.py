@@ -2,7 +2,6 @@ import logging
 
 from flask import (
     abort,
-    current_app,
     redirect,
     render_template,
     request,
