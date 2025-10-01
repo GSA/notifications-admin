@@ -2,8 +2,6 @@ import logging
 
 from flask import (
     abort,
-    current_app,
-    jsonify,
     redirect,
     render_template,
     request,
@@ -32,13 +30,6 @@ def check_feature_flags():
     # if request.path.startswith("/some-feature") and not current_app.config.get("FEATURE_SOME_FEATURE_ENABLED", False):
     #     abort(404)
     pass
-
-
-@main.route("/test/feature-flags")
-def test_feature_flags():
-    return jsonify(
-        {"FEATURE_SOCKET_ENABLED": current_app.config["FEATURE_SOCKET_ENABLED"]}
-    )
 
 
 @main.route("/")
