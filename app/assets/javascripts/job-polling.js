@@ -159,15 +159,7 @@
           const insertPoint = document.querySelector('[data-key="notifications"]');
           if (insertPoint) {
             console.debug('Inserting notifications table');
-            // Use a temporary element to safely parse and insert HTML
-            const temp = document.createElement('div');
-            temp.innerHTML = html;
-
-            // Clear existing content and append parsed nodes
-            insertPoint.innerHTML = '';
-            while (temp.firstChild) {
-              insertPoint.appendChild(temp.firstChild);
-            }
+            insertPoint.innerHTML = html;
           } else {
             console.error('Could not find [data-key="notifications"], reloading page');
             window.location.reload();
