@@ -130,7 +130,9 @@
     }
 
     loadNotificationsTable() {
-      const url = `${window.location.href.split('?')[0]}?_=${Date.now()}`;
+      const url = `/services/${this.serviceId}/jobs/${this.jobId}/notifications-table`;
+
+      console.debug('Loading notifications table from:', url);
 
       fetch(url, {
         headers: {
@@ -138,20 +140,36 @@
           'Pragma': 'no-cache'
         }
       })
-        .then(response => response.text())
+        .then(response => {
+          console.debug('Notifications table response status:', response.status);
+          if (response.status === 204) {
+            // No content yet, job still processing
+            console.debug('Job still processing, no notifications yet');
+            return null;
+          }
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+          return response.text();
+        })
         .then(html => {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, 'text/html');
-          const notificationsTable = doc.querySelector('.job-status-table');
+          if (!html) return;
 
-          if (notificationsTable) {
-            const insertPoint = document.querySelector('.notification-status');
-            if (insertPoint) {
-              insertPoint.insertAdjacentElement('afterend', notificationsTable);
-            } else {
-              window.location.reload();
+          console.debug('Received HTML length:', html.length);
+          const insertPoint = document.querySelector('[data-key="notifications"]');
+          if (insertPoint) {
+            console.debug('Inserting notifications table');
+            // Use a temporary element to safely parse and insert HTML
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+
+            // Clear existing content and append parsed nodes
+            insertPoint.innerHTML = '';
+            while (temp.firstChild) {
+              insertPoint.appendChild(temp.firstChild);
             }
           } else {
+            console.error('Could not find [data-key="notifications"], reloading page');
             window.location.reload();
           }
         })

@@ -198,17 +198,17 @@ def create_app(application):
 
     # @application.context_processor
     # def inject_feature_flags():
-        # this is where feature flags can be easily added as a dictionary within context
-        # feature_socket_enabled = application.config.get("FEATURE_SOCKET_ENABLED", True)
+    # this is where feature flags can be easily added as a dictionary within context
+    # feature_socket_enabled = application.config.get("FEATURE_SOCKET_ENABLED", True)
 
-        # current_app.logger.info(
-        #     f"FEATURE_SOCKET_ENABLED value in __init__.py coming \
-        #                          from config is {application.config.get('FEATURE_SOCKET_ENABLED')} and \
-        #                             the ending value is {feature_socket_enabled}"
-        # )
-        # return dict(
-        #     FEATURE_SOCKET_ENABLED=feature_socket_enabled,
-        # )
+    # current_app.logger.info(
+    #     f"FEATURE_SOCKET_ENABLED value in __init__.py coming \
+    #                          from config is {application.config.get('FEATURE_SOCKET_ENABLED')} and \
+    #                             the ending value is {feature_socket_enabled}"
+    # )
+    # return dict(
+    #     FEATURE_SOCKET_ENABLED=feature_socket_enabled,
+    # )
 
     @application.context_processor
     def inject_initial_signin_url():

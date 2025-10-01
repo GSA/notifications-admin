@@ -241,6 +241,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "verify_email",
             "view_job",
             "view_job_csv",
+            "view_job_notifications_table",
             "view_job_status_poll",
             "view_jobs",
             "view_notification",
