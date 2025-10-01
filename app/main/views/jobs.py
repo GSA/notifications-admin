@@ -10,7 +10,6 @@ from flask import (
     redirect,
     render_template,
     request,
-    session,
     stream_with_context,
     url_for,
 )
@@ -23,8 +22,8 @@ from app import (
     notification_api_client,
     service_api_client,
 )
-from app.enums import JobStatus, NotificationStatus, ServicePermission
-from app.formatters import get_time_left, message_count_noun
+from app.enums import NotificationStatus, ServicePermission
+from app.formatters import message_count_noun
 from app.main import main
 from app.main.forms import SearchNotificationsForm
 from app.models.job import Job
@@ -36,6 +35,7 @@ from app.utils.pagination import (
     get_page_from_request,
 )
 from app.utils.user import user_has_permissions
+from notifications_python_client.errors import HTTPError
 from notifications_utils.template import EmailPreviewTemplate, SMSBodyPreviewTemplate
 
 
@@ -61,19 +61,35 @@ def view_job(service_id, job_id):
     filter_args["status"] = set_status_filters(filter_args)
     api_public_url = os.environ.get("API_PUBLIC_URL")
 
+    notifications = None
+    more_than_one_page = False
+    if job.finished_processing:
+        notifications_data = job.get_notifications(status=filter_args["status"])
+        notifications = list(
+            add_preview_of_content_to_notifications(
+                notifications_data.get("notifications", [])
+            )
+        )
+        more_than_one_page = bool(notifications_data.get("links", {}).get("next"))
+
     return render_template(
         "views/jobs/job.html",
         api_public_url=api_public_url,
-        FEATURE_SOCKET_ENABLED=current_app.config["FEATURE_SOCKET_ENABLED"],
         job=job,
         status=request.args.get("status", ""),
-        updates_url=url_for(
-            ".view_job_updates",
-            service_id=service_id,
-            job_id=job.id,
-            status=request.args.get("status", ""),
+        counts=_get_job_counts(job),
+        notifications=notifications,
+        more_than_one_page=more_than_one_page,
+        download_link=(
+            url_for(
+                ".view_job_csv",
+                service_id=service_id,
+                job_id=job_id,
+                status=request.args.get("status"),
+            )
+            if job.finished_processing
+            else None
         ),
-        partials=get_job_partials(job),
     )
 
 
@@ -112,12 +128,31 @@ def cancel_job(service_id, job_id):
     return redirect(url_for("main.service_dashboard", service_id=service_id))
 
 
-@main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>.json")
+@main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>/status.json")
 @user_has_permissions()
-def view_job_updates(service_id, job_id):
-    job = Job.from_id(job_id, service_id=service_id)
+def view_job_status_poll(service_id, job_id):
+    from app.notify_client.job_api_client import job_api_client
 
-    return jsonify(**get_job_partials(job))
+    try:
+        api_response = job_api_client.get_job_status(service_id, job_id)
+    except HTTPError as e:
+        current_app.logger.error(f"API error fetching job status: {e.status_code} - {e.message}")
+        if e.status_code == 404:
+            abort(404)
+        elif e.status_code >= 500:
+            abort(503, "Service temporarily unavailable")
+        else:
+            abort(500, "Failed to fetch job status")
+
+    response_data = {
+        "total": api_response.get("total", 0),
+        "delivered": api_response.get("delivered", 0),
+        "failed": api_response.get("failed", 0),
+        "pending": api_response.get("pending", 0),
+        "finished": api_response.get("finished", False),
+    }
+
+    return jsonify(response_data)
 
 
 @main.route("/services/<uuid:service_id>/notifications", methods=["GET", "POST"])
@@ -140,8 +175,6 @@ def view_notifications(service_id, message_type=None):
         things_you_can_search_by={
             "email": ["email address"],
             "sms": ["phone number"],
-            # We say recipient here because combining all 3 types, plus
-            # reference gets too long for the hint text
             None: ["recipient"],
         }.get(message_type)
         + {
@@ -245,6 +278,9 @@ def get_notifications(service_id, message_type, status_override=None):  # noqa
         limit_days=service_data_retention_days,
         to=search_term,
     )
+
+    notifications_list = notifications.get("notifications", [])
+
     url_args = {"message_type": message_type, "status": request.args.get("status")}
     prev_page = None
     if "links" in notifications and notifications["links"].get("prev", None):
@@ -291,7 +327,7 @@ def get_notifications(service_id, message_type, status_override=None):  # noqa
         "notifications": render_template(
             "views/activity/notifications.html",
             notifications=list(
-                add_preview_of_content_to_notifications(notifications["notifications"])
+                add_preview_of_content_to_notifications(notifications_list)
             ),
             page=page,
             limit_days=service_data_retention_days,
@@ -407,63 +443,18 @@ def _get_job_counts(job):
     ]
 
 
-def get_job_partials(job):
-    filter_args = parse_filter_args(request.args)
-    filter_args["status"] = set_status_filters(filter_args)
-    notifications = job.get_notifications(status=filter_args["status"])
-    number_of_days = "seven_day"
-    counts = render_template(
-        "partials/count.html",
-        counts=_get_job_counts(job),
-        status=filter_args["status"],
-        notifications_deleted=(
-            job.status == JobStatus.FINISHED and not notifications["notifications"]
-        ),
-    )
-    service_data_retention_days = current_service.get_days_of_retention(
-        job.template_type, number_of_days
-    )
-
-    if request.referrer is not None:
-        session["arrived_from_preview_page"] = ("check" in request.referrer) or (
-            "help=0" in request.referrer
-        )
-    else:
-        session["arrived_from_preview_page"] = False
-
-    arrived_from_preview_page_url = session.get("arrived_from_preview_page", False)
-
-    return {
-        "counts": counts,
-        "notifications": render_template(
-            "partials/jobs/notifications.html",
-            notifications=list(
-                add_preview_of_content_to_notifications(notifications["notifications"])
-            ),
-            more_than_one_page=bool(notifications.get("links", {}).get("next")),
-            download_link=url_for(
-                ".view_job_csv",
-                service_id=current_service.id,
-                job_id=job.id,
-                status=request.args.get("status"),
-            ),
-            time_left=get_time_left(
-                job.created_at, service_data_retention_days=service_data_retention_days
-            ),
-            job=job,
-            service_data_retention_days=service_data_retention_days,
-        ),
-        "status": render_template(
-            "partials/jobs/status.html",
-            job=job,
-            arrived_from_preview_page_url=arrived_from_preview_page_url,
-        ),
-        "finished": job.finished_processing,
-    }
-
-
 def add_preview_of_content_to_notifications(notifications):
     for notification in notifications:
+        if "template" not in notification and "template_name" in notification:
+            notification["template"] = {
+                "name": notification.get("template_name", ""),
+                "template_type": "sms",
+                "content": notification.get("template_name", ""),
+            }
+
+        if "content" not in notification:
+            notification["content"] = notification.get("template_name", "")
+
         yield (
             dict(
                 preview_of_content=get_preview_of_content(notification), **notification
@@ -472,6 +463,9 @@ def add_preview_of_content_to_notifications(notifications):
 
 
 def get_preview_of_content(notification):
+    if "template" not in notification:
+        return notification.get("template_name", "")
+
     if notification["template"].get("redact_personalisation"):
         notification["personalisation"] = {}
 

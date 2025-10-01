@@ -3,6 +3,7 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/components/back-link/macro.njk" import usaBackLink %}
+{% from "components/pill.html" import pill %}
 
 {% block service_page_title %}
   {{ "Message status" }}
@@ -12,49 +13,22 @@
 
     {{ page_header("Message status") }}
     {% if not job.finished_processing %}
-      <p class="max-width-full">This page refreshes automatically to show the latest message activity delivery rates, details, and reports.<br>You can watch it in progress or check back later.</p>
+      <p class="max-width-full">Status updates automatically while processing. Refresh the page if needed.</p>
     {% endif %}
-    <div data-job-id="{{ job.id }}" data-feature="{{FEATURE_SOCKET_ENABLED | lower}}" data-host="{{ api_public_url }}">
-    {% if not job.finished_processing and FEATURE_SOCKET_ENABLED %}
-      <div
-        data-resource="{{ updates_url }}"
-        data-socket-update="status"
-        data-key="status"
-        data-form=""
-      >
-    {% endif %}
-      {{ partials['status']|safe }}
-    {% if not job.finished_processing and FEATURE_SOCKET_ENABLED %}
+    <div data-job-id="{{ job.id }}" data-job-finished="{{ 'true' if job.finished_processing else 'false' }}" data-host="{{ api_public_url }}">
+      <div class='tabs ajax-block-container' data-key="counts">
+        {{ pill(counts, status, {'smaller': True}) }}
       </div>
-    {% endif %}
-    {% if not finished and FEATURE_SOCKET_ENABLED %}
-      <div
-        data-resource="{{ updates_url }}"
-        data-socket-update="counts"
-        data-key="counts"
-        data-form=""
-      >
-    {% endif %}
-      {{ partials['counts']|safe }}
-    {% if not finished and FEATURE_SOCKET_ENABLED %}
-      </div>
-    {% endif %}
 
     <p class="notification-status max-width-full">
       Messages are sent immediately to the cell phone carrier, but will remain in "pending" status until we hear back from the carrier they have received it and attempted deliver. More information on <a class="usa-link" href="{{ url_for('main.message_status') }}">delivery status</a>.
     </p>
-    {% if not job.processing_finished and FEATURE_SOCKET_ENABLED %}
-      <div
-        data-resource="{{ updates_url }}"
-        data-socket-update="notifications"
-        data-key="notifications"
-        data-form=""
-      >
-    {% endif %}
-      {{ partials['notifications']|safe }}
-    {% if not job.processing_finished and FEATURE_SOCKET_ENABLED %}
-      </div>
-    {% endif %}
+
+    <div data-key="notifications">
+      {% if job.finished_processing and notifications is not none %}
+        {% include "partials/jobs/notifications.html" %}
+      {% endif %}
+    </div>
   </div>
 
 {% endblock %}

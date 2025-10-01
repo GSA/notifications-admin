@@ -165,7 +165,6 @@ jobs:
         run: make run-flask &
         env:
           NOTIFY_ENVIRONMENT: scanning
-          FEATURE_SOCKET_ENABLED: true
       - name: Run OWASP Baseline Scan
         uses: zaproxy/action-baseline@v0.14.0
         with:

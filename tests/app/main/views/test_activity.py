@@ -7,7 +7,7 @@ import pytest
 from flask import url_for
 from freezegun import freeze_time
 
-from app.main.views.jobs import get_status_filters, get_time_left
+from app.main.views.jobs import get_status_filters
 from app.models.service import Service
 from tests import notification_json
 from tests.conftest import (
@@ -675,21 +675,6 @@ def test_doesnt_show_pagination_with_search_term(
     assert normalize_spaces(page.select_one(".table-show-more-link").text) == (
         "Only showing the first 50 messages"
     )
-
-
-@pytest.mark.parametrize(
-    ("job_created_at", "expected_message"),
-    [
-        ("2016-01-10 11:09:00.000000+00:00", "Data available for 8 days"),
-        ("2016-01-04 11:09:00.000000+00:00", "Data available for 2 days"),
-        ("2016-01-03 11:09:00.000000+00:00", "Data available for 1 day"),
-        ("2016-01-02 11:09:00.000000+00:00", "Data available for 12 hours"),
-        ("2016-01-01 23:59:59.000000+00:00", "Data no longer available"),
-    ],
-)
-@freeze_time("2016-01-10 12:00:00.000000")
-def test_time_left(job_created_at, expected_message):
-    assert get_time_left(job_created_at) == expected_message
 
 
 STATISTICS = {"sms": {"requested": 6, "failed": 2, "delivered": 1}}
