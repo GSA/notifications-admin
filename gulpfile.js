@@ -79,7 +79,7 @@ const javascripts = () => {
     paths.src + 'javascripts/activityChart.js',
     paths.src + 'javascripts/sidenav.js',
     paths.src + 'javascripts/validation.js',
-    // paths.src + 'javascripts/job-status-polling.js', // Disabled for manual refresh mode
+    paths.src + 'javascripts/job-polling.js',
     paths.src + 'javascripts/scrollPosition.js',
   ])
     .pipe(plugins.prettyerror())

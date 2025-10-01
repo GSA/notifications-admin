@@ -1039,10 +1039,20 @@ def send_notification(service_id, template_id):
     )
     attempts = 0
 
+    # Handle both old and new response formats
+    # New format: { items: [...] }
+    # Old format: { notifications: [...], total: X }
+    def get_items(response):
+        return response.get("items", response.get("notifications", []))
+
+    def get_total(response):
+        items = get_items(response)
+        return response.get("total", len(items))
+
     # The response can come back in different forms of incompleteness
     while (
-        notifications["total"] == 0
-        and notifications["notifications"] == []
+        get_total(notifications) == 0
+        and get_items(notifications) == []
         and attempts < 50
     ):
         notifications = notification_api_client.get_notifications_for_service(
@@ -1051,7 +1061,7 @@ def send_notification(service_id, template_id):
         time.sleep(0.1)
         attempts = attempts + 1
 
-    if notifications["total"] == 0 and attempts == 50:
+    if get_total(notifications) == 0 and attempts == 50:
         # This shows the job we auto-generated for the user
         return redirect(
             url_for(
@@ -1060,7 +1070,7 @@ def send_notification(service_id, template_id):
                 job_id=upload_id,
             )
         )
-    total = notifications["total"]
+    total = get_total(notifications)
     current_app.logger.info(
         hilite(
             f"job_id: {upload_id} has notifications: {total} and attempts: {attempts}"
