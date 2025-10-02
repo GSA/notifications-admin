@@ -33,7 +33,6 @@ const javascripts = () => {
     paths.src + 'javascripts/loginAlert.js',
     paths.src + 'javascripts/sidenav.js',
     paths.src + 'javascripts/validation.js',
-    paths.src + 'javascripts/job-polling.js',
     paths.src + 'javascripts/scrollPosition.js',
   ])
 
@@ -95,6 +94,7 @@ const javascripts = () => {
     .pipe(plugins.addSrc.append(paths.src + 'javascripts/stick-to-window-when-scrolling.js'))
     .pipe(plugins.addSrc.append(paths.src + 'javascripts/totalMessagesChart.js'))
     .pipe(plugins.addSrc.append(paths.src + 'javascripts/activityChart.js'))
+    .pipe(plugins.addSrc.append(paths.src + 'javascripts/job-polling.js'))
     .pipe(plugins.concat('all.js'))
     .pipe(dest(paths.dist + 'javascripts/'));
 };
