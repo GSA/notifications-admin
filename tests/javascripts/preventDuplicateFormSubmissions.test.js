@@ -57,12 +57,13 @@ describe('Prevent duplicate form submissions', () => {
 
     helpers.triggerEvent(button, 'click');
 
-    jest.advanceTimersByTime(1500);
+    jest.advanceTimersByTime(1600);
 
     helpers.triggerEvent(button, 'click');
 
     expect(formEventSpy.mock.calls.length).toEqual(0);
 
   });
+
 
 });

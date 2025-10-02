@@ -149,7 +149,7 @@ def service_switch_live(service_id):
 @user_is_platform_admin
 def service_switch_count_as_live(service_id):
     form = ServiceOnOffSettingForm(
-        name="Count in list of live services",
+        name="Count as live",
         enabled=current_service.count_as_live,
         truthy="Yes",
         falsey="No",

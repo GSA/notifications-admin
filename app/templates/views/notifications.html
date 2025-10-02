@@ -64,20 +64,20 @@
 
   {% if current_user.has_permissions(ServicePermission.VIEW_ACTIVITY) %}
     <p class="font-body-sm">
-      <a href="{{ download_link_seven_day }}" download="download" class="usa-link">Download all data last 7 days (<abbr title="Comma separated values">CSV</abbr>)</a>
+      <a href="{{ download_link_seven_day }}" download="download" class="usa-button usa-button--outline">Download all data last 7 days (<abbr title="Comma separated values">CSV</abbr>)</a>
       &emsp;
       Data available for {{ partials.service_data_retention_days }} days
     </p>
     <p class="font-body-sm">
-      <a href="{{ download_link_five_day }}" download="download" class="usa-link">Download all data last 5 days (<abbr title="Comma separated values">CSV</abbr>)</a>
+      <a href="{{ download_link_five_day }}" download="download" class="usa-button usa-button--outline">Download all data last 5 days (<abbr title="Comma separated values">CSV</abbr>)</a>
       &emsp;
     </p>
     <p class="font-body-sm">
-      <a href="{{ download_link_three_day }}" download="download" class="usa-link">Download all data last 3 days (<abbr title="Comma separated values">CSV</abbr>)</a>
+      <a href="{{ download_link_three_day }}" download="download" class="usa-button usa-button--outline">Download all data last 3 days (<abbr title="Comma separated values">CSV</abbr>)</a>
       &emsp;
     </p>
     <p class="font-body-sm">
-      <a href="{{ download_link_today }}" download="download" class="usa-link">Download all data today (<abbr title="Comma separated values">CSV</abbr>)</a>
+      <a href="{{ download_link_today }}" download="download" class="usa-button usa-button--outline">Download all data today (<abbr title="Comma separated values">CSV</abbr>)</a>
       &emsp;
     </p>
   {% endif %}

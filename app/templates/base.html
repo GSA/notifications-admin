@@ -58,11 +58,11 @@
                     <nav class="nav">
                       <ul class="usa-sidenav">
                         {% for item in navigation_links %}
-                          <li class="usa-sidenav__item">
+                          <li class="usa-sidenav__item{% if request.endpoint.startswith(item['link']) or (item.sub_navigation_items and item.sub_navigation_items | selectattr('link', 'equalto', request.endpoint) | list | length > 0) %} open{% endif %}">
                             <a href="{{ url_for(item.link) }}"
                                class="parent-link {% if request.endpoint.startswith(item['link']) or item.sub_navigation_items | selectattr('link', 'equalto', request.endpoint) | list | length > 0 %} usa-current {% endif %}"
                                aria-haspopup="true"
-                               aria-expanded="{{ 'true' if request.endpoint.startswith(item['link']) else 'false' }}">
+                               aria-expanded="{{ 'true' if request.endpoint.startswith(item['link']) or (item.sub_navigation_items and item.sub_navigation_items | selectattr('link', 'equalto', request.endpoint) | list | length > 0) else 'false' }}">
                               {{ item.name }}
                             </a>
                             {% if item.sub_navigation_items %}

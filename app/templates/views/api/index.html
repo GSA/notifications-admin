@@ -8,7 +8,7 @@
 
 {% block maincolumn_content %}
 
-  <h1 class="heading-medium bottom-gutter-3-2">
+  <h1 class="font-heading-lg margin-bottom-3">
     API integration
   </h1>
 
@@ -26,7 +26,7 @@
 
   <div class="grid-row">
     <div class="grid-col-6">
-      <h2 class="heading-small">
+      <h2 class="font-heading-md">
         Message log
       </h2>
     </div>
@@ -46,11 +46,16 @@
       </div>
     {% endif %}
     {% for notification in api_notifications.notifications %}
-      <details class="api-notifications-item govuk-details" data-module="govuk-details">
-        <summary class="govuk-details__summary api-notifications-item__heading">
-          <h3>
-            <span class="govuk-details__summary-text">
-            {{ notification.to }}
+      <div class="usa-accordion api-notifications-item">
+        <h3 class="usa-accordion__heading">
+          <button
+            type="button"
+            class="usa-accordion__button api-notifications-item__heading"
+            aria-expanded="false"
+            aria-controls="notification-accordion-{{ notification.id }}"
+          >
+            <span>
+              {{ notification.to }}
             </span>
             <span class="grid-row api-notifications-item__meta">
               <span class="grid-col-6 api-notifications-item__meta-key">
@@ -62,9 +67,9 @@
                 </time>
               </span>
             </span>
-          </h3>
-        </summary>
-        <div class="govuk-details__text api-notifications-item__data">
+          </button>
+        </h3>
+        <div id="notification-accordion-{{ notification.id }}" class="usa-accordion__content api-notifications-item__data" hidden>
           <dl id="notification-{{ notification.id }}">
             {% for key in [
               'id', 'client_reference', 'notification_type', 'created_at', 'updated_at', 'sent_at', 'status'
@@ -77,7 +82,7 @@
             <a class="usa-link" href="{{ url_for('.view_notification', service_id=current_service.id, notification_id=notification.id) }}">View {{ 1|message_count_label(notification.template.template_type, suffix='') }}</a>
           </dl>
         </div>
-      </details>
+      </div>
     {% endfor %}
     {% if api_notifications.notifications %}
       <div class="api-notifications-item">

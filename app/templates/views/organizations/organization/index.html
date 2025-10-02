@@ -12,13 +12,13 @@
 
   {{ page_header('Usage', size='medium') }}
 
-  <div class="bottom-gutter">
+  <div class="margin-bottom-3">
     {{ pill(years, selected_year, big_number_args={'smallest': True}) }}
   </div>
 
-  <div class="grid-row bottom-gutter">
+  <div class="grid-row margin-bottom-3">
     <div class="grid-col-6">
-      <h2 class="heading-small">Emails</h2>
+      <h2 class="font-heading-md">Emails</h2>
       <div class="keyline-block">
         {{ big_number(
           total_emails_sent,
@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="grid-col-6">
-      <h2 class="heading-small">Text messages</h2>
+      <h2 class="font-heading-md">Text messages</h2>
       <div class="keyline-block">
         {{ big_number(
           total_sms_cost,
@@ -51,7 +51,7 @@
     </div>
   {% endif %}
 
-  <h2 class="heading-small {% if search_form %}visually-hidden{% endif %}">By service</h2>
+  <h2 class="font-heading-md {% if search_form %}visually-hidden{% endif %}">By service</h2>
 
   {% for service in services %}
     <div class="keyline-block organization-service">

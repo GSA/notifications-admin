@@ -1,10 +1,10 @@
-{% macro sub_navigation_item(item) %}
+{% macro sub_navigation_item(item, has_subnav=False) %}
   <li class="usa-sidenav__item" href="{{ url_for(item['link']) }}"
       itemprop="itemListElement"
       itemscope
       itemtype="http://schema.org/ListItem"
   >
-    <a class="{% if item['link'] == request.endpoint %} usa-current {% endif %}" href="{{ url_for(item['link']) }}" itemprop="item">
+    <a class="{% if has_subnav %}parent-link {% endif %}{% if item['link'] == request.endpoint %} usa-current {% endif %}" href="{{ url_for(item['link']) }}" itemprop="item">
       <span itemprop="name">{{item['name']}}</span>
     </a>
     {% if caller %}
@@ -28,7 +28,7 @@
     <ul class="usa-sidenav" itemtype="http://schema.org/ItemList">
       {% for item in item_set %}
         {% if item.sub_navigation_items %}
-          {% call sub_navigation_item(item) %}
+          {% call sub_navigation_item(item, has_subnav=True) %}
             {{ sub_navigation_item_sub_navigation(item) }}
           {% endcall %}
         {% else %}

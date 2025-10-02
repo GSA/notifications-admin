@@ -34,7 +34,7 @@ from notifications_utils.formatters import (
     sms_encode,
     strip_leading_whitespace,
     strip_unsupported_characters,
-    unlink_govuk_escaped,
+    unlink_usgov_escaped,
 )
 from notifications_utils.insensitive_dict import InsensitiveDict
 from notifications_utils.markdown import (
@@ -517,7 +517,7 @@ class BaseEmailTemplate(SubjectMixin, Template):
                     redact_missing_personalisation=self.redact_missing_personalisation,
                 )
             )
-            .then(unlink_govuk_escaped)
+            .then(unlink_usgov_escaped)
             .then(strip_unsupported_characters)
             .then(add_trailing_newline)
             .then(notify_email_markdown)
@@ -570,7 +570,7 @@ class PlainTextEmailTemplate(BaseEmailTemplate):
                     self.content, self.values, html="passthrough", markdown_lists=True
                 )
             )
-            .then(unlink_govuk_escaped)
+            .then(unlink_usgov_escaped)
             .then(strip_unsupported_characters)
             .then(add_trailing_newline)
             .then(notify_plain_text_email_markdown)
@@ -605,7 +605,7 @@ class HTMLEmailTemplate(BaseEmailTemplate):
         self,
         template,
         values=None,
-        govuk_banner=True,
+        federal_banner=True,
         complete_html=True,
         brand_logo=None,
         brand_text=None,
@@ -614,7 +614,7 @@ class HTMLEmailTemplate(BaseEmailTemplate):
         brand_name=None,
     ):
         super().__init__(template, values)
-        self.govuk_banner = govuk_banner
+        self.federal_banner = federal_banner
         self.complete_html = complete_html
         self.brand_logo = brand_logo
         self.brand_text = brand_text
@@ -633,7 +633,7 @@ class HTMLEmailTemplate(BaseEmailTemplate):
                     markdown_lists=True,
                 )
             )
-            .then(unlink_govuk_escaped)
+            .then(unlink_usgov_escaped)
             .then(strip_unsupported_characters)
             .then(add_trailing_newline)
             .then(notify_email_preheader_markdown)
@@ -647,7 +647,7 @@ class HTMLEmailTemplate(BaseEmailTemplate):
                 "subject": self.subject,
                 "body": self.html_body,
                 "preheader": self.preheader,
-                "govuk_banner": self.govuk_banner,
+                "federal_banner": self.federal_banner,
                 "complete_html": self.complete_html,
                 "brand_logo": self.brand_logo,
                 "brand_text": self.brand_text,
