@@ -827,6 +827,7 @@ def test_choose_a_template_to_copy_from_folder_within_service(
                     "sms",
                     "Should appear in list (at same level)",
                     parent=PARENT_FOLDER_ID,
+                    template_id=TEMPLATE_ONE_ID,
                 ),
                 _template(
                     "sms",
@@ -875,23 +876,20 @@ def test_choose_a_template_to_copy_from_folder_within_service(
         service_id=SERVICE_ONE_ID,
         from_folder=FOLDER_TWO_ID,
     )
-    # assert links[1]["href"] == url_for(
-    #     "main.choose_template_to_copy",
-    #     service_id=SERVICE_ONE_ID,
-    #     from_service=SERVICE_ONE_ID,
-    #     from_folder=PARENT_FOLDER_ID,
-    # )
-    # assert links[2]["href"] == url_for(
-    #     "main.choose_template_to_copy",
-    #     service_id=SERVICE_ONE_ID,
-    #     from_folder=FOLDER_TWO_ID,
-    # )
-    # assert links[3]["href"] == url_for(
-    #     "main.copy_template",
-    #     service_id=SERVICE_ONE_ID,
-    #     template_id=TEMPLATE_ONE_ID,
-    #     from_service=SERVICE_ONE_ID,
-    # )
+
+    assert links[1]["href"] == url_for(
+        "main.copy_template",
+        service_id=SERVICE_ONE_ID,
+        template_id=TEMPLATE_ONE_ID,
+        from_service=SERVICE_ONE_ID,
+    )
+
+    assert links[2]["href"] == url_for(
+        "main.copy_template",
+        service_id=SERVICE_ONE_ID,
+        template_id=TEMPLATE_ONE_ID,
+        from_service=SERVICE_ONE_ID,
+    )
 
 
 @pytest.mark.parametrize(

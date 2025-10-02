@@ -86,6 +86,7 @@ coverage/
 coverage.xml
 test_results.xml
 *,cover
+.hypothesis/
 
 # Translations
 *.mo

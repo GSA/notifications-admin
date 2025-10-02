@@ -33,7 +33,7 @@ const javascripts = () => {
     paths.src + 'javascripts/loginAlert.js',
     paths.src + 'javascripts/sidenav.js',
     paths.src + 'javascripts/validation.js',
-    paths.src + 'javascripts/socketio.js',
+    paths.src + 'javascripts/job-polling.js',
     paths.src + 'javascripts/scrollPosition.js',
   ])
 
@@ -108,6 +108,7 @@ const copyGtmHead = () => {
 const copySetTimezone = () => {
   return src(paths.src + 'js/setTimezone.js').pipe(dest(paths.dist + 'js/'));
 };
+
 
 // Task to copy images
 const copyImages = () => {

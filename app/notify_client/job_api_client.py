@@ -32,6 +32,9 @@ class JobApiClient(NotifyAdminAPIClient):
 
         return job
 
+    def get_job_status(self, service_id, job_id):
+        return self.get(url=f"/service/{service_id}/job/{job_id}/status")
+
     def get_jobs(
         self,
         service_id,
