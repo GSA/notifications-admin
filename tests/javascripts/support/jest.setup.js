@@ -11,4 +11,20 @@ global.io = jest.fn().mockReturnValue({
 });
 
 // Load module code
-require('govuk_frontend_toolkit/javascripts/govuk/modules.js');
+global.window = global.window || {};
+global.window.NotifyModules = global.window.NotifyModules || {};
+global.window.NotifyModules.start = function() {
+  var modules = document.querySelectorAll('[data-module]');
+  modules.forEach(function(element) {
+    var moduleName = element.getAttribute('data-module');
+    var moduleStarted = element.getAttribute('data-module-started');
+
+    if (!moduleStarted && global.window.NotifyModules[moduleName]) {
+      var module = new global.window.NotifyModules[moduleName]();
+      if (module.start) {
+        module.start(element);
+      }
+      element.setAttribute('data-module-started', 'true');
+    }
+  });
+};

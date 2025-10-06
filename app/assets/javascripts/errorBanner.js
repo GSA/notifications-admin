@@ -8,7 +8,7 @@
 
   This may behave in unexpected ways if you have more than one element with the `banner-dangerous` class on your page.
   */
-  window.GOVUK.ErrorBanner = {
+  window.NotifyModules.ErrorBanner = {
     hideBanner: () => $('.banner-dangerous').addClass('display-none'),
     showBanner: () => $('.banner-dangerous')
       .removeClass('display-none')

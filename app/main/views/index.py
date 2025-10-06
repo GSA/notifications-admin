@@ -1,12 +1,6 @@
 import logging
 
-from flask import (
-    abort,
-    redirect,
-    render_template,
-    request,
-    url_for,
-)
+from flask import abort, redirect, render_template, request, url_for
 from flask_login import current_user
 
 from app import status_api_client
@@ -67,14 +61,6 @@ def accessibility_statement():
 @main.route("/features/messages-status")
 def delivery_and_failure():
     return redirect(url_for(".message_status"), 301)
-
-
-@main.route("/design-patterns-content-guidance")
-@user_is_logged_in
-def design_content():
-    return redirect(
-        "https://www.gov.uk/service-manual/design/sending-emails-and-text-messages", 301
-    )
 
 
 @main.route("/documentation")

@@ -1,9 +1,9 @@
-(function(Modules) {
+(function(window) {
   "use strict";
 
   if (!document.queryCommandSupported('copy')) return;
 
-  Modules.CopyToClipboard = function() {
+  window.NotifyModules['copy-to-clipboard'] = function() {
 
     const states = {
       'valueVisible': (options) => `
@@ -90,11 +90,11 @@
               .find('.usa-button').focus()
         );
 
-      if ('stickAtBottomWhenScrolling' in GOVUK) {
-        GOVUK.stickAtBottomWhenScrolling.recalculate();
+      if ('stickAtBottomWhenScrolling' in window.NotifyModules) {
+        window.NotifyModules.stickAtBottomWhenScrolling.recalculate();
       }
 
     };
   };
 
-})(window.GOVUK.Modules);
+})(window);

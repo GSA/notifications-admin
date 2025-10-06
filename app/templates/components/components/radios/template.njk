@@ -1,5 +1,5 @@
 {% from "../error-message/macro.njk" import usaErrorMessage -%}
-{% from "../fieldset/macro.njk" import govukFieldset %}
+{% from "../fieldset/macro.njk" import usaFieldset %}
 {% from "../hint/macro.njk" import usaHint %}
 {% from "../label/macro.njk" import usaLabel %}
 
@@ -90,7 +90,7 @@
 
 <div class="usa-form-group {%- if params.errorMessage %} usa-form-group--error{% endif %} {%- if params.formGroup.classes %} {{ params.formGroup.classes }}{% endif %}">
 {% if params.fieldset %}
-  {% call govukFieldset({
+  {% call usaFieldset({
     describedBy: describedBy,
     classes: params.fieldset.classes,
     attributes: params.fieldset.attributes,

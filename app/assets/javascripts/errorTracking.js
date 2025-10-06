@@ -1,19 +1,21 @@
 (function(window) {
   "use strict";
 
-  window.GOVUK.Modules.TrackError = function() {
+  window.NotifyModules['track-error'] = function() {
 
-    this.start = function(component) {
+    this.start = function(element) {
+      var component = $(element);
 
-      if (!('analytics' in window.GOVUK)) return;
-
-      window.GOVUK.analytics.trackEvent(
-        'Error',
-        $(component).data('error-type'),
-        {
-          'label': $(component).data('error-label')
-        }
-      );
+      // Track error to analytics if available
+      if (window.NotifyModules && window.NotifyModules.analytics && window.NotifyModules.analytics.trackEvent) {
+        window.NotifyModules.analytics.trackEvent(
+          'Error',
+          component.data('error-type'),
+          {
+            'label': component.data('error-label')
+          }
+        );
+      }
 
     };
 

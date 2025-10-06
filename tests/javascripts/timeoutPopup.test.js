@@ -35,7 +35,7 @@ beforeAll(() => {
     `;
 
   const sessionTimerModule = require('../../app/assets/javascripts/timeoutPopup.js');
-  window.GOVUK.modules.start();
+  window.NotifyModules.start();
 });
 
 afterAll(() => {
@@ -73,7 +73,7 @@ describe('The session timer ', () => {
     const restore = mockWindowLocation();
 
     // Test the actual function, not a mock
-    const signoutUserMethod = window.GOVUK.Modules.TimeoutPopup.signoutUser;
+    const signoutUserMethod = window.NotifyModules.TimeoutPopup.signoutUser;
 
     // This will try to set location.href but our mock will catch it
     expect(() => signoutUserMethod()).not.toThrow();
@@ -85,7 +85,7 @@ describe('The session timer ', () => {
     const restore = mockWindowLocation();
 
     // Test the actual function, not a mock
-    const expireUserSessionMethod = window.GOVUK.Modules.TimeoutPopup.expireUserSession;
+    const expireUserSessionMethod = window.NotifyModules.TimeoutPopup.expireUserSession;
 
     // This will try to set location.href but our mock will catch it
     expect(() => expireUserSessionMethod()).not.toThrow();
@@ -97,7 +97,7 @@ describe('The session timer ', () => {
     const restore = mockWindowLocation();
 
     // Test the actual function, not a mock
-    const extendSessionMethod = window.GOVUK.Modules.TimeoutPopup.extendSession;
+    const extendSessionMethod = window.NotifyModules.TimeoutPopup.extendSession;
 
     // This will try to call location.reload but our mock will catch it
     expect(() => extendSessionMethod()).not.toThrow();
@@ -111,7 +111,7 @@ describe('The session timer ', () => {
 
     const showTimerMock = jest.spyOn(sessionTimer, 'showModal');
 
-    window.GOVUK.Modules.TimeoutPopup.showTimer();
+    window.NotifyModules.TimeoutPopup.showTimer();
 
     expect(showTimerMock).toHaveBeenCalled();
   });
@@ -122,17 +122,17 @@ describe('The session timer ', () => {
 
     const closeTimerMock = jest.spyOn(sessionTimer, 'close');
 
-    window.GOVUK.Modules.TimeoutPopup.closeTimer();
+    window.NotifyModules.TimeoutPopup.closeTimer();
 
     expect(closeTimerMock).toHaveBeenCalled();
   });
 
   test('checkTimer is called', () => {
     const checkTimerMock = jest.spyOn(
-      window.GOVUK.Modules.TimeoutPopup,
+      window.NotifyModules.TimeoutPopup,
       'checkTimer'
     );
-    window.GOVUK.Modules.TimeoutPopup.checkTimer();
+    window.NotifyModules.TimeoutPopup.checkTimer();
     expect(checkTimerMock).toHaveBeenCalled();
   });
 });

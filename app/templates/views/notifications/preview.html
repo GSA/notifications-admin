@@ -24,7 +24,7 @@
 
 {% block maincolumn_content %}
   {% if error == 'not-allowed-to-send-to' %}
-    <div class="bottom-gutter">
+    <div class="margin-bottom-3">
       {% call banner_wrapper(type='dangerous') %}
         {% with
           count_of_recipients=1,
@@ -37,13 +37,13 @@
       {% endcall %}
     </div>
   {% elif error == 'too-many-messages' %}
-    <div class="bottom-gutter">
+    <div class="margin-bottom-3">
       {% call banner_wrapper(type='dangerous') %}
         {% include "partials/check/too-many-messages.html" %}
       {% endcall %}
     </div>
   {% elif error == 'message-too-long' %}
-    <div class="bottom-gutter">
+    <div class="margin-bottom-3">
       {% call banner_wrapper(type='dangerous') %}
         {% include "partials/check/message-too-long.html" %}
       {% endcall %}

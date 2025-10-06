@@ -190,10 +190,9 @@ def _handle_e2e_tests(redirect_url):  # pragma: no cover
         )
 
     except Exception as e:
-        stre = str(e)
-        stre = stre.replace(" ", "_")
-        # Trying to get a message back to playwright somehow since we can't raise an error
-        return redirect(url_for(f"https://{stre}"))
+        current_app.logger.error(f"E2E test error: {e}")
+        # Return a simple error page instead of trying to create an invalid URL
+        abort(500)
 
 
 @main.route("/sign-in", methods=(["GET", "POST"]))

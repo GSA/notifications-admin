@@ -45,7 +45,7 @@ describe('copy to clipboard', () => {
     document.execCommand = jest.fn(() => {});
 
     // mock sticky JS
-    window.GOVUK.stickAtBottomWhenScrolling = {
+    window.NotifyModules.stickAtBottomWhenScrolling = {
       recalculate: jest.fn(() => {})
     }
 
@@ -63,7 +63,7 @@ describe('copy to clipboard', () => {
     component = document.querySelector('[data-module=copy-to-clipboard]');
 
     // start the module
-    window.GOVUK.modules.start();
+    window.NotifyModules.start();
 
     expect(component.querySelector('button')).toBeNull();
 
@@ -120,7 +120,7 @@ describe('copy to clipboard', () => {
           });
 
           // start the module
-          window.GOVUK.modules.start();
+          window.NotifyModules.start();
 
         });
 
@@ -139,7 +139,7 @@ describe('copy to clipboard', () => {
         test("It should tell any sticky JS present the page has changed", () => {
 
           // recalculate forces the sticky JS to recalculate any stored DOM position/dimensions
-          expect(window.GOVUK.stickAtBottomWhenScrolling.recalculate).toHaveBeenCalled();
+          expect(window.NotifyModules.stickAtBottomWhenScrolling.recalculate).toHaveBeenCalled();
 
         });
 
@@ -154,7 +154,7 @@ describe('copy to clipboard', () => {
 
           expect(component.querySelector('.copy-to-clipboard__value').textContent).toBe('00000000-0000-0000-0000-000000000000');
 
-        });        
+        });
 
       });
 
@@ -169,7 +169,7 @@ describe('copy to clipboard', () => {
           component = document.querySelector('[data-module=copy-to-clipboard]');
 
           // start the module
-          window.GOVUK.modules.start();
+          window.NotifyModules.start();
 
         });
 
@@ -205,7 +205,7 @@ describe('copy to clipboard', () => {
           component = document.querySelector('[data-module=copy-to-clipboard]');
 
           // start the module
-          window.GOVUK.modules.start();
+          window.NotifyModules.start();
 
         });
 
@@ -233,7 +233,7 @@ describe('copy to clipboard', () => {
           setUpDOM({ 'thing': 'Some Thing', 'name': 'Some Thing' });
 
           // start the module
-          window.GOVUK.modules.start();
+          window.NotifyModules.start();
 
           component = document.querySelector('[data-module=copy-to-clipboard]');
           keyEl = component.querySelector('.copy-to-clipboard__value');
@@ -332,7 +332,7 @@ describe('copy to clipboard', () => {
           setUpDOM({ 'thing': 'ID', 'name': 'Default' });
 
           // start the module
-          window.GOVUK.modules.start();
+          window.NotifyModules.start();
 
           component = document.querySelector('[data-module=copy-to-clipboard]');
 
@@ -375,7 +375,7 @@ describe('copy to clipboard', () => {
           setUpDOM({ 'thing': 'Some Thing', 'name': 'Some Thing' });
 
           // start the module
-          window.GOVUK.modules.start();
+          window.NotifyModules.start();
 
           component = document.querySelector('[data-module=copy-to-clipboard]');
 

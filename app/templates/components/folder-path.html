@@ -41,7 +41,7 @@
   current_user
 ) %}
   {% if folder_path %}
-    <h2 class="heading-medium folder-heading">
+    <h2 class="font-heading-lg folder-heading">
       {% if folder_path|length == 1 %}
         <a class="usa-link" href="{{ url_for('.choose_template_to_copy', service_id=current_service_id) }}">Services</a>
         {{ folder_path_separator() }}

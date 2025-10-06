@@ -22,7 +22,7 @@ from app import (
     notification_api_client,
     service_api_client,
 )
-from app.enums import NotificationStatus, ServicePermission
+from app.enums import NotificationStatus, NotificationType, ServicePermission
 from app.formatters import get_time_left, message_count_noun
 from app.main import main
 from app.main.forms import SearchNotificationsForm
@@ -387,36 +387,37 @@ def get_notifications(service_id, message_type, status_override=None):  # noqa
 
 
 def get_status_filters(service, message_type, statistics):
-    if message_type is None:
-        stats = {
-            key: sum(statistics[message_type][key] for message_type in {"email", "sms"})
-            for key in {
-                "requested",
-                NotificationStatus.DELIVERED,
-                NotificationStatus.FAILED,
-            }
-        }
-    else:
-        stats = statistics[message_type]
+    message_types = (
+        [message_type]
+        if message_type
+        else [NotificationType.EMAIL, NotificationType.SMS]
+    )
 
-    if stats.get("failure") is not None:
-        stats[NotificationStatus.FAILED] = stats["failure"]
+    stats = {
+        NotificationStatus.REQUESTED: sum(
+            statistics[mt].get(NotificationStatus.REQUESTED, 0) for mt in message_types
+        ),
+        NotificationStatus.DELIVERED: sum(
+            statistics[mt].get(NotificationStatus.DELIVERED, 0) for mt in message_types
+        ),
+        NotificationStatus.FAILED: sum(
+            statistics[mt].get(NotificationStatus.FAILED, 0) for mt in message_types
+        ),
+    }
 
     stats[NotificationStatus.PENDING] = (
-        stats["requested"]
+        stats[NotificationStatus.REQUESTED]
         - stats[NotificationStatus.DELIVERED]
         - stats[NotificationStatus.FAILED]
     )
 
     filters = [
-        # key, label, option
-        ("requested", "total", "sending,delivered,failed"),
+        (NotificationStatus.REQUESTED, "total", "sending,delivered,failed"),
         (NotificationStatus.PENDING, "pending", "sending,pending"),
         (NotificationStatus.DELIVERED, "delivered", "delivered"),
         (NotificationStatus.FAILED, "failed", "failed"),
     ]
     return [
-        # return list containing label, option, link, count
         (
             label,
             option,

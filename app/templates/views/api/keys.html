@@ -31,7 +31,7 @@
       {% call field() %}
         <div class="file-list">
           {{ item.name }}
-          <div class="hint">
+          <div class="usa-hint">
             {% if item.key_type == 'normal' %}
               Live – sends to anyone
             {% elif item.key_type == 'team' %}
@@ -44,7 +44,7 @@
       {% endcall %}
       {% if item.expiry_date %}
         {% call field(align='right') %}
-          <span class='hint'>Revoked {{ item.expiry_date|format_datetime_table }}</span>
+          <span class='usa-hint'>Revoked {{ item.expiry_date|format_datetime_table }}</span>
         {% endcall %}
       {% else %}
         {% call field(align='right', status='error') %}

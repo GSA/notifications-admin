@@ -44,7 +44,7 @@ describe('File upload', () => {
     form.reset = jest.fn(() => {});
 
     // start module
-    window.GOVUK.modules.start();
+    window.NotifyModules.start();
 
     helpers.triggerEvent(window, 'pageshow');
 
@@ -59,7 +59,7 @@ describe('File upload', () => {
       form.submit = jest.fn(() => {});
 
       // start module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
 
       helpers.triggerEvent(uploadControl, 'change', { eventInit: { bubbles: true } });
 
@@ -96,7 +96,7 @@ describe('File upload "upload-trigger" click handler', () => {
     form = document.querySelector('form');
 
     // Register the module
-    window.GOVUK.modules.start();
+    window.NotifyModules.start();
   });
 
   afterEach(() => {

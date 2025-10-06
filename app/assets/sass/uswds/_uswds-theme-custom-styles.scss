@@ -615,6 +615,39 @@ details form {
   box-sizing: border-box;
 }
 
+// Loading indicator animation for buttons
+.loading-spinner {
+  display: inline-block;
+  margin-left: 0.5rem;
+  width: 1em;
+  height: 1em;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Style for disabled loading button
+.usa-button[disabled] {
+  position: relative;
+
+  .loading-spinner {
+    display: inline-block;
+  }
+
+  min-width: 120px;
+}
+
 // Textbox highlight
 
 .textbox-highlight {
@@ -1070,4 +1103,45 @@ nav.nav {
 .notification-type-radios legend.usa-legend,
 .organizations-radios legend.usa-legend {
   font-weight: 700;
+}
+
+.dashboard-uploads-table {
+  table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  th:first-child,
+  td:first-child {
+    width: 60%;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    width: 40%;
+  }
+
+  .file-name-cell {
+    .file-link {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .status-display {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: nowrap;
+    align-items: baseline;
+
+    .status-item {
+      white-space: nowrap;
+
+      strong {
+        font-weight: 700;
+      }
+    }
+  }
 }

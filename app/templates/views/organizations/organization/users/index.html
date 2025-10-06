@@ -36,9 +36,9 @@
           <div class="grid-col-9">
             <h2 class="user-list-item-heading">
               {%- if user.name -%}
-                <span class="heading-small">{{ user.name }}</span>&ensp;
+                <span class="font-heading-md">{{ user.name }}</span>&ensp;
               {%- endif -%}
-              <span class="hint">
+              <span class="usa-hint">
                 {%- if user.status == 'pending' -%}
                   {{ user.email_address }} (invited)
                 {%- elif user.status == 'cancelled' -%}

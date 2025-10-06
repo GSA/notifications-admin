@@ -3,9 +3,238 @@
 {{ form.permissions_field }}
 
 {% if form.folder_permissions.all_template_folders %}
-  {{ form.folder_permissions }}
+  <div class="folder-permissions-section margin-top-5">
+    <fieldset class="usa-fieldset">
+      <legend class="usa-legend">
+        <h3 class="font-body-lg margin-bottom-3">Folders this team member can see</h3>
+      </legend>
+
+      <div class="display-flex flex-justify flex-align-center margin-bottom-3">
+        <span class="text-base-dark" aria-live="polite" aria-atomic="true">
+          <span id="folder-counter">0</span> of <span id="folder-total">0</span> selected
+        </span>
+        <button type="button" class="usa-button usa-button--outline" id="select-all-folders">
+          Select all
+        </button>
+      </div>
+
+      <div class="border-1px border-base-lighter radius-md padding-4 folder-permissions-container selection-wrapper">
+        <div id="custom-folder-permissions">
+          <ul class="usa-list usa-list--unstyled" role="list" aria-label="Folder permissions">
+            {% set folder_dict = {} %}
+            {% for folder in form.folder_permissions.all_template_folders %}
+              {% set _ = folder_dict.update({folder.id: folder}) %}
+            {% endfor %}
+            {% macro render_folder(folder_id, folder_name, level=0, is_checked=False, parent_id=None) %}
+              <li class="folder-permission-item {% if level > 0 %}margin-left-{{ level * 5 }}{% endif %} {% if level > 0 %}text-base-dark{% endif %}"
+                  {% if parent_id %}data-parent-id="{{ parent_id }}"{% endif %}
+                  data-folder-id="{{ folder_id }}">
+                <div class="usa-checkbox {% if level > 0 %}padding-left-2{% endif %}">
+                  <input
+                    class="usa-checkbox__input js-folder-checkbox"
+                    id="folder_{{ folder_id|replace('-', '_')|default('root', true) }}"
+                    name="folder_permissions"
+                    type="checkbox"
+                    value="{{ folder_id }}"
+                    {% if is_checked %}checked{% endif %}
+                    data-level="{{ level }}"
+                    {% if parent_id %}data-parent-id="{{ parent_id }}"{% endif %}
+                  >
+                  <label class="usa-checkbox__label {% if level == 0 %}text-bold{% endif %} {% if level > 1 %}font-body-xs{% endif %}" for="folder_{{ folder_id|replace('-', '_')|default('root', true) }}">
+                    {{ folder_name }}
+                  </label>
+                </div>
+              </li>
+            {% endmacro %}
+
+            {% for folder in form.folder_permissions.all_template_folders %}
+              {% if folder.parent_id is none %}
+                {{ render_folder(folder.id, folder.name, 0, folder.id in (form.folder_permissions.data or []), None) }}
+                {% for child in form.folder_permissions.all_template_folders %}
+                  {% if child.parent_id == folder.id %}
+                    {{ render_folder(child.id, child.name, 1, child.id in (form.folder_permissions.data or []), folder.id) }}
+                    {% for grandchild in form.folder_permissions.all_template_folders %}
+                      {% if grandchild.parent_id == child.id %}
+                        {{ render_folder(grandchild.id, grandchild.name, 2, grandchild.id in (form.folder_permissions.data or []), child.id) }}
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+
+  <style nonce="{{ csp_nonce() }}">
+    .folder-permissions-container {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .folder-permission-item {
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .folder-permission-item:hover {
+      background-color: var(--usa-base-lightest);
+      border-radius: 0.25rem;
+    }
+
+    #custom-folder-permissions .usa-checkbox {
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    #custom-folder-permissions .usa-checkbox__label {
+      margin-top: 0;
+    }
+  </style>
+
+  <script nonce="{{ csp_nonce() }}">
+    (function() {
+      'use strict';
+
+      function initFolderPermissions() {
+        const selectAllBtn = document.getElementById('select-all-folders');
+        const folderContainer = document.getElementById('custom-folder-permissions');
+        const folderCounter = document.getElementById('folder-counter');
+        const folderTotal = document.getElementById('folder-total');
+
+        if (!selectAllBtn || !folderContainer || !folderCounter || !folderTotal) {
+          console.error('Folder permissions: Required elements not found');
+          return;
+        }
+
+        const folderCheckboxes = folderContainer.querySelectorAll('input.js-folder-checkbox');
+
+        if (!folderCheckboxes.length) {
+          console.error('Folder permissions: No checkboxes found');
+          return;
+        }
+
+        folderTotal.textContent = folderCheckboxes.length;
+
+        function updateCounter() {
+          let checkedCount = 0;
+          folderCheckboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+              checkedCount++;
+            }
+          });
+
+          folderCounter.textContent = checkedCount;
+
+          if (checkedCount === folderCheckboxes.length && checkedCount > 0) {
+            selectAllBtn.textContent = 'Deselect all';
+          } else {
+            selectAllBtn.textContent = 'Select all';
+          }
+        }
+
+        function toggleSelectAll(event) {
+          event.preventDefault();
+
+          let checkedCount = 0;
+          folderCheckboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+              checkedCount++;
+            }
+          });
+
+          const shouldCheck = checkedCount !== folderCheckboxes.length;
+
+          folderCheckboxes.forEach(function(checkbox) {
+            checkbox.checked = shouldCheck;
+          });
+
+          updateCounter();
+        }
+
+        function handleParentSelection(parentCheckbox, isUserAction) {
+          const parentId = parentCheckbox.value;
+          if (!parentId) return;
+
+          const children = folderContainer.querySelectorAll(`[data-parent-id="${parentId}"] input.js-folder-checkbox`);
+
+          children.forEach(function(childCheckbox) {
+            if (childCheckbox.checked !== parentCheckbox.checked) {
+              childCheckbox.checked = parentCheckbox.checked;
+              handleParentSelection(childCheckbox, false);
+            }
+          });
+
+          if (isUserAction) {
+            updateCounter();
+          }
+        }
+
+        function updateParentState(childCheckbox) {
+          const parentId = childCheckbox.getAttribute('data-parent-id');
+          if (!parentId) return;
+
+          const parentCheckbox = folderContainer.querySelector(`input.js-folder-checkbox[value="${parentId}"]`);
+          if (!parentCheckbox) return;
+
+          const siblings = folderContainer.querySelectorAll(`[data-parent-id="${parentId}"] input.js-folder-checkbox`);
+          let allChecked = true;
+          let anyChecked = false;
+
+          siblings.forEach(function(sibling) {
+            if (sibling.checked) {
+              anyChecked = true;
+            } else {
+              allChecked = false;
+            }
+          });
+
+          if (allChecked) {
+            parentCheckbox.checked = true;
+            parentCheckbox.indeterminate = false;
+          } else if (anyChecked) {
+            parentCheckbox.checked = false;
+            parentCheckbox.indeterminate = true;
+          } else {
+            parentCheckbox.checked = false;
+            parentCheckbox.indeterminate = false;
+          }
+
+          updateParentState(parentCheckbox);
+        }
+
+        selectAllBtn.addEventListener('click', toggleSelectAll);
+
+        folderCheckboxes.forEach(function(checkbox) {
+          checkbox.addEventListener('change', function(event) {
+            if (event.isTrusted) {
+              handleParentSelection(checkbox, true);
+              updateParentState(checkbox);
+              updateCounter();
+            }
+          });
+        });
+
+        updateCounter();
+
+        folderCheckboxes.forEach(function(checkbox) {
+          if (checkbox.checked) {
+            updateParentState(checkbox);
+          }
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initFolderPermissions);
+      } else {
+        setTimeout(initFolderPermissions, 100);
+      }
+    })();
+  </script>
 {% elif user and user.platform_admin %}
-  <p class="bottom-gutter usa-body">
+  <p class="margin-bottom-3 usa-body">
     Platform admin users can access all template folders.
   </p>
 {% endif %}

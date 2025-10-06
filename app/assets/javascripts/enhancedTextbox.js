@@ -1,4 +1,4 @@
-(function(Modules) {
+(function(window) {
   "use strict";
 
   if (
@@ -7,10 +7,11 @@
 
   const tagPattern = /\(\(([^\)\((\?)]+)(\?\?)?([^\)\(]*)\)\)/g;
 
-  Modules.EnhancedTextbox = function() {
+  window.NotifyModules['enhanced-textbox'] = function() {
 
-    this.start = function(textarea) {
+    this.start = function(element) {
 
+      let textarea = $(element);
       let visibleTextbox;
 
       this.highlightPlaceholders = (
@@ -18,7 +19,7 @@
         !!textarea.data('highlightPlaceholders')
       );
 
-      this.$textbox = $(textarea)
+      this.$textbox = textarea
         .wrap(`
           <div class='textbox-highlight-wrapper' />
         `)
@@ -58,8 +59,8 @@
         )
       );
 
-      if ('stickAtBottomWhenScrolling' in GOVUK) {
-        GOVUK.stickAtBottomWhenScrolling.recalculate();
+      if ('stickAtBottomWhenScrolling' in window.NotifyModules) {
+        window.NotifyModules.stickAtBottomWhenScrolling.recalculate();
       }
 
     };
@@ -84,4 +85,4 @@
 
   };
 
-})(window.GOVUK.Modules);
+})(window);

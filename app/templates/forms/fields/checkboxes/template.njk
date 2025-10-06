@@ -1,5 +1,5 @@
 {% from "components/components/error-message/macro.njk" import usaErrorMessage -%}
-{% from "components/components/fieldset/macro.njk" import govukFieldset %}
+{% from "components/components/fieldset/macro.njk" import usaFieldset %}
 {% from "components/components/hint/macro.njk" import usaHint %}
 {% from "components/components/label/macro.njk" import usaLabel %}
 
@@ -7,7 +7,7 @@
 {#- Updated from GOV.UK components to USWDS patterns
     Changed from original GOV.UK template:
     - Uses USWDS checkbox classes (usa-checkbox, usa-checkbox__input, usa-checkbox__label)
-    - Conditional content uses display-none utility class instead of govuk-specific classes
+    - Conditional content uses display-none utility class instead of framework-specific classes
     - Label uses usaLabel macro instead of radio label
     - Hint text uses usa-checkbox__label-description class
     - Maintains all original functionality including conditional reveals and nested checkboxes -#}
@@ -129,7 +129,7 @@
 
 <div class="{% if formGroup %}usa-form-group{% endif %} {%- if params.errorMessage %} usa-form-group--error{% endif %} {%- if params.formGroup.classes %} {{ params.formGroup.classes }}{% endif %}">
 {% if params.fieldset %}
-  {% call govukFieldset({
+  {% call usaFieldset({
     describedBy: describedBy,
     classes: params.fieldset.classes,
     attributes: params.fieldset.attributes,

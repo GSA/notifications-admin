@@ -324,7 +324,7 @@ class Service(JSONModel, SortByNameMixin):
         return self.intending_to_send_email and not self.has_email_reply_to_address
 
     @property
-    def shouldnt_use_govuk_as_sms_sender(self):
+    def shouldnt_use_default_sms_sender(self):
         return self.organization_type != Organization.TYPE_FEDERAL
 
     @cached_property
@@ -354,8 +354,8 @@ class Service(JSONModel, SortByNameMixin):
         return len(self.sms_senders)
 
     @property
-    def sms_sender_is_govuk(self):
-        return self.default_sms_sender in {"GOVUK", "None"}
+    def sms_sender_is_default(self):
+        return self.default_sms_sender in {"USGOV", "None"}
 
     def get_sms_sender(self, id):
         return service_api_client.get_sms_sender(self.id, id)
@@ -365,8 +365,8 @@ class Service(JSONModel, SortByNameMixin):
         return all(
             (
                 self.intending_to_send_sms,
-                self.shouldnt_use_govuk_as_sms_sender,
-                self.sms_sender_is_govuk,
+                self.shouldnt_use_default_sms_sender,
+                self.sms_sender_is_default,
             )
         )
 

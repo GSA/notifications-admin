@@ -77,11 +77,11 @@ describe("Stick to top/bottom of window when scrolling", () => {
     beforeEach(() => {
 
       document.body.innerHTML = `
-        <div class="govuk-grid-row">
-          <main class="govuk-grid-column-three-quarters column-main">
+        <div class="grid-row">
+          <main class="grid-col-9 column-main">
             <form method="post" autocomplete="off">
-              <div class="govuk-grid-row js-stick-at-top-when-scrolling">
-                <div class="govuk-grid-column-two-thirds ">
+              <div class="grid-row js-stick-at-top-when-scrolling">
+                <div class="grid-col-8">
                   <div class="form-group" data-module="">
                     <label class="form-label" for="placeholder_value">
                       name
@@ -98,7 +98,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
         </div>
         <footer class="js-footer"></footer>`;
 
-      inputForm = document.querySelector('form > .govuk-grid-row');
+      inputForm = document.querySelector('form > .grid-row');
       formFooter = document.querySelector('.page-footer');
       footer = document.querySelector('.js-footer');
 
@@ -140,7 +140,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
 
       document.body.innerHTML = '';
 
-      window.GOVUK.stickAtTopWhenScrolling.clearEvents();
+      window.NotifyModules.stickAtTopWhenScrolling.clearEvents();
 
       screenMock.reset();
 
@@ -150,7 +150,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
 
       // scroll position defaults to 0, element top defaults to 138px
 
-      window.GOVUK.stickAtTopWhenScrolling.init();
+      window.NotifyModules.stickAtTopWhenScrolling.init();
 
       expect(inputForm.classList.contains('content-fixed-onload')).toBe(false);
       expect(inputForm.classList.contains('content-fixed')).toBe(false);
@@ -167,7 +167,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
       // scroll past top of form
       screenMock.scrollTo(inputForm.offsetTop + 10);
 
-      window.GOVUK.stickAtTopWhenScrolling.init();
+      window.NotifyModules.stickAtTopWhenScrolling.init();
 
       expect(inputForm.classList.contains('content-fixed')).toBe(false);
       expect(inputForm.classList.contains('content-fixed-onload')).toBe(false); // check the class for onload isn't applied
@@ -181,7 +181,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
         // scroll past the top of the form
         screenMock.scrollTo(inputForm.offsetTop + 10);
 
-        window.GOVUK.stickAtTopWhenScrolling.init();
+        window.NotifyModules.stickAtTopWhenScrolling.init();
 
       });
 
@@ -215,7 +215,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
       // scroll past the furthest point
       screenMock.scrollTo(furthestTopPoint + 10);
 
-      window.GOVUK.stickAtTopWhenScrolling.init();
+      window.NotifyModules.stickAtTopWhenScrolling.init();
 
       // `.content-fixed-onload` adds the drop-shadow without fading in to show it did not become sticky from user interaction
       expect(inputForm.classList.contains('content-fixed-onload')).toBe(true);
@@ -232,7 +232,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
       beforeEach(() => {
 
         // default scroll position is above top of form
-        window.GOVUK.stickAtTopWhenScrolling.init();
+        window.NotifyModules.stickAtTopWhenScrolling.init();
 
       });
 
@@ -275,7 +275,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
         // scroll past top of form
         screenMock.scrollTo(inputForm.offsetTop + 10);
 
-        window.GOVUK.stickAtTopWhenScrolling.init();
+        window.NotifyModules.stickAtTopWhenScrolling.init();
 
       });
 
@@ -315,7 +315,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
         // move the sticky over the link. It's 168px high so this position will cause it to overlap.
         screenMock.scrollTo(link.offsetTop - 140);
 
-        window.GOVUK.stickAtTopWhenScrolling.init();
+        window.NotifyModules.stickAtTopWhenScrolling.init();
 
       });
 
@@ -336,7 +336,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
         expect(stickyPosition.top).toBeLessThanOrEqual(link.offsetTop);
         expect(stickyPosition.bottom).toBeGreaterThanOrEqual(linkBottom);
 
-        window.GOVUK.stickAtTopWhenScrolling.scrollToRevealElement(link);
+        window.NotifyModules.stickAtTopWhenScrolling.scrollToRevealElement(link);
 
         stickyPosition = getStickyGroupPosition(screenMock, { stickyEls: [inputForm], edge: 'top' });
 
@@ -370,7 +370,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
         // move the sticky over the checkbox. It's 168px high so this position will cause it to overlap.
         screenMock.scrollTo(checkbox.offsetTop - 10);
 
-        window.GOVUK.stickAtTopWhenScrolling.init();
+        window.NotifyModules.stickAtTopWhenScrolling.init();
 
       });
 
@@ -439,7 +439,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
         // update inputForm position as DOM normally would
         inputForm.offsetTop = screenMock.window.top;
 
-        window.GOVUK.stickAtTopWhenScrolling.init();
+        window.NotifyModules.stickAtTopWhenScrolling.init();
 
       });
 
@@ -522,7 +522,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
         const inputFormBottom = getScreenItemBottomPosition(inputForm);
 
         // set mode to 'dialog' so sticky elements are treated as one item
-        window.GOVUK.stickAtTopWhenScrolling.setMode('dialog')
+        window.NotifyModules.stickAtTopWhenScrolling.setMode('dialog')
 
         // add another sticky element before the form footer
         radios = helpers.getRadioGroup({
@@ -567,7 +567,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
 
       afterEach(() => {
 
-        window.GOVUK.stickAtTopWhenScrolling.setMode('default');
+        window.NotifyModules.stickAtTopWhenScrolling.setMode('default');
 
       });
 
@@ -578,7 +578,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
           // scroll past top of first sticky element
           screenMock.scrollTo(inputForm.offsetTop + 10);
 
-          window.GOVUK.stickAtTopWhenScrolling.init();
+          window.NotifyModules.stickAtTopWhenScrolling.init();
 
         });
 
@@ -623,7 +623,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
           // scroll past top of first sticky element
           screenMock.scrollTo(furthestTopPoint + 10);
 
-          window.GOVUK.stickAtTopWhenScrolling.init();
+          window.NotifyModules.stickAtTopWhenScrolling.init();
 
         });
 
@@ -684,7 +684,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
 
           screenMock.scrollTo(inputForm.offsetTop + 10);
 
-          window.GOVUK.stickAtTopWhenScrolling.init()
+          window.NotifyModules.stickAtTopWhenScrolling.init()
 
         });
 
@@ -724,7 +724,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
     beforeEach(() => {
 
       document.body.innerHTML = `
-        <main role="main" class="govuk-grid-column-three-quarters column-main">
+        <main role="main" class="grid-col-9 column-main">
           <a class="usa-back-link" href="">Back</a>
           <h1 class="heading-large js-header">
             Preview of ‘Content email’
@@ -752,7 +752,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
               <p>This is a paragraph with a horizontal line underneath.</p>
               <hr>
               <p>This is a paragraph with a horizontal line above.</p>
-              <p>This paragraph has a link in it: <a class="usa-link" href="https://www.gov.uk">https://www.gov.uk</a>.</p>
+              <p>This paragraph has a link in it: <a class="usa-link" href="https://www.usa.gov">https://www.usa.gov</a>.</p>
             </div>
             <div class="page-footer js-stick-at-bottom-when-scrolling">
               <form method="post" action="">
@@ -804,7 +804,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
 
     afterEach(() => {
 
-      window.GOVUK.stickAtBottomWhenScrolling.clearEvents();
+      window.NotifyModules.stickAtBottomWhenScrolling.clearEvents();
 
     });
 
@@ -815,7 +815,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
       // scroll so the bottom of the window goes past the bottom of the element
       screenMock.scrollTo((pageFooterBottom - windowHeight) + 10);
 
-      window.GOVUK.stickAtBottomWhenScrolling.init();
+      window.NotifyModules.stickAtBottomWhenScrolling.init();
 
       // `.content-fixed-onload` adds the drop-shadow without fading in to show it did not become sticky from user interaction
       expect(pageFooter.classList.contains('content-fixed-onload')).toBe(false);
@@ -835,7 +835,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
       // scroll past top of form
       screenMock.scrollTo(pageFooterBottom - 10);
 
-      window.GOVUK.stickAtTopWhenScrolling.init();
+      window.NotifyModules.stickAtTopWhenScrolling.init();
 
       expect(pageFooter.classList.contains('content-fixed')).toBe(false);
       expect(pageFooter.classList.contains('content-fixed-onload')).toBe(false); // check the class for onload isn't applied
@@ -847,7 +847,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
       beforeEach(() => {
 
         // scroll position defaults to 0 so bottom of window starts at 940px. Element bottom defaults to 1160px.
-        window.GOVUK.stickAtBottomWhenScrolling.init();
+        window.NotifyModules.stickAtBottomWhenScrolling.init();
 
       });
 
@@ -883,7 +883,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
       // scroll the window bottom past the furthest point
       screenMock.scrollTo((furthestBottomPoint - windowHeight) - 10);
 
-      window.GOVUK.stickAtBottomWhenScrolling.init();
+      window.NotifyModules.stickAtBottomWhenScrolling.init();
 
       // `.content-fixed-onload` adds the drop-shadow without fading in to show it did not become sticky from user interaction
       expect(pageFooter.classList.contains('content-fixed-onload')).toBe(true);
@@ -911,7 +911,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
         // scroll to just below the element
         screenMock.scrollTo((pageFooterBottom - windowHeight) + 10);
 
-        window.GOVUK.stickAtBottomWhenScrolling.init();
+        window.NotifyModules.stickAtBottomWhenScrolling.init();
 
       });
 
@@ -982,7 +982,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
         // move the sticky over the link. It's 50px high so this position will cause it to overlap.
         screenMock.scrollTo((linkBottom - windowHeight) + 5);
 
-        window.GOVUK.stickAtBottomWhenScrolling.init();
+        window.NotifyModules.stickAtBottomWhenScrolling.init();
 
       });
 
@@ -1003,7 +1003,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
         expect(stickyPosition.top).toBeLessThanOrEqual(link.offsetTop);
         expect(stickyPosition.bottom).toBeGreaterThanOrEqual(linkBottom);
 
-        window.GOVUK.stickAtBottomWhenScrolling.scrollToRevealElement(link)
+        window.NotifyModules.stickAtBottomWhenScrolling.scrollToRevealElement(link)
 
         stickyPosition = getStickyGroupPosition(screenMock, { stickyEls: [pageFooter], edge: 'bottom' });
 
@@ -1031,7 +1031,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
           offsetTop: pageFooter.offsetTop
         };
 
-        window.GOVUK.stickAtBottomWhenScrolling.init();
+        window.NotifyModules.stickAtBottomWhenScrolling.init();
 
         // add mock for shim
         pageFooterShim = document.querySelector('.shim');
@@ -1103,7 +1103,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
         // move the sticky over the checkbox. It's 50px high so this position will cause it to overlap.
         screenMock.scrollTo((checkboxBottom - windowHeight) + 5);
 
-        window.GOVUK.stickAtBottomWhenScrolling.init();
+        window.NotifyModules.stickAtBottomWhenScrolling.init();
 
       });
 
@@ -1171,7 +1171,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
         // update content position as DOM normally would
         pageFooter.offsetTop = screenMock.window.bottom - pageFooter.offsetHeight;
 
-        window.GOVUK.stickAtBottomWhenScrolling.init();
+        window.NotifyModules.stickAtBottomWhenScrolling.init();
 
       });
 
@@ -1251,7 +1251,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
         const contentBottom = getScreenItemBottomPosition(content);
 
         // set mode to 'dialog' so sticky elements are treated as one item
-        window.GOVUK.stickAtBottomWhenScrolling.setMode('dialog')
+        window.NotifyModules.stickAtBottomWhenScrolling.setMode('dialog')
 
         // add another sticky element before the form footer
         radios = helpers.getRadioGroup({
@@ -1294,7 +1294,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
 
       afterEach(() => {
 
-        window.GOVUK.stickAtBottomWhenScrolling.setMode('default');
+        window.NotifyModules.stickAtBottomWhenScrolling.setMode('default');
 
       });
 
@@ -1309,7 +1309,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
           // scroll to just above the element
           screenMock.scrollTo((pageFooterBottom - windowHeight) - 10);
 
-          window.GOVUK.stickAtBottomWhenScrolling.init();
+          window.NotifyModules.stickAtBottomWhenScrolling.init();
 
         });
 
@@ -1352,7 +1352,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
 
           screenMock.scrollTo((furthestBottomPoint - windowHeight) - 10)
 
-          window.GOVUK.stickAtBottomWhenScrolling.init();
+          window.NotifyModules.stickAtBottomWhenScrolling.init();
 
         });
 
@@ -1414,7 +1414,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
 
           screenMock.scrollTo((pageFooterBottom - windowHeight) - 10);
 
-          window.GOVUK.stickAtBottomWhenScrolling.init()
+          window.NotifyModules.stickAtBottomWhenScrolling.init()
 
         });
 

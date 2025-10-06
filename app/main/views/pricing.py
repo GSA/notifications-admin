@@ -1,5 +1,4 @@
-from flask import current_app, render_template
-from flask_login import current_user
+from flask import render_template
 
 from app.main import main
 from app.main.forms import SearchByNameForm
@@ -33,20 +32,5 @@ def pricing():
 def how_to_pay():
     return render_template(
         "views/pricing/how-to-pay.html",
-        navigation_links=using_notify_nav(),
-    )
-
-
-@main.route("/pricing/billing-details")
-@user_is_logged_in
-def billing_details():
-    if current_user.is_authenticated:
-        return render_template(
-            "views/pricing/billing-details.html",
-            billing_details=current_app.config["NOTIFY_BILLING_DETAILS"],
-            navigation_links=using_notify_nav(),
-        )
-    return render_template(
-        "views/pricing/billing-details-signed-out.html",
         navigation_links=using_notify_nav(),
     )

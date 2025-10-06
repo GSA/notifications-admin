@@ -6,6 +6,3 @@ require('./polyfills.js');
 
 // Make jQuery available everywhere
 global.$ = global.jQuery = require('jquery');
-
-// Bring in the GOV.UK modules system
-require('govuk_frontend_toolkit/javascripts/govuk/modules.js');
