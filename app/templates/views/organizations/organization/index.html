@@ -2,20 +2,23 @@
 {% from "components/big-number.html" import big_number %}
 {% from "components/live-search.html" import live_search %}
 {% from "components/pill.html" import pill %}
+{% from "components/table.html" import list_table, field, row_heading %}
 {% extends "withnav_template.html" %}
 
 {% block org_page_title %}
-  Usage
+  Organization Dashboard
 {% endblock %}
 
 {% block maincolumn_content %}
 
-  {{ page_header('Usage', size='medium') }}
+  {{ page_header('Organization Dashboard', size='large') }}
+
+  <h2 class="font-heading-md">Overall {{ selected_year }} Total Message Usage</h2>
+  <p class="usa-body">Combined totals across all services in {{ current_org.name }}</p>
 
   <div class="margin-bottom-3">
     {{ pill(years, selected_year, big_number_args={'smallest': True}) }}
   </div>
-
   <div class="grid-row margin-bottom-3">
     <div class="grid-col-6">
       <h2 class="font-heading-md">Emails</h2>
