@@ -33,7 +33,7 @@
     "d3": "^7.9.0",
     "gulp-merge": "^0.1.1",
     "jquery": "3.7.1",
-    "playwright": "^1.55.1",
+    "playwright": "^1.56.0",
     "python": "^0.0.4",
     "query-command-supported": "1.0.0",
     "sass-embedded": "^1.93.2",
