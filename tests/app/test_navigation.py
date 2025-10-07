@@ -112,7 +112,6 @@ EXCLUDED_ENDPOINTS = tuple(
             "guest_list",
             "how_to",
             "history",
-            "how_to_pay",
             "inbound_sms_admin",
             "index",
             "information_risk_management",

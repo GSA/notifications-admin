@@ -98,7 +98,6 @@ def test_hiding_pages_from_search_engines(
         "multiple_languages",
         "benchmark_performance",
         "message_status",
-        "how_to_pay",
         "get_started",
         "how_to",
         "create_and_send_messages",
