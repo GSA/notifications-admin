@@ -77,6 +77,11 @@ def view_job(service_id, job_id):
         counts=_get_job_counts(job),
         notifications=notifications,
         more_than_one_page=more_than_one_page,
+        uploaded_file_name=job.original_file_name,
+        time_left=get_time_left(job.created_at),
+        service_data_retention_days=current_service.get_days_of_retention(
+            job.template_type, number_of_days="seven_day"
+        ),
         download_link=(
             url_for(
                 ".view_job_csv",
