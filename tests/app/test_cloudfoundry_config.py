@@ -16,7 +16,7 @@ bucket_credentials = {
 @pytest.fixture
 def vcap_services():
     return {
-        "aws-elasticache-redis": [{"credentials": {"uri": "redis://xxx:6379"}}],
+        "aws-elasticache-redis": [{"credentials": {"uri": "rediss://xxx:6379"}}],
         "s3": [
             {
                 "name": "notify-api-csv-upload-bucket-test",
