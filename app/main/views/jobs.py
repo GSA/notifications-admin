@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
 from functools import partial
 
 from flask import (
@@ -59,7 +58,6 @@ def view_job(service_id, job_id):
 
     filter_args = parse_filter_args(request.args)
     filter_args["status"] = set_status_filters(filter_args)
-    api_public_url = os.environ.get("API_PUBLIC_URL")
 
     notifications = None
     more_than_one_page = False
@@ -74,7 +72,6 @@ def view_job(service_id, job_id):
 
     return render_template(
         "views/jobs/job.html",
-        api_public_url=api_public_url,
         job=job,
         status=request.args.get("status", ""),
         counts=_get_job_counts(job),

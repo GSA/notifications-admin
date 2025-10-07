@@ -80,8 +80,7 @@ const javascripts = () => {
     paths.npm + 'query-command-supported/dist/queryCommandSupported.min.js',
     paths.npm + 'textarea-caret/index.js',
     paths.npm + 'cbor-js/cbor.js',
-    paths.npm + 'd3/dist/d3.min.js',
-    paths.npm + 'socket.io-client/dist/socket.io.min.js'
+    paths.npm + 'd3/dist/d3.min.js'
   ]);
 
   // Concatenate all streams
