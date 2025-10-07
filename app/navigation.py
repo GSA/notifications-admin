@@ -90,9 +90,6 @@ class HeaderNavigation(Navigation):
             "view_jobs",
             "usage",
         },
-        "pricing": {
-            "how_to_pay",
-        },
         "documentation": {
             "documentation",
             "integration_testing",

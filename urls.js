@@ -118,7 +118,6 @@ const routes = {
 
   documentation: [
     { label: 'Documentation', path: '/documentation' },
-    { label: 'Pricing How to Pay', path: '/pricing/how-to-pay' },
     { label: 'Create Messages', path: '/using-notify/how-to/create-and-send-messages' },
     { label: 'Edit Messages', path: '/using-notify/how-to/edit-and-format-messages' },
     { label: 'Send Files by Email', path: '/using-notify/how-to/send-files-by-email' },

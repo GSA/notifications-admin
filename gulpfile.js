@@ -7,7 +7,6 @@ plugins.addSrc = require('gulp-add-src');
 plugins.babel = require('gulp-babel');
 plugins.cleanCSS = require('gulp-clean-css');
 plugins.concat = require('gulp-concat');
-plugins.jshint = require('gulp-jshint');
 plugins.prettyerror = require('gulp-prettyerror');
 plugins.uglify = require('gulp-uglify');
 
@@ -149,7 +148,7 @@ const styles = async () => {
   await uswds.compileSass();
 };
 
-// Task to copy USWDS assetsconst
+// Task to copy USWDS assets
 const copyUSWDSAssets = () => {
   return src([
     'node_modules/@uswds/uswds/dist/img/**/*',
