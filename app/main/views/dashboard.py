@@ -194,7 +194,7 @@ def template_usage(service_id):
         get_monthly_template_stats(month, stats)
         for month in get_months_for_financial_year(year, time_format="%B")
     ]
-
+    months.reverse()
     return render_template(
         "views/dashboard/all-template-statistics.html",
         months=months,
