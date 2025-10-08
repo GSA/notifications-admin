@@ -127,6 +127,7 @@ logs/**
 # Files/folders created by build so not present in .cfignore
 app/version.py
 app/static
+app/static-webpack
 app/templates/vendor
 
 # Terraform
