@@ -27,7 +27,6 @@ const javascripts = () => {
     paths.src + 'javascripts/preventDuplicateFormSubmissions.js',
     paths.src + 'javascripts/errorBanner.js',
     paths.src + 'javascripts/notifyModal.js',
-    paths.src + 'javascripts/timeoutPopup.js',
     paths.src + 'javascripts/date.js',
     paths.src + 'javascripts/loginAlert.js',
     paths.src + 'javascripts/sidenav.js',
@@ -88,6 +87,7 @@ const javascripts = () => {
 
   // Use the mainBundle as the base and append remaining non-transpiled files at the end
   return mainBundle
+    .pipe(plugins.addSrc.append(paths.src + 'javascripts/timeoutPopup.js'))
     .pipe(plugins.addSrc.append(paths.src + 'javascripts/listEntry.js'))
     .pipe(plugins.addSrc.append(paths.src + 'javascripts/stick-to-window-when-scrolling.js'))
     .pipe(plugins.addSrc.append(paths.src + 'javascripts/totalMessagesChart.js'))
