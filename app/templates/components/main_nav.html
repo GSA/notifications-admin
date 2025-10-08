@@ -10,9 +10,9 @@
       <li class="usa-sidenav__item"><a class="{{ main_navigation.is_selected('dashboard') }}" href="{{ url_for('.service_dashboard', service_id=current_service.id) }}">Dashboard</a></li>
       <li class="usa-sidenav__item"><a class="{{ main_navigation.is_selected('activity') }}" href="{{ url_for('.all_jobs_activity', service_id=current_service.id) }}">Activity</a></li>
     {% endif %}
-    {% if not current_user.has_permissions(ServicePermission.VIEW_ACTIVITY) %}
-      <li class="usa-sidenav__item"><a class="{{ casework_navigation.is_selected('sent-messages') }}" href="{{ url_for('.view_notifications', service_id=current_service.id, status='sending,delivered,failed') }}">Sent messages</a></li>
-    {% endif %}
+    {# {% if not current_user.has_permissions(ServicePermission.VIEW_ACTIVITY) %} #}
+    {#   <li class="usa-sidenav__item"><a class="{{ casework_navigation.is_selected('sent-messages') }}" href="{{ url_for('.view_notifications', service_id=current_service.id, status='sending,delivered,failed') }}">Sent messages</a></li> #}
+    {# {% endif %} #}
   {% elif current_user.has_permissions(allow_org_user=True) %}
     <li class="usa-sidenav__item"><a class="usa-link{{ main_navigation.is_selected('usage') }}" href="{{ url_for('.usage', service_id=current_service.id) }}">Usage</a></li>
     <li class="usa-sidenav__item"><a class="usa-link{{ main_navigation.is_selected('team-members') }}" href="{{ url_for('.manage_users', service_id=current_service.id) }}">Team members</a></li>
