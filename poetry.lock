@@ -4002,14 +4002,14 @@ zstd = ["zstandard (>=0.18.0)"]
 
 [[package]]
 name = "virtualenv"
-version = "20.34.0"
+version = "20.35.0"
 description = "Virtual Python Environment builder"
 optional = false
 python-versions = ">=3.8"
 groups = ["main", "dev"]
 files = [
-    {file = "virtualenv-20.34.0-py3-none-any.whl", hash = "sha256:341f5afa7eee943e4984a9207c025feedd768baff6753cd660c857ceb3e36026"},
-    {file = "virtualenv-20.34.0.tar.gz", hash = "sha256:44815b2c9dee7ed86e387b842a84f20b93f7f417f95886ca1996a72a4138eb1a"},
+    {file = "virtualenv-20.35.0-py3-none-any.whl", hash = "sha256:3961608acaf5ee9ddc87b5e05664c8dd91d34db59494ae9e648f659292be55ef"},
+    {file = "virtualenv-20.35.0.tar.gz", hash = "sha256:040361d5b7451558edc0a3a68b9f108830d9dc87cc5d03d437a5cf9c742b5cb8"},
 ]
 
 [package.dependencies]
@@ -4398,4 +4398,4 @@ cffi = ["cffi (>=1.17) ; python_version >= \"3.13\" and platform_python_implemen
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13.2"
-content-hash = "f1bc03a8aa2452699533df7fcececf5701615e5c26210e836d7e798cbfa7cd00"
+content-hash = "ca32e2bf55e5b64ce89ed053e324921b25556c09504f41690e0afcac6d698314"
