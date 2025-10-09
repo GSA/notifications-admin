@@ -18,7 +18,7 @@ const paths = {
 
 const javascripts = () => {
   // Files that don't use NotifyModules and can be uglified
-  const local = src([
+  const localUglified = src([
     paths.src + 'javascripts/modules/init.js',
     paths.src + 'javascripts/modules/uswds-modules.js',
     paths.src + 'javascripts/modules/show-hide-content.js',
@@ -27,13 +27,19 @@ const javascripts = () => {
     paths.src + 'javascripts/preventDuplicateFormSubmissions.js',
     paths.src + 'javascripts/errorBanner.js',
     paths.src + 'javascripts/notifyModal.js',
-    paths.src + 'javascripts/timeoutPopup.js',
     paths.src + 'javascripts/date.js',
     paths.src + 'javascripts/loginAlert.js',
     paths.src + 'javascripts/sidenav.js',
     paths.src + 'javascripts/validation.js',
     paths.src + 'javascripts/scrollPosition.js',
   ])
+    .pipe(plugins.prettyerror())
+    .pipe(
+      plugins.babel({
+        presets: ['@babel/preset-env'],
+      })
+    )
+    .pipe(plugins.uglify());
 
   // Files that use NotifyModules - split into two groups to avoid stream issues
   const notifyModules1 = src([
@@ -55,6 +61,7 @@ const javascripts = () => {
     paths.src + 'javascripts/collapsibleCheckboxes.js',
     paths.src + 'javascripts/radioSlider.js',
     paths.src + 'javascripts/updateStatus.js',
+    paths.src + 'javascripts/timeoutPopup.js',
     paths.src + 'javascripts/main.js',
   ])
     .pipe(plugins.prettyerror())
@@ -63,15 +70,6 @@ const javascripts = () => {
         presets: ['@babel/preset-env'],
       })
     );
-
-  // Apply uglify only to local files
-  const localUglified = local
-    .pipe(
-      plugins.babel({
-        presets: ['@babel/preset-env'],
-      })
-    )
-    .pipe(plugins.uglify());
 
   // First create vendored with jquery-expose immediately after jQuery
   const vendoredWithExpose = src([
