@@ -86,7 +86,6 @@ const javascripts = () => {
 
   // Use the mainBundle as the base and append remaining non-transpiled files at the end
   return mainBundle
-    .pipe(plugins.addSrc.append(paths.src + 'javascripts/timeoutPopup.js'))
     .pipe(plugins.addSrc.append(paths.src + 'javascripts/listEntry.js'))
     .pipe(plugins.addSrc.append(paths.src + 'javascripts/stick-to-window-when-scrolling.js'))
     .pipe(plugins.addSrc.append(paths.src + 'javascripts/totalMessagesChart.js'))
