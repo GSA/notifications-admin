@@ -63,7 +63,6 @@ class HeaderNavigation(Navigation):
             "service_dashboard",
             "template_usage",
             "view_notification",
-            # "view_notifications",
             "action_blocked",
             "add_service_template",
             "check_messages",
@@ -160,7 +159,6 @@ class MainNavigation(Navigation):
             "service_dashboard",
             "template_usage",
             "view_notification",
-            # "view_notifications",
         },
         "templates": {
             "action_blocked",
@@ -268,7 +266,6 @@ class CaseworkNavigation(Navigation):
             "send_one_off_to_myself",
         },
         "sent-messages": {
-            # "view_notifications",
             "view_notification",
         },
         "uploads": {
