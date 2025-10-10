@@ -126,18 +126,12 @@ def test_service_navigation_for_org_user(
     [
         (
             [],
-            (
-                "Send messages",
-                "Sent messages",
-            ),
+            ("Send messages",),
             403,
         ),
         (
             [ORGANISATION_ID],
-            (
-                "Send messages",
-                "Sent messages",
-            ),
+            ("Send messages",),
             200,
         ),
     ],

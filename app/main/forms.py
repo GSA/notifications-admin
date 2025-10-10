@@ -1564,20 +1564,20 @@ class SearchUsersForm(StripWhitespaceForm):
     search = UsaSearchField("Search by name or email address")
 
 
-class SearchNotificationsForm(StripWhitespaceForm):
-    to = UsaSearchField()
-
-    labels = {
-        "email": "Search by email address",
-        "sms": "Search by phone number",
-    }
-
-    def __init__(self, message_type, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.to.label.text = self.labels.get(
-            message_type,
-            "Search by phone number or email address",
-        )
+# class SearchNotificationsForm(StripWhitespaceForm):
+#     to = UsaSearchField()
+#
+#     labels = {
+#         "email": "Search by email address",
+#         "sms": "Search by phone number",
+#     }
+#
+#     def __init__(self, message_type, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.to.label.text = self.labels.get(
+#             message_type,
+#             "Search by phone number or email address",
+#         )
 
 
 class SearchTemplatesForm(StripWhitespaceForm):
