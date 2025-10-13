@@ -132,6 +132,8 @@
         {{ text }}
         {%- if suffix %}<span class="usa-sr-only"> {{ suffix }}</span>{% endif -%}
       </a>
+    {% else %}
+      <span class="table-field-status-default">Set automatically</span>
     {% endif %}
   {% endcall %}
 {%- endmacro %}

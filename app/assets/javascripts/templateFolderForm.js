@@ -12,6 +12,11 @@
 
       this.$liveRegionCounter = this.$form.find('.selection-counter');
 
+      // Get single channel data from DOM (must happen after DOM is ready)
+      const addNewTemplateForm = document.querySelector('div[id=add_new_template_form]');
+      this.$singleNotificationChannel = addNewTemplateForm ? addNewTemplateForm.getAttribute("data-channel") : null;
+      this.$singleChannelService = addNewTemplateForm ? addNewTemplateForm.getAttribute("data-service") : null;
+
       this.$liveRegionCounter.before(this.nothingSelectedButtons);
       this.$liveRegionCounter.before(this.itemsSelectedButtons);
 
@@ -188,9 +193,6 @@
       return changed;
     };
 
-    this.$singleNotificationChannel = (document.querySelector('div[id=add_new_template_form]')).getAttribute("data-channel");
-    this.$singleChannelService = (document.querySelector('div[id=add_new_template_form]')).getAttribute("data-service");
-
     this.actionButtonClicked = function(event) {
       this.currentState = $(event.currentTarget).val();
 
@@ -215,6 +217,12 @@
           }
         }
       } else {
+        // If state is not changing, this is a submit button - allow form submission
+        if (this.currentState === this._lastState) {
+          return true;
+        }
+
+        // Otherwise, show the form UI
         event.preventDefault();
         if (this.stateChanged()) {
           this.render();

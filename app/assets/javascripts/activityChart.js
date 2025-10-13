@@ -239,10 +239,10 @@
             }
 
             const data = await response.json();
-                labels = [];
-                deliveredData = [];
-                failedData = [];
-                pendingData = [];
+                let labels = [];
+                let deliveredData = [];
+                let failedData = [];
+                let pendingData = [];
                 let totalMessages = 0;
 
                 for (var dateString in data) {

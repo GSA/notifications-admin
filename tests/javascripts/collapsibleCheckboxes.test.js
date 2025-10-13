@@ -15,7 +15,7 @@ afterAll(() => {
 describe('Collapsible fieldset', () => {
 
   const _checkboxes = (start, end) => {
-    result = '';
+    let result = '';
 
       for (let num = start; num <= end; num++) {
         let id = `folder-permissions-${num}`;
