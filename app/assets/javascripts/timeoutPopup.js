@@ -1,3 +1,4 @@
+window.NotifyModules = window.NotifyModules || {};
 window.NotifyModules.TimeoutPopup = window.NotifyModules.TimeoutPopup || {};
 
 (function(window) {

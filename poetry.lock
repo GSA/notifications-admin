@@ -2461,14 +2461,14 @@ install = ["zstandard (>=0.21.0)"]
 
 [[package]]
 name = "phonenumbers"
-version = "9.0.15"
+version = "9.0.16"
 description = "Python version of Google's common library for parsing, formatting, storing and validating international phone numbers."
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "phonenumbers-9.0.15-py2.py3-none-any.whl", hash = "sha256:269b73bc05258e8fd57582770b9559307099ea677c8f1dc5272476f661344776"},
-    {file = "phonenumbers-9.0.15.tar.gz", hash = "sha256:345ff7f23768332d866f37732f815cdf1d33c7f0961246562a5c5b78c12c3ff3"},
+    {file = "phonenumbers-9.0.16-py2.py3-none-any.whl", hash = "sha256:3c019f10305c311005672f3a0cea4139fef0b949319a60635ee803cfaef4a2e2"},
+    {file = "phonenumbers-9.0.16.tar.gz", hash = "sha256:4002542d987c453b333b54450a9f60a280ed7ec932afd7d5fa8dbe6c2379f10a"},
 ]
 
 [[package]]
@@ -3059,21 +3059,21 @@ test = ["black (>=22.1.0)", "flake8 (>=4.0.1)", "pre-commit (>=2.17.0)", "pytest
 
 [[package]]
 name = "pytest-env"
-version = "1.1.5"
+version = "1.2.0"
 description = "pytest plugin that allows you to add environment variables."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "pytest_env-1.1.5-py3-none-any.whl", hash = "sha256:ce90cf8772878515c24b31cd97c7fa1f4481cd68d588419fd45f10ecaee6bc30"},
-    {file = "pytest_env-1.1.5.tar.gz", hash = "sha256:91209840aa0e43385073ac464a554ad2947cc2fd663a9debf88d03b01e0cc1cf"},
+    {file = "pytest_env-1.2.0-py3-none-any.whl", hash = "sha256:d7e5b7198f9b83c795377c09feefa45d56083834e60d04767efd64819fc9da00"},
+    {file = "pytest_env-1.2.0.tar.gz", hash = "sha256:475e2ebe8626cee01f491f304a74b12137742397d6c784ea4bc258f069232b80"},
 ]
 
 [package.dependencies]
-pytest = ">=8.3.3"
+pytest = ">=8.4.2"
 
 [package.extras]
-testing = ["covdefaults (>=2.3)", "coverage (>=7.6.1)", "pytest-mock (>=3.14)"]
+testing = ["covdefaults (>=2.3)", "coverage (>=7.10.7)", "pytest-mock (>=3.15.1)"]
 
 [[package]]
 name = "pytest-mock"
@@ -4002,14 +4002,14 @@ zstd = ["zstandard (>=0.18.0)"]
 
 [[package]]
 name = "virtualenv"
-version = "20.34.0"
+version = "20.35.3"
 description = "Virtual Python Environment builder"
 optional = false
 python-versions = ">=3.8"
 groups = ["main", "dev"]
 files = [
-    {file = "virtualenv-20.34.0-py3-none-any.whl", hash = "sha256:341f5afa7eee943e4984a9207c025feedd768baff6753cd660c857ceb3e36026"},
-    {file = "virtualenv-20.34.0.tar.gz", hash = "sha256:44815b2c9dee7ed86e387b842a84f20b93f7f417f95886ca1996a72a4138eb1a"},
+    {file = "virtualenv-20.35.3-py3-none-any.whl", hash = "sha256:63d106565078d8c8d0b206d48080f938a8b25361e19432d2c9db40d2899c810a"},
+    {file = "virtualenv-20.35.3.tar.gz", hash = "sha256:4f1a845d131133bdff10590489610c98c168ff99dc75d6c96853801f7f67af44"},
 ]
 
 [package.dependencies]
@@ -4398,4 +4398,4 @@ cffi = ["cffi (>=1.17) ; python_version >= \"3.13\" and platform_python_implemen
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13.2"
-content-hash = "f1bc03a8aa2452699533df7fcececf5701615e5c26210e836d7e798cbfa7cd00"
+content-hash = "71adc41965576b70d0ed91a9f8c87979dbe3071885db29b77f076dc97990fa00"
