@@ -1,5 +1,6 @@
 beforeAll(() => {
-  require('../../app/assets/javascripts/errorBanner.js')
+  // ErrorBanner module sets window.NotifyModules.ErrorBanner for backward compatibility
+  require('../../app/assets/javascripts/errorBanner.js');
 });
 
 afterAll(() => {

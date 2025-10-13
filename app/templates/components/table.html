@@ -1,5 +1,5 @@
-{% macro mapping_table(caption='', field_headings=[], field_headings_visible=True, caption_visible=True, equal_length=False, border_visible=False) -%}
-  <table class="usa-table{{' usa-table--borderless' if not border_visible}} width-full">
+{% macro mapping_table(caption='', field_headings=[], field_headings_visible=True, caption_visible=True, equal_length=False, border_visible=True, striped=True) -%}
+  <table class="usa-table{{' usa-table--borderless' if not border_visible}}{{' usa-table--striped' if striped}} width-full">
     <caption class="font-body-lg table-heading{{ ' usa-sr-only' if not caption_visible}}">
       {{ caption }}
     </caption>
@@ -22,10 +22,10 @@
   </table>
 {%- endmacro %}
 
-{% macro list_table(items, caption='', empty_message='', field_headings=[], field_headings_visible=True, caption_visible=True, equal_length=False, border_visible=False) -%}
+{% macro list_table(items, caption='', empty_message='', field_headings=[], field_headings_visible=True, caption_visible=True, equal_length=False, border_visible=True, striped=True) -%}
   {% set parent_caller = caller %}
 
-  {% call mapping_table(caption, field_headings, field_headings_visible, caption_visible, equal_length, border_visible) %}
+  {% call mapping_table(caption, field_headings, field_headings_visible, caption_visible, equal_length, border_visible, striped) %}
     {% for item in items %}
       {% call row(item.id) %}
         {{ parent_caller(item, loop.index + 1) }}

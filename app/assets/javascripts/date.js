@@ -1,10 +1,7 @@
-(function (window) {
-    "use strict";
+export function initCurrentYear() {
+  const currentYearElement = document.getElementById("current-year");
 
-    // Show the current year
-    const currentYearElement = document.getElementById("current-year");
-
-    if (currentYearElement) {
-        currentYearElement.textContent = new Date().getFullYear();
-    }
-})(window);
+  if (currentYearElement) {
+    currentYearElement.textContent = new Date().getFullYear();
+  }
+}

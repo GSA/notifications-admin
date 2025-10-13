@@ -12,7 +12,12 @@ beforeAll(() => {
         </div>
     `
 
-    const sessionTimerModule = require('../../app/assets/javascripts/loginAlert.js');
+    // Import and manually initialize the login alert
+    const { initLoginAlert } = require('../../app/assets/javascripts/loginAlert.js');
+    // Don't call initLoginAlert() - tests will call updateCountdown() directly
+    // Just ensure window.updateCountdown is available
+    const { updateCountdown } = require('../../app/assets/javascripts/loginAlert.js');
+    window.updateCountdown = updateCountdown;
     window.NotifyModules.start();
 });
 

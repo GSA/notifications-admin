@@ -165,7 +165,7 @@ recipients.column_headers %}
 
 <h2 class="font-body-lg" id="file-preview">{{ original_file_name }}</h2>
 
-<div class="fullscreen-content" data-module="fullscreen-table">
+<div class="usa-table-container--scrollable" tabindex="0">
   {% call(item, row_number) list_table(
   recipients.displayed_rows,
   caption=original_file_name,
