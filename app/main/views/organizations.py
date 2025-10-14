@@ -124,14 +124,10 @@ def organization_usage(org_id):
 @main.route("/organizations/<uuid:org_id>/download-usage-report.csv", methods=["GET"])
 @user_has_permissions()
 def download_organization_usage_report(org_id):
-    selected_year_input = request.args.get("selected_year")
-    # Validate selected_year to prevent header injection
-    if (
-        selected_year_input
-        and selected_year_input.isdigit()
-        and len(selected_year_input) == 4
-    ):
-        selected_year = selected_year_input
+    # Validate and sanitize selected_year to prevent header injection
+    selected_year_input = request.args.get("selected_year", "")
+    if selected_year_input.isdigit() and len(selected_year_input) == 4:
+        selected_year = str(int(selected_year_input))
     else:
         selected_year = str(datetime.now().year)
     services_usage = current_organization.services_and_usage(
