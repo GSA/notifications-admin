@@ -62,9 +62,9 @@ def view_notification(service_id, notification_id, error_message=None):
         job = None
 
     if get_help_argument() or request.args.get("help") == "0":
-        # help=0 is set when you’ve just sent a notification. We
-        # only want to show the back link when you’ve navigated to a
-        # notification, not when you’ve just sent it.
+        # help=0 is set when you've just sent a notification. We
+        # only want to show the back link when you've navigated to a
+        # notification, not when you've just sent it.
         back_link = None
     elif request.args.get("from_job"):
         back_link = url_for(
@@ -74,10 +74,8 @@ def view_notification(service_id, notification_id, error_message=None):
         )
     else:
         back_link = url_for(
-            "main.view_notifications",
+            "main.all_jobs_activity",
             service_id=current_service.id,
-            message_type=template.template_type,
-            status="sending,delivered,failed",
         )
 
     return render_template(
@@ -198,10 +196,8 @@ def download_notifications_csv(service_id):
             )
             return redirect(
                 url_for(
-                    "main.view_notifications",
+                    "main.all_jobs_activity",
                     service_id=service_id,
-                    message_type=filter_args["message_type"][0],
-                    status="sending,delivered,failed",
                 )
             )
     return Response(
