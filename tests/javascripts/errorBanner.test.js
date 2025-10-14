@@ -35,4 +35,10 @@ describe("Error Banner", () => {
       expect(document.querySelector('.banner-dangerous').classList).not.toContain('display-none')
     });
   });
+
+  test("Module exports ErrorBanner to window.NotifyModules", () => {
+    expect(window.NotifyModules.ErrorBanner).toBeDefined();
+    expect(window.NotifyModules.ErrorBanner.hideBanner).toBeDefined();
+    expect(window.NotifyModules.ErrorBanner.showBanner).toBeDefined();
+  });
 });

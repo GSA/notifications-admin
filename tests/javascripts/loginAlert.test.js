@@ -55,3 +55,13 @@ test('Hides the countdown if the target date has passed', () => {
 
     expect(document.getElementById("countdown-container").style.display).toBe("none");
 });
+
+test('initLoginAlert sets up the interval', () => {
+    jest.setSystemTime(targetDate.getTime() - 5 * 24 * 60 * 60 * 1000);
+    const { initLoginAlert } = require('../../app/assets/javascripts/loginAlert.js');
+    jest.spyOn(global, 'setInterval');
+
+    initLoginAlert();
+
+    expect(setInterval).toHaveBeenCalled();
+});
