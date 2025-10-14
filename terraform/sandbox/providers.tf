@@ -12,6 +12,7 @@ terraform {
     key     = "admin.tfstate.sandbox"
     encrypt = "true"
     region  = "us-gov-west-1"
+    use_lockfile = "true"
   }
 }
 
