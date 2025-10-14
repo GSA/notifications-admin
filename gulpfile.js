@@ -28,7 +28,6 @@ const javascripts = () => {
     paths.src + 'javascripts/errorBanner.js',
     paths.src + 'javascripts/notifyModal.js',
     paths.src + 'javascripts/date.js',
-    paths.src + 'javascripts/loginAlert.js',
     paths.src + 'javascripts/sidenav.js',
     paths.src + 'javascripts/validation.js',
     paths.src + 'javascripts/scrollPosition.js',

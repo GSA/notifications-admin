@@ -715,7 +715,7 @@ describe("Stick to top/bottom of window when scrolling", () => {
 
   describe("If intending to stick to the bottom", () => {
 
-    let header;
+    let heading;
     let content;
     let pageFooter;
     let windowHeight;

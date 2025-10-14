@@ -53,7 +53,7 @@ def _mock_get_service_settings_page_common(
             [
                 "",
                 "Service name Test Service Change service name",
-                "Send text messages On",
+                "Send text messages On Set automatically",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",
             ],
@@ -63,7 +63,7 @@ def _mock_get_service_settings_page_common(
             [
                 "",
                 "Service name Test Service Change service name",
-                "Send text messages On",
+                "Send text messages On Set automatically",
                 "Text message senders (Only visible to Platform Admins) USGOV Manage text message senders",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",
@@ -191,7 +191,7 @@ def test_send_files_by_email_row_on_settings_page(
             ["email", "sms", "international_sms"],
             [
                 "Service name service one Change service name",
-                "Send text messages On",
+                "Send text messages On Set automatically",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",
             ],
@@ -200,7 +200,7 @@ def test_send_files_by_email_row_on_settings_page(
             ["email", "sms", ServicePermission.EMAIL_AUTH],
             [
                 "Service name service one Change service name",
-                "Send text messages On",
+                "Send text messages On Set automatically",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",
             ],

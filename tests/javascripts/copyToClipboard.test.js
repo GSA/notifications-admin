@@ -16,6 +16,7 @@ describe('copy to clipboard', () => {
   let component;
   let selectionMock;
   let rangeMock;
+  let screenMock;
 
   const setUpDOM = function (options) {
 

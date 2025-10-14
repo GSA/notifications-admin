@@ -11,6 +11,7 @@ describe('File upload', () => {
 
   let form;
   let fileUpload;
+  let uploadControl;
 
   beforeEach(() => {
 
