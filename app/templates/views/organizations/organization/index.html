@@ -9,37 +9,14 @@
 
   {{ page_header('Organization Dashboard', size='large') }}
 
-  <h2 class="font-heading-md">Overall {{ selected_year }} Total Message Usage</h2>
-  <p class="usa-body">Combined totals across all services in {{ current_org.name }}</p>
-
-  <div class="margin-bottom-3">
-    <nav aria-label="Financial year selector">
-      <ul class="usa-list usa-list--unstyled display-flex flex-gap-05 padding-0 margin-0">
-        {% for label, year, link, display_text in years %}
-          <li>
-            {% if selected_year == year %}
-              <button class="usa-button" disabled aria-current="page">
-                {{ display_text }}
-              </button>
-            {% else %}
-              <a href="{{ link }}" class="usa-button" role="button">
-                {{ display_text }}
-              </a>
-            {% endif %}
-          </li>
-        {% endfor %}
-      </ul>
-    </nav>
-  </div>
-
   <div id="totalMessageChartContainer" data-messages-sent="{{ messages_sent|default(0) }}" data-messages-remaining="{{ messages_remaining|default(0) }}">
     <div class="grid-row flex-align-center">
-      <h2 id="chartTitle" class="margin-right-1">Total messages</h2>
+      <h2 id="chartTitle" class="margin-right-1 margin-y-0">Overall {{ selected_year }} Total Message Allowance</h2>
       <button
         type="button"
         class="usa-tooltip usa-tooltip__information margin-right-0"
         data-position="top"
-        title="Total messages track the sum of messages across all services in this organization: pending, failed, or delivered"
+        title="Combined totals across all services in {{ current_org.name }}: pending, failed, or delivered"
       >
         <span class="usa-sr-only">More information</span>
         i
@@ -49,5 +26,20 @@
     <div id="message"></div>
   </div>
   <div id="totalMessageTable" class="margin-bottom-3"></div>
+
+  <div class="margin-top-5 margin-bottom-5">
+    <h2 class="font-heading-lg">What is a service?</h2>
+    <p class="usa-body">
+      When you join Notify, you're added to a service. This is your organization's workspace for sending text messages and emails. Within your service, you can:
+    </p>
+    <ol class="usa-list">
+      <li>Create and edit message templates</li>
+      <li>Send messages to recipients</li>
+      <li>View message status and history</li>
+      <li>Manage team members and permissions</li>
+      <li>Track usage and delivery statistics</li>
+      <li>If you work for multiple organizations, you may belong to multiple services and can switch between them.</li>
+    </ol>
+  </div>
 
 {% endblock %}

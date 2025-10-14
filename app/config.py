@@ -78,7 +78,9 @@ class Config(object):
     # TODO: reassign this
     NOTIFY_SERVICE_ID = "d6aa2c68-a2d9-4437-ab19-3ae8eb202553"
 
-    ORGANIZATION_DASHBOARD_ENABLED = getenv("ORGANIZATION_DASHBOARD_ENABLED", "False") == "True"
+    ORGANIZATION_DASHBOARD_ENABLED = (
+        getenv("ORGANIZATION_DASHBOARD_ENABLED", "False") == "True"
+    )
 
     NOTIFY_BILLING_DETAILS = json.loads(getenv("NOTIFY_BILLING_DETAILS") or "null") or {
         "account_number": "98765432",
@@ -112,7 +114,9 @@ class Development(Config):
     NOTIFY_LOG_LEVEL = "DEBUG"
 
     # Feature Flags - Enable in development for testing
-    ORGANIZATION_DASHBOARD_ENABLED = getenv("ORGANIZATION_DASHBOARD_ENABLED", "True") == "True"
+    ORGANIZATION_DASHBOARD_ENABLED = (
+        getenv("ORGANIZATION_DASHBOARD_ENABLED", "True") == "True"
+    )
 
     # Buckets
     CSV_UPLOAD_BUCKET = _s3_credentials_from_env("CSV")

@@ -73,7 +73,8 @@ def organization_dashboard(org_id):
     if not current_app.config.get("ORGANIZATION_DASHBOARD_ENABLED", False):
         return redirect(url_for(".organization_usage", org_id=org_id))
 
-    year, current_financial_year = requested_and_current_financial_year(request)
+    year = requested_and_current_financial_year(request)[0]
+
     services = current_organization.services_and_usage(financial_year=year)["services"]
 
     total_messages_sent = 0
@@ -88,11 +89,6 @@ def organization_dashboard(org_id):
 
     return render_template(
         "views/organizations/organization/index.html",
-        years=get_tuples_of_financial_years(
-            partial(url_for, ".organization_dashboard", org_id=current_organization.id),
-            start=current_financial_year - 2,
-            end=current_financial_year,
-        ),
         selected_year=year,
         messages_sent=total_messages_sent,
         messages_remaining=total_messages_remaining,
