@@ -8,3 +8,4 @@ redis_enabled: 1
 nr_agent_id: '1050708682'
 nr_app_id: '1050708682'
 API_PUBLIC_URL: https://notify-api-production.app.cloud.gov
+ORGANIZATION_DASHBOARD_ENABLED: False

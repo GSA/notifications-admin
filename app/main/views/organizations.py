@@ -2,7 +2,7 @@ from collections import OrderedDict
 from datetime import datetime
 from functools import partial
 
-from flask import flash, redirect, render_template, request, url_for
+from flask import current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user
 
 from app import (
@@ -70,6 +70,9 @@ def add_organization():
 @main.route("/organizations/<uuid:org_id>", methods=["GET"])
 @user_has_permissions()
 def organization_dashboard(org_id):
+    if not current_app.config.get("ORGANIZATION_DASHBOARD_ENABLED", False):
+        return redirect(url_for(".organization_usage", org_id=org_id))
+
     year, current_financial_year = requested_and_current_financial_year(request)
     services = current_organization.services_and_usage(financial_year=year)["services"]
 
