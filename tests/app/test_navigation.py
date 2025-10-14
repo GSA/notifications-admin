@@ -138,6 +138,7 @@ EXCLUDED_ENDPOINTS = tuple(
             "organization_dashboard",
             "organization_settings",
             "organization_trial_mode_services",
+            "organization_usage",
             "organizations",
             "performance",
             "platform_admin",
