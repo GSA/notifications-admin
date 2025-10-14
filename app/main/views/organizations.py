@@ -176,13 +176,8 @@ def download_organization_usage_report(org_id):
         {
             "Content-Type": "text/csv; charset=utf-8",
             "Content-Disposition": (
-                "inline;"
-                'filename="{} organization usage report for year {}'
-                ' - generated on {}.csv"'.format(
-                    safe_org_name,
-                    selected_year,
-                    datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
-                )
+                f'inline;filename="{safe_org_name} organization usage report for year {selected_year}'
+                f' - generated on {datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")}.csv"'
             ),
         },
     )
