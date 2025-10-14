@@ -9,6 +9,8 @@ in the form $setting: value,
 
 @use "uswds-core" with (
    $theme-font-type-sans: "public-sans",
+   $theme-font-path: "../fonts",
+   $theme-image-path: "../img",
    $theme-card-border-radius: 0,
    $theme-card-gap: 4,
    $theme-card-border-width: 2px,

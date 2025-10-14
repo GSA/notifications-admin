@@ -117,6 +117,7 @@ def test_get_jobs_should_tell_user_if_more_than_one_page(
     service_one,
     mock_get_job,
     mock_get_service_template,
+    mock_get_service_data_retention,
 ):
     page = client_request.get(
         "main.view_job",
@@ -133,6 +134,7 @@ def test_should_show_job_in_progress(
     mock_get_service_template,
     mock_get_job_in_progress,
     fake_uuid,
+    mock_get_service_data_retention,
 ):
     page = client_request.get(
         "main.view_job",
@@ -149,6 +151,7 @@ def test_should_show_job_without_notifications(
     mock_get_service_template,
     mock_get_job_in_progress,
     fake_uuid,
+    mock_get_service_data_retention,
 ):
     page = client_request.get(
         "main.view_job",
@@ -164,6 +167,7 @@ def test_should_show_job_with_sending_limit_exceeded_status(
     mock_get_service_template,
     mock_get_job_with_sending_limits_exceeded,
     fake_uuid,
+    mock_get_service_data_retention,
 ):
     page = client_request.get(
         "main.view_job",
@@ -224,6 +228,7 @@ def test_should_show_old_job(
     processing_started,
     expected_message,
     active_user_with_permissions,
+    mock_get_service_data_retention,
 ):
     mocker.patch(
         "app.job_api_client.get_job",
@@ -254,6 +259,7 @@ def test_should_show_scheduled_job(
     mock_get_service_template,
     mock_get_scheduled_job,
     fake_uuid,
+    mock_get_service_data_retention,
 ):
     page = client_request.get(
         "main.view_job",

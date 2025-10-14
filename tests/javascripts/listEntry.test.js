@@ -20,6 +20,8 @@ describe("List entry", () => {
     'va.gov'
   ];
   let inputList;
+  let name_value_pairs;
+  let fields;
 
   const triggerEvent = (el, evtType) => {
     const evt = new Event(evtType, {

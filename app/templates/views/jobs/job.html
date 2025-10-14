@@ -15,7 +15,7 @@
     {% if not job.finished_processing %}
       <p class="max-width-full">Status updates automatically while processing. Refresh the page if needed.</p>
     {% endif %}
-    <div data-job-id="{{ job.id }}" data-job-finished="{{ 'true' if job.finished_processing else 'false' }}" data-host="{{ api_public_url }}">
+    <div data-job-id="{{ job.id }}" data-job-finished="{{ 'true' if job.finished_processing else 'false'}}">
       <div class='tabs ajax-block-container' data-key="counts">
         {{ pill(counts, status, {'smaller': True}) }}
       </div>

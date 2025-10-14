@@ -1,3 +1,4 @@
+window.NotifyModules = window.NotifyModules || {};
 window.NotifyModules.TimeoutPopup = window.NotifyModules.TimeoutPopup || {};
 
 (function(window) {
@@ -11,7 +12,7 @@ window.NotifyModules.TimeoutPopup = window.NotifyModules.TimeoutPopup || {};
         var difference = timeTillSessionEnd - now;
         var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((difference % (1000 * 60)) / 1000);
-        document.getElementById("timeLeft").innerHTML = + minutes + "m " + seconds + "s";
+        document.getElementById("timeLeft").textContent = minutes + "m " + seconds + "s";
         showTimer();
         document.getElementById("logOutTimer").addEventListener("click", signoutUser);
         document.getElementById("extendSessionTimer").addEventListener("click", extendSession);

@@ -25,12 +25,3 @@ def pricing():
         search_form=SearchByNameForm(),
         navigation_links=using_notify_nav(),
     )
-
-
-@main.route("/pricing/how-to-pay")
-@user_is_logged_in
-def how_to_pay():
-    return render_template(
-        "views/pricing/how-to-pay.html",
-        navigation_links=using_notify_nav(),
-    )

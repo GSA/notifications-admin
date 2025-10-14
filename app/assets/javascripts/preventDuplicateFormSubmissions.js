@@ -30,10 +30,6 @@
         });
         $cancelButton.prop('disabled', true);
       }, 50); // Small delay to ensure form submits first
-
-      setTimeout(() => {
-        renableSubmitButton($submitButton)();
-      }, 10000); // fallback safety
     } else {
       setTimeout(() => renableSubmitButton($submitButton)(), 1500);
     }

@@ -7,7 +7,6 @@ plugins.addSrc = require('gulp-add-src');
 plugins.babel = require('gulp-babel');
 plugins.cleanCSS = require('gulp-clean-css');
 plugins.concat = require('gulp-concat');
-plugins.jshint = require('gulp-jshint');
 plugins.prettyerror = require('gulp-prettyerror');
 plugins.uglify = require('gulp-uglify');
 
@@ -19,7 +18,7 @@ const paths = {
 
 const javascripts = () => {
   // Files that don't use NotifyModules and can be uglified
-  const local = src([
+  const localUglified = src([
     paths.src + 'javascripts/modules/init.js',
     paths.src + 'javascripts/modules/uswds-modules.js',
     paths.src + 'javascripts/modules/show-hide-content.js',
@@ -28,13 +27,18 @@ const javascripts = () => {
     paths.src + 'javascripts/preventDuplicateFormSubmissions.js',
     paths.src + 'javascripts/errorBanner.js',
     paths.src + 'javascripts/notifyModal.js',
-    paths.src + 'javascripts/timeoutPopup.js',
     paths.src + 'javascripts/date.js',
-    paths.src + 'javascripts/loginAlert.js',
     paths.src + 'javascripts/sidenav.js',
     paths.src + 'javascripts/validation.js',
     paths.src + 'javascripts/scrollPosition.js',
   ])
+    .pipe(plugins.prettyerror())
+    .pipe(
+      plugins.babel({
+        presets: ['@babel/preset-env'],
+      })
+    )
+    .pipe(plugins.uglify());
 
   // Files that use NotifyModules - split into two groups to avoid stream issues
   const notifyModules1 = src([
@@ -56,6 +60,7 @@ const javascripts = () => {
     paths.src + 'javascripts/collapsibleCheckboxes.js',
     paths.src + 'javascripts/radioSlider.js',
     paths.src + 'javascripts/updateStatus.js',
+    paths.src + 'javascripts/timeoutPopup.js',
     paths.src + 'javascripts/main.js',
   ])
     .pipe(plugins.prettyerror())
@@ -65,15 +70,6 @@ const javascripts = () => {
       })
     );
 
-  // Apply uglify only to local files
-  const localUglified = local
-    .pipe(
-      plugins.babel({
-        presets: ['@babel/preset-env'],
-      })
-    )
-    .pipe(plugins.uglify());
-
   // First create vendored with jquery-expose immediately after jQuery
   const vendoredWithExpose = src([
     paths.npm + 'jquery/dist/jquery.min.js',
@@ -81,8 +77,7 @@ const javascripts = () => {
     paths.npm + 'query-command-supported/dist/queryCommandSupported.min.js',
     paths.npm + 'textarea-caret/index.js',
     paths.npm + 'cbor-js/cbor.js',
-    paths.npm + 'd3/dist/d3.min.js',
-    paths.npm + 'socket.io-client/dist/socket.io.min.js'
+    paths.npm + 'd3/dist/d3.min.js'
   ]);
 
   // Concatenate all streams
@@ -149,7 +144,7 @@ const styles = async () => {
   await uswds.compileSass();
 };
 
-// Task to copy USWDS assetsconst
+// Task to copy USWDS assets
 const copyUSWDSAssets = () => {
   return src([
     'node_modules/@uswds/uswds/dist/img/**/*',

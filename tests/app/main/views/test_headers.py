@@ -20,8 +20,7 @@ def test_owasp_useful_headers_set(
     assert search(
         r"script-src 'self' static\.example\.com https:\/\/js-agent\.new"
         r"relic\.com https:\/\/gov-bam\.nr-data\.net https:\/\/www\.googletagmanager\."
-        r"com https:\/\/www\.google-analytics\.com https:\/\/dap\.digitalgov\.gov "
-        r"https:\/\/cdn\.socket\.io",
+        r"com https:\/\/www\.google-analytics\.com https:\/\/dap\.digitalgov\.gov",
         csp,
     )
     assert search(r"'nonce-[^']+';", csp)
@@ -42,7 +41,6 @@ def test_owasp_useful_headers_set(
         "https://gov-bam.nr-data.net",
         "https://www.google-analytics.com",
         config["API_PUBLIC_URL"],
-        config["API_PUBLIC_WS_URL"],
     }
     actual_sources = set(connect_src.strip().split()[1:])
     assert (

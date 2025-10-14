@@ -194,6 +194,22 @@ def template_usage(service_id):
         get_monthly_template_stats(month, stats)
         for month in get_months_for_financial_year(year, time_format="%B")
     ]
+    months.reverse()
+
+    # Get the year from stats
+    # If the year is this year, remove months in the future
+    if len(stats) > 0:
+        stat_year = stats[0]["year"]
+        current_year = datetime.now().year
+        current_month_num = datetime.now().month
+        new_months = []
+        if stat_year == current_year:
+            for m in months:
+
+                month_num_full = datetime.strptime(m["name"], "%B").month
+                if month_num_full <= current_month_num:
+                    new_months.append(m)
+        months = new_months
 
     return render_template(
         "views/dashboard/all-template-statistics.html",

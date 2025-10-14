@@ -110,4 +110,22 @@ describe("Form Validation", () => {
     expect(errorElement.style.display).toBe("none");
   });
 
+  test("Uses 'This field' as label when no label element exists", async () => {
+    document.body.innerHTML = `
+      <form data-force-focus="True">
+        <input id="unlabeled-input" name="unlabeled" type="text" />
+        <button type="submit">Submit</button>
+      </form>
+    `;
+
+    form = document.querySelector('form[data-force-focus="True"]');
+    attachValidation();
+
+    form.dispatchEvent(new Event("submit", { bubbles: true }));
+    await new Promise(resolve => setTimeout(resolve, 20));
+
+    const errorMessage = document.getElementById("unlabeled-input-error");
+    expect(errorMessage.textContent).toBe("Error: This field is required.");
+  });
+
 });
