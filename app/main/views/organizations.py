@@ -85,9 +85,28 @@ def organization_dashboard(org_id):
 
     return render_template(
         "views/organizations/organization/index.html",
-        services=services,
         years=get_tuples_of_financial_years(
             partial(url_for, ".organization_dashboard", org_id=current_organization.id),
+            start=current_financial_year - 2,
+            end=current_financial_year,
+        ),
+        selected_year=year,
+        messages_sent=total_messages_sent,
+        messages_remaining=total_messages_remaining,
+    )
+
+
+@main.route("/organizations/<uuid:org_id>/usage", methods=["GET"])
+@user_has_permissions()
+def organization_usage(org_id):
+    year, current_financial_year = requested_and_current_financial_year(request)
+    services = current_organization.services_and_usage(financial_year=year)["services"]
+
+    return render_template(
+        "views/organizations/organization/usage.html",
+        services=services,
+        years=get_tuples_of_financial_years(
+            partial(url_for, ".organization_usage", org_id=current_organization.id),
             start=current_financial_year - 2,
             end=current_financial_year,
         ),
@@ -100,8 +119,6 @@ def organization_dashboard(org_id):
         download_link=url_for(
             ".download_organization_usage_report", org_id=org_id, selected_year=year
         ),
-        messages_sent=total_messages_sent,
-        messages_remaining=total_messages_remaining,
     )
 
 

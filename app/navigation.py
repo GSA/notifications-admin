@@ -339,6 +339,9 @@ class OrgNavigation(Navigation):
         "dashboard": {
             "organization_dashboard",
         },
+        "usage": {
+            "organization_usage",
+        },
         "settings": {
             "edit_organization_billing_details",
             "edit_organization_domains",
