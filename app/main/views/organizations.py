@@ -1,4 +1,4 @@
-from collections import OrderedDict
+from collections import Counter, OrderedDict
 from datetime import datetime
 from functools import partial
 
@@ -32,6 +32,28 @@ from app.models.user import InvitedOrgUser, User
 from app.utils.csv import Spreadsheet
 from app.utils.user import user_has_permissions, user_is_platform_admin
 from notifications_python_client.errors import HTTPError
+
+
+def get_service_counts_by_status(services):
+    """
+    Calculate service counts by status.
+    """
+    def get_status(service):
+        if not service.get("active"):
+            return "suspended"
+        elif service.get("restricted"):
+            return "trial"
+        else:
+            return "live"
+
+    status_counts = Counter(get_status(service) for service in services)
+
+    return {
+        "live": status_counts["live"],
+        "trial": status_counts["trial"],
+        "suspended": status_counts["suspended"],
+        "total": len(services),
+    }
 
 
 @main.route("/organizations", methods=["GET"])
@@ -77,6 +99,9 @@ def organization_dashboard(org_id):
 
     services = current_organization.services_and_usage(financial_year=year)["services"]
 
+    all_services = current_organization.services
+    service_counts = get_service_counts_by_status(all_services)
+
     total_messages_sent = 0
     total_messages_remaining = 0
 
@@ -92,6 +117,11 @@ def organization_dashboard(org_id):
         selected_year=year,
         messages_sent=total_messages_sent,
         messages_remaining=total_messages_remaining,
+        total_services=service_counts["total"],
+        live_services=service_counts["live"],
+        trial_services=service_counts["trial"],
+        suspended_services=service_counts["suspended"],
+        all_services=all_services
     )
 
 

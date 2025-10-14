@@ -26,6 +26,22 @@
     <div id="message"></div>
   </div>
   <div id="totalMessageTable" class="margin-bottom-3"></div>
+  <div class="grid-row">
+    <div class="grid-col-12 tablet:grid-col-6">
+      <div class="usa-card margin-bottom-3">
+        <div class="usa-card__container">
+          <div class="usa-card__body padding-2">
+            <p class="margin-0">
+              <strong>Services:</strong> {{ total_services }} (Live: {{ live_services }} - Trial: {{ trial_services }} - Suspended: {{ suspended_services }})
+            </p>
+            <p class="margin-0">
+              <strong>Agreement:</strong> Jan 1 - Dec 31
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="margin-top-5 margin-bottom-5">
     <h2 class="font-heading-lg">What is a service?</h2>
