@@ -80,7 +80,7 @@ def test_missing_s3_file_redirects_gracefully(
         service_id=SERVICE_ONE_ID,
         number_of_days="five_day",
         message_type="sms",
-        _expected_redirect=f"/services/{SERVICE_ONE_ID}/notifications/sms?status=sending,delivered,failed",
+        _expected_redirect=f"/activity/services/{SERVICE_ONE_ID}",
     )
 
     # The redirect happens, which means no 500 error occurred

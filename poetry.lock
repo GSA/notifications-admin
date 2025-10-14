@@ -322,14 +322,14 @@ redis = ["redis (>=2.10.5)"]
 
 [[package]]
 name = "cachetools"
-version = "6.2.0"
+version = "6.2.1"
 description = "Extensible memoizing collections and decorators"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "cachetools-6.2.0-py3-none-any.whl", hash = "sha256:1c76a8960c0041fcc21097e357f882197c79da0dbff766e7317890a65d7d8ba6"},
-    {file = "cachetools-6.2.0.tar.gz", hash = "sha256:38b328c0889450f05f5e120f56ab68c8abaf424e1275522b138ffc93253f7e32"},
+    {file = "cachetools-6.2.1-py3-none-any.whl", hash = "sha256:09868944b6dde876dfd44e1d47e18484541eaf12f26f29b7af91b26cc892d701"},
+    {file = "cachetools-6.2.1.tar.gz", hash = "sha256:3f391e4bd8f8bf0931169baf7456cc822705f4e2a31f840d218f445b9a854201"},
 ]
 
 [[package]]
@@ -1517,14 +1517,14 @@ license = ["ukkonen"]
 
 [[package]]
 name = "idna"
-version = "3.10"
+version = "3.11"
 description = "Internationalized Domain Names in Applications (IDNA)"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.8"
 groups = ["main", "dev"]
 files = [
-    {file = "idna-3.10-py3-none-any.whl", hash = "sha256:946d195a0d259cbba61165e88e65941f16e9b36ea6ddb97f00452bae8b1287d3"},
-    {file = "idna-3.10.tar.gz", hash = "sha256:12f65c9b470abda6dc35cf8e63cc574b1c52b11df2c86030af0ac09b01b13ea9"},
+    {file = "idna-3.11-py3-none-any.whl", hash = "sha256:771a87f49d9defaf64091e6e6fe9c18d4833f140bd19464795bc32d966ca37ea"},
+    {file = "idna-3.11.tar.gz", hash = "sha256:795dafcc9c04ed0c1fb032c2aa73654d8e8c5023a7df64a53f39190ada629902"},
 ]
 
 [package.extras]
@@ -1556,14 +1556,14 @@ files = [
 
 [[package]]
 name = "isort"
-version = "6.1.0"
+version = "7.0.0"
 description = "A Python utility / library to sort Python imports."
 optional = false
-python-versions = ">=3.9.0"
+python-versions = ">=3.10.0"
 groups = ["dev"]
 files = [
-    {file = "isort-6.1.0-py3-none-any.whl", hash = "sha256:58d8927ecce74e5087aef019f778d4081a3b6c98f15a80ba35782ca8a2097784"},
-    {file = "isort-6.1.0.tar.gz", hash = "sha256:9b8f96a14cfee0677e78e941ff62f03769a06d412aabb9e2a90487b3b7e8d481"},
+    {file = "isort-7.0.0-py3-none-any.whl", hash = "sha256:1bcabac8bc3c36c7fb7b98a76c8abb18e0f841a3ba81decac7691008592499c1"},
+    {file = "isort-7.0.0.tar.gz", hash = "sha256:5513527951aadb3ac4292a41a16cbc50dd1642432f5e8c20057d414bdafb4187"},
 ]
 
 [package.extras]
@@ -4398,4 +4398,4 @@ cffi = ["cffi (>=1.17) ; python_version >= \"3.13\" and platform_python_implemen
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13.2"
-content-hash = "71adc41965576b70d0ed91a9f8c87979dbe3071885db29b77f076dc97990fa00"
+content-hash = "5611fba8a6a6d6061b53d9fb8798d705d1e34ed4b45608e7cc9367c2a5469234"
