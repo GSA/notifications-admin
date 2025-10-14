@@ -61,13 +61,11 @@ import { ErrorBanner } from './errorBanner.js';
 import './notifyModal.js';
 import './timeoutPopup.js';
 import { initCurrentYear } from './date.js';
-import { initLoginAlert } from './loginAlert.js';
 import './sidenav.js';
 import './validation.js';
 import './scrollPosition.js';
 
 initCurrentYear();
-initLoginAlert();
 
 // NotifyModules
 import './copyToClipboard.js';

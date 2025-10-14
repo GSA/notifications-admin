@@ -36,13 +36,5 @@ export function initModules() {
   });
 }
 
-export function getModule(name) {
-  return modules.get(name);
-}
-
-export function hasModule(name) {
-  return modules.has(name);
-}
-
 window.NotifyModules = window.NotifyModules || {};
 window.NotifyModules.start = initModules;
