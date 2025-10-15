@@ -10,6 +10,7 @@ data "cloudfoundry_app" "source_app" {
 }
 
 data "cloudfoundry_app" "destination_app" {
+  org_name   = var.cf_org_name
   name       = var.destination_app_name
   space_name = data.cloudfoundry_space.space.id
 }
