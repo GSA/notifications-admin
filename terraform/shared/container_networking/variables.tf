@@ -1,5 +1,5 @@
 variable "cf_org_name" {}
-variable "cf_space_name" {}
+variable "cf_space_id" {}
 variable "source_app_name" {}
 variable "destination_app_name" {}
 variable "destination_port" {

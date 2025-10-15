@@ -6,7 +6,7 @@ module "s3" {
   source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v2.4.0"
 
   cf_org_name   = "gsa-tts-benefits-studio"
-  cf_space_name = "notify-management"
+  cf_space_id = "notify-management"
   name          = local.s3_service_name
 }
 

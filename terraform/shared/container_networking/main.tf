@@ -1,6 +1,6 @@
 data "cloudfoundry_space" "space" {
   org_name = var.cf_org_name
-  name     = var.cf_space_name
+  name     = var.cf_space_id
 }
 
 data "cloudfoundry_app" "source_app" {
