@@ -1,5 +1,5 @@
 data "cloudfoundry_space" "space" {
-
+  org  = var.cf_org_name
   name = var.cf_space_name
 }
 
@@ -15,9 +15,9 @@ data "cloudfoundry_app" "destination_app" {
 }
 
 resource "cloudfoundry_network_policy" "internal_route" {
-  policies {
+  policies = [{
     source_app      = data.cloudfoundry_app.source_app.id
     destination_app = data.cloudfoundry_app.destination_app.id
     port            = var.destination_port
-  }
+  }]
 }
