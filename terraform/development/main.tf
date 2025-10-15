@@ -12,9 +12,8 @@ data "cloudfoundry_space" "dev" {
 module "logo_upload_bucket" {
   source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v2.4.0"
 
-  cf_org_name   = local.cf_org_name
-  cf_space_name = local.cf_space_name
-  name          = "${var.username}-logo-upload-bucket"
+  cf_space_id = local.cf_space_name
+  name        = "${var.username}-logo-upload-bucket"
 }
 resource "cloudfoundry_service_key" "logo_key" {
   name             = local.key_name
