@@ -15,8 +15,7 @@ resource "null_resource" "prevent_destroy" {
 module "redis-v70" {
   source = "github.com/GSA-TTS/terraform-cloudgov//redis?ref=v2.4.0"
 
-  cf_org_name     = local.cf_org_name
-  cf_space_name   = local.cf_space_name
+  cf_space_id     = local.cf_space_name
   name            = "${local.app_name}-redis-v70-${local.env}"
   redis_plan_name = "redis-dev"
   json_params = jsonencode(
