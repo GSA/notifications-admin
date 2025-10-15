@@ -64,8 +64,8 @@ describe('Live search', () => {
               <span class="live-search-relevant">${user.label} (${user.email})</span> (invited)
             </span>
           </h3>
-          <ul class="tick-cross-list govuk-grid-row">
-            <div class="tick-cross-list-permissions govuk-grid-column-three-quarters">
+          <ul class="tick-cross-list grid-row">
+            <div class="tick-cross-list-permissions grid-col-9">
               ${getPermissionsHTML(user.permissions)}
               <div class="tick-cross-list-hint">
                   Can see 15 folders
@@ -132,7 +132,7 @@ describe('Live search', () => {
       test("If there is no search term, the results should be unchanged", () => {
 
         // start the module
-        window.GOVUK.modules.start();
+        window.NotifyModules.start();
 
         const listItems = list.querySelectorAll('.user-list-item');
         const listItemsShowing = Array.from(listItems).filter(item => !item.classList.contains('js-hidden'));
@@ -147,7 +147,7 @@ describe('Live search', () => {
         searchTextbox.value = 'admin';
 
         // start the module
-        window.GOVUK.modules.start();
+        window.NotifyModules.start();
 
         const listItems = list.querySelectorAll('.user-list-item');
         const listItemsShowing = Array.from(listItems).filter(item => !item.classList.contains('js-hidden'));
@@ -163,7 +163,7 @@ describe('Live search', () => {
         searchTextbox.value = 'Administrator (admin@nhs.uk)';
 
         // start the module
-        window.GOVUK.modules.start();
+        window.NotifyModules.start();
 
         const listItems = list.querySelectorAll('.user-list-item');
         const listItemsShowing = Array.from(listItems).filter(item => !item.classList.contains('js-hidden'));
@@ -179,7 +179,7 @@ describe('Live search', () => {
         searchTextbox.value = "Add and edit templates";
 
         // start the module
-        window.GOVUK.modules.start();
+        window.NotifyModules.start();
 
         const listItems = list.querySelectorAll('.user-list-item');
         const listItemsShowing = Array.from(listItems).filter(item => !item.classList.contains('js-hidden'));
@@ -200,7 +200,7 @@ describe('Live search', () => {
         searchTextbox.value = 'Admin';
 
         // start the module
-        window.GOVUK.modules.start();
+        window.NotifyModules.start();
 
         // simulate input of new search text
         searchTextbox.value = '';
@@ -218,7 +218,7 @@ describe('Live search', () => {
         searchTextbox.value = 'Admin';
 
         // start the module
-        window.GOVUK.modules.start();
+        window.NotifyModules.start();
 
         // simulate input of new search text
         searchTextbox.value = 'Administrator';
@@ -237,7 +237,7 @@ describe('Live search', () => {
         searchTextbox.value = 'Admin';
 
         // start the module
-        window.GOVUK.modules.start();
+        window.NotifyModules.start();
 
         // simulate input of new search text
         searchTextbox.value = 'Administrator (admin@nhs.uk)';
@@ -256,7 +256,7 @@ describe('Live search', () => {
         searchTextbox.value = "Admin";
 
         // start the module
-        window.GOVUK.modules.start();
+        window.NotifyModules.start();
 
         // simulate input of new search text
         searchTextbox.value = 'Add and edit templates';

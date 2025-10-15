@@ -177,9 +177,7 @@ def test_notification_status_page_respects_redaction(
             {},
             partial(
                 url_for,
-                "main.view_notifications",
-                message_type="sms",
-                status="sending,delivered,failed",
+                "main.all_jobs_activity",
             ),
         ),
         (
@@ -214,7 +212,7 @@ def test_notification_status_shows_expected_back_link(
         notification_id=fake_uuid,
         **extra_args,
     )
-    back_link = page.select_one(".usa-back-link")
+    back_link = page.select_one("nav.usa-breadcrumb a")
 
     if expected_back_link:
         assert back_link["href"] == expected_back_link(service_id=SERVICE_ONE_ID)

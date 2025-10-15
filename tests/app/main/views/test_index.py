@@ -69,7 +69,7 @@ def test_robots(client_request):
         pytest.param("index", {}, marks=pytest.mark.xfail(raises=AssertionError)),
     ],
 )
-@freeze_time("2012-12-12 12:12")  # So we don’t go out of business hours
+@freeze_time("2012-12-12 12:12")  # So we don't go out of business hours
 def test_hiding_pages_from_search_engines(
     client_request, mock_get_service_and_organization_counts, endpoint, kwargs, mocker
 ):
@@ -98,13 +98,11 @@ def test_hiding_pages_from_search_engines(
         "multiple_languages",
         "benchmark_performance",
         "message_status",
-        "how_to_pay",
         "get_started",
         "how_to",
         "create_and_send_messages",
         "edit_and_format_messages",
         "send_files_by_email",
-        "billing_details",
     ],
 )
 def test_static_pages(client_request, mock_get_organization_by_domain, view, mocker):
@@ -145,7 +143,7 @@ def test_guidance_pages_link_to_service_pages_when_signed_in(client_request, moc
         service_id=SERVICE_ONE_ID,
     )
 
-    # Check it still works when they don’t have a recent service
+    # Check it still works when they don't have a recent service
     with client_request.session_transaction() as session:
         session["service_id"] = None
     page = request()

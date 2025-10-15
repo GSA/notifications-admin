@@ -13,13 +13,10 @@ class Config(object):
     NOTIFY_ENVIRONMENT = getenv("NOTIFY_ENVIRONMENT", "development")
     API_HOST_NAME = getenv("API_HOST_NAME", "localhost")
     API_PUBLIC_URL = getenv("API_PUBLIC_URL", "localhost")
-    API_PUBLIC_WS_URL = getenv("API_PUBLIC_WS_URL", "localhost")
 
     ADMIN_BASE_URL = getenv("ADMIN_BASE_URL", "http://localhost:6012")
     HEADER_COLOUR = "#81878b"  # mix of dark-grey and mid-grey
-    LOGO_CDN_DOMAIN = (
-        "static-logos.notifications.service.gov.uk"  # TODO use our own CDN
-    )
+    LOGO_CDN_DOMAIN = "static-logos.notifications.example.gov"  # TODO use our own CDN
 
     ASSETS_DEBUG = False
 
@@ -66,6 +63,7 @@ class Config(object):
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_NAME = "notify_admin_session"
     SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = "Lax"
     # don't send back the cookie if it hasn't been modified by the request. this means that the expiry time won't be
     # updated unless the session is changed - but it's generally refreshed by `save_service_or_org_after_request`
     # every time anyway, except for specific endpoints (png/pdfs generally) where we've disabled that handler.
@@ -132,7 +130,6 @@ class Test(Development):
     ASSET_PATH = "https://static.example.com/"
     API_HOST_NAME = "http://you-forgot-to-mock-an-api-call-to"
     API_PUBLIC_URL = "http://you-forgot-to-mock-an-api-call-to"
-    API_PUBLIC_WS_URL = "ws://you-forgot-to-mock-an-api-call-to"
     REDIS_URL = "redis://you-forgot-to-mock-a-redis-call-to"
     LOGO_CDN_DOMAIN = "static-logos.test.com"
 

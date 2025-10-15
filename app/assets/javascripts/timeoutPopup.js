@@ -1,8 +1,7 @@
-window.GOVUK = window.GOVUK || {};
-window.GOVUK.Modules = window.GOVUK.Modules || {};
-window.GOVUK.Modules.TimeoutPopup = window.GOVUK.Modules.TimeoutPopup || {};
+window.NotifyModules = window.NotifyModules || {};
+window.NotifyModules.TimeoutPopup = window.NotifyModules.TimeoutPopup || {};
 
-(function(global) {
+(function(window) {
     "use strict";
 
     const sessionTimer = document.getElementById("sessionTimer");
@@ -13,7 +12,7 @@ window.GOVUK.Modules.TimeoutPopup = window.GOVUK.Modules.TimeoutPopup || {};
         var difference = timeTillSessionEnd - now;
         var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((difference % (1000 * 60)) / 1000);
-        document.getElementById("timeLeft").innerHTML = + minutes + "m " + seconds + "s";
+        document.getElementById("timeLeft").textContent = minutes + "m " + seconds + "s";
         showTimer();
         document.getElementById("logOutTimer").addEventListener("click", signoutUser);
         document.getElementById("extendSessionTimer").addEventListener("click", extendSession);
@@ -56,10 +55,10 @@ window.GOVUK.Modules.TimeoutPopup = window.GOVUK.Modules.TimeoutPopup || {};
         setTimeout(setSessionTimer, 25 * 60 * 1000);
     }
 
-    global.GOVUK.Modules.TimeoutPopup.checkTimer = checkTimer;
-    global.GOVUK.Modules.TimeoutPopup.expireUserSession = expireUserSession;
-    global.GOVUK.Modules.TimeoutPopup.signoutUser = signoutUser;
-    global.GOVUK.Modules.TimeoutPopup.extendSession = extendSession;
-    global.GOVUK.Modules.TimeoutPopup.showTimer = showTimer;
-    global.GOVUK.Modules.TimeoutPopup.closeTimer = closeTimer;
+    window.NotifyModules.TimeoutPopup.checkTimer = checkTimer;
+    window.NotifyModules.TimeoutPopup.expireUserSession = expireUserSession;
+    window.NotifyModules.TimeoutPopup.signoutUser = signoutUser;
+    window.NotifyModules.TimeoutPopup.extendSession = extendSession;
+    window.NotifyModules.TimeoutPopup.showTimer = showTimer;
+    window.NotifyModules.TimeoutPopup.closeTimer = closeTimer;
 })(window);

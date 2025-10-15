@@ -11,34 +11,35 @@
 
     $submitButton.data('clicked', 'true');
 
-    // Add dot animation for Send/Schedule/Cancel buttons
+    // Add loading spinner for Send/Schedule/Cancel buttons
     const buttonName = $submitButton.attr('name')?.toLowerCase();
     if (["send", "schedule", "cancel"].includes(buttonName)) {
-      $submitButton.prop('disabled', true);
-
-      // Inject dot animation span if not already present
-      if ($submitButton.find('.dot-anim').length === 0) {
-        $submitButton.append('<span class="dot-anim" aria-hidden="true"></span>');
-      }
-
-      // Disable Cancel button too
-      const $cancelButton = $('button[name]').filter(function () {
-        return $(this).attr('name')?.toLowerCase() === 'cancel';
-      });
-      $cancelButton.prop('disabled', true);
-
+      // Use setTimeout with minimal delay to allow form submission to proceed first
       setTimeout(() => {
-        renableSubmitButton($submitButton);
-      }, 10000); // fallback safety
+        $submitButton.prop('disabled', true);
+
+        // Add loading spinner and aria-busy attribute for accessibility
+        if ($submitButton.find('.loading-spinner').length === 0) {
+          $submitButton.attr('aria-busy', 'true');
+          $submitButton.append('<span class="loading-spinner" role="status" aria-label="Sending"></span>');
+        }
+
+        // Disable Cancel button too
+        const $cancelButton = $('button[name]').filter(function () {
+          return $(this).attr('name')?.toLowerCase() === 'cancel';
+        });
+        $cancelButton.prop('disabled', true);
+      }, 50); // Small delay to ensure form submits first
     } else {
-      setTimeout(renableSubmitButton($submitButton), 1500);
+      setTimeout(() => renableSubmitButton($submitButton)(), 1500);
     }
   };
 
   const renableSubmitButton = ($submitButton) => () => {
     $submitButton.data('clicked', '');
     $submitButton.prop('disabled', false);
-    $submitButton.find('.dot-anim').remove(); // clean up if needed
+    $submitButton.attr('aria-busy', 'false');
+    $submitButton.find('.loading-spinner').remove(); // clean up spinner
   };
 
   $('form').on('submit', disableSubmitButtons);

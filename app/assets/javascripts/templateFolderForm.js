@@ -1,7 +1,7 @@
-(function(Modules) {
+(function(window) {
   "use strict";
 
-  Modules.TemplateFolderForm = function() {
+  window.NotifyModules['template-folder-form'] = function() {
 
     this.start = function(templateFolderForm) {
       this.$form = $(templateFolderForm);
@@ -11,6 +11,11 @@
       this.$form.find('button[value=unknown]').remove();
 
       this.$liveRegionCounter = this.$form.find('.selection-counter');
+
+      // Get single channel data from DOM (must happen after DOM is ready)
+      const addNewTemplateForm = document.querySelector('div[id=add_new_template_form]');
+      this.$singleNotificationChannel = addNewTemplateForm ? addNewTemplateForm.getAttribute("data-channel") : null;
+      this.$singleChannelService = addNewTemplateForm ? addNewTemplateForm.getAttribute("data-service") : null;
 
       this.$liveRegionCounter.before(this.nothingSelectedButtons);
       this.$liveRegionCounter.before(this.itemsSelectedButtons);
@@ -82,14 +87,15 @@
         this.render();
       }
 
-      this.$form.on('click', 'button.usa-button--event', (event) => this.actionButtonClicked(event));
+      this.$form.on('click', 'button.usa-button', (event) => this.actionButtonClicked(event));
       this.$form.on('change', 'input[type=checkbox]', () => this.templateFolderCheckboxChanged());
+      this.$form.on('change', 'input[name="add_template_by_template_type"]', () => this.templateTypeChanged());
     };
 
     this.addDescriptionsToStates = function () {
       let id, description;
 
-      $.each(this.states.filter(state => 'description' in state), (idx, state) => {
+      $.each(this.states.filter(state => 'description' in state), (_, state) => {
         id = `${state.key}__description`;
         description = `<p class="usa-sr-only" id="${id}">${state.description}</p>`;
         state.$el
@@ -187,21 +193,37 @@
       return changed;
     };
 
-    this.$singleNotificationChannel = (document.querySelector('div[id=add_new_template_form]')).getAttribute("data-channel");
-    this.$singleChannelService = (document.querySelector('div[id=add_new_template_form]')).getAttribute("data-service");
-
     this.actionButtonClicked = function(event) {
-      event.preventDefault();
       this.currentState = $(event.currentTarget).val();
 
       if (event.currentTarget.value === 'add-new-template' && this.$singleNotificationChannel) {
+        event.preventDefault();
         window.location = "/services/" + this.$singleChannelService + "/templates/add-" + this.$singleNotificationChannel;
-      } else {
-        if (this.currentState === 'add-new-template') {
+      } else if (this.currentState === 'add-new-template') {
+        // Check if a template type is selected
+        const selectedTemplateType = this.$form.find('input[name="add_template_by_template_type"]:checked').val();
+
+        if (selectedTemplateType) {
+          // Template type is selected, let the form submit normally
+          return true;
+        } else {
+          // No template type selected, show the selection UI
+          event.preventDefault();
           this.$form.find('input[type=checkbox]').prop('checked', false);
           this.selectionStatus.update({ total: 0, templates: 0, folders: 0 });
+
+          if (this.stateChanged()) {
+            this.render();
+          }
+        }
+      } else {
+        // If state is not changing, this is a submit button - allow form submission
+        if (this.currentState === this._lastState) {
+          return true;
         }
 
+        // Otherwise, show the form UI
+        event.preventDefault();
         if (this.stateChanged()) {
           this.render();
         }
@@ -260,14 +282,29 @@
 
     };
 
+    this.templateTypeChanged = function() {
+      this.updateContinueButtonState();
+    };
+
+    this.updateContinueButtonState = function() {
+      const selectedTemplateType = this.$form.find('input[name="add_template_by_template_type"]:checked').val();
+      const continueButton = this.$form.find('#add_new_template_form button[value="add-new-template"]');
+
+      if (selectedTemplateType) {
+        continueButton.prop('disabled', false);
+      } else {
+        continueButton.prop('disabled', true);
+      }
+    };
+
     this.hasCheckboxes = function() {
       return !!this.$form.find('input:checkbox').length;
     };
 
     this.countSelectedCheckboxes = function() {
       const allSelected = this.$form.find('input:checkbox:checked');
-      const templates = allSelected.filter((idx, el) => $(el).siblings('.template-list-template').length > 0).length;
-      const folders = allSelected.filter((idx, el) => $(el).siblings('.template-list-folder').length > 0).length;
+      const templates = allSelected.filter((_, el) => $(el).siblings('.template-list-template').length > 0).length;
+      const folders = allSelected.filter((_, el) => $(el).siblings('.template-list-folder').length > 0).length;
       const results = {
         'templates': templates,
         'folders': folders,
@@ -277,7 +314,6 @@
     };
 
     this.render = function() {
-      let mode = 'default';
       let currentStateObj = this.states.filter(state => { return (state.key === this.currentState); })[0];
       let scrollTop;
 
@@ -285,11 +321,6 @@
       this.states.forEach(
         state => (state.key === this.currentState ? this.$liveRegionCounter.before(state.$el) : state.$el.detach())
       );
-
-      // use dialog mode for states which contain more than one form control
-      if (['move-to-existing-folder', 'add-new-template'].indexOf(this.currentState) !== -1) {
-        mode = 'dialog';
-      }
 
       if (this.currentState === 'add-new-template') {
         this.$form.find('.template-list-item').addClass('js-hidden');
@@ -302,6 +333,9 @@
         $('#page-title').text('New Template');
         $('#page-description').text('Every message starts with a template. Choose to start with a blank template or copy an existing template.');
         document.title = 'New Templates';
+
+        // Disable Continue button initially and update based on selection
+        this.updateContinueButtonState();
       } else {
         this.$form.find('.template-list-item').removeClass('js-hidden');
         $('.live-search').removeClass('js-hidden');
@@ -324,10 +358,12 @@
       <div id="nothing_selected">
         <div class="js-stick-at-bottom-when-scrolling">
           <div class="usa-button-group">
-            <button class="usa-button usa-button--event" value="add-new-template" aria-expanded="false">
+            <button class="usa-button" value="add-new-template" aria-expanded="false" role="button">
               New template
             </button>
-            <button class="usa-button usa-button--event" value="add-new-folder" aria-expanded="false">New folder</button>
+            <button class="usa-button usa-button--outline" value="add-new-folder" aria-expanded="false" role="button">
+              New folder
+            </button>
           </div>
           <div class="template-list-selected-counter">
             <span class="template-list-selected-counter__count" aria-hidden="true">
@@ -342,13 +378,15 @@
       <div id="items_selected">
         <div class="js-stick-at-bottom-when-scrolling">
           <div class="usa-button-group">
-            <button class="usa-button usa-button--event" value="move-to-existing-folder" aria-expanded="false">
+            <button class="usa-button" value="move-to-existing-folder" aria-expanded="false" role="button">
               Move<span class="usa-sr-only"> selection to folder</span>
             </button>
-            <button class="usa-button usa-button--event" value="move-to-new-folder" aria-expanded="false">Add to new folder</button>
+            <button class="usa-button usa-button--outline" value="move-to-new-folder" aria-expanded="false" role="button">
+              Add to new folder
+            </button>
           </div>
           <div class="template-list-selected-counter" aria-hidden="true">
-            <span class="template-list-selected-counter__count" aria-hidden="true">
+            <span class="template-list-selected-counter__count text-base" aria-hidden="true">
               ${this.selectionStatus.selected(1)}
             </span>
           </div>
@@ -357,4 +395,4 @@
     `).get(0);
   };
 
-})(window.GOVUK.Modules);
+})(window);

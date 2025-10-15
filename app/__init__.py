@@ -102,22 +102,16 @@ from app.notify_client.organizations_api_client import organizations_client
 from app.notify_client.performance_dashboard_api_client import (
     performance_dashboard_api_client,
 )
-from app.notify_client.platform_stats_api_client import (
-    platform_stats_api_client,
-)
+from app.notify_client.platform_stats_api_client import platform_stats_api_client
 from app.notify_client.service_api_client import service_api_client
 from app.notify_client.status_api_client import status_api_client
-from app.notify_client.template_folder_api_client import (
-    template_folder_api_client,
-)
-from app.notify_client.template_statistics_api_client import (
-    template_statistics_client,
-)
+from app.notify_client.template_folder_api_client import template_folder_api_client
+from app.notify_client.template_statistics_api_client import template_statistics_client
 from app.notify_client.upload_api_client import upload_api_client
 from app.notify_client.user_api_client import user_api_client
 from app.url_converters import SimpleDateTypeConverter, TemplateTypeConverter
 from app.utils.api_health import is_api_down
-from app.utils.govuk_frontend_jinja.flask_ext import init_govuk_frontend
+from app.utils.nunjucks_jinja.flask_ext import init_nunjucks_environment
 from notifications_python_client.errors import HTTPError
 from notifications_utils import logging, request_helper
 from notifications_utils.formatters import (
@@ -149,7 +143,6 @@ navigation = {
 def _csp(config):
     asset_domain = config["ASSET_DOMAIN"]
     api_public_url = config["API_PUBLIC_URL"]
-    api_public_ws_url = config["API_PUBLIC_WS_URL"]
 
     return {
         "default-src": ["'self'", asset_domain],
@@ -168,7 +161,6 @@ def _csp(config):
             "https://www.googletagmanager.com",
             "https://www.google-analytics.com",
             "https://dap.digitalgov.gov",
-            "https://cdn.socket.io",
         ],
         "connect-src": list(
             dict.fromkeys(
@@ -177,7 +169,6 @@ def _csp(config):
                     "https://gov-bam.nr-data.net",
                     "https://www.google-analytics.com",
                     f"{api_public_url}",
-                    f"{api_public_ws_url}",
                 ]
             )
         ),
@@ -198,17 +189,8 @@ def create_app(application):
 
     # @application.context_processor
     # def inject_feature_flags():
-        # this is where feature flags can be easily added as a dictionary within context
-        # feature_socket_enabled = application.config.get("FEATURE_SOCKET_ENABLED", True)
-
-        # current_app.logger.info(
-        #     f"FEATURE_SOCKET_ENABLED value in __init__.py coming \
-        #                          from config is {application.config.get('FEATURE_SOCKET_ENABLED')} and \
-        #                             the ending value is {feature_socket_enabled}"
-        # )
-        # return dict(
-        #     FEATURE_SOCKET_ENABLED=feature_socket_enabled,
-        # )
+    # this is where feature flags can be easily added as a dictionary within context
+    # feature_enabled = application.config.get("FEATURE_ENABLED", True)
 
     @application.context_processor
     def inject_initial_signin_url():
@@ -246,7 +228,7 @@ def create_app(application):
     if "extensions" not in application.jinja_options:
         application.jinja_options["extensions"] = []
 
-    init_govuk_frontend(application)
+    init_nunjucks_environment(application)
     init_jinja(application)
 
     for client in (

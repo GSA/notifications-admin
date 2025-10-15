@@ -1,6 +1,9 @@
 <nav class="usa-breadcrumb" aria-label="Breadcrumb">
-  <a href="{{ params.href.url or params.href or '#' }}" class="usa-link usa-back-link display-inline-flex {{ params.classes or '' }}"
+  <a href="{{ params.href.url or params.href or '#' }}" class="usa-button usa-button--outline {{ params.classes or '' }}"
   {%- for attribute, value in params.attributes %} {{ attribute }}="{{ value }}" {% endfor %}>
+    <svg class="usa-icon margin-right-05" aria-hidden="true" focusable="false" role="img">
+      <use xlink:href="{{ url_for('static', filename='img/sprite.svg') }}#arrow_back"></use>
+    </svg>
     {{- params.html | safe or params.href.text or 'Back' -}}
   </a>
 </nav>

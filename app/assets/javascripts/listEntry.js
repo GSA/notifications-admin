@@ -1,6 +1,7 @@
-(function (Modules) {
+(function (window) {
   'use strict';
 
+  var Modules = window.NotifyModules;
   var lists = [],
       listEntry,
       ListEntry;
@@ -216,10 +217,10 @@
     }
   };
 
-  Modules.ListEntry = function () {
+  Modules['list-entry'] = function () {
 
     this.start = component => lists.push(new ListEntry($(component)));
 
   };
 
-})(window.GOVUK.Modules);
+})(window);

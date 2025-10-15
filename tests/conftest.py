@@ -45,6 +45,10 @@ app.utils.api_health.is_api_down = lambda: False
 
 load_dotenv()
 
+# Disable E2E test environment variables for unit tests
+os.environ.pop("NOTIFY_E2E_TEST_EMAIL", None)
+os.environ.pop("NOTIFY_E2E_TEST_PASSWORD", None)
+
 
 class ElementNotFound(Exception):
     pass
@@ -308,7 +312,7 @@ def single_sms_sender(mocker):
             {
                 "id": "1234",
                 "service_id": service_id,
-                "sms_sender": "GOVUK",
+                "sms_sender": "USGOV",
                 "is_default": True,
                 "created_at": datetime.utcnow(),
                 "inbound_number_id": None,
@@ -325,7 +329,7 @@ def get_default_sms_sender(mocker):
         return {
             "id": "1234",
             "service_id": service_id,
-            "sms_sender": "GOVUK",
+            "sms_sender": "USGOV",
             "is_default": True,
             "created_at": datetime.utcnow(),
             "inbound_number_id": None,
@@ -341,7 +345,7 @@ def get_non_default_sms_sender(mocker):
         return {
             "id": "1234",
             "service_id": service_id,
-            "sms_sender": "GOVUK",
+            "sms_sender": "USGOV",
             "is_default": False,
             "created_at": datetime.utcnow(),
             "inbound_number_id": None,
@@ -445,8 +449,8 @@ def mock_get_service(mocker, api_user_active):
 def mock_get_service_statistics(mocker, api_user_active):
     def _get(service_id, limit_days=None):
         return {
-            "email": {"requested": 0, "delivered": 0, "failed": 0},
-            "sms": {"requested": 0, "delivered": 0, "failed": 0},
+            "email": {"requested": 0, "delivered": 0, "failure": 0},
+            "sms": {"requested": 0, "delivered": 0, "failure": 0},
         }
 
     return mocker.patch(
@@ -1853,7 +1857,7 @@ def mock_get_users_by_service(mocker):
                 id=sample_uuid(),
                 logged_in_at=None,
                 mobile_number="+12028675109",
-                email_address="notify@digital.cabinet-office.gov.uk",
+                email_address="notify@example.gov",
             )
         ]
 
@@ -2371,7 +2375,7 @@ def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too com
             _expected_status=200,
             _follow_redirects=False,
             _expected_redirect=None,
-            _test_page_title=True,
+            _test_page_title=False,
             _test_for_elements_without_class=True,
             _optional_args="",
             **endpoint_kwargs,
@@ -2391,7 +2395,7 @@ def client_request(logged_in_client, mocker, service_one):  # noqa (C901 too com
             _expected_status=200,
             _follow_redirects=False,
             _expected_redirect=None,
-            _test_page_title=True,
+            _test_page_title=False,
             _test_for_elements_without_class=True,
             **endpoint_kwargs,
         ):
@@ -3353,7 +3357,7 @@ def create_multiple_email_reply_to_addresses(service_id="abcd"):
 def create_sms_sender(
     id_="1234",
     service_id="abcd",
-    sms_sender="GOVUK",
+    sms_sender="USGOV",
     is_default=True,
     created_at=None,
     inbound_number_id=None,

@@ -16,7 +16,7 @@
 
     <h1 class="font-body-lg">Settings</h1>
 
-    <div class="bottom-gutter-3-2 settings-table body-copy-table table-overflow-x-auto">
+    <div class="margin-bottom-3 settings-table body-copy-table table-overflow-x-auto">
 
       {% call mapping_table(
         caption='General',
@@ -39,16 +39,9 @@
         {% call row() %}
           {{ text_field('Send text messages') }}
           {{ boolean_field('sms' in current_service.permissions) }}
-          {# {{ edit_field(
-            'Change',
-            url_for(
-            '.service_set_channel',
-            service_id=current_service.id,
-            channel='sms'
-            ),
-            permissions=[ServicePermission.MANAGE_SERVICE],
-            suffix='your settings for sending text messages',
-          )}} #}
+          {% call field(align='right') %}
+            <span class="table-field-status-default">Set automatically</span>
+          {% endcall %}
         {% endcall %}
 
        {% if current_user.platform_admin %}
@@ -57,7 +50,7 @@
           {% call field(status='default' if current_service.default_sms_sender == "None" else '') %}
           {{ current_service.default_sms_sender | nl2br if current_service.default_sms_sender else 'None'}}
             {% if current_service.count_sms_senders > 1 %}
-            <div class="hint">
+            <div class="usa-hint">
               {{ '…and %d more' | format(current_service.count_sms_senders - 1) }}
             </div>
             {% endif %}
@@ -138,7 +131,7 @@
           {% call field(status='default' if current_service.count_email_reply_to_addresses == 0 else '') %}
             {{ current_service.default_email_reply_to_address or 'Not set' }}
             {% if current_service.count_email_reply_to_addresses > 1 %}
-              <div class="hint">
+              <div class="usa-hint">
                 {{ '…and %d more' | format(current_service.count_email_reply_to_addresses - 1) }}
               </div>
             {% endif %}
@@ -187,7 +180,7 @@
       </p>
 
     {% else %}
-      <h2 class="heading-medium top-gutter-0">Your service is live</h2>
+      <h2 class="font-heading-lg top-gutter-0">Your service is live</h2>
 
       <p>
         You can send up to
@@ -218,7 +211,9 @@
             {{ text_field('Live')}}
             {% if current_service.trial_mode and not current_service.organization_id %}
               {{ text_field('No (organization must be set first)') }}
-              {{ text_field('') }}
+              {% call field(align='right') %}
+                <span class="table-field-status-default">Set automatically</span>
+              {% endcall %}
             {% else %}
               {{ boolean_field(not current_service.trial_mode) }}
               {{ edit_field('Change', url_for('.service_switch_live', service_id=current_service.id), suffix='service status') }}
@@ -253,7 +248,7 @@
                 <span class="table-field-status-default">Not set</span>
               {% endif %}
               {% if current_service.organization_type %}
-                <div class="hint">
+                <div class="usa-hint">
                   {{ current_service.organization_type_label }}
                 </div>
               {% endif %}
@@ -327,13 +322,13 @@
         </span>
         {% if current_user.platform_admin %}
           <span class="page-footer-link">
-            <a href="{{ url_for('.suspend_service', service_id=current_service.id) }}" class="usa-link usa-link--destructive page-footer-link">
+            <a href="{{ url_for('.suspend_service', service_id=current_service.id) }}" class="usa-button usa-button--outline">
                 Suspend service
               </a>
           </span>
 
           <span class="page-footer-link">
-            <a href="{{ url_for('.history', service_id=current_service.id) }}" class="usa-link page-footer-link">
+            <a href="{{ url_for('.history', service_id=current_service.id) }}" class="usa-link">
               Service history
             </a>
           </span>
@@ -342,7 +337,7 @@
     {% endif %}
     {% if (not current_service.active) and current_user.platform_admin %}
       <p>
-        <div class="hint ">
+        <div class="usa-hint ">
           Service suspended
         </div>
 
@@ -353,7 +348,7 @@
         </span>
 
         <span class="page-footer-link">
-          <a href="{{ url_for('.history', service_id=current_service.id) }}" class="usa-link page-footer-link">
+          <a href="{{ url_for('.history', service_id=current_service.id) }}" class="usa-link">
             Service history
           </a>
         </span>

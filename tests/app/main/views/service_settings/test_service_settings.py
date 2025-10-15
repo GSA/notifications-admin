@@ -53,7 +53,7 @@ def _mock_get_service_settings_page_common(
             [
                 "",
                 "Service name Test Service Change service name",
-                "Send text messages On",
+                "Send text messages On Set automatically",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",
             ],
@@ -63,8 +63,8 @@ def _mock_get_service_settings_page_common(
             [
                 "",
                 "Service name Test Service Change service name",
-                "Send text messages On",
-                "Text message senders (Only visible to Platform Admins) GOVUK Manage text message senders",
+                "Send text messages On Set automatically",
+                "Text message senders (Only visible to Platform Admins) USGOV Manage text message senders",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",
                 "Send international text messages Off Change your settings for sending international text messages",
@@ -191,7 +191,7 @@ def test_send_files_by_email_row_on_settings_page(
             ["email", "sms", "international_sms"],
             [
                 "Service name service one Change service name",
-                "Send text messages On",
+                "Send text messages On Set automatically",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",
             ],
@@ -200,7 +200,7 @@ def test_send_files_by_email_row_on_settings_page(
             ["email", "sms", ServicePermission.EMAIL_AUTH],
             [
                 "Service name service one Change service name",
-                "Send text messages On",
+                "Send text messages On Set automatically",
                 "Start text messages with service name On Change your settings "
                 "for starting text messages with service name",
             ],
@@ -692,7 +692,7 @@ def test_and_more_hint_appears_on_settings_with_more_than_just_a_single_sender(
             0,
             "test@example.com (default) Change test@example.com",
         ),
-        ("main.service_sms_senders", 0, "GOVUK (default) Change GOVUK"),
+        ("main.service_sms_senders", 0, "USGOV (default) Change USGOV"),
     ],
 )
 def test_api_ids_dont_show_on_option_pages_with_a_single_sender(
@@ -977,9 +977,15 @@ def test_service_verify_reply_to_address(
     )
     assert page.find("h1").text == "{} email reply-to address".format(expected_header)
     if replace:
-        assert "/email-reply-to/123/edit" in page.find("a", text="Back").attrs["href"]
+        assert (
+            "/email-reply-to/123/edit"
+            in page.select_one("nav.usa-breadcrumb a").attrs["href"]
+        )
     else:
-        assert "/email-reply-to/add" in page.find("a", text="Back").attrs["href"]
+        assert (
+            "/email-reply-to/add"
+            in page.select_one("nav.usa-breadcrumb a").attrs["href"]
+        )
 
     assert len(page.find_all("div", class_="banner-dangerous")) == expected_failure
     assert (
@@ -1268,8 +1274,8 @@ def test_shows_delete_link_for_get_request_for_edit_email_reply_to_address(
         reply_to_email_id=sample_uuid(),
     )
 
-    assert page.select_one(".usa-back-link").text.strip() == "Back"
-    assert page.select_one(".usa-back-link")["href"] == url_for(
+    assert "Back" in page.select_one("nav.usa-breadcrumb a").text.strip()
+    assert page.select_one("nav.usa-breadcrumb a")["href"] == url_for(
         ".service_email_reply_to",
         service_id=SERVICE_ONE_ID,
     )
@@ -1329,8 +1335,8 @@ def test_shows_delete_link_for_error_on_post_request_for_edit_email_reply_to_add
         _expected_status=200,
     )
 
-    assert page.select_one(".usa-back-link").text.strip() == "Back"
-    assert page.select_one(".usa-back-link")["href"] == url_for(
+    assert "Back" in page.select_one("nav.usa-breadcrumb a").text.strip()
+    assert page.select_one("nav.usa-breadcrumb a")["href"] == url_for(
         ".service_email_reply_to",
         service_id=SERVICE_ONE_ID,
     )
@@ -1539,9 +1545,9 @@ def test_shows_delete_link_for_sms_sender(
     )
 
     link = page.select_one(".page-footer a")
-    back_link = page.select_one(".usa-back-link")
+    back_link = page.select_one("nav.usa-breadcrumb a")
 
-    assert back_link.text.strip() == "Back"
+    assert "Back" in back_link.text.strip()
     assert back_link["href"] == url_for(
         ".service_sms_senders",
         service_id=SERVICE_ONE_ID,
@@ -1592,9 +1598,9 @@ def test_inbound_sms_sender_is_not_deleteable(
         sms_sender_id=fake_uuid,
     )
 
-    back_link = page.select_one(".usa-back-link")
+    back_link = page.select_one("nav.usa-breadcrumb a")
     footer_link = page.select_one(".page-footer a")
-    assert normalize_spaces(back_link.text) == "Back"
+    assert "Back" in normalize_spaces(back_link.text)
 
     if expected_link_text:
         assert normalize_spaces(footer_link.text) == expected_link_text
@@ -1646,7 +1652,7 @@ def test_inbound_sms_sender_is_not_editable(
     if hide_textbox:
         assert (
             normalize_spaces(page.select_one('form[method="post"] p').text)
-            == "GOVUK This phone number receives replies and cannot be changed"
+            == "USGOV This phone number receives replies and cannot be changed"
         )
 
 

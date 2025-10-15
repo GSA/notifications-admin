@@ -22,10 +22,8 @@ def test_generate_next_dict(client_request):
 
 
 def test_generate_previous_next_dict_adds_other_url_args(client_request):
-    result = generate_next_dict(
-        "main.view_notifications", "foo", 2, {"message_type": "blah"}
-    )
-    assert "notifications/blah" in result["url"]
+    result = generate_next_dict("main.view_jobs", "foo", 2, {"status": "pending"})
+    assert "status=pending" in result["url"]
 
 
 @pytest.mark.parametrize(

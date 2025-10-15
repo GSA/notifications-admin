@@ -19,7 +19,7 @@ class CloudfoundryConfig:
         try:
             return self.parsed_services["aws-elasticache-redis"][0]["credentials"][
                 "uri"
-            ].replace("redis://", "rediss://")
+            ]
         except KeyError:
             return os.environ.get("REDIS_URL")
 

@@ -6,13 +6,13 @@
 {% endblock %}
 
 {% block platform_admin_content %}
-  <div class="grid-row bottom-gutter">
+  <div class="grid-row margin-bottom-3">
     <div class="grid-col-12">
       <h1 class="font-body-2xl margin-bottom-3">
         {{ user.name }}
       </h1>
       <p>{{ user.email_address }}</p>
-      <p class="{{ '' if user.mobile_number else 'hint' }}">{{ user.mobile_number or 'No mobile number'}}</p>
+      <p class="{{ '' if user.mobile_number else 'usa-hint' }}">{{ user.mobile_number or 'No mobile number'}}</p>
 
       <h2 class="font-body-lg">Live services</h2>
       <nav class="browse-list">
@@ -25,7 +25,7 @@
           {% endfor %}
           </ul>
         {% else %}
-          <p class="hint">
+          <p class="usa-hint">
             No live services
           </p>
         {% endif %}
@@ -41,7 +41,7 @@
           {% endfor %}
           </ul>
         {% else %}
-          <p class="hint">
+          <p class="usa-hint">
             No services in trial mode
           </p>
         {% endif %}
@@ -57,7 +57,7 @@
 
       <h2 class="font-body-lg">Last login</h2>
       {% if not user.logged_in_at %}
-      <p class="hint">This person has never logged in</p>
+      <p class="usa-hint">This person has never logged in</p>
       {% else %}
       <p>Last logged in
         <time datetime="{{ user.logged_in_at }}">

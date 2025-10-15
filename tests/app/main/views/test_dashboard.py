@@ -410,7 +410,7 @@ def test_should_not_show_recent_templates_on_dashboard_if_only_one_template_used
     assert expected_count == 50, f"Expected count to be 50, but got {expected_count}"
 
 
-@freeze_time("2017-01-01 12:00")
+@freeze_time("2017-12-01 12:00")
 @pytest.mark.parametrize(
     "extra_args",
     [

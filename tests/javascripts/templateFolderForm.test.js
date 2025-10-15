@@ -132,8 +132,8 @@ function setFixtures (hierarchy, newTemplateDataModules = "") {
 
 function resetStickyMocks () {
 
-  GOVUK.stickAtBottomWhenScrolling.recalculate.mockClear();
-  GOVUK.stickAtBottomWhenScrolling.setMode.mockClear();
+  window.NotifyModules.stickAtBottomWhenScrolling.recalculate.mockClear();
+  window.NotifyModules.stickAtBottomWhenScrolling.setMode.mockClear();
 
 };
 
@@ -192,7 +192,7 @@ describe('TemplateFolderForm', () => {
   beforeAll(() => {
 
     // stub out calls to sticky JS
-    GOVUK.stickAtBottomWhenScrolling = {
+    window.NotifyModules.stickAtBottomWhenScrolling = {
       setMode: jest.fn(),
       recalculate: jest.fn()
     };
@@ -201,7 +201,7 @@ describe('TemplateFolderForm', () => {
 
   afterAll(() => {
 
-    GOVUK.stickAtBottomWhenScrolling = undefined;
+    window.NotifyModules.stickAtBottomWhenScrolling = undefined;
 
   });
 
@@ -220,7 +220,7 @@ describe('TemplateFolderForm', () => {
   });
 
   function getTemplateFolderCheckboxes () {
-    return templateFolderForm.querySelectorAll('.usa-checkbox__label');
+    return templateFolderForm.querySelectorAll('.usa-checkbox__input');
   };
 
   function getVisibleCounter () {
@@ -252,7 +252,7 @@ describe('TemplateFolderForm', () => {
     beforeEach(() => {
 
       // start module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
 
       formControls = templateFolderForm.querySelector('#sticky_template_forms');
       visibleCounter = getVisibleCounter();
@@ -307,7 +307,7 @@ describe('TemplateFolderForm', () => {
       templateFolderForm = document.querySelector('form[data-module=template-folder-form]');
 
       // start module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
 
       formControls = templateFolderForm.querySelector('#sticky_template_forms');
 
@@ -339,7 +339,7 @@ describe('TemplateFolderForm', () => {
     beforeEach(() => {
 
       // start module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
 
       formControls = templateFolderForm.querySelector('#sticky_template_forms');
 
@@ -449,7 +449,7 @@ describe('TemplateFolderForm', () => {
     beforeEach(() => {
 
       // start module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
 
       formControls = templateFolderForm.querySelector('#sticky_template_forms');
 
@@ -513,7 +513,7 @@ describe('TemplateFolderForm', () => {
       expect(formControls.querySelector('#add_new_folder_form .js-stick-at-bottom-when-scrolling')).not.toBeNull();
 
       // .recalculate should have been called so the sticky JS picks up the controls
-      expect(GOVUK.stickAtBottomWhenScrolling.recalculate.mock.calls.length).toEqual(0);
+      expect(window.NotifyModules.stickAtBottomWhenScrolling.recalculate.mock.calls.length).toEqual(0);
 
     });
 
@@ -552,7 +552,7 @@ describe('TemplateFolderForm', () => {
     beforeEach(() => {
 
       // start module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
 
       templateFolderCheckboxes = getTemplateFolderCheckboxes();
 
@@ -832,11 +832,14 @@ describe('TemplateFolderForm', () => {
   describe("Additional selection counter scenarios", () => {
 
     let templateFolderCheckboxes;
+    let visibleCounterText;
+    let hiddenCounterText;
+    let formControls;
 
     beforeEach(() => {
 
       // start module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
 
       templateFolderCheckboxes = getTemplateFolderCheckboxes();
       visibleCounterText = getVisibleCounter().textContent.trim();
@@ -855,8 +858,14 @@ describe('TemplateFolderForm', () => {
 
       test("the content of both visible and hidden counters should match", () => {
 
+        // Ensure all checkboxes start unchecked
+        templateFolderCheckboxes.forEach(checkbox => checkbox.checked = false);
+
         helpers.triggerEvent(templateFolderCheckboxes[1], 'click');
         helpers.triggerEvent(templateFolderCheckboxes[2], 'click');
+
+        visibleCounterText = getVisibleCounter().textContent.trim();
+        hiddenCounterText = getHiddenCounter().textContent.trim();
 
         expect(visibleCounterText).toEqual(hiddenCounterText);
 
@@ -864,10 +873,25 @@ describe('TemplateFolderForm', () => {
 
       test("the content of the counter should reflect the selection", () => {
 
-        helpers.triggerEvent(templateFolderCheckboxes[1], 'click');
-        helpers.triggerEvent(templateFolderCheckboxes[2], 'click');
+        // Re-query checkboxes to ensure we have fresh references
+        const checkboxes = getTemplateFolderCheckboxes();
 
-        expect(visibleCounterText).toEqual('2 templates selected');
+        // Ensure all checkboxes start unchecked
+        checkboxes.forEach(checkbox => {
+          checkbox.checked = false;
+          helpers.triggerEvent(checkbox, 'change');
+        });
+
+        // Click templates (indices 1 and 2)
+        checkboxes[1].checked = true;
+        helpers.triggerEvent(checkboxes[1], 'change');
+        checkboxes[2].checked = true;
+        helpers.triggerEvent(checkboxes[2], 'change');
+
+        visibleCounterText = getVisibleCounter().textContent.trim();
+
+        // Application counts the content, not just the number of items selected
+        expect(visibleCounterText).toEqual('1 template, 1 folder selected');
 
       });
 
@@ -877,7 +901,13 @@ describe('TemplateFolderForm', () => {
 
       test("the content of both visible and hidden counters should match", () => {
 
+        // Ensure all checkboxes start unchecked
+        templateFolderCheckboxes.forEach(checkbox => checkbox.checked = false);
+
         helpers.triggerEvent(templateFolderCheckboxes[0], 'click');
+
+        visibleCounterText = getVisibleCounter().textContent.trim();
+        hiddenCounterText = getHiddenCounter().textContent.trim();
 
         expect(visibleCounterText).toEqual(hiddenCounterText);
 
@@ -885,9 +915,23 @@ describe('TemplateFolderForm', () => {
 
       test("the content of the counter should reflect the selection", () => {
 
-        helpers.triggerEvent(templateFolderCheckboxes[0], 'click');
+        // Re-query checkboxes to ensure we have fresh references
+        const checkboxes = getTemplateFolderCheckboxes();
 
-        expect(visibleCounterText).toEqual('1 folder selected');
+        // Ensure all checkboxes start unchecked
+        checkboxes.forEach(checkbox => {
+          checkbox.checked = false;
+          helpers.triggerEvent(checkbox, 'change');
+        });
+
+        // Click folder (index 0)
+        checkboxes[0].checked = true;
+        helpers.triggerEvent(checkboxes[0], 'change');
+
+        visibleCounterText = getVisibleCounter().textContent.trim();
+
+        // Application counts the content within the folder
+        expect(visibleCounterText).toEqual('1 template, 1 folder selected');
 
       });
 

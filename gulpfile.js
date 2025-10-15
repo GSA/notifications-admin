@@ -1,10 +1,5 @@
 const { src, dest, series } = require('gulp');
-const rollup = require('@rollup/stream');
-const rollupPluginCommonjs = require('@rollup/plugin-commonjs');
-const rollupPluginNodeResolve = require('@rollup/plugin-node-resolve');
-const source = require('vinyl-source-stream');
-const buffer = require('vinyl-buffer');
-const gulpMerge = require('gulp-merge');
+const mergeStream = require('merge-stream');
 const uswds = require('@uswds/compile');
 const { exec } = require('child_process');
 const plugins = {};
@@ -12,75 +7,47 @@ plugins.addSrc = require('gulp-add-src');
 plugins.babel = require('gulp-babel');
 plugins.cleanCSS = require('gulp-clean-css');
 plugins.concat = require('gulp-concat');
-plugins.jshint = require('gulp-jshint');
 plugins.prettyerror = require('gulp-prettyerror');
 plugins.uglify = require('gulp-uglify');
 
 const paths = {
   src: 'app/assets/',
   dist: 'app/static/',
-  npm: 'node_modules/',
-  toolkit: 'node_modules/govuk_frontend_toolkit/',
-  govuk_frontend: 'node_modules/govuk-frontend/',
+  npm: 'node_modules/'
 };
 
 const javascripts = () => {
-  const vendored = rollup({
-    input: paths.src + 'javascripts/modules/all.mjs',
-    plugins: [
-      rollupPluginNodeResolve({
-        mainFields: ['module', 'main'],
-      }),
-      rollupPluginCommonjs({
-        include: 'node_modules/**',
-      }),
-    ],
-    output: {
-      format: 'iife',
-      name: 'GOVUK',
-    },
-  })
-    .pipe(source('all.mjs'))
-    .pipe(buffer())
+  // Files that don't use NotifyModules and can be uglified
+  const localUglified = src([
+    paths.src + 'javascripts/modules/init.js',
+    paths.src + 'javascripts/modules/uswds-modules.js',
+    paths.src + 'javascripts/modules/show-hide-content.js',
+    paths.src + 'javascripts/radioSelect.js',
+    paths.src + 'javascripts/liveSearch.js',
+    paths.src + 'javascripts/preventDuplicateFormSubmissions.js',
+    paths.src + 'javascripts/errorBanner.js',
+    paths.src + 'javascripts/notifyModal.js',
+    paths.src + 'javascripts/date.js',
+    paths.src + 'javascripts/sidenav.js',
+    paths.src + 'javascripts/validation.js',
+    paths.src + 'javascripts/scrollPosition.js',
+  ])
+    .pipe(plugins.prettyerror())
     .pipe(
-      plugins.addSrc.prepend([
-        paths.npm + 'jquery/dist/jquery.min.js',
-        paths.npm + 'query-command-supported/dist/queryCommandSupported.min.js',
-        paths.npm + 'textarea-caret/index.js',
-        paths.npm + 'cbor-js/cbor.js',
-        paths.npm + 'd3/dist/d3.min.js',
-        paths.npm + 'socket.io-client/dist/socket.io.min.js'
-      ])
-    );
+      plugins.babel({
+        presets: ['@babel/preset-env'],
+      })
+    )
+    .pipe(plugins.uglify());
 
-  const local = src([
-    paths.toolkit + 'javascripts/govuk/modules.js',
-    paths.toolkit + 'javascripts/govuk/show-hide-content.js',
+  // Files that use NotifyModules - split into two groups to avoid stream issues
+  const notifyModules1 = src([
     paths.src + 'javascripts/copyToClipboard.js',
     paths.src + 'javascripts/enhancedTextbox.js',
     paths.src + 'javascripts/fileUpload.js',
-    paths.src + 'javascripts/radioSelect.js',
-    paths.src + 'javascripts/listEntry.js',
-    paths.src + 'javascripts/liveSearch.js',
     paths.src + 'javascripts/errorTracking.js',
-    paths.src + 'javascripts/preventDuplicateFormSubmissions.js',
     paths.src + 'javascripts/fullscreenTable.js',
     paths.src + 'javascripts/templateFolderForm.js',
-    paths.src + 'javascripts/collapsibleCheckboxes.js',
-    paths.src + 'javascripts/radioSlider.js',
-    paths.src + 'javascripts/updateStatus.js',
-    paths.src + 'javascripts/errorBanner.js',
-    paths.src + 'javascripts/notifyModal.js',
-    paths.src + 'javascripts/timeoutPopup.js',
-    paths.src + 'javascripts/date.js',
-    paths.src + 'javascripts/loginAlert.js',
-    paths.src + 'javascripts/main.js',
-    paths.src + 'javascripts/totalMessagesChart.js',
-    paths.src + 'javascripts/activityChart.js',
-    paths.src + 'javascripts/sidenav.js',
-    paths.src + 'javascripts/validation.js',
-    paths.src + 'javascripts/job-polling.js',
-    paths.src + 'javascripts/scrollPosition.js',
   ])
     .pipe(plugins.prettyerror())
     .pipe(
@@ -89,8 +56,40 @@ const javascripts = () => {
       })
     );
 
-  return gulpMerge(vendored, local)
-    .pipe(plugins.uglify())
+  const notifyModules2 = src([
+    paths.src + 'javascripts/collapsibleCheckboxes.js',
+    paths.src + 'javascripts/radioSlider.js',
+    paths.src + 'javascripts/updateStatus.js',
+    paths.src + 'javascripts/timeoutPopup.js',
+    paths.src + 'javascripts/main.js',
+  ])
+    .pipe(plugins.prettyerror())
+    .pipe(
+      plugins.babel({
+        presets: ['@babel/preset-env'],
+      })
+    );
+
+  // First create vendored with jquery-expose immediately after jQuery
+  const vendoredWithExpose = src([
+    paths.npm + 'jquery/dist/jquery.min.js',
+    paths.src + 'javascripts/jquery-expose.js',
+    paths.npm + 'query-command-supported/dist/queryCommandSupported.min.js',
+    paths.npm + 'textarea-caret/index.js',
+    paths.npm + 'cbor-js/cbor.js',
+    paths.npm + 'd3/dist/d3.min.js'
+  ]);
+
+  // Concatenate all streams
+  const mainBundle = mergeStream(vendoredWithExpose, localUglified, notifyModules1, notifyModules2);
+
+  // Use the mainBundle as the base and append remaining non-transpiled files at the end
+  return mainBundle
+    .pipe(plugins.addSrc.append(paths.src + 'javascripts/listEntry.js'))
+    .pipe(plugins.addSrc.append(paths.src + 'javascripts/stick-to-window-when-scrolling.js'))
+    .pipe(plugins.addSrc.append(paths.src + 'javascripts/totalMessagesChart.js'))
+    .pipe(plugins.addSrc.append(paths.src + 'javascripts/activityChart.js'))
+    .pipe(plugins.addSrc.append(paths.src + 'javascripts/job-polling.js'))
     .pipe(plugins.concat('all.js'))
     .pipe(dest(paths.dist + 'javascripts/'));
 };
@@ -145,7 +144,7 @@ const styles = async () => {
   await uswds.compileSass();
 };
 
-// Task to copy USWDS assetsconst
+// Task to copy USWDS assets
 const copyUSWDSAssets = () => {
   return src([
     'node_modules/@uswds/uswds/dist/img/**/*',

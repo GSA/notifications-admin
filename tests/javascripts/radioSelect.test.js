@@ -17,6 +17,9 @@ describe('RadioSelect', () => {
   ];
   const HOURS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
   let originalOptionsForAllCategories;
+  let originalOptionsForCategory;
+  let selectedOption;
+  let categoryButtons;
 
   const getDataFromOption = (option) => {
     return {
@@ -127,7 +130,7 @@ describe('RadioSelect', () => {
         // default is for it to be set to true
 
         // start module
-        window.GOVUK.modules.start();
+        window.NotifyModules.start();
 
         expect(document.querySelectorAll('.radio-select__column').length).toEqual(2);
 
@@ -138,7 +141,7 @@ describe('RadioSelect', () => {
         document.querySelector('.radio-select').setAttribute('data-show-now-as-default', 'false');
 
         // start module
-        window.GOVUK.modules.start();
+        window.NotifyModules.start();
 
         expect(document.querySelectorAll('.radio-select__column').length).toEqual(1);
 
@@ -153,7 +156,7 @@ describe('RadioSelect', () => {
       beforeEach(() => {
 
         // start module
-        window.GOVUK.modules.start();
+        window.NotifyModules.start();
 
         categoryButtons = document.querySelectorAll('.radio-select__column:nth-child(2) .radio-select__button--category');
 
@@ -201,7 +204,7 @@ describe('RadioSelect', () => {
           originalOptionsForCategory = originalOptionsForAllCategories.filter(option => categoryRegExp.test(option.label));
 
           // start module
-          window.GOVUK.modules.start();
+          window.NotifyModules.start();
 
           clickButtonForCategory(category);
 
@@ -236,7 +239,7 @@ describe('RadioSelect', () => {
     test(`clicking the button for a category should add a 'Done' button below its options`, () => {
 
       // start module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
 
       clickButtonForCategory(CATEGORIES[0]);
 
@@ -255,7 +258,7 @@ describe('RadioSelect', () => {
     beforeEach(() => {
 
       // start module
-      window.GOVUK.modules.start();
+      window.NotifyModules.start();
 
       clickButtonForCategory(CATEGORIES[0]);
 

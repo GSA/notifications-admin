@@ -254,3 +254,119 @@ def test_all_activity_filters(client_request, mocker, filter_type, expected_limi
         )
     else:
         mock_get_page_of_jobs.assert_any_call(SERVICE_ONE_ID, page=current_page)
+
+
+def test_download_links_show_when_data_available(
+    client_request,
+    service_one,
+    active_user_with_permissions,
+    mocker,
+):
+
+    mock_jobs_with_data = {
+        "data": [{"id": "job1", "created_at": "2020-01-01T00:00:00.000000+00:00"}],
+        "total": 1,
+        "page_size": 50,
+    }
+
+    mocker.patch(
+        "app.job_api_client.get_page_of_jobs", return_value=mock_jobs_with_data
+    )
+    mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[{"id": "job1"}])
+    mocker.patch("app.s3_client.check_s3_file_exists", return_value=True)
+    mock_obj = mocker.Mock()
+    mock_obj.content_length = 1024
+    mocker.patch("app.s3_client.get_s3_object", return_value=mock_obj)
+    mocker.patch("app.s3_client.s3_csv_client.get_csv_upload", return_value=mock_obj)
+
+    page = client_request.get(
+        "main.all_jobs_activity",
+        service_id=service_one["id"],
+    )
+
+    assert "Download recent reports" in page.text
+    assert "Yesterday" in page.text
+    assert "Last 3 days" in page.text
+    assert "Last 5 days" in page.text
+    assert "Last 7 days" in page.text
+
+
+def test_download_links_partial_data_available(
+    client_request,
+    service_one,
+    active_user_with_permissions,
+    mocker,
+):
+    mock_jobs_with_data = {
+        "data": [{"id": "job1", "created_at": "2020-01-01T00:00:00.000000+00:00"}],
+        "total": 1,
+        "page_size": 50,
+    }
+    mock_jobs_empty = {"data": [], "total": 0, "page_size": 50}
+
+    def mock_get_page_of_jobs(service_id, page=1, limit_days=None):
+        if limit_days in [1, 5]:
+            return mock_jobs_with_data
+        return mock_jobs_empty
+
+    mocker.patch(
+        "app.job_api_client.get_page_of_jobs", side_effect=mock_get_page_of_jobs
+    )
+    mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
+    mocker.patch("app.s3_client.check_s3_file_exists", return_value=True)
+    mock_obj = mocker.Mock()
+    mock_obj.content_length = 2048
+    mocker.patch("app.s3_client.s3_csv_client.get_csv_upload", return_value=mock_obj)
+    mocker.patch("app.s3_client.get_s3_object", return_value=mock_obj)
+
+    page = client_request.get(
+        "main.all_jobs_activity",
+        service_id=service_one["id"],
+    )
+
+    assert "Download recent reports" in page.text
+    assert "Yesterday" in page.text
+    assert "Last 3 days" in page.text
+    assert "Last 5 days" in page.text
+    assert "Last 7 days" in page.text
+    assert "No recent activity to download" not in page.text
+
+
+def test_download_links_no_data_available(
+    client_request,
+    service_one,
+    active_user_with_permissions,
+    mocker,
+):
+    mock_jobs_empty = {"data": [], "total": 0, "page_size": 50}
+
+    mocker.patch("app.job_api_client.get_page_of_jobs", return_value=mock_jobs_empty)
+    mocker.patch("app.job_api_client.get_immediate_jobs", return_value=[])
+    mocker.patch("app.s3_client.check_s3_file_exists", return_value=False)
+    mock_obj = mocker.Mock()
+    mock_obj.content_length = 0
+    mocker.patch("app.s3_client.get_s3_object", return_value=mock_obj)
+
+    page = client_request.get(
+        "main.all_jobs_activity",
+        service_id=service_one["id"],
+    )
+
+    assert "Download recent reports" in page.text
+    assert "Yesterday" in page.text
+    assert "No messages sent" in page.text
+    assert "Last 3 days - No messages sent" in page.text
+    assert "Last 5 days - No messages sent" in page.text
+    assert "Last 7 days - No messages sent" in page.text
+
+
+def test_download_not_available_to_users_without_dashboard(
+    client_request,
+    active_caseworking_user,
+):
+    client_request.login(active_caseworking_user)
+    client_request.get(
+        "main.download_notifications_csv",
+        service_id=SERVICE_ONE_ID,
+        _expected_status=403,
+    )
