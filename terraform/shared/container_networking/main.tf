@@ -1,5 +1,10 @@
+data "cloudfoundry_org" "org" {
+  name = var.cf_org_name
+}
+
 data "cloudfoundry_space" "space" {
-  org  = "9e428562-a2d9-41b4-9c23-1ef5237fb44e"
+  org = data.cloudfoundry_org.org.id
+  # org  = "9e428562-a2d9-41b4-9c23-1ef5237fb44e"
   name = var.cf_space_name
 }
 
