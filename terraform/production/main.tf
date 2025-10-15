@@ -13,7 +13,7 @@ resource "null_resource" "prevent_destroy" {
 }
 
 module "redis-v70" {
-  source = "github.com/GSA-TTS/terraform-cloudgov//redis?ref=v2.4.0"
+  source = "github.com/GSA-TTS/terraform-cloudgov//redis?ref=v2.3.0"
 
   cf_space_id     = local.cf_space_name
   name            = "${local.app_name}-redis-v70-${local.env}"
@@ -26,7 +26,7 @@ module "redis-v70" {
 }
 
 module "logo_upload_bucket" {
-  source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v2.4.0"
+  source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v2.3.0"
 
   cf_space_id = local.cf_space_name
   name        = "${local.app_name}-logo-upload-bucket-${local.env}"
@@ -55,7 +55,7 @@ module "api_network_route" {
 #       https://cloud.gov/docs/services/external-domain-service/#how-to-create-an-instance-of-this-service
 ###########################################################################
 module "domain" {
-  source = "github.com/GSA-TTS/terraform-cloudgov//domain?ref=v2.4.0"
+  source = "github.com/GSA-TTS/terraform-cloudgov//domain?ref=v2.3.0"
 
   cf_org_name    = local.cf_org_name
   cf_space_name  = local.cf_space_name
