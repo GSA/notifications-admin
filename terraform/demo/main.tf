@@ -29,7 +29,7 @@ module "redis-v70" {
 module "logo_upload_bucket" {
   source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v2.4.0"
 
-  cf_org_name = local.cf_org_name
+  # cf_org_name = local.cf_org_name
   cf_space_id = local.cf_space_id
   name        = "${local.app_name}-logo-upload-bucket-${local.env}"
 }
