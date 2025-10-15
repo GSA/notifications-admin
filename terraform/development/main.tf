@@ -1,7 +1,7 @@
 locals {
-  cf_org_name   = "gsa-tts-benefits-studio"
+  cf_org_name = "gsa-tts-benefits-studio"
   cf_space_id = "notify-local-dev"
-  key_name      = "${var.username}-admin-dev-key"
+  key_name    = "${var.username}-admin-dev-key"
 }
 
 data "cloudfoundry_space" "dev" {
@@ -12,9 +12,9 @@ data "cloudfoundry_space" "dev" {
 module "logo_upload_bucket" {
   source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v2.4.0"
 
-  cf_org_name   = local.cf_org_name
+  cf_org_name = local.cf_org_name
   cf_space_id = local.cf_space_id
-  name          = "${var.username}-logo-upload-bucket"
+  name        = "${var.username}-logo-upload-bucket"
 }
 resource "cloudfoundry_service_key" "logo_key" {
   name             = local.key_name

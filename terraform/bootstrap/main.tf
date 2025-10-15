@@ -5,9 +5,9 @@ locals {
 module "s3" {
   source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v2.4.0"
 
-  cf_org_name   = "gsa-tts-benefits-studio"
+  cf_org_name = "gsa-tts-benefits-studio"
   cf_space_id = "notify-management"
-  name          = local.s3_service_name
+  name        = local.s3_service_name
 }
 
 resource "cloudfoundry_service_key" "bucket_creds" {
