@@ -9,7 +9,7 @@
 
   {{ page_header('Organization Dashboard', size='large') }}
 
-  <div id="totalMessageChartContainer" data-messages-sent="{{ messages_sent|default(0) }}" data-messages-remaining="{{ messages_remaining|default(0) }}">
+  <div id="totalMessageChartContainer" data-messages-sent="{{ messages_sent|default(0) }}" data-messages-remaining="{{ messages_remaining|default(0) }}" data-total-message-limit="{{ total_message_limit|default(0) }}">
     <div class="grid-row flex-align-center">
       <h2 id="chartTitle" class="margin-right-1 margin-y-0">Overall {{ selected_year }} Total Message Allowance</h2>
       <button

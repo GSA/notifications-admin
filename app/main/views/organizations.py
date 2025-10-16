@@ -5,7 +5,12 @@ from functools import partial
 from flask import current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user
 
-from app import current_organization, org_invite_api_client, organizations_client
+from app import (
+    current_organization,
+    org_invite_api_client,
+    organizations_client,
+    service_api_client,
+)
 from app.main import main
 from app.main.forms import (
     AdminBillingDetailsForm,
@@ -92,10 +97,29 @@ def organization_dashboard(org_id):
 
     year = requested_and_current_financial_year(request)[0]
 
-    # TODO: total message allowance
+    try:
+        message_usage = service_api_client.get_organization_message_usage(org_id)
+    except Exception as e:
+        current_app.logger.error(f"Error fetching organization message usage: {e}")
+        message_usage = {}
+
+    messages_sent = message_usage.get("messages_sent", 0)
+    messages_remaining = message_usage.get("messages_remaining", 0)
+    total_message_limit = message_usage.get("total_message_limit", 0)
+
+    services = current_organization.services
+    service_counts = get_service_counts_by_status(services)
+
     return render_template(
         "views/organizations/organization/index.html",
         selected_year=year,
+        messages_sent=messages_sent,
+        messages_remaining=messages_remaining,
+        total_message_limit=total_message_limit,
+        total_services=service_counts["total"],
+        live_services=service_counts["live"],
+        trial_services=service_counts["trial"],
+        suspended_services=service_counts["suspended"],
     )
 
 
