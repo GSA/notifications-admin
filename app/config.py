@@ -113,7 +113,7 @@ class Development(Config):
     ASSET_PATH = "/static/"
     NOTIFY_LOG_LEVEL = "DEBUG"
 
-    # Feature Flags - Enable in development for testing
+    # Feature Flags
     ORGANIZATION_DASHBOARD_ENABLED = (
         getenv("ORGANIZATION_DASHBOARD_ENABLED", "True") == "True"
     )

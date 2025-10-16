@@ -5,12 +5,7 @@ from functools import partial
 from flask import current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user
 
-from app import (
-    current_organization,
-    org_invite_api_client,
-    organizations_client,
-    service_api_client,
-)
+from app import current_organization, org_invite_api_client, organizations_client
 from app.main import main
 from app.main.forms import (
     AdminBillingDetailsForm,
@@ -97,31 +92,10 @@ def organization_dashboard(org_id):
 
     year = requested_and_current_financial_year(request)[0]
 
-    services = current_organization.services_and_usage(financial_year=year)["services"]
-
-    all_services = current_organization.services
-    service_counts = get_service_counts_by_status(all_services)
-
-    total_messages_sent = 0
-    total_messages_remaining = 0
-
-    for service in services:
-        service_message_ratio = service_api_client.get_service_message_ratio(
-            service["service_id"]
-        )
-        total_messages_sent += service_message_ratio.get("messages_sent", 0)
-        total_messages_remaining += service_message_ratio.get("messages_remaining", 0)
-
+    # TODO: total message allowance
     return render_template(
         "views/organizations/organization/index.html",
         selected_year=year,
-        messages_sent=total_messages_sent,
-        messages_remaining=total_messages_remaining,
-        total_services=service_counts["total"],
-        live_services=service_counts["live"],
-        trial_services=service_counts["trial"],
-        suspended_services=service_counts["suspended"],
-        all_services=all_services
     )
 
 
