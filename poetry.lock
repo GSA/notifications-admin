@@ -1502,14 +1502,14 @@ tests = ["freezegun", "pytest", "pytest-cov"]
 
 [[package]]
 name = "hypothesis"
-version = "6.141.0"
+version = "6.142.0"
 description = "A library for property-based testing"
 optional = false
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "hypothesis-6.141.0-py3-none-any.whl", hash = "sha256:29a1b4301611bdd2833a5ad5fc422c72b60071a169ee048e28b1435ac410d072"},
-    {file = "hypothesis-6.141.0.tar.gz", hash = "sha256:a66861954dc1768945eda83ca28a9bbb5bc59a45edae899c219e2dd85a8ddd43"},
+    {file = "hypothesis-6.142.0-py3-none-any.whl", hash = "sha256:2d1c3096ee625f327134a693d8e5a48134e3a6cd0914cd0497adb2699bd998b4"},
+    {file = "hypothesis-6.142.0.tar.gz", hash = "sha256:584bb5bddb95cfae69151466215433b5620bd7498876e6f6831c9f119344fb0f"},
 ]
 
 [package.dependencies]
@@ -1517,7 +1517,7 @@ attrs = ">=22.2.0"
 sortedcontainers = ">=2.1.0,<3.0.0"
 
 [package.extras]
-all = ["black (>=20.8b0)", "click (>=7.0)", "crosshair-tool (>=0.0.97)", "django (>=4.2)", "dpcontracts (>=0.4)", "hypothesis-crosshair (>=0.0.25)", "lark (>=0.10.1)", "libcst (>=0.3.16)", "numpy (>=1.19.3)", "pandas (>=1.1)", "pytest (>=4.6)", "python-dateutil (>=1.4)", "pytz (>=2014.1)", "redis (>=3.0.0)", "rich (>=9.0.0)", "tzdata (>=2025.2) ; sys_platform == \"win32\" or sys_platform == \"emscripten\"", "watchdog (>=4.0.0)"]
+all = ["black (>=20.8b0)", "click (>=7.0)", "crosshair-tool (>=0.0.97)", "django (>=4.2)", "dpcontracts (>=0.4)", "hypothesis-crosshair (>=0.0.25)", "lark (>=0.10.1)", "libcst (>=0.3.16)", "numpy (>=1.21.6)", "pandas (>=1.1)", "pytest (>=4.6)", "python-dateutil (>=1.4)", "pytz (>=2014.1)", "redis (>=3.0.0)", "rich (>=9.0.0)", "tzdata (>=2025.2) ; sys_platform == \"win32\" or sys_platform == \"emscripten\"", "watchdog (>=4.0.0)"]
 cli = ["black (>=20.8b0)", "click (>=7.0)", "rich (>=9.0.0)"]
 codemods = ["libcst (>=0.3.16)"]
 crosshair = ["crosshair-tool (>=0.0.97)", "hypothesis-crosshair (>=0.0.25)"]
@@ -1526,7 +1526,7 @@ django = ["django (>=4.2)"]
 dpcontracts = ["dpcontracts (>=0.4)"]
 ghostwriter = ["black (>=20.8b0)"]
 lark = ["lark (>=0.10.1)"]
-numpy = ["numpy (>=1.19.3)"]
+numpy = ["numpy (>=1.21.6)"]
 pandas = ["pandas (>=1.1)"]
 pytest = ["pytest (>=4.6)"]
 pytz = ["pytz (>=2014.1)"]
@@ -4432,4 +4432,4 @@ cffi = ["cffi (>=1.17) ; python_version >= \"3.13\" and platform_python_implemen
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13.2"
-content-hash = "a45d27b65c61c6ca3cc84fe720335ccd122488924a12aafd13311d7759ad05b9"
+content-hash = "49456d66320a70688ac66286d174c0e7d16df99313129a746b558d1b532dfd0b"
