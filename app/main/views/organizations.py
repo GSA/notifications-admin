@@ -11,6 +11,7 @@ from app import (
     organizations_client,
     service_api_client,
 )
+from app.enums import ServiceStatus
 from app.main import main
 from app.main.forms import (
     AdminBillingDetailsForm,
@@ -35,23 +36,20 @@ from notifications_python_client.errors import HTTPError
 
 
 def get_service_counts_by_status(services):
-    """
-    Calculate service counts by status.
-    """
     def get_status(service):
         if not service.get("active"):
-            return "suspended"
+            return ServiceStatus.SUSPENDED
         elif service.get("restricted"):
-            return "trial"
+            return ServiceStatus.TRIAL
         else:
-            return "live"
+            return ServiceStatus.LIVE
 
     status_counts = Counter(get_status(service) for service in services)
 
     return {
-        "live": status_counts["live"],
-        "trial": status_counts["trial"],
-        "suspended": status_counts["suspended"],
+        "live": status_counts[ServiceStatus.LIVE],
+        "trial": status_counts[ServiceStatus.TRIAL],
+        "suspended": status_counts[ServiceStatus.SUSPENDED],
         "total": len(services),
     }
 
