@@ -13,7 +13,7 @@ resource "null_resource" "prevent_destroy" {
 }
 
 module "redis-v70" {
-  source = "github.com/GSA-TTS/terraform-cloudgov//redis?ref=v2.4.0"
+  source = "github.com/GSA-TTS/terraform-cloudgov//redis?ref=v1.0.0"
 
   cf_space_id     = local.cf_space_name
   name            = "${local.app_name}-redis-v70-${local.env}"
@@ -30,7 +30,7 @@ module "redis-v70" {
 }
 
 module "logo_upload_bucket" {
-  source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v2.4.0"
+  source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v1.0.0"
 
   cf_space_id = local.cf_space_name
   name        = "${local.app_name}-logo-upload-bucket-${local.env}"
