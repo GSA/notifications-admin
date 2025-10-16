@@ -5,25 +5,30 @@ locals {
 }
 
 data "cloudfoundry_space" "dev" {
-  org_name = local.cf_org_name
-  name     = local.cf_space_name
+  org  = "9e428562-a2d9-41b4-9c23-1ef5237fb44e"
+  name = local.cf_space_name
 }
 
 module "logo_upload_bucket" {
-  source      = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v2.0.0"
-  cf_space_id = local.cf_space_name
-  name        = "${var.username}-logo-upload-bucket"
+  source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v1.0.0"
+
+  cf_org_name   = local.cf_org_name
+  cf_space_name = local.cf_space_name
+  name          = "${var.username}-logo-upload-bucket"
 }
 resource "cloudfoundry_service_key" "logo_key" {
+
+  provider         = cloudfoundry-community.legacy
   name             = local.key_name
   service_instance = module.logo_upload_bucket.bucket_id
 }
 
 data "cloudfoundry_service_instance" "csv_bucket" {
-  name_or_id = "${var.username}-csv-upload-bucket"
-  space      = data.cloudfoundry_space.dev.id
+  name  = "${var.username}-csv-upload-bucket"
+  space = data.cloudfoundry_space.dev.id
 }
 resource "cloudfoundry_service_key" "csv_key" {
+  provider         = cloudfoundry-community.legacy
   name             = local.key_name
   service_instance = data.cloudfoundry_service_instance.csv_bucket.id
 }
