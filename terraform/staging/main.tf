@@ -23,6 +23,10 @@ module "redis-v70" {
       "engineVersion" : "7.0",
     }
   )
+
+  providers = {
+    cloudfoundry-community = cloudfoundry-community.legacy
+  }
 }
 
 module "logo_upload_bucket" {
@@ -30,6 +34,9 @@ module "logo_upload_bucket" {
 
   cf_space_id = local.cf_space_name
   name        = "${local.app_name}-logo-upload-bucket-${local.env}"
+  providers = {
+    cloudfoundry-community = cloudfoundry-community.legacy
+  }
 }
 
 module "api_network_route" {
