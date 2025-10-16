@@ -12,3 +12,4 @@ SECRET_KEY: sandbox-notify-secret-key
 nr_agent_id: ''
 nr_app_id: ''
 NR_BROWSER_KEY: ''
+ORGANIZATION_DASHBOARD_ENABLED: False

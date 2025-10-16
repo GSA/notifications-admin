@@ -1,0 +1,103 @@
+{% from "components/page-header.html" import page_header %}
+{% from "components/big-number.html" import big_number %}
+{% from "components/live-search.html" import live_search %}
+{% from "components/pill.html" import pill %}
+{% from "components/table.html" import list_table, field, row_heading %}
+{% extends "withnav_template.html" %}
+
+{% block org_page_title %}
+  Usage
+{% endblock %}
+
+{% block maincolumn_content %}
+
+  {{ page_header('Usage', size='medium') }}
+
+  <div class="margin-bottom-3">
+    {{ pill(years, selected_year, big_number_args={'smallest': True}) }}
+  </div>
+
+  <div class="grid-row margin-bottom-3">
+    <div class="grid-col-6">
+      <h2 class="font-heading-md">Emails</h2>
+      <div class="keyline-block">
+        {{ big_number(
+          total_emails_sent,
+          label='sent',
+          smaller=True
+        ) }}
+      </div>
+    </div>
+    <div class="grid-col-6">
+      <h2 class="font-heading-md">Text messages</h2>
+      <div class="keyline-block">
+        {{ big_number(
+          total_sms_cost,
+          'spent',
+          currency="$",
+          smaller=True
+        ) }}
+      </div>
+    </div>
+  </div>
+
+  {% if search_form %}
+    <div>
+      {{ live_search(
+        target_selector='.organization-service',
+        show=True,
+        form=search_form,
+        label='Search by service'
+      ) }}
+    </div>
+  {% endif %}
+
+  <h2 class="font-heading-md {% if search_form %}visually-hidden{% endif %}">By service</h2>
+
+  {% for service in services %}
+    <div class="keyline-block organization-service">
+      <h3 class="live-search-relevant">
+        <a href="{{ url_for('main.usage', service_id=service.service_id) }}" class="usa-link browse-list-link">{{ service.service_name  }}</a>
+      </h3>
+      <div class="grid-row">
+        <div class="grid-col-6">
+          {{ big_number(
+            service.emails_sent,
+            label=service.emails_sent|message_count_label('email'),
+            smallest=True
+          ) }}
+        </div>
+        <div class="grid-col-6">
+          {% if service.sms_cost %}
+            {{ big_number(
+              service.sms_cost,
+              'spent on text messages',
+              currency="$",
+              smallest=True
+            ) }}
+          {% else %}
+            {{ big_number(
+              service.sms_billable_units,
+              'free {}'.format(service.sms_billable_units|message_count_label('sms')),
+              smallest=True
+            ) }}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  <div class="keyline-block"></div>
+  {% if not services %}
+    <p class="usa-body usa-hint">
+      {{ current_org.name }} has no live services on Notify.gov
+    </p>
+    <div class="keyline-block"></div>
+  {% else %}
+    <div class="js-stick-at-bottom-when-scrolling">
+      <p>
+        <a href="{{ download_link }}" download="download" class="usa-link">Download this report (<abbr title="Comma separated values">CSV</abbr>)</a>
+      </p>
+    </div>
+  {% endif %}
+
+{% endblock %}

@@ -44,7 +44,7 @@ def test_view_organization_shows_the_correct_organization(client_request, mocker
     )
 
     page = client_request.get(
-        ".organization_dashboard",
+        ".organization_usage",
         org_id=ORGANISATION_ID,
     )
 
@@ -353,7 +353,7 @@ def test_organization_services_shows_live_services_and_usage(
     )
 
     client_request.login(active_user_with_permissions)
-    page = client_request.get(".organization_dashboard", org_id=ORGANISATION_ID)
+    page = client_request.get(".organization_usage", org_id=ORGANISATION_ID)
     mock.assert_called_once_with(ORGANISATION_ID, 2020)
 
     services = page.select("main h3")
@@ -409,7 +409,7 @@ def test_organization_services_shows_live_services_and_usage_with_count_of_1(
     )
 
     client_request.login(active_user_with_permissions)
-    page = client_request.get(".organization_dashboard", org_id=ORGANISATION_ID)
+    page = client_request.get(".organization_usage", org_id=ORGANISATION_ID)
 
     usage_rows = page.select("main .grid-col-6")
 
@@ -443,7 +443,7 @@ def test_organization_services_filters_by_financial_year(
         "app.organizations_client.get_services_and_usage", return_value={"services": []}
     )
     page = client_request.get(
-        ".organization_dashboard",
+        ".organization_usage",
         org_id=ORGANISATION_ID,
         year=financial_year,
     )
@@ -486,7 +486,7 @@ def test_organization_services_shows_search_bar(
     )
 
     client_request.login(active_user_with_permissions)
-    page = client_request.get(".organization_dashboard", org_id=ORGANISATION_ID)
+    page = client_request.get(".organization_usage", org_id=ORGANISATION_ID)
 
     services = page.select(".organization-service")
     assert len(services) == 8
@@ -535,7 +535,7 @@ def test_organization_services_hides_search_bar_for_7_or_fewer_services(
     )
 
     client_request.login(active_user_with_permissions)
-    page = client_request.get(".organization_dashboard", org_id=ORGANISATION_ID)
+    page = client_request.get(".organization_usage", org_id=ORGANISATION_ID)
 
     services = page.select(".organization-service")
     assert len(services) == 7
@@ -569,7 +569,7 @@ def test_organization_services_links_to_downloadable_report(
         },
     )
     client_request.login(active_user_with_permissions)
-    page = client_request.get(".organization_dashboard", org_id=ORGANISATION_ID)
+    page = client_request.get(".organization_usage", org_id=ORGANISATION_ID)
 
     link_to_report = page.select_one("a[download]")
     assert normalize_spaces(link_to_report.text) == "Download this report (CSV)"

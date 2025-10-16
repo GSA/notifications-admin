@@ -78,6 +78,10 @@ class Config(object):
     # TODO: reassign this
     NOTIFY_SERVICE_ID = "d6aa2c68-a2d9-4437-ab19-3ae8eb202553"
 
+    ORGANIZATION_DASHBOARD_ENABLED = (
+        getenv("ORGANIZATION_DASHBOARD_ENABLED", "False") == "True"
+    )
+
     NOTIFY_BILLING_DETAILS = json.loads(getenv("NOTIFY_BILLING_DETAILS") or "null") or {
         "account_number": "98765432",
         "sort_code": "01-23-45",
@@ -108,6 +112,11 @@ class Development(Config):
     ASSET_DOMAIN = ""
     ASSET_PATH = "/static/"
     NOTIFY_LOG_LEVEL = "DEBUG"
+
+    # Feature Flags
+    ORGANIZATION_DASHBOARD_ENABLED = (
+        getenv("ORGANIZATION_DASHBOARD_ENABLED", "True") == "True"
+    )
 
     # Buckets
     CSV_UPLOAD_BUCKET = _s3_credentials_from_env("CSV")

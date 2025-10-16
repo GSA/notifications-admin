@@ -2,7 +2,7 @@ from collections import OrderedDict
 from datetime import datetime
 from functools import partial
 
-from flask import flash, redirect, render_template, request, url_for
+from flask import current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user
 
 from app import current_organization, org_invite_api_client, organizations_client
@@ -65,13 +65,29 @@ def add_organization():
 @main.route("/organizations/<uuid:org_id>", methods=["GET"])
 @user_has_permissions()
 def organization_dashboard(org_id):
-    year, current_financial_year = requested_and_current_financial_year(request)
-    services = current_organization.services_and_usage(financial_year=year)["services"]
+    if not current_app.config.get("ORGANIZATION_DASHBOARD_ENABLED", False):
+        return redirect(url_for(".organization_usage", org_id=org_id))
+
+    year = requested_and_current_financial_year(request)[0]
+
+    # TODO: total message allowance
     return render_template(
         "views/organizations/organization/index.html",
+        selected_year=year,
+    )
+
+
+@main.route("/organizations/<uuid:org_id>/usage", methods=["GET"])
+@user_has_permissions()
+def organization_usage(org_id):
+    year, current_financial_year = requested_and_current_financial_year(request)
+    services = current_organization.services_and_usage(financial_year=year)["services"]
+
+    return render_template(
+        "views/organizations/organization/usage.html",
         services=services,
         years=get_tuples_of_financial_years(
-            partial(url_for, ".organization_dashboard", org_id=current_organization.id),
+            partial(url_for, ".organization_usage", org_id=current_organization.id),
             start=current_financial_year - 2,
             end=current_financial_year,
         ),
@@ -90,14 +106,10 @@ def organization_dashboard(org_id):
 @main.route("/organizations/<uuid:org_id>/download-usage-report.csv", methods=["GET"])
 @user_has_permissions()
 def download_organization_usage_report(org_id):
-    selected_year_input = request.args.get("selected_year")
-    # Validate selected_year to prevent header injection
-    if (
-        selected_year_input
-        and selected_year_input.isdigit()
-        and len(selected_year_input) == 4
-    ):
-        selected_year = selected_year_input
+    # Validate and sanitize selected_year to prevent header injection
+    selected_year_input = request.args.get("selected_year", "")
+    if selected_year_input.isdigit() and len(selected_year_input) == 4:
+        selected_year = str(int(selected_year_input))
     else:
         selected_year = str(datetime.now().year)
     services_usage = current_organization.services_and_usage(
@@ -142,13 +154,8 @@ def download_organization_usage_report(org_id):
         {
             "Content-Type": "text/csv; charset=utf-8",
             "Content-Disposition": (
-                "inline;"
-                'filename="{} organization usage report for year {}'
-                ' - generated on {}.csv"'.format(
-                    safe_org_name,
-                    selected_year,
-                    datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
-                )
+                f'inline;filename="{safe_org_name} organization usage report for year {selected_year}'
+                f' - generated on {datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")}.csv"'
             ),
         },
     )
