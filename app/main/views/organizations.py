@@ -35,25 +35,6 @@ from app.utils.user import user_has_permissions, user_is_platform_admin
 from notifications_python_client.errors import HTTPError
 
 
-def get_service_counts_by_status(services):
-    def get_status(service):
-        if not service.get("active"):
-            return ServiceStatus.SUSPENDED
-        elif service.get("restricted"):
-            return ServiceStatus.TRIAL
-        else:
-            return ServiceStatus.LIVE
-
-    status_counts = Counter(get_status(service) for service in services)
-
-    return {
-        "live": status_counts[ServiceStatus.LIVE],
-        "trial": status_counts[ServiceStatus.TRIAL],
-        "suspended": status_counts[ServiceStatus.SUSPENDED],
-        "total": len(services),
-    }
-
-
 @main.route("/organizations", methods=["GET"])
 @user_is_platform_admin
 def organizations():
@@ -87,6 +68,39 @@ def add_organization():
     return render_template("views/organizations/add-organization.html", form=form)
 
 
+def get_service_counts_by_status(services):
+    def get_status(service):
+        if not service.get("active"):
+            return ServiceStatus.SUSPENDED
+        elif service.get("restricted"):
+            return ServiceStatus.TRIAL
+        else:
+            return ServiceStatus.LIVE
+
+    status_counts = Counter(get_status(service) for service in services)
+
+    return {
+        "live_services": status_counts[ServiceStatus.LIVE],
+        "trial_services": status_counts[ServiceStatus.TRIAL],
+        "suspended_services": status_counts[ServiceStatus.SUSPENDED],
+        "total_services": len(services),
+    }
+
+
+def get_organization_message_allowance(org_id):
+    try:
+        message_usage = service_api_client.get_organization_message_usage(org_id)
+    except Exception as e:
+        current_app.logger.error(f"Error fetching organization message usage: {e}")
+        message_usage = {}
+
+    return {
+        "messages_sent": message_usage.get("messages_sent", 0),
+        "messages_remaining": message_usage.get("messages_remaining", 0),
+        "total_message_limit": message_usage.get("total_message_limit", 0),
+    }
+
+
 @main.route("/organizations/<uuid:org_id>", methods=["GET"])
 @user_has_permissions()
 def organization_dashboard(org_id):
@@ -95,29 +109,14 @@ def organization_dashboard(org_id):
 
     year = requested_and_current_financial_year(request)[0]
 
-    try:
-        message_usage = service_api_client.get_organization_message_usage(org_id)
-    except Exception as e:
-        current_app.logger.error(f"Error fetching organization message usage: {e}")
-        message_usage = {}
-
-    messages_sent = message_usage.get("messages_sent", 0)
-    messages_remaining = message_usage.get("messages_remaining", 0)
-    total_message_limit = message_usage.get("total_message_limit", 0)
-
-    services = current_organization.services
-    service_counts = get_service_counts_by_status(services)
+    message_allowance = get_organization_message_allowance(org_id)
+    service_counts = get_service_counts_by_status(current_organization.services)
 
     return render_template(
         "views/organizations/organization/index.html",
         selected_year=year,
-        messages_sent=messages_sent,
-        messages_remaining=messages_remaining,
-        total_message_limit=total_message_limit,
-        total_services=service_counts["total"],
-        live_services=service_counts["live"],
-        trial_services=service_counts["trial"],
-        suspended_services=service_counts["suspended"],
+        **message_allowance,
+        **service_counts,
     )
 
 
