@@ -1542,7 +1542,6 @@ def test_organization_dashboard_shows_message_usage(
         "app.organizations_client.get_organization_services",
         return_value=[],
     )
-
     client_request.login(active_user_with_permissions)
     page = client_request.get(
         ".organization_dashboard",
