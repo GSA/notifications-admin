@@ -1522,3 +1522,78 @@ def test_organization_billing_page_not_accessible_if_not_platform_admin(
     client_request.get(
         ".organization_billing", org_id=ORGANISATION_ID, _expected_status=403
     )
+
+
+def test_organization_dashboard_shows_message_usage(
+    client_request,
+    mock_get_organization,
+    mocker,
+    active_user_with_permissions,
+):
+    mock_message_usage = mocker.patch(
+        "app.service_api_client.get_organization_message_usage",
+        return_value={
+            "messages_sent": 1000,
+            "messages_remaining": 2000,
+            "total_message_limit": 3000,
+        },
+    )
+    mocker.patch(
+        "app.organizations_client.get_organization_services",
+        return_value=[],
+    )
+
+    client_request.login(active_user_with_permissions)
+    page = client_request.get(
+        ".organization_dashboard",
+        org_id=ORGANISATION_ID,
+    )
+
+    mock_message_usage.assert_called_once_with(ORGANISATION_ID)
+
+    assert normalize_spaces(page.select_one("h1").text) == "Organization Dashboard"
+
+    chart_container = page.select_one("#totalMessageChartContainer")
+    assert chart_container["data-messages-sent"] == "1000"
+    assert chart_container["data-messages-remaining"] == "2000"
+    assert chart_container["data-total-message-limit"] == "3000"
+
+
+def test_organization_dashboard_shows_service_counts(
+    client_request,
+    mock_get_organization,
+    mocker,
+    active_user_with_permissions,
+):
+    mocker.patch(
+        "app.service_api_client.get_organization_message_usage",
+        return_value={
+            "messages_sent": 0,
+            "messages_remaining": 0,
+            "total_message_limit": 0,
+        },
+    )
+    mocker.patch(
+        "app.organizations_client.get_organization_services",
+        return_value=[
+            service_json(id_="1", name="Live Service", restricted=False, active=True),
+            service_json(id_="2", name="Trial Service", restricted=True, active=True),
+            service_json(id_="3", name="Suspended", restricted=False, active=False),
+        ],
+    )
+
+    client_request.login(active_user_with_permissions)
+    page = client_request.get(
+        ".organization_dashboard",
+        org_id=ORGANISATION_ID,
+    )
+
+    summary_boxes = page.select(".usa-summary-box")
+    assert len(summary_boxes) == 2
+
+    service_box = summary_boxes[0]
+    assert "Total Services" in normalize_spaces(service_box.text)
+    assert "3" in normalize_spaces(service_box.text)
+    assert "1 Live" in normalize_spaces(service_box.text)
+    assert "1 Trial" in normalize_spaces(service_box.text)
+    assert "1 Suspended" in normalize_spaces(service_box.text)

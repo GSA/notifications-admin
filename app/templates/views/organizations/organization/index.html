@@ -9,19 +9,114 @@
 
   {{ page_header('Organization Dashboard', size='large') }}
 
-  <div class="margin-top-5 margin-bottom-5">
-    <h2 class="font-heading-lg">What is a service?</h2>
-    <p class="usa-body">
-      When you join Notify, you're added to a service. This is your organization's workspace for sending text messages and emails. Within your service, you can:
-    </p>
-    <ol class="usa-list">
-      <li>Create and edit message templates</li>
-      <li>Send messages to recipients</li>
-      <li>View message status and history</li>
-      <li>Manage team members and permissions</li>
-      <li>Track usage and delivery statistics</li>
-      <li>If you work for multiple organizations, you may belong to multiple services and can switch between them.</li>
-    </ol>
+  <div id="totalMessageChartContainer" data-messages-sent="{{ messages_sent|default(0) }}" data-messages-remaining="{{ messages_remaining|default(0) }}" data-total-message-limit="{{ total_message_limit|default(0) }}">
+    <div class="grid-row flex-align-center">
+      <h2 id="chartTitle" class="margin-right-1 margin-y-0">Overall {{ selected_year }} Total Message Allowance</h2>
+      <button
+        type="button"
+        class="usa-tooltip usa-tooltip__information margin-right-0"
+        data-position="top"
+        title="Combined totals across all services in {{ current_org.name }}: pending, failed, or delivered"
+      >
+        <span class="usa-sr-only">More information</span>
+        i
+      </button>
+    </div>
+    <svg id="totalMessageChart"></svg>
+    <div id="message"></div>
+  </div>
+  <div id="totalMessageTable" class="margin-bottom-3"></div>
+  <div class="grid-row margin-bottom-3 maxw-tablet">
+    <div class="grid-col-12 tablet:grid-col-6 margin-bottom-2 tablet:margin-bottom-0 tablet:padding-right-1">
+      <div class="usa-summary-box height-full" role="region">
+        <div class="usa-summary-box__body">
+          <div class="usa-summary-box__text">
+            <div class="display-flex flex-align-end">
+              <div class="flex-1">
+                <div class="text-base-dark text-uppercase font-sans-3xs text-ls-1 margin-bottom-05">Total Services</div>
+                <div class="font-sans-xl text-primary-darker line-height-sans-1">{{ total_services }}</div>
+              </div>
+              <div class="text-base-dark font-body-2xs line-height-sans-3">
+                <span class="text-success-dark text-bold">{{ live_services }}</span> Live
+                <span class="margin-left-1 text-warning-dark text-bold">{{ trial_services }}</span> Trial
+                <span class="margin-left-1 text-base-dark text-bold">{{ suspended_services }}</span> Suspended
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grid-col-12 tablet:grid-col-6 tablet:padding-left-1">
+      <div class="usa-summary-box height-full" role="region">
+        <div class="usa-summary-box__body">
+          <div class="usa-summary-box__text">
+            <div class="text-base-dark text-uppercase font-sans-3xs text-ls-1 margin-bottom-05">Agreement Period</div>
+            <div class="font-sans-xl text-primary-darker">Jan 1 - Dec 31</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <details class="usa-details">
+      <summary class="usa-details__summary font-heading-lg  ">What is a service?</summary>
+      <div class="usa-details__content">
+        <p class="usa-body">
+          When you join Notify, you're added to a service. This is your organization's workspace for sending text messages and emails. Within your service, you can:
+        </p>
+        <ol class="usa-list">
+          <li>Create and edit message templates</li>
+          <li>Send messages to recipients</li>
+          <li>View message status and history</li>
+          <li>Manage team members and permissions</li>
+          <li>Track usage and delivery statistics</li>
+          <li>If you work for multiple organizations, you may belong to multiple services and can switch between them.</li>
+        </ol>
+      </div>
+    </details>
+
+
+
+  <div class="margin-bottom-5">
+    <h2 class="font-heading-lg margin-bottom-2">Services Overview</h2>
+    <table class="usa-table">
+      <thead>
+        <tr>
+          <th scope="col" role="columnheader">Name</th>
+          <th scope="col" role="columnheader">Status</th>
+          <th scope="col" role="columnheader">Usage</th>
+          <th scope="col" role="columnheader">Primary Contact</th>
+          <th scope="col" role="columnheader">Recent Template Used</th>
+          <th scope="col" role="columnheader">Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if services %}
+          {% for service in services %}
+          <tr>
+            <td><a href="{{ url_for('main.service_dashboard', service_id=service.id) }}" class="usa-link">{{ service.name }}</a></td>
+            <td>
+              {% if not service.active %}
+                Suspended
+              {% elif service.restricted %}
+                Trial
+              {% else %}
+                Live
+              {% endif %}
+            </td>
+            <td>{{ service.usage|default('N/A') }}</td>
+            <td>{{ service.primary_contact|default('N/A') }}</td>
+            <td>{{ service.recent_template|default('N/A') }}</td>
+            <td>{{ service.created_at.strftime('%b %d, %Y') if service.created_at else 'N/A' }}</td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="6" class="table-empty-message">No services found within this organization</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
   </div>
 
 {% endblock %}
