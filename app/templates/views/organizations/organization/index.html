@@ -73,4 +73,47 @@
     </ol>
   </div>
 
+
+  <div class="margin-bottom-5">
+    <h2 class="font-heading-lg margin-bottom-2">Services Overview</h2>
+    <table class="usa-table">
+      <thead>
+        <tr>
+          <th scope="col" role="columnheader">Name</th>
+          <th scope="col" role="columnheader">Status</th>
+          <th scope="col" role="columnheader">Usage</th>
+          <th scope="col" role="columnheader">Primary Contact</th>
+          <th scope="col" role="columnheader">Recent Template Used</th>
+          <th scope="col" role="columnheader">Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if services %}
+          {% for service in services %}
+          <tr>
+            <td><a href="{{ url_for('main.service_dashboard', service_id=service.id) }}" class="usa-link">{{ service.name }}</a></td>
+            <td>
+              {% if not service.active %}
+                Suspended
+              {% elif service.restricted %}
+                Trial
+              {% else %}
+                Live
+              {% endif %}
+            </td>
+            <td>{{ service.usage|default('N/A') }}</td>
+            <td>{{ service.primary_contact|default('N/A') }}</td>
+            <td>{{ service.recent_template|default('N/A') }}</td>
+            <td>{{ service.created_at.strftime('%b %d, %Y') if service.created_at else 'N/A' }}</td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="6" class="table-empty-message">No services found within this organization</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
 {% endblock %}

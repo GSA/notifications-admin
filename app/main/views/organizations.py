@@ -115,6 +115,7 @@ def organization_dashboard(org_id):
     return render_template(
         "views/organizations/organization/index.html",
         selected_year=year,
+        services=current_organization.services,
         **message_allowance,
         **service_counts,
     )
