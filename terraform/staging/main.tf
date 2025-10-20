@@ -14,7 +14,9 @@ resource "null_resource" "prevent_destroy" {
 
 module "redis-v70" {
   source = "github.com/GSA-TTS/terraform-cloudgov//redis?ref=v1.0.0"
-
+  providers = {
+    cfcommunity = cfcommunity.community
+  }
   cf_org_name     = local.cf_org_name
   cf_space_name   = local.cf_space_name
   name            = "${local.app_name}-redis-v70-${local.env}"
@@ -28,7 +30,9 @@ module "redis-v70" {
 
 module "logo_upload_bucket" {
   source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v1.0.0"
-
+  providers = {
+    cfcommunity = cfcommunity.community
+  }
   cf_org_name   = local.cf_org_name
   cf_space_name = local.cf_space_name
   name          = "${local.app_name}-logo-upload-bucket-${local.env}"
@@ -36,7 +40,9 @@ module "logo_upload_bucket" {
 
 module "api_network_route" {
   source = "../shared/container_networking"
-
+  providers = {
+    cfcommunity = cfcommunity.community
+  }
   cf_org_name          = local.cf_org_name
   cf_space_name        = local.cf_space_name
   source_app_name      = "${local.app_name}-${local.env}"
