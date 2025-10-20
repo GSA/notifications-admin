@@ -36,7 +36,10 @@ module "logo_upload_bucket" {
 
 module "api_network_route" {
   source = "../shared/container_networking"
-
+  # Right now the default is cfcommunity, remove this when default is cloudfoundry
+  providers = {
+    cloudfoundry = cloudfoundry.official
+  }
   cf_org_name          = local.cf_org_name
   cf_space_name        = local.cf_space_name
   source_app_name      = "${local.app_name}-${local.env}"
