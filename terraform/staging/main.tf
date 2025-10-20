@@ -32,13 +32,18 @@ data "cloudfoundry_space" "space" {
   name     = local.cf_space_name
 }
 
+data "cloudfoundry_organization" "org" {
+  provider = cloudfoundry.official
+  name     = local.cf_org_name
+}
+
 module "logo_upload_bucket" {
   source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v2.4.0"
   # Right now the default is cfcommunity, remove this when default is cloudfoundry
   providers = {
     cloudfoundry = cloudfoundry.official
   }
-  # cf_org_name   = local.cf_org_name
+  org         = data.cloudfoundry_organization.org.id
   cf_space_id = data.cloudfoundry_space.space.id
   name        = "${local.app_name}-logo-upload-bucket-${local.env}"
 }
