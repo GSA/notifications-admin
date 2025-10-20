@@ -33,16 +33,38 @@ data "cloudfoundry_space" "space" {
 }
 
 
+# IF we want to upgrade from cloudfoundry communit to official,
+# we need to do something like what's commented out below
+#
+# We also need to run
+#
+# terraform state replace-provider \
+#   -auto-approve \
+#  -state=terraform.tfstate
+#  'registry.terraform.io/cloudfoundry-community/cloudfoundry' \
+#  'registry.terraform.io/cloudfoundry/cloudfoundry' \
+#  module.logo_upload_bucket (or something like that)
+# module "logo_upload_bucket" {
+# source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v2.4.0"
+# Right now the default is cfcommunity, remove this when default is cloudfoundry
+# providers = {
+# cloudfoundry = cloudfoundry.official
+# }
+# cf_space_id = data.cloudfoundry_space.space.id
+# name        = "${local.app_name}-logo-upload-bucket-${local.env}"
+# }
+
+
+
 module "logo_upload_bucket" {
-  source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v2.4.0"
-  # Right now the default is cfcommunity, remove this when default is cloudfoundry
-  providers = {
-    cloudfoundry = cloudfoundry.official
-  }
-  # org         = data.cloudfoundry_organization.org.id
-  cf_space_id = data.cloudfoundry_space.space.id
-  name        = "${local.app_name}-logo-upload-bucket-${local.env}"
+  source = "../shared/container_networking"
+
+  cf_org_name   = local.cf_org_name
+  cf_space_name = local.cf_space_name
+  name          = "${local.app_name}-logo-upload-bucket-${local.env}"
+
 }
+
 
 module "api_network_route" {
   source = "../shared/container_networking"
