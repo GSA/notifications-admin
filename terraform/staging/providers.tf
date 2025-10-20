@@ -2,6 +2,10 @@ terraform {
   required_version = "~> 1.7"
   required_providers {
     cloudfoundry = {
+      source  = "cloudfoundry/cloudfoundry"
+      version = "0.19.0"
+    }
+    cf_community = {
       source  = "cloudfoundry-community/cloudfoundry"
       version = "0.53.1"
     }
@@ -16,7 +20,15 @@ terraform {
   }
 }
 
+
 provider "cloudfoundry" {
+  api_url  = "https://api.fr.cloud.gov"
+  user     = var.cf_user
+  password = var.cf_password
+}
+
+provider "cf_community" {
+  alias        = "community"
   api_url      = "https://api.fr.cloud.gov"
   user         = var.cf_user
   password     = var.cf_password
