@@ -55,14 +55,12 @@ data "cloudfoundry_space" "space" {
 # }
 
 
-
 module "logo_upload_bucket" {
-  source = "../shared/container_networking"
+  source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v1.0.0"
 
   cf_org_name   = local.cf_org_name
   cf_space_name = local.cf_space_name
   name          = "${local.app_name}-logo-upload-bucket-${local.env}"
-
 }
 
 
