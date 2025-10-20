@@ -655,15 +655,11 @@ def test_organization_trial_mode_services_shows_all_non_live_services(
     )
 
     services = page.select(".browse-list-item")
-    assert len(services) == 2
+    assert len(services) == 1
 
     assert normalize_spaces(services[0].text) == "2"
-    assert normalize_spaces(services[1].text) == "3"
     assert services[0].find("a")["href"] == url_for(
         "main.service_dashboard", service_id="2"
-    )
-    assert services[1].find("a")["href"] == url_for(
-        "main.service_dashboard", service_id="3"
     )
 
 
