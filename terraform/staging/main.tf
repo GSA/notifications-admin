@@ -26,15 +26,21 @@ module "redis-v70" {
   )
 }
 
+data "cloudfoundry_space" "space" {
+  provider = cloudfoundry.official
+  org_name = local.cf_org_name
+  name     = local.cf_space_name
+}
+
 module "logo_upload_bucket" {
   source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v2.4.0"
   # Right now the default is cfcommunity, remove this when default is cloudfoundry
   providers = {
     cloudfoundry = cloudfoundry.official
   }
-  cf_org_name   = local.cf_org_name
-  cf_space_name = local.cf_space_name
-  name          = "${local.app_name}-logo-upload-bucket-${local.env}"
+  # cf_org_name   = local.cf_org_name
+  cf_space_id = data.cloudfoundry_space.space.id
+  name        = "${local.app_name}-logo-upload-bucket-${local.env}"
 }
 
 module "api_network_route" {
