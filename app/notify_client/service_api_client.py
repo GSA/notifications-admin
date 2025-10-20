@@ -561,11 +561,6 @@ class ServiceAPIClient(NotifyAdminAPIClient):
             url="service/get-service-message-ratio?service_id={0}".format(service_id),
         )
 
-    def get_organization_message_usage(self, org_id):
-        return self.get(
-            url="/organizations/{0}/message-allowance".format(org_id),
-        )
-
 
 service_api_client = ServiceAPIClient()
 

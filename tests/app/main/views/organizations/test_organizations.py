@@ -1531,7 +1531,7 @@ def test_organization_dashboard_shows_message_usage(
     active_user_with_permissions,
 ):
     mock_message_usage = mocker.patch(
-        "app.service_api_client.get_organization_message_usage",
+        "app.organizations_client.get_organization_message_usage",
         return_value={
             "messages_sent": 1000,
             "messages_remaining": 2000,

@@ -5,12 +5,7 @@ from functools import partial
 from flask import current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user
 
-from app import (
-    current_organization,
-    org_invite_api_client,
-    organizations_client,
-    service_api_client,
-)
+from app import current_organization, org_invite_api_client, organizations_client
 from app.main import main
 from app.main.forms import (
     AdminBillingDetailsForm,
@@ -69,7 +64,7 @@ def add_organization():
 
 def get_organization_message_allowance(org_id):
     try:
-        message_usage = service_api_client.get_organization_message_usage(org_id)
+        message_usage = organizations_client.get_organization_message_usage(org_id)
     except Exception as e:
         current_app.logger.error(f"Error fetching organization message usage: {e}")
         message_usage = {}
