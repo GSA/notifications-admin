@@ -24,25 +24,15 @@ Our other repositories are:
 
 ## Before You Start
 
-You will need the following items:
+### Pre-requisites
 
-- An active cloud.gov account with the correct permissions - speak with your
-  onboarding buddy for help with
-  [setting up an account](https://cloud.gov/sign-up/) (requires a `.mil`,
-  `.gov`, or `.fed.us` email address) and getting access to the
-  `notify-local-dev` and `notify-staging` spaces.
-- Admin privileges and SSH access on your machine; you may need to work with
-  your organization's IT support staff if you're not sure or don't currently
-  have this access.
+Before setting up the Admin UI, you must complete the following:
 
-**In addition, you should set up the Notify.gov API first!**
+1. **Set up the Notify.gov API first** - [Follow the complete API setup instructions here](https://github.com/GSA/notifications-api#before-you-start). The API is required for the Admin UI to run and handles most of the system dependencies (Homebrew, Python, Poetry, Terraform, etc.).
 
-[Follow the instructions here to set up the Notify.gov API.](https://github.com/GSA/notifications-api#before-you-start)
+2. **Cloud.gov account** - An active cloud.gov account with access to the `notify-local-dev` and `notify-staging` spaces. Contact your onboarding buddy for help with [setting up an account](https://cloud.gov/sign-up/) (requires a `.mil`, `.gov`, or `.fed.us` email address).
 
-The Notify.gov API is required in order for the Notify.gov Admin UI to run, and
-it will also take care of many of the steps that are listed here. The sections
-that are a repeat from the API setup are flagged with an **[API Step]** label
-in front of them.
+3. **Admin privileges** - Admin privileges and SSH access on your machine. Work with your organization's IT support staff if you need help with this.
 
 ## Local Environment Setup
 
@@ -50,187 +40,19 @@ This project is set up to work with
 [nvm (Node Version Manager)](https://github.com/nvm-sh/nvm#installing-and-updating)
 for managing and using Node.js (version 22.3.0) and the `npm` package manager.
 
-These instructions will walk you through how to set your machine up with all of
-the required tools for this project.
-
 ### Docker installation
 
 If you are using VS Code, there are also instructions for
 [running inside Docker](./docs/docker-remote-containers.md).
 
-### [API Step] Project Pre-Requisite Setup
-
-On MacOS, using [Homebrew](https://brew.sh/) for package management is highly
-recommended. This helps avoid some known installation issues. Start by following
-the installation instructions on the Homebrew homepage.
-
-**Note:** You will also need Xcode or the Xcode Command Line Tools installed. The
-quickest way to do this is is by installing the command line tools in the shell:
-
-```sh
-xcode-select –-install
-```
-
-#### [API Step] Homebrew Setup
-
-If this is your first time installing Homebrew on your machine, you may need to
-add its binaries to your system's `$PATH` environment variable so that you can
-use the `brew` command. Try running `brew help` to see if Homebrew is
-recognized and runs properly. If that fails, then you'll need to add a
-configuration line to wherever your `$PATH` environment variable is set.
-
-Your system `$PATH` environment variable is likely set in one of these
-locations:
-
-For BASH shells:
-
-- `~/.bashrc`
-- `~/.bash_profile`
-- `~/.profile`
-
-For ZSH shells:
-
-- `~/.zshrc`
-- `~/.zprofile`
-
-There may be different files that you need to modify for other shell
-environments.
-
-Which file you need to modify depends on whether or not you are running an
-interactive shell or a login shell
-(see [this Stack Overflow post](https://stackoverflow.com/questions/18186929/what-are-the-differences-between-a-login-shell-and-interactive-shell)
-for an explanation of the differences). If you're still not sure, please ask
-the team for help!
-
-Once you determine which file you'll need to modify, add these lines before any
-lines that add or modify the `$PATH` environment variable; near or at the top
-of the file is appropriate:
-
-```sh
-# Homebrew setup
-eval "$(/opt/homebrew/bin/brew shellenv)"
-```
-
-This will make sure Homebrew gets setup correctly. Once you make these changes,
-either start a new shell session or source the file
-(`source ~/.FILE-YOU-MODIFIED`) you modified to have your system recognize the
-changes.
-
-Verify that Homebrew is now working by trying to run `brew help` again.
-
-### [API Step] System-Level Package Installation
-
-There are several packages you will need to install for your system in order to
-get the app running (and these are good to have in general for any software
-development).
-
-Start off with these packages since they're quick and don't require additional
-configuration after installation to get working out of the box:
-
-- [jq](https://stedolan.github.io/jq/) - for working with JSON in the command
-  line
-- [git](https://git-scm.com/) - for version control management
-- [tenv](https://github.com/tofuutils/tenv) - for managing
-  [Terraform](https://www.terraform.io/) installations
-- [cf-cli@8](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html) - for
-  working with a Cloud Foundry platform (e.g., cloud.gov)
-- [vim](https://www.vim.org/) - for editing files more easily in the command
-  line
-- [wget](https://www.gnu.org/software/wget/) - for retrieving files in the
-  command line
-
-You can install them by running the following:
-
-```sh
-brew install jq git tenv cloudfoundry/tap/cf-cli@8 vim wget
-```
-
-#### [API Step] Terraform Installation
-
-As a part of the installation above, you just installed `tenv` to manage
-Terraform installations. This is great, but you still need to install Terraform
-itself, which can be done with this command:
-
-```sh
-tenv
-```
-
-This will open a menu for you; choose Terraform, then choose the latest stable
-version.
-
-_NOTE: This project currently uses the latest `1.12.x release of Terraform._
-
-#### [API Step] Python Installation
-
-Now we're going to install a tool to help us manage Python versions and
-virtual environments on our system. First, we'll install
-[pyenv](https://github.com/pyenv/pyenv) and one of its plugins,
-[pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv), with Homebrew:
-
-```sh
-brew install pyenv pyenv-virtualenv
-```
-
-When these finish installing, you'll need to make another adjustment in the
-file that you adjusted for your `$PATH` environment variable and Homebrew's
-setup. Open the file, and add these lines to it:
-
-```
-# pyenv setup
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-```
-
-Once again, start a new shell session or source the file in your current shell
-session to make the changes take effect.
-
-Now we're ready to install the Python version we need with `pyenv`, like so:
-
-```sh
-pyenv install 3.13
-```
-
-This will install the latest version of Python 3.13.
-
-_NOTE: This project currently runs on Python 3.13.x._
-
-#### [API Step] Python Dependency Installation
-
-Lastly, we need to install the tool we use to manage Python dependencies within
-the project, which is [poetry](https://python-poetry.org/).
-
-Visit the
-[official installer instructions page](https://python-poetry.org/docs/#installing-with-the-official-installer)
-and follow the steps to install Poetry directly with the script.
-
-This will ensure `poetry` doesn't conflict with any project virtual environments
-and can update itself properly.
-
-#### Node.js and npm Installation
+### Node.js and npm Installation
 
 The project will manage most of the Node.js pieces for you, but you will need to
-install
-[nvm (Node Version Manager)](https://github.com/nvm-sh/nvm#installing-and-updating)
-in order for things to work.
+install [nvm (Node Version Manager)](https://github.com/nvm-sh/nvm#installing-and-updating).
 
-Follow the steps in the installation instructions to get `nvm` installed with
-the install script they provide, and double check that the file that you
-adjusted for your `$PATH` environment variable and Homebrew's setup is properly
-updated with the `nvm` setup as well.
-
-Open the file and check for the `nvm` setup lines; if they're not there, then
-add the lines found in the
-[nvm installation instructions](https://github.com/nvm-sh/nvm#install--update-script)
-to to the file after the `pyenv` section you created, e.g.:
-
-```
-# nvm setup
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-```
+Follow the [nvm installation instructions](https://github.com/nvm-sh/nvm#installing-and-updating)
+to install it with the provided script. The installation will automatically set up
+your shell configuration.
 
 ### First-Time Project Setup
 
@@ -255,7 +77,7 @@ pyenv virtualenv 3.13.2 notify-admin
 pyenv local notify-admin
 ```
 
-_If you're not sure which version of Python was installed with `pyenv`, you can check by running `pyenv versions` and it'll list everything available currently._
+_NOTE: If you're not sure which version of Python was installed with `pyenv`, you can check by running `pyenv versions` and it'll list everything available currently._
 
 Now [log into cloud.gov](https://cloud.gov/docs/getting-started/setup/#set-up-the-command-line)
 in the command line by using this command:
@@ -309,7 +131,7 @@ pyenv local notify-admin
 At this point, proceed with the rest of the instructions here in the README and
 you'll be set with an upgraded version of Python.
 
-_If you're not sure about the details of your current virtual environment, you can run `poetry env info` to get more information. If you've been using `pyenv` for everything, you can also see all available virtual environments with `pyenv virtualenvs`._
+_NOTE: If you're not sure about the details of your current virtual environment, you can run `poetry env info` to get more information. If you've been using `pyenv` for everything, you can also see all available virtual environments with `pyenv virtualenvs`._
 
 
 #### Poetry upgrades ####
@@ -373,7 +195,7 @@ make bootstrap
 This command is handled by the `Makefile` file in the root project directory, as
 are a few others.
 
-_NOTE: You'll want to occasionally run `make bootstrap` to keep your project up-to-date, especially when there are dependency updates._
+_NOTE: Run `make bootstrap` again whenever you pull new changes that include dependency updates or when you encounter issues with your development environment. This ensures your project stays up-to-date._
 
 Now you can run the web server and background workers for asynchronous jobs:
 
@@ -387,9 +209,8 @@ API is running as well!
 
 ## Creating a 'First User' in the database
 
-After you have completed all setup steps, you will be unable to log in, because there
-will not be a user in the database to link to the login.gov account you are using. So
-you will need to create that user in your database using the 'create-test-user' command.
+To login as a user in the database, first create that user with the `create-test-user`
+command. There will then be a user to link to your login.gov account.
 
 Open a terminal pointing to the api project and then run this command.
 
@@ -413,23 +234,34 @@ adding a new hook), use `poetry run pre-commit run --all-files`.
 
 The configuration is stored in `.pre-commit-config.yaml`. In that config, there
 are links to the repos from which the hooks are pulled, so hop through there if
-ou want a detailed description of what each one is doing.
+you want a detailed description of what each one is doing.
 
 We do not maintain any hooks in this repository.
 
 ## Python Dependency Management
 
 We're using [`Poetry`](https://python-poetry.org/) for managing our Python
-dependencies and local virtual environments. When it comes to managing the
-Python dependencies, there are a couple of things to bear in mind.
+dependencies and local virtual environments.
 
-For situations where you manually manipulate the `pyproject.toml` file, you
-should use the `make py-lock` command to sync the `poetry.lock` file. This will
+This project has two key dependency files that must be managed together:
+
+- `pyproject.toml` - Contains the dependency specifications
+- `poetry.lock` - Contains the exact versions of all dependencies (including transitive ones)
+
+### Managing Dependencies
+
+There are two approaches for updating dependencies:
+
+#### 1. Manual manipulation of `pyproject.toml`
+
+If you manually edit the `pyproject.toml` file, you should use the `make py-lock` command to sync the `poetry.lock` file. This will
 ensure that you don't inadvertently bring in other transitive dependency updates
 that have not been fully tested with the project yet.
 
-If you're just trying to update a dependency to a newer (or the latest) version,
-you should let Poetry take care of that for you by running the following:
+#### 2. Using Poetry to update dependencies (recommended)
+
+If you're updating a dependency to a newer (or the latest) version,
+let Poetry handle it by running:
 
 ```sh
 poetry update <dependency> [<dependency>...]
@@ -490,7 +322,7 @@ the VSCode dev container.
 - [JavaScript documentation](https://github.com/alphagov/notifications-manuals/wiki/JavaScript-Documentation)
 - [Updating dependencies](https://github.com/alphagov/notifications-manuals/wiki/Dependencies)
 
-## License && public domain
+## License & public domain
 
 Work through
 [commit `543be77`](https://github.com/GSA/notifications-admin/commit/543be77776b64fddb6ba70fbb015ecd81a372478)
