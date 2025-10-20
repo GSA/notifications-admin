@@ -28,9 +28,8 @@ provider "cloudfoundry" {
 }
 
 # Community provider (aliased)
-provider "cloudfoundry" {
+provider "cfcommunity" {
   alias        = "community"
-  source       = "cloudfoundry-community/cloudfoundry" # Required for disambiguation
   api_url      = "https://api.fr.cloud.gov"
   user         = var.cf_user
   password     = var.cf_password
