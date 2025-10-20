@@ -28,14 +28,10 @@ module "redis-v70" {
 
 data "cloudfoundry_space" "space" {
   provider = cloudfoundry.official
-  org_name = local.cf_org_name
+  org      = "9e428562-a2d9-41b4-9c23-1ef5237fb44e"
   name     = local.cf_space_name
 }
 
-data "cloudfoundry_organization" "org" {
-  provider = cloudfoundry.official
-  name     = local.cf_org_name
-}
 
 module "logo_upload_bucket" {
   source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v2.4.0"
