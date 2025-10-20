@@ -14,9 +14,7 @@ resource "null_resource" "prevent_destroy" {
 
 module "redis-v70" {
   source = "github.com/GSA-TTS/terraform-cloudgov//redis?ref=v1.0.0"
-  providers = {
-    cloudfoundry = cfcommunity
-  }
+
   cf_org_name     = local.cf_org_name
   cf_space_name   = local.cf_space_name
   name            = "${local.app_name}-redis-v70-${local.env}"
