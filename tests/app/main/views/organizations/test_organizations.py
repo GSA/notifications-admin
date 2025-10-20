@@ -1565,7 +1565,7 @@ def test_organization_dashboard_shows_service_counts(
     active_user_with_permissions,
 ):
     mocker.patch(
-        "app.service_api_client.get_organization_message_usage",
+        "app.organizations_client.get_organization_message_usage",
         return_value={
             "messages_sent": 0,
             "messages_remaining": 0,
