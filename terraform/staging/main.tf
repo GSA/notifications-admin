@@ -43,7 +43,7 @@ module "logo_upload_bucket" {
   providers = {
     cloudfoundry = cloudfoundry.official
   }
-  org         = data.cloudfoundry_organization.org.id
+  # org         = data.cloudfoundry_organization.org.id
   cf_space_id = data.cloudfoundry_space.space.id
   name        = "${local.app_name}-logo-upload-bucket-${local.env}"
 }
