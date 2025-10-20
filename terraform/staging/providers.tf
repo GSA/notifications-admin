@@ -20,16 +20,16 @@ terraform {
   }
 }
 
-# Official provider (default)
+# Official provider (should be default but aliased for now)
 provider "cloudfoundry" {
+  alias    = "official"
   api_url  = "https://api.fr.cloud.gov"
   user     = var.cf_user
   password = var.cf_password
 }
 
-# Community provider (aliased)
+# Community provider (should be aliased but default for now)
 provider "cfcommunity" {
-  alias        = "community"
   api_url      = "https://api.fr.cloud.gov"
   user         = var.cf_user
   password     = var.cf_password
