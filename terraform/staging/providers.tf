@@ -5,7 +5,7 @@ terraform {
       source  = "cloudfoundry/cloudfoundry"
       version = "1.9.0"
     }
-    cfcommunity = {
+    cloudfoundry-community = {
       source  = "cloudfoundry-community/cloudfoundry"
       version = "0.53.1"
     }
@@ -27,7 +27,7 @@ provider "cloudfoundry" {
   password = var.cf_password
 }
 
-provider "cfcommunity" {
+provider "cloudfoundry-community" {
   alias        = "community"
   api_url      = "https://api.fr.cloud.gov"
   user         = var.cf_user
