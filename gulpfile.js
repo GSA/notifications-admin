@@ -58,7 +58,6 @@ const javascripts = () => {
 
   const notifyModules2 = src([
     paths.src + 'javascripts/collapsibleCheckboxes.js',
-    paths.src + 'javascripts/radioSlider.js',
     paths.src + 'javascripts/updateStatus.js',
     paths.src + 'javascripts/timeoutPopup.js',
     paths.src + 'javascripts/main.js',

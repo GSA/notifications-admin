@@ -153,7 +153,9 @@ def _cleanup_test_service(page: Page, service_name: str):
 
             print(f"Successfully cleaned up test service: {service_name}")  # noqa: T201
         else:
-            print(f"Service '{service_name}' not found, may have been deleted already")  # noqa: T201
+            print(  # noqa: T201
+                f"Service '{service_name}' not found, may have been deleted already"
+            )
 
     except Exception as e:
         raise Exception(f"Failed to cleanup service '{service_name}': {str(e)}")

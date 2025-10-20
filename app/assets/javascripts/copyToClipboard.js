@@ -1,94 +1,70 @@
 (function(window) {
   "use strict";
 
-  if (!document.queryCommandSupported('copy')) return;
+  // Only initialize if modern Clipboard API is available
+  if (!navigator.clipboard) return;
 
   window.NotifyModules['copy-to-clipboard'] = function() {
 
-    const states = {
-      'valueVisible': (options) => `
-        <span class="copy-to-clipboard__value margin-bottom-1">${options.valueLabel ? '<span class="usa-sr-only">' + options.thing + ': </span>' : ''}${options.value}</span>
-        <span class="copy-to-clipboard__notice" aria-live="assertive">
-          ${options.onload ? '' : options.thing + ' returned to page, press button to copy to clipboard'}
-        </span>
-        <button class="usa-button usa-button--outline copy-to-clipboard__button--copy">
-          Copy ${options.thing} to clipboard${options.name ? '<span class="usa-sr-only"> for ' + options.name + '</span>' : ''}
-        </button>
-      `,
-      'valueCopied': (options) => `
-        <span class="copy-to-clipboard__notice" aria-live="assertive">
-          <span class="usa-sr-only">${options.thing} </span>Copied to clipboard<span class="usa-sr-only">, press button to show in page</span>
-        </span>
-        <button class="usa-button copy-to-clipboard__button--show">
-          Show ${options.thing}${options.name ? '<span class="usa-sr-only"> for ' + options.name + '</span>' : ''}
-        </button>
-      `
-    };
-
-    this.getRangeFromElement = function (copyableElement) {
-      const range = document.createRange();
-      const childNodes = Array.prototype.slice.call(copyableElement.childNodes);
-      let prefixIndex = -1;
-
-      childNodes.forEach((el, idx) => {
-        if ((el.nodeType === 1) && el.classList.contains('usa-sr-only')) {
-          prefixIndex = idx;
-        }
-      });
-
-      range.selectNodeContents(copyableElement);
-      if (prefixIndex !== -1) { range.setStart(copyableElement, prefixIndex + 1); }
-
-      return range;
-    };
-
-    this.copyValueToClipboard = function(copyableElement, callback) {
-      var selection = window.getSelection ? window.getSelection() : document.selection,
-          range = this.getRangeFromElement(copyableElement);
-
-      selection.removeAllRanges();
-      selection.addRange(range);
-      document.execCommand('copy');
-      selection.removeAllRanges();
-      callback();
+    /**
+     * Copy text to clipboard using modern Clipboard API
+     * @param {string} text - The text to copy
+     * @param {Function} callback - Called after successful copy
+     */
+    this.copyValueToClipboard = async function(text, callback) {
+      try {
+        await navigator.clipboard.writeText(text);
+        callback();
+      } catch (err) {
+        console.error('Failed to copy to clipboard:', err);
+      }
     };
 
     this.start = function(component) {
 
-      const $component = $(component),
-            stateOptions = {
-              value: $component.data('value'),
-              thing: $component.data('thing')
-            },
-            name = $component.data('name');
+      const value = component.dataset.value;
+      const thing = component.dataset.thing;
+      const name = component.dataset.name;
 
-      // if the name is distinct from the thing:
-      // - it will be used in the rendering
-      // - the value won't be identified by a heading so needs its own label
-      if (name !== stateOptions.thing) {
-        stateOptions.name = name;
-        stateOptions.valueLabel = true;
-      }
+      // Determine button label
+      const isMultiple = name !== thing;
+      const buttonLabel = isMultiple
+        ? `Copy ${thing}`
+        : `Copy ${thing} to clipboard`;
+      const srSuffix = isMultiple ? ` for ${name}` : '';
 
-      $component
-        .addClass('copy-to-clipboard')
-        .css('min-height', $component.height())
-        .html(states.valueVisible($.extend({ 'onload': true }, stateOptions)))
-        .on(
-          'click', '.copy-to-clipboard__button--copy', () =>
-            this.copyValueToClipboard(
-              $('.copy-to-clipboard__value', component)[0], () =>
-                $component
-                  .html(states.valueCopied(stateOptions))
-                  .find('.usa-button').focus()
-            )
-        )
-        .on(
-          'click', '.copy-to-clipboard__button--show', () =>
-            $component
-              .html(states.valueVisible(stateOptions))
-              .find('.usa-button').focus()
-        );
+      // Create simple HTML structure
+      component.classList.add('copy-to-clipboard');
+      component.innerHTML = `
+        <div class="copy-to-clipboard__value">${value}</div>
+        <button class="usa-button usa-button--outline copy-to-clipboard__button" type="button">
+          ${buttonLabel}<span class="usa-sr-only">${srSuffix}</span>
+        </button>
+        <span class="usa-sr-only" aria-live="polite" aria-atomic="true"></span>
+      `;
+
+      const button = component.querySelector('.copy-to-clipboard__button');
+      const srAnnouncement = component.querySelector('[aria-live]');
+
+      // Handle copy button click
+      button.addEventListener('click', () => {
+        this.copyValueToClipboard(value, () => {
+          // Change button text to "Copied!"
+          const originalText = button.innerHTML;
+          button.innerHTML = `Copied!<span class="usa-sr-only">${srSuffix}</span>`;
+          button.disabled = true;
+
+          // Announce to screen readers
+          srAnnouncement.textContent = `${thing} copied to clipboard`;
+
+          // Reset button after 2 seconds
+          setTimeout(() => {
+            button.innerHTML = originalText;
+            button.disabled = false;
+            srAnnouncement.textContent = '';
+          }, 2000);
+        });
+      });
 
       if ('stickAtBottomWhenScrolling' in window.NotifyModules) {
         window.NotifyModules.stickAtBottomWhenScrolling.recalculate();
