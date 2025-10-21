@@ -354,7 +354,7 @@ def test_organization_services_shows_live_services_and_usage(
 
     client_request.login(active_user_with_permissions)
     page = client_request.get(".organization_usage", org_id=ORGANISATION_ID)
-    mock.assert_called_once_with(ORGANISATION_ID, 2020)
+    mock.assert_called_once_with(ORGANISATION_ID, 2020, False)
 
     services = page.select("main h3")
     usage_rows = page.select("main .grid-col-6")
@@ -447,7 +447,7 @@ def test_organization_services_filters_by_financial_year(
         org_id=ORGANISATION_ID,
         year=financial_year,
     )
-    mock.assert_called_once_with(ORGANISATION_ID, financial_year)
+    mock.assert_called_once_with(ORGANISATION_ID, financial_year, False)
     assert normalize_spaces(page.select_one(".pill").text) == (
         "2020 to 2021 fiscal year "
         "2019 to 2020 fiscal year "
@@ -1538,6 +1538,11 @@ def test_organization_dashboard_shows_message_usage(
         "app.organizations_client.get_organization_services",
         return_value=[],
     )
+    mocker.patch(
+        "app.organizations_client.get_services_and_usage",
+        return_value={"services": []},
+    )
+
     client_request.login(active_user_with_permissions)
     page = client_request.get(
         ".organization_dashboard",
@@ -1576,6 +1581,46 @@ def test_organization_dashboard_shows_service_counts(
             service_json(id_="3", name="Suspended", restricted=False, active=False),
         ],
     )
+    mocker.patch(
+        "app.organizations_client.get_services_and_usage",
+        return_value={
+            "services": [
+                {
+                    "service_id": "1",
+                    "service_name": "Live Service",
+                    "emails_sent": 1000,
+                    "sms_billable_units": 300,
+                    "sms_remainder": 249700,
+                    "sms_cost": 25.50,
+                    "active": True,
+                    "restricted": False,
+                    "created_at": "2023-01-15 10:30:00",
+                },
+                {
+                    "service_id": "2",
+                    "service_name": "Trial Service",
+                    "emails_sent": 500,
+                    "sms_billable_units": 50,
+                    "sms_remainder": 249950,
+                    "sms_cost": 0,
+                    "active": True,
+                    "restricted": True,
+                    "created_at": "2023-02-20 14:00:00",
+                },
+                {
+                    "service_id": "3",
+                    "service_name": "Suspended",
+                    "emails_sent": 0,
+                    "sms_billable_units": 0,
+                    "sms_remainder": 250000,
+                    "sms_cost": 0,
+                    "active": False,
+                    "restricted": False,
+                    "created_at": "2023-03-10 09:15:00",
+                },
+            ]
+        },
+    )
 
     client_request.login(active_user_with_permissions)
     page = client_request.get(
@@ -1592,3 +1637,81 @@ def test_organization_dashboard_shows_service_counts(
     assert "1 Live" in normalize_spaces(service_box.text)
     assert "1 Trial" in normalize_spaces(service_box.text)
     assert "1 Suspended" in normalize_spaces(service_box.text)
+
+
+def test_organization_dashboard_services_table_shows_usage(
+    client_request,
+    mock_get_organization,
+    mocker,
+    active_user_with_permissions,
+):
+    mocker.patch(
+        "app.organizations_client.get_organization_message_usage",
+        return_value={
+            "messages_sent": 0,
+            "messages_remaining": 0,
+            "total_message_limit": 0,
+        },
+    )
+    mocker.patch(
+        "app.organizations_client.get_organization_services",
+        return_value=[
+            service_json(id_="1", name="Service One", restricted=False, active=True),
+            service_json(id_="2", name="Service Two", restricted=True, active=True),
+        ],
+    )
+    mocker.patch(
+        "app.organizations_client.get_services_and_usage",
+        return_value={
+            "services": [
+                {
+                    "service_id": "1",
+                    "service_name": "Service One",
+                    "emails_sent": 1500,
+                    "sms_billable_units": 500,
+                    "sms_remainder": 249500,
+                    "sms_cost": 42.75,
+                    "active": True,
+                    "restricted": False,
+                    "created_at": "2023-01-15 10:30:00",
+                },
+                {
+                    "service_id": "2",
+                    "service_name": "Service Two",
+                    "emails_sent": 250,
+                    "sms_billable_units": 100,
+                    "sms_remainder": 249900,
+                    "sms_cost": 0,
+                    "active": True,
+                    "restricted": True,
+                    "created_at": "2023-02-20 14:00:00",
+                },
+            ]
+        },
+    )
+
+    client_request.login(active_user_with_permissions)
+    page = client_request.get(
+        ".organization_dashboard",
+        org_id=ORGANISATION_ID,
+    )
+
+    table = page.select_one("table.usa-table")
+    assert table is not None
+
+    rows = table.select("tbody tr")
+    assert len(rows) == 2
+
+    first_row_cells = rows[0].select("td")
+    assert normalize_spaces(first_row_cells[0].text) == "Service One"
+    assert normalize_spaces(first_row_cells[1].text) == "Live"
+    assert "1,500 emails" in normalize_spaces(first_row_cells[2].text)
+    assert "500 sms" in normalize_spaces(first_row_cells[2].text)
+    assert "249,500 remaining" in normalize_spaces(first_row_cells[2].text)
+
+    second_row_cells = rows[1].select("td")
+    assert normalize_spaces(second_row_cells[0].text) == "Service Two"
+    assert normalize_spaces(second_row_cells[1].text) == "Trial"
+    assert "250 emails" in normalize_spaces(second_row_cells[2].text)
+    assert "100 sms" in normalize_spaces(second_row_cells[2].text)
+    assert "249,900 remaining" in normalize_spaces(second_row_cells[2].text)
