@@ -45,11 +45,20 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_SECRET_ACCESS_KEY }}
       run: |
         terraform state replace-provider \
-          -dry-run \
           -state=terraform.tfstate \
+          -state-out=new-state.tfstate \
           'registry.terraform.io/cloudfoundry-community/cloudfoundry' \
           'registry.terraform.io/cloudfoundry/cloudfoundry' \
           module.logo_upload_bucket
+
+
+    - name: Terraform show swapped providers
+      working-directory: terraform/staging
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_SECRET_ACCESS_KEY }}
+      run: |
+        terraform show -json new-state.tfstate | jq '.values.root_module.child_modules[]?.provider_configs'
 
     - name: Terraform apply
       working-directory: terraform/staging
