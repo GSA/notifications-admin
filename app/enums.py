@@ -106,9 +106,3 @@ class VerificationStatus(StrEnum):
 class AuthType(StrEnum):
     EMAIL_AUTH = "email_auth"
     SMS_AUTH = "sms_auth"
-
-
-class ServiceStatus(StrEnum):
-    LIVE = "live"
-    TRIAL = "trial"
-    SUSPENDED = "suspended"

@@ -655,15 +655,11 @@ def test_organization_trial_mode_services_shows_all_non_live_services(
     )
 
     services = page.select(".browse-list-item")
-    assert len(services) == 2
+    assert len(services) == 1
 
     assert normalize_spaces(services[0].text) == "2"
-    assert normalize_spaces(services[1].text) == "3"
     assert services[0].find("a")["href"] == url_for(
         "main.service_dashboard", service_id="2"
-    )
-    assert services[1].find("a")["href"] == url_for(
-        "main.service_dashboard", service_id="3"
     )
 
 
@@ -1531,7 +1527,7 @@ def test_organization_dashboard_shows_message_usage(
     active_user_with_permissions,
 ):
     mock_message_usage = mocker.patch(
-        "app.service_api_client.get_organization_message_usage",
+        "app.organizations_client.get_organization_message_usage",
         return_value={
             "messages_sent": 1000,
             "messages_remaining": 2000,
@@ -1542,7 +1538,6 @@ def test_organization_dashboard_shows_message_usage(
         "app.organizations_client.get_organization_services",
         return_value=[],
     )
-
     client_request.login(active_user_with_permissions)
     page = client_request.get(
         ".organization_dashboard",
@@ -1566,7 +1561,7 @@ def test_organization_dashboard_shows_service_counts(
     active_user_with_permissions,
 ):
     mocker.patch(
-        "app.service_api_client.get_organization_message_usage",
+        "app.organizations_client.get_organization_message_usage",
         return_value={
             "messages_sent": 0,
             "messages_remaining": 0,

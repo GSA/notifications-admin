@@ -30,14 +30,14 @@
     "graceful-fs": "^4.2.11"
   },
   "dependencies": {
-    "@rollup/plugin-commonjs": "^28.0.7",
+    "@rollup/plugin-commonjs": "^28.0.8",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/stream": "^3.0.1",
     "@uswds/uswds": "^3.13.0",
     "cbor-js": "0.1.0",
     "d3": "^7.9.0",
     "jquery": "3.7.1",
-    "playwright": "^1.56.0",
+    "playwright": "^1.56.1",
     "python": "^0.0.4",
     "query-command-supported": "1.0.0",
     "sass-embedded": "^1.93.2",
