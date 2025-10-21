@@ -43,6 +43,8 @@ jobs:
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_SECRET_ACCESS_KEY }}
+        TF_VAR_cf_user: ${{ secrets.CLOUDGOV_USERNAME }}
+        TF_VAR_cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
       run: |
         terraform plan -destroy -target=module.logo_upload_bucket
 
