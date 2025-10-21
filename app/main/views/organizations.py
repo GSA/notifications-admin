@@ -62,6 +62,20 @@ def add_organization():
     return render_template("views/organizations/add-organization.html", form=form)
 
 
+def get_organization_message_allowance(org_id):
+    try:
+        message_usage = organizations_client.get_organization_message_usage(org_id)
+    except Exception as e:
+        current_app.logger.error(f"Error fetching organization message usage: {e}")
+        message_usage = {}
+
+    return {
+        "messages_sent": message_usage.get("messages_sent", 0),
+        "messages_remaining": message_usage.get("messages_remaining", 0),
+        "total_message_limit": message_usage.get("total_message_limit", 0),
+    }
+
+
 @main.route("/organizations/<uuid:org_id>", methods=["GET"])
 @user_has_permissions()
 def organization_dashboard(org_id):
@@ -70,10 +84,16 @@ def organization_dashboard(org_id):
 
     year = requested_and_current_financial_year(request)[0]
 
-    # TODO: total message allowance
+    message_allowance = get_organization_message_allowance(org_id)
+
     return render_template(
         "views/organizations/organization/index.html",
         selected_year=year,
+        live_services=len(current_organization.live_services),
+        trial_services=len(current_organization.trial_services),
+        suspended_services=len(current_organization.suspended_services),
+        total_services=len(current_organization.services),
+        **message_allowance,
     )
 
 
