@@ -25,7 +25,6 @@ from app.main.views.dashboard import (
 from app.models.organization import AllOrganizations, Organization
 from app.models.user import InvitedOrgUser, User
 from app.utils.csv import Spreadsheet
-from app.utils.time import parse_naive_dt
 from app.utils.user import user_has_permissions, user_is_platform_admin
 from notifications_python_client.errors import HTTPError
 
@@ -105,12 +104,6 @@ def get_services_usage(organization, year):
                 usage_parts.append(f"{sms_sent:,} sms ({sms_remainder:,} remaining)")
 
         service["usage"] = ", ".join(usage_parts) if usage_parts else "No usage"
-
-        if "created_at" in service and isinstance(service["created_at"], str):
-            try:
-                service["created_at"] = parse_naive_dt(service["created_at"])
-            except (ValueError, TypeError):
-                service["created_at"] = None
 
         services.append(service)
 

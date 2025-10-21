@@ -107,7 +107,7 @@
             <td>{{ service.usage|default('N/A') }}</td>
             <td>{{ service.primary_contact|default('N/A') }}</td>
             <td>{{ service.recent_template|default('N/A') }}</td>
-            <td>{{ service.created_at.strftime('%b %d, %Y') if service.created_at else 'N/A' }}</td>
+            <td>{{ service.created_at|format_date_normal if service.created_at else 'N/A' }}</td>
           </tr>
           {% endfor %}
         {% else %}
