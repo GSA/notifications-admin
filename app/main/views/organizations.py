@@ -25,6 +25,7 @@ from app.main.views.dashboard import (
 from app.models.organization import AllOrganizations, Organization
 from app.models.user import InvitedOrgUser, User
 from app.utils.csv import Spreadsheet
+from app.utils.time import parse_naive_dt
 from app.utils.user import user_has_permissions, user_is_platform_admin
 from notifications_python_client.errors import HTTPError
 
@@ -76,6 +77,46 @@ def get_organization_message_allowance(org_id):
     }
 
 
+def get_services_usage(organization, year):
+
+    try:
+        services_and_usage = organization.services_and_usage(financial_year=year, include_all_services=True)["services"]
+    except Exception as e:
+        current_app.logger.error(f"Error fetching services and usage: {e}")
+        return []
+
+    services = []
+    for service in services_and_usage:
+        service["id"] = service.get("service_id")
+        service["name"] = service.get("service_name")
+
+        emails_sent = service.get("emails_sent", 0)
+        sms_sent = service.get("sms_billable_units", 0)
+        sms_remainder = service.get("sms_remainder", 0)
+        sms_cost = service.get("sms_cost", 0)
+
+        usage_parts = []
+        if emails_sent > 0:
+            usage_parts.append(f"{emails_sent:,} emails")
+        if sms_sent > 0 or sms_remainder > 0:
+            if sms_cost > 0:
+                usage_parts.append(f"{sms_sent:,} sms ({sms_remainder:,} remaining, ${sms_cost:,.2f})")
+            else:
+                usage_parts.append(f"{sms_sent:,} sms ({sms_remainder:,} remaining)")
+
+        service["usage"] = ", ".join(usage_parts) if usage_parts else "No usage"
+
+        if "created_at" in service and isinstance(service["created_at"], str):
+            try:
+                service["created_at"] = parse_naive_dt(service["created_at"])
+            except (ValueError, TypeError):
+                service["created_at"] = None
+
+        services.append(service)
+
+    return services
+
+
 @main.route("/organizations/<uuid:org_id>", methods=["GET"])
 @user_has_permissions()
 def organization_dashboard(org_id):
@@ -86,10 +127,12 @@ def organization_dashboard(org_id):
 
     message_allowance = get_organization_message_allowance(org_id)
 
+    services_with_usage = get_services_usage(current_organization, year)
+
     return render_template(
         "views/organizations/organization/index.html",
         selected_year=year,
-        services=current_organization.services,
+        services=services_with_usage,
         live_services=len(current_organization.live_services),
         trial_services=len(current_organization.trial_services),
         suspended_services=len(current_organization.suspended_services),
