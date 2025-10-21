@@ -3,9 +3,9 @@
 
   window.NotifyModules['update-status'] = function() {
 
-    const getRenderer = $component => response => $component.html(
-      response.html
-    );
+    const getRenderer = component => response => {
+      component.innerHTML = response.html;
+    };
 
     const throttle = (func, limit) => {
 
@@ -41,39 +41,38 @@
 
       let id = 'update-status';
 
-      this.$component = $(component);
-      this.$textbox = $('#' + this.$component.data('target'));
+      this.component = component;
+      this.textbox = document.getElementById(this.component.dataset.target);
 
-      this.$component
-        .attr('id', id);
+      this.component.setAttribute('id', id);
 
-      this.$textbox
-        .attr(
-          'aria-describedby',
-          (
-            this.$textbox.attr('aria-describedby') || ''
-          ) + (
-            this.$textbox.attr('aria-describedby') ? ' ' : ''
-          ) + id
-        )
-        .on('input', throttle(this.update, 150))
-        .trigger('input');
+      const currentAriaDescribedBy = this.textbox.getAttribute('aria-describedby') || '';
+      const newAriaDescribedBy = currentAriaDescribedBy + (currentAriaDescribedBy ? ' ' : '') + id;
+      this.textbox.setAttribute('aria-describedby', newAriaDescribedBy);
+
+      this.textbox.addEventListener('input', throttle(this.update, 150));
+      this.textbox.dispatchEvent(new Event('input'));
 
     };
 
     this.update = () => {
 
-      $.ajax(
-        this.$component.data('updates-url'),
-        {
-          'method': 'post',
-          'data': this.$textbox.parents('form').serialize()
-        }
-      ).done(
-        getRenderer(this.$component)
-      ).fail(
-        () => {}
-      );
+      const form = this.textbox.closest('form');
+      const formData = new FormData(form);
+
+      fetch(this.component.dataset.updatesUrl, {
+        method: 'POST',
+        body: formData,
+        credentials: 'same-origin'
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('HTTP error');
+          }
+          return response.json();
+        })
+        .then(getRenderer(this.component))
+        .catch(() => {});
 
     };
 
