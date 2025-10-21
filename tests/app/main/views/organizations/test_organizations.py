@@ -1594,7 +1594,6 @@ def test_organization_dashboard_shows_service_counts(
                     "sms_cost": 25.50,
                     "active": True,
                     "restricted": False,
-                    "created_at": "2023-01-15 10:30:00",
                 },
                 {
                     "service_id": "2",
@@ -1605,7 +1604,6 @@ def test_organization_dashboard_shows_service_counts(
                     "sms_cost": 0,
                     "active": True,
                     "restricted": True,
-                    "created_at": "2023-02-20 14:00:00",
                 },
                 {
                     "service_id": "3",
@@ -1616,7 +1614,6 @@ def test_organization_dashboard_shows_service_counts(
                     "sms_cost": 0,
                     "active": False,
                     "restricted": False,
-                    "created_at": "2023-03-10 09:15:00",
                 },
             ]
         },
@@ -1673,7 +1670,6 @@ def test_organization_dashboard_services_table_shows_usage(
                     "sms_cost": 42.75,
                     "active": True,
                     "restricted": False,
-                    "created_at": "2023-01-15 10:30:00",
                 },
                 {
                     "service_id": "2",
@@ -1684,7 +1680,6 @@ def test_organization_dashboard_services_table_shows_usage(
                     "sms_cost": 0,
                     "active": True,
                     "restricted": True,
-                    "created_at": "2023-02-20 14:00:00",
                 },
             ]
         },

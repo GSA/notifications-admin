@@ -87,7 +87,6 @@
           <th scope="col" role="columnheader">Usage</th>
           <th scope="col" role="columnheader">Primary Contact</th>
           <th scope="col" role="columnheader">Recent Template Used</th>
-          <th scope="col" role="columnheader">Created</th>
         </tr>
       </thead>
       <tbody>
@@ -107,12 +106,11 @@
             <td>{{ service.usage|default('N/A') }}</td>
             <td>{{ service.primary_contact|default('N/A') }}</td>
             <td>{{ service.recent_template|default('N/A') }}</td>
-            <td>{{ service.created_at|format_date_normal if service.created_at else 'N/A' }}</td>
           </tr>
           {% endfor %}
         {% else %}
           <tr>
-            <td colspan="6" class="table-empty-message">No services found within this organization</td>
+            <td colspan="5" class="table-empty-message">No services found within this organization</td>
           </tr>
         {% endif %}
       </tbody>
