@@ -29,12 +29,28 @@ jobs:
         terraform_version: "^1.7.5"
         terraform_wrapper: false
 
+
     - name: Terraform init
       working-directory: terraform/staging
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_SECRET_ACCESS_KEY }}
       run: terraform init
+
+
+    - name: Terraform swap providers
+      working-directory: terraform/staging
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_SECRET_ACCESS_KEY }}
+      run: |
+        terraform state replace-provider \
+          -dry-run \
+          -state=terraform.tfstate \
+          'registry.terraform.io/cloudfoundry-community/cloudfoundry' \
+          'registry.terraform.io/cloudfoundry/cloudfoundry' \
+          module.logo_upload_bucket
+
     - name: Terraform apply
       working-directory: terraform/staging
       env:
