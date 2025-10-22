@@ -12,22 +12,21 @@ resource "null_resource" "prevent_destroy" {
   }
 }
 
-# module "redis-v70" {
-# source = "github.com/GSA-TTS/terraform-cloudgov//redis?ref=v2.4.0"
-# Right now the default is cfcommunity, remove this when default is cloudfoundry
-# providers = {
-# cloudfoundry = cloudfoundry.official
-# }
-# org             = data.cloudfoundry_space.space.org
-# cf_space_id     = data.cloudfoundry_space.space.id
-# name            = "${local.app_name}-redis-v70-${local.env}"
-# redis_plan_name = "redis-dev"
-# json_params = jsonencode(
-# {
-# "engineVersion" : "7.0",
-# }
-# )
-# }
+module "redis-v70" {
+  source = "github.com/GSA-TTS/terraform-cloudgov//redis?ref=v2.4.0"
+  # Right now the default is cfcommunity, remove this when default is cloudfoundry
+  providers = {
+    cloudfoundry = cloudfoundry.official
+  }
+  cf_space_id     = data.cloudfoundry_space.space.id
+  name            = "${local.app_name}-redis-v70-${local.env}"
+  redis_plan_name = "redis-dev"
+  json_params = jsonencode(
+    {
+      "engineVersion" : "7.0",
+    }
+  )
+}
 
 data "cloudfoundry_space" "space" {
   provider = cloudfoundry.official
