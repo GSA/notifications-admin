@@ -12,19 +12,22 @@ resource "null_resource" "prevent_destroy" {
   }
 }
 
-module "redis-v70" {
-  source = "github.com/GSA-TTS/terraform-cloudgov//redis?ref=v1.0.0"
-
-  cf_org_name     = local.cf_org_name
-  cf_space_name   = local.cf_space_name
-  name            = "${local.app_name}-redis-v70-${local.env}"
-  redis_plan_name = "redis-dev"
-  json_params = jsonencode(
-    {
-      "engineVersion" : "7.0",
-    }
-  )
-}
+# module "redis-v70" {
+# source = "github.com/GSA-TTS/terraform-cloudgov//redis?ref=v2.4.0"
+# Right now the default is cfcommunity, remove this when default is cloudfoundry
+# providers = {
+# cloudfoundry = cloudfoundry.official
+# }
+# org             = data.cloudfoundry_space.space.org
+# cf_space_id     = data.cloudfoundry_space.space.id
+# name            = "${local.app_name}-redis-v70-${local.env}"
+# redis_plan_name = "redis-dev"
+# json_params = jsonencode(
+# {
+# "engineVersion" : "7.0",
+# }
+# )
+# }
 
 data "cloudfoundry_space" "space" {
   provider = cloudfoundry.official
@@ -41,16 +44,6 @@ module "logo_upload_bucket" {
   cf_space_id = data.cloudfoundry_space.space.id
   name        = "${local.app_name}-logo-upload-bucket-${local.env}"
 }
-
-
-# This is the old form which used cfcommunity as a provider
-# module "logo_upload_bucket_old" {
-# source = "github.com/GSA-TTS/terraform-cloudgov//s3?ref=v1.0.0"
-
-# cf_org_name   = local.cf_org_name
-# cf_space_name = local.cf_space_name
-# name          = "${local.app_name}-logo-upload-bucket-${local.env}"
-# }
 
 
 module "api_network_route" {
