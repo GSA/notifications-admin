@@ -54,12 +54,8 @@ jobs:
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_SECRET_ACCESS_KEY }}
-      with:
-        cf_username: ${{ secrets.CLOUDGOV_USERNAME }}
-        cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
-        cf_org: gsa-tts-benefits-studio
-        cf_space: notify-staging
-
+        TF_VAR_cf_user: ${{ secrets.CLOUDGOV_USERNAME }}
+        TF_VAR_cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
       run: terraform apply -auto-approve -input=false
 
     - uses: ./.github/actions/setup-project
