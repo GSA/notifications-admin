@@ -18,7 +18,6 @@ module "redis-v70" {
   providers = {
     cloudfoundry = cloudfoundry.official
   }
-  org             = data.cloudfoundry_space.space.org
   cf_space_id     = data.cloudfoundry_space.space.id
   name            = "${local.app_name}-redis-v70-${local.env}"
   redis_plan_name = "redis-dev"
