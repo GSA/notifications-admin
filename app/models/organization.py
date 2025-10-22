@@ -139,8 +139,8 @@ class Organization(JSONModel, SortByNameMixin):
     def associate_service(self, service_id):
         organizations_client.update_service_organization(service_id, self.id)
 
-    def services_and_usage(self, financial_year):
-        return organizations_client.get_services_and_usage(self.id, financial_year)
+    def services_and_usage(self, financial_year, include_all_services=False):
+        return organizations_client.get_services_and_usage(self.id, financial_year, include_all_services)
 
 
 class Organizations(SerialisedModelCollection):
