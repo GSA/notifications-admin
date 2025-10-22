@@ -38,15 +38,15 @@ jobs:
       run: terraform init
 
 
-    - name: Terraform see if we can destroy a specific module
-      working-directory: terraform/staging
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_SECRET_ACCESS_KEY }}
-        TF_VAR_cf_user: ${{ secrets.CLOUDGOV_USERNAME }}
-        TF_VAR_cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
-      run: |
-        terraform destroy -target=module.redis-v70 -auto-approve
+    # - name: Terraform see if we can destroy a specific module
+    #   working-directory: terraform/staging
+    #   env:
+    #     AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
+    #     AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_SECRET_ACCESS_KEY }}
+    #     TF_VAR_cf_user: ${{ secrets.CLOUDGOV_USERNAME }}
+    #     TF_VAR_cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
+    #   run: |
+    #     terraform destroy -target=module.redis-v70 -auto-approve
 
 
     - name: Terraform apply
