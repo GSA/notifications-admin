@@ -46,7 +46,7 @@ jobs:
         TF_VAR_cf_user: ${{ secrets.CLOUDGOV_USERNAME }}
         TF_VAR_cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
       run: |
-        terraform destroy -target=module.logo_upload_bucket
+        terraform destroy -target=module.logo_upload_bucket -auto-approve
 
 
     - name: Terraform apply
