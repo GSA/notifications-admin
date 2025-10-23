@@ -44,13 +44,22 @@ module "logo_upload_bucket" {
   name        = "${local.app_name}-logo-upload-bucket-${local.env}"
 }
 
+module "api_network_route" {
+  source = "../shared/container_networking"
 
-# module "api_network_route" {
-#  source = "../shared/container_networking"
-#  providers = {
-#    cloudfoundry = cloudfoundry.official
-#  }
-#  cf_space_id          = data.cloudfoundry_space.space.id
-#  source_app_name      = "${local.app_name}-${local.env}"
-#  destination_app_name = "notify-api-${local.env}"
+  cf_org_name          = local.cf_org_name
+  cf_space_name        = local.cf_space_name
+  source_app_name      = "${local.app_name}-${local.env}"
+  destination_app_name = "notify-api-${local.env}"
+}
+
+# Looks like we have to upgrade 'shared' before we can do this
+# module "api_network_route_new" {
+# source = "../shared/container_networking"
+# providers = {
+#  cloudfoundry = cloudfoundry.official
+# }
+# cf_space_id          = data.cloudfoundry_space.space.id
+# source_app_name      = "${local.app_name}-${local.env}"
+# destination_app_name = "notify-api-${local.env}"
 # }
