@@ -46,7 +46,7 @@ jobs:
     #     TF_VAR_cf_user: ${{ secrets.CLOUDGOV_USERNAME }}
     #     TF_VAR_cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
     #   run: |
-    #     terraform destroy -target=module.redis-v70 -auto-approve
+    #     terraform plan -destroy -target=module.api_network_route
 
 
     - name: Terraform apply

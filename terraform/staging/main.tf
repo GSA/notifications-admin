@@ -45,11 +45,12 @@ module "logo_upload_bucket" {
 }
 
 
-module "api_network_route" {
-  source = "../shared/container_networking"
-
-  cf_org_name          = local.cf_org_name
-  cf_space_name        = local.cf_space_name
-  source_app_name      = "${local.app_name}-${local.env}"
-  destination_app_name = "notify-api-${local.env}"
-}
+# module "api_network_route" {
+#  source = "../shared/container_networking"
+#  providers = {
+#    cloudfoundry = cloudfoundry.official
+#  }
+#  cf_space_id          = data.cloudfoundry_space.space.id
+#  source_app_name      = "${local.app_name}-${local.env}"
+#  destination_app_name = "notify-api-${local.env}"
+# }
