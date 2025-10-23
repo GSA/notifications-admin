@@ -1310,7 +1310,12 @@ def test_send_one_off_shows_placeholders_in_correct_order(
             "Use my email address",
             partial(url_for, "main.send_one_off_to_myself"),
         ),
-        (create_active_caseworking_user(), "sms", None, None),
+        (
+            create_active_caseworking_user(),
+            "sms",
+            "Use my phone number",
+            partial(url_for, "main.send_one_off_to_myself"),
+        ),
     ],
 )
 def test_send_one_off_has_skip_link(
