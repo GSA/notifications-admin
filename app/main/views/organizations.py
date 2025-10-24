@@ -77,17 +77,17 @@ def get_organization_message_allowance(org_id):
 
 
 def get_services_usage(organization, year):
-
     try:
-        services_and_usage = organization.services_and_usage(financial_year=year, include_all_services=True)["services"]
+        dashboard_data = organizations_client.get_organization_dashboard(organization.id, year)
+        services = dashboard_data.get("services", [])
     except Exception as e:
-        current_app.logger.error(f"Error fetching services and usage: {e}")
+        current_app.logger.error(f"Error fetching dashboard data: {e}")
         return []
 
-    services = []
-    for service in services_and_usage:
+    for service in services:
         service["id"] = service.get("service_id")
         service["name"] = service.get("service_name")
+        service["recent_template"] = service.get("recent_sms_template_name")
 
         emails_sent = service.get("emails_sent", 0)
         sms_sent = service.get("sms_billable_units", 0)
@@ -104,8 +104,6 @@ def get_services_usage(organization, year):
                 usage_parts.append(f"{sms_sent:,} sms ({sms_remainder:,} remaining)")
 
         service["usage"] = ", ".join(usage_parts) if usage_parts else "No usage"
-
-        services.append(service)
 
     return services
 

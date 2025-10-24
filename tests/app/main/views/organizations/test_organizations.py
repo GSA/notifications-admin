@@ -1582,7 +1582,7 @@ def test_organization_dashboard_shows_service_counts(
         ],
     )
     mocker.patch(
-        "app.organizations_client.get_services_and_usage",
+        "app.organizations_client.get_organization_dashboard",
         return_value={
             "services": [
                 {
@@ -1658,7 +1658,7 @@ def test_organization_dashboard_services_table_shows_usage(
         ],
     )
     mocker.patch(
-        "app.organizations_client.get_services_and_usage",
+        "app.organizations_client.get_organization_dashboard",
         return_value={
             "services": [
                 {
@@ -1670,6 +1670,7 @@ def test_organization_dashboard_services_table_shows_usage(
                     "sms_cost": 42.75,
                     "active": True,
                     "restricted": False,
+                    "recent_sms_template_name": "Welcome SMS",
                 },
                 {
                     "service_id": "2",
@@ -1680,6 +1681,7 @@ def test_organization_dashboard_services_table_shows_usage(
                     "sms_cost": 0,
                     "active": True,
                     "restricted": True,
+                    "recent_sms_template_name": "Reminder SMS",
                 },
             ]
         },
