@@ -5,7 +5,7 @@
 
   function Summary (module) {
     this.module = module;
-    this.$el = module.$formGroup.find('.selection-summary').first();
+    this.el = module.formGroup.querySelector('.selection-summary');
     this.fieldLabel = module.fieldLabel;
     this.total = module.total;
     this.addContent();
@@ -20,14 +20,15 @@
     }[field] || `No ${field}s`)
   };
   Summary.prototype.addContent = function() {
-    const $hint = this.module.$formGroup.find('.usa-hint');
-    this.$text = $(`<p class="selection-summary__text" />`);
+    const hint = this.module.formGroup.querySelector('.usa-hint');
+    this.text = document.createElement('p');
+    this.text.className = 'selection-summary__text';
 
-    if (this.fieldLabel === 'folder') { this.$text.addClass('selection-summary__text--folders'); }
+    if (this.fieldLabel === 'folder') { this.text.classList.add('selection-summary__text--folders'); }
 
-    this.$el.attr('id', $hint.attr('id'));
-    this.$el.append(this.$text);
-    $hint.remove();
+    this.el.setAttribute('id', hint.getAttribute('id'));
+    this.el.appendChild(this.text);
+    hint.remove();
   };
   Summary.prototype.update = function(selection) {
     let template;
@@ -40,19 +41,19 @@
       template = 'none';
     }
 
-    this.$text.html(this.templates[template](selection, this.total, this.fieldLabel));
+    this.text.innerHTML = this.templates[template](selection, this.total, this.fieldLabel);
   };
   Summary.prototype.bindEvents = function () {
     // take summary out of tab order when focus moves
-    this.$el.on('blur', (e) => $(this).attr('tabindex', '-1'));
+    this.el.addEventListener('blur', (e) => e.target.setAttribute('tabindex', '-1'));
   };
 
   function Footer (module) {
     this.module = module;
     this.fieldLabel = module.fieldLabel;
-    this.fieldsetId = module.$fieldset.attr('id');
-    this.$el = this.getEl(this.module.expanded);
-    this.module.$formGroup.append(this.$el);
+    this.fieldsetId = module.fieldset.getAttribute('id');
+    this.el = this.getEl(this.module.expanded);
+    this.module.formGroup.appendChild(this.el);
   }
   Footer.prototype.buttonContent = {
     change: (fieldLabel) => `Choose ${fieldLabel}s`,
@@ -63,37 +64,37 @@
     const buttonContent = this.buttonContent[buttonState](this.fieldLabel);
     const stickyClass = expanded ? ' js-stick-at-bottom-when-scrolling' : '';
 
-    return $(`<div class="selection-footer${stickyClass} margin-top-2">
-              <button
+    const div = document.createElement('div');
+    div.className = `selection-footer${stickyClass} margin-top-2`;
+    div.innerHTML = `<button
                 class="usa-button usa-button--outline selection-footer__button"
                 aria-expanded="${expanded ? 'true' : 'false'}"
                 aria-controls="${this.fieldsetId}">
               ${buttonContent}
-              </button>
-            </div>`);
+              </button>`;
+    return div;
   };
   Footer.prototype.update = function (expanded) {
-    this.$el.remove();
-    this.$el = this.getEl(expanded);
+    this.el.remove();
+    this.el = this.getEl(expanded);
 
-    this.module.$formGroup.append(this.$el);
+    this.module.formGroup.appendChild(this.el);
 
   };
 
   function CollapsibleCheckboxes () {}
-  CollapsibleCheckboxes.prototype._focusTextElement = ($el) => {
-    $el
-      .attr('tabindex', '-1')
-      .focus();
+  CollapsibleCheckboxes.prototype._focusTextElement = (el) => {
+    el.setAttribute('tabindex', '-1');
+    el.focus();
   };
   CollapsibleCheckboxes.prototype.start = function(component) {
-    this.$component = $(component);
-    this.$formGroup = this.$component.find('.usa-form-group').first();
-    this.$fieldset = this.$formGroup.find('fieldset').first();
-    this.$checkboxes = this.$fieldset.find('input[type=checkbox]');
-    this.fieldLabel = this.$component.data('fieldLabel');
-    this.total = this.$checkboxes.length;
-    this.legendText = this.$fieldset.find('legend').first().text().trim();
+    this.component = component;
+    this.formGroup = component.querySelector('.usa-form-group');
+    this.fieldset = this.formGroup.querySelector('fieldset');
+    this.checkboxes = this.fieldset.querySelectorAll('input[type=checkbox]');
+    this.fieldLabel = component.dataset.fieldLabel;
+    this.total = this.checkboxes.length;
+    this.legendText = this.fieldset.querySelector('legend').textContent.trim();
     this.expanded = false;
     this.checkUncheckButtonsAdded = false;
 
@@ -103,71 +104,78 @@
     this.footer = new Footer(this);
     this.summary = new Summary(this);
 
-    this.$fieldset.before(this.summary.$el);
+    this.fieldset.insertAdjacentElement('beforebegin', this.summary.el);
 
     // add custom classes
-    this.$formGroup.addClass('selection-wrapper');
-    this.$fieldset.addClass('selection-content');
+    this.formGroup.classList.add('selection-wrapper');
+    this.fieldset.classList.add('selection-content');
 
     // hide checkboxes
-    this.$fieldset.hide();
+    this.fieldset.style.display = 'none';
 
     this.bindEvents();
   };
-  CollapsibleCheckboxes.prototype.getSelection = function() { return this.$checkboxes.filter(':checked').length; };
+  CollapsibleCheckboxes.prototype.getSelection = function() {
+    return Array.from(this.checkboxes).filter(cb => cb.checked).length;
+  };
   CollapsibleCheckboxes.prototype.addHeadingHideLegend = function() {
-    const headingLevel = this.$component.data('heading-level') || '2';
+    const headingLevel = this.component.dataset.headingLevel || '2';
 
-    this.$heading = $(`<h${headingLevel} class="heading-small"></h${headingLevel}>`);
-    this.$heading.text(this.legendText);
-    this.$fieldset.before(this.$heading);
+    this.heading = document.createElement(`h${headingLevel}`);
+    this.heading.className = 'heading-small';
+    this.heading.textContent = this.legendText;
+    this.fieldset.insertAdjacentElement('beforebegin', this.heading);
 
-    this.$fieldset.find('legend').addClass('usa-sr-only');
+    this.fieldset.querySelector('legend').classList.add('usa-sr-only');
   };
   CollapsibleCheckboxes.prototype.addCheckUncheckAllButtons = function() {
-    const $buttonsContainer = $('<div class="check-uncheck-all-buttons margin-bottom-2"></div>');
+    const buttonsContainer = document.createElement('div');
+    buttonsContainer.className = 'check-uncheck-all-buttons margin-bottom-2';
 
-    this.$toggleAllButton = $('<button type="button" class="usa-button usa-button--outline usa-button--small">Select all</button>');
+    this.toggleAllButton = document.createElement('button');
+    this.toggleAllButton.type = 'button';
+    this.toggleAllButton.className = 'usa-button usa-button--outline usa-button--small';
+    this.toggleAllButton.textContent = 'Select all';
 
-    $buttonsContainer.append(this.$toggleAllButton);
+    buttonsContainer.appendChild(this.toggleAllButton);
 
-    this.summary.$el.after($buttonsContainer);
+    this.summary.el.insertAdjacentElement('afterend', buttonsContainer);
 
-    this.$toggleAllButton.on('click', this.toggleAll.bind(this));
+    this.toggleAllButton.addEventListener('click', this.toggleAll.bind(this));
 
     this.updateToggleButtonText();
   };
   CollapsibleCheckboxes.prototype.toggleAll = function(e) {
     e.preventDefault();
     e.stopPropagation();
-    const allChecked = this.$checkboxes.filter(':checked').length === this.$checkboxes.length;
+    const allChecked = Array.from(this.checkboxes).filter(cb => cb.checked).length === this.checkboxes.length;
 
     if (allChecked) {
-      this.$checkboxes.prop('checked', false);
+      this.checkboxes.forEach(cb => cb.checked = false);
     } else {
-      this.$checkboxes.prop('checked', true);
+      this.checkboxes.forEach(cb => cb.checked = true);
     }
 
     this.handleSelection();
     this.updateToggleButtonText();
   };
   CollapsibleCheckboxes.prototype.updateToggleButtonText = function() {
-    if (!this.$toggleAllButton) return;
+    if (!this.toggleAllButton) return;
 
-    const checkedCount = this.$checkboxes.filter(':checked').length;
-    const allChecked = checkedCount === this.$checkboxes.length;
+    const checkedCount = Array.from(this.checkboxes).filter(cb => cb.checked).length;
+    const allChecked = checkedCount === this.checkboxes.length;
 
     if (allChecked) {
-      this.$toggleAllButton.text('Deselect all');
+      this.toggleAllButton.textContent = 'Deselect all';
     } else {
-      this.$toggleAllButton.text('Select all');
+      this.toggleAllButton.textContent = 'Select all';
     }
   };
   CollapsibleCheckboxes.prototype.expand = function(e) {
     if (e !== undefined) { e.preventDefault(); }
 
     if (!this.expanded) {
-      this.$fieldset.show();
+      this.fieldset.style.display = '';
       this.expanded = true;
       this.summary.update(this.getSelection());
       this.footer.update(this.expanded);
@@ -176,31 +184,31 @@
         this.addCheckUncheckAllButtons();
         this.checkUncheckButtonsAdded = true;
       } else {
-        if (this.$toggleAllButton) {
-          this.$toggleAllButton.parent().show();
+        if (this.toggleAllButton) {
+          this.toggleAllButton.parentElement.style.display = '';
         }
       }
     }
 
     // shift focus whether expanded or not
-    this._focusTextElement(this.$fieldset);
+    this._focusTextElement(this.fieldset);
   };
   CollapsibleCheckboxes.prototype.collapse = function(e) {
     if (e !== undefined) { e.preventDefault(); }
 
     if (this.expanded) {
-      this.$fieldset.hide();
+      this.fieldset.style.display = 'none';
       this.expanded = false;
       this.summary.update(this.getSelection());
       this.footer.update(this.expanded);
 
-      if (this.$toggleAllButton) {
-        this.$toggleAllButton.parent().hide();
+      if (this.toggleAllButton) {
+        this.toggleAllButton.parentElement.style.display = 'none';
       }
     }
 
     // shift focus whether expanded or not
-    this._focusTextElement(this.summary.$text);
+    this._focusTextElement(this.summary.text);
   };
   CollapsibleCheckboxes.prototype.handleClick = function(e) {
     if (this.expanded) {
@@ -216,8 +224,15 @@
   CollapsibleCheckboxes.prototype.bindEvents = function() {
     const self = this;
 
-    this.$formGroup.on('click', '.usa-button', this.handleClick.bind(this));
-    this.$checkboxes.on('click', this.handleSelection.bind(this));
+    this.formGroup.addEventListener('click', (e) => {
+      if (e.target.closest('.usa-button')) {
+        this.handleClick.call(this, e);
+      }
+    });
+
+    this.checkboxes.forEach(cb => {
+      cb.addEventListener('click', this.handleSelection.bind(this));
+    });
 
     this.summary.bindEvents(this);
   };

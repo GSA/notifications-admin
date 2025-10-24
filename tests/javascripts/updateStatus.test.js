@@ -6,27 +6,19 @@ const serviceNumber = '6658542f-0cad-491f-bec8-ab8457700ead';
 const updatesURL = `/services/${serviceNumber}/templates/count-sms-length`;
 
 let responseObj = {};
-let jqueryAJAXReturnObj;
 
 beforeAll(() => {
 
   // ensure all timers go through Jest
   jest.useFakeTimers();
 
-  // mock the bits of jQuery used
-  jest.spyOn(window.$, 'ajax');
-
-  // set up the object returned from $.ajax so it responds with whatever responseObj is set to
-  jqueryAJAXReturnObj = {
-    done: callback => {
-      // For these tests the server responds immediately
-      callback(responseObj);
-      return jqueryAJAXReturnObj;
-    },
-    fail: () => {}
-  };
-
-  $.ajax.mockImplementation(() => jqueryAJAXReturnObj);
+  // mock fetch
+  global.fetch = jest.fn(() =>
+    Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve(responseObj)
+    })
+  );
 
   require('../../app/assets/javascripts/updateStatus.js');
 
@@ -58,8 +50,8 @@ describe('Update content', () => {
 
     document.body.innerHTML = '';
 
-    // tidy up record of mocked AJAX calls
-    $.ajax.mockClear();
+    // tidy up record of mocked fetch calls
+    fetch.mockClear();
 
     // ensure any timers set by continually starting the module are cleared
     jest.clearAllTimers();
@@ -102,18 +94,21 @@ describe('Update content', () => {
 
     window.NotifyModules.start();
 
-    expect($.ajax.mock.calls[0][0]).toEqual(updatesURL);
-    expect($.ajax.mock.calls[0]).toEqual([
-      updatesURL,
-      {
-        "data": "csrf_token=abc123&template_content=Content%20of%20message",
-        "method": "post"
-      }
-    ]);
+    expect(fetch.mock.calls[0][0]).toEqual(updatesURL);
+    expect(fetch.mock.calls[0][1]).toMatchObject({
+      method: 'POST',
+      credentials: 'same-origin',
+      body: expect.any(FormData)
+    });
+
+    // Verify FormData contents
+    const formData = fetch.mock.calls[0][1].body;
+    expect(formData.get('csrf_token')).toBe('abc123');
+    expect(formData.get('template_content')).toBe('Content of message');
 
   });
 
-  test("It should replace the content of the div with the returned HTML", () => {
+  test("It should replace the content of the div with the returned HTML", async () => {
 
     responseObj = {'html': 'Updated content'}
 
@@ -123,13 +118,22 @@ describe('Update content', () => {
       "Initial content"
     );
 
+    // Use real timers for async operations
+    jest.useRealTimers();
+
     window.NotifyModules.start();
+
+    // Wait for the promise chain to complete
+    await new Promise(resolve => setTimeout(resolve, 0));
 
     expect(
       document.querySelectorAll('[data-module=update-status]')[0].textContent.trim()
     ).toEqual(
       "Updated content"
     );
+
+    // Restore fake timers
+    jest.useFakeTimers();
 
   });
 
@@ -139,13 +143,13 @@ describe('Update content', () => {
 
     // Initial update triggered
     window.NotifyModules.start();
-    expect($.ajax.mock.calls.length).toEqual(1);
+    expect(fetch.mock.calls.length).toEqual(1);
 
     // 150ms of inactivity
     jest.advanceTimersByTime(150);
     helpers.triggerEvent(textarea, 'input');
 
-    expect($.ajax.mock.calls.length).toEqual(2);
+    expect(fetch.mock.calls.length).toEqual(2);
 
   });
 
@@ -155,23 +159,23 @@ describe('Update content', () => {
 
     // Initial update triggered
     window.NotifyModules.start();
-    expect($.ajax.mock.calls.length).toEqual(1);
+    expect(fetch.mock.calls.length).toEqual(1);
 
     helpers.triggerEvent(textarea, 'input');
     jest.advanceTimersByTime(149);
-    expect($.ajax.mock.calls.length).toEqual(1);
+    expect(fetch.mock.calls.length).toEqual(1);
 
     helpers.triggerEvent(textarea, 'input');
     jest.advanceTimersByTime(149);
-    expect($.ajax.mock.calls.length).toEqual(1);
+    expect(fetch.mock.calls.length).toEqual(1);
 
     helpers.triggerEvent(textarea, 'input');
     jest.advanceTimersByTime(149);
-    expect($.ajax.mock.calls.length).toEqual(1);
+    expect(fetch.mock.calls.length).toEqual(1);
 
     // > 150ms of inactivity
     jest.advanceTimersByTime(1);
-    expect($.ajax.mock.calls.length).toEqual(2);
+    expect(fetch.mock.calls.length).toEqual(2);
 
   });
 

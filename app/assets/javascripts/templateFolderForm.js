@@ -1,66 +1,98 @@
 (function(window) {
   "use strict";
 
+  // HTML escaping utility to prevent XSS
+  const escapeHtml = (unsafe) => {
+    if (!unsafe) return '';
+    return String(unsafe)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  };
+
   window.NotifyModules['template-folder-form'] = function() {
 
     this.start = function(templateFolderForm) {
-      this.$form = $(templateFolderForm);
+      this.form = templateFolderForm;
 
       // remove the hidden unknown button - if you've got JS enabled then the action you want to do is implied by
       // which field is visible.
-      this.$form.find('button[value=unknown]').remove();
+      const unknownButton = this.form.querySelector('button[value=unknown]');
+      if (unknownButton) {
+        unknownButton.remove();
+      }
 
-      this.$liveRegionCounter = this.$form.find('.selection-counter');
+      this.liveRegionCounter = this.form.querySelector('.selection-counter');
+
+      // Critical: Verify live region counter exists before proceeding
+      if (!this.liveRegionCounter) {
+        console.error('templateFolderForm: .selection-counter element not found');
+        return;
+      }
 
       // Get single channel data from DOM (must happen after DOM is ready)
       const addNewTemplateForm = document.querySelector('div[id=add_new_template_form]');
-      this.$singleNotificationChannel = addNewTemplateForm ? addNewTemplateForm.getAttribute("data-channel") : null;
-      this.$singleChannelService = addNewTemplateForm ? addNewTemplateForm.getAttribute("data-service") : null;
+      this.singleNotificationChannel = addNewTemplateForm ? addNewTemplateForm.getAttribute("data-channel") : null;
+      this.singleChannelService = addNewTemplateForm ? addNewTemplateForm.getAttribute("data-service") : null;
 
-      this.$liveRegionCounter.before(this.nothingSelectedButtons);
-      this.$liveRegionCounter.before(this.itemsSelectedButtons);
+      this.liveRegionCounter.insertAdjacentElement('beforebegin', this.nothingSelectedButtons);
+      this.liveRegionCounter.insertAdjacentElement('beforebegin', this.itemsSelectedButtons);
 
-      // all the diff states that we want to show or hide
+      // all the diff states that we want to show or hide - using Map for better performance
       this.states = [
         {
           key: 'nothing-selected-buttons',
-          $el: this.$form.find('#nothing_selected'),
+          el: this.form.querySelector('#nothing_selected'),
           cancellable: false
         },
         {
           key: 'items-selected-buttons',
-          $el: this.$form.find('#items_selected'),
+          el: this.form.querySelector('#items_selected'),
           cancellable: false
         },
         {
           key: 'move-to-existing-folder',
-          $el: this.$form.find('#move_to_folder_radios'),
+          el: this.form.querySelector('#move_to_folder_radios'),
           cancellable: true,
-          setFocus: () => $('#move_to_folder_radios').focus(),
+          setFocus: () => {
+            const el = document.getElementById('move_to_folder_radios');
+            if (el) el.focus();
+          },
           action: 'move to folder',
           description: 'Press move to confirm or cancel to close'
         },
         {
           key: 'move-to-new-folder',
-          $el: this.$form.find('#move_to_new_folder_form'),
+          el: this.form.querySelector('#move_to_new_folder_form'),
           cancellable: true,
-          setFocus: () => $('#move_to_new_folder_form').focus(),
+          setFocus: () => {
+            const el = document.getElementById('move_to_new_folder_form');
+            if (el) el.focus();
+          },
           action: 'move to new folder',
           description: 'Press add to new folder to confirm name or cancel to close'
         },
         {
           key: 'add-new-folder',
-          $el: this.$form.find('#add_new_folder_form'),
+          el: this.form.querySelector('#add_new_folder_form'),
           cancellable: true,
-          setFocus: () => $('#add_new_folder_form').focus(),
+          setFocus: () => {
+            const el = document.getElementById('add_new_folder_form');
+            if (el) el.focus();
+          },
           action: 'new folder',
           description: 'Press add new folder to confirm name or cancel to close'
         },
         {
           key: 'add-new-template',
-          $el: this.$form.find('#add_new_template_form'),
+          el: this.form.querySelector('#add_new_template_form'),
           cancellable: true,
-          setFocus: () => $('#add_new_template_form').focus(),
+          setFocus: () => {
+            const el = document.getElementById('add_new_template_form');
+            if (el) el.focus();
+          },
           action: 'new template',
           description: 'Press continue to confirm selection or cancel to close'
         }
@@ -70,8 +102,12 @@
       this.states.filter(state => state.cancellable).forEach((x) => this.addCancelButton(x));
       this.states.filter(state => state.key === 'items-selected-buttons').forEach(x => this.addClearButton(x));
 
-      // make elements focusabled
-      this.states.filter(state => state.setFocus).forEach(x => x.$el.attr('tabindex', '0'));
+      // make elements focusable
+      this.states.filter(state => state.setFocus).forEach(x => {
+        if (x.el) {
+          x.el.setAttribute('tabindex', '0');
+        }
+      });
 
       this.addDescriptionsToStates();
 
@@ -79,7 +115,7 @@
       this.activateStickyElements();
 
       // first off show the new template / new folder buttons
-      this._lastState = this.$form.data('prev-state');
+      this._lastState = this.form.dataset.prevState;
       if (this._lastState === undefined) {
         this.selectActionButtons();
       } else {
@@ -87,43 +123,55 @@
         this.render();
       }
 
-      this.$form.on('click', 'button.usa-button', (event) => this.actionButtonClicked(event));
-      this.$form.on('change', 'input[type=checkbox]', () => this.templateFolderCheckboxChanged());
-      this.$form.on('change', 'input[name="add_template_by_template_type"]', () => this.templateTypeChanged());
+      this.form.addEventListener('click', (event) => {
+        const button = event.target.closest('button.usa-button');
+        if (button) {
+          this.actionButtonClicked(event);
+        }
+      });
+      this.form.addEventListener('change', (event) => {
+        if (event.target.matches('input[type=checkbox]')) {
+          this.templateFolderCheckboxChanged();
+        } else if (event.target.matches('input[name="add_template_by_template_type"]')) {
+          this.templateTypeChanged();
+        }
+      });
     };
 
     this.addDescriptionsToStates = function () {
-      let id, description;
-
-      $.each(this.states.filter(state => 'description' in state), (_, state) => {
-        id = `${state.key}__description`;
-        description = `<p class="usa-sr-only" id="${id}">${state.description}</p>`;
-        state.$el
-          .prepend(description)
-          .attr('aria-describedby', id);
+      this.states.filter(state => 'description' in state).forEach(state => {
+        const id = `${escapeHtml(state.key)}__description`;
+        const description = `<p class="usa-sr-only" id="${id}">${escapeHtml(state.description)}</p>`;
+        if (state.el) {
+          state.el.insertAdjacentHTML('afterbegin', description);
+          state.el.setAttribute('aria-describedby', id);
+        }
       });
     };
 
     this.activateStickyElements = function() {
-      var oldClass = 'js-will-stick-at-bottom-when-scrolling';
-      var newClass = 'js-stick-at-bottom-when-scrolling';
+      const oldClass = 'js-will-stick-at-bottom-when-scrolling';
+      const newClass = 'js-stick-at-bottom-when-scrolling';
 
       this.states.forEach(state => {
-        state.$el
-          .find('.' + oldClass)
-          .removeClass(oldClass)
-          .addClass(newClass);
+        if (state.el) {
+          state.el.querySelectorAll('.' + oldClass).forEach(el => {
+            el.classList.remove(oldClass);
+            el.classList.add(newClass);
+          });
+        }
       });
     };
 
     this.addCancelButton = function(state) {
-      let selector = `[value=${state.key}]`;
-      let $cancel = this.makeButton('Cancel', {
+      const selector = `[value=${state.key}]`;
+      const cancel = this.makeButton('Cancel', {
         'onclick': () => {
-
           // clear existing data
-          state.$el.find('input:radio').prop('checked', false);
-          state.$el.find('input:text').val('');
+          if (state.el) {
+            state.el.querySelectorAll('input[type="radio"]').forEach(input => input.checked = false);
+            state.el.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+          }
 
           // go back to action buttons
           this.selectActionButtons(selector);
@@ -132,16 +180,20 @@
         'nonvisualText': state.action
       });
 
-      state.$el.find('[type=submit]').after($cancel);
+      if (state.el) {
+        const submitButton = state.el.querySelector('[type=submit]');
+        if (submitButton) {
+          submitButton.insertAdjacentElement('afterend', cancel);
+        }
+      }
     };
 
     this.addClearButton = function(state) {
-      let selector = 'button[value=add-new-template]';
-      let $clear = this.makeButton('Clear', {
+      const selector = 'button[value=add-new-template]';
+      const clear = this.makeButton('Clear', {
         'onclick': () => {
-
           // uncheck all templates and folders
-          this.$form.find('input:checkbox').prop('checked', false);
+          this.form.querySelectorAll('input[type="checkbox"]').forEach(input => input.checked = false);
 
           // go back to action buttons
           this.selectActionButtons(selector);
@@ -149,29 +201,47 @@
         'nonvisualText': "selection"
       });
 
-      state.$el.find('.template-list-selected-counter').append($clear);
+      if (state.el) {
+        const counter = state.el.querySelector('.template-list-selected-counter');
+        if (counter) {
+          counter.appendChild(clear);
+        }
+      }
     };
 
     this.makeButton = (text, opts) => {
-      let $btn = $('<a href=""></a>')
-                    .html(text)
-                    .addClass('usa-link js-cancel')
-                    // isn't set if cancelSelector is undefined
-                    .data('target', opts.cancelSelector || undefined)
-                    .attr('tabindex', '0')
-                    .on('click keydown', event => {
-                      // space, enter or no keyCode (must be mouse input)
-                      if ([13, 32, undefined].indexOf(event.keyCode) > -1) {
-                        event.preventDefault();
-                        if (opts.hasOwnProperty('onclick')) { opts.onclick(); }
-                      }
-                    });
+      const btn = document.createElement('a');
+      btn.href = '';
+      btn.textContent = text;
+      btn.classList.add('usa-link', 'js-cancel');
 
-        if (opts.hasOwnProperty('nonvisualText')) {
-          $btn.append(`<span class="usa-sr-only"> ${opts.nonvisualText}</span>`);
+      // isn't set if cancelSelector is undefined
+      if (opts.cancelSelector) {
+        btn.dataset.target = opts.cancelSelector;
+      }
+      btn.setAttribute('tabindex', '0');
+
+      const handler = event => {
+        // space, enter or no keyCode (must be mouse input)
+        if ([13, 32, undefined].indexOf(event.keyCode) > -1) {
+          event.preventDefault();
+          if (opts.hasOwnProperty('onclick')) {
+            opts.onclick();
+          }
         }
+      };
 
-        return $btn;
+      btn.addEventListener('click', handler);
+      btn.addEventListener('keydown', handler);
+
+      if (opts.hasOwnProperty('nonvisualText')) {
+        const span = document.createElement('span');
+        span.className = 'usa-sr-only';
+        span.textContent = ' ' + opts.nonvisualText;
+        btn.appendChild(span);
+      }
+
+      return btn;
     };
 
     this.selectActionButtons = function (targetSelector) {
@@ -181,7 +251,10 @@
       this.currentState = 'nothing-selected-buttons';
       this.templateFolderCheckboxChanged();
       if (targetSelector) {
-        $(targetSelector).focus();
+        const target = document.querySelector(targetSelector);
+        if (target) {
+          target.focus();
+        }
       }
     };
 
@@ -194,14 +267,16 @@
     };
 
     this.actionButtonClicked = function(event) {
-      this.currentState = $(event.currentTarget).val();
+      const button = event.target.closest('button.usa-button') || event.target;
+      this.currentState = button.value;
 
-      if (event.currentTarget.value === 'add-new-template' && this.$singleNotificationChannel) {
+      if (this.currentState === 'add-new-template' && this.singleNotificationChannel) {
         event.preventDefault();
-        window.location = "/services/" + this.$singleChannelService + "/templates/add-" + this.$singleNotificationChannel;
+        window.location = "/services/" + this.singleChannelService + "/templates/add-" + this.singleNotificationChannel;
       } else if (this.currentState === 'add-new-template') {
         // Check if a template type is selected
-        const selectedTemplateType = this.$form.find('input[name="add_template_by_template_type"]:checked').val();
+        const selectedInput = this.form.querySelector('input[name="add_template_by_template_type"]:checked');
+        const selectedTemplateType = selectedInput ? selectedInput.value : null;
 
         if (selectedTemplateType) {
           // Template type is selected, let the form submit normally
@@ -209,7 +284,7 @@
         } else {
           // No template type selected, show the selection UI
           event.preventDefault();
-          this.$form.find('input[type=checkbox]').prop('checked', false);
+          this.form.querySelectorAll('input[type=checkbox]').forEach(input => input.checked = false);
           this.selectionStatus.update({ total: 0, templates: 0, folders: 0 });
 
           if (this.stateChanged()) {
@@ -254,15 +329,19 @@
         return results.join(', ') + ' selected';
       },
       'update': numSelected => {
-        let message = (numSelected.total > 0) ? this.selectionStatus.selected(numSelected) : this.selectionStatus.default;
+        const message = (numSelected.total > 0) ? this.selectionStatus.selected(numSelected) : this.selectionStatus.default;
 
-        $('.template-list-selected-counter__count').html(message);
-        this.$liveRegionCounter.html(message);
+        const counters = document.querySelectorAll('.template-list-selected-counter__count');
+        counters.forEach(counter => counter.textContent = message);
+
+        if (this.liveRegionCounter) {
+          this.liveRegionCounter.textContent = message;
+        }
       }
     };
 
     this.templateFolderCheckboxChanged = function() {
-      let numSelected = this.countSelectedCheckboxes();
+      const numSelected = this.countSelectedCheckboxes();
 
       if (this.currentState === 'nothing-selected-buttons' && numSelected.total !== 0) {
         // user has just selected first item
@@ -278,8 +357,11 @@
 
       this.selectionStatus.update(numSelected);
 
-      $('.template-list-selected-counter').toggle(this.hasCheckboxes());
-
+      const counters = document.querySelectorAll('.template-list-selected-counter');
+      const shouldShow = this.hasCheckboxes();
+      counters.forEach(counter => {
+        counter.style.display = shouldShow ? '' : 'none';
+      });
     };
 
     this.templateTypeChanged = function() {
@@ -287,24 +369,31 @@
     };
 
     this.updateContinueButtonState = function() {
-      const selectedTemplateType = this.$form.find('input[name="add_template_by_template_type"]:checked').val();
-      const continueButton = this.$form.find('#add_new_template_form button[value="add-new-template"]');
+      const selectedInput = this.form.querySelector('input[name="add_template_by_template_type"]:checked');
+      const selectedTemplateType = selectedInput ? selectedInput.value : null;
+      const continueButton = this.form.querySelector('#add_new_template_form button[value="add-new-template"]');
 
-      if (selectedTemplateType) {
-        continueButton.prop('disabled', false);
-      } else {
-        continueButton.prop('disabled', true);
+      if (continueButton) {
+        continueButton.disabled = !selectedTemplateType;
       }
     };
 
     this.hasCheckboxes = function() {
-      return !!this.$form.find('input:checkbox').length;
+      return this.form.querySelectorAll('input[type="checkbox"]').length > 0;
     };
 
     this.countSelectedCheckboxes = function() {
-      const allSelected = this.$form.find('input:checkbox:checked');
-      const templates = allSelected.filter((_, el) => $(el).siblings('.template-list-template').length > 0).length;
-      const folders = allSelected.filter((_, el) => $(el).siblings('.template-list-folder').length > 0).length;
+      const allSelected = Array.from(this.form.querySelectorAll('input[type="checkbox"]:checked'));
+      // Check for sibling elements to determine if checkbox is for template or folder
+      // This matches the original jQuery logic: $(el).siblings('.template-list-template')
+      const templates = allSelected.filter(el => {
+        if (!el.parentElement) return false;
+        return el.parentElement.querySelector('.template-list-template') !== null;
+      }).length;
+      const folders = allSelected.filter(el => {
+        if (!el.parentElement) return false;
+        return el.parentElement.querySelector('.template-list-folder') !== null;
+      }).length;
       const results = {
         'templates': templates,
         'folders': folders,
@@ -314,48 +403,79 @@
     };
 
     this.render = function() {
-      let currentStateObj = this.states.filter(state => { return (state.key === this.currentState); })[0];
+      const currentStateObj = this.states.find(state => state.key === this.currentState);
       let scrollTop;
 
       // detach everything, unless they are the currentState
-      this.states.forEach(
-        state => (state.key === this.currentState ? this.$liveRegionCounter.before(state.$el) : state.$el.detach())
-      );
+      this.states.forEach(state => {
+        if (state.key === this.currentState) {
+          if (state.el) {
+            this.liveRegionCounter.insertAdjacentElement('beforebegin', state.el);
+          }
+        } else {
+          if (state.el && state.el.parentElement) {
+            state.el.remove();
+          }
+        }
+      });
 
       if (this.currentState === 'add-new-template') {
-        this.$form.find('.template-list-item').addClass('js-hidden');
-        $('.live-search').addClass('js-hidden');
-        $('#breadcrumb-template-folders').addClass('js-hidden');
-        $('#template-list').addClass('js-hidden');
-        this.$form.find('input[type=checkbox]').prop('checked', false);
+        this.form.querySelectorAll('.template-list-item').forEach(el => el.classList.add('js-hidden'));
+
+        const liveSearch = document.querySelector('.live-search');
+        if (liveSearch) liveSearch.classList.add('js-hidden');
+
+        const breadcrumb = document.getElementById('breadcrumb-template-folders');
+        if (breadcrumb) breadcrumb.classList.add('js-hidden');
+
+        const templateList = document.getElementById('template-list');
+        if (templateList) templateList.classList.add('js-hidden');
+
+        this.form.querySelectorAll('input[type=checkbox]').forEach(input => input.checked = false);
         this.selectionStatus.update({ total: 0, templates: 0, folders: 0 });
 
-        $('#page-title').text('New Template');
-        $('#page-description').text('Every message starts with a template. Choose to start with a blank template or copy an existing template.');
+        const pageTitle = document.getElementById('page-title');
+        if (pageTitle) pageTitle.textContent = 'New Template';
+
+        const pageDescription = document.getElementById('page-description');
+        if (pageDescription) pageDescription.textContent = 'Every message starts with a template. Choose to start with a blank template or copy an existing template.';
+
         document.title = 'New Templates';
 
         // Disable Continue button initially and update based on selection
         this.updateContinueButtonState();
       } else {
-        this.$form.find('.template-list-item').removeClass('js-hidden');
-        $('.live-search').removeClass('js-hidden');
-        $('#breadcrumb-template-folders').removeClass('js-hidden');
-        $('#template-list').removeClass('js-hidden');
+        this.form.querySelectorAll('.template-list-item').forEach(el => el.classList.remove('js-hidden'));
 
-        $('#page-title').text('Select or create a template');
-        $('#page-description').text('Every message starts with a template. To send, choose or create a template.');
+        const liveSearch = document.querySelector('.live-search');
+        if (liveSearch) liveSearch.classList.remove('js-hidden');
+
+        const breadcrumb = document.getElementById('breadcrumb-template-folders');
+        if (breadcrumb) breadcrumb.classList.remove('js-hidden');
+
+        const templateList = document.getElementById('template-list');
+        if (templateList) templateList.classList.remove('js-hidden');
+
+        const pageTitle = document.getElementById('page-title');
+        if (pageTitle) pageTitle.textContent = 'Select or create a template';
+
+        const pageDescription = document.getElementById('page-description');
+        if (pageDescription) pageDescription.textContent = 'Every message starts with a template. To send, choose or create a template.';
+
         document.title = 'Select or create a template';
       }
 
       if (currentStateObj && 'setFocus' in currentStateObj) {
-        scrollTop = $(window).scrollTop();
+        scrollTop = window.scrollY;
         currentStateObj.setFocus();
-        $(window).scrollTop(scrollTop);
+        window.scrollTo(window.scrollX, scrollTop);
       }
     };
 
-    this.nothingSelectedButtons = $(`
-      <div id="nothing_selected">
+    const createNothingSelectedButtons = () => {
+      const div = document.createElement('div');
+      div.id = 'nothing_selected';
+      div.innerHTML = `
         <div class="js-stick-at-bottom-when-scrolling">
           <div class="usa-button-group">
             <button class="usa-button" value="add-new-template" aria-expanded="false" role="button">
@@ -371,11 +491,14 @@
             </span>
           </div>
         </div>
-      </div>
-    `).get(0);
+      `;
+      return div;
+    };
 
-    this.itemsSelectedButtons = $(`
-      <div id="items_selected">
+    const createItemsSelectedButtons = () => {
+      const div = document.createElement('div');
+      div.id = 'items_selected';
+      div.innerHTML = `
         <div class="js-stick-at-bottom-when-scrolling">
           <div class="usa-button-group">
             <button class="usa-button" value="move-to-existing-folder" aria-expanded="false" role="button">
@@ -387,12 +510,16 @@
           </div>
           <div class="template-list-selected-counter" aria-hidden="true">
             <span class="template-list-selected-counter__count text-base" aria-hidden="true">
-              ${this.selectionStatus.selected(1)}
+              ${this.selectionStatus.selected({ templates: 1, folders: 0, total: 1 })}
             </span>
           </div>
         </div>
-      </div>
-    `).get(0);
+      `;
+      return div;
+    };
+
+    this.nothingSelectedButtons = createNothingSelectedButtons();
+    this.itemsSelectedButtons = createItemsSelectedButtons();
   };
 
 })(window);

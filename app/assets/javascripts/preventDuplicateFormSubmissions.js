@@ -2,45 +2,51 @@
   "use strict";
 
   const disableSubmitButtons = function (event) {
-    const $submitButton = $(this).find(':submit');
+    const form = event.currentTarget;
+    const submitButton = form.querySelector('input[type="submit"], button[type="submit"]');
 
-    if ($submitButton.data('clicked') === 'true') {
+    if (!submitButton) return;
+
+    if (submitButton.dataset.clicked === 'true') {
       event.preventDefault();
       return;
     }
 
-    $submitButton.data('clicked', 'true');
+    submitButton.dataset.clicked = 'true';
 
     // Add loading spinner for Send/Schedule/Cancel buttons
-    const buttonName = $submitButton.attr('name')?.toLowerCase();
+    const buttonName = submitButton.getAttribute('name')?.toLowerCase();
     if (["send", "schedule", "cancel"].includes(buttonName)) {
       // Use setTimeout with minimal delay to allow form submission to proceed first
       setTimeout(() => {
-        $submitButton.prop('disabled', true);
+        submitButton.disabled = true;
 
         // Add loading spinner and aria-busy attribute for accessibility
-        if ($submitButton.find('.loading-spinner').length === 0) {
-          $submitButton.attr('aria-busy', 'true');
-          $submitButton.append('<span class="loading-spinner" role="status" aria-label="Sending"></span>');
+        if (submitButton.querySelector('.loading-spinner') === null) {
+          submitButton.setAttribute('aria-busy', 'true');
+          submitButton.insertAdjacentHTML('beforeend', '<span class="loading-spinner" role="status" aria-label="Sending"></span>');
         }
 
         // Disable Cancel button too
-        const $cancelButton = $('button[name]').filter(function () {
-          return $(this).attr('name')?.toLowerCase() === 'cancel';
+        const cancelButtons = Array.from(document.querySelectorAll('button[name]')).filter(button => {
+          return button.getAttribute('name')?.toLowerCase() === 'cancel';
         });
-        $cancelButton.prop('disabled', true);
+        cancelButtons.forEach(button => button.disabled = true);
       }, 50); // Small delay to ensure form submits first
     } else {
-      setTimeout(() => renableSubmitButton($submitButton)(), 1500);
+      setTimeout(() => renableSubmitButton(submitButton)(), 1500);
     }
   };
 
-  const renableSubmitButton = ($submitButton) => () => {
-    $submitButton.data('clicked', '');
-    $submitButton.prop('disabled', false);
-    $submitButton.attr('aria-busy', 'false');
-    $submitButton.find('.loading-spinner').remove(); // clean up spinner
+  const renableSubmitButton = (submitButton) => () => {
+    submitButton.dataset.clicked = '';
+    submitButton.disabled = false;
+    submitButton.setAttribute('aria-busy', 'false');
+    const spinner = submitButton.querySelector('.loading-spinner');
+    if (spinner) spinner.remove(); // clean up spinner
   };
 
-  $('form').on('submit', disableSubmitButtons);
+  document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', disableSubmitButtons);
+  });
 })();

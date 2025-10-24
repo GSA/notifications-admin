@@ -14,8 +14,8 @@ Learn how to [personalize messages](/using-notify/how-to) to increase response.
 Learn about message _parts_ and [how limits are calculated](/using-notify/pricing).
 
 5. ## Start sending messages
-To remove the restrictions of Trial Mode and begin sending messages to clients complete the <a class="usa-link usa-link--external" href="https://docs.google.com/forms/d/1fnaBtxuGf3q-OdGVyt2LqBKvp9_P21kmKJa0yIK8rWM/edit">Go-Live Form</a>.
-We’ll respond within one business day.
+To remove the restrictions of Trial Mode and begin sending messages to people complete the <a class="usa-link usa-link--external" href="https://docs.google.com/forms/d/1fnaBtxuGf3q-OdGVyt2LqBKvp9_P21kmKJa0yIK8rWM/edit">Go-Live Form</a>.
+We'll respond within one business day.
 
 ### Questions?
 [Contact the Notify team](/support)

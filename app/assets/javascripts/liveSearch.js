@@ -12,24 +12,25 @@
     }
   };
 
-  let filter = ($searchBox, $searchLabel, $liveRegion, $targets) => () => {
+  let filter = (searchBox, searchLabel, liveRegion, targets) => () => {
 
-    let query = normalize($searchBox.val());
+    let query = normalize(searchBox.value);
     let results = 0;
-    let $noResultsMessage = $('.js-live-search-no-results');
+    let noResultsMessage = document.querySelector('.js-live-search-no-results');
 
-    $targets.each(function() {
+    targets.forEach(function(target) {
 
-      let content = $('.live-search-relevant', this).text() || $(this).text();
+      let relevantElement = target.querySelector('.live-search-relevant');
+      let content = relevantElement ? relevantElement.textContent : target.textContent;
 
-      if ($(this).has(':checked').length) {
-        $(this).show();
+      if (target.querySelector(':checked')) {
+        target.classList.remove('js-hidden');
         results++;
         return;
       }
 
       if (query == '') {
-        $(this).removeClass('js-hidden');
+        target.classList.remove('js-hidden');
         results++;
         return;
       }
@@ -37,27 +38,29 @@
       let isMatch = normalize(content).includes(normalize(query));
 
       if (isMatch) {
-        $(this).removeClass('js-hidden');
+        target.classList.remove('js-hidden');
         results++;
       } else {
-        $(this).addClass('js-hidden');
+        target.classList.add('js-hidden');
       }
     });
 
-    if (query !== '' && results === 0) {
-      $noResultsMessage.removeClass('js-hidden');
-    } else {
-      $noResultsMessage.addClass('js-hidden');
+    if (noResultsMessage) {
+      if (query !== '' && results === 0) {
+        noResultsMessage.classList.remove('js-hidden');
+      } else {
+        noResultsMessage.classList.add('js-hidden');
+      }
     }
 
     if (state === 'loaded') {
       if (query !== '') {
-        $searchBox.attr('aria-label', $searchLabel.text().trim() + ', ' + resultsSummary(results));
+        searchBox.setAttribute('aria-label', searchLabel.textContent.trim() + ', ' + resultsSummary(results));
       }
       state = 'active';
     } else {
-      $searchBox.removeAttr('aria-label');
-      $liveRegion.text(resultsSummary(results));
+      searchBox.removeAttribute('aria-label');
+      liveRegion.textContent = resultsSummary(results);
     }
 
     // make sticky JS recalculate its cache of the element's position
@@ -73,22 +76,24 @@
 
     this.start = function(component) {
 
-      let $component = $(component);
+      let searchBox = component.querySelector('input');
+      let searchLabel = component.querySelector('label');
+      let liveRegion = component.querySelector('.live-search__status');
 
-      let $searchBox = $('input', $component);
-      let $searchLabel = $('label', $component);
-      let $liveRegion = $('.live-search__status', $component);
+      let targetsSelector = component.dataset.targets;
+      let targets = Array.from(document.querySelectorAll(targetsSelector));
 
       let filterFunc = filter(
-        $searchBox,
-        $searchLabel,
-        $liveRegion,
-        $($component.data('targets'))
+        searchBox,
+        searchLabel,
+        liveRegion,
+        targets
       );
 
       state = 'loaded';
 
-      $searchBox.on('keyup input', filterFunc);
+      searchBox.addEventListener('keyup', filterFunc);
+      searchBox.addEventListener('input', filterFunc);
 
       filterFunc();
 

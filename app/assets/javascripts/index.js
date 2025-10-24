@@ -74,7 +74,6 @@ import './fileUpload.js';
 import './errorTracking.js';
 import './templateFolderForm.js';
 import './collapsibleCheckboxes.js';
-import './radioSlider.js';
 import './updateStatus.js';
 import './main.js';
 import './listEntry.js';

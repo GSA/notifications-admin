@@ -70,12 +70,13 @@
   };
 
   let shiftFocus = function(elementToFocus, component) {
+    const radios = component.querySelectorAll('[type=radio]');
     // The first option is always the default
-    if (elementToFocus === 'default') {
-      $('[type=radio]', component).eq(0).focus();
+    if (elementToFocus === 'default' && radios[0]) {
+      radios[0].focus();
     }
-    if (elementToFocus === 'option') {
-      $('[type=radio]', component).eq(1).focus();
+    if (elementToFocus === 'option' && radios[1]) {
+      radios[1].focus();
     }
   };
 
@@ -83,24 +84,22 @@
 
     this.start = function(component) {
 
-      let $component = $(component);
       let render = (state, data) => {
-        $component.html(renderStates[state](data));
+        component.innerHTML = renderStates[state](data);
       };
       // store array of all options in component
-      let choices = $('label', $component).toArray().map(function(element) {
-        let $element = $(element);
+      let choices = Array.from(component.querySelectorAll('label')).map(function(element) {
         return {
-          'id': $element.attr('for'),
-          'label': $.trim($element.text()),
-          'value': $element.prev('input').attr('value')
+          'id': element.htmlFor,
+          'label': element.textContent.trim(),
+          'value': element.previousElementSibling.value
         };
       });
-      let categories = $component.data('categories').split(',');
-      let name = $component.find('input').eq(0).attr('name');
+      let categories = component.dataset.categories.split(',');
+      let name = component.querySelector('input').name;
       let mousedownOption = null;
       let showNowAsDefault = (
-        $component.data('show-now-as-default').toString() === 'true' ?
+        component.dataset.showNowAsDefault === 'true' ?
         {'name': name} : false
       );
 
@@ -129,22 +128,23 @@
         const parentNode = event.target.parentNode;
 
         if (parentNode === mousedownOption) {
-          const value = $('input', parentNode).attr('value');
+          const input = parentNode.querySelector('input');
+          const value = input ? input.value : '';
 
           selectOption(value);
 
           // clear tracking
           mousedownOption = null;
-          $(document).off('mouseup', trackMouseup);
+          document.removeEventListener('mouseup', trackMouseup);
         }
       };
 
-      // set events
-      $component
-        .on('click', '.radio-select__button--category', function(event) {
-
+      // set events using event delegation
+      component.addEventListener('click', function(event) {
+        // Handle category button clicks
+        if (event.target.classList.contains('radio-select__button--category')) {
           event.preventDefault();
-          let wordsInDay = $(this).attr('value').split(' ');
+          let wordsInDay = event.target.value.split(' ');
           let day = wordsInDay[wordsInDay.length - 1].toLowerCase();
           render('choose', {
             'choices': choices.filter(
@@ -154,57 +154,58 @@
             'showNowAsDefault': showNowAsDefault
           });
           shiftFocus('option', component);
+        }
 
-        })
-        .on('mousedown', '.js-option', function(event) {
-          mousedownOption = this;
-
-          // mouseup on the same option completes the click action
-          $(document).on('mouseup', trackMouseup);
-        })
-        // space and enter, clicked on a radio confirm that option was selected
-        .on('keydown', 'input[type=radio]', function(event) {
-
-          // allow keypresses which aren’t enter or space through
-          if (event.which !== 13 && event.which !== 32) {
-            return true;
-          }
-
+        // Handle done button clicks
+        if (event.target.classList.contains('radio-select__button--done')) {
           event.preventDefault();
-          let value = $(this).attr('value');
-          selectOption(value);
-
-        })
-        .on('click', '.radio-select__button--done', function(event) {
-
-          event.preventDefault();
-          let $selection = $('input[type=radio]:checked', this.parentNode);
-          if ($selection.length) {
-
+          let selection = event.target.parentNode.querySelector('input[type=radio]:checked');
+          if (selection) {
             render('chosen', {
               'choices': choices.filter(
-                element => element.value == $selection.eq(0).attr('value')
+                element => element.value == selection.value
               ),
               'name': name,
               'showNowAsDefault': showNowAsDefault
             });
             shiftFocus('option', component);
-
           } else {
-
             reset();
             shiftFocus('default', component);
-
           }
+        }
 
-        })
-        .on('click', '.radio-select__button--reset', function(event) {
-
+        // Handle reset button clicks
+        if (event.target.classList.contains('radio-select__button--reset')) {
           event.preventDefault();
           reset();
           shiftFocus('default', component);
+        }
+      });
 
-        });
+      component.addEventListener('mousedown', function(event) {
+        // Handle option mousedown
+        const option = event.target.closest('.js-option');
+        if (option) {
+          mousedownOption = option;
+          // mouseup on the same option completes the click action
+          document.addEventListener('mouseup', trackMouseup);
+        }
+      });
+
+      component.addEventListener('keydown', function(event) {
+        // Handle radio keydown (space and enter)
+        if (event.target.type === 'radio') {
+          // allow keypresses which aren't enter or space through
+          if (event.which !== 13 && event.which !== 32) {
+            return true;
+          }
+
+          event.preventDefault();
+          let value = event.target.value;
+          selectOption(value);
+        }
+      });
 
       // set HTML to initial state
       render('initial', {
@@ -213,7 +214,7 @@
         'showNowAsDefault': showNowAsDefault
       });
 
-      $component.css({'height': 'auto'});
+      component.style.height = 'auto';
 
     };
 

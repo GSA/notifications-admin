@@ -28,30 +28,38 @@ function initUploadStatusAnnouncer() {
   "use strict";
 
   window.NotifyModules['file-upload'] = function() {
-    this.submit = () => this.$form.trigger('submit');
+    this.submit = () => this.form.submit();
 
     this.showCancelButton = () => {
-      $('.file-upload-button', this.$form).replaceWith(`
-        <button class='usa-button uploading-button' aria-disabled="true" tabindex="0">
-          Uploading<span class="loading-spinner" role="status" aria-label="Uploading"></span>
-        </button>
-      `);
+      const uploadButton = this.form.querySelector('.file-upload-button');
+      if (uploadButton) {
+        uploadButton.outerHTML = `
+          <button class='usa-button uploading-button' aria-disabled="true" tabindex="0">
+            Uploading<span class="loading-spinner" role="status" aria-label="Uploading"></span>
+          </button>
+        `;
+      }
     };
 
     this.start = function(component) {
-      this.$form = $(component);
+      this.form = component;
 
-      this.$form.on('click', '[data-module="upload-trigger"]', function () {
-        const inputId = $(this).data('file-input-id');
-        const fileInput = document.getElementById(inputId);
-        if (fileInput) fileInput.click();
+      this.form.addEventListener('click', (event) => {
+        const trigger = event.target.closest('[data-module="upload-trigger"]');
+        if (trigger) {
+          const inputId = trigger.dataset.fileInputId;
+          const fileInput = document.getElementById(inputId);
+          if (fileInput) fileInput.click();
+        }
       });
 
-      $(window).on("pageshow", () => this.$form[0].reset());
+      window.addEventListener("pageshow", () => this.form.reset());
 
-      this.$form.on('change', '.file-upload-field', () => {
-        this.submit();
-        this.showCancelButton();
+      this.form.addEventListener('change', (event) => {
+        if (event.target.closest('.file-upload-field')) {
+          this.submit();
+          this.showCancelButton();
+        }
       });
     };
   };

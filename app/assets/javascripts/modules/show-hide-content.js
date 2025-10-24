@@ -1,10 +1,11 @@
 (function (window) {
   'use strict';
 
-  var $ = window.jQuery;
-
+  // this javascript could be removed in the future since it is only being used
+  // on the page "send-files-by-email". which is not currently in use.
   function ShowHideContent () {
     var self = this;
+    var eventHandlers = new Map();
 
     var selectors = {
       namespace: 'ShowHideContent',
@@ -12,126 +13,159 @@
       checkbox: '[data-target] > input[type="checkbox"]'
     };
 
-    function initToggledContent () {
-      var $control = $(this);
-      var $content = getToggledContent($control);
+    function initToggledContent (control) {
+      var content = getToggledContent(control);
 
-      if ($content.length) {
-        $control.attr('aria-controls', $content.attr('id'));
-        $control.attr('aria-expanded', 'false');
-        $content.attr('aria-hidden', 'true');
+      if (content) {
+        control.setAttribute('aria-controls', content.getAttribute('id'));
+        control.setAttribute('aria-expanded', 'false');
+        content.setAttribute('aria-hidden', 'true');
       }
     }
 
-    function getToggledContent ($control) {
+    function getToggledContent (control) {
       try {
-        var id = $control.attr('aria-controls');
+        var id = control.getAttribute('aria-controls');
 
         if (!id) {
-          id = $control.closest('[data-target]').data('target');
+          var parent = control.closest('[data-target]');
+          id = parent ? parent.dataset.target : null;
         }
 
         if (!id || !/^[\w-]+$/.test(id)) {
           console.warn('Invalid element ID:', id);
-          return $();
+          return null;
         }
 
-        return $('#' + id);
+        return document.getElementById(id);
       } catch (error) {
         console.error('Error getting toggled content:', error);
-        return $();
+        return null;
       }
     }
 
-    function showToggledContent ($control, $content) {
-      if ($content.hasClass('display-none')) {
-        $content.removeClass('display-none');
-        $content.attr('aria-hidden', 'false');
+    function showToggledContent (control, content) {
+      if (content.classList.contains('display-none')) {
+        content.classList.remove('display-none');
+        content.setAttribute('aria-hidden', 'false');
 
-        if ($control.attr('aria-controls')) {
-          $control.attr('aria-expanded', 'true');
+        if (control.getAttribute('aria-controls')) {
+          control.setAttribute('aria-expanded', 'true');
         }
       }
     }
 
-    function hideToggledContent ($control, $content) {
-      $content.addClass('display-none');
-      $content.attr('aria-hidden', 'true');
+    function hideToggledContent (control, content) {
+      content.classList.add('display-none');
+      content.setAttribute('aria-hidden', 'true');
 
-      if ($control.attr('aria-controls')) {
-        $control.attr('aria-expanded', 'false');
+      if (control.getAttribute('aria-controls')) {
+        control.setAttribute('aria-expanded', 'false');
       }
     }
 
-    function handleRadioContent ($control, $content) {
-      var selector = selectors.radio + '[name=' + escapeElementName($control.attr('name')) + ']';
-      var $radios = $(selector);
+    function handleRadioContent (control, content) {
+      var selector = selectors.radio + '[name=' + escapeElementName(control.getAttribute('name')) + ']';
+      var radios = document.querySelectorAll(selector);
 
-      $radios.each(function () {
-        hideToggledContent($(this), getToggledContent($(this)));
+      radios.forEach(function (radio) {
+        var radioContent = getToggledContent(radio);
+        if (radioContent) {
+          hideToggledContent(radio, radioContent);
+        }
       });
 
-      showToggledContent($control, $content);
+      if (content) {
+        showToggledContent(control, content);
+      }
     }
 
-    function handleCheckboxContent ($control, $content) {
-      if ($control.is(':checked')) {
-        showToggledContent($control, $content);
+    function handleCheckboxContent (control, content) {
+      if (!content) {
+        return;
+      }
+      if (control.checked) {
+        showToggledContent(control, content);
       } else {
-        hideToggledContent($control, $content);
+        hideToggledContent(control, content);
       }
     }
 
     function escapeElementName (str) {
       // First escape backslashes, then escape other special characters
       // This prevents double-escaping issues identified by CodeQL
-      return str
-        ? str.replace(/\\/g, '\\\\').replace(/([!"#$%&'()*+,./:;<=>?@[\]^`{|}~])/g, '\\$1')
-        : str;
+      return str ? str.replace(/\\/g, '\\\\').replace(/([!"#$%&'()*+,./:;<=>?@[\]^`{|}~])/g, '\\$1') : str;
     }
 
     function setupHandlers () {
-      var $controls = $(selectors.radio + ', ' + selectors.checkbox);
+      var radios = document.querySelectorAll(selectors.radio);
+      var checkboxes = document.querySelectorAll(selectors.checkbox);
 
-      $(selectors.radio).on('click.' + selectors.namespace, function () {
-        handleRadioContent($(this), getToggledContent($(this)));
+      radios.forEach(function (radio) {
+        var handler = function () {
+          handleRadioContent(radio, getToggledContent(radio));
+        };
+        radio.addEventListener('click', handler);
+        eventHandlers.set(radio, handler);
       });
 
-      $(selectors.checkbox).on('click.' + selectors.namespace, function () {
-        handleCheckboxContent($(this), getToggledContent($(this)));
+      checkboxes.forEach(function (checkbox) {
+        var handler = function () {
+          handleCheckboxContent(checkbox, getToggledContent(checkbox));
+        };
+        checkbox.addEventListener('click', handler);
+        eventHandlers.set(checkbox, handler);
       });
-      if ($controls.filter(':checked').length) {
-        $controls.filter(':checked').each(function () {
-          var $control = $(this);
-          var $content = getToggledContent($control);
 
-          if ($control.is('[type=radio]')) {
-            handleRadioContent($control, $content);
-          } else {
-            handleCheckboxContent($control, $content);
+      var allControls = Array.from(radios).concat(Array.from(checkboxes));
+      var checkedControls = allControls.filter(function (control) {
+        return control.checked;
+      });
+
+      if (checkedControls.length) {
+        checkedControls.forEach(function (control) {
+          var content = getToggledContent(control);
+
+          if (content) {
+            if (control.type === 'radio') {
+              handleRadioContent(control, content);
+            } else {
+              handleCheckboxContent(control, content);
+            }
           }
         });
       }
     }
 
     self.destroy = function () {
-      var $controls = $(selectors.radio + ', ' + selectors.checkbox);
+      var radios = document.querySelectorAll(selectors.radio);
+      var checkboxes = document.querySelectorAll(selectors.checkbox);
+      var allControls = Array.from(radios).concat(Array.from(checkboxes));
 
-      $controls.each(function () {
-        var $control = $(this);
-        var $content = getToggledContent($control);
+      allControls.forEach(function (control) {
+        var content = getToggledContent(control);
 
-        $control.removeAttr('aria-controls aria-expanded');
-        $content.removeAttr('aria-hidden');
+        control.removeAttribute('aria-controls');
+        control.removeAttribute('aria-expanded');
+        if (content) {
+          content.removeAttribute('aria-hidden');
+        }
+
+        var handler = eventHandlers.get(control);
+        if (handler) {
+          control.removeEventListener('click', handler);
+          eventHandlers.delete(control);
+        }
       });
-
-      $(selectors.radio).off('.' + selectors.namespace);
-      $(selectors.checkbox).off('.' + selectors.namespace);
     };
 
     self.init = function () {
       try {
-        $(selectors.radio + ', ' + selectors.checkbox).each(initToggledContent);
+        var radios = document.querySelectorAll(selectors.radio);
+        var checkboxes = document.querySelectorAll(selectors.checkbox);
+        var allControls = Array.from(radios).concat(Array.from(checkboxes));
+
+        allControls.forEach(initToggledContent);
         setupHandlers();
 
       } catch (error) {
