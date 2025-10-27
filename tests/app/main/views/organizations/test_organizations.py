@@ -1539,7 +1539,7 @@ def test_organization_dashboard_shows_message_usage(
         return_value=[],
     )
     mocker.patch(
-        "app.organizations_client.get_services_and_usage",
+        "app.organizations_client.get_organization_dashboard",
         return_value={"services": []},
     )
 
@@ -1585,36 +1585,9 @@ def test_organization_dashboard_shows_service_counts(
         "app.organizations_client.get_organization_dashboard",
         return_value={
             "services": [
-                {
-                    "service_id": "1",
-                    "service_name": "Live Service",
-                    "emails_sent": 1000,
-                    "sms_billable_units": 300,
-                    "sms_remainder": 249700,
-                    "sms_cost": 25.50,
-                    "active": True,
-                    "restricted": False,
-                },
-                {
-                    "service_id": "2",
-                    "service_name": "Trial Service",
-                    "emails_sent": 500,
-                    "sms_billable_units": 50,
-                    "sms_remainder": 249950,
-                    "sms_cost": 0,
-                    "active": True,
-                    "restricted": True,
-                },
-                {
-                    "service_id": "3",
-                    "service_name": "Suspended",
-                    "emails_sent": 0,
-                    "sms_billable_units": 0,
-                    "sms_remainder": 250000,
-                    "sms_cost": 0,
-                    "active": False,
-                    "restricted": False,
-                },
+                {"service_id": "1", "service_name": "Live Service", "active": True, "restricted": False},
+                {"service_id": "2", "service_name": "Trial Service", "active": True, "restricted": True},
+                {"service_id": "3", "service_name": "Suspended", "active": False, "restricted": False},
             ]
         },
     )
@@ -1642,13 +1615,11 @@ def test_organization_dashboard_services_table_shows_usage(
     mocker,
     active_user_with_permissions,
 ):
+    mocker.patch.dict("flask.current_app.config", {"ORGANIZATION_DASHBOARD_ENABLED": True})
+
     mocker.patch(
         "app.organizations_client.get_organization_message_usage",
-        return_value={
-            "messages_sent": 0,
-            "messages_remaining": 0,
-            "total_message_limit": 0,
-        },
+        return_value={"messages_sent": 0, "messages_remaining": 0, "total_message_limit": 0},
     )
     mocker.patch(
         "app.organizations_client.get_organization_services",
@@ -1664,23 +1635,23 @@ def test_organization_dashboard_services_table_shows_usage(
                 {
                     "service_id": "1",
                     "service_name": "Service One",
+                    "active": True,
+                    "restricted": False,
                     "emails_sent": 1500,
                     "sms_billable_units": 500,
                     "sms_remainder": 249500,
                     "sms_cost": 42.75,
-                    "active": True,
-                    "restricted": False,
                     "recent_sms_template_name": "Welcome SMS",
                 },
                 {
                     "service_id": "2",
                     "service_name": "Service Two",
+                    "active": True,
+                    "restricted": True,
                     "emails_sent": 250,
                     "sms_billable_units": 100,
                     "sms_remainder": 249900,
                     "sms_cost": 0,
-                    "active": True,
-                    "restricted": True,
                     "recent_sms_template_name": "Reminder SMS",
                 },
             ]
@@ -1705,6 +1676,8 @@ def test_organization_dashboard_services_table_shows_usage(
     assert "1,500 emails" in normalize_spaces(first_row_cells[2].text)
     assert "500 sms" in normalize_spaces(first_row_cells[2].text)
     assert "249,500 remaining" in normalize_spaces(first_row_cells[2].text)
+    assert normalize_spaces(first_row_cells[3].text) == "N/A"
+    assert normalize_spaces(first_row_cells[4].text) == "Welcome SMS"
 
     second_row_cells = rows[1].select("td")
     assert normalize_spaces(second_row_cells[0].text) == "Service Two"
@@ -1712,3 +1685,5 @@ def test_organization_dashboard_services_table_shows_usage(
     assert "250 emails" in normalize_spaces(second_row_cells[2].text)
     assert "100 sms" in normalize_spaces(second_row_cells[2].text)
     assert "249,900 remaining" in normalize_spaces(second_row_cells[2].text)
+    assert normalize_spaces(second_row_cells[3].text) == "N/A"
+    assert normalize_spaces(second_row_cells[4].text) == "Reminder SMS"
