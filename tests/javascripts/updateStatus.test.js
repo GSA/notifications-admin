@@ -179,4 +179,25 @@ describe('Update content', () => {
 
   });
 
+  test("It should handle fetch errors gracefully", async () => {
+
+    global.fetch.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: false,
+        status: 500,
+        json: () => Promise.resolve({})
+      })
+    );
+
+    window.NotifyModules.start();
+
+    const textbox = document.getElementById('template_content');
+    helpers.triggerEvent(textbox, 'input');
+
+    jest.runAllTimers();
+
+    expect(document.querySelector('[data-module="update-status"]')).not.toBeNull();
+
+  });
+
 });

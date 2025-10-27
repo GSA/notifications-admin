@@ -434,6 +434,17 @@ describe('RadioSelect', () => {
 
     });
 
+    test("clicking the 'Done' button without selecting an option should reset to default state", () => {
+
+      const doneButton = document.querySelector('.radio-select__column:nth-child(2) input[type=button]');
+
+      helpers.triggerEvent(doneButton, 'click');
+
+      const categoryButtons = document.querySelectorAll('.radio-select__column:nth-child(2) .radio-select__button--category');
+      expect(categoryButtons.length).toBeGreaterThan(0);
+
+    });
+
     describe("after selecting an option clicking the 'Choose a different time' button should", () => {
 
       beforeEach(() => {

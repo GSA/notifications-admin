@@ -420,4 +420,23 @@ describe("List entry", () => {
       expect(inputList.innerHTML).toContain('id="test-2"');
     });
   });
+
+  describe("when the container element has no id attribute", () => {
+    test("the module should not initialize", () => {
+      document.body.innerHTML = `
+        <div class="input-list" data-module="list-entry" data-list-item-name="domain">
+          <div class="list-entry">
+            <input type="text" name="domains-1" class="usa-input">
+          </div>
+        </div>`;
+
+      const inputList = document.querySelector('[data-module="list-entry"]');
+
+      expect(() => {
+        window.NotifyModules.start();
+      }).not.toThrow();
+
+      expect(inputList.querySelector('.input-list__button--add')).toBeNull();
+    });
+  });
 });

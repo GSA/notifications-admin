@@ -276,4 +276,133 @@ describe('Live search', () => {
 
   });
 
+  describe("When items have checked checkboxes", () => {
+
+    beforeEach(() => {
+
+      const users = [
+        {
+          "label": "Template editor",
+          "email": "template-editor@nhs.uk",
+          "permissions" : ["Add and edit templates"],
+          "checked": true
+        },
+        {
+          "label": "Administrator",
+          "email": "admin@nhs.uk",
+          "permissions" : ["Send messages", "Add and edit templates", "Manage settings, team and usage", "API integration"],
+          "checked": false
+        }
+      ];
+
+      document.body.innerHTML = `
+        <div class="live-search js-header" data-module="live-search" data-targets=".user-list-item">
+          <div class="form-group" data-module="">
+            <label class="form-label" for="search">
+                ${searchLabelText}
+            </label>
+            <input autocomplete="off" class="form-control form-control-1-1 " data-module="" id="search" name="search" rows="8" type="search" value="">
+            <div role="region" aria-live="polite" class="live-search__status usa-sr-only"></div>
+          </div>
+        </div>
+        <form method="post" autocomplete="off" novalidate>
+          <div class="user-list-item">
+            <input type="checkbox" checked>
+            <span class="live-search-relevant">${users[0].label} (${users[0].email})</span>
+          </div>
+          <div class="user-list-item">
+            <input type="checkbox">
+            <span class="live-search-relevant">${users[1].label} (${users[1].email})</span>
+          </div>
+        </form>`;
+
+      searchTextbox = document.getElementById('search');
+      liveRegion = document.querySelector('.live-search__status');
+      list = document.querySelector('form');
+
+    });
+
+    test("Items with checked checkboxes should always be visible", () => {
+
+      searchTextbox.value = 'Administrator';
+
+      window.NotifyModules.start();
+
+      const listItems = list.querySelectorAll('.user-list-item');
+      const listItemsShowing = Array.from(listItems).filter(item => !item.classList.contains('js-hidden'));
+
+      expect(listItemsShowing.length).toEqual(2);
+
+    });
+
+  });
+
+  describe("When no results message element exists", () => {
+
+    beforeEach(() => {
+
+      document.body.innerHTML = `
+        <div class="live-search js-header" data-module="live-search" data-targets=".user-list-item">
+          <div class="form-group" data-module="">
+            <label class="form-label" for="search">
+                ${searchLabelText}
+            </label>
+            <input autocomplete="off" class="form-control form-control-1-1 " data-module="" id="search" name="search" rows="8" type="search" value="">
+            <div role="region" aria-live="polite" class="live-search__status usa-sr-only"></div>
+          </div>
+          <div class="js-live-search-no-results js-hidden">No results found</div>
+        </div>
+        <form method="post" autocomplete="off" novalidate>
+          <div class="user-list-item">
+            <span class="live-search-relevant">Test User (test@example.com)</span>
+          </div>
+        </form>`;
+
+      searchTextbox = document.getElementById('search');
+      liveRegion = document.querySelector('.live-search__status');
+      list = document.querySelector('form');
+
+    });
+
+    test("No results message should show when search yields no results", () => {
+
+      searchTextbox.value = 'nomatch';
+
+      window.NotifyModules.start();
+
+      const noResultsMessage = document.querySelector('.js-live-search-no-results');
+      expect(noResultsMessage.classList.contains('js-hidden')).toBe(false);
+
+    });
+
+    test("No results message should hide when search yields results", () => {
+
+      searchTextbox.value = 'nomatch';
+      window.NotifyModules.start();
+
+      let noResultsMessage = document.querySelector('.js-live-search-no-results');
+      expect(noResultsMessage.classList.contains('js-hidden')).toBe(false);
+
+      searchTextbox.value = 'Test';
+      helpers.triggerEvent(searchTextbox, 'input');
+
+      expect(noResultsMessage.classList.contains('js-hidden')).toBe(true);
+
+    });
+
+    test("No results message should hide when search is empty", () => {
+
+      searchTextbox.value = 'nomatch';
+      window.NotifyModules.start();
+
+      searchTextbox.value = '';
+      helpers.triggerEvent(searchTextbox, 'input');
+
+      const noResultsMessage = document.querySelector('.js-live-search-no-results');
+      expect(noResultsMessage.classList.contains('js-hidden')).toBe(true);
+
+    });
+
+  });
+
 });
