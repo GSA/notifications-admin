@@ -66,10 +66,6 @@
         });
       });
 
-      if ('stickAtBottomWhenScrolling' in window.NotifyModules) {
-        window.NotifyModules.stickAtBottomWhenScrolling.recalculate();
-      }
-
     };
   };
 

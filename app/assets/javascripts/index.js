@@ -1,10 +1,6 @@
 // Webpack Entry Point
 
 // Vendor libraries
-import $ from 'jquery';
-window.jQuery = window.$ = $;
-
-import './jquery-expose.js';
 import 'query-command-supported';
 import 'textarea-caret';
 import * as cbor from 'cbor-js';
@@ -77,7 +73,6 @@ import './collapsibleCheckboxes.js';
 import './updateStatus.js';
 import './main.js';
 import './listEntry.js';
-import './stick-to-window-when-scrolling.js';
 import './totalMessagesChart.js';
 import './activityChart.js';
 import './job-polling.js';

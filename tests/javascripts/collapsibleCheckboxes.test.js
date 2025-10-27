@@ -1,9 +1,6 @@
 const helpers = require('./support/helpers');
 
 beforeAll(() => {
-  // TODO: remove this when tests for sticky JS are written
-  require('../../app/assets/javascripts/stick-to-window-when-scrolling.js');
-
   require('../../app/assets/javascripts/collapsibleCheckboxes.js');
 });
 

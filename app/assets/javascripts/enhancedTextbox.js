@@ -68,9 +68,6 @@
 
       this.textbox.style.height = Math.max(this.initialHeight, backgroundHeight) + 'px';
 
-      if ('stickAtBottomWhenScrolling' in window.NotifyModules) {
-        window.NotifyModules.stickAtBottomWhenScrolling.recalculate();
-      }
 
     };
 

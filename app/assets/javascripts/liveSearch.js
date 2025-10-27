@@ -63,11 +63,6 @@
       liveRegion.textContent = resultsSummary(results);
     }
 
-    // make sticky JS recalculate its cache of the element's position
-    // because live search can change the height document
-    if (window.NotifyModules && 'stickAtBottomWhenScrolling' in window.NotifyModules) {
-      window.NotifyModules.stickAtBottomWhenScrolling.recalculate();
-    }
 
   };
 

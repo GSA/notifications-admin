@@ -100,11 +100,6 @@ describe('copy to clipboard', () => {
 
         });
 
-        test("It should tell any sticky JS present the page has changed", () => {
-
-          expect(window.NotifyModules.stickAtBottomWhenScrolling.recalculate).toHaveBeenCalled();
-
-        });
 
         test("It should display the value", () => {
 
