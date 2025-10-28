@@ -11,13 +11,14 @@ TOKEN_ERROR_DEFAULT_ERROR_MESSAGE = "Invalid token: " + TOKEN_ERROR_GUIDANCE
 
 
 class TokenError(Exception):
-    def __init__(self, message=None, token=None):
+    def __init__(self, message=None, token=None):  # noqa: B042
         self.message = (
             message + ". " + TOKEN_ERROR_GUIDANCE
             if message
             else TOKEN_ERROR_DEFAULT_ERROR_MESSAGE
         )
         self.token = token
+        super().__init__(self.message)
 
 
 class TokenExpiredError(TokenError):
@@ -45,9 +46,10 @@ class TokenIssuedAtError(TokenDecodeError):
 
 
 class APIError(Exception):
-    def __init__(self, response: Response = None, message: str = None):
+    def __init__(self, response: Response = None, message: str = None):  # noqa: B042
         self.response = response
         self._message = message
+        super().__init__(message or REQUEST_ERROR_MESSAGE)
 
     def __str__(self):
         return f"{self.status_code} - {self.message}"
