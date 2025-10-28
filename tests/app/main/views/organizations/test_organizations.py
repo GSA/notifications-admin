@@ -354,7 +354,7 @@ def test_organization_services_shows_live_services_and_usage(
 
     client_request.login(active_user_with_permissions)
     page = client_request.get(".organization_usage", org_id=ORGANISATION_ID)
-    mock.assert_called_once_with(ORGANISATION_ID, 2020, False)
+    mock.assert_called_once_with(ORGANISATION_ID, 2020)
 
     services = page.select("main h3")
     usage_rows = page.select("main .grid-col-6")
@@ -447,7 +447,7 @@ def test_organization_services_filters_by_financial_year(
         org_id=ORGANISATION_ID,
         year=financial_year,
     )
-    mock.assert_called_once_with(ORGANISATION_ID, financial_year, False)
+    mock.assert_called_once_with(ORGANISATION_ID, financial_year)
     assert normalize_spaces(page.select_one(".pill").text) == (
         "2020 to 2021 fiscal year "
         "2019 to 2020 fiscal year "
@@ -1609,7 +1609,7 @@ def test_organization_dashboard_shows_service_counts(
     assert "1 Suspended" in normalize_spaces(service_box.text)
 
 
-def test_organization_dashboard_services_table_shows_usage(
+def test_organization_dashboard_services_table(
     client_request,
     mock_get_organization,
     mocker,
@@ -1642,6 +1642,7 @@ def test_organization_dashboard_services_table_shows_usage(
                     "sms_remainder": 249500,
                     "sms_cost": 42.75,
                     "recent_sms_template_name": "Welcome SMS",
+                    "primary_contact": None,
                 },
                 {
                     "service_id": "2",
@@ -1653,6 +1654,7 @@ def test_organization_dashboard_services_table_shows_usage(
                     "sms_remainder": 249900,
                     "sms_cost": 0,
                     "recent_sms_template_name": "Reminder SMS",
+                    "primary_contact": None,
                 },
             ]
         },

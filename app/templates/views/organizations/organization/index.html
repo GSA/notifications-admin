@@ -104,9 +104,9 @@
                   Live
                 {% endif %}
               </td>
-              <td>{{ service.usage|default('N/A') }}</td>
-              <td>{{ service.primary_contact|default('N/A') }}</td>
-              <td>{{ service.recent_template|default('N/A') }}</td>
+              <td>{{ service.usage }}</td>
+              <td>{{ service.primary_contact }}</td>
+              <td>{{ service.recent_template }}</td>
             </tr>
             {% endfor %}
           {% else %}

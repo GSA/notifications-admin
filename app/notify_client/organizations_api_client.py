@@ -72,10 +72,10 @@ class OrganizationsClient(NotifyAdminAPIClient):
     def remove_user_from_organization(self, org_id, user_id):
         return self.delete(f"/organizations/{org_id}/users/{user_id}")
 
-    def get_services_and_usage(self, org_id, year, include_all_services=False):
+    def get_services_and_usage(self, org_id, year):
         return self.get(
             url=f"/organizations/{org_id}/services-with-usage",
-            params={"year": str(year), "include_all_services": str(include_all_services).lower()},
+            params={"year": str(year)},
         )
 
     def get_organization_message_usage(self, org_id):

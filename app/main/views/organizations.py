@@ -76,7 +76,7 @@ def get_organization_message_allowance(org_id):
     }
 
 
-def get_services_usage(organization, year):
+def get_services_dashboard_data(organization, year):
     try:
         dashboard_data = organizations_client.get_organization_dashboard(organization.id, year)
         services = dashboard_data.get("services", [])
@@ -87,7 +87,8 @@ def get_services_usage(organization, year):
     for service in services:
         service["id"] = service.get("service_id")
         service["name"] = service.get("service_name")
-        service["recent_template"] = service.get("recent_sms_template_name")
+        service["recent_template"] = service.get("recent_sms_template_name") or "N/A"
+        service["primary_contact"] = service.get("primary_contact") or "N/A"
 
         emails_sent = service.get("emails_sent", 0)
         sms_sent = service.get("sms_billable_units", 0)
@@ -118,7 +119,7 @@ def organization_dashboard(org_id):
 
     message_allowance = get_organization_message_allowance(org_id)
 
-    services_with_usage = get_services_usage(current_organization, year)
+    services_with_usage = get_services_dashboard_data(current_organization, year)
 
     return render_template(
         "views/organizations/organization/index.html",
