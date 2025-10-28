@@ -4,6 +4,16 @@
 
   var Modules = window.NotifyModules;
 
+  const escapeHtml = (unsafe) => {
+    if (!unsafe) return '';
+    return String(unsafe)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  };
+
   // Template functions for rendering component states
   let renderStates = {
     'initial': function(data) {
@@ -11,14 +21,14 @@
         ${data.showNowAsDefault ? `
           <div class="radio-select__column margin-y-2">
             <div class="usa-radio">
-              <input class="usa-radio__input" checked="checked" id="${data.name}-0" name="${data.name}" type="radio" value="">
-              <label class="usa-radio__label" for="${data.name}-0">Now</label>
+              <input class="usa-radio__input" checked="checked" id="${escapeHtml(data.name)}-0" name="${escapeHtml(data.name)}" type="radio" value="">
+              <label class="usa-radio__label" for="${escapeHtml(data.name)}-0">Now</label>
             </div>
           </div>
         ` : ''}
         <div class="radio-select__column margin-y-2">
           ${data.categories.map(category =>
-            `<input type='button' class='usa-button usa-button--outline radio-select__button--category' aria-expanded="false" value='${category}' />`
+            `<input type='button' class='usa-button usa-button--outline radio-select__button--category' aria-expanded="false" value='${escapeHtml(category)}' />`
           ).join('')}
         </div>
       `;
@@ -28,16 +38,16 @@
         ${data.showNowAsDefault ? `
           <div class="radio-select__column margin-y-2">
             <div class="usa-radio">
-              <input class="usa-radio__input" checked="checked" id="${data.name}-0" name="${data.name}" type="radio" value="">
-              <label class="usa-radio__label" for="${data.name}-0">Now</label>
+              <input class="usa-radio__input" checked="checked" id="${escapeHtml(data.name)}-0" name="${escapeHtml(data.name)}" type="radio" value="">
+              <label class="usa-radio__label" for="${escapeHtml(data.name)}-0">Now</label>
             </div>
           </div>
         ` : ''}
         <div class="radio-select__column margin-y-2">
           ${data.choices.map(choice => `
             <div class="usa-radio js-option">
-              <input class="usa-radio__input" type="radio" value="${choice.value}" id="${choice.id}" name="${data.name}" />
-              <label class="usa-radio__label" for="${choice.id}">${choice.label}</label>
+              <input class="usa-radio__input" type="radio" value="${escapeHtml(choice.value)}" id="${escapeHtml(choice.id)}" name="${escapeHtml(data.name)}" />
+              <label class="usa-radio__label" for="${escapeHtml(choice.id)}">${escapeHtml(choice.label)}</label>
             </div>
           `).join('')}
           <input type='button' class='usa-button usa-button--outline radio-select__button--done margin-top-4' aria-expanded='true' value='Back to select a new time' />
@@ -49,16 +59,16 @@
         ${data.showNowAsDefault ? `
           <div class="radio-select__column margin-y-2">
             <div class="usa-radio">
-              <input class="usa-radio__input" id="${data.name}-0" name="${data.name}" type="radio" value="">
-              <label class="usa-radio__label" for="${data.name}-0">Now</label>
+              <input class="usa-radio__input" id="${escapeHtml(data.name)}-0" name="${escapeHtml(data.name)}" type="radio" value="">
+              <label class="usa-radio__label" for="${escapeHtml(data.name)}-0">Now</label>
             </div>
           </div>
         ` : ''}
         <div class="radio-select__column margin-y-2">
           ${data.choices.map(choice => `
             <div class="usa-radio">
-              <input class="usa-radio__input" checked="checked" type="radio" value="${choice.value}" id="${choice.id}" name="${data.name}" />
-              <label class="usa-radio__label" for="${choice.id}">${choice.label}</label>
+              <input class="usa-radio__input" checked="checked" type="radio" value="${escapeHtml(choice.value)}" id="${escapeHtml(choice.id)}" name="${escapeHtml(data.name)}" />
+              <label class="usa-radio__label" for="${escapeHtml(choice.id)}">${escapeHtml(choice.label)}</label>
             </div>
           `).join('')}
         </div>

@@ -1,8 +1,6 @@
 (function (window) {
   "use strict";
 
-  const USWDS = window.USWDS || {};
-
   function Summary (module) {
     this.module = module;
     this.el = module.formGroup.querySelector('.selection-summary');
@@ -26,9 +24,11 @@
 
     if (this.fieldLabel === 'folder') { this.text.classList.add('selection-summary__text--folders'); }
 
-    this.el.setAttribute('id', hint.getAttribute('id'));
+    if (hint) {
+      this.el.setAttribute('id', hint.getAttribute('id'));
+      hint.remove();
+    }
     this.el.appendChild(this.text);
-    hint.remove();
   };
   Summary.prototype.update = function(selection) {
     let template;
@@ -222,8 +222,6 @@
     this.updateToggleButtonText();
   };
   CollapsibleCheckboxes.prototype.bindEvents = function() {
-    const self = this;
-
     this.formGroup.addEventListener('click', (e) => {
       if (e.target.closest('.usa-button')) {
         this.handleClick.call(this, e);

@@ -283,13 +283,13 @@ describe('Live search', () => {
       const users = [
         {
           "label": "Template editor",
-          "email": "template-editor@nhs.uk",
+          "email": "template-editor@example.gov",
           "permissions" : ["Add and edit templates"],
           "checked": true
         },
         {
           "label": "Administrator",
-          "email": "admin@nhs.uk",
+          "email": "admin@example.gov",
           "permissions" : ["Send messages", "Add and edit templates", "Manage settings, team and usage", "API integration"],
           "checked": false
         }
