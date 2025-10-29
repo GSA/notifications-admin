@@ -272,7 +272,7 @@
 
       if (this.currentState === 'add-new-template' && this.singleNotificationChannel) {
         event.preventDefault();
-        window.location = "/services/" + this.singleChannelService + "/templates/add-" + this.singleNotificationChannel;
+        window.location = "/services/" + encodeURIComponent(this.singleChannelService) + "/templates/add-" + encodeURIComponent(this.singleNotificationChannel);
       } else if (this.currentState === 'add-new-template') {
         // Check if a template type is selected
         const selectedInput = this.form.querySelector('input[name="add_template_by_template_type"]:checked');
