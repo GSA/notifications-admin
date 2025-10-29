@@ -135,4 +135,37 @@ describe('The session timer ', () => {
     window.NotifyModules.TimeoutPopup.checkTimer();
     expect(checkTimerMock).toHaveBeenCalled();
   });
+
+  test('checkTimer expires and redirects when time runs out', () => {
+    const restore = mockWindowLocation();
+    const sessionTimer = document.getElementById('sessionTimer');
+    sessionTimer.showModal = jest.fn();
+    sessionTimer.close = jest.fn();
+
+    const closeTimerMock = jest.spyOn(sessionTimer, 'close');
+
+    const pastTime = new Date().getTime() - 1000;
+
+    window.NotifyModules.TimeoutPopup.checkTimer(pastTime);
+
+    expect(closeTimerMock).toHaveBeenCalled();
+
+    restore();
+  });
+
+  test('checkTimer updates time display and shows modal when time is remaining', () => {
+    const sessionTimer = document.getElementById('sessionTimer');
+    const timeLeftElement = document.getElementById('timeLeft');
+    sessionTimer.showModal = jest.fn();
+    sessionTimer.close = jest.fn();
+
+    const showModalMock = jest.spyOn(sessionTimer, 'showModal');
+
+    const futureTime = new Date().getTime() + (2 * 60 * 1000);
+
+    window.NotifyModules.TimeoutPopup.checkTimer(futureTime);
+
+    expect(showModalMock).toHaveBeenCalled();
+    expect(timeLeftElement.textContent).toMatch(/\d+m \d+s/);
+  });
 });

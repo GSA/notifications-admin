@@ -77,11 +77,6 @@ module.exports = {
   },
 
   plugins: [
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      'window.jQuery': 'jquery'
-    }),
     new MiniCssExtractPlugin({
       filename: '../css/styles.css'
     }),

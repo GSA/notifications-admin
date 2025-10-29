@@ -1,9 +1,6 @@
 const helpers = require('./support/helpers');
 
 beforeAll(() => {
-  // TODO: remove this when tests for sticky JS are written
-  require('../../app/assets/javascripts/stick-to-window-when-scrolling.js');
-
   require('../../app/assets/javascripts/collapsibleCheckboxes.js');
 });
 
@@ -656,6 +653,42 @@ describe('Collapsible fieldset', () => {
         expect(summaryText.textContent.trim()).toEqual("All team members");
 
       });
+
+    });
+
+  });
+
+  describe("When there is no hint element", () => {
+
+    beforeEach(() => {
+
+      document.body.innerHTML =
+        `<div class="selection-wrapper" data-module="collapsible-checkboxes" data-field-label="folder">
+          <div class="usa-form-group">
+            <fieldset class="usa-fieldset" id="folder_permissions">
+              <legend class="usa-fieldset__legend usa-fieldset__legend--s">
+                Folders this team member can see
+                <span class="selection-summary" role="region" aria-live="polite"></span>
+              </legend>
+              <ul class="usa-checkbox-group">
+                ${_checkboxes(1, 3)}
+              </ul>
+            </fieldset>
+          </div>
+        </div>`;
+
+      wrapper = document.querySelector('.selection-wrapper');
+      formGroup = wrapper.querySelector('.usa-form-group');
+
+      window.NotifyModules.start();
+
+    });
+
+    test("should initialize without errors", () => {
+
+      const summary = formGroup.querySelector('.selection-summary');
+      expect(summary).not.toBeNull();
+      expect(summary.querySelector('.selection-summary__text')).not.toBeNull();
 
     });
 

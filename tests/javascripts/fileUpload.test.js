@@ -184,4 +184,15 @@ describe('announceUploadStatusFromElement', () => {
     // Still unchanged
     expect(srRegion.textContent).toBe('Old message');
   });
+
+  test('does nothing if upload-status-live element does not exist', () => {
+    document.body.innerHTML = `
+      <span id="upload-error" class="usa-sr-only">File upload failed</span>
+    `;
+
+    expect(() => {
+      announceUploadStatusFromElement();
+      jest.advanceTimersByTime(300);
+    }).not.toThrow();
+  });
 });
