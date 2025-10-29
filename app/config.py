@@ -79,7 +79,7 @@ class Config(object):
     NOTIFY_SERVICE_ID = "d6aa2c68-a2d9-4437-ab19-3ae8eb202553"
 
     ORGANIZATION_DASHBOARD_ENABLED = (
-        getenv("ORGANIZATION_DASHBOARD_ENABLED", "False") == "True"
+        getenv("ORGANIZATION_DASHBOARD_ENABLED", "false").lower() == "true"
     )
 
     NOTIFY_BILLING_DETAILS = json.loads(getenv("NOTIFY_BILLING_DETAILS") or "null") or {
@@ -115,7 +115,7 @@ class Development(Config):
 
     # Feature Flags
     ORGANIZATION_DASHBOARD_ENABLED = (
-        getenv("ORGANIZATION_DASHBOARD_ENABLED", "True") == "True"
+        getenv("ORGANIZATION_DASHBOARD_ENABLED", "true").lower() == "true"
     )
 
     # Buckets
