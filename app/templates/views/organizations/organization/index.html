@@ -58,19 +58,65 @@
     </div>
   </div>
 
+    <details class="usa-details">
+      <summary class="usa-details__summary font-heading-lg  ">What is a service?</summary>
+      <div class="usa-details__content">
+        <p class="usa-body">
+          When you join Notify, you're added to a service. This is your organization's workspace for sending text messages and emails. Within your service, you can:
+        </p>
+        <ol class="usa-list">
+          <li>Create and edit message templates</li>
+          <li>Send messages to recipients</li>
+          <li>View message status and history</li>
+          <li>Manage team members and permissions</li>
+          <li>Track usage and delivery statistics</li>
+          <li>If you work for multiple organizations, you may belong to multiple services and can switch between them.</li>
+        </ol>
+      </div>
+    </details>
+
+
+
   <div class="margin-bottom-5">
-    <h2 class="font-heading-lg">What is a service?</h2>
-    <p class="usa-body">
-      When you join Notify, you're added to a service. This is your organization's workspace for sending text messages and emails. Within your service, you can:
-    </p>
-    <ol class="usa-list">
-      <li>Create and edit message templates</li>
-      <li>Send messages to recipients</li>
-      <li>View message status and history</li>
-      <li>Manage team members and permissions</li>
-      <li>Track usage and delivery statistics</li>
-      <li>If you work for multiple organizations, you may belong to multiple services and can switch between them.</li>
-    </ol>
+    <h2 class="font-heading-lg margin-bottom-2">Services Overview</h2>
+    <div class="table-overflow-x-auto">
+      <table class="usa-table">
+        <thead>
+          <tr>
+            <th scope="col" role="columnheader">Name</th>
+            <th scope="col" role="columnheader">Status</th>
+            <th scope="col" role="columnheader">Usage</th>
+            <th scope="col" role="columnheader">Primary Contact</th>
+            <th scope="col" role="columnheader">Recent Template Used</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if services %}
+            {% for service in services %}
+            <tr>
+              <td><a href="{{ url_for('main.service_dashboard', service_id=service.id) }}" class="usa-link">{{ service.name }}</a></td>
+              <td>
+                {% if not service.active %}
+                  Suspended
+                {% elif service.restricted %}
+                  Trial
+                {% else %}
+                  Live
+                {% endif %}
+              </td>
+              <td>{{ service.usage }}</td>
+              <td>{{ service.primary_contact }}</td>
+              <td>{{ service.recent_template }}</td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="5" class="table-empty-message">No services found within this organization</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
   </div>
 
 {% endblock %}

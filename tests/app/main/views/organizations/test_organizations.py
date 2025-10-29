@@ -1538,6 +1538,11 @@ def test_organization_dashboard_shows_message_usage(
         "app.organizations_client.get_organization_services",
         return_value=[],
     )
+    mocker.patch(
+        "app.organizations_client.get_organization_dashboard",
+        return_value={"services": []},
+    )
+
     client_request.login(active_user_with_permissions)
     page = client_request.get(
         ".organization_dashboard",
@@ -1576,6 +1581,16 @@ def test_organization_dashboard_shows_service_counts(
             service_json(id_="3", name="Suspended", restricted=False, active=False),
         ],
     )
+    mocker.patch(
+        "app.organizations_client.get_organization_dashboard",
+        return_value={
+            "services": [
+                {"service_id": "1", "service_name": "Live Service", "active": True, "restricted": False},
+                {"service_id": "2", "service_name": "Trial Service", "active": True, "restricted": True},
+                {"service_id": "3", "service_name": "Suspended", "active": False, "restricted": False},
+            ]
+        },
+    )
 
     client_request.login(active_user_with_permissions)
     page = client_request.get(
@@ -1592,3 +1607,85 @@ def test_organization_dashboard_shows_service_counts(
     assert "1 Live" in normalize_spaces(service_box.text)
     assert "1 Trial" in normalize_spaces(service_box.text)
     assert "1 Suspended" in normalize_spaces(service_box.text)
+
+
+def test_organization_dashboard_services_table(
+    client_request,
+    mock_get_organization,
+    mocker,
+    active_user_with_permissions,
+):
+    mocker.patch.dict("flask.current_app.config", {"ORGANIZATION_DASHBOARD_ENABLED": True})
+
+    mocker.patch(
+        "app.organizations_client.get_organization_message_usage",
+        return_value={"messages_sent": 0, "messages_remaining": 0, "total_message_limit": 0},
+    )
+    mocker.patch(
+        "app.organizations_client.get_organization_services",
+        return_value=[
+            service_json(id_="1", name="Service One", restricted=False, active=True),
+            service_json(id_="2", name="Service Two", restricted=True, active=True),
+        ],
+    )
+    mocker.patch(
+        "app.organizations_client.get_organization_dashboard",
+        return_value={
+            "services": [
+                {
+                    "service_id": "1",
+                    "service_name": "Service One",
+                    "active": True,
+                    "restricted": False,
+                    "emails_sent": 1500,
+                    "sms_billable_units": 500,
+                    "sms_remainder": 249500,
+                    "sms_cost": 42.75,
+                    "recent_sms_template_name": "Welcome SMS",
+                    "primary_contact": None,
+                },
+                {
+                    "service_id": "2",
+                    "service_name": "Service Two",
+                    "active": True,
+                    "restricted": True,
+                    "emails_sent": 250,
+                    "sms_billable_units": 100,
+                    "sms_remainder": 249900,
+                    "sms_cost": 0,
+                    "recent_sms_template_name": "Reminder SMS",
+                    "primary_contact": None,
+                },
+            ]
+        },
+    )
+
+    client_request.login(active_user_with_permissions)
+    page = client_request.get(
+        ".organization_dashboard",
+        org_id=ORGANISATION_ID,
+    )
+
+    table = page.select_one("table.usa-table")
+    assert table is not None
+
+    rows = table.select("tbody tr")
+    assert len(rows) == 2
+
+    first_row_cells = rows[0].select("td")
+    assert normalize_spaces(first_row_cells[0].text) == "Service One"
+    assert normalize_spaces(first_row_cells[1].text) == "Live"
+    assert "1,500 emails" in normalize_spaces(first_row_cells[2].text)
+    assert "500 sms" in normalize_spaces(first_row_cells[2].text)
+    assert "249,500 remaining" in normalize_spaces(first_row_cells[2].text)
+    assert normalize_spaces(first_row_cells[3].text) == "N/A"
+    assert normalize_spaces(first_row_cells[4].text) == "Welcome SMS"
+
+    second_row_cells = rows[1].select("td")
+    assert normalize_spaces(second_row_cells[0].text) == "Service Two"
+    assert normalize_spaces(second_row_cells[1].text) == "Trial"
+    assert "250 emails" in normalize_spaces(second_row_cells[2].text)
+    assert "100 sms" in normalize_spaces(second_row_cells[2].text)
+    assert "249,900 remaining" in normalize_spaces(second_row_cells[2].text)
+    assert normalize_spaces(second_row_cells[3].text) == "N/A"
+    assert normalize_spaces(second_row_cells[4].text) == "Reminder SMS"

@@ -83,5 +83,11 @@ class OrganizationsClient(NotifyAdminAPIClient):
             url="/organizations/{}/message-allowance".format(org_id),
         )
 
+    def get_organization_dashboard(self, org_id, year):
+        return self.get(
+            url=f"/organizations/{org_id}/dashboard",
+            params={"year": str(year)},
+        )
+
 
 organizations_client = OrganizationsClient()
