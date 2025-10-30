@@ -1190,3 +1190,8 @@ nav.nav {
     background-color: transparent;
   }
 }
+
+.button-not-clickable {
+  cursor: default;
+  pointer-events: none;
+}

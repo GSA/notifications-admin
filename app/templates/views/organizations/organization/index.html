@@ -59,10 +59,12 @@
   </div>
 
   <div class="display-flex flex-gap-1 margin-bottom-3">
-    <a href="{{ url_for('.organization_dashboard', org_id=current_org.id, action='create-service') }}" class="usa-button {% if not show_create_service %}usa-button--outline{% endif %}">
+    <a {% if not show_create_service %}href="{{ url_for('.organization_dashboard', org_id=current_org.id, action='create-service') }}"{% endif %}
+       class="usa-button {% if show_create_service %}usa-button--base button-not-clickable{% else %}usa-button--outline{% endif %}">
       Create new service
     </a>
-    <a href="{{ url_for('.organization_dashboard', org_id=current_org.id, action='invite-user') }}" class="usa-button {% if not show_invite_user %}usa-button--outline{% endif %}">
+    <a {% if not show_invite_user %}href="{{ url_for('.organization_dashboard', org_id=current_org.id, action='invite-user') }}"{% endif %}
+       class="usa-button {% if show_invite_user %}usa-button--base button-not-clickable{% else %}usa-button--outline{% endif %}">
       Add org admin
     </a>
   </div>
@@ -78,7 +80,7 @@
 
         <div class="display-flex flex-gap-1 margin-top-3">
           <button type="submit" class="usa-button">Create service</button>
-          <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="usa-button usa-button--unstyled">Cancel</a>
+          <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="usa-button usa-button--outline">Cancel</a>
         </div>
       </form>
     </div>
@@ -96,7 +98,7 @@
 
         <div class="display-flex flex-gap-1 margin-top-3">
           <button type="submit" class="usa-button">Send invitation</button>
-          <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="usa-button usa-button--unstyled">Cancel</a>
+          <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="usa-button usa-button--outline">Cancel</a>
         </div>
       </form>
     </div>
