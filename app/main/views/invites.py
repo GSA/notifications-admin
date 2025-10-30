@@ -140,4 +140,4 @@ def accept_org_invite(token):
             url_for("main.organization_dashboard", org_id=invited_org_user.organization)
         )
     else:
-        return redirect(url_for("main.register_from_org_invite"))
+        return redirect(url_for("main.sign_in"))

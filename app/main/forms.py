@@ -634,26 +634,6 @@ class RegisterUserFromInviteForm(RegisterUserForm):
             raise ValidationError("Cannot be empty")
 
 
-class RegisterUserFromOrgInviteForm(StripWhitespaceForm):
-    def __init__(self, invited_org_user):
-        super().__init__(
-            organization=invited_org_user.organization,
-            email_address=invited_org_user.email_address,
-        )
-
-    name = UsaTextInputField(
-        "Full name", validators=[DataRequired(message="Cannot be empty")]
-    )
-
-    mobile_number = InternationalPhoneNumber(
-        "Mobile number", validators=[DataRequired(message="Cannot be empty")]
-    )
-    password = password()
-    organization = HiddenField("organization")
-    email_address = HiddenField("email_address")
-    auth_type = HiddenField("auth_type", validators=[DataRequired()])
-
-
 def uswds_checkbox_field_widget(self, field, param_extensions=None, **kwargs):
     # error messages
     error_message = None
