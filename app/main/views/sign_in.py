@@ -24,7 +24,7 @@ from app.main.views.index import error
 from app.main.views.verify import activate_user
 from app.models.user import User
 from app.utils import hide_from_search_engines
-from app.utils.login import get_id_token, is_safe_redirect_url
+from app.utils.login import get_id_token
 
 # from app.utils.time import is_less_than_days_ago
 from app.utils.user import is_gov_user
@@ -179,8 +179,12 @@ def _handle_e2e_tests(redirect_url):  # pragma: no cover
         activate_user(user["id"])
 
         # Check if the redirect URL is present and safe before proceeding further
-        if redirect_url and is_safe_redirect_url(redirect_url):
-            return redirect(redirect_url)
+        # Defensive: sanitize backslashes, check for absolute URLs
+        if redirect_url:
+            cleaned_redirect_url = redirect_url.replace("\\", "")
+            parts = urlparse(cleaned_redirect_url)
+            if not parts.netloc and not parts.scheme:
+                return redirect(cleaned_redirect_url)
 
         return redirect(
             url_for(
