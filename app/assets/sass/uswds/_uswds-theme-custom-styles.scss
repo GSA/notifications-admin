@@ -1171,3 +1171,22 @@ nav.nav {
     }
   }
 }
+
+.is-highlighted {
+  td {
+    background-color: color('blue-cool-5v');
+    animation: fadeHighlight 3s ease-out forwards;
+  }
+}
+
+@keyframes fadeHighlight {
+  0% {
+    background-color: color('blue-cool-10v');
+  }
+  50% {
+    background-color: color('blue-cool-5v');
+  }
+  100% {
+    background-color: transparent;
+  }
+}

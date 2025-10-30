@@ -2,7 +2,15 @@ from collections import OrderedDict
 from datetime import datetime
 from functools import partial
 
-from flask import current_app, flash, redirect, render_template, request, url_for
+from flask import (
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from flask_login import current_user
 
 from app import current_organization, org_invite_api_client, organizations_client
@@ -131,28 +139,41 @@ def organization_dashboard(org_id):
         )
 
         if request.method == "POST" and create_service_form.validate_on_submit():
+            service_name = create_service_form.name.data
             service_id, error = _create_service(
-                create_service_form.name.data,
+                service_name,
                 create_service_form.organization_type.data,
-                email_safe(create_service_form.name.data),
+                email_safe(service_name),
                 create_service_form,
             )
             if not error:
-                return redirect(url_for(".service_dashboard", service_id=service_id))
+                current_organization.associate_service(service_id)
+                current_app.logger.info(f"Service {service_id} created and associated with org {org_id}")
+                flash(f"Service '{service_name}' has been created", "default_with_tick")
+                session['new_service_id'] = service_id
+                return redirect(url_for(".organization_dashboard", org_id=org_id))
+            else:
+                current_app.logger.error(f"Error creating service: {error}")
+                flash("Error creating service", "error")
 
     if action == "invite-user" or request.form.get("form_name") == "invite_user":
         invite_user_form = InviteOrgUserForm(inviter_email_address=current_user.email_address)
 
         if request.method == "POST" and invite_user_form.validate_on_submit():
-            invited_org_user = InvitedOrgUser.create(
-                current_user.id, org_id, invite_user_form.email_address.data
-            )
-            flash(f"Invite sent to {invited_org_user.email_address}", "default_with_tick")
-            return redirect(url_for(".organization_dashboard", org_id=org_id))
+            try:
+                invited_org_user = InvitedOrgUser.create(
+                    current_user.id, org_id, invite_user_form.email_address.data
+                )
+                flash(f"Invite sent to {invited_org_user.email_address}", "default_with_tick")
+                return redirect(url_for(".organization_dashboard", org_id=org_id))
+            except Exception as e:
+                current_app.logger.error(f"Error inviting user: {e}")
+                flash("Error sending invitation", "error")
 
     message_allowance = get_organization_message_allowance(org_id)
 
     services_with_usage = get_services_dashboard_data(current_organization, year)
+    new_service_id = session.pop('new_service_id', None)
 
     return render_template(
         "views/organizations/organization/index.html",
@@ -166,6 +187,7 @@ def organization_dashboard(org_id):
         invite_user_form=invite_user_form,
         show_create_service=create_service_form is not None,
         show_invite_user=invite_user_form is not None,
+        new_service_id=new_service_id,
         **message_allowance,
     )
 

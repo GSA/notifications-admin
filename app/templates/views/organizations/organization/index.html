@@ -68,7 +68,7 @@
   </div>
 
   {% if show_create_service and create_service_form %}
-    <div class="bg-base-lightest padding-3 radius-md margin-bottom-3 position-relative">
+    <div id="create-service-form" class="bg-base-lightest padding-3 radius-md margin-bottom-3 position-relative">
       <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="position-absolute top-1 right-1 text-base-dark text-no-underline hover:text-primary" aria-label="Close">
         <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
           <use xlink:href="/static/images/sprite.svg#close"></use>
@@ -90,7 +90,7 @@
   {% endif %}
 
   {% if show_invite_user and invite_user_form %}
-    <div class="bg-base-lightest padding-3 radius-md margin-bottom-3 position-relative">
+    <div id="invite-user-form" class="bg-base-lightest padding-3 radius-md margin-bottom-3 position-relative">
       <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="position-absolute top-1 right-1 text-base-dark text-no-underline hover:text-primary" aria-label="Close">
         <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
           <use xlink:href="/static/images/sprite.svg#close"></use>
@@ -112,23 +112,31 @@
     </div>
   {% endif %}
 
-  <details class="usa-details">
-    <summary class="usa-details__summary font-heading-lg  ">What is a service?</summary>
-      <div class="usa-details__content">
-        <p class="usa-body">
-          When you join Notify, you're added to a service. This is your organization's workspace for sending text messages and emails. Within your service, you can:
-        </p>
-        <ol class="usa-list">
-          <li>Create and edit message templates</li>
-          <li>Send messages to recipients</li>
-          <li>View message status and history</li>
-          <li>Manage team members and permissions</li>
-          <li>Track usage and delivery statistics</li>
-          <li>If you work for multiple organizations, you may belong to multiple services and can switch between them.</li>
-        </ol>
-      </div>
-    </details>
-
+  <div class="usa-accordion margin-bottom-3">
+    <h3 class="usa-accordion__heading">
+      <button
+        type="button"
+        class="usa-accordion__button"
+        aria-expanded="false"
+        aria-controls="what-is-service-content"
+      >
+        What is a service?
+      </button>
+    </h3>
+    <div id="what-is-service-content" class="usa-accordion__content usa-prose" hidden>
+      <p>
+        When you join Notify, you're added to a service. This is your organization's workspace for sending text messages and emails. Within your service, you can:
+      </p>
+      <ol class="usa-list">
+        <li>Create and edit message templates</li>
+        <li>Send messages to recipients</li>
+        <li>View message status and history</li>
+        <li>Manage team members and permissions</li>
+        <li>Track usage and delivery statistics</li>
+        <li>If you work for multiple organizations, you may belong to multiple services and can switch between them.</li>
+      </ol>
+    </div>
+  </div>
 
 
   <div class="margin-bottom-5">
@@ -147,7 +155,8 @@
         <tbody>
           {% if services %}
             {% for service in services %}
-            <tr>
+            {% set is_new_service = new_service_id and service.id == new_service_id %}
+            <tr id="service-{{ service.id }}" {% if is_new_service %}class="is-highlighted"{% endif %}>
               <td><a href="{{ url_for('main.service_dashboard', service_id=service.id) }}" class="usa-link">{{ service.name }}</a></td>
               <td>
                 {% if not service.active %}
@@ -173,4 +182,52 @@
     </div>
   </div>
 
+{% endblock %}
+
+{% block extra_javascripts %}
+  <script nonce="{{ csp_nonce() }}">
+    (function() {
+      function scrollToElement(element, delay) {
+        setTimeout(function() {
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'nearest'
+          });
+        }, delay || 0);
+      }
+
+      function focusFirstInput(container, delay) {
+        setTimeout(function() {
+          var input = container.querySelector('input[type="text"], input[type="search"]');
+          if (input) input.focus();
+        }, delay || 0);
+      }
+
+      {% if new_service_id %}
+      var serviceRow = document.getElementById('service-{{ new_service_id }}');
+      if (serviceRow) {
+        scrollToElement(serviceRow, 300);
+
+        setTimeout(function() {
+          serviceRow.classList.remove('is-highlighted');
+          if (serviceRow.className === '') {
+            serviceRow.removeAttribute('class');
+          }
+        }, 3300);
+      }
+      {% endif %}
+
+      requestAnimationFrame(function() {
+        var form = document.getElementById('create-service-form') ||
+                   document.getElementById('invite-user-form');
+
+        if (form) {
+          scrollToElement(form, 50);
+          focusFirstInput(form, 150);
+        }
+      });
+    })();
+  </script>
+  {{ super() }}
 {% endblock %}
