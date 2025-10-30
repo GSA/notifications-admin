@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Admin front end for Notify",
   "engines": {
-    "node": ">=24.0.0"
+    "node": "^24.10.0"
   },
   "scripts": {
     "lint": "jshint app/assets/javascripts",
