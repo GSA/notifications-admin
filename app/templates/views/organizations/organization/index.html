@@ -36,10 +36,10 @@
                 <div class="text-base-dark text-uppercase font-sans-3xs text-ls-1 margin-bottom-05">Total Services</div>
                 <div class="font-sans-xl text-primary-darker line-height-sans-1">{{ total_services }}</div>
               </div>
-              <div class="text-base-dark font-body-2xs line-height-sans-3">
-                <span class="text-success-dark text-bold">{{ live_services }}</span> Live
-                <span class="margin-left-1 text-warning-dark text-bold">{{ trial_services }}</span> Trial
-                <span class="margin-left-1 text-base-dark text-bold">{{ suspended_services }}</span> Suspended
+              <div class="text-ink font-body-2xs line-height-sans-3">
+                <span class="text-bold">{{ live_services }}</span> Live
+                <span class="margin-left-1 text-bold">{{ trial_services }}</span> Trial
+                <span class="margin-left-1 text-bold">{{ suspended_services }}</span> Suspended
               </div>
             </div>
           </div>
@@ -68,12 +68,7 @@
   </div>
 
   {% if show_create_service and create_service_form %}
-    <div id="create-service-form" class="bg-base-lightest padding-3 radius-md margin-bottom-3 position-relative">
-      <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="position-absolute top-1 right-1 text-base-dark text-no-underline hover:text-primary" aria-label="Close">
-        <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
-          <use xlink:href="/static/images/sprite.svg#close"></use>
-        </svg>
-      </a>
+    <div id="create-service-form" class="bg-base-lightest padding-3 radius-md margin-bottom-3">
       <h3 class="margin-top-0">Create a new service</h3>
       <form method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='create-service') }}">
         <input type="hidden" name="csrf_token" value="{{ create_service_form.csrf_token._value() }}"/>
@@ -90,12 +85,7 @@
   {% endif %}
 
   {% if show_invite_user and invite_user_form %}
-    <div id="invite-user-form" class="bg-base-lightest padding-3 radius-md margin-bottom-3 position-relative">
-      <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="position-absolute top-1 right-1 text-base-dark text-no-underline hover:text-primary" aria-label="Close">
-        <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
-          <use xlink:href="/static/images/sprite.svg#close"></use>
-        </svg>
-      </a>
+    <div id="invite-user-form" class="bg-base-lightest padding-3 radius-md margin-bottom-3">
       <h3 class="margin-top-0">Invite a team member</h3>
       <p class="margin-top-0">{{ current_org.name }} team members can see usage and team members for each service, and invite other team members.</p>
       <form method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='invite-user') }}">
