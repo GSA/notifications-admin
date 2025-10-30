@@ -58,8 +58,62 @@
     </div>
   </div>
 
-    <details class="usa-details">
-      <summary class="usa-details__summary font-heading-lg  ">What is a service?</summary>
+  <div class="display-flex flex-gap-1 margin-bottom-3">
+    <a href="{{ url_for('.organization_dashboard', org_id=current_org.id, action='create-service') }}" class="usa-button {% if not show_create_service %}usa-button--outline{% endif %}">
+      Create new service
+    </a>
+    <a href="{{ url_for('.organization_dashboard', org_id=current_org.id, action='invite-user') }}" class="usa-button {% if not show_invite_user %}usa-button--outline{% endif %}">
+      Add org admin
+    </a>
+  </div>
+
+  {% if show_create_service and create_service_form %}
+    <div class="bg-base-lightest padding-3 radius-md margin-bottom-3 position-relative">
+      <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="position-absolute top-1 right-1 text-base-dark text-no-underline hover:text-primary" aria-label="Close">
+        <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+          <use xlink:href="/static/images/sprite.svg#close"></use>
+        </svg>
+      </a>
+      <h3 class="margin-top-0">Create a new service</h3>
+      <form method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='create-service') }}">
+        <input type="hidden" name="csrf_token" value="{{ create_service_form.csrf_token._value() }}"/>
+        <input type="hidden" name="form_name" value="create_service"/>
+
+        {{ create_service_form.name(param_extensions={"hint": {"text": "You can change this later"}}) }}
+
+        <div class="display-flex flex-gap-1 margin-top-3">
+          <button type="submit" class="usa-button">Create service</button>
+          <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="usa-button usa-button--unstyled">Cancel</a>
+        </div>
+      </form>
+    </div>
+  {% endif %}
+
+  {% if show_invite_user and invite_user_form %}
+    <div class="bg-base-lightest padding-3 radius-md margin-bottom-3 position-relative">
+      <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="position-absolute top-1 right-1 text-base-dark text-no-underline hover:text-primary" aria-label="Close">
+        <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+          <use xlink:href="/static/images/sprite.svg#close"></use>
+        </svg>
+      </a>
+      <h3 class="margin-top-0">Invite a team member</h3>
+      <p class="margin-top-0">{{ current_org.name }} team members can see usage and team members for each service, and invite other team members.</p>
+      <form method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='invite-user') }}">
+        <input type="hidden" name="csrf_token" value="{{ invite_user_form.csrf_token._value() }}"/>
+        <input type="hidden" name="form_name" value="invite_user"/>
+
+        {{ invite_user_form.email_address(param_extensions={"classes": ""}, error_message_with_html=True) }}
+
+        <div class="display-flex flex-gap-1 margin-top-3">
+          <button type="submit" class="usa-button">Send invitation</button>
+          <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="usa-button usa-button--unstyled">Cancel</a>
+        </div>
+      </form>
+    </div>
+  {% endif %}
+
+  <details class="usa-details">
+    <summary class="usa-details__summary font-heading-lg  ">What is a service?</summary>
       <div class="usa-details__content">
         <p class="usa-body">
           When you join Notify, you're added to a service. This is your organization's workspace for sending text messages and emails. Within your service, you can:
