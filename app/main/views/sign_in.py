@@ -2,7 +2,7 @@ import os
 import secrets
 import time
 import uuid
-from urllib.parse import unquote
+from urllib.parse import unquote, urlparse
 
 import jwt
 import requests
@@ -215,8 +215,12 @@ def sign_in():  # pragma: no cover
         return email_verify_template
 
     if current_user and current_user.is_authenticated:
-        if redirect_url and is_safe_redirect_url(redirect_url):
-            return redirect(redirect_url)
+        if redirect_url:
+            # Defensive: sanitize backslashes, check for absolute URLs
+            cleaned_redirect_url = redirect_url.replace("\\", "")
+            parts = urlparse(cleaned_redirect_url)
+            if not parts.netloc and not parts.scheme:
+                return redirect(cleaned_redirect_url)
         return redirect(url_for("main.show_accounts_or_dashboard"))
 
     ttl = 24 * 60 * 60
