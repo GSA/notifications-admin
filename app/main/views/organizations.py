@@ -90,7 +90,9 @@ def get_organization_message_allowance(org_id):
 
 def get_services_dashboard_data(organization, year):
     try:
-        dashboard_data = organizations_client.get_organization_dashboard(organization.id, year)
+        dashboard_data = organizations_client.get_organization_dashboard(
+            organization.id, year
+        )
         services = dashboard_data.get("services", [])
     except Exception as e:
         current_app.logger.error(f"Error fetching dashboard data: {e}")
@@ -112,7 +114,9 @@ def get_services_dashboard_data(organization, year):
             usage_parts.append(f"{emails_sent:,} emails")
         if sms_sent > 0 or sms_remainder > 0:
             if sms_cost > 0:
-                usage_parts.append(f"{sms_sent:,} sms ({sms_remainder:,} remaining, ${sms_cost:,.2f})")
+                usage_parts.append(
+                    f"{sms_sent:,} sms ({sms_remainder:,} remaining, ${sms_cost:,.2f})"
+                )
             else:
                 usage_parts.append(f"{sms_sent:,} sms ({sms_remainder:,} remaining)")
 
@@ -135,7 +139,8 @@ def organization_dashboard(org_id):
 
     if action == "create-service" or request.form.get("form_name") == "create_service":
         create_service_form = CreateServiceForm(
-            organization_type=current_user.default_organization_type or OrganizationType.FEDERAL
+            organization_type=current_user.default_organization_type
+            or OrganizationType.FEDERAL
         )
 
         if request.method == "POST" and create_service_form.validate_on_submit():
@@ -148,23 +153,30 @@ def organization_dashboard(org_id):
             )
             if not error:
                 current_organization.associate_service(service_id)
-                current_app.logger.info(f"Service {service_id} created and associated with org {org_id}")
+                current_app.logger.info(
+                    f"Service {service_id} created and associated with org {org_id}"
+                )
                 flash(f"Service '{service_name}' has been created", "default_with_tick")
-                session['new_service_id'] = service_id
+                session["new_service_id"] = service_id
                 return redirect(url_for(".organization_dashboard", org_id=org_id))
             else:
                 current_app.logger.error(f"Error creating service: {error}")
                 flash("Error creating service", "error")
 
     if action == "invite-user" or request.form.get("form_name") == "invite_user":
-        invite_user_form = InviteOrgUserForm(inviter_email_address=current_user.email_address)
+        invite_user_form = InviteOrgUserForm(
+            inviter_email_address=current_user.email_address
+        )
 
         if request.method == "POST" and invite_user_form.validate_on_submit():
             try:
                 invited_org_user = InvitedOrgUser.create(
                     current_user.id, org_id, invite_user_form.email_address.data
                 )
-                flash(f"Invite sent to {invited_org_user.email_address}", "default_with_tick")
+                flash(
+                    f"Invite sent to {invited_org_user.email_address}",
+                    "default_with_tick",
+                )
                 return redirect(url_for(".organization_dashboard", org_id=org_id))
             except Exception as e:
                 current_app.logger.error(f"Error inviting user: {e}")
@@ -173,7 +185,7 @@ def organization_dashboard(org_id):
     message_allowance = get_organization_message_allowance(org_id)
 
     services_with_usage = get_services_dashboard_data(current_organization, year)
-    new_service_id = session.pop('new_service_id', None)
+    new_service_id = session.pop("new_service_id", None)
 
     return render_template(
         "views/organizations/organization/index.html",

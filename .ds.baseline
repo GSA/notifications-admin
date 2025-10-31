@@ -573,7 +573,7 @@
         "filename": "tests/app/main/views/test_user_profile.py",
         "hashed_secret": "8072d7aad32964ec43fbcb699c75dc38890792f7",
         "is_verified": false,
-        "line_number": 336,
+        "line_number": 337,
         "is_secret": false
       },
       {
@@ -581,7 +581,7 @@
         "filename": "tests/app/main/views/test_user_profile.py",
         "hashed_secret": "4c9dbb972da179e4f66f023eaa5fb9451d835030",
         "is_verified": false,
-        "line_number": 337,
+        "line_number": 338,
         "is_secret": false
       }
     ],
@@ -634,5 +634,5 @@
       }
     ]
   },
-  "generated_at": "2025-10-14T19:59:45Z"
+  "generated_at": "2025-10-31T00:30:15Z"
 }

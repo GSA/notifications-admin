@@ -217,7 +217,7 @@ def test_verify_email_redirects_to_sign_in_if_user_active(
     )
 
     assert page.h1.text == "Sign in"
-    flash_banner = page.find("div", class_="banner-dangerous").string.strip()
+    flash_banner = page.select_one(".usa-alert--error .usa-alert__text").text.strip()
     assert flash_banner == "That verification link has expired."
 
 
