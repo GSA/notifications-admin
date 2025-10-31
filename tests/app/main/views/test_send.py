@@ -464,9 +464,9 @@ def test_upload_files_in_different_formats(
         )
     else:
         assert not mock_s3_upload.called
-        assert normalize_spaces(page.select_one(".banner-dangerous").text) == (
-            "Could not read {}. Try using a different file format.".format(filename)
-        )
+        assert normalize_spaces(
+            page.select_one(".usa-alert--error .usa-alert__text").text
+        ) == ("Could not read {}. Try using a different file format.".format(filename))
 
 
 def test_send_messages_sanitises_and_truncates_file_name_for_metadata(
@@ -574,9 +574,9 @@ def test_shows_error_if_parsing_exception(
         _expected_status=200,
     )
 
-    assert normalize_spaces(page.select_one(".banner-dangerous").text) == (
-        expected_error_message
-    )
+    assert normalize_spaces(
+        page.select_one(".usa-alert--error .usa-alert__text").text
+    ) == (expected_error_message)
 
 
 def test_upload_csv_file_with_errors_shows_check_page_with_errors(
@@ -672,7 +672,9 @@ def test_upload_csv_file_with_empty_message_shows_check_page_with_errors(
     with client_request.session_transaction() as session:
         assert "file_uploads" not in session
 
-    assert normalize_spaces(page.select_one(".banner-dangerous").text) == (
+    assert normalize_spaces(
+        page.select_one(".usa-alert--error .usa-alert__text").text
+    ) == (
         "There’s a problem with example.csv "
         "You need to check you have content for the empty message in 1 row."
     )
@@ -730,7 +732,9 @@ def test_upload_csv_file_with_very_long_placeholder_shows_check_page_with_errors
     with client_request.session_transaction() as session:
         assert "file_uploads" not in session
 
-    assert normalize_spaces(page.select_one(".banner-dangerous").text) == (
+    assert normalize_spaces(
+        page.select_one(".usa-alert--error .usa-alert__text").text
+    ) == (
         "There’s a problem with example.csv "
         "You need to shorten the messages in 2 rows."
     )
@@ -870,7 +874,7 @@ def test_upload_csv_file_with_missing_columns_shows_error(
         page.select_one("input[type=file]")["accept"]
         == ".csv,.xlsx,.xls,.ods,.xlsm,.tsv"
     )
-    assert normalize_spaces(page.select(".banner-dangerous")[0].text) == expected_error
+    assert normalize_spaces(page.select(".usa-alert--error")[0].text) == expected_error
 
 
 def test_upload_csv_invalid_extension(
@@ -2345,13 +2349,11 @@ def test_check_messages_shows_too_many_messages_errors(
     )
 
     assert page.find("h1").text.strip() == "Too many recipients"
-    assert (
-        page.find("div", class_="banner-dangerous").find("a").text.strip()
-        == "trial mode"
-    )
+    assert page.select_one(".usa-alert--error").find("a").text.strip() == "trial mode"
 
     # remove excess whitespace from element
-    details = page.find("div", class_="banner-dangerous").find_all("p")[1]
+    alert_texts = page.select(".usa-alert--error .usa-alert__text")
+    details = alert_texts[-1]
     details = " ".join(
         [line.strip() for line in details.text.split("\n") if line.strip() != ""]
     )
@@ -2394,7 +2396,9 @@ def test_check_messages_shows_trial_mode_error(
         upload_id=fake_uuid,
     )
 
-    assert " ".join(page.find("div", class_="banner-dangerous").text.split()) == (
+    assert " ".join(
+        page.select_one(".usa-alert--error .usa-alert__text").text.split()
+    ) == (
         "You cannot send to this phone number "
         "In trial mode you can only send to yourself and members of your team"
     )
@@ -2435,7 +2439,9 @@ def test_warns_if_file_sent_already(
         original_file_name=uploaded_file_name,
     )
 
-    assert normalize_spaces(page.select_one(".banner-dangerous").text) == (
+    assert normalize_spaces(
+        page.select_one(".usa-alert--error .usa-alert__text").text
+    ) == (
         "These messages have already been sent today "
         "If you need to resend them, rename the file and upload it again."
     )
@@ -2490,7 +2496,9 @@ def stmt_for_test_warns_if_file_sent_already_errors(
         upload_id=fake_uuid,
         original_file_name=uploaded_file_name,
     )
-    assert normalize_spaces(page.select_one(".banner-dangerous").text) == (
+    assert normalize_spaces(
+        page.select_one(".usa-alert--error .usa-alert__text").text
+    ) == (
         "These messages have already been sent today "
         "If you need to resend them, rename the file and upload it again."
     )
@@ -2537,7 +2545,9 @@ def test_check_messages_column_error_doesnt_show_optional_columns(
         _test_page_title=False,
     )
 
-    banner_text = normalize_spaces(page.select_one(".banner-dangerous").text)
+    banner_text = normalize_spaces(
+        page.select_one(".usa-alert--error .usa-alert__text").text
+    )
     assert "problem with your column names" in banner_text
     assert "phone number" in banner_text
     assert "address_line_1" in banner_text
@@ -2628,7 +2638,9 @@ def test_check_messages_shows_over_max_row_error(
         upload_id=fake_uuid,
     )
 
-    assert " ".join(page.find("div", class_="banner-dangerous").text.split()) == (
+    assert " ".join(
+        page.select_one(".usa-alert--error .usa-alert__text").text.split()
+    ) == (
         "Your file has too many rows "
         "Notify can process up to 11,111 rows at once. "
         "Your file has 99,999 rows."

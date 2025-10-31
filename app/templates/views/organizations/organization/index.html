@@ -36,10 +36,10 @@
                 <div class="text-base-dark text-uppercase font-sans-3xs text-ls-1 margin-bottom-05">Total Services</div>
                 <div class="font-sans-xl text-primary-darker line-height-sans-1">{{ total_services }}</div>
               </div>
-              <div class="text-base-dark font-body-2xs line-height-sans-3">
-                <span class="text-success-dark text-bold">{{ live_services }}</span> Live
-                <span class="margin-left-1 text-warning-dark text-bold">{{ trial_services }}</span> Trial
-                <span class="margin-left-1 text-base-dark text-bold">{{ suspended_services }}</span> Suspended
+              <div class="text-ink font-body-2xs line-height-sans-3">
+                <span class="text-bold">{{ live_services }}</span> Live
+                <span class="margin-left-1 text-bold">{{ trial_services }}</span> Trial
+                <span class="margin-left-1 text-bold">{{ suspended_services }}</span> Suspended
               </div>
             </div>
           </div>
@@ -58,23 +58,77 @@
     </div>
   </div>
 
-    <details class="usa-details">
-      <summary class="usa-details__summary font-heading-lg  ">What is a service?</summary>
-      <div class="usa-details__content">
-        <p class="usa-body">
-          When you join Notify, you're added to a service. This is your organization's workspace for sending text messages and emails. Within your service, you can:
-        </p>
-        <ol class="usa-list">
-          <li>Create and edit message templates</li>
-          <li>Send messages to recipients</li>
-          <li>View message status and history</li>
-          <li>Manage team members and permissions</li>
-          <li>Track usage and delivery statistics</li>
-          <li>If you work for multiple organizations, you may belong to multiple services and can switch between them.</li>
-        </ol>
-      </div>
-    </details>
+  <div class="display-flex flex-gap-1 margin-bottom-3">
+    <a {% if not show_create_service %}href="{{ url_for('.organization_dashboard', org_id=current_org.id, action='create-service') }}"{% endif %}
+       class="usa-button {% if show_create_service %}usa-button--base button-not-clickable{% else %}usa-button--outline{% endif %}">
+      Create new service
+    </a>
+    <a {% if not show_invite_user %}href="{{ url_for('.organization_dashboard', org_id=current_org.id, action='invite-user') }}"{% endif %}
+       class="usa-button {% if show_invite_user %}usa-button--base button-not-clickable{% else %}usa-button--outline{% endif %}">
+      Add org admin
+    </a>
+  </div>
 
+  {% if show_create_service and create_service_form %}
+    <div id="create-service-form" class="bg-base-lightest padding-3 radius-md margin-bottom-3">
+      <h3 class="margin-top-0">Create a new service</h3>
+      <form method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='create-service') }}">
+        <input type="hidden" name="csrf_token" value="{{ create_service_form.csrf_token._value() }}"/>
+        <input type="hidden" name="form_name" value="create_service"/>
+
+        {{ create_service_form.name(param_extensions={"hint": {"text": "You can change this later"}}) }}
+
+        <div class="display-flex flex-gap-1 margin-top-3">
+          <button type="submit" class="usa-button">Create service</button>
+          <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="usa-button usa-button--outline">Cancel</a>
+        </div>
+      </form>
+    </div>
+  {% endif %}
+
+  {% if show_invite_user and invite_user_form %}
+    <div id="invite-user-form" class="bg-base-lightest padding-3 radius-md margin-bottom-3">
+      <h3 class="margin-top-0">Invite a team member</h3>
+      <p class="margin-top-0">{{ current_org.name }} team members can see usage and team members for each service, and invite other team members.</p>
+      <form method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='invite-user') }}">
+        <input type="hidden" name="csrf_token" value="{{ invite_user_form.csrf_token._value() }}"/>
+        <input type="hidden" name="form_name" value="invite_user"/>
+
+        {{ invite_user_form.email_address(param_extensions={"classes": ""}, error_message_with_html=True) }}
+
+        <div class="display-flex flex-gap-1 margin-top-3">
+          <button type="submit" class="usa-button">Send invitation</button>
+          <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="usa-button usa-button--outline">Cancel</a>
+        </div>
+      </form>
+    </div>
+  {% endif %}
+
+  <div class="usa-accordion margin-bottom-3">
+    <h3 class="usa-accordion__heading">
+      <button
+        type="button"
+        class="usa-accordion__button"
+        aria-expanded="false"
+        aria-controls="what-is-service-content"
+      >
+        What is a service?
+      </button>
+    </h3>
+    <div id="what-is-service-content" class="usa-accordion__content usa-prose" hidden>
+      <p>
+        When you join Notify, you're added to a service. This is your organization's workspace for sending text messages and emails. Within your service, you can:
+      </p>
+      <ol class="usa-list">
+        <li>Create and edit message templates</li>
+        <li>Send messages to recipients</li>
+        <li>View message status and history</li>
+        <li>Manage team members and permissions</li>
+        <li>Track usage and delivery statistics</li>
+        <li>If you work for multiple organizations, you may belong to multiple services and can switch between them.</li>
+      </ol>
+    </div>
+  </div>
 
 
   <div class="margin-bottom-5">
@@ -93,7 +147,8 @@
         <tbody>
           {% if services %}
             {% for service in services %}
-            <tr>
+            {% set is_new_service = new_service_id and service.id == new_service_id %}
+            <tr id="service-{{ service.id }}" {% if is_new_service %}class="is-highlighted"{% endif %}>
               <td><a href="{{ url_for('main.service_dashboard', service_id=service.id) }}" class="usa-link">{{ service.name }}</a></td>
               <td>
                 {% if not service.active %}
@@ -119,4 +174,52 @@
     </div>
   </div>
 
+{% endblock %}
+
+{% block extra_javascripts %}
+  <script nonce="{{ csp_nonce() }}">
+    (function() {
+      function scrollToElement(element, delay) {
+        setTimeout(function() {
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'nearest'
+          });
+        }, delay || 0);
+      }
+
+      function focusFirstInput(container, delay) {
+        setTimeout(function() {
+          var input = container.querySelector('input[type="text"], input[type="search"]');
+          if (input) input.focus();
+        }, delay || 0);
+      }
+
+      {% if new_service_id %}
+      var serviceRow = document.getElementById('service-{{ new_service_id }}');
+      if (serviceRow) {
+        scrollToElement(serviceRow, 300);
+
+        setTimeout(function() {
+          serviceRow.classList.remove('is-highlighted');
+          if (serviceRow.className === '') {
+            serviceRow.removeAttribute('class');
+          }
+        }, 3300);
+      }
+      {% endif %}
+
+      requestAnimationFrame(function() {
+        var form = document.getElementById('create-service-form') ||
+                   document.getElementById('invite-user-form');
+
+        if (form) {
+          scrollToElement(form, 50);
+          focusFirstInput(form, 150);
+        }
+      });
+    })();
+  </script>
+  {{ super() }}
 {% endblock %}

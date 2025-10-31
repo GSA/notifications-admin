@@ -3,31 +3,35 @@
 
 {% macro banner(body, type=None, with_tick=False, delete_button=None, subhead=None, context=None, action=None, id=None, thing=None) %}
   <div
-    class='banner{% if type %}-{{ type }}{% endif %}{% if with_tick %}-with-tick{% endif %}'
+    class="usa-alert {% if type == 'dangerous' %}usa-alert--error{% else %}usa-alert--success{% endif %} banner{% if type %}-{{ type }}{% endif %}{% if with_tick %}-with-tick{% endif %}"
     {% if id %}
     id={{ id }}
     {% endif %}
   >
-    {% if subhead -%}
-      <h1 class="banner-title font-body-lg">{{ subhead }}</h1>
-    {%- endif -%}
-    {{ body }}
-    {% if context %}
-    <p class="usa-body">
-      {{ context }}
-    </p>
-    {% endif %}
-    {% if delete_button %}
-      {% call form_wrapper(action=action) %}
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        {{ usaButton({
-          "text": "" if thing else delete_button,
-          "html": delete_button + "<span class=\"usa-sr-only\"> ‘" + thing + "’</span>" if thing else "",
-          "name": "delete",
-          "classes": "margin-top-2 usa-button--secondary",
-        }) }}
-      {% endcall %}
-    {% endif %}
+    <div class="usa-alert__body">
+      {% if subhead -%}
+        <h3 class="usa-alert__heading">{{ subhead }}</h3>
+      {%- endif -%}
+      <p class="usa-alert__text">
+        {{ body }}
+      </p>
+      {% if context %}
+      <p class="usa-alert__text">
+        {{ context }}
+      </p>
+      {% endif %}
+      {% if delete_button %}
+        {% call form_wrapper(action=action) %}
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          {{ usaButton({
+            "text": "" if thing else delete_button,
+            "html": delete_button + "<span class=\"usa-sr-only\"> '" + thing + "'</span>" if thing else "",
+            "name": "delete",
+            "classes": "margin-top-2 usa-button--secondary",
+          }) }}
+        {% endcall %}
+      {% endif %}
+    </div>
   </div>
 {% endmacro %}
 

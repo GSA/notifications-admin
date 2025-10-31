@@ -1027,7 +1027,7 @@ def test_invite_user(
         _follow_redirects=True,
     )
     assert page.h1.string.strip() == "Team members"
-    flash_banner = page.find("div", class_="banner-default-with-tick").string.strip()
+    flash_banner = page.select_one(".usa-alert--success .usa-alert__text").text.strip()
     assert flash_banner == f"Invite sent to {email_address}"
 
     expected_permissions = {
@@ -1139,7 +1139,7 @@ def test_invite_user_with_email_auth_service(
     )
 
     assert page.h1.string.strip() == "Team members"
-    flash_banner = page.find("div", class_="banner-default-with-tick").string.strip()
+    flash_banner = page.select_one(".usa-alert--success .usa-alert__text").text.strip()
     assert flash_banner == "Invite sent to test@example.gsa.gov"
 
     expected_permissions = {
@@ -1212,7 +1212,7 @@ def test_cancel_invited_user_cancels_user_invitations(
 
     assert normalize_spaces(page.h1.text) == "Team members"
     flash_banner = normalize_spaces(
-        page.find("div", class_="banner-default-with-tick").text
+        page.select_one(".usa-alert--success .usa-alert__text").text
     )
     assert flash_banner == f"Invitation cancelled for {sample_invite['email_address']}"
     mock_cancel.assert_called_once_with(
@@ -1839,8 +1839,11 @@ def test_edit_user_permissions_with_delete_query_shows_banner(
         delete=1,
     )
 
-    banner = page.find("div", class_="banner-dangerous")
-    assert banner.contents[0].strip() == "Are you sure you want to remove Test User?"
+    banner = page.select_one(".usa-alert--error")
+    assert (
+        banner.select_one(".usa-alert__text").text.strip()
+        == "Are you sure you want to remove Test User?"
+    )
     assert banner.form.attrs["action"] == url_for(
         "main.remove_user_from_service",
         service_id=service_one["id"],

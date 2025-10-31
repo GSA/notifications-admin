@@ -202,11 +202,12 @@ def test_confirm_delete_mobile_number(
         _test_page_title=False,
     )
 
-    assert normalize_spaces(page.select_one(".banner-dangerous").text) == (
-        "Are you sure you want to delete your mobile number from Notify? " "Yes, delete"
+    assert (
+        normalize_spaces(page.select_one(".usa-alert--error .usa-alert__text").text)
+        == "Are you sure you want to delete your mobile number from Notify?"
     )
-    assert "action" not in page.select_one(".banner-dangerous form")
-    assert page.select_one(".banner-dangerous form")["method"] == "post"
+    assert "action" not in page.select_one(".usa-alert--error form")
+    assert page.select_one(".usa-alert--error form")["method"] == "post"
 
 
 def test_delete_mobile_number(client_request, api_user_active_email_auth, mocker):
