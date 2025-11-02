@@ -1,0 +1,91 @@
+@use 'uswds-core' as *;
+@use 'settings/tokens' as *;
+
+.sms-message-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: $sms-bubble-max-width;
+  box-sizing: border-box;
+  padding: units(2);
+  background: color('gray-cool-10');
+  border: 1px solid color('gray-cool-10');
+  border-radius: units(0.5);
+  white-space: normal;
+  margin: 0 0 units(1) 0;
+  clear: both;
+  word-wrap: break-word;
+
+  // Speech bubble arrow
+  &:after {
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: -5px;
+    right: -$sms-bubble-arrow-offset;
+    border: $sms-bubble-arrow-size solid transparent;
+    border-left-width: $sms-bubble-arrow-width;
+    border-right-width: $sms-bubble-arrow-width;
+    border-bottom-color: color('gray-cool-10');
+    border-left-color: color('gray-cool-10');
+    transform: rotate($sms-bubble-arrow-rotation);
+  }
+}
+
+// Inbound messages
+.sms-message-inbound {
+  .sms-message-wrapper {
+    &:after {
+      border-left-color: transparent;
+      border-bottom-color: color('gray-cool-10');
+      border-right-color: color('gray-cool-10');
+      right: auto;
+      left: -$sms-bubble-arrow-offset;
+      transform: rotate($sms-bubble-arrow-rotation);
+    }
+  }
+}
+
+.sms-message-sender,
+.sms-message-file-name,
+.sms-message-scheduler,
+.sms-message-template {
+  margin: units(0.5) 0 0;
+}
+
+.sms-message-recipient {
+  color: color('gray-cool-90');
+  margin: units(0.5) 0 units(2);
+}
+
+.sms-message-status {
+  color: color('gray-cool-90');
+  margin: -20px units(1) 20px units(1); // Specific spacing requirement
+}
+
+.sms-message-status-outbound {
+  text-align: right;
+}
+
+h2.sms-message-header {
+  margin-bottom: units(0.5);
+}
+
+.usa-prose > * + h2.message-header {
+  margin-top: 1em;
+}
+
+h2.recipient-list {
+  margin-bottom: units(0.5);
+}
+
+.sms-message-row {
+  &:focus {
+    outline: none;
+    padding-top: units(15);
+    margin-top: units('neg-15');
+  }
+}
+
+.sms-message-reply-link {
+  text-align: right;
+}

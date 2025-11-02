@@ -1,0 +1,28 @@
+@use 'uswds-core' as *;
+
+// Data visualization colors
+$color-data-delivered: color('blue-50v');
+$color-data-pending: color('green-cool-40v');
+$color-data-failed: color('gray-cool-20');
+
+// Z-index scale
+$z-index-base: 10;
+$z-index-fullscreen-content: 100;
+$z-index-fullscreen-left-column: 150;
+$z-index-fullscreen-shadow: 200;
+$z-index-fullscreen-header: 200;
+$z-index-spreadsheet-fixed: 1000;
+
+// SMS message bubbles
+$sms-bubble-max-width: 464px;
+$sms-bubble-arrow-size: 10px;
+$sms-bubble-arrow-width: 13px;
+$sms-bubble-arrow-offset: 20px;
+$sms-bubble-arrow-rotation: 17deg;
+
+// Spreadsheet viewer
+$spreadsheet-column-width: 194px;
+$spreadsheet-column-padding: 11px;
+$spreadsheet-scrollbar-height: 11px;
+$spreadsheet-scrollbar-thumb-radius: units(1);
+$spreadsheet-scrollbar-border: 2px;

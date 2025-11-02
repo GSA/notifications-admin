@@ -1,5 +1,15 @@
 @forward "uswds-theme";
+
 @forward "uswds";
-@forward "uswds-theme-custom-styles";
-@forward "main";
-@forward "data-visualization";
+
+@forward "settings/tokens";
+
+@forward "components/sms-message";
+@forward "components/file-upload";
+@forward "components/spreadsheet";
+@forward "components/charts";
+
+// USWDS overrides
+@forward "overrides/usa-header";
+@forward "overrides/usa-search";
+@forward "overrides/modal";

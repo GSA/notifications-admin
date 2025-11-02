@@ -1,0 +1,85 @@
+@use 'uswds-core' as *;
+
+.file-upload {
+  &-label,
+  &-button-label {
+    font-weight: bold;
+    font-size: size('body', 5);
+    display: block;
+    margin: 0 0 units(1) 0;
+  }
+
+  &-label .error-message,
+  &-button-label.error-message {
+    padding: 0;
+  }
+
+  &-field {
+    margin-bottom: units(1);
+  }
+
+  .js-enabled &-label,
+  .js-enabled &-field,
+  .js-enabled &-submit {
+    display: none;
+  }
+
+  &-alternate-link {
+    display: inline-block;
+    line-height: 35px; // Specific design requirement
+
+    a {
+      font-weight: bold;
+    }
+  }
+}
+
+.page-footer {
+  position: relative;
+  margin-bottom: 30px; // Specific design requirement
+
+  &-link {
+    line-height: 40px; // Specific design requirement
+    padding: 1px 0 0 units(2);
+    font-weight: normal;
+
+    &:first-of-type {
+      padding-left: 0;
+    }
+  }
+
+  &-delete-link-without-button {
+    padding: 0;
+    display: inline-block;
+  }
+
+  &-secondary-link {
+    display: block;
+    margin-top: units(1);
+  }
+
+  &-right-aligned-link {
+    position: absolute;
+    right: 0;
+    top: units(1);
+
+    &-without-button {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+
+  &__button {
+    margin-right: units(1);
+  }
+
+  .js-cancel {
+    margin: 0;
+  }
+
+  &__button--centred {
+    display: block;
+    margin: 0 auto;
+  }
+}

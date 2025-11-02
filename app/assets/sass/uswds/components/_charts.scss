@@ -1,0 +1,151 @@
+@use 'uswds-core' as *;
+@use 'settings/tokens' as *;
+.chart-container {
+  display: flex;
+
+  &.usage {
+    height: units(4);
+  }
+
+  svg {
+    overflow: visible;
+  }
+}
+
+#totalMessageChartContainer {
+  max-width: 600px;
+}
+
+.bar {
+  border-radius: units(0.5);
+
+  &.delivered,
+  &.usage {
+    background-color: $color-data-delivered;
+    margin-right: 1px;
+  }
+
+  &.pending {
+    background-color: $color-data-pending;
+    margin-right: 1px;
+  }
+
+  &.failed,
+  &.remaining {
+    background-color: $color-data-failed;
+  }
+
+  fill-opacity: 0.8;
+}
+
+.legend {
+  display: flex;
+  margin: units(1) 0;
+
+  .legend-item {
+    display: flex;
+    align-items: flex-start;
+    margin-right: units(2);
+  }
+
+  .legend-color {
+    width: units(3);
+    height: units(3);
+    margin-right: 0;
+    padding: 0;
+    border-radius: 2px;
+    background-color: $color-data-delivered;
+
+    &.pending {
+      background-color: $color-data-pending;
+    }
+
+    &.failed,
+    &.remaining {
+      background-color: $color-data-failed;
+    }
+  }
+
+  .legend-value {
+    margin: 0 units(1);
+  }
+}
+
+.chart-legend {
+  display: flex;
+  align-items: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-right: units(2);
+
+  .legend-rect {
+    width: units(2);
+    height: units(2);
+    margin-right: units(1);
+  }
+}
+
+.progress-bar {
+  width: 300px;
+  height: 20px; // Specific design requirement
+  background-color: color('gray-5');
+  border-radius: units(1);
+  margin-bottom: units(2);
+}
+
+.progress-bar-inner {
+  height: 100%;
+  background-color: color('blue-60v');
+  border-radius: inherit;
+}
+
+.chart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: units(1) units(1) 0;
+}
+
+.chart-subtitle {
+  font-size: size('body', 6);
+  font-weight: bold;
+  text-align: left;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.axis text {
+  font-size: size('body', 1);
+}
+
+.axis line,
+.axis path {
+  shape-rendering: crispEdges;
+  stroke: color('black');
+  fill: none;
+}
+
+#tooltip {
+  position: absolute;
+  display: none;
+  background: color('ink');
+  color: color('white');
+  border: 1px solid color('gray-30');
+  padding: units(1);
+  border-radius: units(1);
+  pointer-events: none;
+  z-index: 100;
+  font-size: size('body', 3);
+  line-height: 1.3;
+}
