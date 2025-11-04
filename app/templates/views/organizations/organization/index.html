@@ -59,22 +59,21 @@
   </div>
 
   <div class="display-flex flex-gap-1 margin-bottom-3">
-    <a {% if not show_create_service %}href="{{ url_for('.organization_dashboard', org_id=current_org.id, action='create-service') }}"{% endif %}
-       class="usa-button {% if show_create_service %}usa-button--base button-not-clickable{% else %}usa-button--outline{% endif %}">
+    <a {% if not create_service_form %}href="{{ url_for('.organization_dashboard', org_id=current_org.id, action='create-service') }}"{% endif %}
+       class="usa-button {% if create_service_form %}usa-button--base button-not-clickable{% else %}usa-button--outline{% endif %}">
       Create new service
     </a>
-    <a {% if not show_invite_user %}href="{{ url_for('.organization_dashboard', org_id=current_org.id, action='invite-user') }}"{% endif %}
-       class="usa-button {% if show_invite_user %}usa-button--base button-not-clickable{% else %}usa-button--outline{% endif %}">
+    <a {% if not invite_user_form %}href="{{ url_for('.organization_dashboard', org_id=current_org.id, action='invite-user') }}"{% endif %}
+       class="usa-button {% if invite_user_form %}usa-button--base button-not-clickable{% else %}usa-button--outline{% endif %}">
       Add org admin
     </a>
   </div>
 
-  {% if show_create_service and create_service_form %}
+  {% if create_service_form %}
     <div id="create-service-form" class="bg-base-lightest padding-3 radius-md margin-bottom-3">
       <h3 class="margin-top-0">Create a new service</h3>
       <form method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='create-service') }}">
         <input type="hidden" name="csrf_token" value="{{ create_service_form.csrf_token._value() }}"/>
-        <input type="hidden" name="form_name" value="create_service"/>
 
         {{ create_service_form.name(param_extensions={"hint": {"text": "You can change this later"}}) }}
 
@@ -86,18 +85,57 @@
     </div>
   {% endif %}
 
-  {% if show_invite_user and invite_user_form %}
+  {% if invite_user_form %}
     <div id="invite-user-form" class="bg-base-lightest padding-3 radius-md margin-bottom-3">
       <h3 class="margin-top-0">Invite a team member</h3>
       <p class="margin-top-0">{{ current_org.name }} team members can see usage and team members for each service, and invite other team members.</p>
       <form method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='invite-user') }}">
         <input type="hidden" name="csrf_token" value="{{ invite_user_form.csrf_token._value() }}"/>
-        <input type="hidden" name="form_name" value="invite_user"/>
 
         {{ invite_user_form.email_address(param_extensions={"classes": ""}, error_message_with_html=True) }}
 
         <div class="display-flex flex-gap-1 margin-top-3">
           <button type="submit" class="usa-button">Send invitation</button>
+          <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="usa-button usa-button--outline">Cancel</a>
+        </div>
+      </form>
+    </div>
+  {% endif %}
+
+  {% if edit_service_data %}
+    <div id="edit-service-form" class="bg-base-lightest padding-3 radius-md margin-bottom-3">
+      <h3 class="margin-top-0">Edit Service</h3>
+      <form method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='edit-service', service_id=edit_service_data.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+        <div class="usa-form-group">
+          <label class="usa-label" for="service_name">Service Name</label>
+          <input class="usa-input" type="text" id="service_name" name="service_name"
+                 value="{{ edit_service_data.name }}" required>
+        </div>
+
+        <div class="usa-form-group">
+          <label class="usa-label" for="primary_contact">Primary Contact Email</label>
+          <input class="usa-input" type="email" id="primary_contact" name="primary_contact"
+                 value="{{ edit_service_data.primary_contact }}" placeholder="email@example.com">
+        </div>
+
+        <fieldset class="usa-fieldset">
+          <legend class="usa-legend">Service Status</legend>
+          <div class="usa-radio">
+            <input class="usa-radio__input" id="statusTrial" type="radio" name="status" value="trial"
+                   {% if edit_service_data.status == 'trial' %}checked{% endif %}>
+            <label class="usa-radio__label" for="statusTrial">Trial</label>
+          </div>
+          <div class="usa-radio">
+            <input class="usa-radio__input" id="statusLive" type="radio" name="status" value="live"
+                   {% if edit_service_data.status == 'live' %}checked{% endif %}>
+            <label class="usa-radio__label" for="statusLive">Live</label>
+          </div>
+        </fieldset>
+
+        <div class="display-flex flex-gap-1 margin-top-3">
+          <button type="submit" class="usa-button">Save Changes</button>
           <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="usa-button usa-button--outline">Cancel</a>
         </div>
       </form>
@@ -134,21 +172,23 @@
   <div class="margin-bottom-5">
     <h2 class="font-heading-lg margin-bottom-2">Services Overview</h2>
     <div class="table-overflow-x-auto">
-      <table class="usa-table">
+      <table class="usa-table service-dashboard-table">
         <thead>
           <tr>
             <th scope="col" role="columnheader">Name</th>
             <th scope="col" role="columnheader">Status</th>
             <th scope="col" role="columnheader">Usage</th>
             <th scope="col" role="columnheader">Primary Contact</th>
-            <th scope="col" role="columnheader">Recent Template Used</th>
+            <th scope="col" role="columnheader">Last Used</th>
+            <th scope="col" role="columnheader">Actions</th>
           </tr>
         </thead>
         <tbody>
           {% if services %}
             {% for service in services %}
             {% set is_new_service = new_service_id and service.id == new_service_id %}
-            <tr id="service-{{ service.id }}" {% if is_new_service %}class="is-highlighted"{% endif %}>
+            {% set is_updated_service = updated_service_id and service.id == updated_service_id %}
+            <tr id="service-{{ service.id }}" {% if is_new_service or is_updated_service %}class="is-highlighted"{% endif %}>
               <td><a href="{{ url_for('main.service_dashboard', service_id=service.id) }}" class="usa-link">{{ service.name }}</a></td>
               <td>
                 {% if not service.active %}
@@ -162,11 +202,23 @@
               <td>{{ service.usage }}</td>
               <td>{{ service.primary_contact }}</td>
               <td>{{ service.recent_template }}</td>
+              <td>
+                {% if service.active %}
+                {% set is_editing = edit_service_data and edit_service_data.id == service.id %}
+                {% if is_editing %}
+                  <span class="text-base">Edit</span>
+                {% else %}
+                  <a href="{{ url_for('.organization_dashboard', org_id=current_org.id, action='edit-service', service_id=service.id) }}" class="usa-link">
+                    Edit
+                  </a>
+                {% endif %}
+                {% endif %}
+              </td>
             </tr>
             {% endfor %}
           {% else %}
             <tr>
-              <td colspan="5" class="table-empty-message">No services found within this organization</td>
+              <td colspan="6" class="table-empty-message">No services found within this organization</td>
             </tr>
           {% endif %}
         </tbody>
@@ -191,7 +243,7 @@
 
       function focusFirstInput(container, delay) {
         setTimeout(function() {
-          var input = container.querySelector('input[type="text"], input[type="search"]');
+          var input = container.querySelector('input[type="text"], input[type="email"]');
           if (input) input.focus();
         }, delay || 0);
       }
@@ -210,9 +262,24 @@
       }
       {% endif %}
 
+      {% if updated_service_id %}
+      var updatedServiceRow = document.getElementById('service-{{ updated_service_id }}');
+      if (updatedServiceRow) {
+        scrollToElement(updatedServiceRow, 300);
+
+        setTimeout(function() {
+          updatedServiceRow.classList.remove('is-highlighted');
+          if (updatedServiceRow.className === '') {
+            updatedServiceRow.removeAttribute('class');
+          }
+        }, 3300);
+      }
+      {% endif %}
+
       requestAnimationFrame(function() {
         var form = document.getElementById('create-service-form') ||
-                   document.getElementById('invite-user-form');
+                   document.getElementById('invite-user-form') ||
+                   document.getElementById('edit-service-form');
 
         if (form) {
           scrollToElement(form, 50);
