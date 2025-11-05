@@ -14,6 +14,7 @@ from flask import (
     url_for,
 )
 from flask_login import current_user
+from markupsafe import escape
 
 from app import current_organization, org_invite_api_client, organizations_client
 from app.enums import OrganizationType
@@ -171,12 +172,12 @@ def _handle_edit_service(org_id, service_id):
     return {
         "id": service.id,
         "name": (
-            request.form.get("service_name", "").strip()
+            escape(request.form.get("service_name", "").strip())
             if request.method == "POST"
             else service.name
         ),
         "primary_contact": (
-            request.form.get("primary_contact", "").strip()
+            escape(request.form.get("primary_contact", "").strip())
             if request.method == "POST"
             else (service.billing_contact_email_addresses or "")
         ),
