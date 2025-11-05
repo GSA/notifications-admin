@@ -117,7 +117,7 @@
         <div class="usa-form-group">
           <label class="usa-label" for="primary_contact">Primary Contact Email</label>
           <input class="usa-input" type="email" id="primary_contact" name="primary_contact"
-                value="{{ edit_service_data.primary_contact }}" placeholder="email@example.com">
+                value="{{ edit_service_data.primary_contact|default('') }}" placeholder="email@example.com">
         </div>
 
         <fieldset class="usa-fieldset">
