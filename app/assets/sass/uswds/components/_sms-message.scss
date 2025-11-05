@@ -9,7 +9,7 @@
   padding: units(2);
   background: color('gray-cool-10');
   border: 1px solid color('gray-cool-10');
-  border-radius: units(0.5);
+  border-radius: units(1);
   white-space: normal;
   margin: 0 0 units(1) 0;
   clear: both;
@@ -49,17 +49,17 @@
 .sms-message-file-name,
 .sms-message-scheduler,
 .sms-message-template {
-  margin: units(0.5) 0 0;
+  margin: units(1) 0 0;
 }
 
 .sms-message-recipient {
   color: color('gray-cool-90');
-  margin: units(0.5) 0 units(2);
+  margin: units(1) 0 units(2);
 }
 
 .sms-message-status {
   color: color('gray-cool-90');
-  margin: -20px units(1) 20px units(1); // Specific spacing requirement
+  margin: units('neg-205') units(1) units('205') units(1); // Specific spacing requirement
 }
 
 .sms-message-status-outbound {
@@ -67,7 +67,7 @@
 }
 
 h2.sms-message-header {
-  margin-bottom: units(0.5);
+  margin-bottom: units(1);
 }
 
 .usa-prose > * + h2.message-header {
@@ -75,7 +75,7 @@ h2.sms-message-header {
 }
 
 h2.recipient-list {
-  margin-bottom: units(0.5);
+  margin-bottom: units(1);
 }
 
 .sms-message-row {

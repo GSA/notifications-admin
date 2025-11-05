@@ -1585,9 +1585,24 @@ def test_organization_dashboard_shows_service_counts(
         "app.organizations_client.get_organization_dashboard",
         return_value={
             "services": [
-                {"service_id": "1", "service_name": "Live Service", "active": True, "restricted": False},
-                {"service_id": "2", "service_name": "Trial Service", "active": True, "restricted": True},
-                {"service_id": "3", "service_name": "Suspended", "active": False, "restricted": False},
+                {
+                    "service_id": "1",
+                    "service_name": "Live Service",
+                    "active": True,
+                    "restricted": False,
+                },
+                {
+                    "service_id": "2",
+                    "service_name": "Trial Service",
+                    "active": True,
+                    "restricted": True,
+                },
+                {
+                    "service_id": "3",
+                    "service_name": "Suspended",
+                    "active": False,
+                    "restricted": False,
+                },
             ]
         },
     )
@@ -1615,11 +1630,17 @@ def test_organization_dashboard_services_table(
     mocker,
     active_user_with_permissions,
 ):
-    mocker.patch.dict("flask.current_app.config", {"ORGANIZATION_DASHBOARD_ENABLED": True})
+    mocker.patch.dict(
+        "flask.current_app.config", {"ORGANIZATION_DASHBOARD_ENABLED": True}
+    )
 
     mocker.patch(
         "app.organizations_client.get_organization_message_usage",
-        return_value={"messages_sent": 0, "messages_remaining": 0, "total_message_limit": 0},
+        return_value={
+            "messages_sent": 0,
+            "messages_remaining": 0,
+            "total_message_limit": 0,
+        },
     )
     mocker.patch(
         "app.organizations_client.get_organization_services",

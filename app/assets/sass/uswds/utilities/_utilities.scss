@@ -1,0 +1,38 @@
+@use 'uswds-core' as *;
+
+// Utility classes to replace inline styles
+.text-error {
+  color: color('red-60v');
+}
+
+.width-half {
+  width: 50%;
+}
+
+.width-quarter {
+  width: 25%;
+}
+
+.no-js-toggle {
+  display: none;
+
+  .no-js & {
+    display: block;
+  }
+}
+
+.js-enabled-toggle {
+  display: none;
+
+  .js-enabled & {
+    display: block;
+  }
+}
+
+.visibility-hidden {
+  visibility: hidden;
+}
+
+.text-spaced {
+  letter-spacing: 1px;
+}

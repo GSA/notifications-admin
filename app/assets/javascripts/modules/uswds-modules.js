@@ -27,10 +27,11 @@
       var modules = this.find(container);
 
       for (var i = 0, l = modules.length; i < l; i++) {
+        var type;
         try {
           var module;
           var element = modules[i];
-          var type = this.camelCaseAndCapitalise(element.dataset.module);
+          type = this.camelCaseAndCapitalise(element.dataset.module);
           var started = element.dataset.moduleStarted;
 
           if (typeof window.NotifyModules[type] === 'function' && !started) {

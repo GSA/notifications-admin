@@ -108,7 +108,7 @@ def e2e_created_service(e2e_test_service):  # noqa: PT022
     page.goto(f"{E2E_TEST_URI}/accounts")
     page.wait_for_load_state("domcontentloaded")
 
-    add_service_button = page.get_by_role("button", name="Add a new service")
+    add_service_button = page.get_by_role("button", name="Add service")
     add_service_button.click()
     page.wait_for_load_state("domcontentloaded")
 

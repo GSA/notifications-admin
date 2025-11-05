@@ -26,7 +26,7 @@
 
   &-alternate-link {
     display: inline-block;
-    line-height: 35px; // Specific design requirement
+    line-height: units(4); // Specific design requirement
 
     a {
       font-weight: bold;
@@ -36,10 +36,10 @@
 
 .page-footer {
   position: relative;
-  margin-bottom: 30px; // Specific design requirement
+  margin-bottom: units(4); // Specific design requirement
 
   &-link {
-    line-height: 40px; // Specific design requirement
+    line-height: units(5); // Specific design requirement
     padding: 1px 0 0 units(2);
     font-weight: normal;
 

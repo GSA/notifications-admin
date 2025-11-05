@@ -78,7 +78,9 @@ def get_organization_message_allowance(org_id):
 
 def get_services_dashboard_data(organization, year):
     try:
-        dashboard_data = organizations_client.get_organization_dashboard(organization.id, year)
+        dashboard_data = organizations_client.get_organization_dashboard(
+            organization.id, year
+        )
         services = dashboard_data.get("services", [])
     except Exception as e:
         current_app.logger.error(f"Error fetching dashboard data: {e}")
@@ -100,7 +102,9 @@ def get_services_dashboard_data(organization, year):
             usage_parts.append(f"{emails_sent:,} emails")
         if sms_sent > 0 or sms_remainder > 0:
             if sms_cost > 0:
-                usage_parts.append(f"{sms_sent:,} sms ({sms_remainder:,} remaining, ${sms_cost:,.2f})")
+                usage_parts.append(
+                    f"{sms_sent:,} sms ({sms_remainder:,} remaining, ${sms_cost:,.2f})"
+                )
             else:
                 usage_parts.append(f"{sms_sent:,} sms ({sms_remainder:,} remaining)")
 

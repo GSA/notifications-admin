@@ -28,7 +28,7 @@
 
   td {
     border-top: 0;
-    min-width: $spreadsheet-column-width - $spreadsheet-column-padding;
+    min-width: calc(#{$spreadsheet-column-width} - #{$spreadsheet-column-padding});
 
     &:first-child {
       min-width: auto;
@@ -76,7 +76,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    width: units(0.5);
+    width: units(1);
     height: 100%;
     z-index: $z-index-fullscreen-shadow;
 
@@ -153,7 +153,7 @@
   }
 
   &-scrolled-table {
-    padding-bottom: 20px; // Specific design requirement
+    padding-bottom: units(3); // Specific design requirement
 
     .table-field-heading-first,
     .table-field-index {
@@ -168,11 +168,11 @@
     width: 100%;
     position: relative;
     z-index: 9;
-    margin-bottom: 30px; // Specific design requirement
+    margin-bottom: units(4); // Specific design requirement
     pointer-events: none;
 
     & + .table-show-more-link {
-      margin-top: -20px; // Specific design requirement
+      margin-top: units('neg-3'); // Specific design requirement
     }
   }
 }

@@ -4,7 +4,7 @@
   display: flex;
 
   &.usage {
-    height: units(4);
+    height: units(5);
   }
 
   svg {
@@ -17,7 +17,7 @@
 }
 
 .bar {
-  border-radius: units(0.5);
+  border-radius: units(1);
 
   &.delivered,
   &.usage {
@@ -41,12 +41,6 @@
 .legend {
   display: flex;
   margin: units(1) 0;
-
-  .legend-item {
-    display: flex;
-    align-items: flex-start;
-    margin-right: units(2);
-  }
 
   .legend-color {
     width: units(3);
@@ -88,10 +82,14 @@
   }
 }
 
+.legend .legend-item {
+  align-items: flex-start;
+}
+
 .progress-bar {
-  width: 300px;
-  height: 20px; // Specific design requirement
-  background-color: color('gray-5');
+  width: units('card');
+  height: units(3); // Specific design requirement
+  background-color: color('gray-cool-5');
   border-radius: units(1);
   margin-bottom: units(2);
 }

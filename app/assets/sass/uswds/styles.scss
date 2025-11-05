@@ -1,15 +1,27 @@
+// Load USWDS theme configuration first
 @forward "uswds-theme";
 
+// Then load USWDS which will use the theme settings
 @forward "uswds";
 
+// Custom tokens
 @forward "settings/tokens";
 
+// Components
 @forward "components/sms-message";
 @forward "components/file-upload";
 @forward "components/spreadsheet";
 @forward "components/charts";
 
+// Utilities
+@forward "utilities/utilities";
+
 // USWDS overrides
+@forward "overrides/typography";
 @forward "overrides/usa-header";
+@forward "overrides/usa-nav";
 @forward "overrides/usa-search";
 @forward "overrides/modal";
+
+// Custom overrides that MUST come last to override USWDS defaults
+@use "custom-overrides";

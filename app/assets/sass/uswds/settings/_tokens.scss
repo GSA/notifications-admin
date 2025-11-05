@@ -14,15 +14,15 @@ $z-index-fullscreen-header: 200;
 $z-index-spreadsheet-fixed: 1000;
 
 // SMS message bubbles
-$sms-bubble-max-width: 464px;
-$sms-bubble-arrow-size: 10px;
-$sms-bubble-arrow-width: 13px;
-$sms-bubble-arrow-offset: 20px;
+$sms-bubble-max-width: units('mobile'); // ~464px
+$sms-bubble-arrow-size: units('105'); // ~10px
+$sms-bubble-arrow-width: units(2); // ~13px
+$sms-bubble-arrow-offset: units('205'); // ~20px
 $sms-bubble-arrow-rotation: 17deg;
 
 // Spreadsheet viewer
-$spreadsheet-column-width: 194px;
-$spreadsheet-column-padding: 11px;
-$spreadsheet-scrollbar-height: 11px;
+$spreadsheet-column-width: 194px; // Keep as pixels for specific layout requirement
+$spreadsheet-column-padding: 16px; // Keep as pixels for calc compatibility
+$spreadsheet-scrollbar-height: units(2); // ~11px
 $spreadsheet-scrollbar-thumb-radius: units(1);
-$spreadsheet-scrollbar-border: 2px;
+$spreadsheet-scrollbar-border: 2px; // Keep as pixels for webkit scrollbar

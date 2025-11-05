@@ -29,9 +29,7 @@ def test_add_new_service_workflow(e2e_test_service):
     expect(sign_in_heading).to_be_visible()
 
     # Retrieve some prominent elements on the page for testing.
-    add_service_button = page.get_by_role(
-        "button", name=re.compile("Add a new service")
-    )
+    add_service_button = page.get_by_role("button", name=re.compile("Add service"))
 
     expect(add_service_button).to_be_visible()
 
