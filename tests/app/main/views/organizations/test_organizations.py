@@ -1711,3 +1711,97 @@ def test_organization_dashboard_services_table(
     assert "249,900 remaining" in normalize_spaces(second_row_cells[2].text)
     assert normalize_spaces(second_row_cells[3].text) == "N/A"
     assert normalize_spaces(second_row_cells[4].text) == "Reminder SMS"
+
+
+def test_organization_dashboard_shows_edit_service_form(
+    client_request,
+    mock_get_organization,
+    mocker,
+    active_user_with_permissions,
+):
+    service = service_json(
+        id_=SERVICE_ONE_ID,
+        name="Test Service",
+        restricted=True,
+        active=True,
+        billing_contact_email_addresses="test@example.com",
+    )
+    mocker.patch("app.service_api_client.get_service", return_value={"data": service})
+    mocker.patch(
+        "app.organizations_client.get_organization_message_usage",
+        return_value={
+            "messages_sent": 0,
+            "messages_remaining": 0,
+            "total_message_limit": 0,
+        },
+    )
+    mocker.patch("app.organizations_client.get_organization_services", return_value=[service])
+    mocker.patch(
+        "app.organizations_client.get_organization_dashboard",
+        return_value={"services": []},
+    )
+
+    client_request.login(active_user_with_permissions)
+    page = client_request.get(
+        ".organization_dashboard",
+        org_id=ORGANISATION_ID,
+        action="edit-service",
+        service_id=SERVICE_ONE_ID,
+    )
+
+    assert page.select_one("#edit-service-form")
+    assert page.select_one("#service_name")["value"] == "service one"
+    assert page.select_one("#primary_contact")
+    assert page.select_one("#statusTrial")["checked"] == ""
+
+
+def test_organization_dashboard_edit_service_updates_service(
+    client_request,
+    mock_get_organization,
+    mocker,
+    active_user_with_permissions,
+):
+    service = service_json(
+        id_=SERVICE_ONE_ID,
+        name="Old Name",
+        restricted=True,
+        active=True,
+        billing_contact_email_addresses="old@example.com",
+    )
+    mocker.patch("app.service_api_client.get_service", return_value={"data": service})
+    mock_update_service = mocker.patch("app.service_api_client.update_service")
+    mocker.patch(
+        "app.organizations_client.get_organization_message_usage",
+        return_value={
+            "messages_sent": 0,
+            "messages_remaining": 0,
+            "total_message_limit": 0,
+        },
+    )
+    mocker.patch("app.organizations_client.get_organization_services", return_value=[service])
+    mocker.patch(
+        "app.organizations_client.get_organization_dashboard",
+        return_value={"services": []},
+    )
+    mocker.patch("app.extensions.redis_client.delete")
+
+    client_request.login(active_user_with_permissions)
+    client_request.post(
+        ".organization_dashboard",
+        org_id=ORGANISATION_ID,
+        action="edit-service",
+        service_id=SERVICE_ONE_ID,
+        _data={
+            "service_name": "New Name",
+            "primary_contact": "new@example.com",
+            "status": "live",
+        },
+        _expected_redirect=url_for(
+            ".organization_dashboard",
+            org_id=ORGANISATION_ID,
+        ),
+    )
+
+    assert mock_update_service.call_count == 3
+    mock_update_service.assert_any_call(SERVICE_ONE_ID, name="New Name")
+    mock_update_service.assert_any_call(SERVICE_ONE_ID, billing_contact_email_addresses="new@example.com")
