@@ -265,73 +265,19 @@
 
 {% block extra_javascripts %}
   <script nonce="{{ csp_nonce() }}">
-    (function() {
-      function scrollToElement(element, delay) {
-        setTimeout(function() {
-          element.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center',
-            inline: 'nearest'
-          });
-        }, delay || 0);
-      }
-
-      function focusFirstInput(container, delay) {
-        setTimeout(function() {
-          var input = container.querySelector('input[type="text"], input[type="email"]');
-          if (input) input.focus();
-        }, delay || 0);
-      }
-
+    document.addEventListener('DOMContentLoaded', function() {
       {% if new_service_id %}
-      var serviceRow = document.getElementById('service-{{ new_service_id }}');
-      if (serviceRow) {
-        scrollToElement(serviceRow, 300);
-
-        setTimeout(function() {
-          serviceRow.classList.remove('is-highlighted');
-          if (serviceRow.className === '') {
-            serviceRow.removeAttribute('class');
-          }
-        }, 3300);
+      if (window.OrganizationDashboard) {
+        window.OrganizationDashboard.highlightAndScrollToService('{{ new_service_id }}');
       }
       {% endif %}
 
       {% if updated_service_id %}
-      var updatedServiceRow = document.getElementById('service-{{ updated_service_id }}');
-      if (updatedServiceRow) {
-        scrollToElement(updatedServiceRow, 300);
-
-        setTimeout(function() {
-          updatedServiceRow.classList.remove('is-highlighted');
-          if (updatedServiceRow.className === '') {
-            updatedServiceRow.removeAttribute('class');
-          }
-        }, 3300);
+      if (window.OrganizationDashboard) {
+        window.OrganizationDashboard.highlightAndScrollToService('{{ updated_service_id }}');
       }
       {% endif %}
-
-      requestAnimationFrame(function() {
-        var form = document.getElementById('create-service-form') ||
-                  document.getElementById('invite-user-form') ||
-                  document.getElementById('edit-service-form');
-
-        if (form) {
-          scrollToElement(form, 50);
-          focusFirstInput(form, 150);
-        }
-      });
-
-      var confirmEditButton = document.getElementById('edit-service-confirm-btn');
-      if (confirmEditButton) {
-        confirmEditButton.addEventListener('click', function() {
-          var editForm = document.getElementById('edit-service-form');
-          if (editForm) {
-            editForm.submit();
-          }
-        });
-      }
-    })();
+    });
   </script>
   {{ super() }}
 {% endblock %}
