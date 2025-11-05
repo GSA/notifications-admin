@@ -103,42 +103,77 @@
   {% endif %}
 
   {% if edit_service_data %}
-    <div id="edit-service-form" class="bg-base-lightest padding-3 radius-md margin-bottom-3">
+    <div class="bg-base-lightest padding-3 radius-md margin-bottom-3">
       <h3 class="margin-top-0">Edit Service</h3>
-      <form method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='edit-service', service_id=edit_service_data.id) }}">
+      <form id="edit-service-form" method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='edit-service', service_id=edit_service_data.id) }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
         <div class="usa-form-group">
           <label class="usa-label" for="service_name">Service Name</label>
           <input class="usa-input" type="text" id="service_name" name="service_name"
-                 value="{{ edit_service_data.name }}" required>
+                value="{{ edit_service_data.name }}" required>
         </div>
 
         <div class="usa-form-group">
           <label class="usa-label" for="primary_contact">Primary Contact Email</label>
           <input class="usa-input" type="email" id="primary_contact" name="primary_contact"
-                 value="{{ edit_service_data.primary_contact }}" placeholder="email@example.com">
+                value="{{ edit_service_data.primary_contact }}" placeholder="email@example.com">
         </div>
 
         <fieldset class="usa-fieldset">
           <legend class="usa-legend">Service Status</legend>
           <div class="usa-radio">
             <input class="usa-radio__input" id="statusTrial" type="radio" name="status" value="trial"
-                   {% if edit_service_data.status == 'trial' %}checked{% endif %}>
+                  {% if edit_service_data.status == 'trial' %}checked{% endif %}>
             <label class="usa-radio__label" for="statusTrial">Trial</label>
           </div>
           <div class="usa-radio">
             <input class="usa-radio__input" id="statusLive" type="radio" name="status" value="live"
-                   {% if edit_service_data.status == 'live' %}checked{% endif %}>
+                  {% if edit_service_data.status == 'live' %}checked{% endif %}>
             <label class="usa-radio__label" for="statusLive">Live</label>
           </div>
         </fieldset>
 
         <div class="display-flex flex-gap-1 margin-top-3">
-          <button type="submit" class="usa-button">Save Changes</button>
+          <button type="button" class="usa-button" data-open-modal="confirmEditModal">Save Changes</button>
           <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="usa-button usa-button--outline">Cancel</a>
         </div>
       </form>
+    </div>
+
+    <div
+      class="usa-modal"
+      data-module="usa-modal"
+      id="confirmEditModal"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confirmEditModalHeading"
+      aria-describedby="confirmEditModalDesc"
+    >
+      <div class="usa-modal__content">
+        <div class="usa-modal__main">
+          <h2 class="usa-modal__heading font-body-lg" id="confirmEditModalHeading">Are you sure you want to save these changes?</h2>
+          <p id="confirmEditModalDesc">This will update the service name, primary contact, and/or status. If you're changing the status to Live, team members will be notified.</p>
+          <div class="usa-modal__footer">
+            <ul class="usa-button-group">
+              <li class="usa-button-group__item">
+                <button type="button" id="edit-service-confirm-btn" class="usa-button">Confirm changes</button>
+              </li>
+              <li class="usa-button-group__item">
+                <button class="usa-button usa-button--unstyled padding-105 text-center" data-close-modal type="button">
+                  No, go back
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <button class="usa-button usa-modal__close" aria-label="Close this window" data-close-modal type="button">
+          <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+            <use xlink:href="{{ asset_url('img/sprite.svg') }}#close"></use>
+          </svg>
+        </button>
+      </div>
     </div>
   {% endif %}
 
@@ -278,14 +313,24 @@
 
       requestAnimationFrame(function() {
         var form = document.getElementById('create-service-form') ||
-                   document.getElementById('invite-user-form') ||
-                   document.getElementById('edit-service-form');
+                  document.getElementById('invite-user-form') ||
+                  document.getElementById('edit-service-form');
 
         if (form) {
           scrollToElement(form, 50);
           focusFirstInput(form, 150);
         }
       });
+
+      var confirmEditButton = document.getElementById('edit-service-confirm-btn');
+      if (confirmEditButton) {
+        confirmEditButton.addEventListener('click', function() {
+          var editForm = document.getElementById('edit-service-form');
+          if (editForm) {
+            editForm.submit();
+          }
+        });
+      }
     })();
   </script>
   {{ super() }}
