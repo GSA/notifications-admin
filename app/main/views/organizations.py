@@ -45,7 +45,7 @@ from app.utils.csv import Spreadsheet
 from app.utils.user import user_has_permissions, user_is_platform_admin
 from notifications_python_client.errors import HTTPError
 
-EMAIL_REGEX = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+EMAIL_REGEX = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
 
 
 @main.route("/organizations", methods=["GET"])
@@ -151,7 +151,7 @@ def _handle_edit_service(org_id, service_id):
 
         if not service_name:
             flash("Service name is required", "error")
-        elif primary_contact and not re.match(EMAIL_REGEX, primary_contact):
+        elif primary_contact and not EMAIL_REGEX.match(primary_contact):
             flash("Please enter a valid email address", "error")
         else:
             if service_name != service.name:
@@ -339,8 +339,6 @@ def download_organization_usage_report(org_id):
     ]
 
     # Sanitize organization name for filename to prevent header injection
-    import re
-
     safe_org_name = re.sub(r"[^\w\s-]", "", current_organization.name).strip()
     safe_org_name = re.sub(r"[-\s]+", "-", safe_org_name)
 
