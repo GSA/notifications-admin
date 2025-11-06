@@ -1,8 +1,10 @@
+import re
 from collections import OrderedDict
 from datetime import datetime
 from functools import partial
 
 from flask import (
+    Response,
     current_app,
     flash,
     redirect,
@@ -12,6 +14,7 @@ from flask import (
     url_for,
 )
 from flask_login import current_user
+from markupsafe import escape
 
 from app import current_organization, org_invite_api_client, organizations_client
 from app.enums import OrganizationType
@@ -35,10 +38,14 @@ from app.main.views.dashboard import (
     requested_and_current_financial_year,
 )
 from app.models.organization import AllOrganizations, Organization
+from app.models.service import Service
 from app.models.user import InvitedOrgUser, User
+from app.notify_client import cache
 from app.utils.csv import Spreadsheet
 from app.utils.user import user_has_permissions, user_is_platform_admin
 from notifications_python_client.errors import HTTPError
+
+EMAIL_REGEX = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
 
 
 @main.route("/organizations", methods=["GET"])
@@ -88,6 +95,96 @@ def get_organization_message_allowance(org_id):
     }
 
 
+def _handle_create_service(org_id):
+    create_service_form = CreateServiceForm(
+        organization_type=current_user.default_organization_type
+        or OrganizationType.FEDERAL
+    )
+
+    if request.method == "POST" and create_service_form.validate_on_submit():
+        service_name = create_service_form.name.data
+        service_id, error = _create_service(
+            service_name,
+            create_service_form.organization_type.data,
+            email_safe(service_name),
+            create_service_form,
+        )
+        if not error:
+            current_organization.associate_service(service_id)
+            flash(f"Service '{service_name}' has been created", "default_with_tick")
+            session["new_service_id"] = service_id
+            return redirect(url_for(".organization_dashboard", org_id=org_id))
+        else:
+            flash("Error creating service", "error")
+
+    return create_service_form
+
+
+def _handle_invite_user(org_id):
+    invite_user_form = InviteOrgUserForm(
+        inviter_email_address=current_user.email_address
+    )
+
+    if request.method == "POST" and invite_user_form.validate_on_submit():
+        try:
+            invited_org_user = InvitedOrgUser.create(
+                current_user.id, org_id, invite_user_form.email_address.data
+            )
+            flash(
+                f"Invite sent to {invited_org_user.email_address}",
+                "default_with_tick",
+            )
+            return redirect(url_for(".organization_dashboard", org_id=org_id))
+        except Exception:
+            flash("Error sending invitation", "error")
+
+    return invite_user_form
+
+
+def _handle_edit_service(org_id, service_id):
+    service = Service.from_id(service_id)
+
+    if request.method == "POST":
+        service_name = request.form.get("service_name", "").strip()
+        primary_contact = request.form.get("primary_contact", "").strip()
+        new_status = request.form.get("status")
+
+        if not service_name:
+            flash("Service name is required", "error")
+        elif primary_contact and not EMAIL_REGEX.match(primary_contact):
+            flash("Please enter a valid email address", "error")
+        else:
+            if service_name != service.name:
+                service.update(name=service_name)
+
+            if primary_contact != (service.billing_contact_email_addresses or ""):
+                service.update(billing_contact_email_addresses=primary_contact)
+
+            current_status = "trial" if service.trial_mode else "live"
+            if new_status != current_status:
+                service.update_status(live=(new_status == "live"))
+                cache.redis_client.delete("organizations")
+
+            flash("Service updated successfully", "default_with_tick")
+            session["updated_service_id"] = str(service_id)
+            return redirect(url_for(".organization_dashboard", org_id=org_id))
+
+    return {
+        "id": service.id,
+        "name": (
+            escape(request.form.get("service_name", "").strip())
+            if request.method == "POST"
+            else service.name
+        ),
+        "primary_contact": (
+            escape(request.form.get("primary_contact", "").strip())
+            if request.method == "POST"
+            else (service.billing_contact_email_addresses or "")
+        ),
+        "status": "trial" if service.trial_mode else "live",
+    }
+
+
 def get_services_dashboard_data(organization, year):
     try:
         dashboard_data = organizations_client.get_organization_dashboard(
@@ -133,73 +230,45 @@ def organization_dashboard(org_id):
 
     year = requested_and_current_financial_year(request)[0]
     action = request.args.get("action")
+    service_id = request.args.get("service_id")
 
     create_service_form = None
     invite_user_form = None
+    edit_service_data = None
 
-    if action == "create-service" or request.form.get("form_name") == "create_service":
-        create_service_form = CreateServiceForm(
-            organization_type=current_user.default_organization_type
-            or OrganizationType.FEDERAL
-        )
+    if action == "create-service":
+        result = _handle_create_service(org_id)
+        if isinstance(result, Response):
+            return result
+        create_service_form = result
 
-        if request.method == "POST" and create_service_form.validate_on_submit():
-            service_name = create_service_form.name.data
-            service_id, error = _create_service(
-                service_name,
-                create_service_form.organization_type.data,
-                email_safe(service_name),
-                create_service_form,
-            )
-            if not error:
-                current_organization.associate_service(service_id)
-                current_app.logger.info(
-                    f"Service {service_id} created and associated with org {org_id}"
-                )
-                flash(f"Service '{service_name}' has been created", "default_with_tick")
-                session["new_service_id"] = service_id
-                return redirect(url_for(".organization_dashboard", org_id=org_id))
-            else:
-                current_app.logger.error(f"Error creating service: {error}")
-                flash("Error creating service", "error")
+    elif action == "invite-user":
+        result = _handle_invite_user(org_id)
+        if isinstance(result, Response):
+            return result
+        invite_user_form = result
 
-    if action == "invite-user" or request.form.get("form_name") == "invite_user":
-        invite_user_form = InviteOrgUserForm(
-            inviter_email_address=current_user.email_address
-        )
-
-        if request.method == "POST" and invite_user_form.validate_on_submit():
-            try:
-                invited_org_user = InvitedOrgUser.create(
-                    current_user.id, org_id, invite_user_form.email_address.data
-                )
-                flash(
-                    f"Invite sent to {invited_org_user.email_address}",
-                    "default_with_tick",
-                )
-                return redirect(url_for(".organization_dashboard", org_id=org_id))
-            except Exception as e:
-                current_app.logger.error(f"Error inviting user: {e}")
-                flash("Error sending invitation", "error")
+    elif action == "edit-service" and service_id:
+        result = _handle_edit_service(org_id, service_id)
+        if isinstance(result, Response):
+            return result
+        edit_service_data = result
 
     message_allowance = get_organization_message_allowance(org_id)
-
-    services_with_usage = get_services_dashboard_data(current_organization, year)
-    new_service_id = session.pop("new_service_id", None)
 
     return render_template(
         "views/organizations/organization/index.html",
         selected_year=year,
-        services=services_with_usage,
+        services=get_services_dashboard_data(current_organization, year),
         live_services=len(current_organization.live_services),
         trial_services=len(current_organization.trial_services),
         suspended_services=len(current_organization.suspended_services),
         total_services=len(current_organization.services),
         create_service_form=create_service_form,
         invite_user_form=invite_user_form,
-        show_create_service=create_service_form is not None,
-        show_invite_user=invite_user_form is not None,
-        new_service_id=new_service_id,
+        edit_service_data=edit_service_data,
+        new_service_id=session.pop("new_service_id", None),
+        updated_service_id=session.pop("updated_service_id", None),
         **message_allowance,
     )
 
@@ -270,8 +339,6 @@ def download_organization_usage_report(org_id):
     ]
 
     # Sanitize organization name for filename to prevent header injection
-    import re
-
     safe_org_name = re.sub(r"[^\w\s-]", "", current_organization.name).strip()
     safe_org_name = re.sub(r"[-\s]+", "-", safe_org_name)
 

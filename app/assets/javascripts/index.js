@@ -60,6 +60,7 @@ import { initCurrentYear } from './date.js';
 import './sidenav.js';
 import './validation.js';
 import './scrollPosition.js';
+import './organizationDashboard.js';
 
 initCurrentYear();
 
