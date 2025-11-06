@@ -1,4 +1,4 @@
-(function() {
+(function(window) {
   'use strict';
 
   function scrollToElement(element, delay) {
@@ -65,4 +65,4 @@
   window.OrganizationDashboard = {
     highlightAndScrollToService: highlightAndScrollToService
   };
-})();
+})(window);
