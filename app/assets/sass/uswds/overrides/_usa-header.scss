@@ -1,13 +1,11 @@
 @use 'uswds-core' as *;
 
-// Fix nav container to maintain content width but extend border
 .usa-header--extended {
   .usa-nav {
     @include at-media('desktop') {
       border-top: 1px solid color('gray-cool-10');
       position: relative;
 
-      // Extend border beyond container
       &::before {
         content: "";
         position: absolute;
@@ -44,6 +42,35 @@
 
       @include at-media('desktop') {
         height: 60px;
+      }
+    }
+  }
+}
+
+.usa-header--extended .usa-nav__secondary {
+  .usa-nav__link {
+    padding: 0;
+
+    &.usa-current {
+      text-decoration: underline;
+    }
+  }
+
+  @include at-media-max('desktop') {
+    padding: 0 units(2);
+
+    ul li {
+      padding-bottom: units(1);
+    }
+  }
+
+  @include at-media('desktop') {
+    .usa-nav__secondary-item {
+      padding-top: 0;
+      padding-bottom: 0;
+
+      &::before {
+        height: 1em;
       }
     }
   }

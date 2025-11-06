@@ -1,9 +1,0 @@
-@use 'uswds-core' as *;
-
-// Logo sizing - responsive
-.usa-header--extended .usa-logo a img {
-  height: 35px;
-  @include at-media('desktop') {
-    height: 60px;
-  }
-}

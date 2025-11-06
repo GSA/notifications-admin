@@ -14,13 +14,13 @@
           {{ heading }}
         </h2>
       </div>
-      <div class="grid-col-9">
+      <div class="grid-col-9 margin-top-1">
         <ul>
   {% else %}
     <ul>
   {% endif %}
   {% for org in organizations|sort %}
-    <li class="browse-list-item">
+    <li class="browse-list-item margin-y-2">
       <a href="{{ url_for('.organization_dashboard', org_id=org.id) }}" class="usa-link">{{ org.name }}</a>
       <p class="browse-list-hint">
         {{ org.count_of_live_services }}
@@ -29,7 +29,7 @@
     </li>
   {% endfor %}
   {% for service in services|sort %}
-    <li class="browse-list-item">
+    <li class="browse-list-item margin-y-2">
       <a href="{{ url_for('.service_dashboard', service_id=service.id) }}" class="usa-link">{{ service.name }}</a>
     </li>
   {% endfor %}
@@ -62,7 +62,7 @@
             Platform admin
           </h2>
         </div>
-        <ul class="grid-col-9">
+        <ul class="grid-col-9 margin-top-3">
           <li class="browse-list-item">
             <a href="{{ url_for('.organizations') }}" class="usa-link">All organizations</a>
             <p class="browse-list-hint">

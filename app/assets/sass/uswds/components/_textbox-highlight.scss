@@ -1,0 +1,90 @@
+@use 'uswds-core' as *;
+@use 'settings/tokens' as *;
+
+.textbox-highlight {
+  &-wrapper {
+    position: relative;
+  }
+
+  &-textbox {
+    resize: none;
+    z-index: 20;
+    background: none;
+  }
+
+  &-textbox,
+  &-background,
+  &-foreground,
+  &-mask {
+    font-size: units(2);
+    display: block;
+    box-sizing: border-box;
+    position: relative;
+    padding: 4px;
+    overflow: hidden;
+    line-height: 1.6;
+  }
+
+  &-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    color: transparent;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    border: 2px solid transparent;
+    padding-bottom: units(3);
+    z-index: 10;
+
+    @media (-ms-high-contrast: active), (forced-colors: active) {
+      border-color: Canvas;
+    }
+
+    .placeholder,
+    .placeholder-conditional {
+      background-color: #fff;
+      position: relative;
+
+      &:after {
+        content: '';
+        background-color: $color-placeholder-highlight;
+        border: 1px solid $color-placeholder-highlight;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 5px;
+        right: 6px;
+        height: 100%;
+        border-radius: 7px;
+      }
+    }
+  }
+}
+
+.textbox-highlight-background,
+.textbox-highlight-foreground,
+.textbox-highlight-mask,
+.textbox-highlight-textbox {
+  font-size: units(2);
+  line-height: 1.2;
+  padding: units(1);
+  font-family: family('sans');
+}
+
+.placeholder,
+.placeholder-conditional {
+  background-color: $color-placeholder-highlight;
+  border: 1px solid $color-placeholder-highlight;
+  border-radius: 7px;
+  padding: 0 units(0.5);
+}
+
+.textbox-help-link {
+  margin: 10px 0 0 0;
+}
+
+.textbox-right-aligned {
+  text-align: right;
+}

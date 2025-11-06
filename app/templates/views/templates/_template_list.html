@@ -25,7 +25,7 @@
   </p>
 </div>
 {% else %}
-<nav id="template-list" aria-label="Template list">
+<nav id="template-list" aria-label="Template list" class="margin-bottom-4">
   {% set checkboxes_data = [] %}
 
   {% if not current_user.has_permissions(ServicePermission.MANAGE_TEMPLATES) %}

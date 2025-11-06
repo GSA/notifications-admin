@@ -9,13 +9,12 @@
   padding: units(2);
   background: color('gray-cool-10');
   border: 1px solid color('gray-cool-10');
-  border-radius: units(1);
+  border-radius: 5px;
   white-space: normal;
   margin: 0 0 units(1) 0;
   clear: both;
   word-wrap: break-word;
 
-  // Speech bubble arrow
   &:after {
     content: "";
     display: block;
@@ -31,7 +30,6 @@
   }
 }
 
-// Inbound messages
 .sms-message-inbound {
   .sms-message-wrapper {
     &:after {
@@ -59,7 +57,7 @@
 
 .sms-message-status {
   color: color('gray-cool-90');
-  margin: units('neg-205') units(1) units('205') units(1); // Specific spacing requirement
+  margin: units('neg-205') units(1) units('205') units(1);
 }
 
 .sms-message-status-outbound {
