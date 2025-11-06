@@ -686,7 +686,7 @@ def test_manage_org_users_shows_correct_link_next_to_each_user(
     )
 
     # No banner confirming a user to be deleted shown
-    assert not page.select_one(".banner-dangerous")
+    assert not page.select_one(".usa-alert--error")
 
     users = page.find_all(class_="user-list-item")
 
@@ -841,9 +841,10 @@ def test_edit_organization_user_shows_the_delete_confirmation_banner(
 
     assert normalize_spaces(page.h1) == "Team members"
 
-    banner = page.select_one(".banner-dangerous")
+    banner = page.select_one(".usa-alert--error")
+    banner_text = banner.select_one(".usa-alert__text")
     assert "Are you sure you want to remove Test User?" in normalize_spaces(
-        banner.contents[0]
+        banner_text.text
     )
     assert banner.form.attrs["action"] == url_for(
         "main.remove_user_from_organization",
@@ -1215,7 +1216,7 @@ def test_update_organization_domains_when_domain_already_exists(
     )
 
     assert (
-        response.find("div", class_="banner-dangerous").text.strip()
+        response.select_one(".usa-alert--error .usa-alert__text").text.strip()
         == "This domain is already in use"
     )
 

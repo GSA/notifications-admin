@@ -83,7 +83,7 @@ def test_cancel_invited_org_user_cancels_user_invitations(
     )
     assert normalize_spaces(page.h1.text) == "Team members"
     flash_banner = normalize_spaces(
-        page.find("div", class_="banner-default-with-tick").text
+        page.select_one(".usa-alert--success .usa-alert__text").text
     )
     assert (
         flash_banner == f"Invitation cancelled for {sample_org_invite['email_address']}"
@@ -104,7 +104,7 @@ def test_accepted_invite_when_other_user_already_logged_in(
         _expected_status=403,
     )
     assert "This invite is for another email address." in normalize_spaces(
-        page.select_one(".banner-dangerous").text
+        page.select_one(".usa-alert--error .usa-alert__text").text
     )
 
 

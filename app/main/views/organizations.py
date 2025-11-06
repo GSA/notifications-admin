@@ -2,22 +2,34 @@ from collections import OrderedDict
 from datetime import datetime
 from functools import partial
 
-from flask import current_app, flash, redirect, render_template, request, url_for
+from flask import (
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from flask_login import current_user
 
 from app import current_organization, org_invite_api_client, organizations_client
+from app.enums import OrganizationType
+from app.formatters import email_safe
 from app.main import main
 from app.main.forms import (
     AdminBillingDetailsForm,
     AdminNewOrganizationForm,
     AdminNotesForm,
     AdminOrganizationDomainsForm,
+    CreateServiceForm,
     InviteOrgUserForm,
     OrganizationOrganizationTypeForm,
     RenameOrganizationForm,
     SearchByNameForm,
     SearchUsersForm,
 )
+from app.main.views.add_service import _create_service
 from app.main.views.dashboard import (
     get_tuples_of_financial_years,
     requested_and_current_financial_year,
@@ -113,17 +125,67 @@ def get_services_dashboard_data(organization, year):
     return services
 
 
-@main.route("/organizations/<uuid:org_id>", methods=["GET"])
+@main.route("/organizations/<uuid:org_id>", methods=["GET", "POST"])
 @user_has_permissions()
 def organization_dashboard(org_id):
     if not current_app.config.get("ORGANIZATION_DASHBOARD_ENABLED", False):
         return redirect(url_for(".organization_usage", org_id=org_id))
 
     year = requested_and_current_financial_year(request)[0]
+    action = request.args.get("action")
+
+    create_service_form = None
+    invite_user_form = None
+
+    if action == "create-service" or request.form.get("form_name") == "create_service":
+        create_service_form = CreateServiceForm(
+            organization_type=current_user.default_organization_type
+            or OrganizationType.FEDERAL
+        )
+
+        if request.method == "POST" and create_service_form.validate_on_submit():
+            service_name = create_service_form.name.data
+            service_id, error = _create_service(
+                service_name,
+                create_service_form.organization_type.data,
+                email_safe(service_name),
+                create_service_form,
+            )
+            if not error:
+                current_organization.associate_service(service_id)
+                current_app.logger.info(
+                    f"Service {service_id} created and associated with org {org_id}"
+                )
+                flash(f"Service '{service_name}' has been created", "default_with_tick")
+                session["new_service_id"] = service_id
+                return redirect(url_for(".organization_dashboard", org_id=org_id))
+            else:
+                current_app.logger.error(f"Error creating service: {error}")
+                flash("Error creating service", "error")
+
+    if action == "invite-user" or request.form.get("form_name") == "invite_user":
+        invite_user_form = InviteOrgUserForm(
+            inviter_email_address=current_user.email_address
+        )
+
+        if request.method == "POST" and invite_user_form.validate_on_submit():
+            try:
+                invited_org_user = InvitedOrgUser.create(
+                    current_user.id, org_id, invite_user_form.email_address.data
+                )
+                flash(
+                    f"Invite sent to {invited_org_user.email_address}",
+                    "default_with_tick",
+                )
+                return redirect(url_for(".organization_dashboard", org_id=org_id))
+            except Exception as e:
+                current_app.logger.error(f"Error inviting user: {e}")
+                flash("Error sending invitation", "error")
 
     message_allowance = get_organization_message_allowance(org_id)
 
     services_with_usage = get_services_dashboard_data(current_organization, year)
+    new_service_id = session.pop("new_service_id", None)
 
     return render_template(
         "views/organizations/organization/index.html",
@@ -133,6 +195,11 @@ def organization_dashboard(org_id):
         trial_services=len(current_organization.trial_services),
         suspended_services=len(current_organization.suspended_services),
         total_services=len(current_organization.services),
+        create_service_form=create_service_form,
+        invite_user_form=invite_user_form,
+        show_create_service=create_service_form is not None,
+        show_invite_user=invite_user_form is not None,
+        new_service_id=new_service_id,
         **message_allowance,
     )
 
