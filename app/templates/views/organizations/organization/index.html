@@ -70,7 +70,7 @@
   </div>
 
   {% if create_service_form %}
-    <div id="create-service-form" class="bg-base-lightest padding-3 radius-md margin-bottom-3">
+    <div id="create-service-form" class="padding-3 radius-md margin-bottom-3">
       <h3 class="margin-top-0">Create a new service</h3>
       <form method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='create-service') }}">
         <input type="hidden" name="csrf_token" value="{{ create_service_form.csrf_token._value() }}"/>
