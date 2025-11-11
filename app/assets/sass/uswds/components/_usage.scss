@@ -1,0 +1,74 @@
+@use 'uswds-core' as *;
+
+.usage-table {
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .big-number-smallest {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .table-field,
+  .table-field-left-aligned,
+  .table-field-right-aligned {
+    width: auto;
+  }
+}
+
+.tabs {
+  .pill {
+    display: flex;
+    list-style: none;
+    padding: 0;
+
+    .pill-item__container {
+      border: 1px solid color('gray-cool-10');
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      font-size: units(2);
+
+      a {
+        padding: units(4);
+
+        .big-number-smaller {
+          font-size: units(5);
+          line-height: units(6);
+        }
+
+        .big-number-smallest {
+          font-size: units(3);
+        }
+
+        .pill-item__label {
+          color: white;
+        }
+
+        &:not(.pill-item--selected):hover {
+          background: color('blue-warm-70v');
+
+          .pill-item__label {
+            color: white;
+          }
+        }
+
+        &.pill-item--selected {
+          .pill-item__label {
+            color: color('blue-60v');
+          }
+        }
+      }
+    }
+  }
+}
+
+.keyline-block {
+  border-left: 4px solid color('blue-60v');
+  padding-left: units(2);
+  margin: units(2) 0;
+}

@@ -1,0 +1,48 @@
+@use 'uswds-core' as *;
+
+.user-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 1rem 0;
+}
+
+.user-list-item {
+  border: 2px solid color('gray-5');
+  padding: units(2);
+
+  button,
+  .usa-accordion__content {
+    background-color: white;
+    border: 2px solid color('gray-5');
+  }
+
+  button:hover,
+  button[aria-expanded="true"] {
+    background-color: color('gray-5');
+  }
+
+  @include at-media(desktop) {
+    width: calc(50% - units(1));
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+  }
+
+  .user-list-item-heading .live-search-relevant {
+    display: block;
+    word-wrap: break-word;
+  }
+
+  .tick-cross-list-permissions {
+    margin: units(1) 0;
+    padding-left: units(2);
+  }
+}
+
+.user-list-edit-link {
+  &:active:before,
+  &:focus:before {
+    box-shadow: none;
+    border: 0;
+  }
+}

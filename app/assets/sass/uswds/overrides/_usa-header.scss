@@ -1,0 +1,77 @@
+@use 'uswds-core' as *;
+
+.usa-header--extended {
+  .usa-nav {
+    @include at-media('desktop') {
+      border-top: 1px solid color('gray-cool-10');
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: -1px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100vw;
+        height: 1px;
+        background-color: color('gray-cool-10');
+        z-index: -1;
+      }
+    }
+  }
+
+  .usa-nav-container {
+    max-width: 100%;
+    padding: 0;
+  }
+}
+
+.usa-header--extended .usa-logo {
+  font-family: family('sans');
+  margin: units(3) 0;
+
+  @include at-media-max('desktop') {
+    margin: units(4) 0 units(4) units(2);
+  }
+
+  a {
+    display: flex;
+
+    img {
+      height: 35px;
+
+      @include at-media('desktop') {
+        height: 60px;
+      }
+    }
+  }
+}
+
+.usa-header--extended .usa-nav__secondary {
+  .usa-nav__link {
+    padding: 0;
+
+    &.usa-current {
+      text-decoration: underline;
+    }
+  }
+
+  @include at-media-max('desktop') {
+    padding: 0 units(2);
+
+    ul li {
+      padding-bottom: units(1);
+    }
+  }
+
+  @include at-media('desktop') {
+    .usa-nav__secondary-item {
+      padding-top: 0;
+      padding-bottom: 0;
+
+      &::before {
+        height: 1em;
+      }
+    }
+  }
+}

@@ -17,7 +17,7 @@ def test_non_gov_user_cannot_see_add_service_button(
 ):
     client_request.login(api_nongov_user_active)
     page = client_request.get("main.choose_account")
-    assert "Add a new service" not in page.text
+    assert "Add service" not in page.text
 
 
 @pytest.mark.parametrize(

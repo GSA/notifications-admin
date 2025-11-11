@@ -152,7 +152,6 @@ EXCLUDED_ENDPOINTS = tuple(
             "received_text_messages_callback",
             "redact_template",
             "register",
-            "register_from_org_invite",
             "registration_continue",
             "remove_user_from_organization",
             "remove_user_from_service",

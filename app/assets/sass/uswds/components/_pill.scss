@@ -1,0 +1,17 @@
+@use 'uswds-core' as *;
+
+.usa-dark-background .pill-item__container {
+  color: color('white');
+}
+
+.pill-separate-item {
+  &:link,
+  &:visited {
+    text-decoration: none;
+    background: initial;
+  }
+}
+
+.pill-item.usa-link {
+  text-decoration: none;
+}

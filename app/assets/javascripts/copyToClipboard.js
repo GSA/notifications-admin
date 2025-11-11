@@ -28,9 +28,9 @@
 
       // Determine button label
       const isMultiple = name !== thing;
-      const buttonLabel = isMultiple
-        ? `Copy ${thing}`
-        : `Copy ${thing} to clipboard`;
+      const buttonLabel = (isMultiple ?
+        `Copy ${thing}` :
+        `Copy ${thing} to clipboard`);
       const srSuffix = isMultiple ? ` for ${name}` : '';
 
       // Create simple HTML structure

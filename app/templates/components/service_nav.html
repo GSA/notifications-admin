@@ -6,10 +6,10 @@
       <a href="{{ url_for('.organization_dashboard', org_id=current_service.organization_id) }}" class="usa-link navigation-organization-link">{{ current_service.organization_name }}</a>
     {% endif %}
   {% endif %}
-  <span>
+  <span class="navigation-service-name">
     {{ current_service.name }}
     {% if not current_service.active %}
-      <span class="navigation-service-name navigation-service-type--suspended">Suspended</span>
+      <span class="navigation-service-type--suspended">Suspended</span>
     {% endif %}
   </span>
   <a href="{{ url_for('main.choose_account') }}" class="usa-button usa-button--outline">Switch service</a>

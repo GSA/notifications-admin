@@ -1,0 +1,15 @@
+@use 'uswds-core' as *;
+
+.usa-tooltip__information {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+
+  .usa-icon {
+    width: units(3);
+    height: units(3);
+  }
+}

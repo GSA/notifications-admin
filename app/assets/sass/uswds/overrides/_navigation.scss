@@ -1,0 +1,41 @@
+@use 'uswds-core' as *;
+
+.navigation-service.usa-breadcrumb {
+  bottom: 0;
+}
+
+.navigation-service-name {
+  font-weight: bold;
+  font-size: size('body', 'lg');
+  margin: 0 units(2);
+
+  .navigation-service-type--suspended {
+    background-color: color('red-50');
+    color: color('white');
+    padding: units(0.5) units(1);
+    border-radius: units(0.5);
+    font-size: size('body', 'xs');
+    margin-left: units(1);
+  }
+}
+
+nav.nav {
+  position: sticky;
+  top: units(3);
+}
+
+.usa-sidenav__sublist {
+  display: none;
+}
+
+.usa-sidenav__item.open .usa-sidenav__sublist {
+  display: block;
+}
+
+.usa-sidenav__sublist .bold {
+  font-weight: bold;
+}
+
+.usa-sidenav__sublist li[role="menuitem"] {
+  border-top: 1px solid #dfe1e2;
+}

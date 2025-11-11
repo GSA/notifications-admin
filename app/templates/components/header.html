@@ -1,6 +1,6 @@
 {% if current_user.is_authenticated %}
   {% set navigation = [
-    {"href": url_for("main.show_accounts_or_dashboard"), "text": "Current service", "active": request.path.startswith('/accounts') or request.path.startswith('/services') or request.path.startswith('/activity/services')},
+    {"href": url_for("main.show_accounts_or_dashboard"), "text": "Current service", "active": request.path.startswith('/accounts') or request.path.startswith('/services') or request.path.startswith('/activity/services') or request.path.startswith('/user-profile')},
     {"href": url_for('main.get_started'), "text": "Using Notify", "active": request.path.startswith('/using-notify')},
     {"href": url_for('main.support'), "text": "Contact us", "active": header_navigation.is_selected('support')}
   ] %}
@@ -62,7 +62,7 @@
           {% endif %}
           {% endfor %}
         </ul>
-        <div class="usa-nav__secondary margin-bottom-6">
+        <div class="usa-nav__secondary">
           <ul class="usa-nav__secondary-links">
             {% if secondaryNavigation %}
             {% for item in secondaryNavigation %}

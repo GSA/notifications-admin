@@ -1,0 +1,23 @@
+@use 'uswds-core' as *;
+
+.usa-nav__primary {
+  & > .usa-nav__primary-item > a {
+    font-size: size('body', 5);
+    cursor: pointer;
+
+    @include at-media('desktop') {
+      line-height: 1;
+      padding: units(2);
+      align-items: center;
+      color: color('gray-cool-60');
+      display: flex;
+    }
+  }
+
+  & > .usa-nav__primary-item {
+    @include at-media('desktop') {
+      font-size: size('body', 3);
+      line-height: 1;
+    }
+  }
+}

@@ -1,0 +1,49 @@
+@use 'uswds-core' as *;
+
+.usa-table {
+  th {
+    border-bottom: 0;
+  }
+
+  td {
+    min-height: units(5);
+
+    div:empty::before {
+      content: '\00a0';
+    }
+  }
+}
+
+.usa-table th[data-sortable][aria-sort='ascending'],
+.usa-table th[data-sortable][aria-sort='descending'] {
+  background-color: color('blue-10');
+}
+
+.table-overflow-x-auto {
+  &.hidden {
+    display: none;
+  }
+
+  @media (max-width: units('desktop-lg')) {
+    overflow-x: auto;
+  }
+}
+
+@include at-media-max('tablet') {
+  .usa-table-container--scrollable-mobile {
+    margin: 0;
+    overflow-y: hidden;
+  }
+}
+
+.table-empty-message,
+td.table-empty-message {
+  font-size: size('body', 'sm');
+}
+
+.table-field-right-aligned a {
+  &:active:before,
+  &:focus:before {
+    box-shadow: none;
+  }
+}
