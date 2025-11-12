@@ -57,9 +57,41 @@
     }
   }
 
+  function initDeleteServiceConfirmation() {
+    var deleteButtons = document.querySelectorAll('[data-open-modal="confirmDeleteModal"]');
+    var confirmDeleteButton = document.getElementById('delete-service-confirm-btn');
+    var deleteServiceNameDisplay = document.getElementById('delete-service-name-display');
+    var deleteForm = document.getElementById('delete-service-form');
+
+    if (deleteButtons.length > 0 && confirmDeleteButton && deleteForm) {
+      var currentServiceId = null;
+
+      deleteButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+          currentServiceId = button.getAttribute('data-service-id');
+          var serviceName = button.getAttribute('data-service-name');
+
+          if (deleteServiceNameDisplay && serviceName) {
+            deleteServiceNameDisplay.textContent = serviceName;
+          }
+        });
+      });
+
+      confirmDeleteButton.addEventListener('click', function() {
+        if (currentServiceId) {
+          var orgId = window.location.pathname.split('/')[2];
+          deleteForm.action = '/organizations/' + orgId + '?action=delete-service&service_id=' + currentServiceId;
+
+          deleteForm.submit();
+        }
+      });
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
     initForms();
     initEditServiceConfirmation();
+    initDeleteServiceConfirmation();
   });
 
   window.OrganizationDashboard = {
