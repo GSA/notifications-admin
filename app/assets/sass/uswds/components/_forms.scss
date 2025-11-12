@@ -43,3 +43,8 @@
   display: inline-flex;
   justify-content: center;
 }
+
+.button-not-clickable {
+  cursor: default;
+  pointer-events: none;
+}
