@@ -80,7 +80,7 @@
       confirmDeleteButton.addEventListener('click', function() {
         if (currentServiceId) {
           var orgId = window.location.pathname.split('/')[2];
-          deleteForm.action = '/organizations/' + orgId + '?action=delete-service&service_id=' + currentServiceId;
+          deleteForm.action = '/organizations/' + encodeURIComponent(orgId) + '?action=delete-service&service_id=' + encodeURIComponent(currentServiceId);
 
           deleteForm.submit();
         }
