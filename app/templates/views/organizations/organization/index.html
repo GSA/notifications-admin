@@ -70,7 +70,7 @@
   </div>
 
   {% if create_service_form %}
-    <div id="create-service-form" class="bg-base-lightest padding-3 radius-md margin-bottom-3">
+    <div id="create-service-form" class="padding-3 radius-md margin-bottom-3">
       <h3 class="margin-top-0">Create a new service</h3>
       <form method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='create-service') }}">
         <input type="hidden" name="csrf_token" value="{{ create_service_form.csrf_token._value() }}"/>
@@ -104,7 +104,7 @@
 
   {% if edit_service_data %}
     <div class="bg-base-lightest padding-3 radius-md margin-bottom-3">
-      <h3 class="margin-top-0">Edit Service</h3>
+      <h3 class="margin-top-0">Manage Service</h3>
       <form id="edit-service-form" method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='edit-service', service_id=edit_service_data.id) }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
@@ -137,6 +137,9 @@
         <div class="display-flex flex-gap-1 margin-top-3">
           <button type="button" class="usa-button" data-open-modal="confirmEditModal">Save Changes</button>
           <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="usa-button usa-button--outline">Cancel</a>
+          {% if edit_service_data.status == 'trial' or current_user.platform_admin %}
+          <button type="button" class="usa-button usa-button--secondary margin-left-auto" data-open-modal="confirmDeleteModal" data-service-id="{{ edit_service_data.id }}" data-service-name="{{ edit_service_data.name }}">Delete Service</button>
+          {% endif %}
         </div>
       </form>
     </div>
@@ -159,6 +162,51 @@
             <ul class="usa-button-group">
               <li class="usa-button-group__item">
                 <button type="button" id="edit-service-confirm-btn" class="usa-button">Confirm changes</button>
+              </li>
+              <li class="usa-button-group__item">
+                <button class="usa-button usa-button--unstyled padding-105 text-center" data-close-modal type="button">
+                  No, go back
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <button class="usa-button usa-modal__close" aria-label="Close this window" data-close-modal type="button">
+          <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+            <use xlink:href="{{ asset_url('img/sprite.svg') }}#close"></use>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <form id="delete-service-form" method="post" class="display-none">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <input type="hidden" name="confirm_delete" value="delete"/>
+    </form>
+
+    <div
+      class="usa-modal"
+      data-module="usa-modal"
+      id="confirmDeleteModal"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confirmDeleteModalHeading"
+      aria-describedby="confirmDeleteModalDesc"
+    >
+      <div class="usa-modal__content">
+        <div class="usa-modal__main">
+          <h2 class="usa-modal__heading font-body-lg text-secondary-dark" id="confirmDeleteModalHeading">
+            Are you absolutely sure?
+          </h2>
+          <p id="confirmDeleteModalDesc">
+            This will permanently delete '<strong id="delete-service-name-display"></strong>' and all associated data.
+            This action <strong>cannot be undone</strong>.
+          </p>
+          <div class="usa-modal__footer">
+            <ul class="usa-button-group">
+              <li class="usa-button-group__item">
+                <button type="button" id="delete-service-confirm-btn" class="usa-button usa-button--secondary">Yes, permanently delete</button>
               </li>
               <li class="usa-button-group__item">
                 <button class="usa-button usa-button--unstyled padding-105 text-center" data-close-modal type="button">
@@ -239,12 +287,13 @@
               <td>{{ service.recent_template }}</td>
               <td>
                 {% if service.active %}
-                {% set is_editing = edit_service_data and edit_service_data.id == service.id %}
-                {% if is_editing %}
-                  <span class="text-base">Edit</span>
+                {% set is_managing = edit_service_data and edit_service_data.id == service.id %}
+
+                {% if is_managing %}
+                  <span class="text-base">Manage</span>
                 {% else %}
                   <a href="{{ url_for('.organization_dashboard', org_id=current_org.id, action='edit-service', service_id=service.id) }}" class="usa-link">
-                    Edit
+                    Manage
                   </a>
                 {% endif %}
                 {% endif %}

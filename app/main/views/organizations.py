@@ -16,8 +16,14 @@ from flask import (
 from flask_login import current_user
 from markupsafe import escape
 
-from app import current_organization, org_invite_api_client, organizations_client
+from app import (
+    current_organization,
+    org_invite_api_client,
+    organizations_client,
+    service_api_client,
+)
 from app.enums import OrganizationType
+from app.event_handlers import create_archive_service_event
 from app.formatters import email_safe
 from app.main import main
 from app.main.forms import (
@@ -185,6 +191,35 @@ def _handle_edit_service(org_id, service_id):
     }
 
 
+def _handle_delete_service(org_id, service_id):
+    if request.method != "POST":
+        flash("Invalid request method", "error")
+        return redirect(url_for(".organization_dashboard", org_id=org_id))
+
+    service = Service.from_id(service_id)
+
+    if not service.active or not (service.trial_mode or current_user.platform_admin):
+        flash("You don't have permission to delete this service", "error")
+        return redirect(url_for(".organization_dashboard", org_id=org_id))
+
+    confirm = request.form.get("confirm_delete")
+    if confirm != "delete":
+        flash("Delete confirmation was not provided", "error")
+        return redirect(url_for(".organization_dashboard", org_id=org_id))
+
+    cached_service_user_ids = [user.id for user in service.active_users]
+
+    service_api_client.archive_service(service_id, cached_service_user_ids)
+    create_archive_service_event(
+        service_id=service_id, archived_by_id=current_user.id
+    )
+
+    cache.redis_client.delete("organizations")
+
+    flash(f"'{service.name}' was deleted", "default_with_tick")
+    return redirect(url_for(".organization_dashboard", org_id=org_id))
+
+
 def get_services_dashboard_data(organization, year):
     try:
         dashboard_data = organizations_client.get_organization_dashboard(
@@ -253,6 +288,9 @@ def organization_dashboard(org_id):
         if isinstance(result, Response):
             return result
         edit_service_data = result
+
+    elif action == "delete-service" and service_id:
+        return _handle_delete_service(org_id, service_id)
 
     message_allowance = get_organization_message_allowance(org_id)
 
