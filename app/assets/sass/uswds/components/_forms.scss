@@ -30,6 +30,11 @@
   }
 }
 
+.browse-list + .js-stick-at-bottom-when-scrolling .usa-button {
+  width: auto;
+  white-space: nowrap;
+}
+
 .usa-button img {
   margin-left: 0.5rem;
   height: 1rem;

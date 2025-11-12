@@ -1735,7 +1735,9 @@ def test_organization_dashboard_shows_edit_service_form(
             "total_message_limit": 0,
         },
     )
-    mocker.patch("app.organizations_client.get_organization_services", return_value=[service])
+    mocker.patch(
+        "app.organizations_client.get_organization_services", return_value=[service]
+    )
     mocker.patch(
         "app.organizations_client.get_organization_dashboard",
         return_value={"services": []},
@@ -1778,7 +1780,9 @@ def test_organization_dashboard_edit_service_updates_service(
             "total_message_limit": 0,
         },
     )
-    mocker.patch("app.organizations_client.get_organization_services", return_value=[service])
+    mocker.patch(
+        "app.organizations_client.get_organization_services", return_value=[service]
+    )
     mocker.patch(
         "app.organizations_client.get_organization_dashboard",
         return_value={"services": []},
@@ -1804,4 +1808,6 @@ def test_organization_dashboard_edit_service_updates_service(
 
     assert mock_update_service.call_count == 3
     mock_update_service.assert_any_call(SERVICE_ONE_ID, name="New Name")
-    mock_update_service.assert_any_call(SERVICE_ONE_ID, billing_contact_email_addresses="new@example.com")
+    mock_update_service.assert_any_call(
+        SERVICE_ONE_ID, billing_contact_email_addresses="new@example.com"
+    )

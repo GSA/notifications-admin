@@ -135,7 +135,7 @@
   }
 
   .template-list-item {
-    padding: units(1) 0;
+    padding: units(1) units(3);
 
     &:empty {
       display: none;
@@ -147,12 +147,10 @@
 
     &:hover {
       background-color: color('gray-cool-5');
-      padding-left: units(1);
-      margin-left: units(-1);
-      padding-right: units(1);
-      margin-right: units(-1);
-    }
+      padding-left: units(3);
+     }
   }
+
 
   li.template-list-item.margin-bottom-2 {
     margin-bottom: units(1);
