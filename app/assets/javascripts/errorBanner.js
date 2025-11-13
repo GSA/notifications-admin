@@ -1,6 +1,10 @@
 export const ErrorBanner = {
-  hideBanner: () => $('.banner-dangerous').addClass('display-none'),
-  showBanner: () => $('.banner-dangerous').removeClass('display-none')
+  hideBanner: () => {
+    document.querySelectorAll('.banner-dangerous').forEach(el => el.classList.add('display-none'));
+  },
+  showBanner: () => {
+    document.querySelectorAll('.banner-dangerous').forEach(el => el.classList.remove('display-none'));
+  }
 };
 
 window.NotifyModules = window.NotifyModules || {};

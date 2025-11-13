@@ -1,0 +1,77 @@
+@use 'uswds-core' as *;
+
+.text-error {
+  color: color('red-60v');
+}
+
+.width-half {
+  width: 50%;
+}
+
+.width-quarter {
+  width: 25%;
+}
+
+.no-js-toggle {
+  display: none;
+
+  .no-js & {
+    display: block;
+  }
+}
+
+.js-enabled-toggle {
+  display: none;
+
+  .js-enabled & {
+    display: block;
+  }
+}
+
+.visibility-hidden {
+  visibility: hidden;
+}
+
+.text-spaced {
+  letter-spacing: 1px;
+}
+
+.js-hidden {
+  display: none !important;
+}
+
+.js-live-search-no-results {
+  &.display-none {
+    display: none;
+  }
+
+  p {
+    padding: units(2);
+    background-color: color('gray-cool-5');
+    border: 1px solid color('gray-cool-10');
+    border-radius: units(0.5);
+    text-align: center;
+    color: color('gray-60');
+    margin: units(2) 0;
+  }
+}
+
+.spark-bar-bar {
+  font-size: units(2);
+  background-color: transparent;
+}
+
+.icon-list {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  padding: 2px 1px;
+  justify-content: center;
+  align-items: center;
+  margin-right: 4px;
+}
+
+.indented-paragraph {
+  margin-left: calc(24px + 4px);
+  margin-top: 4px;
+}

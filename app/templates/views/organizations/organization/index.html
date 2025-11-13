@@ -1,102 +1,332 @@
 {% from "components/page-header.html" import page_header %}
-{% from "components/big-number.html" import big_number %}
-{% from "components/live-search.html" import live_search %}
-{% from "components/pill.html" import pill %}
 {% extends "withnav_template.html" %}
 
 {% block org_page_title %}
-  Usage
+  Organization Dashboard
 {% endblock %}
 
 {% block maincolumn_content %}
 
-  {{ page_header('Usage', size='medium') }}
+  {{ page_header('Organization Dashboard', size='large') }}
 
-  <div class="margin-bottom-3">
-    {{ pill(years, selected_year, big_number_args={'smallest': True}) }}
+  <div id="totalMessageChartContainer" data-messages-sent="{{ messages_sent|default(0) }}" data-messages-remaining="{{ messages_remaining|default(0) }}" data-total-message-limit="{{ total_message_limit|default(0) }}">
+    <div class="grid-row flex-align-center">
+      <h2 id="chartTitle" class="margin-right-1 margin-y-0">Overall {{ selected_year }} Total Message Allowance</h2>
+      <button
+        type="button"
+        class="usa-tooltip usa-tooltip__information margin-right-0"
+        data-position="top"
+        title="Combined totals across all services in {{ current_org.name }}: pending, failed, or delivered"
+      >
+        <span class="usa-sr-only">More information</span>
+        <img src="{{ asset_url('img/usa-icons/info.svg') }}" alt="" class="usa-icon" role="presentation" />
+      </button>
+    </div>
+    <svg id="totalMessageChart"></svg>
+    <div id="message"></div>
   </div>
-
-  <div class="grid-row margin-bottom-3">
-    <div class="grid-col-6">
-      <h2 class="font-heading-md">Emails</h2>
-      <div class="keyline-block">
-        {{ big_number(
-          total_emails_sent,
-          label='sent',
-          smaller=True
-        ) }}
+  <div id="totalMessageTable" class="margin-bottom-3"></div>
+  <div class="grid-row margin-bottom-3 maxw-tablet">
+    <div class="grid-col-12 tablet:grid-col-6 margin-bottom-2 tablet:margin-bottom-0 tablet:padding-right-1">
+      <div class="usa-summary-box height-full" role="region">
+        <div class="usa-summary-box__body">
+          <div class="usa-summary-box__text">
+            <div class="display-flex flex-align-end">
+              <div class="flex-1">
+                <div class="text-base-dark text-uppercase font-sans-3xs text-ls-1 margin-bottom-05">Total Services</div>
+                <div class="font-sans-xl text-primary-darker line-height-sans-1">{{ total_services }}</div>
+              </div>
+              <div class="text-ink font-body-2xs line-height-sans-3">
+                <span class="text-bold">{{ live_services }}</span> Live
+                <span class="margin-left-1 text-bold">{{ trial_services }}</span> Trial
+                <span class="margin-left-1 text-bold">{{ suspended_services }}</span> Suspended
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="grid-col-6">
-      <h2 class="font-heading-md">Text messages</h2>
-      <div class="keyline-block">
-        {{ big_number(
-          total_sms_cost,
-          'spent',
-          currency="$",
-          smaller=True
-        ) }}
+    <div class="grid-col-12 tablet:grid-col-6 tablet:padding-left-1">
+      <div class="usa-summary-box height-full" role="region">
+        <div class="usa-summary-box__body">
+          <div class="usa-summary-box__text">
+            <div class="text-base-dark text-uppercase font-sans-3xs text-ls-1 margin-bottom-05">Agreement Period</div>
+            <div class="font-sans-xl text-primary-darker">Jan 1 - Dec 31</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  {% if search_form %}
-    <div>
-      {{ live_search(
-        target_selector='.organization-service',
-        show=True,
-        form=search_form,
-        label='Search by service'
-      ) }}
+  <div class="display-flex flex-gap-1 margin-bottom-3">
+    <a {% if not create_service_form %}href="{{ url_for('.organization_dashboard', org_id=current_org.id, action='create-service') }}"{% endif %}
+       class="usa-button {% if create_service_form %}usa-button--base button-not-clickable{% else %}usa-button--outline{% endif %}">
+      Create new service
+    </a>
+    <a {% if not invite_user_form %}href="{{ url_for('.organization_dashboard', org_id=current_org.id, action='invite-user') }}"{% endif %}
+       class="usa-button {% if invite_user_form %}usa-button--base button-not-clickable{% else %}usa-button--outline{% endif %}">
+      Add org admin
+    </a>
+  </div>
+
+  {% if create_service_form %}
+    <div id="create-service-form" class="padding-3 radius-md margin-bottom-3 bg-gray-5">
+      <h3 class="margin-top-0">Create a new service</h3>
+      <form method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='create-service') }}">
+        <input type="hidden" name="csrf_token" value="{{ create_service_form.csrf_token._value() }}"/>
+
+        {{ create_service_form.name(param_extensions={"hint": {"text": "You can change this later"}}) }}
+
+        <div class="display-flex flex-gap-1 margin-top-3">
+          <button type="submit" class="usa-button">Create service</button>
+          <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="usa-button usa-button--outline">Cancel</a>
+        </div>
+      </form>
     </div>
   {% endif %}
 
-  <h2 class="font-heading-md {% if search_form %}visually-hidden{% endif %}">By service</h2>
+  {% if invite_user_form %}
+    <div id="invite-user-form" class="bg-base-lightest padding-3 radius-md margin-bottom-3">
+      <h3 class="margin-top-0">Invite a team member</h3>
+      <p class="margin-top-0">{{ current_org.name }} team members can see usage and team members for each service, and invite other team members.</p>
+      <form method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='invite-user') }}">
+        <input type="hidden" name="csrf_token" value="{{ invite_user_form.csrf_token._value() }}"/>
 
-  {% for service in services %}
-    <div class="keyline-block organization-service">
-      <h3 class="live-search-relevant">
-        <a href="{{ url_for('main.usage', service_id=service.service_id) }}" class="usa-link browse-list-link">{{ service.service_name  }}</a>
-      </h3>
-      <div class="grid-row">
-        <div class="grid-col-6">
-          {{ big_number(
-            service.emails_sent,
-            label=service.emails_sent|message_count_label('email'),
-            smallest=True
-          ) }}
+        {{ invite_user_form.email_address(param_extensions={"classes": ""}, error_message_with_html=True) }}
+
+        <div class="display-flex flex-gap-1 margin-top-3">
+          <button type="submit" class="usa-button">Send invitation</button>
+          <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="usa-button usa-button--outline">Cancel</a>
         </div>
-        <div class="grid-col-6">
-          {% if service.sms_cost %}
-            {{ big_number(
-              service.sms_cost,
-              'spent on text messages',
-              currency="$",
-              smallest=True
-            ) }}
-          {% else %}
-            {{ big_number(
-              service.sms_billable_units,
-              'free {}'.format(service.sms_billable_units|message_count_label('sms')),
-              smallest=True
-            ) }}
+      </form>
+    </div>
+  {% endif %}
+
+  {% if edit_service_data %}
+    <div class="bg-base-lightest padding-3 radius-md margin-bottom-3">
+      <h3 class="margin-top-0">Manage Service</h3>
+      <form id="edit-service-form" method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='edit-service', service_id=edit_service_data.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+        <div class="usa-form-group">
+          <label class="usa-label" for="service_name">Service Name</label>
+          <input class="usa-input" type="text" id="service_name" name="service_name"
+                value="{{ edit_service_data.name }}" required>
+        </div>
+
+        <div class="usa-form-group">
+          <label class="usa-label" for="primary_contact">Primary Contact Email</label>
+          <input class="usa-input" type="email" id="primary_contact" name="primary_contact"
+                value="{{ edit_service_data.primary_contact|default('') }}" placeholder="email@example.com">
+        </div>
+
+        <fieldset class="usa-fieldset margin-top-2">
+          <legend class="usa-legend">Service Status</legend>
+          <div class="usa-radio">
+            <input class="usa-radio__input" id="statusTrial" type="radio" name="status" value="trial"
+                  {% if edit_service_data.status == 'trial' %}checked{% endif %}>
+            <label class="usa-radio__label" for="statusTrial">Trial</label>
+          </div>
+          <div class="usa-radio">
+            <input class="usa-radio__input" id="statusLive" type="radio" name="status" value="live"
+                  {% if edit_service_data.status == 'live' %}checked{% endif %}>
+            <label class="usa-radio__label" for="statusLive">Live</label>
+          </div>
+        </fieldset>
+
+        <div class="display-flex flex-gap-1 margin-top-3">
+          <button type="button" class="usa-button" data-open-modal="confirmEditModal">Save Changes</button>
+          <a href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}" class="usa-button usa-button--outline">Cancel</a>
+          {% if edit_service_data.status == 'trial' or current_user.platform_admin %}
+          <button type="button" class="usa-button usa-button--secondary margin-left-auto" data-open-modal="confirmDeleteModal" data-service-id="{{ edit_service_data.id }}" data-service-name="{{ edit_service_data.name }}">Delete Service</button>
           {% endif %}
         </div>
+      </form>
+    </div>
+
+    <div
+      class="usa-modal"
+      data-module="usa-modal"
+      id="confirmEditModal"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confirmEditModalHeading"
+      aria-describedby="confirmEditModalDesc"
+    >
+      <div class="usa-modal__content">
+        <div class="usa-modal__main">
+          <h2 class="usa-modal__heading font-body-lg" id="confirmEditModalHeading">Are you sure you want to save these changes?</h2>
+          <p id="confirmEditModalDesc">This will update the service name, primary contact, and/or status. If you're changing the status to Live, team members will be notified.</p>
+          <div class="usa-modal__footer">
+            <ul class="usa-button-group">
+              <li class="usa-button-group__item">
+                <button type="button" id="edit-service-confirm-btn" class="usa-button">Confirm changes</button>
+              </li>
+              <li class="usa-button-group__item">
+                <button class="usa-button usa-button--unstyled padding-105 text-center" data-close-modal type="button">
+                  No, go back
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <button class="usa-button usa-modal__close" aria-label="Close this window" data-close-modal type="button">
+          <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+            <use xlink:href="{{ asset_url('img/sprite.svg') }}#close"></use>
+          </svg>
+        </button>
       </div>
     </div>
-  {% endfor %}
-  <div class="keyline-block"></div>
-  {% if not services %}
-    <p class="usa-body usa-hint">
-      {{ current_org.name }} has no live services on Notify.gov
-    </p>
-    <div class="keyline-block"></div>
-  {% else %}
-    <div class="js-stick-at-bottom-when-scrolling">
-      <p>
-        <a href="{{ download_link }}" download="download" class="usa-link">Download this report (<abbr title="Comma separated values">CSV</abbr>)</a>
-      </p>
+
+    <form id="delete-service-form" method="post" class="display-none">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <input type="hidden" name="confirm_delete" value="delete"/>
+    </form>
+
+    <div
+      class="usa-modal"
+      data-module="usa-modal"
+      id="confirmDeleteModal"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confirmDeleteModalHeading"
+      aria-describedby="confirmDeleteModalDesc"
+    >
+      <div class="usa-modal__content">
+        <div class="usa-modal__main">
+          <h2 class="usa-modal__heading font-body-lg text-secondary-dark" id="confirmDeleteModalHeading">
+            Are you absolutely sure?
+          </h2>
+          <p id="confirmDeleteModalDesc">
+            This will permanently delete '<strong id="delete-service-name-display"></strong>' and all associated data.
+            This action <strong>cannot be undone</strong>.
+          </p>
+          <div class="usa-modal__footer">
+            <ul class="usa-button-group">
+              <li class="usa-button-group__item">
+                <button type="button" id="delete-service-confirm-btn" class="usa-button usa-button--secondary">Yes, permanently delete</button>
+              </li>
+              <li class="usa-button-group__item">
+                <button class="usa-button usa-button--unstyled padding-105 text-center" data-close-modal type="button">
+                  No, go back
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <button class="usa-button usa-modal__close" aria-label="Close this window" data-close-modal type="button">
+          <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+            <use xlink:href="{{ asset_url('img/sprite.svg') }}#close"></use>
+          </svg>
+        </button>
+      </div>
     </div>
   {% endif %}
 
+  <div class="usa-accordion margin-bottom-3">
+    <h3 class="usa-accordion__heading">
+      <button
+        type="button"
+        class="usa-accordion__button"
+        aria-expanded="false"
+        aria-controls="what-is-service-content"
+      >
+        What is a service?
+      </button>
+    </h3>
+    <div id="what-is-service-content" class="usa-accordion__content usa-prose" hidden>
+      <p>
+        When you join Notify, you're added to a service. This is your organization's workspace for sending text messages and emails. Within your service, you can:
+      </p>
+      <ol class="usa-list">
+        <li>Create and edit message templates</li>
+        <li>Send messages to recipients</li>
+        <li>View message status and history</li>
+        <li>Manage team members and permissions</li>
+        <li>Track usage and delivery statistics</li>
+        <li>If you work for multiple organizations, you may belong to multiple services and can switch between them.</li>
+      </ol>
+    </div>
+  </div>
+
+
+  <div class="margin-bottom-5">
+    <h2 class="font-heading-lg margin-bottom-2">Services Overview</h2>
+    <div class="table-overflow-x-auto">
+      <table class="usa-table service-dashboard-table">
+        <thead>
+          <tr>
+            <th scope="col" role="columnheader">Name</th>
+            <th scope="col" role="columnheader">Status</th>
+            <th scope="col" role="columnheader">Usage</th>
+            <th scope="col" role="columnheader">Primary Contact</th>
+            <th scope="col" role="columnheader">Last Used</th>
+            <th scope="col" role="columnheader">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if services %}
+            {% for service in services %}
+            {% set is_new_service = new_service_id and service.id == new_service_id %}
+            {% set is_updated_service = updated_service_id and service.id == updated_service_id %}
+            <tr id="service-{{ service.id }}" {% if is_new_service or is_updated_service %}class="is-highlighted"{% endif %}>
+              <td><a href="{{ url_for('main.service_dashboard', service_id=service.id) }}" class="usa-link">{{ service.name }}</a></td>
+              <td>
+                {% if not service.active %}
+                  Suspended
+                {% elif service.restricted %}
+                  Trial
+                {% else %}
+                  Live
+                {% endif %}
+              </td>
+              <td>{{ service.usage }}</td>
+              <td>{{ service.primary_contact }}</td>
+              <td>{{ service.recent_template }}</td>
+              <td>
+                {% if service.active %}
+                {% set is_managing = edit_service_data and edit_service_data.id == service.id %}
+
+                {% if is_managing %}
+                  <span class="text-base">Manage</span>
+                {% else %}
+                  <a href="{{ url_for('.organization_dashboard', org_id=current_org.id, action='edit-service', service_id=service.id) }}" class="usa-link">
+                    Manage
+                  </a>
+                {% endif %}
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="6" class="table-empty-message">No services found within this organization</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block extra_javascripts %}
+  <script nonce="{{ csp_nonce() }}">
+    document.addEventListener('DOMContentLoaded', function() {
+      {% if new_service_id %}
+      if (window.OrganizationDashboard) {
+        window.OrganizationDashboard.highlightAndScrollToService('{{ new_service_id }}');
+      }
+      {% endif %}
+
+      {% if updated_service_id %}
+      if (window.OrganizationDashboard) {
+        window.OrganizationDashboard.highlightAndScrollToService('{{ updated_service_id }}');
+      }
+      {% endif %}
+    });
+  </script>
+  {{ super() }}
 {% endblock %}

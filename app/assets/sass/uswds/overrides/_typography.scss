@@ -1,0 +1,52 @@
+@use 'uswds-core' as *;
+.usa-banner__header-action {
+  font-size: size('body', 2);
+}
+
+.usa-nav__primary > .usa-nav__primary-item > a.usa-nav__link {
+  font-size: size('body', 5);
+  cursor: pointer;
+  font-weight: 400;
+}
+h1 {
+  font-weight: bold;
+}
+
+.usa-section--dark h1 {
+  color: color('blue-30v');
+  @include at-media-max('desktop') {
+    font-size: size('body', 12);
+  }
+}
+
+p,
+.list li {
+  font-family: family('sans');
+  font-size: size('body', 6);
+}
+
+.large-number {
+  font-size: size('body', 16);
+}
+
+.template-footer .usa-link,
+.template-content-count,
+.table-empty-message,
+td.table-empty-message {
+  font-size: size('body', 'sm');
+}
+
+.textbox-highlight-background,
+.textbox-highlight-foreground,
+.textbox-highlight-mask,
+.textbox-highlight-textbox {
+  font-size: units(2);
+  line-height: 1.2;
+  padding: units(1);
+  font-family: family('sans');
+}
+
+.hint {
+  font-size: size('body', 'sm');
+  font-weight: normal;
+}

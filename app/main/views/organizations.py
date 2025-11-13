@@ -1,32 +1,57 @@
+import re
 from collections import OrderedDict
 from datetime import datetime
 from functools import partial
 
-from flask import flash, redirect, render_template, request, url_for
+from flask import (
+    Response,
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from flask_login import current_user
+from markupsafe import escape
 
-from app import current_organization, org_invite_api_client, organizations_client
+from app import (
+    current_organization,
+    org_invite_api_client,
+    organizations_client,
+    service_api_client,
+)
+from app.enums import OrganizationType
+from app.event_handlers import create_archive_service_event
+from app.formatters import email_safe
 from app.main import main
 from app.main.forms import (
     AdminBillingDetailsForm,
     AdminNewOrganizationForm,
     AdminNotesForm,
     AdminOrganizationDomainsForm,
+    CreateServiceForm,
     InviteOrgUserForm,
     OrganizationOrganizationTypeForm,
     RenameOrganizationForm,
     SearchByNameForm,
     SearchUsersForm,
 )
+from app.main.views.add_service import _create_service
 from app.main.views.dashboard import (
     get_tuples_of_financial_years,
     requested_and_current_financial_year,
 )
 from app.models.organization import AllOrganizations, Organization
+from app.models.service import Service
 from app.models.user import InvitedOrgUser, User
+from app.notify_client import cache
 from app.utils.csv import Spreadsheet
 from app.utils.user import user_has_permissions, user_is_platform_admin
 from notifications_python_client.errors import HTTPError
+
+EMAIL_REGEX = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
 
 
 @main.route("/organizations", methods=["GET"])
@@ -62,16 +87,241 @@ def add_organization():
     return render_template("views/organizations/add-organization.html", form=form)
 
 
-@main.route("/organizations/<uuid:org_id>", methods=["GET"])
+def get_organization_message_allowance(org_id):
+    try:
+        message_usage = organizations_client.get_organization_message_usage(org_id)
+    except Exception as e:
+        current_app.logger.error(f"Error fetching organization message usage: {e}")
+        message_usage = {}
+
+    return {
+        "messages_sent": message_usage.get("messages_sent", 0),
+        "messages_remaining": message_usage.get("messages_remaining", 0),
+        "total_message_limit": message_usage.get("total_message_limit", 0),
+    }
+
+
+def _handle_create_service(org_id):
+    create_service_form = CreateServiceForm(
+        organization_type=current_user.default_organization_type
+        or OrganizationType.FEDERAL
+    )
+
+    if request.method == "POST" and create_service_form.validate_on_submit():
+        service_name = create_service_form.name.data
+        service_id, error = _create_service(
+            service_name,
+            create_service_form.organization_type.data,
+            email_safe(service_name),
+            create_service_form,
+        )
+        if not error:
+            current_organization.associate_service(service_id)
+            flash(f"Service '{service_name}' has been created", "default_with_tick")
+            session["new_service_id"] = service_id
+            return redirect(url_for(".organization_dashboard", org_id=org_id))
+        else:
+            flash("Error creating service", "error")
+
+    return create_service_form
+
+
+def _handle_invite_user(org_id):
+    invite_user_form = InviteOrgUserForm(
+        inviter_email_address=current_user.email_address
+    )
+
+    if request.method == "POST" and invite_user_form.validate_on_submit():
+        try:
+            invited_org_user = InvitedOrgUser.create(
+                current_user.id, org_id, invite_user_form.email_address.data
+            )
+            flash(
+                f"Invite sent to {invited_org_user.email_address}",
+                "default_with_tick",
+            )
+            return redirect(url_for(".organization_dashboard", org_id=org_id))
+        except Exception:
+            flash("Error sending invitation", "error")
+
+    return invite_user_form
+
+
+def _handle_edit_service(org_id, service_id):
+    service = Service.from_id(service_id)
+
+    if request.method == "POST":
+        service_name = request.form.get("service_name", "").strip()
+        primary_contact = request.form.get("primary_contact", "").strip()
+        new_status = request.form.get("status")
+
+        if not service_name:
+            flash("Service name is required", "error")
+        elif primary_contact and not EMAIL_REGEX.match(primary_contact):
+            flash("Please enter a valid email address", "error")
+        else:
+            if service_name != service.name:
+                service.update(name=service_name)
+
+            if primary_contact != (service.billing_contact_email_addresses or ""):
+                service.update(billing_contact_email_addresses=primary_contact)
+
+            current_status = "trial" if service.trial_mode else "live"
+            if new_status != current_status:
+                service.update_status(live=(new_status == "live"))
+                cache.redis_client.delete("organizations")
+
+            flash("Service updated successfully", "default_with_tick")
+            session["updated_service_id"] = str(service_id)
+            return redirect(url_for(".organization_dashboard", org_id=org_id))
+
+    return {
+        "id": service.id,
+        "name": (
+            escape(request.form.get("service_name", "").strip())
+            if request.method == "POST"
+            else service.name
+        ),
+        "primary_contact": (
+            escape(request.form.get("primary_contact", "").strip())
+            if request.method == "POST"
+            else (service.billing_contact_email_addresses or "")
+        ),
+        "status": "trial" if service.trial_mode else "live",
+    }
+
+
+def _handle_delete_service(org_id, service_id):
+    if request.method != "POST":
+        flash("Invalid request method", "error")
+        return redirect(url_for(".organization_dashboard", org_id=org_id))
+
+    service = Service.from_id(service_id)
+
+    if not service.active or not (service.trial_mode or current_user.platform_admin):
+        flash("You don't have permission to delete this service", "error")
+        return redirect(url_for(".organization_dashboard", org_id=org_id))
+
+    confirm = request.form.get("confirm_delete")
+    if confirm != "delete":
+        flash("Delete confirmation was not provided", "error")
+        return redirect(url_for(".organization_dashboard", org_id=org_id))
+
+    cached_service_user_ids = [user.id for user in service.active_users]
+
+    service_api_client.archive_service(service_id, cached_service_user_ids)
+    create_archive_service_event(
+        service_id=service_id, archived_by_id=current_user.id
+    )
+
+    cache.redis_client.delete("organizations")
+
+    flash(f"'{service.name}' was deleted", "default_with_tick")
+    return redirect(url_for(".organization_dashboard", org_id=org_id))
+
+
+def get_services_dashboard_data(organization, year):
+    try:
+        dashboard_data = organizations_client.get_organization_dashboard(
+            organization.id, year
+        )
+        services = dashboard_data.get("services", [])
+    except Exception as e:
+        current_app.logger.error(f"Error fetching dashboard data: {e}")
+        return []
+
+    for service in services:
+        service["id"] = service.get("service_id")
+        service["name"] = service.get("service_name")
+        service["recent_template"] = service.get("recent_sms_template_name") or "N/A"
+        service["primary_contact"] = service.get("primary_contact") or "N/A"
+
+        emails_sent = service.get("emails_sent", 0)
+        sms_sent = service.get("sms_billable_units", 0)
+        sms_remainder = service.get("sms_remainder", 0)
+        sms_cost = service.get("sms_cost", 0)
+
+        usage_parts = []
+        if emails_sent > 0:
+            usage_parts.append(f"{emails_sent:,} emails")
+        if sms_sent > 0 or sms_remainder > 0:
+            if sms_cost > 0:
+                usage_parts.append(
+                    f"{sms_sent:,} sms ({sms_remainder:,} remaining, ${sms_cost:,.2f})"
+                )
+            else:
+                usage_parts.append(f"{sms_sent:,} sms ({sms_remainder:,} remaining)")
+
+        service["usage"] = ", ".join(usage_parts) if usage_parts else "No usage"
+
+    return services
+
+
+@main.route("/organizations/<uuid:org_id>", methods=["GET", "POST"])
 @user_has_permissions()
 def organization_dashboard(org_id):
-    year, current_financial_year = requested_and_current_financial_year(request)
-    services = current_organization.services_and_usage(financial_year=year)["services"]
+    if not current_app.config.get("ORGANIZATION_DASHBOARD_ENABLED", False):
+        return redirect(url_for(".organization_usage", org_id=org_id))
+
+    year = requested_and_current_financial_year(request)[0]
+    action = request.args.get("action")
+    service_id = request.args.get("service_id")
+
+    create_service_form = None
+    invite_user_form = None
+    edit_service_data = None
+
+    if action == "create-service":
+        result = _handle_create_service(org_id)
+        if isinstance(result, Response):
+            return result
+        create_service_form = result
+
+    elif action == "invite-user":
+        result = _handle_invite_user(org_id)
+        if isinstance(result, Response):
+            return result
+        invite_user_form = result
+
+    elif action == "edit-service" and service_id:
+        result = _handle_edit_service(org_id, service_id)
+        if isinstance(result, Response):
+            return result
+        edit_service_data = result
+
+    elif action == "delete-service" and service_id:
+        return _handle_delete_service(org_id, service_id)
+
+    message_allowance = get_organization_message_allowance(org_id)
+
     return render_template(
         "views/organizations/organization/index.html",
+        selected_year=year,
+        services=get_services_dashboard_data(current_organization, year),
+        live_services=len(current_organization.live_services),
+        trial_services=len(current_organization.trial_services),
+        suspended_services=len(current_organization.suspended_services),
+        total_services=len(current_organization.services),
+        create_service_form=create_service_form,
+        invite_user_form=invite_user_form,
+        edit_service_data=edit_service_data,
+        new_service_id=session.pop("new_service_id", None),
+        updated_service_id=session.pop("updated_service_id", None),
+        **message_allowance,
+    )
+
+
+@main.route("/organizations/<uuid:org_id>/usage", methods=["GET"])
+@user_has_permissions()
+def organization_usage(org_id):
+    year, current_financial_year = requested_and_current_financial_year(request)
+    services = current_organization.services_and_usage(financial_year=year)["services"]
+
+    return render_template(
+        "views/organizations/organization/usage.html",
         services=services,
         years=get_tuples_of_financial_years(
-            partial(url_for, ".organization_dashboard", org_id=current_organization.id),
+            partial(url_for, ".organization_usage", org_id=current_organization.id),
             start=current_financial_year - 2,
             end=current_financial_year,
         ),
@@ -90,14 +340,10 @@ def organization_dashboard(org_id):
 @main.route("/organizations/<uuid:org_id>/download-usage-report.csv", methods=["GET"])
 @user_has_permissions()
 def download_organization_usage_report(org_id):
-    selected_year_input = request.args.get("selected_year")
-    # Validate selected_year to prevent header injection
-    if (
-        selected_year_input
-        and selected_year_input.isdigit()
-        and len(selected_year_input) == 4
-    ):
-        selected_year = selected_year_input
+    # Validate and sanitize selected_year to prevent header injection
+    selected_year_input = request.args.get("selected_year", "")
+    if selected_year_input.isdigit() and len(selected_year_input) == 4:
+        selected_year = str(int(selected_year_input))
     else:
         selected_year = str(datetime.now().year)
     services_usage = current_organization.services_and_usage(
@@ -131,8 +377,6 @@ def download_organization_usage_report(org_id):
     ]
 
     # Sanitize organization name for filename to prevent header injection
-    import re
-
     safe_org_name = re.sub(r"[^\w\s-]", "", current_organization.name).strip()
     safe_org_name = re.sub(r"[-\s]+", "-", safe_org_name)
 
@@ -142,13 +386,8 @@ def download_organization_usage_report(org_id):
         {
             "Content-Type": "text/csv; charset=utf-8",
             "Content-Disposition": (
-                "inline;"
-                'filename="{} organization usage report for year {}'
-                ' - generated on {}.csv"'.format(
-                    safe_org_name,
-                    selected_year,
-                    datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
-                )
+                f'inline;filename="{safe_org_name} organization usage report for year {selected_year}'
+                f' - generated on {datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")}.csv"'
             ),
         },
     )

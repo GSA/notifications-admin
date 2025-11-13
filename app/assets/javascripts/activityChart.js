@@ -228,9 +228,9 @@
 
         var userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-        var url = type === 'service'
-            ? `/services/${currentServiceId}/daily-stats.json?timezone=${encodeURIComponent(userTimezone)}`
-            : `/services/${currentServiceId}/daily-stats-by-user.json?timezone=${encodeURIComponent(userTimezone)}`;
+        var url = (type === 'service' ?
+            `/services/${currentServiceId}/daily-stats.json?timezone=${encodeURIComponent(userTimezone)}` :
+            `/services/${currentServiceId}/daily-stats-by-user.json?timezone=${encodeURIComponent(userTimezone)}`);
 
         try {
             const response = await fetch(url);
@@ -292,20 +292,20 @@
         }
     };
 
-    function startPolling() {
+    var startPolling = function() {
         fetchData(currentType);
 
         pollInterval = setInterval(() => {
             fetchData(currentType);
         }, POLL_INTERVAL_MS);
-    }
+    };
 
-    function stopPolling() {
+    var stopPolling = function() {
         if (pollInterval) {
             clearInterval(pollInterval);
             pollInterval = null;
         }
-    }
+    };
 
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {

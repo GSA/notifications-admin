@@ -4,7 +4,7 @@
       itemscope
       itemtype="http://schema.org/ListItem"
   >
-    <a class="{% if has_subnav %}parent-link {% endif %}{% if item['link'] == request.endpoint %} usa-current {% endif %}" href="{{ url_for(item['link']) }}" itemprop="item">
+    <a class="usa-link {% if has_subnav %}parent-link {% endif %}{% if item['link'] == request.endpoint %}usa-current {% endif %}" href="{{ url_for(item['link']) }}" itemprop="item">
       <span itemprop="name">{{item['name']}}</span>
     </a>
     {% if caller %}

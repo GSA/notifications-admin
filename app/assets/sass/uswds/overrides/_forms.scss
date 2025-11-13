@@ -1,0 +1,26 @@
+@use 'uswds-core' as *;
+
+.usa-radio legend.usa-legend,
+.usa-checkbox legend.usa-legend,
+.api-key-radios legend.usa-legend,
+.login-auth-radios legend.usa-legend,
+.auth-type-radios legend.usa-legend,
+.notification-type-radios legend.usa-legend,
+.organizations-radios legend.usa-legend {
+  font-weight: 700;
+}
+
+.radios-nested {
+  .usa-radio {
+    margin-top: units(1);
+    max-width: units('mobile');
+  }
+}
+
+.usa-fieldset {
+  background-color: transparent;
+}
+
+.usa-radio {
+  background-color: transparent;
+}

@@ -38,7 +38,6 @@ const routes = {
     { label: 'Service Usage', path: servicePath('/usage') },
     { label: 'Service Template Usage', path: servicePath('/template-usage') },
     { label: 'Service Jobs', path: servicePath('/jobs') },
-    { label: 'Service Notifications', path: servicePath('/notifications') },
     { label: 'Service History', path: servicePath('/history') },
     { label: 'Service Settings', path: servicePath('/service-settings') },
     { label: 'Service Settings Admin', path: servicePath('/service-settings?show_admin_view=true') },

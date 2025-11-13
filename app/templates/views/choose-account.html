@@ -14,13 +14,13 @@
           {{ heading }}
         </h2>
       </div>
-      <div class="grid-col-9">
+      <div class="grid-col-9 margin-top-1">
         <ul>
   {% else %}
     <ul>
   {% endif %}
   {% for org in organizations|sort %}
-    <li class="browse-list-item">
+    <li class="browse-list-item margin-y-2">
       <a href="{{ url_for('.organization_dashboard', org_id=org.id) }}" class="usa-link">{{ org.name }}</a>
       <p class="browse-list-hint">
         {{ org.count_of_live_services }}
@@ -29,7 +29,7 @@
     </li>
   {% endfor %}
   {% for service in services|sort %}
-    <li class="browse-list-item">
+    <li class="browse-list-item margin-y-2">
       <a href="{{ url_for('.service_dashboard', service_id=service.id) }}" class="usa-link">{{ service.name }}</a>
     </li>
   {% endfor %}
@@ -49,11 +49,11 @@
 
 {% block maincolumn_content %}
 
-  <h1 class="font-heading-xl {% if current_user.has_access_to_live_and_trial_mode_services %}usa-sr-only{% endif %}">
+  <h1 class="font-heading-xl">
     Choose service
   </h1>
 
-  <nav class="browse-list {% if current_user.has_access_to_live_and_trial_mode_services %}top-gutter-2-3{% endif %}">
+  <nav class="browse-list">
 
     {% if current_user.platform_admin %}
       <div class="grid-row">
@@ -62,7 +62,7 @@
             Platform admin
           </h2>
         </div>
-        <ul class="grid-col-9">
+        <ul class="grid-col-9 margin-top-3">
           <li class="browse-list-item">
             <a href="{{ url_for('.organizations') }}" class="usa-link">All organizations</a>
             <p class="browse-list-hint">
@@ -101,23 +101,12 @@
 
   {% if can_add_service %}
     <div class="js-stick-at-bottom-when-scrolling">
-      {% if current_user.has_access_to_live_and_trial_mode_services %}
-        <div class="grid-row">
-          <div class="grid-col-3">
-            &nbsp;
-          </div>
-          <div class="grid-col-9">
-      {% endif %}
       {{ usaButton({
         "element": "a",
-        "text": "Add a new service",
+        "text": "Add service",
         "href": url_for('.add_service'),
         "classes": ""
       }) }}
-      {% if current_user.has_access_to_live_and_trial_mode_services %}
-          </div>
-        </div>
-      {% endif %}
     </div>
   {% endif %}
 

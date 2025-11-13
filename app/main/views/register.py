@@ -1,26 +1,13 @@
 import json
 import uuid
-from datetime import datetime, timedelta
 from urllib.parse import unquote
 
-from flask import (
-    abort,
-    current_app,
-    flash,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
+from flask import abort, current_app, flash, redirect, render_template, request, url_for
 
 from app import redis_client, user_api_client
 from app.enums import InvitedUserStatus
 from app.main import main
-from app.main.forms import (
-    RegisterUserFromOrgInviteForm,
-    SetupUserProfileForm,
-)
+from app.main.forms import SetupUserProfileForm
 from app.main.views import sign_in
 from app.main.views.verify import activate_user
 from app.models.user import InvitedOrgUser, InvitedUser, User
@@ -32,69 +19,6 @@ from app.utils.user import is_gov_user
 @hide_from_search_engines
 def register():
     abort(404)
-
-
-@main.route("/register-from-org-invite", methods=["GET", "POST"])
-# TODO This is deprecated, we are now handling invites in the
-# login.gov workflow.  Leaving it here until we write the new
-# org registration.
-def register_from_org_invite():
-    invited_org_user = InvitedOrgUser.from_session()
-    if not invited_org_user:
-        abort(404, "No invited_org_user")
-
-    form = RegisterUserFromOrgInviteForm(
-        invited_org_user,
-    )
-    form.auth_type.data = "sms_auth"
-
-    if form.validate_on_submit():
-        if (
-            form.organization.data != invited_org_user.organization
-            or form.email_address.data != invited_org_user.email_address
-        ):
-            abort(400, "organization or email address doesn't match")
-        _do_registration(
-            form,
-            send_email=False,
-            send_sms=True,
-            organization_id=invited_org_user.organization,
-        )
-        invited_org_user.accept_invite()
-
-        return redirect(url_for("main.verify"))
-    return render_template(
-        "views/register-from-org-invite.html",
-        invited_org_user=invited_org_user,
-        form=form,
-    )
-
-
-def _do_registration(form, send_sms=True, send_email=True, organization_id=None):
-    user = User.from_email_address_or_none(form.email_address.data)
-    if user:
-        if send_email:
-            user.send_already_registered_email()
-        session["expiry_date"] = str(datetime.utcnow() + timedelta(hours=1))
-        session["user_details"] = {"email": user.email_address, "id": user.id}
-    else:
-        user = User.register(
-            name=form.name.data,
-            email_address=form.email_address.data,
-            mobile_number=form.mobile_number.data,
-            password=form.password.data,
-            auth_type=form.auth_type.data,
-        )
-
-        if send_email:
-            user.send_verify_email()
-
-        if send_sms:
-            user.send_verify_code()
-        session["expiry_date"] = str(datetime.utcnow() + timedelta(hours=1))
-        session["user_details"] = {"email": user.email_address, "id": user.id}
-    if organization_id:
-        session["organization_id"] = organization_id
 
 
 @main.route("/registration-continue")

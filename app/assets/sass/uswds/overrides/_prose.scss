@@ -1,0 +1,20 @@
+@use 'uswds-core' as *;
+
+.usa-prose {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: family('sans');
+  }
+}
+
+.usa-hero {
+  background-image: none;
+}
+
+.usa-hint {
+  display: block;
+  color: color('gray-70');
+}

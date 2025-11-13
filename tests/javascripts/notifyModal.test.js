@@ -159,3 +159,70 @@ describe("Modal trigger buttons", () => {
       expect(modalWrapper.classList.contains("is-hidden")).toBe(true);
     });
   });
+
+describe("Modal edge cases", () => {
+  test("openModal does nothing if wrapper doesn't exist", () => {
+    expect(() => {
+      openModal("nonExistentModal");
+    }).not.toThrow();
+  });
+
+  test("openModal does nothing if modal element doesn't exist inside wrapper", () => {
+    document.body.innerHTML = `<div id="emptyWrapper"></div>`;
+    expect(() => {
+      openModal("emptyWrapper");
+    }).not.toThrow();
+  });
+
+  test("openModal works when there is no focusable element", () => {
+    document.body.innerHTML = `
+      <div id="noFocusModal">
+        <div class="usa-modal">
+          <p>No focusable elements here</p>
+        </div>
+      </div>
+    `;
+    expect(() => {
+      openModal("noFocusModal");
+    }).not.toThrow();
+    expect(document.getElementById("noFocusModal").classList.contains("is-hidden")).toBe(false);
+  });
+
+  test("closeModal does nothing if no modal is active", () => {
+    expect(() => {
+      closeModal();
+    }).not.toThrow();
+  });
+
+  test("closeModal handles case where modal element is missing", () => {
+    document.body.innerHTML = `
+      <button data-open-modal="testModal">Open</button>
+      <div id="testModal"></div>
+    `;
+    openModal("testModal");
+    expect(() => {
+      closeModal();
+    }).not.toThrow();
+  });
+
+  test("Modal keydown handler ignores non-Tab keys", () => {
+    document.body.innerHTML = `
+      <div id="keyModal">
+        <div class="usa-modal">
+          <button>Test</button>
+        </div>
+      </div>
+    `;
+    openModal("keyModal");
+    const modal = document.querySelector(".usa-modal");
+
+    const enterEvent = new KeyboardEvent("keydown", {
+      key: "Enter",
+      bubbles: true
+    });
+
+    expect(() => {
+      modal.dispatchEvent(enterEvent);
+    }).not.toThrow();
+  });
+});

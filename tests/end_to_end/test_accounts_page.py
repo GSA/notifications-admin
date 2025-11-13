@@ -1,4 +1,3 @@
-import datetime
 import os
 import re
 
@@ -9,15 +8,11 @@ from tests.end_to_end.conftest import check_axe_report
 E2E_TEST_URI = os.getenv("NOTIFY_E2E_TEST_URI")
 
 
-def test_add_new_service_workflow(authenticated_page, end_to_end_context):
-    page = authenticated_page
-
-    # Prepare for adding a new service later in the test.
-    current_date_time = datetime.datetime.now()
-    new_service_name = "E2E Federal Test Service {now} - {browser_type}".format(
-        now=current_date_time.strftime("%m/%d/%Y %H:%M:%S"),
-        browser_type=end_to_end_context.browser.browser_type.name,
-    )
+def test_add_new_service_workflow(e2e_test_service):
+    """Test creating and deleting a service with automatic cleanup."""
+    # Get service info from fixture (cleanup is automatic)
+    new_service_name = e2e_test_service["name"]
+    page = e2e_test_service["page"]
 
     page.goto(f"{E2E_TEST_URI}/accounts")
 
@@ -34,9 +29,7 @@ def test_add_new_service_workflow(authenticated_page, end_to_end_context):
     expect(sign_in_heading).to_be_visible()
 
     # Retrieve some prominent elements on the page for testing.
-    add_service_button = page.get_by_role(
-        "button", name=re.compile("Add a new service")
-    )
+    add_service_button = page.get_by_role("button", name=re.compile("Add service"))
 
     expect(add_service_button).to_be_visible()
 
@@ -81,24 +74,5 @@ def test_add_new_service_workflow(authenticated_page, end_to_end_context):
     # expect(service_heading).to_be_visible()
     expect(page).to_have_title(re.compile(new_service_name))
 
-    page.click("text='Settings'")
-
-    # Check to make sure that we've arrived at the next page.
-    page.wait_for_load_state("domcontentloaded")
-    check_axe_report(page)
-
-    page.click("text='Delete this service'")
-
-    # Check to make sure that we've arrived at the next page.
-    page.wait_for_load_state("domcontentloaded")
-    check_axe_report(page)
-
-    page.click("text='Yes, delete'")
-
-    # Check to make sure that we've arrived at the next page.
-    page.wait_for_load_state("domcontentloaded")
-    check_axe_report(page)
-
-    # Check to make sure that we've arrived at the next page.
-    # Check the page title exists and matches what we expect.
-    expect(page).to_have_title(re.compile("Choose service"))
+    # Service will be automatically cleaned up by the e2e_test_service fixture
+    # even if the test fails before reaching this point

@@ -1,22 +1,28 @@
 (function (window) {
   'use strict';
 
+  // This module creates dynamic add/remove input lists. It lets users add multiple entries
+  // (like email addresses or domains) with "Add another" and "Remove" buttons. It handles
+  // min/max entry limits, focus management, and preserves input attributes.
+  // We're keeping this for now but it's not currently being used in the application.
+
   var Modules = window.NotifyModules;
   var lists = [],
       listEntry,
       ListEntry;
 
   ListEntry = function (elm) {
-    var $elm = $(elm),
-        idPattern = $elm.prop('id');
+    var idPattern = elm.id;
 
-    if (!idPattern) { return false; }
+    if (!idPattern) {
+      return false;
+    }
     this.idPattern = idPattern;
     this.elementSelector = '.list-entry, .input-list__button--remove, .input-list__button--add';
     this.entries = [];
-    this.$wrapper = $elm;
+    this.wrapper = elm;
     this.minEntries = 2;
-    this.listItemName = this.$wrapper.data('listItemName');
+    this.listItemName = this.wrapper.dataset.listItemName;
     this.getSharedAttributes();
     this.getOriginalClasses();
 
@@ -26,33 +32,43 @@
     this.render();
     this.bindEvents();
   };
-  ListEntry.optionalAttributes = ['aria-describedby'];
+  ListEntry.escapeHtml = function(unsafe) {
+    if (!unsafe) return '';
+    return String(unsafe)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  };
   ListEntry.prototype.renderEntry = function(data) {
+    var escapeHtml = ListEntry.escapeHtml;
     return `
       <div class="list-entry">
-        <label for="${data.id}" class="usa-label">
-          <span class="usa-sr-only">${data.listItemName} number </span>${data.number}.
+        <label for="${escapeHtml(data.id)}" class="usa-label">
+          <span class="usa-sr-only">${escapeHtml(data.listItemName)} number </span>${escapeHtml(data.number)}.
         </label>
         <input
-          class="usa-input ${data.classes || ''}"
-          name="${data.name}"
-          id="${data.id}"
-          ${data.value ? `value="${data.value}"` : ''}
+          class="usa-input ${escapeHtml(data.classes || '')}"
+          name="${escapeHtml(data.name)}"
+          id="${escapeHtml(data.id)}"
+          ${data.value ? `value="${escapeHtml(data.value)}"` : ''}
           ${data.sharedAttributes}
         />
         ${data.button ? `
           <button type="button" class="usa-button usa-button--unstyled input-list__button--remove">
-            Remove<span class="usa-sr-only"> ${data.listItemName} number ${data.number}</span>
+            Remove<span class="usa-sr-only"> ${escapeHtml(data.listItemName)} number ${escapeHtml(data.number)}</span>
           </button>
         ` : ''}
       </div>
     `;
   };
   ListEntry.prototype.renderAddButton = function(data) {
-    return `<button type="button" class="usa-button usa-button--outline input-list__button--add margin-top-4">Add another ${data.listItemName} (${data.entriesLeft} remaining)</button>`;
+    var escapeHtml = ListEntry.escapeHtml;
+    return `<button type="button" class="usa-button usa-button--outline input-list__button--add margin-top-4">Add another ${escapeHtml(data.listItemName)} (${escapeHtml(data.entriesLeft)} remaining)</button>`;
   };
   ListEntry.prototype.getSharedAttributes = function () {
-    var $inputs = this.$wrapper.find('input'),
+    var inputs = this.wrapper.querySelectorAll('input'),
         generatedAttributes = ['id', 'name', 'value', 'class'],
         attributes = [],
         attrIdx,
@@ -64,15 +80,16 @@
           elmIdx = attrsByElm.length,
           existingAttributes = [],
           elmAttrs,
-          attrIdx;
+          attrIdx,
+          escapeHtml = ListEntry.escapeHtml;
 
       while (elmIdx--) {
         elmAttrs = attrsByElm[elmIdx];
         attrIdx = elmAttrs.length;
         while (attrIdx--) {
           // prevent duplicates
-          if ($.inArray(elmAttrs[attrIdx].name, existingAttributes) === -1) {
-            attrStr += ` ${elmAttrs[attrIdx].name}="${elmAttrs[attrIdx].value}"`;
+          if (existingAttributes.indexOf(elmAttrs[attrIdx].name) === -1) {
+            attrStr += ` ${escapeHtml(elmAttrs[attrIdx].name)}="${escapeHtml(elmAttrs[attrIdx].value)}"`;
             existingAttributes.push(elmAttrs[attrIdx].name);
           }
         }
@@ -80,11 +97,11 @@
       return attrStr;
     };
 
-    $inputs.each(function (idx, elm) {
+    inputs.forEach(function (elm) {
       attrIdx = elm.attributes.length;
       elmAttributes = [];
       while(attrIdx--) {
-        if ($.inArray(elm.attributes[attrIdx].name, generatedAttributes) === -1) {
+        if (generatedAttributes.indexOf(elm.attributes[attrIdx].name) === -1) {
           elmAttributes.push({
             'name': elm.attributes[attrIdx].name,
             'value': elm.attributes[attrIdx].value
@@ -99,9 +116,9 @@
     this.sharedAttributes = (attributes.length) ? getAttributesHTML(attributes) : '';
   };
   ListEntry.prototype.getOriginalClasses = function () {
-    var $firstInput = this.$wrapper.find('input').first();
-    if ($firstInput.length) {
-      var classList = $firstInput.attr('class');
+    var firstInput = this.wrapper.querySelector('input');
+    if (firstInput) {
+      var classList = firstInput.getAttribute('class');
       if (classList) {
         // Preserve any additional classes from the original input
         this.additionalClasses = classList;
@@ -114,8 +131,8 @@
   };
   ListEntry.prototype.getValues = function () {
     this.entries = [];
-    this.$wrapper.find('input').each(function (idx, elm) {
-      var val = $(elm).val();
+    this.wrapper.querySelectorAll('input').forEach(function (elm) {
+      var val = elm.value;
 
       this.entries.push(val);
     }.bind(this));
@@ -144,11 +161,12 @@
     }
   };
   ListEntry.prototype.bindEvents = function () {
-    this.$wrapper.on('click', '.input-list__button--remove', function (e) {
-      this.removeEntry($(e.target));
-    }.bind(this));
-    this.$wrapper.on('click', '.input-list__button--add', function (e) {
-      this.addEntry();
+    this.wrapper.addEventListener('click', function (e) {
+      if (e.target.closest('.input-list__button--remove')) {
+        this.removeEntry(e.target);
+      } else if (e.target.closest('.input-list__button--add')) {
+        this.addEntry();
+      }
     }.bind(this));
   };
   ListEntry.prototype.shiftFocus = function (opts) {
@@ -159,7 +177,13 @@
     } else { // opts.action === 'add'
       numberTargeted = opts.entryNumberFocused + 1;
     }
-    this.$wrapper.find('.list-entry').eq(numberTargeted - 1).find('input').focus();
+    var entries = this.wrapper.querySelectorAll('.list-entry');
+    if (entries[numberTargeted - 1]) {
+      var input = entries[numberTargeted - 1].querySelector('input');
+      if (input) {
+        input.focus();
+      }
+    }
   };
   ListEntry.prototype.removeEntryFromEntries = function (entryNumber) {
     var idx,
@@ -173,7 +197,7 @@
     }
     this.entries = newEntries;
   };
-  ListEntry.prototype.addEntry = function ($removeButton) {
+  ListEntry.prototype.addEntry = function () {
     var currentLastEntryNumber = this.entries.length;
 
     this.getValues();
@@ -181,8 +205,23 @@
     this.render();
     this.shiftFocus({ 'action' : 'add', 'entryNumberFocused' : currentLastEntryNumber });
   };
-  ListEntry.prototype.removeEntry = function ($removeButton) {
-    var entryNumber = parseInt($removeButton.find('span').text().match(/\d+/)[0], 10);
+  ListEntry.prototype.removeEntry = function (removeButton) {
+    var button = removeButton.closest('.input-list__button--remove');
+    if (!button) {
+      console.error('ListEntry: Remove button not found');
+      return;
+    }
+    var span = button.querySelector('span');
+    if (!span) {
+      console.error('ListEntry: Entry number span not found in remove button');
+      return;
+    }
+    var match = span.textContent.match(/\d+/);
+    if (!match) {
+      console.error('ListEntry: Could not find entry number in remove button');
+      return;
+    }
+    var entryNumber = parseInt(match[0], 10);
 
     this.getValues();
     this.removeEntryFromEntries(entryNumber);
@@ -190,8 +229,10 @@
     this.shiftFocus({ 'action' : 'remove', 'entryNumberFocused' : entryNumber });
   };
   ListEntry.prototype.render = function () {
-    this.$wrapper.find(this.elementSelector).remove();
-    $.each(this.entries, function (idx, entry) {
+    this.wrapper.querySelectorAll(this.elementSelector).forEach(function(el) {
+      el.remove();
+    });
+    this.entries.forEach(function (entry, idx) {
       var entryNumber = idx + 1,
           dataObj = {
             'id' : this.getId(entryNumber),
@@ -207,10 +248,10 @@
       if (entryNumber > 1) {
         dataObj.button = true;
       }
-      this.$wrapper.append(this.renderEntry(dataObj));
+      this.wrapper.insertAdjacentHTML('beforeend', this.renderEntry(dataObj));
     }.bind(this));
     if (this.entries.length < this.maxEntries) {
-      this.$wrapper.append(this.renderAddButton({
+      this.wrapper.insertAdjacentHTML('beforeend', this.renderAddButton({
         'listItemName' : this.listItemName,
         'entriesLeft' : (this.maxEntries - this.entries.length)
       }));
@@ -219,7 +260,7 @@
 
   Modules['list-entry'] = function () {
 
-    this.start = component => lists.push(new ListEntry($(component)));
+    this.start = component => lists.push(new ListEntry(component));
 
   };
 

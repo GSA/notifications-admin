@@ -1,6 +1,11 @@
 beforeAll(() => {
-  // ErrorBanner module sets window.NotifyModules.ErrorBanner for backward compatibility
+  const originalNotifyModules = window.NotifyModules;
+  delete window.NotifyModules;
+
   require('../../app/assets/javascripts/errorBanner.js');
+
+  expect(window.NotifyModules).toBeDefined();
+  expect(window.NotifyModules.ErrorBanner).toBeDefined();
 });
 
 afterAll(() => {
@@ -20,6 +25,13 @@ describe("Error Banner", () => {
       window.NotifyModules.ErrorBanner.hideBanner();
       expect(document.querySelector('.banner-dangerous').classList).toContain('display-none')
     });
+
+    test("Will not error when no banner elements exist", () => {
+      document.body.innerHTML = `<div>No banners here</div>`;
+      expect(() => {
+        window.NotifyModules.ErrorBanner.hideBanner();
+      }).not.toThrow();
+    });
   });
 
   describe("The `showBanner` method", () => {
@@ -33,6 +45,13 @@ describe("Error Banner", () => {
 
     test("Will show the element", () => {
       expect(document.querySelector('.banner-dangerous').classList).not.toContain('display-none')
+    });
+
+    test("Will not error when no banner elements exist", () => {
+      document.body.innerHTML = `<div>No banners here</div>`;
+      expect(() => {
+        window.NotifyModules.ErrorBanner.showBanner();
+      }).not.toThrow();
     });
   });
 

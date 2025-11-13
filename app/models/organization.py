@@ -103,7 +103,11 @@ class Organization(JSONModel, SortByNameMixin):
 
     @property
     def trial_services(self):
-        return [s for s in self.services if not s["active"] or s["restricted"]]
+        return [s for s in self.services if s["active"] and s["restricted"]]
+
+    @property
+    def suspended_services(self):
+        return [s for s in self.services if not s["active"]]
 
     @cached_property
     def invited_users(self):

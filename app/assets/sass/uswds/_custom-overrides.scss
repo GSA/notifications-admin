@@ -1,0 +1,58 @@
+@use 'uswds-core' as *;
+.usa-banner__header-action {
+  font-size: size('body', 2);
+}
+
+.usa-nav__primary > .usa-nav__primary-item > a.usa-nav__link {
+  font-weight: 400;
+}
+
+h1 {
+  font-weight: bold;
+}
+
+.usa-section--dark h1 {
+  color: color('blue-30v');
+  @include at-media-max('desktop') {
+    font-size: size('body', 12);
+  }
+}
+
+p,
+.list li {
+  font-family: family('sans');
+  font-size: size('body', 6);
+}
+
+// Loading spinner for button states (e.g., after hitting send on text messages)
+.loading-spinner {
+  display: inline-block;
+  margin-left: 0.5rem;
+  width: 1em;
+  height: 1em;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Style for disabled loading button
+.usa-button[disabled] {
+  position: relative;
+
+  .loading-spinner {
+    display: inline-block;
+  }
+
+  min-width: 120px;
+}

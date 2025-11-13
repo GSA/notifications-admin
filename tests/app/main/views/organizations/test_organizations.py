@@ -44,7 +44,7 @@ def test_view_organization_shows_the_correct_organization(client_request, mocker
     )
 
     page = client_request.get(
-        ".organization_dashboard",
+        ".organization_usage",
         org_id=ORGANISATION_ID,
     )
 
@@ -353,7 +353,7 @@ def test_organization_services_shows_live_services_and_usage(
     )
 
     client_request.login(active_user_with_permissions)
-    page = client_request.get(".organization_dashboard", org_id=ORGANISATION_ID)
+    page = client_request.get(".organization_usage", org_id=ORGANISATION_ID)
     mock.assert_called_once_with(ORGANISATION_ID, 2020)
 
     services = page.select("main h3")
@@ -409,7 +409,7 @@ def test_organization_services_shows_live_services_and_usage_with_count_of_1(
     )
 
     client_request.login(active_user_with_permissions)
-    page = client_request.get(".organization_dashboard", org_id=ORGANISATION_ID)
+    page = client_request.get(".organization_usage", org_id=ORGANISATION_ID)
 
     usage_rows = page.select("main .grid-col-6")
 
@@ -443,7 +443,7 @@ def test_organization_services_filters_by_financial_year(
         "app.organizations_client.get_services_and_usage", return_value={"services": []}
     )
     page = client_request.get(
-        ".organization_dashboard",
+        ".organization_usage",
         org_id=ORGANISATION_ID,
         year=financial_year,
     )
@@ -486,7 +486,7 @@ def test_organization_services_shows_search_bar(
     )
 
     client_request.login(active_user_with_permissions)
-    page = client_request.get(".organization_dashboard", org_id=ORGANISATION_ID)
+    page = client_request.get(".organization_usage", org_id=ORGANISATION_ID)
 
     services = page.select(".organization-service")
     assert len(services) == 8
@@ -535,7 +535,7 @@ def test_organization_services_hides_search_bar_for_7_or_fewer_services(
     )
 
     client_request.login(active_user_with_permissions)
-    page = client_request.get(".organization_dashboard", org_id=ORGANISATION_ID)
+    page = client_request.get(".organization_usage", org_id=ORGANISATION_ID)
 
     services = page.select(".organization-service")
     assert len(services) == 7
@@ -569,7 +569,7 @@ def test_organization_services_links_to_downloadable_report(
         },
     )
     client_request.login(active_user_with_permissions)
-    page = client_request.get(".organization_dashboard", org_id=ORGANISATION_ID)
+    page = client_request.get(".organization_usage", org_id=ORGANISATION_ID)
 
     link_to_report = page.select_one("a[download]")
     assert normalize_spaces(link_to_report.text) == "Download this report (CSV)"
@@ -655,15 +655,11 @@ def test_organization_trial_mode_services_shows_all_non_live_services(
     )
 
     services = page.select(".browse-list-item")
-    assert len(services) == 2
+    assert len(services) == 1
 
     assert normalize_spaces(services[0].text) == "2"
-    assert normalize_spaces(services[1].text) == "3"
     assert services[0].find("a")["href"] == url_for(
         "main.service_dashboard", service_id="2"
-    )
-    assert services[1].find("a")["href"] == url_for(
-        "main.service_dashboard", service_id="3"
     )
 
 
@@ -690,7 +686,7 @@ def test_manage_org_users_shows_correct_link_next_to_each_user(
     )
 
     # No banner confirming a user to be deleted shown
-    assert not page.select_one(".banner-dangerous")
+    assert not page.select_one(".usa-alert--error")
 
     users = page.find_all(class_="user-list-item")
 
@@ -845,9 +841,10 @@ def test_edit_organization_user_shows_the_delete_confirmation_banner(
 
     assert normalize_spaces(page.h1) == "Team members"
 
-    banner = page.select_one(".banner-dangerous")
+    banner = page.select_one(".usa-alert--error")
+    banner_text = banner.select_one(".usa-alert__text")
     assert "Are you sure you want to remove Test User?" in normalize_spaces(
-        banner.contents[0]
+        banner_text.text
     )
     assert banner.form.attrs["action"] == url_for(
         "main.remove_user_from_organization",
@@ -1219,7 +1216,7 @@ def test_update_organization_domains_when_domain_already_exists(
     )
 
     assert (
-        response.find("div", class_="banner-dangerous").text.strip()
+        response.select_one(".usa-alert--error .usa-alert__text").text.strip()
         == "This domain is already in use"
     )
 
@@ -1521,4 +1518,296 @@ def test_organization_billing_page_not_accessible_if_not_platform_admin(
 ):
     client_request.get(
         ".organization_billing", org_id=ORGANISATION_ID, _expected_status=403
+    )
+
+
+def test_organization_dashboard_shows_message_usage(
+    client_request,
+    mock_get_organization,
+    mocker,
+    active_user_with_permissions,
+):
+    mock_message_usage = mocker.patch(
+        "app.organizations_client.get_organization_message_usage",
+        return_value={
+            "messages_sent": 1000,
+            "messages_remaining": 2000,
+            "total_message_limit": 3000,
+        },
+    )
+    mocker.patch(
+        "app.organizations_client.get_organization_services",
+        return_value=[],
+    )
+    mocker.patch(
+        "app.organizations_client.get_organization_dashboard",
+        return_value={"services": []},
+    )
+
+    client_request.login(active_user_with_permissions)
+    page = client_request.get(
+        ".organization_dashboard",
+        org_id=ORGANISATION_ID,
+    )
+
+    mock_message_usage.assert_called_once_with(ORGANISATION_ID)
+
+    assert normalize_spaces(page.select_one("h1").text) == "Organization Dashboard"
+
+    chart_container = page.select_one("#totalMessageChartContainer")
+    assert chart_container["data-messages-sent"] == "1000"
+    assert chart_container["data-messages-remaining"] == "2000"
+    assert chart_container["data-total-message-limit"] == "3000"
+
+
+def test_organization_dashboard_shows_service_counts(
+    client_request,
+    mock_get_organization,
+    mocker,
+    active_user_with_permissions,
+):
+    mocker.patch(
+        "app.organizations_client.get_organization_message_usage",
+        return_value={
+            "messages_sent": 0,
+            "messages_remaining": 0,
+            "total_message_limit": 0,
+        },
+    )
+    mocker.patch(
+        "app.organizations_client.get_organization_services",
+        return_value=[
+            service_json(id_="1", name="Live Service", restricted=False, active=True),
+            service_json(id_="2", name="Trial Service", restricted=True, active=True),
+            service_json(id_="3", name="Suspended", restricted=False, active=False),
+        ],
+    )
+    mocker.patch(
+        "app.organizations_client.get_organization_dashboard",
+        return_value={
+            "services": [
+                {
+                    "service_id": "1",
+                    "service_name": "Live Service",
+                    "active": True,
+                    "restricted": False,
+                },
+                {
+                    "service_id": "2",
+                    "service_name": "Trial Service",
+                    "active": True,
+                    "restricted": True,
+                },
+                {
+                    "service_id": "3",
+                    "service_name": "Suspended",
+                    "active": False,
+                    "restricted": False,
+                },
+            ]
+        },
+    )
+
+    client_request.login(active_user_with_permissions)
+    page = client_request.get(
+        ".organization_dashboard",
+        org_id=ORGANISATION_ID,
+    )
+
+    summary_boxes = page.select(".usa-summary-box")
+    assert len(summary_boxes) == 2
+
+    service_box = summary_boxes[0]
+    assert "Total Services" in normalize_spaces(service_box.text)
+    assert "3" in normalize_spaces(service_box.text)
+    assert "1 Live" in normalize_spaces(service_box.text)
+    assert "1 Trial" in normalize_spaces(service_box.text)
+    assert "1 Suspended" in normalize_spaces(service_box.text)
+
+
+def test_organization_dashboard_services_table(
+    client_request,
+    mock_get_organization,
+    mocker,
+    active_user_with_permissions,
+):
+    mocker.patch.dict(
+        "flask.current_app.config", {"ORGANIZATION_DASHBOARD_ENABLED": True}
+    )
+
+    mocker.patch(
+        "app.organizations_client.get_organization_message_usage",
+        return_value={
+            "messages_sent": 0,
+            "messages_remaining": 0,
+            "total_message_limit": 0,
+        },
+    )
+    mocker.patch(
+        "app.organizations_client.get_organization_services",
+        return_value=[
+            service_json(id_="1", name="Service One", restricted=False, active=True),
+            service_json(id_="2", name="Service Two", restricted=True, active=True),
+        ],
+    )
+    mocker.patch(
+        "app.organizations_client.get_organization_dashboard",
+        return_value={
+            "services": [
+                {
+                    "service_id": "1",
+                    "service_name": "Service One",
+                    "active": True,
+                    "restricted": False,
+                    "emails_sent": 1500,
+                    "sms_billable_units": 500,
+                    "sms_remainder": 249500,
+                    "sms_cost": 42.75,
+                    "recent_sms_template_name": "Welcome SMS",
+                    "primary_contact": None,
+                },
+                {
+                    "service_id": "2",
+                    "service_name": "Service Two",
+                    "active": True,
+                    "restricted": True,
+                    "emails_sent": 250,
+                    "sms_billable_units": 100,
+                    "sms_remainder": 249900,
+                    "sms_cost": 0,
+                    "recent_sms_template_name": "Reminder SMS",
+                    "primary_contact": None,
+                },
+            ]
+        },
+    )
+
+    client_request.login(active_user_with_permissions)
+    page = client_request.get(
+        ".organization_dashboard",
+        org_id=ORGANISATION_ID,
+    )
+
+    table = page.select_one("table.usa-table")
+    assert table is not None
+
+    rows = table.select("tbody tr")
+    assert len(rows) == 2
+
+    first_row_cells = rows[0].select("td")
+    assert normalize_spaces(first_row_cells[0].text) == "Service One"
+    assert normalize_spaces(first_row_cells[1].text) == "Live"
+    assert "1,500 emails" in normalize_spaces(first_row_cells[2].text)
+    assert "500 sms" in normalize_spaces(first_row_cells[2].text)
+    assert "249,500 remaining" in normalize_spaces(first_row_cells[2].text)
+    assert normalize_spaces(first_row_cells[3].text) == "N/A"
+    assert normalize_spaces(first_row_cells[4].text) == "Welcome SMS"
+
+    second_row_cells = rows[1].select("td")
+    assert normalize_spaces(second_row_cells[0].text) == "Service Two"
+    assert normalize_spaces(second_row_cells[1].text) == "Trial"
+    assert "250 emails" in normalize_spaces(second_row_cells[2].text)
+    assert "100 sms" in normalize_spaces(second_row_cells[2].text)
+    assert "249,900 remaining" in normalize_spaces(second_row_cells[2].text)
+    assert normalize_spaces(second_row_cells[3].text) == "N/A"
+    assert normalize_spaces(second_row_cells[4].text) == "Reminder SMS"
+
+
+def test_organization_dashboard_shows_edit_service_form(
+    client_request,
+    mock_get_organization,
+    mocker,
+    active_user_with_permissions,
+):
+    service = service_json(
+        id_=SERVICE_ONE_ID,
+        name="Test Service",
+        restricted=True,
+        active=True,
+        billing_contact_email_addresses="test@example.com",
+    )
+    mocker.patch("app.service_api_client.get_service", return_value={"data": service})
+    mocker.patch(
+        "app.organizations_client.get_organization_message_usage",
+        return_value={
+            "messages_sent": 0,
+            "messages_remaining": 0,
+            "total_message_limit": 0,
+        },
+    )
+    mocker.patch(
+        "app.organizations_client.get_organization_services", return_value=[service]
+    )
+    mocker.patch(
+        "app.organizations_client.get_organization_dashboard",
+        return_value={"services": []},
+    )
+
+    client_request.login(active_user_with_permissions)
+    page = client_request.get(
+        ".organization_dashboard",
+        org_id=ORGANISATION_ID,
+        action="edit-service",
+        service_id=SERVICE_ONE_ID,
+    )
+
+    assert page.select_one("#edit-service-form")
+    assert page.select_one("#service_name")["value"] == "service one"
+    assert page.select_one("#primary_contact")
+    assert page.select_one("#statusTrial")["checked"] == ""
+
+
+def test_organization_dashboard_edit_service_updates_service(
+    client_request,
+    mock_get_organization,
+    mocker,
+    active_user_with_permissions,
+):
+    service = service_json(
+        id_=SERVICE_ONE_ID,
+        name="Old Name",
+        restricted=True,
+        active=True,
+        billing_contact_email_addresses="old@example.com",
+    )
+    mocker.patch("app.service_api_client.get_service", return_value={"data": service})
+    mock_update_service = mocker.patch("app.service_api_client.update_service")
+    mocker.patch(
+        "app.organizations_client.get_organization_message_usage",
+        return_value={
+            "messages_sent": 0,
+            "messages_remaining": 0,
+            "total_message_limit": 0,
+        },
+    )
+    mocker.patch(
+        "app.organizations_client.get_organization_services", return_value=[service]
+    )
+    mocker.patch(
+        "app.organizations_client.get_organization_dashboard",
+        return_value={"services": []},
+    )
+    mocker.patch("app.extensions.redis_client.delete")
+
+    client_request.login(active_user_with_permissions)
+    client_request.post(
+        ".organization_dashboard",
+        org_id=ORGANISATION_ID,
+        action="edit-service",
+        service_id=SERVICE_ONE_ID,
+        _data={
+            "service_name": "New Name",
+            "primary_contact": "new@example.com",
+            "status": "live",
+        },
+        _expected_redirect=url_for(
+            ".organization_dashboard",
+            org_id=ORGANISATION_ID,
+        ),
+    )
+
+    assert mock_update_service.call_count == 3
+    mock_update_service.assert_any_call(SERVICE_ONE_ID, name="New Name")
+    mock_update_service.assert_any_call(
+        SERVICE_ONE_ID, billing_contact_email_addresses="new@example.com"
     )

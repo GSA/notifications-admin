@@ -1,0 +1,55 @@
+@use 'uswds-core' as *;
+
+.js-enabled .live-search {
+  display: flex;
+  margin-bottom: units(2);
+
+  .usa-form-group {
+    @include u-width('mobile-lg');
+    margin-top: units(2);
+  }
+
+  input#search-by-name {
+    margin-top: units(1);
+    width: 100%;
+    border: 1px solid color('gray-60');
+    height: 40px;
+  }
+}
+
+.button-flex-header {
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: units(2);
+
+  @include at-media(desktop) {
+    flex-direction: row;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.browse-list + .js-stick-at-bottom-when-scrolling .usa-button {
+  width: auto;
+  white-space: nowrap;
+}
+
+.usa-button img {
+  margin-left: 0.5rem;
+  height: 1rem;
+}
+
+.usa-button.login-button.login-button--primary,
+.login-button.login-button--primary:hover {
+  color: color('blue-80');
+  background-color: color('white');
+  border: 1px solid color('gray-50');
+  display: inline-flex;
+  justify-content: center;
+}
+
+.button-not-clickable {
+  cursor: default;
+  pointer-events: none;
+}

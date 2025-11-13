@@ -1,19 +1,23 @@
 (function (window) {
   'use strict';
 
-  var $ = window.jQuery;
-
   window.NotifyModules.moduleSystem = {
     find: function (container) {
-      container = container || $('body');
+      container = container || document.body;
 
       var modules;
       var moduleSelector = '[data-module]';
 
-      modules = container.find(moduleSelector);
+      // If container is already an element, use it directly
+      if (container instanceof Element) {
+        modules = Array.from(container.querySelectorAll(moduleSelector));
 
-      if (container.is(moduleSelector)) {
-        modules = modules.add(container);
+        // If the container itself is a module, include it
+        if (container.matches && container.matches(moduleSelector)) {
+          modules.unshift(container);
+        }
+      } else {
+        modules = Array.from(document.querySelectorAll(moduleSelector));
       }
 
       return modules;
@@ -23,18 +27,19 @@
       var modules = this.find(container);
 
       for (var i = 0, l = modules.length; i < l; i++) {
+        var type;
         try {
           var module;
-          var element = $(modules[i]);
-          var type = this.camelCaseAndCapitalise(element.data('module'));
-          var started = element.data('module-started');
+          var element = modules[i];
+          type = this.camelCaseAndCapitalise(element.dataset.module);
+          var started = element.dataset.moduleStarted;
 
           if (typeof window.NotifyModules[type] === 'function' && !started) {
             module = new window.NotifyModules[type]();
             if (module.start) {
               module.start(element);
             }
-            element.data('module-started', true);
+            element.dataset.moduleStarted = 'true';
           }
         } catch (error) {
           console.error('Failed to initialize module:', type || 'unknown', error);

@@ -161,7 +161,7 @@
         "filename": "app/config.py",
         "hashed_secret": "577a4c667e4af8682ca431857214b3a920883efc",
         "is_verified": false,
-        "line_number": 118,
+        "line_number": 127,
         "is_secret": false
       }
     ],
@@ -483,24 +483,6 @@
         "is_secret": false
       }
     ],
-    "tests/app/main/views/organizations/test_organization_invites.py": [
-      {
-        "type": "Secret Keyword",
-        "filename": "tests/app/main/views/organizations/test_organization_invites.py",
-        "hashed_secret": "bdbb156d25d02fd7792865824201dda1c60f4473",
-        "is_verified": false,
-        "line_number": 274,
-        "is_secret": false
-      },
-      {
-        "type": "Secret Keyword",
-        "filename": "tests/app/main/views/organizations/test_organization_invites.py",
-        "hashed_secret": "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8",
-        "is_verified": false,
-        "line_number": 282,
-        "is_secret": false
-      }
-    ],
     "tests/app/main/views/test_accept_invite.py": [
       {
         "type": "Secret Keyword",
@@ -573,7 +555,7 @@
         "filename": "tests/app/main/views/test_user_profile.py",
         "hashed_secret": "8072d7aad32964ec43fbcb699c75dc38890792f7",
         "is_verified": false,
-        "line_number": 336,
+        "line_number": 337,
         "is_secret": false
       },
       {
@@ -581,7 +563,7 @@
         "filename": "tests/app/main/views/test_user_profile.py",
         "hashed_secret": "4c9dbb972da179e4f66f023eaa5fb9451d835030",
         "is_verified": false,
-        "line_number": 337,
+        "line_number": 338,
         "is_secret": false
       }
     ],
@@ -634,5 +616,5 @@
       }
     ]
   },
-  "generated_at": "2025-10-07T17:43:26Z"
+  "generated_at": "2025-10-31T00:31:47Z"
 }

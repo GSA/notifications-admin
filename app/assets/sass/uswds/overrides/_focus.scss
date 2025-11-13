@@ -1,0 +1,15 @@
+@use 'uswds-core' as *;
+
+iframe:focus,
+[href]:focus,
+[tabindex]:focus,
+[contentEditable='true']:focus,
+button:not([disabled]):focus {
+  outline: units(2px) solid color('blue-40v');
+  outline-offset: 0.3rem;
+}
+
+.show-more-no-border:focus,
+.show-more:focus {
+  box-shadow: none;
+}

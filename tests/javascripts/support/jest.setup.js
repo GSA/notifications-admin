@@ -1,8 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 
-// Set up jQuery
-global.$ = global.jQuery = require('jquery');
 
 // tests/jest.setup.js
 global.io = jest.fn().mockReturnValue({

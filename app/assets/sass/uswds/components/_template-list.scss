@@ -1,0 +1,223 @@
+@use 'uswds-core' as *;
+
+.template-list-item-without-ancestors {
+  .template-list-folder,
+  .template-list-template {
+    &:active,
+    &:active::before,
+    &:focus,
+    &:focus::before {
+      background-color: transparent;
+      box-shadow: none;
+    }
+  }
+}
+
+.template-list-item-hidden-by-default {
+  display: none;
+}
+
+.folder-heading a.folder-heading-folder,
+.template-list-folder {
+  background: url(../img/material-icons/folder.svg) no-repeat;
+  background-size: units(3) units(3);
+  background-position: 0 center;
+  padding-left: units(4);
+  display: inline-flex;
+  align-items: center;
+}
+
+.folder-heading-template {
+  background: url(../img/material-icons/wysiwyg.svg) no-repeat;
+  padding-left: units(4);
+  display: inline-block;
+  background-position: 0;
+  font-weight: bold;
+  font-size: size('body', 'lg');
+}
+
+.folder-heading-folder {
+  background: url(../img/material-icons/folder_open.svg) no-repeat;
+  padding-left: units(4);
+  display: inline-block;
+  background-size: units(3) units(3);
+  background-position: 0;
+}
+
+#breadcrumb-template-folders {
+  font-weight: bold;
+  font-size: size('body', 'lg');
+
+  a {
+    font-weight: bold;
+  }
+}
+
+.copy-template {
+  .folder-heading {
+    margin: units(2) 0;
+    padding: units(1) 0;
+    border-bottom: 1px solid color('gray-cool-10');
+  }
+
+  .template-list-item {
+    display: flex;
+    align-items: center;
+
+    .template-list-folder,
+    .template-list-template {
+      margin-right: units(1);
+    }
+  }
+}
+
+.copy-template-search {
+  margin: units(2) 0;
+
+  .usa-search {
+    margin-bottom: units(1);
+  }
+}
+
+.template-list-template {
+  background: url(../img/material-icons/description.svg) no-repeat;
+  background-size: units(3) units(3);
+  background-position: 0 center;
+  padding-left: units(4);
+  display: inline-flex;
+  align-items: center;
+}
+
+.message-name-separator:before,
+.folder-heading-separator:before {
+  content: '›';
+  margin: 0 units(1);
+  color: color('gray-50');
+  font-size: size('body', 'lg');
+}
+
+.usa-checkbox.template-list-item.template-list-item-with-checkbox.template-list-item-without-ancestors {
+  display: flex;
+  flex-direction: column;
+}
+
+.usa-checkbox__label-description {
+  margin: units(2px) 0 units(1) units(4);
+}
+
+.usa-checkbox .usa-checkbox__label {
+  + a.template-list-folder {
+    margin-left: units(4);
+  }
+}
+
+.template-footer .usa-link,
+.template-content-count {
+  font-size: size('body', 'sm');
+}
+
+#template-list,
+#template-list > div,
+.sticky-scroll-area {
+  position: relative;
+}
+
+#template-list {
+  max-height: 500px;
+  overflow-y: auto;
+  padding: 0;
+  margin: units(2) 0;
+
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .template-list-item {
+    padding: units(1) units(3);
+
+    &:empty {
+      display: none;
+    }
+
+    &:not(:has(a)) {
+      display: none;
+    }
+
+    &:hover {
+      background-color: color('gray-cool-5');
+      padding-left: units(3);
+     }
+  }
+
+
+  li.template-list-item.margin-bottom-2 {
+    margin-bottom: units(1);
+  }
+}
+
+.template-list-empty {
+  padding: units(3);
+  background-color: color('gray-cool-5');
+  border: 1px solid color('gray-cool-10');
+  border-radius: units(0.5);
+  text-align: center;
+  margin: units(2) 0;
+  color: color('gray-60');
+}
+
+.sticky-template-form {
+  margin: 0;
+  border: 1px solid color('gray-cool-10');
+  padding: units(2);
+  margin-bottom: units(2);
+
+  &:focus {
+    outline-offset: units(1);
+  }
+
+  .js-stick-at-bottom-when-scrolling {
+    display: block;
+
+    .usa-form-group {
+      margin-bottom: 0;
+    }
+
+    fieldset {
+      margin-bottom: 0;
+    }
+
+    .usa-fieldset {
+      margin-top: 0;
+    }
+
+    .radios-nested {
+      .usa-radio {
+        margin-top: units(1);
+        max-width: units('mobile');
+      }
+    }
+
+    .page-footer {
+      margin-top: units(3);
+      margin-bottom: 0;
+    }
+  }
+}
+
+.js-stick-at-bottom-when-scrolling {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  overflow: visible;
+
+  button {
+    margin-right: units(2);
+  }
+
+  .template-list-selected-counter {
+    position: relative;
+    top: 0;
+  }
+}
