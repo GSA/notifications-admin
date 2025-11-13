@@ -84,6 +84,25 @@ body:
       - label: Clicking the confirmation removes the team member
 
 - type: checkboxes
+  id: org_dashboard
+  attributes:
+    label: Organization Dashboard
+    options:
+    - label: Dashboard navigation item is highlighted when viewing organization dashboard
+    - label: Clicking "Create new service" button shows service creation form
+    - label: Clicking "Add org admin" button shows user invitation form
+    - label: Clicking "Manage" on a service shows the manage service form
+    - label: In manage service form, service name, primary contact, and status can be edited
+    - label: Clicking "Save Changes" shows confirmation modal
+    - label: Confirming changes updates the service and shows success message
+    - label: Updated service row is highlighted in the services table
+    - label: The "Delete Service" button only appears for trial services or platform admins
+    - label: Clicking "Delete Service" shows confirmation modal with service name
+    - label: Confirming deletion suspends the service and shows success message
+    - label: Deleted service is removed from the services table
+    - label: Cancel buttons on all forms return to dashboard without making changes
+
+- type: checkboxes
   id: sign_out
   attributes:
     label: Sign Out
