@@ -27,6 +27,7 @@ files = [
 [package.dependencies]
 idna = ">=2.8"
 sniffio = ">=1.1"
+typing_extensions = {version = ">=4.5", markers = "python_version < \"3.13\""}
 
 [package.extras]
 trio = ["trio (>=0.26.1)"]
@@ -988,6 +989,9 @@ files = [
     {file = "exceptiongroup-1.3.0.tar.gz", hash = "sha256:b241f5885f560bc56a59ee63ca4c6a8bfa46ae4ad651af316d4e81817bb9fd88"},
 ]
 
+[package.dependencies]
+typing-extensions = {version = ">=4.6.0", markers = "python_version < \"3.13\""}
+
 [package.extras]
 test = ["pytest (>=6)"]
 
@@ -1239,7 +1243,7 @@ version = "1.5.5"
 description = "Let your Python tests travel through time"
 optional = false
 python-versions = ">=3.8"
-groups = ["dev"]
+groups = ["main", "dev"]
 files = [
     {file = "freezegun-1.5.5-py3-none-any.whl", hash = "sha256:cd557f4a75cf074e84bc374249b9dd491eaeacd61376b9eb3c423282211619d2"},
     {file = "freezegun-1.5.5.tar.gz", hash = "sha256:ac7742a6cc6c25a2c35e9292dfd554b897b517d2dec26891a2e8debf205cb94a"},
@@ -4439,5 +4443,5 @@ cffi = ["cffi (>=1.17) ; python_version >= \"3.13\" and platform_python_implemen
 
 [metadata]
 lock-version = "2.1"
-python-versions = "^3.13.2"
-content-hash = "ba26f1d0b6f6281788a92206e8627e91ff43e841c4d97d0957c751b31aed9f64"
+python-versions = ">=3.12,<3.14"
+content-hash = "3ef79460a848ef0b34c8eaa1f0bab9ae001ca3e12a61fc9ea847270e63cec099"

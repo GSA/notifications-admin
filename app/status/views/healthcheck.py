@@ -4,7 +4,8 @@ import traceback
 from flask import current_app, jsonify, request
 from redis import RedisError
 
-from app import status_api_client, version
+from app import status_api_client
+from app.version import __git_commit__, __time__
 from app.extensions import redis_client
 from app.status import status
 from notifications_python_client.errors import HTTPError
@@ -24,8 +25,8 @@ def show_status():
             jsonify(
                 status="ok",
                 api=api_status,
-                git_commit=version.__git_commit__,
-                build_time=version.__time__,
+                git_commit=__git_commit__,
+                build_time=__time__,
             ),
             200,
         )
@@ -65,8 +66,8 @@ def show_redis_status():
             jsonify(
                 status="ok",
                 api=api_status,
-                git_commit=version.__git_commit__,
-                build_time=version.__time__,
+                git_commit=__git_commit__,
+                build_time=__time__,
             ),
             200,
         )
@@ -78,8 +79,8 @@ def show_redis_status():
             jsonify(
                 status="error: internal server error",
                 api=api_status,
-                git_commit=version.__git_commit__,
-                build_time=version.__time__,
+                git_commit=__git_commit__,
+                build_time=__time__,
             ),
             500,
         )

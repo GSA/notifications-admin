@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 STAGING_APP_NAME="notify-admin-staging"
 

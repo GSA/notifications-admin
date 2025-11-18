@@ -1,0 +1,473 @@
+ago 0.1.0 ago: Human readable timedeltas
+async-timeout 5.0.1 Timeout context manager for asyncio programs
+awscli 1.36.40 Universal Command Line Environment for AWS.
+├── botocore 1.35.99
+│   ├── jmespath >=0.7.1,<2.0.0 
+│   ├── python-dateutil >=2.1,<3.0.0 
+│   │   └── six >=1.5 
+│   └── urllib3 >=1.25.4,<2.2.0 || >2.2.0,<3 
+├── colorama >=0.2.5,<0.4.7
+├── docutils >=0.10,<0.17
+├── pyyaml >=3.10,<6.1
+├── rsa >=3.1.2,<4.8
+│   └── pyasn1 >=0.1.3 
+└── s3transfer >=0.10.0,<0.11.0
+    └── botocore >=1.33.2,<2.0a.0 
+        ├── jmespath >=0.7.1,<2.0.0 
+        ├── python-dateutil >=2.1,<3.0.0 
+        │   └── six >=1.5 
+        └── urllib3 >=1.25.4,<2.2.0 || >2.2.0,<3 
+axe-core-python 0.1.0 Automated web accessibility testing using axe-core engine.
+bandit 1.8.6 Security oriented static analyser for python code.
+├── colorama >=0.3.9
+├── pyyaml >=5.3.1
+├── rich *
+│   ├── markdown-it-py >=2.2.0 
+│   │   └── mdurl >=0.1,<1.0 
+│   └── pygments >=2.13.0,<3.0.0 
+└── stevedore >=1.20.0
+beautifulsoup4 4.14.2 Screen-scraping library
+├── soupsieve >1.2
+└── typing-extensions >=4.0.0
+black 25.11.0 The uncompromising code formatter.
+├── click >=8.0.0
+│   └── colorama * 
+├── mypy-extensions >=0.4.3
+├── packaging >=22.0
+├── pathspec >=0.9.0
+├── platformdirs >=2
+└── pytokens >=0.3.0
+bleach 6.3.0 An easy safelist-based HTML-sanitizing tool.
+└── webencodings *
+blinker 1.9.0 Fast, simple object-to-object and broadcast signaling
+boto3 1.35.99 The AWS SDK for Python
+├── botocore >=1.35.99,<1.36.0
+│   ├── jmespath >=0.7.1,<2.0.0 
+│   ├── python-dateutil >=2.1,<3.0.0 
+│   │   └── six >=1.5 
+│   └── urllib3 >=1.25.4,<2.2.0 || >2.2.0,<3 
+├── jmespath >=0.7.1,<2.0.0
+└── s3transfer >=0.10.0,<0.11.0
+    └── botocore >=1.33.2,<2.0a.0 
+        ├── jmespath >=0.7.1,<2.0.0 
+        ├── python-dateutil >=2.1,<3.0.0 
+        │   └── six >=1.5 
+        └── urllib3 >=1.25.4,<2.2.0 || >2.2.0,<3 
+botocore 1.35.99 Low-level, data-driven core of boto 3.
+├── jmespath >=0.7.1,<2.0.0
+├── python-dateutil >=2.1,<3.0.0
+│   └── six >=1.5 
+└── urllib3 >=1.25.4,<2.2.0 || >2.2.0,<3
+cachetools 6.2.2 Extensible memoizing collections and decorators
+certifi 2025.11.12 Python package for providing Mozilla's CA Bundle.
+cffi 2.0.0 Foreign Function Interface for Python calling C code.
+└── pycparser *
+charset-normalizer 3.4.4 The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.
+click 8.3.0 Composable command line interface toolkit
+└── colorama *
+coverage 7.11.3 Code coverage measurement for Python
+cryptography 46.0.3 cryptography is a package which provides cryptographic recipes and primitives to Python developers.
+└── cffi >=2.0.0
+    └── pycparser * 
+detect-secrets 1.5.0 Tool for detecting secrets in the codebase
+├── pyyaml *
+└── requests *
+    ├── certifi >=2017.4.17 
+    ├── charset-normalizer >=2,<4 
+    ├── idna >=2.5,<4 
+    └── urllib3 >=1.21.1,<3 
+exceptiongroup 1.3.0 Backport of PEP 654 (exception groups)
+└── typing-extensions >=4.6.0
+flake8 7.3.0 the modular source code checker: pep8 pyflakes and co
+├── mccabe >=0.7.0,<0.8.0
+├── pycodestyle >=2.14.0,<2.15.0
+└── pyflakes >=3.4.0,<3.5.0
+flake8-bugbear 25.10.21 A plugin for flake8 finding likely bugs and design problems in your program. Contains warnings that don't belong in pyflakes and pycodestyle.
+├── attrs >=22.2.0
+└── flake8 >=7.2.0
+    ├── mccabe >=0.7.0,<0.8.0 
+    ├── pycodestyle >=2.14.0,<2.15.0 
+    └── pyflakes >=3.4.0,<3.5.0 
+flake8-print 5.0.0 print statement checker plugin for flake8
+├── flake8 >=3.0
+│   ├── mccabe >=0.7.0,<0.8.0 
+│   ├── pycodestyle >=2.14.0,<2.15.0 
+│   └── pyflakes >=3.4.0,<3.5.0 
+└── pycodestyle *
+flake8-pytest-style 2.2.0 A flake8 plugin checking common style issues or inconsistencies with pytest-based tests.
+└── flake8-plugin-utils >=1.3.2,<2.0.0
+flask 3.1.2 A simple framework for building complex web applications.
+├── blinker >=1.9.0
+├── click >=8.1.3
+│   └── colorama * 
+├── itsdangerous >=2.2.0
+├── jinja2 >=3.1.2
+│   └── markupsafe >=2.0 
+├── markupsafe >=2.1.1
+└── werkzeug >=3.1.0
+    └── markupsafe >=2.1.1 
+flask-basicauth 0.2.0 HTTP basic access authentication for Flask.
+└── flask *
+    ├── blinker >=1.9.0 
+    ├── click >=8.1.3 
+    │   └── colorama * 
+    ├── itsdangerous >=2.2.0 
+    ├── jinja2 >=3.1.2 
+    │   └── markupsafe >=2.0 
+    ├── markupsafe >=2.1.1 (circular dependency aborted here)
+    └── werkzeug >=3.1.0 
+        └── markupsafe >=2.1.1 (circular dependency aborted here)
+flask-login 0.6.3 User authentication and session management for Flask.
+├── flask >=1.0.4
+│   ├── blinker >=1.9.0 
+│   ├── click >=8.1.3 
+│   │   └── colorama * 
+│   ├── itsdangerous >=2.2.0 
+│   ├── jinja2 >=3.1.2 
+│   │   └── markupsafe >=2.0 
+│   ├── markupsafe >=2.1.1 (circular dependency aborted here)
+│   └── werkzeug >=3.1.0 
+│       └── markupsafe >=2.1.1 (circular dependency aborted here)
+└── werkzeug >=1.0.1
+    └── markupsafe >=2.1.1 
+flask-redis 0.4.0 A nice way to use Redis in your Flask app
+├── flask >=0.8
+│   ├── blinker >=1.9.0 
+│   ├── click >=8.1.3 
+│   │   └── colorama * 
+│   ├── itsdangerous >=2.2.0 
+│   ├── jinja2 >=3.1.2 
+│   │   └── markupsafe >=2.0 
+│   ├── markupsafe >=2.1.1 (circular dependency aborted here)
+│   └── werkzeug >=3.1.0 
+│       └── markupsafe >=2.1.1 (circular dependency aborted here)
+└── redis >=2.7.6
+flask-talisman 1.1.0 HTTP security headers for Flask.
+flask-wtf 1.2.2 Form rendering, validation, and CSRF protection for Flask with WTForms.
+├── flask *
+│   ├── blinker >=1.9.0 
+│   ├── click >=8.1.3 
+│   │   └── colorama * 
+│   ├── itsdangerous >=2.2.0 
+│   ├── jinja2 >=3.1.2 
+│   │   └── markupsafe >=2.0 
+│   ├── markupsafe >=2.1.1 (circular dependency aborted here)
+│   └── werkzeug >=3.1.0 
+│       └── markupsafe >=2.1.1 (circular dependency aborted here)
+├── itsdangerous *
+└── wtforms *
+    └── markupsafe * 
+freezegun 1.5.5 Let your Python tests travel through time
+└── python-dateutil >=2.7
+    └── six >=1.5 
+geojson 3.2.0 Python bindings and utilities for GeoJSON
+gevent 25.9.1 Coroutine-based network library
+├── cffi >=1.17.1
+│   └── pycparser * 
+├── greenlet >=3.2.2
+├── zope-event *
+│   └── setuptools >=75.8.2 
+└── zope-interface *
+    └── setuptools * 
+gunicorn 23.0.0 WSGI HTTP Server for UNIX
+├── gevent >=1.4.0
+│   ├── cffi >=1.17.1 
+│   │   └── pycparser * 
+│   ├── greenlet >=3.2.2 
+│   ├── zope-event * 
+│   │   └── setuptools >=75.8.2 
+│   └── zope-interface * 
+│       └── setuptools * (circular dependency aborted here)
+└── packaging *
+humanize 4.14.0 Python humanize utilities
+hypothesis 6.147.0 A library for property-based testing
+└── sortedcontainers >=2.1.0,<3.0.0
+idna 3.11 Internationalized Domain Names in Applications (IDNA)
+isort 7.0.0 A Python utility / library to sort Python imports.
+itsdangerous 2.2.0 Safely pass data to untrusted environments and back.
+jinja2 3.1.6 A very fast and expressive template engine.
+└── markupsafe >=2.0
+jinja2-cli 0.8.2 A CLI interface to Jinja2
+├── jinja2 *
+│   └── markupsafe >=2.0 
+└── pyyaml *
+jmespath 1.0.1 JSON Matching Expressions
+markdown 3.10 Python implementation of John Gruber's Markdown.
+markupsafe 3.0.3 Safely add untrusted strings to HTML/XML markup.
+mistune 3.1.4 A sane and fast Markdown parser with useful plugins and renderers
+moto 5.1.16 A library that allows you to easily mock out tests based on AWS infrastructure
+├── boto3 >=1.9.201
+│   ├── botocore >=1.35.99,<1.36.0 
+│   │   ├── jmespath >=0.7.1,<2.0.0 
+│   │   ├── python-dateutil >=2.1,<3.0.0 
+│   │   │   └── six >=1.5 
+│   │   └── urllib3 >=1.25.4,<2.2.0 || >2.2.0,<3 
+│   ├── jmespath >=0.7.1,<2.0.0 (circular dependency aborted here)
+│   └── s3transfer >=0.10.0,<0.11.0 
+│       └── botocore >=1.33.2,<2.0a.0 (circular dependency aborted here)
+├── botocore >=1.20.88,<1.35.45 || >1.35.45,<1.35.46 || >1.35.46
+│   ├── jmespath >=0.7.1,<2.0.0 
+│   ├── python-dateutil >=2.1,<3.0.0 
+│   │   └── six >=1.5 
+│   └── urllib3 >=1.25.4,<2.2.0 || >2.2.0,<3 
+├── cryptography >=35.0.0
+│   └── cffi >=2.0.0 
+│       └── pycparser * 
+├── jinja2 >=2.10.1
+│   └── markupsafe >=2.0 
+├── python-dateutil >=2.1,<3.0.0
+│   └── six >=1.5 
+├── requests >=2.5
+│   ├── certifi >=2017.4.17 
+│   ├── charset-normalizer >=2,<4 
+│   ├── idna >=2.5,<4 
+│   └── urllib3 >=1.21.1,<3 
+├── responses >=0.15.0,<0.25.5 || >0.25.5
+│   ├── pyyaml * 
+│   ├── requests >=2.30.0,<3.0 
+│   │   ├── certifi >=2017.4.17 
+│   │   ├── charset-normalizer >=2,<4 
+│   │   ├── idna >=2.5,<4 
+│   │   └── urllib3 >=1.21.1,<3 
+│   └── urllib3 >=1.25.10,<3.0 (circular dependency aborted here)
+├── werkzeug >=0.5,<2.2.0 || >2.2.0,<2.2.1 || >2.2.1
+│   └── markupsafe >=2.1.1 
+└── xmltodict *
+newrelic 11.1.0 New Relic Python Agent
+numpy 2.3.4 Fundamental package for array computing in Python
+openpyxl 3.0.10 A Python library to read/write Excel 2010 xlsx/xlsm files
+└── et-xmlfile *
+ordered-set 4.1.0 An OrderedSet is a custom MutableSet that remembers its order, so that every
+phonenumbers 9.0.18 Python version of Google's common library for parsing, formatting, storing and validating international phone numbers.
+pip-audit 2.9.0 A tool for scanning Python environments for known vulnerabilities
+├── cachecontrol >=0.13.0
+│   ├── filelock >=3.8.0 
+│   ├── msgpack >=0.5.2,<2.0.0 
+│   └── requests >=2.16.0 
+│       ├── certifi >=2017.4.17 
+│       ├── charset-normalizer >=2,<4 
+│       ├── idna >=2.5,<4 
+│       └── urllib3 >=1.21.1,<3 
+├── cyclonedx-python-lib >=5,<10
+│   ├── license-expression >=30,<31 
+│   │   └── boolean-py >=4.0 
+│   ├── packageurl-python >=0.11,<2 
+│   ├── py-serializable >=2.0.0,<3.0.0 
+│   │   └── defusedxml >=0.7.1,<0.8.0 
+│   └── sortedcontainers >=2.4.0,<3.0.0 
+├── packaging >=23.0.0
+├── pip-api >=0.0.28
+│   └── pip * 
+├── pip-requirements-parser >=32.0.0
+│   ├── packaging * 
+│   └── pyparsing * 
+├── platformdirs >=4.2.0
+├── requests >=2.31.0
+│   ├── certifi >=2017.4.17 
+│   ├── charset-normalizer >=2,<4 
+│   ├── idna >=2.5,<4 
+│   └── urllib3 >=1.21.1,<3 
+├── rich >=12.4
+│   ├── markdown-it-py >=2.2.0 
+│   │   └── mdurl >=0.1,<1.0 
+│   └── pygments >=2.13.0,<3.0.0 
+└── toml >=0.10
+poetry-dotenv-plugin 0.2.0 A Poetry plugin to automatically load environment variables from .env files
+├── poetry >=1.2.0a1
+│   ├── build >=1.2.1,<2.0.0 
+│   │   ├── colorama * 
+│   │   ├── packaging >=19.1 
+│   │   └── pyproject-hooks * 
+│   ├── cachecontrol >=0.14.0,<0.15.0 
+│   │   ├── filelock >=3.8.0 
+│   │   ├── msgpack >=0.5.2,<2.0.0 
+│   │   └── requests >=2.16.0 
+│   │       ├── certifi >=2017.4.17 
+│   │       ├── charset-normalizer >=2,<4 
+│   │       ├── idna >=2.5,<4 
+│   │       └── urllib3 >=1.21.1,<3 
+│   ├── cleo >=2.1.0,<3.0.0 
+│   │   ├── crashtest >=0.4.1,<0.5.0 
+│   │   └── rapidfuzz >=3.0.0,<4.0.0 
+│   ├── dulwich >=0.22.6,<0.23.0 
+│   │   └── urllib3 >=1.25 (circular dependency aborted here)
+│   ├── fastjsonschema >=2.18.0,<3.0.0 
+│   ├── findpython >=0.6.2,<0.7.0 
+│   │   └── packaging >=20 (circular dependency aborted here)
+│   ├── installer >=0.7.0,<0.8.0 
+│   ├── keyring >=25.1.0,<26.0.0 
+│   │   ├── jaraco-classes * 
+│   │   │   └── more-itertools * 
+│   │   ├── jaraco-context * 
+│   │   ├── jaraco-functools * 
+│   │   │   └── more-itertools * (circular dependency aborted here)
+│   │   ├── jeepney >=0.4.2 
+│   │   ├── pywin32-ctypes >=0.2.0 
+│   │   └── secretstorage >=3.2 
+│   │       ├── cryptography >=2.0 
+│   │       │   └── cffi >=2.0.0 
+│   │       │       └── pycparser * 
+│   │       └── jeepney >=0.6 (circular dependency aborted here)
+│   ├── packaging >=24.0 (circular dependency aborted here)
+│   ├── pbs-installer >=2025.1.6,<2026.0.0 
+│   │   ├── httpx >=0.27.0,<1 
+│   │   │   ├── anyio * 
+│   │   │   │   ├── idna >=2.8 (circular dependency aborted here)
+│   │   │   │   ├── sniffio >=1.1 
+│   │   │   │   └── typing-extensions >=4.5 
+│   │   │   ├── certifi * (circular dependency aborted here)
+│   │   │   ├── httpcore ==1.* 
+│   │   │   │   ├── certifi * (circular dependency aborted here)
+│   │   │   │   └── h11 >=0.16 
+│   │   │   └── idna * (circular dependency aborted here)
+│   │   └── zstandard >=0.21.0 
+│   ├── pkginfo >=1.12,<2.0 
+│   ├── platformdirs >=3.0.0,<5 
+│   ├── poetry-core 2.1.3 
+│   ├── pyproject-hooks >=1.0.0,<2.0.0 (circular dependency aborted here)
+│   ├── requests >=2.26,<3.0 (circular dependency aborted here)
+│   ├── requests-toolbelt >=1.0.0,<2.0.0 
+│   │   └── requests >=2.0.1,<3.0.0 (circular dependency aborted here)
+│   ├── shellingham >=1.5,<2.0 
+│   ├── tomlkit >=0.11.4,<1.0.0 
+│   ├── trove-classifiers >=2022.5.19 
+│   ├── virtualenv >=20.26.6,<21.0.0 
+│   │   ├── distlib >=0.3.7,<1 
+│   │   ├── filelock >=3.12.2,<4 (circular dependency aborted here)
+│   │   └── platformdirs >=3.9.1,<5 (circular dependency aborted here)
+│   └── xattr >=1.0.0,<2.0.0 
+│       └── cffi >=1.16.0 (circular dependency aborted here)
+└── python-dotenv >=0.10.0
+pre-commit 4.4.0 A framework for managing and maintaining multi-language pre-commit hooks.
+├── cfgv >=2.0.0
+├── identify >=1.0.0
+├── nodeenv >=0.11.1
+├── pyyaml >=5.1
+└── virtualenv >=20.10.0
+    ├── distlib >=0.3.7,<1 
+    ├── filelock >=3.12.2,<4 
+    └── platformdirs >=3.9.1,<5 
+pycparser 2.23 C parser in Python
+pyexcel 0.7.4 A wrapper library that provides one API to read, manipulate and writedata in different excel formats
+├── lml >=0.2.0
+├── pyexcel-io >=0.6.2
+│   └── lml >=0.0.4 
+└── texttable >=0.8.2
+pyexcel-io 0.6.7 A python library to read and write structured data in csv, zipped csvformat and to/from databases
+└── lml >=0.0.4
+pyexcel-ods3 0.6.1 A wrapper library to read, manipulate and write data in ods format
+├── lxml *
+├── pyexcel-ezodf >=0.3.3
+│   └── lxml * 
+└── pyexcel-io >=0.6.2
+    └── lml >=0.0.4 
+pyexcel-xls 0.7.1 A wrapper library to read, manipulate and write data in xls format. Itreads xlsx and xlsm format
+├── pyexcel-io >=0.6.2
+│   └── lml >=0.0.4 
+├── xlrd *
+└── xlwt *
+pyexcel-xlsx 0.6.1 A wrapper library to read, manipulate and write data in xlsx and xlsmformat
+├── openpyxl >=2.6.1
+│   └── et-xmlfile * 
+└── pyexcel-io >=0.6.2
+    └── lml >=0.0.4 
+pyjwt 2.10.1 JSON Web Token implementation in Python
+pyproj 3.7.2 Python interface to PROJ (cartographic projections and coordinate transformations library)
+└── certifi *
+pytest 8.4.2 pytest: simple powerful testing with Python
+├── colorama >=0.4
+├── iniconfig >=1
+├── packaging >=20
+├── pluggy >=1.5,<2
+└── pygments >=2.7.2
+pytest-env 1.2.0 pytest plugin that allows you to add environment variables.
+└── pytest >=8.4.2
+    ├── colorama >=0.4 
+    ├── iniconfig >=1 
+    ├── packaging >=20 
+    ├── pluggy >=1.5,<2 
+    └── pygments >=2.7.2 
+pytest-mock 3.15.1 Thin-wrapper around the mock package for easier use with pytest
+└── pytest >=6.2.5
+    ├── colorama >=0.4 
+    ├── iniconfig >=1 
+    ├── packaging >=20 
+    ├── pluggy >=1.5,<2 
+    └── pygments >=2.7.2 
+pytest-playwright 0.7.1 A pytest wrapper with fixtures for Playwright to automate web browsers
+├── playwright >=1.18
+│   ├── greenlet >=3.1.1,<4.0.0 
+│   └── pyee >=13,<14 
+│       └── typing-extensions * 
+├── pytest >=6.2.4,<9.0.0
+│   ├── colorama >=0.4 
+│   ├── iniconfig >=1 
+│   ├── packaging >=20 
+│   ├── pluggy >=1.5,<2 
+│   └── pygments >=2.7.2 
+├── pytest-base-url >=1.0.0,<3.0.0
+│   ├── pytest >=7.0.0 
+│   │   ├── colorama >=0.4 
+│   │   ├── iniconfig >=1 
+│   │   ├── packaging >=20 
+│   │   ├── pluggy >=1.5,<2 
+│   │   └── pygments >=2.7.2 
+│   └── requests >=2.9 
+│       ├── certifi >=2017.4.17 
+│       ├── charset-normalizer >=2,<4 
+│       ├── idna >=2.5,<4 
+│       └── urllib3 >=1.21.1,<3 
+└── python-slugify >=6.0.0,<9.0.0
+    └── text-unidecode >=1.3 
+pytest-xdist 3.8.0 pytest xdist plugin for distributed testing, most importantly across multiple CPUs
+├── execnet >=2.1
+└── pytest >=7.0.0
+    ├── colorama >=0.4 
+    ├── iniconfig >=1 
+    ├── packaging >=20 
+    ├── pluggy >=1.5,<2 
+    └── pygments >=2.7.2 
+python-dateutil 2.9.0.post0 Extensions to the standard Python datetime module
+└── six >=1.5
+python-dotenv 1.2.1 Read key-value pairs from a .env file and set them as environment variables
+python-json-logger 4.0.0 JSON Log Formatter for the Python Logging Package
+pyyaml 6.0.3 YAML parser and emitter for Python
+radon 6.0.1 Code Metrics in Python
+├── colorama >=0.4.1
+└── mando >=0.6,<0.8
+    └── six * 
+redis 7.0.1 Python client for Redis database and key-value store
+regex 2025.11.3 Alternative regular expression module, to replace re.
+requests 2.32.5 Python HTTP for Humans.
+├── certifi >=2017.4.17
+├── charset-normalizer >=2,<4
+├── idna >=2.5,<4
+└── urllib3 >=1.21.1,<3
+requests-mock 1.12.1 Mock out responses from the requests package
+└── requests >=2.22,<3
+    ├── certifi >=2017.4.17 
+    ├── charset-normalizer >=2,<4 
+    ├── idna >=2.5,<4 
+    └── urllib3 >=1.21.1,<3 
+rtreelib 0.2.0 Pluggable R-tree implementation in pure Python.
+s3transfer 0.10.4 An Amazon S3 Transfer Manager
+└── botocore >=1.33.2,<2.0a.0
+    ├── jmespath >=0.7.1,<2.0.0 
+    ├── python-dateutil >=2.1,<3.0.0 
+    │   └── six >=1.5 
+    └── urllib3 >=1.25.4,<2.2.0 || >2.2.0,<3 
+shapely 2.1.2 Manipulation and analysis of geometric objects
+└── numpy >=1.21
+six 1.17.0 Python 2 and 3 compatibility utilities
+smartypants 2.0.2 Python with the SmartyPants
+urllib3 2.5.0 HTTP library with thread-safe connection pooling, file post, and more.
+virtualenv 20.35.4 Virtual Python Environment builder
+├── distlib >=0.3.7,<1
+├── filelock >=3.12.2,<4
+└── platformdirs >=3.9.1,<5
+vulture 2.14 Find dead code
+webencodings 0.5.1 Character encoding aliases for legacy web content
+werkzeug 3.1.3 The comprehensive WSGI web application library.
+└── markupsafe >=2.1.1
+wtforms 3.2.1 Form validation and rendering for Python web development.
+└── markupsafe *
