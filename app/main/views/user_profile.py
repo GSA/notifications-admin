@@ -165,7 +165,7 @@ def user_profile_mobile_number():
 
     if request.endpoint == "main.user_profile_confirm_delete_mobile_number":
         flash(
-            "Are you sure you want to delete your mobile number from Notify?", "delete"
+            "Are you sure you want to delete your mobile number from Flexion Messaging?", "delete"
         )
 
     return render_template(

@@ -43,7 +43,7 @@ def using_notify_nav():
 def about_notify_nav():
     return [
         {
-            "name": "About Notify",
+            "name": "About Flexion Messaging",
             "link": "main.about_notify",
             "sub_navigation_items": [
                 {
