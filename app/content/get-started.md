@@ -2,7 +2,7 @@
 
 
 1. ## Everyone starts in [Trial Mode](/using-notify/trial-mode)
-Explore Notify, add team members, and practice [sending messages to teammates](/using-notify/trial-mode).
+Explore Flexion Messaging, add team members, and practice [sending messages to teammates](/using-notify/trial-mode).
 
 2. ## Personalize content
 Learn how to [personalize messages](/using-notify/how-to) to increase response.
@@ -18,4 +18,4 @@ To remove the restrictions of Trial Mode and begin sending messages to clients c
 We’ll respond within one business day.
 
 ### Questions?
-[Contact the Notify team](/support)
+[Contact the Flexion Messaging team](/support)

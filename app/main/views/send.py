@@ -160,7 +160,7 @@ def send_messages(service_id, template_id):
         except XLDateError:
             flash(
                 (
-                    "{} contains numbers or dates that Notify cannot understand. "
+                    "{} contains numbers or dates that Flexion Messaging cannot understand. "
                     "Try formatting all columns as ‘text’ or export your file as CSV."
                 ).format(form.file.data.filename)
             )
@@ -292,9 +292,9 @@ def remove_notify_from_sender_options(sender_details):
 
 
 def verify_sender_options(sender):
-    if sender.get("sms_sender") in ["Notify.gov", "US Notify"] and sender["is_default"]:
+    if sender.get("sms_sender") in ["Flexion Messaging", "US Notify"] and sender["is_default"]:
         return True
-    if sender.get("sms_sender") not in ["Notify.gov", "US Notify"]:
+    if sender.get("sms_sender") not in ["Flexion Messaging", "US Notify"]:
         return True
 
     return False

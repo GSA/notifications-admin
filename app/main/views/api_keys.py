@@ -124,7 +124,7 @@ def revoke_api_key(service_id, key_id):
         flash(
             [
                 "Are you sure you want to revoke ‘{}’?".format(key_name),
-                "You will not be able to use this API key to connect to Notify.gov.",
+                "You will not be able to use this API key to connect to Flexion Messaging.",
             ],
             "revoke this API key",
         )
