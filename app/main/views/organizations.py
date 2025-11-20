@@ -210,9 +210,7 @@ def _handle_delete_service(org_id, service_id):
     cached_service_user_ids = [user.id for user in service.active_users]
 
     service_api_client.archive_service(service_id, cached_service_user_ids)
-    create_archive_service_event(
-        service_id=service_id, archived_by_id=current_user.id
-    )
+    create_archive_service_event(service_id=service_id, archived_by_id=current_user.id)
 
     cache.redis_client.delete("organizations")
 
