@@ -19,6 +19,49 @@ describe('organizationDashboard.js', () => {
     document.body.innerHTML = '';
   });
 
+  describe('Delete Service Confirmation', () => {
+    beforeEach(() => {
+      document.body.innerHTML = `
+        <button
+          data-open-modal="confirmDeleteModal"
+          data-service-id="service-123"
+          data-service-name="Test Service">
+          Delete
+        </button>
+        <div id="delete-service-name-display"></div>
+        <button id="delete-service-confirm-btn">Confirm Delete</button>
+        <form id="delete-service-form"></form>
+      `;
+
+      require('../../app/assets/javascripts/organizationDashboard.js');
+      document.dispatchEvent(new Event('DOMContentLoaded'));
+    });
+
+    test('sets service name when delete button clicked', () => {
+      const deleteButton = document.querySelector('[data-service-id="service-123"]');
+      const nameDisplay = document.getElementById('delete-service-name-display');
+
+      deleteButton.click();
+
+      expect(nameDisplay.textContent).toBe('Test Service');
+    });
+
+    test('does not update name display if missing', () => {
+      document.getElementById('delete-service-name-display').remove();
+
+      const deleteButton = document.querySelector('[data-service-id="service-123"]');
+
+      expect(() => deleteButton.click()).not.toThrow();
+    });
+
+    test('does nothing if required elements missing', () => {
+      document.body.innerHTML = '<div>No delete elements</div>';
+
+      require('../../app/assets/javascripts/organizationDashboard.js');
+
+      expect(() => document.dispatchEvent(new Event('DOMContentLoaded'))).not.toThrow();
+    });
+  });
 
   describe('Edit Service Confirmation', () => {
     beforeEach(() => {
@@ -39,6 +82,21 @@ describe('organizationDashboard.js', () => {
       confirmButton.click();
 
       expect(editForm.submit).toHaveBeenCalled();
+    });
+
+    test('does not throw if form missing when confirm clicked', () => {
+      document.getElementById('edit-service-form').remove();
+      const confirmButton = document.getElementById('edit-service-confirm-btn');
+
+      expect(() => confirmButton.click()).not.toThrow();
+    });
+
+    test('does nothing if confirm button missing', () => {
+      document.body.innerHTML = '<form id="edit-service-form"></form>';
+
+      require('../../app/assets/javascripts/organizationDashboard.js');
+
+      expect(() => document.dispatchEvent(new Event('DOMContentLoaded'))).not.toThrow();
     });
   });
 
