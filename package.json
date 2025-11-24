@@ -27,7 +27,8 @@
   "license": "CC0",
   "homepage": "https://github.com/GSA/notifications-admin#readme",
   "overrides": {
-    "graceful-fs": "^4.2.11"
+    "graceful-fs": "^4.2.11",
+    "glob": "^10.5.0"
   },
   "dependencies": {
     "@rollup/plugin-commonjs": "^29.0.0",
