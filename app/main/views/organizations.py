@@ -245,10 +245,10 @@ def get_services_dashboard_data(organization, year):
         if sms_sent > 0 or sms_remainder > 0:
             if sms_cost > 0:
                 usage_parts.append(
-                    f"{sms_sent:,} sms ({sms_remainder:,} remaining, ${sms_cost:,.2f})"
+                    f"{sms_sent:,} sms ({sms_remainder:,} message parts remaining, ${sms_cost:,.2f})"
                 )
             else:
-                usage_parts.append(f"{sms_sent:,} sms ({sms_remainder:,} remaining)")
+                usage_parts.append(f"{sms_sent:,} sms ({sms_remainder:,} message parts remaining)")
 
         service["usage"] = ", ".join(usage_parts) if usage_parts else "No usage"
 
