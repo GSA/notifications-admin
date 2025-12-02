@@ -11,7 +11,7 @@ MAX_FILE_UPLOAD_SIZE = 2 * 1024 * 1024  # 2MB
 
 
 @main.route("/services/<uuid:service_id>/uploads")
-@user_has_permissions()
+@user_has_permissions(allow_org_user=True)
 def uploads(service_id):
     # No tests have been written, this has been quickly prepared for user research.
     # It's also very like that a new view will be created to show uploads.

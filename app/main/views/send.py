@@ -95,7 +95,7 @@ def get_example_csv_rows(template, use_example_as_example=True, submitted_fields
 @main.route(
     "/services/<uuid:service_id>/send/<uuid:template_id>/csv", methods=["GET", "POST"]
 )
-@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True, allow_org_user=True)
 def send_messages(service_id, template_id):
     notification_count = service_api_client.get_notification_count(service_id)
     remaining_messages = current_service.message_limit - notification_count
@@ -189,7 +189,7 @@ def send_messages(service_id, template_id):
 
 @main.route("/services/<uuid:service_id>/send/<uuid:template_id>.csv", methods=["GET"])
 @user_has_permissions(
-    ServicePermission.SEND_MESSAGES, ServicePermission.MANAGE_TEMPLATES
+    ServicePermission.SEND_MESSAGES, ServicePermission.MANAGE_TEMPLATES, allow_org_user=True
 )
 def get_example_csv(service_id, template_id):
     template = get_template(
@@ -215,7 +215,7 @@ def get_example_csv(service_id, template_id):
     "/services/<uuid:service_id>/send/<uuid:template_id>/set-sender",
     methods=["GET", "POST"],
 )
-@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True, allow_org_user=True)
 def set_sender(service_id, template_id):
     session["sender_id"] = None
     redirect_to_one_off = redirect(
@@ -344,7 +344,7 @@ def get_sender_details(service_id, template_type):
 
 
 @main.route("/services/<uuid:service_id>/send/<uuid:template_id>/one-off")
-@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True, allow_org_user=True)
 def send_one_off(service_id, template_id):
     session["recipient"] = None
     session["placeholders"] = {}
@@ -388,7 +388,7 @@ def get_notification_check_endpoint(service_id, template):
     "/services/<uuid:service_id>/send/<uuid:template_id>/one-off/step-<int:step_index>",
     methods=["GET", "POST"],
 )
-@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True, allow_org_user=True)
 def send_one_off_step(service_id, template_id, step_index):
     if {"recipient", "placeholders"} - set(session.keys()):
         return redirect(
@@ -650,7 +650,7 @@ def _check_messages(service_id, template_id, upload_id, preview_row, **kwargs):
     "/services/<uuid:service_id>/<uuid:template_id>/check/<uuid:upload_id>/row-<int:row_index>",
     methods=["GET"],
 )
-@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True, allow_org_user=True)
 def check_messages(service_id, template_id, upload_id, row_index=2):
     data = _check_messages(service_id, template_id, upload_id, row_index)
     data["allowed_file_extensions"] = Spreadsheet.ALLOWED_FILE_EXTENSIONS
@@ -694,7 +694,7 @@ def check_messages(service_id, template_id, upload_id, row_index=2):
     "/services/<uuid:service_id>/<uuid:template_id>/check/<uuid:upload_id>/preview/row-<int:row_index>",
     methods=["POST"],
 )
-@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True, allow_org_user=True)
 def preview_job(service_id, template_id, upload_id, row_index=2):
     session["scheduled_for"] = request.form.get("scheduled_for", "")
     data = _check_messages(
@@ -709,7 +709,7 @@ def preview_job(service_id, template_id, upload_id, row_index=2):
 
 
 @main.route("/services/<uuid:service_id>/start-job/<uuid:upload_id>", methods=["POST"])
-@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True, allow_org_user=True)
 def start_job(service_id, upload_id):
     scheduled_for = session.pop("scheduled_for", None)
     job_api_client.create_job(
@@ -862,7 +862,7 @@ def get_skip_link(step_index, template):
     "/services/<uuid:service_id>/template/<uuid:template_id>/one-off/send-to-myself",
     methods=["GET"],
 )
-@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True, allow_org_user=True)
 def send_one_off_to_myself(service_id, template_id):
     current_app.logger.info("Send one off to myself")
     try:
@@ -899,7 +899,7 @@ def send_one_off_to_myself(service_id, template_id):
     "/services/<uuid:service_id>/template/<uuid:template_id>/notification/check",
     methods=["GET"],
 )
-@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True, allow_org_user=True)
 def check_notification(service_id, template_id):
     return render_template(
         "views/notifications/check.html",
@@ -981,7 +981,7 @@ def get_template_error_dict(exception):
     "/services/<uuid:service_id>/template/<uuid:template_id>/notification/check/preview",
     methods=["POST"],
 )
-@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True, allow_org_user=True)
 def preview_notification(service_id, template_id):
     recipient = get_recipient()
     if not recipient:
@@ -1013,7 +1013,7 @@ def preview_notification(service_id, template_id):
     "/services/<uuid:service_id>/template/<uuid:template_id>/notification/check",
     methods=["POST"],
 )
-@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True, allow_org_user=True)
 def send_notification(service_id, template_id):
     recipient = get_recipient()
 

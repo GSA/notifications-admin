@@ -70,7 +70,7 @@ PLATFORM_ADMIN_SERVICE_PERMISSIONS = OrderedDict(
 
 
 @main.route("/services/<uuid:service_id>/service-settings")
-@user_has_permissions(ServicePermission.MANAGE_SERVICE, "manage_api_keys")
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, "manage_api_keys", allow_org_user=True)
 def service_settings(service_id):
     return render_template(
         "views/service-settings.html",
@@ -81,7 +81,7 @@ def service_settings(service_id):
 @main.route(
     "/services/<uuid:service_id>/service-settings/name", methods=["GET", "POST"]
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def service_name_change(service_id):
     form = RenameServiceForm(name=current_service.name)
 
@@ -195,7 +195,7 @@ def service_set_permission(service_id, permission):
 @main.route(
     "/services/<uuid:service_id>/service-settings/archive", methods=["GET", "POST"]
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def archive_service(service_id):
     if not current_service.active or not (
         current_service.trial_mode or current_user.platform_admin
@@ -268,7 +268,7 @@ def resume_service(service_id):
     "/services/<uuid:service_id>/service-settings/send-files-by-email",
     methods=["GET", "POST"],
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def send_files_by_email_contact_details(service_id):
     form = ServiceContactDetailsForm()
     contact_details = None
@@ -298,7 +298,7 @@ def send_files_by_email_contact_details(service_id):
 @main.route(
     "/services/<uuid:service_id>/service-settings/set-reply-to-email", methods=["GET"]
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def service_set_reply_to_email(service_id):
     return redirect(url_for(".service_email_reply_to", service_id=service_id))
 
@@ -306,7 +306,7 @@ def service_set_reply_to_email(service_id):
 @main.route(
     "/services/<uuid:service_id>/service-settings/email-reply-to", methods=["GET"]
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE, "manage_api_keys")
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, "manage_api_keys", allow_org_user=True)
 def service_email_reply_to(service_id):
     return render_template("views/service-settings/email_reply_to.html")
 
@@ -315,7 +315,7 @@ def service_email_reply_to(service_id):
     "/services/<uuid:service_id>/service-settings/email-reply-to/add",
     methods=["GET", "POST"],
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def service_add_email_reply_to(service_id):
     form = ServiceReplyToEmailForm()
     first_email_address = current_service.count_email_reply_to_addresses == 0
@@ -359,7 +359,7 @@ def service_add_email_reply_to(service_id):
     "/services/<uuid:service_id>/service-settings/email-reply-to/<uuid:notification_id>/verify",
     methods=["GET", "POST"],
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def service_verify_reply_to_address(service_id, notification_id):
     replace = request.args.get("replace", False)
     is_default = request.args.get("is_default", False)
@@ -379,7 +379,7 @@ def service_verify_reply_to_address(service_id, notification_id):
 @main.route(
     "/services/<uuid:service_id>/service-settings/email-reply-to/<uuid:notification_id>/verify.json"
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def service_verify_reply_to_address_updates(service_id, notification_id):
     return jsonify(
         **get_service_verify_reply_to_address_partials(service_id, notification_id)
@@ -456,7 +456,7 @@ def get_service_verify_reply_to_address_partials(service_id, notification_id):
     methods=["GET"],
     endpoint="service_confirm_delete_email_reply_to",
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def service_edit_email_reply_to(service_id, reply_to_email_id):
     form = ServiceReplyToEmailForm()
     reply_to_email_address = current_service.get_email_reply_to_address(
@@ -525,7 +525,7 @@ def service_edit_email_reply_to(service_id, reply_to_email_id):
     "/services/<uuid:service_id>/service-settings/email-reply-to/<uuid:reply_to_email_id>/delete",
     methods=["POST"],
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def service_delete_email_reply_to(service_id, reply_to_email_id):
     service_api_client.delete_reply_to_email_address(
         service_id=current_service.id,
@@ -538,7 +538,7 @@ def service_delete_email_reply_to(service_id, reply_to_email_id):
     "/services/<uuid:service_id>/service-settings/set-inbound-number",
     methods=["GET", "POST"],
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def service_set_inbound_number(service_id):
     available_inbound_numbers = (
         inbound_number_client.get_available_inbound_sms_numbers()
@@ -571,7 +571,7 @@ def service_set_inbound_number(service_id):
 @main.route(
     "/services/<uuid:service_id>/service-settings/sms-prefix", methods=["GET", "POST"]
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def service_set_sms_prefix(service_id):
     form = SMSPrefixForm(enabled=current_service.prefix_sms)
 
@@ -590,7 +590,7 @@ def service_set_sms_prefix(service_id):
     "/services/<uuid:service_id>/service-settings/set-international-sms",
     methods=["GET", "POST"],
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def service_set_international_sms(service_id):
     form = ServiceOnOffSettingForm(
         "Send text messages to international phone numbers",
@@ -611,7 +611,7 @@ def service_set_international_sms(service_id):
 @main.route(
     "/services/<uuid:service_id>/service-settings/set-inbound-sms", methods=["GET"]
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def service_set_inbound_sms(service_id):
     return render_template(
         "views/service-settings/set-inbound-sms.html",
@@ -622,7 +622,7 @@ def service_set_inbound_sms(service_id):
     "/services/<uuid:service_id>/service-settings/set-<channel>",
     methods=["GET", "POST"],
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def service_set_channel(service_id, channel):
     if channel not in {"email", "sms"}:
         abort(404)
@@ -647,7 +647,7 @@ def service_set_channel(service_id, channel):
 @main.route(
     "/services/<uuid:service_id>/service-settings/set-auth-type", methods=["GET"]
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def service_set_auth_type(service_id):
     return render_template(
         "views/service-settings/set-auth-type.html",
@@ -655,7 +655,7 @@ def service_set_auth_type(service_id):
 
 
 @main.route("/services/<uuid:service_id>/service-settings/sms-sender", methods=["GET"])
-@user_has_permissions(ServicePermission.MANAGE_SERVICE, "manage_api_keys")
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, "manage_api_keys", allow_org_user=True)
 def service_sms_senders(service_id):
     return render_template(
         "views/service-settings/sms-senders.html",
@@ -666,7 +666,7 @@ def service_sms_senders(service_id):
     "/services/<uuid:service_id>/service-settings/sms-sender/add",
     methods=["GET", "POST"],
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def service_add_sms_sender(service_id):
     form = ServiceSmsSenderForm()
     first_sms_sender = current_service.count_sms_senders == 0
@@ -694,7 +694,7 @@ def service_add_sms_sender(service_id):
     methods=["GET"],
     endpoint="service_confirm_delete_sms_sender",
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def service_edit_sms_sender(service_id, sms_sender_id):
     sms_sender = current_service.get_sms_sender(sms_sender_id)
     is_inbound_number = sms_sender["inbound_number_id"]
@@ -732,7 +732,7 @@ def service_edit_sms_sender(service_id, sms_sender_id):
     "/services/<uuid:service_id>/service-settings/sms-sender/<uuid:sms_sender_id>/delete",
     methods=["POST"],
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def service_delete_sms_sender(service_id, sms_sender_id):
     service_api_client.delete_sms_sender(
         service_id=current_service.id,
