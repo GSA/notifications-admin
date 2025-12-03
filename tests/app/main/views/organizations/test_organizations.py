@@ -839,7 +839,7 @@ def test_edit_organization_user_shows_the_delete_confirmation_banner(
         user_id=active_user_with_permissions["id"],
     )
 
-    assert normalize_spaces(page.h1) == "Team members"
+    assert normalize_spaces(page.h1) == "Organization administrators"
 
     banner = page.select_one(".usa-alert--error")
     banner_text = banner.select_one(".usa-alert__text")
@@ -1622,7 +1622,7 @@ def test_organization_dashboard_shows_service_counts(
     assert "3" in normalize_spaces(service_box.text)
     assert "1 Live" in normalize_spaces(service_box.text)
     assert "1 Trial" in normalize_spaces(service_box.text)
-    assert "1 Suspended" in normalize_spaces(service_box.text)
+    assert "1 Archived" in normalize_spaces(service_box.text)
 
 
 def test_organization_dashboard_services_table(
@@ -1699,7 +1699,7 @@ def test_organization_dashboard_services_table(
     assert normalize_spaces(first_row_cells[1].text) == "Live"
     assert "1,500 emails" in normalize_spaces(first_row_cells[2].text)
     assert "500 sms" in normalize_spaces(first_row_cells[2].text)
-    assert "249,500 remaining" in normalize_spaces(first_row_cells[2].text)
+    assert "249,500 message parts remaining" in normalize_spaces(first_row_cells[2].text)
     assert normalize_spaces(first_row_cells[3].text) == "N/A"
     assert normalize_spaces(first_row_cells[4].text) == "Welcome SMS"
 
@@ -1708,7 +1708,7 @@ def test_organization_dashboard_services_table(
     assert normalize_spaces(second_row_cells[1].text) == "Trial"
     assert "250 emails" in normalize_spaces(second_row_cells[2].text)
     assert "100 sms" in normalize_spaces(second_row_cells[2].text)
-    assert "249,900 remaining" in normalize_spaces(second_row_cells[2].text)
+    assert "249,900 message parts remaining" in normalize_spaces(second_row_cells[2].text)
     assert normalize_spaces(second_row_cells[3].text) == "N/A"
     assert normalize_spaces(second_row_cells[4].text) == "Reminder SMS"
 

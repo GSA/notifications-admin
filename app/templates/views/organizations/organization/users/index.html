@@ -5,7 +5,7 @@
 {% from "components/components/button/macro.njk" import usaButton %}
 
 {% block org_page_title %}
-  Team members
+  Organization administrators
 {% endblock %}
 
 {% block maincolumn_content %}
@@ -20,7 +20,7 @@
   {% endif %}
 
   <h1 class="font-body-2xl">
-    Team members
+    Organization administrators
   </h1>
 
   {% if show_search_box %}
@@ -66,7 +66,7 @@
   <div class="js-stick-at-bottom-when-scrolling">
     {{ usaButton({
       "element": "a",
-      "text": "Invite team member",
+      "text": "Invite an organization administrator",
       "href": url_for('.invite_org_user', org_id=current_org.id),
       "classes": "usa-button"
     }) }}

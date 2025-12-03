@@ -24,13 +24,13 @@ from app.utils.user import user_has_permissions
 
 
 @main.route("/services/<uuid:service_id>/dashboard")
-@user_has_permissions(ServicePermission.VIEW_ACTIVITY, ServicePermission.SEND_MESSAGES)
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY, ServicePermission.SEND_MESSAGES, allow_org_user=True)
 def old_service_dashboard(service_id):
     return redirect(url_for(".service_dashboard", service_id=service_id))
 
 
 @main.route("/services/<uuid:service_id>")
-@user_has_permissions()
+@user_has_permissions(allow_org_user=True)
 def service_dashboard(service_id):
 
     if session.get("invited_user_id"):
@@ -84,7 +84,7 @@ def job_is_finished(job_dict):
 
 
 @main.route("/services/<uuid:service_id>/daily-stats.json")
-@user_has_permissions()
+@user_has_permissions(allow_org_user=True)
 def get_daily_stats(service_id):
     date_range = get_stats_date_range()
     days = date_range["days"]
@@ -148,7 +148,7 @@ def get_local_daily_stats_for_last_x_days(stats_utc, user_timezone, days):
 
 
 @main.route("/services/<uuid:service_id>/daily-stats-by-user.json")
-@user_has_permissions()
+@user_has_permissions(allow_org_user=True)
 def get_daily_stats_by_user(service_id):
     date_range = get_stats_date_range()
     days = date_range["days"]
@@ -166,7 +166,7 @@ def get_daily_stats_by_user(service_id):
 
 
 @main.route("/services/<uuid:service_id>/template-usage")
-@user_has_permissions(ServicePermission.VIEW_ACTIVITY)
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY, allow_org_user=True)
 def template_usage(service_id):
     year, current_financial_year = requested_and_current_financial_year(request)
     stats = template_statistics_client.get_monthly_template_usage_for_service(

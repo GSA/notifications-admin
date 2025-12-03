@@ -26,7 +26,7 @@ from notifications_utils.template import EmailPreviewTemplate, SMSBodyPreviewTem
 
 
 @main.route("/services/<uuid:service_id>/jobs")
-@user_has_permissions()
+@user_has_permissions(allow_org_user=True)
 def view_jobs(service_id):
     return redirect(
         url_for(
@@ -37,7 +37,7 @@ def view_jobs(service_id):
 
 
 @main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>")
-@user_has_permissions()
+@user_has_permissions(allow_org_user=True)
 def view_job(service_id, job_id):
     job = Job.from_id(job_id, service_id=current_service.id)
     if job.cancelled:
@@ -83,7 +83,7 @@ def view_job(service_id, job_id):
 
 
 @main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>.csv")
-@user_has_permissions(ServicePermission.VIEW_ACTIVITY)
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY, allow_org_user=True)
 def view_job_csv(service_id, job_id):
     job = Job.from_id(job_id, service_id=service_id)
     filter_args = parse_filter_args(request.args)
@@ -111,14 +111,14 @@ def view_job_csv(service_id, job_id):
 
 
 @main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>", methods=["POST"])
-@user_has_permissions(ServicePermission.SEND_MESSAGES)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, allow_org_user=True)
 def cancel_job(service_id, job_id):
     Job.from_id(job_id, service_id=service_id).cancel()
     return redirect(url_for("main.service_dashboard", service_id=service_id))
 
 
 @main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>/status.json")
-@user_has_permissions()
+@user_has_permissions(allow_org_user=True)
 def view_job_status_poll(service_id, job_id):
     from app.notify_client.job_api_client import job_api_client
 
@@ -147,7 +147,7 @@ def view_job_status_poll(service_id, job_id):
 
 
 @main.route("/services/<uuid:service_id>/jobs/<uuid:job_id>/notifications-table")
-@user_has_permissions()
+@user_has_permissions(allow_org_user=True)
 def view_job_notifications_table(service_id, job_id):
     """Endpoint that returns only the notifications table HTML fragment."""
     job = Job.from_id(job_id, service_id=current_service.id)

@@ -81,7 +81,7 @@ def test_cancel_invited_org_user_cancels_user_invitations(
         invited_user_id=sample_org_invite["id"],
         _follow_redirects=True,
     )
-    assert normalize_spaces(page.h1.text) == "Team members"
+    assert normalize_spaces(page.h1.text) == "Organization administrators"
     flash_banner = normalize_spaces(
         page.select_one(".usa-alert--success .usa-alert__text").text
     )

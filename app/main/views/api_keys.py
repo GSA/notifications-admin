@@ -23,7 +23,7 @@ dummy_bearer_token = "bearer_token_set"  # nosec B105 - this is not a real token
 
 
 @main.route("/services/<uuid:service_id>/api")
-@user_has_permissions("manage_api_keys")
+@user_has_permissions("manage_api_keys", allow_org_user=True)
 def api_integration(service_id):
     callbacks_link = (
         ".api_callbacks"
@@ -40,7 +40,7 @@ def api_integration(service_id):
 
 
 @main.route("/services/<uuid:service_id>/api/documentation")
-@user_has_permissions("manage_api_keys")
+@user_has_permissions("manage_api_keys", allow_org_user=True)
 def api_documentation(service_id):
     return redirect(url_for(".documentation"), code=301)
 
@@ -51,7 +51,7 @@ def api_documentation(service_id):
     endpoint="old_guest_list",
 )
 @main.route("/services/<uuid:service_id>/api/guest-list", methods=["GET", "POST"])
-@user_has_permissions("manage_api_keys")
+@user_has_permissions("manage_api_keys", allow_org_user=True)
 def guest_list(service_id):
     form = GuestList()
     if form.validate_on_submit():
@@ -70,7 +70,7 @@ def guest_list(service_id):
 
 
 @main.route("/services/<uuid:service_id>/api/keys")
-@user_has_permissions("manage_api_keys")
+@user_has_permissions("manage_api_keys", allow_org_user=True)
 def api_keys(service_id):
     return render_template(
         "views/api/keys.html",
@@ -78,7 +78,7 @@ def api_keys(service_id):
 
 
 @main.route("/services/<uuid:service_id>/api/keys/create", methods=["GET", "POST"])
-@user_has_permissions("manage_api_keys", restrict_admin_usage=True)
+@user_has_permissions("manage_api_keys", restrict_admin_usage=True, allow_org_user=True)
 def create_api_key(service_id):
     form = CreateKeyForm(current_service.api_keys)
     form.key_type.choices = [
@@ -118,7 +118,7 @@ def create_api_key(service_id):
 @main.route(
     "/services/<uuid:service_id>/api/keys/revoke/<uuid:key_id>", methods=["GET", "POST"]
 )
-@user_has_permissions("manage_api_keys")
+@user_has_permissions("manage_api_keys", allow_org_user=True)
 def revoke_api_key(service_id, key_id):
     key_name = current_service.get_api_key(key_id)["name"]
     if request.method == "GET":
@@ -161,7 +161,7 @@ def check_token_against_dummy_bearer(token):
 
 
 @main.route("/services/<uuid:service_id>/api/callbacks", methods=["GET"])
-@user_has_permissions("manage_api_keys")
+@user_has_permissions("manage_api_keys", allow_org_user=True)
 def api_callbacks(service_id):
     if not current_service.has_permission(ServicePermission.INBOUND_SMS):
         return redirect(url_for(".delivery_status_callback", service_id=service_id))
@@ -192,7 +192,7 @@ def get_delivery_status_callback_details():
     "/services/<uuid:service_id>/api/callbacks/delivery-status-callback",
     methods=["GET", "POST"],
 )
-@user_has_permissions("manage_api_keys")
+@user_has_permissions("manage_api_keys", allow_org_user=True)
 def delivery_status_callback(service_id):
     delivery_status_callback = get_delivery_status_callback_details()
     back_link = (
@@ -259,7 +259,7 @@ def get_received_text_messages_callback():
     "/services/<uuid:service_id>/api/callbacks/received-text-messages-callback",
     methods=["GET", "POST"],
 )
-@user_has_permissions("manage_api_keys")
+@user_has_permissions("manage_api_keys", allow_org_user=True)
 def received_text_messages_callback(service_id):
     if not current_service.has_permission(ServicePermission.INBOUND_SMS):
         return redirect(url_for(".api_integration", service_id=service_id))

@@ -44,7 +44,7 @@ def manage_users(service_id):
 @main.route(
     "/services/<uuid:service_id>/users/invite/<uuid:user_id>", methods=["GET", "POST"]
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def invite_user(service_id, user_id=None):
     form_class = InviteUserForm
     form = form_class(
@@ -116,7 +116,7 @@ def invite_user(service_id, user_id=None):
 
 
 @main.route("/services/<uuid:service_id>/users/<uuid:user_id>", methods=["GET", "POST"])
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def edit_user_permissions(service_id, user_id):
     service_has_email_auth = current_service.has_permission(
         ServicePermission.EMAIL_AUTH
@@ -169,7 +169,7 @@ def edit_user_permissions(service_id, user_id):
 
 
 @main.route("/services/<uuid:service_id>/users/<uuid:user_id>/delete", methods=["POST"])
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def remove_user_from_service(service_id, user_id):
     try:
         service_api_client.remove_user_from_service(service_id, user_id)
@@ -192,7 +192,7 @@ def remove_user_from_service(service_id, user_id):
     "/services/<uuid:service_id>/users/<uuid:user_id>/edit-email",
     methods=["GET", "POST"],
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def edit_user_email(service_id, user_id):
     user = current_service.get_team_member(user_id)
     user_email = user.email_address
@@ -225,7 +225,7 @@ def edit_user_email(service_id, user_id):
     "/services/<uuid:service_id>/users/<uuid:user_id>/edit-email/confirm",
     methods=["GET", "POST"],
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def confirm_edit_user_email(service_id, user_id):
     user = current_service.get_team_member(user_id)
     session_key = "team_member_email_change-{}".format(user_id)
@@ -263,7 +263,7 @@ def confirm_edit_user_email(service_id, user_id):
     "/services/<uuid:service_id>/users/<uuid:user_id>/edit-mobile-number",
     methods=["GET", "POST"],
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def edit_user_mobile_number(service_id, user_id):
     user = current_service.get_team_member(user_id)
     user_mobile_number = redact_mobile_number(user.mobile_number)
@@ -293,7 +293,7 @@ def edit_user_mobile_number(service_id, user_id):
     "/services/<uuid:service_id>/users/<uuid:user_id>/edit-mobile-number/confirm",
     methods=["GET", "POST"],
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def confirm_edit_user_mobile_number(service_id, user_id):
     user = current_service.get_team_member(user_id)
     if "team_member_mobile_change" in session:
@@ -331,7 +331,7 @@ def confirm_edit_user_mobile_number(service_id, user_id):
     "/services/<uuid:service_id>/cancel-invited-user/<uuid:invited_user_id>",
     methods=["GET"],
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def cancel_invited_user(service_id, invited_user_id):
     current_service.cancel_invite(invited_user_id)
 
@@ -350,7 +350,7 @@ def cancel_invited_user(service_id, invited_user_id):
     "/services/<uuid:service_id>/resend-invite/<uuid:invited_user_id>",
     methods=["GET"],
 )
-@user_has_permissions(ServicePermission.MANAGE_SERVICE)
+@user_has_permissions(ServicePermission.MANAGE_SERVICE, allow_org_user=True)
 def resend_invite(service_id, invited_user_id):
     current_service.resend_invite(invited_user_id)
 

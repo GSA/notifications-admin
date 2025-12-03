@@ -4,7 +4,7 @@
     <li class="usa-sidenav__item"><a class="usa-link {{ org_navigation.is_selected('dashboard') }}" href="{{ url_for('.organization_dashboard', org_id=current_org.id) }}">Dashboard</a></li>
     {% endif %}
     <li class="usa-sidenav__item"><a class="usa-link {{ org_navigation.is_selected('usage') }}" href="{{ url_for('.organization_usage', org_id=current_org.id) }}">Usage</a></li>
-    <li class="usa-sidenav__item"><a class="usa-link {{ org_navigation.is_selected('team-members') }}" href="{{ url_for('.manage_org_users', org_id=current_org.id) }}">Team members</a></li>
+    <li class="usa-sidenav__item"><a class="usa-link {{ org_navigation.is_selected('team-members') }}" href="{{ url_for('.manage_org_users', org_id=current_org.id) }}">Org admins</a></li>
     {% if current_user.platform_admin %}
     <li class="usa-sidenav__item"><a class="usa-link {{ org_navigation.is_selected('settings') }}" href="{{ url_for('.organization_settings', org_id=current_org.id) }}">Settings</a></li>
     <li class="usa-sidenav__item"><a class="usa-link {{ org_navigation.is_selected('trial-services') }}" href="{{ url_for('.organization_trial_mode_services', org_id=current_org.id) }}">Trial mode services</a></li>
