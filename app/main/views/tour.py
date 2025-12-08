@@ -15,7 +15,7 @@ from app.utils.user import user_has_permissions
 
 
 @main.route("/services/<uuid:service_id>/tour/<uuid:template_id>")
-@user_has_permissions(ServicePermission.SEND_MESSAGES)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, allow_org_user=True)
 def begin_tour(service_id, template_id):
     db_template = current_service.get_template_with_user_permission_or_403(
         template_id, current_user
@@ -48,7 +48,7 @@ def begin_tour(service_id, template_id):
     "/services/<uuid:service_id>/tour/<uuid:template_id>/step-<int:step_index>",
     methods=["GET", "POST"],
 )
-@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True, allow_org_user=True)
 def tour_step(service_id, template_id, step_index):
     db_template = current_service.get_template_with_user_permission_or_403(
         template_id, current_user
@@ -167,7 +167,7 @@ def _get_tour_step_back_link(service_id, template_id, step_index):
 @main.route(
     "/services/<uuid:service_id>/tour/<uuid:template_id>/check", methods=["GET"]
 )
-@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, restrict_admin_usage=True, allow_org_user=True)
 def check_tour_notification(service_id, template_id):
     db_template = current_service.get_template_with_user_permission_or_403(
         template_id, current_user
@@ -224,7 +224,7 @@ def check_tour_notification(service_id, template_id):
 
 
 @main.route("/services/<uuid:service_id>/end-tour/<uuid:example_template_id>")
-@user_has_permissions(ServicePermission.MANAGE_TEMPLATES)
+@user_has_permissions(ServicePermission.MANAGE_TEMPLATES, allow_org_user=True)
 def go_to_dashboard_after_tour(service_id, example_template_id):
     service_api_client.delete_service_template(service_id, example_template_id)
 
