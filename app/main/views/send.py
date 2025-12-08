@@ -846,7 +846,7 @@ def get_skip_link(step_index, template):
         and step_index == 0
         and template.template_type in ("sms", "email")
         and not (template.template_type == "sms" and current_user.mobile_number is None)
-        and current_user.has_permissions(ServicePermission.SEND_MESSAGES)
+        and current_user.has_permissions(ServicePermission.SEND_MESSAGES, allow_org_user=True)
     ):
         return (
             "Use my {}".format(first_column_headings[template.template_type][0]),
