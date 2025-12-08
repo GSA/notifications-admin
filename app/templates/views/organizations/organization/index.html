@@ -9,23 +9,21 @@
 
   {{ page_header('Organization Dashboard', size='large') }}
 
-  <div id="totalMessageChartContainer" data-messages-sent="{{ messages_sent|default(0) }}" data-messages-remaining="{{ messages_remaining|default(0) }}" data-total-message-limit="{{ total_message_limit|default(0) }}">
+  <div class="margin-bottom-3">
     <div class="grid-row flex-align-center">
-      <h2 id="chartTitle" class="margin-right-1 margin-y-0">Overall Usage</h2>
+      <h2 id="chartTitle" class="margin-right-1 margin-y-0">Overall {{ selected_year }} Messages Sent</h2>
       <button
         type="button"
         class="usa-tooltip usa-tooltip__information margin-right-0"
         data-position="top"
-        title="Combined totals for all services in {{ current_org.name }} for the current agreement period: pending, failed, or delivered"
+        title="Total messages sent across all services in {{ current_org.name }}"
       >
         <span class="usa-sr-only">More information</span>
         <img src="{{ asset_url('img/usa-icons/info.svg') }}" alt="" class="usa-icon" role="presentation" />
       </button>
     </div>
-    <svg id="totalMessageChart"></svg>
-    <div id="message"></div>
+    <div class="font-sans-xl text-primary-darker margin-top-1">{{ "{:,}".format(messages_sent|default(0)) }} sent</div>
   </div>
-  <div id="totalMessageTable" class="margin-bottom-3"></div>
   <div class="grid-row margin-bottom-3 maxw-tablet">
     <div class="grid-col-12 tablet:grid-col-6 margin-bottom-2 tablet:margin-bottom-0 tablet:padding-right-1">
       <div class="usa-summary-box height-full" role="region">
