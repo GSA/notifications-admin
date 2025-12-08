@@ -73,9 +73,9 @@ def unicode_truncate(s, length):
 
 def should_skip_template_page(db_template):
     return (
-        current_user.has_permissions(ServicePermission.SEND_MESSAGES)
+        current_user.has_permissions(ServicePermission.SEND_MESSAGES, allow_org_user=True)
         and not current_user.has_permissions(
-            ServicePermission.MANAGE_TEMPLATES, "manage_api_keys"
+            ServicePermission.MANAGE_TEMPLATES, "manage_api_keys", allow_org_user=True
         )
         and not db_template["archived"]
     )
