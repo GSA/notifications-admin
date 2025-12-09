@@ -76,7 +76,7 @@ virtualenv = "<20.36"
 [tool.poetry.group.dev.dependencies]
 awscli = "^1.34.29"
 bandit = "*"
-black = "^25.11.0"
+black = "^25.12.0"
 coverage = "*"
 detect-secrets = "^1.5.0"
 freezegun = "^1.5.5"
