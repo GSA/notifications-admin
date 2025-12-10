@@ -9,23 +9,21 @@
 
   {{ page_header('Organization Dashboard', size='large') }}
 
-  <div id="totalMessageChartContainer" data-messages-sent="{{ messages_sent|default(0) }}" data-messages-remaining="{{ messages_remaining|default(0) }}" data-total-message-limit="{{ total_message_limit|default(0) }}">
+  <div class="margin-bottom-3">
     <div class="grid-row flex-align-center">
-      <h2 id="chartTitle" class="margin-right-1 margin-y-0">Overall {{ selected_year }} Total Message Allowance</h2>
+      <h2 id="chartTitle" class="margin-right-1 margin-y-0">Overall {{ selected_year }} Messages Sent</h2>
       <button
         type="button"
         class="usa-tooltip usa-tooltip__information margin-right-0"
         data-position="top"
-        title="Combined totals across all services in {{ current_org.name }}: pending, failed, or delivered"
+        title="Total messages sent across all services in {{ current_org.name }}"
       >
         <span class="usa-sr-only">More information</span>
         <img src="{{ asset_url('img/usa-icons/info.svg') }}" alt="" class="usa-icon" role="presentation" />
       </button>
     </div>
-    <svg id="totalMessageChart"></svg>
-    <div id="message"></div>
+    <div class="font-sans-xl text-primary-darker margin-top-1">{{ "{:,}".format(messages_sent|default(0)) }} sent</div>
   </div>
-  <div id="totalMessageTable" class="margin-bottom-3"></div>
   <div class="grid-row margin-bottom-3 maxw-tablet">
     <div class="grid-col-12 tablet:grid-col-6 margin-bottom-2 tablet:margin-bottom-0 tablet:padding-right-1">
       <div class="usa-summary-box height-full" role="region">
@@ -39,7 +37,7 @@
               <div class="text-ink font-body-2xs line-height-sans-3">
                 <span class="text-bold">{{ live_services }}</span> Live
                 <span class="margin-left-1 text-bold">{{ trial_services }}</span> Trial
-                <span class="margin-left-1 text-bold">{{ suspended_services }}</span> Suspended
+                <span class="margin-left-1 text-bold">{{ suspended_services }}</span> Archived
               </div>
             </div>
           </div>
@@ -142,6 +140,9 @@
           {% endif %}
         </div>
       </form>
+      <div class="border-top-1px border-base-lighter margin-top-3 padding-top-3">
+        <a href="{{ url_for('main.invite_user', service_id=edit_service_data.id) }}" class="usa-button usa-button--outline">Invite team member</a>
+      </div>
     </div>
 
     <div
@@ -238,7 +239,7 @@
     </h3>
     <div id="what-is-service-content" class="usa-accordion__content usa-prose" hidden>
       <p>
-        When you join Notify, you're added to a service. This is your organization's workspace for sending text messages and emails. Within your service, you can:
+        Services are your organization's workspaces for sending text messages and emails. If you have multiple teams using Notify for different purposes, it is helpful to set up a separate Service for each team, with its own managers and templates. There is no limit to the number of Services you can create, and messages sent by all of your Services contribute to your overall messaging usage. Within each Service, you can:
       </p>
       <ol class="usa-list">
         <li>Create and edit message templates</li>
@@ -246,7 +247,8 @@
         <li>View message status and history</li>
         <li>Manage team members and permissions</li>
         <li>Track usage and delivery statistics</li>
-        <li>If you work for multiple organizations, you may belong to multiple services and can switch between them.</li>
+        <li>Service members can be added to multiple services and can switch between them</li>
+        <li>Organizational administrators can always see all Services</li>
       </ol>
     </div>
   </div>
@@ -275,7 +277,7 @@
               <td><a href="{{ url_for('main.service_dashboard', service_id=service.id) }}" class="usa-link">{{ service.name }}</a></td>
               <td>
                 {% if not service.active %}
-                  Suspended
+                  Archived
                 {% elif service.restricted %}
                   Trial
                 {% else %}

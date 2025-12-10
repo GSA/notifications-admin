@@ -839,7 +839,7 @@ def test_edit_organization_user_shows_the_delete_confirmation_banner(
         user_id=active_user_with_permissions["id"],
     )
 
-    assert normalize_spaces(page.h1) == "Team members"
+    assert normalize_spaces(page.h1) == "Organization administrators"
 
     banner = page.select_one(".usa-alert--error")
     banner_text = banner.select_one(".usa-alert__text")
@@ -1521,7 +1521,7 @@ def test_organization_billing_page_not_accessible_if_not_platform_admin(
     )
 
 
-def test_organization_dashboard_shows_message_usage(
+def test_organization_dashboard_shows_messages_sent(
     client_request,
     mock_get_organization,
     mocker,
@@ -1531,8 +1531,6 @@ def test_organization_dashboard_shows_message_usage(
         "app.organizations_client.get_organization_message_usage",
         return_value={
             "messages_sent": 1000,
-            "messages_remaining": 2000,
-            "total_message_limit": 3000,
         },
     )
     mocker.patch(
@@ -1553,11 +1551,7 @@ def test_organization_dashboard_shows_message_usage(
     mock_message_usage.assert_called_once_with(ORGANISATION_ID)
 
     assert normalize_spaces(page.select_one("h1").text) == "Organization Dashboard"
-
-    chart_container = page.select_one("#totalMessageChartContainer")
-    assert chart_container["data-messages-sent"] == "1000"
-    assert chart_container["data-messages-remaining"] == "2000"
-    assert chart_container["data-total-message-limit"] == "3000"
+    assert "1,000 sent" in page.text
 
 
 def test_organization_dashboard_shows_service_counts(
@@ -1622,7 +1616,7 @@ def test_organization_dashboard_shows_service_counts(
     assert "3" in normalize_spaces(service_box.text)
     assert "1 Live" in normalize_spaces(service_box.text)
     assert "1 Trial" in normalize_spaces(service_box.text)
-    assert "1 Suspended" in normalize_spaces(service_box.text)
+    assert "1 Archived" in normalize_spaces(service_box.text)
 
 
 def test_organization_dashboard_services_table(
@@ -1699,7 +1693,7 @@ def test_organization_dashboard_services_table(
     assert normalize_spaces(first_row_cells[1].text) == "Live"
     assert "1,500 emails" in normalize_spaces(first_row_cells[2].text)
     assert "500 sms" in normalize_spaces(first_row_cells[2].text)
-    assert "249,500 remaining" in normalize_spaces(first_row_cells[2].text)
+    assert "249,500 message parts remaining" in normalize_spaces(first_row_cells[2].text)
     assert normalize_spaces(first_row_cells[3].text) == "N/A"
     assert normalize_spaces(first_row_cells[4].text) == "Welcome SMS"
 
@@ -1708,7 +1702,7 @@ def test_organization_dashboard_services_table(
     assert normalize_spaces(second_row_cells[1].text) == "Trial"
     assert "250 emails" in normalize_spaces(second_row_cells[2].text)
     assert "100 sms" in normalize_spaces(second_row_cells[2].text)
-    assert "249,900 remaining" in normalize_spaces(second_row_cells[2].text)
+    assert "249,900 message parts remaining" in normalize_spaces(second_row_cells[2].text)
     assert normalize_spaces(second_row_cells[3].text) == "N/A"
     assert normalize_spaces(second_row_cells[4].text) == "Reminder SMS"
 

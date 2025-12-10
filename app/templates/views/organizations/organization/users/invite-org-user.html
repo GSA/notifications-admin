@@ -15,7 +15,7 @@
 
 {% block maincolumn_content %}
 
-  {{ page_header("Invite a team member") }}
+  {{ page_header("Invite an organization administrator") }}
   {% call form_wrapper() %}
     {{ form.email_address(
       param_extensions={
@@ -26,11 +26,11 @@
 
     <div class="margin-bottom-3">
 		  <p class="form-label">
-		    {{ current_org.name }} team members can:
+		    {{ current_org.name }} organization administrators can:
 		  </p>
 		  <ul class="list list-bullet">
-		    <li>see usage and team members for each service</li>
-        <li>invite other team members</li>
+		    <li>access and manage all services</li>
+        <li>invite or remove other organization administrators</li>
 		  </ul>
 		</div>
 

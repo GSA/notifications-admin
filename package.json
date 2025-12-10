@@ -27,7 +27,8 @@
   "license": "CC0",
   "homepage": "https://github.com/GSA/notifications-admin#readme",
   "overrides": {
-    "graceful-fs": "^4.2.11"
+    "graceful-fs": "^4.2.11",
+    "glob@^10": "10.5.0"
   },
   "dependencies": {
     "@rollup/plugin-commonjs": "^29.0.0",
@@ -37,7 +38,7 @@
     "cbor-js": "0.1.0",
     "ci-info": "^4.3.1",
     "d3": "^7.9.0",
-    "playwright": "^1.56.1",
+    "playwright": "^1.57.0",
     "python": "^0.0.4",
     "query-command-supported": "1.0.0",
     "sass-embedded": "^1.93.3",
@@ -60,10 +61,10 @@
     "merge-stream": "^2.0.0",
     "mini-css-extract-plugin": "^2.9.4",
     "postcss-loader": "^8.2.0",
-    "sass": "^1.94.0",
+    "sass": "^1.95.0",
     "sass-loader": "^16.0.6",
-    "terser-webpack-plugin": "^5.3.14",
-    "webpack": "^5.102.1",
+    "terser-webpack-plugin": "^5.3.15",
+    "webpack": "^5.103.0",
     "webpack-cli": "^6.0.1"
   }
 }

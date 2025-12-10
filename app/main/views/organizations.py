@@ -87,18 +87,14 @@ def add_organization():
     return render_template("views/organizations/add-organization.html", form=form)
 
 
-def get_organization_message_allowance(org_id):
+def get_organization_messages_sent(org_id):
     try:
         message_usage = organizations_client.get_organization_message_usage(org_id)
     except Exception as e:
         current_app.logger.error(f"Error fetching organization message usage: {e}")
         message_usage = {}
 
-    return {
-        "messages_sent": message_usage.get("messages_sent", 0),
-        "messages_remaining": message_usage.get("messages_remaining", 0),
-        "total_message_limit": message_usage.get("total_message_limit", 0),
-    }
+    return message_usage.get("messages_sent", 0)
 
 
 def _handle_create_service(org_id):
@@ -210,9 +206,7 @@ def _handle_delete_service(org_id, service_id):
     cached_service_user_ids = [user.id for user in service.active_users]
 
     service_api_client.archive_service(service_id, cached_service_user_ids)
-    create_archive_service_event(
-        service_id=service_id, archived_by_id=current_user.id
-    )
+    create_archive_service_event(service_id=service_id, archived_by_id=current_user.id)
 
     cache.redis_client.delete("organizations")
 
@@ -247,10 +241,10 @@ def get_services_dashboard_data(organization, year):
         if sms_sent > 0 or sms_remainder > 0:
             if sms_cost > 0:
                 usage_parts.append(
-                    f"{sms_sent:,} sms ({sms_remainder:,} remaining, ${sms_cost:,.2f})"
+                    f"{sms_sent:,} sms ({sms_remainder:,} message parts remaining, ${sms_cost:,.2f})"
                 )
             else:
-                usage_parts.append(f"{sms_sent:,} sms ({sms_remainder:,} remaining)")
+                usage_parts.append(f"{sms_sent:,} sms ({sms_remainder:,} message parts remaining)")
 
         service["usage"] = ", ".join(usage_parts) if usage_parts else "No usage"
 
@@ -292,7 +286,7 @@ def organization_dashboard(org_id):
     elif action == "delete-service" and service_id:
         return _handle_delete_service(org_id, service_id)
 
-    message_allowance = get_organization_message_allowance(org_id)
+    messages_sent = get_organization_messages_sent(org_id)
 
     return render_template(
         "views/organizations/organization/index.html",
@@ -307,7 +301,7 @@ def organization_dashboard(org_id):
         edit_service_data=edit_service_data,
         new_service_id=session.pop("new_service_id", None),
         updated_service_id=session.pop("updated_service_id", None),
-        **message_allowance,
+        messages_sent=messages_sent,
     )
 
 

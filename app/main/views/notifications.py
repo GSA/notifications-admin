@@ -35,7 +35,7 @@ from notifications_utils.s3 import S3ObjectNotFound
 
 
 @main.route("/services/<uuid:service_id>/notification/<uuid:notification_id>")
-@user_has_permissions(ServicePermission.VIEW_ACTIVITY, ServicePermission.SEND_MESSAGES)
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY, ServicePermission.SEND_MESSAGES, allow_org_user=True)
 def view_notification(service_id, notification_id, error_message=None):
     if error_message:
         flash(error_message)
@@ -108,7 +108,7 @@ def view_notification(service_id, notification_id, error_message=None):
 
 
 @main.route("/services/<uuid:service_id>/notification/<uuid:notification_id>.json")
-@user_has_permissions(ServicePermission.VIEW_ACTIVITY, ServicePermission.SEND_MESSAGES)
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY, ServicePermission.SEND_MESSAGES, allow_org_user=True)
 def view_notification_updates(service_id, notification_id):
     return jsonify(
         **get_single_notification_partials(
@@ -149,7 +149,7 @@ PERIOD_TO_S3_FILENAME = {
 
 
 @main.route("/services/<uuid:service_id>/download-notifications.csv")
-@user_has_permissions(ServicePermission.VIEW_ACTIVITY)
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY, allow_org_user=True)
 def download_notifications_csv(service_id):
     set_timezone()
     filter_args = parse_filter_args(request.args)

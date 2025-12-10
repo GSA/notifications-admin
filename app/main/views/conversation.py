@@ -13,7 +13,7 @@ from notifications_utils.template import SMSPreviewTemplate
 
 
 @main.route("/services/<uuid:service_id>/conversation/<uuid:notification_id>")
-@user_has_permissions(ServicePermission.VIEW_ACTIVITY)
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY, allow_org_user=True)
 def conversation(service_id, notification_id):
     user_number = get_user_number(service_id, notification_id)
 
@@ -31,7 +31,7 @@ def conversation(service_id, notification_id):
 
 
 @main.route("/services/<uuid:service_id>/conversation/<uuid:notification_id>.json")
-@user_has_permissions(ServicePermission.VIEW_ACTIVITY)
+@user_has_permissions(ServicePermission.VIEW_ACTIVITY, allow_org_user=True)
 def conversation_updates(service_id, notification_id):
     return jsonify(
         get_conversation_partials(
@@ -46,7 +46,7 @@ def conversation_updates(service_id, notification_id):
 @main.route(
     "/services/<uuid:service_id>/conversation/<uuid:notification_id>/reply-with/from-folder/<uuid:from_folder>"
 )
-@user_has_permissions(ServicePermission.SEND_MESSAGES)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, allow_org_user=True)
 def conversation_reply(
     service_id,
     notification_id,
@@ -70,7 +70,7 @@ def conversation_reply(
 @main.route(
     "/services/<uuid:service_id>/conversation/<uuid:notification_id>/reply-with/<uuid:template_id>"
 )
-@user_has_permissions(ServicePermission.SEND_MESSAGES)
+@user_has_permissions(ServicePermission.SEND_MESSAGES, allow_org_user=True)
 def conversation_reply_with_template(
     service_id,
     notification_id,
