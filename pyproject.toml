@@ -20,7 +20,7 @@ flask-login = "^0.6"
 flask-talisman = "*"
 flask-wtf = "^1.2"
 gunicorn = {version = "==23.0.0", extras = ["gevent"]}
-hypothesis = "^6.148.7"
+hypothesis = "^6.148.8"
 humanize = "~=4.15"
 itsdangerous = "~=2.2"
 jinja2 = "^3.1.6"
