@@ -1507,14 +1507,14 @@ tests = ["freezegun", "pytest", "pytest-cov"]
 
 [[package]]
 name = "hypothesis"
-version = "6.149.1"
+version = "6.150.0"
 description = "The property-based testing library for Python"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "hypothesis-6.149.1-py3-none-any.whl", hash = "sha256:48d7ea77cae8b83c6c3c9f50ac683ae3b1673c1c306909410ea348e4e97aeb77"},
-    {file = "hypothesis-6.149.1.tar.gz", hash = "sha256:abe36199df3f068f72db85bd5f347a9032b79044a27bd9d2eb016179e5313069"},
+    {file = "hypothesis-6.150.0-py3-none-any.whl", hash = "sha256:caf1f752418c49ac805f11d909c5831aaceb96762aa3895e0c702468dedbe3fe"},
+    {file = "hypothesis-6.150.0.tar.gz", hash = "sha256:ac263bdaf338f4899a9a56e8224304e29b3ad91799e0274783c49abd91ea35ac"},
 ]
 
 [package.dependencies]
@@ -4493,4 +4493,4 @@ cffi = ["cffi (>=1.17) ; python_version >= \"3.13\" and platform_python_implemen
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13.2"
-content-hash = "05b4803fc3d4c9179cc1f1ebe005e708b252ce3589cfc867eef8c9e206377cda"
+content-hash = "562d88b93bb45447a5505303809bbceba454121a1ea9c78755670aa85571b7ac"
