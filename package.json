@@ -59,7 +59,7 @@
     "jshint": "2.13.6",
     "jshint-stylish": "2.2.1",
     "merge-stream": "^2.0.0",
-    "mini-css-extract-plugin": "^2.9.4",
+    "mini-css-extract-plugin": "^2.10.0",
     "postcss-loader": "^8.2.0",
     "sass": "^1.97.2",
     "sass-loader": "^16.0.6",
