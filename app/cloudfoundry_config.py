@@ -10,7 +10,7 @@ class CloudfoundryConfig:
         self._empty_bucket_credentials = {
             "bucket": "",
             "access_key_id": "",
-            "secret_access_key": "",
+            "secret_access_key": "",  # nosec B105 - empty default, not a real password
             "region": "",
         }
 
