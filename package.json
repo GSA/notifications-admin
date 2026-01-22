@@ -41,7 +41,7 @@
     "playwright": "^1.57.0",
     "python": "^0.0.4",
     "query-command-supported": "1.0.0",
-    "sass-embedded": "^1.97.2",
+    "sass-embedded": "^1.97.3",
     "textarea-caret": "3.1.0"
   },
   "devDependencies": {
