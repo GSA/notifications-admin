@@ -19,7 +19,7 @@ flask-basicauth = "~=0.2"
 flask-login = "^0.6"
 flask-talisman = "*"
 flask-wtf = "^1.2"
-gunicorn = {version = "==23.0.0", extras = ["gevent"]}
+gunicorn = {version = "==24.1.1", extras = ["gevent"]}
 hypothesis = "^6.150.3"
 humanize = "~=4.15"
 itsdangerous = "~=2.2"
