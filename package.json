@@ -52,7 +52,7 @@
     "backstopjs": "^6.3.25",
     "better-npm-audit": "^3.11.0",
     "copy-webpack-plugin": "^13.0.1",
-    "css-loader": "^7.1.2",
+    "css-loader": "^7.1.3",
     "jest": "^30.2.0",
     "jest-each": "^30.1.0",
     "jest-environment-jsdom": "^30.2.0",
