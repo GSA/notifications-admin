@@ -38,16 +38,16 @@
     "cbor-js": "0.1.0",
     "ci-info": "^4.3.1",
     "d3": "^7.9.0",
-    "playwright": "^1.57.0",
+    "playwright": "^1.58.0",
     "python": "^0.0.4",
     "query-command-supported": "1.0.0",
-    "sass-embedded": "^1.93.3",
+    "sass-embedded": "^1.97.3",
     "textarea-caret": "3.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.5",
-    "@babel/preset-env": "^7.28.5",
-    "autoprefixer": "^10.4.22",
+    "@babel/core": "^7.28.6",
+    "@babel/preset-env": "^7.28.6",
+    "autoprefixer": "^10.4.23",
     "babel-loader": "^10.0.0",
     "backstopjs": "^6.3.25",
     "better-npm-audit": "^3.11.0",
@@ -59,12 +59,12 @@
     "jshint": "2.13.6",
     "jshint-stylish": "2.2.1",
     "merge-stream": "^2.0.0",
-    "mini-css-extract-plugin": "^2.9.4",
+    "mini-css-extract-plugin": "^2.10.0",
     "postcss-loader": "^8.2.0",
-    "sass": "^1.95.0",
+    "sass": "^1.97.2",
     "sass-loader": "^16.0.6",
-    "terser-webpack-plugin": "^5.3.15",
-    "webpack": "^5.103.0",
+    "terser-webpack-plugin": "^5.3.16",
+    "webpack": "^5.104.1",
     "webpack-cli": "^6.0.1"
   }
 }
