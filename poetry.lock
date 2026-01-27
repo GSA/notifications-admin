@@ -1507,24 +1507,24 @@ tests = ["freezegun", "pytest", "pytest-cov"]
 
 [[package]]
 name = "hypothesis"
-version = "6.150.3"
+version = "6.151.2"
 description = "The property-based testing library for Python"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "hypothesis-6.150.3-py3-none-any.whl", hash = "sha256:5577c0f8eff5ac54a8aff1ce32e30c5454167c29360fdabf1bfea0539b1689f9"},
-    {file = "hypothesis-6.150.3.tar.gz", hash = "sha256:32c88d4b7df3a8483e69877561b520320bf7779b0709c11869e392025e9279d4"},
+    {file = "hypothesis-6.151.2-py3-none-any.whl", hash = "sha256:909d2b5f0dc80640561bb2c3859f3c56a52ed8d1cc589e5e6450362ced8c31a0"},
+    {file = "hypothesis-6.151.2.tar.gz", hash = "sha256:fc91f88a77074b31c7ab871eebab3d2e0210fd3095f1d1ecbd9440c1c6bc06d9"},
 ]
 
 [package.dependencies]
 sortedcontainers = ">=2.1.0,<3.0.0"
 
 [package.extras]
-all = ["black (>=20.8b0)", "click (>=7.0)", "crosshair-tool (>=0.0.101)", "django (>=4.2)", "dpcontracts (>=0.4)", "hypothesis-crosshair (>=0.0.27)", "lark (>=0.10.1)", "libcst (>=0.3.16)", "numpy (>=1.21.6)", "pandas (>=1.1)", "pytest (>=4.6)", "python-dateutil (>=1.4)", "pytz (>=2014.1)", "redis (>=3.0.0)", "rich (>=9.0.0)", "tzdata (>=2025.3) ; sys_platform == \"win32\" or sys_platform == \"emscripten\"", "watchdog (>=4.0.0)"]
+all = ["black (>=20.8b0)", "click (>=7.0)", "crosshair-tool (>=0.0.102)", "django (>=4.2)", "dpcontracts (>=0.4)", "hypothesis-crosshair (>=0.0.27)", "lark (>=0.10.1)", "libcst (>=0.3.16)", "numpy (>=1.21.6)", "pandas (>=1.1)", "pytest (>=4.6)", "python-dateutil (>=1.4)", "pytz (>=2014.1)", "redis (>=3.0.0)", "rich (>=9.0.0)", "tzdata (>=2025.3) ; sys_platform == \"win32\" or sys_platform == \"emscripten\"", "watchdog (>=4.0.0)"]
 cli = ["black (>=20.8b0)", "click (>=7.0)", "rich (>=9.0.0)"]
 codemods = ["libcst (>=0.3.16)"]
-crosshair = ["crosshair-tool (>=0.0.101)", "hypothesis-crosshair (>=0.0.27)"]
+crosshair = ["crosshair-tool (>=0.0.102)", "hypothesis-crosshair (>=0.0.27)"]
 dateutil = ["python-dateutil (>=1.4)"]
 django = ["django (>=4.2)"]
 dpcontracts = ["dpcontracts (>=0.4)"]
@@ -4516,4 +4516,4 @@ cffi = ["cffi (>=1.17) ; python_version >= \"3.13\" and platform_python_implemen
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13.2"
-content-hash = "4dd51674d673a12ef684d423c45a90b33f087c8d0e69f5644d3716c3a1bbdd8b"
+content-hash = "02e919808751fc77f237bf391a1bf5dcfc1223c46e555ac6a5ef9145e170cb7d"
