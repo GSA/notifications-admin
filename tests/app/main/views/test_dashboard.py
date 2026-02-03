@@ -1431,7 +1431,7 @@ def test_breadcrumb_shows_if_service_is_suspended(
 
     page = client_request.get("main.service_dashboard", service_id=SERVICE_ONE_ID)
 
-    assert "Suspended" in page.select_one(".navigation-service-name").text
+    assert "Archived" in page.select_one(".navigation-service-name").text
 
 
 @pytest.mark.parametrize(

@@ -9,7 +9,7 @@
   <span class="navigation-service-name">
     {{ current_service.name }}
     {% if not current_service.active %}
-      <span class="navigation-service-type--suspended">Suspended</span>
+      <span class="navigation-service-type--suspended">Archived</span>
     {% endif %}
   </span>
   <a href="{{ url_for('main.choose_account') }}" class="usa-button usa-button--outline">Switch service</a>

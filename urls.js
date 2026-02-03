@@ -3,10 +3,12 @@ const baseUrl = process.env.BACKSTOP_BASE_URL || 'http://localhost:6012';
 const TEST_SERVICE_ID = 'da14b8fa-6a9e-4320-8484-9cd6e900c333';
 const TEST_TEMPLATE_ID = '31588995-646b-40ae-bed1-617612d9245e';
 const TEST_USER_ID = '6af522d0-2915-4e52-83a3-3690455a5fe6';
+const TEST_ORG_ID = 'a134fb9b-ab87-4e76-b216-77cb66a6ee18';
 
 const servicePath = (path = '') => `/services/${TEST_SERVICE_ID}${path}`;
 const userPath = (path = '') => `/user-profile${path}`;
 const platformAdminPath = (path = '') => `/platform-admin${path}`;
+const orgPath = (path = '') => `/organizations/${TEST_ORG_ID}${path}`;
 
 const routes = {
   public: [
@@ -89,6 +91,10 @@ const routes = {
   organizations: [
     { label: 'Organizations List', path: '/organizations' },
     { label: 'Add Organization', path: '/organizations/add' },
+    { label: 'Organization Dashboard', path: orgPath() },
+    { label: 'Organization Usage', path: orgPath('/usage') },
+    { label: 'Organization Team Members', path: orgPath('/users') },
+    { label: 'Invite Org User', path: orgPath('/users/invite') },
   ],
 
   platformAdmin: [
