@@ -85,8 +85,8 @@
 
   {% if invite_user_form %}
     <div id="invite-user-form" class="bg-base-lightest padding-3 radius-md margin-bottom-3">
-      <h3 class="margin-top-0">Invite a team member</h3>
-      <p class="margin-top-0">{{ current_org.name }} team members can see usage and team members for each service, and invite other team members.</p>
+      <h3 class="margin-top-0">Invite an organization administrator</h3>
+      <p class="margin-top-0">{{ current_org.name }} administrators can access and manage all services, and invite or remove other organization administrators.</p>
       <form method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='invite-user') }}">
         <input type="hidden" name="csrf_token" value="{{ invite_user_form.csrf_token._value() }}"/>
 
