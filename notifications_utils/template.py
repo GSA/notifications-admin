@@ -557,7 +557,7 @@ class BaseEmailTemplate(SubjectMixin, Template):
         That's still an extremely long email, and should be sufficient for all normal use, while at the same
         time giving us safe margin while sending the emails through Amazon SES.
 
-        EDIT: putting size up to 2MB as GOV.UK email digests are hitting the limit.
+        EDIT: putting size up to 2MB as email digests were hitting the limit.
         """
         return self.content_size_in_bytes > 2000000
 
