@@ -1,6 +1,7 @@
 ![notify-logo](https://github.com/GSA/notifications-admin/assets/4156602/31b74039-4d87-4f89-a35e-71e9f3152342)
 
 # Notify.gov Admin UI
+[![DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/GSA/notifications-admin)
 
 This is the Notify front-end for government users and admins. To see it in
 action, check out [the demo site](https://notify-demo.app.cloud.gov)
