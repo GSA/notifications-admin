@@ -11,12 +11,12 @@
 
   <div class="margin-bottom-3">
     <div class="grid-row flex-align-center">
-      <h2 id="chartTitle" class="margin-right-1 margin-y-0">Overall {{ selected_year }} Messages Sent</h2>
+      <h2 id="chartTitle" class="margin-right-1 margin-y-0">Overall {{ selected_year }} Usage</h2>
       <button
         type="button"
         class="usa-tooltip usa-tooltip__information margin-right-0"
         data-position="top"
-        title="Total messages sent across all services in {{ current_org.name }}"
+        title="Combined totals for all services in {{ current_org.name }} for the current agreement period"
       >
         <span class="usa-sr-only">More information</span>
         <img src="{{ asset_url('img/usa-icons/info.svg') }}" alt="" class="usa-icon" role="presentation" />
