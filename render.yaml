@@ -1,0 +1,70 @@
+services:
+  - type: web
+    name: notify-admin
+    runtime: python
+    plan: starter
+    region: oregon
+    buildCommand: pip install poetry && poetry install --only main && make generate-version-file
+    startCommand: poetry run gunicorn -c gunicorn_config.py gunicorn_entry:application
+    healthCheckPath: /_status
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.2
+      - key: RENDER
+        value: "true"
+      - key: FLASK_APP
+        value: application.py
+      - key: FLASK_DEBUG
+        value: "false"
+      - key: PORT
+        value: "10000"
+      - key: NOTIFY_APP_NAME
+        value: admin
+      - key: NOTIFY_ENVIRONMENT
+        value: production
+      - key: NOTIFY_LOG_LEVEL
+        value: INFO
+      - key: REDIS_ENABLED
+        value: "1"
+      - key: NOTIFY_BILLING_DETAILS
+        value: "[]"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DANGEROUS_SALT
+        generateValue: true
+      - key: ADMIN_CLIENT_SECRET
+        sync: false
+      - key: ADMIN_CLIENT_USERNAME
+        sync: false
+      - key: API_HOST_NAME
+        sync: false
+      - key: ADMIN_BASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: LOGIN_PEM
+        sync: false
+      - key: LOGIN_DOT_GOV_CLIENT_ID
+        sync: false
+      - key: LOGIN_DOT_GOV_USER_INFO_URL
+        sync: false
+      - key: LOGIN_DOT_GOV_ACCESS_TOKEN_URL
+        sync: false
+      - key: LOGIN_DOT_GOV_LOGOUT_URL
+        sync: false
+      - key: LOGIN_DOT_GOV_BASE_LOGOUT_URL
+        sync: false
+      - key: LOGIN_DOT_GOV_SIGNOUT_REDIRECT
+        sync: false
+      - key: LOGIN_DOT_GOV_INITIAL_SIGNIN_URL
+        sync: false
+      - key: LOGIN_DOT_GOV_CERTS_URL
+        sync: false
+      - key: CSV_AWS_ACCESS_KEY_ID
+        sync: false
+      - key: CSV_AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: CSV_AWS_REGION
+        value: us-west-2
+      - key: CSV_BUCKET_NAME
+        sync: false
