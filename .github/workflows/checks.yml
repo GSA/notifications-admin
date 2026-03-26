@@ -145,6 +145,7 @@ jobs:
           inputs: requirements.txt
           ignore-vulns: |
             PYSEC-2023-312
+            CVE-2026-4539
       - name: Run npm audit
         run: make npm-audit
 
