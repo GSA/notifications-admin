@@ -44,7 +44,8 @@
     "query-command-supported": "1.0.0",
     "sass-embedded": "^1.97.3",
     "textarea-caret": "3.1.0",
-    "immutable": "^5.1.5"
+    "immutable": "^5.1.5",
+    "picomatch": "^4.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
