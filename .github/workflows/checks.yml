@@ -22,9 +22,9 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22.3.0"
       - name: Install dependencies
@@ -87,7 +87,7 @@ jobs:
           - 6379:6379
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-project
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
@@ -123,7 +123,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: staging
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-project
       - name: Validate NewRelic config
         env:
@@ -136,7 +136,7 @@ jobs:
   dependency-audits:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-project
       - name: Create requirements.txt
         run: poetry export --output requirements.txt
@@ -152,7 +152,7 @@ jobs:
   static-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-project
       - name: Run scan
         run: poetry run bandit -r app/ --confidence-level medium
@@ -160,7 +160,7 @@ jobs:
   dynamic-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-project
       - name: Run server
         run: make run-flask &
@@ -179,7 +179,7 @@ jobs:
   a11y-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-project
       - name: Run server
         run: make run-flask &
