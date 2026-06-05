@@ -316,7 +316,7 @@ the VSCode dev container.
 1. `make run-flask` from within the devcontainer
 2. Run `make a11y-scan` from your host computer.
 
-## Further docs from UK
+## Further documentation
 
 - [Working with static assets](docs/static-assets.md)
 - [JavaScript documentation](https://github.com/alphagov/notifications-manuals/wiki/JavaScript-Documentation)

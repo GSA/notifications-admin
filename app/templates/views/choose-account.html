@@ -15,14 +15,14 @@
         </h2>
       </div>
       <div class="grid-col-9 margin-top-1">
-        <ul>
+        <ul class="usa-list usa-list--unstyled">
   {% else %}
-    <ul>
+    <ul class="usa-list usa-list--unstyled">
   {% endif %}
   {% for org in organizations|sort %}
     <li class="browse-list-item margin-y-2">
       <a href="{{ url_for('.organization_dashboard', org_id=org.id) }}" class="usa-link">{{ org.name }}</a>
-      <p class="browse-list-hint">
+      <p class="browse-list-hint margin-top-05 margin-bottom-0 text-base font-body-xs">
         {{ org.count_of_live_services }}
         live service{% if org.count_of_live_services != 1 %}s{% endif %}
       </p>
@@ -62,10 +62,10 @@
             Platform admin
           </h2>
         </div>
-        <ul class="grid-col-9 margin-top-3">
-          <li class="browse-list-item">
+        <ul class="usa-list usa-list--unstyled grid-col-9 margin-top-3">
+          <li class="browse-list-item margin-y-2">
             <a href="{{ url_for('.organizations') }}" class="usa-link">All organizations</a>
-            <p class="browse-list-hint">
+            <p class="browse-list-hint margin-top-05 margin-bottom-0 text-base font-body-xs">
               {{ org_count|format_thousands }} organizations, {{ live_service_count|format_thousands }} live services
             </p>
           </li>

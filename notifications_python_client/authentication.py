@@ -21,7 +21,7 @@ INVALID_FUTURE_TOKEN_ERROR_MESSAGE = "Token can not be in the future"
 
 def create_jwt_token(secret, client_id):
     """
-    Create JWT token for GOV.UK Notify
+    Create JWT token for Notify.gov
 
     Tokens have standard header:
     {

@@ -3,18 +3,19 @@
 # Please see the documentation for all configuration options:
 # https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
 
+# Note: Setting open-pull-requests-limit to 0 disables version update PRs.
+# Security updates are still active and controlled separately in repository settings.
+
 version: 2
 updates:
   - package-ecosystem: 'pip' # See documentation for possible values
     directory: '/' # Location of package manifests
     schedule:
       interval: 'daily'
-    assignees:
-      - 'alexjanousekGSA'
+    open-pull-requests-limit: 0  # Disable version update PRs; security updates still active
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
       interval: 'daily'
+    open-pull-requests-limit: 0  # Disable version update PRs; security updates still active
     versioning-strategy: increase
-    assignees:
-      - 'alexjanousekGSA'

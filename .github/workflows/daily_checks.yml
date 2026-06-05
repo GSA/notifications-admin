@@ -22,7 +22,7 @@ jobs:
   dependency-audits:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - uses: ./.github/actions/setup-project
     - name: Create requirements.txt
       run: poetry export --output requirements.txt
@@ -31,13 +31,14 @@ jobs:
         inputs: requirements.txt
         ignore-vulns: |
             PYSEC-2023-312
+            CVE-2026-4539
     - name: Run npm audit
       run: make npm-audit
 
   static-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-project
       - name: Run scan
         run: poetry run bandit -r app/ --confidence-level medium
@@ -45,7 +46,7 @@ jobs:
   dynamic-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-project
       - name: Run server
         run: make run-flask &

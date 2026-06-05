@@ -1,7 +1,7 @@
 {% macro browse_list(items) %}
   {% if items %}
     <nav class="browse-list">
-      <ul>
+      <ul class="usa-list usa-list--unstyled">
         {% for item in items %}
           {% if item.title and item.link %}
             <li class="browse-list-item">

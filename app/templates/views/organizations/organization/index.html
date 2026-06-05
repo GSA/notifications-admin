@@ -11,12 +11,12 @@
 
   <div class="margin-bottom-3">
     <div class="grid-row flex-align-center">
-      <h2 id="chartTitle" class="margin-right-1 margin-y-0">Overall {{ selected_year }} Messages Sent</h2>
+      <h2 id="chartTitle" class="margin-right-1 margin-y-0">Overall {{ selected_year }} Usage</h2>
       <button
         type="button"
         class="usa-tooltip usa-tooltip__information margin-right-0"
         data-position="top"
-        title="Total messages sent across all services in {{ current_org.name }}"
+        title="Combined totals for all services in {{ current_org.name }} for the current agreement period"
       >
         <span class="usa-sr-only">More information</span>
         <img src="{{ asset_url('img/usa-icons/info.svg') }}" alt="" class="usa-icon" role="presentation" />
@@ -85,8 +85,8 @@
 
   {% if invite_user_form %}
     <div id="invite-user-form" class="bg-base-lightest padding-3 radius-md margin-bottom-3">
-      <h3 class="margin-top-0">Invite a team member</h3>
-      <p class="margin-top-0">{{ current_org.name }} team members can see usage and team members for each service, and invite other team members.</p>
+      <h3 class="margin-top-0">Invite an organization administrator</h3>
+      <p class="margin-top-0">{{ current_org.name }} administrators can access and manage all services, and invite or remove other organization administrators.</p>
       <form method="post" action="{{ url_for('.organization_dashboard', org_id=current_org.id, action='invite-user') }}">
         <input type="hidden" name="csrf_token" value="{{ invite_user_form.csrf_token._value() }}"/>
 
