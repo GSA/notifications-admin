@@ -48,7 +48,7 @@
     "immutable": "^5.1.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.0",
+    "@babel/core": "^7.29.6",
     "@babel/preset-env": "^7.29.0",
     "autoprefixer": "^10.4.27",
     "babel-loader": "^10.0.0",
