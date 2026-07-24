@@ -6,6 +6,9 @@ on:
     # this will run at noon UTC every day (7am EST / 8am EDT)
     - cron: '0 12 * * *'
 
+permissions:
+  contents: read
+
 jobs:
   check_staging_drift:
     runs-on: ubuntu-latest

@@ -5,6 +5,10 @@ on:
     branches: [ production ]
     paths: [ 'terraform/**' ]
 
+permissions:
+  contents: read
+  pull-requests: write
+
 defaults:
   run:
     working-directory: terraform/production
