@@ -2,7 +2,7 @@
 
 # Notify.gov Admin UI
 
-> ![WARNING]
+> [!WARNING]
 >
 > This repository has been archived and dependencies are out of date. If being revived in the future, we recommend starting from https://workshop.cloud.gov/cloud-gov/notifications/admin which has had some updates completed.
 
