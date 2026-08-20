@@ -2,6 +2,11 @@
 
 # Notify.gov Admin UI
 
+> ![WARNING]
+>
+> This repository has been archived and dependencies are out of date. If being revived in the future, we recommend starting from https://workshop.cloud.gov/cloud-gov/notifications/admin which has had some updates completed.
+
+
 This is the Notify front-end for government users and admins. To see it in
 action, check out [the demo site](https://notify-demo.app.cloud.gov)
 (contact team for credentials).
